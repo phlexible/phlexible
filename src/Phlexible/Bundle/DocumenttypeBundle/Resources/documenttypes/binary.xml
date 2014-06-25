@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="binary">
+    <type>document</type>
+    <titles>
+        <title lang="de">Binär Datei</title>
+        <title lang="en">Binary File</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/octet-stream</mimetype>
+    </mimetypes>
+</documenttype>

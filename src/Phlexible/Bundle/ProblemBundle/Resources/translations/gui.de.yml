@@ -1,0 +1,12 @@
+problems:
+    problems: Probleme
+    problem: Problem
+    no_problems: 'Keine Probleme gefunden.'
+    new_problem: 'Neues Problem'
+    solve: Lösen
+    solution: Lösung
+    id: ID
+    severity: Schwere
+    source: Quelle
+    link: Link
+    menu_hint: 'Hiding problems of severity notice and lower, open Menu / Administration / Problems for a full list.'

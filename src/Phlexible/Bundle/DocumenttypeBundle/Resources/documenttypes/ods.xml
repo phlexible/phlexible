@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="ods">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenDocument Arbeitsmappe</title>
+        <title lang="en">OpenDocument Spreadsheet</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.oasis.opendocument.spreadsheet</mimetype>
+    </mimetypes>
+</documenttype>

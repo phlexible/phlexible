@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="wma">
+    <type>audio</type>
+    <titles>
+        <title lang="de">Windows Media Audio</title>
+        <title lang="en">Windows Media Audio</title>
+    </titles>
+    <mimetypes>
+        <mimetype>Audio/x-ms-wma</mimetype>
+    </mimetypes>
+</documenttype>

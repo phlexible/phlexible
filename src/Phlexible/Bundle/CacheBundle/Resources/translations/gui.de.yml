@@ -1,0 +1,9 @@
+cache:
+    cache_statistics: 'Cache Statistiken'
+    reload: 'Neu laden'
+    flush_all_servers: 'Alle Caches leeren'
+    flush_server: 'Cache leeren'
+    cache_usage: 'Cache Benutzung'
+    hits_and_misses: 'Hits und Misses'
+    warning_flush_all_servers: 'Möchten Sie wirklich alle Server leeren? Dies könnte auch andere Projekte betreffen, die diese Server benutzen.'
+    warning_flush_server: 'Möchten Sie wirklich diesen Server leeren? Dies könnte auch andere Projekte betreffen, die diesen Server benutzen.'

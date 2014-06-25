@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="rtf">
+    <type>document</type>
+    <titles>
+        <title lang="de">Rich Text Dokument</title>
+        <title lang="en">Rich Text Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/rtf</mimetype>
+    </mimetypes>
+</documenttype>

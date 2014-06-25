@@ -1,0 +1,5 @@
+services:
+    phlexible_lock.doctrine.lock_manager:
+        class: Phlexible\Bundle\LockBundle\Doctrine\LockManager
+        public: false
+        arguments: [@doctrine.orm.entity_manager]

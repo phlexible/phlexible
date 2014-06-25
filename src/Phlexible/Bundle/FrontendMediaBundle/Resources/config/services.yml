@@ -1,0 +1,70 @@
+services:
+    # asset providers
+    phlexible_frontend_media.asset_provider:
+        class: Phlexible\Bundle\FrontendMediaBundle\AssetProvider\FrontendMediaAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # dwoo plugins
+    phlexible_frontend_media.dwoo.plugin.documentlist:
+        class: Phlexible\Bundle\FrontendMediaBundle\Plugin\Documentlist
+        public: false
+        tags:
+            - {name: phlexible_dwoo.plugin, alias: mwDocumentlist}
+
+    phlexible_frontend_media.dwoo.plugin.gallery:
+        class: Phlexible\Bundle\FrontendMediaBundle\Plugin\Gallery
+        public: false
+        tags:
+            - {name: phlexible_dwoo.plugin, alias: mwGallery}
+
+    # event listeners
+    phlexible_frontend_media.listener.render:
+        class: Phlexible\Bundle\FrontendMediaBundle\EventListener\RenderListener
+        tags:
+            - {name: kernel.event_listener, event: elementtype_documentlist, method: onElementtypeDocumentlist}
+
+    phlexible_frontend_media.listener.element:
+        class: Phlexible\Bundle\FrontendMediaBundle\EventListener\ElementListener
+        tags:
+            - {name: kernel.event_listener, event: phlexible_element.save, method: onSaveElement}
+
+    phlexible_frontend_media.listener.media:
+        class: Phlexible\Bundle\FrontendMediaBundle\EventListener\MediaListener
+        tags:
+            - {name: kernel.event_listener, event: phlexible_media_site.save_upload, method: onUploadFile}
+            - {name: kernel.event_listener, event: phlexible_media_site.save_meta, method: onChangeFile}
+            - {name: kernel.event_listener, event: phlexible_media_site.delete_file, method: onDeleteFile}
+
+    # fields
+    phlexible_frontend_media.field.folder:
+        class: Phlexible\Bundle\FrontendMediaBundle\Field\FolderField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: folder}
+
+    phlexible_frontend_media.field.download:
+        class: Phlexible\Bundle\FrontendMediaBundle\Field\DownloadField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: download}
+
+    phlexible_frontend_media.field.flash:
+        class: Phlexible\Bundle\FrontendMediaBundle\Field\FlashField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: flash}
+
+    phlexible_frontend_media.field.image:
+        class: Phlexible\Bundle\FrontendMediaBundle\Field\ImageField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: image}
+
+    phlexible_frontend_media.field.video:
+        class: Phlexible\Bundle\FrontendMediaBundle\Field\VideoField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: video}

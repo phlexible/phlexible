@@ -1,0 +1,9 @@
+dashboard:
+    start: Dashboard
+    portlets: Portlets
+    available_portlets: 'Verfügbare Portlets'
+    no_available_portlets: 'Keine weiteren Portlets'
+    save_layout: 'Ansicht speichern'
+    save: Speichern
+    use_defaults: 'Standwerte benutzen'
+    close: Schliessen

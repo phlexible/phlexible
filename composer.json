@@ -1,0 +1,55 @@
+{
+    "name": "phlexible/phlexible",
+    "description": "phlexible",
+    "license": "proprietary",
+	"type": "symfony-bundle",
+	"keywords": ["phlexible"],
+    "autoload": {
+        "psr-0": {
+            "Phlexible\\": "src/",
+			"Zend_": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "ext-date": "*",
+		"ext-hash": "*",
+		"ext-iconv": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "ext-mbstring": "*",
+        "ext-pcre": "*",
+        "ext-session": "*",
+		"ext-simplexml": "*",
+		"ext-zip": "*",
+        "bombayworks/zendframework1": "~1.12",
+        "doctrine/dbal": "~2.4",
+		"doctrine/cache": "~1.3",
+        "doctrine/collections": "~1.1",
+        "jms/cg": "dev-master",
+        "kriswallsmith/assetic": "~1.0",
+        "symfony/symfony": "~2.4",
+		"symfony-cmf/routing-bundle": "~1.1",
+        "twig/twig": "~1.15",
+		"brainbits/toolkit": "dev-master",
+		"phlexible/formatter": "dev-master",
+		"phlexible/util": "dev-master",
+		"php-ffmpeg/php-ffmpeg": "~0.4",
+		"igorw/file-serve-bundle": "~1",
+		"alchemy/zippy": "~0.2",
+		"cocur/slugify": "~0.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.1"
+    },
+	"suggest": {
+		"phlexible/compressor-minify-bundle": "Compress javascript and css files."
+	},
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.brainbits.net/phlexible-bundles/"
+        }
+    ],
+    "minimum-stability": "stable"
+}

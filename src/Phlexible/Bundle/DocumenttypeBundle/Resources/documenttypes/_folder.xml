@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="_folder">
+    <type>document</type>
+    <titles>
+        <title lang="de">Ordner</title>
+        <title lang="en">Folder</title>
+    </titles>
+    <mimetypes>
+    </mimetypes>
+</documenttype>

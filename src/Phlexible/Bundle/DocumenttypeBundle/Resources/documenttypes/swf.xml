@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="swf">
+    <type>flash</type>
+    <titles>
+        <title lang="de">Shockwave Flash</title>
+        <title lang="en">Shockwave Flash</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/x-shockwave-flash</mimetype>
+    </mimetypes>
+</documenttype>

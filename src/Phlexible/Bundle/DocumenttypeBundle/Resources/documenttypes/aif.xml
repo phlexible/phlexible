@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="aif">
+    <type>audio</type>
+    <titles>
+        <title lang="de">AIF Datei</title>
+        <title lang="en">AIF File</title>
+    </titles>
+    <mimetypes>
+    </mimetypes>
+</documenttype>

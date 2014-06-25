@@ -1,0 +1,9 @@
+services:
+    phlexible_media_tool.image_converter:
+        class: Brainbits\ImageConverter\ImageConverter
+        arguments: [@phlexible_media_tool.image_converter.driver]
+
+    phlexible_media_tool.image_converter.driver.imagemagick:
+        class: Brainbits\ImageConverter\Driver\ImagemagickDriver
+        arguments: [@phlexible_media_tool.convert, @phlexible_media_tool.identify]
+

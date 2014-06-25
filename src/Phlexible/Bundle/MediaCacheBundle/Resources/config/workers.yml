@@ -1,0 +1,70 @@
+services:
+    phlexible_media_cache.worker.resolver:
+        class: Phlexible\Bundle\MediaCacheBundle\Worker\WorkerResolver
+        public: false
+        arguments: [[]]
+
+    # workers
+    phlexible_media_cache.worker.audio:
+        class: Phlexible\Bundle\MediaCacheBundle\Worker\AudioWorker
+        public: false
+        arguments:
+            - @phlexible_media_cache.storage_manager
+            - @phlexible_media_asset.transmutor
+            - @phlexible_media_cache.cache_manager
+            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_cache.id_strategy.default
+            - @phlexible_media_template.applier.audio
+            - @logger
+            - %phlexible_media_cache.temp_dir%
+        tags:
+            - {name: phlexible_media_cache.worker}
+            - {name: monolog.logger, channel:media_cache}
+
+    phlexible_media_cache.worker.image:
+        class: Phlexible\Bundle\MediaCacheBundle\Worker\ImageWorker
+        public: false
+        arguments:
+            - @phlexible_media_cache.storage_manager
+            - @phlexible_media_asset.transmutor
+            - @phlexible_media_cache.cache_manager
+            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_cache.id_strategy.default
+            - @phlexible_media_template.applier.image
+            - @logger
+            - %phlexible_media_cache.temp_dir%
+        tags:
+            - {name: phlexible_media_cache.worker}
+            - {name: monolog.logger, channel:media_cache}
+
+    phlexible_media_cache.worker.pdf:
+        class: Phlexible\Bundle\MediaCacheBundle\Worker\PdfWorker
+        public: false
+        arguments:
+            - @phlexible_media_cache.storage_manager
+            - @phlexible_media_cache.cache_manager
+            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_cache.id_strategy.default
+            - @phlexible_media_template.applier.pdf
+            - @logger
+            - %phlexible_media_cache.temp_dir%
+        tags:
+            - {name: phlexible_media_cache.worker}
+            - {name: monolog.logger, channel:media_cache}
+
+    phlexible_media_cache.worker.video:
+        class: Phlexible\Bundle\MediaCacheBundle\Worker\VideoWorker
+        public: false
+        arguments:
+            - @phlexible_media_cache.storage_manager
+            - @phlexible_media_asset.transmutor
+            - @phlexible_media_cache.cache_manager
+            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_cache.id_strategy.default
+            - @phlexible_media_template.applier.video
+            - @phlexible_media_tool.ffprobe
+            - @logger
+            - %phlexible_media_cache.temp_dir%
+        tags:
+            - {name: phlexible_media_cache.worker}
+            - {name: monolog.logger, channel:media_cache}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="dotx">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Text Vorlage</title>
+        <title lang="en">OpenXML Text Template</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.openxmlformats-officedocument.wordprocessingml.template</mimetype>
+    </mimetypes>
+</documenttype>

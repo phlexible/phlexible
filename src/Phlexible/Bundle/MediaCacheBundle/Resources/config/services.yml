@@ -1,0 +1,87 @@
+parameters:
+    phlexible_media_cache.temp_dir: %kernel.cache_dir%/mediacache/temp/
+    phlexible_media_cache.cache_dir: %kernel.cache_dir%/mediacache/
+
+services:
+    phlexible_media_cache.storage.local:
+        class: Phlexible\Bundle\MediaCacheBundle\Storage\LocalStorage
+        arguments: [[], @phlexible_media_cache.cache_manager]
+
+    phlexible_media_cache.storage_manager:
+        class: Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager
+        arguments: [[]]
+
+    phlexible_media_cache.queue.worker:
+        class: Phlexible\Bundle\MediaCacheBundle\Queue\Worker
+        arguments:
+            - @phlexible_media_cache.worker.resolver
+            - @phlexible_media_site.manager
+            - @phlexible_media_template.template_manager
+            - @properties
+            - %app.lock_dir%
+
+    phlexible_media_cache.queue.batch_builder:
+        class: Phlexible\Bundle\MediaCacheBundle\Queue\BatchBuilder
+        arguments: [@phlexible_media_site.manager, @phlexible_media_template.template_manager]
+
+    phlexible_media_cache.queue.batch_resolver:
+        class: Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver
+        arguments:
+            - @phlexible_media_cache.cache_manager
+            - @phlexible_media_cache.queue_manager
+            - @phlexible_media_cache.id_strategy.default
+
+    phlexible_media_cache.id_strategy.default:
+        class: Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\DefaultCacheIdStrategy
+
+    phlexible_media_cache.image_delegate.worker:
+        class: Phlexible\Bundle\MediaCacheBundle\ImageDelegate\DelegateWorker
+        arguments:
+            - @phlexible_media_template.template_manager
+            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_template.applier.image
+            - %phlexible_media_cache.cache_dir%
+
+    phlexible_media_cache.image_delegate.service:
+        class: Phlexible\Bundle\MediaCacheBundle\ImageDelegate\DelegateService
+        arguments: [@phlexible_media_cache.image_delegate.worker]
+
+    # acl providers
+    phlexible_media_cache.acl_provider:
+        class: Phlexible\Bundle\MediaCacheBundle\AclProvider\MediaCacheAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_media_cache.asset_provider:
+        class: Phlexible\Bundle\MediaCacheBundle\AssetProvider\MediaCacheAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # event listeners
+    phlexible_media_cache.listener.file:
+        class: Phlexible\Bundle\MediaCacheBundle\EventListener\FileListener
+        arguments:
+            - @phlexible_media_template.template_manager
+            - @phlexible_media_cache.queue.worker
+            - @phlexible_media_cache.queue.batch_resolver
+            - %phlexible_media_cache.asynchronous_system_cache%
+        tags:
+            - {name: kernel.event_subscriber}
+
+    phlexible_media_cache.listener.collect_problems:
+        class: Phlexible\Bundle\MediaCacheBundle\EventListener\CollectProblemsListener
+        arguments: [@properties]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_problem.collect, method: onCollectProblems}
+
+    # portlets
+    phlexible_media_cache.portlet.cache_status:
+        class: Phlexible\Bundle\MediaCacheBundle\Portlet\CacheStatusPortlet
+        public: false
+        arguments: [@translator, @phlexible_media_cache.queue_manager]
+        tags:
+            - {name: phlexible_dashboard.portlet}

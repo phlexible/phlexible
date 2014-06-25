@@ -1,0 +1,66 @@
+gui:
+    frame: Frame
+    administration: Administration
+    bundle: Bundle
+    bundles: Bundles
+    no_bundles: No bundles to display.
+    configuration: Configuration
+    content: Content
+    dialog: Dialog
+    initialising: Initialising
+    setup: Setup
+    help: Help
+    debug: Debug
+    styles_and_images: 'styles and images'
+    what_do_you_want_to_do: 'What do you want to do?'
+    nothing_to_do: 'Nothing to do'
+    loading: Loading
+    menu: Menu
+    server_load: 'Server load'
+    waiting_for_data: 'Waiting for data...'
+    1_min_avg: '1 minute average'
+    5_min_avg: '5 minute average'
+    15_min_avg: '15 minute average'
+    success: Success
+    warning: Warning
+    error: Error
+    error_occured: 'Error occured'
+    check_not_supported: 'Your browser {0} is not supported.'
+    check_no_right_click: 'Your browser {0} has no support for right click context menus.'
+    de: German
+    en: English
+    fr: French
+    es: Spanish
+    nl: Dutch
+    cz: Czech
+    online_for: 'Online for'
+    seconds: seconds
+    second: second
+    minutes: minutes
+    minute: minute
+    hours: hours
+    hour: hour
+    days: days
+    day: day
+    weeks: weeks
+    week: week
+    months: months
+    month: month
+    years: years
+    year: year
+    and: and
+    manager: Manager
+    status: Status
+    icon: Icon
+    key: Key
+    filter: Filter
+    name: Name
+    version: Version
+    package: Package
+    classname: Classname
+    path: Path
+    description: Description
+    dependencies: Dependencies
+    reset: Reset
+    extensions: Extensions
+    please_wait: 'Please wait...'

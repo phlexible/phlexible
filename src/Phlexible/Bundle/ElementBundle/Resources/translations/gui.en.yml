@@ -1,0 +1,311 @@
+elements:
+    elements: Elements
+    element: Element
+    element_version: 'Element Version'
+    latest_version: 'Latest Version'
+    online_version: 'Online Version'
+    tree_node: Treenode
+    teaser_node: Teasernode
+    teaser_id: 'Teaser ID'
+    catch: Catch
+    content: Content
+    field: Field
+    sites: Sites
+    siteroots: Siteroots
+    properties: Properties
+    versions: Versions
+    instance: Instance
+    instances: Instances
+    actions: Actions
+    list: List
+    type: Type
+    tid: TID
+    eid: EID
+    id: ID
+    version: Version
+    language: Language
+    languages: Languages
+    unique_id: 'Unique ID'
+    author: Author
+    masterlanguage: Master
+    masterlanguage_dialog: Masterlanguage
+    status: Status
+    custom_date: 'Custom date'
+    create_date: 'Create date'
+    created: Created
+    publish_date: 'Publish date'
+    published: Published
+    published_async: 'Published, newer version available'
+    not_published: 'Not Published'
+    publisher: 'Published by'
+    name: Name
+    title: Title
+    data: Data
+    information: Information
+    layout: 'Layout areas'
+    preview: Preview
+    history: History
+    date: Date
+    action: Action
+    username: Username
+    paging_display_msg: 'Displaying topics {0} - {1} of {2}'
+    paging_empty_msg: 'No topics to display'
+    paging_before_page_text: Page
+    paging_after_page_text: 'of {0}'
+    show_all_items: 'Show all'
+    save: Save
+    save_publish: 'Save & Publish'
+    save_minor: 'Save with minor changes'
+    reset: Reset
+    minor_update: 'Minor update'
+    add_element: Add
+    delete_element: Delete
+    open_element: Open
+    edit_element: Edit
+    lock_element: Lock
+    locked_element: Locked
+    locked_by_user: 'Locked by {0}.'
+    locked_by_me: 'Locked by me.'
+    locked_by_user_permanently: 'Locked permanently by {0}.'
+    unlock_warning: 'Please note that this is a critical action. The user that locked this element might still be editing it. The element was locked {0} ago. Do you really want to remove the lock?'
+    save_element: Save
+    publish_element: Publish
+    publish_element_recursive: 'Publish with all child elements'
+    publish_element_advanced: 'Advanced publish'
+    publish_element_with_notification: 'Publish with update notification'
+    publish_treenode: Publish
+    publish_treenode_header: Publish
+    publish_treenode_description: 'Publish the selected elements'
+    publish_treenode_recursive: 'Publish with all child nodes'
+    publish_teaser: Publish
+    publish_teaser_header: Publish
+    publish_teaser_description: 'Publish selected teaser'
+    release_element: Release
+    set_element_offline: 'Set offline'
+    set_element_offline_recursive: 'Set offline with all child elements'
+    set_element_offline_advanced: 'Advanced set offline'
+    set_treenode_offline: 'Set offline'
+    set_treenode_offline_header: 'Set offline'
+    set_treenode_offline_description: 'Set selected treenode offline'
+    set_treenode_offline_recursive: 'Set offline with all subtreenodes'
+    set_teaser_offline: 'Set offline'
+    set_teaser_offline_header: 'Set offline'
+    set_teaser_offline_description: 'Set selected teaser offline'
+    publish: Publish
+    set_offline: 'Set offline'
+    options: Optionen
+    include_full_elements: 'Include full elements'
+    include_full_element_instances: 'Include full element instances'
+    include_part_elements: 'Include part elements'
+    include_part_element_instances: 'Include part element instances'
+    recursive: Recursive
+    only_offline_elements: 'Only elements that are not published'
+    only_async_elements: 'Only publ. elements with newer version'
+    no_elements_match_filter: 'No elements match the given filter'
+    check_input: 'Please fill all required fields.'
+    check_elements: 'Please choose at least the full or the part element checkbox.'
+    duplicate: Duplicate
+    copy: Copy
+    cut: Cut
+    paste: Paste
+    paste_as: 'Paste "{0}" as...'
+    paste_element: 'New Element'
+    paste_alias: 'New Instance'
+    caching: Caching
+    expires_after: 'Expires after (h)'
+    allowed: allowed
+    meta: Meta
+    key: Key
+    value: Value
+    links: Links
+    include_incoming_links: 'Include incoming links'
+    incoming_links: 'Incoming links'
+    outgoing_links: 'Outgoing links'
+    link: Link
+    no_links_found: 'No links found.'
+    raw: 'Raw data'
+    allowed_child_elements: 'Allowed child elements'
+    no_allowed_child_elements: 'No child elements allowed.'
+    elementtype: 'Element type'
+    position: Position
+    sort: Sort
+    sort_mode: 'Sort Mode'
+    sort_field: 'Sort Field'
+    sort_order: 'Sort Order'
+    title_asc: 'Title, ascending'
+    title_desc: 'Title, descending'
+    date_asc: 'Date, ascending'
+    date_desc: 'Date, descending'
+    createdate_asc: 'Create date, ascending'
+    createdate_desc: 'Create date, descending'
+    publishdate_asc: 'Publish date, ascending'
+    publishdate_desc: 'Publish date, descending'
+    customdate_asc: 'Custom date, ascending'
+    customdate_desc: 'Custom date, descending'
+    publish_sort: 'Publish sorting'
+    ascending: ascending
+    descending: descending
+    unsorted: unsorted
+    page: Page
+    disable_caching: 'disable Caching'
+    cache_lifetime: 'Cache lifetime (seconds)'
+    http_response_code: 'HTTP Response Code'
+    in_navigation: 'in Navigation'
+    is_restricted: 'is Restricted'
+    use_https: 'use HTTPS'
+    use_default: 'use default'
+    free: Free
+    first: First
+    position_help: 'Position of the new element. Either first or AFTER the chosen element.'
+    after: After
+    create: Create
+    set: Set
+    cancel: Cancel
+    close: Close
+    navigation: Navigation
+    search_engine_friendly_url: 'Search engine friendly URL'
+    breadcrumb_preview: 'Breadcrumb preview'
+    reload: Reload
+    templates: Templates
+    template: Template
+    no_template: 'no template'
+    latest_element_changes: 'Latest element changes'
+    no_recent_elements: 'No recent Element Versions.'
+    new_element: 'Create element'
+    new_element_header: 'Create new Element'
+    new_element_description: 'Please enter the required information for the new Element.'
+    select_elementtype: 'Please select an Element Type.'
+    empty_tab: 'Tab "{0}" is empty. Please add some fields, or remove the tab for completely deactivate the data mask for this element.'
+    teaser: Teaser
+    teasers: Teasers
+    backend_title: 'Backend title'
+    page_title: 'Page title'
+    navigation_title: 'Navigation title'
+    backend_page_title: 'Backend / Page title'
+    backend_navigation_title: 'Backend / Navigation title'
+    backend_page_navigation_title: 'Backend / Page / Navigation title'
+    add_teaser: 'Add Teaser'
+    add_teaser_reference: 'Add Teaser instance'
+    add_teaser_reference_header: 'Add Teaser instance'
+    add_teaser_reference_description: 'Please select a part element you want to add an instance for at this place.'
+    new_teaser: 'New Teaser'
+    new_teaser_header: 'Create new Teaser'
+    new_teaser_description: 'Please enter the required information for the new Teaser.'
+    add_catch: 'Add Catch'
+    new_catch: 'New Catch'
+    new_catch_header: 'Create Catch'
+    new_catch_description: 'Please enter the required information for the new Catch.'
+    delete_teaser: 'Delete Teaser'
+    delete_catch: 'Delete Catch'
+    inherited_teaser: Inherited
+    stopped_inherited_teaser: 'Stopped inheritation'
+    not_shown_teaser: 'Not shown here'
+    inherited: Inherited
+    confirm_delete_element: 'Do you really want to delete this element?'
+    confirm_delete_elements: 'Do you really want to delete these elements?'
+    error: Error
+    warning: Warning
+    filter: Filter
+    paging: Paging
+    activate: activate
+    catch_showing: 'showing {0} of {1}'
+    catch_max_elements: 'Maximum Number of Teasers'
+    catch_rotation: Rotation
+    catch_pool_size: 'Rotation Pool'
+    catch_max_depth: 'Maximium Search Depth'
+    catch_elements_per_page: 'Elements per Site'
+    add_alias: 'Add Instance'
+    new_alias: 'New Instance'
+    new_alias_header: 'Create Instance'
+    new_alias_description: 'Please select an element you want to add an instance for at this place.'
+    delete_alias: 'Delete Instance'
+    link_no_link: 'No Link'
+    link_tid: 'Element from this siteroot'
+    link_intrasiteroot: 'Element from all siteroot'
+    link_url: 'External URL'
+    link_mailto: Mailto
+    link_url_help: 'Format: http://www.test.com'
+    link_mailto_help: 'Format: test@test.com'
+    link_new_window: 'Open in new window'
+    link_language_help: 'Language of target site (optional)'
+    link_language_empty: 'Not specified'
+    url: URL
+    mailto: Mailto
+    full_element: 'Full Element'
+    full_elements: 'Full Elements'
+    part_element: 'Part Element'
+    part_elements: 'Part Elements'
+    structure_element: 'Structure Element'
+    meta_filter: 'Meta Filter'
+    meta_keywords: 'Meta Keywords'
+    track_links: 'Track links'
+    open_in_new_window: 'Open in new window'
+    icon: Icon
+    doubleclick_to_sort: 'Doubleclick to sort'
+    loading_list: 'Loading list'
+    comment: Comment
+    confirm_publish: 'Confirm publish'
+    confirm_publish_dialog: 'You are going to publish the element. Do you really want to proceed?'
+    confirm_publish_text: 'This element and all child elements will be published now. This applies to full elements and part elements. This operation might take some take to finish.'
+    confirm_set_offline: 'Confirm set offline'
+    confirm_set_offline_text: 'This element and all child elements will be set offline now. This applies to full elements and part elements. This operation might take some take to finish.'
+    country_context: 'Country context'
+    no_country_context: 'No country context'
+    country: Country
+    active: Active
+    differences: Differences
+    show_differences: 'Show differences'
+    no_differences: 'No differences'
+    compare: Compare
+    show: Show
+    from_version: 'From version'
+    compare_to: 'compare to'
+    to_version: 'To version'
+    load: Load
+    task_publish_element: 'Publish element'
+    task_publish_element_template: 'Publish element "{title}" with TID {tid}.'
+    task_set_element_offline: 'Set element offline'
+    task_set_element_offline_template: 'Set element "{title}" with TID {tid} offline.'
+    task_delete_element: 'Delete element'
+    task_delete_element_template: 'Delete element "{title}" with TID {tid}.'
+    task_general: 'General task'
+    task_general_template: 'General task for element "{title}" with TID {tid}.'
+    task_done: 'Automatically set task finished through action.'
+    task_delete: 'Automatically set task finished through deletion of target.'
+    access: Access
+    user: User
+    users: Users
+    add_user: 'Add user'
+    group: Group
+    groups: Groups
+    add_group: 'Add group'
+    hide_children: 'This element hides children-elements.'
+    more: More
+    source_element: 'Source element'
+    not_filtered: 'Not filtered'
+    status_online: Online
+    status_async: Async
+    status_offline: Offline
+    not_in_navigation: 'Not in navigation'
+    restricted: Restricted
+    is_not_restricted: 'Not restricted'
+    from: From
+    to: To
+    tree: Tree
+    element_search: 'Element search'
+    media_search: 'Media search'
+    no_results: 'No reults'
+    depth: Tiefe
+    publish_slave_header: 'Publish cross-language content'
+    publish_slave_text: "The element contains cross-language information. Normally all language versions of this elements will be published simultaneously to update the cross-language information in all language versions.<br /><br />\nThe system recognized, that the following language-versions may contain changes that have not been published yet. So they were not automatically published. However, if you want to publish the affected language-versions select them in the following list. Be aware that changes may be published that are not yet intended for publication.<br /><br />\nIf you are unsure, do not check any item in the list and check and publish the affected language versions manually.<br /><br />\nThe following elements have not been published automatically:"
+    publish_cancel: 'No cross-language publish'
+    delete_instances_header: 'Delete element instances'
+    delete_instances_text: 'The item to be deleted is used several times. Please decide which occurrence of the item to be deleted. The master instance is marked bold.'
+    siteroot_id: Siteroot
+    parent_title: 'Parent element'
+    modify_time: 'modified at'
+    instance_master: Delete
+    delete_cancel: 'Do not delete element(s)'
+    clipboard: Clipboard
+    copy_text_type: 'Object "{0}" of type "{1}" copied to clipboard.'
+    copy_text: 'Object "{0}" copied to clipboard.'

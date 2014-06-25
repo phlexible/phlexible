@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="tif">
+    <type>image</type>
+    <titles>
+        <title lang="de">TIFF Bild</title>
+        <title lang="en">TIFF Image</title>
+    </titles>
+    <mimetypes>
+        <mimetype>image/tiff</mimetype>
+    </mimetypes>
+</documenttype>

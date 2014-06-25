@@ -1,0 +1,150 @@
+mediatemplates:
+    mediatemplates: 'Media Templates'
+    vars: 'Extended Properties'
+    preview: Preview
+    image_template: 'Image template'
+    image_template_title: 'Image template "{0}"'
+    video_template: 'Video template'
+    video_template_title: 'Video template "{0}"'
+    audio_template: 'Audio template'
+    audio_template_title: 'Audio template "{0}"'
+    filmstrip_template: 'Filmstrip template'
+    filmstrip_template_title: 'Filmstrip template "{0}"'
+    pdf2swf_template: 'PDF to SWF template'
+    pdf2swf_template_title: 'PDF to SWF template "{0}"'
+    base: Base
+    image: Image
+    video: Video
+    audio: Audio
+    filmstrip: 'Film Strip'
+    pdf2swf: 'PDF to SWF'
+    add: Add
+    save: Save
+    save_hint: 'Please note that saving will result in regenerating all images stored in the media manager based on this media template. This can result in heavy server load. If you want to test your settings use the preview button. Saving is not necessary for previewing.'
+    reset: Reset
+    remove: Delete
+    title: Title
+    key: Key
+    type: Type
+    value: Value
+    rename: Rename
+    name: Name
+    ok: Ok
+    cancel: Cancel
+    yes: Yes
+    no: No
+    sure: 'Are you sure?'
+    enterName: 'Please enter a new Name'
+    width: Width
+    height: Height
+    method: Method
+    deliver: Deliver
+    scale: Scale
+    for_web: 'For web.'
+    match_format: 'Change format only if necessary'
+    format: 'Output format'
+    colorspace: Colorspace
+    quality: Quality
+    compression: 'Compression level'
+    filtertype: 'Filter type'
+    backgroundcolor: 'Background color'
+    deinterlace: Deinterlace
+    bitrate: Bitrate
+    framerate: Framerate
+    samplerate: Samplerate
+    samplebits: 'Audio bit depth'
+    channels: Channels
+    cols: Columns
+    rows: Rows
+    no_info: 'No info'
+    no_timestamp: 'No timeline'
+    text: Text
+    flash_version: 'Flash version'
+    select_method: 'Please select a resize method'
+    select_deliver: 'Please select a delivery method'
+    select_scale: 'Please select a scale method'
+    select_format: 'Please select an output format'
+    select_compression: 'Please select a compression level'
+    select_filtertype: 'Please select a filter type'
+    help_width_image: 'Width of the generated image.'
+    help_width_video: 'Width of the generated video.'
+    help_height_image: 'Height of the generated image.'
+    help_height_video: 'Height of the generated video.'
+    help_method: 'Defines the method for scaling and cropping of the image.'
+    help_deliver: 'Defines how the image is delivered.'
+    help_scale: 'Defines the allowed scaling direction.'
+    help_for_web_image: 'Optimize for web usage. Limits output format to GIF, JPG and PNG. Limits colorspace to RGB and grayscale.'
+    help_for_web_video: 'Optimize for web usage. Limits output format to FLV.'
+    help_match_format: 'Don''t change format if it matches the chosen format.'
+    help_format: 'Defines the format of the image.'
+    help_colorspace: 'Defines the colorspace of the image.'
+    help_quality: 'Quality of the generated image.'
+    help_compression: 'Compression level of the generated image.'
+    help_filtertype: 'Filter type of the generated image.'
+    help_backgroundcolor: 'Background color for padded regions, leave empty for transparent background.'
+    help_deinterlace: 'Activate deinterlacing. Converts interlaced in non-interlaced videos.'
+    help_bitrate: 'Defines the average bitrate per second of the video.'
+    help_framerate: 'Defines the framerate of the video.'
+    help_samplerate: 'Defines the samplerate of the audio file.'
+    help_samplebits: 'Defines the audio bit depth of the audio file.'
+    help_channels: 'Defines whether the audio file is converted to mono or stereo. '
+    help_cols: 'Number of columns'
+    help_rows: 'Number of rows'
+    help_no_info: 'Don''t show additional movie information'
+    help_no_timestamp: 'Don''t show timestamps'
+    help_text: 'Text that will be shown at the top of the image'
+    help_flash_version: 'Version of the generated Flash file'
+    method_width: 'Fixed width'
+    method_height: 'Fixed height'
+    method_exact: 'Exact fit without padding'
+    method_exactFit: 'Exact fit with padding'
+    method_fit: 'Simple fit'
+    method_crop: Crop
+    method_focal: 'Crop with focal point'
+    method_width_help: 'Image has fixed width and variable height'
+    method_height_help: 'Image has fixed height and variable width'
+    method_exact_help: 'Image has fixed width and height, image might be distorted'
+    method_exactFit_help: 'Image has fixed width and height, image will not be distorted, border area is padded with background color'
+    method_fit_help: 'Image will have either given width or height'
+    method_crop_help: 'Image is resized to width or height and afterwards cropped around the center point'
+    method_focal_help: 'Image is resized to width or height and afterwards cropped around the defined focal point'
+    deliver_thumb: 'Deliver as resized image'
+    deliver_icon: 'Deliver document type icon'
+    deliver_download: 'Deliver as download'
+    scale_up: 'Only scale up'
+    scale_up_and_down: 'Scale up and down'
+    scale_down: 'Only scale down'
+    colorspace_rgb: RGB
+    colorspace_cmyk: CMYK
+    colorspace_gray: Grayscale
+    compression_huffman: 'Huffman compression (fast, good for photos)'
+    compression_fastest: 'Fastest compression'
+    compression_best: 'Best compression'
+    channels_no: 'Disable sound'
+    channels_mono: Mono
+    channels_stereo: Stereo
+    keep_format: '[Keep format]'
+    keep_colorspace: '[Keep colorspace]'
+    keep_bitrate: '[Keep bitrate]'
+    keep_framerate: '[Keep framerate]'
+    keep_samplerate: '[Keep samplerate]'
+    keep_samplebits: '[Keep samplebits]'
+    keep_channels: '[Keep channels]'
+    empty_backgroundcolor: Transparent
+    tiffcompression: Compression
+    tiffcompression_none: none
+    tiffcompression_zip: zip
+    tiffcompression_lzw: lzw
+    tiffcompression_help: 'algorithm for compression of TIF-file'
+    depth: 'Color depth'
+    keep_depth: '[Keep color depth]'
+    eight_bit_per_channel: '8 Bit per channel'
+    sixteen_bit_per_channel: '16 Bit per channel'
+    help_depth: 'Defines color depth in bits per channel'
+    required_values: 'Please check the form for required values.'
+    debug: Debug
+    no_preview_available: 'No preview available'
+    change_background_color_to: 'Change background color to:'
+    white: White
+    black: Black
+    random: Random

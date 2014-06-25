@@ -1,0 +1,5 @@
+services:
+    phlexible_siteroot.doctrine.siteroot_manager:
+        class: Phlexible\Bundle\SiterootBundle\Doctrine\SiterootManager
+        arguments: [@doctrine.orm.entity_manager]
+        public: false

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="mid">
+    <type>audio</type>
+    <titles>
+        <title lang="de">MIDI Datei</title>
+        <title lang="en">MIDI File</title>
+    </titles>
+    <mimetypes>
+        <mimetype>audio/midi</mimetype>
+    </mimetypes>
+</documenttype>

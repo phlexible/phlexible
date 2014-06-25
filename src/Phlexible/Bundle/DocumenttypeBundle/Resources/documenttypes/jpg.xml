@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="jpg">
+    <type>image</type>
+    <titles>
+        <title lang="de">JPEG Bild</title>
+        <title lang="en">JPEG Image</title>
+    </titles>
+    <mimetypes>
+        <mimetype>image/jpg</mimetype>
+        <mimetype>image/jpeg</mimetype>
+    </mimetypes>
+</documenttype>

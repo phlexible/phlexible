@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="gif">
+    <type>image</type>
+    <titles>
+        <title lang="de">GIF Bild</title>
+        <title lang="en">GIF Image</title>
+    </titles>
+    <mimetypes>
+        <mimetype>image/gif</mimetype>
+    </mimetypes>
+</documenttype>

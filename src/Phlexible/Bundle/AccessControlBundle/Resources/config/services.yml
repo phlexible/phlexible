@@ -1,0 +1,39 @@
+services:
+    phlexible_access_control.permissions:
+        class: Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection
+        arguments: [[]]
+
+    phlexible_access_control.rights:
+        class: Phlexible\Bundle\AccessControlBundle\Rights\Rights
+        arguments: [@phlexible_access_control.access_manager, @phlexible_access_control.permissions]
+
+    phlexible_access_control.provider.user:
+        class: Phlexible\Bundle\AccessControlBundle\Provider\UserProvider
+        arguments: [@phlexible_user.user_manager]
+
+    phlexible_access_control.provider.group:
+        class: Phlexible\Bundle\AccessControlBundle\Provider\GroupProvider
+        arguments: [@doctrine.orm.entity_manager]
+
+    # acl providers
+    phlexible_access_control.acl_provider:
+        class: Phlexible\Bundle\AccessControlBundle\AclProvider\AccessControlAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_access_control.asset_provider:
+        class: Phlexible\Bundle\AccessControlBundle\AssetProvider\AccessControlAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider, priority: 110}
+
+    # voters
+    phlexible_access_control.voter.rights:
+        class: Phlexible\Bundle\AccessControlBundle\Rights\RightsVoter
+        public: false
+        arguments: [@phlexible_access_control.access_manager, @phlexible_access_control.permissions]
+        tags:
+            - {name: security.voter}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="docx">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Text Dokument</title>
+        <title lang="en">OpenXML Text Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mimetype>
+    </mimetypes>
+</documenttype>

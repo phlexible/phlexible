@@ -1,0 +1,4 @@
+problems:
+    parent: admin
+    xtype: Phlexible.problems.menuhandle.ProblemsHandle
+    resources: [problems]

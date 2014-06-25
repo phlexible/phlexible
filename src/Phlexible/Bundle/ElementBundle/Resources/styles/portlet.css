@@ -1,0 +1,41 @@
+.elements-portlet .x-panel-body{
+    font: 11px Arial, Helvetica, sans-serif;
+}
+.elements-portlet table, 
+.elements-portlet tbody, 
+.elements-portlet tr, 
+.elements-portlet td,
+.elements-portlet th {
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+}
+.elements-portlet td,
+.elements-portlet th {
+    padding: 2px;
+}
+.elements-portlet th {
+    font-weight: bold;
+}
+.elements-portlet td {
+    cursor: pointer;
+}
+.elements-portlet .elements-wrap-over {
+    background-color: #BBBBBB;
+}
+.elements-portlet .elements-portlet-title {
+}
+.elements-portlet .elements-portlet-title img{
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+}
+.elements-portlet .elements-portlet-language {
+}
+.elements-portlet .elements-portlet-version {
+}
+.elements-portlet .elements-portlet-author {
+}
+.elements-portlet .elements-portlet-date {
+    color: #8B8B8B;
+}

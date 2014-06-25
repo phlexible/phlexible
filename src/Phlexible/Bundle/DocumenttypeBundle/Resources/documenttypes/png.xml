@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="png">
+    <type>image</type>
+    <titles>
+        <title lang="de">PNG Bild</title>
+        <title lang="en">PNG Image</title>
+    </titles>
+    <mimetypes>
+        <mimetype>image/png</mimetype>
+    </mimetypes>
+</documenttype>

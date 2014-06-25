@@ -1,0 +1,5 @@
+mediacache:
+    cache_status: 'Media Cache Status'
+    cache_status_empty: 'Keine Einträge in der Warteschlange.'
+    cache_status_items: '{0} Einträge in der Warteschlange.'
+    cache_status_items_remaining: '{0} Einträge in der Warteschlange ({1} Einträge pro Minute; verbleibende Zeit {2}).'

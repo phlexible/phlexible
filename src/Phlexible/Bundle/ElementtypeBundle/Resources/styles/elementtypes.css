@@ -1,0 +1,135 @@
+.p-elementtypes-grid .x-grid3-cell-inner img {
+    vertical-align: middle;
+}
+.p-elementtypes-grid .p-elementtype-grid-selected .x-grid3-cell-inner {
+    font-weight: bold;
+}
+.p-elementtypes-value-grid .p-elementtype-value-grid-default .x-grid3-cell-inner {
+    font-weight: bold;
+}
+.p-elementtypes-value-grid .p-elementtype-value-grid-default {
+    background: #FFFFA8 none repeat scroll 0% 50%;
+}
+
+.p-elementtype-tree .dirty a span {
+    color: green;
+}
+.p-elementtype-tree .error a span {
+    color: red;
+}
+
+.p-elementtype-tree .p-elementtypes-type-full {
+    background:#DDEEFF url(/COMPONENTSPATH/elementtypes/images/cmp-bg-full.gif) repeat-x scroll 0%;
+    border-top:1px solid #D1E8FF;
+    border-bottom:1px solid #CCE5FF;
+    margin-top:1px;
+    padding-bottom:1px;
+    padding-top:2px;
+}
+.p-elementtype-tree .p-elementtype-type-full .x-tree-node-icon {
+    width: 18px;
+    height: 18px;
+}
+.p-elementtype-tree .p-elementtypes-type-part {
+    background:#DDEEFF url(/COMPONENTSPATH/elementtypes/images/cmp-bg-part.gif) repeat-x scroll 0%;
+    border-top:1px solid #D1E8FF;
+    border-bottom:1px solid #CCE5FF;
+    margin-top:1px;
+    padding-bottom:1px;
+    padding-top:2px;
+}
+.p-elementtype-tree .p-elementtypes-type-part .x-tree-node-icon {
+    width: 18px;
+    height: 18px;
+}
+.p-elementtype-tree .p-elementtypes-type-layout {
+    background:#DDEEFF url(/COMPONENTSPATH/elementtypes/images/cmp-bg-part.gif) repeat-x scroll 0%;
+    border-top:1px solid #D1E8FF;
+    border-bottom:1px solid #CCE5FF;
+    margin-top:1px;
+    padding-bottom:1px;
+    padding-top:2px;
+}
+.p-elementtype-tree .p-elementtypes-type-layout .x-tree-node-icon {
+    width: 18px;
+    height: 18px;
+}
+.p-elementtype-tree .p-elementtypes-type-structure {
+    background:#DDEEFF url(/COMPONENTSPATH/elementtypes/images/cmp-bg-structure.gif) repeat-x scroll 0%;
+    border-top:1px solid #D1E8FF;
+    border-bottom:1px solid #CCE5FF;
+    margin-top:1px;
+    padding-bottom:1px;
+    padding-top:2px;
+}
+.p-elementtype-tree .p-elementtypes-type-structure .x-tree-node-icon {
+    width: 18px;
+    height: 18px;
+}
+.p-elementtype-tree .p-elementtypes-type-root {
+    background:#DDEEFF url(/COMPONENTSPATH/elementtypes/images/cmp-bg-root.gif) repeat-x scroll 0%;
+    border-top:1px solid #D1E8FF;
+    border-bottom:1px solid #CCE5FF;
+    margin-top:1px;
+    padding-bottom:1px;
+    padding-top:2px;
+}
+.p-elementtype-tree .p-elementtypes-type-root .x-tree-node-icon {
+    width: 18px;
+    height: 18px;
+}
+.p-elementtype-tree .p-elementtypes-type-referenceroot {
+    background:#FF9999 url(/COMPONENTSPATH/elementtypes/images/cmp-bg-referenceroot.gif) repeat-x scroll 0%;
+    border-top:1px solid #FFADAD;
+    border-bottom:1px solid #FF7A7A;
+    margin-top:1px;
+    padding-bottom:1px;
+    padding-top:2px;
+}
+.p-elementtype-tree .p-elementtypes-type-referenceroot .x-tree-node-icon {
+    width: 18px;
+    height: 18px;
+}
+.p-elementtype-tree .p-elementtypes-type-tab {
+    background-color: #DADADA;
+}
+.p-elementtype-tree .p-elementtypes-type-accordion {
+    background-color: #E5E5E5;
+}
+.p-elementtype-tree .p-elementtypes-type-group {
+    background-color: #EFEFEF;
+}
+.p-elementtype-tree .p-elementtypes-type-reference {
+    background:#FF9999 url(/COMPONENTSPATH/elementtypes/images/cmp-bg-referenceroot.gif) repeat-x scroll 0%;
+    border-bottom:1px solid #FF7C7C;
+    border-top:1px solid #FF9999;
+    margin-top:1px;
+    padding-bottom:1px;
+    padding-top:2px;
+}
+.p-elementtype-tree .p-elementtypes-node {
+    padding: 1px;
+}
+.p-elementtype-tree .p-elementtypes-reference {
+    background-color: #FFDDDD !important;
+}
+
+.p-elementtypes-newelementtype .p-header-image {
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+}
+
+.p-elementtypes-panel .x-layout-collapsed-west{
+    background-image:url(/BASEURL/admin/gui/assets/textimage?key=elementtypes.elementtypes);
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
+.p-elementtypes-2-panel .x-layout-collapsed-west{
+    background-image:url(/BASEURL/admin/gui/asset/textimage?key=elementtypes.template_elementtype);
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
+.p-elementtypes-accordion .x-panel .x-accordion-hd .error {
+    color: red;
+}

@@ -1,0 +1,12 @@
+problems:
+    problems: Problems
+    problem: Problem
+    no_problems: 'No problems found.'
+    new_problem: 'New problem'
+    solve: Solve
+    solution: Solution
+    id: ID
+    severity: Severity
+    source: Source
+    link: Link
+    menu_hint: 'Probleme vom Typ notice oder niedriger werden nicht angezeigt, öffnen Sie Menü / Administration / Probleme für eine vollständige Liste.'

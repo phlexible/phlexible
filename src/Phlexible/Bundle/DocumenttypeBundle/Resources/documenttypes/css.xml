@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="css">
+    <type>document</type>
+    <titles>
+        <title lang="de">CSS Dokument</title>
+        <title lang="en">CSS Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>text/css</mimetype>
+    </mimetypes>
+</documenttype>

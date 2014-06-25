@@ -1,0 +1,96 @@
+/* big style */
+.mediamanager-portlet-big .x-panel-body{
+    font: 11px Arial, Helvetica, sans-serif;
+}
+.mediamanager-portlet-big .thumb-wrap{
+    float: left;
+    margin: 4px;
+    margin-right: 0;
+    padding: 5px;
+}
+.mediamanager-portlet-big .thumb-wrap .thumb{
+    background: #fff;
+    padding: 0px;
+    width: 96px;
+    height: 96px;
+    border: 1px solid #bbb;
+}
+.mediamanager-portlet-big .thumb-wrap-over .thumb{
+    border: 1px solid #888;
+}
+.mediamanager-portlet-big .thumb-wrap .thumb img{
+    width: 96px;
+    height: 96px;
+}
+.mediamanager-portlet-big .thumb-wrap span{
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+.mediamanager-portlet-big .thumb-wrap span.thumb-date {
+    color: #8B8B8B;
+}
+
+/* small style */
+.mediamanager-portlet-small .x-panel-body{
+    font: 11px Arial, Helvetica, sans-serif;
+}
+.mediamanager-portlet-small .thumb-wrap{
+    margin: 1px;
+    margin-right: 0;
+    margin-bottom: 3px;
+    padding: 1px;
+    float: left;
+    width: 170px;
+}
+.mediamanager-portlet-small .thumb-wrap .thumb{
+    background: #fff;
+    padding: 3px;
+    width: 32px;
+    height: 32px;
+    border: 2px solid #bbb;
+    float: left;
+}
+.mediamanager-portlet-small .thumb-wrap-over .thumb{
+    border: 2px solid #888;
+}
+.mediamanager-portlet-small .thumb-wrap .thumb img{
+    width: 32px;
+    height: 32px;
+}
+.mediamanager-portlet-small .thumb-wrap .text{
+    margin-left: 50px;
+    margin-right: 10px;
+}
+.mediamanager-portlet-small .thumb-wrap span{
+    display: block;
+    overflow: hidden;
+}
+.mediamanager-portlet-small .thumb-wrap span.thumb-date,
+.mediamanager-portlet-small .thumb-wrap span.thumb-type {
+    color: #8B8B8B;
+    white-space: nowrap;
+}
+
+/* list style */
+.mediamanager-portlet-list .x-panel-body{
+    font: 11px Arial, Helvetica, sans-serif;
+}
+.mediamanager-portlet-list .thumb-wrap{
+    margin: 1px;
+    margin-right: 0;
+    margin-bottom: 3px;
+    padding: 1px;
+}
+.mediamanager-portlet-list .thumb-wrap .thumb{
+    float: left;
+    width: 16px;
+    height: 16px;
+}
+.mediamanager-portlet-list .thumb-wrap .text{
+    padding-left: 5px;
+    float: left;
+}
+.mediamanager-portlet-list .thumb-wrap span.thumb-date {
+    color: #8B8B8B;
+}

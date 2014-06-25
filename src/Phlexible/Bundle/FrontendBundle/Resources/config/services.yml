@@ -1,0 +1,41 @@
+parameters:
+    phlexible_frontend.web_dir: %kernel.root_dir%/../web/
+    phlexible_frontend.response.cache_dir: %kernel.cache_dir%/response/
+    phlexible_frontend.download_rel_nofollow: false
+    phlexible_frontend.request.handler: ~
+    phlexible_frontend.request.preview_handler: ~
+    phlexible_frontend.request.edit_handler: ~
+    phlexible_frontend.request.debug_handler: ~
+    phlexible_frontend.request.stayssl: false
+    phlexible_frontend.request.redirect_to_default_siteroot: false
+    phlexible_frontend.request.protocol_businesslogic: ~
+    phlexible_frontend.request.force_protocol: ~
+
+services:
+    # asset providers
+    phlexible_frontend.asset_provider:
+        class: Phlexible\Bundle\FrontendBundle\AssetProvider\FrontendAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # event listeners
+    phlexible_frontend.listener.render:
+        class: Phlexible\Bundle\FrontendBundle\EventListener\RenderListener
+        arguments: [@service_container]
+        tags:
+            - {name: kernel.event_listener, event: xxxrenderer.render, method: onRender}
+
+    phlexible_frontend.listener.apply_successor:
+        class: Phlexible\Bundle\FrontendBundle\EventListener\ApplySuccessorListener
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    # problem checkers
+    phlexible_frontend.problem.specialtidcheck:
+        class: Phlexible\Bundle\FrontendBundle\ProblemChecker\SpecialTidChecker
+        public: false
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - {name: problem.checker}

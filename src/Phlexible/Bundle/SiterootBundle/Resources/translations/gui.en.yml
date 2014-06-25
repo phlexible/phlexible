@@ -1,0 +1,91 @@
+siteroots:
+    siteroots: Siteroots
+    siteroot: Siteroot
+    id: ID
+    default_title: 'new siteroot'
+    default_url: 'new url'
+    all: all
+    add_siteroot: 'Add siteroot'
+    save_siteroot_data: 'Save siteroot data'
+    failure: Failure
+    remove: Delete
+    sure: 'Are you sure?'
+    path: Path
+    type_element: Element
+    type_link: Link
+    err_siteroot_existing: 'The siteroot ''{0}'' is already existing.'
+    err_check_accordions_for_errors: 'Check the marked accordions for errors.'
+    url_mappings: 'URL Mapping'
+    no_url_mappings: 'URL Mapping'
+    add_mapping: 'Add mapping'
+    hostname: Hostname
+    url: URL
+    language: Language
+    type: Type
+    target: Target
+    default: Default
+    fallback: Fallback
+    err_url_existing: 'The url ''{0}'' for language ''{1}'' is already existing.'
+    err_url_empty: 'You have to specify an URL.'
+    err_invalid_url: '''{0}'' is not a valid URL.'
+    err_path_empty: 'You have to specify a path.'
+    err_language_empty: 'You have to specify a language.'
+    err_target_empty: 'You have to specify a target.'
+    short_urls: 'Short URLs'
+    no_short_urls: 'No short URLs'
+    add_short_url: 'Add short url'
+    navigations: Navigations
+    no_navigations: 'No navigations'
+    title: Title
+    handler: Handler
+    start_tid: 'Start TID'
+    max_depth: 'Max. depth'
+    flags: Flags
+    additional: 'Add. parameters'
+    add_navigation: 'Add navigation'
+    err_navigation_existing: 'The navigation ''{0}'' is already existing.'
+    err_title_empty: 'You have to specify a titel.'
+    err_handler_empty: 'You have to specify a handler.'
+    special_tids: 'Named TIDs'
+    no_special_tids: 'No named TIDs'
+    key: Key
+    tid: TID
+    add_specialtid: 'Add special tid'
+    err_specialtid_existing: 'the special tid ''{0}'' for language ''{1}'' already exists.'
+    err_key_empty: 'You have to specify a key.'
+    titles: Titles
+    err_title_existing: 'You have to specify a title.'
+    custom_titles: 'Custom titles'
+    example: Example
+    legend: 'Available placeholders'
+    siteroot_title: 'Siteroot title'
+    element_backend_title: 'Element backend title'
+    element_page_title: 'Element page title'
+    element_navigation_title: 'Element navigation title'
+    project_title: 'Project title'
+    no_customized_title: 'No customized title'
+    no_customized_start_title: 'No customized start page title, will use default'
+    default_custom_title: Default
+    start_custom_title: 'Start page'
+    siteroot_navigation: 'Siteroot Navigation'
+    select_siteroot: 'Select a siteroot to add it'
+    new_siteroot: 'New siteroot'
+    properties: Properties
+    no_properties: 'No properties'
+    contentchannels: Contentchannels
+    contentchannel: Contentchannel
+    contentchannel_id: 'Contentchannel ID'
+    actions: Actions
+    active: Active
+    cancel: Cancel
+    store: Store
+    flag_no_prepend_home: 'Don''t prepend "Home"-node'
+    flag_append_active: 'Append active node'
+    flag_include_no_navigation: 'Include nodes with no navigation flag'
+    flag_include_restricted: 'Include restricted nodes'
+    flag_include_not_published: 'Invluce nodes that are not published'
+    flag_include_type_full: 'Include full element types'
+    flag_include_type_structure: 'Include structure element types'
+    flag_include_type_layout: 'Include layout element types'
+    flag_include_type_teaser: 'Include teaser element types'
+    flag_include_unique_id: 'Use unique IDs'

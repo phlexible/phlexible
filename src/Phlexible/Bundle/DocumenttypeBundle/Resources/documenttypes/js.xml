@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="js">
+    <type>document</type>
+    <titles>
+        <title lang="de">Javascript Datei</title>
+        <title lang="en">Javascript Datei</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/x-javascript</mimetype>
+    </mimetypes>
+</documenttype>

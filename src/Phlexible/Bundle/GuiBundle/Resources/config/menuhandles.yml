@@ -1,0 +1,54 @@
+main:
+    xtype: Phlexible.gui.menuhandle.MainGroup
+    resources: []
+
+menus:
+    xtype: Phlexible.gui.menuhandle.MenusGroup
+    resources: []
+
+config:
+    parent: menus
+    xtype: Phlexible.gui.menuhandle.ConfigurationMenu
+    resources: []
+
+admin:
+    parent: menus
+    xtype: Phlexible.gui.menuhandle.AdministrationMenu
+    resources: []
+
+debug:
+    parent: menus
+    xtype: Phlexible.gui.menuhandle.DebugMenu
+    resources: []
+
+fill:
+    xtype: Phlexible.gui.menuhandle.Fill
+    resources: []
+
+account:
+    xtype: Phlexible.gui.menuhandle.AccountGroup
+    resources: []
+
+tray:
+    xtype: Phlexible.gui.menuhandle.TrayGroup
+    resources: []
+
+help:
+    parent: account
+    xtype: Phlexible.gui.menuhandle.HelpHandle
+    resources: []
+
+phpinfo:
+    parent: debug
+    xtype: Phlexible.gui.menuhandle.PhpInfoHandle
+    resources: [debug]
+
+#properties:
+#    parent: debug
+#    xtype: Phlexible.gui.menuhandle.PropertiesHandle
+#    resources: [debug]
+
+components:
+    parent: admin
+    xtype: Phlexible.gui.menuhandle.BundlesHandle
+    resources: [components]

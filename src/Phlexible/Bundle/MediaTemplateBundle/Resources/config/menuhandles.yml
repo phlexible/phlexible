@@ -1,0 +1,5 @@
+mediatemplates:
+    parent: config
+    xtype: Phlexible.mediatemplates.menuhandle.MediaTemplatesHandle
+    resources: [mediatemplates]
+

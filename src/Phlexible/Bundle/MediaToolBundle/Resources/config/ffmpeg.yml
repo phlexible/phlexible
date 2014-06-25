@@ -1,0 +1,20 @@
+parameters:
+    phlexible_media_tool.ffmpeg.ffmpeg: ffmpeg
+    phlexible_media_tool.ffmpeg.ffprobe: ffprobe
+
+services:
+    phlexible_media_tool.ffprobe:
+        class: FFMpeg\FFProbe
+        factory_class: FFMpeg\FFProbe
+        factory_method: create
+        arguments: [{ffprobe.binaries: %phlexible_media_tool.ffmpeg.ffprobe%}, @logger]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+
+    phlexible_media_tool.ffmpeg:
+        class: FFMpeg\FFMpeg
+        factory_class: FFMpeg\FFMpeg
+        factory_method: create
+        arguments: [{ffmpeg.binaries: %phlexible_media_tool.ffmpeg.ffmpeg%}, @logger, @phlexible_media_tool.ffprobe]
+        tags:
+            - {name: monolog.logger, channel: media_tools}

@@ -1,0 +1,85 @@
+.x-grid3-body .x-grid3-td-rowheader {
+    background:transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/grid3-hrow.gif) repeat-x right;
+    border-right:1px solid #D0D0D0;
+}
+
+.x-grid3-body .x-grid3-td-rowheader {
+    padding-left: 0;
+}
+
+/*
+.x-grid3-body .x-grid3-cell-selected .x-grid3-col-rowheader {
+    background:transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/grid3-hrow-over.gif) repeat-x right;
+}
+*/
+
+
+.x-dd-drag-proxy .p-elementtypes-type-referenceroot .x-tree-node-icon {
+    background-image:url(/COMPONENTSPATH/elementtypes/icons/field_reference.png) !important;
+}
+
+.p-field-table {
+    float: left;
+}
+
+.p-fields-diff-new {
+    background: none #FBB !important;
+}
+.p-fields-diff-change {
+    background: none #FBB !important;
+}
+.p-fields-diff-new iframe body {
+    background: none #FBB !important;
+}
+.p-fields-diff-change iframe body {
+    background: none #FBB !important;
+}
+.p-fields-diff-new .x-grid3 {
+    background: none !important;
+}
+.p-fields-diff-change .x-grid3 {
+    background: none !important;
+}
+.p-fields-diff-inline {
+    background-color: #DDD;
+    border: 1px solid #B5B8C8;
+    clear: both;
+    padding: 4px;
+    overflow: auto;
+}
+.p-fields-diff-inline ins {
+    color: green;
+}
+.p-fields-diff-inline del {
+    color: red;
+}
+
+.p-fields-synchronized-master {
+    border: 1px solid green !important;
+}
+.p-fields-synchronized-synched {
+    border: 1px solid red !important;
+}
+.p-fields-synchronized-unlinked {
+    border: 1px solid blue !important;
+}
+
+img.p-fields-unlink {
+    cursor: pointer;
+    margin-left: 3px;
+    vertical-align: top;
+    background-image:url(/COMPONENTSPATH/elementtypes/icons/unlink.png) !important;
+}
+img.p-fields-link {
+    cursor: pointer;
+    margin-left: 3px;
+    vertical-align: top;
+    background-image:url(/COMPONENTSPATH/elementtypes/icons/link.png) !important;
+}
+
+/**
+ * @fixes a float bug on ie8 and ie9
+ */
+.ext-ie8 .x-item-disabled  {
+    padding-left: 5px !important;
+}

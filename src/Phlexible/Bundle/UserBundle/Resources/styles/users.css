@@ -1,0 +1,86 @@
+.p-users-main-panel .x-layout-collapsed-west{
+    background-image:url(/BASEURL/admin/gui/asset/textimage/?key=users.search&component=users&icon=filter);
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
+.p-users-options-window .x-panel-header {
+    background: none;
+    background-color: white;
+    font-size: 14px;
+    padding: 10px;
+}
+.p-users-options-window .x-panel-header-noborder {
+    border: none;
+}
+.p-users-options-window li {
+    margin:3px 3px 20px;
+}
+.p-users-options-window li img {
+    width:16px;
+    height:16px;
+    margin-bottom:2px;
+    margin-right:7px;
+    vertical-align:middle;
+}
+.p-users-options-window li a {
+    color:#336699;
+    font-weight:bold;
+    text-decoration:none;
+}
+.p-users-options-window li span {
+    padding-left:24px;
+}
+
+.p-users-options-window .x-panel-body{
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+.p-users-options-window .thumb{
+    background: #dddddd;
+    padding: 3px;
+}
+.p-users-options-window .thumb img{
+    width: 140px;
+    height: 100px;
+}
+.p-users-options-window .thumb-wrap{
+    float: left;
+    margin: 4px;
+    margin-right: 0;
+    padding: 5px;
+}
+.p-users-options-window .thumb-wrap span{
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+.p-users-options-window .x-view-over{
+    border:1px solid #dddddd;
+    background: #efefef url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/row-over.gif) repeat-x left top;
+    padding: 4px;
+}
+
+.p-users-options-window .x-view-selected{
+    background: #eff5fb url(images/selected.gif) no-repeat right bottom;
+    border:1px solid #99bbe8;
+    padding: 4px;
+}
+.p-users-options-window .x-view-selected .thumb{
+    background:transparent;
+}
+.p-users-options-quickstart-tree li {
+    margin: 0;
+}
+.p-users-options-quickstart-tree li span {
+    margin: 0;
+    padding:1px 3px 1px 2px;
+}
+.p-users-expired {
+    background-image: url(/COMPONENTSPATH/phlexibleuser/images/toolbar-bg.gif) !IMPORTANT;
+}
+
+.p-users-filter-panel .x-panel {
+    padding-bottom: 8px;
+}

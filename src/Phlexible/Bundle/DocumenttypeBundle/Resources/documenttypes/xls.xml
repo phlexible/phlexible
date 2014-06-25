@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="xls">
+    <type>document</type>
+    <titles>
+        <title lang="de">Excel Arbeitsmappe</title>
+        <title lang="en">Excel Spreadsheet</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.ms-excel</mimetype>
+    </mimetypes>
+</documenttype>

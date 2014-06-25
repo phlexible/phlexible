@@ -1,0 +1,16 @@
+services:
+    phlexible_search.search_providers:
+        class: Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderCollection
+        arguments: [[]]
+
+    phlexible_search.search:
+        class: Phlexible\Bundle\SearchBundle\Search\Search
+        arguments: [@phlexible_search.search_providers, @security.context]
+
+    # asset providers
+    phlexible_search.asset_provider:
+        class: Phlexible\Bundle\SearchBundle\AssetProvider\SearchAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}

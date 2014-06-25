@@ -1,0 +1,27 @@
+parameters:
+    asset.cache_dir: %kernel.cache_dir%/assets/
+
+services:
+    phlexible_gui.asset.asset_providers:
+        class: Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection
+        arguments: []
+
+    phlexible_gui.asset.builder.scripts:
+        class: Phlexible\Bundle\GuiBundle\Asset\Builder\ScriptsBuilder
+        arguments: [@phlexible_gui.asset.asset_providers, @phlexible_gui.compressor.javascript, %asset.cache_dir%, %kernel.debug%]
+
+    phlexible_gui.asset.builder.css:
+        class: Phlexible\Bundle\GuiBundle\Asset\Builder\CssBuilder
+        arguments: [@phlexible_gui.asset.asset_providers, @phlexible_gui.compressor.css, %asset.cache_dir%, %kernel.debug%]
+
+    phlexible_gui.asset.builder.icons:
+        class: Phlexible\Bundle\GuiBundle\Asset\Builder\IconsBuilder
+        arguments: [%kernel.bundles%, @phlexible_gui.compressor.css, %asset.cache_dir%, %kernel.debug%]
+
+    phlexible_gui.asset.builder.translations:
+        class: Phlexible\Bundle\GuiBundle\Asset\Builder\TranslationsBuilder
+        arguments: [@phlexible_gui.catalog_accessor, @phlexible_gui.compressor.javascript, %asset.cache_dir%]
+
+    phlexible_gui.asset.textimage.renderer:
+        class: Phlexible\Bundle\GuiBundle\Asset\Textimage\TextimageRenderer
+        arguments: [%kernel.bundles%, @?mediatools.convert, %asset.cache_dir%]

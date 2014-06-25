@@ -1,0 +1,17 @@
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         syntaxCheck="true">
+    <testsuite name="phlexible">
+        <directory>Phlexible/</directory>
+    </testsuite>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">Phlexible/</directory>
+        </whitelist>
+    </filter>
+</phpunit>

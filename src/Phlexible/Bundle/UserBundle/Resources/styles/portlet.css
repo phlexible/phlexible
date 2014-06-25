@@ -1,0 +1,12 @@
+.online-portlet .user-image {
+    float: right; 
+}
+.online-portlet .user-image img {
+}
+.online-portlet .user-name {
+    padding-bottom: 2px;
+}
+.online-portlet .user-age {
+    padding-bottom: 6px;
+    color:#8B8B8B;
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="ps">
+    <type>image</type>
+    <titles>
+        <title lang="de">PostScript Dokument</title>
+        <title lang="en">PostScript Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/postscript</mimetype>
+        <mimetype>application/postscript-ps</mimetype>
+    </mimetypes>
+</documenttype>

@@ -1,0 +1,4 @@
+metasets:
+    parent: config
+    xtype: Phlexible.metasets.menuhandle.MetaSetsHandle
+    resources: [metasets]

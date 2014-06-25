@@ -1,0 +1,38 @@
+services:
+    phlexible_teaser.service:
+        class: Phlexible\Bundle\TeaserBundle\Teaser\TeaserManager
+        arguments: [@doctrine.orm.entity_manager]
+
+    phlexible_teaser.hasher:
+        class: Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher
+        arguments: [@connection_manager]
+
+    phlexible_teaser.layoutarea.manager:
+        class: Phlexible\Bundle\TeaserBundle\Layoutarea\LayoutareaManager
+
+    phlexible_teaser.catch.repository:
+        class: Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatchRepository
+        arguments: [@connection_manager, @event_dispatcher, @phlexible_message.message_poster]
+
+    phlexible_teaser.catch.matcher.treenode:
+        class: Phlexible\Bundle\TeaserBundle\ElementCatch\Matcher\TreeNodeMatcher
+        arguments: [@phlexible_tree.content.manager, @phlexible_element.service, false]
+
+    phlexible_teaser.catcher:
+        class: Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatcher
+        arguments: [@connection_manager, @event_dispatcher, @phlexible_teaser.catch.matcher.treenode, false]
+
+    phlexible_teaser.catch.helper:
+        class: Phlexible\Bundle\TeaserBundle\ElementCatch\CatchHelper
+        arguments: [@connection_manager, @phlexible_element.service]
+
+    phlexible_teaser.rights.provider:
+        class: Phlexible\Bundle\TeaserBundle\AccessControl\TeaserRightsProvider
+        tags:
+            - {name: phlexible_access_control.rights}
+
+    # event listeners
+    phlexible_teaser.listener.publish_node:
+        class: Phlexible\Bundle\TeaserBundle\EventListener\NodeListener
+        tags:
+            - {name: kernel.event_subscriber}

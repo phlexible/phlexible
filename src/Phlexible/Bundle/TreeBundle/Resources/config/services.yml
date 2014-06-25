@@ -1,0 +1,45 @@
+services:
+    phlexible_tree.manager:
+        class: Phlexible\Bundle\TreeBundle\TreeManager
+        arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.database_tree_factory]
+
+    phlexible_tree.history:
+        class: Phlexible\Bundle\TreeBundle\Tree\TreeHistory
+        arguments: [@connection_manager]
+
+    phlexible_tree.database_tree_factory:
+        class: Phlexible\Bundle\TreeBundle\Tree\DatabaseTreeFactory
+        arguments: [@connection_manager, @event_dispatcher, @phlexible_tree.history]
+
+    phlexible_tree.content.manager:
+        class: Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManager
+
+    phlexible_tree.router.handler.default:
+        class: Phlexible\Bundle\TreeBundle\Router\Handler\DefaultHandler
+        arguments:
+            - @logger
+            - @phlexible_tree.content.manager
+            - @phlexible_element.service
+            - %phlexible_cms.languages.available%
+            - %phlexible_cms.languages.default%
+        tags:
+            - {name: monolog.logger, channel: router}
+
+    phlexible_tree.router:
+        class: Phlexible\Bundle\TreeBundle\Router\TreeRouter
+        arguments:
+            - @router.request_context
+            - @phlexible_tree.router.handler.default
+            - @phlexible_tree.router.handler.default
+            -
+            - @event_dispatcher
+        tags:
+            - {name: monolog.logger, channel: router}
+            - {name: router, priority: 100}
+
+    # access control permission providers
+    phlexible_tree.permission_provider:
+        class: Phlexible\Bundle\TreeBundle\AccessControl\TreePermissionProvider
+        public: false
+        tags:
+            - {name: phlexible_access_control.permission}

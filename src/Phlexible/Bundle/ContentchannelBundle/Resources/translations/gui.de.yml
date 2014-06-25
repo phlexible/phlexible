@@ -1,0 +1,19 @@
+contentchannels:
+    contentchannels: 'Content Channels'
+    contentchannel: 'Content Channel'
+    id: ID
+    unique_id: 'Unique ID'
+    title: Titel
+    renderer_classname: 'Renderer Classname'
+    icon: Icon
+    template_folder: Templaterordner
+    comment: Kommentar
+    add: Hinzufügen
+    delete: Löschen
+    remove: Entfernen
+    rename: Umbenennen
+    save: Speichern
+    error: Fehler
+    saveError: 'Speichern Fehler'
+    enterName: 'Namen eingeben'
+    confirm_delete: 'Möchten Sie diesen Content Channel wirklich löschen?'

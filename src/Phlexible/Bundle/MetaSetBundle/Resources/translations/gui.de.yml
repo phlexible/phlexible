@@ -1,0 +1,10 @@
+metasets:
+    metasets: 'Meta sets'
+    meta: Datei-Meta
+    folder_meta: Ordner-Meta
+    no_meta_values: 'Keine Metadaten'
+    key: Schlüssel
+    value: Wert
+    save: Speichern
+    error: Fehler
+    fill_required_fields: 'Bitte füllen Sie alle Pflichtfelder aus.'

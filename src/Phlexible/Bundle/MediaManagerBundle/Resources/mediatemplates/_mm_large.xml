@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mediaTemplate key="_mm_large" type="image" class="Phlexible\MediaTemplateBundle\Model\ImageTemplate" cache="1" revision="1">
+  <parameter key="width">96</parameter>
+  <parameter key="height">96</parameter>
+  <parameter key="method">exactFit</parameter>
+  <parameter key="format">png</parameter>
+  <parameter key="quality">90</parameter>
+</mediaTemplate>

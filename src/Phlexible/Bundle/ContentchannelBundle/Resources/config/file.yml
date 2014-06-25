@@ -1,0 +1,28 @@
+parameters:
+    phlexible_contentchannel.file_dir: %kernel.root_dir%/Resources/contentchannels/
+
+services:
+    phlexible_contentchannel.file.loader.xml:
+        class: Phlexible\Bundle\ContentchannelBundle\File\Loader\XmlLoader
+        public: false
+
+    phlexible_contentchannel.file.loader:
+        class: Phlexible\Bundle\ContentchannelBundle\File\ContentchannelLoader
+        arguments: [%kernel.bundles%, %phlexible_contentchannel.file_dir%]
+        public: false
+        calls:
+            - [addLoader, [@phlexible_contentchannel.file.loader.xml]]
+
+    phlexible_contentchannel.file.dumper.xml:
+        class: Phlexible\Bundle\ContentchannelBundle\File\Dumper\XmlDumper
+        public: false
+
+    phlexible_contentchannel.file.dumper:
+        class: Phlexible\Bundle\ContentchannelBundle\File\ContentchannelDumper
+        arguments: [@phlexible_contentchannel.file.dumper.xml, %phlexible_contentchannel.file_dir%]
+        public: false
+
+    phlexible_contentchannel.file.contentchannel_manager:
+        class: Phlexible\Bundle\ContentchannelBundle\File\ContentchannelRepository
+        arguments: [@phlexible_contentchannel.file.loader, @phlexible_contentchannel.file.dumper]
+        public: false

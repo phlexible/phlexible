@@ -1,0 +1,150 @@
+mediatemplates:
+    mediatemplates: Medienvorlagen
+    vars: 'Weitere Eigenschaften'
+    preview: Vorschau
+    image_template: Bildvorlage
+    image_template_title: 'Bildvorlage "{0}"'
+    video_template: Videovorlage
+    video_template_title: 'Videovorlage "{0}"'
+    audio_template: Audiovorlage
+    audio_template_title: 'Audiovorlage "{0}"'
+    filmstrip_template: Filmstreifenvorlage
+    filmstrip_template_title: 'Filmstreifenvorlage "{0}"'
+    pdf2swf_template: 'PDF zu SWF Vorlage'
+    pdf2swf_template_title: 'PDF zu SWF Vorlage "{0}"'
+    base: Basis
+    image: Bild
+    video: Video
+    audio: Audio
+    filmstrip: Filmstreifen
+    pdf2swf: 'PDF zu SWF'
+    add: Hinzufügen
+    save: Speichern
+    save_hint: 'Bitte beachten Sie, dass nach dem Speichern alle in der Medienverwaltung hinterlegten Bilder auf der Basis dieser Medienvorlage neu berechnet werden. Das kann den Server stark belasten. Wenn Sie Ihre Einstellungen testen möchten, verwenden Sie bitte den Vorschau-Button. Ein Speichern ist hierfür nicht erforderlich.'
+    reset: Zurücksetzen
+    remove: Löschen
+    title: Titel
+    key: Schlüssel
+    type: Typ
+    value: Wert
+    rename: Umbenennen
+    name: Name
+    ok: Ok
+    cancel: Abbrechen
+    yes: Ja
+    no: Nein
+    sure: 'Sind sie sicher das Sie das tun möchten?'
+    enterName: 'Bitte geben Sie den Namen ein'
+    width: Breite
+    height: Höhe
+    method: Methode
+    deliver: Auslieferung
+    scale: Skalierung
+    for_web: 'Für Webdarstellung optimieren.'
+    match_format: 'Formatänderung nur bei Bedarf'
+    format: Ausgabeformat
+    colorspace: Farbraum
+    quality: Qualität
+    compression: Kompressionsgrad
+    filtertype: Filtertyp
+    backgroundcolor: Hintergrundfarbe
+    deinterlace: Deinterlace
+    bitrate: Bitrate
+    framerate: Framerate
+    samplerate: Samplerate
+    samplebits: 'Audio bit depth'
+    channels: Kanäle
+    cols: Spalten
+    rows: Zeilen
+    no_info: 'Keine Infos'
+    no_timestamp: 'Keine Zeitleiste'
+    text: Text
+    flash_version: 'Flash Version'
+    select_method: 'Bitte wählen Sie eine Verkleinerungsmethode'
+    select_deliver: 'Bitte wählen Sie eine Auslieferungsmethode'
+    select_scale: 'Bitte wählen Sie eine Skaliermethode'
+    select_format: 'Bitte wählen Sie ein Ausgabeformat'
+    select_compression: 'Bitte wählen Sie einen Kompressionsgrad'
+    select_filtertype: 'Bitte wählen Sie einen Filtertypen'
+    help_width_image: 'Breite des generierten Bildes.'
+    help_width_video: 'Breite des generierten Videos.'
+    help_height_image: 'Höhe des generierten Bildes.'
+    help_height_video: 'Höhe des generierten Videos.'
+    help_method: 'Definiert die Methode zum Skalieren und Beschneiden des Bildes.'
+    help_deliver: 'Definiert wie das Bild ausgeliefert wird.'
+    help_scale: 'Definiert die erlaubte Skalierungsrichtung.'
+    help_for_web_image: 'Für Webdarstellung optimieren. Schränkt das Ausgabeformat auf GIF, JPG und PNG ein. Schränkt den Farbraum auf RGB und Graustufen ein.'
+    help_for_web_video: 'Für Webdarstellung optimieren. Schränkt das Ausgabeformat auf FLV ein.'
+    help_match_format: 'Format nicht ändern wenn das Video bereits im gewählten Format vorliegt.'
+    help_format: 'Definiert das Format des Bildes.'
+    help_colorspace: 'Definiert den Farbraum des Bildes.'
+    help_quality: 'Qualität des generierten Bildes.'
+    help_compression: 'Kompressionsgrad des generierten Bildes.'
+    help_filtertype: 'Filtertyp des generierten Bildes.'
+    help_backgroundcolor: 'Hintergrundfarbe für überschüssige Bereiche, leer lassen für transparenten Hintergrund.'
+    help_deinterlace: 'Aktiviert Deinterlacing ("Zeilenentflechtung"). Konvertiert Videos im Zeilensprungverfahren in Vollbildvideos.'
+    help_bitrate: 'Definiert die durchschnittliche Bitrate pro Sekunde (Datenmenge pro Sekunde) des Videos.'
+    help_framerate: 'Definiert die Framerate (Bildwiederholfrequenz) des Videos.'
+    help_samplerate: 'Definiert die Samplerate (Abtastrate) der Tondatei.'
+    help_samplebits: 'Definiert die Audio Bit Depth der Tondatei.'
+    help_channels: 'Definiert, ob die Tondatei in Mono oder Stereo konvertiert wird.'
+    help_cols: 'Anzahl der Spalten'
+    help_rows: 'Anzahl der Zeilen'
+    help_no_info: 'Keine zusätzlichen Informationen anzeigen'
+    help_no_timestamp: 'Zeitmarke nicht anzeigen'
+    help_text: 'Text der am oberen Rand des Bildes angezeigt wird'
+    help_flash_version: 'Version der generierten Flashdatei'
+    method_width: 'Feste Breite'
+    method_height: 'Feste Höhe'
+    method_exact: 'Exaktes Einpassen ohne Auffüllen'
+    method_exactFit: 'Exaktes Einpassen mit Auffüllen'
+    method_fit: 'Einfaches Einpassen'
+    method_crop: Beschneiden
+    method_focal: 'Beschneiden mit Fokuspunkt'
+    method_width_help: 'Bild hat feste Breite und variable Höhe'
+    method_height_help: 'Bild hat feste Höhe und variable Breite'
+    method_exact_help: 'Bild hat feste Breite und Höhe, Bild wird ggf. verzerrt'
+    method_exactFit_help: 'Bild hat feste Breite und Höhe, Bild wird nicht verzerrt, sondern Randbereiche werden mit Hintergrundfarbe ausgefüllt'
+    method_fit_help: 'Bild hat entweder angegebene Breite oder Höhe'
+    method_crop_help: 'Bild wird entweder auf Breite oder Höhe skaliert und anschließend um den Mittelpunkt ausgeschnitten'
+    method_focal_help: 'Bild wird entweder auf Breite oder Höhe skaliert und anschließend um den Fokuspunkt ausgeschnitten'
+    deliver_thumb: 'Als verkleinertes Bild ausliefern'
+    deliver_icon: 'Als Dokumenttype Icon ausliefern'
+    deliver_download: 'Als download ausliefern'
+    scale_up: 'Nur hochskalieren'
+    scale_up_and_down: 'Hoch- und herunterskalieren'
+    scale_down: 'Nur herunterskalieren'
+    colorspace_rgb: RGB
+    colorspace_cmyk: CMYK
+    colorspace_gray: Graustufen
+    compression_huffman: 'Huffman Kompression (schnell, gut für Photos)'
+    compression_fastest: 'Schnellste Kompression'
+    compression_best: 'Beste Kompression'
+    channels_no: 'Ton deaktivieren'
+    channels_mono: Mono
+    channels_stereo: Stereo
+    keep_format: '[Format beibehalten]'
+    keep_colorspace: '[Farbraum beibehalten]'
+    keep_bitrate: '[Bitrate beibehalten]'
+    keep_framerate: '[Framerate beibehalten]'
+    keep_samplerate: '[Samplerate beibehalten]'
+    keep_samplebits: '[Samplebits beibehalten]'
+    keep_channels: '[Channels beibehalten]'
+    empty_backgroundcolor: Transparent
+    tiffcompression: Komprimierung
+    tiffcompression_none: keine
+    tiffcompression_zip: zip
+    tiffcompression_lzw: lzw
+    tiffcompression_help: 'Algorithmus für die Komprimierung der TIF-Datei'
+    depth: Farbtiefe
+    keep_depth: '[Farbtiefe beibehalten]'
+    eight_bit_per_channel: '8 Bit pro Kanal'
+    sixteen_bit_per_channel: '16 Bit pro Kanal'
+    help_depth: 'Definiert die Farbtiefe in Bit pro Kanal'
+    required_values: 'Bitte überprüfen Sie das Formular auf Pflichtfelder.'
+    debug: Debug
+    no_preview_available: 'Keine Vorschau verfügbar'
+    change_background_color_to: 'Hintergrundfarbe ändern in:'
+    white: Weiss
+    black: Schwarz
+    random: Zufällig

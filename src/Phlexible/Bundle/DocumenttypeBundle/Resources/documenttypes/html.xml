@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="html">
+    <type>document</type>
+    <titles>
+        <title lang="de">HTML Dokument</title>
+        <title lang="en">HTML Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>text/html</mimetype>
+    </mimetypes>
+</documenttype>

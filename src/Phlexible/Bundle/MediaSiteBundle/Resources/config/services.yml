@@ -1,0 +1,4 @@
+services:
+    phlexible_media_site.manager:
+        class: Phlexible\Bundle\MediaSiteBundle\Site\SiteManager
+        arguments: [[]]

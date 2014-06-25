@@ -1,0 +1,87 @@
+/* Filecontainer */
+.p-form-file {
+    float: left;
+    color: #000;
+    background: #fff;
+    border: 1px solid #99bbe8;
+    /*padding-right: 4px;*/
+}
+/*
+.p-form-file .NoVariants {margin-top: 23px;}
+.p-form-file .FileBoxVariants {margin: 0; padding: 1px 4px 2px 4px;background: #d9e7f8; border-bottom: 1px solid #99bbe8;height: 19px;}
+.p-form-file .FileBoxVariants select, .FileBox .FileBoxVariants input {font-size: 11px;}
+.p-form-file .FileBoxVariants label {width: 43px;}
+*/
+.p-form-file .FileBoxButtons {
+    float: left;
+    margin: 3px 0 0 0; 
+    padding: 0;
+    width: 20px;
+    text-align: center;
+}
+.p-form-file .FileBoxButtons img {
+    margin-bottom: 2px;
+    cursor: pointer;
+}
+.p-form-file .FileBoxImageContainer {
+    float: left;
+    position: relative;
+    margin: 3px 3px 3px 0; 
+    /*padding: 0 0 3px 0;*/
+    /*width: 114px;*/
+    text-align: center;
+}
+.p-form-file .FileBoxImageContainer img.FileBoxImage {
+    border: 1px solid #8d8d8d;
+    margin: 0; 
+    padding: 0; 
+    width: 96px;
+    height: 96px;
+    display: block;
+}
+.p-form-file .FileBoxImageContainer a {
+    color: #222; 
+    text-decoration: underline;
+    font-size: 10px;
+}
+.p-form-file .FileBoxImageContainer .AddText {
+    cursor:pointer;
+    position: absolute; 
+    left: 2px; 
+    bottom: 8px;
+    background: #FFF; 
+    width: 92px;
+    border: 1px solid #8d8d8d;
+    font-size: 10px;
+    padding-bottom: 3px;
+    padding-top: 1px;
+    line-height: 10px;
+    z-index:99;
+}
+.p-form-file .FileBoxImageContainer .AddText a {
+    text-decoration: none;
+}
+.p-form-file .FileBoxImageContainer .AddText a:hover,.FileBox .FileBoxImage .AddText a:active, .FileBox .FileBoxImage .AddText a:focus {
+    text-decoration: underline;
+}
+/*
+.p-form-file .FileBoxLegend {float:left;margin: 0; padding: 2px 2px 0 2px;width: 106px;}
+.p-form-file table.LegendData {margin:0;padding:0;width: 106px;font-size: 10px;}
+.p-form-file table.LegendData th {font-weight:normal;padding: 1px 0 2px 0;border-bottom: 1px solid #8d8d8d;}
+.p-form-file table.LegendData th label {width: 45px;}
+.p-form-file table.LegendData td {padding: 1px 0 2px 0;font-weight:normal;border-bottom: 1px solid #8d8d8d;}
+.p-form-file table.LegendData .first {font-weight:bold;}
+.p-form-file table.LegendData .last {border-bottom: none;}
+*/
+/* Diese Styles wieder entfernen */
+/*
+.p-form-file .FileBoxVariants select {border: 1px solid #b5b8c8;width: 105px;}
+.p-form-file .FileBoxVariants .button {background: #c7c9ce;margin-left: 3px;}
+.p-form-file .FileBoxLink {margin: 0; padding: 0 0 2px 2px;font-size: 10px;}
+.p-form-file .FileBoxLink img {vertical-align: middle;margin-right: 4px;cursor:pointer;} 
+.p-form-file-legend {border: 1px solid black; background: white;padding: 5px;overflow: auto;font-size: 8pt;}
+*/
+
+.x-form-invalid .FileBoxImageContainer img.FileBoxImage {
+    border-color: red;
+}

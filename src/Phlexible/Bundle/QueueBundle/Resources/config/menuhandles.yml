@@ -1,0 +1,4 @@
+queuestats:
+    parent: debug
+    xtype: Phlexible.queue.menuhandle.QueueStatsHandle
+    resources: [debug]

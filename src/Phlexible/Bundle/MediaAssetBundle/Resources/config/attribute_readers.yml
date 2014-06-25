@@ -1,0 +1,45 @@
+services:
+    phlexible_media_asset.reader.attribute.imageanalyzer:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ImageAnalyzerAttributeReader
+        public: false
+        arguments: [@phlexible_media_tool.image_analyzer]
+        tags:
+            - {name: phlexible_media_asset.attribute_reader}
+
+    phlexible_media_asset.reader.attribute.openxml:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\OpenXmlAttributeReader
+        public: false
+        tags:
+            - {name: phlexible_media_asset.attribute_reader}
+
+    phlexible_media_asset.reader.attribute.videoanalyzer:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\VideoAnalyzerAttributeReader
+        public: false
+        arguments: [@phlexible_media_tool.ffprobe, @logger]
+        tags:
+            - {name: phlexible_media_asset.attribute_reader}
+            - {name: monolog.logger, channel: media_asset}
+
+    phlexible_media_asset.reader.attribute.zendmedia:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ZendMediaAttributeReader
+        public: false
+        arguments: [@logger]
+        tags:
+            - {name: phlexible_media_asset.attribute_reader}
+            - {name: monolog.logger, channel: media_asset}
+
+    phlexible_media_asset.reader.attribute.zendpdf:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ZendPdfAttributeReader
+        public: false
+        tags:
+            - {name: phlexible_media_asset.attribute_reader}
+
+    phlexible_media_asset.reader.attribute.zipextension:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ZipExtensionAttributeReader
+        public: false
+        tags:
+            - {name: phlexible_media_asset.attribute_reader}
+
+    phlexible_media_asset.reader.attribute:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ChainAttributeReader
+        arguments: [[]]

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="psd">
+    <type>image</type>
+    <titles>
+        <title lang="de">Photoshop Dokument</title>
+        <title lang="en">Photoshop Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>image/x-photoshop</mimetype>
+    </mimetypes>
+</documenttype>

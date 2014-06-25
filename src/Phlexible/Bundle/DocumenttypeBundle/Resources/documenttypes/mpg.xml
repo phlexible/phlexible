@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="mpg">
+    <type>video</type>
+    <titles>
+        <title lang="de">MPEG Video</title>
+        <title lang="en">MPEG Video</title>
+    </titles>
+    <mimetypes>
+        <mimetype>video/mpeg</mimetype>
+    </mimetypes>
+</documenttype>

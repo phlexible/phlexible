@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="odi">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenDocument Bild</title>
+        <title lang="en">OpenDocument Image</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.oasis.opendocument.image</mimetype>
+    </mimetypes>
+</documenttype>

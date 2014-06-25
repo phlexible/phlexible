@@ -1,0 +1,32 @@
+accesscontrol:
+    access: Zugriff
+    user: Benutzer
+    users: Benutzer
+    group: Gruppe
+    groups: Gruppen
+    add: Hinzufügen
+    rights: Rechte
+    right: Recht
+    inheritance: Vererbung
+    status: Status
+    save: 'Rechte speichern'
+    id: ID
+    subject: Subjekt
+    subjects: Subjekte
+    no_subjects: 'Keine Subjekte'
+    language: Sprache
+    actions: Aktionen
+    reload: 'Neu laden'
+    all: Alle
+    delete: Löschen
+    link: Verbinden
+    restore: Zurücksetzen
+    legend: Legende
+    not_set: 'Nicht gesetzt'
+    set_here: 'Hier gesetzt'
+    set_above: 'Oberhalb gesetzt'
+    stopped_above: 'Oberhalb gestoppt'
+    stopped_here: 'Oberhalb gesetzt, hier gestoppt'
+    stopped_below: 'Gesetzt, unterhalb gestoppt'
+    from_id: 'Gesetzt in ID "{0}"'
+    defined_here: 'Hier gesetzt'

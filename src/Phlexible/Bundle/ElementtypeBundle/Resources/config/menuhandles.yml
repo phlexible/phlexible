@@ -1,0 +1,5 @@
+elementtypes:
+    parent: config
+    xtype: Phlexible.elementtypes.menuhandle.ElementtypesHandle
+    resources: [elementtypes]
+

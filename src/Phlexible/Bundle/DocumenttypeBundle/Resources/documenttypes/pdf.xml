@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="pdf">
+    <type>document</type>
+    <titles>
+        <title lang="de">PDF Dokument</title>
+        <title lang="en">PDF Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/pdf</mimetype>
+    </mimetypes>
+</documenttype>

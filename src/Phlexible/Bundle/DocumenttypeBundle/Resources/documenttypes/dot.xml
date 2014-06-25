@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="dot">
+    <type>document</type>
+    <titles>
+        <title lang="de">Word Vorlage</title>
+        <title lang="en">Word Template</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/x-dot</mimetype>
+    </mimetypes>
+</documenttype>

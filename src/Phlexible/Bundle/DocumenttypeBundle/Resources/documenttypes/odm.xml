@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="odm">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenDocument Master Dokument</title>
+        <title lang="en">OpenDocument Master Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.oasis.opendocument.text-master</mimetype>
+    </mimetypes>
+</documenttype>

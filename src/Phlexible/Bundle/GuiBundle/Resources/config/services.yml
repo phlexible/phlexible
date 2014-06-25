@@ -1,0 +1,64 @@
+parameters:
+    app.lock_dir:             %kernel.cache_dir%/locks/
+    app.web_dir:              %kernel.root_dir%/../web/
+    connection_manager.class: Phlexible\Component\Database\ConnectionManager
+
+services:
+    connection_manager:
+        class: %connection_manager.class%
+
+    properties:
+        class: Phlexible\Bundle\GuiBundle\Properties\Properties
+        arguments: [@doctrine.orm.entity_manager]
+
+    phlexible_gui.view.index:
+        class: Phlexible\Bundle\GuiBundle\View\IndexView
+        arguments: [@event_dispatcher]
+
+    phlexible_gui.builder.config:
+        class: Phlexible\Bundle\GuiBundle\Config\ConfigBuilder
+        arguments: [@event_dispatcher, @security.context, %phlexible_gui.languages.available%, %phlexible_gui.languages.default%]
+
+    phlexible_gui.menu.loader:
+        class: Phlexible\Bundle\GuiBundle\Menu\MenuLoader
+        arguments: [@event_dispatcher]
+
+    phlexible_gui.catalog_accessor:
+        class: Phlexible\Bundle\GuiBundle\Translator\CatalogAccessor
+        arguments: [@translator]
+
+    # acl providers
+    phlexible_gui.acl_provider:
+        class: Phlexible\Bundle\GuiBundle\AclProvider\GuiAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_gui.asset_provider:
+        class: Phlexible\Bundle\GuiBundle\AssetProvider\GuiAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider, priority: 700}
+
+    # compressors
+    phlexible_gui.compressor.javascript.simple:
+        class: Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\SimpleJavascriptCompressor
+        public: false
+        tags:
+            - {name: phlexible_gui.compressor.javascript, priority: -100}
+
+    phlexible_gui.compressor.css.simple:
+        class: Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\SimpleCssCompressor
+        public: false
+        tags:
+            - {name: phlexible_gui.compressor.css, priority: -100}
+
+    # portlets
+    phlexible_gui.portlet.load:
+        class: Phlexible\Bundle\GuiBundle\Portlet\LoadPortlet
+        public: false
+        arguments: [@translator]
+        tags:
+            - {name: phlexible_dashboard.portlet}

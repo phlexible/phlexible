@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="ott">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenDocument Text Vorlage</title>
+        <title lang="en">OpenDocument Text Template</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.oasis.opendocument.text-template</mimetype>
+    </mimetypes>
+</documenttype>

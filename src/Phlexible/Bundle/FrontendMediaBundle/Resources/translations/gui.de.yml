@@ -1,0 +1,11 @@
+frontendmedia:
+    mediatemplate_information: 'Mediatemplate information'
+    cache_id: 'Cache ID'
+    key: Schlüssel
+    type: Typ
+    status: Status
+    width: Breite
+    height: Höhe
+    size: Dateigröße
+    readable_size: 'Lesbare Dateigröße'
+    mimetype: Mimetype

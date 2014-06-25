@@ -1,0 +1,18 @@
+services:
+    phlexible_dashboard.portlets:
+        class: Phlexible\Bundle\DashboardBundle\Portlet\PortletCollection
+        arguments: [[]]
+
+    # asset providers
+    phlexible_dashboard.asset_provider:
+        class: Phlexible\Bundle\DashboardBundle\AssetProvider\DashboardAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider, priority: 700}
+
+    # event listeners
+    phlexible_dashboard.listener.get_config:
+        class: Phlexible\Bundle\DashboardBundle\EventListener\GetConfigListener
+        tags:
+            - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}

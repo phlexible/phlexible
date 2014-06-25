@@ -1,0 +1,20 @@
+parameters:
+    phlexible_contentchannel.file_dir: %kernel.root_dir%/Resources/contentchannels/
+
+services:
+    # acl providers
+    phlexible_contentchannel.acl_provider:
+        class: Phlexible\Bundle\ContentchannelBundle\AclProvider\ContentchannelAclProvider
+        public: false
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_contentchannel.asset_provider:
+        class: Phlexible\Bundle\ContentchannelBundle\AssetProvider\ContentchannelAssetProvider
+        public: false
+        arguments: [@file_locator]
+        public: false
+        tags:
+            - {name: phlexible_gui.asset.provider}

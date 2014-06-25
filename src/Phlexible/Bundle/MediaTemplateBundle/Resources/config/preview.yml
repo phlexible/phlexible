@@ -1,0 +1,19 @@
+parameters:
+    phlexible_media_template.temp_dir: %kernel.cache_dir%/mediatemplates/temp/
+
+services:
+    phlexible_media_template.preview.audio:
+        class: Phlexible\Bundle\MediaTemplateBundle\Preview\AudioPreview
+        arguments: [@phlexible_media_template.applier.audio, %phlexible_media_template.temp_dir%]
+
+    phlexible_media_template.preview.image:
+        class: Phlexible\Bundle\MediaTemplateBundle\Preview\ImagePreview
+        arguments: [@phlexible_media_template.applier.image, %phlexible_media_template.temp_dir%]
+
+    phlexible_media_template.preview.pdf:
+        class: Phlexible\Bundle\MediaTemplateBundle\Preview\PdfPreview
+        arguments: [@phlexible_media_template.applier.pdf, %phlexible_media_template.temp_dir%]
+
+    phlexible_media_template.preview.video:
+        class: Phlexible\Bundle\MediaTemplateBundle\Preview\VideoPreview
+        arguments: [@phlexible_media_template.applier.video, %phlexible_media_template.temp_dir%]

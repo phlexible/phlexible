@@ -1,0 +1,24 @@
+parameters:
+    phlexible_documenttype.file_dir: %kernel.root_dir%/Resources/documenttypes/
+
+services:
+    phlexible_documenttype.file.loader.xml:
+        class: Phlexible\Bundle\DocumenttypeBundle\File\Loader\XmlLoader
+        public: false
+
+    phlexible_documenttype.file.loader:
+        class: Phlexible\Bundle\DocumenttypeBundle\File\DocumenttypeLoader
+        public: false
+        arguments:
+            - %kernel.bundles%
+            - @phlexible_documenttype.compiler.php
+            - %phlexible_documenttype.file_dir%
+            - %phlexible_documenttype.compiler.cache_dir%
+            - %kernel.debug%
+        calls:
+            - [addLoader, [@phlexible_documenttype.file.loader.xml]]
+
+    phlexible_documenttype.file.documenttype_manager:
+        class: Phlexible\Bundle\DocumenttypeBundle\File\DocumenttypeManager
+        public: false
+        arguments: [@phlexible_documenttype.file.loader, @phlexible_media_tool.mime.detector]

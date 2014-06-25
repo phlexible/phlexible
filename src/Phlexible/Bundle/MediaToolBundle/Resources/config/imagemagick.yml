@@ -1,0 +1,22 @@
+parameters:
+    phlexible_media_tool.imagemagick.identify: identify
+    phlexible_media_tool.imagemagick.convert: convert
+    phlexible_media_tool.imagemagick.mogrify: mogrify
+
+services:
+    phlexible_media_tool.identify:
+        class: Brainbits\Imagemagick\Identify
+        factory_class: Brainbits\Imagemagick\Identify
+        factory_method: load
+        arguments: [[%phlexible_media_tool.imagemagick.identify%], @logger]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+
+    phlexible_media_tool.convert:
+        class: Brainbits\Imagemagick\Convert
+        factory_class: Brainbits\Imagemagick\Convert
+        factory_method: load
+        arguments: [[%phlexible_media_tool.imagemagick.convert%], @logger]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+

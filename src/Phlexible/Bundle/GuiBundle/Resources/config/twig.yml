@@ -1,0 +1,7 @@
+services:
+    # twig extensions
+    phlexible_gui.twig.extension.controller:
+        class: Phlexible\Bundle\GuiBundle\Twig\Extension\ControllerExtension
+        arguments: [@router]
+        tags:
+            - {name: twig.extension}

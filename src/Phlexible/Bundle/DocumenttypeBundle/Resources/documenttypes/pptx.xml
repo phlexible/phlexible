@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="pptx">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Präsentation</title>
+        <title lang="en">OpenXML Presentation</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.openxmlformats-officedocument.presentationml.presentation</mimetype>
+    </mimetypes>
+</documenttype>

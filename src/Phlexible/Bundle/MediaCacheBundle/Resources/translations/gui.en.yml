@@ -1,0 +1,5 @@
+mediacache:
+    cache_status: 'Media Cache Status'
+    cache_status_empty: 'No items in queue.'
+    cache_status_items: '{0} items in queue.'
+    cache_status_items_remaining: '{0} items in queue ({1} items per minute; remaining time {2}).'

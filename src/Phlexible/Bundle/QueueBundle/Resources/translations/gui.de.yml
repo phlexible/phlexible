@@ -1,0 +1,11 @@
+queue:
+    queue: Warteschlange
+    no_jobs: 'Keine Jobs'
+    reload: 'Neu laden'
+    id: ID
+    command: Kommando
+    priority: Priorität
+    status: Status
+    create_time: 'Angelegt an'
+    start_time: 'Gestartet an'
+    end_time: 'Beendet an'

@@ -1,0 +1,61 @@
+messages:
+    messages: Messages
+    message: Message
+    loading: Loading...
+    view: View
+    no_recent_messages: 'No recent messages.'
+    no_messages_found: 'No messages found.'
+    no_filters: 'No filters to display.'
+    no_subscriptions: 'No subscriptions to display.'
+    filter: Filter
+    id: ID
+    subject: Subject
+    text: Text
+    priority: Priority
+    type: Type
+    channel: Channel
+    resource: Resource
+    date: Date
+    before: Vor
+    after: Nach
+    user: 'Created by'
+    created_at: 'Created at'
+    empty_msg: 'No messages to display.'
+    display_msg: 'Displaying messages {0} - {1} of {2}'
+    priority_low: Low
+    priority_normal: Normal
+    priority_high: High
+    priority_urgent: Urgent
+    type_info: Info
+    type_error: Error
+    reset: Reset
+    subscription: Subscription
+    subscriptions: Subscriptions
+    filter: Filter
+    filters: Filters
+    criteriom: Criterion
+    criteria: Criteria
+    criteria_for: 'Criteria for filter "{0}"'
+    title: Title
+    handler: Handler
+    actions: Actions
+    add: Add
+    subscribe: Subscribe
+    delete: Delete
+    add_filter: 'Please enter the title for the new filter.'
+    rename_filter: 'Please enter the new title for filter "{0}".'
+    delete_filter: 'Do you really want to delete filter "{0}"?'
+    value: Value
+    information: Information
+    save: Save
+    refresh: Refresh
+    preview: Preview
+    preview_for: 'Preview for filter "{0}"'
+    body: Body
+    addOrBlock: 'Add "or"-block'
+    group: Group
+    number_of_days: 'Number of days...'
+    add_filter: 'Add filter'
+    cancel: Cancel
+    messages_filter: 'Messages Filter'
+    select_criterium: 'Please select a criterium'

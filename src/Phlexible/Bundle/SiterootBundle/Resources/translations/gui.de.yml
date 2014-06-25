@@ -1,0 +1,91 @@
+siteroots:
+    siteroots: Siteroots
+    siteroot: Siteroot
+    id: ID
+    default_title: 'Neuer Siteroot'
+    default_url: 'Neue URL'
+    all: alle
+    add_siteroot: 'Siteroot hinzufügen'
+    save_siteroot_data: 'Siteroot-Daten speichern'
+    failure: Fehler
+    remove: Löschen
+    sure: 'Sind Sie sicher?'
+    path: Pfad
+    type_element: Element
+    type_link: Link
+    err_siteroot_existing: 'Der Siteroot ''{0}'' existiert bereits.'
+    err_check_accordions_for_errors: 'Überprüfen Sie die markierten Akkordeons.'
+    url_mappings: 'URL Verknüpfungen'
+    no_url_mappings: 'URL Verknüpfungen'
+    add_mapping: 'Verknüpfung hinzufügen'
+    hostname: Hostname
+    url: URL
+    language: Sprache
+    type: Typ
+    target: Ziel
+    default: Standard
+    fallback: Fallback
+    err_url_existing: 'Die URL ''{0}'' existiert für die Sprache ''{1}'' bereits.'
+    err_url_empty: 'Sie müssen eine URL angeben.'
+    err_invalid_url: '''{0}'' ist keine gültige URL.'
+    err_path_empty: 'Sie müssen einen Pfad angeben.'
+    err_language_empty: 'Sie müssen eine Sprache angeben.'
+    err_target_empty: 'Sie müssen ein Ziel angeben.'
+    short_urls: Kurz-URLs
+    no_short_urls: 'Keine Kurz-URLs'
+    add_short_url: 'Kurz-URL hinzufügen'
+    navigations: Navigationen
+    no_navigations: 'Keine Navigationen'
+    title: Titel
+    handler: Handler
+    start_tid: 'Start TID'
+    max_depth: 'Max. Tiefe'
+    flags: Flags
+    additional: 'Zus. Parameter'
+    add_navigation: 'Navigation hinzufügen'
+    err_navigation_existing: 'Die Navigation ''{0}'' existiert bereits.'
+    err_title_empty: 'Sie müssen einen Titel angeben.'
+    err_handler_empty: 'Sie müssen einen Handler angeben.'
+    special_tids: 'Benannte TIDs'
+    no_special_tids: 'Keine benannten TIDs'
+    key: Schlüssel
+    tid: TID
+    add_specialtid: 'Special TID hinzufügen'
+    err_specialtid_existing: 'Die Special TID ''{0}'' existiert für die Sprache ''{1}'' bereits.'
+    err_key_empty: 'Sie müssen einen Schlüssel angeben.'
+    titles: Titel
+    err_title_existing: 'Sie müssen einen Titel angeben.'
+    custom_titles: 'Angepasste Titel'
+    example: Beispiel
+    legend: 'Verfügbare Platzhalter'
+    siteroot_title: Siteroottitel
+    element_backend_title: 'Element Backendtitel'
+    element_page_title: 'Element Seitentitel'
+    element_navigation_title: 'Element Navigationstitel'
+    project_title: Projekttitel
+    no_customized_title: 'Kein angepasster Titel'
+    no_customized_start_title: 'Kein angepasster Startseiten-Titel, benutze Standard'
+    default_custom_title: Standard
+    start_custom_title: Startseite
+    siteroot_navigation: 'Siteroot Navigation'
+    select_siteroot: 'Select a SiteRoot to add it'
+    new_siteroot: 'Neuer Siteroot'
+    properties: Eigenschaften
+    no_properties: 'Keine Eigenschaften'
+    contentchannels: 'Content Channels'
+    contentchannel: 'Content Channel'
+    contentchannel_id: 'Content Channel ID'
+    actions: Aktionen
+    active: Aktiv
+    cancel: Abbrechen
+    store: Übernehmen
+    flag_no_prepend_home: '"Home"-Knoten nicht als ersten Eintrag einfügen'
+    flag_append_active: 'Aktiven Knoten anhängen'
+    flag_include_no_navigation: 'Knoten die nicht in der Navigation stehen einbeziehen'
+    flag_include_restricted: 'Eingeschränkte Knoten einbeziehen'
+    flag_include_not_published: 'Nicht veröffentlichte Knoten einbeziehen'
+    flag_include_type_full: 'Vollelementtypen einbeziehen'
+    flag_include_type_structure: 'Strukturelementtypen einbeziehen'
+    flag_include_type_layout: 'Layoutelementtypen einbeziehen'
+    flag_include_type_teaser: 'Teaserelementtypen einbeziehen'
+    flag_include_unique_id: 'Unique IDs benutzen'

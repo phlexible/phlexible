@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="mmap">
+    <type>document</type>
+    <titles>
+        <title lang="de">MindManager Dokument</title>
+        <title lang="en">MindManager Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.mindjet.mindmanager</mimetype>
+    </mimetypes>
+</documenttype>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="docm">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Text with Macros</title>
+        <title lang="en">OpenXML Text with Macros</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.ms-word.document.macroEnabled.12</mimetype>
+    </mimetypes>
+</documenttype>

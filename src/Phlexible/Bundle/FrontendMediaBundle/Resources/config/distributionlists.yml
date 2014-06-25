@@ -1,0 +1,14 @@
+services:
+    frontendmediamanagerChangeFolderDataMapper:
+        class: Makeweb_Frontendmediamanager_Change_Folder_DataMapper_Database
+        arguments: [@connection_manager]
+
+    frontendmediamanagerChangeFolderRepository:
+        class: Makeweb_Frontendmediamanager_Change_Folder_Repository
+        arguments: [@frontendmediamanagerChangeFolderDataMapper]
+
+    frontendmediamanagerChangeFolderChanges:
+        class: Makeweb_Frontendmediamanager_Change_Folder_Changes
+        arguments: [@elementsManager, @elementsVersionManager, @elementsTreeManager, @distributionlistsChangesRepository]
+        tags:
+            - {name: distributionlists.changes}

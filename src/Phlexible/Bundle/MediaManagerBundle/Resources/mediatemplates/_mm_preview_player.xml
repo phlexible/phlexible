@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mediaTemplate key="_mm_preview_player" type="image" class="Phlexible\MediaTemplateBundle\Model\ImageTemplate" cache="1" revision="1">
+  <parameter key="width">256</parameter>
+  <parameter key="height">224</parameter>
+  <parameter key="method">fit</parameter>
+  <parameter key="scale">down</parameter>
+  <parameter key="optimize_for_web">1</parameter>
+  <parameter key="format">png</parameter>
+  <parameter key="quality">90</parameter>
+  <parameter key="backgroundcolor">#000000</parameter>
+</mediaTemplate>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="pptm">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Präsentation mit Makros</title>
+        <title lang="en">OpenXML Presentation with Macros</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.ms-powerpoint.presentation.macroEnabled.12</mimetype>
+    </mimetypes>
+</documenttype>

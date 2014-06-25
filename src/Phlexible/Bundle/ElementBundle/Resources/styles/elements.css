@@ -1,0 +1,499 @@
+.x-tree-node div.siteroot-node {
+    background:#eee url(/COMPONENTSPATH/elements/images/cmp-bg.gif) repeat-x;
+    margin-top:1px;
+    border-top:1px solid #ddd;
+    border-bottom:1px solid #ccc;
+    padding-top:2px;
+    padding-bottom:1px;
+}
+.x-tree-node div.node-disabled a span {
+    color: gray;
+}
+
+.p-elements-main-panel .x-layout-collapsed-west{
+    background-image:url(/BASEURL/admin/gui/asset/textimage/index/page/elements/key/elements);
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
+/*
+.p-elements-main-panel .x-layout-collapsed-east{
+    background-image:url(/BASEURL/admin/gui/asset/textimage/index/page/elements/key/properties/location/east);
+    background-repeat:no-repeat;
+    background-position:center;
+}
+*/
+
+.p-elements-main-panel .x-layout-collapsed-south {
+    background-image:url(/BASEURL/admin/gui/asset/textimage/?key=elements.layout&location=south);
+    background-position:center center;
+    background-repeat:no-repeat;
+}
+
+.x-form-field-wrap .p-form-link-trigger {
+    background-image:url(/COMPONENTSPATH/elements/images/link-trigger.gif);
+    cursor:pointer;
+}
+
+.p-elements-newelement .p-header-image {
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+}
+.p-elements-newelementinstance .p-header-image {
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+}
+.p-elements-newteaser .p-header-image {
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+}
+.p-elements-newteaserinstance .p-header-image {
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+}
+
+/* Tree */
+
+.p-elements-elements-tree .x-tree-node-collapsed .x-tree-node-icon,
+.p-elements-elements-tree .x-tree-node-expanded .x-tree-node-icon,
+.p-elements-elements-tree .x-tree-node-leaf .x-tree-node-icon{
+    width:18px;
+    height:18px;
+}
+
+/* Tabs */
+
+.p-elements-layout-tree .x-tree-node-collapsed .x-tree-node-icon,
+.p-elements-layout-tree .x-tree-node-expanded .x-tree-node-icon,
+.p-elements-layout-tree .x-tree-node-leaf .x-tree-node-icon{
+    width:18px;
+    height:18px;
+}
+
+/* List Tab */
+
+.p-elements-elements-list .x-grid3-header {
+    background: #f9f9f9 url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/grid3-hrow.gif) repeat-x left top;
+}
+
+.p-elements-elements-list .p-parent-row {
+    background:#eee url(/COMPONENTSPATH/elements/images/cmp-bg.gif) repeat-x;
+    margin-top:1px;
+    border-top:1px solid #ddd;
+    border-bottom:1px solid #ccc;
+    padding-top:2px;
+    padding-bottom:1px;
+    height:24px;
+}
+.p-elements-elements-list .p-parent-row td {
+    font-weight: bold;
+}
+
+/* Data Tab */
+
+.p-elements-data-panel .x-form-text {
+    line-height:14px;
+}
+
+/* sylvia: einzeilig/mehrzeilig */
+.p-elements-data-panel .p-form-group-singleline .x-form-item {
+    xclear: none !important;
+    float: left;
+}
+.p-elements-data-panel .p-form-group-multiline .x-form-item {
+    xclear: left !important;
+}
+.p-elements-data-panel .p-form-group-singleline .p-form-group-multiline {
+    xclear: none !important;
+    float: left;
+}
+
+.p-elements-data-panel .p-form-group-singleline .p-form-group-multiline {float:left;}
+.p-elements-data-panel .p-form-group-singleline .p-form-group-multiline .x-form-item {clear:left}
+
+.p-elements-data-panel .p-form-group-multiline xfieldset {
+    xclear: left !important;
+}
+
+.p-elements-data-panel .p-form-item-prefix {
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align:middle;
+}
+
+.p-elements-data-panel .p-form-item-suffix {
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align:middle;
+}
+
+.p-elements-data-panel .x-form-item-label {
+    text-align: right;
+}
+
+.p-elements-data-panel .x-form-helptext {
+    color: gray;
+}
+
+.p-elements-data-panel .p-handle {
+    cursor : move;
+    float:none;
+    position: absolute;
+    top: 4px;
+    left: 1px;
+    display: block;
+    height: 15px;
+    margin-left:2px;
+    overflow:hidden;
+    width:15px;
+}
+
+.ext-ie .p-elements-data-panel .p-handle {
+    top: 0;
+}
+
+.p-elements-data-panel fieldset fieldset .p-handle {
+    cursor : move;
+    float:none;
+    position: absolute;
+    top: 3px;
+    left: 1px;
+    display: block;
+    height: 15px;
+    margin-left:2px;
+    overflow:hidden;
+    width:15px;
+}
+
+.p-elements-data-panel .p-handle {
+    background:transparent url(/COMPONENTSPATH/phlexiblegui/images/tool-sprites2.gif) no-repeat scroll 0%;
+    background-position:0pt -330px;
+    z-index: 99;
+}
+
+/* Layout Tab */
+
+.p-elements-layout-tree .x-tree-node-collapsed .x-tree-node-icon,
+.p-elements-layout-tree .x-tree-node-expanded .x-tree-node-icon,
+.p-elements-layout-tree .x-tree-node-leaf .x-tree-node-icon{
+    width:18px;
+    height:18px;
+}
+
+.p-elements-layout-tree .inherit span {
+    font-weight: bold;
+}
+.p-elements-layout-tree .stop-inherit span {
+    color: gray;
+}
+.p-elements-layout-tree .dont-show span {
+    text-decoration: line-through;
+}
+
+/* Meta Accordion */
+
+.p-elements-meta-accordion .synchronized-master {
+    border: 1px solid green;
+}
+.p-elements-meta-accordion .synchronized-slave {
+    border: 1px solid red;
+}
+
+/* Version Accordion */
+
+/* Data Accordion */
+
+.p-elements-data-accordion .data-wrap {
+    padding: 2px;
+    font-weight: bold;
+    font-family:tahoma,arial,helvetica,sans-serif;
+    font-size:10px;
+}
+.p-elements-data-accordion .data-wrap th {
+    width: 60px;
+    vertical-align: top;
+}
+.p-elements-data-accordion .data-wrap td {
+    vertical-align: top;
+}
+
+/* Data Tabs */
+
+.p-elements-content-panel .x-tab-panel-header {
+    padding-bottom: 0;
+}
+.p-elements-content-panel .x-tab-strip-wrap {
+    margin-bottom: 3px;
+}
+.p-elements-content-panel .x-tab-strip-top {
+    border-bottom: 0;
+    xpadding-bottom: 2px;
+    padding-top: 3px;
+    background-image: none !important;
+    background-color: transparent !important;
+}
+.p-elements-content-panel .x-tab-right {
+    background-image: none;
+    padding-left: 3px !important;
+}
+.p-elements-content-panel .x-tab-left {
+    background-image: none;
+    padding-right: 3px !important;
+}
+.p-elements-content-panel .x-tab-strip-inner {
+    background-image: none;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.p-elements-content-panel .x-tab-strip span.x-tab-strip-text,
+.p-elements-content-panel .x-tab-strip-top .x-tab-strip-active .x-tab-right span.x-tab-strip-text {
+    padding-bottom: 2px;
+}
+.p-elements-content-panel .x-tab-strip-active .x-tab-right,
+.p-elements-content-panel .x-tab-strip-over .x-tab-right {
+    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) no-repeat scroll 0 0 !important;
+    padding-left: 3px;
+}
+.p-elements-content-panel .x-tab-strip-active .x-tab-left,
+.p-elements-content-panel .x-tab-strip-over .x-tab-left {
+    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) no-repeat scroll right -21px !important;
+    padding-right: 3px;
+}
+.p-elements-content-panel .x-tab-strip-active .x-tab-strip-inner,
+.p-elements-content-panel .x-tab-strip-over .x-tab-strip-inner {
+    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) repeat-x scroll 0 -42px !important;
+}
+
+/* Navigation Accordion */
+
+.ext-strict .p-elements-navigation-accordion .x-form-text {
+    height: 14px;
+}
+.p-elements-navigation-accordion .x-form-field {
+    font-size: 10px;
+}
+
+/*.x-tree-node-icon*/
+
+
+
+/**
+ * Field Groups
+ *
+ * @section field-group
+ */
+.p-elements-data-panel .p-elements-content-panel .p-fields-group {
+    margin: 10px;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group .p-fields-group {
+	margin-left: 0;
+	margin-right: 0;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group > .x-panel-bwrap > .x-panel-body > :first-child {
+	margin-top: 0;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group > .x-panel-bwrap > .x-panel-body > :last-child {
+	margin-bottom: 0;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group .p-fields-group > .p-fields-group-header {
+	margin-top: 10px;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-border > .p-fields-group-header,
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-sortable > .p-fields-group-header,
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-repeatable > .p-fields-group-header {
+    border-top: 1px solid #99BBE8;
+    margin-bottom: 0;
+    padding-left: 25px;
+    position: relative;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-border > .x-panel-bwrap > .x-panel-body {
+	background: #f0f0f0;
+	border-color: #ccc;
+	border-top: none;
+	font-size: 11px;
+	padding:  10px;
+}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-multiline .x-form-item,
+.p-elements-data-panel .p-elements-content-panel .p-form-group-singleline .x-form-item {
+	padding-right: 10px;
+}
+
+/**
+ * Single Line Field Groups
+ *
+ * @section field-group
+ * @subsection single-line
+ */
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-noborder.p-form-group-singleline > .p-fields-group-header .p-handle,
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-noborder.p-form-group-singleline > .p-fields-group-header .x-tool {
+	top:  0;
+	margin-top: 3px;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-noborder {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-noborder > .x-panel-bwrap > .x-panel-body {
+	border:  none;
+	padding: 0;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-noborder > .p-fields-group-header {
+	display: none;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-noborder.p-form-group-multiline.p-fields-group-sortable > .p-fields-group-header,
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-noborder.p-form-group-multiline.p-fields-group-repeatable > .p-fields-group-header {
+	display: block;
+	margin-bottom: 10px;
+}
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-noborder.p-form-group-singleline.p-fields-group-sortable > .p-fields-group-header,
+.p-elements-data-panel .p-elements-content-panel .p-fields-group-noborder.p-form-group-singleline.p-fields-group-repeatable > .p-fields-group-header {
+	border: none;
+	display: block;
+	height: 0;
+	margin-top: 0;
+	overflow: visible;
+	padding: 0;
+	text-indent: -9999px;
+}
+
+/* sylvia: rahmen/kein rahmen*/
+.p-elements-data-panel .p-elements-content-panel .p-form-group-border {margin-bottom: 10px;margin-top: 3px;padding-top: 4px; padding-bottom: 0;margin-top: 0; margin-bottom: 3px;position: relative;}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-border legend {display: block;}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-border .p-repeat-minus {position: absolute; top: 0; right: 38px; z-index:99;}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-border .p-repeat-plus {position: absolute; top: 0; right: 20px; z-index:99;}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-border .p-repeat-right {position: absolute; top: 0; right: 2px; z-index:99;}
+.ext-ie .p-elements-data-panel .p-elements-content-panel .p-form-group-border .p-repeat-minus {top: 0;}
+.ext-ie .p-elements-data-panel .p-elements-content-panel .p-form-group-border .p-repeat-plus {top: 0;}
+.ext-ie .p-elements-data-panel .p-elements-content-panel .p-form-group-border .p-repeat-right {top: 0;}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-noborder {border:1px solid #F0F0F0;background: none; padding-top: 0; padding-bottom: 0;margin-top: 0; margin-bottom: 3px;position: relative;}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-noborder legend {display: none;}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-noborder .p-repeat-minus {position: absolute; top: 3px; right: 38px; z-index:99;}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-noborder .p-repeat-plus {position: absolute; top: 3px; right: 20px; z-index:99;}
+.p-elements-data-panel .p-elements-content-panel .p-form-group-noborder .p-repeat-right {position: absolute; top: 3px; right: 2px; z-index:99;}
+.p-elements-data-panel .p-elements-content-panel .x-form-element .p-repeat-minus {position: absolute; top: 2px; right: 24px; z-index:99;}
+.p-elements-data-panel .p-elements-content-panel .x-form-element .p-repeat-plus {position: absolute; top: 2px; right: 8px; z-index:99;}
+.p-elements-data-panel .p-elements-content-panel .x-form-element .p-repeat-right {position: absolute; top: 2px; right: 8px; z-index:99;}
+
+/* Legend fuer die geschachtelten Ebenen */
+.p-elements-data-panel .p-elements-content-panel fieldset.x-fieldset legend {color: #333;padding-left: 20px; padding-right: 2px;margin-left: 2px; margin-right: 2px;}
+
+/* Buttonleiste in der Ueberschrift, mit Fieldsettiefe */
+.p-elements-data-panel .p-elements-content-panel .x-tab-panel-bwrap fieldset .x-panel-header {border-top: none;border-left: none; border-right: none;background:transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/panel/white-top-bottom.gif) repeat-x 0 -1px}
+.p-elements-data-panel .p-elements-content-panel .x-tab-panel-bwrap fieldset fieldset .x-panel-header {border-top: none;border-left: none; border-right: none;background:transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/panel/light-hd.gif) repeat-x 0 -1px}
+.p-elements-data-panel .p-elements-content-panel .x-tab-panel-bwrap fieldset fieldset fieldset .x-panel-header {border-top: none;border-left: none; border-right: none;background:transparent none;}
+
+/* Label links */
+.p-elements-data-panel .p-elements-content-panel .x-form-item {
+	margin-bottom: 5px;
+}
+.p-elements-data-panel .p-elements-content-panel .x-form-item label {
+	line-height:  20px;
+	padding: 0;
+}
+.p-fields-label {background: #F0F0F0;padding: 4px 3px 3px 17px; margin:0 6px 3px; font-size:11px;font-weight:bold;}
+
+/* Labelbreiten nach Schachtelung */
+.p-elements-data-panel .p-elements-content-panel .x-form-item label {width: 200px;}
+.p-elements-data-panel .p-elements-content-panel fieldset .x-form-item label {width: 189px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset .x-form-item label {width: 178px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset .x-form-item label {width: 167px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset .x-form-item label {width: 156px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset .x-form-item label {width: 145px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset .x-form-item label {width: 134px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-item label {width: 123px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-item label {width: 112px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-item label {width: 101px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-item label {width: 90px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-item label {width: 79px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-item label {width: 68px;}
+
+/* Label in Gruppen */
+.p-elements-data-panel .p-elements-content-panel .x-form-item .x-form-cb-label {padding-left: 5px;padding-right: 5px;}
+
+/* Abstand der Formularfelder nach oben nivelliert */
+.ext-gecko .p-elements-data-panel .p-elements-content-panel .x-form-text {padding-bottom:0pt;padding-top:0px;}
+
+/* Formularfelder, Schachtelung nach Fieldsettiefe */
+/*
+.p-elements-data-panel .p-elements-content-panel .x-form-element {padding-left: 205px;}
+.p-elements-data-panel .p-elements-content-panel fieldset .x-form-element {padding-left: 194px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset .x-form-element {padding-left: 183px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset .x-form-element {padding-left: 172px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset .x-form-item {padding-left: 161px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset .x-form-element {padding-left: 150px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset .x-form-element {padding-left: 139px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-element {padding-left: 128px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-element {padding-left: 117px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-element {padding-left: 106px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-element {padding-left: 95px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-element {padding-left: 84px;}
+.p-elements-data-panel .p-elements-content-panel fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset fieldset .x-form-element {padding-left: 73px;}
+*/
+.p-elements-data-panel .p-elements-content-panel .x-form-field {font-size:11px;}
+.ext-strict .p-elements-data-panel .p-elements-content-panel .p-element-data-panel .x-form-text {height:17px;padding-top: 3px;}
+
+/* Buttons nach Formularfelder */
+.p-elements-data-panel .p-elements-content-panel .x-form-field-wrap .x-form-trigger {position: static;height:19px;vertical-align:middle;}
+
+/* Catch Panel */
+.p-elements-catch-panel .x-fieldset legend {color: #333;margin-left:2px;margin-right:2px;padding-left:20px;padding-right:2px;display:block;}
+.p-elements-catch-panel .x-fieldset {background:#f0f0f0 none;border:1px solid #B5B8C8;margin:4px 6px 10px;padding:0 0 9px;margin-bottom:3px;margin-top:0;padding-bottom:0;padding-top:4px;position:relative;}
+.p-elements-catch-panel .x-fieldset .x-fieldset {margin: 0; padding: 0;}
+.p-elements-catch-panel .x-form-item {background:#F0F0F0;margin:0;padding-right:10px;font-size:11px;padding-bottom:1px;padding-top:1px;font-size:11px;}
+.p-elements-catch-panel .x-form-text, .p-elements-catch-panel .ux-mselect-item {font-size:11px;}
+.p-elements-catch-panel .x-form-item label {padding:4px 3px 3px 0;text-align:right;}
+
+
+.p-tasks-toolbar .x-btn .x-btn-left {
+    background:url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 0 transparent !important;
+}
+.p-tasks-toolbar .x-btn .x-btn-center {
+    background:url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") repeat-x scroll 0 -42px transparent !important;
+}
+.p-tasks-toolbar .x-btn .x-btn-right {
+    background:url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -21px transparent !important;
+}
+
+.p-tasks-toolbar .x-btn-over .x-btn-left {
+    background:url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -63px transparent !important;
+}
+.p-tasks-toolbar .x-btn-over .x-btn-center {
+    background:url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") repeat-x scroll 0 -105px transparent !important;
+}
+.p-tasks-toolbar .x-btn-over .x-btn-right {
+    background:url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -84px transparent !important;
+}
+
+.p-elements-accordion .x-accordion-hd .error {
+    color: red;
+}
+
+.p-elements-diff-accordion label {
+    font-weight: bold;
+    font-size: 8pt;
+}
+.p-elements-diff-accordion ins {
+    color: green;
+}
+.p-elements-diff-accordion del {
+    color: red;
+}
+
+.p-elements-result-wrap {
+    cursor: pointer;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border: 1px solid transparent;
+}
+.p-elements-result-wrap-over {
+    background-color: #EEE;
+    border: 1px solid #CCC;
+}
+
+.element-icon {
+    width: 18px !important;
+    height: 18px !important;
+}
+.p-elements-resource-tabs .x-tab-strip-inner {
+    width: 16px;
+}
+
+.p-elements-publish-filter .x-panel {
+    padding-bottom: 8px;
+}

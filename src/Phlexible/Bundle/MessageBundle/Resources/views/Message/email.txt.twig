@@ -1,0 +1,6 @@
+[{{ appTitle }} {{ projectTitle }}] {{ message.subject }}
+{{ message.body }}
+
+{% if user %}
+by {{ user.getFirstname }} {{ user.getLastname }}
+{% endif %}

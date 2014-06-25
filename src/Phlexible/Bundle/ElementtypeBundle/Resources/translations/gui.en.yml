@@ -1,0 +1,217 @@
+elementtypes:
+    elementtypes: 'Element types'
+    elementtype: 'Element type'
+    elementtype_tree: 'Elementtype tree'
+    template_elementtype: Template
+    root: Root
+    fields: Fields
+    field: Field
+    pattern: Pattern
+    index: Index
+    new_field: 'New Field'
+    edit_field: 'Edit Field'
+    categories: Categories
+    component: Component
+    types: Types
+    groups: Groups
+    status: Status
+    publish: Publish
+    reset_element_type: Reset
+    save_properties: 'Save properties'
+    reset_properties: Reset
+    create_user: 'Created by'
+    create_time: 'Created on'
+    create: Create
+    create_element_type: 'New element type'
+    properties: Properties
+    properties_of: 'Properties of'
+    templates: Templates
+    template: Template
+    viability: Viability
+    configuration: Configuration
+    validation: Validation
+    details: Details
+    options: Options
+    name: Name
+    ds_id: 'DS ID'
+    uniqueid: 'Unique ID'
+    icon: Icon
+    type: Type
+    title: Title
+    titles: Titles
+    field_mappings: 'Field mappings'
+    full_element: 'Full element type'
+    full: Full
+    layout_element: 'Layout area element type'
+    layout: 'Layout Area'
+    layoutcontainer_element: 'Layout container element type'
+    layoutcontainer: 'Layout container'
+    part_element: 'Part element type'
+    part: Part
+    structure_element: 'Structure element type'
+    structure: Structure
+    reference_element: 'Reference element type'
+    reference: Reference
+    list_element: 'List element'
+    show_as_list: 'show as list'
+    global_teasers: 'Global teasers'
+    show: show
+    teaser_groups: 'Teaser groups'
+    comment: Comment
+    context_help: 'Context help'
+    overwrite: overwrite
+    field_values: 'Field values'
+    preview: Preview
+    working_title: 'Working title'
+    unique_id: 'Unique ID'
+    category: Category
+    image: Image
+    labels: Labels
+    label: Label
+    fieldlabel: Fieldlabel
+    boxlabel: Boxlabel
+    default_value: 'Default value'
+    prefix: Prefix
+    suffix: Suffix
+    group: Group
+    group_show_border: 'Show border'
+    group_single_row: 'Single row'
+    language: Language
+    is_synchronized: 'is synchronized'
+    navigation: Navigation
+    width: Width
+    height: Height
+    repeat_min: 'Min occurances'
+    repeat_max: 'Max occurances'
+    repeat_default: 'Default occurances'
+    value: Value
+    values: Values
+    required: Required
+    number_allow_negative: 'can be negative'
+    number_allow_decimals: 'can be a decimal'
+    number_min_value: 'Minimum value'
+    number_max_value: Maximum
+    text_min_length: 'Minimum length'
+    text_max_length: 'Maximum length'
+    text_validator: Validator
+    text_validation: 'Text validation'
+    text_regular_expression: 'Regular Expression'
+    text_modifiers: Modifiers
+    text_global: Global
+    text_ignore_case: 'Ignore case'
+    text_multiline: Multiline
+    content_validation: 'Content validation'
+    number_validation: 'Number validation'
+    add_elementtype: 'Add Element Type...'
+    add_template: 'Add Template...'
+    paging_displayMsg: 'Displaying topics {0} - {1} of {2}'
+    paging_emptyMsg: 'No topics to display'
+    paging_beforePageText: Page
+    paging_afterPageText: 'of {0}'
+    copy: Copy
+    cut: Cut
+    paste: Paste
+    delete: Delete
+    remove: Remove
+    remove_reference: 'Remove reference'
+    cancel: Cancel
+    add: Add
+    duplicate: Duplicate
+    save: Save
+    usage: Usage
+    no_usage: 'This Element Type is not used.'
+    add_field_before: 'Add field before'
+    add_field_after: 'Add field after'
+    add_field_as_child: 'Add field as child'
+    values_key: Key
+    values_german: German
+    values_english: English
+    link: Link
+    allow: erlauben
+    link_types: 'Link types'
+    link_internal: 'Internal link'
+    link_external: 'External link'
+    link_intra: 'Intra-Siteroot link'
+    link_email: Email-link
+    table: Table
+    table_rows: 'Number of rows'
+    table_cols: 'Number of columns'
+    add_option: 'Add option'
+    remove_option: 'Remove option'
+    set_as_default: 'Set as default value'
+    asset_types: 'File types'
+    cols: Cols
+    image_templates: 'Image templates'
+    image_template: 'Image template'
+    video_templates: 'Video templates'
+    video_template: 'Video template'
+    audio_templates: 'Audio templates'
+    audio_template: 'Audio template'
+    capture_frame: Frame
+    autoapply: Autoapply
+    allow_deactivation: 'Allow deactivation'
+    allow_unlink: 'Allow unlink'
+    version: Version
+    versions: Versions
+    source: Source
+    editable_list: 'Editable list'
+    editable_value: 'Editable value'
+    component_function: 'Component function'
+    content_channels: 'Content channels'
+    available: available
+    specific: specific
+    default_collapsed: 'default collapsed'
+    contentchannel: 'Content Channel'
+    new_elementtype_header: 'Create a new Element Type'
+    new_elementtype_description: 'Please enter a title for the new Element Type.'
+    navigation_default_title: 'Drag text fields here to create a compound navigation title.'
+    navigation_default_date: 'Drag a date field here to create a custom date.'
+    navigation_default_link: 'Drag a link field here to create a custom link.'
+    clear: Clear
+    no_viability: 'No Viability, please choose from above.'
+    no_templates: 'No Templates, please choose from above.'
+    default_tab: 'Default tab'
+    no_default_tab: 'No default tab'
+    default_content_tab: 'Default content tab'
+    no_default_content_tab: 'No default content tab'
+    latest_elementtype_changes: 'Latest element type changes'
+    no_recent_elementtypes: 'No recent element type versions.'
+    accordion: Accordion
+    child_items: 'Child items'
+    can_be_sorted: 'can be sorted'
+    hide_children: 'Hide children in tree'
+    metaset: 'Meta set'
+    no_metaset: 'No meta set'
+    author: Author
+    date: Date
+    custom_date: 'Custom date'
+    text: Text
+    check_input: 'Please check your input on the marked accordions.'
+    readonly: Readonly
+    hide_label: 'Hide label'
+    not_synchronized: 'Not synchronized'
+    synchronized: Synchronized
+    synchronized_with_unlink: 'Synchronized, with unlink'
+    not_required: 'Not required'
+    on_publish: 'On publish'
+    always: Always
+    backend_title: 'Backend title'
+    page_title: 'Page title'
+    navigation_title: 'Navigation title'
+    use_backend_as_page: 'Use backend title as page title'
+    use_backend_as_navigation: 'Use backend title as navigation title'
+    working_title_help: 'Valid chars for the working title are "a-z", "0-9", "-" and "_".'
+    add_above: 'Add above'
+    add_below: 'Add below'
+    add_child: 'Add child'
+    no_value: 'no value'
+    add_row_above: 'Add row above'
+    add_row_below: 'Add row below'
+    delete_row: 'Delete row'
+    add_column_before: 'Add column before'
+    add_column_after: 'Add column beforeafter'
+    delete_column: 'Delete column'
+    headers: Headers
+    first_row_is_header: 'First row is header'
+    first_column_is_header: 'First column is header'
+    diff_new_field: 'NEW FIELD'

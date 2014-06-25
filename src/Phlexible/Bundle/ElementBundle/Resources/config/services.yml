@@ -1,0 +1,186 @@
+parameters:
+    phlexible_element.overlay.cache_dir: %kernel.cache_dir%/overlays/
+    phlexible_element.content.cache_dir: %kernel.cache_dir%/elements/
+
+services:
+    phlexible_element.repository:
+        class: Phlexible\Bundle\ElementBundle\Element\ElementRepository
+        arguments: [@event_dispatcher, @connection_manager]
+
+    phlexible_element.version.repository:
+        class: Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersionRepository
+        arguments: [@event_dispatcher, @connection_manager]
+
+    phlexible_element.version.data.loader:
+        class: Phlexible\Bundle\ElementBundle\ElementVersionData\ElementVersionDataLoader
+        arguments: [@connection_manager, @phlexible_elementtype.field.registry, @phlexible_elementtype.service]
+
+    phlexible_element.structure.loader:
+        class: Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructureLoader
+        arguments: [@connection_manager, @phlexible_elementtype.field.registry, @phlexible_elementtype.service]
+
+    phlexible_element.service:
+        class: Phlexible\Bundle\ElementBundle\ElementService
+        arguments:
+            - @phlexible_element.repository
+            - @phlexible_element.version.repository
+            - @phlexible_element.structure.loader
+            - @phlexible_elementtype.service
+
+    phlexible_element.context.manager:
+        class: Phlexible\Bundle\ElementBundle\Context\ContextManager
+
+    phlexible_element.file.usage:
+        class: Phlexible\Bundle\ElementBundle\Usage\FileUsage
+
+    phlexible_element.folder.usage:
+        class: Phlexible\Bundle\ElementBundle\Usage\FolderUsage
+
+    phlexible_element.field.mapper:
+        class: Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper
+        arguments: [@phlexible_element.service]
+
+    phlexible_element.content.loader:
+        class: Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader
+        arguments:
+            - @event_dispatcher
+            - @logger
+            - @phlexible_element.content.builder
+            - @phlexible_element.content.loader.xml
+            - @phlexible_element.content.dumper.xml
+
+    phlexible_element.content.builder:
+        class: Phlexible\Bundle\ElementBundle\ContentElement\ContentElementBuilder
+        arguments: [@event_dispatcher, @logger, @phlexible_element.service]
+
+    phlexible_element.content.dumper.xml:
+        class: Phlexible\Bundle\ElementBundle\ContentElement\Dumper\XmlDumper
+        arguments: [%phlexible_element.content.cache_dir%]
+
+    phlexible_element.content.loader.xml:
+        class: Phlexible\Bundle\ElementBundle\ContentElement\Loader\XmlLoader
+        arguments: [%phlexible_element.content.cache_dir%]
+
+    phlexible_element.overlay:
+        class: Phlexible\Bundle\ElementBundle\Overlay
+        arguments: [%phlexible_element.overlay.cache_dir%]
+
+    phlexible_element.lock.manager:
+        class: Phlexible\Bundle\ElementBundle\Lock\LockManager
+        arguments: [@doctrine.orm.entity_manager]
+
+    phlexible_element.util.suggest_field:
+        class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
+        arguments: [@connection_manager, %phlexible_elementtype.field.suggest_seperator%]
+
+    phlexible_element.util.suggest_meta_field:
+        class: Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil
+        arguments: [@connection_manager, %phlexible_meta_set.suggest.seperator%]
+
+    # acl providers
+    phlexible_element.acl_provider:
+        class: Phlexible\Bundle\ElementBundle\AclProvider\ElementAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_element.asset_provider:
+        class: Phlexible\Bundle\ElementBundle\AssetProvider\ElementAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider, priority: 100}
+
+    # event listeners
+    phlexible_element.listener.elementtypes:
+        class: Phlexible\Bundle\ElementBundle\EventListener\ElementtypeListener
+        tags:
+            - {name: kernel.event_listener, event: phlexible_elementtype.version_create, method: onElementTypeVersionCreate}
+            - {name: kernel.event_listener, event: phlexible_elementtype.delete, method: onElementTypeDelete}
+
+    phlexible_element.listener.node:
+        class: Phlexible\Bundle\ElementBundle\EventListener\TreeNodeListener
+        tags:
+            - {name: kernel.event_listener, event: phlexible_element.publish_node, method: onPublishNode}
+            - {name: kernel.event_listener, event: phlexible_element.set_node_offline, method: onSetNodeOffline}
+            - {name: kernel.event_listener, event: phlexible_element.delete_node, method: onDeleteNode}
+
+    phlexible_element.listener.siteroots:
+        class: Phlexible\Bundle\ElementBundle\EventListener\SiterootListener
+        tags:
+            - {name: kernel.event_listener, event: phlexible_siteroot.create, method: onCreateSiteroot}
+
+    phlexible_element.listener.datasource:
+        class: Phlexible\Bundle\ElementBundle\EventListener\DatasourceListener
+        arguments: [@phlexible_element.util.suggest_field, @phlexible_element.util.suggest_meta_field]
+        tags:
+            - {name: kernel.event_subscriber}
+
+    phlexible_element.listener.get_config:
+        class: Phlexible\Bundle\ElementBundle\EventListener\GetConfigListener
+        arguments: [@service_container]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
+
+    phlexible_element.listener.get_menu:
+        class: Phlexible\Bundle\ElementBundle\EventListener\GetMenuListener
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_gui.get_menu, method: onGetMenu}
+
+    phlexible_element.listener.apply_successor:
+        class: Phlexible\Bundle\ElementBundle\EventListener\ApplySuccessorListener
+        arguments: [@connection_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    phlexible_element.listener.elementtype_usage:
+        class: Phlexible\Bundle\ElementBundle\EventListener\ElementtypeUsageListener
+        arguments: [@connection_manager, @security.context]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_elementtype.usage, method: onElementtypeUsage}
+
+    # portlets
+    #phlexible_element.portlet.latest:
+    #    class: Phlexible\Bundle\ElementBundle\Portlet\LatestElementsPortlet
+    #    public: false
+    #    arguments: [@translator, @phlexible_element.version.repository, @phlexible_tree.manager, @connection_manager, %phlexible_element.portlet.num_items%]
+    #    tags:
+    #        - {name: phlexible_dashboard.portlet}
+
+    # searches
+    phlexible_element.search.eid:
+        class: Phlexible\Bundle\ElementBundle\Search\EidSearch
+        public: false
+        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        tags:
+            - {name: phlexible_search.handler}
+
+    phlexible_element.search.elementtype:
+        class: Phlexible\Bundle\ElementBundle\Search\ElementtypeSearch
+        public: false
+        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        tags:
+            - {name: phlexible_search.handler}
+
+    phlexible_element.search.tid:
+        class: Phlexible\Bundle\ElementBundle\Search\TidSearch
+        public: false
+        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        tags:
+            - {name: phlexible_search.handler}
+
+    phlexible_element.search.title:
+        class: Phlexible\Bundle\ElementBundle\Search\TitleSearch
+        public: false
+        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        tags:
+            - {name: phlexible_search.handler}
+
+    phlexible_element.search.unique_id:
+        class: Phlexible\Bundle\ElementBundle\Search\UniqueIdSearch
+        public: false
+        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        tags:
+            - {name: phlexible_search.handler}

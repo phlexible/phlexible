@@ -1,0 +1,7 @@
+.x-form-append { float: left; padding-right: 3px; }
+.x-form-helptext { clear: both; font-size: 9px; color: #888; }
+
+.ext-safari .x-form-text,
+.ext-chrome .x-form-text {
+    height: 18px;
+}

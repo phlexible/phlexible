@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="xlsm">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Arbeitsmappe mit Makros</title>
+        <title lang="en">OpenXML Spreadsheet with Macros</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.ms-excel.sheet.macroEnabled.12</mimetype>
+    </mimetypes>
+</documenttype>

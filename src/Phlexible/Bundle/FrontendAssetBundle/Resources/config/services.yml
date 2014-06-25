@@ -1,0 +1,25 @@
+services:
+    phlexible_frontend_asset.collector:
+        class: Phlexible\Bundle\FrontendAssetBundle\Collector\Collector
+        arguments: [@event_dispatcher]
+
+    phlexible_frontend_asset.dumper.script:
+        class: Phlexible\Bundle\FrontendAssetBundle\Dumper\ScriptDumper
+        arguments: [@logger, @phlexible_gui.compressor.javascript, %app.web_dir%]
+
+    phlexible_frontend_asset.dumper.style:
+        class: Phlexible\Bundle\FrontendAssetBundle\Dumper\StyleDumper
+        arguments: [@logger, @phlexible_gui.compressor.css, %app.web_dir%]
+
+    # dwoo plugins
+    phlexible_frontend_asset.dwoo.plugin.script:
+        class: Phlexible\Bundle\FrontendAssetBundle\Plugin\Scripts
+        public: false
+        tags:
+            - {name: phlexible_dwoo.plugin, alias: scripts}
+
+    phlexible_frontend_asset.dwoo.plugin.style:
+        class: Phlexible\Bundle\FrontendAssetBundle\Plugin\Styles
+        public: false
+        tags:
+            - {name: phlexible_dwoo.plugin, alias: styles}

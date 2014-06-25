@@ -1,0 +1,38 @@
+services:
+    phlexible_siteroot.matcher.url:
+        class: Phlexible\Bundle\SiterootBundle\Siteroot\UrlMatcher
+        arguments: [@phlexible_siteroot.siteroot_manager]
+
+    phlexible_siteroot.title.resolver:
+        class: Phlexible\Bundle\SiterootBundle\Siteroot\TitleResolver
+        arguments: [@translator, %app.project_title%]
+
+    # acl providers
+    phlexible_siteroot.acl_provider:
+        class: Phlexible\Bundle\SiterootBundle\AclProvider\SiterootAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_siteroot.asset_provider:
+        class: Phlexible\Bundle\SiterootBundle\AssetProvider\SiterootAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # event listeners
+    phlexible_siteroot.listener.apply_successor:
+        class: Phlexible\Bundle\SiterootBundle\EventListener\ApplySuccessorListener
+        arguments: [@phlexible_siteroot.siteroot_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    # problem checkers
+    phlexible_siteroot.problem.siterootcheck:
+        class: Phlexible\Bundle\SiterootBundle\ProblemChecker\SiterootProblemChecker
+        public: false
+        arguments: [@phlexible_siteroot.siteroot_manager]
+        tags:
+            - {name: phlexible_problem.problem_checker}

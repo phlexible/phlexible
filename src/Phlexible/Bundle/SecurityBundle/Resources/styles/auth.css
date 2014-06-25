@@ -1,0 +1,11 @@
+.m-auth-login-window a:link { color:blue; text-decoration:none; }
+.m-auth-login-window a:visited { color:blue; text-decoration:none; }
+.m-auth-login-window a:focus { color:blue; text-decoration:none; }
+.m-auth-login-window a:hover { color:blue; text-decoration:none; }
+.m-auth-login-window a:active { color:blue; text-decoration:none; }
+
+.m-auth-logout-window a:link { color:blue; text-decoration:none; }
+.m-auth-logout-window a:visited { color:blue; text-decoration:none; }
+.m-auth-logout-window a:focus { color:blue; text-decoration:none; }
+.m-auth-logout-window a:hover { color:blue; text-decoration:none; }
+.m-auth-logout-window a:active { color:blue; text-decoration:none; }

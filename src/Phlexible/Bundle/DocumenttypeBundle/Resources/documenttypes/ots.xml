@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="ots">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenDocument Spreadsheet Vorlage</title>
+        <title lang="en">OpenDocument Spreadsheet Template</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.oasis.opendocument.spreadsheet-template</mimetype>
+    </mimetypes>
+</documenttype>

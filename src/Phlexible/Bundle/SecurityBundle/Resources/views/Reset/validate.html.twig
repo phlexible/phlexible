@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+    <title>{{ appTitle }} - {{ projectTitle }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7" />
+</head>
+<body>
+<noscript>{{ noScript }}</noscript>
+</body>
+<link href="{{ extjs("/resources/css/ext-all.css") }}" media="screen" rel="stylesheet" type="text/css" />
+{% if theme and theme != "default" %}
+    <link id="theme" href="{{ extjs('/resources/css/xtheme-' ~ theme ~ '.css') }}" media="screen" rel="stylesheet" type="text/css" />
+{% endif %}
+<link href="{{ path("security_asset_css") }}" media="screen" rel="stylesheet" type="text/css" />
+<link href="{{ path("security_asset_icons") }}" media="screen" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{{ extjs('/adapter/ext/ext-base.js') }}"></script>
+{% if debug %}
+    <script type="text/javascript" src="{{ extjs('/ext-all-debug.js') }}"></script>
+{% else %}
+    <script type="text/javascript" src="{{ extjs('/ext-all.js') }}"></script>
+{% endif %}
+<script type="text/javascript" src="{{ extjs("/locale/ext-lang-" ~ language ~ ".js") }}"></script>
+<script type="text/javascript">
+    //<![CDATA[
+    Ext.BLANK_IMAGE_URL = "{{ component("/phlexiblegui/images/blank.gif") }}";
+    Ext.QuickTips.init();
+    var Phlexible = {
+        title: "{{ appTitle }}",
+        version: "{{ appVersion }}",
+        project: "{{ projectTitle }}",
+        baseUrl: "{{ baseUrl }}",
+        basePath: "{{ basePath }}",
+        componentsPath: "{{ componentsPath }}"
+    };
+    //]]>
+</script>
+<script type="text/javascript" src="{{ path("security_asset_translations", {language: language}) }}"></script>
+<script type="text/javascript" src="{{ path("security_asset_scripts") }}"></script>
+{{ scripts|raw }}
+<script type="text/javascript">
+    //<![CDATA[
+    Ext.onReady(function() {
+        win = new Phlexible.security.ValidateWindow({
+            title: "{{ appTitle }} - {{ projectTitle }}",
+            loginUrl: "{{ loginUrl }}",
+            validateUrl: "{{ validateUrl }}",
+            csrfToken: "{{ csrfToken }}"
+        });
+        win.show();
+    });
+    //]]>
+</script>
+</html>

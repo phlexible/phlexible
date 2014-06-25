@@ -1,0 +1,312 @@
+elements:
+    elements: Elemente
+    element: Element
+    element_version: 'Element Version'
+    latest_version: 'Letzte Version'
+    online_version: 'Online Version'
+    tree_node: Treenode
+    teaser_node: Teasernode
+    teaser_id: 'Teaser ID'
+    catch: Catch
+    content: Content
+    field: Feld
+    sites: Seiten
+    siteroots: Siteroots
+    properties: Eigenschaften
+    versions: Versionen
+    instance: Instanz
+    instances: Instanzen
+    actions: Aktionen
+    list: Liste
+    type: Typ
+    tid: TID
+    eid: EID
+    id: ID
+    version: Version
+    language: Sprache
+    languages: Sprachen
+    unique_id: 'Unique ID'
+    author: Autor
+    masterlanguage: Master
+    masterlanguage_dialog: Hauptsprache
+    status: Status
+    custom_date: 'Spezifisches Datum'
+    create_date: Anlegedatum
+    created: Angelegt
+    publish_date: Veröffentlichungsdatum
+    published: Veröffentlicht
+    published_async: 'Veröffentlicht, neuere Version vorhanden'
+    not_published: 'Nicht Veröffentlicht'
+    publisher: 'Veröffentlicht durch'
+    name: Name
+    title: Titel
+    data: Daten
+    information: Informationen
+    layout: Layoutbereiche
+    preview: Vorschau
+    history: Verlauf
+    date: Datum
+    action: Aktion
+    username: Benutzername
+    paging_display_msg: 'Zeige Einträge {0} - {1} von {2}'
+    paging_empty_msg: 'Keine Einträge vorhanden'
+    paging_before_page_text: Seite
+    paging_after_page_text: 'von {0}'
+    show_all_items: 'Alle anzeigen'
+    save: Speichern
+    save_publish: 'Speichern & Veröffentlichen'
+    save_minor: 'Speichern mit unwesentlichen Änderungen'
+    reset: Zurücksetzen
+    minor_update: 'Unwesentliche Änderung'
+    add_element: Hinzufügen
+    delete_element: Löschen
+    open_element: Öffnen
+    edit_element: Bearbeiten
+    lock_element: Sperren
+    locked_element: Gesperrt
+    locked_by_user: 'Gesperrt von {0}.'
+    locked_by_me: 'Durch mich gesperrt.'
+    locked_by_user_permanently: 'Permanent gesperrt von {0}.'
+    unlock_warning: 'Achtung, das entsperren eines Elements ist eine kritische Aktion. Der Benutzer könnte das gesperrte Element noch bearbeiten. Das Element wurde vor {0} gesperrt. Wollen Sie die Sperre wirklich auflösen?'
+    save_element: Speichern
+    publish_element: Veröffentlichen
+    publish_element_recursive: 'Veröffentlichen mit allen Unterelementen'
+    publish_element_advanced: 'Erweitertes Veröffentlichen'
+    publish_element_with_notification: 'Veröffentlichen mit Update-Benachrichtigung'
+    publish_treenode: Veröffentlichen
+    publish_treenode_header: Veröffentlichen
+    publish_treenode_description: 'Veröffentliche ausgewählte Elemente'
+    publish_treenode_recursive: 'Veröffentlichen mit allen Untertreenodes'
+    publish_teaser: Veröffentlichen
+    publish_teaser_header: Veröffentlichen
+    publish_teaser_description: 'Veröffentliche ausgewählten Teaser'
+    release_element: Freigeben
+    set_element_offline: 'Offline setzen'
+    set_element_offline_recursive: 'Offline setzen mit allen Unterelementen'
+    set_element_offline_advanced: 'Erweitertes Offline setzen'
+    set_treenode_offline: 'Offline setzen'
+    set_treenode_offline_header: 'Offline setzen'
+    set_treenode_offline_description: 'Setze ausgewählten Treenode offline'
+    set_treenode_offline_recursive: 'Setze mit allen Untertreenodes offline'
+    set_teaser_offline: 'Offline setzen'
+    set_teaser_offline_header: 'Offline setzen'
+    set_teaser_offline_description: 'Setze ausgewählten Teaser offline'
+    publish: Veröffentlichen
+    set_offline: 'Offline setzten'
+    options: Optionen
+    include_full_elements: 'Vollelemente einbeziehen'
+    include_full_element_instances: 'Vollelementinstanzen einbeziehen'
+    include_part_elements: 'Teilelemente einbeziehen'
+    include_part_element_instances: 'Teilelementinstanzen einbeziehen'
+    recursive: Rekursiv
+    only_offline_elements: 'Nur Elemente die nicht veröffentlicht sind'
+    only_async_elements: 'Nur veröff. Elemente mit neuer Version'
+    no_elements_match_filter: 'Keine Elemente entsprechen dem gewählten Filter'
+    check_input: 'Bitte füllen Sie alle benötigten Felder aus.'
+    check_elements: 'Bitte wählen Sie mindestens entweder die Voll- oder die Teilelement-Checkbox.'
+    duplicate: Dublizieren
+    copy: Kopieren
+    cut: Ausschneiden
+    paste: Einfügen
+    paste_as: '"{0}" einfügen als...'
+    paste_element: 'Neues Element'
+    paste_alias: 'Neue Instanz'
+    caching: Caching
+    expires_after: 'Läuft ab nach (h)'
+    allowed: erlaubt
+    meta: Meta
+    key: Schlüssel
+    value: Wert
+    links: Links
+    include_incoming_links: 'Eingehende Links anzeigen'
+    incoming_links: 'Eingehende Links'
+    outgoing_links: 'Ausgehende Links'
+    link: Link
+    no_links_found: 'Keine Links gefunden.'
+    raw: Rohdaten
+    allowed_child_elements: 'Erlaubte Kindelemente'
+    no_allowed_child_elements: 'Keine Kindelemente erlaubt.'
+    elementtype: Elementtyp
+    position: Position
+    sort: Sortierung
+    sort_mode: Sortiermodus
+    sort_field: Sortierfeld
+    sort_order: Sortierreihenfolge
+    title_asc: 'Titel, aufsteigend'
+    title_desc: 'Titel, absteigend'
+    date_asc: 'Datum, aufsteigend'
+    date_desc: 'Datum, absteigend'
+    createdate_asc: 'Anlegedatum, aufsteigend'
+    createdate_desc: 'Anlegedatum, absteigend'
+    publishdate_asc: 'Veröffentlichungsdatum, aufsteigend'
+    publishdate_desc: 'Veröffentlichungsdatum, absteigend'
+    customdate_asc: 'Spezifisches Datum, aufsteigend'
+    customdate_desc: 'Spezifisches Datum, absteigend'
+    publish_sort: 'Sortierung veröffentlichen'
+    ascending: aufsteigend
+    descending: absteigend
+    unsorted: unsortiert
+    page: Seite
+    disable_caching: 'Caching deaktivieren'
+    cache_lifetime: 'Cache-Lebensdauer (Sekunden)'
+    http_response_code: 'HTTP Response Code'
+    in_navigation: 'in Navigation'
+    is_restricted: 'Zugriff beschränkt'
+    use_https: 'HTTPS benutzen'
+    use_default: 'Standard benutzen'
+    free: Frei
+    first: Zuerst
+    position_help: 'Die Position des neuen Elements. Entweder zuerst oder NACH dem gewählten Element.'
+    after: Nach
+    create: Anlegen
+    set: Setzen
+    cancel: Abbrechen
+    close: Schliessen
+    navigation: Navigation
+    search_engine_friendly_url: 'Suchmaschinenfreundliche URL'
+    breadcrumb_preview: 'Breadcrumb Vorschau'
+    reload: 'Neu laden'
+    templates: Templates
+    template: Template
+    no_template: 'kein Template'
+    latest_elements: 'Letzte Elementversionen'
+    latest_element_changes: 'Letzte Elementänderungen'
+    no_recent_elements: 'Keine letzten Elementversion.'
+    create_element: 'Element anlegen'
+    new_element_header: 'Neues Element anlegen'
+    new_element_description: 'Bitte geben Sie die benötigten Daten für das neue Element ein.'
+    select_elementtype: 'Bitte wählen Sie einen Elementtypen.'
+    empty_tab: 'Reiter "{0}" ist leer. Bitte fügen Sie einige Felder hinzu, oder löschen Sie den Reiter, damit die Datenmaske für dieses Element komplett deaktiviert wird.'
+    teaser: Teaser
+    teasers: Teaser
+    backend_title: Backendtitel
+    page_title: Seitentitel
+    navigation_title: Navigationstitel
+    backend_page_title: 'Backend- / Seitentitel'
+    backend_navigation_title: 'Backend- / Navigationstitel'
+    backend_page_navigation_title: 'Backend- / Page- / Navigationstitel'
+    add_teaser: 'Teaser anlegen'
+    add_teaser_reference: 'Teaserinstanz anlegen'
+    add_teaser_reference_header: 'Teaserinstanz anlegen'
+    add_teaser_reference_description: 'Bitte wählen Sie jenes Teilelement aus, für das Sie an dieser Stelle eine Instanz anlegen möchten.'
+    new_teaser: 'Neuer Teaser'
+    new_teaser_header: 'Neuen Teaser anlegen'
+    new_teaser_description: 'Bitte geben Sie die benötigten Daten für den neuen Teaser ein.'
+    add_catch: 'Catch anlegen'
+    new_catch: 'Neuer Catch'
+    new_catch_header: 'Neuen Teaser anlegen'
+    new_catch_description: 'Bitte geben Sie die benötigten Daten für den neuen Teaser ein.'
+    delete_teaser: 'Teaser löschen'
+    delete_catch: 'Catch löschen'
+    inherited_teaser: Vererbt
+    stopped_inherited_teaser: 'Vererbung gestoppt'
+    not_shown_teaser: 'Hier nicht anzeigen'
+    inherited: Vererbt
+    confirm_delete_element: 'Möchten Sie dieses Element wirklich löschen?'
+    confirm_delete_elements: 'Möchten Sie diese Elemente wirklich löschen?'
+    error: Fehler
+    warning: Warnung
+    filter: Filter
+    paging: Paging
+    activate: aktivieren
+    catch_showing: 'zeige {0} von {1}'
+    catch_max_elements: 'Maximale Teaseranzahl'
+    catch_rotation: Rotation
+    catch_pool_size: Rotationspool
+    catch_max_depth: 'Maximale Suchtiefe'
+    catch_elements_per_page: 'Elemente pro Seite'
+    add_alias: 'Instanz anlegen'
+    new_alias: 'Neue Instanz'
+    new_alias_header: 'Instanz anlegen'
+    new_alias_description: 'Bitte wählen Sie jenes Element aus, für das Sie an dieser Stelle eine Instanz anlegen möchten.'
+    delete_alias: 'Instanz löschen'
+    link_no_link: 'Kein Link'
+    link_tid: 'Element aus diesem Siteroot'
+    link_intrasiteroot: 'Element aus allen Siteroots'
+    link_url: 'Externe URL'
+    link_mailto: Mailto
+    link_url_help: 'Format: http://www.test.com'
+    link_mailto_help: 'Format: test@test.com'
+    link_new_window: 'In neuem Fenster öffnen'
+    link_language_help: 'Sprache der Zielseite (optional)'
+    link_language_empty: 'Nicht angeben'
+    url: URL
+    mailto: Mailto
+    full_element: Vollelement
+    full_elements: Vollelemente
+    part_element: Teilelement
+    part_elements: Teilelemente
+    structure_element: Strukturelement
+    meta_filter: 'Meta Filter'
+    meta_keywords: 'Meta Keywords'
+    track_links: 'Links folgen'
+    open_in_new_window: 'In neuem Fenster öffnen'
+    icon: Icon
+    doubleclick_to_sort: 'Doppelklicken zum Sortieren'
+    loading_list: 'Lade Liste'
+    comment: Kommentar
+    confirm_publish: 'Veröffentlichen bestätigen'
+    confirm_publish_dialog: 'Sie veröffentlichen damit das Element. Wollen Sie das wirklich?'
+    confirm_publish_text: 'Sie veröffentlichen nun dieses Element und alle darunter liegenden Elemente. Dies betrifft sowohl Vollelemente als auch Teilelemente (z. B. Teaser). Dieser Vorgang kann einige Zeit in Anspruch nehmen.'
+    confirm_set_offline: 'Offline setzen bestätigen'
+    confirm_set_offline_text: 'Sie setzen nun dieses Element und alle darunter liegenden Elemente offline. Dies betrifft sowohl Vollelemente als auch Teilelemente (z. B. Teaser). Dieser Vorgang kann einige Zeit in Anspruch nehmen.'
+    country_context: Länderkontext
+    no_country_context: 'Kein Länderkontext'
+    country: Land
+    active: Aktiv
+    differences: Unterschiede
+    show_differences: 'Unterschiede anzeigen'
+    no_differences: 'Keine Unterschiede'
+    compare: Vergleichen
+    show: Zeige
+    from_version: 'Von Version'
+    compare_to: 'vergleiche mit'
+    to_version: 'Zu Version'
+    load: Laden
+    task_publish_element: 'Element veröffentlichen'
+    task_publish_element_template: 'Element "{title}" mit der TID {tid} veröffentlichen.'
+    task_set_element_offline: 'Element offline setzen'
+    task_set_element_offline_template: 'Element "{title}" mit der TID {tid} offline setzen.'
+    task_delete_element: 'Element löschen'
+    task_delete_element_template: 'Element "{title}" mit der TID {tid} löschen.'
+    task_general: 'Allgemeine Aufgabe'
+    task_general_template: 'Allgemeine Aufgabe für das Element "{title}" mit der TID {tid}.'
+    task_done: 'Aufgabe wurde durch Aktion automatisch erledigt.'
+    task_delete: 'Aufgabe wurde durch Löschen des Ziels automatisch erledigt.'
+    access: Zugriff
+    user: Benutzer
+    users: Benutzer
+    add_user: 'Benutzer hinzufügen'
+    group: Gruppe
+    groups: Gruppen
+    add_group: 'Gruppe hinzufügen'
+    hide_children: 'Dieses Element hat Kindelemente, stellt sie aber nicht dar.'
+    more: Mehr
+    source_element: Quellelement
+    not_filtered: 'Nicht gefiltert'
+    status_online: Online
+    status_async: Asynchron
+    status_offline: Offline
+    not_in_navigation: 'nicht in Navigation'
+    restricted: Beschränkt
+    is_not_restricted: 'nicht beschränkt'
+    from: Von
+    to: Bis
+    tree: Baum
+    element_search: Elementsuche
+    media_search: Mediensuche
+    no_results: 'Keine Ergebnisse'
+    depth: Depth
+    publish_slave_header: 'Veröffentlichen sprachübergreifender Inhalte'
+    publish_slave_text: "Das Element enthält sprachübergreifende Inhalte. In diesem Fall werden alle Sprachversionen mitveröffentlicht, um die sprachübergreifenden Inhalte in allen Sprachversionen zu aktualisieren.<br /><br />\nDas System hat erkannt, dass die nachfolgend aufgeführten Sprachversionen Änderungen enthalten können, die bisher nicht veröffentlicht waren. Daher werden Sie nicht automatisch mitveröffentlicht. Wenn Sie die betroffenen Sprachversionen dennoch veröffentlichen möchten, markieren Sie sie. Bitte beachten Sie, dass dabei gegebenenfalls Änderungen online gehen, die noch nicht für die Veröffentlichung bestimmt sind.<br /><br />\nSollten Sie unsicher sein, haken Sie nichts an und überprüfen und veröffentlichen Sie jede Sprachversion separat.<br /><br />\nFolgende Elemente wurden nicht automatisch mitveröffentlicht:"
+    publish_cancel: 'Nicht sprachübergreifend veröffentlichen'
+    delete_instances_header: 'Element-Instanzen löschen'
+    delete_instances_text: 'Das zu löschende Element wird mehrfach eingesetzt. Bitte entscheiden Sie, welche Vorkommen des Elements gelöscht werden sollen. Die Master-Instanz ist fett markiert.'
+    siteroot_id: Siteroot
+    parent_title: Eltern-Element
+    modify_time: 'zuletzt geändert'
+    instance_master: Löschen
+    delete_cancel: 'Element(e) nicht löschen'
+    clipboard: Zwischenablage
+    copy_text_type: 'Objekt "{0}" vom Typ "{1}" in die Zwischenablge kopiert.'
+    copy_text: 'Objekt "{0}" in die Zwischenablage kopiert.'

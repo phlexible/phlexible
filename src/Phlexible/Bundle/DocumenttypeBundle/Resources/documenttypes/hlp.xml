@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="hlp">
+    <type>document</type>
+    <titles>
+        <title lang="de">Hilfe Dokument</title>
+        <title lang="en">Help Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/mshelp</mimetype>
+    </mimetypes>
+</documenttype>

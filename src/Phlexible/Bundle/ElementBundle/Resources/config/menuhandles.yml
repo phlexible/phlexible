@@ -1,0 +1,4 @@
+elements:
+    parent: main
+    xtype: Phlexible.elements.menuhandle.ElementsHandle
+    resources: [elements]

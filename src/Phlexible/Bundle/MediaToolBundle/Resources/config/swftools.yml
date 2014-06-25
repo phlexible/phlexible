@@ -1,0 +1,30 @@
+parameters:
+    phlexible_media_tool.swftools.pdf2swf: pdf2swf
+    phlexible_media_tool.swftools.swfdump: swfdump
+    phlexible_media_tool.swftools.swfcombine: swfcombine
+
+services:
+    phlexible_media_tool.pdf2swf:
+        class: Brainbits\SwfTools\Pdf2swf
+        factory_class: Brainbits\SwfTools\Pdf2swf
+        factory_method: load
+        arguments: [[%phlexible_media_tool.swftools.pdf2swf%], @logger]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+
+    phlexible_media_tool.swfdump:
+        class: Brainbits\SwfTools\SwfDump
+        factory_class: Brainbits\SwfTools\SwfDump
+        factory_method: load
+        arguments: [[%phlexible_media_tool.swftools.swfdump%], @logger]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+
+    phlexible_media_tool.swfcombine:
+        class: Brainbits\SwfTools\SwfCombine
+        factory_class: Brainbits\SwfTools\SwfCombine
+        factory_method: load
+        arguments: [[%phlexible_media_tool.swftools.swfcombine%], @logger]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+

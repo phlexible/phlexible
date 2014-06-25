@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="potx">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Arbeitsmappe Vorlage</title>
+        <title lang="en">OpenXML Spreadsheet Template</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.openxmlformats-officedocument.presentationml.template</mimetype>
+    </mimetypes>
+</documenttype>

@@ -1,0 +1,9 @@
+.m-translations-panel .x-layout-collapsed-west{
+    background-image:url(/BASEURL/admin/gui/asset/textimage/?key=translations.filter&component=translations&icon=filter);
+    background-repeat:no-repeat;
+    background-position:center;
+}
+
+.m-translations-filter-panel .x-panel {
+    padding-bottom: 8px;
+}

@@ -1,0 +1,10 @@
+services:
+    phlexible_media_cache.doctrine.cache_manager:
+        class: Phlexible\Bundle\MediaCacheBundle\Doctrine\CacheManager
+        public: false
+        arguments: [@doctrine.orm.entity_manager]
+
+    phlexible_media_cache.doctrine.queue_manager:
+        class: Phlexible\Bundle\MediaCacheBundle\Doctrine\QueueManager
+        public: false
+        arguments: [@doctrine.orm.entity_manager]

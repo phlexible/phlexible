@@ -1,0 +1,12 @@
+.m-eid-selector .x-tree-node-inline-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.m-eid-selector {
+    padding: 0 !important;
+}
+
+.m-eid-selector .x-tree-root-ct {
+    padding: 2px !important;
+}

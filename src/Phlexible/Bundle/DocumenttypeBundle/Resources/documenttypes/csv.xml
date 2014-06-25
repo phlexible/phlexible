@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="csv">
+    <type>document</type>
+    <titles>
+        <title lang="de">CSV Dokument</title>
+        <title lang="en">CSV Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>text/csv</mimetype>
+        <mimetype>application/csv</mimetype>
+    </mimetypes>
+</documenttype>

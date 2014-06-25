@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="ai">
+    <type>document</type>
+    <titles>
+        <title lang="de">Illustrator Dokument</title>
+        <title lang="en">Illustrator Document</title>
+    </titles>
+    <mimetypes>
+    </mimetypes>
+</documenttype>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="bmp">
+    <type>image</type>
+    <titles>
+        <title lang="de">BMP Bild</title>
+        <title lang="en">BMP Image</title>
+    </titles>
+    <mimetypes>
+        <mimetype>image/bmp</mimetype>
+    </mimetypes>
+</documenttype>

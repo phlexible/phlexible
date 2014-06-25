@@ -1,0 +1,20 @@
+.p-dashboard-list-panel .x-panel-body{
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+.p-dashboard-list-panel .portlets{
+    border: 1px solid #99BBE8;
+    background: #D0DEF0;
+    padding: 3px;
+}
+.p-dashboard-list-panel .portlets-wrap{
+    /*margin: 4px 4px 0 4px;*/
+    padding: 5px;
+    color: #15428B;
+    font-weight: bold;
+}
+.p-dashboard-list-panel .x-view-over{
+    border:1px solid #dddddd;
+    background: #efefef url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/row-over.gif) repeat-x left top;
+    padding: 4px;
+}

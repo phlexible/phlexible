@@ -1,0 +1,92 @@
+users:
+    uid: 'Benutzer ID'
+    gid: 'Gruppen ID'
+    user: Benutzer
+    users: Benutzer
+    who_is_online: 'Wer ist online?'
+    no_online_users: 'Keine Benutzer online.'
+    no_users: 'Keine Benutzer gefunden.'
+    online_for: 'Online seit'
+    logged_in: 'hat sich eingeloggt'
+    logged_out: 'hat sich ausgeloggt'
+    personal_details: 'Persönliche Angaben'
+    personal_details_description: 'Ändern Sie Ihre Persönliche Angaben.'
+    username: Benutzername
+    firstname: Vorname
+    lastname: Nachname
+    comment: Kommentar
+    company: Firma
+    email: Email
+    jid: JID
+    password: Passwort
+    password_description: 'Ändern Sie Ihr Passwort.'
+    password_repeat: 'Passwort (wiederholt)'
+    my_options: 'Meine Optionen'
+    options: Optionen
+    preferences: Voreinstellungen
+    preferences_description: 'Ändern Sie Ihre Voreinstellungen.'
+    content_language: Inhaltssprache
+    interface_language: Oberflächensprache
+    date: Datumsformat
+    theme: Theme
+    theme_description: 'Ändern Sie Ihre Theme.'
+    expireDate: Ablaufdatum
+    createDate: Erstellungsdatum
+    createUser: 'Erstellt von'
+    modifyDate: Änderungsdatum
+    modifyUser: 'Geändert von'
+    close: Schliessen
+    save: Speichern
+    save_and_notify: 'Speichern und Benachrichtigen'
+    new_user: Hinzufügen
+    cancel: Abbrechen
+    back_to_login: 'Zurück zum Login'
+    delete: Löschen
+    apply: Anwenden
+    reset: Zurücksetzen
+    cant_change_password: 'Kann Passwort nicht ändern'
+    password_doesnt_expire: 'Passwort läuft nicht ab'
+    change_password_next_login: 'Muss Passwort beim nächsten Login ändern'
+    account: Zugang
+    delete_user_warning: 'Möchten Sie den Benutzer "{0}" wirklich löschen?'
+    delete_users_warning: 'Möchten Sie diese Benutzer wirklich löschen?'
+    yes: Ja
+    no: Nein
+    passwords_dont_match: 'Passwörter stimmen nicht überein'
+    roles: Rollen
+    role: Rolle
+    groups: Gruppen
+    group: Gruppe
+    search: Suche
+    filter: Filter
+    do_search: Suchen
+    type: Typ
+    members: Mitglieder
+    member: Mitglied
+    actions: Aktionen
+    add: Hinzufügen
+    rename: Umbenennen
+    delete: Löschen
+    add_group: 'Bitte geben Sie einen Titel für die neue Gruppe ein.'
+    remame_group: 'Bitte geben Sie einen neuen Titel für die Gruppe "{0}" ein.'
+    delete_group: 'Möchten Sie die Gruppe "{0}" wirklich löschen?'
+    empty_msg: 'Keine Benutzer gefunden'
+    display_msg: 'Zeige Benutzer {0} - {1} von {2}'
+    current_password_wrong: 'Aktuelles Passwort ist falsch.'
+    password_are_the_same: 'Aktuelles und neues Passwort sind gleich.'
+    status: Status
+    active: Aktiv
+    expired: Abgelaufen
+    expire_help: 'Der Zugang des Benutzers läuft um 00:00 Uhr dieses Datums ab.'
+    has_expire_date: 'Hat Ablaufdatum'
+    impersonate: Imitieren
+    account_expires_on: 'Zugang gültig bis'
+    notify_user: 'Benutzer benachrichtigen'
+    generate: generieren
+    copy: kopieren
+    generated_password: 'Generiertes Passwort'
+    generate_password_text: 'Benutzen Sie das untere Feld um ein Passwort zu generieren. Vergessen Sie nicht es in die oberen Passwortfelder zu kopieren.'
+    account_is_expired: 'Der Zugang dieses Benutzers ist abgelaufen.'
+    successor: Nachfolger
+    successor_header: 'Nachfolger auswählen'
+    successor_description: 'Der ausgewählte Benutzer wird alle Benuterbezogenen Referenzen des Originalbenutzers erhalten.'

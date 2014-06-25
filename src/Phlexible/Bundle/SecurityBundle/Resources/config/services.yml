@@ -1,0 +1,56 @@
+parameters:
+    phlexible_security.mailer.validate.template: PhlexibleSecurityBundle:Reset:email.txt.twig
+    phlexible_security.mailer.validate.from: %phlexible_gui.mail.from_email%
+
+services:
+    phlexible_security.mailer:
+        class: Phlexible\Bundle\SecurityBundle\Mailer\Mailer
+        arguments:
+            - @twig
+            - @mailer
+            -
+                validate: {template: %phlexible_security.mailer.validate.template%, from: %phlexible_security.mailer.validate.from%}
+
+    # asset providers
+    phlexible_security.asset_provider:
+        class: Phlexible\Bundle\SecurityBundle\AssetProvider\SecurityAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # listeners
+    phlexible_security.listener.apply_successor:
+        class: Phlexible\Bundle\SecurityBundle\Listener\ApplySuccessorListener
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    # views
+    phlexible_security.view.login:
+        class: Phlexible\Bundle\SecurityBundle\View\LoginView
+        arguments: [@event_dispatcher]
+
+    phlexible_security.view.logout:
+        class: Phlexible\Bundle\SecurityBundle\View\LogoutView
+        arguments: [@event_dispatcher]
+
+    phlexible_security.view.validate:
+        class: Phlexible\Bundle\SecurityBundle\View\ValidateView
+        arguments: [@event_dispatcher]
+
+    phlexible_security.view.reset:
+        class: Phlexible\Bundle\SecurityBundle\View\ResetView
+        arguments: [@event_dispatcher]
+
+    phlexible_security.view.changepassword:
+        class: Phlexible\Bundle\SecurityBundle\View\ChangePasswordView
+        arguments: [@event_dispatcher]
+
+    # voters
+    phlexible_security.authorisation.voter.zendacl:
+        class: Phlexible\Bundle\SecurityBundle\Authorisation\Voter\ZendAclVoter
+        public: false
+        arguments: [@phlexible_security.acl]
+        tags:
+            - {name: security.voter}

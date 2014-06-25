@@ -1,0 +1,15 @@
+services:
+    # acl providers
+    phlexible_media_template.acl_provider:
+        class: Phlexible\Bundle\MediaTemplateBundle\AclProvider\MediaTemplateAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_media_template.asset_provider:
+        class: Phlexible\Bundle\MediaTemplateBundle\AssetProvider\MediaTemplatesAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider, priority: 600}

@@ -1,0 +1,38 @@
+services:
+    phlexible_problem.problem_checkers:
+        class: Phlexible\Bundle\ProblemBundle\ProblemChecker\ProblemCheckerCollection
+        arguments: [[]]
+
+    phlexible_problem.problem_fetcher:
+        class: Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcher
+        arguments: [@doctrine.orm.entity_manager, @event_dispatcher]
+
+    # acl providers
+    phlexible_problem.acl_provider:
+        class: Phlexible\Bundle\ProblemBundle\AclProvider\ProblemAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_problem.asset_provider:
+        class: Phlexible\Bundle\ProblemBundle\AssetProvider\ProblemAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # event listeners
+    phlexible_problem.listener.collect_problems:
+        class: Phlexible\Bundle\ProblemBundle\EventListener\CollectProblemsListener
+        arguments: [@properties]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_problem.collect, method: onCollectProblems}
+
+    # portlets
+    phlexible_problem.portlet.problems:
+        class: Phlexible\Bundle\ProblemBundle\Portlet\ProblemsPortlet
+        public: false
+        arguments: [@translator, @phlexible_problem.problem_fetcher]
+        tags:
+            - {name: phlexible_dashboard.portlet}

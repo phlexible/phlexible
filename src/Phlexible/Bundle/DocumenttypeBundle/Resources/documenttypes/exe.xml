@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="exe">
+    <type>document</type>
+    <titles>
+        <title lang="de">Ausführbare Datei</title>
+        <title lang="en">Executable File</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/x-dosexec</mimetype>
+        <mimetype>application/x-msdos-program</mimetype>
+    </mimetypes>
+</documenttype>

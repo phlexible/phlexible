@@ -1,0 +1,6 @@
+cms:
+    report: Report
+    reports: Reporte
+    statistics: Statistiken
+    quickstart: Schnellstart
+    quickstart_description: 'Ändern Sie Ihre Schnellstart Einträge.'

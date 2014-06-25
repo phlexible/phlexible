@@ -1,0 +1,28 @@
+services:
+    # acl providers
+    phlexible_queue.acl_provider:
+        class: Phlexible\Bundle\QueueBundle\AclProvider\QueueAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_queue.asset_provider:
+        class: Phlexible\Bundle\QueueBundle\AssetProvider\QueueAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # event listeners
+    phlexible_queue.listener.collect_problems:
+        class: Phlexible\Bundle\QueueBundle\EventListener\CollectProblemsListener
+        arguments: [@properties]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_problem.collect, method: onCollectProblems}
+
+    phlexible_queue.listener.console:
+        class: Phlexible\Bundle\QueueBundle\EventListener\ConsoleListener
+        arguments: [@phlexible_queue.job_manager]
+        tags:
+            - {name: kernel.event_subscriber}

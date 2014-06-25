@@ -1,0 +1,176 @@
+mediamanager:
+    media: Medien
+    delete_files_warning: 'Möchten Sie diese Dateien wirklich löschen?'
+    delete_file_warning: 'Möchten Sie diese Datei wirklich löschen?'
+    hide_files_warning: 'Möchten Sie diese Dateien wirklich verstecken?'
+    hide_file_warning: 'Möchten Sie diese Datei wirklich verstecken?'
+    confirm: Bestätigen
+    x_files: '{0} Dateien'
+    keywords: Keywords
+    meta: Meta
+    no_meta_values: 'Keine Metadaten'
+    key: Schlüssel
+    value: Wert
+    versions: Versionen
+    attributes: Attribute
+    no_attribute_values: 'Keine Attribute'
+    no_preview_available: 'Keine Vorschau verfügbar'
+    preview: Vorschau
+    no_file_selected: 'Keine Datei ausgewählt'
+    properties: Eigenschaften
+    administration: Administration
+    scan_folders_added: 'Ordner hinzugefügt'
+    scan_files_added: 'Dateien hinzugefügt'
+    scan_no_result: 'Keine Dateien oder Ordner gefunden'
+    scan_results: Abfrageergebnisse
+    trash: Müll
+    root: Root
+    location: Ort
+    modify_date: Änderungsdatum
+    modified_by: 'Geändert von'
+    create_date: Erstellungsdatum
+    created_by: 'Erstellt von'
+    size: Größe
+    asset: Asset
+    type: Typ
+    version: Version
+    name: Name
+    no_files_in_this_folder: 'In diesem Ordner befinden sich keine Dateien'
+    all_files: 'Alle Dateien'
+    upload_file_to_folder: 'Datei in Ordner hochladen'
+    upload_file: 'Datei hochladen'
+    upload_files: 'Dateien hochladen'
+    upload_version: 'Version hochladen'
+    multi_upload_files: 'Dateien hochladen (Flash-Multiupload)'
+    delete_files: 'Dateien löschen'
+    delete_file: 'Datei löschen'
+    hide_files: 'Dateien verstecken'
+    hide_file: 'Datei verstecken'
+    show_hidden_files: 'Versteckte Dateien anzeigen'
+    show_files: 'Dateien anzeigen'
+    show_file: 'Datei anzeigen'
+    rename_file: 'Datei umbenennen'
+    delete_folder: 'Ordner löschen'
+    rename_folder: 'Ordner umbenennen'
+    rights_for_folder: Ordnerrechte
+    folder_rights: Ordnerrechte
+    new_folder_below: 'Neuer Ordner unterhalb'
+    new_folder: 'Neuer Ordner'
+    collapse_all: 'Alle einklappen'
+    expand_all: 'Alle ausklappen'
+    reload: 'Neu laden'
+    view_tiles: Kacheln
+    view_details: Details
+    view_small: 'Kleine Icons'
+    view_medium: 'Mittelgroße Icons'
+    view_large: 'Große Icons'
+    view_extralarge: 'Extra große Icons'
+    views: Ansichten
+    filter_type_document: 'Nur Dokumente'
+    filter_type_audio: 'Nur Audio'
+    filter_type_video: 'Nur Video'
+    filter_type_image: 'Nur Bilder'
+    filter_type_flash: 'Nur Flash'
+    filter_type_archive: 'Nur Archive'
+    filter_type_other: 'Nur Andere'
+    filter_by_type: 'Nach Typ'
+    filter_age_6m: '6 Monate'
+    filter_age_1m: '1 Monat'
+    filter_age_10d: '10 Tage'
+    filter_age_3d: '3 Tage'
+    filter_by_age_created: 'Nach Erstellungsdatum'
+    filter_by_age_modified: 'Nach Bearbeitungsdatum'
+    filter_my_modified: 'Nur Dateien, die von mir geändert wurden'
+    filter_my_created: 'Nur Dateien, die von mir angelegt wurden'
+    filter_no: 'Kein Filter'
+    filter: Filter
+    filters: Filter
+    files_for_folder: 'Dateien für Ordner'
+    files_for: 'Dateien für'
+    clear: Clear
+    file: Datei
+    files: Dateien
+    folder: Ordner
+    folders: Ordner
+    title: Mediamanager
+    no_recent_files: 'Keine neuen Dateien'
+    latest_files: 'Neueste Dateien'
+    read_attributes: 'Attribute neu einlesen'
+    read_files_read: '{0} Dateien gelesen'
+    scan_new_files_folders: 'Suche nach neuen Dateien oder Ordnern'
+    download: Herunterladen
+    download_folder: 'Vollständigen Ordner herunterladen [ZIP]'
+    download_file: 'Datei herunterladen'
+    download_file_version: 'Dateiversion herunterladen'
+    download_files: 'Ausgewählte Dateien herunterladen [ZIP]'
+    create_new_folder_header: 'Neuen Ordner anlegen'
+    create_new_folder_desc: 'Einen neuen Ordner unter dem ausgewählten Ordner anlegen.'
+    create: Anlegen
+    cancel: Abbrechen
+    rename_folder_header: 'Datei umbenennen'
+    rename_folder_desc: 'Den gewählten Ordner umbenennen.'
+    rename_file_header: 'Ordner umbenennen'
+    rename_file_desc: 'Den gewählte Datei umbenennen.'
+    rename: Umbenennen
+    select_user: 'Benutzer auswählen...'
+    select_group: 'Gruppe auswählen...'
+    uploaded_file_conflict: 'Dateikonflikt beheben'
+    uploaded_file_conflict_text: 'Es befindet sich bereits eine Datei desselben Namens an diesem Ort.'
+    uploaded_file_conflict_desc: 'Wählen Sie aus den folgenden Möglichkeiten aus.'
+    delete_uploaded_file: 'Vorhandene Datei beibehalten.'
+    delete_uploaded_file_desc: 'Es werden keine Dateien geändert. Die folgende Datei wird im Zielordner belassen:'
+    replace_existing_file: 'Vorhandene Datei ersetzen.'
+    replace_existing_file_desc: 'Die vorhandene Datei wird duch diese Datei ersetzt:'
+    keep_both_files: 'Beide Dateien behalten.'
+    keep_both_files_desc: 'Die neue Datei wird in "{0}" umbenannt.'
+    apply_to_remaining_files: 'Für alle nachfolgenden Dateien übernehmen'
+    folder_read: 'Ordner lesen'
+    folder_create: 'Ordner anlegen'
+    folder_modify: 'Ordner verändern'
+    folder_delete: 'Ordner löschen'
+    file_read: 'Datei lesen'
+    file_create: 'Datei anlegen'
+    file_modify: 'Datei verändern'
+    file_delete: 'Datei löschen'
+    swfupload_text_add: 'Datei(en) hinzufügen'
+    swfupload_text_upload: 'Datei(en) hochladen'
+    swfupload_text_cancel: 'Hochladen abbrechen'
+    swfupload_text_clear: 'Warteschlange leeren'
+    swfupload_text_progressbar: Fortschritt
+    swfupload_text_remove: 'Datei entfernen'
+    swfupload_text_remove_sure: 'Sind Sie sicher das Sie diese Datei aus der Warteschlange entfernen möchten?'
+    swfupload_text_error: Fehler
+    swfupload_text_uploading: 'Übertrage Datei: {0} ({1} von {2})'
+    swfupload_header_filename: Dateiname
+    swfupload_header_size: Größe
+    swfupload_header_status: Status
+    swfupload_status_0: Eingereiht
+    swfupload_status_1: Übertrage...
+    swfupload_status_2: Fertig
+    swfupload_status_3: Fehler
+    swfupload_status_4: Abgebrochen
+    swfupload_error_queue_exceeded: 'Die ausgewählte(n) Datei(en) überschreiten die maximale Anzahl von {0} eingereihten Dateien.'
+    swfupload_error_queue_slots_0: 'Es ist kein freier Platz verfügbar.'
+    swfupload_error_queue_slots_1: 'Es ist nur noch ein freier Platz verfügbar.'
+    swfupload_error_queue_slots_2: 'Es sind nur noch {0} freie Plätze verfügbar.'
+    swfupload_error_size_exceeded: 'Die Dateigrößen der ausgewählten Dateien überschreiten die erlaubte Grenze von {0}.'
+    swfupload_error_zero_byte_file: 'Leere Datei ausgewählt.'
+    swfupload_error_invalid_filetype: 'Ungültiger Dateityp ausgewählt.'
+    swfupload_error_file_not_found: 'Datei nicht gefunden 404.'
+    swfupload_error_security_error: 'Sicherheitsfehler. Keine Erlaubnis an eine andere Adresse zu übertragen.'
+    path: Pfad
+    contents: Inhalt
+    close: Schließen
+    configuration: Konfiguration
+    no_templates: 'Keine Templates'
+    click_to_add_video: 'Klicken um ein Video einzufügen'
+    click_to_add_image: 'Klicken um ein Bild einzufügen'
+    click_to_add_flash: 'Klicken um einen Flashfilm einzufügen'
+    click_to_add_file: 'Klicken um eine Datei einzufügen'
+    mediasettings: Medieneinstellungen
+    mediasettings_description: 'Einstellungen für die Medienverwaltung'
+    save: Speichern
+    disable_flash_uploader: 'Flash-Uploader deaktivieren'
+    disable_flash_uploader_help: 'Die Auswirkung der Änderung dieses Wertes wird erst nach einem Neustart von phlexible aktiv.'
+    enable_upload_sort: 'Nach Upload automatisch nach Anlegedatum sortieren'
+    enable_upload_sort_help: 'Die Auswirkung der Änderung dieses Wertes wird erst nach einem Neustart von phlexible aktiv.'

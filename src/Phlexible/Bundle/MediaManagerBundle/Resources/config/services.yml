@@ -1,0 +1,125 @@
+parameters:
+    phlexible_media_manager.temp_dir: %kernel.cache_dir%/mediamanager/temp/
+    phlexible_media_manager.portlet.style: large
+    phlexible_media_manager.portlet.num_items: 20
+    phlexible_media_manager.files.view: tiles
+    phlexible_media_manager.files.num_files: 20
+    phlexible_media_manager.upload.enable_upload_sort: true
+    phlexible_media_manager.upload.disable_flash: false
+    phlexible_media_manager.delete_policy: hide_old
+
+services:
+    phlexible_media_manager.upload.storage.temp:
+        class: Phlexible\Bundle\MediaManagerBundle\Upload\TempStorage
+        arguments: [@session, %phlexible_media_manager.temp_dir%]
+
+    phlexible_media_manager.upload.handler:
+        class: Phlexible\Bundle\MediaManagerBundle\Upload\UploadHandler
+        arguments:
+            - @phlexible_media_site.manager
+            - @phlexible_media_manager.upload.storage.temp
+            - @phlexible_media_tool.mime.detector
+
+    phlexible_media_manager.meta.resolver:
+        class: Phlexible\Bundle\MediaManagerBundle\Meta\MetaResolver
+        arguments:
+            - @phlexible_media_site.manager
+            - @phlexible_media_manager.meta.foldermetamanager
+            - %phlexible_meta_set.languages.available%
+            - %phlexible_meta_set.languages.default%
+
+    phlexible_media_manager.meta.foldermetamanager:
+        class: Phlexible\Bundle\MediaManagerBundle\Meta\FolderMetaManager
+        arguments: [@connection_manager, %phlexible_meta_set.languages.default%]
+
+    phlexible_media_manager.usage.datamapper.database:
+        class: Phlexible\Bundle\MediaManagerBundle\Usage\Datamapper\DatabaseDatamapper
+        arguments: [@connection_manager]
+
+    phlexible_media_manager.usage.repository:
+        class: Phlexible\Bundle\MediaManagerBundle\Usage\UsageRepository
+        arguments: [@phlexible_media_manager.usage.datamapper]
+
+    phlexible_media_manager.util.suggest_field:
+        class: Phlexible\Bundle\MediaManagerBundle\Util\SuggestFieldUtil
+        arguments: [@connection_manager, %phlexible_meta_set.suggest.seperator%]
+
+    # access control permission providers
+    phlexible_media_manager.permission_provider:
+        class: Phlexible\Bundle\MediaManagerBundle\AccessControl\MediaManagerPermissionProvider
+        tags:
+            - {name: phlexible_access_control.permission}
+
+    # acl providers
+    phlexible_media_manager.acl_provider:
+        class: Phlexible\Bundle\MediaManagerBundle\AclProvider\MediaManagerAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_media_manager.asset_provider:
+        class: Phlexible\Bundle\MediaManagerBundle\AssetProvider\MediaManagerAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider, priority: 300}
+
+    # event listeners
+    phlexible_media_manager.listener.file:
+        class: Phlexible\Bundle\MediaManagerBundle\EventListener\FileListener
+        arguments: [@phlexible_documenttype.documenttype_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_media_site.before_create_file, method: onBeforeCreateFile}
+
+    phlexible_media_manager.listener.data_source:
+        class: Phlexible\Bundle\MediaManagerBundle\EventListener\DataSourceListener
+        arguments: [@phlexible_media_manager.util.suggest_field]
+        tags:
+            - {name: kernel.event_subscriber}
+
+    phlexible_media_manager.listener.get_config:
+        class: Phlexible\Bundle\MediaManagerBundle\EventListener\GetConfigListener
+        arguments:
+            - %phlexible_media_manager.files.num_files%
+            - %phlexible_media_manager.files.view%
+            - %phlexible_media_manager.upload.disable_flash%
+            - %phlexible_media_manager.upload.enable_upload_sort%
+            - %phlexible_media_manager.delete_policy%
+        tags:
+            - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
+
+    phlexible_media_manager.listener.apply_successor:
+        class: Phlexible\Bundle\MediaManagerBundle\EventListener\ApplySuccessorListener
+        arguments: [@connection_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    # portlets
+    phlexible_media_manager.portlet.latest_files:
+        class: Phlexible\Bundle\MediaManagerBundle\Portlet\LatestFilesPortlet
+        public: false
+        arguments:
+            - @translator
+            - @phlexible_media_site.manager
+            - @phlexible_media_cache.cache_manager
+            - @security.context
+            - %phlexible_media_manager.portlet.style%
+            - %phlexible_media_manager.portlet.num_items%
+        tags:
+            - {name: phlexible_dashboard.portlet}
+
+    # searches
+    phlexible_media_manager.search.file:
+        class: Phlexible\Bundle\MediaManagerBundle\Search\FileSearch
+        public: false
+        arguments: [@connection_manager, @phlexible_media_site.manager]
+        tags:
+            - {name: phlexible_search.handler}
+
+    phlexible_media_manager.search.meta:
+        class: Phlexible\Bundle\MediaManagerBundle\Search\MetaSearch
+        public: false
+        arguments: [@connection_manager, @phlexible_media_site.manager]
+        tags:
+            - {name: phlexible_search.handler}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="flv">
+    <type>video</type>
+    <titles>
+        <title lang="de">Flash Video</title>
+        <title lang="en">Flash Video</title>
+    </titles>
+    <mimetypes>
+        <mimetype>video/x-flv</mimetype>
+    </mimetypes>
+</documenttype>

@@ -1,0 +1,20 @@
+security:
+    logout: Logout
+    roles: Rollen
+    role: Rolle
+    resources: Ressourcen
+    resource: Ressource
+    resources_for_role: 'Ressourcen für Rolle "{0}"'
+    allowed: Allowed
+    full: Vollzugriff
+    write: Schreiben
+    read: Lesen
+    actions: Aktionen
+    add: Hinzufügen
+    rename: Umbenennen
+    delete: Löschen
+    save: Speichern
+    reset: Zurücksetzen
+    add_role: 'Bitte geben Sie einen Titel für die neue Rolle ein.'
+    rename_role: 'Bitte geben Sie einen neuen Titel für die Rolle "{0}" ein.'
+    delete_role: 'Möchten Sie die Rolle "{0}" wirklich löschen?'

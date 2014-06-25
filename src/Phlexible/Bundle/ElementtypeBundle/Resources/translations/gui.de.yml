@@ -1,0 +1,217 @@
+elementtypes:
+    elementtypes: Elementtypen
+    elementtype: Elementtyp
+    elementtype_tree: 'Elementtyp Baum'
+    template_elementtype: Vorlage
+    root: Root
+    fields: Felder
+    field: Feld
+    pattern: Muster
+    index: Index
+    new_field: 'Neues Feld'
+    edit_field: 'Feld bearbeiten'
+    categories: Kategorien
+    component: Komponente
+    types: Typen
+    groups: Gruppen
+    status: Status
+    publish: Veröffentlichen
+    reset_element_type: Zurücksetzen
+    save_properties: 'Eigenschaften speichern'
+    reset_properties: Zurücksetzen
+    create_user: 'Erstellt durch'
+    create_time: 'Erstellt am'
+    create: Anlegen
+    create_element_type: 'Elementtyp anlegen'
+    properties: Eigenschaften
+    properties_of: 'Eigenschaften von'
+    templates: Templates
+    template: Template
+    viability: Anlegbarkeit
+    configuration: Konfiguration
+    validation: Validierung
+    details: Details
+    options: Optionen
+    name: Name
+    ds_id: 'DS ID'
+    uniqueid: 'Unique ID'
+    icon: Icon
+    type: Typ
+    title: Titel
+    titles: Titel
+    field_mappings: Feldzuordnungen
+    full_element: Vollelementtyp
+    full: Voll
+    layout_element: Layoutareaelementtyp
+    layout: Layoutarea
+    layoutcontainer_element: Layoutcontainerelementtyp
+    layoutcontainer: Layoutcontainer
+    part_element: Teilelementtyp
+    part: Teil
+    structure_element: Strukturelementtyp
+    structure: Struktur
+    reference_element: Referenzelementtyp
+    reference: Referenz
+    list_element: 'Listen element'
+    show_as_list: 'als Liste anzeigen'
+    global_teasers: 'Globale Teaser'
+    show: anzeigen
+    teaser_groups: Teasergruppen
+    comment: Kommentar
+    context_help: Kontexthilfe
+    overwrite: überschreiben
+    field_values: Feldwerte
+    preview: Vorschau
+    working_title: Arbeitstitel
+    unique_id: 'Unique ID'
+    category: Kategorie
+    image: Bild
+    labels: Labels
+    label: Label
+    fieldlabel: Feldlabel
+    boxlabel: Boxlabel
+    default_value: Standardwert
+    prefix: Prefix
+    suffix: Suffix
+    group: Gruppe
+    group_show_border: 'Rahmen anzeigen'
+    group_single_row: Einzeilig
+    language: Sprache
+    is_synchronized: 'ist synchronisiert'
+    navigation: Navigation
+    width: Breite
+    height: Höhe
+    repeat_min: 'Min Vorkommen'
+    repeat_max: 'Max Vorkommen'
+    repeat_default: 'Standard Vorkommen'
+    value: Wert
+    values: Werte
+    required: Pflicht
+    number_allow_negative: 'darf negativ sein'
+    number_allow_decimals: 'darf dezimal sein'
+    number_min_value: 'Minimaler Wert'
+    number_max_value: 'Maximaler Wert'
+    text_min_length: 'Minimale Länge'
+    text_max_length: 'Maximale Länge'
+    text_validator: Validator
+    text_validation: Textüberprüfung
+    text_regular_expression: 'Regulärer Ausdruck'
+    text_modifiers: Modifiers
+    text_global: Global
+    text_ignore_case: 'Ignore case'
+    text_multiline: Multiline
+    content_validation: Inhaltsüberprüfung
+    number_validation: Nummernvalidierung
+    add_elementtype: 'Elementtyp hinzufügen...'
+    add_template: 'Template hinzufügen...'
+    paging_displayMsg: 'Zeige Einträge {0} - {1} von {2}'
+    paging_emptyMsg: 'Keine Einträge vorhanden'
+    paging_beforePageText: Seite
+    paging_afterPageText: 'of {0}'
+    copy: Kopieren
+    cut: Ausschneiden
+    paste: Einfügen
+    delete: Löschen
+    remove: Entfernen
+    remove_reference: 'Referenz entfernen'
+    cancel: Abbrechen
+    add: Hinzufügen
+    duplicate: Duplizieren
+    save: Speichern
+    usage: Verwendung
+    no_usage: 'Dieser Elementtyp ist nicht in Benutzung.'
+    add_field_before: 'Feld davor einfügen'
+    add_field_after: 'Feld danach einfügen'
+    add_field_as_child: 'Feld als Kind hinzufügen'
+    values_key: Schlüssel
+    values_german: Deutsch
+    values_english: Englisch
+    link: Link
+    allow: erlauben
+    link_types: Linktypen
+    link_internal: 'Interner Link'
+    link_external: 'Externer Link'
+    link_intra: 'Intra-Siteroot Link'
+    link_email: Email-Link
+    table: Tabelle
+    table_rows: 'Anzahl Zeilen'
+    table_cols: 'Anzahl Spalten'
+    add_option: 'Option hinzufügen'
+    remove_option: 'Option entfernen'
+    set_as_default: 'Als Standardwert setzen'
+    asset_types: Dateitypen
+    cols: Spalten
+    image_templates: Bildvorlagen
+    image_template: Bildvorlage
+    video_templates: Videovorlagen
+    video_template: Videovorlage
+    audio_templates: Audiovorlagen
+    audio_template: Audiovorlage
+    capture_frame: Frame
+    autoapply: Autoanwenden
+    allow_deactivation: 'Erlaube deaktivierung'
+    allow_unlink: 'Erlaube loslösen'
+    version: Version
+    versions: Versionen
+    source: Quelle
+    editable_list: 'Editierbare Liste'
+    editable_value: 'Editierbarer Wert'
+    component_function: Komponentenfunktion
+    content_channels: 'Content Channels'
+    available: verfügbar
+    specific: spezifisch
+    default_collapsed: 'standardmässig eingeklappt'
+    contentchannel: Contentchannel
+    new_elementtype_header: 'Neuen Elementtypen anlegen'
+    new_elementtype_description: 'Bitte geben Sie einen Namen für den neuen Elementtypen ein.'
+    navigation_default_title: 'Ziehen Sie Textfelder hierher um einen zusammengesetzten Navigationstitel zu erstellen.'
+    navigation_default_date: 'Ziehen Sie ein Datumsfeld hierher um ein angepasstes Datum zu erstellen.'
+    navigation_default_link: 'Ziehen Sie ein Linkfeld hierher um einen angepassten Link zu erstellen.'
+    clear: Leeren
+    no_viability: 'Keine Anlegbarkeit, bitte wählen Sie aus der Liste oben.'
+    no_templates: 'Keine Templates, bitte wählen Sie aus der Liste oben.'
+    default_tab: 'Standard Tab'
+    no_default_tab: 'Kein Standard Tab'
+    default_content_tab: 'Standard Inhalte-Tab'
+    no_default_content_tab: 'Kein Standard Inhalte-Tab'
+    latest_elementtype_changes: 'Letzte Elementtypänderungen'
+    no_recent_elementtypes: 'Keine letzten Elementtypversion.'
+    accordion: Akordeon
+    child_items: Kindelemente
+    can_be_sorted: 'sind sortierbar'
+    hide_children: 'Kindelemente im Baum ausblenden'
+    metaset: 'Meta Set'
+    no_metaset: 'Kein Meta Set'
+    author: Autor
+    date: Datum
+    custom_date: 'Custom Datum'
+    text: Text
+    check_input: 'Bitte überprüfen Sie Ihre Eingabe auf den markierten Akkordions.'
+    readonly: Schreibgeschützt
+    hide_label: 'Label verstecken'
+    not_synchronized: 'Nicht synchronisiert'
+    synchronized: Synchronisiert
+    synchronized_with_unlink: 'Synchronisiert, mit loslösen'
+    not_required: 'Nicht pflichtig'
+    on_publish: 'Bei Veröffentlichung'
+    always: Immer
+    backend_title: Backendtitel
+    page_title: Seitentitel
+    navigation_title: Navigationstitel
+    use_backend_as_page: 'Backendtitel als Seitentitel benutzen'
+    use_backend_as_navigation: 'Backendtitel als Navigationstitel benutzen'
+    working_title_help: 'Der Arbeitstitel darf nur aus den Zeichen "a-z", "0-9", "-" und "_" bestehen.'
+    add_above: 'Darüber hinzufügen'
+    add_below: 'Darunter hinzufügen'
+    add_child: 'Kind hinzufügen'
+    no_value: 'kein Wert'
+    add_row_above: 'Zeile oberhalb einfügen'
+    add_row_below: 'Zeile unterhalb einfügen'
+    delete_row: 'Zeile löschen'
+    add_column_before: 'Spalte vorher einfügen'
+    add_column_after: 'Spalte danach einfügen'
+    delete_column: 'Spalte einfügen'
+    headers: Überschriften
+    first_row_is_header: 'Erste Zeile ist Überschrift'
+    first_column_is_header: 'Erste Spalte ist Überschrift'
+    diff_new_field: 'NEUES FELD'

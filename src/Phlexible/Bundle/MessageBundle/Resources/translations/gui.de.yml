@@ -1,0 +1,61 @@
+messages:
+    messages: Nachrichten
+    message: Nachricht
+    loading: Lade...
+    view: Anzeige
+    no_recent_messages: 'Keine neuen Nachrichten.'
+    no_messages_found: 'Keine Nachrichten gefunden.'
+    no_filters: 'Keine Filter gefunden.'
+    no_subscriptions: 'Keine Abonnements gefunden.'
+    filter: Filter
+    id: ID
+    subject: Betreff
+    text: Text
+    priority: Priorität
+    type: Typ
+    channel: Kanal
+    resource: Ressource
+    date: Datum
+    before: Before
+    after: After
+    user: 'Erzeugt durch'
+    created_at: Zeitpunkt
+    empty_msg: 'Keine Nachrichten gefunden.'
+    display_msg: 'Zeige Nachrichten {0} - {1} von {2}'
+    priority_low: Niedrig
+    priority_normal: Normal
+    priority_high: Hoch
+    priority_urgent: Dringend
+    type_info: Info
+    type_error: Fehler
+    reset: Zurücksetzen
+    subscription: Subscription
+    subscriptions: Subscriptions
+    filter: Filter
+    filters: Filter
+    criterium: Kriterium
+    criteria: Kriterien
+    criteria_for: 'Kriterien für Filter "{0}"'
+    title: Titel
+    handler: Handler
+    actions: Aktionen
+    add: Hinzufügen
+    subscribe: Abonnieren
+    delete: Löschen
+    add_filter: 'Bitte geben Sie einen Titel für den neuen Filter ein.'
+    rename_filter: 'Bitte geben Sie einen neuen Titel für den Filter "{0}" ein.'
+    delete_filter: 'Möchten Sie den Filter "{0}" wirklich löschen?'
+    value: Wert
+    information: Informationen
+    save: Speichern
+    refresh: Aktualisieren
+    preview: Vorschau
+    preview_for: 'Vorschau für Filter "{0}"'
+    body: Body
+    addOrBlock: '"Oder"-Block hinzufügen'
+    group: Gruppe
+    number_of_days: Tage...
+    add_filter: 'Filter hinzufügen'
+    cancel: Abbrechen
+    messages_filter: Nachrichtenfilter
+    select_criterium: 'Bitte wählen Sie ein Kriterium'

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="mkv">
+    <type>video</type>
+    <titles>
+        <title lang="de">Matroshka Video</title>
+        <title lang="en">Matroshka Video</title>
+    </titles>
+    <mimetypes>
+        <mimetype>video/x-matroska</mimetype>
+    </mimetypes>
+</documenttype>

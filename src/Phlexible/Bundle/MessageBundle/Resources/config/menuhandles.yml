@@ -1,0 +1,4 @@
+messages:
+    parent: admin
+    xtype: Phlexible.messages.menuhandle.MessagesHandle
+    resources: [messages]

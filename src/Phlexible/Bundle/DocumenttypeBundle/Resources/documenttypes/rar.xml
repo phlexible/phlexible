@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="rar">
+    <type>archive</type>
+    <titles>
+        <title lang="de">RAR Archiv</title>
+        <title lang="en">RAR Archive</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/rar</mimetype>
+        <mimetype>application/x-rar</mimetype>
+    </mimetypes>
+</documenttype>

@@ -1,0 +1,18 @@
+services:
+    phlexible_data_source.garbage_collector:
+        class: Phlexible\Bundle\DataSourceBundle\GarbageCollector\GarbageCollector
+        arguments: [@phlexible_data_source.data_source_manager, @event_dispatcher]
+
+    # acl provider
+    phlexible_data_source.acl_provider:
+        class: Phlexible\Bundle\DataSourceBundle\AclProvider\DataSourceAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # event listeners
+    phlexible_data_source.listener.apply_successor:
+        class: Phlexible\Bundle\DataSourceBundle\EventListener\ApplySuccessorListener
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}

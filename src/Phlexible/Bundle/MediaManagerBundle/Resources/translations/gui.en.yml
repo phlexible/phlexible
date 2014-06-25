@@ -1,0 +1,176 @@
+mediamanager:
+    media: Media
+    delete_files_warning: 'Do you really want to delete these files?'
+    delete_file_warning: 'Do you really want to delete this file?'
+    hide_files_warning: 'Do you really want to hide these files?'
+    hide_file_warning: 'Do you really want to hide this file?'
+    confirm: Confirm
+    x_files: '{0} files'
+    keywords: Keywords
+    meta: Meta
+    no_meta_values: 'No meta data'
+    key: Key
+    value: Value
+    versions: Versions
+    attributes: Attributes
+    no_attribute_values: 'No attributes'
+    no_preview_available: 'No Preview available'
+    preview: Preview
+    no_file_selected: 'No file selected'
+    properties: Properties
+    administration: Administration
+    scan_folders_added: 'folders added'
+    scan_files_added: 'files added'
+    scan_no_result: 'No new files or folders found'
+    scan_results: 'Scan results'
+    trash: Trash
+    root: Root
+    location: Location
+    modify_date: 'Date modified'
+    modified_by: 'Modified by'
+    create_date: 'Date created'
+    created_by: 'Created by'
+    size: Size
+    asset: Asset
+    type: Type
+    version: Version
+    name: Name
+    no_files_in_this_folder: 'No files in this folder'
+    all_files: 'All files'
+    upload_file_to_folder: 'Upload file to folder'
+    upload_file: 'Upload file'
+    upload_files: 'Upload files'
+    upload_version: 'Upload version'
+    multi_upload_files: 'Upload files (Flash-Multiupload)'
+    delete_files: 'Delete files'
+    delete_file: 'Delete file'
+    hide_files: 'Hide files'
+    hide_file: 'Hide file'
+    show_hidden_files: 'Show hidden files'
+    show_files: 'Show files'
+    show_file: 'Show file'
+    rename_file: 'Rename file'
+    delete_folder: 'Delete folder'
+    rename_folder: 'Rename folder'
+    rights_for_folder: 'Rights for folder'
+    folder_rights: 'Folder rights'
+    new_folder_below: 'New folder below'
+    new_folder: 'New folder'
+    collapse_all: 'Collapse all'
+    expand_all: 'Expand all'
+    reload: Reload
+    view_tiles: Tiles
+    view_details: Details
+    view_small: 'Small Icons'
+    view_medium: 'Medium Icons'
+    view_large: 'Large Icons'
+    view_extralarge: 'Extra Large Icons'
+    views: Views
+    filter_type_document: 'only documents'
+    filter_type_audio: 'only audio'
+    filter_type_video: 'only video'
+    filter_type_image: 'only images'
+    filter_type_flash: 'only flash'
+    filter_type_archive: 'only archives'
+    filter_type_other: 'only other'
+    filter_by_type: 'by type'
+    filter_age_6m: '6 months'
+    filter_age_1m: '1 month'
+    filter_age_10d: '10 days'
+    filter_age_3d: '3 days'
+    filter_by_age_created: 'By date created'
+    filter_by_age_modified: 'By date modified'
+    filter_my_modified: 'Only files modified by me'
+    filter_my_created: 'Only files created by me'
+    filter_no: 'No filter'
+    filter: Filter
+    filters: Filters
+    files_for_folder: 'Files for folder'
+    files_for: 'Files for'
+    clear: Clear
+    file: File
+    files: Files
+    folder: Folder
+    folders: Folders
+    title: Mediamanager
+    no_recent_files: 'No recent files'
+    latest_files: 'Latest files'
+    read_attributes: 'Re-read attributes'
+    read_files_read: '{0} files read'
+    scan_new_files_folders: 'Scan for new files and folders'
+    download: Download
+    download_folder: 'Download complete folder [ZIP]'
+    download_file: 'Download file'
+    download_file_version: 'Download file version'
+    download_files: 'Download selected files [ZIP]'
+    create_new_folder_header: 'Create a new folder'
+    create_new_folder_desc: 'Create a new folder below the selected folder.'
+    create: Create
+    cancel: Cancel
+    rename_folder_header: 'Rename folder'
+    rename_folder_desc: 'Rename the currently selected folder.'
+    rename_file_header: 'Rename file'
+    rename_file_desc: 'Rename the currently selected file.'
+    rename: Rename
+    select_user: 'Select a user...'
+    select_group: 'Select a group...'
+    uploaded_file_conflict: 'Solve file conflict'
+    uploaded_file_conflict_text: 'A file with the same name is already present in the target folder.'
+    uploaded_file_conflict_desc: 'Please choose one of the following options.'
+    delete_uploaded_file: 'Keep existing file.'
+    delete_uploaded_file_desc: 'No files are changed. The following file will be kept in the target folder:'
+    replace_existing_file: 'Replace existing file.'
+    replace_existing_file_desc: 'The existing file will be replaced with this file:'
+    keep_both_files: 'Keep both files.'
+    keep_both_files_desc: 'The new file will be renamed to "{0}".'
+    apply_to_remaining_files: 'Apply to remaining files'
+    folder_read: 'Folder read'
+    folder_create: 'Folder create'
+    folder_modify: 'Folder modify'
+    folder_delete: 'Folder delete'
+    file_read: 'File read'
+    file_create: 'File create'
+    file_modify: 'File modify'
+    file_delete: 'File delete'
+    swfupload_text_add: 'Add file(s)'
+    swfupload_text_upload: 'Upload file(s)'
+    swfupload_text_cancel: 'Cancel upload'
+    swfupload_text_clear: 'Clear queue'
+    swfupload_text_progressbar: 'Progress Bar'
+    swfupload_text_remove: 'Remove file'
+    swfupload_text_remove_sure: 'Are you sure you wish to remove this file from queue?'
+    swfupload_text_error: Error
+    swfupload_text_uploading: 'Uploading file: {0} ({1} of {2})'
+    swfupload_header_filename: Filename
+    swfupload_header_size: Size
+    swfupload_header_status: Status
+    swfupload_status_0: Queued
+    swfupload_status_1: Uploading...
+    swfupload_status_2: Completed
+    swfupload_status_3: Error
+    swfupload_status_4: Cancelled
+    swfupload_error_queue_exceeded: 'The selected file(s) exceed(s) the maximum number of {0} queued files.'
+    swfupload_error_queue_slots_0: 'There is no slot left.'
+    swfupload_error_queue_slots_1: 'There is only one slot left.'
+    swfupload_error_queue_slots_2: 'There are only {0} slots left.'
+    swfupload_error_size_exceeded: 'The selected files size exceeds the allowed limit of {0}.'
+    swfupload_error_zero_byte_file: 'Zero byte file selected.'
+    swfupload_error_invalid_filetype: 'Invalid filetype selected.'
+    swfupload_error_file_not_found: 'File not found 404.'
+    swfupload_error_security_error: 'Security Error. Not allowed to post to different url.'
+    path: Path
+    contents: Contents
+    close: Close
+    configuration: Configuration
+    no_templates: 'No templates'
+    click_to_add_video: 'Click to add a video'
+    click_to_add_image: 'Click to add an image'
+    click_to_add_flash: 'Click to add a flash movie'
+    click_to_add_file: 'Click to add a file'
+    mediasettings: 'Media settings'
+    mediasettings_description: 'Change settings regarding the media manager'
+    save: Save
+    disable_flash_uploader: 'Disable flash uploader'
+    disable_flash_uploader_help: 'The result of changing this value will be visible after a restart of phlexible.'
+    enable_upload_sort: 'Automatically sort by create time after an upload'
+    enable_upload_sort_help: 'The result of changing this value will be visible after a restart of phlexible.'

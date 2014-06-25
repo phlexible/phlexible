@@ -1,0 +1,77 @@
+parameters:
+    phlexible_user.user.class: Phlexible\Bundle\UserBundle\Entity\User
+    phlexible_user.group.class: Phlexible\Bundle\UserBundle\Entity\Group
+    phlexible_user.mailer.new_account.template: PhlexibleUserBundle:Users:new_account.txt.twig
+    phlexible_user.mailer.new_account.from: %phlexible_gui.mail.from_email%
+    phlexible_user.mailer.new_password.template: PhlexibleUserBundle:Users:new_password.txt.twig
+    phlexible_user.mailer.new_password.from: %phlexible_gui.mail.from_email%
+
+services:
+    phlexible_user.successor_service:
+        class: Phlexible\Bundle\UserBundle\Successor\SuccessorService
+        arguments: [@event_dispatcher, @phlexible_message.message_poster]
+
+    phlexible_user.password_checker:
+        class: Phlexible\Bundle\UserBundle\Password\PasswordChecker
+        arguments: [%phlexible_user.password.min_length%]
+
+    phlexible_user.mailer:
+        class: Phlexible\Bundle\UserBundle\Mailer\Mailer
+        arguments:
+            - @twig
+            - @mailer
+            -
+                new_account: {template: %phlexible_user.mailer.new_account.template%, from: %phlexible_user.mailer.new_account.from%}
+                new_password: {template: %phlexible_user.mailer.new_password.template%, from: %phlexible_user.mailer.new_password.from%}
+
+    # acl providers
+    phlexible_user.acl_provider:
+        class: Phlexible\Bundle\UserBundle\AclProvider\UserAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_user.asset_provider:
+        class: Phlexible\Bundle\UserBundle\AssetProvider\UserAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # event listeners
+    phlexible_user.listener.apply_successor:
+        class: Phlexible\Bundle\UserBundle\EventListener\ApplySuccessorListener
+        arguments: [@phlexible_user.user_manager, @phlexible_user.group_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    phlexible_user.listener.get_config:
+        class: Phlexible\Bundle\UserBundle\EventListener\GetConfigListener
+        arguments:
+            - @acl
+            -
+                language: %phlexible_user.defaults.language%
+                theme: %phlexible_user.defaults.theme%
+                force_password_change: %phlexible_user.defaults.force_password_change%
+                cant_change_password: %phlexible_user.defaults.cant_change_password%
+                password_doesnt_expire: %phlexible_user.defaults.password_doesnt_expire%
+            - %phlexible_user.password.min_length%
+        tags:
+            - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
+
+    # portlets
+    phlexible_user.portlet.online:
+        class: Phlexible\Bundle\UserBundle\Portlet\OnlinePortlet
+        public: false
+        arguments: [@translator, @phlexible_user.user_manager]
+        tags:
+            - {name: phlexible_dashboard.portlet}
+
+    # searches
+    phlexible_user.search.user:
+        class: Phlexible\Bundle\UserBundle\Search\UserSearch
+        public: false
+        arguments: [@phlexible_user.user_manager]
+        tags:
+            - {name: phlexible_search.provider}

@@ -1,0 +1,15 @@
+services:
+    # acl providers
+    phlexible_translation.acl_provider:
+        class: Phlexible\Bundle\TranslationBundle\AclProvider\TranslationAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_translation.asset_provider:
+        class: Phlexible\Bundle\TranslationBundle\AssetProvider\TranslationAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}

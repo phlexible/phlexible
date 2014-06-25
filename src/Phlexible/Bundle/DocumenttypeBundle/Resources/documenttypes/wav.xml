@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="wav">
+    <type>audio</type>
+    <titles>
+        <title lang="de">Wave Datei</title>
+        <title lang="en">Wave File</title>
+    </titles>
+    <mimetypes>
+        <mimetype>audio/x-wav</mimetype>
+    </mimetypes>
+</documenttype>

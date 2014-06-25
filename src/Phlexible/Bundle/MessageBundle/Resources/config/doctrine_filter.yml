@@ -1,0 +1,5 @@
+services:
+    phlexible_message.doctrine.filter_manager:
+        class: Phlexible\Bundle\MessageBundle\Doctrine\FilterManager
+        public: false
+        arguments: [@doctrine.orm.entity_manager]

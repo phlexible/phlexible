@@ -1,0 +1,20 @@
+services:
+    phlexible_user.doctrine.user_manager:
+        class: Phlexible\Bundle\UserBundle\Doctrine\UserManager
+        public: false
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @security.encoder_factory
+            - @event_dispatcher
+            - %phlexible_user.user.class%
+            - %phlexible_user.user.system_user_id%
+            - %phlexible_user.group.everyone_group_id%
+
+    phlexible_user.doctrine.group_manager:
+        class: Phlexible\Bundle\UserBundle\Doctrine\GroupManager
+        public: false
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @event_dispatcher
+            - %phlexible_user.group.class%
+            - %phlexible_user.group.everyone_group_id%

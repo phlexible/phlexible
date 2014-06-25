@@ -1,0 +1,4 @@
+siteroots:
+    parent: config
+    xtype: Phlexible.siteroots.menuhandle.SiterootsHandle
+    resources: [siteroots]

@@ -1,0 +1,5 @@
+services:
+    phlexible_queue.doctrine.job_manager:
+        class: Phlexible\Bundle\QueueBundle\Doctrine\JobManager
+        public: false
+        arguments: [@doctrine.orm.entity_manager]

@@ -1,0 +1,47 @@
+.verticalTabs ul.x-tab-strip li{
+  clear:both;
+  margin:0;
+  width:100%;
+}
+
+.verticalTabs .x-tab-strip a.x-tab-strip-close{
+  display:none;
+}
+
+.verticalTabs ul.x-tab-strip li .x-tab-strip-inner {
+  padding:6px 3px;
+}
+
+.verticalTabs .x-tab-left, .verticalTabs .x-tab-strip .x-tab-with-icon .x-tab-right, .verticalTabs .x-tab-strip-top .x-tab-right{
+  background:none;
+  padding:0;
+}
+
+.verticalTabs ul.x-tab-strip-top{
+  background:none;
+  border:none;
+  padding-top:0;
+}
+
+.verticalTabs ul.x-tab-strip li.x-tab-edge{
+  border-bottom:1px solid #99BBE8!important;
+}
+
+.verticalTabs.leftTabs .x-tab-panel-header{
+ float:left;
+}
+
+.verticalTabs.rightTabs .x-tab-panel-header{
+ float:right; 
+}
+
+.verticalTabs.alignRight ul.x-tab-strip {
+  width: 100%;
+}
+
+.verticalTabs.alignRight ul.x-tab-strip li {
+  clear: both;
+  margin: 0;
+  text-align: right;
+  width: 100%;
+} 

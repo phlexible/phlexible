@@ -1,0 +1,23 @@
+templates:
+    template: Template
+    templates: Templates
+    template_browser: 'Template Browser'
+    script: Script
+    scripts: Scripts
+    style: Style
+    styles: Styles
+    frontend: Frontend
+    name: Name
+    path: Path
+    filename: Filename
+    status: Status
+    usage: Usage
+    data: Data
+    preview: Preview
+    editor: Editor
+    view: View
+    reload: Reload
+    full: Voll
+    part: Teil
+    save: Save
+    cancel: Cancel

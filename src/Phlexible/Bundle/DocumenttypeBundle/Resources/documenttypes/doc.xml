@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="doc">
+    <type>document</type>
+    <titles>
+        <title lang="de">Microsoft Word Dokument</title>
+        <title lang="en">Microsoft Word Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/doc</mimetype>
+        <mimetype>application/msword</mimetype>
+        <mimetype>application/vnd.msword</mimetype>
+    </mimetypes>
+</documenttype>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="mka">
+    <type>audio</type>
+    <titles>
+        <title lang="de">Matroshka Audio</title>
+        <title lang="en">Matroshka Audio</title>
+    </titles>
+    <mimetypes>
+        <mimetype>audio/x-matroska</mimetype>
+    </mimetypes>
+</documenttype>

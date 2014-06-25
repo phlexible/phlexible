@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="ppt">
+    <type>document</type>
+    <titles>
+        <title lang="de">Powerpoint Präsentation</title>
+        <title lang="en">Powerpoint Presentation</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.ms-powerpoint</mimetype>
+    </mimetypes>
+</documenttype>

@@ -1,0 +1,84 @@
+.ext-safari .p-messages-filter-form .p-messages-plus,
+.ext-chrome .p-messages-filter-form .p-messages-plus {
+    top: 0 !important;    
+}
+.ext-safari .p-messages-filter-form .p-messages-close,
+.ext-chrome .p-messages-filter-form .p-messages-close {
+    top: 0 !important;    
+}
+
+.p-messages-filter-form .panel-filter-title {
+    font-weight:bold;
+    padding-top:5px;
+    padding-bottom:5px;
+    margin-bottom:10px;
+    width:475px;
+}
+
+.p-messages-filter-form .addBtn {
+    position: relative;
+    left:500px;
+}
+.p-messages-filter-form .hideGroupBtn {
+    position: relative;
+    left:580px;
+    top: -21px;
+}
+
+
+.p-messages-filter-form .panel-filter {
+    background-color:#F0EFFF;
+    margin-bottom:5px;
+    xwidth:475px;
+}
+.p-messages-filter-form .panel-filter-small {
+    height: 22px;
+}
+
+.p-messages-filter-form .or-block {
+    background-color: #FFFFFF;
+    margin: 10px;
+    position: relative;
+}
+.p-messages-filter-form .filter-group-fs {
+    
+}
+.p-messages-filter-form .or-block-label {
+    font-weight:bold;
+    margin-left:10px;
+}
+.p-messages-filter-form .or-block-small {
+    height: 22px;
+}
+
+.p-messages-filter-form .label-filter {
+    display: none;
+}
+
+.p-messages-filter-form .first-filter-field {
+    float:left;
+    margin-left:10px;
+    margin-right:10px;
+    width:200px;
+}
+.p-messages-filter-form .second-filter-field {
+    
+}
+
+.p-messages-filter-form .removeCriteriaButton {
+    /*position: absolute;
+    right: 5px;*/
+}
+
+.p-messages-filter-form .p-messages-plus {
+    position: absolute;
+    right: 42px;
+    top: -23px;
+    z-index: 999;
+}
+.p-messages-filter-form .p-messages-close {
+    position: absolute;
+    right: 20px;
+    top: -23px;
+    z-index: 999;
+}

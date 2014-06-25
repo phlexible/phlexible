@@ -1,0 +1,14 @@
+[{{ appTitle }} {{ projectTitle }}] Daily Digest Mail
+Digest Mail from {{ date }}
+
+{% for message in messages %}
+===============================================================================
+{{ message.subject }} {{ message.createdAt|date }}
+-------------------------------------------------------------------------------
+{% if message.body %}
+{{ message.body }}
+{% endif %}
+{% if message.user %}
+triggered by {{ message.user }}
+{% endif %}
+{% endfor %}

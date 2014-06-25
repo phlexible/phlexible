@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="odb">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenDocument Datenbank</title>
+        <title lang="en">OpenDocument Database</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.oasis.opendocument.database</mimetype>
+    </mimetypes>
+</documenttype>

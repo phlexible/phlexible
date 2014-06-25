@@ -1,0 +1,12 @@
+parameters:
+    phlexible_media_tool.pdftotext.pdftotext: pdftotext
+
+services:
+    phlexible_media_tool.pdftotext:
+        class: Brainbits\PdfToText\PdfToText
+        factory_class: Brainbits\PdfToText\PdfToText
+        factory_method: load
+        arguments: [[%phlexible_media_tool.pdftotext.pdftotext%], @logger]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+

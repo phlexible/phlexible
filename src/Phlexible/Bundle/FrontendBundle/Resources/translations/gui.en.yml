@@ -1,0 +1,6 @@
+frontend:
+    preview: Preview
+    preview_online: Online
+    preview_debug: Debug
+    preview_vertical: Vertical
+    preview_horizontal: Horizontal

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="mp3">
+    <type>audio</type>
+    <titles>
+        <title lang="de">MP3 Datei</title>
+        <title lang="en">MP3 File</title>
+    </titles>
+    <mimetypes>
+        <mimetype>audio/mpeg</mimetype>
+    </mimetypes>
+</documenttype>

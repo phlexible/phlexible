@@ -1,0 +1,92 @@
+users:
+    uid: 'User ID'
+    gid: 'Group ID'
+    user: User
+    users: Users
+    who_is_online: 'Who is online?'
+    no_online_users: 'No online users.'
+    no_users: 'No users to display.'
+    online_for: 'Online for'
+    logged_in: 'logged in'
+    logged_out: 'logged out'
+    personal_details: 'Personal details'
+    personal_details_description: 'Change your personal details.'
+    username: Username
+    firstname: Firstname
+    lastname: Lastname
+    comment: Comment
+    company: Company
+    email: Email
+    jid: JID
+    password: Password
+    password_description: 'Change your password.'
+    password_repeat: 'Password (repeat)'
+    my_options: 'My options'
+    options: Options
+    preferences: Preferences
+    preferences_description: 'Change your preferences.'
+    content_language: 'Content language'
+    interface_language: 'Interface language'
+    date: 'Date format'
+    theme: Theme
+    theme_description: 'Change your theme.'
+    expireDate: 'Expire date'
+    createDate: 'Create date'
+    createUser: 'Created by'
+    modifyDate: 'Modify date'
+    modifyUser: 'Modified by'
+    close: Close
+    save: Save
+    save_and_notify: 'Save und notify'
+    new_user: Add
+    cancel: Cancel
+    back_to_login: 'Back to login'
+    delete: Delete
+    apply: Apply
+    reset: Reset
+    cant_change_password: 'Can''t change password'
+    password_doesnt_expire: 'Password doesn''t expire'
+    change_password_next_login: 'Force password change on next login'
+    account: Account
+    delete_user_warning: 'Do you really want to delete user "{0}"?'
+    delete_users_warning: 'Do you really want to delete these users?'
+    yes: Yes
+    no: No
+    passwords_dont_match: 'Passwords don''t match'
+    roles: Roles
+    role: Role
+    groups: Groups
+    group: Group
+    search: Search
+    filter: Filter
+    do_search: Search
+    type: Type
+    members: Members
+    member: Member
+    actions: Actions
+    add: Add
+    rename: Rename
+    delete: Delete
+    add_group: 'Please enter the title for the new group.'
+    rename_group: 'Please enter the new title for group "{0}".'
+    delete_group: 'Do you really want to delete group "{0}"?'
+    empty_msg: 'No users to display'
+    display_msg: 'Displaying users {0} - {1} of {2}'
+    current_password_wrong: 'Current password is wrong'
+    password_are_the_same: 'Current and new passwords are the same.'
+    status: Status
+    active: Active
+    expired: Expired
+    expire_help: 'The users account expires at 00:00 of the given date.'
+    has_expire_date: 'Has expire date'
+    impersonate: Impersonate
+    account_expires_on: 'Account expires on'
+    notify_user: 'Notify user'
+    generate: generate
+    copy: copy
+    generated_password: 'Generated Password'
+    generate_password_text: 'Alternatively, use the field below to generate a password. Don''t forget to copy it into the password fields above afterwards.'
+    account_is_expired: 'The account of this user is expired.'
+    successor: Successor
+    successor_header: 'Select successor'
+    successor_description: 'The selected user will receive all user-related references from the original user.'

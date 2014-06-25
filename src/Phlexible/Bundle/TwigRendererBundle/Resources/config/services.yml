@@ -1,0 +1,55 @@
+parameters:
+    phlexible_twig_renderer.template_dir: %app.template_dir%
+    phlexible_twig_renderer.cache_dir: %kernel.cache_dir%/twig/
+    phlexible_twig_renderer.charset: UTF-8
+
+services:
+    phlexible_twig_renderer.twig.loader.filesystem:
+        class: Twig_Loader_Filesystem
+
+    phlexible_twig_renderer.twig:
+        class: Twig_Environment
+        arguments:
+            - @phlexible_twig_renderer.twig.loader
+            - {debug: %kernel.debug%, cache: %phlexible_twig_renderer.cache_dir%, charset: %phlexible_twig_renderer.charset%}
+
+    phlexible_twig_renderer.twig.data_provider:
+        class: Phlexible\Bundle\TwigRendererBundle\TwigDataProvider
+
+    phlexible_twig_renderer.data_provider:
+        class: Phlexible\Bundle\ElementRendererBundle\DataProvider
+        arguments: [@phlexible_twig_renderer.twig.data_provider, @event_dispatcher]
+
+    phlexible_twig_renderer.twig.renderer:
+        class: Phlexible\Bundle\TwigRendererBundle\TwigRenderer
+        arguments: [@twig, @phlexible_twig_renderer.data_provider, %app.template_dir%]
+
+    phlexible_twig_renderer.renderer:
+        class: Phlexible\Bundle\ElementRendererBundle\Renderer
+        arguments: [@phlexible_twig_renderer.twig.renderer, @event_dispatcher]
+
+    # twig extensions
+    phlexible_twig_renderer.twig.extension.asset:
+        class: Phlexible\Bundle\TwigRendererBundle\Extension\AssetExtension
+        public: false
+        arguments: [@phlexible_frontend_asset.collector]
+        tags:
+            - {name: twig.extension}
+
+    phlexible_twig_renderer.twig.extension.image:
+        class: Phlexible\Bundle\TwigRendererBundle\Extension\ImageExtension
+        public: false
+        tags:
+            - {name: twig.extension}
+
+    phlexible_twig_renderer.twig.extension.misc:
+        class: Phlexible\Bundle\TwigRendererBundle\Extension\MiscExtension
+        public: false
+        tags:
+            - {name: twig.extension}
+
+    phlexible_twig_renderer.twig.extension.url:
+        class: Phlexible\Bundle\TwigRendererBundle\Extension\UrlExtension
+        public: false
+        tags:
+            - {name: twig.extension}

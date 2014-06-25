@@ -1,0 +1,32 @@
+accesscontrol:
+    access: Access
+    user: User
+    users: Users
+    group: Group
+    groups: Groups
+    add: Add
+    rights: Rights
+    right: Right
+    inheritance: Inheritance
+    status: Status
+    save: 'Save rights'
+    id: ID
+    subject: Subject
+    subjects: Subjects
+    no_subjects: 'No subjects'
+    language: Language
+    actions: Actions
+    reload: Reload
+    all: All
+    delete: Delete
+    link: Link
+    restore: Restore
+    legend: Legend
+    not_set: 'Not set'
+    set_here: 'Set here'
+    set_above: 'Set above'
+    stopped_above: 'stopped above'
+    stopped_here: 'Set above, Stopped here'
+    stopped_below: 'Stopped below'
+    from_id: 'Set in ID "{0}"'
+    defined_here: 'Set here'

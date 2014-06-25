@@ -1,0 +1,29 @@
+parameters:
+    phlexible_media_template.cache_dir: %kernel.cache_dir%/mediatemplates/
+    phlexible_media_template.file_dir: %kernel.root_dir%/Resources/media_templates/
+
+services:
+    phlexible_media_template.file.loader.xml:
+        class: Phlexible\Bundle\MediaTemplateBundle\File\Loader\XmlLoader
+        public: false
+
+    phlexible_media_template.file.dumper.xml:
+        class: Phlexible\Bundle\MediaTemplateBundle\File\Dumper\XmlDumper
+        public: false
+
+    phlexible_media_template.file.loader:
+        class: Phlexible\Bundle\MediaTemplateBundle\File\TemplateLoader
+        public: false
+        arguments: [%kernel.bundles%, %phlexible_media_template.file_dir%]
+        calls:
+            - [addLoader, [@phlexible_media_template.file.loader.xml]]
+
+    phlexible_media_template.file.dumper:
+        class: Phlexible\Bundle\MediaTemplateBundle\File\TemplateDumper
+        public: false
+        arguments: [@phlexible_media_template.file.dumper.xml, %phlexible_media_template.file_dir%]
+
+    phlexible_media_template.file.template_manager:
+        class: Phlexible\Bundle\MediaTemplateBundle\File\TemplateManager
+        public: false
+        arguments: [@phlexible_media_template.file.loader, @phlexible_media_template.file.dumper]

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="_fallback">
+    <type>document</type>
+    <titles>
+        <title lang="de">Unbekannt</title>
+        <title lang="en">Unknown</title>
+    </titles>
+    <mimetypes>
+    </mimetypes>
+</documenttype>

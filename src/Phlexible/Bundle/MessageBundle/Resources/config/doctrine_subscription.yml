@@ -1,0 +1,5 @@
+services:
+    phlexible_message.doctrine.subscription_manager:
+        class: Phlexible\Bundle\MessageBundle\Doctrine\SubscriptionManager
+        public: false
+        arguments: [@doctrine.orm.entity_manager]

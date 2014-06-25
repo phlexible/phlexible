@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="_empty">
+    <type>document</type>
+    <titles>
+        <title lang="de">Leere Datei</title>
+        <title lang="en">Empty File</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/x-empty</mimetype>
+    </mimetypes>
+</documenttype>

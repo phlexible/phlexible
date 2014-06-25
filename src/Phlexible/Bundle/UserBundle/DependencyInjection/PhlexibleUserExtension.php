@@ -1,0 +1,48 @@
+<?php
+/**
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietery
+ */
+
+namespace Phlexible\Bundle\UserBundle\DependencyInjection;
+
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+
+/**
+ * User extension
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
+class PhlexibleUserExtension extends Extension
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function load(array $config, ContainerBuilder $container)
+    {
+        $configuration = $this->getConfiguration($config, $container);
+        $config = $this->processConfiguration($configuration, $config);
+
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
+
+        $container->setParameter('phlexible_user.user.system_user_id', $config['system_user_id']);
+        $container->setParameter('phlexible_user.group.everyone_group_id', $config['everyone_group_id']);
+        $container->setParameter('phlexible_user.password.min_length', $config['password']['min_length']);
+        $container->setParameter('phlexible_user.password.expire_after_days', $config['password']['expire_after_days']);
+        $container->setParameter('phlexible_user.defaults.language', $config['defaults']['language']);
+        $container->setParameter('phlexible_user.defaults.theme', $config['defaults']['theme']);
+        $container->setParameter('phlexible_user.defaults.force_password_change', $config['defaults']['force_password_change']);
+        $container->setParameter('phlexible_user.defaults.cant_change_password', $config['defaults']['cant_change_password']);
+        $container->setParameter('phlexible_user.defaults.password_doesnt_expire', $config['defaults']['password_doesnt_expire']);
+
+        $loader->load('doctrine.yml');
+        $container->setAlias('phlexible_user.group_manager', 'phlexible_user.doctrine.group_manager');
+        $container->setAlias('phlexible_user.user_manager', 'phlexible_user.doctrine.user_manager');
+    }
+}

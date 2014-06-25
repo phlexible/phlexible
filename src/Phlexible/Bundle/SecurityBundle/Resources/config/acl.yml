@@ -1,0 +1,22 @@
+services:
+    phlexible_security.acl.acl_provider:
+        class: Phlexible\Bundle\SecurityBundle\Acl\AclProvider\ChainAclProvider
+        arguments: [[]]
+
+    phlexible_security.acl:
+        class: Phlexible\Bundle\SecurityBundle\Acl\Acl
+        factory_class: Phlexible\Bundle\SecurityBundle\Acl\AclFactory
+        factory_method: factory
+        arguments: [@phlexible_security.acl.acl_provider]
+
+    # acl provider
+    phlexible_security.acl.acl_provider.database:
+        class: Phlexible\Bundle\SecurityBundle\Acl\AclProvider\DatabaseAclProvider
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    phlexible_security.acl_provider:
+        class: Phlexible\Bundle\SecurityBundle\AclProvider\SecurityAclProvider
+        tags:
+            - {name: phlexible_security.acl.provider}

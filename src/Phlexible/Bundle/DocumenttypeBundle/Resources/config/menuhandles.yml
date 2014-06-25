@@ -1,0 +1,4 @@
+documenttypes:
+    parent: config
+    xtype: Phlexible.documenttypes.menuhandle.DocumenttypesHandle
+    resources: [documenttypes]

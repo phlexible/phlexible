@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="m4a">
+    <type>audio</type>
+    <titles>
+        <title lang="de">MP4 Audio</title>
+        <title lang="en">MP4 Audio</title>
+    </titles>
+    <mimetypes>
+        <mimetype>audio/mp4</mimetype>
+    </mimetypes>
+</documenttype>

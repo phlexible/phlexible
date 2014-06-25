@@ -1,0 +1,27 @@
+parameters:
+    phlexible_cms.languages.default: en
+    phlexible_cms.languages.available: en,de
+
+services:
+    # acl providers
+    phlexible_cms.acl_provider:
+        class: Phlexible\Bundle\CmsBundle\AclProvider\CmsAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_cms.asset_provider:
+        class: Phlexible\Bundle\CmsBundle\AssetProvider\CmsAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider, priority: 200}
+
+    # event listeners
+    phlexible_cms.listener.get_config:
+        class: Phlexible\Bundle\CmsBundle\EventListener\GetConfigListener
+        arguments: [%phlexible_cms.languages.default%, %phlexible_cms.languages.available%]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
+
