@@ -1,0 +1,63 @@
+parameters:
+    phlexible_task.portlet.num_items: 10
+    phlexible_task.mail_on_close: true
+    phlexible_task.mailer.new_task.template: PhlexibleTaskBundle/NewTask/email.txt.twig
+    phlexible_task.mailer.new_task.from: %phlexible_gui.mail.from_email%
+    phlexible_task.mailer.new_status.template: PhlexibleTaskBundle/NewStatus/email.txt.twig
+    phlexible_task.mailer.new_status.from: %phlexible_gui.mail.from_email%
+
+services:
+    phlexible_task.types:
+        class: Phlexible\Bundle\TaskBundle\Task\Type\TypeCollection
+        arguments: [[]]
+
+    phlexible_task.mailer:
+        class: Phlexible\Bundle\TaskBundle\Mailer\Mailer
+        arguments:
+            - @twig
+            - @mailer
+            -
+                new_task: {template: %phlexible_task.mailer.new_task.template%, from: %phlexible_task.mailer.new_task.from%}
+                new_status: {template: %phlexible_task.mailer.new_status.template%, from: %phlexible_task.mailer.new_status.from%}
+
+    # acl providers
+    phlexible_task.acl_provider:
+        class: Phlexible\Bundle\TaskBundle\AclProvider\TaskAclProvider
+        public: false
+        tags:
+            - {name: phlexible_security.acl.provider}
+
+    # asset providers
+    phlexible_task.asset_provider:
+        class: Phlexible\Bundle\TaskBundle\AssetProvider\TaskAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # event listeners
+    phlexible_task.listener.apply_successor:
+        class: Phlexible\Bundle\TaskBundle\EventListener\ApplySuccessorListener
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    # portlets
+    phlexible_task.portlet.my_tasks:
+        class: Phlexible\Bundle\TaskBundle\Portlet\MyTasksPortlet
+        public: false
+        arguments:
+            - @phlexible_task.task_manager
+            - @phlexible_task.types
+            - @security.context
+            - @phlexible_user.user_manager
+            - %phlexible_task.portlet.num_items%]
+        tags:
+            - {name: phlexible_dashboard.portlet}
+
+    # task types
+    phlexible_task.type.generic:
+        class: Phlexible\Bundle\TaskBundle\Task\Type\GenericType
+        public: false
+        tags:
+            - {name: phlexible_task.type}

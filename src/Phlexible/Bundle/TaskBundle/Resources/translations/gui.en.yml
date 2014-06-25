@@ -1,0 +1,48 @@
+tasks:
+    tasks: Tasks
+    task: Task
+    task_name: Task
+    my_tasks: 'My Tasks'
+    no_active_tasks: 'No active tasks.'
+    details: Details
+    new_task: 'New Task'
+    recipient: Recipient
+    send: Send
+    cancel: Cancel
+    filter: Filter
+    reset: Reset
+    reload: Reload
+    component: Component
+    comment: Comment
+    comments: Comments
+    id: ID
+    create_date: 'Created on'
+    create_user: 'Created by'
+    change_date: 'Changed on'
+    change_user: 'Changed by'
+    title: Title
+    type: Type
+    status: Status
+    action: Action
+    assigned_to_me: 'Assigned to me'
+    created_by_me: 'Created by me'
+    assigned_to: 'Assigned to'
+    involved: I am involved
+    all_tasks: All
+    open_target: 'Open target'
+    status_text: 'Please enter a comment for the new status "{0}".'
+    status_history: 'Status history'
+    no_tasks_found: 'No tasks found.'
+    please_choose: 'Please choose'
+    open: Open
+    reopen: Reopen
+    reopened: Reopened
+    reject: 'Send back'
+    rejected: 'Sent back'
+    finish: Finish
+    finished: Finished
+    close: Close
+    closed: Closed
+    for_creator: 'You have assigned this task to {2} on {0} {1}.'
+    for_recipient: 'This task has been assigned to you on {0} {1} by {2}.'
+    for_others: 'This task has been assigned to {3} by {0} on {1} {2}.'

@@ -1,0 +1,48 @@
+tasks:
+    tasks: Aufgaben
+    task: Aufgabe
+    task_name: Aufgabe
+    my_tasks: 'Meine Aufgaben'
+    no_active_tasks: 'Keine aktiven Aufgaben.'
+    details: Details
+    new_task: 'Neue Aufgabe'
+    recipient: Empfänger
+    send: Abschicken
+    cancel: Abbrechen
+    filter: Filter
+    reset: Zurücksetzen
+    reload: 'Neu laden'
+    component: Komponente
+    comment: Kommentar
+    comments: Kommentare
+    id: ID
+    create_date: 'Angelegt am'
+    create_user: 'Angelegt von'
+    change_date: 'Geändert am'
+    change_user: 'Geändert von'
+    title: Titel
+    type: Typ
+    status: Status
+    action: Aktion
+    assigned_to_me: 'Mir zugewiesen'
+    created_by_me: 'Von mir erstellt'
+    assigned_to: 'Zugewiesen an'
+    involved: Ich bin beteiligt
+    all_tasks: Alle
+    open_target: 'Ziel öffnen'
+    status_text: 'Bitte geben Sie einen Kommentar für den neuen Status "{0}" ein.'
+    status_history: 'Status Verlauf'
+    no_tasks_found: 'Keine Aufgaben gefunden.'
+    please_choose: 'Bitte wählen'
+    open: Offen
+    reopen: 'Wieder öffnen'
+    reopened: 'Wieder geöffnet'
+    reject: Zurücksenden
+    rejected: Zurückgesendet
+    finish: Erledigen
+    finished: Erledigt
+    close: Schliessen
+    closed: Geschlossen
+    for_creator: 'Sie haben diese Aufgabe {2} am {0} um {1} zugewiesen.'
+    for_recipient: 'Diese Aufgabe wurde Ihnen am {0} um {1} durch {2} zugewiesen.'
+    for_others: '{0} hat am {1} um {2} {3} diese Aufgabe zugewiesen.'
