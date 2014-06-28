@@ -84,7 +84,7 @@ class DatabaseAclProvider implements AclProviderInterface
             return;
         }
 
-        $definitions = array(
+        $this->definitions = array(
             self::DEFINITION_ROLES     => array(),
             self::DEFINITION_RESOURCES => array(),
             self::DEFINITION_ALLOW     => array(),
@@ -92,10 +92,14 @@ class DatabaseAclProvider implements AclProviderInterface
         );
 
         $roleRepository = $this->entityManager->getRepository('PhlexibleSecurityBundle:Role');
-        $roles = $roleRepository->findAll();
+        try {
+            $roles = $roleRepository->findAll();
+        } catch (\Exception $e) {
+            return;
+        }
 
         foreach ($roles as $role) {
-            $definitions[self::DEFINITION_ROLES][] = $role->getRole();
+            $this->definitions[self::DEFINITION_ROLES][] = $role->getRole();
 
             foreach ($role->getResources() as $resource) {
                 $op = $resource->getOp();
@@ -105,13 +109,11 @@ class DatabaseAclProvider implements AclProviderInterface
                 if (!in_array($op, array(self::DEFINITION_ALLOW, self::DEFINITION_DENY))) {
                     continue;
                 }
-                $definitions[$op][] = array(
+                $this->definitions[$op][] = array(
                     $role->getRole(),
                     $resource->getResource()
                 );
             }
         }
-
-        $this->definitions = $definitions;
     }
 }

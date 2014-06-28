@@ -29,7 +29,7 @@ class DebugHandler implements HandlerInterface
     private $typeNames;
 
     /**
-     * @var Message[]
+     * @var array
      */
     private $messages = array();
 
@@ -62,7 +62,14 @@ class DebugHandler implements HandlerInterface
     }
 
     /**
-     * @return Message[]
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+    }
+
+    /**
+     * @return array
      */
     public function getMessages()
     {

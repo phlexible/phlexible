@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\Model;
 
+use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
+
 /**
  * Access manager interface
  *
@@ -24,29 +26,52 @@ interface AccessManagerInterface
     public function findBy(array $criteria);
 
     /**
-     * @param string  $rightType
+     * @param string      $type
+     * @param string      $contentType
+     * @param array       $contentIdPath
+     * @param array       $securityTypes
+     * @param string|null $contentLanguage
+     *
+     * @return AccessControlEntry[]
+     */
+    public function findByContentIdPath($type, $contentType, array $contentIdPath, array $securityTypes, $contentLanguage = null);
+
+    /**
+     * @param string      $type
+     * @param string      $contentType
+     * @param string      $contentId
+     * @param string      $securityType
+     * @param string      $securityId
+     * @param string|null $contentLanguage
+     *
+     * @return AccessControlEntry|null
+     */
+    public function findOneByValues($type, $contentType, $contentId, $securityType, $securityId, $contentLanguage = null);
+
+    /**
+     * @param string  $type
      * @param string  $contentType
      * @param string  $contentId
-     * @param string  $objectType
-     * @param string  $objectId
+     * @param string  $securityType
+     * @param string  $securityId
      * @param string  $right
      * @param integer $inherit
      * @param string  $language
      *
      * @return $this
      */
-    public function setRight($rightType, $contentType, $contentId, $objectType, $objectId, $right, $inherit = 1, $language = null);
+    public function setRight($type, $contentType, $contentId, $securityType, $securityId, $right, $inherit = 1, $language = null);
 
     /**
-     * @param string $rightType
+     * @param string $type
      * @param string $contentType
      * @param string $contentId
-     * @param string $objectType
-     * @param string $objectId
+     * @param string $securityType
+     * @param string $securityId
      * @param string $right
      * @param string $language
      *
      * @return $this
      */
-    public function removeRight($rightType, $contentType, $contentId, $objectType = null, $objectId = null, $right = null, $language = null);
+    public function removeRight($type, $contentType, $contentId, $securityType = null, $securityId = null, $right = null, $language = null);
 }

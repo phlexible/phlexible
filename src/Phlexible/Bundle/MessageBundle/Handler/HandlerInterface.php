@@ -18,9 +18,14 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 interface HandlerInterface
 {
     /**
-     * Handle the incoming message
+     * Will be called as soon as a message is posted.
      *
      * @param Message $message
      */
     public function handle(Message $message);
+
+    /**
+     * Will be called on kernel/console::terminate event.
+     */
+    public function close();
 }

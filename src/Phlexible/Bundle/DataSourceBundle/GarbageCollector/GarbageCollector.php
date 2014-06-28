@@ -8,12 +8,11 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\GarbageCollector;
 
-use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
-use Phlexible\Bundle\DataSourceBundle\ValueCollection;
+use Phlexible\Bundle\DataSourceBundle\Value\ValueCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

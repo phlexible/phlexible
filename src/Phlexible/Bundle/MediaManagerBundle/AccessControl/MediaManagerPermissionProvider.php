@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\AccessControl;
 
+use Phlexible\Bundle\AccessControlBundle\Permission\Permission;
+use Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection;
 use Phlexible\Bundle\AccessControlBundle\Permission\PermissionProviderInterface;
 
 /**
@@ -22,51 +24,19 @@ class MediaManagerPermissionProvider implements PermissionProviderInterface
      */
     public function getPermissions()
     {
-        return array(
-            'internal' => array(
-                'folder' => array(
-                    'FOLDER_READ' => array(
-                        'bit' => 1,
-                        'iconCls' => 'p-mediamanager-folder_view-icon'
-                    ),
-                    'FOLDER_CREATE' => array(
-                        'bit' => 2,
-                        'iconCls' => 'p-mediamanager-folder_add-icon'
-                    ),
-                    'FOLDER_MODIFY' => array(
-                        'bit' => 4,
-                        'iconCls' => 'p-mediamanager-folder_edit-icon'
-                    ),
-                    'FOLDER_DELETE' => array(
-                        'bit' => 8,
-                        'iconCls' => 'p-mediamanager-folder_delete-icon'
-                    ),
-                    'FOLDER_RIGHTS' => array(
-                        'bit' => 16,
-                        'iconCls' => 'p-mediamanager-folder_rights-icon'
-                    ),
-                    'FILE_READ' => array(
-                        'bit' => 32,
-                        'iconCls' => 'p-mediamanager-file_view-icon'
-                    ),
-                    'FILE_CREATE' => array(
-                        'bit' => 64,
-                        'iconCls' => 'p-mediamanager-file_add-icon'
-                    ),
-                    'FILE_MODIFY' => array(
-                        'bit' => 128,
-                        'iconCls' => 'p-mediamanager-file_edit-icon'
-                    ),
-                    'FILE_DELETE' => array(
-                        'bit' => 256,
-                        'iconCls' => 'p-mediamanager-file_delete-icon'
-                    ),
-                    'FILE_DOWNLOAD' => array(
-                        'bit' => 512,
-                        'iconCls' => 'p-mediamanager-file_download-icon'
-                    ),
-                ),
-            ),
+        return new PermissionCollection(
+            array(
+                new Permission('folder-internal', 'FOLDER_READ', 1, 'p-mediamanager-folder_view-icon'),
+                new Permission('folder-internal', 'FOLDER_CREATE', 2, 'p-mediamanager-folder_add-icon'),
+                new Permission('folder-internal', 'FOLDER_MODIFY', 4, 'p-mediamanager-folder_edit-icon'),
+                new Permission('folder-internal', 'FOLDER_DELETE', 8, 'p-mediamanager-folder_delete-icon'),
+                new Permission('folder-internal', 'FOLDER_RIGHTS', 16, 'p-mediamanager-folder_rights-icon'),
+                new Permission('folder-internal', 'FILE_READ', 32, 'p-mediamanager-file_view-icon'),
+                new Permission('folder-internal', 'FILE_CREATE', 64, 'p-mediamanager-file_add-icon'),
+                new Permission('folder-internal', 'FILE_MODIFY', 128, 'p-mediamanager-file_edit-icon'),
+                new Permission('folder-internal', 'FILE_DELETE', 256, 'p-mediamanager-file_delete-icon'),
+                new Permission('folder-internal', 'FILE_DOWNLOAD', 512, 'p-mediamanager-file_download-icon'),
+            )
         );
     }
 }

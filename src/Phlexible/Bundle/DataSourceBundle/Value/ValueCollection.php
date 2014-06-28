@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\DataSourceBundle;
+namespace Phlexible\Bundle\DataSourceBundle\Value;
 
 /**
  * Value collection

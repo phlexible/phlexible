@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\AccessControlBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Add permissions pass
@@ -23,14 +24,10 @@ class AddPermissionsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        // add css compressor alias to container
-        $rights = array();
+        $permissions = $container->findDefinition('phlexible_access_control.permissions');
         foreach ($container->findTaggedServiceIds('phlexible_access_control.permission') as $id => $attributes) {
             $definition = $container->findDefinition($id);
-            $class = $definition->getClass();
-            $provider = new $class();
-            $rights = array_merge($rights, $provider->getPermissions());
+            $permissions->addMethodCall('addProvider', array(new Reference($id)));
         }
-        $container->findDefinition('phlexible_access_control.permissions')->replaceArgument(0, $rights);
     }
 }

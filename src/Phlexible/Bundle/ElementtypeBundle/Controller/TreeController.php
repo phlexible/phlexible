@@ -237,7 +237,7 @@ class TreeController extends Controller
 
         $rootProperties = $rootRow['properties'];
 
-        if (empty(trim($rootProperties['root']['unique_id']))) {
+        if (!isset($rootProperties['root']['unique_id']) || !trim($rootProperties['root']['unique_id'])) {
             return new ResultResponse(false, 'No unique ID.');
         }
 

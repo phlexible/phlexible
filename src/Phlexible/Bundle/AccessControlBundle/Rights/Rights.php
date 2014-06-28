@@ -48,73 +48,66 @@ class Rights
     }
 
     /**
-     * @param array  $subjectTypes
-     * @param string $rightType
+     * @param array  $securityTypes
+     * @param string $type
      * @param string $contentType
      * @param string $contentId
-     * @param array  $path
-     * @param array  $subjectFetchers
+     * @param array  $contentIdPath
+     * @param array  $securityFetchers
      *
      * @return array
      * @throws \Exception
      */
-    public function getRights(array $subjectTypes, $rightType, $contentType, $contentId, array $path, array $subjectFetchers)
+    public function getRights(array $securityTypes, $type, $contentType, $contentId, array $contentIdPath, array $securityFetchers)
     {
-        $baseContentId = current($path);
+        $baseContentId = current($contentIdPath);
 
-        $rights = $this->accessManager->findBy(
-            array(
-                'object_type'  => $subjectTypes,
-                'right_type'   => $rightType,
-                'content_type' => $contentType,
-                'content_id'   => $path
-            )
-        );
+        $entries = $this->accessManager->findByContentIdPath($type, $contentType, $contentIdPath, $securityTypes);
 
         $sort = array();
-        foreach ($rights as $key => $right) {
-            $sort[$key] = array_search((integer) $right['content_id'], $path);
+        foreach ($entries as $idx => $entry) {
+            $sort[$idx] = array_search((int) $entry->getContentId(), $contentIdPath);
 
             $rights[$key]['status'] = $rights[$key]['inherit'];
             unset($rights[$key]['inherit']);
-            $rights[$key]['inherited'] = count($path) > 1 ? 1 : 0;
-            if ($baseContentId != $right['content_id']) {
+            $rights[$key]['inherited'] = count($contentIdPath) > 1 ? 1 : 0;
+            if ($baseContentId != $entry->getContentId()) {
                 $rights[$key]['inherited'] = 2;
             }
         }
 
-        array_multisort($sort, $rights);
+        array_multisort($sort, $entries);
 
         $userIds  = array();
         $groupIds = array();
 
-        foreach ($rights as $right) {
-            if ($right['object_type'] == 'uid' && !array_key_exists($right['object_id'], $userIds)) {
-                $userIds[$right['object_id']] = $right['object_id'];
-            } elseif ($right['object_type'] == 'gid' && !array_key_exists($right['object_id'], $groupIds)) {
-                $groupIds[$right['object_id']] = $right['object_id'];
+        foreach ($entries as $entry) {
+            if ($entry->getSecurityType() === 'uid' && !array_key_exists($entry->getSecurityId(), $userIds)) {
+                $userIds[$entry->getSecurityId()] = $entry->getSecurityId();
+            } elseif ($entry->getSecurityType() === 'gid' && !array_key_exists($entry->getSecurityId(), $groupIds)) {
+                $groupIds[$entry->getSecurityId()] = $entry->getSecurityId();
             }
         }
 
         $userSubjects = array();
         if (count($userIds)) {
-            $userSubjects = $subjectFetchers['uid']($userIds);
+            $userSubjects = $securityFetchers['uid']($userIds);
         }
 
         $groupSubjects = array();
         if (count($groupIds)) {
-            $groupSubjects = $subjectFetchers['gid']($groupIds);
+            $groupSubjects = $securityFetchers['gid']($groupIds);
         }
 
         $subjectsData = array_merge($userSubjects, $groupSubjects);
 
-        $contentRights = array_keys($this->permissions->getPermissions($rightType, $contentType));
+        $contentRights = array_keys($this->permissions->getByType($type));
 
         return $this->_getRightsForSubjects(
             $contentId,
             $subjectsData,
             $contentRights,
-            $rights
+            $entries
         );
     }
 

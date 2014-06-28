@@ -36,6 +36,7 @@ class HandlerCollection implements \IteratorAggregate
     public function addHandler(HandlerInterface $handler)
     {
         $this->handlers[] = $handler;
+
         return $this;
     }
 

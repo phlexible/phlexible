@@ -7,11 +7,11 @@
          convertWarningsToExceptions="true"
          syntaxCheck="true">
     <testsuite name="phlexible">
-        <directory>Phlexible/</directory>
+        <directory>src/Phlexible/</directory>
     </testsuite>
     <filter>
         <whitelist>
-            <directory suffix=".php">Phlexible/</directory>
+            <directory suffix=".php">src/Phlexible/</directory>
         </whitelist>
     </filter>
 </phpunit>

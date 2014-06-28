@@ -76,4 +76,11 @@ class LogHandler implements HandlerInterface
             $this->logger->debug($msg);
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+    }
 }

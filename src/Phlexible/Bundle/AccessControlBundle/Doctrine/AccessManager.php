@@ -13,10 +13,6 @@ use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\AccessControlBundle\AccessControlEvents;
 use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
 use Phlexible\Bundle\AccessControlBundle\Event\AccessControlEntryEvent;
-use Phlexible\Bundle\AccessControlBundle\Event\BeforeRemoveRightEvent;
-use Phlexible\Bundle\AccessControlBundle\Event\BeforeSetRightEvent;
-use Phlexible\Bundle\AccessControlBundle\Event\RemoveRightEvent;
-use Phlexible\Bundle\AccessControlBundle\Event\SetRightEvent;
 use Phlexible\Bundle\AccessControlBundle\Model\AccessManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -43,9 +39,9 @@ class AccessManager implements AccessManagerInterface
     private $entityRepository;
 
     /**
-     * @var array
+     * @var AccessControlEntry[]
      */
-    private $rights;
+    private $entries;
 
     /**
      * @param EntityManager            $entityManager
@@ -67,52 +63,109 @@ class AccessManager implements AccessManagerInterface
      */
     public function findBy(array $criteria)
     {
-        $this->loadRights();
+        $this->loadEntries();
 
         $rights = array();
-        foreach ($this->rights as $right) {
+        foreach ($this->entries as $entry) {
             foreach ($criteria as $key => $value) {
                 $isArray = is_array($value);
-                if ($isArray && !in_array($right[$key], $value)) {
+                if ($isArray && !in_array($entry[$key], $value)) {
                     continue 2;
-                } elseif (!$isArray && $right[$key] != $value) {
+                } elseif (!$isArray && $entry[$key] != $value) {
                     continue 2;
                 }
             }
-            $rights[] = $right;
+            $rights[] = $entry;
         }
 
         return $rights;
     }
 
     /**
-     * @param string  $rightType
+     * {@inheritdoc}
+     */
+    public function findByContentIdPath($type, $contentType, array $contentIdPath, array $securityTypes, $contentLanguage = null)
+    {
+        $this->loadEntries();
+
+        $entries = array();
+        foreach ($this->entries as $entry) {
+            foreach ($securityTypes as $securityType) {
+                foreach ($contentIdPath as $contentId) {
+                    if ($type === $entry->getType()
+                            && $contentType === $entry->getContentType()
+                            && $contentId === $entry->getContentId()
+                            && $securityType === $entry->getSecurityType()
+                            && $contentLanguage === $entry->getContentLanguage()) {
+                        $entries[] = $entry;
+                    }
+                }
+            }
+        }
+
+        return $entries;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneByValues($type, $contentType, $contentId, $securityType, $securityId, $contentLanguage = null)
+    {
+        $this->loadEntries();
+
+        foreach ($this->entries as $entry) {
+            if ($type === $entry->getType()
+                    && $contentType === $entry->getContentType()
+                    && $contentId === $entry->getContentId()
+                    && $securityType === $entry->getSecurityType()
+                    && $securityId === $entry->getSecurityId()
+                    && $contentLanguage === $entry->getContentLanguage()) {
+                return $entry;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string  $type
      * @param string  $contentType
      * @param string  $contentId
-     * @param string  $objectType
-     * @param string  $objectId
+     * @param string  $securityType
+     * @param string  $securityId
      * @param string  $permission
      * @param integer $inherit
      * @param string  $contentLanguage
      *
      * @return $this
      */
-    public function setRight($rightType, $contentType, $contentId, $objectType, $objectId, $permission, $inherit = 1, $contentLanguage = null)
+    public function setRight($type, $contentType, $contentId, $securityType, $securityId, $permission, $inherit = 1, $contentLanguage = null)
     {
         if ($contentLanguage === '_all_') {
             $contentLanguage = null;
         }
 
-        $ace = new AccessControlEntry();
+        $ace = $this->findOneByValues($type, $contentType, $contentId, $securityType, $securityId);
+        if (!$ace) {
+            $ace = new AccessControlEntry();
+            $ace
+                ->setType($type)
+                ->setContentType($contentType)
+                ->setContentId($contentId)
+                ->setSecurityType($securityType)
+                ->setSecurityId($securityId)
+                ->setContentLanguage($contentLanguage)
+            ;
+        }
+
+        $mask = 0;
+        $stopMask = 0;
+        $inheritMask = 0;
+
         $ace
-            ->setRightType($rightType)
-            ->setContentType($contentType)
-            ->setContentId($contentId)
-            ->setObjectType($objectType)
-            ->setObjectId($objectId)
-            ->setContentLanguage($contentLanguage)
-            ->setPermission($permission)
-            ->setInherit($inherit)
+            ->setMask($mask)
+            ->setStopMask($stopMask)
+            ->setNoInheritMask($inheritMask)
         ;
 
         $event = new AccessControlEntryEvent($ace);
@@ -130,31 +183,31 @@ class AccessManager implements AccessManagerInterface
     }
 
     /**
-     * @param string $rightType
+     * @param string $type
      * @param string $contentType
      * @param string $contentId
-     * @param string $objectType
-     * @param string $objectId
+     * @param string $securityType
+     * @param string $securityId
      * @param string $permission
      * @param string $language
      *
      * @return $this
      */
-    public function removeRight($rightType, $contentType, $contentId, $objectType = null, $objectId = null, $permission = null, $language = null)
+    public function removeRight($type, $contentType, $contentId, $securityType = null, $securityId = null, $permission = null, $language = null)
     {
         $criteria = array(
-            'right_type'       => $rightType,
+            'right_type'       => $type,
             'content_type'     => $contentType,
             'content_id'       => $contentId,
             'content_language' => null,
         );
 
-        if ($objectType !== null) {
-            $criteria['object_type'] = $objectType;
+        if ($securityType !== null) {
+            $criteria['object_type'] = $securityType;
         }
 
-        if ($objectId !== null) {
-            $criteria['object_id'] = $objectId;
+        if ($securityId !== null) {
+            $criteria['object_id'] = $securityId;
         }
 
         if ($permission !== null) {
@@ -184,13 +237,13 @@ class AccessManager implements AccessManagerInterface
         return $this;
     }
 
-    private function loadRights()
+    private function loadEntries()
     {
-        if ($this->rights !== null) {
+        if ($this->entries !== null) {
             return;
         }
 
         $qb = $this->entityRepository->createQueryBuilder('a');
-        $this->rights = $qb->getQuery()->getResult();
+        $this->entries = $qb->getQuery()->getResult();
     }
 }

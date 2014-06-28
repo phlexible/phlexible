@@ -1,8 +1,16 @@
 <?php
-
 /**
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
-class MWF_Core_DataSources_DataSourceTest extends PHPUnit_Framework_TestCase
+
+namespace Phlexible\Bundle\DataSourceBundle\Tests;
+
+use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
+
+class DataSourceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -29,7 +37,7 @@ class MWF_Core_DataSources_DataSourceTest extends PHPUnit_Framework_TestCase
     {
         // SETUP
         $title = 'mytitle';
-        $dataSource = new MWF_Core_DataSources_DataSource();
+        $dataSource = new DataSource();
 
         // EXERCISE
         $dataSource->setTitle($title);
@@ -49,7 +57,7 @@ class MWF_Core_DataSources_DataSourceTest extends PHPUnit_Framework_TestCase
             'id-2' => 'key-2',
         );
 
-        $dataSource = new MWF_Core_DataSources_DataSource();
+        $dataSource = new DataSource();
 
         // EXERCISE
         $dataSource->setKeys($keys);
@@ -268,11 +276,11 @@ class MWF_Core_DataSources_DataSourceTest extends PHPUnit_Framework_TestCase
      * @param string $startChar [Optional] default = 'a'
      * @param string $endChar   [Optional] default = 'z'
      *
-     * @return MWF_Core_DataSources_DataSource
+     * @return DataSource
      */
     public function createDataSourceAlphabet($startChar = 'a', $endChar = 'z')
     {
-        $dataSource = new MWF_Core_DataSources_DataSource();
+        $dataSource = new DataSource();
         $dataSource->setKeys($this->createKeysAlphabet($startChar, $endChar));
 
         return $dataSource;
@@ -286,7 +294,7 @@ class MWF_Core_DataSources_DataSourceTest extends PHPUnit_Framework_TestCase
      * @param string $startInactiveChr [Optional] default = 'a'
      * @param string $endInactiveChr   [Optional] default = 'z'
      *
-     * @return MWF_Core_DataSources_DataSource
+     * @return DataSource
      */
     public function createDataSourceAlphabetWithDeactivatedKeys($startActiveChr   = 'a',
                                                                 $endActiveChr     = 'z',
@@ -313,8 +321,7 @@ class MWF_Core_DataSources_DataSourceTest extends PHPUnit_Framework_TestCase
         $endOrd   = ord($endChar);
 
         $keys = array();
-        for ($i = $startOrd; $i <= $endOrd; ++$i)
-        {
+        for ($i = $startOrd; $i <= $endOrd; ++$i) {
             $c = chr($i);
             $keys["id-$c"] = $c;
         }

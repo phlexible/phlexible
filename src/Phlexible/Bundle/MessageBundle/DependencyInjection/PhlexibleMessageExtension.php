@@ -32,31 +32,19 @@ class PhlexibleMessageExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
+        $handlers = array(
+            new Reference('phlexible_message.handler.message_manager')
+        );
         if ($config['use_log_handler']) {
-            $arguments = $container->findDefinition('phlexible_message.handlers')->getArguments();
-            if (!isset($arguments[0])) {
-                $handlers = array();
-            }
             $handlers[] = new Reference('phlexible_message.handler.log');
-            $container->findDefinition('phlexible_message.handlers')->replaceArgument(0, $handlers);
         }
-
         if ($container->getParameter('kernel.debug')) {
-            $arguments = $container->findDefinition('phlexible_message.handlers')->getArguments();
-            if (!isset($arguments[0])) {
-                $handlers = array();
-            }
             $handlers[] = new Reference('phlexible_message.handler.debug');
-            $container->findDefinition('phlexible_message.handlers')->replaceArgument(0, $handlers);
         }
+        $container->findDefinition('phlexible_message.handlers')->replaceArgument(0, $handlers);
 
         if ($config['audit_entities']) {
-            $arguments = $container->findDefinition('phlexible_message.handlers')->getArguments();
-            if (!isset($arguments[0])) {
-                $handlers = array();
-            }
-            $handlers[] = new Reference('phlexible_message.handler.buffer');
-            $container->findDefinition('phlexible_message.handlers')->replaceArgument(0, $handlers);
+            $container->findDefinition('phlexible_message.listener.audit')->addTag('kernel.event_subscriber');
         }
 
         $loader->load('doctrine_message.yml');

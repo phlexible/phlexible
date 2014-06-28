@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="access_control", uniqueConstraints={@ORM\UniqueConstraint(columns={"content_type", "content_id", "object_type", "object_id", "right_name", "content_language"})})
+ * @ORM\Table(name="access_control", uniqueConstraints={@ORM\UniqueConstraint(columns={"content_type", "content_id", "security_type", "security_id", "content_language"})})
  */
 class AccessControlEntry
 {
@@ -42,21 +42,15 @@ class AccessControlEntry
 
     /**
      * @var string
-     * @ORM\Column(name="object_type", type="string", length=100)
+     * @ORM\Column(name="security_type", type="string", length=100)
      */
-    private $objectType;
+    private $securityType;
 
     /**
      * @var string
-     * @ORM\Column(name="object_id", type="string", length=100)
+     * @ORM\Column(name="security_id", type="string", length=100)
      */
-    private $objectId;
-
-    /**
-     * @var string
-     * @ORM\Column(name="permission", type="string", length=100)
-     */
-    private $permission;
+    private $securityId;
 
     /**
      * @var string
@@ -66,15 +60,27 @@ class AccessControlEntry
 
     /**
      * @var string
-     * @ORM\Column(name="right_type", type="string", length=100)
+     * @ORM\Column(name="type", type="string", length=100)
      */
-    private $rightType;
+    private $type;
 
     /**
-     * @var bool
-     * @ORM\Column(type="boolean")
+     * @var int
+     * @ORM\Column(name="mask", type="integer", options={"default"=0})
      */
-    private $inherit;
+    private $mask;
+
+    /**
+     * @var int
+     * @ORM\Column(name="stop_mask", type="integer", options={"default"=0})
+     */
+    private $stopMask;
+
+    /**
+     * @var int
+     * @ORM\Column(name="no_inherit_mask", type="integer", options={"default"=0})
+     */
+    private $noInheritMask;
 
     /**
      * @return int
@@ -99,19 +105,19 @@ class AccessControlEntry
     /**
      * @return string
      */
-    public function getRightType()
+    public function getType()
     {
-        return $this->rightType;
+        return $this->type;
     }
 
     /**
-     * @param string $rightType
+     * @param string $type
      *
      * @return $this
      */
-    public function setRightType($rightType)
+    public function setType($type)
     {
-        $this->rightType = $rightType;
+        $this->type = $type;
 
         return $this;
     }
@@ -179,19 +185,19 @@ class AccessControlEntry
     /**
      * @return string
      */
-    public function getObjectType()
+    public function getSecurityType()
     {
-        return $this->objectType;
+        return $this->securityType;
     }
 
     /**
-     * @param string $objectType
+     * @param string $securityType
      *
      * @return $this
      */
-    public function setObjectType($objectType)
+    public function setSecurityType($securityType)
     {
-        $this->objectType = $objectType;
+        $this->securityType = $securityType;
 
         return $this;
     }
@@ -199,59 +205,79 @@ class AccessControlEntry
     /**
      * @return string
      */
-    public function getObjectId()
+    public function getSecurityId()
     {
-        return $this->objectId;
+        return $this->securityId;
     }
 
     /**
-     * @param string $objectId
+     * @param string $securityId
      *
      * @return $this
      */
-    public function setObjectId($objectId)
+    public function setSecurityId($securityId)
     {
-        $this->objectId = $objectId;
+        $this->securityId = $securityId;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getPermission()
+    public function getMask()
     {
-        return $this->permission;
+        return $this->mask;
     }
 
     /**
-     * @param string $rightName
+     * @param int $mask
      *
      * @return $this
      */
-    public function setPermission($rightName)
+    public function setMask($mask)
     {
-        $this->permission = $rightName;
+        $this->mask = $mask;
 
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return int
      */
-    public function getInherit()
+    public function getStopMask()
     {
-        return $this->inherit;
+        return $this->stopMask;
     }
 
     /**
-     * @param boolean $inherit
+     * @param int $stopMask
      *
      * @return $this
      */
-    public function setInherit($inherit)
+    public function setStopMask($stopMask)
     {
-        $this->inherit = $inherit;
+        $this->stopMask = $stopMask;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNoInheritMask()
+    {
+        return $this->noInheritMask;
+    }
+
+    /**
+     * @param int $inheritMask
+     *
+     * @return $this
+     */
+    public function setNoInheritMask($inheritMask)
+    {
+        $this->noInheritMask = $inheritMask;
 
         return $this;
     }

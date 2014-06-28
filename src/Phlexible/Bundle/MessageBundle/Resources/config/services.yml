@@ -37,6 +37,26 @@ services:
         tags:
             - {name: monolog.logger, channel: mailer}
 
+    phlexible_message.handler.debug:
+        class: Phlexible\Bundle\MessageBundle\Handler\DebugHandler
+        public: false
+        arguments: [@phlexible_message.message_manager]
+
+    phlexible_message.handler.log:
+        class: Phlexible\Bundle\MessageBundle\Handler\LogHandler
+        public: false
+        arguments: [@logger, @phlexible_message.message_manager]
+
+    phlexible_message.handler.message_manager:
+        class: Phlexible\Bundle\MessageBundle\Handler\BufferHandler
+        public: false
+        arguments: [@phlexible_message.handler.message_manager.real]
+
+    phlexible_message.handler.message_manager.real:
+        class: Phlexible\Bundle\MessageBundle\Handler\MessageManagerHandler
+        public: false
+        arguments: [@phlexible_message.message_manager]
+
     # acl providers
     phlexible_message.acl_provider:
         class: Phlexible\Bundle\MessageBundle\AclProvider\MessageAclProvider
@@ -63,38 +83,14 @@ services:
     # event listeners
     phlexible_message.listener.message:
         class: Phlexible\Bundle\MessageBundle\EventListener\MessageListener
-        arguments: [@phlexible_message.message_manager, @phlexible_message.handlers]
+        arguments: [@phlexible_message.handlers]
         tags:
-            - {name: kernel.event_listener, event: phlexible_message.message, method: onMessage}
-            - {name: kernel.event_listener, event: kernel.terminate, method: onTerminate}
-            - {name: kernel.event_listener, event: console.terminate, method: onTerminate}
+            - {name: kernel.event_subscriber}
 
     phlexible_message.listener.audit:
         class: Phlexible\Bundle\MessageBundle\EventListener\AuditListener
         arguments: [@phlexible_message.message_poster]
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    # handlers
-    phlexible_message.handler.buffer:
-        class: Phlexible\Bundle\MessageBundle\Handler\BufferHandler
-        public: false
-        tags:
-            - {name: phlexible_message.handler}
-
-    phlexible_message.handler.debug:
-        class: Phlexible\Bundle\MessageBundle\Handler\DebugHandler
-        public: false
-        arguments: [@phlexible_message.message_manager]
-        tags:
-            - {name: phlexible_message.handler}
-
-    phlexible_message.handler.log:
-        class: Phlexible\Bundle\MessageBundle\Handler\LogHandler
-        public: false
-        arguments: [@logger, @phlexible_message.message_manager]
-        tags:
-            - {name: phlexible_message.handler}
+        # no kernel.event_subscriber tag here, added on demand in PhlexibleMessageExtension
 
     # portlets
     phlexible_message.portlet.messages:

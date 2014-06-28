@@ -18,7 +18,7 @@ interface PermissionProviderInterface
     /**
      * Return permissions
      *
-     * @return array
+     * @return PermissionCollection
      */
     public function getPermissions();
 }

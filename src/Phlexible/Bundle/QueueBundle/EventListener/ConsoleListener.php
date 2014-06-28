@@ -62,21 +62,14 @@ class ConsoleListener implements EventSubscriberInterface
      */
     public function onException(ConsoleExceptionEvent $event)
     {
-        file_put_contents('/tmp/exc-a', 'a');
         if (!$this->jobId) {
             return;
         }
 
-        file_put_contents('/tmp/exc-b', 'b');
-
         $job = $this->jobManager->find($this->jobId);
         $job->setStackTrace(FlattenException::create($event->getException()));
 
-        file_put_contents('/tmp/exc-c', 'c');
-
         $this->jobManager->updateJob($job);
-
-        file_put_contents('/tmp/exc-d', 'd');
     }
 
     /**

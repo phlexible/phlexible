@@ -63,6 +63,7 @@ class RightsVoter implements VoterInterface
         $right = !empty($attributes['right']) ? $attributes['right'] : $attributes[0];
         $language = !empty($attributes['language']) ? $attributes['language'] : null;
 
+        return self::ACCESS_ABSTAIN;
         if (!$this->permissions->hasPermission($rightType, $contentType, $right)) {
             return self::ACCESS_ABSTAIN;
         }

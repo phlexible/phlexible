@@ -1,8 +1,16 @@
 <?php
-
 /**
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
-class MWF_Core_DataSources_Value_CollectionTest extends PHPUnit_Framework_TestCase
+
+namespace Phlexible\Bundle\DataSourceBundle\Tests;
+
+use Phlexible\Bundle\DataSourceBundle\Value\ValueCollection;
+
+class MWF_Core_DataSources_Value_CollectionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -28,7 +36,7 @@ class MWF_Core_DataSources_Value_CollectionTest extends PHPUnit_Framework_TestCa
     public function testToArrayReturnsEmptyForAutoInitializedCollection()
     {
         // EXERCISE
-        $collection = new MWF_Core_DataSources_Value_Collection();
+        $collection = new ValueCollection();
 
         // VERIFY
         $this->assertEquals(
@@ -50,7 +58,7 @@ class MWF_Core_DataSources_Value_CollectionTest extends PHPUnit_Framework_TestCa
         );
 
         // EXERCISE
-        $collection = new MWF_Core_DataSources_Value_Collection($values);
+        $collection = new ValueCollection($values);
 
         // VERIFY
         $this->assertEquals($values, $collection->toArray(), 'value array modified');
@@ -62,7 +70,7 @@ class MWF_Core_DataSources_Value_CollectionTest extends PHPUnit_Framework_TestCa
     public function testToArrayReturnsArrayPassedInSetValues()
     {
         // SETUP
-        $collection = new MWF_Core_DataSources_Value_Collection();
+        $collection = new ValueCollection();
 
         $values = array(
             'id1' => 'key1',
@@ -97,7 +105,7 @@ class MWF_Core_DataSources_Value_CollectionTest extends PHPUnit_Framework_TestCa
             'id1' => 'key1',
         );
 
-        $collection = new MWF_Core_DataSources_Value_Collection();
+        $collection = new ValueCollection();
         $collection->setValues($values);
 
         // EXERCISE
@@ -131,7 +139,7 @@ class MWF_Core_DataSources_Value_CollectionTest extends PHPUnit_Framework_TestCa
             'id2' => 'key2',
         );
 
-        $collection = new MWF_Core_DataSources_Value_Collection();
+        $collection = new ValueCollection();
         $collection->setValues($values);
 
         // EXERCISE
@@ -166,7 +174,7 @@ class MWF_Core_DataSources_Value_CollectionTest extends PHPUnit_Framework_TestCa
             'id1' => 'key1',
         );
 
-        $collection = new MWF_Core_DataSources_Value_Collection();
+        $collection = new ValueCollection();
         $collection->setValues($values);
 
         // EXERCISE
@@ -179,5 +187,4 @@ class MWF_Core_DataSources_Value_CollectionTest extends PHPUnit_Framework_TestCa
             'removeValuesByKey() removes incorrect values'
         );
     }
-
 }

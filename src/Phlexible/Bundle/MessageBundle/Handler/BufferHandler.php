@@ -18,9 +18,22 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 class BufferHandler implements HandlerInterface
 {
     /**
+     * @var HandlerInterface
+     */
+    private $handler;
+
+    /**
      * @var Message[]
      */
     private $messages = array();
+
+    /**
+     * @param HandlerInterface $handler
+     */
+    public function __construct(HandlerInterface $handler)
+    {
+        $this->handler = $handler;
+    }
 
     /**
      * {@inheritdoc}
@@ -36,5 +49,15 @@ class BufferHandler implements HandlerInterface
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+        foreach ($this->messages as $message) {
+            $this->handler->handle($message);
+        }
     }
 }

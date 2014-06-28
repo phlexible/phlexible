@@ -137,7 +137,7 @@ class UploadController extends Controller
                     'new_size' => $tempFile->getSize()
                 );
 
-                if (!empty($tempFile->getOriginalFileId())) {
+                if ($tempFile->getOriginalFileId()) {
                     $oldFile = $site->findFile($tempFile->getOriginalFileId());
 
                     $alternativeName = $this->createAlternateFilename($tempFile->getTempName(), $folder);

@@ -11,33 +11,42 @@ namespace Phlexible\Bundle\MessageBundle\EventListener;
 use Phlexible\Bundle\MessageBundle\Event\MessageEvent;
 use Phlexible\Bundle\MessageBundle\Handler\BufferHandler;
 use Phlexible\Bundle\MessageBundle\Handler\HandlerCollection;
+use Phlexible\Bundle\MessageBundle\MessageEvents;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Message listener
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MessageListener
+class MessageListener implements EventSubscriberInterface
 {
-    /**
-     * @var MessageManagerInterface
-     */
-    private $messageManager;
-
     /**
      * @var HandlerCollection
      */
     private $messageHandlers;
 
     /**
-     * @param MessageManagerInterface $messageManager
      * @param HandlerCollection       $messageHandlers
      */
-    public function __construct(MessageManagerInterface $messageManager, HandlerCollection $messageHandlers)
+    public function __construct(HandlerCollection $messageHandlers)
     {
-        $this->messageManager = $messageManager;
         $this->messageHandlers = $messageHandlers;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            MessageEvents::MESSAGE => 'onMessage',
+            KernelEvents::TERMINATE => 'onTerminate',
+            ConsoleEvents::TERMINATE => 'onTerminate',
+        );
     }
 
     /**
@@ -47,23 +56,18 @@ class MessageListener
     {
         $message = $event->getMessage();
 
-        //$this->messageManager->updateMessage($message);
-
         foreach ($this->messageHandlers as $messageHandler) {
             $messageHandler->handle($message);
         }
     }
 
+    /**
+     * On terminate
+     */
     public function onTerminate()
     {
         foreach ($this->messageHandlers as $messageHandler) {
-            if ($messageHandler instanceof BufferHandler) {
-                foreach ($messageHandler->getMessages() as $message) {
-                    $this->messageManager->updateMessage($message);
-                }
-
-                return;
-            }
+            $messageHandler->close();
         }
     }
 }

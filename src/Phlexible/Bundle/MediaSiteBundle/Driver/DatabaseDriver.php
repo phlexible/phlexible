@@ -490,7 +490,7 @@ class DatabaseDriver extends AbstractDriver
                     'mime_type'      => $file->getMimeType(),
                     'size'           => $file->getSize(),
                     'hash'           => $file->getHash(),
-                    'attributes'     => !empty($file->getAttributes()) ? json_encode($file->getAttributes()) : null,
+                    'attributes'     => $file->getAttributes() ? json_encode($file->getAttributes()) : null,
                     'create_user_id' => $file->getCreateUserId(),
                     'created_at'     => $file->getCreatedAt()->format('Y-m-d H:i:s'),
                     'modify_user_id' => $file->getModifyUserId(),
@@ -751,7 +751,7 @@ class DatabaseDriver extends AbstractDriver
             $this->db->update(
                 $this->fileTable,
                 array(
-                    'attributes' => !empty($action->getAttributes()) ? json_encode($action->getAttributes()) : null,
+                    'attributes' => $action->getAttributes() ? json_encode($action->getAttributes()) : null,
                 ),
                 array(
                     'id = ?' => $action->getFile()->getId(),
@@ -770,7 +770,7 @@ class DatabaseDriver extends AbstractDriver
             $this->db->update(
                 $this->folderTable,
                 array(
-                    'attributes' => !empty($action->getAttributes()) ? json_encode($action->getAttributes()) : null,
+                    'attributes' => !$action->getAttributes() ? json_encode($action->getAttributes()) : null,
                 ),
                 array(
                     'id = ?' => $action->getFolder()->getId(),

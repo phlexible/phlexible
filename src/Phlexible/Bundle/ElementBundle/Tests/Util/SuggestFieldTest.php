@@ -1,40 +1,33 @@
 <?php
-
 /**
- * MAKEweb
+ * phlexible
  *
- * PHP Version 5
- *
- * @category    Makeweb
- * @package     Makeweb_Elements_Test
- * @copyright   2007 brainbits GmbH (http://www.brainbits.net)
- * @version     SVN: $Id: Generator.php 2312 2007-01-25 18:46:27Z swentz $
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
 
+namespace Phlexible\Bundle\ElementBundle\Tests\Util;
+
+use Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil;
+
 /**
- * Test: Makeweb_Elements_Util_SuggestField
+ * Elements events
  *
- * @category    Makeweb
- * @package     Makeweb_Elements_Test
- * @author      Phillip Look <pl@brainbits.net>
- * @copyright   2007 brainbits GmbH (http://www.brainbits.net)
+ * @author Stephan Wentz <sw@brainbits.net>
  */
-class Makeweb_Elements_Util_SuggestFieldTest extends PHPUnit_Framework_TestCase
+class SuggestFieldUtilTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Call constructor with DbPool
      */
     public function testCallConstructorWithDbPool()
     {
-        // SETUP
-        $dbPool = MWF_Test_Db_Helper::createPoolDummy();
-
         // EXERCISE
-        $suggestFieldUtil = new Makeweb_Elements_Util_SuggestField($dbPool, '#');
+        $suggestFieldUtil = new SuggestFieldUtil($dbPool, '#');
 
         // VERIFY
         $this->assertTrue(
-            $suggestFieldUtil instanceof Makeweb_Elements_Util_SuggestField,
+            $suggestFieldUtil instanceof SuggestFieldUtil,
             'constructor failed'
         );
     }
@@ -53,8 +46,7 @@ class Makeweb_Elements_Util_SuggestFieldTest extends PHPUnit_Framework_TestCase
             implode('#', $splittedOriginal2),
         );
 
-        $dbPool = MWF_Test_Db_Helper::createPoolDummy();
-        $suggestFieldUtil = new Makeweb_Elements_Util_SuggestField($dbPool, '#');
+        $suggestFieldUtil = new SuggestFieldUtil($dbPool, '#');
 
         // EXERCISE
         $splitted = $suggestFieldUtil->splitSuggestValues($concatenatedValues);
@@ -76,8 +68,7 @@ class Makeweb_Elements_Util_SuggestFieldTest extends PHPUnit_Framework_TestCase
             implode('#', $splittedOriginal),
         );
 
-        $dbPool           = MWF_Test_Db_Helper::createPoolDummy();
-        $suggestFieldUtil = new Makeweb_Elements_Util_SuggestField($dbPool, '#');
+        $suggestFieldUtil = new SuggestFieldUtil($dbPool, '#');
 
         // EXERCISE
         $splitted = $suggestFieldUtil->splitSuggestValues($concatenatedValues);
@@ -105,8 +96,7 @@ class Makeweb_Elements_Util_SuggestFieldTest extends PHPUnit_Framework_TestCase
 
         $expected = array('a', 'b', 'cde', 'hi');
 
-        $dbPool = MWF_Test_Db_Helper::createPoolDummy();
-        $suggestFieldUtil = new Makeweb_Elements_Util_SuggestField($dbPool, '#');
+        $suggestFieldUtil = new SuggestFieldUtil($dbPool, '#');
 
         // EXERCISE
         $splitted = $suggestFieldUtil->splitSuggestValues($concatenatedValues);
@@ -136,8 +126,7 @@ class Makeweb_Elements_Util_SuggestFieldTest extends PHPUnit_Framework_TestCase
 
         $expected = array('a', 'b', 'cde', 'hi');
 
-        $dbPool = MWF_Test_Db_Helper::createPoolDummy();
-        $suggestFieldUtil = new Makeweb_Elements_Util_SuggestField($dbPool, '#');
+        $suggestFieldUtil = new SuggestFieldUtil($dbPool, '#');
 
         /* @var $adapter Zend_Test_DbAdapter */
         $adapter = $dbPool->default;
@@ -173,8 +162,7 @@ class Makeweb_Elements_Util_SuggestFieldTest extends PHPUnit_Framework_TestCase
 
         $expected = array('a', 'b', 'cde', 'hi');
 
-        $dbPool = MWF_Test_Db_Helper::createPoolDummy();
-        $suggestFieldUtil = new Makeweb_Elements_Util_SuggestField($dbPool, '#');
+        $suggestFieldUtil = new SuggestFieldUtil($dbPool, '#');
 
         /* @var $adapter Zend_Test_DbAdapter */
         $adapter = $dbPool->read;
@@ -203,8 +191,7 @@ class Makeweb_Elements_Util_SuggestFieldTest extends PHPUnit_Framework_TestCase
     {
         $concatenatedLines = array();
 
-        foreach ($splittedLines as $splittedLine)
-        {
+        foreach ($splittedLines as $splittedLine) {
             $concatenatedLines[] = implode(
                 '#',
                 $splittedLine
