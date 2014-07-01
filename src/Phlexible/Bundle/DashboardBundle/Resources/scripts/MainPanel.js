@@ -9,77 +9,61 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
     initComponent: function() {
         this.closable = false;
 
-        this.items = [
-            this.listPanel = new Phlexible.dashboard.ListPanel({
-                region: 'west',
-                collapsible: true,
-                collapsed: true,
+        this.items = [{
+			xtype: 'dashboard-listpanel',
+			region: 'west',
+			collapsible: true,
+			collapsed: true,
 //                collapseMode: 'mini',
-                listeners: {
-                    portletOpen: {
-                        fn: function(store, r){
-                            r.set('mode', 'opened');
-                            this.portletPanel.addRecordPanel(r);
-                            store.remove(r);
-                        },
-                        scope: this
-                    },
-                    portletSave: {
-                        fn: this.onDoSave,
-                        scope: this
-                    }
-                }
-            }),
-            this.portletPanel = new Phlexible.dashboard.PortalPanel({
-                region: 'center',
-                listeners: {
-                    portletAdd: {
-                        fn: function(panel, record) {
-                            this.onSave();
-                        },
-                        scope: this
-                    },
-                    portletClose: {
-                        fn: function(panel, record) {
-                            Phlexible.dashboard.ListStore.add(record);
-                            Phlexible.dashboard.ListStore.sort('title', 'ASC');
-                            panel.ownerCt.remove(panel, true);
-                            panel.destroy();
+			listeners: {
+				portletOpen: function(store, r){
+					r.set('mode', 'opened');
+					this.getPortletPanel().addRecordPanel(r);
+					store.remove(r);
+				},
+				portletSave: this.onDoSave,
+				scope: this
+			}
+		},{
+			xtype: 'dashboard-portalpanel',
+			region: 'center',
+			listeners: {
+				portletAdd: function(panel, record) {
+					this.onSave();
+				},
+				portletClose: function(panel, record) {
+					Phlexible.dashboard.ListStore.add(record);
+					Phlexible.dashboard.ListStore.sort('title', 'ASC');
+					panel.ownerCt.remove(panel, true);
+					panel.destroy();
 
-                            this.onSave();
-                        },
-                        scope: this
-                    },
-                    portletCollapse: {
-                        fn: function(panel, record) {
-                            this.onSave();
-                        },
-                        scope: this
-                    },
-                    portletExpand: {
-                        fn: function(panel, record) {
-                            this.onSave();
-                        },
-                        scope: this
-                    },
-                    drop: {
-                        fn: function(e) {
-                            var r = e.panel.record;
-                            r.set('col', e.columnIndex);
-                            r.set('pos', e.position);
+					this.onSave();
+				},
+				portletCollapse: function(panel, record) {
+					this.onSave();
+				},
+				portletExpand: function(panel, record) {
+					this.onSave();
+				},
+				drop: function(e) {
+					var r = e.panel.record;
+					r.set('col', e.columnIndex);
+					r.set('pos', e.position);
 
-                            this.onSave();
-                        },
-                        scope: this
-                    }
-                }
-            })
-        ];
+					this.onSave();
+				},
+				scope: this
+			}
+		}];
 
         this.saveTask = new Ext.util.DelayedTask(this.onDoSave, this);
 
         Phlexible.dashboard.MainPanel.superclass.initComponent.call(this);
     },
+
+	getPortletPanel: function() {
+		return this.getComponent(1);
+	},
 
     onRender: function(ct, position) {
         Phlexible.dashboard.MainPanel.superclass.onRender.call(this, ct, position);
@@ -98,7 +82,7 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
         var data = Ext.decode(response.responseText);
         var matrix = [];
         var id, i, row, r;
-        var cols = this.portletPanel.cols;
+        var cols = this.getPortletPanel().cols;
 
         for (i = 0; i < cols; i++) {
             matrix.push(new Ext.util.MixedCollection());
@@ -130,7 +114,7 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
         for(i = 0; i< cols; i++) {
             matrix[i].each(function(item) {
                 r = new Phlexible.dashboard.PortletRecord(item, item.id);
-                this.portletPanel.addRecordPanel(r, true);
+				this.getPortletPanel().addRecordPanel(r, true);
             }, this);
         }
     },
@@ -143,7 +127,7 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
     onDoSave: function() {
         this.saveTask.cancel();
 
-        var data = this.portletPanel.getSaveData();
+        var data = this.getPortletPanel().getSaveData();
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('dashboard_portlets_save'),

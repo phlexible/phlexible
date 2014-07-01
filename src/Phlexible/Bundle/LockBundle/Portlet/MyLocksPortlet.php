@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\LockBundle\Portlet;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\LockBundle\Entity\Lock;
 use Phlexible\Bundle\LockBundle\Model\LockManagerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -20,7 +20,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MyLocksPortlet extends AbstractPortlet
+class MyLocksPortlet extends Portlet
 {
     /**
      * @var LockManagerInterface
@@ -41,10 +41,11 @@ class MyLocksPortlet extends AbstractPortlet
                                 LockManagerInterface $lockManager,
                                 SecurityContextInterface $securityContext)
     {
-        $this->id        = 'locks-portlet';
-        $this->title     = $translator->trans('locks.my_locked_items', array(), 'gui');
-        $this->class     = 'Phlexible.locks.portlet.Locks';
-        $this->iconClass = 'p-lock-lock-icon';
+        $this
+            ->setId('locks-portlet')
+            ->setTitle($translator->trans('locks.my_locked_items', array(), 'gui'))
+            ->setClass('Phlexible.locks.portlet.Locks')
+            ->setIconClass('p-lock-lock-icon');
 
         $this->lockManager = $lockManager;
         $this->securityContext = $securityContext;

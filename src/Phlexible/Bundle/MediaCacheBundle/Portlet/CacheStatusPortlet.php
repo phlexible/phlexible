@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\MediaCacheBundle\Model\QueueManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -17,7 +17,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CacheStatusPortlet extends AbstractPortlet
+class CacheStatusPortlet extends Portlet
 {
     /**
      * @var QueueManagerInterface
@@ -30,11 +30,12 @@ class CacheStatusPortlet extends AbstractPortlet
      */
     public function __construct(TranslatorInterface $translator, QueueManagerInterface $queueManager)
     {
-        $this->id        = 'cachestatus-portlet';
-        $this->title     = $translator->trans('mediacache.cache_status', array(), 'gui');
-        $this->class     = 'Phlexible.mediacache.portlet.CacheStatus';
-        $this->iconClass = 'p-mediacache-component-icon';
-        $this->resource  = 'mediacache';
+        $this
+            ->setId('cachestatus-portlet')
+            ->setTitle($translator->trans('mediacache.cache_status', array(), 'gui'))
+            ->setClass('Phlexible.mediacache.portlet.CacheStatus')
+            ->setIconClass('p-mediacache-component-icon')
+            ->setResource('mediacache');
 
         $this->queueManager = $queueManager;
     }

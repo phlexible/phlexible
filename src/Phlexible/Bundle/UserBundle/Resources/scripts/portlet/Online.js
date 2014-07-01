@@ -84,3 +84,5 @@ Phlexible.users.portlet.Online = Ext.extend(Ext.ux.Portlet, {
         this.store.sort('username', 'ASC');
     }
 });
+
+Ext.reg('users-portlet-online', Phlexible.users.portlet.Online);

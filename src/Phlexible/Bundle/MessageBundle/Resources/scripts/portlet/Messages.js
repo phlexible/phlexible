@@ -103,3 +103,5 @@ Phlexible.messages.portlet.Messages = Ext.extend(Ext.ux.Portlet, {
         this.store.sort('time', 'DESC');
     }
 });
+
+Ext.reg('messages-portlet-messages', Phlexible.messages.portlet.Messages);

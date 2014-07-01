@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LatestFilesPortlet extends AbstractPortlet
+class LatestFilesPortlet extends Portlet
 {
     /**
      * @var SiteManager
@@ -61,11 +61,12 @@ class LatestFilesPortlet extends AbstractPortlet
                                 $style,
                                 $numItems)
     {
-        $this->id        = 'mediamanager-portlet';
-        $this->title     = $translator->trans('mediamanager.latest_files', array(), 'gui');
-        $this->class     = 'Phlexible.mediamanager.portlet.LatestFiles';
-        $this->iconClass = 'p-mediamanager-portlet-icon';
-        $this->resource  = 'media';
+        $this
+            ->setId('mediamanager-portlet')
+            ->setTitle($translator->trans('mediamanager.latest_files', array(), 'gui'))
+            ->setClass('Phlexible.mediamanager.portlet.LatestFiles')
+            ->setIconClass('p-mediamanager-portlet-icon')
+            ->setResource('media');
 
         $this->siteManager = $siteManager;
         $this->cacheManager = $cacheManager;

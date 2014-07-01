@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\DashboardBundle\Portlet;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-abstract class AbstractPortlet
+class Portlet
 {
     /**
      * @var string
@@ -54,11 +54,35 @@ abstract class AbstractPortlet
     }
 
     /**
+     * @param string $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return $this
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
     }
 
     /**
@@ -70,6 +94,18 @@ abstract class AbstractPortlet
     }
 
     /**
+     * @param string $class
+     *
+     * @return $this
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getIconClass()
@@ -78,11 +114,35 @@ abstract class AbstractPortlet
     }
 
     /**
+     * @param string $iconClass
+     *
+     * @return $this
+     */
+    public function setIconClass($iconClass)
+    {
+        $this->iconClass = $iconClass;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * @param string $resource
+     *
+     * @return $this
+     */
+    public function setResource($resource)
+    {
+        $this->resource = $resource;
+
+        return $this;
     }
 
     /**

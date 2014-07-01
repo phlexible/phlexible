@@ -110,3 +110,4 @@ Phlexible.problems.portlet.Problems = Ext.extend(Ext.ux.Portlet, {
     }
 });
 
+Ext.reg('problems-portlet-problems', Phlexible.problems.portlet.Problems);

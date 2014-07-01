@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MessageBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Phlexible\Bundle\MessageBundle\Model\SubscriptionManagerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MessagesPortlet extends AbstractPortlet
+class MessagesPortlet extends Portlet
 {
     /**
      * @var SubscriptionManagerInterface
@@ -47,11 +47,12 @@ class MessagesPortlet extends AbstractPortlet
                                 MessageManagerInterface $messageManager,
                                 SecurityContextInterface $securityContext)
     {
-        $this->id        = 'messages-portlet';
-        $this->title     = $translator->trans('messages.messages', array(), 'gui');
-        $this->class     = 'Phlexible.messages.portlet.Messages';
-        $this->iconClass = 'p-message-component-icon';
-        $this->resource  = 'messages_subscriptions';
+        $this
+            ->setId('messages-portlet')
+            ->setTitle($translator->trans('messages.messages', array(), 'gui'))
+            ->setClass('Phlexible.messages.portlet.Messages')
+            ->setIconClass('p-message-component-icon')
+            ->setResource('messages_subscriptions');
 
         $this->subscriptionManager = $subscriptionManager;
         $this->messageManager = $messageManager;

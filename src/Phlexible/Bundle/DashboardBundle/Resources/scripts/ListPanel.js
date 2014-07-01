@@ -57,3 +57,5 @@ Phlexible.dashboard.ListPanel = Ext.extend(Ext.Panel, {
         Phlexible.dashboard.ListPanel.superclass.initComponent.call(this);
     }
 });
+
+Ext.reg('dashboard-listpanel', Phlexible.dashboard.ListPanel);

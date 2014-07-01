@@ -57,7 +57,7 @@ class ProblemAssetProvider implements AssetProviderInterface
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/scripts/Definitions.js')),
 
-            new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/scripts/Problemsgrid.js')),
+            new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/scripts/ProblemsGrid.js')),
 
             new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/scripts/model/Problem.js')),
 

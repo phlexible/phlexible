@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -16,17 +16,18 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LoadPortlet extends AbstractPortlet
+class LoadPortlet extends Portlet
 {
     /**
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
     {
-        $this->id        = 'load-portlet';
-        $this->title     = $translator->trans('gui.server_load', array(), 'gui');
-        $this->class     = 'Phlexible.gui.portlet.Load';
-        $this->iconClass = 'p-gui-load-icon';
+        $this
+            ->setId('load-portlet')
+            ->setTitle($translator->trans('gui.server_load', array(), 'gui'))
+            ->setClass('Phlexible.gui.portlet.Load')
+            ->setIconClass('p-gui-load-icon');
     }
 
     /**

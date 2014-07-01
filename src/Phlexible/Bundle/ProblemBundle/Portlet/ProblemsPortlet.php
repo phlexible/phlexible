@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ProblemBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcher;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>
  */
-class ProblemsPortlet extends AbstractPortlet
+class ProblemsPortlet extends Portlet
 {
     /**
      * @var ProblemFetcher
@@ -32,11 +32,12 @@ class ProblemsPortlet extends AbstractPortlet
      */
     public function __construct(TranslatorInterface $translator, ProblemFetcher $fetcher)
     {
-        $this->id        = 'problems-portlet';
-        $this->title     = $translator->trans('problems.problems', array(), 'gui');
-        $this->class     = 'Phlexible.problems.portlet.Problems';
-        $this->iconClass = 'p-problem-portlet-icon';
-        $this->resource  = 'problems';
+        $this
+            ->setId('problems-portlet')
+            ->setTitle($translator->trans('problems.problems', array(), 'gui'))
+            ->setClass('Phlexible.problems.portlet.Problems')
+            ->setIconClass('p-problem-portlet-icon')
+            ->setResource('problems');
 
         $this->fetcher = $fetcher;
     }

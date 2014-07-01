@@ -167,3 +167,5 @@ Phlexible.mediamanager.portlet.LatestFiles = Ext.extend(Ext.ux.Portlet, {
         this.getComponent(0).refresh();
     }
 });
+
+Ext.reg('mediamanager-portlet-latestfiles', Phlexible.mediamanager.portlet.LatestFiles);

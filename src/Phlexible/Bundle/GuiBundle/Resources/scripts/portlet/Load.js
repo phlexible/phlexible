@@ -238,3 +238,5 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
         }
     }
 });
+
+Ext.reg('gui-portlet-load', Phlexible.gui.portlet.Load);

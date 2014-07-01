@@ -107,3 +107,5 @@ Phlexible.locks.portlet.Locks = Ext.extend(Ext.ux.Portlet, {
         this.store.sort('lock_time', 'DESC');
     }
 });
+
+Ext.reg('locks-portlet-locks', Phlexible.locks.portlet.Locks);

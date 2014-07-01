@@ -8,21 +8,20 @@
 
 namespace Phlexible\Bundle\TaskBundle\Portlet;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
 use Phlexible\Bundle\TaskBundle\Model\TaskManagerInterface;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeCollection;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * My tasks portlet
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MyTasksPortlet extends AbstractPortlet
+class MyTasksPortlet extends Portlet
 {
     /**
      * @var TaskManagerInterface
@@ -50,23 +49,26 @@ class MyTasksPortlet extends AbstractPortlet
     private $numItems;
 
     /**
+     * @param TranslatorInterface      $translator
      * @param TaskManagerInterface     $taskManager
      * @param TypeCollection           $types
      * @param SecurityContextInterface $securityContext
      * @param UserManagerInterface     $userManager
      * @param integer                  $numItems
      */
-    public function __construct(TaskManagerInterface $taskManager,
+    public function __construct(TranslatorInterface $translator,
+                                TaskManagerInterface $taskManager,
                                 TypeCollection $types,
                                 SecurityContextInterface $securityContext,
                                 UserManagerInterface $userManager,
                                 $numItems)
     {
-        $this->id          = 'my-tasks-portlet';
-        $this->title       = '_my_tasks';
-        $this->description = 'Displays your active tasks';
-        $this->class       = 'Phlexible.tasks.portlet.MyTasks';
-        $this->iconCls     = 'p-task-portlet-icon';
+        $this
+            ->setId('my-tasks-portlet')
+            ->setTitle($translator->trans('my_tasks', array(), 'gui'))
+            //->setDescription('Displays your active tasks')
+            ->setClass('Phlexible.tasks.portlet.MyTasks')
+            ->setIconClass('p-task-portlet-icon');
 
         $this->taskManager = $taskManager;
         $this->types = $types;

@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\CacheBundle\Portlet;
 
 use Brainbits_Format_Filesize as FilesizeFormatter;
 use Phlexible\Bundle\CacheBundle\Cache\CacheCollection;
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -18,12 +18,12 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CacheUsagePortlet extends AbstractPortlet
+class CacheUsagePortlet extends Portlet
 {
     /**
-     * @var array
+     * @var CacheCollection
      */
-    protected $cache;
+    private $caches;
 
     /**
      * @param TranslatorInterface $translator
@@ -31,11 +31,12 @@ class CacheUsagePortlet extends AbstractPortlet
      */
     public function __construct(TranslatorInterface $translator, CacheCollection $caches)
     {
-        $this->id        = 'cache-usage-portlet';
-        $this->title     = $translator->trans('cache.cache_usage', array(), 'gui');
-        $this->class     = 'Phlexible.cache.portlet.CacheUsage';
-        $this->iconClass = 'p-cache-stats-icon';
-        $this->resource  = 'debug';
+        $this
+            ->setId('cache-usage-portlet')
+            ->setTitle($translator->trans('cache.cache_usage', array(), 'gui'))
+            ->setClass('Phlexible.cache.portlet.CacheUsage')
+            ->setIconClass('p-cache-stats-icon')
+            ->setResource('debug');
 
         $this->caches = $caches;
     }

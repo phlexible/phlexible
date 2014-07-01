@@ -134,7 +134,7 @@ class GuiAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/Router.js')),
             new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Phlexible.functions.js')),
             new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/Console.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Phlexible.Cookie.js')),
+            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Phlexible.cookie.js')),
             new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Phlexible.Format.js')),
             new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Definitions.js')),
             new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/Frame.js')),

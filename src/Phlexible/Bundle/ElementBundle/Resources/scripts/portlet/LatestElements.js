@@ -120,3 +120,5 @@ Phlexible.elements.portlet.LatestElements = Ext.extend(Ext.ux.Portlet, {
         this.store.sort('time', 'DESC');
     }
 });
+
+Ext.reg('elements-portlet-latestelements', Phlexible.elements.portlet.LatestElements);

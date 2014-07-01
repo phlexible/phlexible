@@ -57,3 +57,5 @@ Phlexible.mediacache.portlet.CacheStatus = Ext.extend(Ext.ux.Portlet, {
         }
     }
 });
+
+Ext.reg('mediacache-portlet-cachestatus', Phlexible.mediacache.portlet.CacheStatus);

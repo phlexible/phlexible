@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -16,7 +16,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LatestElementsPortlet extends AbstractPortlet
+class LatestElementsPortlet extends Portlet
 {
     /**
      * @var \Zend_Db_Adapter_Abstract
@@ -39,7 +39,7 @@ class LatestElementsPortlet extends AbstractPortlet
     private $numItems;
 
     /**
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface                      $translator
      * @param Makeweb_Elements_Element_Version_Manager $versionManager
      * @param Makeweb_Elements_Tree_Manager            $treeManager
      * @param MWF_Db_Pool                              $dbPool
@@ -51,11 +51,12 @@ class LatestElementsPortlet extends AbstractPortlet
                                 MWF_Db_Pool $dbPool,
                                 $numItems)
     {
-        $this->id        = 'elements-portlet';
-        $this->title     = $translator->trans('elements.latest_element_changes', array(), 'gui');
-        $this->class     = 'Makeweb.elements.portlet.LatestElements';
-        $this->iconClass = 'p-element-component-icon';
-        $this->resource  = 'elements';
+        $this
+            ->setId('elements-portlet')
+            ->setTitle($translator->trans('elements.latest_element_changes', array(), 'gui'))
+            ->setClass('Makeweb.elements.portlet.LatestElements')
+            ->setIconClass('p-element-component-icon')
+            ->setResource('elements');
 
         $this->versionManager = $versionManager;
         $this->treeManager = $treeManager;

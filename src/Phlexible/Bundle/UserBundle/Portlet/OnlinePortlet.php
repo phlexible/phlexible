@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\AbstractPortlet;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -17,7 +17,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class OnlinePortlet extends AbstractPortlet
+class OnlinePortlet extends Portlet
 {
     /**
      * @var UserManagerInterface
@@ -30,11 +30,11 @@ class OnlinePortlet extends AbstractPortlet
      */
     public function __construct(TranslatorInterface $translator, UserManagerInterface $userManager)
     {
-        $this->id        = 'online-portlet';
-        $this->title     = $translator->trans('users.who_is_online', array(), 'gui');
-        $this->class     = 'Phlexible.users.portlet.Online';
-        $this->iconClass = 'p-user-portlet-icon';
-//        $this->resource  = 'users';
+        $this
+            ->setId('online-portlet')
+            ->setTitle($translator->trans('users.who_is_online', array(), 'gui'))
+            ->setClass('Phlexible.users.portlet.Online')
+            ->setIconClass('p-user-portlet-icon');
 
         $this->userManager = $userManager;
     }

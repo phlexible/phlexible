@@ -21,7 +21,7 @@ class PortletCollection implements \IteratorAggregate
     private $portlets = array();
 
     /**
-     * @param AbstractPortlet[] $portlets
+     * @param Portlet[] $portlets
      */
     public function __construct(array $portlets)
     {
@@ -31,10 +31,11 @@ class PortletCollection implements \IteratorAggregate
     }
 
     /**
-     * @param AbstractPortlet $portlet
-     * @return $this
+     * @param Portlet $portlet
+     *
+*@return $this
      */
-    public function addPortlet(AbstractPortlet $portlet)
+    public function addPortlet(Portlet $portlet)
     {
         $this->portlets[] = $portlet;
         return $this;

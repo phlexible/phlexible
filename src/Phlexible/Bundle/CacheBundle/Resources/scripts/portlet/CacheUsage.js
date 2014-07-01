@@ -53,3 +53,5 @@ Phlexible.cache.portlet.CacheUsage = Ext.extend(Ext.ux.Portlet, {
 
     }
 });
+
+Ext.reg('cache-portlet-cacheusage', Phlexible.cache.portlet.CacheUsage);

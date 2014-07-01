@@ -16,8 +16,7 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         Phlexible.Frame.getSystemMessage().on('message', this.processMessage, this);
 
         var items = [];
-        for (var i=0; i<this.cols; i++)
-        {
+        for (var i=0; i<this.cols; i++) {
             items.push({
                 id: 'col' + i,
                 col: i,
@@ -39,22 +38,25 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
 
         Phlexible.dashboard.PortalPanel.superclass.initComponent.call(this);
 
-        this.on('render', function() {
-            Ext.DomHelper.append(this.el, {
-                tag: 'img',
-                src: Phlexible.component('/phlexiblegui/images/watermark.gif'),
-                width: 250,
-                height: 89,
-                cls: 'p-dashboard-watermark'
-            });
+        this.on({
+			render: function() {
+				Ext.DomHelper.append(this.el, {
+					tag: 'img',
+					src: Phlexible.component('/phlexiblegui/images/watermark.gif'),
+					width: 250,
+					height: 89,
+					cls: 'p-dashboard-watermark'
+				});
 
-            if (Phlexible.User.isGranted('admin')) {
-                Ext.DomHelper.append(this.el, {
-                    tag: 'div',
-                    cls: 'p-dashboard-info'
-                }, true).load(Phlexible.url('/dashboard/info'));
-            }
-        }, this);
+				if (Phlexible.User.isGranted('admin')) {
+					Ext.DomHelper.append(this.el, {
+						tag: 'div',
+						cls: 'p-dashboard-info'
+					}, true).load(Phlexible.url('/dashboard/info'));
+				}
+			},
+			scope: this
+		});
     },
 
     updatePanels: function() {
@@ -124,22 +126,17 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
                     tools: tools,
                     plugins: plugins,
                     listeners: {
-                        collapse: {
-                            fn: function(panel){
-                                panel.record.set('mode', 'collapsed');
+                        collapse: function(panel){
+							panel.record.set('mode', 'collapsed');
 
-                                this.fireEvent('portletCollapse', panel, panel.record);
-                            },
-                            scope: this
-                        },
-                        expand: {
-                            fn: function(panel){
-                                panel.record.set('mode', 'expanded');
+							this.fireEvent('portletCollapse', panel, panel.record);
+						},
+                        expand: function(panel){
+							panel.record.set('mode', 'expanded');
 
-                                this.fireEvent('portletExpand', panel, panel.record);
-                            },
-                            scope: this
-                        }
+							this.fireEvent('portletExpand', panel, panel.record);
+						},
+						scope: this
                     }
                 });
                 var panel = col.add(o);
@@ -192,3 +189,5 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         }
     }
 });
+
+Ext.reg('dashboard-portalpanel', Phlexible.dashboard.PortalPanel);
