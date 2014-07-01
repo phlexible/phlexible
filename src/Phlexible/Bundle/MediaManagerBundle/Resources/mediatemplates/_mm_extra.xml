@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mediaTemplate key="_mm_extra" type="image" class="Phlexible\MediaTemplateBundle\Model\ImageTemplate" cache="1" revision="1">
+<mediaTemplate key="_mm_extra" type="image" class="Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate" cache="1" revision="1">
   <parameter key="width">256</parameter>
   <parameter key="height">256</parameter>
   <parameter key="method">exactFit</parameter>

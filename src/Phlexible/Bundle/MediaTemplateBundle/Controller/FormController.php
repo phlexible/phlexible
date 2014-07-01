@@ -34,7 +34,7 @@ class FormController extends Controller
      */
     public function loadAction(Request $request)
     {
-        $repository = $this->get('mediatemplates.repository');
+        $repository = $this->get('phlexible_media_template.template_manager');
 
         $templateKey = $request->get('template_key');
 
@@ -59,10 +59,10 @@ class FormController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $repository = $this->get('mediatemplates.repository');
+        $repository = $this->get('phlexible_media_template.template_manager');
 
         $templateKey = $request->get('template_key');
-        $params = $this->getAllParams();
+        $params = $request->request->all();
 
         unset($params['template_key'],
               $params['module'],
@@ -77,7 +77,7 @@ class FormController extends Controller
             $template->setParameter($key, $value);
         }
 
-        $repository->save($template);
+        $repository->updateTemplate($template);
 
         return new ResultResponse(true, 'Media template "' . $template->getKey() . '" saved.');
     }

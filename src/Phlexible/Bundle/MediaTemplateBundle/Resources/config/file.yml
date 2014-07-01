@@ -1,6 +1,6 @@
 parameters:
     phlexible_media_template.cache_dir: %kernel.cache_dir%/mediatemplates/
-    phlexible_media_template.file_dir: %kernel.root_dir%/Resources/media_templates/
+    phlexible_media_template.file_dir: %kernel.root_dir%/Resources/mediatemplates/
 
 services:
     phlexible_media_template.file.loader.xml:

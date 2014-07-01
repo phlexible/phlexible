@@ -18,7 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class AudioPreview
+class AudioPreview implements PreviewerInterface
 {
     /**
      * @var string
@@ -40,6 +40,19 @@ class AudioPreview
         $this->applier = $applier;
     }
 
+    /**
+     * @return string
+     */
+    public function getPreviewDir()
+    {
+        return $this->cacheDir;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
     public function create(array $params)
     {
         $assetPath = dirname(__DIR__) . '/Resources/public/audio/';

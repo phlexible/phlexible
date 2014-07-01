@@ -19,7 +19,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ImagePreview
+class ImagePreview implements PreviewerInterface
 {
     /**
      * @var ImageTemplateApplier
@@ -41,6 +41,19 @@ class ImagePreview
         $this->cacheDir = $cacheDir;
     }
 
+    /**
+     * @return string
+     */
+    public function getPreviewDir()
+    {
+        return $this->cacheDir;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
     public function create(array $params)
     {
         $assetPath = dirname(__DIR__) . '/Resources/public/images/';

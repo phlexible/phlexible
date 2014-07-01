@@ -32,7 +32,7 @@ class TemplatesController extends Controller
      */
     public function listAction()
     {
-        $repository = $this->get('mediatemplates.repository');
+        $repository = $this->get('phlexible_media_template.template_manager');
 
         $allTemplates = $repository->findAll();
 
@@ -58,7 +58,7 @@ class TemplatesController extends Controller
      */
     public function createAction(Request $request)
     {
-        $templateRepository = $this->get('mediatemplates.repository');
+        $templateRepository = $this->get('phlexible_media_template.template_manager');
 
         $type = $request->get('type');
         $key  = $request->get('key');
@@ -82,7 +82,7 @@ class TemplatesController extends Controller
 
         $template->setKey($key);
 
-        $templateRepository->save($template);
+        $templateRepository->updateTemplate($template);
 
         return new ResultResponse(true, 'New "' . $type . '" template "' . $key . '" created.');
     }

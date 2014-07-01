@@ -18,7 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class VideoPreview
+class VideoPreview implements PreviewerInterface
 {
     /**
      * @var string
@@ -40,6 +40,19 @@ class VideoPreview
         $this->applier = $applier;
     }
 
+    /**
+     * @return string
+     */
+    public function getPreviewDir()
+    {
+        return $this->cacheDir;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
     public function create(array $params)
     {
         $assetPath     = dirname(__DIR__) . '/Resources/public/video/';
@@ -86,7 +99,7 @@ class VideoPreview
                 $debug .= $record['message'] . PHP_EOL;
             }
 
-            #$debug .= print_r($video->getStreams()->videos()->first(), 1);
+            //$debug .= print_r($video->getStreams()->videos()->first(), 1);
         } else {
             $debug = '';
         }
