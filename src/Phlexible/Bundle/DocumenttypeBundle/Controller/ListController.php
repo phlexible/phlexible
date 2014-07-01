@@ -33,7 +33,7 @@ class ListController extends Controller
      */
     public function listAction(Request $request)
     {
-        $repository = $this->get('documenttypes.repository');
+        $repository = $this->get('phlexible_documenttype.documenttype_manager');
 
         $allDocumenttypes = $repository->findAll();
 
