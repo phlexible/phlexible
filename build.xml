@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="queue-component" default="help">
+
+    <!-- ============================================  -->
+    <!-- Target: help                                  -->
+    <!-- ============================================  -->
+    <target name="help">
+        <echo msg="Help" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: lint                                  -->
+    <!-- ============================================  -->
+    <target name="lint">
+        <phplint>
+            <fileset dir="src/Phlexible">
+                <include name="**/*.php"/>
+            </fileset>
+        </phplint>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: prepare                               -->
+    <!-- ============================================  -->
+    <target name="prepare">
+        <echo msg="Making directory ./reports" />
+        <mkdir dir="./reports" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpcpd                                -->
+    <!-- ============================================  -->
+    <target name="phpcpd" depends="prepare">
+        <phpcpd>
+            <fileset dir="src/Phlexible">
+                <include name="**/*.php"/>
+            </fileset>
+            <formatter type="default" outfile="reports/phpcpd.txt"/>
+            <formatter type="pmd" outfile="reports/phpcpd.xml"/>
+        </phpcpd>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phploc                                -->
+    <!-- ============================================  -->
+    <target name="phploc" description="Measures the size of the project and count it's tests">
+        <phploc countTests="true"
+                reportType="txt"
+                reportName="phploc"
+                reportDirectory="reports">
+            <fileset dir="Phlexible">
+                <include name="**/*.php" />
+                <include name="*.php" />
+            </fileset>
+        </phploc>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpcs                                 -->
+    <!-- ============================================  -->
+    <target name="phpcs" depends="prepare">
+        <phpcodesniffer standard="Symfony2"
+                        showSniffs="true"
+                        showWarnings="true"
+                        file="Phlexible"
+                        docGenerator="HTML"
+                        docFile="reports/phpcs.html"
+                        allowedFileExtensions="php">
+            <formatter type="checkstyle" outfile="reports/phpcs.xml"/>
+        </phpcodesniffer>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpdoc                                -->
+    <!-- ============================================  -->
+    <target name="phpdoc" depends="prepare">
+        <echo msg="Making directory ./reports/apidocs" />
+        <mkdir dir="./reports/apidocs" />
+        <phpdoc2 title="API Documentation" destdir="reports/apidocs" template="responsive-twig">
+           <fileset dir="./Phlexible">
+              <include name="**/*.php" />
+           </fileset>
+        </phpdoc2>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: all                                   -->
+    <!-- ============================================  -->
+    <target name="all" depends="lint, phpcpd, phploc, phpcs, phpdoc">
+    </target>
+
+</project>
