@@ -18,7 +18,7 @@ use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 class GetConfigListener
 {
     /**
-     * @var integer
+     * @var int
      */
     private $numFiles;
 
@@ -28,12 +28,12 @@ class GetConfigListener
     private $view;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $disableFlash;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $enableUploadSort;
 
@@ -43,11 +43,11 @@ class GetConfigListener
     private $deletePolicy;
 
     /**
-     * @param integer $numFiles
-     * @param string  $view
-     * @param boolean $disableFlash
-     * @param boolean $enableUploadSort
-     * @param string  $deletePolicy
+     * @param int    $numFiles
+     * @param string $view
+     * @param bool   $disableFlash
+     * @param bool   $enableUploadSort
+     * @param string $deletePolicy
      */
     public function __construct($numFiles, $view, $disableFlash, $enableUploadSort, $deletePolicy)
     {
@@ -66,7 +66,7 @@ class GetConfigListener
         $config = $event->getConfig();
 
         $config
-            ->set('mediamanager.files.num_files', (integer) $this->numFiles)
+            ->set('mediamanager.files.num_files', (int) $this->numFiles)
             ->set('mediamanager.files.view', $this->view)
             ->set('mediamanager.upload.disable_flash', $this->disableFlash)
             ->set('mediamanager.upload.enable_upload_sort', $this->enableUploadSort)

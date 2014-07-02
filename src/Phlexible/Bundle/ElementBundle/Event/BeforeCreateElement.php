@@ -26,14 +26,14 @@ class Makeweb_Elements_Event_BeforeCreateElement extends Brainbits_Event_Notific
     protected $_notificationName = Makeweb_Elements_Event::BEFORE_CREATE_ELEMENT;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_elementTypeId = null;
 
     /**
      * Constructor
      *
-     * @param integer $elementTypeId
+     * @param int $elementTypeId
      */
     public function __construct($elementTypeId)
     {
@@ -43,7 +43,7 @@ class Makeweb_Elements_Event_BeforeCreateElement extends Brainbits_Event_Notific
     /**
      * Return element type id
      *
-     * @return integer
+     * @return int
      */
     public function getElementTypeId()
     {

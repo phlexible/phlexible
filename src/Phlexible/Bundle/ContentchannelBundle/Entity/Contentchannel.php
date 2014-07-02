@@ -16,7 +16,7 @@ namespace Phlexible\Bundle\ContentchannelBundle\Entity;
 class Contentchannel
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -48,7 +48,7 @@ class Contentchannel
     /**
      * Return ID
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -56,7 +56,7 @@ class Contentchannel
     }
 
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return $this
      */

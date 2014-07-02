@@ -33,7 +33,7 @@ abstract class AbstractTemplate implements TemplateInterface
     private $type;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $cache = false;
 
@@ -43,7 +43,7 @@ abstract class AbstractTemplate implements TemplateInterface
     private $storage = 'default';
 
     /**
-     * @var integer
+     * @var int
      */
     private $revision = 0;
 

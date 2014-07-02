@@ -29,14 +29,14 @@ class GetConfigListener
     private $acl;
 
     /**
-     * @var integer
+     * @var int
      */
     private $passwordMinLength;
 
     /**
-     * @param Acl     $acl
-     * @param array   $defaults
-     * @param integer $passwordMinLength
+     * @param Acl   $acl
+     * @param array $defaults
+     * @param int   $passwordMinLength
      */
     public function __construct(Acl $acl, array $defaults, $passwordMinLength)
     {

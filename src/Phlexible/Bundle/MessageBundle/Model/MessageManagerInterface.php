@@ -56,7 +56,7 @@ interface MessageManagerInterface
     /**
      * @param Criteria $criteria
      *
-     * @return integer
+     * @return int
      */
     public function countByCriteria(Criteria $criteria);
 

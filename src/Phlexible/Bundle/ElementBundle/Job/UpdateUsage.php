@@ -18,14 +18,14 @@ use Phlexible\Bundle\QueueBundle\Job\ContainerAwareJob;
 class UpdateUsageJob extends ContainerAwareJob
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $_eid = null;
 
     /**
      * Set EID
      *
-     * @param integer $eid
+     * @param int $eid
      */
     public function setEid($eid = null)
     {

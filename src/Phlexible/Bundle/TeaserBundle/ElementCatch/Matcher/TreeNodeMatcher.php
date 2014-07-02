@@ -33,14 +33,14 @@ class TreeNodeMatcher
     private $elementService;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $useElementLanguageAsFallback;
 
     /**
      * @param ContentTreeManager $contentTreeManager
      * @param ElementService     $elementService
-     * @param boolean            $useElementLanguageAsFallback
+     * @param bool               $useElementLanguageAsFallback
      */
     public function __construct(ContentTreeManager $contentTreeManager,
                                 ElementService $elementService,
@@ -55,10 +55,10 @@ class TreeNodeMatcher
      * Traverse tree and find matching nodes.
      * - check max depth
      *
-     * @param integer $treeId
-     * @param integer $maxDepth
-     * @param boolean $isPreview
-     * @param array   $languages
+     * @param int   $treeId
+     * @param int   $maxDepth
+     * @param bool  $isPreview
+     * @param array $languages
      *
      * @return array
      */
@@ -93,7 +93,7 @@ class TreeNodeMatcher
                 $onlineLanguages = array('de');//$childNode->getOnlineLanguages();
             }
 
-            $childTreeId = (integer) $childNode->getId();
+            $childTreeId = (int) $childNode->getId();
 
             foreach ($languages as $language) {
                 if (in_array($language, $onlineLanguages)) {
@@ -118,7 +118,7 @@ class TreeNodeMatcher
                 // master language is published
                 // and master language was not processed yet
                 if (in_array($masterLanguage, $onlineLanguages) && !in_array($masterLanguage, $languages)) {
-                    $catched[$masterLanguage][] = (integer) $childNode->getId();
+                    $catched[$masterLanguage][] = (int) $childNode->getId();
                 }
             }
         }

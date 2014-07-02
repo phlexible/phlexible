@@ -74,7 +74,7 @@ class ElementService
     /**
      * Find element by ID
      *
-     * @param integer $eid
+     * @param int $eid
      *
      * @return Element
      */
@@ -97,7 +97,7 @@ class ElementService
 
     /**
      * @param Element $element
-     * @param integer $version
+     * @param int     $version
      *
      * @return ElementVersion
      */

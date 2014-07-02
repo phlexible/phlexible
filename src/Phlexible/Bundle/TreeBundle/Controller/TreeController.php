@@ -374,11 +374,11 @@ class TreeController extends Controller
     /**
      * Recurse over tree nodes
      *
-     * @param array   $nodes
-     * @param string  $language
-     * @param integer $mode
-     * @param array   $elementTypeIds
-     * @param string  $targetTid
+     * @param array  $nodes
+     * @param string $language
+     * @param int    $mode
+     * @param array  $elementTypeIds
+     * @param string $targetTid
      * @return array
      */
     protected function _recurseLinkNodes(array $nodes, $language, $mode, Makeweb_Elements_Tree_Node $targetNode = null)
@@ -643,7 +643,7 @@ class TreeController extends Controller
         $currentSiteRootID = $this->_getParam('siteroot_id', null);
         $id                = $this->_getParam('node', 'root');
         $language          = $this->_getParam('language', null);
-        $recursive         = (boolean) $this->_getParam('recursive', false);
+        $recursive         = (bool) $this->_getParam('recursive', false);
 
         if (null === $language)
         {
@@ -816,7 +816,7 @@ class TreeController extends Controller
 
         $siterootID     = $this->_getParam('siteroot_id', null);
         $id             = $this->_getParam('node', 'root');
-        $recursive      = (boolean) $this->_getParam('recursive', false);
+        $recursive      = (bool) $this->_getParam('recursive', false);
         $language       = $this->_getParam('language', null);
         $elementTypeIds = $this->_getParam('element_type_ids', array());
         $targetTid      = $this->_getParam('value', null);
@@ -1307,8 +1307,8 @@ class TreeController extends Controller
                         $siteroot->getTitle(),
                         $instanceTitle,
                         $instance['modify_time'],
-                        (boolean) $instance['instance_master'],
-                        (boolean) ($instance['id'] == $nodeId)
+                        (bool) $instance['instance_master'],
+                        (bool) ($instance['id'] == $nodeId)
                     );
                 }
 

@@ -30,7 +30,7 @@ class File implements FileInterface, IdentifiableInterface
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $version = 1;
 
@@ -50,7 +50,7 @@ class File implements FileInterface, IdentifiableInterface
     private $mimeType;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $hidden = false;
 
@@ -60,7 +60,7 @@ class File implements FileInterface, IdentifiableInterface
     private $physicalPath;
 
     /**
-     * @var integer
+     * @var int
      */
     private $size;
 
@@ -150,7 +150,7 @@ class File implements FileInterface, IdentifiableInterface
      */
     public function setVersion($version)
     {
-        $this->version = (integer)$version;
+        $this->version = (int) $version;
         return $this;
     }
 
@@ -235,7 +235,7 @@ class File implements FileInterface, IdentifiableInterface
      */
     public function setSize($size)
     {
-        $this->size = (integer)$size;
+        $this->size = (int) $size;
         return $this;
     }
 
@@ -269,7 +269,7 @@ class File implements FileInterface, IdentifiableInterface
      */
     public function setHidden($hidden = true)
     {
-        $this->hidden = (boolean)$hidden;
+        $this->hidden = (bool) $hidden;
         return $this;
     }
 

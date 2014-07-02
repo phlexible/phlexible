@@ -18,8 +18,8 @@ use Phlexible\Bundle\LockBundle\LockIdentifier;
 class ElementtypeVersionIdentifier extends LockIdentifier
 {
     /**
-     * @param integer $elementTypeId
-     * @param string  $version
+     * @param int    $elementTypeId
+     * @param string $version
      */
     public function __construct($elementTypeId, $version)
     {

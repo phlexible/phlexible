@@ -45,7 +45,7 @@ class ElementCatcher
     private $treeNodeMatcher;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $useElementLanguageAsFallback;
 
@@ -56,7 +56,7 @@ class ElementCatcher
      * @param ConnectionManager        $connectionManager
      * @param EventDispatcherInterface $dispatcher
      * @param TreeNodeMatcher          $treeNodeMatcher
-     * @param boolean                  $useElementLanguageAsFallback
+     * @param bool                     $useElementLanguageAsFallback
      */
     public function __construct(ConnectionManager $connectionManager,
                                 EventDispatcherInterface $dispatcher,
@@ -66,7 +66,7 @@ class ElementCatcher
         $this->db = $connectionManager->default;
         $this->dispatcher = $dispatcher;
         $this->treeNodeMatcher = $treeNodeMatcher;
-        $this->useElementLanguageAsFallback = (boolean) $useElementLanguageAsFallback;
+        $this->useElementLanguageAsFallback = (bool) $useElementLanguageAsFallback;
     }
 
     /**
@@ -82,7 +82,7 @@ class ElementCatcher
      *
      * @param ElementCatch $elementCatch
      * @param array        $languages
-     * @param boolean      $isPreview
+     * @param bool         $isPreview
      * @param mixed        $filter
      * @param string       $country
      *
@@ -166,7 +166,7 @@ class ElementCatcher
      *
      * @param ElementCatch           $elementCatch
      * @param ElementCatchResultPool $resultPool
-     * @param boolean                $isPreview
+     * @param bool                   $isPreview
      * @param array                  $languages
      * @param mixed                  $filter
      * @param string                 $country
@@ -207,7 +207,7 @@ class ElementCatcher
      *
      * @param ElementCatch           $elementCatch
      * @param ElementCatchResultPool $resultPool
-     * @param boolean                $isPreview
+     * @param bool                   $isPreview
      * @param array                  $languages
      * @param string                 $country
      *
@@ -307,7 +307,7 @@ class ElementCatcher
      *
      * @param \Zend_Db_Select $select
      * @param ElementCatch    $elementCatch
-     * @param boolean         $isPreview
+     * @param bool            $isPreview
      */
     private function applySort(\Zend_Db_Select $select, ElementCatch $elementCatch, $isPreview)
     {
@@ -384,7 +384,7 @@ class ElementCatcher
      *
      * @param \Zend_Db_Select $select
      * @param ElementCatch    $elementCatch
-     * @param boolean         $isPreview
+     * @param bool            $isPreview
      */
     private function applySortByPublishDate(\Zend_Db_Select $select, ElementCatch $elementCatch, $isPreview)
     {
@@ -410,7 +410,7 @@ class ElementCatcher
      * @param \Zend_Db_Select $select
      * @param ElementCatch    $elementCatch
      *
-     * @return boolean
+     * @return bool
      */
     private function hasSelectSort(\Zend_Db_Select $select, ElementCatch $elementCatch)
     {

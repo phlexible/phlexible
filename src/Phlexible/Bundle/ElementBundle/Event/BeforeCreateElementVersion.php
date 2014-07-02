@@ -26,20 +26,20 @@ class Makeweb_Elements_Event_BeforeCreateElementVersion extends Brainbits_Event_
     protected $_notificationName = Makeweb_Elements_Event::BEFORE_CREATE_ELEMENT_VERSION;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_eid = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_newVersion = null;
 
     /**
      * Constructor
      *
-     * @param integer $eid
-     * @param integer $newVersion
+     * @param int $eid
+     * @param int $newVersion
      */
     public function __construct($eid, $newVersion)
     {
@@ -50,7 +50,7 @@ class Makeweb_Elements_Event_BeforeCreateElementVersion extends Brainbits_Event_
     /**
      * Return eid
      *
-     * @return integer
+     * @return int
      */
     public function getEid()
     {
@@ -60,7 +60,7 @@ class Makeweb_Elements_Event_BeforeCreateElementVersion extends Brainbits_Event_
     /**
      * Return new version
      *
-     * @return integer
+     * @return int
      */
     public function getNewVersion()
     {

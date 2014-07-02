@@ -36,7 +36,7 @@ class ElementStructure
     private $element;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Id
      * @ORM\Column(type="integer")
      */

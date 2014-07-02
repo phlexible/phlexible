@@ -24,10 +24,10 @@ class ResultResponse extends JsonResponse
     /**
      * Generate a standard result
      *
-     * @param boolean $result     True for success, false for failure
-     * @param array   $message    (Optional) Message
-     * @param array   $data       (Optional) Data
-     * @param array   $additional (Optional) Additional values
+     * @param bool  $result     True for success, false for failure
+     * @param array $message    (Optional) Message
+     * @param array $data       (Optional) Data
+     * @param array $additional (Optional) Additional values
      */
     public function __construct($result = self::RESULT_SUCCESS,
                                 $message = null,
@@ -42,10 +42,10 @@ class ResultResponse extends JsonResponse
     /**
      * Generate a standard result
      *
-     * @param boolean $result     True for success, false for failure
-     * @param array   $message    (Optional) Message
-     * @param array   $data       (Optional) Data
-     * @param array   $additional (Optional) Additional values
+     * @param bool  $result     True for success, false for failure
+     * @param array $message    (Optional) Message
+     * @param array $data       (Optional) Data
+     * @param array $additional (Optional) Additional values
      */
     public function setResult($result = self::RESULT_SUCCESS,
                               $message = null,

@@ -28,7 +28,7 @@ class Quota
     private $softQuotaPercent = 0.7;
 
     /**
-     * @var integer
+     * @var int
      */
     private $hardQuota = 107374182400;
 
@@ -89,7 +89,7 @@ class Quota
     /**
      * Return soft Quota in bytes for this Site
      *
-     * @return integer
+     * @return int
      */
     public function getSoftQuota()
     {
@@ -109,7 +109,7 @@ class Quota
     /**
      * Return hard Quota in bytes for this Site
      *
-     * @return integer
+     * @return int
      */
     public function getHardQuota()
     {
@@ -119,7 +119,7 @@ class Quota
     /**
      * Return Usage in bytes for this Site
      *
-     * @return integer
+     * @return int
      */
     public function getUsage()
     {
@@ -158,7 +158,7 @@ class Quota
     /**
      * Return remaining soft quota in bytes for this Site
      *
-     * @return integer
+     * @return int
      */
     public function getRemainingSoftQuota()
     {
@@ -192,7 +192,7 @@ class Quota
     /**
      * Return remaining hard quota in bytes for this Site
      *
-     * @return integer
+     * @return int
      */
     public function getRemainingHardQuota()
     {

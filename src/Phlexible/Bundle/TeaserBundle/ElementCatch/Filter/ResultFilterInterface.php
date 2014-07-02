@@ -27,7 +27,7 @@ interface ResultFilterInterface
     /**
      * Returns true if filter is used in this request.
      *
-     * @return boolean
+     * @return bool
      */
     public function isActive();
 }

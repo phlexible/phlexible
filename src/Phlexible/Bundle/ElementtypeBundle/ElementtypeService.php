@@ -63,7 +63,8 @@ class ElementtypeService
     /**
      * Find element type by ID
      *
-     * @param integer $elementTypeId
+     * @param int $elementTypeId
+     *
      * @return Elementtype
      */
     public function findElementtype($elementTypeId)
@@ -247,7 +248,7 @@ class ElementtypeService
      * @param string               $title
      * @param string               $icon
      * @param bool                 $hideChildren
-     * @param integer              $defaultTab
+     * @param int                  $defaultTab
      */
     public function createElementtypeVersion(ElementtypeStructure $elementtypeStructure, $uniqueId, $title, $icon, $hideChildren, $defaultTab)
     {
@@ -271,7 +272,7 @@ class ElementtypeService
     /**
      * Delete an Element Type
      *
-     * @param integer $elementTypeId
+     * @param int $elementTypeId
      */
     public function delete($elementTypeId)
     {

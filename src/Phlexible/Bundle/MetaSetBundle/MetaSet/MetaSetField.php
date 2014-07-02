@@ -41,17 +41,17 @@ class MetaSetField
     private $options;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $required;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $readonly;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $synchronized;
 
@@ -124,7 +124,7 @@ class MetaSetField
     }
 
     /**
-     * @param boolean $required
+     * @param bool $required
      *
      * @return $this
      */
@@ -144,7 +144,7 @@ class MetaSetField
     }
 
     /**
-     * @param boolean $readonly
+     * @param bool $readonly
      *
      * @return $this
      */
@@ -164,7 +164,7 @@ class MetaSetField
     }
 
     /**
-     * @param boolean $synchronized
+     * @param bool $synchronized
      *
      * @return $this
      */

@@ -18,7 +18,7 @@ use Phlexible\Bundle\LockBundle\Lock\LockIdentifierInterface;
 class ElementMasterLockIdentifier extends LockIdentifierInterface
 {
     /**
-     * @param integer $eid
+     * @param int $eid
      */
     public function __construct($eid)
     {

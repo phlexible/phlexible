@@ -139,7 +139,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     /**
      * @param string $dsId
      *
-     * @return boolean
+     * @return bool
      */
     public function hasNode($dsId)
     {
@@ -251,7 +251,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      *
      * @param string $dsId (Optional) ds_id of node to check childrens
      *
-     * @return boolean
+     * @return bool
      */
     public function hasChildNodes($dsId = null)
     {
@@ -269,7 +269,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     /**
      * Get number of nodes in this tree.
      *
-     * @return integer
+     * @return int
      */
     public function count()
     {

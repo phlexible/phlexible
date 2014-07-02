@@ -42,12 +42,12 @@ interface FileInterface
     public function setId($id);
 
     /**
-     * @return integer
+     * @return int
      */
     public function getVersion();
 
     /**
-     * @param integer $version
+     * @param int $version
      *
      * @return $this
      */
@@ -102,12 +102,12 @@ interface FileInterface
     public function setPhysicalPath($physicalPath);
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSize();
 
     /**
-     * @param integer $size
+     * @param int $size
      *
      * @return $this
      */
@@ -126,12 +126,12 @@ interface FileInterface
     public function setHash($hash);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isHidden();
 
     /**
-     * @param boolean $hidden
+     * @param bool $hidden
      *
      * @return $this
      */

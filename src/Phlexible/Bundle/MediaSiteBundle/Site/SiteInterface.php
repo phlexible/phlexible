@@ -45,7 +45,7 @@ interface SiteInterface extends FindInterface
     public function getRootDir();
 
     /**
-     * @return integer
+     * @return int
      */
     public function getQuota();
 
@@ -57,7 +57,7 @@ interface SiteInterface extends FindInterface
     /**
      * @param string $feature
      *
-     * @return boolean
+     * @return bool
      */
     public function hasFeature($feature);
 

@@ -42,7 +42,7 @@ class DelegateService
     /**
      * @param TemplateInterface $template
      * @param Documenttype      $documentType
-     * @param boolean           $createOnDemand
+     * @param bool              $createOnDemand
      *
      * @return string
      */
@@ -66,7 +66,7 @@ class DelegateService
     /**
      * @param TemplateInterface $template
      * @param Documenttype      $documentType
-     * @param boolean           $createOnDemand
+     * @param bool              $createOnDemand
      *
      * @return string
      */

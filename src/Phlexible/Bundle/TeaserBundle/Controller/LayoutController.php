@@ -270,10 +270,10 @@ class LayoutController extends Controller
         $teaserData = (object)$teaserManager->getAllByTIDPath($treePath, $layoutArea, $language, array(), true);
 
         $parent = array(
-            'teaser_id'       => (int)$teaserData->id,
+            'teaser_id'       => (int) $teaserData->id,
             'tid'             => 0,
             'title'           => $teaserData->text,
-            'element_type_id' => (int)$teaserData->layoutareaId,
+            'element_type_id' => (int) $teaserData->layoutareaId,
             'element_type'    => $layoutArea->getTitle(),
             'icon'            => $layoutArea->getIconUrl(),
             'author'          => 'author',
@@ -285,8 +285,8 @@ class LayoutController extends Controller
             'sort'            => 0,
             'sort_mode'       => 'free',
             'sort_dir'        => 'asc',
-            'version_latest'  => (int)$layoutArea->getVersion(),
-            'version_online'  => (int)$layoutArea->getVersion(),
+            'version_latest'  => (int) $layoutArea->getVersion(),
+            'version_online'  => (int) $layoutArea->getVersion(),
             'status'          => ' o_O ',
             'qtip'            =>
                 $layoutArea->getTitle() . ', Version '  . $layoutArea->getVersion() . '<br>' .
@@ -379,11 +379,11 @@ class LayoutController extends Controller
                 }
 
                 $data[] = array(
-                    'teaser_id'       => (int)$teaserItem->id,
-                    'eid'             => (int)$teaserItem->eid,
+                    'teaser_id'       => (int) $teaserItem->id,
+                    'eid'             => (int) $teaserItem->eid,
                     '_type'           => 'teaser',
                     'title'           => $teaserItem->text,
-                    'element_type_id' => (int)$teaserElementTypeVersion->getID(),
+                    'element_type_id' => (int) $teaserElementTypeVersion->getID(),
                     'element_type'    => $teaserElementTypeVersion->getTitle(),
                     'navigation'      => 0,
                     'restricted'      => 0,
@@ -395,9 +395,9 @@ class LayoutController extends Controller
                     'publish_time'    => $teaserNode->getPublishTime($language),
                     'custom_date'     => $teaserElementVersion->getCustomDate($language),
                     'language'        => $language,
-                    'sort'            => (int)$teaserNode->getSort(),
-                    'version_latest'  => (int)$teaserNode->getLatestVersion(),
-                    'version_online'  => (int)$teaserNode->getOnlineVersion($language),
+                    'sort'            => (int) $teaserNode->getSort(),
+                    'version_latest'  => (int) $teaserNode->getLatestVersion(),
+                    'version_online'  => (int) $teaserNode->getOnlineVersion($language),
                     'status'          => '>o>',
                     'qtip'            => $teaserElementTypeVersion->getTitle() . ', Version '  . $teaserElementTypeVersion->getVersion() . '<br>' .
                                          'Version ' . $teaserElementVersion->getVersion() . '<br>',
@@ -406,7 +406,7 @@ class LayoutController extends Controller
             elseif (Makeweb_Teasers_Manager::TYPE_CATCH == $teaserItem->type)
             {
                 $data[] = array(
-                    'teaser_id'       => (int)$teaserItem->id,
+                    'teaser_id'       => (int) $teaserItem->id,
                     'eid'             => null,
                     '_type'           => $teaserItem->type,
                     'title'           => $teaserItem->text,
@@ -431,7 +431,7 @@ class LayoutController extends Controller
             elseif (Makeweb_Teasers_Manager::TYPE_INHERITED == $teaserItem->type)
             {
                 $data[] = array(
-                    'teaser_id'       => (int)$teaserItem->id,
+                    'teaser_id'       => (int) $teaserItem->id,
                     'eid'             => null,
                     '_type'           => $teaserItem->type,
                     'title'           => $teaserItem->text,
@@ -827,7 +827,7 @@ class LayoutController extends Controller
      */
     public function showAction()
     {
-        $teaserId = (integer) $this->_getParam('teaser_id');
+        $teaserId = (int) $this->_getParam('teaser_id');
 
         try
         {
@@ -872,7 +872,7 @@ class LayoutController extends Controller
      */
     public function hideAction()
     {
-        $teaserId = (integer) $this->_getParam('teaser_id');
+        $teaserId = (int) $this->_getParam('teaser_id');
 
         try
         {
@@ -919,10 +919,10 @@ class LayoutController extends Controller
      */
     public function showinheritedAction()
     {
-        $layoutAreaId = (integer) $this->_getParam('layoutarea_id');
-        $treeId       = (integer) $this->_getParam('tree_id');
-        $eid          = (integer) $this->_getParam('eid');
-        $teaserEid    = (integer) $this->_getParam('teaser_eid');
+        $layoutAreaId = (int) $this->_getParam('layoutarea_id');
+        $treeId       = (int) $this->_getParam('tree_id');
+        $eid          = (int) $this->_getParam('eid');
+        $teaserEid    = (int) $this->_getParam('teaser_eid');
 
         try
         {
@@ -974,10 +974,10 @@ class LayoutController extends Controller
      */
     public function hideinheritedAction()
     {
-        $layoutAreaId = (integer) $this->_getParam('layoutarea_id');
-        $treeId       = (integer) $this->_getParam('tree_id');
-        $eid          = (integer) $this->_getParam('eid');
-        $teaserEid    = (integer) $this->_getParam('teaser_eid');
+        $layoutAreaId = (int) $this->_getParam('layoutarea_id');
+        $treeId       = (int) $this->_getParam('tree_id');
+        $eid          = (int) $this->_getParam('eid');
+        $teaserEid    = (int) $this->_getParam('teaser_eid');
 
         try
         {
@@ -997,7 +997,7 @@ class LayoutController extends Controller
                 ->where('teaser_eid = ?', $teaserEid)
                 ->where($db->quoteIdentifier('type') . ' = ?', 'hide');
 
-            $hideId = (integer) $db->fetchOne($select);
+            $hideId = (int) $db->fetchOne($select);
 
             if (!$hideId)
             {

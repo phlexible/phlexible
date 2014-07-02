@@ -21,7 +21,7 @@ interface RotationStrategyInterface
      * Get last remembered position for teaser rotation.
      *
      * @param ElementCatchResultPool $pool
-     * @param integer                $position
+     * @param int                    $position
      *
      * @return $this
      */
@@ -32,7 +32,7 @@ interface RotationStrategyInterface
      *
      * @param ElementCatchResultPool $pool
      *
-     * @return integer
+     * @return int
      */
     public function getLastRotationPosition(ElementCatchResultPool $pool);
 }

@@ -31,7 +31,7 @@ class DelegatingContentExtractor implements ContentExtractorInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAvailable()
     {

@@ -47,7 +47,7 @@ class DataController extends Controller
         $language = $request->get('language');
         $version  = $request->get('version');
         $unlockId = $request->get('unlock');
-        $doLock   = (boolean) $request->get('lock', false);
+        $doLock   = (bool) $request->get('lock', false);
 
         $teaserService  = $this->get('phlexible_teaser.service');
         $treeManager    = $this->get('phlexible_tree.manager');
@@ -870,7 +870,7 @@ class DataController extends Controller
                     if (array_key_exists('code', $data['page']))
                     {
                         $page['disable_cache'] = !empty($data['page']['disable_cache']) ? 1 : 0;
-                        $page['cache_lifetime'] = (integer) Brainbits_Util_Array::get($data['page'], 'cache_lifetime', 0);
+                        $page['cache_lifetime'] = (int) Brainbits_Util_Array::get($data['page'], 'cache_lifetime', 0);
                         $page['https'] = !empty($data['page']['https']) ? 1 : 0;
                         $page['code'] = !empty($data['page']['code']) ? $data['page']['code'] : 200;
                     }
@@ -885,7 +885,7 @@ class DataController extends Controller
                         !empty($page['disable_cache']) ? 1 : 0,
                         !empty($page['code']) ? $page['code'] : 200,
                         !empty($page['https']) ? 1 : 0,
-                        (integer) Brainbits_Util_Array::get($page, 'cache_lifetime', 0)
+                        (int) Brainbits_Util_Array::get($page, 'cache_lifetime', 0)
                     );
 
                     //$tree->getNodeOnlineVersions($node->getId(), false);
@@ -1015,7 +1015,7 @@ class DataController extends Controller
                 {
                     $updateData = array(
                         'disable_cache'  => empty($data['teaser']['disable_cache']) ? 0 : 1,
-                        'cache_lifetime' => (integer) Brainbits_Util_Array::get($data['teaser'], 'cache_lifetime', 0),
+                        'cache_lifetime' => (int) Brainbits_Util_Array::get($data['teaser'], 'cache_lifetime', 0),
                     );
 
                     if ($updateData['disable_cache'])

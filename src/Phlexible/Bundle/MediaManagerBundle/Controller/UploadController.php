@@ -495,7 +495,7 @@ class UploadController extends Controller
             $meta[$key]['key']    = $key;
             $meta[$key]['value_de']  = '';
             $meta[$key]['value_en']  = '';
-            $meta[$key]['required'] = (integer)$meta[$key]['required'];
+            $meta[$key]['required'] = (int) $meta[$key]['required'];
 
             $meta[$key]['tkey'] = $key;
             if (!empty($pageKeys[$key])) {
@@ -549,7 +549,7 @@ class UploadController extends Controller
                     $meta[$key]['key']   = $key;
                     $meta[$key]['value_de'] = '';
                     $meta[$key]['value_en'] = '';
-                    $meta[$key]['required'] = (integer)$meta[$key]['required'];
+                    $meta[$key]['required'] = (int) $meta[$key]['required'];
 
                     $meta[$key]['tkey'] = $key;
                     if (!empty($pageKeys[$key])) {

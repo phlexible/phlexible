@@ -42,7 +42,7 @@ class LatestFilesPortlet extends Portlet
     private $style;
 
     /**
-     * @var integer
+     * @var int
      */
     private $numItems;
 
@@ -52,7 +52,7 @@ class LatestFilesPortlet extends Portlet
      * @param CacheManagerInterface    $cacheManager
      * @param SecurityContextInterface $securityContext
      * @param string                   $style
-     * @param integer                  $numItems
+     * @param int                      $numItems
      */
     public function __construct(TranslatorInterface $translator,
                                 SiteManager $siteManager,

@@ -83,12 +83,12 @@ class ContentElement
                                 array $mappedFields,
                                 ElementStructure $structure)
     {
-        $this->eid = (integer) $eid;
+        $this->eid = (int) $eid;
         $this->uniqueId = $uniqueId ?: null;
         $this->elementtypeId = $elementtypeId;
         $this->elementtypeUniqueId = $elementtypeUniqueId;
         $this->elementtypeType = $elementtypeType;
-        $this->version = (integer) $version;
+        $this->version = (int) $version;
         $this->language = $language;
         $this->mappedFields = $mappedFields;
         $this->structure = $structure;

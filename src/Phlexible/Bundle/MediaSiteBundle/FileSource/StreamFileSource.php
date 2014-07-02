@@ -34,7 +34,8 @@ class StreamFileSource implements StreamSourceInterface
      * @param string   $name
      * @param resource $stream
      * @param string   $mimeType
-     * @param integer  $size
+     * @param int      $size
+     *
      * @throws \InvalidArgumentException
      */
     public function __construct($name, $stream, $mimeType, $size)
@@ -73,7 +74,7 @@ class StreamFileSource implements StreamSourceInterface
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSize()
     {

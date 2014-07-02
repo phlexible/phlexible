@@ -27,7 +27,7 @@ interface DataSourceManagerInterface
     /**
      * Return all data source titles
      *
-     * @param boolean $sorted
+     * @param bool $sorted
      *
      * @return array
      */

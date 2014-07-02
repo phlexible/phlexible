@@ -324,8 +324,9 @@ class DataSource
     }
 
     /**
-     * @param string  $key
-     * @param boolean $active
+     * @param string $key
+     * @param bool   $active
+     *
      * @return $this
      */
     public function addKey($key, $active = true)
@@ -333,11 +334,11 @@ class DataSource
         $key = trim($key);
 
         if ($active) {
-            $keyStore      = &$this->activeKeys;
-            $otherKeyStore = &$this->inactiveKeys;
+            $keyStore = & $this->activeKeys;
+            $otherKeyStore = & $this->inactiveKeys;
         } else {
-            $keyStore      = &$this->inactiveKeys;
-            $otherKeyStore = &$this->activeKeys;
+            $keyStore = & $this->inactiveKeys;
+            $otherKeyStore = & $this->activeKeys;
         }
 
         // add to one key store
@@ -363,7 +364,7 @@ class DataSource
      */
     public function removeKeys($removeableKeys)
     {
-        $this->activeKeys   = array_diff($this->activeKeys, $removeableKeys);
+        $this->activeKeys = array_diff($this->activeKeys, $removeableKeys);
         $this->inactiveKeys = array_diff($this->inactiveKeys, $removeableKeys);
 
         return $this;

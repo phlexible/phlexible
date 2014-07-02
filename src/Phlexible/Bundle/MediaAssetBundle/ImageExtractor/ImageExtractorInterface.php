@@ -20,7 +20,7 @@ interface ImageExtractorInterface
     /**
      * Check if requirements for image extractor are given
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable();
 
@@ -29,7 +29,7 @@ interface ImageExtractorInterface
      *
      * @param FileInterface $file
      *
-     * @return boolean
+     * @return bool
      */
     public function supports(FileInterface $file);
 

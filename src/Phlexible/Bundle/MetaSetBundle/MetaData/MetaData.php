@@ -106,7 +106,7 @@ class MetaData implements MetaDataInterface, \Countable
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasValues()
     {
@@ -114,7 +114,7 @@ class MetaData implements MetaDataInterface, \Countable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function count()
     {

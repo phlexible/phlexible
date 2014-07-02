@@ -26,14 +26,14 @@ class Makeweb_Teasers_Event_BeforeUpdateCatch extends Brainbits_Event_Notificati
     protected $_notificationName = Makeweb_Teasers_Event::BEFORE_UPDATE_CATCH;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_catchId = null;
 
     /**
      * Constructor
      *
-     * @param integer $catchId
+     * @param int $catchId
      */
     public function __construct($catchId)
     {
@@ -43,7 +43,7 @@ class Makeweb_Teasers_Event_BeforeUpdateCatch extends Brainbits_Event_Notificati
     /**
      * Return catch ID (teaser id)
      *
-     * @return integer
+     * @return int
      */
     public function getCatchId()
     {

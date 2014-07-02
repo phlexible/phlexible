@@ -139,7 +139,7 @@ class FolderMetaManager
             ->where('set_id = ?', $set->id)
             ->where('folder_id = ?', $folderId);
 
-        $isExisting = (boolean) $db->fetchOne($select);
+        $isExisting = (bool) $db->fetchOne($select);
 
         if (!$isExisting)
         {

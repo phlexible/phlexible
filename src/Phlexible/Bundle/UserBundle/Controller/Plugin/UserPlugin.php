@@ -26,13 +26,13 @@ class UserPlugin extends AbstractPlugin
     private $securityContext;
 
     /**
-     * @var integer
+     * @var int
      */
     private $expireDays;
 
     /**
      * @param SecurityContextInterface $securityContext
-     * @param integer                  $expireDays
+     * @param int                      $expireDays
      */
     public function __construct(SecurityContextInterface $securityContext, $expireDays)
     {

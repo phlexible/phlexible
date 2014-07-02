@@ -26,18 +26,18 @@ class Makeweb_Teasers_Event_ShowInheritedTeaser extends Makeweb_Teasers_Event_Be
     protected $_notificationName = Makeweb_Teasers_Event::SHOW_INHERITED_TEASER;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_hideInheritId = null;
 
     /**
      * Constructor
      *
-     * @param integer $treeId
-     * @param integer $eid
-     * @param integer $teaserEid
-     * @param ineger  $layoutarreaId
-     * @param integer $hideInheritId
+     * @param int $treeId
+     * @param int $eid
+     * @param int $teaserEid
+     * @param int $layoutarreaId
+     * @param int $hideInheritId
      */
     public function __construct($treeId, $eid, $teaserEid, $layoutarreaId, $hideInheritId)
     {
@@ -49,7 +49,7 @@ class Makeweb_Teasers_Event_ShowInheritedTeaser extends Makeweb_Teasers_Event_Be
     /**
      * Return tree ID
      *
-     * @return integer
+     * @return int
      */
     public function getHideInheritId()
     {

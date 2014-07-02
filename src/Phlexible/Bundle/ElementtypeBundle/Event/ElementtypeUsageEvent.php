@@ -28,10 +28,10 @@ class ElementtypeUsageEvent extends ElementtypeEvent
     }
 
     /**
-     * @param string  $type
-     * @param string  $id
-     * @param string  $title
-     * @param integer $latestVersion
+     * @param string $type
+     * @param string $id
+     * @param string $title
+     * @param int    $latestVersion
      */
     public function addUsage($type, $id, $title, $latestVersion = null)
     {

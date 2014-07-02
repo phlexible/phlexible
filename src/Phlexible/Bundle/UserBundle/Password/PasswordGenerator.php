@@ -91,7 +91,7 @@ class PasswordGenerator
      *
      * This method creates a random unpronounceable password
      *
-     * @param integer $length Length of the password
+     * @param int     $length Length of the password
      * @param string  $chars  Character which could be use in the
      *                        unpronounceable password ex : 'ABCDEFG'
      *                        or numeric, alphabetical or alphanumeric.

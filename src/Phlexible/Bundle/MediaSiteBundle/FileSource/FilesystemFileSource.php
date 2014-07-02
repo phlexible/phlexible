@@ -31,14 +31,14 @@ class FilesystemFileSource implements PathSourceInterface
     private $mimeType;
 
     /**
-     * @var integer
+     * @var int
      */
     private $size;
 
     /**
-     * @param string  $path
-     * @param string  $mimeType
-     * @param integer $size
+     * @param string $path
+     * @param string $mimeType
+     * @param int    $size
      */
     public function __construct($path, $mimeType, $size)
     {

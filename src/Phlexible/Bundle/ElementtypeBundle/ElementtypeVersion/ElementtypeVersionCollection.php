@@ -51,7 +51,8 @@ class ElementtypeVersionCollection
 
     /**
      * @param Elementtype $elementtype
-     * @param integer     $version
+     * @param int         $version
+     *
      * @return ElementtypeVersion|null
      */
     public function get(Elementtype $elementtype, $version)

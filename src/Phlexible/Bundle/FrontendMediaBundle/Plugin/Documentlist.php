@@ -17,7 +17,7 @@ class Documentlist extends \Dwoo\Plugin
 {
     /**
      * ID of media folder
-     * @var integer
+     * @var int
      */
     protected $_folderId;
 
@@ -30,12 +30,12 @@ class Documentlist extends \Dwoo\Plugin
     /**
      * Executes the helper
      *
-     * @param integer $folderId     ID of media folder
-     * @param string  $partial      Path to partial
-     * @param string  $docView      chosen documentlist_view from elementtype
-     * @param array   $data         list with documents
-     * @param integer $countPerPage documentcount per page
-     * @param boolean $filter       file filter active
+     * @param int    $folderId     ID of media folder
+     * @param string $partial      Path to partial
+     * @param string $docView      chosen documentlist_view from elementtype
+     * @param array  $data         list with documents
+     * @param int    $countPerPage documentcount per page
+     * @param bool   $filter       file filter active
      */
     public function process($folderId, $partial, $docView, $data, $countPerPage = 10, $filter = false)
     {

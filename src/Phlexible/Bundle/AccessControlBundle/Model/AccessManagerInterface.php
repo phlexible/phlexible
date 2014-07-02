@@ -49,14 +49,14 @@ interface AccessManagerInterface
     public function findOneByValues($type, $contentType, $contentId, $securityType, $securityId, $contentLanguage = null);
 
     /**
-     * @param string  $type
-     * @param string  $contentType
-     * @param string  $contentId
-     * @param string  $securityType
-     * @param string  $securityId
-     * @param string  $right
-     * @param integer $inherit
-     * @param string  $language
+     * @param string $type
+     * @param string $contentType
+     * @param string $contentId
+     * @param string $securityType
+     * @param string $securityId
+     * @param string $right
+     * @param int    $inherit
+     * @param string $language
      *
      * @return $this
      */

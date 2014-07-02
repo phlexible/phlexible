@@ -21,7 +21,7 @@ class MetaSet implements MetaSetInterface
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $revision;
 

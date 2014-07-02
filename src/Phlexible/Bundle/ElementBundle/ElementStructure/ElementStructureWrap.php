@@ -137,7 +137,7 @@ class ElementStructureWrap implements \ArrayAccess
     /**
      * @param mixed $offset
      *
-     * @return boolean
+     * @return bool
      */
     public function offsetExists($offset)
     {

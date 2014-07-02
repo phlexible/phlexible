@@ -18,8 +18,8 @@ use Phlexible\Component\Identifier\Identifier;
 class ElementVersionIdentifier extends Identifier
 {
     /**
-     * @param integer $eid
-     * @param integer $version
+     * @param int $eid
+     * @param int $version
      */
     public function __construct($eid, $version)
     {

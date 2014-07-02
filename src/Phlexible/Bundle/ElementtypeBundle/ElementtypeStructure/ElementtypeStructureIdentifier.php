@@ -18,8 +18,8 @@ use Phlexible\Component\Identifier\Identifier;
 class ElementtypeStructureIdentifier extends Identifier
 {
     /**
-     * @param integer $elementTypeId
-     * @param string  $version
+     * @param int    $elementTypeId
+     * @param string $version
      */
     public function __construct($elementTypeId, $version)
     {

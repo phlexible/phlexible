@@ -31,7 +31,7 @@ class BlockCollection
     /**
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function hasBlock($name)
     {

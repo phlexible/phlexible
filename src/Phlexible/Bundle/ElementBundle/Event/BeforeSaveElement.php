@@ -36,7 +36,7 @@ class Makeweb_Elements_Event_BeforeSaveElement extends Brainbits_Event_Notificat
     protected $_language = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_oldVersion = null;
 
@@ -45,7 +45,7 @@ class Makeweb_Elements_Event_BeforeSaveElement extends Brainbits_Event_Notificat
      *
      * @param Makeweb_Elements_Element $element
      * @param string                   $language
-     * @param integer                  $oldVersion
+     * @param int                      $oldVersion
      */
     public function __construct(Makeweb_Elements_Element $element, $language, $oldVersion)
     {
@@ -77,7 +77,7 @@ class Makeweb_Elements_Event_BeforeSaveElement extends Brainbits_Event_Notificat
     /**
      * Return old version
      *
-     * @return integer
+     * @return int
      */
     public function getOldVersion()
     {

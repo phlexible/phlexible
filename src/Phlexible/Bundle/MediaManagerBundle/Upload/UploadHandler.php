@@ -48,7 +48,7 @@ class UploadHandler
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     private function useWizard()
     {

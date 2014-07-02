@@ -39,7 +39,7 @@ interface WritableTreeInterface
      *
      * @param TreeNodeInterface|int $node
      * @param TreeNodeInterface|int $targetNode
-     * @param boolean               $before
+     * @param bool                  $before
      *
      * @throws InvalidNodeMoveException
      */

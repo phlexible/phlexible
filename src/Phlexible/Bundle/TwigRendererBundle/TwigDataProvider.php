@@ -30,7 +30,7 @@ class TwigDataProvider implements DataProviderInterface
 
         $data->request   = $request;
         $data->language  = $request->attributes->get('language');
-        $data->isPreview = true;//(boolean)$renderRequest->getVersionStrategy() === 'latest';
+        $data->isPreview = true;//(bool) $renderRequest->getVersionStrategy() === 'latest';
 
         if ($renderConfiguration->hasFeature('treeNode')) {
             $treeNode = $renderConfiguration->get('treeNode');
@@ -38,9 +38,9 @@ class TwigDataProvider implements DataProviderInterface
             $data->treeContext  = $renderConfiguration->get('treeContext');
             $data->tid          = $treeNode->getId();
             $data->parentTid    = $treeNode->getParentId();
-            $data->isPublished  = false;//(boolean) $treeNode->isPublished($renderConfiguration->get('elementLanguage'));
-            $data->isRestricted = false;//(boolean) $treeNode->isRestricted($version);
-            $data->inNavigation = false;//(boolean) $treeNode->inNavigation($version);
+            $data->isPublished  = false;//(bool) $treeNode->isPublished($renderConfiguration->get('elementLanguage'));
+            $data->isRestricted = false;//(bool) $treeNode->isRestricted($version);
+            $data->inNavigation = false;//(bool) $treeNode->inNavigation($version);
         }
 
         if ($request->attributes->has('siterootUrl')) {

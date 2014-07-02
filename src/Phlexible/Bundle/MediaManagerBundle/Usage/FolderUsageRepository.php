@@ -62,11 +62,11 @@ class FolderUsageRepository
                 $this->db->prefix . 'media_folder_usage',
                 array('folder_id', 'usage_id', 'usage_type', 'status')
             )
-            ->where($this->db->quoteIdentifier('usage_id') . ' = ?', (integer) $eid);
+            ->where($this->db->quoteIdentifier('usage_id') . ' = ?', (int) $eid);
 
         // filter by status if parameter is specified
         if ($status) {
-            $select->where($this->db->quoteIdentifier('status') . ' & ?', (integer) $status);
+            $select->where($this->db->quoteIdentifier('status') . ' & ?', (int) $status);
         }
 
         $result = $this->db->fetchAll($select);
@@ -96,7 +96,7 @@ class FolderUsageRepository
      * Save usage
      *
      * @param FolderUsage $usage
-     * @param boolean     $update
+     * @param bool        $update
      */
     public function save(FolderUsage $usage, $update = false)
     {

@@ -41,7 +41,7 @@ class ElementHistory
     private $language;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(type="integer", nullable=true)
      */
     private $version;

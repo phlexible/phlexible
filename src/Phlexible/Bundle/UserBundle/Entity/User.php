@@ -396,7 +396,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEnabled()
     {
@@ -404,7 +404,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param boolean $enabled
+     * @param bool $enabled
      *
      * @return $this
      */
@@ -526,7 +526,7 @@ class User implements AdvancedUserInterface
     /**
      * @param string $role
      *
-     * @return boolean
+     * @return bool
      */
     public function hasRole($role)
     {

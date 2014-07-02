@@ -45,8 +45,8 @@ class TreeHelper
     /**
      * get data data wrap for the online element version
      *
-     * @param integer $tid
-     * @param string  $language
+     * @param int    $tid
+     * @param string $language
      *
      * @return Makeweb_Elements_Element_Version_Data_Wrap|null if tid is not found or language is not online
      */
@@ -67,8 +67,8 @@ class TreeHelper
     /**
      * get online element version
      *
-     * @param integer $tid
-     * @param string  $language
+     * @param int    $tid
+     * @param string $language
      *
      * @return Makeweb_Elements_Element_Version|null if tid is not found or language is not online
      */
@@ -115,10 +115,10 @@ class TreeHelper
     /**
      * get title of online version
      *
-     * @param integer $tid
-     * @param string  $language
-     * @param string  $section
-     * @param string  $fallbackLanguage (optional)
+     * @param int    $tid
+     * @param string $language
+     * @param string $section
+     * @param string $fallbackLanguage (optional)
      *
      * @return string|null if tid is not found or language is not online
      */
@@ -138,10 +138,10 @@ class TreeHelper
     /**
      * get title of online version
      *
-     * @param integer $tid
-     * @param string  $language
-     * @param string  $section
-     * @param string  $fallbackLanguage (optional)
+     * @param int    $tid
+     * @param string $language
+     * @param string $section
+     * @param string $fallbackLanguage (optional)
      *
      * @return string|null if tid is not found or language is not online
      */

@@ -79,7 +79,7 @@ class Mailer
      * @param UserInterface $user
      * @param Message[]     $messages
      *
-     * @return boolean
+     * @return bool
      */
     public function sendDigestMail(UserInterface $user, array $messages)
     {

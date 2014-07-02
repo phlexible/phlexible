@@ -79,7 +79,7 @@ class Elementtype implements IdentifiableInterface
     private $deleted = false;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(name="latest_version", type="integer")
      */
     private $latestVersion = 0;
@@ -97,7 +97,7 @@ class Elementtype implements IdentifiableInterface
     private $createUserId;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -105,13 +105,13 @@ class Elementtype implements IdentifiableInterface
     }
 
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return $this
      */
     public function setId($id)
     {
-        $this->id = (integer) $id;
+        $this->id = (int) $id;
 
         return $this;
     }
@@ -213,19 +213,19 @@ class Elementtype implements IdentifiableInterface
     }
 
     /**
-     * @param integer $defaultTab
+     * @param int $defaultTab
      *
      * @return $this
      */
     public function setDefaultTab($defaultTab)
     {
-        $this->defaultTab = isset($defaultTab) ? (integer) $defaultTab : null;
+        $this->defaultTab = isset($defaultTab) ? (int) $defaultTab : null;
 
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHideChildren()
     {
@@ -233,19 +233,19 @@ class Elementtype implements IdentifiableInterface
     }
 
     /**
-     * @param boolean $hideChildren
+     * @param bool $hideChildren
      *
      * @return $this
      */
     public function setHideChildren($hideChildren)
     {
-        $this->hideChildren = (boolean) $hideChildren;
+        $this->hideChildren = (bool) $hideChildren;
 
         return $this;
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getLatestVersion()
     {
@@ -253,7 +253,7 @@ class Elementtype implements IdentifiableInterface
     }
 
     /**
-     * @param integer $latestVersion
+     * @param int $latestVersion
      *
      * @return $this
      */

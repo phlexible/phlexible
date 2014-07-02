@@ -45,9 +45,10 @@ class Makeweb_Elements_Notifications
     /**
      * save new notification
      *
-     * @param integer $tid
-     * @param string  $language
-     * @return integer
+     * @param int    $tid
+     * @param string $language
+     *
+     * @return int
      */
     public function save($tid, $language)
     {
@@ -69,9 +70,10 @@ class Makeweb_Elements_Notifications
     /**
      * update notification
      *
-     * @param integer $id
+     * @param int    $id
      * @param string $language
-     * @return integer
+     *
+     * @return int
      */
     public function update($id, $language)
     {
@@ -90,8 +92,9 @@ class Makeweb_Elements_Notifications
     /**
      * delete notification
      *
-     * @param integer $id
-     * @return integer
+     * @param int $id
+     *
+     * @return int
      */
     public function delete($id)
     {
@@ -103,7 +106,8 @@ class Makeweb_Elements_Notifications
     /**
      * get notification by tid
      *
-     * @param integer $tid
+     * @param int $tid
+     *
      * @return array
      */
     public function getNotificationByTid($tid, $language)

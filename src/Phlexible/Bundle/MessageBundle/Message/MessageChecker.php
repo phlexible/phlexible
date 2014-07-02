@@ -26,7 +26,8 @@ class MessageChecker
      *
      * @param Filter  $filter
      * @param Message $message
-     * @return boolean
+     *
+     * @return bool
      */
     public function checkByFilter(Filter $filter, Message $message)
     {
@@ -38,8 +39,9 @@ class MessageChecker
      *
      * @param Criteria $criteria
      * @param Message  $message
-     * @return boolean
+     *
      * @throws InvalidArgumentException
+     * @return bool
      */
     public function check(Criteria $criteria, Message $message)
     {

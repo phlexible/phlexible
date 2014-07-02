@@ -130,7 +130,7 @@ class PermissionCollection
      * @param string $type
      * @param string $permission
      *
-     * @return boolean
+     * @return bool
      */
     public function has($type, $permission)
     {

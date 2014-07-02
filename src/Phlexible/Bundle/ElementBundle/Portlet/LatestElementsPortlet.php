@@ -34,7 +34,7 @@ class LatestElementsPortlet extends Portlet
     private $treeManager;
 
     /**
-     * @var integer
+     * @var int
      */
     private $numItems;
 
@@ -43,7 +43,7 @@ class LatestElementsPortlet extends Portlet
      * @param Makeweb_Elements_Element_Version_Manager $versionManager
      * @param Makeweb_Elements_Tree_Manager            $treeManager
      * @param MWF_Db_Pool                              $dbPool
-     * @param integer                                  $numItems
+     * @param int                                      $numItems
      */
     public function __construct(TranslatorInterface $translator,
                                 Makeweb_Elements_Element_Version_Manager $versionManager,

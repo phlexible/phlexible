@@ -60,7 +60,7 @@ class ContentchannelRepository implements ContentchannelManagerInterface
     /**
      * Find content channel
      *
-     * @param integer $id
+     * @param int $id
      *
      * @throws InvalidArgumentException
      * @return Contentchannel

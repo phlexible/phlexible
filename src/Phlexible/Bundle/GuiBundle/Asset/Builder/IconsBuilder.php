@@ -37,7 +37,7 @@ class IconsBuilder
     private $cacheDir;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $debug;
 
@@ -45,7 +45,7 @@ class IconsBuilder
      * @param array                  $bundles
      * @param CssCompressorInterface $cssCompressor
      * @param string                 $cacheDir
-     * @param boolean                $debug
+     * @param bool                   $debug
      */
     public function __construct(array $bundles,
                                 CssCompressorInterface $cssCompressor,

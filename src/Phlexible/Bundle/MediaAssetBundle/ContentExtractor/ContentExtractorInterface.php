@@ -21,7 +21,7 @@ interface ContentExtractorInterface
     /**
      * Check if requirements for content reader are given
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable();
 
@@ -30,7 +30,7 @@ interface ContentExtractorInterface
      *
      * @param FileInterface $file
      *
-     * @return boolean
+     * @return bool
      */
     public function supports(FileInterface $file);
 

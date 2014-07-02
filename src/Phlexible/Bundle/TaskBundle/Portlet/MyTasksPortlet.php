@@ -54,7 +54,7 @@ class MyTasksPortlet extends Portlet
      * @param TypeCollection           $types
      * @param SecurityContextInterface $securityContext
      * @param UserManagerInterface     $userManager
-     * @param integer                  $numItems
+     * @param int                      $numItems
      */
     public function __construct(TranslatorInterface $translator,
                                 TaskManagerInterface $taskManager,

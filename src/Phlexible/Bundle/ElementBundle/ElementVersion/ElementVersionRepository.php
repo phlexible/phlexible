@@ -41,7 +41,7 @@ class ElementVersionRepository
 
     /**
      * @param Element $element
-     * @param integer $version
+     * @param int     $version
      *
      * @return ElementVersion
      */

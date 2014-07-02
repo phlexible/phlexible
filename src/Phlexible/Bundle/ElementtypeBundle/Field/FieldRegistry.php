@@ -68,15 +68,15 @@ class FieldRegistry
     /**
      * Returns all titles
      *
-     * @param boolean $onlyUsable
+     * @param bool $onlyUsable
+     *
      * @return array
      */
     public function xgetFieldTypes($onlyUsable = false)
     {
         $fieldTypes = array_keys($this->_getFields());
 
-        if ($onlyUsable)
-        {
+        if ($onlyUsable) {
             unset($fieldTypes['root']);
             unset($fieldTypes['referenceroot']);
             unset($fieldTypes['reference']);
@@ -109,7 +109,7 @@ class FieldRegistry
     /**
      * @param string $key
      *
-     * @return boolean
+     * @return bool
      */
     public function hasField($key)
     {

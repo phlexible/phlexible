@@ -26,20 +26,18 @@ class Makeweb_Teasers_Event_UpdateCatchTeaserHelper extends Brainbits_Event_Noti
     protected $_notificationName = Makeweb_Teasers_Event::UPDATE_CATCH_TEASER_HELPER;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_eid = null;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $_preview;
 
     /**
-     * Constructor
-     *
-     * @param integer $eid
-     * @param boolean $preview
+     * @param int  $eid
+     * @param bool $preview
      */
     public function __construct($eid, $preview = false)
     {

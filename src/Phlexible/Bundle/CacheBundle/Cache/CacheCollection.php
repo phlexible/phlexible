@@ -52,7 +52,7 @@ class CacheCollection implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function count()
     {

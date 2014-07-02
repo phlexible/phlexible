@@ -41,7 +41,7 @@ class ElementRepository
     /**
      * Find element by ID
      *
-     * @param integer $eid
+     * @param int $eid
      *
      * @throws \Exception
      * @return Element
@@ -66,10 +66,10 @@ class ElementRepository
     /**
      * Find elements
      *
-     * @param array   $criteria
-     * @param string  $order
-     * @param integer $limit
-     * @param integer $offset
+     * @param array  $criteria
+     * @param string $order
+     * @param int    $limit
+     * @param int    $offset
      *
      * @return Element[]
      */

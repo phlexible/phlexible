@@ -74,7 +74,7 @@ class DelegateWorker
     }
 
     /**
-     * @param boolean  $force
+     * @param bool     $force
      * @param callable $callback
      */
     public function writeAll($force = false, callable $callback = null)
@@ -154,7 +154,9 @@ class DelegateWorker
     /**
      * @param Documenttype  $documentType
      * @param ImageTemplate $template
-     * @param boolean       $force
+     * @param bool          $force
+     *
+     * @throws WorkerException
      */
     public function write(Documenttype $documentType, ImageTemplate $template, $force = false)
     {

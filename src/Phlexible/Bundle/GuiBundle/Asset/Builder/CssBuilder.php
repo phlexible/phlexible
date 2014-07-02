@@ -39,7 +39,7 @@ class CssBuilder
     private $cacheDir;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $debug;
 
@@ -47,7 +47,7 @@ class CssBuilder
      * @param AssetProviderCollection $assetProviders
      * @param CssCompressorInterface  $cssCompressor
      * @param string                  $cacheDir
-     * @param boolean                 $debug
+     * @param bool                    $debug
      */
     public function __construct(AssetProviderCollection $assetProviders,
                                 CssCompressorInterface $cssCompressor,

@@ -55,7 +55,8 @@ class ElementtypeCollection
     }
 
     /**
-     * @param integer $id
+     * @param int $id
+     *
      * @return Elementtype|null
      */
     public function get($id)
@@ -68,7 +69,8 @@ class ElementtypeCollection
     }
 
     /**
-     * @param integer $uniqueId
+     * @param int $uniqueId
+     *
      * @return Elementtype|null
      */
     public function getByUniqueId($uniqueId)

@@ -66,7 +66,7 @@ class Site implements SiteInterface, \IteratorAggregate
     private $rootDir;
 
     /**
-     * @var integer
+     * @var int
      */
     private $quota;
 
@@ -83,7 +83,7 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * @param string                   $id
      * @param string                   $rootDir
-     * @param integer                  $quota
+     * @param int                      $quota
      * @param DriverInterface          $driver
      * @param EventDispatcherInterface $dispatcher
      */

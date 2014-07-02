@@ -42,7 +42,7 @@ class ElementLink
     private $language;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(type="integer")
      */
     private $version;

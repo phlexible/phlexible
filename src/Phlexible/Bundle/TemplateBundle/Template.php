@@ -43,7 +43,7 @@ class Template
     /**
      * Return template ID
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

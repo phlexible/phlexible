@@ -36,7 +36,7 @@ class Makeweb_Teasers_Event_BeforePublishTeaser extends Brainbits_Event_Notifica
     protected $_language = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_version = null;
 
@@ -45,7 +45,7 @@ class Makeweb_Teasers_Event_BeforePublishTeaser extends Brainbits_Event_Notifica
      *
      * @param Makeweb_Teasers_Node $node
      * @param string               $language
-     * @param integer              $version
+     * @param int                  $version
      */
     public function __construct(Makeweb_Teasers_Node $node, $language, $version)
     {
@@ -77,7 +77,7 @@ class Makeweb_Teasers_Event_BeforePublishTeaser extends Brainbits_Event_Notifica
     /**
      * Return version
      *
-     * @return integer
+     * @return int
      */
     public function getVersion()
     {

@@ -116,7 +116,7 @@ AND
                 )
             );
 
-            $rows = $db->fetchAll($query, array('eid' => (integer) $eid));
+            $rows = $db->fetchAll($query, array('eid' => (int) $eid));
             $log .= 'Tree Online Versions: '; $log .= print_r($rows, true);
 
             if (!$rows)
@@ -220,8 +220,8 @@ AND
     /**
      * Get all element usages for a file.
      *
-     * @param string  $folderId
-     * @param integer $status (optional)
+     * @param string $folderId
+     * @param int    $status
      *
      * @return array
      */
@@ -237,7 +237,7 @@ AND
         // filter by status if parameter is specified
         if ($status)
         {
-            $select->where($db->quoteIdentifier('status') . ' & ?', (integer) $status);
+            $select->where($db->quoteIdentifier('status') . ' & ?', (int) $status);
         }
 
         $result = $db->fetchAll($select);
@@ -248,8 +248,8 @@ AND
     /**
      * Get all file usages for an element.
      *
-     * @param integer $eid
-     * @param integer $status (optional)
+     * @param int $eid
+     * @param int $status
      *
      * @return array
      */
@@ -262,13 +262,13 @@ AND
                 $db->prefix . 'mediamanager_folders_usage',
                 array('folder_id', 'usage_id', 'usage_type', 'status')
             )
-            ->where($db->quoteIdentifier('usage_id') . ' = ?', (integer) $eid)
+            ->where($db->quoteIdentifier('usage_id') . ' = ?', (int) $eid)
             ->where($db->quoteIdentifier('usage_type') . ' = ?', 'element');
 
         // filter by status if parameter is specified
         if ($status)
         {
-            $select->where($db->quoteIdentifier('status') . ' & ?', (integer) $status);
+            $select->where($db->quoteIdentifier('status') . ' & ?', (int) $status);
         }
 
         $result = $db->fetchAll($select);
@@ -279,7 +279,7 @@ AND
     /**
      * Get all folder usages by status.
      *
-     * @param integer $status
+     * @param int $status
      *
      * @return array
      */
@@ -292,7 +292,7 @@ AND
                 $db->prefix . 'mediamanager_folders_usage',
                 array('folder_id', 'usage_id', 'usage_type', 'status')
             )
-            ->where($db->quoteIdentifier('status') . ' & ?', (integer) $status)
+            ->where($db->quoteIdentifier('status') . ' & ?', (int) $status)
             ->where($db->quoteIdentifier('usage_type') . ' = ?', 'element');
 
         $result = $db->fetchAll($select);

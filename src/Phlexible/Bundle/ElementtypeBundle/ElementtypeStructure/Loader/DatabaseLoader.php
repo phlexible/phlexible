@@ -54,8 +54,8 @@ class DatabaseLoader implements LoaderInterface
 
     /**
      * @param ElementtypeStructure     $structure
-     * @param integer                  $id
-     * @param integer                  $version
+     * @param int                      $id
+     * @param int                      $version
      * @param ElementtypeStructureNode $referenceParentNode
      */
     private function doLoad(ElementtypeStructure $structure, $id, $version, $referenceParentNode = null)

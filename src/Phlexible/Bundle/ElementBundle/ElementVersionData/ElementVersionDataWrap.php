@@ -163,8 +163,8 @@ class ElementVersionDataWrap
     /**
      * Enter description here...
      *
-     * @param string  $offset
-     * @param boolean $returnContent
+     * @param string $offset
+     * @param bool   $returnContent
      *
      * @return $this
      */
@@ -198,8 +198,8 @@ class ElementVersionDataWrap
     /**
      * Enter description here...
      *
-     * @param string  $offset
-     * @param boolean $returnContent
+     * @param string $offset
+     * @param bool   $returnContent
      *
      * @return $this
      */

@@ -29,7 +29,7 @@ class Makeweb_Elements_Context
     protected $_country = null;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $_isPreview = null;
 
@@ -64,9 +64,7 @@ class Makeweb_Elements_Context
     protected $_reverseDefaults = null;
 
     /**
-     * Constructor
-     *
-     * @param boolean $isPreview
+     * @param bool $isPreview
      */
     public function __construct($isPreview)
     {
@@ -144,10 +142,10 @@ class Makeweb_Elements_Context
     /**
      * Is this tid relevant for this language?
      *
-     * @param integer      $tid
+     * @param int          $tid
      * @param array|string $languages
      *
-     * @return boolean
+     * @return bool
      */
     public function isRelevantForTid($tid, $languages)
     {
@@ -172,10 +170,10 @@ class Makeweb_Elements_Context
     /**
      * Is this teaserid relevant for this language?
      *
-     * @param integer      $teaserId
+     * @param int          $teaserId
      * @param array|string $languages
      *
-     * @return boolean
+     * @return bool
      */
     public function isRelevantForTeaserId($teaserId, $languages)
     {
@@ -214,7 +212,7 @@ class Makeweb_Elements_Context
     /**
      * Return languages for this tid
      *
-     * @param integer $tid
+     * @param int $tid
      *
      * @return array
      */
@@ -293,7 +291,7 @@ class Makeweb_Elements_Context
     /**
      * Return languages for this teaserid
      *
-     * @param integer $tid
+     * @param int $tid
      *
      * @return array
      */
@@ -404,8 +402,8 @@ class Makeweb_Elements_Context
     /**
      * Return languages for this tid
      *
-     * @param integer $tid
-     * @param string  $language
+     * @param int    $tid
+     * @param string $language
      *
      * @return array|null array is empty page is globally available
      *                    and null if language/context combination is invalid

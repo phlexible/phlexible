@@ -45,7 +45,7 @@ class CacheRotationStrategy implements RotationStrategyInterface
             $this->cache->save($identifier, $position);
         }
 
-        return  (integer) $position;
+        return  (int) $position;
     }
 
     /**

@@ -21,7 +21,7 @@ interface MetaReaderInterface
     /**
      * Check if requirements for meta reader are given
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable();
 
@@ -30,7 +30,7 @@ interface MetaReaderInterface
      *
      * @param FileInterface $file
      *
-     * @return boolean
+     * @return bool
      */
     public function supports(FileInterface $file);
 

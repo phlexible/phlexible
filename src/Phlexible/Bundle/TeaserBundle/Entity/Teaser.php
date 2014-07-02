@@ -114,7 +114,7 @@ class Teaser implements IdentifiableInterface
     private $disableCache = false;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(name="cache_lifetime", type="integer")
      */
     private $cacheLifeTime;
@@ -341,7 +341,7 @@ class Teaser implements IdentifiableInterface
     }
 
     /**
-     * @param integer $cacheLifeTime
+     * @param int $cacheLifeTime
      *
      * @return $this
      */

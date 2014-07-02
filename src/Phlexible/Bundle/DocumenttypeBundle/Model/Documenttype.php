@@ -160,9 +160,9 @@ class Documenttype
     /**
      * Is an icon for the given size available?
      *
-     * @param integer $neededSize
+     * @param int $neededSize
      *
-     * @return boolean
+     * @return bool
      */
     public function hasIcon($neededSize = 16)
     {
@@ -191,7 +191,7 @@ class Documenttype
     /**
      * Return icon
      *
-     * @param integer $neededSize
+     * @param int $neededSize
      *
      * @return string
      */

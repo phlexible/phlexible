@@ -43,8 +43,8 @@ class TreeHistory
      *
      * @param TreeNodeInterface $node
      * @param string            $uid
-     * @param integer           $eid
-     * @param integer           $version
+     * @param int               $eid
+     * @param int               $version
      * @param string            $language
      * @param string            $comment
      */
@@ -58,8 +58,8 @@ class TreeHistory
      *
      * @param TreeNodeInterface $node
      * @param string            $uid
-     * @param integer           $eid
-     * @param integer           $version
+     * @param int               $eid
+     * @param int               $version
      * @param string            $language
      * @param string            $comment
      */
@@ -73,8 +73,8 @@ class TreeHistory
      *
      * @param TreeNodeInterface $node
      * @param string            $uid
-     * @param integer           $eid
-     * @param integer           $version
+     * @param int               $eid
+     * @param int               $version
      * @param string            $language
      * @param string            $comment
      */
@@ -89,7 +89,7 @@ class TreeHistory
      * @param string            $action
      * @param TreeNodeInterface $node
      * @param string            $uid
-     * @param integer           $eid
+     * @param int               $eid
      * @param string            $version
      * @param string            $language
      * @param string            $comment

@@ -32,7 +32,7 @@ class DelegatingMetaReader implements MetaReaderInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAvailable()
     {

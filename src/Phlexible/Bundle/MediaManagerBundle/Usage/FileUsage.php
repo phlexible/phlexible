@@ -24,7 +24,7 @@ class FileUsage implements UsageInterface
     private $fileId;
 
     /**
-     * @var integer
+     * @var int
      */
     private $fileVersion;
 
@@ -39,7 +39,7 @@ class FileUsage implements UsageInterface
     private $usageId;
 
     /**
-     * @var integer
+     * @var int
      */
     private $status;
 

@@ -62,8 +62,9 @@ class MetaResolver
     /**
      * Get meta data of a file.
      *
-     * @param string  $fileId
-     * @param integer $fileVersion
+     * @param string $fileId
+     * @param int    $fileVersion
+     *
      * @return array
      */
     public function getFileMeta($fileId, $fileVersion = -1)

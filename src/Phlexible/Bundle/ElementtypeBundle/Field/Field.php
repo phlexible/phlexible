@@ -16,22 +16,22 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
 abstract class Field
 {
     /**
-     * @var boolean
+     * @var bool
      */
     protected $isField = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $isContainer = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $hasContent = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $hasOptions = false;
 
@@ -49,7 +49,7 @@ abstract class Field
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isContainer()
     {
@@ -57,7 +57,7 @@ abstract class Field
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isField()
     {
@@ -65,7 +65,7 @@ abstract class Field
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasContent()
     {
@@ -73,7 +73,7 @@ abstract class Field
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasOptions()
     {
@@ -83,10 +83,10 @@ abstract class Field
     /**
      * Transforms old field types to new elementar types
      *
-     * @param array   $item
-     * @param integer $eid
-     * @param integer $version
-     * @param string  $language
+     * @param array  $item
+     * @param int    $eid
+     * @param int    $version
+     * @param string $language
      *
      * @return array
      */

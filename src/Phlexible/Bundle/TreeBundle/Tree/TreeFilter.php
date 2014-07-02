@@ -47,7 +47,7 @@ class TreeFilter
     protected $_sortDir = 'ASC';
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_tid = null;
 
@@ -66,7 +66,7 @@ class TreeFilter
      *
      * @param MWF_Db_Pool 			   $dbPool
      * @param EventDispatcherInterface $dispatcher
-     * @param integer                  $tid
+     * @param int                      $tid
      * @param string                   $language
      */
     public function __construct(MWF_Db_Pool $dbPool, EventDispatcherInterface $dispatcher, $tid, $language)

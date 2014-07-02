@@ -64,7 +64,7 @@ class Item
     protected $_types = array();
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $empty = true;
 
@@ -80,7 +80,7 @@ class Item
     /**
      * Is this metaset item empty?
      *
-     * @return boolean
+     * @return bool
      */
     public function isEmpty()
     {
@@ -123,7 +123,8 @@ class Item
 
     /**
      * @param string $key
-     * @return boolean
+     *
+     * @return bool
      */
     public function __isset($key)
     {
@@ -144,7 +145,8 @@ class Item
      * Is this key allowed?
      *
      * @param string $key
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasKey($key)
     {

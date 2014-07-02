@@ -41,7 +41,7 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
     /**
      * Returns true if filter is used in this request.
      *
-     * @return boolean
+     * @return bool
      */
     public function isActive()
     {
@@ -167,7 +167,7 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
      * Join a filed
      *
      * @param \Zend_Db_Select $select
-     * @param integer|string  $index
+     * @param int|string      $index
      * @param array           $dsIds
      * @param string|array    $whereValue
      * @param string|array    $whereExpr
@@ -185,7 +185,7 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
      * Join a filed
      *
      * @param \Zend_Db_Select $select
-     * @param integer|string  $index
+     * @param int|string      $index
      * @param array           $dsIds
      * @param string          $whereValue
      * @param string          $whereExpr
@@ -204,7 +204,7 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
      *
      * @param string          $joinMethod
      * @param \Zend_Db_Select $select
-     * @param integer|string  $index
+     * @param int|string      $index
      * @param array           $dsIds
      * @param string|array    $whereValue
      * @param string          $whereExpr

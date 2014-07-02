@@ -21,7 +21,7 @@ interface AttributeReaderInterface
     /**
      * Check if requirements for reader are given
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable();
 
@@ -30,7 +30,7 @@ interface AttributeReaderInterface
      *
      * @param FileInterface $file
      *
-     * @return boolean
+     * @return bool
      */
     public function supports(FileInterface $file);
 

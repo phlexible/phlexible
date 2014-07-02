@@ -153,7 +153,7 @@ interface FolderInterface
     public function setModifyUserId($modifyUserId);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isRoot();
 }

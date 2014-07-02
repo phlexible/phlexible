@@ -66,7 +66,7 @@ class MetaBag
     /**
      * @param MetaDataInterface $metaData
      *
-     * @return boolean
+     * @return bool
      */
     public function has(MetaDataInterface $metaData)
     {

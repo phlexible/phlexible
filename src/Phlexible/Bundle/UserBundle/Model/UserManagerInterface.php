@@ -32,7 +32,7 @@ interface UserManagerInterface
     /**
      * Find user
      *
-     * @param integer $userId
+     * @param int $userId
      *
      * @return User
      */
@@ -109,14 +109,14 @@ interface UserManagerInterface
     /**
      * @param string $username
      *
-     * @return boolean
+     * @return bool
      */
     public function checkUsername($username);
 
     /**
      * @param string $email
      *
-     * @return boolean
+     * @return bool
      */
     public function checkEmail($email);
 

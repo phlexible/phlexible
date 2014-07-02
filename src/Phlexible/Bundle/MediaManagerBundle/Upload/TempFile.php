@@ -16,11 +16,11 @@ namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 class TempFile extends UploadFile
 {
     /**
-     * @param string  $tempName
-     * @param string  $name
-     * @param string  $type
-     * @param integer $size
-     * @param integer $error
+     * @param string $tempName
+     * @param string $name
+     * @param string $type
+     * @param int    $size
+     * @param int    $error
      */
     public function __construct($tempName, $name, $type, $size, $error)
     {

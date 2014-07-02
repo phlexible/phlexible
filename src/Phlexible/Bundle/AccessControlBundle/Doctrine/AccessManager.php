@@ -128,14 +128,14 @@ class AccessManager implements AccessManagerInterface
     }
 
     /**
-     * @param string  $type
-     * @param string  $contentType
-     * @param string  $contentId
-     * @param string  $securityType
-     * @param string  $securityId
-     * @param string  $permission
-     * @param integer $inherit
-     * @param string  $contentLanguage
+     * @param string $type
+     * @param string $contentType
+     * @param string $contentId
+     * @param string $securityType
+     * @param string $securityId
+     * @param string $permission
+     * @param int    $inherit
+     * @param string $contentLanguage
      *
      * @return $this
      */

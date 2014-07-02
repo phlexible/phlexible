@@ -40,7 +40,7 @@ class Makeweb_Frontendmediamanager_Folder_PaginatorAdapter implements Zend_Pagin
     /**
      * Returns the total count
      *
-     * @return integer Total Count of files
+     * @return int
      */
     public function count()
     {

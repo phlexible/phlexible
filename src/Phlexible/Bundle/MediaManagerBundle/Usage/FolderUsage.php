@@ -34,7 +34,7 @@ class FolderUsage implements UsageInterface
     private $usageId;
 
     /**
-     * @var integer
+     * @var int
      */
     private $status;
 

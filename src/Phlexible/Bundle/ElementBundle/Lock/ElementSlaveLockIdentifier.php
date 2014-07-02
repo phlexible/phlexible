@@ -18,8 +18,8 @@ use Phlexible\Bundle\LockBundle\Lock\LockIdentifierInterface;
 class ElementSlaveLockIdentifier extends LockIdentifierInterface
 {
     /**
-     * @param integer $eid
-     * @param string  $language
+     * @param int    $eid
+     * @param string $language
      */
     public function __construct($eid, $language)
     {

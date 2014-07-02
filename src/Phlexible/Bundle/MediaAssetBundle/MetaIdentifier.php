@@ -21,7 +21,7 @@ class MetaIdentifier implements \Media_MetaSets_Item_Interface
     private $_fileId;
 
     /**
-     * @var integer
+     * @var int
      */
     private $_fileVersion;
 

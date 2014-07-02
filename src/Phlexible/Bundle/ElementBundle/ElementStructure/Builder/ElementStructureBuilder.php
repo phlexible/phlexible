@@ -66,9 +66,9 @@ class ElementStructureBuilder
     }
 
     /**
-     * @param string  $dsId
-     * @param integer $id
-     * @param string  $name
+     * @param string $dsId
+     * @param int    $id
+     * @param string $name
      *
      * @return ElementStructureBuilder
      * @throws \Exception

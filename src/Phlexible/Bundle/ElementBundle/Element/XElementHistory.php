@@ -23,9 +23,9 @@ class XElementHistory
     /**
      * Get range of history items
      *
-     * @param integer $eid
-     * @param integer $offset
-     * @param integer $limit
+     * @param int $eid
+     * @param int $offset
+     * @param int $limit
      *
      * @return array
      */
@@ -83,7 +83,7 @@ class XElementHistory
     /**
      * Get all history items
      *
-     * @param integer $eid
+     * @param int $eid
      *
      * @return string
      */
@@ -138,10 +138,10 @@ class XElementHistory
     /**
      * Check if an element is saved in a given language.
      *
-     * @param integer $eid
-     * @param string  $language
+     * @param int    $eid
+     * @param string $language
      *
-     * @return integer|null First version saved in this language.
+     * @return int|null First version saved in this language.
      */
     public static function getFirstVersionByEidAndLanguage($eid, $language)
     {
@@ -152,7 +152,7 @@ class XElementHistory
             return null;
         }
 
-        return (integer) self::$_cache[$eid][$language][0]['min_version'];
+        return (int) self::$_cache[$eid][$language][0]['min_version'];
     }
 
     protected static $_cache = null;
@@ -160,7 +160,7 @@ class XElementHistory
     /**
      * Get all languages saved for an element.
      *
-     * @param integer $eid
+     * @param int $eid
      *
      * @return array
      */

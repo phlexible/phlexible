@@ -23,7 +23,7 @@ class ElementStructure implements \IteratorAggregate
     private $elementVersion;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -86,13 +86,13 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return $this
      */
     public function setId($id)
     {
-        $this->id = (integer) $id;
+        $this->id = (int) $id;
 
         return $this;
     }
@@ -222,7 +222,7 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function hasValue($name)
     {
@@ -240,7 +240,7 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @param string $dsId
      *
-     * @return boolean
+     * @return bool
      */
     public function hasValueByDsId($dsId)
     {

@@ -26,7 +26,7 @@ class Makeweb_Teasers_Event_BeforeUpdateTeaser extends Brainbits_Event_Notificat
     protected $_notificationName = Makeweb_Teasers_Event::BEFORE_UPDATE_TEASER;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_node = null;
 

@@ -21,7 +21,7 @@ class ContextManager
     protected $_dbPool;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $_useContext;
 
@@ -34,7 +34,7 @@ class ContextManager
      * Constructor
      *
      * @param MWF_Db_Pool $dbPool
-     * @param boolean     $useContext
+     * @param bool        $useContext
      * @param array       $contextCountries
      */
     public function __construct(MWF_Db_Pool $dbPool,
@@ -49,7 +49,7 @@ class ContextManager
     /**
      * Is context usage activated in registry and configured properly in configuration file.
      *
-     * @return boolean
+     * @return bool
      */
     public function useContext()
     {
@@ -92,7 +92,7 @@ class ContextManager
 
         $select = $db->select()
             ->from($db->prefix . 'element_tree_context', 'context')
-            ->where('tid = ?', (integer) $tid);
+            ->where('tid = ?', (int) $tid);
 
         $activeCountries = $db->fetchCol($select);
 
@@ -127,7 +127,7 @@ class ContextManager
 
         $select = $db->select()
             ->from($db->prefix . 'element_tree_teasers_context', 'context')
-            ->where('teaser_id = ?', (integer) $teaserId);
+            ->where('teaser_id = ?', (int) $teaserId);
 
         $activeCountries = $db->fetchCol($select);
 

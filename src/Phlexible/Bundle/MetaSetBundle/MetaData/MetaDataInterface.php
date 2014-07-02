@@ -50,7 +50,7 @@ interface MetaDataInterface
      * @param string $field
      * @param string $language
      *
-     * @return boolean
+     * @return bool
      */
     public function has($field, $language = null);
 

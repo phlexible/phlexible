@@ -18,11 +18,11 @@ use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
  */
 class TeaserManager
 {
-    const TYPE_TEASER    = 'teaser';
-    const TYPE_CATCH     = 'catch';
+    const TYPE_TEASER = 'teaser';
+    const TYPE_CATCH = 'catch';
     const TYPE_INHERITED = 'inherited';
-    const TYPE_STOP      = 'stop';
-    const TYPE_HIDE      = 'hide';
+    const TYPE_STOP = 'stop';
+    const TYPE_HIDE = 'hide';
 
     /**
      * @var EntityManager
@@ -38,7 +38,7 @@ class TeaserManager
     }
 
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return Teaser
      */
@@ -84,10 +84,10 @@ class TeaserManager
     public function findForLayoutAreaAndTreeNode($layoutarea, TreeNodeInterface $treeNode)
     {
         $teasers = $this->entityManager->getRepository('PhlexibleTeaserBundle:Teaser')->findBy(
-            array(
-                'layoutarea_id' => $layoutarea->getId(),
-                'tree_id'       => $treeNode->getId()
-            )
+                                       array(
+                                           'layoutarea_id' => $layoutarea->getId(),
+                                           'tree_id'       => $treeNode->getId()
+                                       )
         );
 
         return $teasers;
@@ -97,31 +97,30 @@ class TeaserManager
      * Return all teasers on given tree path
      * Will flatten the inherited teasers
      *
-     * @param array $treePath
+     * @param array                                    $treePath
      * @param Makeweb_Elementtypes_Elementtype_Version $layoutArea
-     * @param string $language
-     * @param array $availableLanguages
-     * @param boolean $isPreview
+     * @param string                                   $language
+     * @param array                                    $availableLanguages
+     * @param bool                                     $isPreview
+     *
+     * @return array
      */
-    public function getAllByTIDPathFlat($treePath,
-                                        Makeweb_Elementtypes_Elementtype_Version $layoutArea,
-                                        $language = null,
-                                        array $availableLanguages = array(),
-                                        $isPreview = false)
+    public function getAllByTIDPathFlat(
+        $treePath,
+        Makeweb_Elementtypes_Elementtype_Version $layoutArea,
+        $language = null,
+        array $availableLanguages = array(),
+        $isPreview = false
+    )
     {
         $teaserData = $this->getAllByTIDPath($treePath, $layoutArea, $language, $availableLanguages, $isPreview);
 
         $result = array();
-        foreach ($teaserData['children'] as $teaserItem)
-        {
-            if ($teaserItem['type'] !== self::TYPE_INHERITED)
-            {
+        foreach ($teaserData['children'] as $teaserItem) {
+            if ($teaserItem['type'] !== self::TYPE_INHERITED) {
                 $result[] = $teaserItem;
-            }
-            else
-            {
-                foreach ($teaserItem['children'] as $inheritedTeaserItem)
-                {
+            } else {
+                foreach ($teaserItem['children'] as $inheritedTeaserItem) {
                     $result[] = $inheritedTeaserItem;
                 }
             }
@@ -135,26 +134,27 @@ class TeaserManager
     /**
      * Return all teasers on given tree path
      *
-     * @param array $treePath
+     * @param array                                    $treePath
      * @param Makeweb_Elementtypes_Elementtype_Version $layoutArea
-     * @param string $language
-     * @param array $availableLanguages
-     * @param boolean $isPreview
+     * @param string                                   $language
+     * @param array                                    $availableLanguages
+     * @param bool                                     $isPreview
      */
-    public function getAllByTIDPath($treePath,
-                                    Makeweb_Elementtypes_Elementtype_Version $layoutArea,
-                                    $language = null,
-                                    array $availableLanguages = array(),
-                                    $isPreview = false)
+    public function getAllByTIDPath(
+        $treePath,
+        Makeweb_Elementtypes_Elementtype_Version $layoutArea,
+        $language = null,
+        array $availableLanguages = array(),
+        $isPreview = false
+    )
     {
         $container = MWF_Registry::getContainer();
 
-        $teaserManager         = $container->teasersManager;
-        $elementManager        = $container->elementsManager;
+        $teaserManager = $container->teasersManager;
+        $elementManager = $container->elementsManager;
         $elementVersionManager = $container->elementsVersionManager;
 
-        if (!count($availableLanguages))
-        {
+        if (!count($availableLanguages)) {
             $availableLanguages = array($language);
         }
 
@@ -168,7 +168,7 @@ class TeaserManager
             'children'           => array(),
         );
 
-        $inheritUsed  = false;
+        $inheritUsed = false;
         $dummyInherit = array(
             'id'           => -1, //layoutArea->getId() . '_inherit',
             'type'         => self::TYPE_INHERITED,
@@ -178,50 +178,49 @@ class TeaserManager
             'children'     => array(),
         );
 
-        $hideEids          = array();
+        $hideEids = array();
         $inheritedStopEids = array();
-        $localStopEids     = array();
-        $inheritedEids     = array();
+        $localStopEids = array();
+        $inheritedEids = array();
 
         $localTreeId = end($treePath)->getId();
 
-        foreach ($treePath as $currentNode)
-        {
+        foreach ($treePath as $currentNode) {
             $currentTreeId = $currentNode->getId();
 
-            $element               = $elementManager->getByEID($currentNode->getEid());
+            $element = $elementManager->getByEID($currentNode->getEid());
             $elementMasterLanguage = $element->getMasterLanguage();
 
-            $teasers = $teaserManager->getAllByTID($currentTreeId, $layoutArea->getId(), $language, null, $availableLanguages, true);
+            $teasers = $teaserManager->getAllByTID(
+                                     $currentTreeId,
+                                         $layoutArea->getId(),
+                                         $language,
+                                         null,
+                                         $availableLanguages,
+                                         true
+            );
 
             // first loop - only flags
-            foreach ($teasers as $teaserArray)
-            {
+            foreach ($teasers as $teaserArray) {
                 $isInherited = $currentTreeId != $localTreeId;
 
-                switch ($teaserArray['type'])
-                {
+                switch ($teaserArray['type']) {
                     case self::TYPE_HIDE:
                         // only necessary for local teasers
-                        if ($isInherited)
-                        {
+                        if ($isInherited) {
                             continue;
                         }
 
-                        if ((bool)$teaserArray['no_display'] && !$isInherited)
-                        {
+                        if ((bool) $teaserArray['no_display'] && !$isInherited) {
                             $hideEids[] = $teaserArray['teaser_eid'];
                         }
 
                         break;
 
                     case self::TYPE_STOP:
-                        if ($isInherited)
-                        {
+                        if ($isInherited) {
                             $inheritedStopEids[] = $teaserArray['teaser_eid'];
-                        }
-                        else
-                        {
+                        } else {
                             $localStopEids[] = $teaserArray['teaser_eid'];
                         }
 
@@ -230,14 +229,11 @@ class TeaserManager
             }
 
             // second loop - only teasers, catches and inherited
-            foreach ($teasers as $teaserArray)
-            {
-                switch ($teaserArray['type'])
-                {
+            foreach ($teasers as $teaserArray) {
+                switch ($teaserArray['type']) {
                     case self::TYPE_INHERITED:
                         // only necessary for local teasers
-                        if ($isInherited)
-                        {
+                        if ($isInherited) {
                             continue;
                         }
 
@@ -252,8 +248,7 @@ class TeaserManager
 
                     case self::TYPE_CATCH:
                         // only necessary for local teasers
-                        if ($isInherited)
-                        {
+                        if ($isInherited) {
                             continue;
                         }
 
@@ -288,48 +283,38 @@ class TeaserManager
 
                     case self::TYPE_TEASER:
                     default:
-                        if ($isInherited && $teaserArray['stop_inherit'])
-                        {
+                        if ($isInherited && $teaserArray['stop_inherit']) {
                             continue;
                         }
 
-                        if (in_array($teaserArray['teaser_eid'], $inheritedStopEids))
-                        {
+                        if (in_array($teaserArray['teaser_eid'], $inheritedStopEids)) {
                             continue;
                         }
 
-                        if (in_array($teaserArray['teaser_eid'], $localStopEids))
-                        {
+                        if (in_array($teaserArray['teaser_eid'], $localStopEids)) {
                             continue;
                         }
 
-                        if (!empty($inheritedEids[$teaserArray['teaser_eid']]))
-                        {
+                        if (!empty($inheritedEids[$teaserArray['teaser_eid']])) {
                             continue;
                         }
 
                         $teaserNode = new Makeweb_Teasers_Node($teaserArray['id']);
 
-                        if ($isPreview)
-                        {
+                        if ($isPreview) {
                             $teaserLanguage = $language;
                             $teaser = $elementVersionManager->getLatest($teaserArray['teaser_eid']);
-                        }
-                        else
-                        {
+                        } else {
                             $onlineVersion = null;
-                            foreach ($availableLanguages as $availableLanguage)
-                            {
-                                if ($teaserNode->isPublished($availableLanguage))
-                                {
+                            foreach ($availableLanguages as $availableLanguage) {
+                                if ($teaserNode->isPublished($availableLanguage)) {
                                     $teaserLanguage = $availableLanguage;
-                                    $onlineVersion  = $teaserNode->getOnlineVersion($teaserLanguage);
+                                    $onlineVersion = $teaserNode->getOnlineVersion($teaserLanguage);
                                     break;
                                 }
                             }
 
-                            if (null === $onlineVersion)
-                            {
+                            if (null === $onlineVersion) {
                                 continue;
                             }
 
@@ -337,14 +322,16 @@ class TeaserManager
                         }
 
                         $stopInherit = false;
-                        if ($teaserArray['stop_inherit'] || in_array($teaserArray['teaser_eid'], $localStopEids))
-                        {
+                        if ($teaserArray['stop_inherit'] || in_array($teaserArray['teaser_eid'], $localStopEids)) {
                             $stopInherit = true;
                         }
 
                         $noDisplay = false;
-                        if (!$isInherited && ($teaserArray['no_display'] || in_array($teaserArray['teaser_eid'], $hideEids)))
-                        {
+                        if (!$isInherited && ($teaserArray['no_display'] || in_array(
+                                    $teaserArray['teaser_eid'],
+                                    $hideEids
+                                ))
+                        ) {
                             $noDisplay = true;
                         }
 
@@ -355,7 +342,7 @@ class TeaserManager
                             'layoutareaId'   => $layoutArea->getID(),
                             'language'       => $teaserLanguage,
                             'text'           => $teaser->getBackendTitle($language, $elementMasterLanguage),
-                            'icon' 		     => $teaser->getIconUrl($teaserNode->getIconParams($language)),
+                            'icon'           => $teaser->getIconUrl($teaserNode->getIconParams($language)),
                             'sort'           => $teaserArray['sort'],
                             'templateId'     => $teaserArray['template_id'],
                             'node'           => $teaserNode,
@@ -365,15 +352,12 @@ class TeaserManager
                             'noDisplay'      => $noDisplay
                         );
 
-                        if ($isInherited)
-                        {
+                        if ($isInherited) {
                             $dummyInherit['children'][] = $dummyTeaser;
 
                             $inheritedEids[$teaserArray['teaser_eid']] = true;
 
-                        }
-                        else
-                        {
+                        } else {
                             $areaRoot['children'][] = $dummyTeaser;
                         }
 
@@ -382,49 +366,36 @@ class TeaserManager
             }
         }
 
-        if (count($inheritedStopEids) || count($localStopEids))
-        {
-            foreach ($dummyInherit['children'] as $teaserIdx => $teaser)
-            {
-                if (in_array($teaser['eid'], $inheritedStopEids))
-                {
+        if (count($inheritedStopEids) || count($localStopEids)) {
+            foreach ($dummyInherit['children'] as $teaserIdx => $teaser) {
+                if (in_array($teaser['eid'], $inheritedStopEids)) {
                     unset($dummyInherit['children'][$teaserIdx]);
                     continue;
                 }
-                if (in_array($teaser['eid'], $localStopEids))
-                {
+                if (in_array($teaser['eid'], $localStopEids)) {
                     $dummyInherit['children'][$teaserIdx]['stopInherit'] = true;
                 }
             }
         }
 
-        if (false === $inheritUsed && count($dummyInherit['children']))
-        {
+        if (false === $inheritUsed && count($dummyInherit['children'])) {
             $inheritUsed = count($areaRoot['children']);
 
             $dummyInherit['sort'] = 9999;
             array_push($areaRoot['children'], $dummyInherit);
-        }
-        elseif (false !== $inheritUsed && !count($dummyInherit['children']))
-        {
+        } elseif (false !== $inheritUsed && !count($dummyInherit['children'])) {
             unset($areaRoot['children'][$inheritUsed]);
         }
 
-        foreach ($hideEids as $hideEid)
-        {
-            foreach ($areaRoot['children'] as $teaserIdx => $teaser)
-            {
-                if (isset($teaser['eid']) && $teaser['eid'] == $hideEid)
-                {
+        foreach ($hideEids as $hideEid) {
+            foreach ($areaRoot['children'] as $teaserIdx => $teaser) {
+                if (isset($teaser['eid']) && $teaser['eid'] == $hideEid) {
                     $areaRoot['children'][$teaserIdx]['noDisplay'] = true;
                 }
 
-                if (isset($teaser['children']))
-                {
-                    foreach ($teaser['children'] as $inheritedTeaserIdx => $inheritedTeaser)
-                    {
-                        if (isset($inheritedTeaser['eid']) && $inheritedTeaser['eid'] == $hideEid)
-                        {
+                if (isset($teaser['children'])) {
+                    foreach ($teaser['children'] as $inheritedTeaserIdx => $inheritedTeaser) {
+                        if (isset($inheritedTeaser['eid']) && $inheritedTeaser['eid'] == $hideEid) {
                             $areaRoot['children'][$teaserIdx]['children'][$inheritedTeaserIdx]['noDisplay'] = true;
                         }
                     }
@@ -454,71 +425,70 @@ class TeaserManager
      *
      * @return array
      */
-    public function getAllByTID($tid,
-                                $areaId = null,
-                                $language = null,
-                                $includeInherit = false,
-                                array $availableLanguages = array(),
-                                $isPreview = false)
+    public function getAllByTID(
+        $tid,
+        $areaId = null,
+        $language = null,
+        $includeInherit = false,
+        array $availableLanguages = array(),
+        $isPreview = false
+    )
     {
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $select = $db->select()
-             ->from(
-                 array('ett' => $db->prefix . 'element_tree_teasers'),
-                 array(
-                     'tree_id',
-                     'eid',
-                     'layoutarea_id',
-                     'teaser_eid',
-                     'type',
-                     'sort',
-                     'modify_uid',
-                     'modify_time',
-                     'configuration',
-                     'stop_inherit',
-                     'id',
-                     'template_id',
-                     'no_display',
-                 )
-             )
-             ->where('tree_id = ?', (integer) $tid)
-             ->order('sort ASC');
+                     ->from(
+                     array('ett' => $db->prefix . 'element_tree_teasers'),
+                         array(
+                             'tree_id',
+                             'eid',
+                             'layoutarea_id',
+                             'teaser_eid',
+                             'type',
+                             'sort',
+                             'modify_uid',
+                             'modify_time',
+                             'configuration',
+                             'stop_inherit',
+                             'id',
+                             'template_id',
+                             'no_display',
+                         )
+            )
+                     ->where('tree_id = ?', (int) $tid)
+                     ->order('sort ASC');
 
-        if ($isPreview)
-        {
+        if ($isPreview) {
             $select
                 ->joinLeft(
-                    array('e' => $db->prefix . 'element'),
+                array('e' => $db->prefix . 'element'),
                     'e.eid = ett.teaser_eid',
                     array(
                         'latest_version',
                     )
                 )
                 ->joinLeft(
-                    array('eh' => $db->prefix . 'element_history'),
+                array('eh' => $db->prefix . 'element_history'),
                     'eh.eid = ett.teaser_eid AND NOT ISNULL(eh.language)',
                     'language'
                 )
                 ->joinLeft(
-                    array('etto' => $db->prefix . 'element_tree_teasers_online'),
+                array('etto' => $db->prefix . 'element_tree_teasers_online'),
                     'etto.teaser_id = ett.id AND eh.language = etto.language',
                     array(
                         'online_version' => 'version'
                     )
                 )
                 ->group(array('ett.teaser_eid', 'ett.type', 'eh.language', 'ett.configuration'));
-        }
-        else
-        {
+        } else {
             $select
                 ->joinLeft(
-                    array('e' => $db->prefix . 'element'),
+                array('e' => $db->prefix . 'element'),
                     'e.eid = ett.teaser_eid',
                     'latest_version'
                 )
                 ->joinLeft(
-                    array('etto' => $db->prefix . 'element_tree_teasers_online'),
+                array('etto' => $db->prefix . 'element_tree_teasers_online'),
                     'etto.teaser_id = ett.id',
                     array(
                         'online_version' => 'version',
@@ -527,60 +497,50 @@ class TeaserManager
                 );
         }
 
-        if (!is_null($areaId))
-        {
+        if (!is_null($areaId)) {
             $select->where('layoutarea_id = ?', $areaId);
         }
 
-        if ($language === null)
-        {
+        if ($language === null) {
             $language = MWF_Env::getContentLanguage();
         }
 
-        if (!count($availableLanguages))
-        {
+        if (!count($availableLanguages)) {
             $availableLanguages = array($language);
         }
 
         $results = $db->fetchAll($select);
 
         $groupedResults = Brainbits_Util_Array::groupBy(
-            $results,
-            array('sort', 'teaser_eid', 'language')
+                                              $results,
+                                                  array('sort', 'teaser_eid', 'language')
         );
 
         $hasInherit = false;
 
         $teasers = array();
-        foreach ($groupedResults as $sortValue => $teaserEidArray)
-        {
-            foreach ($teaserEidArray as $teaserEid => $languageArray)
-            {
-                if (!count($languageArray))
-                {
+        foreach ($groupedResults as $sortValue => $teaserEidArray) {
+            foreach ($teaserEidArray as $teaserEid => $languageArray) {
+                if (!count($languageArray)) {
                     continue;
                 }
 
                 // Is this a catch or a virtual teaser.
-                if (!key($languageArray))
-                {
+                if (!key($languageArray)) {
                     $teasers = array_merge($teasers, $languageArray['']);
                     continue;
                 }
 
                 $found = false;
-                foreach ($availableLanguages as $language)
-                {
-                    if (array_key_exists($language, $languageArray))
-                    {
+                foreach ($availableLanguages as $language) {
+                    if (array_key_exists($language, $languageArray)) {
                         $teasers = array_merge($teasers, $languageArray[$language]);
                         $found = true;
                         break;
                     }
                 }
 
-                if (!$found && $isPreview)
-                {
+                if (!$found && $isPreview) {
                     $teasers = array_merge($teasers, current($languageArray));
                     continue;
                 }
@@ -637,28 +597,23 @@ class TeaserManager
     {
         $db = MWF_Registry::getContainer()->dbPool->default;
 
-        if (0 && !is_null($inheritSiterootID))
-        {
+        if (0 && !is_null($inheritSiterootID)) {
             $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-            $tree        = $treeManager->getBySiteRootID($inheritSiterootID);
-            $node        = $tree->getNodeByEid($eid);
-            $path        = $node->getEidPath();
-        }
-        else
-        {
+            $tree = $treeManager->getBySiteRootID($inheritSiterootID);
+            $node = $tree->getNodeByEid($eid);
+            $path = $node->getEidPath();
+        } else {
             $path = array($eid);
         }
 
         $teasers = array();
-        foreach ($path as $pathEid)
-        {
+        foreach ($path as $pathEid) {
             $select = $db->select()
                          ->from($db->prefix . 'element_tree_teasers')
                          ->where('eid = ?', $pathEid)
                          ->order('sort ASC');
 
-            if (!is_null($areaId))
-            {
+            if (!is_null($areaId)) {
                 $select->where('layoutarea_id = ?', $areaId);
             }
 
@@ -666,13 +621,11 @@ class TeaserManager
 
             return $teasers;
 
-            foreach ($teasers as $teaserRow)
-            {
+            foreach ($teasers as $teaserRow) {
                 $teaserEid = $teaserRow['teaser_eid'];
-                $type      = $teaserRow['type'];
+                $type = $teaserRow['type'];
 
-                if ($type == self::TYPE_TEASER)
-                {
+                if ($type == self::TYPE_TEASER) {
                     $teaser = self::getByEID($teaserEid);
 
                     $teasers[$teaserEid] = array(
@@ -680,15 +633,15 @@ class TeaserManager
                         'inherit'        => $teaserRow['inherit'],
                         'stop_inherit'   => $teaserRow['stop_inherit'],
                     );
-                }
-                else if ($type == 'inherit')
-                {
-                    $teasers['inherit'] = null;
-                }
-                else if ($type == self::TYPE_CATCH)
-                {
-                    $teaserId = $teaserRow['id'];
-                    $teasers['catch_' . $teaserId] = unserialize($teaserRow['configuration']);
+                } else {
+                    if ($type == 'inherit') {
+                        $teasers['inherit'] = null;
+                    } else {
+                        if ($type == self::TYPE_CATCH) {
+                            $teaserId = $teaserRow['id'];
+                            $teasers['catch_' . $teaserId] = unserialize($teaserRow['configuration']);
+                        }
+                    }
                 }
             }
         }
@@ -699,8 +652,8 @@ class TeaserManager
     /**
      * Return a Teaser by ID
      *
-     * @param string  $eid
-     * @param boolean $version
+     * @param string $eid
+     * @param bool   $version
      *
      * @return Makeweb_Elements_Element_Version
      */
@@ -708,12 +661,9 @@ class TeaserManager
     {
         $manager = Makeweb_Elements_Element_Version_Manager::getInstance();
 
-        if ($version !== null)
-        {
+        if ($version !== null) {
             return $manager->get($eid, $version);
-        }
-        else
-        {
+        } else {
             return $manager->getLatest($eid);
         }
     }
@@ -721,28 +671,35 @@ class TeaserManager
     /**
      * Create new Element
      *
-     * @param string  $treeId           Tree ID
-     * @param string  $eid              EID
-     * @param string  $layoutAreaId     Layout Area ID
-     * @param integer $newElementTypeID Element Type ID
-     * @param boolean $inherit          Inherit flag
-     * @param boolean $noDisplay        No display flag
-     * @param string  $masterLanguage   Master language
+     * @param string $treeId           Tree ID
+     * @param string $eid              EID
+     * @param string $layoutAreaId     Layout Area ID
+     * @param int    $newElementTypeID Element Type ID
+     * @param bool   $inherit          Inherit flag
+     * @param bool   $noDisplay        No display flag
+     * @param string $masterLanguage   Master language
      *
      * @return Makeweb_Teasers_Node
      *
      * @throws Makeweb_Elements_Element_Manager_Exception
      */
-    public function createTeaser($treeId, $eid, $layoutAreaId, $newElementTypeID, $prevId = 0, $inherit = true, $noDisplay = false, $masterLanguage = 'en')
+    public function createTeaser(
+        $treeId,
+        $eid,
+        $layoutAreaId,
+        $newElementTypeID,
+        $prevId = 0,
+        $inherit = true,
+        $noDisplay = false,
+        $masterLanguage = 'en'
+    )
     {
         $db = MWF_Registry::getContainer()->dbPool->default;
         $dispatcher = Brainbits_Event_Dispatcher::getInstance();
 
-        try
-        {
+        try {
             $beforeEvent = new Makeweb_Teasers_Event_BeforeCreateTeaser($treeId, $eid, $layoutAreaId, $newElementTypeID);
-            if (false === $dispatcher->dispatch($beforeEvent))
-            {
+            if (false === $dispatcher->dispatch($beforeEvent)) {
                 return null;
             }
 
@@ -755,11 +712,10 @@ class TeaserManager
             $newEid = $newElement->getEid();
 
             $sort = 0;
-            if ($prevId)
-            {
+            if ($prevId) {
                 $select = $db->select()
-                    ->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('sort + 1'))
-                    ->where('id = ?', $prevId);
+                             ->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('sort + 1'))
+                             ->where('id = ?', $prevId);
 
                 $sort = $db->fetchOne($select);
             }
@@ -768,9 +724,9 @@ class TeaserManager
             $uid = MWF_Env::getUid();
 
             $db->update(
-                $db->prefix.'element_tree_teasers',
-                array('sort' => new Zend_Db_Expr('sort + 1')),
-                array('tree_id = ?' => $treeId, 'sort >= ?' => $sort)
+               $db->prefix . 'element_tree_teasers',
+                   array('sort' => new Zend_Db_Expr('sort + 1')),
+                   array('tree_id = ?' => $treeId, 'sort >= ?' => $sort)
             );
 
             // place new teaser in element_tree_teasers
@@ -787,9 +743,9 @@ class TeaserManager
                 'modify_uid'    => $uid,
             );
 
-            $db->insert($db->prefix.'element_tree_teasers', $insertData);
+            $db->insert($db->prefix . 'element_tree_teasers', $insertData);
 
-            $newTeaserId = $db->lastInsertId($db->prefix.'element_tree_teasers');
+            $newTeaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
 
             $db->commit();
 
@@ -797,9 +753,7 @@ class TeaserManager
 
             $event = new Makeweb_Teasers_Event_CreateTeaser($node);
             $dispatcher->dispatch($event);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $db->rollBack();
 
             throw new Makeweb_Elements_Element_Manager_Exception($e->getMessage());
@@ -811,9 +765,10 @@ class TeaserManager
     /**
      * Create new teaser instance
      *
-     * @param integer $treeId
-     * @param integer $teaserId
-     * @param integer $layoutAreaId
+     * @param int $treeId
+     * @param int $teaserId
+     * @param int $layoutAreaId
+     *
      * @return Makeweb_Teasers_Node
      */
     public function createTeaserInstance($treeId, $teaserId, $layoutAreaId)
@@ -821,11 +776,9 @@ class TeaserManager
         $db = MWF_Registry::getContainer()->dbPool->default;
         $dispatcher = Brainbits_Event_Dispatcher::getInstance();
 
-        try
-        {
+        try {
             $beforeEvent = new Makeweb_Teasers_Event_BeforeCreateTeaserInstance($treeId, $teaserId, $layoutAreaId);
-            if (false === $dispatcher->dispatch($beforeEvent))
-            {
+            if (false === $dispatcher->dispatch($beforeEvent)) {
                 return null;
             }
 
@@ -836,28 +789,26 @@ class TeaserManager
 
             $row = $db->fetchRow($select);
 
-            $row['id']            = null;
-            $row['tree_id']       = $treeId;
+            $row['id'] = null;
+            $row['tree_id'] = $treeId;
             $row['layoutarea_id'] = $layoutAreaId;
-            $row['modify_uid']    = MWF_Env::getUid();
-            $row['modify_time']   = $db->fn->now();
+            $row['modify_uid'] = MWF_Env::getUid();
+            $row['modify_time'] = $db->fn->now();
 
             $db->insert($db->prefix . 'element_tree_teasers', $row);
             $newTeaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
 
             Makeweb_Teasers_History::insert(
-                Makeweb_Teasers_History::ACTION_CREATE_INSTANCE,
-                $teaserId,
-                $row['teaser_eid']
+                                   Makeweb_Teasers_History::ACTION_CREATE_INSTANCE,
+                                       $teaserId,
+                                       $row['teaser_eid']
             );
 
             $node = new Makeweb_Teasers_Node($newTeaserId);
 
             $event = new Makeweb_Teasers_Event_CreateTeaserInstance($node);
             $dispatcher->dispatch($event);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $db->rollBack();
 
             throw new Makeweb_Elements_Element_Manager_Exception($e->getMessage());
@@ -872,34 +823,34 @@ class TeaserManager
      * @param string   $treeId               Tree ID
      * @param string   $eid                  EID
      * @param string   $layoutAreaId         Layout Area ID
-     * @param integer  $forTreeId            For Tree ID
+     * @param int      $forTreeId            For Tree ID
      * @param array    $catchElementTypeId   Element Type ID
-     * @param boolean  $catchInNavigation    Only elememts from navigation
-     * @param integer  $catchMaxDepth        Maximum Search Depth
+     * @param bool     $catchInNavigation    Only elememts from navigation
+     * @param int      $catchMaxDepth        Maximum Search Depth
      * @param string   $catchSortField       Sort Field Uuid
      * @param string   $catchSortOrder       Sort Order
      * @param callback $catchFilter          Name of filter callback function
-     * @param boolean  $catchPaginator       Use Paginator?
-     * @param boolean  $catchOnlyFirstPage   Show only first page -> limit
-     * @param integer  $catchElementsPerPage Number of elements shown on page
+     * @param bool     $catchPaginator       Use Paginator?
+     * @param bool     $catchOnlyFirstPage   Show only first page -> limit
+     * @param int      $catchElementsPerPage Number of elements shown on page
      *
      * @return Makeweb_Teasers
      *
      * @throws Makeweb_Elements_Element_Manager_Exception
      */
-    public function createCatch($treeId,
-                                $eid,
-                                $layoutAreaId)
+    public function createCatch(
+        $treeId,
+        $eid,
+        $layoutAreaId
+    )
     {
         // get writable db connection
         $db = MWF_Registry::getContainer()->dbPool->default;
         $dispatcher = Brainbits_Event_Dispatcher::getInstance();
 
-        try
-        {
+        try {
             $beforeEvent = new Makeweb_Teasers_Event_BeforeCreateCatch($treeId, $eid, $layoutAreaId);
-            if (false === $dispatcher->dispatch($beforeEvent))
-            {
+            if (false === $dispatcher->dispatch($beforeEvent)) {
                 return null;
             }
             #
@@ -912,9 +863,11 @@ class TeaserManager
                 'eid'           => $eid,
                 'layoutarea_id' => $layoutAreaId,
                 'type'          => self::TYPE_CATCH,
-                'configuration' => serialize(array(
-                    'forTreeId' => $treeId,
-                )),
+                'configuration' => serialize(
+                    array(
+                        'forTreeId' => $treeId,
+                    )
+                ),
                 'modify_time'   => $now,
                 'modify_uid'    => $uid,
             );
@@ -925,9 +878,7 @@ class TeaserManager
 
             $event = new Makeweb_Teasers_Event_CreateCatch($treeId, $eid, $layoutAreaId, $teaserId);
             $dispatcher->dispatch($event);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             throw new Makeweb_Elements_Element_Manager_Exception($e->getMessage());
         }
     }
@@ -936,39 +887,41 @@ class TeaserManager
      * Create new Element
      *
      * @param string   $teaserId             Teaser ID
-     * @param integer  $forTreeId            For Tree ID
+     * @param int      $forTreeId            For Tree ID
      * @param array    $catchElementTypeId   Element Type ID
-     * @param boolean  $catchInNavigation    Only elememts from navigation
-     * @param integer  $catchMaxDepth        Maximum Search Depth
+     * @param bool     $catchInNavigation    Only elememts from navigation
+     * @param int      $catchMaxDepth        Maximum Search Depth
      * @param string   $catchSortField       Sort Field Uuid
      * @param string   $catchSortOrder       Sort Order
      * @param callback $catchFilter          Name of filter callback function
-     * @param boolean  $catchPaginator       Use Paginator?
-     * @param integer  $catchMaxElements     Maximum Elements to fetch
-     * @param boolean  $catchRotation        Use Rotation?
-     * @param integer  $catchPoolSize        Size of pool to fetch random objects from
-     * @param integer  $catchElementsPerPage Number of elements shown on page
+     * @param bool     $catchPaginator       Use Paginator?
+     * @param int      $catchMaxElements     Maximum Elements to fetch
+     * @param bool     $catchRotation        Use Rotation?
+     * @param int      $catchPoolSize        Size of pool to fetch random objects from
+     * @param int      $catchElementsPerPage Number of elements shown on page
      * @param string   $catchTemplate        Selected Template
      *
      * @return Makeweb_Elements_Element
      *
      * @throws Makeweb_Elements_Element_Manager_Exception
      */
-    public function saveCatch($teaserId,
-                              $forTreeId,
-                              array $catchElementTypeId,
-                              $catchInNavigation,
-                              $catchMaxDepth,
-                              $catchSortField,
-                              $catchSortOrder,
-                              $catchFilter,
-                              $catchPaginator,
-                              $catchMaxElements,
-                              $catchRotation,
-                              $catchPoolSize,
-                              $catchElementsPerPage,
-                              $catchTemplate,
-                              array $catchMetaSearch)
+    public function saveCatch(
+        $teaserId,
+        $forTreeId,
+        array $catchElementTypeId,
+        $catchInNavigation,
+        $catchMaxDepth,
+        $catchSortField,
+        $catchSortOrder,
+        $catchFilter,
+        $catchPaginator,
+        $catchMaxElements,
+        $catchRotation,
+        $catchPoolSize,
+        $catchElementsPerPage,
+        $catchTemplate,
+        array $catchMetaSearch
+    )
     {
         // get writable db connection
         $db = MWF_Registry::getContainer()->dbPool->default;
@@ -976,17 +929,14 @@ class TeaserManager
 
         // ignore pool size if catchMaxElements == catchPoolSize
         // to avoid unwanted data administration errors
-        if (!$catchRotation || !$catchMaxElements || ($catchPoolSize && $catchMaxElements >= $catchPoolSize))
-        {
+        if (!$catchRotation || !$catchMaxElements || ($catchPoolSize && $catchMaxElements >= $catchPoolSize)) {
             $catchPoolSize = '';
             $catchRotation = false;
         }
 
-        try
-        {
+        try {
             $beforeEvent = new Makeweb_Teasers_Event_BeforeUpdateCatch($teaserId);
-            if (false === $dispatcher->dispatch($beforeEvent))
-            {
+            if (false === $dispatcher->dispatch($beforeEvent)) {
                 return null;
             }
 
@@ -995,22 +945,24 @@ class TeaserManager
 
             // place new teaser in element_tree_teasers
             $updateData = array(
-                'configuration' => serialize(array(
-                    'forTreeId'            => $forTreeId,
-                    'catchElementTypeId'   => $catchElementTypeId,
-                    'catchInNavigation'    => $catchInNavigation,
-                    'catchMaxDepth'        => $catchMaxDepth,
-                    'catchSortField'       => $catchSortField,
-                    'catchSortOrder'       => $catchSortOrder,
-                    'catchFilter'          => $catchFilter,
-                    'catchRotation'        => $catchRotation,
-                    'catchPaginator'       => $catchPaginator,
-                    'catchMaxElements'     => $catchMaxElements,
-                    'catchPoolSize'        => $catchPoolSize,
-                    'catchElementsPerPage' => $catchElementsPerPage,
-                    'catchTemplate'        => $catchTemplate,
-                    'catchMetaSearch'      => $catchMetaSearch,
-                )),
+                'configuration' => serialize(
+                    array(
+                        'forTreeId'            => $forTreeId,
+                        'catchElementTypeId'   => $catchElementTypeId,
+                        'catchInNavigation'    => $catchInNavigation,
+                        'catchMaxDepth'        => $catchMaxDepth,
+                        'catchSortField'       => $catchSortField,
+                        'catchSortOrder'       => $catchSortOrder,
+                        'catchFilter'          => $catchFilter,
+                        'catchRotation'        => $catchRotation,
+                        'catchPaginator'       => $catchPaginator,
+                        'catchMaxElements'     => $catchMaxElements,
+                        'catchPoolSize'        => $catchPoolSize,
+                        'catchElementsPerPage' => $catchElementsPerPage,
+                        'catchTemplate'        => $catchTemplate,
+                        'catchMetaSearch'      => $catchMetaSearch,
+                    )
+                ),
                 'modify_time'   => $now,
                 'modify_uid'    => $uid,
             );
@@ -1021,9 +973,7 @@ class TeaserManager
 
             $event = new Makeweb_Teasers_Event_UpdateCatch($teaserId);
             $dispatcher->dispatch($event);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             throw new Makeweb_Elements_Element_Manager_Exception($e->getMessage());
         }
     }
@@ -1040,8 +990,7 @@ class TeaserManager
         $node = new Makeweb_Teasers_Node($teaserId);
 
         $beforeEvent = new Makeweb_Teasers_Event_BeforeDeleteTeaser($node);
-        if (false === $dispatcher->dispatch($beforeEvent))
-        {
+        if (false === $dispatcher->dispatch($beforeEvent)) {
             return;
         }
 
@@ -1055,16 +1004,16 @@ class TeaserManager
         $eid = $db->fetchOne($select);
 
         $db->delete(
-            $db->prefix . 'element_tree_teasers',
-            array(
-                'id = ?' => $teaserId
-            )
+           $db->prefix . 'element_tree_teasers',
+               array(
+                   'id = ?' => $teaserId
+               )
         );
 
         Makeweb_Teasers_History::insert(
-            Makeweb_Teasers_History::ACTION_DELETE_TEASER,
-            $teaserId,
-            $eid
+                               Makeweb_Teasers_History::ACTION_DELETE_TEASER,
+                                   $teaserId,
+                                   $eid
         );
 
         $event = new Makeweb_Teasers_Event_DeleteTeaser($node);
@@ -1081,18 +1030,17 @@ class TeaserManager
         $dispatcher = Brainbits_Event_Dispatcher::getInstance();
 
         $beforeEvent = new Makeweb_Teasers_Event_BeforeDeleteCatch($catchId);
-        if (false === $dispatcher->dispatch($beforeEvent))
-        {
+        if (false === $dispatcher->dispatch($beforeEvent)) {
             return;
         }
 
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $db->delete(
-            $db->prefix . 'element_tree_teasers',
-            array(
-                'id = ?' => $catchId
-            )
+           $db->prefix . 'element_tree_teasers',
+               array(
+                   'id = ?' => $catchId
+               )
         );
 
         $event = new Makeweb_Teasers_Event_DeleteCatch($catchId);
@@ -1102,9 +1050,9 @@ class TeaserManager
     /**
      * Get Teaser EID by Teaser ID.
      *
-     * @param integer $id
+     * @param int $id
      *
-     * @return integer teaser eid
+     * @return int
      */
     public function getTeaserEidById($id)
     {
@@ -1123,9 +1071,9 @@ class TeaserManager
     /**
      * Get Layout Area Id (Elementtype ID) by Teaser ID.
      *
-     * @param integer $id
+     * @param int $id
      *
-     * @return integer teaser eid
+     * @return int teaser eid
      */
     public function getLayoutAreaIdById($id)
     {
@@ -1133,8 +1081,8 @@ class TeaserManager
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $select = $db->select()
-            ->from($db->prefix . 'element_tree_teasers', 'layoutarea_id')
-            ->where('id = :id');
+                     ->from($db->prefix . 'element_tree_teasers', 'layoutarea_id')
+                     ->where('id = :id');
 
         $result = (int) $db->fetchOne($select, array(':id' => $id));
 
@@ -1144,13 +1092,13 @@ class TeaserManager
     /**
      * Publish a teaser.
      *
-     * @param integer $teaserId
-     * @param integer $version
-     * @param string  $language
-     * @param string  $comment
-     * @param integer $tid
+     * @param int    $teaserId
+     * @param int    $version
+     * @param string $language
+     * @param string $comment
+     * @param int    $tid
      *
-     * @return integer teaser eid
+     * @return int
      */
     public function publish($teaserId, $version, $language, $comment, $tid)
     {
@@ -1160,24 +1108,22 @@ class TeaserManager
         $node = new Makeweb_Teasers_Node($teaserId);
 
         $beforeEvent = new Makeweb_Teasers_Event_BeforePublishTeaser($node, $language, $version);
-        if (!$dispatcher->dispatch($beforeEvent))
-        {
+        if (!$dispatcher->dispatch($beforeEvent)) {
             return null;
         }
 
         $eid = $node->getEid();
 
-        if ($version === null)
-        {
+        if ($version === null) {
             $version = $node->getLatestVersion();
         }
 
         $db->delete(
-            $db->prefix . 'element_tree_teasers_online',
-            array(
-                'teaser_id = ?' => $teaserId,
-                'language = ?' => $language,
-            )
+           $db->prefix . 'element_tree_teasers_online',
+               array(
+                   'teaser_id = ?' => $teaserId,
+                   'language = ?'  => $language,
+               )
         );
 
         $insertData = array(
@@ -1192,12 +1138,12 @@ class TeaserManager
         $db->insert($db->prefix . 'element_tree_teasers_online', $insertData);
 
         Makeweb_Teasers_History::insert(
-            Makeweb_Teasers_History::ACTION_PUBLISH,
-            $teaserId,
-            $eid,
-            $version,
-            $language,
-            $comment
+                               Makeweb_Teasers_History::ACTION_PUBLISH,
+                                   $teaserId,
+                                   $eid,
+                                   $version,
+                                   $language,
+                                   $comment
         );
 
         $node = new Makeweb_Teasers_Node($teaserId);
@@ -1216,26 +1162,25 @@ class TeaserManager
         $node = new Makeweb_Teasers_Node($teaserId);
 
         $beforeEvent = new Makeweb_Teasers_Event_BeforeSetTeaserOffline($node, $language);
-        if (!$dispatcher->dispatch($beforeEvent))
-        {
+        if (!$dispatcher->dispatch($beforeEvent)) {
             return null;
         }
 
         $db->delete(
-            $db->prefix . 'element_tree_teasers_online',
-            array(
-                'teaser_id = ?' => $teaserId,
-                'language = ?' => $language,
-            )
+           $db->prefix . 'element_tree_teasers_online',
+               array(
+                   'teaser_id = ?' => $teaserId,
+                   'language = ?'  => $language,
+               )
         );
 
 
         Makeweb_Teasers_History::insert(
-            Makeweb_Teasers_History::ACTION_PUBLISH,
-            $teaserId,
-            $node->getEid(),
-            null,
-            $language
+                               Makeweb_Teasers_History::ACTION_PUBLISH,
+                                   $teaserId,
+                                   $node->getEid(),
+                                   null,
+                                   $language
         );
 
         $node = new Makeweb_Teasers_Node($teaserId);
@@ -1249,15 +1194,14 @@ class TeaserManager
     /**
      * Check if teaser is published
      *
-     * @param integer $eid
-     * @param string  $language
+     * @param int    $eid
+     * @param string $language
      *
-     * @return boolean
+     * @return bool
      */
     public function isPublished($eid, $language)
     {
-        try
-        {
+        try {
             $db = MWF_Registry::getContainer()->dbPool->default;
 
             $select = $db->select()
@@ -1268,10 +1212,8 @@ class TeaserManager
 
             $result = $db->fetchOne($select);
 
-            return (boolean) $result;
-        }
-        catch (Exception $e)
-        {
+            return (bool) $result;
+        } catch (Exception $e) {
             MWF_Log::exception($e);
         }
 
@@ -1281,15 +1223,14 @@ class TeaserManager
     /**
      * Check if teaser is inherited
      *
-     * @param integer $teaserId
-     * @param integer $tid
+     * @param int $teaserId
+     * @param int $tid
      *
-     * @return boolean
+     * @return bool
      */
     public function isInherited($teaserId, $tid)
     {
-        try
-        {
+        try {
             $db = MWF_Registry::getContainer()->dbPool->default;
 
             $select = $db->select()
@@ -1300,9 +1241,7 @@ class TeaserManager
             $result = $db->fetchOne($select);
 
             return $result != $tid;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             MWF_Log::exception($e);
         }
 

@@ -26,17 +26,17 @@ class Makeweb_Teasers_Event_CreateCatch extends Makeweb_Teasers_Event_BeforeCrea
     protected $_notificationName = Makeweb_Teasers_Event::CREATE_CATCH;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_teaserId = null;
 
     /**
      * Constructor
      *
-     * @param integer $treeId
-     * @param integer $eid
-     * @param integer $layoutAreaId
-     * @param integer $teaserId
+     * @param int $treeId
+     * @param int $eid
+     * @param int $layoutAreaId
+     * @param int $teaserId
      */
     public function __construct($treeId, $eid, $layoutAreaId, $teaserId)
     {
@@ -47,7 +47,7 @@ class Makeweb_Teasers_Event_CreateCatch extends Makeweb_Teasers_Event_BeforeCrea
     /**
      * get teaser id
      *
-     * @return integer
+     * @return int
      */
     public function getTeaserId()
     {

@@ -122,7 +122,7 @@ $log = '';
                 )
             );
 
-            $rows = $db->fetchAll($query, array('eid' => (integer) $eid));
+            $rows = $db->fetchAll($query, array('eid' => (int) $eid));
 
             if (!$rows)
             {
@@ -224,9 +224,9 @@ $log .= $logPrefix . ': Old, Dead'.PHP_EOL;
     /**
      * Get all element usages for a file.
      *
-     * @param string  $fileId
-     * @param integer $version
-     * @param integer $status (optional)
+     * @param string $fileId
+     * @param int    $version
+     * @param int    $status
      *
      * @return array
      */
@@ -242,13 +242,13 @@ $log .= $logPrefix . ': Old, Dead'.PHP_EOL;
         // filter by file version if parameter is specified
         if ($version)
         {
-            $select->where($db->quoteIdentifier('file_version') . ' = ?', (integer) $version);
+            $select->where($db->quoteIdentifier('file_version') . ' = ?', (int) $version);
         }
 
         // filter by status if parameter is specified
         if ($status)
         {
-            $select->where($db->quoteIdentifier('status') . ' & ?', (integer) $status);
+            $select->where($db->quoteIdentifier('status') . ' & ?', (int) $status);
         }
 
         $result = $db->fetchAll($select);
@@ -259,8 +259,8 @@ $log .= $logPrefix . ': Old, Dead'.PHP_EOL;
     /**
      * Get all file usages for an element.
      *
-     * @param integer $eid
-     * @param integer $status (optional)
+     * @param int $eid
+     * @param int $status
      */
     public function getAllByEid($eid, $status = null)
     {
@@ -271,13 +271,13 @@ $log .= $logPrefix . ': Old, Dead'.PHP_EOL;
                 $db->prefix . 'mediamanager_files_usage',
                 array('file_id', 'file_version', 'usage_id', 'usage_type', 'status')
             )
-            ->where($db->quoteIdentifier('usage_id') . ' = ?', (integer) $eid)
+            ->where($db->quoteIdentifier('usage_id') . ' = ?', (int) $eid)
             ->where($db->quoteIdentifier('usage_type') . ' = ?', 'element');
 
         // filter by status if parameter is specified
         if ($status)
         {
-            $select->where($db->quoteIdentifier('status') . ' & ?', (integer) $status);
+            $select->where($db->quoteIdentifier('status') . ' & ?', (int) $status);
         }
 
         $result = $db->fetchAll($select);

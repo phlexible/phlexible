@@ -151,6 +151,6 @@ class CleanupCommand extends ContainerAwareCommand
 
         $id = $db->fetchOne($select);
 
-        return (boolean)$id;
+        return (bool) $id;
     }
 }

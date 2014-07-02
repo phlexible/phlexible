@@ -138,7 +138,7 @@ class Siteroot
     }
 
     /**
-     * @param boolean $default
+     * @param bool $default
      *
      * @return $this
      */
@@ -150,7 +150,7 @@ class Siteroot
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDefault()
     {

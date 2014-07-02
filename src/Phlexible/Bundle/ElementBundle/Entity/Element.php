@@ -49,7 +49,7 @@ class Element
     private $masterLanguage;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(name="latest_version", type="integer")
      */
     private $latestVersion;
@@ -67,7 +67,7 @@ class Element
     private $createUserId;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getEid()
     {
@@ -75,7 +75,7 @@ class Element
     }
 
     /**
-     * @param integer $eid
+     * @param int $eid
      *
      * @return $this
      */
@@ -107,7 +107,7 @@ class Element
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getElementtypeId()
     {
@@ -115,7 +115,7 @@ class Element
     }
 
     /**
-     * @param integer $elementtypeId
+     * @param int $elementtypeId
      *
      * @return $this
      */
@@ -147,7 +147,7 @@ class Element
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getLatestVersion()
     {
@@ -155,7 +155,7 @@ class Element
     }
 
     /**
-     * @param integer $latestVersion
+     * @param int $latestVersion
      *
      * @return $this
      */
@@ -209,10 +209,10 @@ class Element
     /**
      * Create a new Element Version
      *
-     * @param string  $elementTypeVersion (Optional) Element Type Version
-     * @param string  $comment            (Optional) Comment
-     * @param boolean $minor              (Optional) Is this a minor update?
-     * @param boolean $triggerLanguage    (Optional) Language that triggered the new version
+     * @param string $elementTypeVersion (Optional) Element Type Version
+     * @param string $comment            (Optional) Comment
+     * @param bool   $minor              (Optional) Is this a minor update?
+     * @param bool   $triggerLanguage    (Optional) Language that triggered the new version
      *
      * @return ElementVersion
      */

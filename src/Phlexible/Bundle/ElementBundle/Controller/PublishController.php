@@ -99,13 +99,13 @@ class PublishController extends Controller
         $language                = $request->get('language');
         $languages               = $request->get('languages');
         $version                 = $request->get('version', null);
-        $includeElements         = (boolean) $request->get('include_elements', false);
-        $includeElementInstances = (boolean) $request->get('include_element_instances', false);
-        $includeTeasers          = (boolean) $request->get('include_teasers', false);
-        $includeTeaserInstances  = (boolean) $request->get('include_teaser_instances', false);
-        $recursive               = (boolean) $request->get('recursive', false);
-        $onlyOffline             = (boolean) $request->get('only_offline', false);
-        $onlyAsync               = (boolean) $request->get('only_async', false);
+        $includeElements         = (bool) $request->get('include_elements', false);
+        $includeElementInstances = (bool) $request->get('include_element_instances', false);
+        $includeTeasers          = (bool) $request->get('include_teasers', false);
+        $includeTeaserInstances  = (bool) $request->get('include_teaser_instances', false);
+        $recursive               = (bool) $request->get('recursive', false);
+        $onlyOffline             = (bool) $request->get('only_offline', false);
+        $onlyAsync               = (bool) $request->get('only_async', false);
 
         if ($languages) {
             $languages = explode(',', $languages);

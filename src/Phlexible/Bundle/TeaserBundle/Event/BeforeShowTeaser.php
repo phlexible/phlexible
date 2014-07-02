@@ -33,10 +33,10 @@ class Makeweb_Teasers_Event_BeforeShowTeaser extends Brainbits_Event_Notificatio
     /**
      * Constructor
      *
-     * @param integer $tid
-     * @param integer $teaserEid
-     * @param ineger  $teaserId
-     * @param string  $type
+     * @param int    $tid
+     * @param int    $teaserEid
+     * @param int    $teaserId
+     * @param string $type
      */
     public function __construct(Makeweb_Teasers_Node $node)
     {

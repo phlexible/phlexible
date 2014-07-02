@@ -120,7 +120,7 @@ class DataSourceValue
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isActive()
     {
@@ -128,7 +128,7 @@ class DataSourceValue
     }
 
     /**
-     * @param boolean $active
+     * @param bool $active
      *
      * @return $this
      */

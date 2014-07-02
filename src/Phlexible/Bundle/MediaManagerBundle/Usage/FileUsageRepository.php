@@ -61,11 +61,11 @@ class FileUsageRepository
                 $this->db->prefix . 'media_file_usage',
                 array('file_id', 'file_version', 'usage_id', 'usage_type', 'status')
             )
-            ->where($this->db->quoteIdentifier('usage_id') . ' = ?', (integer) $eid);
+            ->where($this->db->quoteIdentifier('usage_id') . ' = ?', (int) $eid);
 
         // filter by status if parameter is specified
         if ($status) {
-            $select->where($this->db->quoteIdentifier('status') . ' & ?', (integer) $status);
+            $select->where($this->db->quoteIdentifier('status') . ' & ?', (int) $status);
         }
 
         $result = $this->db->fetchAll($select);
@@ -95,7 +95,7 @@ class FileUsageRepository
      * Save usage
      *
      * @param FileUsage $usage
-     * @param boolean   $update
+     * @param bool      $update
      */
     public function save(FileUsage $usage, $update = false)
     {

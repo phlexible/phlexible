@@ -52,12 +52,12 @@ interface TemplateInterface
     public function setType($type);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getCache();
 
     /**
-     * @param boolean $cache
+     * @param bool $cache
      *
      * @return $this
      */
@@ -76,12 +76,12 @@ interface TemplateInterface
     public function setStorage($storage);
 
     /**
-     * @return integer
+     * @return int
      */
     public function getRevision();
 
     /**
-     * @param integer $revision
+     * @param int $revision
      *
      * @return $this
      */
@@ -117,17 +117,17 @@ interface TemplateInterface
     public function getParameters();
 
     /**
-     * @param array   $parameters
-     * @param boolean $strict
+     * @param array $parameters
+     * @param bool  $strict
      *
      * @return $this
      */
     public function setParameters(array $parameters, $strict = true);
 
     /**
-     * @param string  $key
-     * @param string  $value
-     * @param boolean $strict
+     * @param string $key
+     * @param string $value
+     * @param bool   $strict
      *
      * @return $this
      */
@@ -142,10 +142,10 @@ interface TemplateInterface
     public function getParameter($key, $defaultValue = null);
 
     /**
-     * @param string  $key
-     * @param boolean $notEmpty
+     * @param string $key
+     * @param bool   $notEmpty
      *
-     * @return boolean
+     * @return bool
      */
     public function hasParameter($key, $notEmpty = false);
 

@@ -17,7 +17,7 @@ class Gallery extends \Dwoo\Plugin
 {
     /**
      * ID of media folder
-     * @var integer
+     * @var int
      */
     protected $_folderId;
 
@@ -29,16 +29,16 @@ class Gallery extends \Dwoo\Plugin
 
     /**
      * Limit of images per page
-     * @var integer
+     * @var int
      */
     protected $_limit;
 
     /**
      * Executes the helper
      *
-     * @param integer $folder ID of media folder
+     * @param int    $folder  ID of media folder
      * @param string $partial Path to partial
-     * @param integer $limit Limit of images per page
+     * @param int    $limit   Limit of images per page
      */
     public function process($folder, $partial, $limit = 49, $templates = array('_mm_small', '_mm_medium'))
     {

@@ -36,12 +36,12 @@ class Makeweb_Elements_Event_BeforePublishNode extends Brainbits_Event_Notificat
     protected $_language = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_version = null;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $_isRecursive = false;
 
@@ -50,15 +50,15 @@ class Makeweb_Elements_Event_BeforePublishNode extends Brainbits_Event_Notificat
      *
      * @param Makeweb_Elements_Tree_Node $node
      * @param string                     $language
-     * @param integer                    $version
-     * @param boolean                    $isRecursive
+     * @param int                        $version
+     * @param bool                       $isRecursive
      */
     public function __construct(Makeweb_Elements_Tree_Node $node, $language, $version, $isRecursive = false)
     {
         $this->_node        = $node;
         $this->_language    = $language;
         $this->_version     = $version;
-        $this->_isRecursive = (boolean)$isRecursive;
+        $this->_isRecursive = (bool) $isRecursive;
     }
 
     /**
@@ -84,7 +84,7 @@ class Makeweb_Elements_Event_BeforePublishNode extends Brainbits_Event_Notificat
     /**
      * Return version
      *
-     * @return integer
+     * @return int
      */
     public function getVersion()
     {
@@ -94,7 +94,7 @@ class Makeweb_Elements_Event_BeforePublishNode extends Brainbits_Event_Notificat
     /**
      * Is this a recusrive publish?
      *
-     * @return boolean
+     * @return bool
      */
     public function isRecursive()
     {

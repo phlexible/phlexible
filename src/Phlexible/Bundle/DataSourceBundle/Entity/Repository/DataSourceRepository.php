@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\DataSourceBundle\DataSource;
 
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 
 /**
  * Data source repository
@@ -21,7 +20,7 @@ class DataSourceRepository extends EntityRepository
     /**
      * Return all data source titles
      *
-     * @param boolean $sorted
+     * @param bool $sorted
      *
      * @return array
      */
@@ -53,8 +52,7 @@ class DataSourceRepository extends EntityRepository
             ->distinct()
             ->select('v.language')
             ->where($qb->expr()->eq('d.id', $qb->expr()->literal($dataSourceId)))
-            ->join('PhlexibleDataSourceBundle:DataSourceValue', 'v')
-        ;
+            ->join('PhlexibleDataSourceBundle:DataSourceValue', 'v');
 
         $languages = $qb->getQuery()->getScalarResult();
 
@@ -136,21 +134,20 @@ class DataSourceRepository extends EntityRepository
     /**
      * Fix active flag in existing keys.
      *
-     * @param string  $dataSourceId
-     * @param array   $existingIds
-     * @param boolean $isActive
+     * @param string $dataSourceId
+     * @param array  $existingIds
+     * @param bool   $isActive
      */
     protected function _fixValues($dataSourceId, array $existingIds, $isActive)
     {
-        if (!count($existingIds))
-        {
+        if (!count($existingIds)) {
             return;
         }
 
         $this->db->update(
                  $this->db->prefix . self::T_DATASOURCE_VALUE,
                      array(
-                         self::C_DATASOURCE_VALUE_ACTIVE => (integer) $isActive,
+                         self::C_DATASOURCE_VALUE_ACTIVE => (int) $isActive,
                      ),
                      array(
                          self::C_DATASOURCE_VALUE_ID . ' in (?)'     => $existingIds,
@@ -162,22 +159,21 @@ class DataSourceRepository extends EntityRepository
     /**
      * Insert new values to an data source.
      *
-     * @param string  $dataSourceId
-     * @param string  $language
-     * @param array   $insertedKeys
-     * @param boolean $isActive
+     * @param string $dataSourceId
+     * @param string $language
+     * @param array  $insertedKeys
+     * @param bool   $isActive
+     *
      * @throws InvalidArgumentException if language not set correctly
      */
     protected function _insertValues($dataSourceId, $language, array $insertedKeys, $isActive)
     {
-        if (2 !== strlen($language))
-        {
+        if (2 !== strlen($language)) {
             $msg = 'Language not set correctly. Found: ' . $language;
             throw new InvalidArgumentException($msg);
         }
 
-        foreach ($insertedKeys as $insertedKey)
-        {
+        foreach ($insertedKeys as $insertedKey) {
             $hashableString = $dataSourceId . $insertedKey . $language;
 
             $this->db->insert(
@@ -187,7 +183,7 @@ class DataSourceRepository extends EntityRepository
                              self::C_DATASOURCE_VALUE_SOURCE_ID => $dataSourceId,
                              self::C_DATASOURCE_VALUE_LANGUAGE  => $language,
                              self::C_DATASOURCE_VALUE_KEY       => $insertedKey,
-                             self::C_DATASOURCE_VALUE_ACTIVE    => (integer) $isActive,
+                             self::C_DATASOURCE_VALUE_ACTIVE    => (int) $isActive,
                              self::C_DATASOURCE_VALUE_HASH      => md5($hashableString),
                          )
             );
@@ -202,8 +198,7 @@ class DataSourceRepository extends EntityRepository
      */
     protected function _deleteValues($dataSourceId, array $deletedIds = null)
     {
-        if (null === $deletedIds)
-        {
+        if (null === $deletedIds) {
             // delete all
             $this->db->delete(
                      $this->db->prefix . self::T_DATASOURCE_VALUE,
@@ -211,9 +206,7 @@ class DataSourceRepository extends EntityRepository
                              self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
                          )
             );
-        }
-        elseif (count($deletedIds))
-        {
+        } elseif (count($deletedIds)) {
             $this->db->delete(
                      $this->db->prefix . self::T_DATASOURCE_VALUE,
                          array(
@@ -228,8 +221,7 @@ class DataSourceRepository extends EntityRepository
     {
         $result = array();
 
-        foreach ($values as $value)
-        {
+        foreach ($values as $value) {
             $result[mb_strtolower($value, 'UTF-8')] = $value;
         }
 
@@ -238,8 +230,7 @@ class DataSourceRepository extends EntityRepository
 
     protected function _lowerValue(array $values)
     {
-        foreach ($values as $key => $value)
-        {
+        foreach ($values as $key => $value) {
             $values[$key] = mb_strtolower($value, 'UTF-8');
         }
 

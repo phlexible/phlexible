@@ -69,7 +69,8 @@ class ElementtypeRepository
     /**
      * Find element type by ID
      *
-     * @param integer $elementtypeId
+     * @param int $elementtypeId
+     *
      * @return Elementtype
      */
     public function find($elementtypeId)

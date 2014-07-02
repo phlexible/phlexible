@@ -64,7 +64,7 @@ class MessageRepository extends EntityRepository
     /**
      * @param Criteria $criteria
      *
-     * @return integer
+     * @return int
      */
     public function countByCriteria(Criteria $criteria)
     {
@@ -91,7 +91,7 @@ class MessageRepository extends EntityRepository
     /**
      * @param Filter $filter
      *
-     * @return integer
+     * @return int
      */
     public function countByFilter(Filter $filter)
     {

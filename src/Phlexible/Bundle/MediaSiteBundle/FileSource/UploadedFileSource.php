@@ -33,7 +33,7 @@ class UploadedFileSource implements PathSourceInterface
     private $mimeType;
 
     /**
-     * @var integer
+     * @var int
      */
     private $size;
 

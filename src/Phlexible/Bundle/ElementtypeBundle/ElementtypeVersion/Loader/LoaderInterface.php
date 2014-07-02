@@ -20,7 +20,7 @@ interface LoaderInterface
 {
     /**
      * @param Elementtype $elementtype
-     * @param integer     $version
+     * @param int         $version
      *
      * @return ElementtypeVersion
      */

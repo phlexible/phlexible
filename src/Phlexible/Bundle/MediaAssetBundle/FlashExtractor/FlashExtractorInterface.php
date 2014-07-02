@@ -18,7 +18,7 @@ interface FlashExtractorInterface
     /**
      * Check if requirements for flash extractor are given
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable();
 
@@ -26,7 +26,8 @@ interface FlashExtractorInterface
      * Check if extractor supports the given asset
      *
      * @param Asset $asset
-     * @return boolean
+     *
+     * @return bool
      */
     public function supports(Asset $asset);
 
@@ -34,7 +35,8 @@ interface FlashExtractorInterface
      * Extract flash from file
      *
      * @param Asset $asset
-     * @return string
+     *
+     * @return bool
      */
     public function extract(Asset $asset);
 }

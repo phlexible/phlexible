@@ -47,7 +47,7 @@ class DocumenttypeLoader
      * @param CompilerInterface $compiler
      * @param string            $fileDir
      * @param string            $cacheDir
-     * @param boolean           $debug
+     * @param bool              $debug
      */
     public function __construct(array $bundles, CompilerInterface $compiler, $fileDir, $cacheDir, $debug)
     {

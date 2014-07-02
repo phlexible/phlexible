@@ -27,9 +27,9 @@ class LockManager extends BaseLockManager
      * Is item locked?
      *
      * @param string|LockIdentifierInterface $identifier
-     * @param boolean                        $isSlave
+     * @param bool                           $isSlave
      *
-     * @return boolean
+     * @return bool
      */
     public function isLockedPart($identifier, $isSlave)
     {
@@ -54,11 +54,11 @@ class LockManager extends BaseLockManager
     /**
      * Is item locked by user?
      *
-     * @param string  $identifier
-     * @param boolean $isSlave
-     * @param string  $userId
+     * @param string $identifier
+     * @param bool   $isSlave
+     * @param string $userId
      *
-     * @return boolean
+     * @return bool
      */
     public function isLockedPartByUser($identifier, $isSlave, $userId)
     {
@@ -82,11 +82,11 @@ class LockManager extends BaseLockManager
     /**
      * Is item locked by another user?
      *
-     * @param string  $identifier
-     * @param boolean $isSlave
-     * @param string  $uid
+     * @param string $identifier
+     * @param bool   $isSlave
+     * @param string $uid
      *
-     * @return boolean
+     * @return bool
      */
     public function isLockedPartByOtherUser($identifier, $isSlave, $uid)
     {
@@ -140,7 +140,7 @@ class LockManager extends BaseLockManager
      * @param Element $element
      * @param string  $language (Optional) if language is null master language is used
      *
-     * @return boolean
+     * @return bool
      */
     public function isElementLocked(Element $element, $language = null)
     {

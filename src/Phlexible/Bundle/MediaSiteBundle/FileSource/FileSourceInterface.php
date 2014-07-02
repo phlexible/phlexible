@@ -26,7 +26,7 @@ interface FileSourceInterface
     public function getMimeType();
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSize();
 }

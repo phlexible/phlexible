@@ -20,7 +20,7 @@ interface AudioExtractorInterface
     /**
      * Check if requirements for audio extractor are given
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable();
 
@@ -29,7 +29,7 @@ interface AudioExtractorInterface
      *
      * @param FileInterface $file
      *
-     * @return boolean
+     * @return bool
      */
     public function supports(FileInterface $file);
 

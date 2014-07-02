@@ -69,7 +69,8 @@ class ElementtypeVersionRepository
 
     /**
      * @param Elementtype $elementtype
-     * @param integer     $version
+     * @param int         $version
+     *
      * @return ElementtypeVersion
      */
     public function find(Elementtype $elementtype, $version = null)

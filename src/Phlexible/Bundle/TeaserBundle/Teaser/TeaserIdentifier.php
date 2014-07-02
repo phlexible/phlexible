@@ -18,9 +18,7 @@ use Phlexible\Component\Identifier\Identifier;
 class TeaserIdentifier extends Identifier
 {
     /**
-     * constructor
-     *
-     * @param integer $id
+     * @param int $id
      */
     public function __construct($id)
     {

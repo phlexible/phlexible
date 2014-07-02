@@ -27,10 +27,10 @@ class Makeweb_Elements_Element_Version_Data_Identifier extends LockIdentifier
      * Constructor
      * Create a new Element Version Data Identifier
      *
-     * @param integer $eid
-     * @param string  $language
-     * @param integer $version
-     * @param string  $mode
+     * @param int    $eid
+     * @param string $language
+     * @param int    $version
+     * @param string $mode
      *
      * @throws Brainbits_Identifier_Exception
      */

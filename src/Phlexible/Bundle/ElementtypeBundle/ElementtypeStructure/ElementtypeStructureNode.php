@@ -19,7 +19,7 @@ class ElementtypeStructureNode
     const FIELD_TYPE_REFERENCE_ROOT = 'referenceroot';
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
@@ -49,7 +49,7 @@ class ElementtypeStructureNode
     private $type;
 
     /**
-     * @var integer
+     * @var int
      */
     private $parentId;
 
@@ -59,12 +59,12 @@ class ElementtypeStructureNode
     private $parentDsId;
 
     /**
-     * @var integer
+     * @var int
      */
     private $referenceId;
 
     /**
-     * @var integer
+     * @var int
      */
     private $referenceVersion;
 
@@ -102,13 +102,13 @@ class ElementtypeStructureNode
     }
 
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return $this
      */
     public function setId($id)
     {
-        $this->id = (integer)$id;
+        $this->id = (int) $id;
 
         return $this;
     }
@@ -148,7 +148,7 @@ class ElementtypeStructureNode
      */
     public function setParentId($parentId)
     {
-        $this->parentId = $parentId ? (integer) $parentId : null;
+        $this->parentId = $parentId ? (int) $parentId : null;
 
         return $this;
     }
@@ -254,7 +254,7 @@ class ElementtypeStructureNode
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getReferenceId()
     {
@@ -262,19 +262,19 @@ class ElementtypeStructureNode
     }
 
     /**
-     * @param integer $referenceId
+     * @param int $referenceId
      *
      * @return $this
      */
     public function setReferenceId($referenceId)
     {
-        $this->referenceId = (integer) $referenceId;
+        $this->referenceId = (int) $referenceId;
 
         return $this;
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getReferenceVersion()
     {
@@ -282,13 +282,13 @@ class ElementtypeStructureNode
     }
 
     /**
-     * @param integer $referenceVersion
+     * @param int $referenceVersion
      *
      * @return $this
      */
     public function setReferenceVersion($referenceVersion)
     {
-        $this->referenceVersion = (integer) $referenceVersion;
+        $this->referenceVersion = (int) $referenceVersion;
 
         return $this;
     }
@@ -475,7 +475,7 @@ class ElementtypeStructureNode
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isRoot()
     {
@@ -489,7 +489,7 @@ class ElementtypeStructureNode
      */
     public function isRepeatable()
     {
-        $max = (integer) $this->getConfigurationValue('repeat_max');
+        $max = (int) $this->getConfigurationValue('repeat_max');
 
         return $max > 1;
     }
@@ -501,8 +501,8 @@ class ElementtypeStructureNode
      */
     public function isOptional()
     {
-        $min = (integer) $this->getConfigurationValue('repeat_min');
-        $max = (integer) $this->getConfigurationValue('repeat_max');
+        $min = (int) $this->getConfigurationValue('repeat_min');
+        $max = (int) $this->getConfigurationValue('repeat_max');
 
         return $min === 0 && $max > 0;
     }

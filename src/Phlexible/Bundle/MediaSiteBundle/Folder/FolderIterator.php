@@ -49,7 +49,7 @@ class FolderIterator implements \Iterator, \RecursiveIterator
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function key()
     {
@@ -67,7 +67,7 @@ class FolderIterator implements \Iterator, \RecursiveIterator
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function valid()
     {

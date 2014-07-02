@@ -26,26 +26,26 @@ class Makeweb_Teasers_Event_BeforeCreateCatch extends Brainbits_Event_Notificati
     protected $_notificationName = Makeweb_Teasers_Event::BEFORE_CREATE_CATCH;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_treeId = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_eid = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_layoutAreaId = null;
 
     /**
      * Constructor
      *
-     * @param integer $treeId
-     * @param integer $eid
-     * @param integer $layoutAreaId
+     * @param int $treeId
+     * @param int $eid
+     * @param int $layoutAreaId
      */
     public function __construct($treeId, $eid, $layoutAreaId)
     {

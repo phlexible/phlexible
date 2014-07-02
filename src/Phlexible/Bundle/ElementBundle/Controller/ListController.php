@@ -102,11 +102,11 @@ class ListController extends Controller
         }
 
         $parent = array(
-            'tid'             => (int)$tid,
-            'teaser_id'       => (int)0,
-            'eid'             => (int)$eid,
+            'tid'             => (int) $tid,
+            'teaser_id'       => (int) 0,
+            'eid'             => (int) $eid,
             'title'           => $elementVersion->getBackendTitle($language, $elementMasterLanguage),
-            'element_type_id' => (int)$elementTypeVersion->getID(),
+            'element_type_id' => (int) $elementTypeVersion->getID(),
             'element_type'    => $elementTypeVersion->getTitle(),
             'icon'            => $elementVersion->getIconUrl($node->getIconParams($language)),
             'author'          => 'author',
@@ -119,8 +119,8 @@ class ListController extends Controller
             'sort'            => 0,
             'sort_mode'       => $node->getSortMode(),
             'sort_dir'        => $node->getSortDir(),
-            'version_latest'  => (int)$node->getLatestVersion(),
-            'version_online'  => (int)$node->getOnlineVersion($language),
+            'version_latest'  => (int) $node->getLatestVersion(),
+            'version_online'  => (int) $node->getOnlineVersion($language),
             'status'          => ' o_O ',
             'rights'          => $userRights,
             'qtip'            =>
@@ -164,11 +164,11 @@ class ListController extends Controller
             $childElementTypeVersion = $childElementVersion->getElementTypeVersionObj();
 
             $data[] = array(
-                'tid'             => (int)$childNode->getId(),
-                'eid'             => (int)$childNode->getEid(),
+                'tid'             => (int) $childNode->getId(),
+                'eid'             => (int) $childNode->getEid(),
                 '_type'           => 'element',
                 'title'           => $childTitle,
-                'element_type_id' => (int)$childElementTypeVersion->getID(),
+                'element_type_id' => (int) $childElementTypeVersion->getID(),
                 'element_type'    => $childElementTypeVersion->getTitle(),
                 'navigation'      => $childNode->inNavigation($childElementVersion->getVersion()),
                 'restricted'      => $childNode->isRestricted($childElementVersion->getVersion()),
@@ -180,9 +180,9 @@ class ListController extends Controller
                 'publish_time'    => $childNode->getPublishDate($language),
                 'custom_date'     => $childElementVersion->getCustomDate($language),
                 'language'        => $language,
-                'sort'            => (int)$childNode->getSort(),
-                'version_latest'  => (int)$childNode->getLatestVersion(),
-                'version_online'  => (int)$childNode->getOnlineVersion($language),
+                'sort'            => (int) $childNode->getSort(),
+                'version_latest'  => (int) $childNode->getLatestVersion(),
+                'version_online'  => (int) $childNode->getOnlineVersion($language),
                 'status'          => '>o>',
                 'rights'          => $userRights,
                 'qtip'            => $childElementTypeVersion->getTitle() . ', Version '  . $childElementTypeVersion->getVersion() . '<br>' .

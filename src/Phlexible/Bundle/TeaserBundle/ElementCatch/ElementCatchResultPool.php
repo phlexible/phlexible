@@ -26,13 +26,13 @@ class ElementCatchResultPool
     private $matchedTreeIds = array();
 
     /**
-     * @var integer
+     * @var int
      */
     private $resultsPerPage;
 
     /**
-     * @param integer $resultsPerPage
-     * @param mixed   $filter
+     * @param int   $resultsPerPage
+     * @param mixed $filter
      */
     public function __construct($resultsPerPage, $filter)
     {
@@ -137,7 +137,7 @@ class ElementCatchResultPool
     /**
      * Get paginator object.
      *
-     * @param integer $page
+     * @param int $page
      *
      * @return \Zend_Paginator
      */

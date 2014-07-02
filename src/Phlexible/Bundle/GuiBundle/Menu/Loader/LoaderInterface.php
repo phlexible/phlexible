@@ -26,7 +26,8 @@ interface LoaderInterface
      * Is the config file supported?
      *
      * @param string $file
-     * @return boolean
+     *
+     * @return bool
      */
     public function supports($file);
 }

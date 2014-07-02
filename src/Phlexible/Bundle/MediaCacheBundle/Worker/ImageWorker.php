@@ -129,7 +129,7 @@ class ImageWorker extends AbstractWorker
      * @param ImageTemplate $template
      * @param FileInterface $file
      * @param string        $inputFilename
-     * @param boolean       $missing
+     * @param bool          $missing
      *
      * @return CacheItem
      */

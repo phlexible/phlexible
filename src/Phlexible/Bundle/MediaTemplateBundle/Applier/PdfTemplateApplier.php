@@ -35,7 +35,7 @@ class PdfTemplateApplier
     /**
      * @param string $filename
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable($filename)
     {

@@ -53,7 +53,7 @@ interface TreeInterface
      *
      * @param int $id
      *
-     * @return boolean
+     * @return bool
      */
     public function has($id);
 
@@ -107,7 +107,7 @@ interface TreeInterface
      *
      * @param TreeNodeInterface|int $node
      *
-     * @return boolean
+     * @return bool
      */
     public function isRoot($node);
 
@@ -117,7 +117,7 @@ interface TreeInterface
      * @param TreeNodeInterface|int $childNode
      * @param TreeNodeInterface|int $parentNode
      *
-     * @return boolean
+     * @return bool
      */
     public function isChildOf($childNode, $parentNode);
 
@@ -127,7 +127,7 @@ interface TreeInterface
      * @param TreeNodeInterface|int $parentNode
      * @param TreeNodeInterface|int $childNode
      *
-     * @return boolean
+     * @return bool
      */
     public function isParentOf($parentNode, $childNode);
 }

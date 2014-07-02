@@ -63,7 +63,7 @@ class ElementStructureIterator implements \RecursiveIterator
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function valid()
     {
@@ -72,7 +72,7 @@ class ElementStructureIterator implements \RecursiveIterator
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasChildren()
     {

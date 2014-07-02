@@ -18,7 +18,7 @@ use Phlexible\Bundle\LockBundle\LockIdentifier;
 class ElementtypeIdentifier extends LockIdentifier
 {
     /**
-     * @param integer $elementTypeId
+     * @param int $elementTypeId
      */
     public function __construct($elementTypeId)
     {

@@ -19,8 +19,8 @@ use Phlexible\Bundle\LockBundle\Lock\LockIdentityInterface;
 class ElementIdentifier extends Identifier implements LockIdentityInterface
 {
     /**
-     * @param integer $eid
-     * @param string  $language
+     * @param int    $eid
+     * @param string $language
      */
     public function __construct($eid, $language = null)
     {

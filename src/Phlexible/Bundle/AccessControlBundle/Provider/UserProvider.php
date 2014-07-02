@@ -48,9 +48,10 @@ class UserProvider implements ProviderInterface
     /**
      * Return users
      *
-     * @param string  $query
-     * @param integer $limit
-     * @param integer $offset
+     * @param string $query
+     * @param int    $limit
+     * @param int    $offset
+     *
      * @return array
      */
     public function getAll($query, $limit, $offset)
@@ -63,16 +64,16 @@ class UserProvider implements ProviderInterface
             $name = $user->getFirstname() . ' ' . $user->getLastname();
 
             $data[] = array(
-                'type'        => 'user',
+                'type' => 'user',
                 'object_type' => 'uid',
-                'object_id'   => $user->getId(),
-                'label'       => $name
+                'object_id' => $user->getId(),
+                'label' => $name
             );
         }
 
         return array(
             'total' => $this->userManager->countAll(),
-            'data'  => $data,
+            'data' => $data,
         );
     }
 }

@@ -31,17 +31,17 @@ class Makeweb_Elements_Event_BeforeCreateNodeInstance extends Brainbits_Event_No
     protected $_tree = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_targetId;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_instanceId;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_prevId;
 
@@ -49,9 +49,9 @@ class Makeweb_Elements_Event_BeforeCreateNodeInstance extends Brainbits_Event_No
      * Constructor
      *
      * @param Makeweb_Elements_Tree $tree
-     * @param integer               $targetId
-     * @param integer               $instanceId
-     * @param integer               $prevId
+     * @param int                   $targetId
+     * @param int                   $instanceId
+     * @param int                   $prevId
      */
     public function __construct(Makeweb_Elements_Tree $tree, $targetId, $instanceId, $prevId)
     {
@@ -74,7 +74,7 @@ class Makeweb_Elements_Event_BeforeCreateNodeInstance extends Brainbits_Event_No
     /**
      * Return target ID
      *
-     * @return integer
+     * @return int
      */
     public function getTargetId()
     {
@@ -84,7 +84,7 @@ class Makeweb_Elements_Event_BeforeCreateNodeInstance extends Brainbits_Event_No
     /**
      * Return instance ID
      *
-     * @return integer
+     * @return int
      */
     public function getInstanceId()
     {
@@ -94,7 +94,7 @@ class Makeweb_Elements_Event_BeforeCreateNodeInstance extends Brainbits_Event_No
     /**
      * Return previous ID
      *
-     * @return integer
+     * @return int
      */
     public function getPrevId()
     {

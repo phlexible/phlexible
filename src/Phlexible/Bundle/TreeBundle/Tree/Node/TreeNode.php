@@ -25,12 +25,12 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
     private $tree;
 
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var integer
+     * @var int
      */
     private $parentId;
 
@@ -50,7 +50,7 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
     private $attributes;
 
     /**
-     * @var integer
+     * @var int
      */
     private $sort;
 
@@ -134,7 +134,7 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
      */
     public function setId($id)
     {
-        $this->id = (integer) $id;
+        $this->id = (int) $id;
 
         return $this;
     }
@@ -152,7 +152,7 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
      */
     public function setParentId($parentId)
     {
-        $this->parentId = empty($parentId) ? null : (integer) $parentId;
+        $this->parentId = empty($parentId) ? null : (int) $parentId;
 
         return $this;
     }
@@ -250,7 +250,7 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
      */
     public function setSort($sort)
     {
-        $this->sort = (integer) $sort;
+        $this->sort = (int) $sort;
 
         return $this;
     }

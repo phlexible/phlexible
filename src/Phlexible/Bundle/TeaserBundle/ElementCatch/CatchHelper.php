@@ -339,8 +339,8 @@ class CatchHelper
             'version'         => $version,
             'language'        => $language,
             'online_version'  => $onlineVersion,
-            'in_navigation'   => (integer) $navigation,
-            'restricted'      => (integer) $restricted,
+            'in_navigation'   => (int) $navigation,
+            'restricted'      => (int) $restricted,
         );
 
         $this->_db->insert($this->_db->prefix . 'catchteaser_helper', $insertData);

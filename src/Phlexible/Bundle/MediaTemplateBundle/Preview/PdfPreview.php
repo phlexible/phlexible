@@ -57,7 +57,7 @@ class PdfPreview implements PreviewerInterface
     {
         $assetPath = dirname(__DIR__) . '/Resources/public/pdf/';
         $previewPdf = 'test.pdf';
-        $filePath      = $assetPath . $previewPdf;
+        $filePath = $assetPath . $previewPdf;
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
@@ -106,12 +106,12 @@ class PdfPreview implements PreviewerInterface
         }
 
         $data = array(
-            'file'     => basename($cacheFilename),
-            'size'     => filesize($cacheFilename),
+            'file' => basename($cacheFilename),
+            'size' => filesize($cacheFilename),
             'template' => $templateKey,
-            'format'   => $extension,
+            'format' => $extension,
             'mimetype' => $this->applier->getMimetype($template),
-            'debug'    => $debug,
+            'debug' => $debug,
         );
 
         return $data;

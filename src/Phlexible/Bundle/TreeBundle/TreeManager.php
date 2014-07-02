@@ -65,7 +65,7 @@ class TreeManager
     /**
      * Get tree by node ID
      *
-     * @param integer $nodeId
+     * @param int $nodeId
      *
      * @return TreeInterface
      * @throws NodeNotFoundException

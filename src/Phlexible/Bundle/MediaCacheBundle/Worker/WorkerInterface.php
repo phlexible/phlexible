@@ -25,7 +25,7 @@ interface WorkerInterface
      * @param TemplateInterface $template
      * @param FileInterface     $file
      *
-     * @return boolean
+     * @return bool
      */
     public function accept(TemplateInterface $template, FileInterface $file);
 

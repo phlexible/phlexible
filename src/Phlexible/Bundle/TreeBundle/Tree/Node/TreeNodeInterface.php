@@ -54,7 +54,7 @@ interface TreeNodeInterface
     public function setParentId($parentId);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isRoot();
 
@@ -110,12 +110,12 @@ interface TreeNodeInterface
     public function setAttribute($key, $value);
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSort();
 
     /**
-     * @param integer $sort
+     * @param int $sort
      *
      * @return $this
      */

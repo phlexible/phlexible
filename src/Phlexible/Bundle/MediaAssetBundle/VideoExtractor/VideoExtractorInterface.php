@@ -20,7 +20,7 @@ interface VideoExtractorInterface
     /**
      * Check if requirements for video extractor are given
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable();
 
@@ -29,7 +29,7 @@ interface VideoExtractorInterface
      *
      * @param FileInterface $file
      *
-     * @return boolean
+     * @return bool
      */
     public function supports(FileInterface $file);
 

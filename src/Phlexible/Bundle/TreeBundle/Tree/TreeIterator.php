@@ -90,7 +90,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
     /**
      * Check if there is a current element after calls to rewind() or next().
      *
-     * @return boolean
+     * @return bool
      */
     public function valid()
     {
@@ -111,7 +111,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
     /**
      * Check if current element has children.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasChildren()
     {

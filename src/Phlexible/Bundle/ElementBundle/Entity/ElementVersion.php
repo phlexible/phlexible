@@ -29,7 +29,7 @@ class ElementVersion
      * 2 - element data (language) / data_id changes
      * 1 - initial version
      *
-     * @var integer
+     * @var int
      */
     const CURRENT_FORMAT = 3;
 
@@ -49,7 +49,7 @@ class ElementVersion
     private $element;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(type="integer")
      */
     private $version;
@@ -123,7 +123,7 @@ class ElementVersion
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getVersion()
     {
@@ -131,7 +131,7 @@ class ElementVersion
     }
 
     /**
-     * @param integer $version
+     * @param int $version
      *
      * @return $this
      */
@@ -143,7 +143,7 @@ class ElementVersion
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getElementtypeVersion()
     {
@@ -151,7 +151,7 @@ class ElementVersion
     }
 
     /**
-     * @param integer $elementtypeVersion
+     * @param int $elementtypeVersion
      *
      * @return $this
      */
@@ -241,8 +241,8 @@ class ElementVersion
     /**
      * Return backend title
      *
-     * @param string  $language
-     * @param boolean $fallbackLanguage
+     * @param string $language
+     * @param bool   $fallbackLanguage
      *
      * @return string
      */
@@ -254,8 +254,8 @@ class ElementVersion
     /**
      * Return page title
      *
-     * @param string  $language
-     * @param boolean $fallbackLanguage
+     * @param string $language
+     * @param bool   $fallbackLanguage
      *
      * @return string
      */
@@ -267,8 +267,8 @@ class ElementVersion
     /**
      * Return navigation title
      *
-     * @param string  $language
-     * @param boolean $fallbackLanguage
+     * @param string $language
+     * @param bool   $fallbackLanguage
      *
      * @return string
      */
@@ -280,8 +280,8 @@ class ElementVersion
     /**
      * Return custom date
      *
-     * @param string  $language
-     * @param boolean $fallbackLanguage
+     * @param string $language
+     * @param bool   $fallbackLanguage
      *
      * @return \DateTime
      */
@@ -407,8 +407,8 @@ class ElementVersion
     /**
      * Create a new Element Version
      *
-     * @param integer $targetEid             Target EID
-     * @param integer $newElementTypeVersion New Element Type Version
+     * @param int $targetEid             Target EID
+     * @param int $newElementTypeVersion New Element Type Version
      *
      * @return Makeweb_Elements_Element_Version
      */

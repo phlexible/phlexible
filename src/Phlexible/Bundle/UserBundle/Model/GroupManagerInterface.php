@@ -30,7 +30,7 @@ interface GroupManagerInterface
     /**
      * Find group
      *
-     * @param integer $groupId
+     * @param int $groupId
      *
      * @return Group
      */
@@ -78,7 +78,7 @@ interface GroupManagerInterface
     /**
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function checkName($name);
 

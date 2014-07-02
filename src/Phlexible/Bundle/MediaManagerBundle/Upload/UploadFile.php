@@ -31,21 +31,21 @@ class UploadFile
     private $type;
 
     /**
-     * @var integer
+     * @var int
      */
     private $size;
 
     /**
-     * @var integer
+     * @var int
      */
     private $error;
 
     /**
-     * @param string  $tempName
-     * @param string  $name
-     * @param string  $type
-     * @param integer $size
-     * @param integer $error
+     * @param string $tempName
+     * @param string $name
+     * @param string $type
+     * @param int    $size
+     * @param int    $error
      */
     public function __construct($tempName, $name, $type, $size, $error)
     {
@@ -81,7 +81,7 @@ class UploadFile
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSize()
     {
@@ -89,7 +89,7 @@ class UploadFile
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getError()
     {
@@ -97,7 +97,7 @@ class UploadFile
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasError()
     {

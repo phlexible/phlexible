@@ -26,14 +26,14 @@ class CreateFileSource implements FileSourceInterface
     private $mimeType;
 
     /**
-     * @var integer
+     * @var int
      */
     private $size;
 
     /**
-     * @param string  $name
-     * @param string  $mimeType
-     * @param integer $size
+     * @param string $name
+     * @param string $mimeType
+     * @param int    $size
      */
     public function __construct($name, $mimeType = 'application/x-empty', $size = 0)
     {
@@ -59,7 +59,7 @@ class CreateFileSource implements FileSourceInterface
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getSize()
     {

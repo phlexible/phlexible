@@ -37,7 +37,7 @@ class AudioTemplateApplier
     /**
      * @param string $filename
      *
-     * @return boolean
+     * @return bool
      */
     public function isAvailable($filename)
     {

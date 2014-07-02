@@ -37,7 +37,7 @@ class ElementtypeVersion implements IdentifiableInterface
     private $elementtype;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(type="integer")
      */
     private $version;
@@ -99,7 +99,7 @@ class ElementtypeVersion implements IdentifiableInterface
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getVersion()
     {
@@ -107,13 +107,13 @@ class ElementtypeVersion implements IdentifiableInterface
     }
 
     /**
-     * @param integer $version
+     * @param int $version
      *
      * @return $this
      */
     public function setVersion($version)
     {
-        $this->version = (integer) $version;
+        $this->version = (int) $version;
 
         return $this;
     }
@@ -145,7 +145,7 @@ class ElementtypeVersion implements IdentifiableInterface
     }
 
     /**
-     * @param integer $defaultContentTab
+     * @param int $defaultContentTab
      *
      * @return $this
      */

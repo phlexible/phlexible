@@ -26,32 +26,32 @@ class Makeweb_Teasers_Event_BeforeInheritInheritedTeaser extends Brainbits_Event
     protected $_notificationName = Makeweb_Teasers_Event::BEFORE_INHERIT_INHERITED_TEASER;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_treeId = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_eid = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_teaserEid = null;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $_layoutarreaId = null;
 
     /**
      * Constructor
      *
-     * @param integer $treeId
-     * @param integer $eid
-     * @param integer $teaserEid
-     * @param ineger  $layoutarreaId
+     * @param int $treeId
+     * @param int $eid
+     * @param int $teaserEid
+     * @param int $layoutarreaId
      */
     public function __construct($treeId, $eid, $teaserEid, $layoutarreaId)
     {
@@ -64,7 +64,7 @@ class Makeweb_Teasers_Event_BeforeInheritInheritedTeaser extends Brainbits_Event
     /**
      * Return tree ID
      *
-     * @return integer
+     * @return int
      */
     public function getTreeId()
     {
@@ -74,7 +74,7 @@ class Makeweb_Teasers_Event_BeforeInheritInheritedTeaser extends Brainbits_Event
     /**
      * Return EID
      *
-     * @return integer
+     * @return int
      */
     public function getEid()
     {
@@ -84,7 +84,7 @@ class Makeweb_Teasers_Event_BeforeInheritInheritedTeaser extends Brainbits_Event
     /**
      * Return teaser EID
      *
-     * @return integer
+     * @return int
      */
     public function getTeaserEid()
     {
@@ -94,7 +94,7 @@ class Makeweb_Teasers_Event_BeforeInheritInheritedTeaser extends Brainbits_Event
     /**
      * Return layoutarea ID
      *
-     * @return integer
+     * @return int
      */
     public function getLayoutareaId()
     {

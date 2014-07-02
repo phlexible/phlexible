@@ -39,7 +39,7 @@ class ElementVersionData
     private $fieldClasses = array();
 
     /**
-     * @param boolean $skipRoot
+     * @param bool $skipRoot
      *
      * @return array
      */
@@ -53,8 +53,8 @@ class ElementVersionData
     }
 
     /**
-     * @param array   $tree
-     * @param boolean $skipRoot
+     * @param array $tree
+     * @param bool  $skipRoot
      *
      * @return $this
      */

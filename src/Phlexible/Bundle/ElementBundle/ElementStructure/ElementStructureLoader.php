@@ -183,8 +183,8 @@ class ElementStructureLoader
     }
 
     /**
-     * @param integer $eid
-     * @param integer $version
+     * @param int $eid
+     * @param int $version
      *
      * @return array
      */
@@ -221,9 +221,9 @@ class ElementStructureLoader
     }
 
     /**
-     * @param integer $eid
-     * @param integer $version
-     * @param string  $language
+     * @param int    $eid
+     * @param int    $version
+     * @param string $language
      *
      * @return array
      */

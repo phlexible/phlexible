@@ -18,7 +18,7 @@ use Phlexible\Bundle\UserBundle\Entity\User;
 class PasswordChecker
 {
     /**
-     * @param integer $minLength
+     * @param int $minLength
      */
     public function __construct($minLength)
     {
@@ -26,14 +26,14 @@ class PasswordChecker
     }
 
     /**
-     * @param $password
-     * @param User $user
-     * @return boolean|string
+     * @param string $password
+     * @param User   $user
+     *
+     * @return bool|string
      */
     public function test($password, User $user)
     {
-        if ($this->minLength && strlen($password) < $this->minLength)
-        {
+        if ($this->minLength && strlen($password) < $this->minLength) {
             return 'Password too short';
         }
 

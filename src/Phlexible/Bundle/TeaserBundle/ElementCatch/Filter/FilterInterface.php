@@ -72,7 +72,7 @@ interface FilterInterface
      * Add filter to a select statement.
      *
      * @param \Zend_Db_Select $select
-     * @param boolean         $all
+     * @param bool            $all
      */
     public function filterSelect(\Zend_Db_Select $select, $all = false);
 
@@ -86,7 +86,7 @@ interface FilterInterface
     /**
      * Returns true if filter is used in this request.
      *
-     * @return boolean
+     * @return bool
      */
     public function isActive();
 }

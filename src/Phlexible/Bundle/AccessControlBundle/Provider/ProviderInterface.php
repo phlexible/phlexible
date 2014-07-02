@@ -20,6 +20,7 @@ interface ProviderInterface
      *
      * @param string $objectType
      * @param string $objectId
+     *
      * @return string
      */
     public function getName($objectType, $objectId);
@@ -27,9 +28,10 @@ interface ProviderInterface
     /**
      * Return users
      *
-     * @param string  $query
-     * @param integer $limit
-     * @param integer $offset
+     * @param string $query
+     * @param int    $limit
+     * @param int    $offset
+     *
      * @return array
      */
     public function getAll($query, $limit, $offset);

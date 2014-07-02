@@ -28,12 +28,12 @@ interface MetaSetInterface
     public function setId($id);
 
     /**
-     * @return integer
+     * @return int
      */
     public function getRevision();
 
     /**
-     * @param integer $revision
+     * @param int $revision
      *
      * @return $this
      */

@@ -44,7 +44,7 @@ class SessionRotationStrategy implements RotationStrategyInterface
             $this->session->$identifier = $position = 0;
         }
 
-        return  (integer) $position;
+        return  (int) $position;
     }
 
     /**

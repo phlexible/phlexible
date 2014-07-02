@@ -126,8 +126,8 @@ class TreeController extends Controller
      * @param ElementtypeStructureNode[] $nodes
      * @param string                     $language
      * @param string                     $mode
-     * @param boolean                    $reference
-     * @param boolean                    $allowDrag
+     * @param bool                       $reference
+     * @param bool                       $allowDrag
      *
      * @return array
      */
