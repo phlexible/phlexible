@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="queue-component" default="help">
+<project name="phlexible" default="help">
 
     <!-- ============================================  -->
     <!-- Target: help                                  -->
@@ -49,9 +49,8 @@
                 reportType="txt"
                 reportName="phploc"
                 reportDirectory="reports">
-            <fileset dir="Phlexible">
-                <include name="**/*.php" />
-                <include name="*.php" />
+            <fileset dir="src/Phlexible">
+                <include name="**/*.php"/>
             </fileset>
         </phploc>
     </target>
@@ -63,10 +62,12 @@
         <phpcodesniffer standard="Symfony2"
                         showSniffs="true"
                         showWarnings="true"
-                        file="Phlexible"
+                        file="src/Phlexible"
                         docGenerator="HTML"
-                        docFile="reports/phpcs.html"
+                        docFile="reports/phpcs-standard.html"
                         allowedFileExtensions="php">
+            <formatter type="html" outfile="reports/phpcs.html"/>
+            <formatter type="full" outfile="reports/phpcs.txt"/>
             <formatter type="checkstyle" outfile="reports/phpcs.xml"/>
         </phpcodesniffer>
     </target>
@@ -77,10 +78,12 @@
     <target name="phpdoc" depends="prepare">
         <echo msg="Making directory ./reports/apidocs" />
         <mkdir dir="./reports/apidocs" />
-        <phpdoc2 title="API Documentation" destdir="reports/apidocs" template="responsive-twig">
-           <fileset dir="./Phlexible">
-              <include name="**/*.php" />
-           </fileset>
+        <phpdoc2 title="phlexible API Documentation"
+                 destdir="reports/apidocs"
+                 template="responsive-twig">
+            <fileset dir="src/Phlexible">
+                <include name="**/*.php"/>
+            </fileset>
         </phpdoc2>
     </target>
 
