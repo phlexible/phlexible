@@ -56,19 +56,15 @@ class UserAssetProvider implements AssetProviderInterface
     {
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/Definitions.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/model/Group.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/model/User.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/model/UserGroup.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/model/UserRole.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/options/Details.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/options/Password.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/options/Preferences.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/options/Theme.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/portlet/Online.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/OptionsWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/UserGrid.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/UserFilterPanel.js')),
@@ -77,7 +73,6 @@ class UserAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/GroupsMainPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/MainPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/SuccessorWindow.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/menuhandle/UsersHandle.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/menuhandle/OptionsHandle.js')),
         ));

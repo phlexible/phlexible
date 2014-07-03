@@ -5,7 +5,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
     closable: false,
     layout: 'fit',
 
-    initComponent: function() {
+    initComponent: function () {
         this.element.on({
             load: {
                 fn: this.onLoadElement,
@@ -15,14 +15,14 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
 
         this.on({
             activate: {
-                fn: function() {
+                fn: function () {
                     this.isActive = true;
                     this.updateIframe();
                 },
                 scope: this
             },
             deactivate: {
-                fn: function() {
+                fn: function () {
                     this.isActive = false;
                 },
                 scope: this
@@ -30,31 +30,31 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
         });
 
         /*this.items = {
-            xtype: 'iframepanel',
-            defaultSrc: 'about:blank',
-            tbar: [{
-                // 0
-                xtype: 'textfield',
-                width: 500,
-                readOnly: true,
-                value: 'about:blank'
-            },{
-                // 1
-                iconCls: 'p-element-reload-icon',
-                handler: function() {
-                    this.getComponent(0).setSrc();
-                },
-                scope: this
-            }],
-            listeners: {
-                render: {
-                    fn: function(c) {
-                        c.iframe.dom.onload = this.onIframeLoad.createDelegate(this);
-                    },
-                    scope: this
-                }
-            }
-        };*/
+         xtype: 'iframepanel',
+         defaultSrc: 'about:blank',
+         tbar: [{
+         // 0
+         xtype: 'textfield',
+         width: 500,
+         readOnly: true,
+         value: 'about:blank'
+         },{
+         // 1
+         iconCls: 'p-element-reload-icon',
+         handler: function() {
+         this.getComponent(0).setSrc();
+         },
+         scope: this
+         }],
+         listeners: {
+         render: {
+         fn: function(c) {
+         c.iframe.dom.onload = this.onIframeLoad.createDelegate(this);
+         },
+         scope: this
+         }
+         }
+         };*/
 
         this.mode = null;
 
@@ -77,115 +77,123 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             vertical: 7
         };
 
-        this.tbar = [{
-            // 0
-            xtype: 'cycle',
-            showText: true,
-            items: langBtns,
-            listeners: {
-                change: {
-                    fn: function(cycle, btn){
-                        this.activeLanguage = btn.langKey;
+        this.tbar = [
+            {
+                // 0
+                xtype: 'cycle',
+                showText: true,
+                items: langBtns,
+                listeners: {
+                    change: {
+                        fn: function (cycle, btn) {
+                            this.activeLanguage = btn.langKey;
 
-                        Ext.Ajax.request({
-                            url: Phlexible.Router.generate('frontend_preview_urls'),
-                            params: {
-                                tid: this.activeTid,
-                                language: this.activeLanguage
-                            },
-                            success: function(response) {
-                                var data = Ext.decode(response.responseText);
+                            Ext.Ajax.request({
+                                url: Phlexible.Router.generate('frontend_preview_urls'),
+                                params: {
+                                    tid: this.activeTid,
+                                    language: this.activeLanguage
+                                },
+                                success: function (response) {
+                                    var data = Ext.decode(response.responseText);
 
-                                if (data.success) {
-                                    this.preview_url = data.data.preview;
-                                    this.online_url = data.data.online;
-                                    this.debug_url = data.data.debug;
+                                    if (data.success) {
+                                        this.preview_url = data.data.preview;
+                                        this.online_url = data.data.online;
+                                        this.debug_url = data.data.debug;
 
-                                    this.updateIframe();
-                                }
-                            },
-                            scope: this
-                        });
-                    },
-                    scope: this
+                                        this.updateIframe();
+                                    }
+                                },
+                                scope: this
+                            });
+                        },
+                        scope: this
+                    }
                 }
+            },
+            '-',
+            {
+                // 2
+                text: this.strings.preview,
+                iconCls: 'p-frontend-preview_preview-icon',
+                pressed: true,
+                enableToggle: true,
+                allowDepress: false,
+                toggleGroup: 'preview',
+                toggleHandler: function (btn, state) {
+                    if (state) {
+                        this.updateSrc('preview');
+                    }
+                },
+                scope: this
+            },
+            {
+                // 3
+                text: this.strings.preview_online,
+                iconCls: 'p-frontend-preview_online-icon',
+                enableToggle: true,
+                allowDepress: false,
+                toggleGroup: 'preview',
+                toggleHandler: function (btn, state) {
+                    if (state) {
+                        this.updateSrc('online');
+                    }
+                },
+                scope: this
+            },
+            {
+                // 4
+                text: this.strings.preview_debug,
+                iconCls: 'p-frontend-preview_debug-icon',
+                enableToggle: true,
+                allowDepress: false,
+                toggleGroup: 'preview',
+                hidden: Phlexible.User.isGranted('debug'),
+                toggleHandler: function (btn, state) {
+                    if (state) {
+                        this.updateSrc('debug');
+                    }
+                },
+                scope: this
+            },
+            '-',
+            {
+                // 6
+                text: this.strings.preview_horizontal,
+                iconCls: 'p-frontend-preview_horizontal-icon',
+                enableToggle: true,
+                allowDepress: false,
+                toggleGroup: 'preview',
+                toggleHandler: function (btn, state) {
+                    if (state) {
+                        this.updateSrc('horizontal');
+                    }
+                },
+                scope: this
+            },
+            {
+                // 7
+                text: this.strings.preview_vertical,
+                iconCls: 'p-frontend-preview_vertical-icon',
+                enableToggle: true,
+                allowDepress: false,
+                toggleGroup: 'preview',
+                toggleHandler: function (btn, state) {
+                    if (state) {
+                        this.updateSrc('vertical');
+                    }
+                },
+                scope: this
             }
-        }, '-', {
-            // 2
-            text: this.strings.preview,
-            iconCls: 'p-frontend-preview_preview-icon',
-            pressed: true,
-            enableToggle: true,
-            allowDepress: false,
-            toggleGroup: 'preview',
-            toggleHandler: function(btn, state) {
-                if (state) {
-                    this.updateSrc('preview');
-                }
-            },
-            scope: this
-        },{
-            // 3
-            text: this.strings.preview_online,
-            iconCls: 'p-frontend-preview_online-icon',
-            enableToggle: true,
-            allowDepress: false,
-            toggleGroup: 'preview',
-            toggleHandler: function(btn, state) {
-                if (state) {
-                    this.updateSrc('online');
-                }
-            },
-            scope: this
-        },{
-            // 4
-            text: this.strings.preview_debug,
-            iconCls: 'p-frontend-preview_debug-icon',
-            enableToggle: true,
-            allowDepress: false,
-            toggleGroup: 'preview',
-            hidden: Phlexible.User.isGranted('debug'),
-            toggleHandler: function(btn, state) {
-                if (state) {
-                    this.updateSrc('debug');
-                }
-            },
-            scope: this
-        },'-',{
-            // 6
-            text: this.strings.preview_horizontal,
-            iconCls: 'p-frontend-preview_horizontal-icon',
-            enableToggle: true,
-            allowDepress: false,
-            toggleGroup: 'preview',
-            toggleHandler: function(btn, state) {
-                if (state) {
-                    this.updateSrc('horizontal');
-                }
-            },
-            scope: this
-        },{
-            // 7
-            text: this.strings.preview_vertical,
-            iconCls: 'p-frontend-preview_vertical-icon',
-            enableToggle: true,
-            allowDepress: false,
-            toggleGroup: 'preview',
-            toggleHandler: function(btn, state) {
-                if (state) {
-                    this.updateSrc('vertical');
-                }
-            },
-            scope: this
-        }];
+        ];
 
         Phlexible.frontend.ElementPreviewPanel.superclass.initComponent.call(this);
     },
 
-    onLoadElement: function(element) {
+    onLoadElement: function (element) {
         if (element.properties.et_type == Phlexible.elementtypes.TYPE_FULL ||
-            element.properties.et_type == Phlexible.elementtypes.TYPE_PART)
-        {
+            element.properties.et_type == Phlexible.elementtypes.TYPE_PART) {
             this.activeTid = this.element.tid;
             this.activeLanguage = this.element.language;
 
@@ -194,7 +202,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             this.online_url = this.element.data.urls.online;
 
             var languageBtn = this.getTopToolbar().items.items[this.btnIndex.language];
-            languageBtn.menu.items.each(function(item) {
+            languageBtn.menu.items.each(function (item) {
                 if (item.langKey === this.activeLanguage) {
                     languageBtn.setActiveItem(item);
                     return false;
@@ -211,7 +219,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    updateIframe: function() {
+    updateIframe: function () {
         if (this.isActive &&
             (this.activeTid != this.element.id || this.activeLanguage != this.element.language)) {
 
@@ -240,7 +248,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    updateSingleSrc: function() {
+    updateSingleSrc: function () {
         var url;
         if (this.mode === 'preview') {
             url = this.preview_url;
@@ -260,7 +268,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
         this.currentSingleUrl = url;
     },
 
-    updateDualSrc: function() {
+    updateDualSrc: function () {
         var c = this.getComponent(0);
         var c1 = c.getComponent(0);
         var c2 = c.getComponent(1);
@@ -271,7 +279,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
         this.currentOnlineUrl = this.online_url;
     },
 
-    updateSrc: function(newMode) {
+    updateSrc: function (newMode) {
         if ((!newMode || newMode === 'preview' || newMode === 'online' || newMode === 'debug') &&
             (this.mode === 'preview' || this.mode === 'online' || this.mode === 'debug')) {
             if (newMode) {
@@ -302,41 +310,47 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                 this.singleIframe = this.add({
                     xtype: 'iframepanel',
                     defaultSrc: this[this.mode + '_url'],
-                    tbar: [{
-                        // 0
-                        iconCls: 'p-frontend-back-icon',
-                        handler: function() {
-                            this.singleIframe.iframe.dom.contentWindow.history.back();
+                    tbar: [
+                        {
+                            // 0
+                            iconCls: 'p-frontend-back-icon',
+                            handler: function () {
+                                this.singleIframe.iframe.dom.contentWindow.history.back();
+                            },
+                            scope: this
                         },
-                        scope: this
-                    },{
-                        // 1
-                        iconCls: 'p-frontend-forward-icon',
-                        handler: function() {
-                            this.singleIframe.iframe.dom.contentWindow.history.forward();
+                        {
+                            // 1
+                            iconCls: 'p-frontend-forward-icon',
+                            handler: function () {
+                                this.singleIframe.iframe.dom.contentWindow.history.forward();
+                            },
+                            scope: this
                         },
-                        scope: this
-                    },{
-                        // 2
-                        iconCls: 'p-frontend-home-icon',
-                        handler: function() {
-                            this.getComponent(0).setSrc(this.currentSingleUrl);
+                        {
+                            // 2
+                            iconCls: 'p-frontend-home-icon',
+                            handler: function () {
+                                this.getComponent(0).setSrc(this.currentSingleUrl);
+                            },
+                            scope: this
                         },
-                        scope: this
-                    },{
-                        // 3
-                        xtype: 'textfield',
-                        width: 500,
-                        readOnly: true,
-                        value: this.preview_url
-                    },{
-                        // 4
-                        iconCls: 'p-frontend-reload-icon',
-                        handler: function() {
-                            this.getComponent(0).setSrc();
+                        {
+                            // 3
+                            xtype: 'textfield',
+                            width: 500,
+                            readOnly: true,
+                            value: this.preview_url
                         },
-                        scope: this
-                    }]
+                        {
+                            // 4
+                            iconCls: 'p-frontend-reload-icon',
+                            handler: function () {
+                                this.getComponent(0).setSrc();
+                            },
+                            scope: this
+                        }
+                    ]
                 });
                 break;
 
@@ -344,18 +358,21 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                 this.add({
                     layout: 'border',
                     border: false,
-                    items: [{
-                        xtype: 'iframepanel',
-                        region: 'west',
-                        width: '50%',
-                        title: this.strings.preview,
-                        defaultSrc: this.preview_url
-                    },{
-                        xtype: 'iframepanel',
-                        region: 'center',
-                        title: this.strings.preview_online,
-                        defaultSrc: this.online_url
-                    }]
+                    items: [
+                        {
+                            xtype: 'iframepanel',
+                            region: 'west',
+                            width: '50%',
+                            title: this.strings.preview,
+                            defaultSrc: this.preview_url
+                        },
+                        {
+                            xtype: 'iframepanel',
+                            region: 'center',
+                            title: this.strings.preview_online,
+                            defaultSrc: this.online_url
+                        }
+                    ]
                 });
                 break;
 
@@ -363,17 +380,20 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                 this.add({
                     layout: 'row-fit',
                     border: false,
-                    items: [{
-                        xtype: 'iframepanel',
-                        height: '50%',
-                        title: this.strings.preview,
-                        defaultSrc: this.preview_url
-                    },{
-                        xtype: 'iframepanel',
-                        height: '50%',
-                        title: this.strings.preview_online,
-                        defaultSrc: this.online_url
-                    }]
+                    items: [
+                        {
+                            xtype: 'iframepanel',
+                            height: '50%',
+                            title: this.strings.preview,
+                            defaultSrc: this.preview_url
+                        },
+                        {
+                            xtype: 'iframepanel',
+                            height: '50%',
+                            title: this.strings.preview_online,
+                            defaultSrc: this.online_url
+                        }
+                    ]
                 });
                 break;
         }
@@ -385,7 +405,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    onIframeLoad: function(e, p) {
+    onIframeLoad: function (e, p) {
         var iframe = e.currentTarget;
         var href = iframe.contentDocument.location.href;
 

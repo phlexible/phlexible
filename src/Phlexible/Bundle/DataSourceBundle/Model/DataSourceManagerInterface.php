@@ -49,6 +49,13 @@ interface DataSourceManagerInterface
      */
     public function getAllDataSourceIds();
 
+    /**
+     * @param string    $sourceId
+     * @param string    $language
+     * @param null|bool $isActive
+     *
+     * @return array
+     */
     public function getAllValuesByDataSourceId($sourceId, $language, $isActive = null);
 
     /**

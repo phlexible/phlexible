@@ -45,7 +45,7 @@
  *
  * <br>
  * Release: 1.2.3 (1/11/2009)
-        Fix: frameConfig attributes not being passed to IFRAME element.
+ Fix: frameConfig attributes not being passed to IFRAME element.
  * Release: 1.2.2( 11/10/2008)
  *      Fix: setSrc ( {url: url,callback: function(){}....}) style calls were broken.
  * Release: 1.2.1( 11/3/2008)
@@ -70,44 +70,44 @@
  *
  */
 
-(function() {
+(function () {
 
     var EV = Ext.lib.Event;
     var MIM;
     /**
-   * @class Ext.ux.ManagedIFrame
-   * @extends Ext.Element
-   * @extends Ext.util.Observable
-   * @version:  1.2.1 - 10/9/2008
-   * @license <a href="http://www.gnu.org/licenses/lgpl.html">LGPL 3.0</a>
-   * @author: Doug Hendricks. Forum ID: <a href="http://extjs.com/forum/member.php?u=8730">hendricd</a>
-   * @donate <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_donations">
-<input type="hidden" name="business" value="doug@theactivegroup.com">
-<input type="hidden" name="item_name" value="ux.ManagedIFrame">
-<input type="hidden" name="item_number" value="MIF/P">
-<input type="hidden" name="no_shipping" value="1">
-<input type="hidden" name="return" value="http://donate.theactivegroup.com/thankyou.html">
-<input type="hidden" name="cn" value="Optional Comments">
-<input type="hidden" name="currency_code" value="USD">
-<input type="hidden" name="tax" value="0">
-<input type="hidden" name="lc" value="US">
-<input type="hidden" name="bn" value="PP-DonationsBF">
-<input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-butcc-donate.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
-</form>
-   *
-   * @cfg {Boolean/Object} autoCreate True to auto generate the IFRAME element, or a {@link Ext.DomHelper} config of the IFRAME to create
-   * @cfg {String} html Any markup to be applied to the IFRAME's document content when rendered.
-   * @cfg {Object} loadMask An {@link Ext.LoadMask} config or true to mask the iframe while using the update or setSrc methods (defaults to false).
-   * @cfg {Object} src  The src attribute to be assigned to the Iframe after initialization (overrides the autoCreate config src attribute)
-   * @constructor
-   * @param {Mixed} el, Config object The iframe element or it's id to harness or a valid config object.
-   */
+     * @class Ext.ux.ManagedIFrame
+     * @extends Ext.Element
+     * @extends Ext.util.Observable
+     * @version:  1.2.1 - 10/9/2008
+     * @license <a href="http://www.gnu.org/licenses/lgpl.html">LGPL 3.0</a>
+     * @author: Doug Hendricks. Forum ID: <a href="http://extjs.com/forum/member.php?u=8730">hendricd</a>
+     * @donate <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+     <input type="hidden" name="cmd" value="_donations">
+     <input type="hidden" name="business" value="doug@theactivegroup.com">
+     <input type="hidden" name="item_name" value="ux.ManagedIFrame">
+     <input type="hidden" name="item_number" value="MIF/P">
+     <input type="hidden" name="no_shipping" value="1">
+     <input type="hidden" name="return" value="http://donate.theactivegroup.com/thankyou.html">
+     <input type="hidden" name="cn" value="Optional Comments">
+     <input type="hidden" name="currency_code" value="USD">
+     <input type="hidden" name="tax" value="0">
+     <input type="hidden" name="lc" value="US">
+     <input type="hidden" name="bn" value="PP-DonationsBF">
+     <input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-butcc-donate.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+     <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+     </form>
+     *
+     * @cfg {Boolean/Object} autoCreate True to auto generate the IFRAME element, or a {@link Ext.DomHelper} config of the IFRAME to create
+     * @cfg {String} html Any markup to be applied to the IFRAME's document content when rendered.
+     * @cfg {Object} loadMask An {@link Ext.LoadMask} config or true to mask the iframe while using the update or setSrc methods (defaults to false).
+     * @cfg {Object} src  The src attribute to be assigned to the Iframe after initialization (overrides the autoCreate config src attribute)
+     * @constructor
+     * @param {Mixed} el, Config object The iframe element or it's id to harness or a valid config object.
+     */
 
     /** @private */
 
-    Ext.ux.ManagedIFrame = function() {
+    Ext.ux.ManagedIFrame = function () {
         var args = Array.prototype.slice.call(arguments, 0),
             el = Ext.get(args[0]),
             config = args[0];
@@ -118,19 +118,21 @@
             config = args[0] || args[1] || {};
 
             el = config.autoCreate ? Ext.get(Ext.DomHelper.append(
-                    config.autoCreate.parent || Ext.getBody(), Ext.apply({
-                        tag : 'iframe',
-                        frameborder : 0,
-                        src : (Ext.isIE && Ext.isSecure)? Ext.SSL_SECURE_URL: 'about:blank'
-                    }, config.autoCreate)))
-                    : null;
+                config.autoCreate.parent || Ext.getBody(), Ext.apply({
+                    tag: 'iframe',
+                    frameborder: 0,
+                    src: (Ext.isIE && Ext.isSecure) ? Ext.SSL_SECURE_URL : 'about:blank'
+                }, config.autoCreate)))
+                : null;
 
-            if(el && this.unsupportedText){
-                Ext.DomHelper.append(el.dom.parentNode, {tag:'noframes',html:this.unsupportedText } );
+            if (el && this.unsupportedText) {
+                Ext.DomHelper.append(el.dom.parentNode, {tag: 'noframes', html: this.unsupportedText });
             }
         }
 
-        if (!el || el.dom.tagName != 'IFRAME') { return el; }
+        if (!el || el.dom.tagName != 'IFRAME') {
+            return el;
+        }
 
         el.dom.name || (el.dom.name = el.dom.id); // make sure there is a valid frame name
         el.dom.ownerEl = el;
@@ -149,7 +151,7 @@
              * @param {Ext.Event} event
              *
              */
-            "focus" : true,
+            "focus": true,
 
             /**
              * Fires when the frame is blurred (loses focus). Note: This event
@@ -162,7 +164,7 @@
              * @param {Ext.ux.ManagedIFrame} this
              * @param {Ext.Event} event
              */
-            "blur" : true,
+            "blur": true,
 
             /**
              * Note: This event is only available when overwriting the iframe
@@ -175,7 +177,7 @@
              * @param {Ext.ux.ManagedIFrame} this
              * @param {Ext.Event} event
              */
-            "unload" : true,
+            "unload": true,
 
             /**
              * Note: This event is only available when overwriting the iframe
@@ -189,7 +191,7 @@
              * @event domready
              * @param {Ext.ux.ManagedIFrame} this
              */
-            "domready" : true,
+            "domready": true,
 
             /**
              * Fires when the iFrame has reached a loaded/complete state.
@@ -197,7 +199,7 @@
              * @event documentloaded
              * @param {Ext.ux.ManagedIFrame} this
              */
-            "documentloaded" : true,
+            "documentloaded": true,
 
             /**
              * Fires when the frame actions raise an error
@@ -206,7 +208,7 @@
              * @param {Ext.ux.ManagedIFrame} this
              * @param {Error|string} exception
              */
-            "exception" : true,
+            "exception": true,
             /**
              * Fires upon receipt of a message generated by window.sendMessage
              * method of the embedded Iframe.window object
@@ -247,53 +249,53 @@
              *            </li>
              *            </ul>
              */
-            "message" : true
-                // "message:tagName" is supported for X-frame messaging
-                /**
-                 * Alternate event handler syntax for message:tag filtering
-                 * Fires upon receipt of a message generated by
-                 * window.sendMessage method which includes a specific tag value
-                 * of the embedded Iframe.window object
-                 *
-                 * @event message:tag
-                 * @param {Ext.ux.ManagedIFrame} this
-                 * @param {Object} message members:
-                 *            <ul>
-                 *            <li><b>type</b> {string}
-                 *            <p class="sub-desc">
-                 *            literal "message"
-                 *            </p>
-                 *            </li>
-                 *            <li><b>data</b> {Mixed}
-                 *            <p class="sub-desc">
-                 *            the message payload]
-                 *            </p>
-                 *            </li>
-                 *            <li><b>domain</b> {String}
-                 *            <p class="sub-desc">
-                 *            the document domain from which the message
-                 *            originated
-                 *            </p>
-                 *            </li>
-                 *            <li><b>uri</b> {string}
-                 *            <p class="sub-desc">
-                 *            the document URI of the message sender
-                 *            </p>
-                 *            </li>
-                 *            <li><b>source</b> (Object)
-                 *            <p class="sub-desc">
-                 *            the window context of the message sender
-                 *            </p>
-                 *            </li>
-                 *            <li><b>tag</b> {string}
-                 *            <p class="sub-desc">
-                 *            optional reference tag sent by the message sender }
-                 *            </p>
-                 *            </li>
-                 *            </ul>
-                 */
+            "message": true
+            // "message:tagName" is supported for X-frame messaging
+            /**
+             * Alternate event handler syntax for message:tag filtering
+             * Fires upon receipt of a message generated by
+             * window.sendMessage method which includes a specific tag value
+             * of the embedded Iframe.window object
+             *
+             * @event message:tag
+             * @param {Ext.ux.ManagedIFrame} this
+             * @param {Object} message members:
+             *            <ul>
+             *            <li><b>type</b> {string}
+             *            <p class="sub-desc">
+             *            literal "message"
+             *            </p>
+             *            </li>
+             *            <li><b>data</b> {Mixed}
+             *            <p class="sub-desc">
+             *            the message payload]
+             *            </p>
+             *            </li>
+             *            <li><b>domain</b> {String}
+             *            <p class="sub-desc">
+             *            the document domain from which the message
+             *            originated
+             *            </p>
+             *            </li>
+             *            <li><b>uri</b> {string}
+             *            <p class="sub-desc">
+             *            the document URI of the message sender
+             *            </p>
+             *            </li>
+             *            <li><b>source</b> (Object)
+             *            <p class="sub-desc">
+             *            the window context of the message sender
+             *            </p>
+             *            </li>
+             *            <li><b>tag</b> {string}
+             *            <p class="sub-desc">
+             *            optional reference tag sent by the message sender }
+             *            </p>
+             *            </li>
+             *            </ul>
+             */
 
-            });
+        });
 
         if (config.listeners) {
             this.listeners = config.listeners;
@@ -301,7 +303,7 @@
         }
 
         Ext.apply(el, this); // apply this class interface ( pseudo Decorator
-                                // )
+        // )
 
         el.addClass('x-managed-iframe');
         if (config.style) {
@@ -309,25 +311,23 @@
         }
 
         Ext.apply(el, {
-            disableMessaging : config.disableMessaging === true,
-            loadMask : !!config.loadMask ? Ext.apply({
-                        msg : 'Loading..',
-                        msgCls : 'x-mask-loading',
-                        maskEl : null,
-                        hideOnReady : false,
-                        disabled : false
-                    }, config.loadMask) : false
-
-            ,
-            _windowContext : null,
-            eventsFollowFrameLinks : typeof config.eventsFollowFrameLinks == 'undefined'
-                    ? true : config.eventsFollowFrameLinks
+            disableMessaging: config.disableMessaging === true,
+            loadMask: !!config.loadMask ? Ext.apply({
+                msg: 'Loading..',
+                msgCls: 'x-mask-loading',
+                maskEl: null,
+                hideOnReady: false,
+                disabled: false
+            }, config.loadMask) : false,
+            _windowContext: null,
+            eventsFollowFrameLinks: typeof config.eventsFollowFrameLinks == 'undefined'
+                ? true : config.eventsFollowFrameLinks
         });
 
 
-        if(el.loadMask ){
-           el.loadMask.maskEl ||
-           ( el.loadMask.maskEl = el.parent('.x-managed-iframe-mask') || el.parent().addClass('x-managed-iframe-mask'));
+        if (el.loadMask) {
+            el.loadMask.maskEl ||
+            ( el.loadMask.maskEl = el.parent('.x-managed-iframe-mask') || el.parent().addClass('x-managed-iframe-mask'));
         }
 
 
@@ -342,9 +342,10 @@
             var content = config.html || config.content || false;
 
             if (content) {
-                el.reset(null,function(frame){
+                el.reset(null, function (frame) {
                     // permit the syntax for supported arguments: content or [content, loadScripts, callback, scope]
-                    frame.update.apply(el, [].concat(content)); });
+                    frame.update.apply(el, [].concat(content));
+                });
             }
         }
 
@@ -358,7 +359,7 @@
          * @property
          * @type String
          */
-        src : null,
+        src: null,
 
         /** (read-only) For "same-origin" frames only.  Provides a reference to
          * the Ext.util.CSS singleton to manipulate the style sheets of the frame's
@@ -367,29 +368,29 @@
          * @property
          * @type Ext.util.CSS
          */
-        CSS : null,
+        CSS: null,
 
         /** Provides a reference to the managing Ext.ux.ManagedIFrame.Manager instance.
          *
          * @property
          * @type Ext.ux.ManagedIFrame.Manager
          */
-        manager : null,
+        manager: null,
 
-         /**
-          * Enables/disables internal cross-frame messaging interface
-          * @cfg {Boolean} disableMessaging False to enable cross-frame messaging API
-          * Default = true
-          *
-          */
-        disableMessaging :  true,
+        /**
+         * Enables/disables internal cross-frame messaging interface
+         * @cfg {Boolean} disableMessaging False to enable cross-frame messaging API
+         * Default = true
+         *
+         */
+        disableMessaging: true,
 
         /**
          * @cfg {String} resetUrl Frame document reset string for use with the {@link #Ext.ux.ManagedIFrame-reset} method.
          * Defaults:<p> For IE on SSL domains - the current value of Ext.SSL_SECURE_URL<p> "about:blank" for all others.
          */
-        resetUrl : (function(){
-            if(Ext.isIE && Ext.isSecure){
+        resetUrl: (function () {
+            if (Ext.isIE && Ext.isSecure) {
                 return Ext.SSL_SECURE_URL;
             } else {
                 return 'about:blank';
@@ -400,7 +401,7 @@
          * @cfg {String} unsupportedText Text to display when the IFRAMES.FRAMESETS are disabled by the browser.
          *
          */
-        unsupportedText : 'Inline frames are NOT enabled\/supported by your browser.',
+        unsupportedText: 'Inline frames are NOT enabled\/supported by your browser.',
 
         /**
          * Sets the embedded Iframe src property. Note: invoke the function with
@@ -418,7 +419,7 @@
          * @param {Object} scope (Optional) scope by which the callback function is
          *            invoked.
          */
-        setSrc : function(url, discardUrl, callback, scope) {
+        setSrc: function (url, discardUrl, callback, scope) {
 
             if (url && typeof url == 'object') {
                 callback = url.callback || false;
@@ -435,7 +436,7 @@
 
             this.showMask();
 
-            (function() {
+            (function () {
                 var s = this._targetURI = typeof src == 'function' ? src() || '' : src;
                 try {
                     this._frameAction = true; // signal listening now
@@ -447,7 +448,7 @@
                     this.fireEvent('exception', this, ex);
                 }
 
-             }).defer(10, this);
+            }).defer(10, this);
 
             if (discardUrl !== true) {
                 this.src = src;
@@ -474,7 +475,7 @@
          *
          */
 
-        setLocation : function(url, discardUrl, callback, scope) {
+        setLocation: function (url, discardUrl, callback, scope) {
 
             if (url && typeof url == 'object') {
                 callback = url.callback || false;
@@ -491,9 +492,9 @@
 
             this.showMask();
 
-            (function() {
+            (function () {
                 var s = this._targetURI = typeof src == 'function' ? src()
-                        || '' : src;
+                    || '' : src;
                 try {
                     this._frameAction = true; // signal listening now
                     this._callBack = typeof callback == 'function' ? callback.createDelegate(scope) : null;
@@ -527,24 +528,25 @@
          *            scope (Optional) scope by which the callback function is
          *            invoked.
          */
-        reset : function(src, callback, scope) {
+        reset: function (src, callback, scope) {
 
             this._unHook();
 
             var loadMaskOff = false;
-            if(this.loadMask){
+            if (this.loadMask) {
                 loadMaskOff = this.loadMask.disabled;
                 this.loadMask.disabled = false;
             }
 
 
-            this._callBack = function(frame) {
-                if(frame.loadMask){
+            this._callBack = function (frame) {
+                if (frame.loadMask) {
                     frame.loadMask.disabled = loadMaskOff;
-                };
+                }
+                ;
                 frame._frameAction = false;
                 frame.frameInit = true;
-                this._isReset= false;
+                this._isReset = false;
 
                 if (callback) {
                     callback.call(scope || window, frame);
@@ -553,23 +555,25 @@
             this.hideMask(true);
             this._frameAction = false; // no chatter on reset
             this.frameInit = true
-            this._isReset= true;
+            this._isReset = true;
             var s = src;
-            if (typeof src == 'function') { s = src();}
+            if (typeof src == 'function') {
+                s = src();
+            }
 
-            s = this._targetURI = Ext.isEmpty(s, true)? this.resetUrl: s;
+            s = this._targetURI = Ext.isEmpty(s, true) ? this.resetUrl : s;
             this.getWindow().location.href = s;
 
             return this;
 
         },
 
-       /**
-        * Regular Expression filter pattern for script tag removal.
-        * @cfg {regexp} scriptRE script removal RegeXp
-        * Default: "/(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)/gi"
-        */
-        scriptRE : /(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)/gi,
+        /**
+         * Regular Expression filter pattern for script tag removal.
+         * @cfg {regexp} scriptRE script removal RegeXp
+         * Default: "/(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)/gi"
+         */
+        scriptRE: /(?:<script.*?>)((\n|\r|.)*?)(?:<\/script>)/gi,
 
         /**
          * Write(replacing) string content into the IFrames document structure
@@ -580,7 +584,7 @@
          * frame document has been written and fully loaded. @param {Object}
          * scope (Optional) scope by which the callback function is invoked.
          */
-        update : function(content, loadScripts, callback, scope) {
+        update: function (content, loadScripts, callback, scope) {
 
             loadScripts = loadScripts || this.getUpdateManager().loadScripts || false;
 
@@ -598,7 +602,7 @@
                 this.frameInit = true; // control initial event chatter
                 this.showMask();
 
-                (function() {
+                (function () {
                     this._callBack = typeof callback == 'function' ? callback.createDelegate(scope) : null;
                     doc.open();
                     this._frameAction = true;
@@ -606,7 +610,7 @@
                     doc.close();
 
                     this.checkDOM();
-                 }).defer(10, this);
+                }).defer(10, this);
 
             } else {
                 this.hideMask(true);
@@ -624,20 +628,20 @@
          * @cfg {Boolean} disableMessaging False to enable cross-frame messaging
          *      API (default is True)
          */
-        disableMessaging : true,
+        disableMessaging: true,
 
         /**
          * @private, frame messaging interface (for same-domain-policy frames
          *           only)
          */
-        _XFrameMessaging : function() {
+        _XFrameMessaging: function () {
             // each tag gets a hash queue ($ = no tag ).
-            var tagStack = { '$' : [] };
-            var isEmpty = function(v, allowBlank) {
+            var tagStack = { '$': [] };
+            var isEmpty = function (v, allowBlank) {
                 return v === null || v === undefined
-                        || (!allowBlank ? v === '' : false);
+                    || (!allowBlank ? v === '' : false);
             };
-            window.sendMessage = function(message, tag, origin) {
+            window.sendMessage = function (message, tag, origin) {
                 var MIF;
                 if (MIF = arguments.callee.manager) {
                     if (message._fromHost) {
@@ -648,7 +652,7 @@
 
                         for (var i = 0, l = mstack.length; i < l; i++) {
                             if (fn = mstack[i]) {
-                                result = fn.apply(fn.__scope, arguments) === false? false: result;
+                                result = fn.apply(fn.__scope, arguments) === false ? false : result;
                                 if (fn.__single) {
                                     mstack[i] = null;
                                 }
@@ -662,19 +666,19 @@
                     } else {
 
                         message = {
-                            type : isEmpty(tag) ? 'message' : 'message:'
-                                    + tag.toLowerCase().replace(/^\s+|\s+$/g,''),
-                            data : message,
-                            domain : origin || document.domain,
-                            uri : document.documentURI,
-                            source : window,
-                            tag : isEmpty(tag) ? null : tag.toLowerCase()
+                            type: isEmpty(tag) ? 'message' : 'message:'
+                                + tag.toLowerCase().replace(/^\s+|\s+$/g, ''),
+                            data: message,
+                            domain: origin || document.domain,
+                            uri: document.documentURI,
+                            source: window,
+                            tag: isEmpty(tag) ? null : tag.toLowerCase()
                         };
 
                         try {
                             return MIF.disableMessaging !== true
-                                    ? MIF.fireEvent.call(MIF, message.type,MIF, message)
-                                    : null;
+                                ? MIF.fireEvent.call(MIF, message.type, MIF, message)
+                                : null;
                         } catch (ex) {
                         } // trap for message:tag handlers not yet defined
 
@@ -683,22 +687,22 @@
 
                 }
             };
-            window.onhostmessage = function(fn, scope, single, tag) {
+            window.onhostmessage = function (fn, scope, single, tag) {
 
                 if (typeof fn == 'function') {
                     if (!isEmpty(fn.__index)) {
                         throw "onhostmessage: duplicate handler definition"
-                                + (tag ? " for tag:" + tag : '');
+                            + (tag ? " for tag:" + tag : '');
                     }
 
                     var k = isEmpty(tag) ? "$" : tag.toLowerCase();
                     tagStack[k] || (tagStack[k] = []);
                     Ext.apply(fn, {
-                                __tag : k,
-                                __single : single || false,
-                                __scope : scope || window,
-                                __index : tagStack[k].length
-                            });
+                        __tag: k,
+                        __single: single || false,
+                        __scope: scope || window,
+                        __index: tagStack[k].length
+                    });
                     tagStack[k].push(fn);
 
                 } else {
@@ -706,7 +710,7 @@
                 }
 
             };
-            window.unhostmessage = function(fn) {
+            window.unhostmessage = function (fn) {
                 if (typeof fn == 'function' && typeof fn.__index != 'undefined') {
                     var k = fn.__tag || "$";
                     tagStack[k][fn.__index] = null;
@@ -719,9 +723,12 @@
          * Method to retrieve frame's history object.
          * @return {object} or null if permission was denied
          */
-        getHistory  : function(){
-            var h=null;
-            try{ h=this.getWindow().history; }catch(eh){}
+        getHistory: function () {
+            var h = null;
+            try {
+                h = this.getWindow().history;
+            } catch (eh) {
+            }
             return h;
 
         },
@@ -737,7 +744,7 @@
          *         was found)
          */
 
-        get : function(el) {
+        get: function (el) {
             return MIM.El.get(this, el);
         },
 
@@ -756,7 +763,7 @@
          *         element was found)
          */
 
-        fly : function(el, named) {
+        fly: function (el, named) {
             named = named || '_global';
             el = this.getDom(el);
             if (!el) {
@@ -776,13 +783,13 @@
          * @return HTMLElement
          */
 
-        getDom : function(el) {
+        getDom: function (el) {
             var d;
             if (!el || !(d = this.getDocument())) {
                 return null;
             }
             return el.dom ? el.dom : (typeof el == 'string' ? d
-                    .getElementById(el) : el);
+                .getElementById(el) : el);
 
         },
         /**
@@ -796,9 +803,9 @@
          * @return {Ext.CompositeElement/Ext.CompositeElementLite} The composite element
          */
 
-        select : function(selector, unique) {
+        select: function (selector, unique) {
             var d;
-            return (d = this.getDocument()) ? Ext.Element.select(selector,unique, d) : null;
+            return (d = this.getDocument()) ? Ext.Element.select(selector, unique, d) : null;
         },
 
         /**
@@ -809,9 +816,9 @@
          * @return {Array} An array of the matched nodes
          */
 
-        query : function(selector) {
+        query: function (selector) {
             var d;
-            return (d = this.getDocument()) ? Ext.DomQuery.select(selector, d): null;
+            return (d = this.getDocument()) ? Ext.DomQuery.select(selector, d) : null;
         },
 
         /**
@@ -821,7 +828,7 @@
          * @return {Ext.Element} The document
          */
 
-        getDoc : function() {
+        getDoc: function () {
             return this.get(this.getDocument());
         },
 
@@ -832,13 +839,13 @@
          *
          */
 
-        removeNode : function(node) {
+        removeNode: function (node) {
             MIM.removeNode(this, this.getDom(node));
         },
 
         /** @private : clear all event listeners and Element cache */
 
-        _unHook : function() {
+        _unHook: function () {
 
             var elcache, h = MIM.getFrameHash(this) || {};
 
@@ -865,23 +872,23 @@
         },
         // Private execScript sandbox and messaging interface
 
-        _renderHook : function() {
+        _renderHook: function () {
 
             this._windowContext = null;
             this.CSS = this.CSS ? this.CSS.destroy() : null;
             this._hooked = false;
             try {
                 if (this.writeScript('(function(){(window.hostMIF = parent.Ext.get("'
-                                + this.dom.id
-                                + '"))._windowContext='
-                                + (Ext.isIE
-                                        ? 'window'
-                                        : '{eval:function(s){return eval(s);}}')
-                                + ';})();')) {
+                    + this.dom.id
+                    + '"))._windowContext='
+                    + (Ext.isIE
+                    ? 'window'
+                    : '{eval:function(s){return eval(s);}}')
+                    + ';})();')) {
                     this._frameProxy || (this._frameProxy = MIM.eventProxy.createDelegate(this));
                     var w;
 
-                    if(w = this.getWindow()){
+                    if (w = this.getWindow()) {
                         EV.doAdd(w, 'focus', this._frameProxy);
                         EV.doAdd(w, 'blur', this._frameProxy);
                         EV.doAdd(w, 'unload', this._frameProxy);
@@ -889,9 +896,9 @@
 
                     if (this.disableMessaging !== true) {
                         this.loadFunction({
-                                    name : 'XMessage',
-                                    fn : this._XFrameMessaging
-                                }, false, true);
+                            name: 'XMessage',
+                            fn: this._XFrameMessaging
+                        }, false, true);
                         var sm;
                         if (sm = w.sendMessage) {
                             sm.manager = this;
@@ -915,32 +922,32 @@
          * {String} origin Optional domain designation of the sender (defaults
          * to document.domain).
          */
-        sendMessage : function(message, tag, origin) {
+        sendMessage: function (message, tag, origin) {
             var win;
             if (this.disableMessaging !== true && (win = this.getWindow())) {
                 // support frame-to-frame messaging relay
                 tag || (tag = message.tag || '');
                 tag = tag.toLowerCase();
                 message = Ext.applyIf(message.data ? message : {
-                            data : message
-                        }, {
-                            type : Ext.isEmpty(tag) ? 'message' : 'message:'
-                                    + tag,
-                            domain : origin || document.domain,
-                            uri : document.documentURI,
-                            source : window,
-                            tag : tag || null,
-                            _fromHost : this
-                        });
+                    data: message
+                }, {
+                    type: Ext.isEmpty(tag) ? 'message' : 'message:'
+                        + tag,
+                    domain: origin || document.domain,
+                    uri: document.documentURI,
+                    source: window,
+                    tag: tag || null,
+                    _fromHost: this
+                });
                 return win.sendMessage ? win.sendMessage.call(null, message,
-                        tag, origin) : null;
+                    tag, origin) : null;
             }
             return null;
 
         },
 
         /** @private */
-        _windowContext : null,
+        _windowContext: null,
 
         /**
          * If sufficient privilege exists, returns the frame's current document
@@ -949,12 +956,12 @@
          * @return {HTMLElement} The frame document or false if access to
          *         document object was denied.
          */
-        getDocument : function() {
+        getDocument: function () {
             var win = this.getWindow(), doc = null;
             try {
                 doc = (Ext.isIE && win ? win.document : null)
-                        || this.dom.contentDocument
-                        || window.frames[this.id].document || null;
+                    || this.dom.contentDocument
+                    || window.frames[this.id].document || null;
             } catch (gdEx) {
                 return false; // signifies probable access restriction
             }
@@ -968,7 +975,7 @@
          * @return {HTMLElement} The frame document body or Null if access to
          *         document object was denied.
          */
-        getBody : function() {
+        getBody: function () {
             var d;
             return (d = this.getDocument()) ? d.body : null;
         },
@@ -977,21 +984,21 @@
          * Attempt to retrieve the frames current URI via frame's document object
          * @return {string} The frame document's current URI or the last know URI if permission was denied.
          */
-        getDocumentURI : function() {
+        getDocumentURI: function () {
             var URI, d;
             try {
-                URI = this.src && (d = this.getDocument()) ? d.location.href: null;
+                URI = this.src && (d = this.getDocument()) ? d.location.href : null;
             } catch (ex) { // will fail on NON-same-origin domains
             }
             return URI || (typeof this.src == 'function' ? this.src() : this.src);
             // fallback to last known
         },
 
-       /**
-        * Attempt to retrieve the frames current URI via frame's Window object
-        * @return {string} The frame document's current URI or the last know URI if permission was denied.
-        */
-        getWindowURI : function() {
+        /**
+         * Attempt to retrieve the frames current URI via frame's Window object
+         * @return {string} The frame document's current URI or the last know URI if permission was denied.
+         */
+        getWindowURI: function () {
             var URI, w;
             try {
                 URI = (w = this.getWindow()) ? w.location.href : null;
@@ -1006,7 +1013,7 @@
          *
          * @return {Window} The frame Window object.
          */
-        getWindow : function() {
+        getWindow: function () {
             var dom = this.dom, win = null;
             try {
                 win = dom.contentWindow || window.frames[dom.name] || null;
@@ -1018,10 +1025,10 @@
         /**
          * Print the contents of the Iframes (if we own the document)
          */
-        print : function() {
+        print: function () {
             var win;
             try {
-                if( win = this.getWindow()){
+                if (win = this.getWindow()) {
                     if (Ext.isIE) {
                         win.focus();
                     }
@@ -1032,14 +1039,14 @@
             }
         },
         /** @private */
-        destroy : function() {
+        destroy: function () {
             this.removeAllListeners();
             if (this.loadMask) {
                 this.hideMask(true);
                 Ext.apply(this.loadMask, {
-                            masker : null,
-                            maskEl : null
-                        });
+                    masker: null,
+                    maskEl: null
+                });
             }
 
             if (this.dom) {
@@ -1055,7 +1062,6 @@
             }
 
 
-
         },
         /**
          * Returns the general DOM modification capability of the frame. @return
@@ -1063,7 +1069,7 @@
          * Event Listeners set.
          */
 
-        domWritable : function() {
+        domWritable: function () {
             return !!this._windowContext;
         },
         /**
@@ -1077,7 +1083,7 @@
          * been hooked, otherwise an exception is raised.
          */
 
-        execScript : function(block, useDOM) {
+        execScript: function (block, useDOM) {
             try {
                 if (this.domWritable()) {
                     if (useDOM) {
@@ -1107,11 +1113,11 @@
          * exception is raised.
          */
 
-        writeScript : function(block, attributes) {
+        writeScript: function (block, attributes) {
             attributes = Ext.apply({}, attributes || {}, {
-                        type : "text/javascript",
-                        text : block
-                    });
+                type: "text/javascript",
+                text: block
+            });
 
             try {
                 var head, script, doc = this.getDocument();
@@ -1125,7 +1131,7 @@
                     if (head && (script = doc.createElement("script"))) {
                         for (var attrib in attributes) {
                             if (attributes.hasOwnProperty(attrib)
-                                    && attrib in script) {
+                                && attrib in script) {
                                 script[attrib] = attributes[attrib];
                             }
                         }
@@ -1153,7 +1159,7 @@
          * trim});</code></pre>
          */
 
-        loadFunction : function(fn, useDOM, invokeIt) {
+        loadFunction: function (fn, useDOM, invokeIt) {
 
             var name = fn.name || fn;
             var fn = fn.fn || window[fn];
@@ -1172,22 +1178,22 @@
          * ready/loaded state.
          */
 
-        showMask : function(msg, msgCls, forced) {
+        showMask: function (msg, msgCls, forced) {
             var lmask = this.loadMask;
 
             if (lmask && !lmask.disabled) {
                 lmask.masker
-                        || (lmask.masker = Ext.get(lmask.maskEl
-                                || this.dom.parentNode || this.wrap({
-                                            tag : 'div',
-                                            style : {
-                                                position : 'static'
-                                            }
-                                        })));
-                (function   () {
+                || (lmask.masker = Ext.get(lmask.maskEl
+                    || this.dom.parentNode || this.wrap({
+                    tag: 'div',
+                    style: {
+                        position: 'static'
+                    }
+                })));
+                (function () {
                     //this.masker.repaint();
                     this._vis = !!this.masker.mask(msg || this.msg, msgCls
-                                    || this.msgCls);
+                        || this.msgCls);
                 }).defer(lmask.delay || 10, lmask)
 
             }
@@ -1197,7 +1203,7 @@
          * hide the mask regardless of document ready/loaded state.
          */
 
-        hideMask : function(forced) {
+        hideMask: function (forced) {
             var tlm = this.loadMask;
 
             if (tlm && !tlm.disabled && tlm.masker) {
@@ -1217,24 +1223,26 @@
          * applicable.
          */
 
-        loadHandler : function(e, target) {
+        loadHandler: function (e, target) {
 
             if (!this.frameInit || (!this._frameAction && !this.eventsFollowFrameLinks)) {
                 return;
             }
             target || (target = {});
-            var rstatus = (e && typeof e.type !== 'undefined' ? e.type: this.dom.readyState);
+            var rstatus = (e && typeof e.type !== 'undefined' ? e.type : this.dom.readyState);
 
             switch (rstatus) {
 
                 case 'domready' : // MIF
-                    if (this._domReady) { return; }
+                    if (this._domReady) {
+                        return;
+                    }
                     this._domReady = true;
 
                     if (this._frameAction
-                            && this.getDocumentURI() != 'about:blank'
-                            && (this._hooked = this._renderHook())) {
-                                // Only raise if sandBox injection succeeded (same origin)
+                        && this.getDocumentURI() != 'about:blank'
+                        && (this._hooked = this._renderHook())) {
+                        // Only raise if sandBox injection succeeded (same origin)
                         this._domFired = true;
                         this.fireEvent("domready", this);
                     }
@@ -1248,9 +1256,9 @@
 
                     if (!this._domReady) { // one last try for slow DOMS.
                         this.loadHandler({
-                                    type : 'domready',
-                                    id : this.id
-                                }, this.dom);
+                            type: 'domready',
+                            id: this.id
+                        }, this.dom);
                     }
                     this.hideMask(true);
                     if (this._frameAction || this.eventsFollowFrameLinks) {
@@ -1258,7 +1266,7 @@
                         // cancellable anyhow.
                         this.fireEvent.defer(1, this, ["documentloaded", this]);
                         // setSrc and update method (async) callbacks are called
-                                            // ASAP.
+                        // ASAP.
                         if (this._callBack) {
                             this._callBack.defer(1, null, [this]);
                         }
@@ -1266,7 +1274,7 @@
                     this._frameAction = this._frameInit = false;
 
                     if (this.eventsFollowFrameLinks) { // reset for link
-                                                        // tracking
+                        // tracking
                         this._domFired = this._domReady = false;
                     }
 
@@ -1283,16 +1291,18 @@
          * state, and raise the 'domready' event when applicable.
          */
 
-        checkDOM : function(win) {
-            if (Ext.isOpera || Ext.isGecko || !this._frameAction) { return; }
+        checkDOM: function (win) {
+            if (Ext.isOpera || Ext.isGecko || !this._frameAction) {
+                return;
+            }
             // initialise the counter
             var n = 0, manager = this, domReady = false,
                 b, l, d, max = 300, polling = false,
-                startLocation = (this.getDocument() || {location : {}}).location.href;
+                startLocation = (this.getDocument() || {location: {}}).location.href;
 
-            (function() { // DOM polling for IE and others
+            (function () { // DOM polling for IE and others
 
-                d = manager.getDocument() || {location : {}};
+                d = manager.getDocument() || {location: {}};
 
                 // wait for location.href transition
                 polling = (d.location.href !== startLocation || d.location.href === manager._targetURI);
@@ -1310,7 +1320,7 @@
                     return;
                 }
 
-                manager.loadHandler({ type : domReady ? 'domready' : 'domfail'});
+                manager.loadHandler({ type: domReady ? 'domready' : 'domfail'});
 
             })();
         }
@@ -1320,20 +1330,22 @@
      * Stylesheet Frame interface object
      */
     var styleCamelRe = /(-[a-z])/gi;
-    var styleCamelFn = function(m, a) {
+    var styleCamelFn = function (m, a) {
         return a.charAt(1).toUpperCase();
     };
     /** @private */
-    var CSSInterface = function(hostDocument) {
+    var CSSInterface = function (hostDocument) {
         var doc;
         if (hostDocument) {
 
             doc = hostDocument;
 
             return {
-                rules : null,
+                rules: null,
 
-                destroy  :  function(){  return doc = null; },
+                destroy: function () {
+                    return doc = null;
+                },
                 /**
                  * Creates a stylesheet from a text blob of rules. These rules
                  * will be wrapped in a STYLE tag and appended to the HEAD of
@@ -1346,7 +1358,7 @@
                  *            removal
                  * @return {StyleSheet}
                  */
-                createStyleSheet : function(cssText, id) {
+                createStyleSheet: function (cssText, id) {
                     var ss;
 
                     if (!doc)
@@ -1369,9 +1381,9 @@
                         }
                         head.appendChild(rules);
                         ss = rules.styleSheet
-                                ? rules.styleSheet
-                                : (rules.sheet || doc.styleSheets[doc.styleSheets.length
-                                        - 1]);
+                            ? rules.styleSheet
+                            : (rules.sheet || doc.styleSheets[doc.styleSheets.length
+                            - 1]);
                     }
                     this.cacheStyleSheet(ss);
                     return ss;
@@ -1383,7 +1395,7 @@
                  * @param {String}
                  *            id The id of the tag
                  */
-                removeStyleSheet : function(id) {
+                removeStyleSheet: function (id) {
 
                     if (!doc)
                         return;
@@ -1402,7 +1414,7 @@
                  * @param {String}
                  *            url The href of the new stylesheet to include
                  */
-                swapStyleSheet : function(id, url) {
+                swapStyleSheet: function (id, url) {
                     this.removeStyleSheet(id);
 
                     if (!doc)
@@ -1422,12 +1434,12 @@
                  * @return {Object} An object (hash) of rules indexed by
                  *         selector
                  */
-                refreshCache : function() {
+                refreshCache: function () {
                     return this.getRules(true);
                 },
 
                 // private
-                cacheStyleSheet : function(ss) {
+                cacheStyleSheet: function (ss) {
                     if (this.rules) {
                         this.rules = {};
                     }
@@ -1448,7 +1460,7 @@
                  * @return {Object} An object (hash) of rules indexed by
                  *         selector
                  */
-                getRules : function(refreshCache) {
+                getRules: function (refreshCache) {
                     if (this.rules == null || refreshCache) {
                         this.rules = {};
 
@@ -1478,7 +1490,7 @@
                  *            styles dynamically
                  * @return {CSSRule} The CSS rule or null if one is not found
                  */
-                getRule : function(selector, refreshCache) {
+                getRule: function (selector, refreshCache) {
                     var rs = this.getRules(refreshCache);
                     if (!Ext.isArray(selector)) {
                         return rs[selector];
@@ -1504,12 +1516,12 @@
                  *            value The new value for the property
                  * @return {Boolean} true If a rule was found and updated
                  */
-                updateRule : function(selector, property, value) {
+                updateRule: function (selector, property, value) {
                     if (!Ext.isArray(selector)) {
                         var rule = this.getRule(selector);
                         if (rule) {
                             rule.style[property.replace(styleCamelRe,
-                                    styleCamelFn)] = value;
+                                styleCamelFn)] = value;
                             return true;
                         }
                     } else {
@@ -1649,13 +1661,13 @@
          *      Overwritten every time {@link Ext.ux.panel.ManagedIframe#setSrc}
          *      is called unless "discardUrl" param is set to true.
          */
-        defaultSrc : null,
+        defaultSrc: null,
 
         /**
          * @cfg {Object/String} bodyStyle Inline style rules applied to the
          *      Panel body prior to render.
          */
-        bodyStyle : { position : 'relative' },
+        bodyStyle: { position: 'relative' },
 
 
         /**
@@ -1664,7 +1676,7 @@
          *      {@link Ext.Element#applyStyles} (defaults to CSS Rule
          *      {overflow:'auto'}).
          */
-        frameStyle : { overflow : 'auto' },
+        frameStyle: { overflow: 'auto' },
 
         /**
          * @cfg {Object} frameConfig Custom DOMHelper config for iframe node
@@ -1685,7 +1697,7 @@
          *      });
          *
          */
-        frameConfig : null,
+        frameConfig: null,
 
         /**
          * @cfg {String} hideMode How this component should hidden. Supported
@@ -1696,16 +1708,16 @@
          *      prevent frame re-initialization after reflow of frame
          *      parentNodes).
          */
-        hideMode : !Ext.isIE ? 'nosize' : 'display',
+        hideMode: !Ext.isIE ? 'nosize' : 'display',
 
-        shimCls : 'x-frame-shim',
+        shimCls: 'x-frame-shim',
 
         /**
          * @cfg {String} shimUrl The url of a transparent graphic image used to
          *      shim the frame (during drag or other) shimming operation.
          *      Defaults to Ext.BLANK_IMG_URL.
          */
-        shimUrl : null,
+        shimUrl: null,
         /**
          * @cfg {Object} loadMask An {@link Ext.LoadMask} config or true to mask
          *      the frame while loading (defaults to false). Additional loadMask
@@ -1713,54 +1725,54 @@
          *      loadMask when the frame document is fully loaded rather than on
          *      domready.
          */
-        loadMask : false,
-        stateful : false,
-        animCollapse : Ext.isIE && Ext.enableFx,
+        loadMask: false,
+        stateful: false,
+        animCollapse: Ext.isIE && Ext.enableFx,
         /** @private class override */
-        autoScroll : false,
+        autoScroll: false,
         /**
          * @cfg {Boolean} closable Set True by default in the event a site
          * times-out while loadMasked
          */
-        closable : true,
+        closable: true,
         /** @private */
-        ctype : "Ext.ux.ManagedIframePanel",
+        ctype: "Ext.ux.ManagedIframePanel",
         /** @private class override */
-        showLoadIndicator : false,
+        showLoadIndicator: false,
 
         /**
          * @cfg {String/Object} unsupportedText Text (or Ext.DOMHelper config)
          *      to display within the rendered iframe tag to indicate the frame
          *      is not supported/enabled in the browser.
          */
-        unsupportedText : 'Inline frames are NOT enabled\/supported by your browser.',
+        unsupportedText: 'Inline frames are NOT enabled\/supported by your browser.',
 
         /** @private */
 
-        initComponent : function() {
+        initComponent: function () {
 
             var f = this.frameConfig ? this.frameConfig.autoCreate || this.frameConfig : {};
 
-            var frCfg = Ext.apply(f, { id : f.id || Ext.id()});
+            var frCfg = Ext.apply(f, { id: f.id || Ext.id()});
             frCfg.name = f.name || frCfg.id;
 
-            if(Ext.isIE && Ext.isSecure){
-                 frCfg.src = Ext.SSL_SECURE_URL;
+            if (Ext.isIE && Ext.isSecure) {
+                frCfg.src = Ext.SSL_SECURE_URL;
             }
 
             var frameTag = Ext.apply({
-                        tag : 'iframe',
-                        frameborder : 0,
-                        cls : 'x-managed-iframe',
-                        style : this.frameStyle || f.style || {}
-                    }, frCfg );
+                tag: 'iframe',
+                frameborder: 0,
+                cls: 'x-managed-iframe',
+                style: this.frameStyle || f.style || {}
+            }, frCfg);
 
-            var unsup = this.unsupportedText? {tag:'noframes',html:this.unsupportedText } : [];
+            var unsup = this.unsupportedText ? {tag: 'noframes', html: this.unsupportedText } : [];
 
             this.bodyCfg || (this.bodyCfg = {
                 // shared masking DIV for hosting loadMask/dragMask
-                cls : this.baseCls +'-body',
-                children : this.contentEl? [] : [frameTag].concat(unsup)
+                cls: this.baseCls + '-body',
+                children: this.contentEl ? [] : [frameTag].concat(unsup)
             });
 
             this.autoScroll = false; // Force off as the Iframe manages this
@@ -1776,25 +1788,25 @@
             this.monitorResize || (this.monitorResize = !!this.fitToParent);
 
             this.addEvents({
-                        documentloaded : true,
-                        domready : true,
-                        message : true,
-                        exception : true,
-                        blur : true,
-                        focus : true
-                    });
+                documentloaded: true,
+                domready: true,
+                message: true,
+                exception: true,
+                blur: true,
+                focus: true
+            });
 
             // apply the addListener patch for 'message:tagging'
             this.addListener = this.on;
 
         },
         /** @private */
-        doLayout : function() {
+        doLayout: function () {
             // only resize (to Parent) if the panel is NOT in a layout.
             // parentNode should have {style:overflow:hidden;} applied.
             if (this.fitToParent && !this.ownerCt) {
                 var pos = this.getPosition(), size = (Ext.get(this.fitToParent)
-                        || this.getEl().parent()).getViewSize();
+                    || this.getEl().parent()).getViewSize();
                 this.setSize(size.width - pos[0], size.height - pos[1]);
             }
             Ext.ux.ManagedIframePanel.superclass.doLayout.apply(this, arguments);
@@ -1802,7 +1814,7 @@
         },
 
         /** @private */
-        beforeDestroy : function() {
+        beforeDestroy: function () {
 
             if (this.rendered) {
 
@@ -1814,43 +1826,43 @@
 
                 if (this.header && this.headerAsText) {
                     var s;
-                    if (s = this.header.child('span'))s.remove(true,true);
+                    if (s = this.header.child('span'))s.remove(true, true);
                     this.header.update('');
                 }
 
                 Ext.each(['iframe', 'shim', 'header', 'topToolbar',
-                                'bottomToolbar', 'footer', 'loadMask', 'body',
-                                'bwrap'],
-                       function(elName) {
-                            if (this[elName]) {
-                                if (typeof this[elName].destroy == 'function') {
-                                    this[elName].destroy();
-                                } else {
-                                    Ext.destroy(this[elName]);
-                                }
-
-                                this[elName] = null;
-                                delete this[elName];
+                    'bottomToolbar', 'footer', 'loadMask', 'body',
+                    'bwrap'],
+                    function (elName) {
+                        if (this[elName]) {
+                            if (typeof this[elName].destroy == 'function') {
+                                this[elName].destroy();
+                            } else {
+                                Ext.destroy(this[elName]);
                             }
-                        }, this);
+
+                            this[elName] = null;
+                            delete this[elName];
+                        }
+                    }, this);
             }
 
             Ext.ux.ManagedIframePanel.superclass.beforeDestroy.call(this);
         },
         /** @private */
-        onDestroy : function() {
+        onDestroy: function () {
             // Yes, Panel.super (Component), since we're doing Panel cleanup
             // beforeDestroy instead.
             Ext.Panel.superclass.onDestroy.call(this);
         },
 
         /** @private */
-        afterRender : function(container) {
+        afterRender: function (container) {
 
             var html = this.html; //preserve for frame-writing
             delete this.html;
 
-            Ext.ux.ManagedIframePanel.superclass.afterRender.apply(this,arguments);
+            Ext.ux.ManagedIframePanel.superclass.afterRender.apply(this, arguments);
 
             if (this.iframe = this.body.child('iframe')) {
 
@@ -1859,15 +1871,15 @@
                 if (this.loadMask) {
                     //resolve possible maskEl by Element name eg. 'body', 'bwrap', 'actionEl'
                     var mEl;
-                    if(mEl = this.loadMask.maskEl){
+                    if (mEl = this.loadMask.maskEl) {
                         this.loadMask.maskEl = this[mEl] || mEl || this.body;
                         this.loadMask.maskEl.addClass('x-managed-iframe-mask');
                     }
 
                     this.loadMask = Ext.apply({
-                                disabled : false,
-                                hideOnReady : false
-                            }, this.loadMask);
+                        disabled: false,
+                        hideOnReady: false
+                    }, this.loadMask);
                 }
 
                 this.getUpdater().showLoadIndicator = this.showLoadIndicator || false;
@@ -1878,64 +1890,63 @@
                 // dragMask when needed
                 var ownerCt = this.ownerCt;
                 while (ownerCt) {
-                    ownerCt.on('afterlayout', function(container, layout) {
-                                var MIM = Ext.ux.ManagedIFrame.Manager, st = false;
-                                Ext.each(['north', 'south', 'east', 'west'],
-                                        function(region) {
-                                            var reg;
-                                            if ((reg = layout[region])
-                                                    && reg.splitEl) {
-                                                st = true;
-                                                if (!reg.split._splitTrapped) {
-                                                    reg.split.on(
-                                                            'beforeresize',
-                                                            MIM.showShims, MIM);
-                                                    reg.split._splitTrapped = true;
-                                                }
-                                            }
-                                        }, this);
-                                if (st && !this._splitTrapped) {
-                                    this.on('resize', MIM.hideShims, MIM);
-                                    this._splitTrapped = true;
+                    ownerCt.on('afterlayout', function (container, layout) {
+                        var MIM = Ext.ux.ManagedIFrame.Manager, st = false;
+                        Ext.each(['north', 'south', 'east', 'west'],
+                            function (region) {
+                                var reg;
+                                if ((reg = layout[region])
+                                    && reg.splitEl) {
+                                    st = true;
+                                    if (!reg.split._splitTrapped) {
+                                        reg.split.on(
+                                            'beforeresize',
+                                            MIM.showShims, MIM);
+                                        reg.split._splitTrapped = true;
+                                    }
                                 }
+                            }, this);
+                        if (st && !this._splitTrapped) {
+                            this.on('resize', MIM.hideShims, MIM);
+                            this._splitTrapped = true;
+                        }
 
-                            }, this, { single : true}); // and discard
+                    }, this, { single: true}); // and discard
 
                     ownerCt = ownerCt.ownerCt; // nested layouts?
                 }
 
                 // create the shimming agent if not specified in markup
                 this.shim = Ext.get(this.body.child('.' + this.shimCls))
-                               || Ext.DomHelper.append(this.body,{
-                                                tag : 'img',
-                                                src : this.shimUrl || Ext.BLANK_IMAGE_URL,
-                                                cls : this.shimCls,
-                                                galleryimg : "no"
-                                    }, true);
+                    || Ext.DomHelper.append(this.body, {
+                    tag: 'img',
+                    src: this.shimUrl || Ext.BLANK_IMAGE_URL,
+                    cls: this.shimCls,
+                    galleryimg: "no"
+                }, true);
                 // Set the Visibility Mode for el, bwrap for
                 // collapse/expands/hide/show
                 var El = Ext.Element;
                 var mode = El[this.hideMode.toUpperCase()] || 'x-hide-nosize';
-                Ext.each([this[this.collapseEl], this.floating ? null : this.getActionEl(),this.iframe],
-                     function(el) {
-                            if (el)
-                                el.setVisibilityMode(mode);
-                     }, this);
+                Ext.each([this[this.collapseEl], this.floating ? null : this.getActionEl(), this.iframe],
+                    function (el) {
+                        if (el)
+                            el.setVisibilityMode(mode);
+                    }, this);
 
                 if (this.iframe = new Ext.ux.ManagedIFrame(this.iframe, {
-                            loadMask : this.loadMask,
-                            showLoadIndicator: this.showLoadIndicator,
-                            disableMessaging : this.disableMessaging,
-                            style            : this.frameStyle,
-                            src              : this.defaultSrc,
-                            html             : html
-                        }))
-                   {
+                    loadMask: this.loadMask,
+                    showLoadIndicator: this.showLoadIndicator,
+                    disableMessaging: this.disableMessaging,
+                    style: this.frameStyle,
+                    src: this.defaultSrc,
+                    html: html
+                })) {
                     this.loadMask = this.iframe.loadMask;
                     this.iframe.ownerCt = this;
                     this.relayEvents(this.iframe, ["blur", "focus", "unload",
-                                    "documentloaded", "domready", "exception",
-                                    "message"].concat(this._msgTagHandlers || []));
+                        "documentloaded", "domready", "exception",
+                        "message"].concat(this._msgTagHandlers || []));
                     delete this._msgTagHandlers;
                 }
 
@@ -1952,7 +1963,7 @@
          * (defaults to document.domain).
          */
 
-        sendMessage : function() {
+        sendMessage: function () {
             if (this.iframe) {
                 this.iframe.sendMessage.apply(this.iframe, arguments);
             }
@@ -1961,7 +1972,7 @@
         /** @private
          *  relay all defined 'message:tag' event handlers
          */
-        on : function(name) {
+        on: function (name) {
             var tagRE = /^message\:/i, n = null;
             if (typeof name == 'object') {
                 for (var na in name) {
@@ -1980,7 +1991,7 @@
                 this._msgTagHandlers || (this._msgTagHandlers = []);
                 if (n)
                     this._msgTagHandlers = this._msgTagHandlers.concat(n);
-                    // queued for onRender when iframe is available
+                // queued for onRender when iframe is available
             }
             Ext.ux.ManagedIframePanel.superclass.on.apply(this, arguments);
         },
@@ -2001,7 +2012,7 @@
          * @param {Object} scope (Optional) scope by which the callback function is
          *            invoked.
          */
-        setSrc : function(url, discardUrl, callback, scope) {
+        setSrc: function (url, discardUrl, callback, scope) {
             url = url || this.defaultSrc || false;
 
 //            if (url && this.rendered && this.iframe) {
@@ -2028,12 +2039,12 @@
          * @param {Object} scope (Optional) scope by which the callback function is
          *            invoked.
          */
-        setLocation : function(url, discardUrl, callback, scope) {
-           url = url || this.defaultSrc || false;
+        setLocation: function (url, discardUrl, callback, scope) {
+            url = url || this.defaultSrc || false;
 
-           if (url && this.rendered && this.iframe) {
-               this.iframe.setLocation.call(this.iframe, url, discardUrl, callback, scope);
-           }
+            if (url && this.rendered && this.iframe) {
+                this.iframe.setLocation.call(this.iframe, url, discardUrl, callback, scope);
+            }
 
 
             return this;
@@ -2042,13 +2053,13 @@
         /**
          * @private //Make it state-aware
          */
-        getState : function() {
+        getState: function () {
 
             var URI = this.iframe ? this.iframe.getDocumentURI() || null : null;
             return Ext.apply(Ext.ux.ManagedIframePanel.superclass.getState.call(this)
-                            || {}, URI ? {
-                        defaultSrc : typeof URI == 'function' ? URI() : URI
-                    } : null);
+                || {}, URI ? {
+                defaultSrc: typeof URI == 'function' ? URI() : URI
+            } : null);
 
         },
 
@@ -2058,17 +2069,17 @@
          *
          * @return {Ext.Updater} The Updater
          */
-        getUpdater : function() {
+        getUpdater: function () {
             return this.rendered
-                    ? (this.iframe || this.body).getUpdater()
-                    : null;
+                ? (this.iframe || this.body).getUpdater()
+                : null;
         },
         /**
          * Get the embedded iframe Ext.Element for this panel
          *
          * @return {Ext.Element} The Panels Ext.ux.ManagedIFrame instance.
          */
-        getFrame : function() {
+        getFrame: function () {
             return this.rendered ? this.iframe : null
         },
 
@@ -2077,10 +2088,10 @@
          *
          * @return {Window} The frame Window object.
          */
-        getFrameWindow : function() {
+        getFrameWindow: function () {
             return this.rendered && this.iframe
-                    ? this.iframe.getWindow()
-                    : null;
+                ? this.iframe.getWindow()
+                : null;
         },
 
         /**
@@ -2090,10 +2101,10 @@
          * @return {HTMLElement} The frame document or false if access to
          *         document object was denied.
          */
-        getFrameDocument : function() {
+        getFrameDocument: function () {
             return this.rendered && this.iframe
-                    ? this.iframe.getDocument()
-                    : null;
+                ? this.iframe.getDocument()
+                : null;
         },
 
         /**
@@ -2101,7 +2112,7 @@
          *
          * @return {Ext.Element object} or null if unavailable
          */
-        getFrameDoc : function() {
+        getFrameDoc: function () {
             return this.rendered && this.iframe ? this.iframe.getDoc() : null;
         },
 
@@ -2112,7 +2123,7 @@
          * @return {HTMLElement} The frame document body or Null if access to
          *         document object was denied.
          */
-        getFrameBody : function() {
+        getFrameBody: function () {
             return this.rendered && this.iframe ? this.iframe.getBody() : null;
         },
 
@@ -2147,7 +2158,7 @@
          *            instance.
          * @return {Ext.Panel} this
          */
-        load : function(loadCfg) {
+        load: function (loadCfg) {
             var um;
             if (um = this.getUpdater()) {
                 if (loadCfg && loadCfg.renderer) {
@@ -2160,33 +2171,35 @@
         },
 
         /** @private */
-       doAutoLoad : function() {
+        doAutoLoad: function () {
             this.load(typeof this.autoLoad == 'object' ? this.autoLoad : {
-                        url : this.autoLoad
-                    });
+                url: this.autoLoad
+            });
         }
 
     });
 
-    Ext.ux.ManagedIFrame.Manager = MIM = function() {
+    Ext.ux.ManagedIFrame.Manager = MIM = function () {
         var frames = {};
 
         // private DOMFrameContentLoaded handler for browsers (Gecko, Webkit) that support it.
 
 
         var implementation = {
-            readyHandler : function(e) {
+            readyHandler: function (e) {
 
                 try {
 
                     var $frame = e.target.ownerEl;
-                    if ($frame && $frame._frameAction){
+                    if ($frame && $frame._frameAction) {
 
-                        $frame.loadHandler.call($frame,{type : 'domready'});
+                        $frame.loadHandler.call($frame, {type: 'domready'});
 
                     }
 
-                } catch (rhEx) {return} //nested iframes will throw when accessing target.id
+                } catch (rhEx) {
+                    return
+                } //nested iframes will throw when accessing target.id
 
             },
             /**
@@ -2194,22 +2207,22 @@
              * @default "x-frame-shim"
              * The default CSS rule applied to ManagedIFrame image shims to toggle their visibility.
              */
-            shimCls : 'x-frame-shim',
+            shimCls: 'x-frame-shim',
 
             /** @private */
-            register : function(frame) {
+            register: function (frame) {
                 frame.manager = this;
                 frames[frame.id] = frames[frame.dom.name] = {
-                    ref : frame,
-                    elCache : {}
+                    ref: frame,
+                    elCache: {}
                 };
 
                 // Hook the Iframes loaded state handler
-                frame.dom[Ext.isIE?'onreadystatechange':'onload'] = frame.loadHandler.createDelegate(frame);
+                frame.dom[Ext.isIE ? 'onreadystatechange' : 'onload'] = frame.loadHandler.createDelegate(frame);
                 return frame;
             },
             /** @private */
-            deRegister : function(frame) {
+            deRegister: function (frame) {
                 frame._unHook();
                 frame.dom.onload = frame.dom.onreadystatechange = null;
                 delete frames[frame.id];
@@ -2221,12 +2234,12 @@
              * @methodOf Ext.ux.ManagedIFrame.Manager
              * @param none
              */
-            hideShims : function() {
+            hideShims: function () {
 
                 if (!this.shimApplied)
                     return;
                 Ext.select('.' + this.shimCls, true).removeClass(this.shimCls
-                        + '-on');
+                    + '-on');
                 this.shimApplied = false;
             },
 
@@ -2235,12 +2248,12 @@
              * @methodOf Ext.ux.ManagedIFrame.Manager
              * @param none
              */
-            showShims : function() {
+            showShims: function () {
                 if (!this.shimApplied) {
                     this.shimApplied = true;
                     // Activate the shimCls globally
                     Ext.select('.' + this.shimCls, true).addClass(this.shimCls
-                            + '-on');
+                        + '-on');
                 }
 
             },
@@ -2250,9 +2263,9 @@
              * @methodOf Ext.ux.ManagedIFrame.Manager
              * @param {Ext.ux.ManagedIFrame/string} id
              */
-            getFrameById : function(id) {
+            getFrameById: function (id) {
                 return typeof id == 'string' ? (frames[id] ? frames[id].ref
-                        || null : null) : null;
+                    || null : null) : null;
             },
 
             /**
@@ -2260,19 +2273,19 @@
              * @methodOf Ext.ux.ManagedIFrame.Manager
              * @param {Ext.ux.ManagedIFrame/string} name
              */
-            getFrameByName : function(name) {
+            getFrameByName: function (name) {
                 return this.getFrameById(name);
             },
             /** @private */
             // retrieve the internal frameCache object
-            getFrameHash : function(frame) {
+            getFrameHash: function (frame) {
                 return frame.id ? frames[frame.id] : null;
 
             },
 
             /** @private */
             // to be called under the scope of the managing MIF
-            eventProxy : function(e) {
+            eventProxy: function (e) {
 
                 if (!e)
                     return;
@@ -2286,32 +2299,32 @@
                 }
 
                 if (!be['eventPhase']
-                        || (be['eventPhase'] == (be['AT_TARGET'] || 2))) {
+                    || (be['eventPhase'] == (be['AT_TARGET'] || 2))) {
                     return this.fireEvent(e.type, e);
                 }
             },
             /** @private */
-            _flyweights : {},
+            _flyweights: {},
 
             /** @private */
-            destroy : function() {
+            destroy: function () {
 
                 if (document.addEventListener) {
-                      window.removeEventListener("DOMFrameContentLoaded", this.readyHandler, true);
+                    window.removeEventListener("DOMFrameContentLoaded", this.readyHandler, true);
                 }
 
             },
 
             // safe removal of embedded frame elements
-            removeNode : Ext.isIE ? function(frame, n) {
+            removeNode: Ext.isIE ? function (frame, n) {
                 frame = MIM.getFrameHash(frame);
                 if (frame && n && n.tagName != 'BODY') {
                     d = frame.scratchDiv
-                            || (frame.scratchDiv = frame.getDocument().createElement('div'));
+                        || (frame.scratchDiv = frame.getDocument().createElement('div'));
                     d.appendChild(n);
                     d.innerHTML = '';
                 }
-            } : function(frame, n) {
+            } : function (frame, n) {
                 if (n && n.parentNode && n.tagName != 'BODY') {
                     n.parentNode.removeChild(n);
                 }
@@ -2319,14 +2332,14 @@
 
         };
         if (document.addEventListener) { // for Gecko and Opera and any who
-                                            // might support it later
-                                            //Ext.EventManager.on
+            // might support it later
+            //Ext.EventManager.on
 
             window.addEventListener("DOMFrameContentLoaded", implementation.readyHandler, true);
 
         }
 
-        Ext.EventManager.on(window, 'beforeunload', implementation.destroy,implementation);
+        Ext.EventManager.on(window, 'beforeunload', implementation.destroy, implementation);
         return implementation;
 
     }();
@@ -2336,7 +2349,7 @@
 
     // Provide an Ext.Element interface to frame document elements
     /** @private */
-    MIM.El = function(frame, el, forceNew) {
+    MIM.El = function (frame, el, forceNew) {
 
         var frameObj;
         frame = (frameObj = MIM.getFrameHash(frame)) ? frameObj.ref : null;
@@ -2353,7 +2366,7 @@
         }
         var id = dom.id;
         if (forceNew !== true && id && elCache[id]) { // element object
-                                                        // already exists
+            // already exists
             return elCache[id];
         }
 
@@ -2372,7 +2385,7 @@
         this.id = id || Ext.id(dom);
     };
     /** @private */
-    MIM.El.get = function(frame, el) {
+    MIM.El.get = function (frame, el) {
         var ex, elm, id, doc;
         if (!frame || !el) {
             return null;
@@ -2413,11 +2426,11 @@
         } else if (el instanceof MIM.El) {
             if (el != frameObj.docEl) {
                 el.dom = frame.getDom(el.id) || el.dom; // refresh dom element
-                                                        // in case no longer
-                                                        // valid,
+                // in case no longer
+                // valid,
                 // catch case where it hasn't been appended
                 elCache[el.id] = el; // in case it was created directly with
-                                        // Element(), let's cache it
+                // Element(), let's cache it
             }
             return el;
         } else if (el.isComposite) {
@@ -2427,7 +2440,7 @@
         } else if (el == doc) {
             // create a bogus element object representing the document object
             if (!frameObj.docEl) {
-                var f = function() {
+                var f = function () {
                 };
                 f.prototype = MIM.El.prototype;
                 frameObj.docEl = new f();
@@ -2458,15 +2471,15 @@
      */
 
     Ext.ux.ManagedIframePortlet = Ext.extend(Ext.ux.ManagedIframePanel, {
-                anchor : '100%',
-                frame : true,
-                collapseEl : 'bwrap',
-                collapsible : true,
-                draggable : true,
-                cls : 'x-portlet'
-            });
+        anchor: '100%',
+        frame: true,
+        collapseEl: 'bwrap',
+        collapsible: true,
+        draggable: true,
+        cls: 'x-portlet'
+    });
 
-    Ext.reg('iframeportlet',Ext.ux.portlet.ManagedIframe = Ext.ux.ManagedIframePortlet);
+    Ext.reg('iframeportlet', Ext.ux.portlet.ManagedIframe = Ext.ux.ManagedIframePortlet);
 
     /** @private
      * override adds a third visibility feature to Ext.Element: Now an elements'
@@ -2475,7 +2488,7 @@
      */
 
     Ext.apply(Ext.Element.prototype, {
-        setVisible : function(visible, animate) {
+        setVisible: function (visible, animate) {
             if (!animate || !Ext.lib.Anim) {
                 if (this.visibilityMode == Ext.Element.DISPLAY) {
                     this.setDisplayed(visible);
@@ -2496,23 +2509,23 @@
                     this.setVisible(true);
                 }
                 this.anim({
-                            opacity : {
-                                to : (visible ? 1 : 0)
-                            }
-                        }, this.preanim(arguments, 1), null, .35, 'easeIn',
-                        function() {
+                        opacity: {
+                            to: (visible ? 1 : 0)
+                        }
+                    }, this.preanim(arguments, 1), null, .35, 'easeIn',
+                    function () {
 
-                            if (!visible) {
-                                if (visMode == Ext.Element.DISPLAY) {
-                                    dom.style.display = "none";
-                                } else if (visMode == Ext.Element.VISIBILITY) {
-                                    dom.style.visibility = "hidden";
-                                } else {
-                                    Ext.get(dom).addClass(String(visMode));
-                                }
-                                Ext.get(dom).setOpacity(1);
+                        if (!visible) {
+                            if (visMode == Ext.Element.DISPLAY) {
+                                dom.style.display = "none";
+                            } else if (visMode == Ext.Element.VISIBILITY) {
+                                dom.style.visibility = "hidden";
+                            } else {
+                                Ext.get(dom).addClass(String(visMode));
                             }
-                        });
+                            Ext.get(dom).setOpacity(1);
+                        }
+                    });
             }
             return this;
         },
@@ -2526,9 +2539,9 @@
          * @return {Boolean} True if the element is currently visible, else
          *         false
          */
-        isVisible : function(deep) {
+        isVisible: function (deep) {
             var vis = !(this.hasClass(this.visibilityMode) || this.getStyle("visibility") == "hidden"
-                    || this.getStyle("display") == "none" );
+                || this.getStyle("display") == "none" );
             if (deep !== true || !vis) {
                 return vis;
             }
@@ -2543,18 +2556,18 @@
         }
     });
     /** @private */
-    Ext.onReady(function() {
+    Ext.onReady(function () {
         // Generate CSS Rules but allow for overrides.
         var CSS = Ext.util.CSS, rules = [];
 
-        CSS.getRule('.x-managed-iframe')|| (rules.push('.x-managed-iframe {height:100%;width:100%;overflow:auto;position:relative;}'));
-        CSS.getRule('.x-managed-iframe-mask')|| (rules.push('.x-managed-iframe-mask{position:relative;zoom:1;}'));
+        CSS.getRule('.x-managed-iframe') || (rules.push('.x-managed-iframe {height:100%;width:100%;overflow:auto;position:relative;}'));
+        CSS.getRule('.x-managed-iframe-mask') || (rules.push('.x-managed-iframe-mask{position:relative;zoom:1;}'));
         if (!CSS.getRule('.x-frame-shim')) {
             rules.push('.x-frame-shim {z-index:8500;position:absolute;top:0px;left:0px;background:transparent!important;overflow:hidden;display:none;}');
             rules.push('.x-frame-shim-on{width:100%;height:100%;display:block;zoom:1;}');
             rules.push('.ext-ie6 .x-frame-shim{margin-left:5px;margin-top:3px;}');
         }
-        CSS.getRule('.x-hide-nosize')|| (rules.push('.x-hide-nosize,.x-hide-nosize *{height:0px!important;width:0px!important;border:none;}'));
+        CSS.getRule('.x-hide-nosize') || (rules.push('.x-hide-nosize,.x-hide-nosize *{height:0px!important;width:0px!important;border:none;}'));
 
         if (!!rules.length) {
             CSS.createStyleSheet(rules.join(' '));

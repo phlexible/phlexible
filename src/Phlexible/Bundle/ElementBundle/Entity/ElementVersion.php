@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 
 /**
  * Element version
@@ -306,8 +305,9 @@ class ElementVersion
     public function getMappedField($field, $language, $fallbackLanguage = null)
     {
         if (in_array($field, array('page', 'navigation'))
-                && !isset($this->mappedFields[$language][$field])
-                && !isset($this->mappedFields[$fallbackLanguage][$field])) {
+            && !isset($this->mappedFields[$language][$field])
+            && !isset($this->mappedFields[$fallbackLanguage][$field])
+        ) {
             $field = 'backend';
         }
 
@@ -334,23 +334,21 @@ class ElementVersion
         return '/elements/asset/';
         $icon = '/elements/asset/' . $this->getElementTypeVersionObj()->getIcon();
 
-//        $uid = MWF_Env::getUid();
-//        $service = $this->getContainer()->get('locks.service');
-//        $lockIdentifier = new Makeweb_Elements_Element_Identifier($this->_eid);
-//
-//        if ($service->isLockedByUser($lockIdentifier, $uid))
-//        {
-//            $icon .= '/lock/me';
-//        }
-//        elseif ($service->isLocked($lockIdentifier))
-//        {
-//            $icon .= '/lock/other';
-//        }
+        //        $uid = MWF_Env::getUid();
+        //        $service = $this->getContainer()->get('locks.service');
+        //        $lockIdentifier = new Makeweb_Elements_Element_Identifier($this->_eid);
+        //
+        //        if ($service->isLockedByUser($lockIdentifier, $uid))
+        //        {
+        //            $icon .= '/lock/me';
+        //        }
+        //        elseif ($service->isLocked($lockIdentifier))
+        //        {
+        //            $icon .= '/lock/other';
+        //        }
 
-        foreach ($additionalParams as $key => $value)
-        {
-            if ($value)
-            {
+        foreach ($additionalParams as $key => $value) {
+            if ($value) {
                 $icon .= '/' . $key . '/' . $value;
             }
         }
@@ -367,8 +365,7 @@ class ElementVersion
      */
     public function xgetData($language, $mode, $diffFromVersion = null, $diffToVersion = null, $diffLanguage = null)
     {
-        if (empty($this->data[$language][$mode]))
-        {
+        if (empty($this->data[$language][$mode])) {
             $identifier = new Makeweb_Elements_Element_Version_Data_Identifier($this->_eid, $language, $this->version, $mode);
 
             $etUniqueId = $this->getElementTypeVersionObj()->getElementtype()->getUniqueId();
@@ -377,8 +374,8 @@ class ElementVersion
                 $mode === Makeweb_Elements_Element_Version_Data::MODE_DIFF ||
                 !$data ||
                 $etUniqueId == 'businesslogic' ||
-                $etUniqueId == 'servicetools')
-            {
+                $etUniqueId == 'servicetools'
+            ) {
                 $data = new Makeweb_Elements_Element_Version_Data(
                     $this->_eid,
                     $language,
@@ -388,8 +385,7 @@ class ElementVersion
                     $mode
                 );
 
-                if ($mode === Makeweb_Elements_Element_Version_Data::MODE_DIFF)
-                {
+                if ($mode === Makeweb_Elements_Element_Version_Data::MODE_DIFF) {
                     $data->setDiffFromVersion($diffFromVersion);
                     $data->setDiffToVersion($diffToVersion);
                     $data->setDiffLanguage($diffLanguage);
@@ -412,65 +408,62 @@ class ElementVersion
      *
      * @return Makeweb_Elements_Element_Version
      */
-    public function copy($targetEid = null,
-                         $newElementTypeVersion = null)
+    public function copy(
+        $targetEid = null,
+        $newElementTypeVersion = null)
     {
         $db = MWF_Registry::getContainer()->dbPool->default;
         $dispatcher = Brainbits_Event_Dispatcher::getInstance();
 
         $sourceEid = $this->getEID();
 
-        if ($targetEid === null)
-        {
+        if ($targetEid === null) {
             $targetEid = $sourceEid;
-        }
-        else
-        {
+        } else {
             $select = $db->select()
-                         ->from($db->prefix . 'element', array('element_type_id', 'masterlanguage'))
-                         ->where('eid = ?', $targetEid);
+                ->from($db->prefix . 'element', array('element_type_id', 'masterlanguage'))
+                ->where('eid = ?', $targetEid);
 
             $result = $db->fetchRow($select);
 
-            $targetElementTypeId  = $result['element_type_id'];
+            $targetElementTypeId = $result['element_type_id'];
 
-            if ($this->_elementTypeID != $targetElementTypeId)
-            {
+            if ($this->_elementTypeID != $targetElementTypeId) {
                 throw new Makeweb_Elements_Element_Exception('Element Type Ids don\'t match.');
             }
         }
 
         // fetch source element version
 
-        $sourceVersion            = $this->version;
+        $sourceVersion = $this->version;
         $sourceElementTypeVersion = $this->getElementTypeVersionObj()->getVersion();
 
-        if ($newElementTypeVersion === null)
-        {
+        if ($newElementTypeVersion === null) {
             $newElementTypeVersion = $sourceElementTypeVersion;
         }
 
         // fetch target element version
 
         $select = $db->select()
-                     ->from($db->prefix.'element_version', array(
-                           'format',
-                           'new_version' => new Zend_Db_Expr('version + 1')))
-                     ->where('eid = ?', $targetEid)
-                     ->order('version DESC')
-                     ->limit(1);
+            ->from(
+                $db->prefix . 'element_version',
+                array(
+                    'format',
+                    'new_version' => new Zend_Db_Expr('version + 1')
+                )
+            )
+            ->where('eid = ?', $targetEid)
+            ->order('version DESC')
+            ->limit(1);
 
         $targetVersionRow = $db->fetchRow($select);
 
-        if ($targetVersionRow)
-        {
+        if ($targetVersionRow) {
             $targetVersion = $targetVersionRow['new_version'];
-            $targetFormat  = $targetVersionRow['format'];
-        }
-        else
-        {
+            $targetFormat = $targetVersionRow['format'];
+        } else {
             $targetVersion = 1;
-            $targetFormat  = self::CURRENT_FORMAT;
+            $targetFormat = self::CURRENT_FORMAT;
         }
 
         // before version create event
@@ -489,7 +482,7 @@ class ElementVersion
             'format'               => $targetFormat,
         );
 
-        $db->insert($db->prefix.'element_version', $insertData);
+        $db->insert($db->prefix . 'element_version', $insertData);
 
         // update latest_version information in element
 
@@ -524,18 +517,16 @@ class ElementVersion
         // copy metasets
 
         $setId = $elementTypeVersion->getMetaSetId();
-        if ($setId)
-        {
+        if ($setId) {
             $select = $db->select()
-                         ->from($db->prefix . 'element_version_metaset_items', array('key', 'language', 'value'))
-                         ->where('set_id = ?', $setId)
-                         ->where('eid = ?', $sourceEid)
-                         ->where('version = ?', $sourceVersion);
+                ->from($db->prefix . 'element_version_metaset_items', array('key', 'language', 'value'))
+                ->where('set_id = ?', $setId)
+                ->where('eid = ?', $sourceEid)
+                ->where('version = ?', $sourceVersion);
 
             $metaValues = $db->fetchAll($select);
 
-            foreach($metaValues as $row)
-            {
+            foreach ($metaValues as $row) {
                 $insertData = array(
                     'set_id'   => $setId,
                     'eid'      => $targetEid,
@@ -551,13 +542,13 @@ class ElementVersion
 
         // retrieve new element version
         $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
-        $elementVersion        = $elementVersionManager->get($targetEid, $targetVersion);
+        $elementVersion = $elementVersionManager->get($targetEid, $targetVersion);
 
         // clean cache
         $identifier = new Makeweb_Elements_Element_Identifier($targetEid);
 
         // post message
-        $message = new Makeweb_Elements_Message('EID '.$sourceEid.' Version '.$sourceVersion.' copied to EID '.$targetEid.' Version '.$targetVersion);
+        $message = new Makeweb_Elements_Message('EID ' . $sourceEid . ' Version ' . $sourceVersion . ' copied to EID ' . $targetEid . ' Version ' . $targetVersion);
         $message->post();
 
         // post event

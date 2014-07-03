@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\EventListener;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
+use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Elementtypes listeners
@@ -37,15 +37,15 @@ class ApplySuccessorListener
     public function onApplySuccessor(ApplySuccessorEvent $event)
     {
         $fromUser = $event->getFromUser();
-        $toUser   = $event->getToUser();
+        $toUser = $event->getToUser();
 
         $fromUid = $fromUser->getId();
-        $toUid   = $toUser->getId();
+        $toUid = $toUser->getId();
 
         $this->db->update(
             $this->db->prefix . 'elementtype',
             array(
-                'create_uid'  => $toUid,
+                'create_uid' => $toUid,
             ),
             array(
                 'create_uid = ?' => $fromUid
@@ -55,7 +55,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'elementtype',
             array(
-                'modify_uid'  => $toUid,
+                'modify_uid' => $toUid,
             ),
             array(
                 'modify_uid = ?' => $fromUid
@@ -65,7 +65,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'elementtype_version',
             array(
-                'modify_uid'  => $toUid,
+                'modify_uid' => $toUid,
             ),
             array(
                 'modify_uid = ?' => $fromUid

@@ -26,8 +26,7 @@ class ClearCacheCommand extends ContainerAwareCommand
     {
         $this
             ->setName('cache:delete')
-            ->setDescription('Clear cache. This is safe to call, it only raises the cache namespace version.')
-        ;
+            ->setDescription('Clear cache. This is safe to call, it only raises the cache namespace version.');
     }
 
     /**

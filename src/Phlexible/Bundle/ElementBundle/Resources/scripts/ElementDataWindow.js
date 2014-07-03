@@ -7,7 +7,7 @@ Phlexible.elements.ElementDataWindow = Ext.extend(Ext.Window, {
     constrainHeader: true,
     modal: true,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents(
             'save'
@@ -34,7 +34,7 @@ Phlexible.elements.ElementDataWindow = Ext.extend(Ext.Window, {
             element: this.element,
             listeners: {
                 loadVersion: {
-                    fn: function(version) {
+                    fn: function (version) {
                         this.element.reload({
                             version: version
                         });
@@ -44,11 +44,11 @@ Phlexible.elements.ElementDataWindow = Ext.extend(Ext.Window, {
             }
         });
 
-        this.dataPanel.on('render', function() {
+        this.dataPanel.on('render', function () {
             this.element.loadEid(this.element.eid, null, null, true);
         }, this);
 
-        this.dataPanel.on('save', function() {
+        this.dataPanel.on('save', function () {
             this.fireEvent('save', this);
         }, this);
 
@@ -57,7 +57,7 @@ Phlexible.elements.ElementDataWindow = Ext.extend(Ext.Window, {
         Phlexible.elements.ElementDataWindow.superclass.initComponent.call(this);
     },
 
-    show: function(title, eid) {
+    show: function (title, eid) {
         this.setTitle(title);
         this.element.eid = eid;
 

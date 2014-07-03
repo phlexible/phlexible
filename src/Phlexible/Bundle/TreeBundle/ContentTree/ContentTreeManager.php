@@ -49,6 +49,7 @@ class ContentTreeManager
                 return $tree;
             }
         }
+
         return null;
     }
 }

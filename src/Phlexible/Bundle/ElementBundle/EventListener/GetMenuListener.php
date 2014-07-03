@@ -46,7 +46,7 @@ class GetMenuListener
             $menuItem->setParameters(
                 array(
                     'siteroot_id' => $siteroot->getId(),
-                    'title' => $siteroot->getTitle(),
+                    'title'       => $siteroot->getTitle(),
                 )
             );
 

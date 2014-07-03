@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Siteroot event
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class SiterootEvent extends Event
 {

@@ -1,7 +1,7 @@
 Phlexible.mediamanager.FolderTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
 
     // private
-    renderElements : function(n, a, targetNode, bulkRender){
+    renderElements: function (n, a, targetNode, bulkRender) {
 
         //prefix = '';
 

@@ -36,8 +36,9 @@ class MetaSetRepository
      * @param MetaSetLoader $loader
      * @param MetaSetDumper $dumper
      */
-    public function __construct(MetaSetLoader $loader,
-                                MetaSetDumper $dumper)
+    public function __construct(
+        MetaSetLoader $loader,
+        MetaSetDumper $dumper)
     {
         $this->loader = $loader;
         $this->dumper = $dumper;

@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Show command
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ShowCommand extends ContainerAwareCommand
 {
@@ -26,8 +26,7 @@ class ShowCommand extends ContainerAwareCommand
     {
         $this
             ->setName('siteroots:show')
-            ->setDescription('Show siteroot infos.')
-        ;
+            ->setDescription('Show siteroot infos.');
     }
 
     /**
@@ -53,7 +52,9 @@ class ShowCommand extends ContainerAwareCommand
                 if ($siteroot->getShortUrls()) {
                     $output->writeln('  Short Urls:');
                     foreach ($siteroot->getShortUrls() as $shortUrl) {
-                        $output->writeln('    ' . $shortUrl->getHostname() . $shortUrl->getPath() . ' => ' . $shortUrl->getTarget());
+                        $output->writeln(
+                            '    ' . $shortUrl->getHostname() . $shortUrl->getPath() . ' => ' . $shortUrl->getTarget()
+                        );
                     }
                 }
 

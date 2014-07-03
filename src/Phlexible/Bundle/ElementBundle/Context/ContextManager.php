@@ -37,11 +37,12 @@ class ContextManager
      * @param bool        $useContext
      * @param array       $contextCountries
      */
-    public function __construct(MWF_Db_Pool $dbPool,
-                                $useContext,
-                                array $contextCountries)
+    public function __construct(
+        MWF_Db_Pool $dbPool,
+        $useContext,
+        array $contextCountries)
     {
-        $this->_dbPool     = $dbPool;
+        $this->_dbPool = $dbPool;
         $this->_useContext = $useContext;
         $this->_contextCountries = $contextCountries;
     }
@@ -53,12 +54,10 @@ class ContextManager
      */
     public function useContext()
     {
-        if ($this->_useContext)
-        {
-            if (empty($this->_contextCountries))
-            {
+        if ($this->_useContext) {
+            if (empty($this->_contextCountries)) {
                 $msg = "Context is activated in config ('elements.context.enabled')"
-                     . ", but 'elements.context.countries' is missing in config file.";
+                    . ", but 'elements.context.countries' is missing in config file.";
 
                 $this->_useContext = false;
             }

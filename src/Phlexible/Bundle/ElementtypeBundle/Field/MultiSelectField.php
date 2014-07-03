@@ -16,7 +16,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
 class MultiSelectField extends AbstractField
 {
     protected $hasOptions = true;
-    protected $icon       = 'p-elementtype-field_select-icon';
+    protected $icon = 'p-elementtype-field_select-icon';
 
     /**
      * Transform item values
@@ -29,34 +29,28 @@ class MultiSelectField extends AbstractField
      */
     protected function _transform(array $item, array $media, array $options)
     {
-        $item['rawContent']      = $item['data_content'];
-        $item['options']         = array();
+        $item['rawContent'] = $item['data_content'];
+        $item['options'] = array();
         $item['translation_key'] = '';
 
-        if (!empty($options['default_value']))
-        {
+        if (!empty($options['default_value'])) {
             $item['default_content'] = $options['default_value'];
         }
 
-        if (mb_strlen($item['rawContent']))
-        {
+        if (mb_strlen($item['rawContent'])) {
             $values = explode(',', $item['rawContent']);
             $item['content'] = $values;
 
             $item['translation_keys'] = array();
-            foreach ($values as $value)
-            {
+            foreach ($values as $value) {
                 $item['translation_keys'][$value] = 'multiselect-' . $item['working_title'] . '-' . $value;
             }
         }
 
-        if (!empty($options['source_list']))
-        {
+        if (!empty($options['source_list'])) {
             $item['options'] = $options['source_list'];
-        }
-        elseif (!empty($options['source_function']))
-        {
-            $function                   = $options['source_function'];
+        } elseif (!empty($options['source_function'])) {
+            $function = $options['source_function'];
             $item['component_function'] = $function;
         }
 

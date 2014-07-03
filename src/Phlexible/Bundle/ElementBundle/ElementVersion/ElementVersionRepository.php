@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\ElementVersion;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\ElementBundle\Element\Element;
+use Phlexible\Component\Database\ConnectionManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -51,8 +51,7 @@ class ElementVersionRepository
             ->select()
             ->from($this->db->prefix . 'element_version')
             ->where('eid = ?', $element->getEid())
-            ->where('version = ?', $version)
-        ;
+            ->where('version = ?', $version);
 
         $row = $this->db->fetchRow($select);
 
@@ -101,8 +100,7 @@ class ElementVersionRepository
             ->setComment($row['comment'])
             ->setMappedFields($row['mapped_fields'] ? json_decode($row['mapped_fields'], true) : null)
             ->setCreatedAt(new \DateTime($row['create_time']))
-            ->setCreateUserId($row['create_uid'])
-        ;
+            ->setCreateUserId($row['create_uid']);
 
         $this->map[$element->getEid() . '_' . $row['version']] = $elementVersion;
 
@@ -119,8 +117,7 @@ class ElementVersionRepository
         $select = $this->db
             ->select()
             ->from($this->db->prefix . 'element_version', 'version')
-            ->where('eid = ?', $element->getEid())
-        ;
+            ->where('eid = ?', $element->getEid());
 
         $versions = array();
         foreach ($this->db->fetchCol($select) as $version) {

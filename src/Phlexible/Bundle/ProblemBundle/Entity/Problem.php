@@ -21,9 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Problem
 {
     const SEVERITY_CRITICAL = 'critical';
-    const SEVERITY_WARNING  = 'warning';
-    const SEVERITY_NOTICE   = 'notice';
-    const SEVERITY_INFO     = 'info';
+    const SEVERITY_WARNING = 'warning';
+    const SEVERITY_NOTICE = 'notice';
+    const SEVERITY_INFO = 'info';
 
     /**
      * @var string

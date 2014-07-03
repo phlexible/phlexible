@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\TeaserBundle\ElementCatch;
 
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\TeaserBundle\Event\ElementCatchEvent;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
 use Phlexible\Bundle\TeaserBundle\TeasersMessage;
+use Phlexible\Component\Database\ConnectionManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -41,11 +41,12 @@ class ElementCatchRepository
     /**
      * @param ConnectionManager        $connectionManager
      * @param EventDispatcherInterface $dispatcher
-     * @param MessagePoster           $messageService
+     * @param MessagePoster            $messageService
      */
-    public function __construct(ConnectionManager $connectionManager,
-                                EventDispatcherInterface $dispatcher,
-                                MessagePoster $messageService)
+    public function __construct(
+        ConnectionManager $connectionManager,
+        EventDispatcherInterface $dispatcher,
+        MessagePoster $messageService)
     {
         $this->db = $connectionManager->default;
         $this->dispatcher = $dispatcher;
@@ -62,8 +63,7 @@ class ElementCatchRepository
         $select = $this->db
             ->select()
             ->from($this->db->prefix . 'catch')
-            ->where('id = ?', $id)
-        ;
+            ->where('id = ?', $id);
 
         $row = $this->db->fetchRow($select);
 
@@ -81,8 +81,7 @@ class ElementCatchRepository
     {
         $select = $this->db
             ->select()
-            ->from($this->db->prefix . 'catch')
-        ;
+            ->from($this->db->prefix . 'catch');
 
         $rows = $this->db->fetchAll($select);
 
@@ -104,20 +103,23 @@ class ElementCatchRepository
             $this->db->update(
                 $this->db->prefix . 'catch',
                 array(
-                    'title'             => $catch->getTitle(),
-                    'tree_id'           => $catch->getTreeId(),
-                    'elementtype_ids'   => !empty($catch->getElementtypeIds()) ? explode(',', $catch->getElementtypeIds()) : null,
-                    'sort_field'        => $catch->getSortField(),
-                    'sort_order'        => $catch->getSortOrder(),
-                    'in_navigation'     => $catch->inNavigation() ? 1 : 0,
-                    'max_depth'         => $catch->getMaxDepth(),
-                    'max_results'       => $catch->getMaxResults(),
-                    'results_per_page'  => $catch->getResultsPerPage(),
-                    'rotation'          => $catch->hasRotation(),
-                    'filter'            => $catch->getFilter(),
-                    'pool_size'         => $catch->getPoolSize(),
-                    'template'          => $catch->getTemplate(),
-                    'meta_search'       => json_encode($catch->getMetaSearch())
+                    'title'            => $catch->getTitle(),
+                    'tree_id'          => $catch->getTreeId(),
+                    'elementtype_ids'  => !empty($catch->getElementtypeIds()) ? explode(
+                            ',',
+                            $catch->getElementtypeIds()
+                        ) : null,
+                    'sort_field'       => $catch->getSortField(),
+                    'sort_order'       => $catch->getSortOrder(),
+                    'in_navigation'    => $catch->inNavigation() ? 1 : 0,
+                    'max_depth'        => $catch->getMaxDepth(),
+                    'max_results'      => $catch->getMaxResults(),
+                    'results_per_page' => $catch->getResultsPerPage(),
+                    'rotation'         => $catch->hasRotation(),
+                    'filter'           => $catch->getFilter(),
+                    'pool_size'        => $catch->getPoolSize(),
+                    'template'         => $catch->getTemplate(),
+                    'meta_search'      => json_encode($catch->getMetaSearch())
                 ),
                 array(
                     'id' => $catch->getId(),
@@ -142,21 +144,24 @@ class ElementCatchRepository
             $this->db->insert(
                 $this->db->prefix . 'catch',
                 array(
-                    'id'                => $catch->getId(),
-                    'title'             => $catch->getTitle(),
-                    'tree_id'           => $catch->getTreeId(),
-                    'elementtype_ids'   => !empty($catch->getElementtypeIds()) ? explode(',', $catch->getElementtypeIds()) : null,
-                    'sort_field'        => $catch->getSortField(),
-                    'sort_order'        => $catch->getSortOrder(),
-                    'in_navigation'     => $catch->inNavigation() ? 1 : 0,
-                    'max_depth'         => $catch->getMaxDepth(),
-                    'max_results'       => $catch->getMaxResults(),
-                    'results_per_page'  => $catch->getResultsPerPage(),
-                    'rotation'          => $catch->hasRotation(),
-                    'filter'            => $catch->getFilter(),
-                    'pool_size'         => $catch->getPoolSize(),
-                    'template'          => $catch->getTemplate(),
-                    'meta_search'       => json_encode($catch->getMetaSearch())
+                    'id'               => $catch->getId(),
+                    'title'            => $catch->getTitle(),
+                    'tree_id'          => $catch->getTreeId(),
+                    'elementtype_ids'  => !empty($catch->getElementtypeIds()) ? explode(
+                            ',',
+                            $catch->getElementtypeIds()
+                        ) : null,
+                    'sort_field'       => $catch->getSortField(),
+                    'sort_order'       => $catch->getSortOrder(),
+                    'in_navigation'    => $catch->inNavigation() ? 1 : 0,
+                    'max_depth'        => $catch->getMaxDepth(),
+                    'max_results'      => $catch->getMaxResults(),
+                    'results_per_page' => $catch->getResultsPerPage(),
+                    'rotation'         => $catch->hasRotation(),
+                    'filter'           => $catch->getFilter(),
+                    'pool_size'        => $catch->getPoolSize(),
+                    'template'         => $catch->getTemplate(),
+                    'meta_search'      => json_encode($catch->getMetaSearch())
                 )
             );
 
@@ -240,8 +245,7 @@ class ElementCatchRepository
             ->setSortField($row['sort_field'])
             ->setSortOrder($row['sort_order'])
             ->setTemplate($row['template'])
-            ->setElementtypeIds(explode(',', $row['elementtype_ids']))
-        ;
+            ->setElementtypeIds(explode(',', $row['elementtype_ids']));
 
         return $catch;
     }

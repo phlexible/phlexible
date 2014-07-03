@@ -21,8 +21,8 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
-use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\Exception;
+use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotFoundException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotWritableException;
@@ -168,7 +168,11 @@ class DatabaseDriver extends AbstractDriver
     {
         $select = $this->db->select()
             ->from(array('fo' => $this->folderTable))
-            ->join(array('fi' => $this->fileTable), 'fo.id = fi.folder_id AND fi.id = ' . $this->db->quote($fileId), array());
+            ->join(
+                array('fi' => $this->fileTable),
+                'fo.id = fi.folder_id AND fi.id = ' . $this->db->quote($fileId),
+                array()
+            );
 
         $row = $this->db->fetchRow($select);
 
@@ -244,7 +248,12 @@ class DatabaseDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
-    public function findFilesByFolder(FolderInterface $folder, $order = null, $limit = null, $start = null, $includeHidden = false)
+    public function findFilesByFolder(
+        FolderInterface $folder,
+        $order = null,
+        $limit = null,
+        $start = null,
+        $includeHidden = false)
     {
         $select = $this->db
             ->select()
@@ -376,7 +385,8 @@ class DatabaseDriver extends AbstractDriver
             ->where('folder_id = ?', $action->getFile()->getFolderId());
 
         if ($this->db->fetchOne($select)) {
-            throw new AlreadyExistsException("Create file {$action->getFile()->getName()} failed, already exists in database.");
+            throw new AlreadyExistsException("Create file {$action->getFile()->getName(
+            )} failed, already exists in database.");
         }
     }
 
@@ -518,8 +528,7 @@ class DatabaseDriver extends AbstractDriver
         $file
             ->setName($action->getName())
             ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId())
-        ;
+            ->setModifyUserId($action->getUserId());
 
         try {
             $this->db->update(
@@ -551,8 +560,7 @@ class DatabaseDriver extends AbstractDriver
         $file
             ->setFolderId($action->getTargetFolder()->getId())
             ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId())
-        ;
+            ->setModifyUserId($action->getUserId());
 
         try {
             $this->db->update(
@@ -620,8 +628,7 @@ class DatabaseDriver extends AbstractDriver
         $folder
             ->setName($action->getName())
             ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId())
-        ;
+            ->setModifyUserId($action->getUserId());
 
         if (!$folder->isRoot()) {
             $parentFolder = $this->findFolder($folder->getParentId());
@@ -657,7 +664,9 @@ class DatabaseDriver extends AbstractDriver
                 $this->db->update(
                     $this->folderTable,
                     array(
-                        'path' => $this->db->fn->expr('REPLACE(path, ' . $this->db->quote($oldPath) . ', ' . $this->db->quote($newPath) . ')')
+                        'path' => $this->db->fn->expr(
+                                'REPLACE(path, ' . $this->db->quote($oldPath) . ', ' . $this->db->quote($newPath) . ')'
+                            )
                     ),
                     array(
                         'site_id = ?' => $this->getSite()->getId(),
@@ -691,8 +700,7 @@ class DatabaseDriver extends AbstractDriver
             ->setParentId($action->getTargetFolder()->getId())
             ->setPath($newPath)
             ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId())
-        ;
+            ->setModifyUserId($action->getUserId());
 
         try {
             $this->db->update(
@@ -709,9 +717,15 @@ class DatabaseDriver extends AbstractDriver
             );
 
             if ($action->getTargetFolder()->isRoot()) {
-                $pathExpression = $this->db->fn->expr('CONCAT(' . $this->db->quote($action->getTargetFolder()->getPath()) . ', path)');
+                $pathExpression = $this->db->fn->expr(
+                    'CONCAT(' . $this->db->quote($action->getTargetFolder()->getPath()) . ', path)'
+                );
             } else {
-                $pathExpression = $this->db->fn->expr('REPLACE(path, ' . $this->db->quote($action->getTargetFolder()->getPath()) . ', ' . $this->db->quote($action->getTargetFolder()->getPath()) . ')');
+                $pathExpression = $this->db->fn->expr(
+                    'REPLACE(path, ' . $this->db->quote(
+                        $action->getTargetFolder()->getPath()
+                    ) . ', ' . $this->db->quote($action->getTargetFolder()->getPath()) . ')'
+                );
             }
 
             $this->db->update(
@@ -847,14 +861,14 @@ class DatabaseDriver extends AbstractDriver
             ->setCreatedAt(new \DateTime($row['created_at']))
             ->setCreateUserId($row['create_user_id'])
             ->setModifiedAt(new \DateTime($row['modified_at']))
-            ->setModifyUserId($row['modify_user_id'])
-        ;
+            ->setModifyUserId($row['modify_user_id']);
 
         return $folder;
     }
 
     /**
      * @param array $rows
+     *
      * @return File[]
      */
     private function mapFileRows(array $rows)
@@ -863,11 +877,13 @@ class DatabaseDriver extends AbstractDriver
         foreach ($rows as $row) {
             $files[] = $this->mapFileRow($row);
         }
+
         return $files;
     }
 
     /**
      * @param array $row
+     *
      * @return File
      */
     private function mapFileRow(array $row)
@@ -893,8 +909,7 @@ class DatabaseDriver extends AbstractDriver
             ->setCreatedAt(new \DateTime($row['created_at']))
             ->setCreateUserId($row['create_user_id'])
             ->setModifiedAt(new \DateTime($row['modified_at']))
-            ->setModifyUserId($row['modify_user_id'])
-        ;
+            ->setModifyUserId($row['modify_user_id']);
 
         return $file;
     }

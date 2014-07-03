@@ -7,34 +7,40 @@ Phlexible.cache.CacheStatsWindow = Ext.extend(Ext.Window, {
     layout: 'fit',
     constrainHeader: true,
 
-    initComponent: function() {
-        this.items = [{
-            xtype: 'panel',
-            layout: 'accordion',
-            border: false,
-            items: []
-        }];
+    initComponent: function () {
+        this.items = [
+            {
+                xtype: 'panel',
+                layout: 'accordion',
+                border: false,
+                items: []
+            }
+        ];
 
-        this.tbar = [{
-            text: this.strings.reload,
-            iconCls: 'p-cache-reload-icon',
-            handler: this.reload,
-            scope: this
-        },'-',{
-            text: this.strings.flush_all_servers,
-            iconCls: 'p-cache-flush-icon',
-            handler: function(){
-                this.flush(null);
+        this.tbar = [
+            {
+                text: this.strings.reload,
+                iconCls: 'p-cache-reload-icon',
+                handler: this.reload,
+                scope: this
             },
-            scope: this
-        }];
+            '-',
+            {
+                text: this.strings.flush_all_servers,
+                iconCls: 'p-cache-flush-icon',
+                handler: function () {
+                    this.flush(null);
+                },
+                scope: this
+            }
+        ];
 
         Phlexible.cache.CacheStatsWindow.superclass.initComponent.call(this);
 
         this.reload();
     },
 
-    reload: function() {
+    reload: function () {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('cache_data'),
             success: this.onReloadSuccess,
@@ -42,7 +48,7 @@ Phlexible.cache.CacheStatsWindow = Ext.extend(Ext.Window, {
         });
     },
 
-    flush: function(id) {
+    flush: function (id) {
         var text;
         var params = {};
 
@@ -53,12 +59,12 @@ Phlexible.cache.CacheStatsWindow = Ext.extend(Ext.Window, {
             text = this.strings.warning_flush_server;
         }
 
-        Ext.MessageBox.confirm('Confirm', text, function(btn, a, b, params) {
+        Ext.MessageBox.confirm('Confirm', text, function (btn, a, b, params) {
             if (btn == 'yes') {
                 Ext.Ajax.request({
                     url: Phlexible.Router.generate('cache_flush'),
                     params: params,
-                    success: function(){
+                    success: function () {
                         this.reload();
                     },
                     scope: this
@@ -67,7 +73,7 @@ Phlexible.cache.CacheStatsWindow = Ext.extend(Ext.Window, {
         }.createDelegate(this, [params], true), this);
     },
 
-    onReloadSuccess: function(response) {
+    onReloadSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
         this.getComponent(0).removeAll();
@@ -78,20 +84,24 @@ Phlexible.cache.CacheStatsWindow = Ext.extend(Ext.Window, {
                     xtype: 'panel',
                     layout: 'border',
                     title: name,
-                    items: [{
-                        xtype: 'propertygrid',
-                        region: 'center',
-                        border: false,
-                        source: server
-                    }],
-                    tbar: [{
-                        text: this.strings.flush_server,
-                        iconCls: 'p-cache-flush-icon',
-                        handler: function() {
-                            this.flush(server.name);
-                        },
-                        scope: this
-                    }]
+                    items: [
+                        {
+                            xtype: 'propertygrid',
+                            region: 'center',
+                            border: false,
+                            source: server
+                        }
+                    ],
+                    tbar: [
+                        {
+                            text: this.strings.flush_server,
+                            iconCls: 'p-cache-flush-icon',
+                            handler: function () {
+                                this.flush(server.name);
+                            },
+                            scope: this
+                        }
+                    ]
                 };
 
             if (server.charts) {
@@ -105,18 +115,20 @@ Phlexible.cache.CacheStatsWindow = Ext.extend(Ext.Window, {
                     xtype: 'panel',
                     border: false,
                     bodyStyle: 'padding: 10px',
-                    items: [{
-                        xtype: 'googlechart',
-                        title: this.strings.cache_usage,
-                        width: 270,
-                        height: 150,
+                    items: [
+                        {
+                            xtype: 'googlechart',
+                            title: this.strings.cache_usage,
+                            width: 270,
+                            height: 150,
 
-                        data: usageData,
-                        chartType: "pie3d",
-                        //            dataType: "extended",
-                        labels: ["free", "used"],
-                        chartColors: ["44cc44", "cc4444"]
-                    }]
+                            data: usageData,
+                            chartType: "pie3d",
+                            //            dataType: "extended",
+                            labels: ["free", "used"],
+                            chartColors: ["44cc44", "cc4444"]
+                        }
+                    ]
                 });
 
                 if (server.charts.hits_misses) {
@@ -125,18 +137,20 @@ Phlexible.cache.CacheStatsWindow = Ext.extend(Ext.Window, {
                         xtype: 'panel',
                         border: false,
                         bodyStyle: 'padding: 10px',
-                        items: [{
-                            xtype: 'googlechart',
-                            title: this.strings.hits_and_misses,
-                            width: 270,
-                            height: 150,
+                        items: [
+                            {
+                                xtype: 'googlechart',
+                                title: this.strings.hits_and_misses,
+                                width: 270,
+                                height: 150,
 
-                            data: hitsData,
-                            chartType: "pie3d",
-                            //            dataType: "extended",
-                            labels: ["hits", "misses"],
-                            chartColors: ["44cc44", "cc4444"]
-                        }]
+                                data: hitsData,
+                                chartType: "pie3d",
+                                //            dataType: "extended",
+                                labels: ["hits", "misses"],
+                                chartColors: ["44cc44", "cc4444"]
+                            }
+                        ]
                     });
                 }
 
@@ -150,7 +164,8 @@ Phlexible.cache.CacheStatsWindow = Ext.extend(Ext.Window, {
             }
 
             this.getComponent(0).add(config);
-        };
+        }
+        ;
 
         this.doLayout();
     }

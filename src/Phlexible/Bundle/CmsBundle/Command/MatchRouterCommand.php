@@ -30,8 +30,7 @@ class MatchRouterCommand extends ContainerAwareCommand
             ->setDefinition(array(
                 new InputArgument('uri', InputArgument::REQUIRED, 'URI to match'),
             ))
-            ->setDescription('Match frontend route.')
-        ;
+            ->setDescription('Match frontend route.');
     }
 
     /**
@@ -51,8 +50,6 @@ class MatchRouterCommand extends ContainerAwareCommand
             $uri = 'http://example.com' . $uri;
         }
 
-        $uri = \Zend_Uri::factory($uri);
-        $request = new \Zend_Controller_Request_Http($uri);
         $route = $router->route($request);
         $output->writeln(print_r($route, 1));
 

@@ -15,7 +15,7 @@ use Zend_Db_Adapter_Abstract as Connection;
  * Database connection manager
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @property Connection $default
+ * @property Connection         $default
  * @property FunctionsInterface $fn
  */
 class ConnectionFactory
@@ -35,7 +35,10 @@ class ConnectionFactory
 
         $connection->prefix = $parameters['prefix'];
 
-        $functionsClass = sprintf('Phlexible\Component\Database\Functions\%sFunctions', ucfirst(strtolower($parameters['type'])));
+        $functionsClass = sprintf(
+            'Phlexible\Component\Database\Functions\%sFunctions',
+            ucfirst(strtolower($parameters['type']))
+        );
         $connection->fn = new $functionsClass();
 
         return $connection;

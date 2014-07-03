@@ -9,28 +9,26 @@ Phlexible.elements.accordion.Diff = Ext.extend(Ext.Panel, {
 
     key: 'comment',
 
-    initComponent: function() {
+    initComponent: function () {
         this.element.on({
             diff: {
-                fn: function(diff, cb, scope) {
+                fn: function (diff, cb, scope) {
                     if (cb && scope) {
                         cb.call(scope, diff, this);
                         this.expand();
                     }
-                    else if(cb)
-                    {
+                    else if (cb) {
                         cb(diff, this);
                         this.expand();
                     }
-                    else
-                    {
+                    else {
                         this.empty();
                     }
                 },
                 scope: this
             },
             clearDiff: {
-                fn: function() {
+                fn: function () {
                     this.empty();
                 },
                 scope: this
@@ -42,11 +40,11 @@ Phlexible.elements.accordion.Diff = Ext.extend(Ext.Panel, {
         Phlexible.elements.accordion.Diff.superclass.initComponent.call(this);
     },
 
-    empty: function() {
+    empty: function () {
         this.body.update(Phlexible.elements.Strings.no_differences);
     },
 
-    load: function(data, element) {
+    load: function (data, element) {
         this.empty();
 
         this.diff = element.data.diff;

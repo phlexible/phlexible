@@ -1,5 +1,5 @@
 Phlexible.gui.menuhandle.handle.PanelHandle = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
-    handle: function() {
+    handle: function () {
         var identifier = this.getIdentifier(),
             component = this.getComponent(),
             parameters = {};
@@ -17,7 +17,7 @@ Phlexible.gui.menuhandle.handle.PanelHandle = Ext.extend(Phlexible.gui.menuhandl
         Phlexible.Frame.loadPanel(identifier, component, parameters);
     },
 
-    getIdentifier: function() {
+    getIdentifier: function () {
         return this.getComponent();
     }
 });

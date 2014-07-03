@@ -27,8 +27,7 @@ class PdfTemplate extends AbstractTemplate
      */
     public function getDefaultParameters()
     {
-        return array(
-        );
+        return array();
     }
 
     /**

@@ -16,7 +16,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
 class CheckboxField extends AbstractField
 {
     protected $hasOptions = true;
-    protected $icon       = 'p-elementtype-field_checkbox-icon';
+    protected $icon = 'p-elementtype-field_checkbox-icon';
 
     /**
      * Transform item values
@@ -29,12 +29,10 @@ class CheckboxField extends AbstractField
      */
     protected function _transform(array $item, array $media, array $options)
     {
-        if (!empty($options['default_value']))
-        {
+        if (!empty($options['default_value'])) {
             $item['default_content'] = $options['default_value'];
 
-            if ($item['data_content'] === null)
-            {
+            if ($item['data_content'] === null) {
                 $item['data_content'] = $options['default_value'];
             }
         }

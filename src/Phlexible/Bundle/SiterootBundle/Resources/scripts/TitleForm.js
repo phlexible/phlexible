@@ -4,10 +4,10 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.form.FormPanel, {
     border: false,
     bodyStyle: 'padding: 5px;',
 
-    initComponent: function(){
+    initComponent: function () {
         this.items = [];
 
-        for(var i=0; i<Phlexible.Config.get('set.language.frontend').length; i++) {
+        for (var i = 0; i < Phlexible.Config.get('set.language.frontend').length; i++) {
             this.items.push({
                 fieldLabel: Phlexible.inlineIcon(Phlexible.Config.get('set.language.frontend')[i][2]) + ' ' + Phlexible.Config.get('set.language.frontend')[i][1],
                 name: Phlexible.Config.get('set.language.frontend')[i][0],
@@ -27,12 +27,12 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.form.FormPanel, {
      * @param {String} title
      * @param {Object} data
      */
-    loadData: function(id, title, data) {
+    loadData: function (id, title, data) {
         this.getForm().reset();
         this.getForm().setValues(data.titles);
     },
 
-    isValid: function() {
+    isValid: function () {
         var valid = this.getForm().isValid();
 
         if (valid) {
@@ -47,7 +47,7 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.form.FormPanel, {
     /**
      * Get the data to be saved.
      */
-    getSaveData: function() {
+    getSaveData: function () {
         var values = this.getForm().getValues();
 
         return {

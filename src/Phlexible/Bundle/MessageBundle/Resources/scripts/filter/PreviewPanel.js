@@ -7,11 +7,11 @@ Phlexible.messages.filter.PreviewPanel = Ext.extend(Ext.grid.GridPanel, {
     parameterString: '',
     //quantityLimit: 50,
 
-	viewConfig: {
-		emptyText: Phlexible.messages.Strings.no_messages_found
-	},
+    viewConfig: {
+        emptyText: Phlexible.messages.Strings.no_messages_found
+    },
 
-    initComponent: function(){
+    initComponent: function () {
         this.store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('messages_filter_preview'),
             root: 'messages',
@@ -34,42 +34,42 @@ Phlexible.messages.filter.PreviewPanel = Ext.extend(Ext.grid.GridPanel, {
 
         this.columns = [
             expander,
-        {
-            id: 'subject',
-            header: this.strings.subject,
-            dataIndex: 'subject',
-            sortable: true
-        },{
-            header: this.strings.priority,
-            width: 50,
-            dataIndex: 'priority',
-            sortable: true
-        },{
-            header: this.strings.type,
-            width: 50,
-            dataIndex: 'type',
-            sortable: true
-        },{
-            header: this.strings.channel,
-            width: 60,
-            dataIndex: 'channel',
-            sortable: true
-        },{
-            header: this.strings.resource,
-            width: 50,
-            dataIndex: 'resource',
-            sortable: true
-        },{
-            header: this.strings.user,
-            width: 50,
-            dataIndex: 'user',
-            sortable: true
-        },{
-            header: this.strings.created_at,
-            width: 100,
-            dataIndex: 'createdAt',
-            sortable: true
-        }];
+            {
+                id: 'subject',
+                header: this.strings.subject,
+                dataIndex: 'subject',
+                sortable: true
+            }, {
+                header: this.strings.priority,
+                width: 50,
+                dataIndex: 'priority',
+                sortable: true
+            }, {
+                header: this.strings.type,
+                width: 50,
+                dataIndex: 'type',
+                sortable: true
+            }, {
+                header: this.strings.channel,
+                width: 60,
+                dataIndex: 'channel',
+                sortable: true
+            }, {
+                header: this.strings.resource,
+                width: 50,
+                dataIndex: 'resource',
+                sortable: true
+            }, {
+                header: this.strings.user,
+                width: 50,
+                dataIndex: 'user',
+                sortable: true
+            }, {
+                header: this.strings.created_at,
+                width: 100,
+                dataIndex: 'createdAt',
+                sortable: true
+            }];
 
         this.plugins = [expander];
 
@@ -77,11 +77,11 @@ Phlexible.messages.filter.PreviewPanel = Ext.extend(Ext.grid.GridPanel, {
 
     },
 
-	getParamString: function() {
-		return this.parameterString;
-	},
+    getParamString: function () {
+        return this.parameterString;
+    },
 
-    loadData: function(criterias, title) {
+    loadData: function (criterias, title) {
         if (criterias) {
             this.parameterString = Ext.encode(criterias);
         }
@@ -99,7 +99,7 @@ Phlexible.messages.filter.PreviewPanel = Ext.extend(Ext.grid.GridPanel, {
         this.enable();
     },
 
-    clear: function() {
+    clear: function () {
         this.store.removeAll();
         this.setTitle(this.strings.preview);
     }

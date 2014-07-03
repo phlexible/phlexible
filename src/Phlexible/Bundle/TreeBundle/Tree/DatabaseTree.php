@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
-use Phlexible\Component\Identifier\IdentifiableInterface;
 use Phlexible\Bundle\TreeBundle\Event\BeforeCreateNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\BeforeDeleteNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\BeforeMoveNodeEvent;
@@ -18,7 +17,7 @@ use Phlexible\Bundle\TreeBundle\Event\MoveNodeEvent;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNode;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
-use Symfony\Component\Config\Definition\NodeInterface;
+use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -64,7 +63,11 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
      * @param EventDispatcherInterface  $dispatcher
      * @param TreeHistory               $history
      */
-    public function __construct($siteRootId, \Zend_Db_Adapter_Abstract $db, EventDispatcherInterface $dispatcher, TreeHistory $history)
+    public function __construct(
+        $siteRootId,
+        \Zend_Db_Adapter_Abstract $db,
+        EventDispatcherInterface $dispatcher,
+        TreeHistory $history)
     {
         $this->siterootId = $siteRootId;
         $this->db = $db;
@@ -112,6 +115,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             $node = $this->mapNode($row);
             $nodes[$node->getId()] = $node;
         }
+
         return $nodes;
     }
 
@@ -122,7 +126,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
      */
     private function mapNode(array $row)
     {
-        $attributes = json_decode($row['attributes'], true) ?: array();
+        $attributes = json_decode($row['attributes'], true) ? : array();
 
         $node = new TreeNode();
         $node
@@ -136,8 +140,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             ->setSortMode($row['sort_mode'])
             ->setSortDir($row['sort_dir'])
             ->setCreatedAt(new \DateTime($row['create_time']))
-            ->setCreateUserId($row['create_uid'])
-        ;
+            ->setCreateUserId($row['create_uid']);
 
         $this->nodes[$node->getId()] = $node;
 
@@ -387,7 +390,15 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
     /**
      * {@inheritdoc}
      */
-    public function add($parentId, $afterId, $type, $typeId, array $attributes, $uid, $sortMode = 'free', $sortDir = 'asc')
+    public function add(
+        $parentId,
+        $afterId,
+        $type,
+        $typeId,
+        array $attributes,
+        $uid,
+        $sortMode = 'free',
+        $sortDir = 'asc')
     {
         $parentNode = $this->get($parentId);
 
@@ -417,8 +428,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             ->setSortMode($sortMode)
             ->setSortDir($sortDir)
             ->setCreateUserId($uid)
-            ->setCreatedAt(new \DateTime)
-        ;
+            ->setCreatedAt(new \DateTime);
 
         $beforeEvent = new BeforeCreateNodeEvent($this, $node);
         if (false === $this->dispatcher->dispatch($beforeEvent)) {
@@ -540,7 +550,14 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         $this->dispatcher->dispatch($event);
 
         // history
-        $this->history->insertMoveNode($node, $uid, null, null, null, 'Node moved from TID ' . $oldParentId . ' to TID ' . $toNode->getId());
+        $this->history->insertMoveNode(
+            $node,
+            $uid,
+            null,
+            null,
+            null,
+            'Node moved from TID ' . $oldParentId . ' to TID ' . $toNode->getId()
+        );
     }
 
     /**
@@ -569,39 +586,36 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
 
     protected function _deleteCheck(Makeweb_Elements_Tree_Node $node, array $rightsIdentifiers)
     {
-        $eid  = $node->getEid();
-        $uid  = MWF_Env::getUid();
+        $eid = $node->getEid();
+        $uid = MWF_Env::getUid();
 
-        $container  = MWF_Registry::getContainer();
+        $container = MWF_Registry::getContainer();
 
         $contentRightsManager = $container->contentRightsManager;
 
         if (!MWF_Env::getUser()->isGranted(MWF_Core_Acl_Acl::RESOURCE_SUPERADMIN) &&
-            !MWF_Env::getUser()->isGranted(MWF_Core_Acl_Acl::RESOURCE_DEVELOPMENT))
-        {
+            !MWF_Env::getUser()->isGranted(MWF_Core_Acl_Acl::RESOURCE_DEVELOPMENT)
+        ) {
             $contentRightsManager->calculateRights('internal', $node, $rightsIdentifiers);
 
-            if (true !== $contentRightsManager->hasRight('DELETE', '_all_'))
-            {
+            if (true !== $contentRightsManager->hasRight('DELETE', '_all_')) {
                 $msg = 'You don\t have the delete right for TID "' . $node->getId() . '"';
                 throw new Makeweb_Elements_Tree_Exception($msg);
             }
         }
 
-        $lockIdentifier  = new Makeweb_Elements_Element_Identifier($eid);
-        $locksService    = $container->get('phlexible_element.lock.service');
+        $lockIdentifier = new Makeweb_Elements_Element_Identifier($eid);
+        $locksService = $container->get('phlexible_element.lock.service');
         $locksRepository = $container->get('phlexible_lock.repository');
 
-        if ($locksService->isLockedPartByOtherUser($lockIdentifier, false, $uid))
-        {
+        if ($locksService->isLockedPartByOtherUser($lockIdentifier, false, $uid)) {
             $lockInfo = current($locksRepository->findByIdentifierPartAndOtherUid($lockIdentifier, $uid));
             $user = MWF_Core_Users_User_Peer::getByUserID($lockInfo->lockUid);
             $msg = 'Can\'t delete, element is locked by "' . $user->getUsername() . '".';
             throw new Makeweb_Elements_Tree_Exception_LockException($msg);
         }
 
-        foreach ($node->getChildren() as $childNode)
-        {
+        foreach ($node->getChildren() as $childNode) {
             $this->_deleteCheck($childNode, $rightsIdentifiers);
         }
     }

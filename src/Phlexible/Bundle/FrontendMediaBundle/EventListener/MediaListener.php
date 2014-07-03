@@ -19,30 +19,27 @@ class MediaListener
      * callback for file upload
      *
      * @param Media_Site_Event_SaveUpload $upload
-     * @param array                       $params
      */
-    public function onUploadFile(Media_Site_Event_SaveUpload $event, array $params)
+    public function onUploadFile(Media_Site_Event_SaveUpload $event)
     {
-        $container               = $params['container'];
+        $container = $params['container'];
 
-        if (!$container->components->has('distributionslists'))
-        {
+        if (!$container->components->has('distributionslists')) {
             return;
         }
 
-        $folderRepository        = $container->get('frontendmediamanagerChangeFolderRepository');
-        $changesRepository       = $container->get('distributionlistsChangesRepository');
+        $folderRepository = $container->get('frontendmediamanagerChangeFolderRepository');
+        $changesRepository = $container->get('distributionlistsChangesRepository');
 
         // get folder id
         $folderId = $event->getFolder()->getID();
-        $file     = $event->getFile();
+        $file = $event->getFile();
 
         $folderLists = $folderRepository->getAllFolderListItems($folderId);
-        foreach ($folderLists as $folderList)
-        {
+        foreach ($folderLists as $folderList) {
             $createDate = new Zend_Date();
             $data = array(
-                'fileTitle' => $file->getName(),
+                'fileTitle'   => $file->getName(),
                 'fileVersion' => '1',
                 'fileDate'    => $createDate->toString('yyyy-MM-dd HH:mm:ss'),
                 'eid'         => (int) $folderList->eid,
@@ -50,10 +47,10 @@ class MediaListener
             );
 
             // create change object and save it
-            $change           = $changesRepository->create();
-            $change->type     = 'folders';
-            $change->data     = $data;
-            $change->listIds  = array($folderList->listId);
+            $change = $changesRepository->create();
+            $change->type = 'folders';
+            $change->data = $data;
+            $change->listIds = array($folderList->listId);
             $changesRepository->save($change);
         }
     }
@@ -66,25 +63,23 @@ class MediaListener
      */
     public function onChangeFile(Media_Manager_Event_SaveMeta $event, array $params)
     {
-        $container               = $params['container'];
+        $container = $params['container'];
 
-        if (!$container->components->has('distributionslists'))
-        {
+        if (!$container->components->has('distributionslists')) {
             return;
         }
 
-        $folderRepository        = $container->get('frontendmediamanagerChangeFolderRepository');
-        $changesRepository       = $container->get('distributionlistsChangesRepository');
+        $folderRepository = $container->get('frontendmediamanagerChangeFolderRepository');
+        $changesRepository = $container->get('distributionlistsChangesRepository');
 
         $folderId = $event->getFile()->getFolderID();
-        $file     = $event->getFile();
+        $file = $event->getFile();
 
         $folderLists = $folderRepository->getAllFolderListItems($folderId);
-        foreach ($folderLists as $folderList)
-        {
+        foreach ($folderLists as $folderList) {
             $modifiyDate = new Zend_Date();
             $data = array(
-                'fileTitle' => $file->getName(),
+                'fileTitle'   => $file->getName(),
                 'fileVersion' => $file->getVersion(),
                 'fileDate'    => $modifiyDate->toString('yyyy-MM-dd HH:mm:ss'),
                 'eid'         => (int) $folderList->eid,
@@ -92,10 +87,10 @@ class MediaListener
             );
 
             // create change object and save it
-            $change           = $changesRepository->create();
-            $change->type     = 'folders';
-            $change->data     = $data;
-            $change->listIds  = array($folderList->listId);
+            $change = $changesRepository->create();
+            $change->type = 'folders';
+            $change->data = $data;
+            $change->listIds = array($folderList->listId);
             $changesRepository->save($change);
         }
     }
@@ -108,25 +103,23 @@ class MediaListener
      */
     public function onDeleteFile(Media_Site_Event_DeleteFile $event, array $params)
     {
-        $container               = $params['container'];
+        $container = $params['container'];
 
-        if (!$container->components->has('distributionslists'))
-        {
+        if (!$container->components->has('distributionslists')) {
             return;
         }
 
-        $folderRepository        = $container->get('frontendmediamanagerChangeFolderRepository');
-        $changesRepository       = $container->get('distributionlistsChangesRepository');
+        $folderRepository = $container->get('frontendmediamanagerChangeFolderRepository');
+        $changesRepository = $container->get('distributionlistsChangesRepository');
 
         $folderId = $event->getFolder()->getID();
-        $file     = $event->getFile();
+        $file = $event->getFile();
 
         $folderLists = $folderRepository->getAllFolderListItems($folderId);
-        foreach ($folderLists as $folderList)
-        {
+        foreach ($folderLists as $folderList) {
             $modifiyDate = new Zend_Date();
             $data = array(
-                'fileTitle' => $file->getName(),
+                'fileTitle'   => $file->getName(),
                 'fileVersion' => $file->getVersion(),
                 'fileDate'    => $modifiyDate->toString('yyyy-MM-dd HH:mm:ss'),
                 'eid'         => (int) $folderList->eid,
@@ -134,10 +127,10 @@ class MediaListener
             );
 
             // create change object and save it
-            $change           = $changesRepository->create();
-            $change->type     = 'folders';
-            $change->data     = $data;
-            $change->listIds  = array($folderList->listId);
+            $change = $changesRepository->create();
+            $change->type = 'folders';
+            $change->data = $data;
+            $change->listIds = array($folderList->listId);
             $changesRepository->save($change);
         }
     }

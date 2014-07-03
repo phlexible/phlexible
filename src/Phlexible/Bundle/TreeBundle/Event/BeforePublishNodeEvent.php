@@ -55,9 +55,9 @@ class Makeweb_Elements_Event_BeforePublishNode extends Brainbits_Event_Notificat
      */
     public function __construct(Makeweb_Elements_Tree_Node $node, $language, $version, $isRecursive = false)
     {
-        $this->_node        = $node;
-        $this->_language    = $language;
-        $this->_version     = $version;
+        $this->_node = $node;
+        $this->_language = $language;
+        $this->_version = $version;
         $this->_isRecursive = (bool) $isRecursive;
     }
 

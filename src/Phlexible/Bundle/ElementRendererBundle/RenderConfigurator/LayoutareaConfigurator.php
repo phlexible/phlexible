@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\TeaserBundle\Teaser\TeaserService;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -49,10 +49,11 @@ class LayoutareaConfigurator implements ConfiguratorInterface
      * @param ElementService           $elementService
      * @param TeaserService            $teaserService
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                LoggerInterface $logger,
-                                ElementService $elementService,
-                                TeaserService $teaserService)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger,
+        ElementService $elementService,
+        TeaserService $teaserService)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
@@ -91,8 +92,8 @@ class LayoutareaConfigurator implements ConfiguratorInterface
         }
 
         /* @var $treeNode TreeNodeInterface */
-        $treeNode     = $renderConfiguration->get('treeNode');
-        $tree         = $treeNode->getTree();
+        $treeNode = $renderConfiguration->get('treeNode');
+        $tree = $treeNode->getTree();
         $treeNodePath = $tree->getPath($treeNode);
 
         $language = $request->attributes->get('language');
@@ -135,8 +136,10 @@ class LayoutareaConfigurator implements ConfiguratorInterface
             ->set('layoutareas', $areas);
 
         // Before Init Teasers Event
-        #$event = new Makeweb_Renderers_Event_InitTeasers($this);
-        #$this->_dispatcher->dispatch($event);
+        /*
+        $event = new Makeweb_Renderers_Event_InitTeasers($this);
+        $this->_dispatcher->dispatch($event);
+        */
     }
 
 }

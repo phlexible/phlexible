@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\ElementBundle\Overlay;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,7 +37,7 @@ class AssetController extends Controller
      */
     public function iconAction(Request $request)
     {
-        $icon   = $request->get('icon', null);
+        $icon = $request->get('icon', null);
         $params = $request->query->all();
 
         $overlay = $this->get('phlexible_element.overlay');

@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\Event\GetSlotsEvent;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
@@ -21,6 +20,7 @@ use Phlexible\Bundle\MediaSiteBundle\Site;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -143,21 +143,23 @@ class FolderController extends Controller
                 $userRights = array_keys($this->get('accesscontrol.right.registry')->getRights('internal', 'folder'));
 
                 $slot = new SiteSlot();
-                $slot->setData(array(
+                $slot->setData(
                     array(
-                        'id'        => $rootFolder->getId(),
-                        'site_id'   => $site->getId(),
-                        'text'      => $rootFolder->getName(),
-                        'cls'       => 't-mediamanager-root',
-                        'leaf'      => !$site->countFoldersByParentFolder($rootFolder),
-                        'numChilds' => $site->countFilesByFolder($rootFolder),
-                        'draggable' => false,
-                        'expanded'  => true,
-                        'allowDrop' => true,
-                        'versions'  => $site->hasFeature('versions'),
-                        'rights'    => $userRights,
+                        array(
+                            'id'        => $rootFolder->getId(),
+                            'site_id'   => $site->getId(),
+                            'text'      => $rootFolder->getName(),
+                            'cls'       => 't-mediamanager-root',
+                            'leaf'      => !$site->countFoldersByParentFolder($rootFolder),
+                            'numChilds' => $site->countFilesByFolder($rootFolder),
+                            'draggable' => false,
+                            'expanded'  => true,
+                            'allowDrop' => true,
+                            'versions'  => $site->hasFeature('versions'),
+                            'rights'    => $userRights,
+                        )
                     )
-                ));
+                );
 
                 $slots->append($slot);
             }
@@ -167,23 +169,23 @@ class FolderController extends Controller
 
             $data = $slots->getAllData();
 
-//            $data[] = array(
-//                'id'        => 'tags',
-//                'text'      => 'Tags',
-//                'iconCls'   => 'p-mediamanager-tag-icon',
-//                'cls'       => 't-mediamanager-root',
-//                'leaf'      => false,
-//                'children' => array(array(
-//                    'id' => 'tag1',
-//                    'text' => 'tag1',
-//                    'leaf' => true
-//                )),
-//                'draggable' => false,
-//                'expanded'  => true,
-//                'allowDrag' => false,
-//                'allowDrop' => false,
-//                'module'    => true,
-//            );
+            //            $data[] = array(
+            //                'id'        => 'tags',
+            //                'text'      => 'Tags',
+            //                'iconCls'   => 'p-mediamanager-tag-icon',
+            //                'cls'       => 't-mediamanager-root',
+            //                'leaf'      => false,
+            //                'children' => array(array(
+            //                    'id' => 'tag1',
+            //                    'text' => 'tag1',
+            //                    'leaf' => true
+            //                )),
+            //                'draggable' => false,
+            //                'expanded'  => true,
+            //                'allowDrag' => false,
+            //                'allowDrop' => false,
+            //                'module'    => true,
+            //            );
         } else {
             $slotKey = $request->get('slot', null);
             if (!$slotKey) {
@@ -207,7 +209,9 @@ class FolderController extends Controller
                     }
                     $userRights = array();
                     */
-                    $userRights = array_keys($this->get('accesscontrol.right.registry')->getRights('internal', 'folder'));
+                    $userRights = array_keys(
+                        $this->get('accesscontrol.right.registry')->getRights('internal', 'folder')
+                    );
 
                     $folderUsageService = $this->get('mediamanager.usage.folder_usage_service');
                     $usage = $folderUsageService->getStatus($folder);
@@ -292,8 +296,8 @@ class FolderController extends Controller
      */
     public function renameAction(Request $request)
     {
-        $siteId     = $request->get('site_id');
-        $folderId   = $request->get('folder_id');
+        $siteId = $request->get('site_id');
+        $folderId = $request->get('folder_id');
         $folderName = $request->get('folder_name');
 
         $site = $this->getSite($siteId);
@@ -316,7 +320,7 @@ class FolderController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $siteId   = $request->get('site_id');
+        $siteId = $request->get('site_id');
         $folderId = $request->get('folder_id');
 
         $site = $this->getSite($siteId);
@@ -345,7 +349,7 @@ class FolderController extends Controller
      */
     public function moveAction(Request $request)
     {
-        $siteId   = $request->get('site_id');
+        $siteId = $request->get('site_id');
         $targetId = $request->get('target_id');
         $sourceId = $request->get('source_id');
 

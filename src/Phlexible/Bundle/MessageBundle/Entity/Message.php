@@ -20,9 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Message
 {
-    const PRIORITY_LOW    = 0;
+    const PRIORITY_LOW = 0;
     const PRIORITY_NORMAL = 1;
-    const PRIORITY_HIGH   = 2;
+    const PRIORITY_HIGH = 2;
     const PRIORITY_URGENT = 3;
 
     const TYPE_INFO = 0;
@@ -109,7 +109,14 @@ class Message
      *
      * @return Message
      */
-    public static function create($subject = null, $body = null, $priority = null, $type = null, $channel = null, $resource = null, $user = null)
+    public static function create(
+        $subject = null,
+        $body = null,
+        $priority = null,
+        $type = null,
+        $channel = null,
+        $resource = null,
+        $user = null)
     {
         $staticMessage = new static();
         $defaults = $staticMessage->getDefaults();

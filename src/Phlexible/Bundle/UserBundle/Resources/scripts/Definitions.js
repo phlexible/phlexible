@@ -1,10 +1,10 @@
 Ext.namespace(
-	'Phlexible.users.menuhandle',
-	'Phlexible.users.model',
-	'Phlexible.users.options'
+    'Phlexible.users.menuhandle',
+    'Phlexible.users.model',
+    'Phlexible.users.options'
 );
 
-Phlexible.EntryManager.register('users', function(params) {
+Phlexible.EntryManager.register('users', function (params) {
     return {
         handler: Phlexible.LoadHandler.handlePanel,
         identifier: 'Phlexible_users_MainPanel',

@@ -91,7 +91,7 @@ class VideoAnalyzerAttributeReader implements AttributeReaderInterface
                 $metaData->set('number_of_streams', $format->get('nb_streams'));
             }
 
-            $streams = $this->analyzer->streams($asset->getFilename());
+            $streams = $this->analyzer->streams($file->getPhysicalPath());
 
             foreach ($streams as $stream) {
                 /* @var $stream Stream */

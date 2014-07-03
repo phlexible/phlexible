@@ -36,10 +36,22 @@ class GetConfigListener
 
         $config = $event->getConfig();
 
-        $config->set('elements.publish.comment_required', (bool) $container->getParameter('phlexible_element.publish.comment_required'));
-        $config->set('elements.publish.confirm_required', (bool) $container->getParameter('phlexible_element.publish.confirm_required'));
-        $config->set('elements.create.use_multilanguage', (bool) $container->getParameter('phlexible_element.create.use_multilanguage'));
-        $config->set('elements.create.restricted', (bool) $container->getParameter('phlexible_element.create.restricted'));
+        $config->set(
+            'elements.publish.comment_required',
+            (bool) $container->getParameter('phlexible_element.publish.comment_required')
+        );
+        $config->set(
+            'elements.publish.confirm_required',
+            (bool) $container->getParameter('phlexible_element.publish.confirm_required')
+        );
+        $config->set(
+            'elements.create.use_multilanguage',
+            (bool) $container->getParameter('phlexible_element.create.use_multilanguage')
+        );
+        $config->set(
+            'elements.create.restricted',
+            (bool) $container->getParameter('phlexible_element.create.restricted')
+        );
 
         $siterootManager = $container->get('phlexible_siteroot.siteroot_manager');
         $treeManager = $container->get('phlexible_tree.manager');
@@ -54,7 +66,8 @@ class GetConfigListener
             $siterootId = $siteroot->getId();
 
             if ($securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) ||
-                    $securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)) {
+                $securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)
+            ) {
                 $siterootLanguages[$siterootId] = $allLanguages;
             } else {
                 $siterootLanguages[$siterootId] = array();

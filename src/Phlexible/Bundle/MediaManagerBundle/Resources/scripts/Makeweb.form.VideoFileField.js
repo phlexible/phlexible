@@ -13,11 +13,11 @@ Ext.form.VideoFileField = Ext.extend(Ext.form.FileField, {
 
     emptyAddText: Phlexible.mediamanager.Strings.click_to_add_video,
 
-	getPlaceholder: function() {
-		return Phlexible.component('/mediamanagerbundle/images/form-file-video.gif');
-	},
+    getPlaceholder: function () {
+        return Phlexible.component('/mediamanagerbundle/images/form-file-video.gif');
+    },
 
-	onAdd: function() {
+    onAdd: function () {
         if (this.disabled) return;
 
         var w = new Phlexible.mediamanager.MediamanagerWindow({
@@ -41,7 +41,7 @@ Ext.form.VideoFileField = Ext.extend(Ext.form.FileField, {
         w.show();
     },
 
-    onFileSelect: function(w, file_id, file_version, file_name, folder_id) {
+    onFileSelect: function (w, file_id, file_version, file_name, folder_id) {
         this.setFile(file_id, file_version, file_name, folder_id);
 
         w.close();

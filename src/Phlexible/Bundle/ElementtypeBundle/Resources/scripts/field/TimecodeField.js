@@ -1,31 +1,31 @@
-Phlexible.fields.Registry.addFactory('timecodefield', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('timecodefield', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.dsId);
+    element.prototypes.incCount(item.dsId);
 
-	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
 
-	Ext.apply(config, {
-		xtype: 'textfield',
-		minLength: (item.validation.min_length || 0),
-		maxLength: (item.validation.max_length || Number.MAX_VALUE),
-		vtype: (item.validation.validator || null),
-		regex: (item.validation.regexp ? new RegExp(item.validation.regexp, (item.validation.ignore ? 'i' : '') + (item.validation.multiline ? 'm' : '')) : null),
+    Ext.apply(config, {
+        xtype: 'textfield',
+        minLength: (item.validation.min_length || 0),
+        maxLength: (item.validation.max_length || Number.MAX_VALUE),
+        vtype: (item.validation.validator || null),
+        regex: (item.validation.regexp ? new RegExp(item.validation.regexp, (item.validation.ignore ? 'i' : '') + (item.validation.multiline ? 'm' : '')) : null),
 
-		timecodePattern: '99:99:99.99',
-		plugins: [new Ext.ux.InputTextMask(this.timecodePattern)],
+        timecodePattern: '99:99:99.99',
+        plugins: [new Ext.ux.InputTextMask(this.timecodePattern)],
 
-		supportsPrefix: true,
-		supportsSuffix: true,
-		supportsDiff: true,
-		supportsInlineDiff: true,
-		supportsUnlink: true,
-		supportsRepeatable: true
-	});
+        supportsPrefix: true,
+        supportsSuffix: true,
+        supportsDiff: true,
+        supportsInlineDiff: true,
+        supportsUnlink: true,
+        supportsRepeatable: true
+    });
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('timecodefield', {
@@ -35,11 +35,11 @@ Phlexible.fields.FieldTypes.addField('timecodefield', {
     },
     iconCls: 'p-elementtype-field_timecode-icon',
     allowedIn: [
-		'tab',
-		'accordion',
-		'group',
-		'referenceroot'
-	],
+        'tab',
+        'accordion',
+        'group',
+        'referenceroot'
+    ],
     defaultValueField: 'default_value_textfield',
     config: {
         labels: {

@@ -23,13 +23,16 @@ class Config
     /**
      * @param string $key
      * @param mixed  $value
+     *
      * @throws \InvalidArgumentException
      * @return $this
      */
     public function set($key, $value)
     {
         if (!is_scalar($value) && !is_array($value)) {
-            throw new \InvalidArgumentException('Value has to be a scalar or an array, but is ' . gettype($value) . '.');
+            throw new \InvalidArgumentException('Value has to be a scalar or an array, but is ' . gettype(
+                    $value
+                ) . '.');
         }
 
         $this->values[$key] = $value;
@@ -39,6 +42,7 @@ class Config
 
     /**
      * @param string $key
+     *
      * @throws \InvalidArgumentException
      * @return mixed
      */

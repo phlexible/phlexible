@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -35,7 +35,7 @@ class DataController extends Controller
     public function addAction(Request $request)
     {
         $sourceId = $request->get('source_id');
-        $key      = $request->get('key');
+        $key = $request->get('key');
         $language = $request->get('language', 'de');
 
         $dataSourcesRepository = $this->get('datasources.repository');

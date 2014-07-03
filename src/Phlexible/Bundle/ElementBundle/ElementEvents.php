@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\ElementBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ElementEvents
+class ElementEvents
 {
     /**
      * Before Create Element Event

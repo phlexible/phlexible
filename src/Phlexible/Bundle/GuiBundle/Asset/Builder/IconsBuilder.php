@@ -47,10 +47,11 @@ class IconsBuilder
      * @param string                 $cacheDir
      * @param bool                   $debug
      */
-    public function __construct(array $bundles,
-                                CssCompressorInterface $cssCompressor,
-                                $cacheDir,
-                                $debug)
+    public function __construct(
+        array $bundles,
+        CssCompressorInterface $cssCompressor,
+        $cacheDir,
+        $debug)
     {
         $this->bundles = $bundles;
         $this->cssCompressor = $cssCompressor;
@@ -189,7 +190,7 @@ class IconsBuilder
                 $urlTemplate
             );
 
-            $style = $row['selector'] . ' {background-image: url('.$url.') !important;}' . PHP_EOL;
+            $style = $row['selector'] . ' {background-image: url(' . $url . ') !important;}' . PHP_EOL;
 
             $content .= $style;
         }

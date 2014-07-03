@@ -3,26 +3,26 @@ Phlexible.elements.accordion.QuickInfoTemplate = new Ext.XTemplate(
     '<div class="data-wrap">',
     '<table style="width:100%">',
 
-        '<tr><th>{[Phlexible.elements.Strings.title]}</th><td>{backend_title}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.title]}</th><td>{backend_title}</td></tr>',
 
-        '<tpl if="!teaser_id">',
-        '<tr><th>{[Phlexible.elements.Strings.tid]}:</th><td>{tid}</td></tr>',
-        '</tpl>',
+    '<tpl if="!teaser_id">',
+    '<tr><th>{[Phlexible.elements.Strings.tid]}:</th><td>{tid}</td></tr>',
+    '</tpl>',
 
-        '<tpl if="teaser_id">',
-        '<tr><th>{[Phlexible.elements.Strings.teaser_id]}:</th><td>{teaser_id}</td></tr>',
-        '</tpl>',
+    '<tpl if="teaser_id">',
+    '<tr><th>{[Phlexible.elements.Strings.teaser_id]}:</th><td>{teaser_id}</td></tr>',
+    '</tpl>',
 
-        //'<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{author}</td></tr>',
-        //'<tr><th>{[Phlexible.elements.Strings.created]}:</th><td>{create_date}</td></tr>',
-        '<tr><th>{[Phlexible.elements.Strings.status]}:</th>',
-            '<tpl if="!status || status == Phlexible.elements.STATUS_OFFLINE"><td>{[Phlexible.elements.Strings.not_published]}</td></tpl>',
-            '<tpl if="status && status == Phlexible.elements.STATUS_ONLINE"><td style="color: green">{[Phlexible.elements.Strings.published]}</td></tpl>',
-            '<tpl if="status && status == Phlexible.elements.STATUS_ASYNC"><td style="color: red">{[Phlexible.elements.Strings.published_async]}</td></tpl>',
-        '</tr>',
-        '<tpl if="values.masterlanguage != values.language">',
-        '<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td style="color: red;">{[Phlexible.inlineIcon("p-flags-"+values.masterlanguage+"-icon")]} {[Phlexible.languages.Strings[values.masterlanguage]]}</td></tr>',
-        '</tpl>',
+    //'<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{author}</td></tr>',
+    //'<tr><th>{[Phlexible.elements.Strings.created]}:</th><td>{create_date}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.status]}:</th>',
+    '<tpl if="!status || status == Phlexible.elements.STATUS_OFFLINE"><td>{[Phlexible.elements.Strings.not_published]}</td></tpl>',
+    '<tpl if="status && status == Phlexible.elements.STATUS_ONLINE"><td style="color: green">{[Phlexible.elements.Strings.published]}</td></tpl>',
+    '<tpl if="status && status == Phlexible.elements.STATUS_ASYNC"><td style="color: red">{[Phlexible.elements.Strings.published_async]}</td></tpl>',
+    '</tr>',
+    '<tpl if="values.masterlanguage != values.language">',
+    '<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td style="color: red;">{[Phlexible.inlineIcon("p-flags-"+values.masterlanguage+"-icon")]} {[Phlexible.languages.Strings[values.masterlanguage]]}</td></tr>',
+    '</tpl>',
 
     '</table>',
     '</div>',
@@ -38,7 +38,7 @@ Phlexible.elements.accordion.QuickInfo = Ext.extend(Ext.Panel, {
     //startPinned: true,
     //plugins: [Ext.ux.plugins.ToggleCollapsible],
 
-    initComponent: function() {
+    initComponent: function () {
         this.items = new Ext.DataView({
             store: new Ext.data.SimpleStore({
                 id: 'dummy_id',
@@ -67,38 +67,38 @@ Phlexible.elements.accordion.QuickInfo = Ext.extend(Ext.Panel, {
             tpl: Phlexible.elements.accordion.QuickInfoTemplate,
             autoHeight: true,
             singleSelect: true,
-            overClass:'x-view-over',
+            overClass: 'x-view-over',
             itemSelector: 'div.data-wrap'
         });
 
         Phlexible.elements.accordion.QuickInfo.superclass.initComponent.call(this);
     },
 
-    load: function(data) {
+    load: function (data) {
         var store = this.getComponent(0).store;
         store.removeAll();
         var r = new Ext.data.Record(data.properties);
         store.add(r);
         return;
         /*
-        r.beginEdit();
-        for(var i in data.properties) {
-            r.set(i, data.properties[i]);
-            continue;
-            if(i == 'status') {
-                data[i] = data.properties[i] ? this.strings.published : this.strings.not_published;
-            }
-            r = store.getById(i);
-            if(r) {
-//                r.beginEdit();
-                r.set('value', data.properties[i]);
-//                r.endEdit();
-//                r.commit();
-            }
-        }
-        r.endEdit();
-        r.commit();
-        */
+         r.beginEdit();
+         for(var i in data.properties) {
+         r.set(i, data.properties[i]);
+         continue;
+         if(i == 'status') {
+         data[i] = data.properties[i] ? this.strings.published : this.strings.not_published;
+         }
+         r = store.getById(i);
+         if(r) {
+         //                r.beginEdit();
+         r.set('value', data.properties[i]);
+         //                r.endEdit();
+         //                r.commit();
+         }
+         }
+         r.endEdit();
+         r.commit();
+         */
     }
 });
 

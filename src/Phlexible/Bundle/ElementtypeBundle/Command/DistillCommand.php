@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureNode;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,11 +29,12 @@ class DistillCommand extends ContainerAwareCommand
     {
         $this
             ->setName('elementtypes:distill')
-            ->setDefinition(array(
-                new InputArgument('elementtypeId', InputArgument::REQUIRED, 'Element type ID'),
-            ))
-            ->setDescription('Distill element type.')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('elementtypeId', InputArgument::REQUIRED, 'Element type ID'),
+                )
+            )
+            ->setDescription('Distill element type.');
     }
 
     /**
@@ -72,7 +73,9 @@ class DistillCommand extends ContainerAwareCommand
             if ($field->isField()) {
                 $data[$childNode->getWorkingTitle()] = true;
 
-                $output->writeln($childNode->getDsId() . ' ' . $childNode->getTitle() . ' ' . $childNode->getFieldType());
+                $output->writeln(
+                    $childNode->getDsId() . ' ' . $childNode->getTitle() . ' ' . $childNode->getFieldType()
+                );
             }
 
             if ($structure->hasChildNodes($childNode->getDsId())) {

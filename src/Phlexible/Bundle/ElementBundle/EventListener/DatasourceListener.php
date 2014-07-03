@@ -45,8 +45,8 @@ class DatasourceListener implements EventSubscriberInterface
     {
         // add cleanup job for suggets fields
         MWF_Registry::getContainer()->queueService->addUniqueJob(
-                                                  new \Phlexible\Bundle\DataSourceBundle\Job\CleanupJob(),
-                                                      \Phlexible\Bundle\QueueBundle\QueueItem::PRIORITY_LOW
+            new \Phlexible\Bundle\DataSourceBundle\Job\CleanupJob(),
+            \Phlexible\Bundle\QueueBundle\QueueItem::PRIORITY_LOW
         );
     }
 
@@ -68,9 +68,9 @@ class DatasourceListener implements EventSubscriberInterface
     public function onBeforeDeleteValues(CollectionEvent $event)
     {
         // get id of data source to process
-        $dataSource   = $event->getDataSource();
+        $dataSource = $event->getDataSource();
         $dataSourceId = $dataSource->getId();
-        $language     = $dataSource->getLanguage();
+        $language = $dataSource->getLanguage();
 
         // fetch all data source values used in any element version
         $usedValues = $this->suggestFieldUtil->fetchUsedValues($dataSourceId, $language);
@@ -91,9 +91,9 @@ class DatasourceListener implements EventSubscriberInterface
     public function onBeforeMarkInactive(CollectionEvent $event)
     {
         // get id of data source to process
-        $dataSource   = $event->getDataSource();
+        $dataSource = $event->getDataSource();
         $dataSourceId = $dataSource->getId();
-        $language     = $dataSource->getLanguage();
+        $language = $dataSource->getLanguage();
 
         // fetch all data source values used in element online versions
         $onlineValues = $this->suggestFieldUtil->fetchOnlineValues($dataSourceId, $language);
@@ -114,9 +114,9 @@ class DatasourceListener implements EventSubscriberInterface
     public function onBeforeMarkActive(CollectionEvent $event)
     {
         // get id of data source to process
-        $dataSource   = $event->getDataSource();
+        $dataSource = $event->getDataSource();
         $dataSourceId = $dataSource->getId();
-        $language     = $dataSource->getLanguage();
+        $language = $dataSource->getLanguage();
 
         // fetch all data source values used in element online versions
         $onlineValues = $this->suggestFieldUtil->fetchOnlineValues($dataSourceId, $language);

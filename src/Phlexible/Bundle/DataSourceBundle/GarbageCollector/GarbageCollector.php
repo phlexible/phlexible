@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\GarbageCollector;
 
+use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
-use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
 use Phlexible\Bundle\DataSourceBundle\Value\ValueCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -106,7 +106,7 @@ class GarbageCollector
     private function removeUnusedValues(DataSource $dataSource)
     {
         // dispatch pre event
-        $collection  = new ValueCollection($dataSource->getKeys());
+        $collection = new ValueCollection($dataSource->getKeys());
         $event = new CollectionEvent($dataSource, $collection);
         if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_DELETE_VALUES, $event)->isPropagationStopped()) {
             return 0;
@@ -140,7 +140,7 @@ class GarbageCollector
     protected function activateActiveValues(DataSource $dataSource)
     {
         // dispatch pre event
-        $collection  = new ValueCollection();
+        $collection = new ValueCollection();
         $event = new CollectionEvent($dataSource, $collection);
         if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_MARK_ACTIVE, $event)->isPropagationStopped()) {
             return 0;
@@ -149,7 +149,7 @@ class GarbageCollector
         // get deactivatable values
         $activatable = array_intersect($dataSource->getInactiveKeys(), $collection->toArray());
 
-        $count =  count($activatable);
+        $count = count($activatable);
         if ($count) {
             // apply changes if there is changeable data
             $dataSource->activateKeys($activatable);
@@ -173,7 +173,7 @@ class GarbageCollector
     protected function deactivateInactiveValues(DataSource $dataSource)
     {
         // dispatch pre event
-        $collection  = new ValueCollection($dataSource->getActiveKeys());
+        $collection = new ValueCollection($dataSource->getActiveKeys());
         $beforeEvent = new CollectionEvent($dataSource, $collection);
         if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_MARK_INACTIVE, $beforeEvent)->isPropagationStopped()) {
             return 0;

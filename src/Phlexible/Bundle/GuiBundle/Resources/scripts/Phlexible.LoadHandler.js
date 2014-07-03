@@ -23,8 +23,8 @@ Phlexible.LoadHandler = {
      * @param {Ext.Item} menu The {@link Ext.menu.Item} object
      * @param {Ext.Eventobject} event The {@link Ext.EventObject} object
      */
-    handleLink: function(menu, event){
-        if(!menu.handleTarget || !menu.handleTarget.href){
+    handleLink: function (menu, event) {
+        if (!menu.handleTarget || !menu.handleTarget.href) {
             return;
         }
 
@@ -41,8 +41,8 @@ Phlexible.LoadHandler = {
      * @param {Ext.Item} menu The {@link Ext.menu.Item} object
      * @param {Ext.Eventobject} event The {@link Ext.EventObject} object
      */
-    handleIframe: function(menu, event){
-        if(!menu.handleTarget || !menu.handleTarget.iframeurl){
+    handleIframe: function (menu, event) {
+        if (!menu.handleTarget || !menu.handleTarget.iframeurl) {
             return;
         }
 
@@ -55,7 +55,7 @@ Phlexible.LoadHandler = {
             defaultSrc: url
         };
 
-        if(menu.handleTarget.iframeiconclass) {
+        if (menu.handleTarget.iframeiconclass) {
             config.iconCls = menu.handleTarget.iframeiconclass;
         }
 
@@ -72,15 +72,15 @@ Phlexible.LoadHandler = {
      * @param {Ext.Item} menu The {@link Ext.menu.Item} object
      * @param {Ext.Eventobject} event The {@link Ext.EventObject} object
      */
-    handleDialog: function(menu, event){
+    handleDialog: function (menu, event) {
         var handleTarget;
         var handleParams;
 
-        if(typeof menu == 'string'){
+        if (typeof menu == 'string') {
             handleTarget = Phlexible.evalClassString(menu);
             handleParams = {};
         } else {
-            if(!menu.handleTarget){
+            if (!menu.handleTarget) {
                 alert('no dialog name given!');
                 return;
             }
@@ -88,7 +88,7 @@ Phlexible.LoadHandler = {
             handleParams = menu.params || {};
         }
 
-        if(handleTarget) {
+        if (handleTarget) {
             var o = new handleTarget(handleParams);
             o.show();
         }
@@ -99,15 +99,15 @@ Phlexible.LoadHandler = {
      * @param {Ext.Item} menu The {@link Ext.menu.Item} object
      * @param {Ext.Eventobject} event The {@link Ext.EventObject} object
      */
-    handleFunction: function(menu, event) {
+    handleFunction: function (menu, event) {
         var handleTarget;
         var handleParams;
 
-        if(typeof menu == 'string'){
+        if (typeof menu == 'string') {
             handleTarget = Phlexible.evalClassString(menu);
             handleParams = {};
         } else {
-            if(!menu.handleTarget){
+            if (!menu.handleTarget) {
                 alert('no function name given!');
                 return;
             }
@@ -123,19 +123,19 @@ Phlexible.LoadHandler = {
      * @param {Ext.Item} menu The {@link Ext.menu.Item} object
      * @param {Ext.Eventobject} event The {@link Ext.EventObject} object
      */
-    handleClass: function(menu, event){
+    handleClass: function (menu, event) {
         alert("handleClass call, aborted");
         return;
 
         var handleClass;
         var handleClassName;
 
-        if(typeof menu == 'string'){
+        if (typeof menu == 'string') {
             handleClassName = menu.replace(/\./g, '_');
             handleClass = Phlexible.evalClassString(menu);
             handleParams = {};
         } else {
-            if(!menu.handleClassName) {
+            if (!menu.handleClassName) {
                 alert('no class name given!');
                 return;
             }
@@ -152,16 +152,16 @@ Phlexible.LoadHandler = {
      * @param {Ext.Item} menu The {@link Ext.menu.Item} object
      * @param {Ext.EventObject} event The {@link Ext.EventObject} object
      */
-    handlePanel: function(menu, event) {
+    handlePanel: function (menu, event) {
         var handlePanel;
         var handlePanelIdentifier;
         var handleParams = {};
 
-        if(typeof menu == 'string'){
+        if (typeof menu == 'string') {
             handlePanelIdentifier = menu.replace(/\./g, '_');
             handlePanel = Phlexible.evalClassString(menu);
         } else {
-            if(!menu.handleTarget) {
+            if (!menu.handleTarget) {
                 alert('no panel name given!');
                 return;
             }
@@ -172,7 +172,7 @@ Phlexible.LoadHandler = {
                 handlePanelIdentifier = menu.handleTarget;
             }
             handlePanelIdentifier = handlePanelIdentifier.replace(/\./g, '_');
-            if(menu.params) {
+            if (menu.params) {
                 handleParams = menu.params;
             }
         }

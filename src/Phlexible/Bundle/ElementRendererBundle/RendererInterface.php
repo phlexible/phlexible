@@ -17,6 +17,7 @@ interface RendererInterface
 {
     /**
      * @param RenderConfiguration $renderConfiguration
+     *
      * @return string
      */
     public function render(RenderConfiguration $renderConfiguration);

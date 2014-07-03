@@ -38,8 +38,7 @@ class TemplateLoader
         $templates = new TemplateCollection();
 
         $finder = new Finder();
-        foreach ($finder->in($this->templateDir)->files() as $templateFile)
-        {
+        foreach ($finder->in($this->templateDir)->files() as $templateFile) {
             /* @var $templateFile \Symfony\Component\Finder\SplFileInfo */
             $template = new Template();
             $template

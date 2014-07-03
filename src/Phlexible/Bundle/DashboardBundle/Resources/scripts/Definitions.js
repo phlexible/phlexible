@@ -15,8 +15,8 @@ Phlexible.dashboard.PortletRecord = Ext.data.Record.create([
 Phlexible.dashboard.ListStore = new Ext.data.SimpleStore({
     fields: Phlexible.dashboard.PortletRecord,
     listeners: {
-        remove: function(store) {
-            if(!store.getCount()) {
+        remove: function (store) {
+            if (!store.getCount()) {
                 store.removeAll();
             }
         }

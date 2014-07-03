@@ -48,10 +48,11 @@ class ScriptsBuilder
      * @param string                        $cacheDir
      * @param bool                          $debug
      */
-    public function __construct(AssetProviderCollection $assetProviders,
-                                JavascriptCompressorInterface $javascriptCompressor,
-                                $cacheDir,
-                                $debug)
+    public function __construct(
+        AssetProviderCollection $assetProviders,
+        JavascriptCompressorInterface $javascriptCompressor,
+        $cacheDir,
+        $debug)
     {
         $this->assetProviders = $assetProviders;
         $this->javascriptCompressor = $javascriptCompressor;

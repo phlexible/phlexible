@@ -32,7 +32,15 @@ interface WritableTreeInterface
      *
      * @return TreeNodeInterface
      */
-    public function add($parentNode, $afterNode, $type, $typeId, array $attributes, $uid, $sortMode = 'free', $sortDir = 'asc');
+    public function add(
+        $parentNode,
+        $afterNode,
+        $type,
+        $typeId,
+        array $attributes,
+        $uid,
+        $sortMode = 'free',
+        $sortDir = 'asc');
 
     /**
      * Reorder node

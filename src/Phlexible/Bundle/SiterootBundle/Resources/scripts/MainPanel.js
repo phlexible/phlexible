@@ -6,7 +6,7 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
 
     layout: 'border',
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents(
             /**
@@ -37,38 +37,49 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
                 }
             }), {
                 region: 'center',
-                xtype:  'panel',
+                xtype: 'panel',
                 title: 'no_siteroot_loaded',
                 layout: 'accordion',
                 disabled: true,
-                tbar: [{
-                    text: this.strings.save_siteroot_data,
-                    iconCls: 'p-siteroot-save-icon',
-                    handler: this.onSaveData,
-                    scope: this
-                }],
-                items: [{
-                    xtype: 'siteroots-urls'
-                },{
-                    xtype: 'siteroots-shorturls'
-                },{
-                    xtype: 'siteroots-titles'
-                },{
-                    xtype: 'siteroots-customtitles'
-                },{
-                    xtype: 'siteroots-properties'
-                },{
-                    xtype: 'siteroots-specialtids'
-                },{
-                    xtype: 'siteroots-navigations'
-                }]
+                tbar: [
+                    {
+                        text: this.strings.save_siteroot_data,
+                        iconCls: 'p-siteroot-save-icon',
+                        handler: this.onSaveData,
+                        scope: this
+                    }
+                ],
+                items: [
+                    {
+                        xtype: 'siteroots-urls'
+                    },
+                    {
+                        xtype: 'siteroots-shorturls'
+                    },
+                    {
+                        xtype: 'siteroots-titles'
+                    },
+                    {
+                        xtype: 'siteroots-customtitles'
+                    },
+                    {
+                        xtype: 'siteroots-properties'
+                    },
+                    {
+                        xtype: 'siteroots-specialtids'
+                    },
+                    {
+                        xtype: 'siteroots-navigations'
+                    }
+                ]
             }
         ];
 
         Phlexible.siteroots.MainPanel.superclass.initComponent.call(this);
     },
 
-    loadParams: function() {},
+    loadParams: function () {
+    },
 
     /**
      * After the siteroot selection changes load the siteroot data.
@@ -76,19 +87,19 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
      * @param {Number} id
      * @param {String} title
      */
-    onSiterootChange: function(id, title) {
+    onSiterootChange: function (id, title) {
         this.getComponent(0).enable();
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('siteroots_data', {id: id}),
-            success: function(response) {
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 this.siterootId = id;
                 this.siterootTitle = title;
                 this.getComponent(1).setTitle(title);
 
-                this.getComponent(1).items.each(function(panel) {
+                this.getComponent(1).items.each(function (panel) {
                     panel.loadData(id, title, data);
                 });
 
@@ -106,7 +117,7 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
      *  - new siteroot added
      *  - title of siteroot changed
      */
-    onSiterootDataChange: function() {
+    onSiterootDataChange: function () {
         Phlexible.Frame.menu.load();
     },
 
@@ -117,18 +128,17 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
      * all plugins must register themselfs at the PHP observer for handle the
      * submit process.
      */
-    onSaveData: function() {
+    onSaveData: function () {
         var saveData = {}, valid = true;
 
-        this.getComponent(1).items.each(function(panel) {
+        this.getComponent(1).items.each(function (panel) {
             if (typeof(panel.isValid) == 'function' && !panel.isValid()) {
                 valid = false;
             }
             else if (typeof(panel.getSaveData) == 'function') {
                 var data = panel.getSaveData();
 
-                if (!data)
-                {
+                if (!data) {
                     return;
                 }
 
@@ -150,7 +160,7 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
                 id: this.siterootId,
                 data: Ext.encode(saveData)
             },
-            success: function(response){
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
                 if (data.success) {
                     this.siterootGrid.selected = this.siterootGrid.getSelectionModel().getSelected().id;

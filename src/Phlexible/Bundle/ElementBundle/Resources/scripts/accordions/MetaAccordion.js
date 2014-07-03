@@ -13,13 +13,13 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
 
     key: 'meta',
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.SimpleStore({
             //fields: ['key', 'type', 'value']
             fields: ['key', 'tkey', 'type', 'options', 'value', 'required', 'synchronized'],
             listeners: {
                 load: {
-                    fn: function() {
+                    fn: function () {
                         this.validateMeta();
                     },
                     scope: this
@@ -32,31 +32,34 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
         var metaFields = new Phlexible.metasets.Fields();
 
         this.cm = new Phlexible.gui.grid.TypeColumnModel({
-            columns: [{
-                header: this.strings.key,
-                dataIndex: 'key',
-                renderer: function(v, md, r) {
-                    if (r.data.required) {
-                        v = '<b>' + v + '</b>';
-                    }
-                    return v;
-                }
-            },{
-                header: this.strings.value,
-                dataIndex: 'value',
-                editor: new Ext.form.TextField(),
-                renderer: function(v, md, r) {
-                    if (r.data['synchronized']) {
-                        if (this.master) {
-                            md.css = md.css + ' synchronized-master';
-                        } else {
-                            md.css = md.css + ' synchronized-slave';
+            columns: [
+                {
+                    header: this.strings.key,
+                    dataIndex: 'key',
+                    renderer: function (v, md, r) {
+                        if (r.data.required) {
+                            v = '<b>' + v + '</b>';
                         }
+                        return v;
                     }
+                },
+                {
+                    header: this.strings.value,
+                    dataIndex: 'value',
+                    editor: new Ext.form.TextField(),
+                    renderer: function (v, md, r) {
+                        if (r.data['synchronized']) {
+                            if (this.master) {
+                                md.css = md.css + ' synchronized-master';
+                            } else {
+                                md.css = md.css + ' synchronized-slave';
+                            }
+                        }
 
-                    return v;
-                }.createDelegate(this)
-            }],
+                        return v;
+                    }.createDelegate(this)
+                }
+            ],
             store: this.store,
             grid: this,
             editors: metaFields.getEditors(),
@@ -67,9 +70,9 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
 
         this.on({
             beforeedit: {
-                fn: function(e) {
-                    var field          = e.field;
-                    var record         = e.record;
+                fn: function (e) {
+                    var field = e.field;
+                    var record = e.record;
                     var isSynchronized = (1 == record.get('synchronized'));
 
                     // skip editing english values if language is synchronized
@@ -80,7 +83,7 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
                 scope: this
             },
             afteredit: {
-                fn: function(e) {
+                fn: function (e) {
                     this.validateMeta();
                 },
                 scope: this
@@ -90,8 +93,8 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
         Phlexible.elements.accordion.Meta.superclass.initComponent.call(this);
     },
 
-    load: function(data) {
-        if(data.properties.et_type != 'full' || !data.meta.length) {
+    load: function (data) {
+        if (data.properties.et_type != 'full' || !data.meta.length) {
             this.hide();
             return;
         }
@@ -102,7 +105,7 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
         this.setTitle(this.strings.meta + ' [' + data.meta.length + ']');
 
         var tData = [];
-        for(var i=0; i<data.meta.length; i++) {
+        for (var i = 0; i < data.meta.length; i++) {
             tData.push([
                 data.meta[i].key,
                 data.meta[i].tkey,
@@ -120,31 +123,31 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
         this.show();
     },
 
-    getData: function() {
+    getData: function () {
         var data = {};
         var records = this.store.getRange();
 
-        for(var i=0; i<records.length; i++) {
+        for (var i = 0; i < records.length; i++) {
             data[records[i].data.key] = records[i].data['value'];
         }
 
         return data;
     },
 
-    xupdateSource: function(response) {
+    xupdateSource: function (response) {
         var source = Ext.decode(response.responseText);
         this.setSource(source);
     },
 
-    isValid: function() {
+    isValid: function () {
         return this.validateMeta();
     },
 
-    validateMeta: function() {
+    validateMeta: function () {
         var valid = true;
 
         var metaRecords = this.getStore().getRange();
-        for(var i=0; i<metaRecords.length; i++) {
+        for (var i = 0; i < metaRecords.length; i++) {
             row = metaRecords[i].data;
 
             //if (1 == row['synchronized']) {

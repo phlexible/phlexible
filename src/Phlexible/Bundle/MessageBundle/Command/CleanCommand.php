@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MessageBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,11 +28,12 @@ class CleanCommand extends ContainerAwareCommand
     {
         $this
             ->setName('message:clean')
-            ->setDefinition(array(
-                new InputArgument('days', InputArgument::OPTIONAL, 'Keep latest <days> days of messages.', 30),
-            ))
-            ->setDescription('Delete old messages.')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('days', InputArgument::OPTIONAL, 'Keep latest <days> days of messages.', 30),
+                )
+            )
+            ->setDescription('Delete old messages.');
     }
 
     /**

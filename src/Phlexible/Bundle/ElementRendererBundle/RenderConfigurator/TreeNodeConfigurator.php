@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -51,10 +51,11 @@ class TreeNodeConfigurator implements ConfiguratorInterface
      * @param ElementService           $elementService
      * @param SecurityContextInterface $securityContext
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                LoggerInterface $logger,
-                                ElementService $elementService,
-                                SecurityContextInterface $securityContext)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger,
+        ElementService $elementService,
+        SecurityContextInterface $securityContext)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
@@ -103,8 +104,8 @@ class TreeNodeConfigurator implements ConfiguratorInterface
 
         $eid = $treeNode->getTypeId();
 
-        if (0)// || $renderRequest->getVersionStrategy() === 'latest')
-        {
+        if (0) {
+            // || $renderRequest->getVersionStrategy() === 'latest')
             if (!$this->securityContext->isGranted('VIEW', $treeNode)) {
                 $this->logger->debug('403 Forbidden du to missing VIEW content right');
 
@@ -237,8 +238,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
             ->addFeature('eid')
             ->set('eid', $treeNode->getTypeId())
             ->set('version', $tree->getVersion($treeNode, 'de'))
-            ->set('language', 'de')
-        ;
+            ->set('language', 'de');
 
         // Init Element Event
         /*

@@ -34,7 +34,12 @@ interface AccessManagerInterface
      *
      * @return AccessControlEntry[]
      */
-    public function findByContentIdPath($type, $contentType, array $contentIdPath, array $securityTypes, $contentLanguage = null);
+    public function findByContentIdPath(
+        $type,
+        $contentType,
+        array $contentIdPath,
+        array $securityTypes,
+        $contentLanguage = null);
 
     /**
      * @param string      $type
@@ -46,7 +51,13 @@ interface AccessManagerInterface
      *
      * @return AccessControlEntry|null
      */
-    public function findOneByValues($type, $contentType, $contentId, $securityType, $securityId, $contentLanguage = null);
+    public function findOneByValues(
+        $type,
+        $contentType,
+        $contentId,
+        $securityType,
+        $securityId,
+        $contentLanguage = null);
 
     /**
      * @param string $type
@@ -60,7 +71,15 @@ interface AccessManagerInterface
      *
      * @return $this
      */
-    public function setRight($type, $contentType, $contentId, $securityType, $securityId, $right, $inherit = 1, $language = null);
+    public function setRight(
+        $type,
+        $contentType,
+        $contentId,
+        $securityType,
+        $securityId,
+        $right,
+        $inherit = 1,
+        $language = null);
 
     /**
      * @param string $type
@@ -73,5 +92,12 @@ interface AccessManagerInterface
      *
      * @return $this
      */
-    public function removeRight($type, $contentType, $contentId, $securityType = null, $securityId = null, $right = null, $language = null);
+    public function removeRight(
+        $type,
+        $contentType,
+        $contentId,
+        $securityType = null,
+        $securityId = null,
+        $right = null,
+        $language = null);
 }

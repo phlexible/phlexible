@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,7 +38,7 @@ class FormController extends Controller
 
         $templateKey = $request->get('template_key');
 
-        $template   = $repository->find($templateKey);
+        $template = $repository->find($templateKey);
         $parameters = $template->getParameters();
 
         if (isset($parameters['method'])) {
@@ -65,9 +65,9 @@ class FormController extends Controller
         $params = $request->request->all();
 
         unset($params['template_key'],
-              $params['module'],
-              $params['controller'],
-              $params['action']);
+        $params['module'],
+        $params['controller'],
+        $params['action']);
 
         $template = $repository->find($templateKey);
 

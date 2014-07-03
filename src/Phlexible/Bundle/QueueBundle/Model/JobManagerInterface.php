@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\QueueBundle\Model;
 
 use Phlexible\Bundle\QueueBundle\Entity\Job;
-use Phlexible\Bundle\QueueBundle\Entity\Repository\JobRepository;
 
 /**
  * Job manager interface

@@ -16,5 +16,5 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
 class RadioField extends AbstractField
 {
     protected $hasOptions = true;
-    protected $icon       = 'p-elementtype-field_radio-icon';
+    protected $icon = 'p-elementtype-field_radio-icon';
 }

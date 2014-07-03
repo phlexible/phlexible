@@ -3,166 +3,181 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
     title: Phlexible.elementtypes.Strings.values,
     iconCls: 'p-elementtype-tab_values-icon',
     border: false,
-	autoScroll: true,
+    autoScroll: true,
     bodyStyle: 'padding:3px',
     defaultType: 'textfield',
     labelWidth: 100,
 
-    initComponent: function() {
-        this.items = [{
-            fieldLabel: this.strings.default_value,
-            name: 'default_value_textfield',
-            hidden: true,
-            disabled: true,
-            width: 230
-        },{
-            xtype: 'numberfield',
-            fieldLabel: this.strings.default_value,
-            name: 'default_value_numberfield',
-            hidden: true,
-            disabled: true,
-            width: 230
-        },{
-            xtype: 'textarea',
-            fieldLabel: this.strings.default_value,
-            name: 'default_value_textarea',
-            hidden: true,
-            disabled: true,
-            width: 230,
-            height: 100
-        },{
-            xtype: 'datefield',
-            fieldLabel: this.strings.default_value,
-            name: 'default_value_datefield',
-            hidden: true,
-            disabled: true,
-            width: 183,
-            format: 'Y-m-d'
-        },{
-            xtype: 'timefield',
-            fieldLabel: this.strings.default_value,
-            name: 'default_value_timefield',
-            format: 'H:i:s',
-            hidden: true,
-            disabled: true,
-            width: 183,
-            listWidth: 200
-        },{
-            xtype: 'checkbox',
-            fieldLabel: this.strings.default_value,
-            boxLabel: 'checked',
-            name: 'default_value_checkbox',
-            hidden: true,
-            disabled: true
-        },{
-            xtype: 'combo',
-            fieldLabel: this.strings.source,
-            name: 'source',
-            hiddenName: 'source',
-            hideMode: 'display',
-            allowBlank: false,
-            store: new Ext.data.SimpleStore({
-                fields: ['key','title'],
-                data: [
-                    ['list', this.strings.editable_list],
-                    ['function', this.strings.component_function]
+    initComponent: function () {
+        this.items = [
+            {
+                fieldLabel: this.strings.default_value,
+                name: 'default_value_textfield',
+                hidden: true,
+                disabled: true,
+                width: 230
+            },
+            {
+                xtype: 'numberfield',
+                fieldLabel: this.strings.default_value,
+                name: 'default_value_numberfield',
+                hidden: true,
+                disabled: true,
+                width: 230
+            },
+            {
+                xtype: 'textarea',
+                fieldLabel: this.strings.default_value,
+                name: 'default_value_textarea',
+                hidden: true,
+                disabled: true,
+                width: 230,
+                height: 100
+            },
+            {
+                xtype: 'datefield',
+                fieldLabel: this.strings.default_value,
+                name: 'default_value_datefield',
+                hidden: true,
+                disabled: true,
+                width: 183,
+                format: 'Y-m-d'
+            },
+            {
+                xtype: 'timefield',
+                fieldLabel: this.strings.default_value,
+                name: 'default_value_timefield',
+                format: 'H:i:s',
+                hidden: true,
+                disabled: true,
+                width: 183,
+                listWidth: 200
+            },
+            {
+                xtype: 'checkbox',
+                fieldLabel: this.strings.default_value,
+                boxLabel: 'checked',
+                name: 'default_value_checkbox',
+                hidden: true,
+                disabled: true
+            },
+            {
+                xtype: 'combo',
+                fieldLabel: this.strings.source,
+                name: 'source',
+                hiddenName: 'source',
+                hideMode: 'display',
+                allowBlank: false,
+                store: new Ext.data.SimpleStore({
+                    fields: ['key', 'title'],
+                    data: [
+                        ['list', this.strings.editable_list],
+                        ['function', this.strings.component_function]
+                    ]
+                }),
+                displayField: 'title',
+                valueField: 'key',
+                editable: false,
+                mode: 'local',
+                typeAhead: false,
+                triggerAction: 'all',
+                selectOnFocus: true,
+                width: 183,
+                listWidth: 200,
+                listeners: {
+                    select: function (combo, record, index) {
+                        var source = record.get('key');
+                        this.updateSelectSourceVisibility(source);
+                    },
+                    scope: this
+                }
+            },
+            {
+                xtype: 'elementtypes-configuration-field-value-grid',
+                hidden: true,
+                listeners: {
+                    defaultchange: function (key) {
+                        this.getComponent(0).setValue(key);
+                    },
+                    scope: this
+                }
+            },
+            {
+                xtype: 'combo',
+                hidden: true,
+                editable: false,
+                hiddenName: 'source_function',
+                name: 'source_function',
+                fieldLabel: 'Function',
+                hideMode: 'display',
+                allowBlank: false,
+                store: new Ext.data.JsonStore({
+                    url: Phlexible.Router.generate('elementtypes_functions_select'),
+                    root: 'functions',
+                    fields: ['function', 'title']
+                }),
+                displayField: 'title',
+                valueField: 'function',
+                mode: 'remote',
+                typeAhead: false,
+                triggerAction: 'all',
+                selectOnFocus: true,
+                listWidth: 200,
+                width: 182
+            },
+            {
+                xtype: 'combo',
+                hidden: true,
+                editable: false,
+                hiddenName: 'source_source',
+                name: 'source_source',
+                fieldLabel: 'Source',
+                hideMode: 'display',
+                allowBlank: false,
+                store: new Ext.data.JsonStore({
+                    url: Phlexible.Router.generate('datasources_list'),
+                    root: 'sources',
+                    fields: ['id', 'title']
+                }),
+                displayField: 'title',
+                valueField: 'id',
+                mode: 'remote',
+                typeAhead: false,
+                triggerAction: 'all',
+                selectOnFocus: true,
+                listWidth: 200,
+                width: 182
+            },
+            {
+                xtype: 'fieldset',
+                title: this.strings.text,
+                autoHeight: true,
+                width: 350,
+                items: [
+                    {
+                        xtype: 'textarea',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        name: 'text_de',
+                        width: 200
+                    },
+                    {
+                        xtype: 'textarea',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_english,
+                        name: 'text_en',
+                        width: 200
+                    }
                 ]
-            }),
-            displayField: 'title',
-            valueField: 'key',
-            editable: false,
-            mode: 'local',
-            typeAhead: false,
-            triggerAction: 'all',
-            selectOnFocus: true,
-            width: 183,
-            listWidth: 200,
-            listeners: {
-                select: function(combo, record, index) {
-                    var source = record.get('key');
-                    this.updateSelectSourceVisibility(source);
-                },
-                scope: this
             }
-        },{
-			xtype: 'elementtypes-configuration-field-value-grid',
-            hidden: true,
-            listeners: {
-                defaultchange: function(key) {
-                    this.getComponent(0).setValue(key);
-                },
-                scope: this
-            }
-        },{
-            xtype: 'combo',
-            hidden: true,
-            editable: false,
-            hiddenName: 'source_function',
-            name: 'source_function',
-            fieldLabel: 'Function',
-            hideMode: 'display',
-            allowBlank: false,
-            store: new Ext.data.JsonStore({
-                url: Phlexible.Router.generate('elementtypes_functions_select'),
-                root: 'functions',
-                fields: ['function', 'title']
-            }),
-            displayField: 'title',
-            valueField: 'function',
-            mode: 'remote',
-            typeAhead: false,
-            triggerAction: 'all',
-            selectOnFocus: true,
-            listWidth: 200,
-            width: 182
-        },{
-            xtype: 'combo',
-            hidden: true,
-            editable: false,
-            hiddenName: 'source_source',
-            name: 'source_source',
-            fieldLabel: 'Source',
-            hideMode: 'display',
-            allowBlank: false,
-            store: new Ext.data.JsonStore({
-                url: Phlexible.Router.generate('datasources_list'),
-                root: 'sources',
-                fields: ['id', 'title']
-            }),
-            displayField: 'title',
-            valueField: 'id',
-            mode: 'remote',
-            typeAhead: false,
-            triggerAction: 'all',
-            selectOnFocus: true,
-            listWidth: 200,
-            width: 182
-        },{
-            xtype: 'fieldset',
-            title: this.strings.text,
-            autoHeight: true,
-            width: 350,
-            items: [{
-                xtype: 'textarea',
-                fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
-                name: 'text_de',
-                width: 200
-            },{
-                xtype: 'textarea',
-                fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_english,
-                name: 'text_en',
-                width: 200
-            }]
-        }];
+        ];
 
         Phlexible.elementtypes.configuration.FieldValue.superclass.initComponent.call(this);
     },
 
-	getValueGrid: function() {
-		return this.getComponent(7);
-	},
+    getValueGrid: function () {
+        return this.getComponent(7);
+    },
 
-    updateVisibility: function(fieldType, source) {
+    updateVisibility: function (fieldType, source) {
         // default_text
         if (fieldType.config.values.default_text || fieldType.config.values.default_select || fieldType.config.values.default_link) {
             this.getComponent(0).enable();
@@ -227,7 +242,7 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
         if (fieldType.config.values.source) {
             this.getComponent(6).enable();
             this.getComponent(6).show();
-            if(source) {
+            if (source) {
                 this.updateSelectSourceVisibility(source);
             }
         }
@@ -240,8 +255,8 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
             this.getComponent(8).hide();
 
             if (fieldType.config.values.source_single) {
-				this.getValueGrid().enable();
-				this.getValueGrid().show();
+                this.getValueGrid().enable();
+                this.getValueGrid().show();
             }
         }
 
@@ -266,43 +281,43 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
         }
     },
 
-    updateSelectSourceVisibility: function(source) {
-        switch(source) {
+    updateSelectSourceVisibility: function (source) {
+        switch (source) {
             case 'list':
-				this.getValueGrid().enable();
-				this.getValueGrid().show();
+                this.getValueGrid().enable();
+                this.getValueGrid().show();
                 this.getComponent(8).disable();
                 this.getComponent(8).hide();
                 break;
 
             case 'function':
-				this.getValueGrid().disable();
-				this.getValueGrid().hide();
+                this.getValueGrid().disable();
+                this.getValueGrid().hide();
                 this.getComponent(8).enable();
                 this.getComponent(8).show();
                 break;
         }
     },
 
-    loadData: function(fieldData, fieldType) {
+    loadData: function (fieldData, fieldType) {
         this.updateVisibility(fieldType, fieldData.source);
 
         this.getForm().setValues([
             //{id: 'default_value',   value: fieldData.default_value},
-            {id: 'source',          value: fieldData.source},
+            {id: 'source', value: fieldData.source},
             {id: 'source_function', value: fieldData.source_function},
-            {id: 'source_source',   value: fieldData.source_source},
-            {id: 'text_de',         value: fieldData.text_de},
-            {id: 'text_en',         value: fieldData.text_en}
+            {id: 'source_source', value: fieldData.source_source},
+            {id: 'text_de', value: fieldData.text_de},
+            {id: 'text_en', value: fieldData.text_en}
         ]);
-        this.items.each(function(item) {
+        this.items.each(function (item) {
             if (!item.isFormField) return;
 
             var name = item.getName();
             if (name == fieldType.defaultValueField) {
                 item.setValue(fieldData.default_value);
             }
-            else if(name.match(/^default_value/)) {
+            else if (name.match(/^default_value/)) {
                 item.reset();
             }
         });
@@ -311,16 +326,16 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
         //}
 
         if (fieldType.config.values.source_single) {
-			this.getValueGrid().loadData('single', fieldData.source_list, fieldData.default_value);
+            this.getValueGrid().loadData('single', fieldData.source_list, fieldData.default_value);
         }
         else if (fieldType.config.values.source_multi) {
-			this.getValueGrid().loadData('multi', fieldData.source_list, fieldData.default_value);
+            this.getValueGrid().loadData('multi', fieldData.source_list, fieldData.default_value);
         }
 
         this.isValid();
     },
 
-    getSaveValues: function() {
+    getSaveValues: function () {
         var values = this.getForm().getValues();
         for (var i in values) {
             if (i.match(/^default_value_/)) {
@@ -330,12 +345,12 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
         }
         //Phlexible.console.info(values);
 
-        if(this.getValueGrid().isVisible()) {
+        if (this.getValueGrid().isVisible()) {
             delete values.source_function;
 
             var list = [];
 
-            for(var i=0; i<this.getValueGrid().store.getCount(); i++) {
+            for (var i = 0; i < this.getValueGrid().store.getCount(); i++) {
                 var r = this.getValueGrid().store.getAt(i);
                 list.push({
                     key: r.get('key'),
@@ -344,7 +359,7 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
                 });
             }
 
-			this.getValueGrid().store.commitChanges();
+            this.getValueGrid().store.commitChanges();
 
             values.source_list = list;
         }
@@ -352,8 +367,8 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
         return values;
     },
 
-    isValid: function() {
-        if(this.getForm().isValid()) {
+    isValid: function () {
+        if (this.getForm().isValid()) {
             //this.header.child('span').removeClass('error');
             this.setIconClass('p-elementtype-tab_values-icon');
 
@@ -366,7 +381,7 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
         }
     },
 
-    loadField: function(properties, node, fieldType) {
+    loadField: function (properties, node, fieldType) {
         if (fieldType.config.values) {
             this.ownerCt.getTabEl(this).hidden = false;
             this.loadData(properties.options, fieldType);
@@ -394,10 +409,10 @@ Phlexible.elementtypes.configuration.FieldValueGrid = Ext.extend(Ext.grid.Editor
     enableDragDrop: true,
     ddGroup: 'fieldvalue',
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents(
-             /**
+            /**
              * @event defaultchange
              * Fires when new default value is to be set
              * @param {String} key The new default key
@@ -409,39 +424,43 @@ Phlexible.elementtypes.configuration.FieldValueGrid = Ext.extend(Ext.grid.Editor
             fields: ['key', 'value_de', 'value_en']
         });
 
-        this.columns = [{
-            id: 'key',
-            header: this.strings.values_key,
-            dataIndex: 'key',
-            width: 100,
-            sortable: false,
-            editor: new Ext.form.TextField({
-                allowBlank: true
-            })
-        },{
-            id: 'de',
-            header: this.strings.values_german,
-            dataIndex: 'value_de',
-            width: 100,
-            sortable: false,
-            editor: new Ext.form.TextField({
-                allowBlank: false
-            })
-        },{
-            id: 'en',
-            header: this.strings.values_english,
-            dataIndex: 'value_en',
-            width: 100,
-            sortable: false,
-            editor: new Ext.form.TextField({
-                allowBlank: false
-            })
-        }];
+        this.columns = [
+            {
+                id: 'key',
+                header: this.strings.values_key,
+                dataIndex: 'key',
+                width: 100,
+                sortable: false,
+                editor: new Ext.form.TextField({
+                    allowBlank: true
+                })
+            },
+            {
+                id: 'de',
+                header: this.strings.values_german,
+                dataIndex: 'value_de',
+                width: 100,
+                sortable: false,
+                editor: new Ext.form.TextField({
+                    allowBlank: false
+                })
+            },
+            {
+                id: 'en',
+                header: this.strings.values_english,
+                dataIndex: 'value_en',
+                width: 100,
+                sortable: false,
+                editor: new Ext.form.TextField({
+                    allowBlank: false
+                })
+            }
+        ];
 
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true,
             listeners: {
-                selectionchange: function(sm) {
+                selectionchange: function (sm) {
                     var r = sm.getSelected();
 
                     if (this.mode == 'multi' && r) {
@@ -457,67 +476,69 @@ Phlexible.elementtypes.configuration.FieldValueGrid = Ext.extend(Ext.grid.Editor
             }
         });
 
-        this.tbar = [{
-            text: this.strings.add_option,
-            iconCls: 'p-elementtype-option_add-icon',
-            handler: function() {
-                this.store.add(new Ext.data.Record({key: 'new key', value_de: '', value_en: ''}));
+        this.tbar = [
+            {
+                text: this.strings.add_option,
+                iconCls: 'p-elementtype-option_add-icon',
+                handler: function () {
+                    this.store.add(new Ext.data.Record({key: 'new key', value_de: '', value_en: ''}));
+                },
+                scope: this
             },
-            scope: this
-        },{
-            text: this.strings.remove_option,
-            iconCls: 'p-elementtype-option_delete-icon',
-            disabled: true,
-            handler: function() {
-                var recordToBeRemoved = this.getSelectionModel().getSelected();
-                if (!recordToBeRemoved) {
-                    return;
-                }
-                var key = recordToBeRemoved.get('key');
-                if(this.default_value == key) {
-                    this.default_value = '';
+            {
+                text: this.strings.remove_option,
+                iconCls: 'p-elementtype-option_delete-icon',
+                disabled: true,
+                handler: function () {
+                    var recordToBeRemoved = this.getSelectionModel().getSelected();
+                    if (!recordToBeRemoved) {
+                        return;
+                    }
+                    var key = recordToBeRemoved.get('key');
+                    if (this.default_value == key) {
+                        this.default_value = '';
+                        this.fireEvent('defaultchange', this.default_value);
+                    }
+
+                    this.store.remove(recordToBeRemoved);
+                },
+                scope: this
+            },
+            {
+                text: this.strings.set_as_default,
+                iconCls: 'p-elementtype-elementtype_edit-icon',
+                disabled: true,
+                handler: function (item) {
+                    var record = this.getSelectionModel().getSelected();
+                    if (!record) {
+                        return;
+                    }
+
+                    var key = record.data.key;
+
+                    var defaultIndex = this.store.find('key', this.default_value);
+                    if (defaultIndex != -1) {
+                        var row = Ext.get(this.view.getRow(defaultIndex));
+                        row.removeClass('p-elementtype-value-grid-default');
+                    }
+
+                    this.default_value = key;
+                    var selectedIndex = this.store.indexOf(record);
+                    var row = Ext.get(this.view.getRow(selectedIndex));
+                    row.addClass('p-elementtype-value-grid-default');
+
                     this.fireEvent('defaultchange', this.default_value);
-                }
-
-                this.store.remove(recordToBeRemoved);
-            },
-            scope: this
-        },{
-            text: this.strings.set_as_default,
-            iconCls: 'p-elementtype-elementtype_edit-icon',
-            disabled: true,
-            handler: function(item) {
-                var record = this.getSelectionModel().getSelected();
-                if (!record) {
-                    return;
-                }
-
-                var key = record.data.key;
-
-                var defaultIndex = this.store.find('key', this.default_value);
-                if (defaultIndex != -1) {
-                    var row = Ext.get(this.view.getRow(defaultIndex));
-                    row.removeClass('p-elementtype-value-grid-default');
-                }
-
-                this.default_value = key;
-                var selectedIndex = this.store.indexOf(record);
-                var row = Ext.get(this.view.getRow(selectedIndex));
-                row.addClass('p-elementtype-value-grid-default');
-
-                this.fireEvent('defaultchange', this.default_value);
-            },
-            scope: this
-        }];
+                },
+                scope: this
+            }
+        ];
 
         this.on({
-            validateedit: function(validationobject) {
-                if(validationobject.field == 'key')
-                {
+            validateedit: function (validationobject) {
+                if (validationobject.field == 'key') {
                     var recordQuery = this.store.find('key', new RegExp('^' + validationobject.value + '$'));
 
-                    if(recordQuery != -1)
-                    {
+                    if (recordQuery != -1) {
                         validationobject.value = validationobject.originalValue;
                         return;
                     }
@@ -528,19 +549,19 @@ Phlexible.elementtypes.configuration.FieldValueGrid = Ext.extend(Ext.grid.Editor
                     }
                 }
             },
-            afteredit: function(validationobject){
+            afteredit: function (validationobject) {
                 var defaultIndex = this.store.find('key', this.default_value);
                 if (defaultIndex != -1) {
                     var row = Ext.get(this.view.getRow(defaultIndex)); //validationobject.row));
                     row.addClass('p-elementtype-value-grid-default');
                 }
             },
-            render: function(grid){
+            render: function (grid) {
                 this.ddrow = new Ext.ux.dd.GridReorderDropTarget(grid, {
                     copy: false
                 });
                 // if you need scrolling, register the grid view's scroller with the scroll manager
-    //            Ext.dd.ScrollManager.register(g.getView().getEditorParent());
+                //            Ext.dd.ScrollManager.register(g.getView().getEditorParent());
             },
             scope: this
         });
@@ -548,12 +569,14 @@ Phlexible.elementtypes.configuration.FieldValueGrid = Ext.extend(Ext.grid.Editor
         Phlexible.elementtypes.configuration.FieldValueGrid.superclass.initComponent.call(this);
     },
 
-    loadData: function(mode, sourceList, defaultValue) {
+    loadData: function (mode, sourceList, defaultValue) {
         this.mode = mode;
         this.store.removeAll();
         if (mode == 'single') {
-            if(!sourceList.length) {
-                sourceList = [['key', 'an', 'on']];
+            if (!sourceList.length) {
+                sourceList = [
+                    ['key', 'an', 'on']
+                ];
             } else if (sourceList.length > 1) {
                 sourceList = [sourceList[0]];
             }
@@ -566,7 +589,7 @@ Phlexible.elementtypes.configuration.FieldValueGrid = Ext.extend(Ext.grid.Editor
         if (sourceList && sourceList[0]) {
             if (sourceList[0].key) {
                 var modified_list = [];
-                Ext.each(sourceList, function(item){
+                Ext.each(sourceList, function (item) {
                     modified_list.push([item.key, item.de, item.en]);
                 });
                 this.store.loadData(modified_list);

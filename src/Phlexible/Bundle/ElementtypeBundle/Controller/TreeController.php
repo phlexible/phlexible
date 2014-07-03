@@ -8,17 +8,17 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypesMessage;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Event\BeforeVersionCreateEvent;
 use Phlexible\Bundle\ElementtypeBundle\Event\VersionCreateEvent;
+use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -41,20 +41,20 @@ class TreeController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $id      = $request->get('id', null);
+        $id = $request->get('id', null);
         $version = $request->get('version', null);
-        $mode    = $request->get('mode', 'edit');
+        $mode = $request->get('mode', 'edit');
 
         $elementtypeService = $this->get('phlexible_elementtype.service');
 
-        $elementtype          = $elementtypeService->findElementtype($id);
-        $elementtypeVersion   = $elementtypeService->findElementtypeVersion($elementtype, $version);
+        $elementtype = $elementtypeService->findElementtype($id);
+        $elementtypeVersion = $elementtypeService->findElementtypeVersion($elementtype, $version);
         $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
 
         $rootNode = $elementtypeStructure->getRootNode();
-        $type     = $elementtype->getType();// != 'reference' ? 'root' : 'referenceroot';
+        $type = $elementtype->getType(); // != 'reference' ? 'root' : 'referenceroot';
 
-        $metaSetId  = $elementtypeVersion->getMetaSetId();
+        $metaSetId = $elementtypeVersion->getMetaSetId();
         $allMetaSets = $this->get('phlexible_metaset.repository')->findAll();
 
         $metaSets = array();
@@ -63,11 +63,11 @@ class TreeController extends Controller
         }
 
         $children = array();
-        $rootID   = '';
+        $rootID = '';
         $rootDsId = '';
         $rootType = 'root';
         if ($rootNode) {
-            $rootID   = $rootNode->getId();
+            $rootID = $rootNode->getId();
             $rootDsId = $rootNode->getDsId();
             $rootType = $rootNode->getType();
             $children = $elementtypeStructure->getChildNodes($rootNode->getDsId());
@@ -81,8 +81,8 @@ class TreeController extends Controller
         $data = array(
             array(
                 'text'                 => $elementtype->getTitle() .
-                                          ' [v' . $elementtypeVersion->getVersion() . ', ' .
-                                          $elementtype->getType() . ']',
+                    ' [v' . $elementtypeVersion->getVersion() . ', ' .
+                    $elementtype->getType() . ']',
                 'id'                   => $rootID,
                 'ds_id'                => $rootDsId,
                 'element_type_id'      => $elementtype->getId(),
@@ -96,10 +96,10 @@ class TreeController extends Controller
                 'allowDrop'            => $mode == 'edit',
                 'editable'             => $mode == 'edit',
                 'properties'           => array(
-                    'root' => array(
+                    'root'     => array(
                         'title'               => $elementtype->getTitle(),
                         'reference_title'     => $elementtype->getTitle() .
-                                                 ' [v' . $elementtypeVersion->getVersion() . ']',
+                            ' [v' . $elementtypeVersion->getVersion() . ']',
                         'unique_id'           => $elementtype->getUniqueID(),
                         'icon'                => $elementtype->getIcon(),
                         'hide_children'       => $elementtype->getHideChildren() ? 'on' : '',
@@ -112,7 +112,14 @@ class TreeController extends Controller
                     'mappings' => $elementtypeVersion->getMappings(),
                     'metasets' => $metaSets,
                 ),
-                'children' => $this->recurseTree($elementtypeStructure, $children, $language, $mode, false, true)
+                'children'             => $this->recurseTree(
+                    $elementtypeStructure,
+                    $children,
+                    $language,
+                    $mode,
+                    false,
+                    true
+                )
             )
         );
 
@@ -131,12 +138,13 @@ class TreeController extends Controller
      *
      * @return array
      */
-    private function recurseTree(ElementtypeStructure $structure,
-                                 array $nodes,
-                                 $language,
-                                 $mode = 'edit',
-                                 $reference = false,
-                                 $allowDrag = true)
+    private function recurseTree(
+        ElementtypeStructure $structure,
+        array $nodes,
+        $language,
+        $mode = 'edit',
+        $reference = false,
+        $allowDrag = true)
     {
         $return = array();
 
@@ -144,25 +152,28 @@ class TreeController extends Controller
             /* @var $node ElementtypeStructureNode */
 
             $tmp = array(
-                'text'       => $node->getLabel('fieldlabel', $language) . ' ('.$node->getName().')',
+                'text'       => $node->getLabel('fieldlabel', $language) . ' (' . $node->getName() . ')',
                 'id'         => $node->getId(),
                 'ds_id'      => $node->getDsId(),
-                'cls'        => 'p-elementtypes-node p-elementtypes-type-' . $node->getType() . ($reference ? ' p-elementtypes-reference' : ''),
+                'cls'        => 'p-elementtypes-node p-elementtypes-type-' . $node->getType(
+                    ) . ($reference ? ' p-elementtypes-reference' : ''),
                 'leaf'       => true,
                 'expanded'   => false,
                 'type'       => $node->getType(),
-                'iconCls'    => $this->getContainer()->get('phlexible_elementtype.field.registry')->getField($node->getType())->getIcon(),
+                'iconCls'    => $this->getContainer()->get('phlexible_elementtype.field.registry')->getField(
+                        $node->getType()
+                    )->getIcon(),
                 'reference'  => $reference,
                 'allowDrag'  => $allowDrag,
                 'allowDrop'  => $mode == 'edit' && !$reference,
                 'editable'   => $mode == 'edit' || !$reference,
                 'properties' => array(
-                    'field'  => array(
+                    'field'            => array(
                         'title'         => $node->getName(),
                         'type'          => $node->getType(),
                         'working_title' => $node->getName(),
                         'comment'       => $node->getComment(),
-                        'image'            => ''
+                        'image'         => ''
                     ),
                     'configuration'    => $node->getConfiguration(),
                     'labels'           => $node->getLabels(),
@@ -173,28 +184,34 @@ class TreeController extends Controller
             );
 
             if ($structure->hasChildNodes($node->getDsId())) {
-                $tmp['leaf']     = false;
+                $tmp['leaf'] = false;
                 $tmp['expanded'] = true;
-                $tmp['children'] = $this->recurseTree($structure, $structure->getChildNodes($node->getDsId()), $language, $mode, $reference);
+                $tmp['children'] = $this->recurseTree(
+                    $structure,
+                    $structure->getChildNodes($node->getDsId()),
+                    $language,
+                    $mode,
+                    $reference
+                );
             }
 
             if ($node->isReference()) {
                 $elementtypesService = $this->getContainer()->get('phlexible_elementtype.service');
 
-                $referenceId        = $node->getReferenceId();
-                $referenceVersion   = $node->getReferenceVersion();
-                $elementtype        = $elementtypesService->findElementtype($referenceId);
+                $referenceId = $node->getReferenceId();
+                $referenceVersion = $node->getReferenceVersion();
+                $elementtype = $elementtypesService->findElementtype($referenceId);
                 $elementtypeVersion = $elementtypesService->findElementtypeVersion($elementtype, $referenceVersion);
-                $children           = $structure->getChildNodes($node->getDsId());
-                $referenceRoot      = $children[0];
+                $children = $structure->getChildNodes($node->getDsId());
+                $referenceRoot = $children[0];
 
-                $tmp['text']      = $elementtype->getTitle() . ' [v' . $elementtypeVersion->getVersion() . ']';
-                $tmp['leaf']      = false;
-                $tmp['expanded']  = true;
+                $tmp['text'] = $elementtype->getTitle() . ' [v' . $elementtypeVersion->getVersion() . ']';
+                $tmp['leaf'] = false;
+                $tmp['expanded'] = true;
                 $tmp['reference'] = array('refID' => $referenceId, 'refVersion' => $referenceVersion);
-                $tmp['editable']  = false;
+                $tmp['editable'] = false;
                 $tmp['allowDrag'] = true;
-                $tmp['children']  = $this->recurseTree(
+                $tmp['children'] = $this->recurseTree(
                     $structure,
                     $structure->getChildNodes($referenceRoot->getDsId()),
                     $language,
@@ -222,13 +239,13 @@ class TreeController extends Controller
     public function saveAction(Request $request)
     {
         $elementtypeId = $request->get('element_type_id', false);
-        $data          = json_decode($request->get('data'), true);
+        $data = json_decode($request->get('data'), true);
 
         if (!$elementtypeId) {
             return new ResultResponse(false, 'No elementtype ID.');
         }
 
-        $rootRow  = array_shift($data);
+        $rootRow = array_shift($data);
         $rootType = $rootRow['type'];
 
         if ($rootType != 'root' && $rootType != 'referenceroot') {
@@ -249,25 +266,26 @@ class TreeController extends Controller
         $elementtypeVersion = clone $priorElementtypeVersion;
         $elementtypeVersion
             ->setVersion($elementtypeVersion->getVersion() + 1)
-            ->setDefaultContentTab(strlen($rootProperties['root']['default_content_tab']) ? $rootProperties['root']['default_content_tab'] : null)
+            ->setDefaultContentTab(
+                strlen(
+                    $rootProperties['root']['default_content_tab']
+                ) ? $rootProperties['root']['default_content_tab'] : null
+            )
             ->setMappings(!empty($rootProperties['mappings']) ? $rootProperties['mappings'] : null)
             ->setComment(trim($rootProperties['root']['comment']))
             ->setCreateUserId($this->getUser()->getId())
-            ->setCreatedAt(new \DateTime())
-        ;
+            ->setCreatedAt(new \DateTime());
 
         $elementtypeStructure = new ElementtypeStructure();
         $elementtypeStructure
-            ->setElementTypeVersion($elementtypeVersion)
-        ;
+            ->setElementTypeVersion($elementtypeVersion);
 
         $rootNode = new ElementtypeStructureNode();
         $rootDsId = !empty($rootRow['ds_id']) ? $rootRow['ds_id'] : Uuid::generate();
         $rootNode
             ->setElementtypeStructure($elementtypeStructure)
             ->setDsId($rootDsId)
-            ->setType($rootType)
-        ;
+            ->setType($rootType);
 
         $elementtypeStructure->addNode($rootNode);
 
@@ -281,15 +299,13 @@ class TreeController extends Controller
             $node
                 ->setElementtypeStructure($elementtypeStructure)
                 ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : Uuid::generate())
-                ->setParentDsId($parentNode->getDsId())
-            ;
+                ->setParentDsId($parentNode->getDsId());
 
             if ($row['type'] == 'reference') {
                 $node
                     ->setType('reference')
                     ->setReferenceId($row['reference']['refID'])
-                    ->setReferenceVersion($row['reference']['refVersion'])
-                ;
+                    ->setReferenceVersion($row['reference']['refVersion']);
             } else {
                 $properties = $row['properties'];
 
@@ -301,8 +317,9 @@ class TreeController extends Controller
                     ->setValidation(!empty($properties['validation']) ? $properties['validation'] : null)
                     ->setLabels(!empty($properties['labels']) ? $properties['labels'] : null)
                     ->setOptions(!empty($properties['options']) ? $properties['options'] : null)
-                    ->setContentChannels(!empty($properties['content_channels']) ? $properties['content_channels'] : null)
-                ;
+                    ->setContentChannels(
+                        !empty($properties['content_channels']) ? $properties['content_channels'] : null
+                    );
             }
 
             $elementtypeStructure->addNode($node);
@@ -369,7 +386,8 @@ class TreeController extends Controller
         return new ResultResponse(
             true,
             $elementtypeId,
-            'Element Type "' . $elementtype->getTitle() . '" saved as Version ' . $elementtypeVersion->getVersion() . '.'
+            'Element Type "' . $elementtype->getTitle() . '" saved as Version ' . $elementtypeVersion->getVersion(
+            ) . '.'
         );
     }
 
@@ -425,14 +443,12 @@ class TreeController extends Controller
             ->setElementtypeStructure($referenceElementtypeVersion)
             ->setComment('Transformed to reference.')
             ->setDsId(Uuid::generate())
-            ->setType('referenceroot')
-        ;
+            ->setType('referenceroot');
 
         $referenceStructure = new ElementtypeStructure();
         $referenceStructure
             ->setElementTypeVersion($referenceElementtypeVersion)
-            ->addNode($referenceRootNode)
-        ;
+            ->addNode($referenceRootNode);
 
         foreach ($data as $row) {
             $node = new ElementtypeStructureNode();
@@ -441,15 +457,13 @@ class TreeController extends Controller
             $node
                 ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : Uuid::generate())
                 ->setParentDsId($parentNode->getDsId())
-                ->setElementtypeStructure($referenceElementtypeVersion->getVersion())
-            ;
+                ->setElementtypeStructure($referenceElementtypeVersion->getVersion());
 
             if ($row['type'] == 'reference') {
                 $node
                     ->setType('reference')
                     ->setReferenceId($row['reference']['refID'])
-                    ->setReferenceVersion($row['reference']['refVersion'])
-                ;
+                    ->setReferenceVersion($row['reference']['refVersion']);
             } else {
                 $properties = $row['properties'];
 
@@ -461,8 +475,9 @@ class TreeController extends Controller
                     ->setValidation(!empty($properties['validation']) ? $properties['validation'] : array())
                     ->setLabels(!empty($properties['labels']) ? $properties['labels'] : array())
                     ->setOptions(!empty($properties['options']) ? $properties['options'] : array())
-                    ->setContentChannels(!empty($properties['content_channels']) ? $properties['content_channels'] : array())
-                ;
+                    ->setContentChannels(
+                        !empty($properties['content_channels']) ? $properties['content_channels'] : array()
+                    );
             }
 
             $referenceStructure->addNode($node);
@@ -476,7 +491,7 @@ class TreeController extends Controller
             $referenceElementtypeVersion->getVersion(),
             'Reference Element Type "' . $title . '" created.',
             array(
-                'title'                => $title . ' [v'.$referenceElementtypeVersion->getVersion().']',
+                'title'                => $title . ' [v' . $referenceElementtypeVersion->getVersion() . ']',
                 'element_type_id'      => $referenceElementtype->getId(),
                 'element_type_version' => $referenceElementtypeVersion->getVersion(),
             )

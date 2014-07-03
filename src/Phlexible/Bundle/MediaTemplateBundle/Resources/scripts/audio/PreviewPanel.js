@@ -1,9 +1,9 @@
 Phlexible.mediatemplates.audio.PreviewPanel = Ext.extend(Phlexible.mediatemplates.BasePreviewPanel, {
-    getCreateUrl: function() {
+    getCreateUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_audio');
     },
 
-    getResult: function(data) {
+    getResult: function (data) {
         var s = '';
         if (data.template) {
             s += data.template;
@@ -17,29 +17,31 @@ Phlexible.mediatemplates.audio.PreviewPanel = Ext.extend(Phlexible.mediatemplate
         return s;
     },
 
-    getPreviewDomHelperConfig: function(data) {
+    getPreviewDomHelperConfig: function (data) {
         //var link = 'file=' + Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()});
 
         return {
             tag: 'audio',
             autoplay: 'autoplay',
             controls: 'controls',
-            children: [{
-                tag: 'source',
-                src: Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()}),
-                type: data.mimetype
-            }]
+            children: [
+                {
+                    tag: 'source',
+                    src: Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()}),
+                    type: data.mimetype
+                }
+            ]
             /*
-            src: Phlexible.component('/mediamanager/flash/player.swf'),
-            width: 300,
-            height: 20,
-            allowfullscreen: 'false',
-            allowscriptaccess: 'always',
-            quality: 'high',
-            wmode: 'transparent',
-            flashvars: link,
-            type: 'application/x-shockwave-flash'
-            */
+             src: Phlexible.component('/mediamanager/flash/player.swf'),
+             width: 300,
+             height: 20,
+             allowfullscreen: 'false',
+             allowscriptaccess: 'always',
+             quality: 'high',
+             wmode: 'transparent',
+             flashvars: link,
+             type: 'application/x-shockwave-flash'
+             */
         };
     }
 });

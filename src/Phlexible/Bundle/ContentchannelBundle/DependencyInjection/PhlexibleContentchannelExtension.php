@@ -25,10 +25,13 @@ class PhlexibleContentchannelExtension extends Extension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
         $loader->load('file.yml');
-        $container->setAlias('phlexible_contentchannel.contentchannel_manager', 'phlexible_contentchannel.file.contentchannel_manager');
+        $container->setAlias(
+            'phlexible_contentchannel.contentchannel_manager',
+            'phlexible_contentchannel.file.contentchannel_manager'
+        );
     }
 }

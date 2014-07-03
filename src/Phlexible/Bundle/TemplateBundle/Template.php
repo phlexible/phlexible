@@ -18,27 +18,27 @@ class Template
     /**
      * @var string
      */
-    private $id = null;
+    private $id;
 
     /**
      * @var string
      */
-    private $name = null;
+    private $name;
 
     /**
      * @var string
      */
-    private $path = null;
+    private $path;
 
     /**
      * @var string
      */
-    private $filename = null;
+    private $filename;
 
     /**
      * @var string
      */
-    private $absoluteFilename = null;
+    private $absoluteFilename;
 
     /**
      * Return template ID
@@ -52,11 +52,13 @@ class Template
 
     /**
      * @param string $id
+     *
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -74,11 +76,13 @@ class Template
      * Set template name
      *
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -96,11 +100,13 @@ class Template
      * Set template path
      *
      * @param string $path
+     *
      * @return $this
      */
     public function setPath($path)
     {
         $this->path = $path;
+
         return $this;
     }
 
@@ -118,11 +124,13 @@ class Template
      * Set template filename
      *
      * @param string $filename
+     *
      * @return $this
      */
     public function setFilename($filename)
     {
         $this->filename = $filename;
+
         return $this;
     }
 
@@ -140,11 +148,13 @@ class Template
      * Set template absolute filename
      *
      * @param string $absoluteFilename
+     *
      * @return $this
      */
     public function setAbsoluteFilename($absoluteFilename)
     {
         $this->absoluteFilename = $absoluteFilename;
+
         return $this;
     }
 

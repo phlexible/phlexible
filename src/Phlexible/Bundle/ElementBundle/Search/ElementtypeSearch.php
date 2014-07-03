@@ -31,23 +31,23 @@ class ElementtypeSearch extends AbstractSearch
         $select = $this->db->select()
             ->distinct()
             ->from(
-                array('etv' => $this->db->prefix.'elementtype_version'),
+                array('etv' => $this->db->prefix . 'elementtype_version'),
                 array(
                     'et.id',
                     'et.siteroot_id'
                 )
             )
             ->join(
-                array('ev' => $this->db->prefix.'element_version'),
+                array('ev' => $this->db->prefix . 'element_version'),
                 'ev.element_type_id = etv.element_type_id AND ev.element_type_version = etv.version',
                 array()
             )
             ->join(
-                array('et' => $this->db->prefix.'element_tree'),
+                array('et' => $this->db->prefix . 'element_tree'),
                 'ev.eid = et.eid',
                 array()
             )
-            ->where('etv.title LIKE ?', '%'.$query.'%')
+            ->where('etv.title LIKE ?', '%' . $query . '%')
             ->order('etv.title ASC');
 
         return parent::_doSearch($select, 'Elements Elementtype Search');

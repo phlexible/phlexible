@@ -35,14 +35,14 @@ class ElementtypeCollection
      */
     public function __construct(array $elementtypes = array())
     {
-        foreach ($elementtypes as $elementtype)
-        {
+        foreach ($elementtypes as $elementtype) {
             $this->add($elementtype);
         }
     }
 
     /**
      * @param Elementtype $elementtype
+     *
      * @return $this
      */
     public function add(Elementtype $elementtype)
@@ -84,6 +84,7 @@ class ElementtypeCollection
 
     /**
      * @param string $type
+     *
      * @return Elementtype[]
      */
     public function getByType($type)

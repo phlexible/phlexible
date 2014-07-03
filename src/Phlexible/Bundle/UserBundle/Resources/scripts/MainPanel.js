@@ -9,23 +9,26 @@ Phlexible.users.MainPanel = Ext.extend(Ext.Panel, {
     cls: 'p-users-main-panel',
     iconCls: 'p-user-component-icon',
 
-    initComponent: function() {
+    initComponent: function () {
         this.items = {
             xtype: 'tabpanel',
             border: false,
             activeTab: 0,
-            items: [{
-				xtype: 'users-users-mainpanel',
-				params: this.params
-			},{
-				xtype: 'users-groups-mainpanel'
-			}]
+            items: [
+                {
+                    xtype: 'users-users-mainpanel',
+                    params: this.params
+                },
+                {
+                    xtype: 'users-groups-mainpanel'
+                }
+            ]
         };
 
         Phlexible.users.UsersMainPanel.superclass.initComponent.call(this);
     },
 
-    loadParams: function(params) {
+    loadParams: function (params) {
         this.getComponent(0).getComponent(0).loadParams(params);
     }
 });

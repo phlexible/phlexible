@@ -27,8 +27,7 @@ class StatsCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-cache:stats')
-            ->setDescription('Show media cache statistics')
-        ;
+            ->setDescription('Show media cache statistics');
     }
 
     /**

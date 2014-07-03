@@ -32,7 +32,7 @@ class Makeweb_Frontendmediamanager_Folder_PaginatorAdapter implements Zend_Pagin
      *
      * @param Media_SiteDb_Folder $folder Media Site Folder
      */
-    public function __construct(Media_SiteDb_Folder  $folder)
+    public function __construct(Media_SiteDb_Folder $folder)
     {
         $this->_folder = $folder;
     }
@@ -52,6 +52,7 @@ class Makeweb_Frontendmediamanager_Folder_PaginatorAdapter implements Zend_Pagin
      *
      * @param  integer $offset
      * @param  integer $itemCountPerPage
+     *
      * @return array Array with files
      */
     public function getItems($offset, $itemCountPerPage)

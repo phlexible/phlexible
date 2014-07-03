@@ -10,27 +10,29 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         emptyText: Phlexible.siteroots.Strings.no_short_urls
     },
 
-    initComponent: function(){
+    initComponent: function () {
 
         // Create RowActions Plugin
         this.actions = new Ext.ux.grid.RowActions({
             header: this.strings.actions,
 //          autoWidth:false,
             width: 150,
-            actions:[{
-                iconCls: 'p-siteroot-delete-icon',
-                tooltip: this.strings.delete,
-                callback: function(grid, record, action, row, col) {
-                    var r = grid.store.getAt(row);
+            actions: [
+                {
+                    iconCls: 'p-siteroot-delete-icon',
+                    tooltip: this.strings.delete,
+                    callback: function (grid, record, action, row, col) {
+                        var r = grid.store.getAt(row);
 
-                    Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function(btn) {
-                        if (btn === 'yes') {
-                            this.onDeleteUrl(r);
-                        }
-                    }, this);
-                }.createDelegate(this)
-            }],
-            getData: function(value, cell, record, row, col, store) {
+                        Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
+                            if (btn === 'yes') {
+                                this.onDeleteUrl(r);
+                            }
+                        }, this);
+                    }.createDelegate(this)
+                }
+            ],
+            getData: function (value, cell, record, row, col, store) {
                 switch (record.get('handler')) {
                     case 'Siteroot':
                         record.data.hide_config = false;
@@ -45,66 +47,72 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             }
         });
 
-        this.tbar = [{
-            text: this.strings.add_short_url,
-            iconCls: 'p-siteroot-add-icon',
-            handler: this.onAddUrl,
-            scope: this
-        }];
+        this.tbar = [
+            {
+                text: this.strings.add_short_url,
+                iconCls: 'p-siteroot-add-icon',
+                handler: this.onAddUrl,
+                scope: this
+            }
+        ];
 
         this.store = new Ext.data.JsonStore({
             fields: Phlexible.siteroots.ShortUrlRecord
         });
 
-        this.columns = [{
-            id:'id',
-            header: 'ID',
-            hidden: true,
-            dataIndex: 'id'
-        },{
-            id:'path',
-            header: this.strings.path,
-            dataIndex: 'path',
-            sortable: true,
-            editor: new Ext.form.TextField({
-               //allowBlank: true
-           })
-        }, {
-            id:'language',
-            header: this.strings.language,
-            dataIndex: 'language',
-            sortable: true,
-            renderer: this.renderLanguage.createDelegate(this),
-            width: 100,
-            editor: new Ext.ux.IconCombo({
-                allowBlank: true,
-                editable: false,
-                triggerAction: 'all',
-                selectOnFocus: true,
-                mode: 'local',
-                displayField: 'title',
-                valueField: 'language',
-                iconClsField: 'icon',
-                emptyText: '',
-                store: new Ext.data.SimpleStore({
-                    fields: ['language', 'title', 'icon'],
-                    data: Phlexible.Config.get('set.language.frontend')
+        this.columns = [
+            {
+                id: 'id',
+                header: 'ID',
+                hidden: true,
+                dataIndex: 'id'
+            },
+            {
+                id: 'path',
+                header: this.strings.path,
+                dataIndex: 'path',
+                sortable: true,
+                editor: new Ext.form.TextField({
+                    //allowBlank: true
                 })
-            })
-        }, {
-            id:'target',
-            header: this.strings.target,
-            dataIndex: 'target',
-            sortable: true,
-            width: 200,
-            editor: new Phlexible.elements.EidSelector({
-                labelSeparator: '',
-                element: { siteroot_id: this.siterootId },
-                width: 300,
-                listWidth: 283,
-                treeWidth: 283
-            })
-        },
+            },
+            {
+                id: 'language',
+                header: this.strings.language,
+                dataIndex: 'language',
+                sortable: true,
+                renderer: this.renderLanguage.createDelegate(this),
+                width: 100,
+                editor: new Ext.ux.IconCombo({
+                    allowBlank: true,
+                    editable: false,
+                    triggerAction: 'all',
+                    selectOnFocus: true,
+                    mode: 'local',
+                    displayField: 'title',
+                    valueField: 'language',
+                    iconClsField: 'icon',
+                    emptyText: '',
+                    store: new Ext.data.SimpleStore({
+                        fields: ['language', 'title', 'icon'],
+                        data: Phlexible.Config.get('set.language.frontend')
+                    })
+                })
+            },
+            {
+                id: 'target',
+                header: this.strings.target,
+                dataIndex: 'target',
+                sortable: true,
+                width: 200,
+                editor: new Phlexible.elements.EidSelector({
+                    labelSeparator: '',
+                    element: { siteroot_id: this.siterootId },
+                    width: 300,
+                    listWidth: 283,
+                    treeWidth: 283
+                })
+            },
             this.actions
         ];
 
@@ -117,7 +125,7 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 fn: this.onRowContextMenu,
                 scope: this
             },
-            afterEdit : {
+            afterEdit: {
                 fn: this.onValidateEdit,
                 scope: this
             }
@@ -126,7 +134,7 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         Phlexible.siteroots.ShortUrlGrid.superclass.initComponent.call(this);
     },
 
-    renderLanguage: function(v, md, r, ri, ci, store) {
+    renderLanguage: function (v, md, r, ri, ci, store) {
         var editor = this.getColumnModel().getCellEditor(2, 0);
 
         var estore = editor.field.store;
@@ -138,12 +146,12 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         return v;
     },
 
-    onValidateEdit: function(event) {
-        if(event.record.get('path') === '') {
+    onValidateEdit: function (event) {
+        if (event.record.get('path') === '') {
             this.startEditing(event.row, 1);
         }
 
-        if(event.record.get('target') === '') {
+        if (event.record.get('target') === '') {
             this.startEditing(event.row, 3);
         }
     },
@@ -155,7 +163,7 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      * @param {Number} rowIndex
      * @param {Object} event
      */
-    onRowContextMenu: function(grid, rowIndex, event) {
+    onRowContextMenu: function (grid, rowIndex, event) {
         event.stopEvent();
 
         var r = grid.store.getAt(rowIndex);
@@ -165,7 +173,7 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         this.contextMenu.showAt([coords[0], coords[1]]);
 
         var sm = grid.getSelectionModel();
-        if(!sm.hasSelection() || (sm.getSelected().id != r.id)) {
+        if (!sm.hasSelection() || (sm.getSelected().id != r.id)) {
             sm.selectRow(rowIndex);
         }
     },
@@ -173,7 +181,7 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     /**
      * Action if site
      */
-    onAddUrl: function() {
+    onAddUrl: function () {
 
         // create new empty record
         var newRecord = new Phlexible.siteroots.ShortUrlRecord({
@@ -196,7 +204,7 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      * @param {String} title
      * @param {Object} data
      */
-    loadData: function(id, title, data) {
+    loadData: function (id, title, data) {
         this.deletedRecords = [];
         this.store.commitChanges();
 
@@ -215,9 +223,9 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      *
      * @param {Object} r
      */
-    onDeleteUrl: function(r) {
+    onDeleteUrl: function (r) {
 
-        if(!this.deletedRecords) {
+        if (!this.deletedRecords) {
             this.deletedRecords = [];
         }
 
@@ -231,11 +239,11 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     /**
      * Get the data to be saved.
      */
-    getSaveData: function() {
+    getSaveData: function () {
 
         // fetch deleted records
         var delRecords = [];
-        Ext.each(this.deletedRecords || [], function(r) {
+        Ext.each(this.deletedRecords || [], function (r) {
             if (new String(r.data.id).length > 0) {
                 delRecords.push(r.data);
             }
@@ -243,27 +251,27 @@ Phlexible.siteroots.ShortUrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         // fetch modified records
         var modRecords = [];
-        Ext.each(this.store.getModifiedRecords() || [], function(r) {
+        Ext.each(this.store.getModifiedRecords() || [], function (r) {
             modRecords.push(r.data);
         });
 
         // check data
-        for(var i = 0; i < modRecords.length; ++i) {
+        for (var i = 0; i < modRecords.length; ++i) {
 
             // get current record
             var r = modRecords[i];
 
-            if(r.path.length <= 0) {
+            if (r.path.length <= 0) {
                 Ext.Msg.alert(this.strings.failure, this.strings.err_path_empty);
                 return false;
             }
 
-            if(r.target.length <= 0) {
+            if (r.target.length <= 0) {
                 Ext.Msg.alert(this.strings.failure, this.strings.err_target_empty);
                 return false;
             }
 
-            if(r.language.length <= 0) {
+            if (r.language.length <= 0) {
                 Ext.Msg.alert(this.strings.failure, this.strings.err_language_empty);
                 return false;
             }

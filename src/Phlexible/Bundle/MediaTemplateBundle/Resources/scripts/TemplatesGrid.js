@@ -4,7 +4,7 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
     border: true,
     autoExpandColumn: 1,
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('mediatemplates_templates_list'),
             root: 'templates',
@@ -17,51 +17,61 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
             autoLoad: true
         });
 
-        this.columns = [{
-            header: this.strings.type,
-            dataIndex: 'type',
-            width: 35,
-            renderer: function(s) {
-                return Phlexible.inlineIcon('p-mediatemplate-type_' + s + '-icon');
+        this.columns = [
+            {
+                header: this.strings.type,
+                dataIndex: 'type',
+                width: 35,
+                renderer: function (s) {
+                    return Phlexible.inlineIcon('p-mediatemplate-type_' + s + '-icon');
+                }
+            },
+            {
+                header: this.strings.title,
+                dataIndex: 'key',
+                width: 170,
+                sortable: true
             }
-        },{
-            header: this.strings.title,
-            dataIndex: 'key',
-            width: 170,
-            sortable: true
-        }];
+        ];
 
         this.selModel = new Ext.grid.RowSelectionModel();
 
-        this.tbar = [{
-           text: this.strings.add,
-           iconCls: 'p-mediatemplate-add-icon',
-           menu: [{
-               text: this.strings.image,
-               iconCls: 'p-mediatemplate-type_image-icon',
-               handler: this.newImageTemplate,
-               scope: this
-           },{
-               text: this.strings.video,
-               iconCls: 'p-mediatemplate-type_video-icon',
-               handler: this.newVideoTemplate,
-               scope: this
-           },{
-               text: this.strings.audio,
-               iconCls: 'p-mediatemplate-type_audio-icon',
-               handler: this.newAudioTemplate,
-               scope: this
-           },{
-               text: this.strings.pdf2swf,
-               iconCls: 'p-mediatemplate-type_pdf-icon',
-               handler: this.newPdfTemplate,
-               scope: this
-           }]
-        }];
+        this.tbar = [
+            {
+                text: this.strings.add,
+                iconCls: 'p-mediatemplate-add-icon',
+                menu: [
+                    {
+                        text: this.strings.image,
+                        iconCls: 'p-mediatemplate-type_image-icon',
+                        handler: this.newImageTemplate,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.video,
+                        iconCls: 'p-mediatemplate-type_video-icon',
+                        handler: this.newVideoTemplate,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.audio,
+                        iconCls: 'p-mediatemplate-type_audio-icon',
+                        handler: this.newAudioTemplate,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.pdf2swf,
+                        iconCls: 'p-mediatemplate-type_pdf-icon',
+                        handler: this.newPdfTemplate,
+                        scope: this
+                    }
+                ]
+            }
+        ];
 
         this.addListener({
             rowdblclick: {
-                fn: function(grid, rowIndex) {
+                fn: function (grid, rowIndex) {
                     var r = grid.store.getAt(rowIndex);
                     this.fireEvent('templatechange', r);
                 },
@@ -72,28 +82,28 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.mediatemplates.TemplatesGrid.superclass.initComponent.call(this);
     },
 
-    newImageTemplate: function() {
+    newImageTemplate: function () {
         this.newTemplate('image');
     },
 
-    newVideoTemplate: function() {
+    newVideoTemplate: function () {
         this.newTemplate('video');
     },
 
-    newAudioTemplate: function() {
+    newAudioTemplate: function () {
         this.newTemplate('audio');
     },
 
-    newPdfTemplate: function() {
+    newPdfTemplate: function () {
         this.newTemplate('pdf');
     },
 
-    newTemplate: function(type){
-        if(!type || (type != 'image' && type != 'video' && type != 'audio' && type != 'pdf')) {
+    newTemplate: function (type) {
+        if (!type || (type != 'image' && type != 'video' && type != 'audio' && type != 'pdf')) {
             return;
         }
 
-        Ext.MessageBox.prompt('_title', '_title', function(btn, key) {
+        Ext.MessageBox.prompt('_title', '_title', function (btn, key) {
             if (btn !== 'ok') {
                 return;
             }
@@ -104,14 +114,14 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
                     type: type,
                     key: key
                 },
-                success: function(response){
+                success: function (response) {
                     var data = Ext.decode(response.responseText);
-                    if(data.success) {
+                    if (data.success) {
                         Phlexible.success(data.msg);
 
                         // store reload
                         this.store.reload({
-                            callback: function(template_id) {
+                            callback: function (template_id) {
                                 var r = this.store.getById(template_id);
                                 var index = this.store.indexOf(r);
                                 this.selModel.selectRange(index);
@@ -122,9 +132,9 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
                         Ext.Msg.alert('Failure', data.msg);
                     }
                 },
-                scope:this
+                scope: this
 
-             });
+            });
         }, this);
     }
 });

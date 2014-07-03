@@ -1,30 +1,30 @@
-Phlexible.fields.Registry.addFactory('date', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('date', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.dsId);
+    element.prototypes.incCount(item.dsId);
 
-	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
 
-	Ext.apply(config, {
-		xtype: 'datefield',
-		format: 'Y-m-d',
+    Ext.apply(config, {
+        xtype: 'datefield',
+        format: 'Y-m-d',
 
-		supportsPrefix: true,
-		supportsSuffix: true,
-		supportsDiff: true,
-		supportsInlineDiff: true,
-		supportsUnlink: {unlinkEl: 'trigger'},
-		supportsRepeatable: true
-	});
+        supportsPrefix: true,
+        supportsSuffix: true,
+        supportsDiff: true,
+        supportsInlineDiff: true,
+        supportsUnlink: {unlinkEl: 'trigger'},
+        supportsRepeatable: true
+    });
 
-	if (config.readOnly) {
-		config.hideTrigger = true;
-		config.onTriggerClick = Ext.emptyFn;
-	}
+    if (config.readOnly) {
+        config.hideTrigger = true;
+        config.onTriggerClick = Ext.emptyFn;
+    }
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('date', {
@@ -34,11 +34,11 @@ Phlexible.fields.FieldTypes.addField('date', {
     },
     iconCls: 'p-elementtype-field_date-icon',
     allowedIn: [
-		'tab',
-		'accordion',
-		'group',
-		'referenceroot'
-	],
+        'tab',
+        'accordion',
+        'group',
+        'referenceroot'
+    ],
     defaultValueField: 'default_value_datefield',
     config: {
         labels: {

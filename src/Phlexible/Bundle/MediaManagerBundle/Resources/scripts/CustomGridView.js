@@ -1,4 +1,4 @@
-Phlexible.mediamanager.CustomGridView = function(config) {
+Phlexible.mediamanager.CustomGridView = function (config) {
     Ext.apply(this, config);
 
     this.addEvents(
@@ -13,14 +13,14 @@ Phlexible.mediamanager.CustomGridView = function(config) {
     Ext.grid.GridView.superclass.constructor.call(this);
 };
 Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
-    modeOrder: ["tile","large","extralarge","detail"],
+    modeOrder: ["tile", "large", "extralarge", "detail"],
     onLoad: Ext.emptyFn,
     cookies: new Ext.state.CookieProvider(),
     stateKey: null,
     defaultMode: "tile",
     startGroup: Phlexible.mediamanager.templates.StartGroup,
 
-    initTemplates: function() {
+    initTemplates: function () {
         Phlexible.mediamanager.CustomGridView.superclass.initTemplates.apply(this, arguments);
         this.detailRowTemplate = this.templates.row;
         this.detailCellTemplate = this.templates.cell;
@@ -35,46 +35,46 @@ Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
         this.customCellTemplate = null;
         this.restoreState();
     },
-    renderUI: function() {
+    renderUI: function () {
         Phlexible.mediamanager.CustomGridView.superclass.renderUI.apply(this, arguments);
     },
-    saveState: function() {
-        if(this.stateKey){
-            this.cookies.set(this.stateKey,this.mode);
+    saveState: function () {
+        if (this.stateKey) {
+            this.cookies.set(this.stateKey, this.mode);
         }
     },
-    restoreState: function() {
+    restoreState: function () {
         var mode = this.defaultMode;
-        if(this.stateKey){
+        if (this.stateKey) {
             var mode = this.cookies.get(this.stateKey) || this.defaultMode;
         }
         this.setViewMode(mode);
     },
-    updateAllColumnWidths: function(){
+    updateAllColumnWidths: function () {
         var tw = this.getTotalWidth();
         var clen = this.cm.getColumnCount();
         var ws = [];
-        for(var i = 0; i < clen; i++){
+        for (var i = 0; i < clen; i++) {
             ws[i] = this.getColumnWidth(i);
         }
 
         this.innerHd.firstChild.firstChild.style.width = tw;
 
-        for(var i = 0; i < clen; i++){
+        for (var i = 0; i < clen; i++) {
             var hd = this.getHeaderCell(i);
             hd.style.width = ws[i];
         }
 
-        if(this.templates.cell){
+        if (this.templates.cell) {
             var ns = this.getRows(), row, trow;
-            for(var i = 0, len = ns.length; i < len; i++){
+            for (var i = 0, len = ns.length; i < len; i++) {
                 row = ns[i];
                 row.style.width = tw;
-                if(row.firstChild){
+                if (row.firstChild) {
                     row.firstChild.style.width = tw;
                     trow = row.firstChild.rows[0];
                     for (var j = 0; j < clen; j++) {
-                       trow.childNodes[j].style.width = ws[j];
+                        trow.childNodes[j].style.width = ws[j];
                     }
                 }
             }
@@ -82,7 +82,7 @@ Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
 
         this.onAllColumnWidthsUpdated(ws, tw);
     },
-    updateColumnWidth: function(col, width){
+    updateColumnWidth: function (col, width) {
         var w = this.getColumnWidth(col);
         var tw = this.getTotalWidth();
 
@@ -101,40 +101,40 @@ Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
 
         this.onColumnWidthUpdated(col, w, tw);
     },
-    detailView: function(){
+    detailView: function () {
         this.setViewMode("detail");
     },
-    extraLargeThumbnails: function(){
+    extraLargeThumbnails: function () {
         this.setViewMode("extralarge");
     },
-    largeThumbnails: function(){
+    largeThumbnails: function () {
         this.setViewMode("large");
     },
-    mediumThumbnails: function(){
+    mediumThumbnails: function () {
         this.setViewMode("medium");
     },
-    smallThumbnails: function(){
+    smallThumbnails: function () {
         this.setViewMode("small");
     },
-    tileView: function(){
+    tileView: function () {
         this.setViewMode("tile");
     },
-    timelineView: function(){
+    timelineView: function () {
         this.setViewMode("timeline");
     },
-    nextViewMode: function(){
+    nextViewMode: function () {
         var curMode = this.mode || "tile";
         var modeOrder = this.modeOrder;
         var curIndex = modeOrder.indexOf(curMode);
         curIndex++;
-        if(curIndex>=modeOrder.length){
+        if (curIndex >= modeOrder.length) {
             curIndex = 0;
         }
         this.setViewMode(modeOrder[curIndex]);
     },
-    setViewMode: function(newMode){
+    setViewMode: function (newMode) {
         this.mode = newMode;
-        if(newMode=="detail"){
+        if (newMode == "detail") {
             this.templates.row = this.detailRowTemplate;
             this.templates.cell = this.detailCellTemplate;
         } else {
@@ -142,49 +142,49 @@ Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
             //this.customRowTemplate.setMode(newMode);
             this.templates.cell = this.customCellTemplate;
         }
-        if(this.el){
+        if (this.el) {
             this.refresh();
         }
         this.saveState();
 
         this.fireEvent("modeChange", this, this.mode);
     },
-    customDoRender: function(cs,rs,ds,startRow,colCount,stripe){
-        var cellTpl = this.templates.cell, rowTpl = this.templates.row, maxColValue = colCount-1;
+    customDoRender: function (cs, rs, ds, startRow, colCount, stripe) {
+        var cellTpl = this.templates.cell, rowTpl = this.templates.row, maxColValue = colCount - 1;
         var width = "width:" + this.getTotalWidth() + ";";
-        var buf = [], cellBuf, c, cell = {}, row = {tstyle:width}, r;
-        for(var i=0, len=rs.length; i<len; i++){
+        var buf = [], cellBuf, c, cell = {}, row = {tstyle: width}, r;
+        for (var i = 0, len = rs.length; i < len; i++) {
             r = rs[i];
             cellBuf = [];
-            var rowIndex = (i+startRow);
-            if(cellTpl){
-                for(var j=0; j<colCount; j++){
+            var rowIndex = (i + startRow);
+            if (cellTpl) {
+                for (var j = 0; j < colCount; j++) {
                     c = cs[j];
                     cell.id = c.id;
-                    cell.css = j===0 ? "x-grid3-cell-first " : (j==maxColValue ? "x-grid3-cell-last " : "");
+                    cell.css = j === 0 ? "x-grid3-cell-first " : (j == maxColValue ? "x-grid3-cell-last " : "");
                     cell.attr = cell.cellAttr = "";
-                    cell.value = c.renderer(r.data[c.name],cell,r,rowIndex,j,ds);
+                    cell.value = c.renderer(r.data[c.name], cell, r, rowIndex, j, ds);
                     cell.record = r;
                     cell.style = c.style;
-                    if(cell.value==undefined || cell.value===""){
+                    if (cell.value == undefined || cell.value === "") {
                         cell.value = " ";
                     }
-                    if(r.dirty && typeof r.modified[c.name]!=="undefined"){
+                    if (r.dirty && typeof r.modified[c.name] !== "undefined") {
                         cell.css += " x-grid3-dirty-cell";
                     }
                     cellBuf[cellBuf.length] = cellTpl.apply(cell);
                 }
             }
             var altBuf = [];
-            if(stripe && ((rowIndex+1)%2===0)){
+            if (stripe && ((rowIndex + 1) % 2 === 0)) {
                 altBuf[0] = "x-grid3-row-alt";
             }
-            if(r.dirty){
+            if (r.dirty) {
                 altBuf[1] = "x-grid3-dirty-row";
             }
             row.record = r;
-            if(this.getRowClass){
-                altBuf[2] = this.getRowClass(r,rowIndex,row,ds);
+            if (this.getRowClass) {
+                altBuf[2] = this.getRowClass(r, rowIndex, row, ds);
             }
             row.alt = altBuf.join(" ");
             row.cells = cellBuf.join("");
@@ -195,8 +195,8 @@ Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
 
         return buf.join("");
     },
-    doRender: function(cs,rs,ds,startRow,colCount,stripe){
-        if(rs.length<1){
+    doRender: function (cs, rs, ds, startRow, colCount, stripe) {
+        if (rs.length < 1) {
             return "";
         }
         var groupField = this.getGroupField();
@@ -204,7 +204,7 @@ Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
 
         this.enableGrouping = !!groupField;
 
-        if(!this.enableGrouping || this.isUpdating){
+        if (!this.enableGrouping || this.isUpdating) {
             return this.customDoRender.apply(this, arguments);
         }
         var gstyle = "width:" + this.getTotalWidth() + ";";
@@ -213,13 +213,13 @@ Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
         var cfg = this.cm.config[colIndex];
         var groupRenderer = cfg.groupRenderer || cfg.renderer;
         var prefix = this.showGroupName ? (cfg.groupName || cfg.header) + ": " : "";
-        var groups = [],curGroup,i,len,gid;
-        for(i=0, len=rs.length; i<len; i++){
+        var groups = [], curGroup, i, len, gid;
+        for (i = 0, len = rs.length; i < len; i++) {
             var rowIndex = startRow + i;
-            var r = rs[i], gvalue = r.data[groupField], g = this.getGroup(gvalue,r,groupRenderer,rowIndex,colIndex,ds);
-            if(!curGroup || curGroup.group!=g){
+            var r = rs[i], gvalue = r.data[groupField], g = this.getGroup(gvalue, r, groupRenderer, rowIndex, colIndex, ds);
+            if (!curGroup || curGroup.group != g) {
                 gid = gidPrefix + "-gp-" + groupField + "-" + g;
-                var isCollapsed  = typeof this.state[gid] !== 'undefined' ? !this.state[gid] : this.startCollapsed;
+                var isCollapsed = typeof this.state[gid] !== 'undefined' ? !this.state[gid] : this.startCollapsed;
                 var gcls = isCollapsed ? 'x-grid-group-collapsed' : '';
                 curGroup = {
                     group: g,
@@ -238,11 +238,11 @@ Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
             r._groupId = gid;
         }
         var buf = [];
-        for(i = 0; i<groups.length; i++){
+        for (i = 0; i < groups.length; i++) {
             var g = groups[i];
-            this.doGroupStart(buf,g,cs,ds,colCount);
-            buf[buf.length] = this.customDoRender.call(this,cs,g.rs,ds,g.startRow,colCount,stripe);
-            this.doGroupEnd(buf,g,cs,ds,colCount);
+            this.doGroupStart(buf, g, cs, ds, colCount);
+            buf[buf.length] = this.customDoRender.call(this, cs, g.rs, ds, g.startRow, colCount, stripe);
+            this.doGroupEnd(buf, g, cs, ds, colCount);
         }
         return buf.join("");
     }

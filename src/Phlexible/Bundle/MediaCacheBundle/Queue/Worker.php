@@ -57,11 +57,12 @@ class Worker
      * @param Properties               $properties
      * @param string                   $lockDir
      */
-    public function __construct(WorkerResolver $workerResolver,
-                                SiteManager $siteManager,
-                                TemplateManagerInterface $templateManager,
-                                Properties $properties,
-                                $lockDir)
+    public function __construct(
+        WorkerResolver $workerResolver,
+        SiteManager $siteManager,
+        TemplateManagerInterface $templateManager,
+        Properties $properties,
+        $lockDir)
     {
         $this->workerResolver = $workerResolver;
         $this->siteManager = $siteManager;
@@ -80,7 +81,7 @@ class Worker
     {
         $lock = $this->lock();
         $cacheItem = $this->doProcess($queueItem, $callback);
-        $lock->unlock();
+        $lock->release();
 
         return $cacheItem;
     }
@@ -92,7 +93,7 @@ class Worker
     private function lock()
     {
         $lock = new FileLock('mediacache_lock', $this->lockDir);
-        if (!$lock->tryLock()) {
+        if (!$lock->tryAcquire()) {
             throw new AlreadyRunningException('Another cache worker process running.');
         }
 

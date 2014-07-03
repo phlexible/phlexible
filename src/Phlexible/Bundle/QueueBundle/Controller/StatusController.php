@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\QueueBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -44,7 +44,7 @@ class StatusController extends Controller
             );
         }
 
-        $out = '<pre>Current jobs: '.PHP_EOL;
+        $out = '<pre>Current jobs: ' . PHP_EOL;
         $out .= print_r($data, 1);
 
         return new Response($out);

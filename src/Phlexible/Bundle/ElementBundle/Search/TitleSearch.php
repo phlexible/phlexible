@@ -30,20 +30,22 @@ class TitleSearch extends AbstractSearch
     {
         $select = $this->db->select()
             ->from(
-                array('evt' => $this->db->prefix.'element_version_titles'),
+                array('evt' => $this->db->prefix . 'element_version_titles'),
                 array()
             )
             ->join(
                 array('e' => $this->db->prefix . 'element'),
-                'evt.eid = e.eid AND evt.version = e.latest_version AND evt.language = ' . $this->db->quote($this->defaultLanguage),
+                'evt.eid = e.eid AND evt.version = e.latest_version AND evt.language = ' . $this->db->quote(
+                    $this->defaultLanguage
+                ),
                 array()
             )
             ->join(
-                array('et' => $this->db->prefix.'element_tree'),
+                array('et' => $this->db->prefix . 'element_tree'),
                 'evt.eid = et.eid',
                 array('id', 'siteroot_id')
             )
-            ->where('evt.backend LIKE ?', '%'.$query.'%')
+            ->where('evt.backend LIKE ?', '%' . $query . '%')
             ->where('evt.language = ?', $this->defaultLanguage)
             ->order('evt.backend ASC');
 

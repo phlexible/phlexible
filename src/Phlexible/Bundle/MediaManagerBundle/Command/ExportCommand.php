@@ -29,13 +29,14 @@ class ExportCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-manager:export')
-            ->setDefinition(array(
-                new InputArgument('site', InputArgument::REQUIRED, 'Site to export.'),
-                new InputArgument('target', InputArgument::REQUIRED, 'Target directory.'),
-                new InputOption('symlink', null, InputOption::VALUE_NONE, 'Symlink'),
-            ))
-            ->setDescription('Export site')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('site', InputArgument::REQUIRED, 'Site to export.'),
+                    new InputArgument('target', InputArgument::REQUIRED, 'Target directory.'),
+                    new InputOption('symlink', null, InputOption::VALUE_NONE, 'Symlink'),
+                )
+            )
+            ->setDescription('Export site');
     }
 
     /**
@@ -72,7 +73,7 @@ class ExportCommand extends ContainerAwareCommand
                 $fileName = $file->getName();
                 $filePath = $file->getPhysicalPath();
 
-                $targetPath = $target.$folderPath.$fileName;
+                $targetPath = $target . $folderPath . $fileName;
 
                 if ($symlink) {
                     if ($filesystem->exists($filePath)) {

@@ -9,35 +9,35 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
     hideMode: 'offsets',
     accordionCollapsed: false,
 
-    initComponent: function(){
+    initComponent: function () {
         this.element.on({
             afterload: this.onAfterLoadElement,
-			scope: this
+            scope: this
         });
 
         /*
-        this.on({
-            xbeforetabchange: function(tabPanel, newTab, currentTab) {
-                if (newTab.xtype !== 'elements-elementdatapanel') {
-                    tabPanel.element.fireEvent('disableSave');
-                }
-            },
-            xtabchange: function(tabPanel, tab) {
-                if (tab.element.tid && tab.xtype === 'elements-elementdatapanel') {
-                    tabPanel.element.fireEvent('enableSave');
-                }
-            }
-        });
-        */
+         this.on({
+         xbeforetabchange: function(tabPanel, newTab, currentTab) {
+         if (newTab.xtype !== 'elements-elementdatapanel') {
+         tabPanel.element.fireEvent('disableSave');
+         }
+         },
+         xtabchange: function(tabPanel, tab) {
+         if (tab.element.tid && tab.xtype === 'elements-elementdatapanel') {
+         tabPanel.element.fireEvent('enableSave');
+         }
+         }
+         });
+         */
 
         this.populateItems();
 
         Phlexible.elements.ElementTabPanel.superclass.initComponent.call(this);
     },
 
-    onAfterLoadElement: function(element){
+    onAfterLoadElement: function (element) {
         // set active tab to default value
-        this.items.each(function(item) {
+        this.items.each(function (item) {
             if (element.data.default_tab === item.tabKey) {
                 this.setActiveTab(item);
                 return false;
@@ -59,51 +59,57 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
         //}
     },
 
-    populateItems: function() {
-        this.items = [{
-            xtype: 'elements-elementlistgrid',
-            element: this.element,
-            listeners: {
-                listLoadTeaser: function(teaser_id) {
-					this.fireEvent('listLoadTeaser', teaser_id);
-				},
-                listLoadNode: function(tid) {
-					this.fireEvent('listLoadNode', tid);
-				},
-                listReloadNode: function(tid) {
-					this.fireEvent('listReloadNode', tid);
-				},
-				scope: this
-            }
-        },{
-            xtype: 'elements-elementdatapanel',
-            element: this.element,
-            accordionCollapsed: this.accordionCollapsed
-        },{
-            xtype: 'elements-rightsgrid',
-            iconCls: 'p-element-tab_rights-icon',
-            element: this.element,
-            title: Phlexible.elements.Strings.access,
-            right: 'ACCESS',
-            rightType: 'internal',
-            contentType: 'treenode',
-            strings: {
-                users: Phlexible.elements.Strings.users,
-                user: Phlexible.elements.Strings.user,
-                groups: Phlexible.elements.Strings.groups,
-                group: Phlexible.elements.Strings.group
+    populateItems: function () {
+        this.items = [
+            {
+                xtype: 'elements-elementlistgrid',
+                element: this.element,
+                listeners: {
+                    listLoadTeaser: function (teaser_id) {
+                        this.fireEvent('listLoadTeaser', teaser_id);
+                    },
+                    listLoadNode: function (tid) {
+                        this.fireEvent('listLoadNode', tid);
+                    },
+                    listReloadNode: function (tid) {
+                        this.fireEvent('listReloadNode', tid);
+                    },
+                    scope: this
+                }
             },
-            urls: {
-                subjects: Phlexible.Router.generate('elements_rights_subjects'),
-                add: Phlexible.Router.generate('elements_rights_add')
+            {
+                xtype: 'elements-elementdatapanel',
+                element: this.element,
+                accordionCollapsed: this.accordionCollapsed
+            },
+            {
+                xtype: 'elements-rightsgrid',
+                iconCls: 'p-element-tab_rights-icon',
+                element: this.element,
+                title: Phlexible.elements.Strings.access,
+                right: 'ACCESS',
+                rightType: 'internal',
+                contentType: 'treenode',
+                strings: {
+                    users: Phlexible.elements.Strings.users,
+                    user: Phlexible.elements.Strings.user,
+                    groups: Phlexible.elements.Strings.groups,
+                    group: Phlexible.elements.Strings.group
+                },
+                urls: {
+                    subjects: Phlexible.Router.generate('elements_rights_subjects'),
+                    add: Phlexible.Router.generate('elements_rights_add')
+                }
+            },
+            {
+                xtype: 'elements-elementlinksgrid',
+                element: this.element
+            },
+            {
+                xtype: 'elements-elementhistorygrid',
+                element: this.element
             }
-        }, {
-            xtype: 'elements-elementlinksgrid',
-            element: this.element
-        },{
-            xtype: 'elements-elementhistorygrid',
-            element: this.element
-        }];
+        ];
     }
 });
 

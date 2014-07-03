@@ -17,8 +17,8 @@ class FolderUsage
 {
     const STATUS_ONLINE = 8;
     const STATUS_LATEST = 4;
-    const STATUS_OLD    = 2;
-    const STATUS_DEAD   = 1;
+    const STATUS_OLD = 2;
+    const STATUS_DEAD = 1;
 
     /**
      * @var MWF_Db_Pool
@@ -39,12 +39,9 @@ class FolderUsage
     {
         $db = $this->_dbPool->write;
 
-        if ($eid !== null)
-        {
+        if ($eid !== null) {
             $eids = array($eid);
-        }
-        else
-        {
+        } else {
             $select = $db->select()
                 ->from($db->prefix . 'element', 'eid');
 
@@ -55,15 +52,14 @@ class FolderUsage
         $cntDelete = 0;
 
         $types = array('folder');
-        foreach ($types as $key => $type)
-        {
+        foreach ($types as $key => $type) {
             $types[$key] = $db->quote($type);
         }
         $typeString = implode(',', $types);
 
         $query =
-#INSERT INTO
-#    ' . $db->prefix . 'mediamanager_files_usage
+            #INSERT INTO
+            #    ' . $db->prefix . 'mediamanager_files_usage
             'SELECT DISTINCT
     edl.content AS folder_id,
     "element" AS usage_type,
@@ -76,7 +72,7 @@ FROM
     ' . $db->prefix . 'element_data_language edl,
     ' . $db->prefix . 'mediamanager_folders mfo
 WHERE
-    ets.field_type IN ('.$typeString.')
+    ets.field_type IN (' . $typeString . ')
 AND
     ets.ds_id = ed.ds_id
 AND
@@ -96,16 +92,21 @@ AND
 ';
 
         $select1 = $db->select()->from($db->prefix . 'element', 'latest_version')->where('eid = :eid');
-        $select2 = $db->select()->from($db->prefix . 'element_tree_online', new Zend_Db_Expr('language||"_"||version'))->where('eid = :eid');
-        $select3 = $db->select()->from($db->prefix . 'element_tree_teasers_online', new Zend_Db_Expr('language||"_"||version'))->where('eid = :eid');
+        $select2 = $db->select()->from($db->prefix . 'element_tree_online', new Zend_Db_Expr('language||"_"||version'))
+            ->where('eid = :eid');
+        $select3 = $db->select()->from(
+            $db->prefix . 'element_tree_teasers_online',
+            new Zend_Db_Expr('language||"_"||version')
+        )->where('eid = :eid');
 
         $select4 = $db->select()->from($db->prefix . 'element_tree', new Zend_Db_Expr('COUNT(*)'))->where('eid = :eid');
-        $select5 = $db->select()->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('COUNT(*)'))->where('teaser_eid = :eid');
+        $select5 = $db->select()->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('COUNT(*)'))->where(
+            'teaser_eid = :eid'
+        );
 
         $log = '';
 
-        foreach ($eids as $eid)
-        {
+        foreach ($eids as $eid) {
             #$db->beginTransaction();
 
             $cntDelete += $db->delete(
@@ -117,21 +118,23 @@ AND
             );
 
             $rows = $db->fetchAll($query, array('eid' => (int) $eid));
-            $log .= 'Tree Online Versions: '; $log .= print_r($rows, true);
+            $log .= 'Tree Online Versions: ';
+            $log .= print_r($rows, true);
 
-            if (!$rows)
-            {
+            if (!$rows) {
                 continue;
             }
 
-            $latestVersion        = $db->fetchOne($select1, array('eid' => $eid));
-            $treeOnlineVersions   = $db->fetchCol($select2, array('eid' => $eid));
+            $latestVersion = $db->fetchOne($select1, array('eid' => $eid));
+            $treeOnlineVersions = $db->fetchCol($select2, array('eid' => $eid));
             $teaserOnlineVersions = $db->fetchCol($select3, array('eid' => $eid));
             $log .= 'Latest Version: ' . $latestVersion . PHP_EOL;
-            $log .= 'Tree Online Versions: '; $log .= print_r($treeOnlineVersions, true);
-            $log .= 'Teaser Online Versions: '; $log .= print_r($teaserOnlineVersions, true);
+            $log .= 'Tree Online Versions: ';
+            $log .= print_r($treeOnlineVersions, true);
+            $log .= 'Teaser Online Versions: ';
+            $log .= print_r($teaserOnlineVersions, true);
 
-            $treeUsed    = $db->fetchOne($select4, array('eid' => $eid));
+            $treeUsed = $db->fetchOne($select4, array('eid' => $eid));
             $teasersUsed = $db->fetchOne($select5, array('eid' => $eid));
 
             #echo $latestVersion." ";
@@ -141,14 +144,12 @@ AND
             $status = array();
             $insertRows = array();
 
-            foreach ($rows as $row)
-            {
+            foreach ($rows as $row) {
                 #echo $row['version'].PHP_EOL;
                 $key = $row['folder_id'];
                 $logPrefix = $key . ' ' . $row['eid'] . '_' . $row['language'] . '_' . $row['version'];
 
-                if (!array_key_exists($key, $insertRows))
-                {
+                if (!array_key_exists($key, $insertRows)) {
                     $insertRows[$key] = $row;
                     $insertRows[$key]['status'] = 0;
                     unset($insertRows[$key]['version']);
@@ -156,34 +157,24 @@ AND
                 }
 
                 if (in_array($row['language'] . '_' . $row['version'], $treeOnlineVersions) ||
-                    in_array($row['language'] . '_' . $row['version'], $teaserOnlineVersions))
-                {
-                    $log .= $logPrefix . ': Online'.PHP_EOL;
+                    in_array($row['language'] . '_' . $row['version'], $teaserOnlineVersions)
+                ) {
+                    $log .= $logPrefix . ': Online' . PHP_EOL;
                     $insertRows[$key]['status'] |= self::STATUS_ONLINE;
-                }
-                elseif ($row['version'] == $latestVersion)
-                {
-                    if ($treeUsed || $teasersUsed)
-                    {
-                        $log .= $logPrefix . ': Latest'.PHP_EOL;
+                } elseif ($row['version'] == $latestVersion) {
+                    if ($treeUsed || $teasersUsed) {
+                        $log .= $logPrefix . ': Latest' . PHP_EOL;
                         $insertRows[$key]['status'] |= self::STATUS_LATEST;
-                    }
-                    else
-                    {
-                        $log .= $logPrefix . ': Latest, Dead'.PHP_EOL;
+                    } else {
+                        $log .= $logPrefix . ': Latest, Dead' . PHP_EOL;
                         $insertRows[$key]['status'] |= self::STATUS_DEAD;
                     }
-                }
-                else
-                {
-                    if ($treeUsed || $teasersUsed)
-                    {
-                        $log .= $logPrefix . ': Old'.PHP_EOL;
+                } else {
+                    if ($treeUsed || $teasersUsed) {
+                        $log .= $logPrefix . ': Old' . PHP_EOL;
                         $insertRows[$key]['status'] |= self::STATUS_OLD;
-                    }
-                    else
-                    {
-                        $log .= $logPrefix . ': Old, Dead'.PHP_EOL;
+                    } else {
+                        $log .= $logPrefix . ': Old, Dead' . PHP_EOL;
                         $insertRows[$key]['status'] |= self::STATUS_DEAD;
                     }
                 }
@@ -192,18 +183,14 @@ AND
             //unset($insertRow['version']);
             //$insertRow['status'] = $status;
 
-            foreach ($insertRows as $insertRow)
-            {
-                try
-                {
+            foreach ($insertRows as $insertRow) {
+                try {
                     $cntInsert += $db->insert(
                         $db->prefix . 'mediamanager_folders_usage',
                         $insertRow
                     );
-                }
-                catch (Exception $e)
-                {
-                    die($e->getMessage().PHP_EOL.$e->getTraceAsString());
+                } catch (Exception $e) {
+                    die($e->getMessage() . PHP_EOL . $e->getTraceAsString());
                 }
             }
 
@@ -235,8 +222,7 @@ AND
             ->where($db->quoteIdentifier('usage_type') . ' = ?', 'element');
 
         // filter by status if parameter is specified
-        if ($status)
-        {
+        if ($status) {
             $select->where($db->quoteIdentifier('status') . ' & ?', (int) $status);
         }
 
@@ -266,8 +252,7 @@ AND
             ->where($db->quoteIdentifier('usage_type') . ' = ?', 'element');
 
         // filter by status if parameter is specified
-        if ($status)
-        {
+        if ($status) {
             $select->where($db->quoteIdentifier('status') . ' & ?', (int) $status);
         }
 

@@ -73,18 +73,19 @@ class ContentElement
      * @param array            $mappedFields
      * @param ElementStructure $structure
      */
-    public function __construct($eid,
-                                $uniqueId,
-                                $elementtypeId,
-                                $elementtypeUniqueId,
-                                $elementtypeType,
-                                $version,
-                                $language,
-                                array $mappedFields,
-                                ElementStructure $structure)
+    public function __construct(
+        $eid,
+        $uniqueId,
+        $elementtypeId,
+        $elementtypeUniqueId,
+        $elementtypeType,
+        $version,
+        $language,
+        array $mappedFields,
+        ElementStructure $structure)
     {
         $this->eid = (int) $eid;
-        $this->uniqueId = $uniqueId ?: null;
+        $this->uniqueId = $uniqueId ? : null;
         $this->elementtypeId = $elementtypeId;
         $this->elementtypeUniqueId = $elementtypeUniqueId;
         $this->elementtypeType = $elementtypeType;

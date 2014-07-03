@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
+use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Apply successor listener
@@ -31,18 +31,21 @@ class ApplySuccessorListener
         $this->db = $dbPool->default;
     }
 
-    public function onApplySuccessor(ApplySuccessorEvent $event, array $params = array())
+    /**
+     * @param ApplySuccessorEvent $event
+     */
+    public function onApplySuccessor(ApplySuccessorEvent $event)
     {
         $fromUser = $event->getFromUser();
-        $toUser   = $event->getToUser();
+        $toUser = $event->getToUser();
 
         $fromUid = $fromUser->getId();
-        $toUid   = $toUser->getId();
+        $toUid = $toUser->getId();
 
         $this->db->update(
             $this->db->prefix . 'element',
             array(
-                'create_uid'  => $toUid,
+                'create_uid' => $toUid,
             ),
             array(
                 'create_uid = ?' => $fromUid
@@ -52,7 +55,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'element_history',
             array(
-                'create_uid'  => $toUid,
+                'create_uid' => $toUid,
             ),
             array(
                 'create_uid = ?' => $fromUid
@@ -62,7 +65,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'element_tree',
             array(
-                'modify_uid'  => $toUid,
+                'modify_uid' => $toUid,
             ),
             array(
                 'modify_uid = ?' => $fromUid
@@ -72,7 +75,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'element_tree_history',
             array(
-                'create_uid'  => $toUid,
+                'create_uid' => $toUid,
             ),
             array(
                 'create_uid = ?' => $fromUid
@@ -82,7 +85,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'element_tree_online',
             array(
-                'publish_uid'  => $toUid,
+                'publish_uid' => $toUid,
             ),
             array(
                 'publish_uid = ?' => $fromUid
@@ -92,7 +95,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'element_tree_teasers',
             array(
-                'modify_uid'  => $toUid,
+                'modify_uid' => $toUid,
             ),
             array(
                 'modify_uid = ?' => $fromUid
@@ -102,7 +105,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'element_tree_teasers_history',
             array(
-                'create_uid'  => $toUid,
+                'create_uid' => $toUid,
             ),
             array(
                 'create_uid = ?' => $fromUid
@@ -112,7 +115,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'element_tree_teasers_online',
             array(
-                'publish_uid'  => $toUid,
+                'publish_uid' => $toUid,
             ),
             array(
                 'publish_uid = ?' => $fromUid
@@ -122,7 +125,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'element_version',
             array(
-                'create_uid'  => $toUid,
+                'create_uid' => $toUid,
             ),
             array(
                 'create_uid = ?' => $fromUid

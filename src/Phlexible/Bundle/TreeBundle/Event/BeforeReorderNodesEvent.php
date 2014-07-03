@@ -43,7 +43,7 @@ class Makeweb_Elements_Event_BeforeReorderNodes extends Brainbits_Event_Notifica
     public function __construct(Makeweb_Elements_Tree_Node $parentNode, array $sortIds = array())
     {
         $this->_parentNode = $parentNode;
-        $this->_sortIds    = $sortIds;
+        $this->_sortIds = $sortIds;
     }
 
     /**

@@ -34,42 +34,82 @@ class XElementHistory
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $innerSelect1 = $db->select()
-            ->from($db->prefix . 'element_history', array('type' => new Zend_Db_Expr('"element"'), 'id', 'tid' => new Zend_Db_Expr('null'), 'teaser_id' => new Zend_Db_Expr('null'), 'eid', 'version', 'language', 'action', 'comment', 'create_uid', 'create_time'));
+            ->from(
+                $db->prefix . 'element_history',
+                array(
+                    'type'      => new Zend_Db_Expr('"element"'),
+                    'id',
+                    'tid'       => new Zend_Db_Expr('null'),
+                    'teaser_id' => new Zend_Db_Expr('null'),
+                    'eid',
+                    'version',
+                    'language',
+                    'action',
+                    'comment',
+                    'create_uid',
+                    'create_time'
+                )
+            );
 
         $innerSelect2 = $db->select()
-            ->from($db->prefix . 'element_tree_history', array('type' => new Zend_Db_Expr('"node"'), 'id', 'tid', 'teaser_id' => new Zend_Db_Expr('null'), 'eid', 'version', 'language', 'action', 'comment', 'create_uid', 'create_time'));
+            ->from(
+                $db->prefix . 'element_tree_history',
+                array(
+                    'type'      => new Zend_Db_Expr('"node"'),
+                    'id',
+                    'tid',
+                    'teaser_id' => new Zend_Db_Expr('null'),
+                    'eid',
+                    'version',
+                    'language',
+                    'action',
+                    'comment',
+                    'create_uid',
+                    'create_time'
+                )
+            );
 
         $innerSelect3 = $db->select()
-            ->from($db->prefix . 'element_tree_teasers_history', array('type' => new Zend_Db_Expr('"teaser"'), 'id', 'tid' => 'teaser_id', 'teaser_id', 'eid', 'version', 'language', 'action', 'comment', 'create_uid', 'create_time'));
+            ->from(
+                $db->prefix . 'element_tree_teasers_history',
+                array(
+                    'type' => new Zend_Db_Expr('"teaser"'),
+                    'id',
+                    'tid'  => 'teaser_id',
+                    'teaser_id',
+                    'eid',
+                    'version',
+                    'language',
+                    'action',
+                    'comment',
+                    'create_uid',
+                    'create_time'
+                )
+            );
 
         $innerSelect = $db->select()
             ->union(array($innerSelect1, $innerSelect2, $innerSelect3));
 
         $select = $db->select()
-            ->from(array('t' => $innerSelect), array('type', 'id', 'tid', 'eid', 'version', 'language', 'action', 'comment', 'create_time'))
+            ->from(
+                array('t' => $innerSelect),
+                array('type', 'id', 'tid', 'eid', 'version', 'language', 'action', 'comment', 'create_time')
+            )
             ->join(array('u' => $db->prefix . 'user'), 't.create_uid = u.uid', 'username')
             ->order('t.' . $sort . ' ' . $dir)
             ->limit($limit, $offset);
 
-        if (is_string($filter))
-        {
+        if (is_string($filter)) {
             $select->where('eid = ?', $filter);
-        }
-        elseif (is_array($filter))
-        {
-            foreach ($filter as $key => $value)
-            {
-                if (!$value)
-                {
+        } elseif (is_array($filter)) {
+            foreach ($filter as $key => $value) {
+                if (!$value) {
                     continue;
                 }
 
-                if (in_array($key, array('action', 'comment')))
-                {
+                if (in_array($key, array('action', 'comment'))) {
                     $select->where('t.' . $db->quoteIdentifier($key) . ' LIKE ?', '%' . $value . '%');
-                }
-                else
-                {
+                } else {
                     $select->where('t.' . $db->quoteIdentifier($key) . ' = ?', $value);
                 }
             }
@@ -92,13 +132,58 @@ class XElementHistory
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $innerSelect1 = $db->select()
-            ->from($db->prefix . 'element_history', array('type' => new Zend_Db_Expr('"element"'), 'id', 'tid' => new Zend_Db_Expr('null'), 'teaser_id' => new Zend_Db_Expr('null'), 'eid', 'version', 'language', 'action', 'comment', 'create_uid', 'create_time'));
+            ->from(
+                $db->prefix . 'element_history',
+                array(
+                    'type'      => new Zend_Db_Expr('"element"'),
+                    'id',
+                    'tid'       => new Zend_Db_Expr('null'),
+                    'teaser_id' => new Zend_Db_Expr('null'),
+                    'eid',
+                    'version',
+                    'language',
+                    'action',
+                    'comment',
+                    'create_uid',
+                    'create_time'
+                )
+            );
 
         $innerSelect2 = $db->select()
-            ->from($db->prefix . 'element_tree_history', array('type' => new Zend_Db_Expr('"node"'), 'id', 'tid', 'teaser_id' => new Zend_Db_Expr('null'), 'eid', 'version', 'language', 'action', 'comment', 'create_uid', 'create_time'));
+            ->from(
+                $db->prefix . 'element_tree_history',
+                array(
+                    'type'      => new Zend_Db_Expr('"node"'),
+                    'id',
+                    'tid',
+                    'teaser_id' => new Zend_Db_Expr('null'),
+                    'eid',
+                    'version',
+                    'language',
+                    'action',
+                    'comment',
+                    'create_uid',
+                    'create_time'
+                )
+            );
 
         $innerSelect3 = $db->select()
-            ->from($db->prefix . 'element_tree_teasers_history', array('type' => new Zend_Db_Expr('"teaser"'), 'id', 'tid' => 'teaser_id', 'teaser_id', 'eid', 'version', 'language', 'action', 'comment', 'create_uid', 'create_time'));
+            ->from(
+                $db->prefix . 'element_tree_teasers_history',
+                array(
+                    'type' => new Zend_Db_Expr('"teaser"'),
+                    'id',
+                    'tid'  => 'teaser_id',
+                    'teaser_id',
+                    'eid',
+                    'version',
+                    'language',
+                    'action',
+                    'comment',
+                    'create_uid',
+                    'create_time'
+                )
+            );
 
         $innerSelect = $db->select()
             ->union(array($innerSelect1, $innerSelect2, $innerSelect3));
@@ -106,25 +191,17 @@ class XElementHistory
         $select = $db->select()
             ->from(array('t' => $innerSelect), new Zend_Db_Expr('COUNT(t.eid)'));
 
-        if (is_string($filter))
-        {
+        if (is_string($filter)) {
             $select->where('eid = ?', $filter);
-        }
-        elseif (is_array($filter))
-        {
-            foreach ($filter as $key => $value)
-            {
-                if (!$value)
-                {
+        } elseif (is_array($filter)) {
+            foreach ($filter as $key => $value) {
+                if (!$value) {
                     continue;
                 }
 
-                if (in_array($key, array('action', 'comment')))
-                {
+                if (in_array($key, array('action', 'comment'))) {
                     $select->where('t.' . $db->quoteIdentifier($key) . ' LIKE ?', '%' . $value . '%');
-                }
-                else
-                {
+                } else {
                     $select->where('t.' . $db->quoteIdentifier($key) . ' = ?', $value);
                 }
             }
@@ -147,8 +224,7 @@ class XElementHistory
     {
         self::_loadCache();
 
-        if (!isset(self::$_cache[$eid][$language][0]))
-        {
+        if (!isset(self::$_cache[$eid][$language][0])) {
             return null;
         }
 
@@ -168,8 +244,7 @@ class XElementHistory
     {
         self::_loadCache();
 
-        if (!isset(self::$_cache[$eid]))
-        {
+        if (!isset(self::$_cache[$eid])) {
             return array();
         }
 
@@ -178,8 +253,7 @@ class XElementHistory
 
     protected static function _loadCache()
     {
-        if (null !== self::$_cache)
-        {
+        if (null !== self::$_cache) {
             return;
         }
 
@@ -195,7 +269,7 @@ class XElementHistory
             )
             ->where('language IS NOT NULL')
             //->where('action LIKE ?', 'save%')
-            ->where('action LIKE '.$db->quote('save%').' OR comment LIKE '.$db->quote('New translation for%'))
+            ->where('action LIKE ' . $db->quote('save%') . ' OR comment LIKE ' . $db->quote('New translation for%'))
             ->group(array('eid', 'language'));
 
         $result = $db->fetchAll($select);

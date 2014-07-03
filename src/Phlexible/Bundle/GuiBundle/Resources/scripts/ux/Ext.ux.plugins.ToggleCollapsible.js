@@ -2,9 +2,9 @@ Ext.namespace("Ext.ux.plugins");
 
 Ext.ux.plugins.ToggleCollapsible = {
 
-    init: function(panel) {
+    init: function (panel) {
 
-        var renderCollapsible = function(panel, events, startPinned) {
+        var renderCollapsible = function (panel, events, startPinned) {
             if (!startPinned & panel.collapsible) {
                 // Pin/Unpin tools
                 if (panel.header) {
@@ -18,7 +18,7 @@ Ext.ux.plugins.ToggleCollapsible = {
                 }
 
                 // Toggle tool
-                if(!panel.hideCollapseTool){
+                if (!panel.hideCollapseTool) {
                     var tool = panel.tools['toggle'];
                     if (tool) {
                         tool.show();
@@ -26,14 +26,14 @@ Ext.ux.plugins.ToggleCollapsible = {
                     else {
                         panel.addTool({
                             id: 'toggle',
-                            handler : panel.toggleCollapse,
+                            handler: panel.toggleCollapse,
                             scope: panel
                         });
                     }
                 }
 
                 // Events
-                if(events && panel.titleCollapse && panel.header){
+                if (events && panel.titleCollapse && panel.header) {
                     panel.header.on('click', panel.toggleCollapse, panel);
                     panel.header.setStyle('cursor', 'pointer');
                 }
@@ -44,44 +44,44 @@ Ext.ux.plugins.ToggleCollapsible = {
                 panel.tools['unpin'].hide();
 
                 // Toggle tool
-                if(!panel.hideCollapseTool){
+                if (!panel.hideCollapseTool) {
                     panel.tools['toggle'].hide();
                 }
 
                 // Events
-                if(events && panel.titleCollapse && panel.header){
+                if (events && panel.titleCollapse && panel.header) {
                     panel.header.un('click', panel.toggleCollapse, panel);
                     panel.header.setStyle('cursor', null);
                 }
             }
         };
 
-        var toggleCollapsible = function(panel) {
+        var toggleCollapsible = function (panel) {
             panel.collapsible = !panel.collapsible;
             renderCollapsible(panel, true);
         };
-        
+
         // Add new tools without overwriting existing ones
         if (!panel.tools) {
             panel.tools = [];
         }
-        
+
         panel.tools.push({
-            id:'pin',
-            hidden:true,
-            handler:function(){
+            id: 'pin',
+            hidden: true,
+            handler: function () {
                 toggleCollapsible(panel);
             }
         });
         panel.tools.push({
-            id:'unpin',
-            hidden:true,
-            handler:function(){
+            id: 'unpin',
+            hidden: true,
+            handler: function () {
                 toggleCollapsible(panel);
             }
         });
-        
-        panel.on('expand', function() {
+
+        panel.on('expand', function () {
             if (panel.collapsible) {
                 panel.tools['pin'].hide();
                 panel.tools['unpin'].show();
@@ -91,14 +91,14 @@ Ext.ux.plugins.ToggleCollapsible = {
                 panel.tools['unpin'].hide();
             }
         });
-        
-        panel.on('collapse', function() {
+
+        panel.on('collapse', function () {
             panel.tools['unpin'].hide();
             panel.tools['pin'].hide();
         });
 
-        panel.on('render', function() {
-            if(this.startPinned) {
+        panel.on('render', function () {
+            if (this.startPinned) {
                 this.collapsible = false;
             }
             renderCollapsible(panel, false, this.startPinned);
@@ -109,15 +109,15 @@ Ext.ux.plugins.ToggleCollapsible = {
 
 // Allow more than one panel expanded
 Ext.override(Ext.layout.Accordion, {
-    beforeExpand : function(p){
+    beforeExpand: function (p) {
         var oldActive = this.activeItem;
         // The following is the only line changed from the original beforeExpand function.
-        if(oldActive && oldActive.collapsible){
-        //if(oldActive){
+        if (oldActive && oldActive.collapsible) {
+            //if(oldActive){
             oldActive.collapse(this.animate);
         }
         this.activeItem = p;
-        if(this.activeOnTop){
+        if (this.activeOnTop) {
             p.el.dom.parentNode.insertBefore(p.el.dom, p.el.dom.parentNode.firstChild);
         }
         this.layout();

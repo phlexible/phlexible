@@ -1,30 +1,30 @@
-Phlexible.fields.Registry.addFactory('checkbox', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('checkbox', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.dsId);
+    element.prototypes.incCount(item.dsId);
 
-	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
 
-	Ext.apply(config, {
-		xtype: 'xcheckbox',
-		boxLabel: (item.labels.boxlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
-		checked: item.rawContent,
+    Ext.apply(config, {
+        xtype: 'xcheckbox',
+        boxLabel: (item.labels.boxlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
+        checked: item.rawContent,
 
-		submitOffValue: '',
-		submitOnValue: 'on',
+        submitOffValue: '',
+        submitOnValue: 'on',
 
-		supportsPrefix: true,
-		supportsSuffix: true,
-		supportsDiff: true,
-		supportsUnlink: {styleEl: 'imageEl'},
-		supportsRepeatable: true
-	});
+        supportsPrefix: true,
+        supportsSuffix: true,
+        supportsDiff: true,
+        supportsUnlink: {styleEl: 'imageEl'},
+        supportsRepeatable: true
+    });
 
-	delete config.value;
+    delete config.value;
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('checkbox', {
@@ -34,11 +34,11 @@ Phlexible.fields.FieldTypes.addField('checkbox', {
     },
     iconCls: 'p-elementtype-field_checkbox-icon',
     allowedIn: [
-		'tab',
-		'accordion',
-		'group',
-		'referenceroot'
-	],
+        'tab',
+        'accordion',
+        'group',
+        'referenceroot'
+    ],
     defaultValueField: 'default_value_checkbox',
     config: {
         labels: {

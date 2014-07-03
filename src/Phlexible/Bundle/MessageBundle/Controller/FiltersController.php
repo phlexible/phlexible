@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Criteria\Criterium;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -81,23 +81,23 @@ class FiltersController extends Controller
         $data['criteria'] = array(
             array('key' => 'subject_like', 'value' => 'Subject like'),
             array('key' => 'subject_not_like', 'value' => 'Subject not like'),
-            array('key' => 'body_like', 'value' =>  'Body Like'),
-            array('key' => 'body_not_like', 'value' =>  'Body not like'),
-            array('key' => 'priority_is', 'value' =>  'Priority is'),
-            array('key' => 'priority_in', 'value' =>  'Priority in'),
-            array('key' => 'priority_min', 'value' =>  'Priority min'),
-            array('key' => 'type_is', 'value' =>  'Type is'),
-            array('key' => 'type_in', 'value' =>  'Type in'),
-            array('key' => 'channel_is', 'value' =>  'Channel is'),
-            array('key' => 'channel_like', 'value' =>  'Channel like'),
-            array('key' => 'channel_in', 'value' =>  'Channel in'),
-            array('key' => 'resource_is', 'value' =>  'Resource is'),
-            array('key' => 'min_age', 'value' =>  'Min age'),
-            array('key' => 'max_age', 'value' =>  'Max age'),
-            array('key' => 'start_date', 'value' =>  'Start date'),
-            array('key' => 'end_date', 'value' =>  'End date'),
-            array('key' => 'date_is', 'value' =>  'Date is'),
-            array('key' => '', 'value' =>  ''),
+            array('key' => 'body_like', 'value' => 'Body Like'),
+            array('key' => 'body_not_like', 'value' => 'Body not like'),
+            array('key' => 'priority_is', 'value' => 'Priority is'),
+            array('key' => 'priority_in', 'value' => 'Priority in'),
+            array('key' => 'priority_min', 'value' => 'Priority min'),
+            array('key' => 'type_is', 'value' => 'Type is'),
+            array('key' => 'type_in', 'value' => 'Type in'),
+            array('key' => 'channel_is', 'value' => 'Channel is'),
+            array('key' => 'channel_like', 'value' => 'Channel like'),
+            array('key' => 'channel_in', 'value' => 'Channel in'),
+            array('key' => 'resource_is', 'value' => 'Resource is'),
+            array('key' => 'min_age', 'value' => 'Min age'),
+            array('key' => 'max_age', 'value' => 'Max age'),
+            array('key' => 'start_date', 'value' => 'Start date'),
+            array('key' => 'end_date', 'value' => 'End date'),
+            array('key' => 'date_is', 'value' => 'Date is'),
+            array('key' => '', 'value' => ''),
         );
 
         return new JsonResponse($data);
@@ -122,8 +122,7 @@ class FiltersController extends Controller
             ->setUserId($this->getUser()->getId())
             ->setTitle($title)
             ->setModifiedAt(new \DateTime())
-            ->setCreatedAt(new \DateTime())
-        ;
+            ->setCreatedAt(new \DateTime());
 
         $filterManager->updateFilter($filter);
 
@@ -185,7 +184,7 @@ class FiltersController extends Controller
         $filter = $filterManager->find($id);
         $filterManager->deleteFilter($filter);
 
-        return new ResultResponse(true, 'Filter "'.$filter->getTitle().'" deleted.');
+        return new ResultResponse(true, 'Filter "' . $filter->getTitle() . '" deleted.');
     }
 
     /**
@@ -226,7 +225,7 @@ class FiltersController extends Controller
         $count = $messageManager->countByCriteria($criteria);
 
         $priorityList = $messageManager->getPriorityNames();
-        $typeList     = $messageManager->getTypeNames();
+        $typeList = $messageManager->getTypeNames();
 
         $data = array();
         foreach ($messages as $message) {

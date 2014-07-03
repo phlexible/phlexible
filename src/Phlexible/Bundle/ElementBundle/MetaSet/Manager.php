@@ -43,8 +43,7 @@ class Makeweb_Elements_Element_Version_MetaSet_Manager
      */
     public static function getInstance()
     {
-        if (self::$_instance === null)
-        {
+        if (self::$_instance === null) {
             self::$_instance = new Makeweb_Elements_Element_Version_MetaSet_Manager();
         }
 
@@ -59,22 +58,20 @@ class Makeweb_Elements_Element_Version_MetaSet_Manager
     public function getKeys()
     {
         $result = array();
-        try
-        {
+        try {
             $db = MWF_Registry::getContainer()->dbPool->default;
 
             $select = $db->select()
-                         ->from($db->prefix.'element_version_metaset_items', array('key'))
-                         ->group($db->prefix.'element_version_metaset_items.key')
-                         ->order('key');
+                ->from($db->prefix . 'element_version_metaset_items', array('key'))
+                ->group($db->prefix . 'element_version_metaset_items.key')
+                ->order('key');
 
             $result = $db->fetchCol($select);
 
-        }
-        catch (Zend_Db_Exception $e)
-        {
+        } catch (Zend_Db_Exception $e) {
             MWF_Log::exception($e);
         }
+
         return $result;
     }
 
@@ -82,18 +79,18 @@ class Makeweb_Elements_Element_Version_MetaSet_Manager
      * Returns unique meta key values as array
      *
      * @param string $key
+     *
      * @return array $values
      */
     public function getMetaKeyValues($key, $language = null)
     {
         $values = array();
-        try
-        {
+        try {
             $db = MWF_Registry::getContainer()->dbPool->default;
 
             $select = $db->select()->distinct()
                 ->from(
-                    array('evmi' => $db->prefix.'element_version_metaset_items'),
+                    array('evmi' => $db->prefix . 'element_version_metaset_items'),
                     array('value')
                 )
                 #->join(
@@ -103,21 +100,17 @@ class Makeweb_Elements_Element_Version_MetaSet_Manager
                 #)
                 ->where('evmi.key = ?', array($key));
 
-            if (null !== $language)
-            {
+            if (null !== $language) {
                 $select->where('evmi.language = ?', $language);
             }
 
             $result = $db->fetchCol($select);
             $tValues = array();
-            foreach ($result as $value)
-            {
+            foreach ($result as $value) {
                 $tValues = explode(',', $value);
-                foreach ($tValues as $tValue)
-                {
+                foreach ($tValues as $tValue) {
                     $tValue = trim($tValue);
-                    if (!empty($tValue))
-                    {
+                    if (!empty($tValue)) {
                         $values[] = $tValue;
                     }
                 }
@@ -125,9 +118,7 @@ class Makeweb_Elements_Element_Version_MetaSet_Manager
 
             $values = array_unique($values);
             asort($values);
-        }
-        catch (Zend_Db_Exception $e)
-        {
+        } catch (Zend_Db_Exception $e) {
             MWF_Log::exception($e);
         }
 

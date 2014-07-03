@@ -116,9 +116,11 @@ class ElementCatchResultPool
             // get last remembered rotation position
             $pos = $this->getLastRotationPosition() % $resultSize;
 
-            $size = min($elementCatch->getPoolSize() ?: PHP_INT_MAX,
+            $size = min(
+                $elementCatch->getPoolSize() ? : PHP_INT_MAX,
                 $elementCatch->getMaxResults(),
-                $resultSize);
+                $resultSize
+            );
 
             for ($i = 0; $i < $size; ++$i) {
                 $key = $resultKeys[$pos];

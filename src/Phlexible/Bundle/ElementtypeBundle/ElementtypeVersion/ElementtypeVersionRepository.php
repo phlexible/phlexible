@@ -45,9 +45,12 @@ class ElementtypeVersionRepository
     /**
      * @param EventDispatcherInterface $dispatcher
      * @param LoaderInterface          $loader
-     * @param MessagePoster           $messageService
+     * @param MessagePoster            $messageService
      */
-    public function __construct(EventDispatcherInterface $dispatcher, LoaderInterface $loader, MessagePoster $messageService)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        LoaderInterface $loader,
+        MessagePoster $messageService)
     {
         $this->dispatcher = $dispatcher;
         $this->loader = $loader;
@@ -59,8 +62,7 @@ class ElementtypeVersionRepository
      */
     public function getCollection()
     {
-        if (null === $this->elementtypeVersions)
-        {
+        if (null === $this->elementtypeVersions) {
             $this->elementtypeVersions = new ElementtypeVersionCollection();
         }
 
@@ -91,6 +93,7 @@ class ElementtypeVersionRepository
 
     /**
      * @param Elementtype $elementtype
+     *
      * @return array
      */
     public function getVersions(Elementtype $elementtype)
@@ -107,6 +110,7 @@ class ElementtypeVersionRepository
 
     /**
      * @param ElementtypeVersion $elementtypeVersion
+     *
      * @throws \Exception
      */
     public function save(ElementtypeVersion $elementtypeVersion)

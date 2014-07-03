@@ -3,31 +3,31 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
     title: Phlexible.elementtypes.Strings.properties,
     iconCls: 'p-elementtype-tab_properties-icon',
     border: false,
-	autoScroll: true,
+    autoScroll: true,
     bodyStyle: 'padding:3px',
     defaultType: 'textfield',
     labelWidth: 120,
 
-    initComponent: function() {
+    initComponent: function () {
         var typesSort = [],
-        	types = [],
-			key;
+            types = [],
+            key;
 
-        for(key in Phlexible.fields.FieldTypes) {
+        for (key in Phlexible.fields.FieldTypes) {
             if (typeof Phlexible.fields.FieldTypes[key] == 'function' || key == 'root' || key == 'referenceroot') continue;
             typesSort.push(key);
         }
         typesSort.sort();
 
-        for(var i=0; i<typesSort.length; i++) {
+        for (var i = 0; i < typesSort.length; i++) {
             key = typesSort[i];
-			if (Phlexible.fields.FieldTypes[key].allowedIn.length) {
-				types.push({
-					key: key,
-					title: Phlexible.fields.FieldTypes[key].titles.de,
-					iconCls: Phlexible.fields.FieldTypes[key].iconCls
-				});
-			}
+            if (Phlexible.fields.FieldTypes[key].allowedIn.length) {
+                types.push({
+                    key: key,
+                    title: Phlexible.fields.FieldTypes[key].titles.de,
+                    iconCls: Phlexible.fields.FieldTypes[key].iconCls
+                });
+            }
         }
 
         var dev = Phlexible.User.isGranted('debug');
@@ -44,7 +44,7 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
             allowBlank: true,
             store: new Ext.data.JsonStore({
                 id: 'key',
-                fields: ['key','title','iconCls'],
+                fields: ['key', 'title', 'iconCls'],
                 data: types
             }),
             displayField: 'title',
@@ -72,50 +72,56 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
             typeCombo.helpText = Phlexible.inlineIcon('p-elementtype-tab_error-icon') + ' Change this value only if you know what you\'re doing. It might result in data loss.';
         }
 
-        this.items = [{
-            fieldLabel: this.strings.working_title,
-            name: 'working_title',
-            allowBlank: false,
-            width: 230,
-            regex: /^[0-9a-z-_]+$/,
-            helpText: this.strings.working_title_help
-        },
+        this.items = [
+            {
+                fieldLabel: this.strings.working_title,
+                name: 'working_title',
+                allowBlank: false,
+                width: 230,
+                regex: /^[0-9a-z-_]+$/,
+                helpText: this.strings.working_title_help
+            },
             typeCombo,
-        {
-            fieldLabel: this.strings.image,
-            name: 'image',
-            width: 230,
-            hidden: true
-        },{
-            xtype: 'textarea',
-            fieldLabel: this.strings.comment,
-            name: 'comment',
-            width: 230,
-            height: 100
-        }];
+            {
+                fieldLabel: this.strings.image,
+                name: 'image',
+                width: 230,
+                hidden: true
+            },
+            {
+                xtype: 'textarea',
+                fieldLabel: this.strings.comment,
+                name: 'comment',
+                width: 230,
+                height: 100
+            }
+        ];
 
-        if(Phlexible.User.isGranted('debug')) {
+        if (Phlexible.User.isGranted('debug')) {
             this.items.push({
                 xtype: 'fieldset',
                 title: 'Debug',
                 autoHeight: true,
                 collapsible: true,
                 collapsed: true,
-                items: [{
-                    xtype: 'textfield',
-                    name: 'debug_ds_id',
-                    fieldLabel: 'ds_id',
-                    width: 230,
-                    readOnly: true
-                },{
-                    xtype: 'textarea',
-                    name: 'debug_dump',
-                    fieldLabel: 'dump',
-                    width: 400,
-                    height: 300,
-                    readOnly: true,
-                    style: 'font-family: Courier, "Courier New", monospace'
-                }]
+                items: [
+                    {
+                        xtype: 'textfield',
+                        name: 'debug_ds_id',
+                        fieldLabel: 'ds_id',
+                        width: 230,
+                        readOnly: true
+                    },
+                    {
+                        xtype: 'textarea',
+                        name: 'debug_dump',
+                        fieldLabel: 'dump',
+                        width: 400,
+                        height: 300,
+                        readOnly: true,
+                        style: 'font-family: Courier, "Courier New", monospace'
+                    }
+                ]
             });
         }
 
@@ -126,8 +132,8 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
         //this.getComponent(1).setDisabled(true);
     },
 
-    onSelect: function(combo, record, index) {
-        switch(record.get('key')) {
+    onSelect: function (combo, record, index) {
+        switch (record.get('key')) {
             case 'image':
             case 'download':
             case 'flash':
@@ -142,12 +148,12 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
                 break;
 
             default:
-                //this.optionsGrid.hide();
+            //this.optionsGrid.hide();
         }
         this.doLayout();
     },
 
-    loadData: function(field, node, fieldType) {
+    loadData: function (field, node, fieldType) {
         var values = {
             'working_title': field.working_title,
             'type': field.type,
@@ -165,11 +171,11 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
         this.isValid();
     },
 
-    getSaveValues: function() {
+    getSaveValues: function () {
         return this.getForm().getValues();
     },
 
-    isValid: function() {
+    isValid: function () {
         if (this.getForm().isValid()) {
             //this.header.child('span').removeClass('error');
             this.setIconClass('p-elementtype-tab_properties-icon');
@@ -183,7 +189,7 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
         }
     },
 
-    loadField: function(properties, node, fieldType) {
+    loadField: function (properties, node, fieldType) {
         // FieldProperties Accordion
         this.ownerCt.getTabEl(this).hidden = false;
         this.loadData(properties.field, node, fieldType);

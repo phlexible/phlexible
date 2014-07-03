@@ -14,7 +14,6 @@ use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructure;
 use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructureLoader;
 use Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersion;
 use Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersionRepository;
-use Phlexible\Bundle\ElementBundle\ElementVersionData\ElementVersionData;
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
@@ -52,10 +51,11 @@ class ElementService
      * @param ElementStructureLoader   $elementStructureLoader
      * @param ElementtypeService       $elementtypeService
      */
-    public function __construct(ElementRepository $elementRepository,
-                                ElementVersionRepository $elementVersionRepository,
-                                ElementStructureLoader $elementStructureLoader,
-                                ElementtypeService $elementtypeService)
+    public function __construct(
+        ElementRepository $elementRepository,
+        ElementVersionRepository $elementVersionRepository,
+        ElementStructureLoader $elementStructureLoader,
+        ElementtypeService $elementtypeService)
     {
         $this->elementRepository = $elementRepository;
         $this->elementVersionRepository = $elementVersionRepository;

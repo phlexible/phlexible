@@ -56,7 +56,7 @@ class PdfToTextExtractor implements ContentExtractorInterface
     {
         $pdfToTextOptions = new PdfToTextOptions();
         $pdfToTextOptions->encoding('UTF-8');
-        $output = $this->pdfToText->write($file->getPhysicalPath(), $pdfToTextOptions);
+        $output = $this->pdfToText->write($file->getPhysicalPath(), $pdfToTextOptions->getOptions());
 
         // set pdftotext output as content
         // strip UTF-8 control characters

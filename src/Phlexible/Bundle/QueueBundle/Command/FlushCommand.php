@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\QueueBundle\Command;
 
-use Phlexible\Bundle\QueueBundle\Entity\Job;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -28,17 +27,18 @@ class FlushCommand extends ContainerAwareCommand
     {
         $this
             ->setName('queue:flush')
-            ->setDefinition(array(
-                new InputOption('all', null, InputOption::VALUE_NONE, 'Flush all jobs'),
-                new InputOption('pending', null, InputOption::VALUE_NONE, 'Flush pendingjobs'),
-                new InputOption('running', null, InputOption::VALUE_NONE, 'Flush running'),
-                new InputOption('finished', null, InputOption::VALUE_NONE, 'Flush finished jobs'),
-                new InputOption('failed', null, InputOption::VALUE_NONE, 'Flush failed jobs'),
-                new InputOption('suspended', null, InputOption::VALUE_NONE, 'Flush suspended jobs'),
-                new InputOption('aborted', null, InputOption::VALUE_NONE, 'Flush aborted jobs'),
-            ))
-            ->setDescription('Flush the queue')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('all', null, InputOption::VALUE_NONE, 'Flush all jobs'),
+                    new InputOption('pending', null, InputOption::VALUE_NONE, 'Flush pendingjobs'),
+                    new InputOption('running', null, InputOption::VALUE_NONE, 'Flush running'),
+                    new InputOption('finished', null, InputOption::VALUE_NONE, 'Flush finished jobs'),
+                    new InputOption('failed', null, InputOption::VALUE_NONE, 'Flush failed jobs'),
+                    new InputOption('suspended', null, InputOption::VALUE_NONE, 'Flush suspended jobs'),
+                    new InputOption('aborted', null, InputOption::VALUE_NONE, 'Flush aborted jobs'),
+                )
+            )
+            ->setDescription('Flush the queue');
     }
 
     /**
@@ -49,25 +49,31 @@ class FlushCommand extends ContainerAwareCommand
         $jobManager = $this->getContainer()->get('phlexible_queue.job_manager');
 
         if (!$input->getOption('all')
-                && !$input->getOption('pending')
-                && !$input->getOption('running')
-                && !$input->getOption('finished')
-                && !$input->getOption('failed')
-                && !$input->getOption('suspended')
-                && !$input->getOption('aborted')) {
-            $output->writeln('Please choose either --all or one or more of the status options: --pending, --running, --finished, --failed, --suspended, --aborted');
+            && !$input->getOption('pending')
+            && !$input->getOption('running')
+            && !$input->getOption('finished')
+            && !$input->getOption('failed')
+            && !$input->getOption('suspended')
+            && !$input->getOption('aborted')
+        ) {
+            $output->writeln(
+                'Please choose either --all or one or more of the status options: --pending, --running, --finished, --failed, --suspended, --aborted'
+            );
 
             return 1;
         }
 
         if ($input->getOption('all')
-                && ($input->getOption('pending')
+            && ($input->getOption('pending')
                 || $input->getOption('running')
                 || $input->getOption('finished')
                 || $input->getOption('failed')
                 || $input->getOption('suspended')
-                || $input->getOption('aborted'))) {
-            $output->writeln('Please use either --all or one or more of the status options: --pending, --running, --finished, --failed, --suspended, --aborted');
+                || $input->getOption('aborted'))
+        ) {
+            $output->writeln(
+                'Please use either --all or one or more of the status options: --pending, --running, --finished, --failed, --suspended, --aborted'
+            );
 
             return 1;
         }

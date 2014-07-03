@@ -33,6 +33,7 @@ interface SearchProviderInterface
      * Perform search
      *
      * @param string $query
+     *
      * @return SearchResult[]
      */
     public function search($query);

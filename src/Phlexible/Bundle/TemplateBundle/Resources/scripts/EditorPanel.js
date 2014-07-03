@@ -3,23 +3,27 @@ Phlexible.templates.EditorPanel = Ext.extend(Ext.form.FormPanel, {
     layout: 'fit',
     defaultType: 'textarea',
 
-    initComponent: function() {
-        this.items = [{
-            //xtype: 'textarea',
-            hideLabel: true,
-            name: 'blubb',
-            readonly: true,
-            style: 'font-family: Courier, "Courier New", monospace; font-size: 10px;'
-        }];
+    initComponent: function () {
+        this.items = [
+            {
+                //xtype: 'textarea',
+                hideLabel: true,
+                name: 'blubb',
+                readonly: true,
+                style: 'font-family: Courier, "Courier New", monospace; font-size: 10px;'
+            }
+        ];
 
-        this.tbar = [{
-            text: 'Save'
-        }];
+        this.tbar = [
+            {
+                text: 'Save'
+            }
+        ];
 
         Phlexible.templates.EditorPanel.superclass.initComponent.call(this);
     },
 
-    loadSrc: function(templateID, src) {
+    loadSrc: function (templateID, src) {
         this.templateID = templateID;
         this.getComponent(0).setValue(src);
     }

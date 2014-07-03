@@ -20,11 +20,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ElementCatch
 {
-    const SORT_TITLE_BACKEND    = '__backend_title';
-    const SORT_TITLE_PAGE       = '__page_title';
+    const SORT_TITLE_BACKEND = '__backend_title';
+    const SORT_TITLE_PAGE = '__page_title';
     const SORT_TITLE_NAVIGATION = '__navigation_title';
-    const SORT_PUBLISH_DATE     = '__publish_date';
-    const SORT_CUSTOM_DATE      = '__custom_date';
+    const SORT_PUBLISH_DATE = '__publish_date';
+    const SORT_CUSTOM_DATE = '__custom_date';
 
     const FIELD_SORT = 'sort_field';
 
@@ -137,25 +137,6 @@ class ElementCatch
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
-
-    /**
-     * @param array $config
-     */
-    public function x__construct()
-    {
-        // check for old configuration option
-        $onlyFirstPage = array_key_exists('catchMaxElements', $config)
-            ? false
-            : Brainbits_Util_Array::get($config, 'catchOnlyFirstPage', true);
-
-        if ($onlyFirstPage)
-        {
-            $this->_maxElements  = ($this->_elementsPerPage == PHP_INT_MAX)
-                ? ''
-                : $this->_elementsPerPage;
-        }
-
-    }
 
     /**
      * @param int $id

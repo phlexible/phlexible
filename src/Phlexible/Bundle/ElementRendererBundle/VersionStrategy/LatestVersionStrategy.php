@@ -66,8 +66,8 @@ class LatestVersionStrategy implements VersionStrategyInterface
 
             // only if element has been saved at least once
             $firstVersion = \Makeweb_Elements_History::getFirstVersionByEidAndLanguage(
-                                                     $element->getEid(),
-                                                         $language
+                $element->getEid(),
+                $language
             );
 
             if ((null !== $firstVersion) && ($firstVersion <= $version)) {
@@ -113,8 +113,8 @@ class LatestVersionStrategy implements VersionStrategyInterface
 
             // only if element has been saved at least once
             $firstVersion = \Makeweb_Elements_History::getFirstVersionByEidAndLanguage(
-                                                     $element->getEid(),
-                                                         $language
+                $element->getEid(),
+                $language
             );
 
             if ((null !== $firstVersion) && ($firstVersion <= $version)) {

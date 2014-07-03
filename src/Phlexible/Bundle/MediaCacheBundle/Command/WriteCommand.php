@@ -30,8 +30,7 @@ class WriteCommand extends ContainerAwareCommand
         $this
             ->setName('media-cache:write')
             ->setDescription('Write queued cache files')
-            ->addOption('break-on-error', 'b', InputOption::VALUE_NONE, 'Break on error')
-        ;
+            ->addOption('break-on-error', 'b', InputOption::VALUE_NONE, 'Break on error');
     }
 
     /**
@@ -43,47 +42,49 @@ class WriteCommand extends ContainerAwareCommand
 
         $worker = $this->getContainer()->get('mediacache.queue.worker');
 
-        $worker->processAll(function($status, $worker, $queueItem, $cacheItem) use ($output, $breakOnError) {
-            $worker = ($worker ? get_class($worker) : '-');
-            $fileId = $queueItem->getFileId();
-            $templateKey = $queueItem->getTemplateKey();
-            if ($output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET) {
-                if ($status === 'no_worker' || $status === 'no_cacheitem') {
-                    $output->writeln(
-                        "<fg=red>[$status]</fg=red> " .
-                        "worker:$worker " .
-                        "fileId:$fileId " .
-                        "templateKey:$templateKey"
-                    );
-                } elseif ($status === 'processing') {
-                    $output->writeln(
-                        "<info>[$status]</info> " .
-                        "worker:$worker " .
-                        "fileId:$fileId " .
-                        "templateKey:$templateKey"
-                    );
-                } else {
-                    $mimeType = $cacheItem->getMimeType();
-                    $size = $cacheItem->getFileSize();
-                    $color = ($status === 'ok' ? 'green' : ($status === 'error' ? 'red' : 'yellow'));
-                    $output->writeln(
-                        "<comment>[result]</comment> " .
-                        "<fg=$color>status:$status</fg=$color> " .
-                        "worker:$worker " .
-                        "fileId:$fileId " .
-                        "templateKey:$templateKey " .
-                        "mimeType:$mimeType " .
-                        "size: $size"
-                    );
+        $worker->processAll(
+            function ($status, $worker, $queueItem, $cacheItem) use ($output, $breakOnError) {
+                $worker = ($worker ? get_class($worker) : '-');
+                $fileId = $queueItem->getFileId();
+                $templateKey = $queueItem->getTemplateKey();
+                if ($output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET) {
+                    if ($status === 'no_worker' || $status === 'no_cacheitem') {
+                        $output->writeln(
+                            "<fg=red>[$status]</fg=red> " .
+                            "worker:$worker " .
+                            "fileId:$fileId " .
+                            "templateKey:$templateKey"
+                        );
+                    } elseif ($status === 'processing') {
+                        $output->writeln(
+                            "<info>[$status]</info> " .
+                            "worker:$worker " .
+                            "fileId:$fileId " .
+                            "templateKey:$templateKey"
+                        );
+                    } else {
+                        $mimeType = $cacheItem->getMimeType();
+                        $size = $cacheItem->getFileSize();
+                        $color = ($status === 'ok' ? 'green' : ($status === 'error' ? 'red' : 'yellow'));
+                        $output->writeln(
+                            "<comment>[result]</comment> " .
+                            "<fg=$color>status:$status</fg=$color> " .
+                            "worker:$worker " .
+                            "fileId:$fileId " .
+                            "templateKey:$templateKey " .
+                            "mimeType:$mimeType " .
+                            "size: $size"
+                        );
+                    }
+                }
+                if ($status === 'error' && $cacheItem && $cacheItem->getStatus() === CacheItem::STATUS_ERROR) {
+                    $output->writeln('<error>' . $cacheItem->getError() . '<error>');
+                    if ($breakOnError) {
+                        exit(1);
+                    }
                 }
             }
-            if ($status === 'error' && $cacheItem && $cacheItem->getStatus() === CacheItem::STATUS_ERROR) {
-                $output->writeln('<error>'.$cacheItem->getError().'<error>');
-                if ($breakOnError) {
-                    exit(1);
-                }
-            }
-        });
+        );
 
         return 0;
     }

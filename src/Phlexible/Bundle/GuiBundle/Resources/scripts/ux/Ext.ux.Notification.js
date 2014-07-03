@@ -2,10 +2,10 @@
 /*(c) Copyright 2008 Licensed under LGPL3. See details below*/
 
 Ext.override(Array, {
-    findBy: function(fn) {
+    findBy: function (fn) {
         var result = [];
-        for (var i = 0, len = this.length; i < len; i++){
-            if(fn.call(this || scope, this[i])) {
+        for (var i = 0, len = this.length; i < len; i++) {
+            if (fn.call(this || scope, this[i])) {
                 result.push(this[i]);
             }
         }
@@ -40,12 +40,16 @@ Ext.override(Array, {
  */
 Ext.namespace('Ext.ux');
 
-Ext.ux.Sound = (function(){
+Ext.ux.Sound = (function () {
 
-    var hasFlash = (navigator.plugins && Array.prototype.findBy.call(navigator.plugins, function(p){return p.name.indexOf('Flash')!==-1;}));
+    var hasFlash = (navigator.plugins && Array.prototype.findBy.call(navigator.plugins, function (p) {
+        return p.name.indexOf('Flash') !== -1;
+    }));
 
 //  Disabled if Windows Gecko without the QuickTime plugin
-    var  FFWin = (Ext.isGecko && Ext.isWindows), enabled = !FFWin || (navigator.plugins && Array.prototype.findBy.call(navigator.plugins, function(p){return p.name.indexOf('QuickTime')!==-1;}));
+    var FFWin = (Ext.isGecko && Ext.isWindows), enabled = !FFWin || (navigator.plugins && Array.prototype.findBy.call(navigator.plugins, function (p) {
+        return p.name.indexOf('QuickTime') !== -1;
+    }));
     if (!enabled) {
         return {
             enable: Ext.emptyFn,
@@ -58,17 +62,17 @@ Ext.ux.Sound = (function(){
 
     return {
 
-    /**
-     * @cfg enable Enables sound playback if playback is possible for the browser.
-     */
-        enable: function(){
+        /**
+         * @cfg enable Enables sound playback if playback is possible for the browser.
+         */
+        enable: function () {
             enabled = true;
         },
 
-    /**
-     * @cfg disable Disables sound playback
-     */
-        disable: function(){
+        /**
+         * @cfg disable Disables sound playback
+         */
+        disable: function () {
             enabled = false;
         },
 
@@ -83,16 +87,16 @@ Ext.ux.Sound = (function(){
          *  <div class="mdesc">True to stop any previously started playback of the named track.</div></li>
          * </ul>
          */
-        play: function(url, options){
-            if(!enabled) return;
+        play: function (url, options) {
+            if (!enabled) return;
 
             var options = Ext.apply({
-              track: 'global',
-              url: url,
-              replace: false
+                track: 'global',
+                url: url,
+                replace: false
             }, options);
 
-            if(options.replace && tracks[options.track]) {
+            if (options.replace && tracks[options.track]) {
                 for (var i = 0; i <= tracks[options.track].id; i++) {
                     var sound = Ext.get('sound_' + options.track + '_' + i);
                     sound.dom.Stop && sound.dom.Stop();
@@ -101,7 +105,7 @@ Ext.ux.Sound = (function(){
                 tracks[options.track] = null;
             }
 
-            if(tracks[options.track]) {
+            if (tracks[options.track]) {
                 tracks[options.track].id++;
             } else {
                 tracks[options.track] = { id: 0 }
@@ -114,16 +118,16 @@ Ext.ux.Sound = (function(){
             if (options.url.match(/\.swf$/) && hasFlash) {
                 var objectId = 'sound_' + options.track + '_' + options.id;
                 var SWFconfig = {
-                  tag: 'object',
-                  cls: 'x-hide-offsets',
-                  cn: [
-                      {tag: 'embed',
-                          src: options.url,
-                          type: 'application/x-shockwave-flash',
-                          quality: 'high'
-                      },
-                      {tag: 'param', name: 'quality', value: 'high'},
-                      {tag: 'param', name: 'movie', value: options.url}
+                    tag: 'object',
+                    cls: 'x-hide-offsets',
+                    cn: [
+                        {tag: 'embed',
+                            src: options.url,
+                            type: 'application/x-shockwave-flash',
+                            quality: 'high'
+                        },
+                        {tag: 'param', name: 'quality', value: 'high'},
+                        {tag: 'param', name: 'movie', value: options.url}
                     ]
                 };
 
@@ -142,22 +146,22 @@ Ext.ux.Sound = (function(){
                 return;
             } else if (Ext.isIE) {
                 sound = document.createElement('bgsound');
-                sound.setAttribute('src',options.url);
-                sound.setAttribute('loop','1');
-                sound.setAttribute('autostart','true');
+                sound.setAttribute('src', options.url);
+                sound.setAttribute('loop', '1');
+                sound.setAttribute('autostart', 'true');
             } else if (FFWin && !options.url.match(/\.wav$/)) {
                 sound = document.createElement('object');
-                sound.setAttribute('type','audio/mpeg');
-                sound.setAttribute('data',options.url);
+                sound.setAttribute('type', 'audio/mpeg');
+                sound.setAttribute('data', options.url);
             } else {
                 sound = document.createElement('embed');
-                sound.setAttribute('src',options.url);
-                sound.setAttribute('hidden','true');
-                sound.setAttribute('loop','false');
-                sound.setAttribute('autostart','true');
+                sound.setAttribute('src', options.url);
+                sound.setAttribute('hidden', 'true');
+                sound.setAttribute('loop', 'false');
+                sound.setAttribute('autostart', 'true');
             }
             sound.className = 'x-hide-offsets';
-            sound.setAttribute('id','sound_'+options.track+'_'+options.id);
+            sound.setAttribute('id', 'sound_' + options.track + '_' + options.id);
             document.body.appendChild(sound);
         }
     };
@@ -167,7 +171,7 @@ Ext.ux.Sound = (function(){
  * Ext.ux.ToastWindow
  *
  * @author  Edouard Fattal
- * @date	March 14, 2008
+ * @date    March 14, 2008
  *
  * @class Ext.ux.ToastWindow
  * @extends Ext.Window
@@ -181,7 +185,7 @@ Ext.ux.NotificationMgr = {
 };
 
 Ext.ux.Notification = Ext.extend(Ext.Window, {
-    initComponent: function(){
+    initComponent: function () {
         Ext.apply(this, {
             iconCls: this.iconCls || 'x-icon-information',
             cls: 'x-notification',
@@ -194,7 +198,7 @@ Ext.ux.Notification = Ext.extend(Ext.Window, {
             shadow: false,
             bodyStyle: this.bodyStyle || 'text-align:center'
         });
-        if(this.autoDestroy) {
+        if (this.autoDestroy) {
             this.task = new Ext.util.DelayedTask(this.hide, this);
         } else {
             this.cls += ' fixed';
@@ -202,47 +206,47 @@ Ext.ux.Notification = Ext.extend(Ext.Window, {
         }
         Ext.ux.Notification.superclass.initComponent.call(this);
     },
-    setMessage: function(msg){
+    setMessage: function (msg) {
         this.body.update(msg);
     },
-    setTitle: function(title, iconCls){
-        Ext.ux.Notification.superclass.setTitle.call(this, title, iconCls||this.iconCls);
+    setTitle: function (title, iconCls) {
+        Ext.ux.Notification.superclass.setTitle.call(this, title, iconCls || this.iconCls);
     },
-    onRender:function(ct, position) {
+    onRender: function (ct, position) {
         Ext.ux.Notification.superclass.onRender.call(this, ct, position);
     },
-    onDestroy: function(){
+    onDestroy: function () {
         Ext.ux.NotificationMgr.positions.remove(this.pos);
         Ext.ux.Notification.superclass.onDestroy.call(this);
     },
-    cancelHiding: function(){
-        if(this.autoDestroy) {
+    cancelHiding: function () {
+        if (this.autoDestroy) {
             this.addClass('fixed');
             this.task.cancel();
         }
     },
-    afterShow: function(){
+    afterShow: function () {
         Ext.ux.Notification.superclass.afterShow.call(this);
         Ext.fly(this.body.dom).on('click', this.cancelHiding, this);
-        if(this.autoDestroy) {
+        if (this.autoDestroy) {
             this.task.delay(this.hideDelay || 5000);
-       }
+        }
     },
-    animShow: function(){
+    animShow: function () {
         this.pos = 0;
-        while(Ext.ux.NotificationMgr.positions.indexOf(this.pos)>-1)
+        while (Ext.ux.NotificationMgr.positions.indexOf(this.pos) > -1)
             this.pos++;
         Ext.ux.NotificationMgr.positions.push(this.pos);
-        this.setSize(this.width,this.height);
-        this.el.alignTo(document, "br-br", [ -10, -40-((this.getSize().height+10)*this.pos) ]);
+        this.setSize(this.width, this.height);
+        this.el.alignTo(document, "br-br", [ -10, -40 - ((this.getSize().height + 10) * this.pos) ]);
         this.el.slideIn('b', {
             duration: 1,
             callback: this.afterShow,
             scope: this
         });
     },
-    animHide: function(){
-           Ext.ux.NotificationMgr.positions.remove(this.pos);
+    animHide: function () {
+        Ext.ux.NotificationMgr.positions.remove(this.pos);
         this.el.ghost("b", {
             duration: 1,
             remove: true

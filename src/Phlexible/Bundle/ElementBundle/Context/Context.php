@@ -71,15 +71,13 @@ class Makeweb_Elements_Context
         $this->_isPreview = $isPreview;
 
         $container = MWF_Registry::getContainer();
-        $this->_db       = $container->dbPool->read;
-        $this->_config   = $container->config;
+        $this->_db = $container->dbPool->read;
+        $this->_config = $container->config;
 
-        if (isset($this->_config->context->defaults))
-        {
+        if (isset($this->_config->context->defaults)) {
             $this->_defaults = $this->_config->context->defaults->toArray();
         }
-        if (isset($this->_config->context->urls))
-        {
+        if (isset($this->_config->context->urls)) {
             $this->_urls = $this->_config->context->urls->toArray();
         }
         $this->_countries = $this->_config->context->countries->toArray();
@@ -96,8 +94,7 @@ class Makeweb_Elements_Context
 
         $url = !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
 
-        if (array_key_exists($url, $this->_urls))
-        {
+        if (array_key_exists($url, $this->_urls)) {
             $country = $this->_urls[$_SERVER['SERVER_NAME']];
         }
 
@@ -111,8 +108,7 @@ class Makeweb_Elements_Context
      */
     public function getCountry()
     {
-        if ($this->_country === null)
-        {
+        if ($this->_country === null) {
             $this->setCountry($this->_determineCountry());
         }
 
@@ -123,16 +119,14 @@ class Makeweb_Elements_Context
      * Set the country of context
      *
      * @param  string $country
+     *
      * @throws Makeweb_Elements_Context_Exception
      */
     public function setCountry($country)
     {
-        if ($country == self::GLOBAL_COUNTRY)
-        {
+        if ($country == self::GLOBAL_COUNTRY) {
             $this->_country = $country;
-        }
-        elseif (!$country || ($country !== self::NO_COUNTRY && !array_key_exists($country, $this->_countries)))
-        {
+        } elseif (!$country || ($country !== self::NO_COUNTRY && !array_key_exists($country, $this->_countries))) {
             throw new Makeweb_Elements_Context_Exception('No country found for "' . $country . '".');
         }
 
@@ -149,17 +143,14 @@ class Makeweb_Elements_Context
      */
     public function isRelevantForTid($tid, $languages)
     {
-        if (!is_array($languages))
-        {
+        if (!is_array($languages)) {
             $languages = array($languages);
         }
 
         $languagesForTid = $this->getLanguagesForTid($tid);
 
-        foreach ($languages as $language)
-        {
-            if (in_array($language, $languagesForTid))
-            {
+        foreach ($languages as $language) {
+            if (in_array($language, $languagesForTid)) {
                 return true;
             }
         }
@@ -177,17 +168,14 @@ class Makeweb_Elements_Context
      */
     public function isRelevantForTeaserId($teaserId, $languages)
     {
-        if (!is_array($languages))
-        {
+        if (!is_array($languages)) {
             $languages = array($languages);
         }
 
         $languagesForTeaserId = $this->getLanguagesForTeaserId($teaserId);
 
-        foreach ($languages as $language)
-        {
-            if (in_array($language, $languagesForTeaserId))
-            {
+        foreach ($languages as $language) {
+            if (in_array($language, $languagesForTeaserId)) {
                 return true;
             }
         }
@@ -218,23 +206,20 @@ class Makeweb_Elements_Context
      */
     public function getLanguagesForTid($tid)
     {
-        if (!empty($this->_languageMap['treenode_' . $tid]))
-        {
+        if (!empty($this->_languageMap['treenode_' . $tid])) {
             return $this->_languageMap['treenode_' . $tid];
         }
 
         $country = $this->getCountry();
 
-        if (!$this->_isPreview)
-        {
+        if (!$this->_isPreview) {
             $select = $this->_db->select()
                 ->from($this->_db->prefix . 'element_tree_context', 'context')
                 ->where('tid = ?', $tid);
 
             $available = $this->_db->fetchCol($select);
 
-            if (count($available) && !in_array($country, $available))
-            {
+            if (count($available) && !in_array($country, $available)) {
                 return array();
             }
 
@@ -244,40 +229,28 @@ class Makeweb_Elements_Context
 
             $onlineLanguages = $this->_db->fetchCol($select);
 
-            if (count($this->_defaults))
-            {
-                if (self::GLOBAL_COUNTRY === $country)
-                {
+            if (count($this->_defaults)) {
+                if (self::GLOBAL_COUNTRY === $country) {
                     $languages = $onlineLanguages;
-                }
-                else
-                {
+                } else {
                     $defaultLanguages = $this->_defaults[$country];
 
                     //$languages = array_unique($languages);
                     $languages = array_intersect($defaultLanguages, $onlineLanguages);
                 }
 
-            }
-            else
-            {
+            } else {
                 $languages = $onlineLanguages;
             }
-        }
-        else
-        {
+        } else {
             $languages = array();
 
-            if (!empty($this->_defaults))
-            {
-                foreach ($this->_defaults as $l)
-                {
+            if (!empty($this->_defaults)) {
+                foreach ($this->_defaults as $l) {
                     $languages = array_merge($languages, $l);
                 }
-            }
-            else
-            {
-               $languages = explode(',', MWF_Registry::getContainer()->getParam(':frontend.languages.available'));
+            } else {
+                $languages = explode(',', MWF_Registry::getContainer()->getParam(':frontend.languages.available'));
             }
 
             $languages = array_unique($languages);
@@ -297,23 +270,20 @@ class Makeweb_Elements_Context
      */
     public function getLanguagesForTeaserId($teaserId)
     {
-        if (!empty($this->_languageMap['teaser_' . $teaserId]))
-        {
+        if (!empty($this->_languageMap['teaser_' . $teaserId])) {
             return $this->_languageMap['teaser_' . $teaserId];
         }
 
         $country = $this->getCountry();
 
-        if (!$this->_isPreview)
-        {
+        if (!$this->_isPreview) {
             $select = $this->_db->select()
                 ->from($this->_db->prefix . 'element_tree_teasers_context', 'context')
                 ->where('teaser_id = ?', $teaserId);
 
             $available = $this->_db->fetchCol($select);
 
-            if (count($available) && !in_array($country, $available))
-            {
+            if (count($available) && !in_array($country, $available)) {
                 return array();
             }
 
@@ -323,39 +293,27 @@ class Makeweb_Elements_Context
 
             $onlineLanguages = $this->_db->fetchCol($select);
 
-            if (count($this->_defaults))
-            {
-                if (self::GLOBAL_COUNTRY === $country)
-                {
+            if (count($this->_defaults)) {
+                if (self::GLOBAL_COUNTRY === $country) {
                     $languages = $onlineLanguages;
-                }
-                else
-                {
+                } else {
                     $defaultLanguages = $this->_defaults[$country];
 
                     //$languages = array_unique($languages);
                     $languages = array_intersect($defaultLanguages, $onlineLanguages);
                 }
-            }
-            else
-            {
+            } else {
                 $languages = $onlineLanguages;
             }
-        }
-        else
-        {
+        } else {
             $languages = array();
 
-            if (!empty($this->_defaults))
-            {
-                foreach ($this->_defaults as $l)
-                {
+            if (!empty($this->_defaults)) {
+                foreach ($this->_defaults as $l) {
                     $languages = array_merge($languages, $l);
                 }
-            }
-            else
-            {
-               $languages = explode(',', MWF_Registry::getContainer()->getParam(':frontend.languages.available'));
+            } else {
+                $languages = explode(',', MWF_Registry::getContainer()->getParam(':frontend.languages.available'));
             }
 
             $languages = array_unique($languages);
@@ -373,21 +331,16 @@ class Makeweb_Elements_Context
      */
     protected function _getReverseDefaults()
     {
-        if ($this->_reverseDefaults === null)
-        {
+        if ($this->_reverseDefaults === null) {
             $reverseDefaults = array();
 
-            foreach ($this->_defaults as $country => $languages)
-            {
-                foreach ($languages as $language)
-                {
-                    if (!array_key_exists($language, $reverseDefaults))
-                    {
+            foreach ($this->_defaults as $country => $languages) {
+                foreach ($languages as $language) {
+                    if (!array_key_exists($language, $reverseDefaults)) {
                         $reverseDefaults[$language] = array();
                     }
 
-                    if (!in_array($country, $reverseDefaults[$language]))
-                    {
+                    if (!in_array($country, $reverseDefaults[$language])) {
                         $reverseDefaults[$language][] = $country;
                     }
                 }
@@ -416,12 +369,10 @@ class Makeweb_Elements_Context
 
         $countries = $this->_db->fetchCol($select);
 
-        if (count($this->_defaults))
-        {
+        if (count($this->_defaults)) {
             $reverseDefaults = $this->_getReverseDefaults();
 
-            if (!array_key_exists($language, $reverseDefaults))
-            {
+            if (!array_key_exists($language, $reverseDefaults)) {
                 throw new Makeweb_Elements_Context_Exception(
                     'No country found for language "' . $language . '".'
                 );
@@ -429,19 +380,15 @@ class Makeweb_Elements_Context
 
             $defaultCountries = $reverseDefaults[$language];
 
-            if (count($countries))
-            {
+            if (count($countries)) {
                 $countries = array_intersect($countries, $defaultCountries);
-            }
-            else
-            {
+            } else {
                 $countries = $defaultCountries;
             }
 
             // if language/context combination is invalid
             // -> return null
-            if (!count($countries))
-            {
+            if (!count($countries)) {
                 return null;
             }
         }

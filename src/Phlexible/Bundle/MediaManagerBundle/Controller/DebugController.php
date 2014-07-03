@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -41,11 +41,11 @@ class DebugController extends Controller
         $file = $site->findFile($fileId);
 
         $debug = array(
-            array('key' => 'mimeType',     'value' => $file->getMimeType()),
+            array('key' => 'mimeType', 'value' => $file->getMimeType()),
             array('key' => 'documentType', 'value' => strtolower($file->getAttribute('documenttype'))),
-            array('key' => 'assetType',    'value' => strtolower($file->getAttribute('assettype'))),
-            array('key' => 'fileId',       'value' => $file->getId()),
-            array('key' => 'folderId',     'value' => $file->getFolderId()),
+            array('key' => 'assetType', 'value' => strtolower($file->getAttribute('assettype'))),
+            array('key' => 'fileId', 'value' => $file->getId()),
+            array('key' => 'folderId', 'value' => $file->getFolderId()),
         );
 
         return new JsonResponse(array('debug' => $debug));

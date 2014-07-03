@@ -49,8 +49,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                 ->setSeverity(Problem::SEVERITY_WARNING)
                 ->setMessage('No Siteroots defined.')
                 ->setHint('Add at least one siteroot.')
-                ->setIconClass('p-siteroot-component-icon')
-            ;
+                ->setIconClass('p-siteroot-component-icon');
 
             return array($problem);
         }
@@ -64,8 +63,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                     ->setSeverity(Problem::SEVERITY_WARNING)
                     ->setMessage("No Navigation defined for Siteroot {$siteRoot->getTitle()}.")
                     ->setHint('Add Navigations to the Siteroot.')
-                    ->setIconClass('p-siteroot-component-icon')
-                ;
+                    ->setIconClass('p-siteroot-component-icon');
                 $problems[] = $problem;
             }
 
@@ -78,8 +76,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                     ->setSeverity(Problem::SEVERITY_WARNING)
                     ->setMessage("No Special TIDs defined for Siteroot {$siteRoot->getTitle()}.")
                     ->setHint('Add Special TIDs to the Siteroot.')
-                    ->setIconClass('p-siteroot-component-icon')
-                ;
+                    ->setIconClass('p-siteroot-component-icon');
                 $problems[] = $problem;
             } else {
                 // TODO: repair
@@ -128,8 +125,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                     ->setSeverity(Problem::SEVERITY_WARNING)
                     ->setMessage("No Titles defined for Siteroot {$siteRoot->getId()}.")
                     ->setHint('Set Titles for the Siteroot')
-                    ->setIconClass('p-siteroot-component-icon')
-                ;
+                    ->setIconClass('p-siteroot-component-icon');
                 $problems[] = $problem;
             }
 
@@ -141,8 +137,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                     ->setSeverity(Problem::SEVERITY_WARNING)
                     ->setMessage("No Urls defined for Siteroot {$siteRoot->getTitle('en')}.")
                     ->setHint('Set Urls for the Siteroot')
-                    ->setIconClass('p-siteroot-component-icon')
-                ;
+                    ->setIconClass('p-siteroot-component-icon');
                 $problems[] = $problem;
             }
         }

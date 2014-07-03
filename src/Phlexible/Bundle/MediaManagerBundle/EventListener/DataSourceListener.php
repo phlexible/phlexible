@@ -54,9 +54,9 @@ class DataSourceListener implements EventSubscriberInterface
      */
     public function onMarkActive(CollectionEvent $event)
     {
-        $dataSource   = $event->getDataSource();
+        $dataSource = $event->getDataSource();
         $dataSourceId = $dataSource->getId();
-        $language     = $dataSource->getLanguage();
+        $language = $dataSource->getLanguage();
 
         $usedValues = $this->suggestFieldUtil->fetchUsedValues($dataSourceId, array($language));
 
@@ -88,7 +88,7 @@ class DataSourceListener implements EventSubscriberInterface
     public function cleanupValues(DataSource $dataSource, ValueCollection $collection)
     {
         $dataSourceId = $dataSource->getId();
-        $language     = $dataSource->getLanguage();
+        $language = $dataSource->getLanguage();
 
         $usedValues = $this->suggestFieldUtil->fetchUsedValues($dataSourceId, array($language));
 

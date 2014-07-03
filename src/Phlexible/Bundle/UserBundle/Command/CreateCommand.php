@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\UserBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\UserBundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,13 +28,14 @@ class CreateCommand extends ContainerAwareCommand
     {
         $this
             ->setName('user:create')
-            ->setDefinition(array(
-                new InputArgument('username', InputArgument::REQUIRED, 'Username'),
-                new InputArgument('password', InputArgument::REQUIRED, 'Password'),
-                new InputArgument('email', InputArgument::REQUIRED, 'Email'),
-            ))
-            ->setDescription('Create user.')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('username', InputArgument::REQUIRED, 'Username'),
+                    new InputArgument('password', InputArgument::REQUIRED, 'Password'),
+                    new InputArgument('email', InputArgument::REQUIRED, 'Email'),
+                )
+            )
+            ->setDescription('Create user.');
     }
 
     /**
@@ -42,7 +43,7 @@ class CreateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $username  = $input->getArgument('username');
+        $username = $input->getArgument('username');
         $password = $input->getArgument('password');
         $email = $input->getArgument('email');
 
@@ -52,8 +53,7 @@ class CreateCommand extends ContainerAwareCommand
             ->setPlainPassword($password)
             ->setEmail($email)
             ->setCreatedAt(new \DateTime())
-            ->setModifiedAt(new \DateTime())
-        ;
+            ->setModifiedAt(new \DateTime());
 
         $userRepository = $this->getContainer()->get('phlexible_user.user_manager');
         $userRepository->updateUser($user);

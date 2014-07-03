@@ -70,12 +70,13 @@ class TaskManager implements TaskManagerInterface
      * @param Mailer               $mailer
      * @param bool                 $sendMailOnClose
      */
-    public function __construct(EntityManager $entityManager,
-                                TypeCollection $types,
-                                UserManagerInterface $userManager,
-                                MessagePoster $messageService,
-                                Mailer $mailer,
-                                $sendMailOnClose)
+    public function __construct(
+        EntityManager $entityManager,
+        TypeCollection $types,
+        UserManagerInterface $userManager,
+        MessagePoster $messageService,
+        Mailer $mailer,
+        $sendMailOnClose)
     {
         $this->entityManager = $entityManager;
         $this->types = $types;
@@ -98,7 +99,12 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByCreatedByAndStatus($userId, array $status = array(), array $sort = array(), $limit = null, $start = null)
+    public function findByCreatedByAndStatus(
+        $userId,
+        array $status = array(),
+        array $sort = array(),
+        $limit = null,
+        $start = null)
     {
         $qb = $this->taskRepository->createQueryBuilder('t');
         $qb->where($qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)));
@@ -133,14 +139,22 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByAssignedToAndStatus($userId, array $status = array(), array $sort = array(), $limit = null, $start = null)
+    public function findByAssignedToAndStatus(
+        $userId,
+        array $status = array(),
+        array $sort = array(),
+        $limit = null,
+        $start = null)
     {
         $qb = $this->taskRepository->createQueryBuilder('t');
         $qb->where(
             $qb->expr()->orX(
                 $qb->expr()->andX(
                     $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
-                    $qb->expr()->IN('t.currentStatus', array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED))
+                    $qb->expr()->IN(
+                        't.currentStatus',
+                        array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED)
+                    )
                 ),
                 $qb->expr()->andX(
                     $qb->expr()->eq('t.recipientUserId', $qb->expr()->literal($userId)),
@@ -174,7 +188,10 @@ class TaskManager implements TaskManagerInterface
             $qb->expr()->orX(
                 $qb->expr()->andX(
                     $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
-                    $qb->expr()->IN('t.currentStatus', array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED))
+                    $qb->expr()->IN(
+                        't.currentStatus',
+                        array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED)
+                    )
                 ),
                 $qb->expr()->andX(
                     $qb->expr()->eq('t.recipientUserId', $qb->expr()->literal($userId)),
@@ -190,7 +207,12 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByInvolvementAndStatus($userId, array $status = array(), array $sort = array(), $limit = null, $start = null)
+    public function findByInvolvementAndStatus(
+        $userId,
+        array $status = array(),
+        array $sort = array(),
+        $limit = null,
+        $start = null)
     {
         $qb = $this->taskRepository->createQueryBuilder('t');
         $qb->where(
@@ -325,17 +347,16 @@ class TaskManager implements TaskManagerInterface
             ->setComment($comment)
             ->setCreatedAt(new \DateTime())
             ->setCreateUserId($userId)
-            ->setStatus($newStatus)
-        ;
+            ->setStatus($newStatus);
         $this->entityManager->persist($taskStatus);
         $this->entityManager->flush();
 
         if ($userId == $task->getRecipientUserId()) {
             $fromUser = $this->userManager->find($task->getCreateUserId());
-            $toUser   = $this->userManager->find($task->getRecipientUserId());
+            $toUser = $this->userManager->find($task->getRecipientUserId());
         } else {
             $fromUser = $this->userManager->find($task->getRecipientUserId());
-            $toUser   = $this->userManager->find($task->getCreateUserId());
+            $toUser = $this->userManager->find($task->getCreateUserId());
         }
 
         $body = 'Task status changed by ' . $fromUser->getDisplayName() .

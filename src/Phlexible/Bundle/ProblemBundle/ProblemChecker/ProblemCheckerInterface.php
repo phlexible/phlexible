@@ -16,8 +16,8 @@ namespace Phlexible\Bundle\ProblemBundle\ProblemChecker;
 interface ProblemCheckerInterface
 {
     const SEVERITY_CRITICAL = 'critical';
-    const SEVERITY_WARNING  = 'warning';
-    const SEVERITY_INFO     = 'info';
+    const SEVERITY_WARNING = 'warning';
+    const SEVERITY_INFO = 'info';
 
     /**
      * Check for problems

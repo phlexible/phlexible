@@ -2,40 +2,42 @@ Phlexible.elementtypes.configuration.FieldConfigurationAccordion = Ext.extend(Ex
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.accordion,
     iconCls: 'p-elementtype-container_accordion-icon',
-	autoHeight: true,
+    autoHeight: true,
     labelWidth: 139,
 
-    initComponent: function() {
-        this.items = [{
-			xtype: 'checkbox',
-			name: 'default_collapsed',
-			fieldLabel: '',
-			labelSeparator: '',
-			boxLabel: this.strings.default_collapsed
-        }];
+    initComponent: function () {
+        this.items = [
+            {
+                xtype: 'checkbox',
+                name: 'default_collapsed',
+                fieldLabel: '',
+                labelSeparator: '',
+                boxLabel: this.strings.default_collapsed
+            }
+        ];
 
         Phlexible.elementtypes.configuration.FieldConfigurationAccordion.superclass.initComponent.call(this);
     },
 
-	updateVisibility: function(type) {
-		var isAccordion = type === 'accordion';
-		this.getComponent(0).setDisabled(!isAccordion);
-		this.setVisible(isAccordion);
-	},
+    updateVisibility: function (type) {
+        var isAccordion = type === 'accordion';
+        this.getComponent(0).setDisabled(!isAccordion);
+        this.setVisible(isAccordion);
+    },
 
-    loadData: function(fieldData, fieldType) {
+    loadData: function (fieldData, fieldType) {
         this.getComponent(0).setValue(fieldData.default_collapsed);
 
         this.isValid();
     },
 
-    getSaveValues: function() {
+    getSaveValues: function () {
         return {
-			default_collapsed: this.getComponent(0).getValue()
-		};
+            default_collapsed: this.getComponent(0).getValue()
+        };
     },
 
-    isValid: function() {
+    isValid: function () {
         return this.getComponent(0).isValid();
     }
 });

@@ -27,9 +27,9 @@ class TreeIterator implements \Iterator, \RecursiveIterator
     /**
      * Create a new tree iterator for a tree or a specific node.
      *
-     * @param TreeInterface|TreeNodeInterface $tree
-     *     TreeInterface: traverse tree from root node
-     *     TreeNodeInterface: traverse a subtree
+     * @param TreeInterface|TreeNodeInterface $tree TreeInterface: traverse tree from root node
+     *                                              TreeNodeInterface: traverse a subtree
+     *
      * @throws \Exception
      */
     public function __construct($tree)

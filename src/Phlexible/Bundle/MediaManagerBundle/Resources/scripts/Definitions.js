@@ -1,11 +1,11 @@
 Ext.namespace(
-	'Phlexible.mediamanager.menuhandle',
-	'Phlexible.mediamanager.model',
-	'Phlexible.mediamanager.templates',
-	'Phlexible.mediamanager.util'
+    'Phlexible.mediamanager.menuhandle',
+    'Phlexible.mediamanager.model',
+    'Phlexible.mediamanager.templates',
+    'Phlexible.mediamanager.util'
 );
 
-Phlexible.EntryManager.register('mediamanager', function(params) {
+Phlexible.EntryManager.register('mediamanager', function (params) {
     return {
         handler: Phlexible.LoadHandler.handlePanel,
         identifier: 'Phlexible_mediamanager_MediamanagerPanel',
@@ -14,13 +14,13 @@ Phlexible.EntryManager.register('mediamanager', function(params) {
     };
 });
 
-Phlexible.mediamanager.IMAGE    = 'IMAGE';
-Phlexible.mediamanager.VIDEO    = 'VIDEO';
-Phlexible.mediamanager.FLASH    = 'FLASH';
-Phlexible.mediamanager.AUDIO    = 'AUDIO';
+Phlexible.mediamanager.IMAGE = 'IMAGE';
+Phlexible.mediamanager.VIDEO = 'VIDEO';
+Phlexible.mediamanager.FLASH = 'FLASH';
+Phlexible.mediamanager.AUDIO = 'AUDIO';
 Phlexible.mediamanager.DOCUMENT = 'DOCUMENT';
-Phlexible.mediamanager.ARCHIVE  = 'ARCHIVE';
-Phlexible.mediamanager.OTHER    = 'OTHER';
+Phlexible.mediamanager.ARCHIVE = 'ARCHIVE';
+Phlexible.mediamanager.OTHER = 'OTHER';
 
 Phlexible.mediamanager.Rights = {
     FOLDER_READ: 'FOLDER_READ',

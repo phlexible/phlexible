@@ -52,44 +52,44 @@ SWFUpload.instances = {};
 SWFUpload.movieCount = 0;
 SWFUpload.version = "2.2.1 2009-03-30";
 SWFUpload.QUEUE_ERROR = {
-    QUEUE_LIMIT_EXCEEDED              : -100,
-    FILE_EXCEEDS_SIZE_LIMIT          : -110,
-    ZERO_BYTE_FILE                      : -120,
-    INVALID_FILETYPE                  : -130
+    QUEUE_LIMIT_EXCEEDED: -100,
+    FILE_EXCEEDS_SIZE_LIMIT: -110,
+    ZERO_BYTE_FILE: -120,
+    INVALID_FILETYPE: -130
 };
 SWFUpload.UPLOAD_ERROR = {
-    HTTP_ERROR                          : -200,
-    MISSING_UPLOAD_URL                  : -210,
-    IO_ERROR                          : -220,
-    SECURITY_ERROR                      : -230,
-    UPLOAD_LIMIT_EXCEEDED              : -240,
-    UPLOAD_FAILED                      : -250,
-    SPECIFIED_FILE_ID_NOT_FOUND        : -260,
-    FILE_VALIDATION_FAILED              : -270,
-    FILE_CANCELLED                      : -280,
-    UPLOAD_STOPPED                    : -290
+    HTTP_ERROR: -200,
+    MISSING_UPLOAD_URL: -210,
+    IO_ERROR: -220,
+    SECURITY_ERROR: -230,
+    UPLOAD_LIMIT_EXCEEDED: -240,
+    UPLOAD_FAILED: -250,
+    SPECIFIED_FILE_ID_NOT_FOUND: -260,
+    FILE_VALIDATION_FAILED: -270,
+    FILE_CANCELLED: -280,
+    UPLOAD_STOPPED: -290
 };
 SWFUpload.FILE_STATUS = {
-    QUEUED         : -1,
-    IN_PROGRESS     : -2,
-    ERROR         : -3,
-    COMPLETE     : -4,
-    CANCELLED     : -5
+    QUEUED: -1,
+    IN_PROGRESS: -2,
+    ERROR: -3,
+    COMPLETE: -4,
+    CANCELLED: -5
 };
 SWFUpload.BUTTON_ACTION = {
-    SELECT_FILE  : -100,
-    SELECT_FILES : -110,
-    START_UPLOAD : -120,
-    JAVASCRIPT   : -130
+    SELECT_FILE: -100,
+    SELECT_FILES: -110,
+    START_UPLOAD: -120,
+    JAVASCRIPT: -130
 };
 SWFUpload.CURSOR = {
-    ARROW : -1,
-    HAND : -2
+    ARROW: -1,
+    HAND: -2
 };
 SWFUpload.WINDOW_MODE = {
-    WINDOW : "window",
-    TRANSPARENT : "transparent",
-    OPAQUE : "opaque"
+    WINDOW: "window",
+    TRANSPARENT: "transparent",
+    OPAQUE: "opaque"
 };
 
 // Private: takes a URL, determines if it is relative and converts to an absolute URL
@@ -100,14 +100,14 @@ SWFUpload.completeURL = function (url) {
         if (typeof(url) !== "string" || url.match(/^https?:\/\//i) || url.match(/^\//) || url === "") {
             return url;
         }
-        
+
         var indexSlash = window.location.pathname.lastIndexOf("/");
         if (indexSlash <= 0) {
             path = "/";
         } else {
             path = window.location.pathname.substr(0, indexSlash) + "/";
         }
-        
+
         return path + url;
     } catch (ex) {
         return url;
@@ -140,7 +140,7 @@ SWFUpload.prototype.initSettings = function (userSettings) {
             this.settings[settingName] = defaultValue;
         }
     };
-    
+
     // Upload backend settings
     this.ensureDefault("upload_url", "");
     this.ensureDefault("preserve_relative_urls", false);
@@ -150,7 +150,7 @@ SWFUpload.prototype.initSettings = function (userSettings) {
     this.ensureDefault("requeue_on_error", false);
     this.ensureDefault("http_success", []);
     this.ensureDefault("assume_success_timeout", 0);
-    
+
     // File Settings
     this.ensureDefault("file_types", "*.*");
     this.ensureDefault("file_types_description", "All Files");
@@ -161,7 +161,7 @@ SWFUpload.prototype.initSettings = function (userSettings) {
     // Flash Settings
     this.ensureDefault("flash_url", "swfupload.swf");
     this.ensureDefault("prevent_swf_caching", true);
-    
+
     // Button Settings
     this.ensureDefault("button_image_url", "");
     this.ensureDefault("button_width", 1);
@@ -176,11 +176,11 @@ SWFUpload.prototype.initSettings = function (userSettings) {
     this.ensureDefault("button_placeholder", null);
     this.ensureDefault("button_cursor", SWFUpload.CURSOR.ARROW);
     this.ensureDefault("button_window_mode", SWFUpload.WINDOW_MODE.WINDOW);
-    
+
     // Debug Settings
     this.ensureDefault("debug", false);
     this.settings.debug_enabled = this.settings.debug;    // Here to maintain v2 API
-    
+
     // Event Handlers
     this.settings.return_upload_start_handler = this.returnUploadStart;
     this.ensureDefault("swfupload_loaded_handler", null);
@@ -188,32 +188,32 @@ SWFUpload.prototype.initSettings = function (userSettings) {
     this.ensureDefault("file_queued_handler", null);
     this.ensureDefault("file_queue_error_handler", null);
     this.ensureDefault("file_dialog_complete_handler", null);
-    
+
     this.ensureDefault("upload_start_handler", null);
     this.ensureDefault("upload_progress_handler", null);
     this.ensureDefault("upload_error_handler", null);
     this.ensureDefault("upload_success_handler", null);
     this.ensureDefault("upload_complete_handler", null);
-    
+
     this.ensureDefault("button_action_handler", null);
-    
+
     this.ensureDefault("debug_handler", this.debugMessage);
 
     this.ensureDefault("custom_settings", {});
 
     // Other settings
     this.customSettings = this.settings.custom_settings;
-    
+
     // Update the flash url if needed
     if (!!this.settings.prevent_swf_caching) {
         this.settings.flash_url = this.settings.flash_url + (this.settings.flash_url.indexOf("?") < 0 ? "?" : "&") + "preventswfcaching=" + new Date().getTime();
     }
-    
+
     if (!this.settings.preserve_relative_urls) {
         this.settings.upload_url = SWFUpload.completeURL(this.settings.upload_url);
         this.settings.button_image_url = SWFUpload.completeURL(this.settings.button_image_url);
     }
-    
+
     delete this.ensureDefault;
 };
 
@@ -234,7 +234,7 @@ SWFUpload.prototype.loadFlash = function () {
     }
 
     var wrapperType = ((targetElement.currentStyle && targetElement.currentStyle["display"]) ||
-                      ((window.getComputedStyle && document.defaultView.getComputedStyle(targetElement, null).getPropertyValue("display")) !== "block") ? "span" : "div");
+        ((window.getComputedStyle && document.defaultView.getComputedStyle(targetElement, null).getPropertyValue("display")) !== "block") ? "span" : "div");
 
     // Append the container and load the flash
     tempParent = document.createElement(wrapperType);
@@ -245,20 +245,20 @@ SWFUpload.prototype.loadFlash = function () {
     if (window[this.movieName] == undefined) {
         window[this.movieName] = this.getMovieElement();
     }
-    
+
 };
 
 // Private: getFlashHTML generates the object tag needed to embed the flash in to the document
 SWFUpload.prototype.getFlashHTML = function () {
     // Flash Satay object syntax: http://www.alistapart.com/articles/flashsatay
     return ['<object id="', this.movieName, '" type="application/x-shockwave-flash" data="', this.settings.flash_url, '" width="', this.settings.button_width, '" height="', this.settings.button_height, '" class="swfupload">',
-                '<param name="wmode" value="', this.settings.button_window_mode, '" />',
-                '<param name="movie" value="', this.settings.flash_url, '" />',
-                '<param name="quality" value="high" />',
-                '<param name="menu" value="false" />',
-                '<param name="allowScriptAccess" value="always" />',
-                '<param name="flashvars" value="' + this.getFlashVars() + '" />',
-                '</object>'].join("");
+        '<param name="wmode" value="', this.settings.button_window_mode, '" />',
+        '<param name="movie" value="', this.settings.flash_url, '" />',
+        '<param name="quality" value="high" />',
+        '<param name="menu" value="false" />',
+        '<param name="allowScriptAccess" value="always" />',
+        '<param name="flashvars" value="' + this.getFlashVars() + '" />',
+        '</object>'].join("");
 };
 
 // Private: getFlashVars builds the parameter string that will be passed
@@ -267,33 +267,33 @@ SWFUpload.prototype.getFlashVars = function () {
     // Build a string from the post param object
     var paramString = this.buildParamString();
     var httpSuccessString = this.settings.http_success.join(",");
-    
+
     // Build the parameter string
     return ["movieName=", encodeURIComponent(this.movieName),
-            "&amp;uploadURL=", encodeURIComponent(this.settings.upload_url),
-            "&amp;useQueryString=", encodeURIComponent(this.settings.use_query_string),
-            "&amp;requeueOnError=", encodeURIComponent(this.settings.requeue_on_error),
-            "&amp;httpSuccess=", encodeURIComponent(httpSuccessString),
-            "&amp;assumeSuccessTimeout=", encodeURIComponent(this.settings.assume_success_timeout),
-            "&amp;params=", encodeURIComponent(paramString),
-            "&amp;filePostName=", encodeURIComponent(this.settings.file_post_name),
-            "&amp;fileTypes=", encodeURIComponent(this.settings.file_types),
-            "&amp;fileTypesDescription=", encodeURIComponent(this.settings.file_types_description),
-            "&amp;fileSizeLimit=", encodeURIComponent(this.settings.file_size_limit),
-            "&amp;fileUploadLimit=", encodeURIComponent(this.settings.file_upload_limit),
-            "&amp;fileQueueLimit=", encodeURIComponent(this.settings.file_queue_limit),
-            "&amp;debugEnabled=", encodeURIComponent(this.settings.debug_enabled),
-            "&amp;buttonImageURL=", encodeURIComponent(this.settings.button_image_url),
-            "&amp;buttonWidth=", encodeURIComponent(this.settings.button_width),
-            "&amp;buttonHeight=", encodeURIComponent(this.settings.button_height),
-            "&amp;buttonText=", encodeURIComponent(this.settings.button_text),
-            "&amp;buttonTextTopPadding=", encodeURIComponent(this.settings.button_text_top_padding),
-            "&amp;buttonTextLeftPadding=", encodeURIComponent(this.settings.button_text_left_padding),
-            "&amp;buttonTextStyle=", encodeURIComponent(this.settings.button_text_style),
-            "&amp;buttonAction=", encodeURIComponent(this.settings.button_action),
-            "&amp;buttonDisabled=", encodeURIComponent(this.settings.button_disabled),
-            "&amp;buttonCursor=", encodeURIComponent(this.settings.button_cursor)
-        ].join("");
+        "&amp;uploadURL=", encodeURIComponent(this.settings.upload_url),
+        "&amp;useQueryString=", encodeURIComponent(this.settings.use_query_string),
+        "&amp;requeueOnError=", encodeURIComponent(this.settings.requeue_on_error),
+        "&amp;httpSuccess=", encodeURIComponent(httpSuccessString),
+        "&amp;assumeSuccessTimeout=", encodeURIComponent(this.settings.assume_success_timeout),
+        "&amp;params=", encodeURIComponent(paramString),
+        "&amp;filePostName=", encodeURIComponent(this.settings.file_post_name),
+        "&amp;fileTypes=", encodeURIComponent(this.settings.file_types),
+        "&amp;fileTypesDescription=", encodeURIComponent(this.settings.file_types_description),
+        "&amp;fileSizeLimit=", encodeURIComponent(this.settings.file_size_limit),
+        "&amp;fileUploadLimit=", encodeURIComponent(this.settings.file_upload_limit),
+        "&amp;fileQueueLimit=", encodeURIComponent(this.settings.file_queue_limit),
+        "&amp;debugEnabled=", encodeURIComponent(this.settings.debug_enabled),
+        "&amp;buttonImageURL=", encodeURIComponent(this.settings.button_image_url),
+        "&amp;buttonWidth=", encodeURIComponent(this.settings.button_width),
+        "&amp;buttonHeight=", encodeURIComponent(this.settings.button_height),
+        "&amp;buttonText=", encodeURIComponent(this.settings.button_text),
+        "&amp;buttonTextTopPadding=", encodeURIComponent(this.settings.button_text_top_padding),
+        "&amp;buttonTextLeftPadding=", encodeURIComponent(this.settings.button_text_left_padding),
+        "&amp;buttonTextStyle=", encodeURIComponent(this.settings.button_text_style),
+        "&amp;buttonAction=", encodeURIComponent(this.settings.button_action),
+        "&amp;buttonDisabled=", encodeURIComponent(this.settings.button_disabled),
+        "&amp;buttonCursor=", encodeURIComponent(this.settings.button_cursor)
+    ].join("");
 };
 
 // Public: getMovieElement retrieves the DOM reference to the Flash element added by SWFUpload
@@ -306,14 +306,14 @@ SWFUpload.prototype.getMovieElement = function () {
     if (this.movieElement === null) {
         throw "Could not find Flash element";
     }
-    
+
     return this.movieElement;
 };
 
 // Private: buildParamString takes the name/value pairs in the post_params setting object
 // and joins them up in to a string formatted "name=value&amp;name=value"
 SWFUpload.prototype.buildParamString = function () {
-    var postParams = this.settings.post_params; 
+    var postParams = this.settings.post_params;
     var paramStringPairs = [];
 
     if (typeof(postParams) === "object") {
@@ -335,10 +335,10 @@ SWFUpload.prototype.destroy = function () {
     try {
         // Make sure Flash is done before we try to remove it
         this.cancelUpload(null, false);
-        
+
         // Stop the external interface check from running
         this.callFlash("StopExternalInterfaceCheck");
-        
+
         var movieElement = this.cleanUp();
 
         // Remove the SWFUpload DOM nodes
@@ -346,7 +346,8 @@ SWFUpload.prototype.destroy = function () {
             // Remove the Movie Element from the page
             try {
                 movieElement.parentNode.removeChild(movieElement);
-            } catch (ex) {}
+            } catch (ex) {
+            }
         }
 
         // Remove IE form fix reference
@@ -361,8 +362,8 @@ SWFUpload.prototype.destroy = function () {
         this.customSettings = null;
         this.eventQueue = null;
         this.movieName = null;
-        
-        
+
+
         return true;
     } catch (ex2) {
         return false;
@@ -427,8 +428,8 @@ SWFUpload.prototype.displayDebugInfo = function () {
 };
 
 /* Note: addSetting and getSetting are no longer used by SWFUpload but are included
-    the maintain v2 API compatibility
-*/
+ the maintain v2 API compatibility
+ */
 // Public: (Deprecated) addSetting adds a setting value. If the value given is undefined or null then the default_value is used.
 SWFUpload.prototype.addSetting = function (name, value, default_value) {
     if (value == undefined) {
@@ -448,13 +449,12 @@ SWFUpload.prototype.getSetting = function (name) {
 };
 
 
-
 // Private: callFlash handles function calls made to the Flash element.
 // Calls are made with a setTimeout for some functions to work around
 // bugs in the ExternalInterface library.
 SWFUpload.prototype.callFlash = function (functionName, argumentArray) {
     argumentArray = argumentArray || [];
-    
+
     var movieElement = this.getMovieElement();
     var returnValue, returnString;
 
@@ -465,7 +465,7 @@ SWFUpload.prototype.callFlash = function (functionName, argumentArray) {
     } catch (ex) {
         throw "Call to " + functionName + " failed";
     }
-    
+
     // Unescape file post param values
     if (returnValue != undefined && typeof returnValue.post === "object") {
         returnValue = this.unescapeFilePostParams(returnValue);
@@ -475,10 +475,10 @@ SWFUpload.prototype.callFlash = function (functionName, argumentArray) {
 };
 
 /* *****************************
-    -- Flash control methods --
-    Your UI should use these
-    to operate SWFUpload
-   ***************************** */
+ -- Flash control methods --
+ Your UI should use these
+ to operate SWFUpload
+ ***************************** */
 
 // WARNING: this function does not work in Flash Player 10
 // Public: selectFile causes a File Selection Dialog window to appear.  This
@@ -499,7 +499,7 @@ SWFUpload.prototype.selectFiles = function () {
 
 
 // Public: startUpload starts uploading the first file in the queue unless
-// the optional parameter 'fileID' specifies the ID 
+// the optional parameter 'fileID' specifies the ID
 SWFUpload.prototype.startUpload = function (fileID) {
     this.callFlash("StartUpload", [fileID]);
 };
@@ -542,7 +542,7 @@ SWFUpload.prototype.getStats = function () {
     return this.callFlash("GetStats");
 };
 
-// Public: setStats changes the SWFUpload statistics.  You shouldn't need to 
+// Public: setStats changes the SWFUpload statistics.  You shouldn't need to
 // change the statistics but you can.  Changing the statistics does not
 // affect SWFUpload accept for the successful_uploads count which is used
 // by the upload_limit setting to determine how many files the user may upload.
@@ -645,7 +645,7 @@ SWFUpload.prototype.setHTTPSuccess = function (http_status_codes) {
     if (typeof http_status_codes === "string") {
         http_status_codes = http_status_codes.replace(" ", "").split(",");
     }
-    
+
     this.settings.http_success = http_status_codes;
     this.callFlash("SetHTTPSuccess", [http_status_codes]);
 };
@@ -667,7 +667,7 @@ SWFUpload.prototype.setButtonImageURL = function (buttonImageURL) {
     if (buttonImageURL == undefined) {
         buttonImageURL = "";
     }
-    
+
     this.settings.button_image_url = buttonImageURL;
     this.callFlash("SetButtonImageURL", [buttonImageURL]);
 };
@@ -676,13 +676,13 @@ SWFUpload.prototype.setButtonImageURL = function (buttonImageURL) {
 SWFUpload.prototype.setButtonDimensions = function (width, height) {
     this.settings.button_width = width;
     this.settings.button_height = height;
-    
+
     var movie = this.getMovieElement();
     if (movie != undefined) {
         movie.style.width = width + "px";
         movie.style.height = height + "px";
     }
-    
+
     this.callFlash("SetButtonDimensions", [width, height]);
 };
 // Public: setButtonText Changes the text overlaid on the button
@@ -720,39 +720,39 @@ SWFUpload.prototype.setButtonCursor = function (cursor) {
 };
 
 /* *******************************
-    Flash Event Interfaces
-    These functions are used by Flash to trigger the various
-    events.
-    
-    All these functions a Private.
-    
-    Because the ExternalInterface library is buggy the event calls
-    are added to a queue and the queue then executed by a setTimeout.
-    This ensures that events are executed in a determinate order and that
-    the ExternalInterface bugs are avoided.
-******************************* */
+ Flash Event Interfaces
+ These functions are used by Flash to trigger the various
+ events.
+
+ All these functions a Private.
+
+ Because the ExternalInterface library is buggy the event calls
+ are added to a queue and the queue then executed by a setTimeout.
+ This ensures that events are executed in a determinate order and that
+ the ExternalInterface bugs are avoided.
+ ******************************* */
 
 SWFUpload.prototype.queueEvent = function (handlerName, argumentArray) {
     // Warning: Don't call this.debug inside here or you'll create an infinite loop
-    
+
     if (argumentArray == undefined) {
         argumentArray = [];
     } else if (!(argumentArray instanceof Array)) {
         argumentArray = [argumentArray];
     }
-    
+
     var self = this;
     if (typeof this.settings[handlerName] === "function") {
         // Queue the event
         this.eventQueue.push(function () {
             this.settings[handlerName].apply(this, argumentArray);
         });
-        
+
         // Execute the next queued event
         setTimeout(function () {
             self.executeNextEvent();
         }, 0);
-        
+
     } else if (this.settings[handlerName] !== null) {
         throw "Event handler " + handlerName + " is unknown or is not a function";
     }
@@ -763,7 +763,7 @@ SWFUpload.prototype.queueEvent = function (handlerName, argumentArray) {
 SWFUpload.prototype.executeNextEvent = function () {
     // Warning: Don't call this.debug inside here or you'll create an infinite loop
 
-    var  f = this.eventQueue ? this.eventQueue.shift() : null;
+    var f = this.eventQueue ? this.eventQueue.shift() : null;
     if (typeof(f) === "function") {
         f.apply(this);
     }
@@ -816,7 +816,7 @@ SWFUpload.prototype.flashReady = function () {
     }
 
     this.cleanUp();
-    
+
     this.queueEvent("swfupload_loaded_handler");
 };
 
@@ -824,7 +824,7 @@ SWFUpload.prototype.flashReady = function () {
 // This function is called by Flash each time the ExternalInterface functions are created.
 SWFUpload.prototype.cleanUp = function () {
     var movieElement = this.getMovieElement();
-    
+
     // Pro-actively unhook all the Flash functions
     try {
         if (movieElement && typeof(movieElement.CallFunction) === "unknown") { // We only want to do this in IE
@@ -839,7 +839,7 @@ SWFUpload.prototype.cleanUp = function () {
             }
         }
     } catch (ex1) {
-    
+
     }
 
     // Fix Flashes own cleanup code so if the SWF Movie was removed from the page
@@ -850,10 +850,10 @@ SWFUpload.prototype.cleanUp = function () {
                 instance[name] = null;
             }
         } catch (flashEx) {
-        
+
         }
     };
-    
+
     return movieElement;
 };
 
@@ -882,7 +882,7 @@ SWFUpload.prototype.fileQueueError = function (file, errorCode, message) {
 };
 
 /* Called after the file dialog has closed and the selected files have been queued.
-    You could call startUpload here if you want the queued files to begin uploading immediately. */
+ You could call startUpload here if you want the queued files to begin uploading immediately. */
 SWFUpload.prototype.fileDialogComplete = function (numFilesSelected, numFilesQueued, numFilesInQueue) {
     this.queueEvent("file_dialog_complete_handler", [numFilesSelected, numFilesQueued, numFilesInQueue]);
 };
@@ -906,12 +906,11 @@ SWFUpload.prototype.returnUploadStart = function (file) {
     if (returnValue === undefined) {
         returnValue = true;
     }
-    
+
     returnValue = !!returnValue;
-    
+
     this.callFlash("ReturnUploadStart", [returnValue]);
 };
-
 
 
 SWFUpload.prototype.uploadProgress = function (file, bytesComplete, bytesTotal) {
@@ -935,25 +934,25 @@ SWFUpload.prototype.uploadComplete = function (file) {
 };
 
 /* Called by SWFUpload JavaScript and Flash functions when debug is enabled. By default it writes messages to the
-   internal debug console.  You can override this event and have messages written where you want. */
+ internal debug console.  You can override this event and have messages written where you want. */
 SWFUpload.prototype.debug = function (message) {
     this.queueEvent("debug_handler", message);
 };
 
 
 /* **********************************
-    Debug Console
-    The debug console is a self contained, in page location
-    for debug message to be sent.  The Debug Console adds
-    itself to the body if necessary.
+ Debug Console
+ The debug console is a self contained, in page location
+ for debug message to be sent.  The Debug Console adds
+ itself to the body if necessary.
 
-    The console is automatically scrolled as messages appear.
-    
-    If you are using your own debug handler or when you deploy to production and
-    have debug disabled you can remove these functions to reduce the file size
-    and complexity.
-********************************** */
-   
+ The console is automatically scrolled as messages appear.
+
+ If you are using your own debug handler or when you deploy to production and
+ have debug disabled you can remove these functions to reduce the file size
+ and complexity.
+ ********************************** */
+
 // Private: debugMessage is the default debug_handler.  If you want to print debug messages
 // call the debug() function.  When overriding the function your own function should
 // check to see if the debug setting is true before outputting debug information.

@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,22 +31,22 @@ class LinksController extends Controller
      */
     public function listAction(Request $request)
     {
-        $tid      = $request->get('tid');
+        $tid = $request->get('tid');
         $language = $request->get('language');
-        $version  = $request->get('version');
+        $version = $request->get('version');
         $incoming = $request->get('incoming', false);
 
         $displayLanguage = $language;
 
         $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
-        $siteRootManager       = Makeweb_Siteroots_Siteroot_Manager::getInstance();
-        $treeManager           = Makeweb_Elements_Tree_Manager::getInstance();
+        $siteRootManager = Makeweb_Siteroots_Siteroot_Manager::getInstance();
+        $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
 
         $node = $treeManager->getNodeByNodeID($tid);
 
         $elementVersion = $elementVersionManager->get($node->getEid(), $version);
-        $elementData    = $elementVersion->getData($language);
-        $data           = $elementData->getWrap();
+        $elementData = $elementVersion->getData($language);
+        $data = $elementData->getWrap();
 
         $result = array();
 
@@ -56,7 +56,6 @@ class LinksController extends Controller
             if (empty($node) || empty($node['content'])) {
                 continue;
             }
-            #print_r($node);die;
 
             switch ($node['type']) {
                 case 'image':
@@ -70,19 +69,19 @@ class LinksController extends Controller
                     $documentTypeRepository = MWF_Registry::getContainer()->get('documenttypes.repository');
                     $documentType = $documentTypeRepository->find($node['media']['documenttype']);
 
-                    $imageUrl = $this->_request->getBaseUrl().'/media/'.$node['media']['file_id'];
-                    $content = '<img src="' . $imageUrl. '/_mm_medium" width="48" height="48" style="margin-right: 5px; float: left; padding: 1px; border: 1px solid lightgrey; vertical-align: top" /> '
-                             . $node['media']['name'] . '<br />'
-                             . $documentType->getTitle('en') . '<br />'
-                             . $node['media']['readablesize'];
+                    $imageUrl = $this->_request->getBaseUrl() . '/media/' . $node['media']['file_id'];
+                    $content = '<img src="' . $imageUrl . '/_mm_medium" width="48" height="48" style="margin-right: 5px; float: left; padding: 1px; border: 1px solid lightgrey; vertical-align: top" /> '
+                        . $node['media']['name'] . '<br />'
+                        . $documentType->getTitle('en') . '<br />'
+                        . $node['media']['readablesize'];
 
                     $site = Media_Site_Manager::getInstance()->getByFolderId($node['media']['folder_id']);
                     $folder = $site->getFolderPeer()->getById($node['media']['folder_id']);
                     $folderPath = $folder->getIdPath();
                     $menuItem = new MWF_Core_Menu_Item_Panel();
                     $menuItem->setPanel('Phlexible.mediamanager.MediamanagerPanel')
-                             ->setParam('start_file_id', $node['media']['file_id'])
-                             ->setParam('start_folder_path', $folderPath);
+                        ->setParam('start_file_id', $node['media']['file_id'])
+                        ->setParam('start_folder_path', $folderPath);
 
                     $result[] = array(
                         'id'      => $i++,
@@ -109,7 +108,7 @@ class LinksController extends Controller
                     $folderPath = $folder->getIdPath();
                     $menuItem = new MWF_Core_Menu_Item_Panel();
                     $menuItem->setPanel('Phlexible.mediamanager.MediamanagerPanel')
-                             ->setParam('start_folder_path', $folderPath);
+                        ->setParam('start_folder_path', $folderPath);
 
                     $result[] = array(
                         'id'      => $i++,
@@ -131,19 +130,19 @@ class LinksController extends Controller
 
                         $iconUrl = $elementVersion->getIconUrl($treeNode->getIconParams($language));
                         $icon = '<img src="' . $iconUrl . '" width="18" height="18" style="vertical-align: middle;" />'
-                              . $node['displayContent'];
+                            . $node['displayContent'];
 
                         $menuItem = new MWF_Core_Menu_Item_Panel();
                         $menuItem->setPanel('Makeweb.elements.MainPanel')
-                                 ->setIdentifier('Makeweb_elements_MainPanel_' . $siteRoot->getTitle($language))
-                                 ->setParam('id', $node['link']['id'])
-                                 ->setParam('siteroot_id', $node['link']['siteroot_id'])
-                                 ->setParam('title', $siteRoot->getTitle())
-                                 ->setParam('start_tid_path', '/' . implode('/', $treeNode->getPath()));
+                            ->setIdentifier('Makeweb_elements_MainPanel_' . $siteRoot->getTitle($language))
+                            ->setParam('id', $node['link']['id'])
+                            ->setParam('siteroot_id', $node['link']['siteroot_id'])
+                            ->setParam('title', $siteRoot->getTitle())
+                            ->setParam('start_tid_path', '/' . implode('/', $treeNode->getPath()));
 
                         $link = $menuItem->get();
                     } else {
-                        $link   = null;
+                        $link = null;
                         $content = $node['content'];
                     }
 
@@ -165,25 +164,25 @@ class LinksController extends Controller
             $db = $this->getContainer()->dbPool->read;
 
             $select = $db->select()
-                         ->distinct()
-                         ->from(array('edl' => $db->prefix . 'element_data_language'), array('edl.content'))
-                         ->join(
-                             array('ed' => $db->prefix . 'element_data'),
-                             'edl.eid = ed.eid AND edl.version = ed.version AND edl.data_id = ed.data_id',
-                             array('ed.eid')
-                         )
-                         ->joinLeft(
-                             array('et' => $db->prefix . 'element_tree'),
-                             'et.eid = ed.eid',
-                             array('id AS tid')
-                         )
-                         ->joinLeft(
-                             array('ett' => $db->prefix . 'element_tree_teasers'),
-                             'ett.teaser_eid = ed.eid',
-                             array('id AS teaser_id')
-                         )
-                         ->where('edl.content LIKE ?', 'id:' . $tid . '%')
-                         ->orWhere('edl.content LIKE ?', 'sr:' . $tid . '%');
+                ->distinct()
+                ->from(array('edl' => $db->prefix . 'element_data_language'), array('edl.content'))
+                ->join(
+                    array('ed' => $db->prefix . 'element_data'),
+                    'edl.eid = ed.eid AND edl.version = ed.version AND edl.data_id = ed.data_id',
+                    array('ed.eid')
+                )
+                ->joinLeft(
+                    array('et' => $db->prefix . 'element_tree'),
+                    'et.eid = ed.eid',
+                    array('id AS tid')
+                )
+                ->joinLeft(
+                    array('ett' => $db->prefix . 'element_tree_teasers'),
+                    'ett.teaser_eid = ed.eid',
+                    array('id AS teaser_id')
+                )
+                ->where('edl.content LIKE ?', 'id:' . $tid . '%')
+                ->orWhere('edl.content LIKE ?', 'sr:' . $tid . '%');
 
             $data = $db->fetchAll($select);
 
@@ -194,26 +193,27 @@ class LinksController extends Controller
                     $treeNode = $treeManager->getNodeByNodeId($row['tid']);
                     $siteRoot = $siteRootManager->getByID($treeNode->getSiterootId());
 
-                    $icon = '<img src="'.$elementVersion->getIconUrl($treeNode->getIconParams($language))
-                    .'" width="18" height="18" style="vertical-align: middle;" />';
+                    $icon = '<img src="' . $elementVersion->getIconUrl($treeNode->getIconParams($language))
+                        . '" width="18" height="18" style="vertical-align: middle;" />';
 
-                    $content = $icon . ' '.$elementVersion->getBackendTitle($language).' [' . $row['tid'] . ']';
+                    $content = $icon . ' ' . $elementVersion->getBackendTitle($language) . ' [' . $row['tid'] . ']';
                     $title = 'Incoming TreeNode link';
 
                     $menuItem = new MWF_Core_Menu_Item_Panel();
                     $menuItem->setPanel('Makeweb.elements.MainPanel')
-                             ->setIdentifier('Makeweb_elements_MainPanel_' . $siteRoot->getTitle($language))
-                             ->setParam('id', $treeNode->getId())
-                             ->setParam('siteroot_id', $treeNode->getSiterootId())
-                             ->setParam('title', $siteRoot->getTitle())
-                             ->setParam('start_tid_path', '/' . implode('/', $treeNode->getPath()));
+                        ->setIdentifier('Makeweb_elements_MainPanel_' . $siteRoot->getTitle($language))
+                        ->setParam('id', $treeNode->getId())
+                        ->setParam('siteroot_id', $treeNode->getSiterootId())
+                        ->setParam('title', $siteRoot->getTitle())
+                        ->setParam('start_tid_path', '/' . implode('/', $treeNode->getPath()));
 
                     $link = $menuItem->get();
                 } else {
-                    $icon = '<img src="'.$elementVersion->getIconUrl().
-                    '" width="18" height="18" style="vertical-align: middle;" />';
+                    $icon = '<img src="' . $elementVersion->getIconUrl() .
+                        '" width="18" height="18" style="vertical-align: middle;" />';
 
-                    $content = $icon . ' '.$elementVersion->getBackendTitle($language).' [' . $row['teaser_id'] . ']';
+                    $content = $icon . ' ' . $elementVersion->getBackendTitle($language)
+                        . ' [' . $row['teaser_id'] . ']';
                     $title = 'Incoming Teaser Link';
                     $link = null;
                 }
@@ -248,12 +248,12 @@ class LinksController extends Controller
 
         $db = $this->dbPool->default;
 
-        $language           = $request->get('language', $defaultLanguage);
-        $query              = $request->get('query');
-        $siterootId         = $request->get('siteroot_id');
-        $allowTid           = $request->get('allow_tid');
+        $language = $request->get('language', $defaultLanguage);
+        $query = $request->get('query');
+        $siterootId = $request->get('siteroot_id');
+        $allowTid = $request->get('allow_tid');
         $allowIntrasiteroot = $request->get('allow_intrasiteroot');
-        $elementTypeIds     = $request->get('element_type_ids', '');
+        $elementTypeIds = $request->get('element_type_ids', '');
         if ($elementTypeIds) {
             $elementTypeIds = explode(',', $elementTypeIds);
             foreach ($elementTypeIds as $key => $elementTypeId) {
@@ -263,15 +263,15 @@ class LinksController extends Controller
         }
 
         $where = false;
-        if(!$allowTid || !$allowIntrasiteroot) {
+        if (!$allowTid || !$allowIntrasiteroot) {
             $where = array();
 
             if ($allowTid) {
-                $where[] = 'et.siteroot_id = '.$db->quote($siterootId);
+                $where[] = 'et.siteroot_id = ' . $db->quote($siterootId);
             }
 
             if ($allowIntrasiteroot) {
-                $where[] = 'et.siteroot_id != '.$db->quote($siterootId);
+                $where[] = 'et.siteroot_id != ' . $db->quote($siterootId);
             }
             $where = implode(' OR ', $where);
         }
@@ -279,11 +279,11 @@ class LinksController extends Controller
         $select = $db->select()
             ->distinct()
             ->from(
-                array('et' => $db->prefix.'element_tree'),
+                array('et' => $db->prefix . 'element_tree'),
                 array('id', 'eid', 'siteroot_id')
             )
             ->join(
-                array('evt' => $db->prefix.'element_version_titles'),
+                array('evt' => $db->prefix . 'element_version_titles'),
                 'evt.eid = et.eid AND language = ' . $db->quote($language),
                 array('backend AS title')
             )
@@ -300,7 +300,11 @@ class LinksController extends Controller
         }
 
         if ($elementTypeIds) {
-            $select->join(array('ev' => $db->prefix . 'element_version'), 'et.eid = ev.eid AND ev.element_type_id IN ('.$elementTypeIds.')', array());
+            $select->join(
+                array('ev' => $db->prefix . 'element_version'),
+                'et.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')',
+                array()
+            );
         }
 
         $results1 = $db->fetchAssoc($select);
@@ -308,11 +312,11 @@ class LinksController extends Controller
         $select = $db->select()
             ->distinct()
             ->from(
-                array('et' => $db->prefix.'element_tree'),
+                array('et' => $db->prefix . 'element_tree'),
                 array('id', 'eid', 'siteroot_id')
             )
             ->join(
-                array('evt' => $db->prefix.'element_version_titles'),
+                array('evt' => $db->prefix . 'element_version_titles'),
                 'evt.eid = et.eid AND language = ' . $db->quote($language),
                 array('backend AS title')
             )
@@ -321,7 +325,7 @@ class LinksController extends Controller
                 'evt.eid = e.eid AND evt.version = e.latest_version',
                 array()
             )
-            ->where('evt.backend LIKE ?', '%'.$query.'%')
+            ->where('evt.backend LIKE ?', '%' . $query . '%')
             ->order('title ASC');
 
         if ($where) {
@@ -329,7 +333,11 @@ class LinksController extends Controller
         }
 
         if ($elementTypeIds) {
-            $select->join(array('ev' => $db->prefix . 'element_version'), 'et.eid = ev.eid AND ev.element_type_id IN ('.$elementTypeIds.')', array());
+            $select->join(
+                array('ev' => $db->prefix . 'element_version'),
+                'et.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')',
+                array()
+            );
         }
 
         $results2 = $db->fetchAssoc($select);
@@ -345,7 +353,8 @@ class LinksController extends Controller
                 'id'    => ($siterootId == $row['siteroot_id'] ? 'id' : 'sr') . ':' . $row['id'],
                 'tid'   => $row['id'],
                 'eid'   => $row['eid'],
-                'title' => $siteroots[$row['siteroot_id']]->getTitle($language) . ' :: ' . $row['title'] . ' [' . $row['id'] . ']',
+                'title' => $siteroots[$row['siteroot_id']]->getTitle($language)
+                    . ' :: ' . $row['title'] . ' [' . $row['id'] . ']',
             );
         }
 

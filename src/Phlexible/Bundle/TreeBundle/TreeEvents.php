@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\TreeBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface TreeEvents
+class TreeEvents
 {
     /**
      * Before Create Node Event

@@ -20,10 +20,9 @@ class RenderListener
         // TODO: parameter alle ans template übergeben? erspart callback...
 
         $renderer = $event->getRenderer();
-        $request  = $renderer->getRequest();
+        $request = $renderer->getRequest();
 
-        if ($request->hasParam('fileid'))
-        {
+        if ($request->hasParam('fileid')) {
             $view = $renderer->getView();
             $view->assign('fileid', $request->getParam('fileid'));
         }

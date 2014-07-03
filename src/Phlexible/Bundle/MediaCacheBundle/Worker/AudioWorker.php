@@ -78,14 +78,15 @@ class AudioWorker extends AbstractWorker
      * @param LoggerInterface              $logger
      * @param string                       $tempDir
      */
-    public function __construct(StorageManager $storageManager,
-                                Transmutor $transmutor,
-                                CacheManagerInterface $cacheManager,
-                                DocumenttypeManagerInterface $documenttypeManager,
-                                CacheIdStrategyInterface $cacheIdStrategy,
-                                AudioTemplateApplier $applier,
-                                LoggerInterface $logger,
-                                $tempDir)
+    public function __construct(
+        StorageManager $storageManager,
+        Transmutor $transmutor,
+        CacheManagerInterface $cacheManager,
+        DocumenttypeManagerInterface $documenttypeManager,
+        CacheIdStrategyInterface $cacheIdStrategy,
+        AudioTemplateApplier $applier,
+        LoggerInterface $logger,
+        $tempDir)
     {
         $this->storageManager = $storageManager;
         $this->transmutor = $transmutor;
@@ -126,11 +127,11 @@ class AudioWorker extends AbstractWorker
      */
     private function work(AudioTemplate $template, FileInterface $file, $inputFilename)
     {
-        $site        = $file->getSite();
-        $fileId      = $file->getId();
+        $site = $file->getSite();
+        $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
-        $cacheId      = $this->cacheIdStrategy->createCacheId($template, $file);
+        $cacheId = $this->cacheIdStrategy->createCacheId($template, $file);
         $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $template->getParameter('audio_format');
 
         $cacheItem = $this->cacheManager->find($cacheId);
@@ -154,9 +155,23 @@ class AudioWorker extends AbstractWorker
             ->setCreatedAt(new \DateTime());
 
         if (!file_exists($inputFilename)) {
-            $this->applyError($cacheItem, CacheItem::STATUS_MISSING, 'Input file not found.', $inputFilename, $template, $file);
+            $this->applyError(
+                $cacheItem,
+                CacheItem::STATUS_MISSING,
+                'Input file not found.',
+                $inputFilename,
+                $template,
+                $file
+            );
         } elseif ($this->applier->isAvailable($inputFilename)) {
-            $this->applyError($cacheItem, CacheItem::STATUS_MISSING, 'No suitable audio template applier found.', $inputFilename, $template, $file);
+            $this->applyError(
+                $cacheItem,
+                CacheItem::STATUS_MISSING,
+                'No suitable audio template applier found.',
+                $inputFilename,
+                $template,
+                $file
+            );
         } else {
             $filesystem = new Filesystem();
             if (!$filesystem->exists($this->tempDir)) {

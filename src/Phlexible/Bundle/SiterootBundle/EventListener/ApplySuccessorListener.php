@@ -31,13 +31,16 @@ class ApplySuccessorListener
         $this->siterootManager = $siterootManager;
     }
 
+    /**
+     * @param ApplySuccessorEvent $event
+     */
     public function onApplySuccessor(ApplySuccessorEvent $event)
     {
         $fromUser = $event->getFromUser();
-        $toUser   = $event->getToUser();
+        $toUser = $event->getToUser();
 
         $fromUid = $fromUser->getId();
-        $toUid   = $toUser->getId();
+        $toUid = $toUser->getId();
 
         foreach ($this->siterootManager->findAll() as $siteroot) {
             $changed = false;

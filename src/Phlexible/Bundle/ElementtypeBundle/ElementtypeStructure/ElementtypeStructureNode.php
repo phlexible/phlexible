@@ -15,7 +15,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure;
  */
 class ElementtypeStructureNode
 {
-    const FIELD_TYPE_REFERENCE      = 'reference';
+    const FIELD_TYPE_REFERENCE = 'reference';
     const FIELD_TYPE_REFERENCE_ROOT = 'referenceroot';
 
     /**
@@ -377,6 +377,7 @@ class ElementtypeStructureNode
 
     /**
      * @param array|string $labels
+     *
      * @return $this
      */
     public function setLabels($labels)
@@ -450,6 +451,7 @@ class ElementtypeStructureNode
 
     /**
      * @param array|null $contentChannels
+     *
      * @return $this
      */
     public function setContentChannels(array $contentChannels = null)

@@ -1,51 +1,51 @@
 /*jsl:ignoreall*/
 Ext.namespace('Ext.ux');
-    
-Ext.ux.InlineToolbarTabPanel = function(config) {
+
+Ext.ux.InlineToolbarTabPanel = function (config) {
     Ext.apply(this, config);
     this.id = this.getId();
     this.config = config;
     this.tbarsWidth = 0;
     Ext.ux.InlineToolbarTabPanel.superclass.constructor.call(this, config);
 };
-    
-    // plugin code
+
+// plugin code
 Ext.extend(Ext.ux.InlineToolbarTabPanel, Ext.TabPanel, {
-    
-    getScrollArea : function(){
+
+    getScrollArea: function () {
         this.tbarsWidth = 0
-        for (var i=0;i<this.config.toolbars.length;i++) {
+        for (var i = 0; i < this.config.toolbars.length; i++) {
             this.tbarsWidth += this.config.toolbars[i].width;
         }
-        var newScrollArea = this.el.dom.clientWidth-this.tbarsWidth;
+        var newScrollArea = this.el.dom.clientWidth - this.tbarsWidth;
         return parseInt(newScrollArea, 10) || 0;
     },
-    
-    afterRender : function() {
+
+    afterRender: function () {
         Ext.ux.InlineToolbarTabPanel.superclass.afterRender.call(this);
         this.renderToolbar();
     },
-    
-    onResize : function(w, h) {
+
+    onResize: function (w, h) {
         Ext.ux.InlineToolbarTabPanel.superclass.onResize.call(this, w, h);
         this.renderToolbar();
     },
-    
-    autoSizeTabs : function () {
+
+    autoSizeTabs: function () {
         Ext.ux.InlineToolbarTabPanel.superclass.autoSizeTabs.call(this);
         this.renderToolbar();
     },
-    
-    autoScrollTabs :  function () {
+
+    autoScrollTabs: function () {
         Ext.ux.InlineToolbarTabPanel.superclass.autoScrollTabs.call(this);
         this.renderToolbar();
     },
-    
-    getToolbar: function() {
+
+    getToolbar: function () {
         return this.toolbar.getTopToolbar();
     },
-    
-    renderToolbar: function(){
+
+    renderToolbar: function () {
         for (var i = 0; i < this.config.toolbars.length; i++) {
             var tbar = this.config.toolbars[i];
             var toolbarDiv = tbar.id || this.id + 'Toolbar' + i;
@@ -81,4 +81,4 @@ Ext.extend(Ext.ux.InlineToolbarTabPanel, Ext.TabPanel, {
         }
     }
 });
-Ext.reg('inlinetoolbartabpanel',Ext.ux.InlineToolbarTabPanel)  
+Ext.reg('inlinetoolbartabpanel', Ext.ux.InlineToolbarTabPanel)

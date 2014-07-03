@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\Element;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\ElementBundle\ElementsMessage;
+use Phlexible\Component\Database\ConnectionManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -23,6 +23,7 @@ class ElementRepository
      * @var EventDispatcherInterface
      */
     private $dispatcher;
+
     /**
      * @var \Zend_Db_Adapter_Abstract
      */
@@ -51,8 +52,7 @@ class ElementRepository
         $select = $this->db
             ->select()
             ->from($this->db->prefix . 'element')
-            ->where('eid = ?', $eid)
-        ;
+            ->where('eid = ?', $eid);
 
         $row = $this->db->fetchRow($select);
 
@@ -77,8 +77,7 @@ class ElementRepository
     {
         $select = $this->db
             ->select()
-            ->from($this->db->prefix . 'element')
-        ;
+            ->from($this->db->prefix . 'element');
 
         foreach ($criteria as $key => $value) {
             if (is_array($value)) {
@@ -142,8 +141,7 @@ class ElementRepository
             ->setMasterLanguage($row['masterlanguage'])
             ->setLatestVersion($row['latest_version'])
             ->setCreatedAt(new \DateTime($row['create_time']))
-            ->setCreateUserId($row['create_user_id'])
-        ;
+            ->setCreateUserId($row['create_user_id']);
 
         $this->map[$row['eid']] = $element;
 
@@ -154,6 +152,7 @@ class ElementRepository
      * Find element by unique ID
      *
      * @param string $uniqueId
+     *
      * @throws \Exception
      *
      * @return Element
@@ -163,8 +162,7 @@ class ElementRepository
         $select = $this->db
             ->select()
             ->from($this->db->prefix . 'element')
-            ->where('unique_id = ?', $uniqueId)
-        ;
+            ->where('unique_id = ?', $uniqueId);
 
         $row = $this->db->fetchRow($select);
 
@@ -186,8 +184,7 @@ class ElementRepository
     {
         if (!$element->getEid()) {
             $event = new BeforeCreateEvent($element);
-            if (!$this->dispatcher->dispatch($event))
-            {
+            if (!$this->dispatcher->dispatch($event)) {
                 throw new \Exception('Create canceled by callback.');
             }
 
@@ -198,13 +195,13 @@ class ElementRepository
             $this->dispatcher->dispatch($event);
 
             // post message
-            $message = new ElementtypesMessage('Element Type "'.$elementtype->getId().' created.');
+            $message = new ElementtypesMessage('Element Type "' . $elementtype->getId() . ' created.');
             $message->post();
         } else {
             $this->loader->update($element);
 
             // post message
-            $message = new ElementtypesMessage('Element Type "'.$elementtype->getId().' updated.');
+            $message = new ElementtypesMessage('Element Type "' . $elementtype->getId() . ' updated.');
             $message->post();
         }
 
@@ -215,6 +212,7 @@ class ElementRepository
      * Delete element
      *
      * @param Element $element
+     *
      * @return $this
      * @throws \Exception
      */
@@ -222,58 +220,53 @@ class ElementRepository
     {
         // post before event
         $event = new BeforeDeleteEvent($elementtype);
-        if (!$this->dispatcher->dispatch($event))
-        {
+        if (!$this->dispatcher->dispatch($event)) {
             throw new \Exception('Delete canceled by listener.');
         }
 
         $delete = true;
 
-        if ($elementtype->getType() == ElementtypeVersion::TYPE_REFERENCE)
-        {
+        if ($elementtype->getType() == ElementtypeVersion::TYPE_REFERENCE) {
             $db = MWF_Registry::getContainer()->dbPool->default;
             $select = $db->select()
-                         ->distinct()
-                         ->from($db->prefix.'elementtype_structure', array('element_type_id', new Zend_Db_Expr('MAX(version) AS max_version')))
-                         ->where('reference_id = ?', $elementtype->getId())
-                         ->group('element_type_id');
+                ->distinct()
+                ->from(
+                    $db->prefix . 'elementtype_structure',
+                    array('element_type_id', new Zend_Db_Expr('MAX(version) AS max_version'))
+                )
+                ->where('reference_id = ?', $elementtype->getId())
+                ->group('element_type_id');
 
             $result = $db->fetchAll($select);
 
-            if (count($result))
-            {
+            if (count($result)) {
                 $delete = false;
 
                 $select = $db->select()
-                             ->from($db->prefix . 'elementtype', 'latest_version')
-                             ->where('element_type_id = ?');
+                    ->from($db->prefix . 'elementtype', 'latest_version')
+                    ->where('element_type_id = ?');
 
-                foreach($result as $row)
-                {
+                foreach ($result as $row) {
                     $latestElementTypeVersion = $db->fetchOne($select, $row['element_type_id']);
 
-                    if ($latestElementTypeVersion == $row['max_version'])
-                    {
+                    if ($latestElementTypeVersion == $row['max_version']) {
                         throw new \Exception('Reference in use, can\'t delete.');
                     }
                 }
             }
         }
 
-        if ($delete)
-        {
+        if ($delete) {
             $this->loader->delete($elementtype);
 
             // send message
-            $message = new ElementsMessage('Element type "'.$elementtype->getId().'" deleted.');
+            $message = new ElementsMessage('Element type "' . $elementtype->getId() . '" deleted.');
             $message->post();
-        }
-        else
-        {
+        } else {
             $this->loader->softDelete($elementtype);
 
             // send message
-            $message = new ElementsMessage('Element type "'.$elementtype->getId().'" soft deleted.');
+            $message = new ElementsMessage('Element type "' . $elementtype->getId() . '" soft deleted.');
             $message->post();
         }
 

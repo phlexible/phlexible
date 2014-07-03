@@ -35,13 +35,10 @@ class LoadPortlet extends Portlet
      */
     public function getData()
     {
-        if (function_exists('sys_getloadavg'))
-        {
+        if (function_exists('sys_getloadavg')) {
             $data = sys_getloadavg();
-        }
-        else
-        {
-            $data = array(0,0,0);
+        } else {
+            $data = array(0, 0, 0);
         }
 
         return $data;

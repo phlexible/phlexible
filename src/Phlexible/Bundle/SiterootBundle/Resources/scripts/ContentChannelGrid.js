@@ -4,28 +4,33 @@ Phlexible.siteroots.ContentChannelGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     iconCls: 'p-contentchannels-component-icon',
     border: false,
 
-    initComponent: function(){
+    initComponent: function () {
 
         this.store = new Ext.data.SimpleStore({
             fields: Phlexible.siteroots.ContentChannelRecord,
         });
 
-        this.columns = [{
-            header: this.strings.contentchannel_id,
-            hidden: true,
-            dataIndex: 'contentchannel_id'
-        },{
-            header: this.strings.contentchannel,
-            dataIndex: 'contentchannel'
-        }, this.cc1 = new Ext.grid.CheckColumn({
-            header: this.strings.active,
-            dataIndex: 'used',
-            width: 50
-        }), this.cc2 = new Ext.grid.CheckColumn({
-            header: this.strings['default'],
-            dataIndex: 'default',
-            width: 50
-        })];
+        this.columns = [
+            {
+                header: this.strings.contentchannel_id,
+                hidden: true,
+                dataIndex: 'contentchannel_id'
+            },
+            {
+                header: this.strings.contentchannel,
+                dataIndex: 'contentchannel'
+            },
+            this.cc1 = new Ext.grid.CheckColumn({
+                header: this.strings.active,
+                dataIndex: 'used',
+                width: 50
+            }),
+            this.cc2 = new Ext.grid.CheckColumn({
+                header: this.strings['default'],
+                dataIndex: 'default',
+                width: 50
+            })
+        ];
 
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true
@@ -43,7 +48,7 @@ Phlexible.siteroots.ContentChannelGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      * @param {String} title
      * @param {Object} data
      */
-    loadData: function(id, title, data) {
+    loadData: function (id, title, data) {
         this.deletedRecords = [];
         this.store.commitChanges();
 
@@ -53,10 +58,10 @@ Phlexible.siteroots.ContentChannelGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     /**
      * Get the data to be saved.
      */
-    getSaveData: function() {
+    getSaveData: function () {
         // fetch modified records
         var data = [];
-        Ext.each(this.store.getRange(), function(r) {
+        Ext.each(this.store.getRange(), function (r) {
             data.push(r.data);
         });
 

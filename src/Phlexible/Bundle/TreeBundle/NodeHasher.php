@@ -24,8 +24,7 @@ class Makeweb_Elements_Tree_Node_Hash extends Makeweb_Elements_Element_Hash
     {
         $identifier = $tid . '__' . $language . '__' . $version;
 
-        if (!empty($this->_hashes[$identifier]))
-        {
+        if (!empty($this->_hashes[$identifier])) {
             return $this->_hashes[$identifier];
         }
 
@@ -38,10 +37,9 @@ class Makeweb_Elements_Tree_Node_Hash extends Makeweb_Elements_Element_Hash
 
         $hash = $this->_db->fetchOne($select);
 
-        if (!$hash)
-        {
+        if (!$hash) {
             $values = $this->_getHashValuesByTid($tid, $language, $version);
-            $hash   = $this->_createHashFromValues($values);
+            $hash = $this->_createHashFromValues($values);
 
             $insertData = array(
                 'tid'      => $tid,
@@ -62,7 +60,7 @@ class Makeweb_Elements_Tree_Node_Hash extends Makeweb_Elements_Element_Hash
     public function getHashValuesByTid($tid, $language, $version)
     {
         $values = $this->_getHashValuesByTid($tid, $language, $version);
-        $hash   = $this->_createHashFromValues($values);
+        $hash = $this->_createHashFromValues($values);
 
         return array('values' => $values, 'hash' => $hash);
     }
@@ -73,16 +71,19 @@ class Makeweb_Elements_Tree_Node_Hash extends Makeweb_Elements_Element_Hash
             ->from($this->_db->prefix . 'element_tree', array('eid'))
             ->where('id = ?', $tid)
             ->limit(1);
-#echo $selectEid.PHP_EOL;
+        #echo $selectEid.PHP_EOL;
 
         $eid = $this->_db->fetchOne($selectEid);
 
         $selectPage = $this->_db->select()
-            ->from($this->_db->prefix . 'element_tree_page', array('navigation', 'restricted', 'disable_cache', 'cache_lifetime', 'code', 'https'))
+            ->from(
+                $this->_db->prefix . 'element_tree_page',
+                array('navigation', 'restricted', 'disable_cache', 'cache_lifetime', 'code', 'https')
+            )
             ->where('tree_id = ?', $tid)
             ->where('version = ?', $version)
             ->limit(1);
-#echo $selectPage.PHP_EOL;
+        #echo $selectPage.PHP_EOL;
 
         $page = $this->_db->fetchRow($selectPage);
 

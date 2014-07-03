@@ -1,4 +1,4 @@
 Ext.namespace(
-	'Phlexible.security.menuhandle',
-	'Phlexible.security.model'
+    'Phlexible.security.menuhandle',
+    'Phlexible.security.model'
 );

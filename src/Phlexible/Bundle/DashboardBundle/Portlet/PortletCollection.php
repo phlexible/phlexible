@@ -33,16 +33,17 @@ class PortletCollection implements \IteratorAggregate
     /**
      * @param Portlet $portlet
      *
-*@return $this
+     * @return $this
      */
     public function addPortlet(Portlet $portlet)
     {
         $this->portlets[] = $portlet;
+
         return $this;
     }
 
     /**
-     * @return ArrayIterator
+     * @return \ArrayIterator
      */
     public function getIterator()
     {

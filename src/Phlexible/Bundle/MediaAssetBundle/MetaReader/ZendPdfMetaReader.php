@@ -24,7 +24,7 @@ class ZendPdfMetaReader implements MetaReaderInterface
      */
     public function isAvailable()
     {
-       return class_exists('Zend_Pdf');
+        return class_exists('Zend_Pdf');
     }
 
     /**

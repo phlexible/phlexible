@@ -121,8 +121,8 @@ abstract class AbstractView
      */
     public function getNoScript($baseUrl, $appTitle, $projectTitle)
     {
-        $title   = $appTitle . ' - ' . $projectTitle;
-        $text    = 'Javascript is disabled.<br />Please enable it or update your browser to a recent version.';
+        $title = $appTitle . ' - ' . $projectTitle;
+        $text = 'Javascript is disabled.<br />Please enable it or update your browser to a recent version.';
 
         return $this->getHint($title, $text, $baseUrl);
     }

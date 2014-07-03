@@ -11,52 +11,55 @@ Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
 
     key: 'page',
 
-    initComponent: function() {
-        this.items = [{
-        	// 0
-            xtype: 'checkbox',
-            name: 'navigation',
-            hideLabel: true,
-            boxLabel: this.strings.in_navigation
-        },{
-        	// 1
-            xtype: 'checkbox',
-            name: 'restricted',
-            hideLabel: true,
-            boxLabel: this.strings.is_restricted
-        }];
+    initComponent: function () {
+        this.items = [
+            {
+                // 0
+                xtype: 'checkbox',
+                name: 'navigation',
+                hideLabel: true,
+                boxLabel: this.strings.in_navigation
+            },
+            {
+                // 1
+                xtype: 'checkbox',
+                name: 'restricted',
+                hideLabel: true,
+                boxLabel: this.strings.is_restricted
+            }
+        ];
 
         if (Phlexible.User.isGranted('elements_accordion_page_advanced')) {
             this.items.push({
-            	// 3
+                // 3
                 xtype: 'checkbox',
                 name: 'disable_cache',
                 hideLabel: true,
                 boxLabel: this.strings.disable_caching,
                 listeners: {
-                	check: {
-                		fn: function(c, state) {
-                			this.getComponent(4).setDisabled(state);
-                		},
-                		scope: this
-                	}
+                    check: {
+                        fn: function (c, state) {
+                            this.getComponent(4).setDisabled(state);
+                        },
+                        scope: this
+                    }
                 }
             });
             this.items.push({
-            	// 4
+                // 4
                 xtype: 'numberfield',
                 name: 'cache_lifetime',
                 fieldLabel: this.strings.cache_lifetime
             });
             this.items.push({
-            	// 5
+                // 5
                 xtype: 'checkbox',
                 name: 'https',
                 hideLabel: true,
                 boxLabel: this.strings.use_https
             });
             this.items.push({
-            	// 6
+                // 6
                 xtype: 'combo',
                 hiddenName: 'code',
                 fieldLabel: this.strings.http_response_code,
@@ -84,8 +87,8 @@ Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
         Phlexible.frontend.accordion.Page.superclass.initComponent.call(this);
     },
 
-    load: function(data) {
-        if(data.properties.et_type == 'structure' || data.properties.et_type == 'part') {
+    load: function (data) {
+        if (data.properties.et_type == 'structure' || data.properties.et_type == 'part') {
             this.hide();
             return;
         }
@@ -101,13 +104,13 @@ Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
         this.getForm().loadRecord(new Ext.data.Record(page));
 
         if (Phlexible.User.isGranted('elements_accordion_page_advanced')) {
-    	    this.getComponent(4).setDisabled(this.getComponent(3).getValue());
+            this.getComponent(4).setDisabled(this.getComponent(3).getValue());
         }
 
         this.show();
     },
 
-    getData: function() {
+    getData: function () {
         var form = this.getComponent(0).getForm();
 
         return form.getValues();

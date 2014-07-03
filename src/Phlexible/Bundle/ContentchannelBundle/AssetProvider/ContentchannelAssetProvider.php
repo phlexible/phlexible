@@ -56,12 +56,16 @@ class ContentchannelAssetProvider implements AssetProviderInterface
     {
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate('@PhlexibleContentchannelBundle/Resources/scripts/Definitions.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleContentchannelBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelsGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelForm.js')),
-
-            new FileAsset($this->locator->locate('@PhlexibleContentchannelBundle/Resources/scripts/menuhandle/ContentchannelsHandle.js')),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelsGrid.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelForm.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleContentchannelBundle/Resources/scripts/menuhandle/ContentchannelsHandle.js'
+            )),
         ));
 
         return $collection;

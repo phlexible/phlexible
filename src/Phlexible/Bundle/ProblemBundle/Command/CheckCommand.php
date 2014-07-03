@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\ProblemBundle\Command;
 
 use Phlexible\Bundle\ProblemBundle\ProblemsMessage;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Security\Authentication\Token\PreAuthenticatedToken;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CheckCommand extends  ContainerAwareCommand
+class CheckCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -28,8 +28,7 @@ class CheckCommand extends  ContainerAwareCommand
     {
         $this
             ->setName('problems:check')
-            ->setDescription('Run cached problem checks.')
-        ;
+            ->setDescription('Run cached problem checks.');
     }
 
     /**
@@ -37,7 +36,7 @@ class CheckCommand extends  ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $problemCheckers = $this->getContainer()->get('phlexible_problems.problem_checkers');
+        $problemCheckers = $this->getContainer()->get('phlexible_problem.problem_checkers');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $problemsRepository = $em->getRepository('PhlexibleProblemBundle:Problem');
 
@@ -57,7 +56,7 @@ class CheckCommand extends  ContainerAwareCommand
                 $existingProblemId = $existingProblem->getId();
 
                 if (array_key_exists($existingProblemId, $problemIds)) {
-                    $output->writeln("= ".$existingProblemId);
+                    $output->writeln("= " . $existingProblemId);
                     $existingProblem->setLastCheckedAt(new \DateTime());
                     unset ($problems[$problemIds[$existingProblemId]]);
                     unset ($existingProblems[$existingProblemKey]);

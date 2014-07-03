@@ -7,7 +7,7 @@
  */
 
 namespace Phlexible\Bundle\ElementtypeBundle;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\ElementtypeRepository;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
@@ -15,6 +15,7 @@ use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersionRepository;
 use Phlexible\Bundle\ElementtypeBundle\Viability\ViabilityManager;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 
 /**
  * Elementtype service
@@ -49,10 +50,11 @@ class ElementtypeService
      * @param ElementtypeStructureRepository $elementtypeStructureRepository
      * @param ViabilityManager               $viabilityManager
      */
-    public function __construct(ElementtypeRepository $elementtypeRepository,
-                                ElementtypeVersionRepository $elementtypeVersionRepository,
-                                ElementtypeStructureRepository $elementtypeStructureRepository,
-                                ViabilityManager $viabilityManager)
+    public function __construct(
+        ElementtypeRepository $elementtypeRepository,
+        ElementtypeVersionRepository $elementtypeVersionRepository,
+        ElementtypeStructureRepository $elementtypeStructureRepository,
+        ViabilityManager $viabilityManager)
     {
         $this->elementtypeRepository = $elementtypeRepository;
         $this->elementtypeVersionRepository = $elementtypeVersionRepository;
@@ -76,6 +78,7 @@ class ElementtypeService
      * Find element type by unique ID
      *
      * @param string $uniqueID
+     *
      * @return Elementtype
      */
     public function findElementtypeByUniqueID($uniqueID)
@@ -87,6 +90,7 @@ class ElementtypeService
      * Find element types by type
      *
      * @param string $type
+     *
      * @return Elementtype[]
      */
     public function findElementtypeByType($type)
@@ -112,16 +116,17 @@ class ElementtypeService
     public function findAllElementtypeIDs()
     {
         $ids = array();
-        foreach ($this->findAllElementtypes() as $elementtype)
-        {
+        foreach ($this->findAllElementtypes() as $elementtype) {
             $ids[] = $elementtype->getId();
         }
+
         return $ids;
     }
 
     /**
      * @param Elementtype $elementtype
-     * @param $version
+     * @param             $version
+     *
      * @return ElementtypeVersion
      */
     public function findElementtypeVersion(Elementtype $elementtype, $version)
@@ -133,6 +138,7 @@ class ElementtypeService
 
     /**
      * @param Elementtype $elementtype
+     *
      * @return ElementtypeVersion
      */
     public function findLatestElementtypeVersion(Elementtype $elementtype)
@@ -144,6 +150,7 @@ class ElementtypeService
 
     /**
      * @param Elementtype $elementtype
+     *
      * @return array
      */
     public function getVersions(Elementtype $elementtype)
@@ -153,6 +160,7 @@ class ElementtypeService
 
     /**
      * @param ElementtypeVersion $elementtypeVersion
+     *
      * @return ElementtypeStructure
      */
     public function findElementtypeStructure(ElementtypeVersion $elementtypeVersion)
@@ -225,16 +233,14 @@ class ElementtypeService
             ->setIcon($icon)
             ->setLatestVersion(1)
             ->setCreateUserId($uid)
-            ->setCreatedAt(new \DateTime())
-        ;
+            ->setCreatedAt(new \DateTime());
 
         $elementtypeVersion = new ElementtypeVersion();
         $elementtypeVersion
             ->setElementtype($elementtype)
             ->setVersion(0)
             ->setCreateUserId($elementtype->getCreateUserId())
-            ->setCreatedAt($elementtype->getCreatedAt())
-        ;
+            ->setCreatedAt($elementtype->getCreatedAt());
 
         $this->elementtypeRepository->save($elementtype);
         $this->elementtypeVersionRepository->save($elementtypeVersion);
@@ -250,7 +256,13 @@ class ElementtypeService
      * @param bool                 $hideChildren
      * @param int                  $defaultTab
      */
-    public function createElementtypeVersion(ElementtypeStructure $elementtypeStructure, $uniqueId, $title, $icon, $hideChildren, $defaultTab)
+    public function createElementtypeVersion(
+        ElementtypeStructure $elementtypeStructure,
+        $uniqueId,
+        $title,
+        $icon,
+        $hideChildren,
+        $defaultTab)
     {
         $elementtypeVersion = $elementtypeStructure->getElementtypeVersion();
         $elementtype = $elementtypeVersion->getElementtype();
@@ -261,8 +273,7 @@ class ElementtypeService
             ->setIcon($icon)
             ->setHideChildren($hideChildren)
             ->setDefaultTab($defaultTab)
-            ->setLatestVersion($elementtypeVersion->getVersion())
-        ;
+            ->setLatestVersion($elementtypeVersion->getVersion());
 
         $this->elementtypeVersionRepository->save($elementtypeVersion);
         $this->elementtypeRepository->save($elementtype);
@@ -278,18 +289,18 @@ class ElementtypeService
     {
         $elementtype = $this->find($elementTypeId);
         $this->elementtypeRepository->delete($elementtype);
+
         return;
 
         $dispatcher = Brainbits_Event_Dispatcher::getInstance();
         $db = MWF_Registry::getContainer()->dbPool->default;
 
-        $elementType        = $this->getById($elementTypeId);
+        $elementType = $this->getById($elementTypeId);
         $elementTypeVersion = $elementType->getLatest();
 
         // post before event
         $event = new BeforeDeleteEvent($elementType);
-        if (!$dispatcher->dispatch(ElementtypeEvents::BEFORE_DELETE, $event))
-        {
+        if (!$dispatcher->dispatch(ElementtypeEvents::BEFORE_DELETE, $event)) {
             throw new ElementtypeException(
                 'Delete canceled by callback.'
             );
@@ -297,30 +308,29 @@ class ElementtypeService
 
         $delete = true;
 
-        if ($elementType->getType() == Elementtype::TYPE_REFERENCE)
-        {
+        if ($elementType->getType() == Elementtype::TYPE_REFERENCE) {
             $select = $db->select()
-                         ->distinct()
-                         ->from($db->prefix.'elementtype_structure', array('elementtype_id', $db->fn->expr('MAX(version) AS max_version')))
-                         ->where('reference_id = ?', $elementTypeId)
-                         ->group('elementtype_id');
+                ->distinct()
+                ->from(
+                    $db->prefix . 'elementtype_structure',
+                    array('elementtype_id', $db->fn->expr('MAX(version) AS max_version'))
+                )
+                ->where('reference_id = ?', $elementTypeId)
+                ->group('elementtype_id');
 
             $result = $db->fetchAll($select);
 
-            if (count($result))
-            {
+            if (count($result)) {
                 $delete = false;
 
                 $select = $db->select()
-                             ->from($db->prefix . 'elementtype', 'latest_version')
-                             ->where('elementtype_id = ?');
+                    ->from($db->prefix . 'elementtype', 'latest_version')
+                    ->where('elementtype_id = ?');
 
-                foreach($result as $row)
-                {
+                foreach ($result as $row) {
                     $latestElementTypeVersion = $db->fetchOne($select, $row['elementtype_id']);
 
-                    if ($latestElementTypeVersion == $row['max_version'])
-                    {
+                    if ($latestElementTypeVersion == $row['max_version']) {
                         throw new ElementtypeException('Reference in use, can\'t delete.');
                     }
                 }
@@ -340,8 +350,7 @@ class ElementtypeService
         $elementtype = clone $sourceElementtype;
         $elementtype
             ->setId(null)
-            ->setUniqueId($elementtype->getUniqueId() . '_' . Uuid::generate())
-        ;
+            ->setUniqueId($elementtype->getUniqueId() . '_' . Uuid::generate());
 
         $this->elementtypeRepository->save($elementtype);
 
@@ -351,14 +360,14 @@ class ElementtypeService
         return $elementtypeVersion;
     }
 
-    public function copyElementtypeVersion(ElementtypeVersion $sourceElementtypeVersion,
-                                           Elementtype $targetElementtype)
+    public function copyElementtypeVersion(
+        ElementtypeVersion $sourceElementtypeVersion,
+        Elementtype $targetElementtype)
     {
         $elementtypeVersion = clone $sourceElementtypeVersion;
         $elementtypeVersion
             ->setElementtype($targetElementtype)
-            ->setVersion(1)
-        ;
+            ->setVersion(1);
 
         $this->elementtypeVersionRepository->save($elementtypeVersion);
 
@@ -373,8 +382,7 @@ class ElementtypeService
                 ->setDsId($newDsId)
                 ->setParentDsId($dsIdMap[$node->getParentDsId()])
                 ->setModifyUid($uid)
-                ->setModifyTime(new \DateTime())
-            ;
+                ->setModifyTime(new \DateTime());
         }
 
         $navigation = $elementtypeVersion->getNavigation();

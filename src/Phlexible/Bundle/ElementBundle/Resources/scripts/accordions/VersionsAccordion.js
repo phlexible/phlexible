@@ -12,7 +12,7 @@ Phlexible.elements.accordion.Versions = Ext.extend(Ext.grid.GridPanel, {
         forceFit: true
     },
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.JsonStore({
             fields: [
                 {name: 'version', type: 'int'},
@@ -23,50 +23,53 @@ Phlexible.elements.accordion.Versions = Ext.extend(Ext.grid.GridPanel, {
             id: 'version'
         });
 
-        this.columns = [{
-            header: this.strings.version,
-            dataIndex: 'version',
-            width: 40,
-            renderer: function(v, md, r) {
-                if (this.element.data.properties.online_version == r.data.version) {
-                    md.attr += 'style="font-weight: bold;"';
-                }
-                if (r.data.was_published) {
-                    md.attr += 'style="font-style: italic;"';
-                }
-                return v;
-            }.createDelegate(this)
-        },{
-            header: this.strings.date,
-            dataIndex: 'create_date',
-            width: 80,
-            renderer: function(v, md, r) {
-                if (this.element.data.properties.online_version == r.data.version) {
-                    md.attr += 'style="font-weight: bold;"';
-                }
-                if (r.data.was_published) {
-                    md.attr += 'style="font-style: italic;"';
-                }
-                return v.format('Y-m-d H:i:s');
-            }.createDelegate(this)
-        }];
+        this.columns = [
+            {
+                header: this.strings.version,
+                dataIndex: 'version',
+                width: 40,
+                renderer: function (v, md, r) {
+                    if (this.element.data.properties.online_version == r.data.version) {
+                        md.attr += 'style="font-weight: bold;"';
+                    }
+                    if (r.data.was_published) {
+                        md.attr += 'style="font-style: italic;"';
+                    }
+                    return v;
+                }.createDelegate(this)
+            },
+            {
+                header: this.strings.date,
+                dataIndex: 'create_date',
+                width: 80,
+                renderer: function (v, md, r) {
+                    if (this.element.data.properties.online_version == r.data.version) {
+                        md.attr += 'style="font-weight: bold;"';
+                    }
+                    if (r.data.was_published) {
+                        md.attr += 'style="font-style: italic;"';
+                    }
+                    return v.format('Y-m-d H:i:s');
+                }.createDelegate(this)
+            }
+        ];
 
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true
         });
 
         this.on({
-            rowdblclick: function(grid, index) {
-				var r = this.store.getAt(index);
-				this.fireEvent('loadVersion', r.get('version'));
-			},
-			scope: this
+            rowdblclick: function (grid, index) {
+                var r = this.store.getAt(index);
+                this.fireEvent('loadVersion', r.get('version'));
+            },
+            scope: this
         });
 
         Phlexible.elements.accordion.Versions.superclass.initComponent.call(this);
     },
 
-    load: function(data, element) {
+    load: function (data, element) {
         this.element = element;
 
         this.setTitle(this.strings.versions + ' [' + data.versions.length + ']');
@@ -76,7 +79,7 @@ Phlexible.elements.accordion.Versions = Ext.extend(Ext.grid.GridPanel, {
         this.version = data.properties.version;
 
         var r = this.store.getById(this.version);
-        if(r) {
+        if (r) {
             this.getSelectionModel().selectRecords([r]);
         }
     }

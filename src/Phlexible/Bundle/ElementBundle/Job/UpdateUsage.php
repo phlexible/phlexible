@@ -47,13 +47,13 @@ class UpdateUsageJob extends ContainerAwareJob
         $fileUsage = new Makeweb_Elements_Element_FileUsage($dbPool);
         $cnt = $fileUsage->update($eid);
 
-        $output .= 'Files: Deleted '.$cnt['delete'].', inserted '.$cnt['insert'].' rows.';
+        $output .= 'Files: Deleted ' . $cnt['delete'] . ', inserted ' . $cnt['insert'] . ' rows.';
         $output .= PHP_EOL;
 
         $folderUsage = new Makeweb_Elements_Element_FolderUsage($dbPool);
         $cnt = $folderUsage->update($eid);
 
-        $output .= 'Folders: Deleted '.$cnt['delete'].', inserted '.$cnt['insert'].' rows.';
+        $output .= 'Folders: Deleted ' . $cnt['delete'] . ', inserted ' . $cnt['insert'] . ' rows.';
 
         return $output;
     }

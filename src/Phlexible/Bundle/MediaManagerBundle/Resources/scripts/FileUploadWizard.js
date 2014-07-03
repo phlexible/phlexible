@@ -12,9 +12,9 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
     files: [],
     meta: [],
 
-    initComponent: function() {
+    initComponent: function () {
         var files = [];
-        for(var i=0; i<this.files.length; i++) {
+        for (var i = 0; i < this.files.length; i++) {
             files.push([
                 this.files[i].temp_key,
                 this.files[i].temp_id,
@@ -39,277 +39,310 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
             fields: ['set_id', 'key', 'tkey', 'value_de', 'value_en', 'type', 'required', 'synchronized', 'options']
         });
 
-        this.items = [{
-            xtype: 'grid',
-            title: 'Uploaded files',
-            region: 'north',
-            height: 120,
-            collapsible: true,
-            store: this.filesStore,
-            autoExpandColumn: 1,
-            columns: [{
-                header: '&nbsp;',
-                width: 30,
-                renderer: function(v, md, r, rowIndex) {
-                    if (rowIndex === 0) {
-                        v = Phlexible.inlineIcon('p-mediamanager-wizard_current-icon');
-                    } else {
-                        v = '';
-                    }
-
-                    return v;
-                }
-            },{
-                header: 'Name',
-                dataIndex: 'name',
-                renderer: function(v) {
-                    return v.shorten(80);
-                }
-            },{
-                header: '&nbsp;',
-                width: 30,
-                dataIndex: 'conflict',
-                renderer: function(v, md, r) {
-                    if (v) {
-                        v = Phlexible.inlineIcon('p-mediamanager-wizard_conflict-icon');
-                    } else {
-                        v = '';
-                    }
-
-                    return v;
-                }
-            },{
-                header: 'Type',
-                dataIndex: 'type',
-                width: 120,
-                renderer: function(v) {
-                    return Phlexible.documenttypes.DocumentTypes.getText(v);
-                }
-            },{
-                header: 'Size',
-                dataIndex: 'size',
-                width: 60,
-                renderer: function(v) {
-                    return Phlexible.Format.size(v);
-                }
-            }]
-        },{
-            title: 'Current file',
-            region: 'center',
-            layout: 'border',
-            items: [{
-                xtype: 'form',
+        this.items = [
+            {
+                xtype: 'grid',
+                title: 'Uploaded files',
                 region: 'north',
-                height: 80,
-                bodyStyle: 'padding: 5px',
-                labelWidth: 80,
-                border: false,
-                items: [{
-                    border: false,
-                    html: Phlexible.inlineIcon('p-mediamanager-wizard_conflict-icon') + ' <b>A file with this name already exists. Selecting "Keep both files" will save it as:</b>'
-                },{
-                    xtype: 'displayfield',
-                    hideLabel: true,
-                    name: 'altname',
-                    anchor: '-10',
-                    allowBlank: false,
-                    style: 'padding-bottom: 10px;'
-                },{
-                    xtype: 'twincombobox',
-                    fieldLabel: 'MetaSet',
-                    hiddenName: 'metaset',
-                    editable: false,
-                    anchor: '-10',
-                    store: new Ext.data.JsonStore({
-                        url: Phlexible.Router.generate('mediamanager_upload_metasets'),
-                        fields: ['key', 'title'],
-                        root: 'metasets',
-                        autoLoad: true,
-                        listeners: {
-                            load:  {
-                                fn: function() {
-                                    if (this.currentRecord) {
-                                        this.getComponent(1).getComponent(0).getForm().setValues({
-                                            metaset: this.currentRecord.data.parsed.metaset
-                                        });
-                                    }
-                                },
-                                scope: this
-                            }
-                        }
-                    }),
-                    displayField: 'title',
-                    valueField: 'key',
-                    mode: 'remote',
-                    lazyInit: false,
-                    triggerAction: 'all',
-                    listeners: {
-                        select: {
-                            fn: function(combo) {
-                                this.buildMeta(combo.getValue());
-                            },
-                            scope: this
-                        },
-                        clear: {
-                            fn: function(){
-                                this.buildMeta(null);
-                            },
-                            scope: this
-                        }
-                    }
-                }]
-            },{
-                xtype: 'editorgrid',
-                cls: 'p-mediamanager-wizard-meta',
-                region: 'center',
-                autoExpandColumn: 2,
-                stripeRows: true,
-                store: this.metaStore,
-                cm: new Phlexible.gui.grid.TypeColumnModel({
-                    columns: [{
-                        header: 'Key',
-                        dataIndex: 'tkey',
-                        width: 100
-                    },{
+                height: 120,
+                collapsible: true,
+                store: this.filesStore,
+                autoExpandColumn: 1,
+                columns: [
+                    {
                         header: '&nbsp;',
-                        dataIndex: 'required',
                         width: 30,
-                        renderer: function(v) {
-                            return 1 == v
-                                ? Phlexible.inlineIcon('p-mediamanager-wizard_required-icon')
-                                : '';
-                        }
-                    },{
-                        header: 'Value (de)',
-                        dataIndex: 'value_de',
-                        editable: true,
-                        width: 300,
-                        renderer: this.formatField.createDelegate(this)
-                    },{
-                        header: 'Value (en)',
-                        dataIndex: 'value_en',
-                        editable: true,
-                        width: 300,
-                        renderer: this.formatField.createDelegate(this)
-                    }],
-                    store: this.metaStore,
-                    editors: {
-                        textfield: new Ext.form.TextField(),
-                        textarea: new Ext.form.TextArea(),
-                        date: new Ext.form.DateField({
-                            format: 'd.m.Y'
-                        }),
-                        'boolean': new Ext.form.ComboBox({
-                            store: new Ext.data.SimpleStore({
-                                fields: ['value'],
-                                data: [['true'], ['false']]
-                            }),
-                            displayField: 'value',
-                            mode: 'local',
-                            triggerAction: 'all'
-                        }),
-                        select: new Ext.form.ComboBox({
-                            store: new Ext.data.SimpleStore({
-                                fields: ['key', 'value']
-                            }),
-                            valueField: 'key',
-                            displayField: 'value',
-                            mode: 'local',
-                            triggerAction: 'all'
-                        })
-                    },
-                    listeners: {
-                        editorselect: {
-                            fn: function(editor, record) {
-                                if (record.data.type == 'select') {
-                                    editor.field.store.loadData(record.data.options);
-                                }
-                            },
-                            scope: this
-                        }
-                    }
-                }),
-                sm: new Ext.grid.CellSelectionModel(),
-                listeners: {
-                    beforeedit: {
-                        fn: function(e) {
-                            var field          = e.field;
-                            var record         = e.record;
-                            var isSynchronized = (1 == record.get('synchronized'));
-
-                            // skip editing english values if language is synchronized
-                            if ('value_en' === field && isSynchronized) {
-                                return false;
+                        renderer: function (v, md, r, rowIndex) {
+                            if (rowIndex === 0) {
+                                v = Phlexible.inlineIcon('p-mediamanager-wizard_current-icon');
+                            } else {
+                                v = '';
                             }
 
-                            if (e.record.data.type == 'suggest') {
-                                var optionsIndex = 'values_' + field.substring(field.length - 2);
+                            return v;
+                        }
+                    },
+                    {
+                        header: 'Name',
+                        dataIndex: 'name',
+                        renderer: function (v) {
+                            return v.shorten(80);
+                        }
+                    },
+                    {
+                        header: '&nbsp;',
+                        width: 30,
+                        dataIndex: 'conflict',
+                        renderer: function (v, md, r) {
+                            if (v) {
+                                v = Phlexible.inlineIcon('p-mediamanager-wizard_conflict-icon');
+                            } else {
+                                v = '';
+                            }
 
-                                var w = new Phlexible.metasets.MetaSuggestWindow({
-                                    record: record,
-                                    valueField: field,
-                                    optionsField: optionsIndex,
+                            return v;
+                        }
+                    },
+                    {
+                        header: 'Type',
+                        dataIndex: 'type',
+                        width: 120,
+                        renderer: function (v) {
+                            return Phlexible.documenttypes.DocumentTypes.getText(v);
+                        }
+                    },
+                    {
+                        header: 'Size',
+                        dataIndex: 'size',
+                        width: 60,
+                        renderer: function (v) {
+                            return Phlexible.Format.size(v);
+                        }
+                    }
+                ]
+            },
+            {
+                title: 'Current file',
+                region: 'center',
+                layout: 'border',
+                items: [
+                    {
+                        xtype: 'form',
+                        region: 'north',
+                        height: 80,
+                        bodyStyle: 'padding: 5px',
+                        labelWidth: 80,
+                        border: false,
+                        items: [
+                            {
+                                border: false,
+                                html: Phlexible.inlineIcon('p-mediamanager-wizard_conflict-icon') + ' <b>A file with this name already exists. Selecting "Keep both files" will save it as:</b>'
+                            },
+                            {
+                                xtype: 'displayfield',
+                                hideLabel: true,
+                                name: 'altname',
+                                anchor: '-10',
+                                allowBlank: false,
+                                style: 'padding-bottom: 10px;'
+                            },
+                            {
+                                xtype: 'twincombobox',
+                                fieldLabel: 'MetaSet',
+                                hiddenName: 'metaset',
+                                editable: false,
+                                anchor: '-10',
+                                store: new Ext.data.JsonStore({
+                                    url: Phlexible.Router.generate('mediamanager_upload_metasets'),
+                                    fields: ['key', 'title'],
+                                    root: 'metasets',
+                                    autoLoad: true,
                                     listeners: {
-                                        store: {
-                                            fn: this.validateMeta,
+                                        load: {
+                                            fn: function () {
+                                                if (this.currentRecord) {
+                                                    this.getComponent(1).getComponent(0).getForm().setValues({
+                                                        metaset: this.currentRecord.data.parsed.metaset
+                                                    });
+                                                }
+                                            },
                                             scope: this
                                         }
                                     }
-                                });
-
-                                w.show();
-
-                                return false;
+                                }),
+                                displayField: 'title',
+                                valueField: 'key',
+                                mode: 'remote',
+                                lazyInit: false,
+                                triggerAction: 'all',
+                                listeners: {
+                                    select: {
+                                        fn: function (combo) {
+                                            this.buildMeta(combo.getValue());
+                                        },
+                                        scope: this
+                                    },
+                                    clear: {
+                                        fn: function () {
+                                            this.buildMeta(null);
+                                        },
+                                        scope: this
+                                    }
+                                }
                             }
-                        },
-                        scope: this
+                        ]
                     },
-                    afteredit: {
-                        fn: this.validateMeta,
-                        scope: this
-                    }
-                }
-            }]
-        }];
+                    {
+                        xtype: 'editorgrid',
+                        cls: 'p-mediamanager-wizard-meta',
+                        region: 'center',
+                        autoExpandColumn: 2,
+                        stripeRows: true,
+                        store: this.metaStore,
+                        cm: new Phlexible.gui.grid.TypeColumnModel({
+                            columns: [
+                                {
+                                    header: 'Key',
+                                    dataIndex: 'tkey',
+                                    width: 100
+                                },
+                                {
+                                    header: '&nbsp;',
+                                    dataIndex: 'required',
+                                    width: 30,
+                                    renderer: function (v) {
+                                        return 1 == v
+                                            ? Phlexible.inlineIcon('p-mediamanager-wizard_required-icon')
+                                            : '';
+                                    }
+                                },
+                                {
+                                    header: 'Value (de)',
+                                    dataIndex: 'value_de',
+                                    editable: true,
+                                    width: 300,
+                                    renderer: this.formatField.createDelegate(this)
+                                },
+                                {
+                                    header: 'Value (en)',
+                                    dataIndex: 'value_en',
+                                    editable: true,
+                                    width: 300,
+                                    renderer: this.formatField.createDelegate(this)
+                                }
+                            ],
+                            store: this.metaStore,
+                            editors: {
+                                textfield: new Ext.form.TextField(),
+                                textarea: new Ext.form.TextArea(),
+                                date: new Ext.form.DateField({
+                                    format: 'd.m.Y'
+                                }),
+                                'boolean': new Ext.form.ComboBox({
+                                    store: new Ext.data.SimpleStore({
+                                        fields: ['value'],
+                                        data: [
+                                            ['true'],
+                                            ['false']
+                                        ]
+                                    }),
+                                    displayField: 'value',
+                                    mode: 'local',
+                                    triggerAction: 'all'
+                                }),
+                                select: new Ext.form.ComboBox({
+                                    store: new Ext.data.SimpleStore({
+                                        fields: ['key', 'value']
+                                    }),
+                                    valueField: 'key',
+                                    displayField: 'value',
+                                    mode: 'local',
+                                    triggerAction: 'all'
+                                })
+                            },
+                            listeners: {
+                                editorselect: {
+                                    fn: function (editor, record) {
+                                        if (record.data.type == 'select') {
+                                            editor.field.store.loadData(record.data.options);
+                                        }
+                                    },
+                                    scope: this
+                                }
+                            }
+                        }),
+                        sm: new Ext.grid.CellSelectionModel(),
+                        listeners: {
+                            beforeedit: {
+                                fn: function (e) {
+                                    var field = e.field;
+                                    var record = e.record;
+                                    var isSynchronized = (1 == record.get('synchronized'));
 
-        this.bbar = [{
-            text: 'Discard all remaining files',
-            iconCls: 'p-mediamanager-wizard_discard-icon',
-            all: true,
-            hidden: this.files.length < 2,
-            handler: this.doDiscard,
-            scope: this
-        },'->',{
-            text: 'Discard file',
-            iconCls: 'p-mediamanager-wizard_discard-icon',
-            'do': 'replace',
-            handler: this.doDiscard,
-            scope: this
-        },'-',{
-            text: 'Keep both files',
-            iconCls: 'p-mediamanager-wizard_save-icon',
-            'do': 'keep',
-            handler: this.doSave,
-            scope: this
-        },{
-            text: 'Replace file',
-            iconCls: 'p-mediamanager-wizard_save-icon',
-            'do': 'replace',
-            handler: this.doSave,
-            scope: this
-        },{
-            text: 'Save as new version',
-            iconCls: 'p-mediamanager-wizard_save-icon',
-            'do': 'version',
-            handler: this.doSave,
-            scope: this
-        },{
-            text: 'Save file',
-            iconCls: 'p-mediamanager-wizard_save-icon',
-            'do': 'save',
-            handler: this.doSave,
-            scope: this
-        }];
+                                    // skip editing english values if language is synchronized
+                                    if ('value_en' === field && isSynchronized) {
+                                        return false;
+                                    }
+
+                                    if (e.record.data.type == 'suggest') {
+                                        var optionsIndex = 'values_' + field.substring(field.length - 2);
+
+                                        var w = new Phlexible.metasets.MetaSuggestWindow({
+                                            record: record,
+                                            valueField: field,
+                                            optionsField: optionsIndex,
+                                            listeners: {
+                                                store: {
+                                                    fn: this.validateMeta,
+                                                    scope: this
+                                                }
+                                            }
+                                        });
+
+                                        w.show();
+
+                                        return false;
+                                    }
+                                },
+                                scope: this
+                            },
+                            afteredit: {
+                                fn: this.validateMeta,
+                                scope: this
+                            }
+                        }
+                    }
+                ]
+            }
+        ];
+
+        this.bbar = [
+            {
+                text: 'Discard all remaining files',
+                iconCls: 'p-mediamanager-wizard_discard-icon',
+                all: true,
+                hidden: this.files.length < 2,
+                handler: this.doDiscard,
+                scope: this
+            },
+            '->',
+            {
+                text: 'Discard file',
+                iconCls: 'p-mediamanager-wizard_discard-icon',
+                'do': 'replace',
+                handler: this.doDiscard,
+                scope: this
+            },
+            '-',
+            {
+                text: 'Keep both files',
+                iconCls: 'p-mediamanager-wizard_save-icon',
+                'do': 'keep',
+                handler: this.doSave,
+                scope: this
+            },
+            {
+                text: 'Replace file',
+                iconCls: 'p-mediamanager-wizard_save-icon',
+                'do': 'replace',
+                handler: this.doSave,
+                scope: this
+            },
+            {
+                text: 'Save as new version',
+                iconCls: 'p-mediamanager-wizard_save-icon',
+                'do': 'version',
+                handler: this.doSave,
+                scope: this
+            },
+            {
+                text: 'Save file',
+                iconCls: 'p-mediamanager-wizard_save-icon',
+                'do': 'save',
+                handler: this.doSave,
+                scope: this
+            }
+        ];
 
         Phlexible.mediamanager.FileUploadWizard.superclass.initComponent.call(this);
 
@@ -319,7 +352,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         this.getComponent(1).on('render', this.doFirstSelect, this);
     },
 
-    doFirstSelect: function() {
+    doFirstSelect: function () {
         if (!this.firstDone && this.isVisible() && this.rendered &&
             this.getComponent(0).rendered &&
             this.getComponent(1).rendered) {
@@ -329,19 +362,19 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         }
     },
 
-    buildMeta: function(metaset) {
+    buildMeta: function (metaset) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('mediamanager_upload_meta'),
             params: {
                 metaset: metaset
             },
-            success: function(response) {
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 var grid = this.getComponent(1).getComponent(1);
 
                 var storeData = [];
-                for (var i=0; i<data.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     var key = data[i].key;
 
                     if (this.meta[key]) {
@@ -394,7 +427,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         });
     },
 
-    next: function() {
+    next: function () {
         if (this.currentRecord) {
             this.filesStore.remove(this.currentRecord);
 
@@ -451,7 +484,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         this.buildMeta(this.currentRecord.data.parsed.metaset);
     },
 
-    doDiscard: function(btn) {
+    doDiscard: function (btn) {
         var handler;
         if (btn.all) {
             handler = this.close;
@@ -472,11 +505,11 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         });
     },
 
-    validateMeta: function() {
+    validateMeta: function () {
         var valid = true;
 
         var metaRecords = this.getComponent(1).getComponent(1).store.getRange();
-        for(var i=0; i<metaRecords.length; i++) {
+        for (var i = 0; i < metaRecords.length; i++) {
             row = metaRecords[i].data;
 
             if (1 == row['synchronized']) {
@@ -506,12 +539,12 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         return valid;
     },
 
-    doSave: function(btn) {
+    doSave: function (btn) {
         var formValues = this.getComponent(1).getComponent(0).getForm().getValues();
         var metaRecords = this.getComponent(1).getComponent(1).store.getRange();
         var meta = {};
         var row, key, values;
-        for(var i=0; i<metaRecords.length; i++) {
+        for (var i = 0; i < metaRecords.length; i++) {
             key = metaRecords[i].data.key;
             values = metaRecords[i].data;
 
@@ -545,8 +578,8 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('mediamanager_upload_save'),
             params: formValues,
-            success: function(response) {
-            var data = Ext.decode(response.responseText);
+            success: function (response) {
+                var data = Ext.decode(response.responseText);
 
                 if (data.success) {
                     this.fireEvent('update');
@@ -561,7 +594,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         });
     },
 
-    formatDate: function(v)  {
+    formatDate: function (v) {
         if (typeof v !== 'object') {
             var dt = Date.parseDate(v, 'Y-m-d');
         }
@@ -576,7 +609,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         return v;
     },
 
-    formatField: function(v, md, r, ri, ci, s) {
+    formatField: function (v, md, r, ri, ci, s) {
 
         Phlexible.console.log(v, md, r, ri, ci, s);
 
@@ -596,8 +629,8 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         if (v && type == 'date') {
             v = this.formatDate(v);
         }
-        else if(v && type === 'select') {
-            for(var i=0; i<r.data.options.length; i++) {
+        else if (v && type === 'select') {
+            for (var i = 0; i < r.data.options.length; i++) {
                 if (r.data.options[i][0] == v) {
                     v = r.data.options[i][1];
                     break;
@@ -613,7 +646,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
         var languages = Phlexible.Config.get('set.language.frontend');
 
         for (var i = 0; i < languages.length; ++i) {
-            code  = languages[i][0];
+            code = languages[i][0];
             field = 'value_' + code;
 
             if (!data[field]) {

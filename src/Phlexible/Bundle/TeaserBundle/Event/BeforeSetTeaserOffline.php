@@ -43,7 +43,7 @@ class Makeweb_Teasers_Event_BeforeSetTeaserOffline extends Brainbits_Event_Notif
      */
     public function __construct(Makeweb_Teasers_Node $node, $language)
     {
-        $this->_node     = $node;
+        $this->_node = $node;
         $this->_language = $language;
     }
 

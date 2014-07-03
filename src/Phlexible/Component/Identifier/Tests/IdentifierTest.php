@@ -19,13 +19,13 @@ class IdentifierTest extends TestCase
     {
         $identifier = new Identifier('name');
 
-        $this->assertSame(str_replace('\\', '_', get_class($identifier)) . '__name', (string)$identifier);
+        $this->assertSame(str_replace('\\', '_', get_class($identifier)) . '__name', (string) $identifier);
     }
 
     public function testInstanciateWithTwoArguments()
     {
         $identifier = new Identifier('id', 3);
 
-        $this->assertSame(str_replace('\\', '_', get_class($identifier)) . '__id__3', (string)$identifier);
+        $this->assertSame(str_replace('\\', '_', get_class($identifier)) . '__id__3', (string) $identifier);
     }
 }

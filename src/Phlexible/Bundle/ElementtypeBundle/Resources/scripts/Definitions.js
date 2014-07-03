@@ -1,22 +1,22 @@
 Ext.namespace(
-	'Phlexible.elementtypes.configuration',
-	'Phlexible.elementtypes.menuhandle',
-	'Phlexible.fields'
+    'Phlexible.elementtypes.configuration',
+    'Phlexible.elementtypes.menuhandle',
+    'Phlexible.fields'
 );
 
-Phlexible.elementtypes.TYPE_FULL            = 'full';
-Phlexible.elementtypes.TYPE_STRUCTURE       = 'structure';
-Phlexible.elementtypes.TYPE_LAYOUTAREA      = 'layout';
+Phlexible.elementtypes.TYPE_FULL = 'full';
+Phlexible.elementtypes.TYPE_STRUCTURE = 'structure';
+Phlexible.elementtypes.TYPE_LAYOUTAREA = 'layout';
 Phlexible.elementtypes.TYPE_LAYOUTCONTAINER = 'layoutcontainer';
-Phlexible.elementtypes.TYPE_PART            = 'part';
-Phlexible.elementtypes.TYPE_REFERENCE       = 'reference';
+Phlexible.elementtypes.TYPE_PART = 'part';
+Phlexible.elementtypes.TYPE_REFERENCE = 'reference';
 
 Phlexible.elementtypes.Format = {
-    title: function(title, meta, record){
+    title: function (title, meta, record) {
         return '<img src="' + Phlexible.component('/elementtypes/elementtypes/' + record.get('icon')) + '" width="18" height="18" border="0" alt="' + title + '" /> ' + title;
     },
 
-    status: function(status, meta, record){
+    status: function (status, meta, record) {
         return '';
     }
 };

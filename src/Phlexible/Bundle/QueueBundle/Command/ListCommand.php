@@ -29,18 +29,19 @@ class ListCommand extends ContainerAwareCommand
     {
         $this
             ->setName('queue:list')
-            ->setDefinition(array(
-                new InputOption('pending', null, InputOption::VALUE_NONE, 'List pending jobs'),
-                new InputOption('running', null, InputOption::VALUE_NONE, 'List running jobs'),
-                new InputOption('finished', null, InputOption::VALUE_NONE, 'List finished jobs'),
-                new InputOption('failed', null, InputOption::VALUE_NONE, 'List failed jobs'),
-                new InputOption('suspended', null, InputOption::VALUE_NONE, 'List suspended jobs'),
-                new InputOption('aborted', null, InputOption::VALUE_NONE, 'List aborted jobs'),
-                new InputOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit', 10),
-                new InputOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset', 0),
-            ))
-            ->setDescription('List jobs')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('pending', null, InputOption::VALUE_NONE, 'List pending jobs'),
+                    new InputOption('running', null, InputOption::VALUE_NONE, 'List running jobs'),
+                    new InputOption('finished', null, InputOption::VALUE_NONE, 'List finished jobs'),
+                    new InputOption('failed', null, InputOption::VALUE_NONE, 'List failed jobs'),
+                    new InputOption('suspended', null, InputOption::VALUE_NONE, 'List suspended jobs'),
+                    new InputOption('aborted', null, InputOption::VALUE_NONE, 'List aborted jobs'),
+                    new InputOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit', 10),
+                    new InputOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset', 0),
+                )
+            )
+            ->setDescription('List jobs');
     }
 
     /**
@@ -66,7 +67,12 @@ class ListCommand extends ContainerAwareCommand
             $criteria = array();
         }
 
-        $jobs = $jobManager->findBy($criteria, array('createdAt' => 'DESC'), $input->getOption('limit'), $input->getOption('offset'));
+        $jobs = $jobManager->findBy(
+            $criteria,
+            array('createdAt' => 'DESC'),
+            $input->getOption('limit'),
+            $input->getOption('offset')
+        );
 
         if (empty($jobs)) {
             $output->writeln('No queued jobs');
@@ -80,14 +86,16 @@ class ListCommand extends ContainerAwareCommand
         $table->setHeaders(array('ID', 'Command', 'Priority', 'Status', 'Created At', 'Execute After'));
 
         foreach ($jobs as $job) {
-            $table->addRow(array(
-                $job->getId(),
-                $job->getCommand(),
-                $job->getPriority(),
-                $job->getState(),
-                $job->getCreatedAt()->format('Y-m-d H:i:s'),
-                $job->getExecuteAfter()->format('Y-m-d H:i:s'),
-            ));
+            $table->addRow(
+                array(
+                    $job->getId(),
+                    $job->getCommand(),
+                    $job->getPriority(),
+                    $job->getState(),
+                    $job->getCreatedAt()->format('Y-m-d H:i:s'),
+                    $job->getExecuteAfter()->format('Y-m-d H:i:s'),
+                )
+            );
         }
 
         $table->render($output);

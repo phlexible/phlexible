@@ -34,6 +34,7 @@ class CalculatedRights
             $row
         );
     }
+
     /**
      * Return all granted rights
      *
@@ -75,7 +76,7 @@ class CalculatedRights
             $result = array_key_exists($right, $this->rights['_all_']);
         } else {
             $result = (array_key_exists($language, $this->rights) && array_key_exists($right, $this->rights[$language])) ||
-                      (array_key_exists('_all_', $this->rights) && array_key_exists($right, $this->rights['_all_']));
+                (array_key_exists('_all_', $this->rights) && array_key_exists($right, $this->rights['_all_']));
         }
 
         return $result;

@@ -13,12 +13,12 @@ namespace Phlexible\Bundle\AccessControlBundle\ContentObject;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
- interface DomainObjectInterface
- {
-     /**
-      * Return domain object identifier
-      *
-      * @return array
-      */
-     public function getDomainObjectIdentifier();
- }
+interface DomainObjectInterface
+{
+    /**
+     * Return domain object identifier
+     *
+     * @return array
+     */
+    public function getDomainObjectIdentifier();
+}

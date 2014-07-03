@@ -10,7 +10,7 @@
  * </code></pre>
  * @constructor
  */
-Phlexible.gui.Menu = function(){
+Phlexible.gui.Menu = function () {
     this.addEvents(
         /**
          * @event beforeload
@@ -39,16 +39,16 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
      * Fires the "beforeload" event before loading the menu, can be canceled.
      * After successful load the "load" event is fired.
      */
-    load: function() {
-        if(this.fireEvent('beforeload', this) === false) {
+    load: function () {
+        if (this.fireEvent('beforeload', this) === false) {
             return;
         }
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('gui_menu'),
             success: this.onLoadSuccess,
-            failure: function(){
-				Ext.MessageBox.alert('Load error', 'Error loading menu.');
+            failure: function () {
+                Ext.MessageBox.alert('Load error', 'Error loading menu.');
             },
             scope: this
         });
@@ -57,7 +57,7 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
     /**
      * @see load()
      */
-    reload: function() {
+    reload: function () {
         this.load();
     },
 
@@ -65,24 +65,25 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
      * Called after successful load
      * @param {Object} XMLHttpResponse object
      */
-    onLoadSuccess: function(response) {
+    onLoadSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
-        this.items = this.iterate(data);;
+        this.items = this.iterate(data);
+        ;
 
         this.loaded = true;
 
         this.fireEvent('load', this);
     },
 
-    getItems: function() {
+    getItems: function () {
         return this.items;
     },
 
-    iterate: function(data) {
+    iterate: function (data) {
         var items = [];
 
-        Ext.each(data, function(dataItem) {
+        Ext.each(data, function (dataItem) {
             var handlerCls, handler, config;
 
             handlerCls = Phlexible.evalClassString(dataItem.xtype);
@@ -94,14 +95,14 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
 
             handler = new handlerCls();
 
-			if (dataItem.parameters) {
-				dataItem.setParameters(dataItem.parameters);
-			}
+            if (dataItem.parameters) {
+                dataItem.setParameters(dataItem.parameters);
+            }
 
             config = handler.createConfig(dataItem);
 
             if (Ext.isArray(config)) {
-                Ext.each(config, function(configItem) {
+                Ext.each(config, function (configItem) {
                     items.push(configItem);
                 }, this);
             } else {

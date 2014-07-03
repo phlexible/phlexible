@@ -8,14 +8,12 @@
 
 namespace Phlexible\Bundle\GuiBundle\Menu;
 
-use Phlexible\Component\ComponentCollection;
 use Phlexible\Bundle\GuiBundle\Event\GetMenuEvent;
 use Phlexible\Bundle\GuiBundle\GuiEvents;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\DelegatingLoader;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderResolver;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
+use Phlexible\Component\ComponentCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Finder;
 
@@ -48,7 +46,7 @@ class MenuLoader
     {
         $loader = new DelegatingLoader(
             new LoaderResolver(
-                array (
+                array(
                     new YamlFileLoader(),
                 )
             )

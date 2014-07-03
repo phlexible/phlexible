@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\MediaManagerBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface MediaManagerEvents
+class MediaManagerEvents
 {
     /**
      * Get Slots Event

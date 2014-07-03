@@ -125,7 +125,7 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
     upload_cancelled: false,
 
     // private
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents(
             /**
@@ -192,37 +192,41 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
         );
 
         this.rec = Ext.data.Record.create([
-             {name: 'name'},
-             {name: 'size'},
-             {name: 'id'},
-             {name: 'type'},
-             {name: 'creationdate', type: 'date', dateFormat: 'm/d/Y'},
-             {name: 'status'}
+            {name: 'name'},
+            {name: 'size'},
+            {name: 'id'},
+            {name: 'type'},
+            {name: 'creationdate', type: 'date', dateFormat: 'm/d/Y'},
+            {name: 'status'}
         ]);
 
         this.store = new Ext.data.Store({
             reader: new Ext.data.JsonReader({
-                  id: 'id'
-             }, this.rec)
+                id: 'id'
+            }, this.rec)
         });
 
-        this.columns = [{
-            id:'name',
-            header: this.strings.header_filename,
-            dataIndex: 'name'
-        },{
-            id:'size',
-            header: this.strings.header_size,
-            width: 80,
-            dataIndex: 'size',
-            renderer: this.formatBytes
-        },{
-            id:'status',
-            header: this.strings.header_status,
-            width: 80,
-            dataIndex: 'status',
-            renderer: this.formatStatus.createDelegate(this)
-        }];
+        this.columns = [
+            {
+                id: 'name',
+                header: this.strings.header_filename,
+                dataIndex: 'name'
+            },
+            {
+                id: 'size',
+                header: this.strings.header_size,
+                width: 80,
+                dataIndex: 'size',
+                renderer: this.formatBytes
+            },
+            {
+                id: 'status',
+                header: this.strings.header_status,
+                width: 80,
+                dataIndex: 'status',
+                renderer: this.formatStatus.createDelegate(this)
+            }
+        ];
 
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: this.single_select
@@ -234,37 +238,43 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
 //            width: this.width - 7
         });
 
-        this.tbar = [{
-            text: this.strings.text_add,
-            iconCls: 'SwfUploadPanel_iconAdd',
-            xhandler: function() {
-                if (this.single_select) {
-                    this.suo.selectFile();
-                }
-                else {
-                    this.suo.selectFiles();
-                }
+        this.tbar = [
+            {
+                text: this.strings.text_add,
+                iconCls: 'SwfUploadPanel_iconAdd',
+                xhandler: function () {
+                    if (this.single_select) {
+                        this.suo.selectFile();
+                    }
+                    else {
+                        this.suo.selectFiles();
+                    }
+                },
+                xscope: this
             },
-            xscope: this
-        }, '->', {
-            text: this.strings.text_cancel,
-            iconCls: 'SwfUploadPanel_iconCancel',
-            handler: this.stopUpload,
-            scope: this,
-            hidden: true
-        }, {
-            text: this.strings.text_upload,
-            iconCls: 'SwfUploadPanel_iconUpload',
-            handler: this.startUpload,
-            scope: this,
-            hidden: true
-        }, {
-            text: this.strings.text_clear,
-            iconCls: 'SwfUploadPanel_iconClear',
-            handler: this.removeAllFiles,
-            scope: this,
-            hidden: false
-        }];
+            '->',
+            {
+                text: this.strings.text_cancel,
+                iconCls: 'SwfUploadPanel_iconCancel',
+                handler: this.stopUpload,
+                scope: this,
+                hidden: true
+            },
+            {
+                text: this.strings.text_upload,
+                iconCls: 'SwfUploadPanel_iconUpload',
+                handler: this.startUpload,
+                scope: this,
+                hidden: true
+            },
+            {
+                text: this.strings.text_clear,
+                iconCls: 'SwfUploadPanel_iconClear',
+                handler: this.removeAllFiles,
+                scope: this,
+                hidden: false
+            }
+        ];
 
         this.bbar = [
             this.progress_bar
@@ -272,10 +282,10 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
 
         this.addListener({
             keypress: {
-                fn: function(e) {
+                fn: function (e) {
                     if (this.confirm_delete) {
-                        if(e.getKey() == e.DELETE) {
-                            Ext.MessageBox.confirm(this.strings.text_remove,this.strings.text_remove_sure, function(e) {
+                        if (e.getKey() == e.DELETE) {
+                            Ext.MessageBox.confirm(this.strings.text_remove, this.strings.text_remove_sure, function (e) {
                                 if (e == 'yes') {
                                     this.removeFiles();
                                 }
@@ -289,12 +299,12 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
             },
 
             // Prevent the default right click to show up in the grid.
-            contextmenu: function(e) {
+            contextmenu: function (e) {
                 e.stopEvent();
             },
 
             render: {
-                fn: function(){
+                fn: function () {
                     this.resizeProgressBar();
 
                     this.addBtn = this.getTopToolbar().items.items[0];
@@ -309,7 +319,7 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
         });
 
 
-        this.on('render', function() {
+        this.on('render', function () {
             var suoID = Ext.id();
             var em = this.addBtn.el.child('em');
             em.setStyle({
@@ -366,7 +376,7 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
     },
 
     // private
-    resizeProgressBar: function() {
+    resizeProgressBar: function () {
         this.progress_bar.setWidth(this.getBottomToolbar().el.getWidth() - 5);
         Ext.fly(this.progress_bar.el.dom.firstChild.firstChild).applyStyles("height: 16px");
     },
@@ -375,7 +385,7 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * SWFUpload debug handler
      * @param {Object} line
      */
-    debugHandler: function(line) {
+    debugHandler: function (line) {
         Phlexible.console.log(line);
     },
 
@@ -384,7 +394,7 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * @param {Integer} status
      * @return {String}
      */
-    formatStatus: function(status) {
+    formatStatus: function (status) {
         return this.strings.status[status];
     },
 
@@ -393,7 +403,7 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * @param {Integer} bytes
      * @return {String}
      */
-    formatBytes: function(size) {
+    formatBytes: function (size) {
         if (!size) {
             size = 0;
         }
@@ -410,27 +420,27 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
 
         return result;
 
-        if(isNaN(bytes)) {
+        if (isNaN(bytes)) {
             return ('');
         }
 
         var unit, val;
 
-        if(bytes < 999) {
+        if (bytes < 999) {
             unit = 'B';
             val = (!bytes && this.progressRequestCount >= 1) ? '~' : bytes;
-        } else if(bytes < 999999) {
+        } else if (bytes < 999999) {
             unit = 'kB';
-            val = Math.round(bytes/1000);
-        } else if(bytes < 999999999) {
+            val = Math.round(bytes / 1000);
+        } else if (bytes < 999999999) {
             unit = 'MB';
-            val = Math.round(bytes/100000) / 10;
-        } else if(bytes < 999999999999) {
+            val = Math.round(bytes / 100000) / 10;
+        } else if (bytes < 999999999999) {
             unit = 'GB';
-            val = Math.round(bytes/100000000) / 10;
+            val = Math.round(bytes / 100000000) / 10;
         } else {
             unit = 'TB';
-            val = Math.round(bytes/100000000000) / 10;
+            val = Math.round(bytes / 100000000000) / 10;
         }
 
         return (val + ' ' + unit);
@@ -439,8 +449,8 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
     /**
      * SWFUpload swfUploadLoaded event
      */
-    swfUploadLoaded: function() {
-        if(this.debug) Phlexible.console.info('SWFUPLOAD LOADED');
+    swfUploadLoaded: function () {
+        if (this.debug) Phlexible.console.info('SWFUPLOAD LOADED');
 
         this.fireEvent('swfUploadLoaded', this);
     },
@@ -448,8 +458,8 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
     /**
      * SWFUpload fileDialogStart event
      */
-    fileDialogStart: function() {
-        if(this.debug) Phlexible.console.info('FILE DIALOG START');
+    fileDialogStart: function () {
+        if (this.debug) Phlexible.console.info('FILE DIALOG START');
 
         this.fireEvent('fileDialogStart', this);
     },
@@ -459,8 +469,8 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * SWFUpload fileQueue event
      * @param {Object} file
      */
-    fileQueue: function(file) {
-        if(this.debug) Phlexible.console.info('FILE QUEUE');
+    fileQueue: function (file) {
+        if (this.debug) Phlexible.console.info('FILE QUEUE');
 
         file.status = 0;
         r = new this.rec(file);
@@ -477,13 +487,13 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * @param {Integer} code
      * @param {string}  message
      */
-    fileQueueError: function(file, code, message) {
-        if(this.debug) Phlexible.console.info('FILE QUEUE ERROR');
+    fileQueueError: function (file, code, message) {
+        if (this.debug) Phlexible.console.info('FILE QUEUE ERROR');
 
         switch (code) {
             case -100:
                 var slots;
-                switch(message) {
+                switch (message) {
                     case '0':
                         slots = this.strings.error_queue_slots_0;
                         break;
@@ -516,8 +526,8 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * SWFUpload fileDialogComplete event
      * @param {Integer} file_count
      */
-    fileDialogComplete: function(file_count) {
-        if(this.debug) Phlexible.console.info('FILE DIALOG COMPLETE');
+    fileDialogComplete: function (file_count) {
+        if (this.debug) Phlexible.console.info('FILE DIALOG COMPLETE');
 
         if (file_count > 0) {
             this.uploadBtn.show();
@@ -533,8 +543,8 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * SWFUpload uploadStart event
      * @param {Object} file
      */
-    uploadStart: function(file) {
-        if(this.debug) Phlexible.console.info('UPLOAD START');
+    uploadStart: function (file) {
+        if (this.debug) Phlexible.console.info('UPLOAD START');
 
         this.fireEvent('uploadStart', this, file);
 
@@ -547,12 +557,12 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * @param {Integer} bytes_completed
      * @param {Integer} bytes_total
      */
-    uploadProgress: function(file, bytes_completed, bytes_total) {
-        if(this.debug) Phlexible.console.info('UPLOAD PROGRESS');
+    uploadProgress: function (file, bytes_completed, bytes_total) {
+        if (this.debug) Phlexible.console.info('UPLOAD PROGRESS');
 
         this.store.getById(file.id).set('status', 1);
         this.store.getById(file.id).commit();
-        this.progress_bar.updateProgress(bytes_completed/bytes_total, String.format(this.strings.text_uploading, file.name, this.formatBytes(bytes_completed), this.formatBytes(bytes_total)));
+        this.progress_bar.updateProgress(bytes_completed / bytes_total, String.format(this.strings.text_uploading, file.name, this.formatBytes(bytes_completed), this.formatBytes(bytes_total)));
 
         this.fireEvent('uploadProgress', this, file, bytes_completed, bytes_total);
     },
@@ -565,8 +575,8 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * @param {Integer} code
      * @return {}
      */
-    uploadError: function(file, error, code) {
-        if(this.debug) Phlexible.console.info('UPLOAD ERROR');
+    uploadError: function (file, error, code) {
+        if (this.debug) Phlexible.console.info('UPLOAD ERROR');
 
         switch (error) {
             case -200:
@@ -591,8 +601,8 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * @param {Object} file
      * @param {Object} response
      */
-    uploadSuccess: function(file, response) {
-        if(this.debug) Phlexible.console.info('UPLOAD SUCCESS');
+    uploadSuccess: function (file, response) {
+        if (this.debug) Phlexible.console.info('UPLOAD SUCCESS');
 
         var data = Ext.decode(response);
         if (data.success) {
@@ -613,13 +623,13 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * SWFUpload uploadComplete event
      * @param {Object} file
      */
-    uploadComplete: function(file) {
-        if(this.debug) Phlexible.console.info('UPLOAD COMPLETE');
+    uploadComplete: function (file) {
+        if (this.debug) Phlexible.console.info('UPLOAD COMPLETE');
 
         this.progress_bar.reset();
         this.progress_bar.updateText(this.strings.text_progressbar);
 
-        if(this.suo.getStats().files_queued && !this.upload_cancelled) {
+        if (this.suo.getStats().files_queued && !this.upload_cancelled) {
             this.suo.startUpload();
         } else {
             this.fireEvent('fileUploadComplete', this, file);
@@ -632,7 +642,7 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
     /**
      * SWFUpload allUploadsComplete method
      */
-    allUploadsComplete: function() {
+    allUploadsComplete: function () {
         this.cancelBtn.hide();
         this.addBtn.show();
         this.clearBtn.show();
@@ -645,7 +655,7 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * @param {String} name
      * @param {String} value
      */
-    addPostParam: function(name, value) {
+    addPostParam: function (name, value) {
         if (this.suo) {
             this.suo.settings.post_params[name] = value;
             this.suo.setPostParams(this.suo.settings.post_params);
@@ -658,8 +668,8 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * Start file upload
      * SWFUpload startUpload method
      */
-    startUpload: function() {
-        if(this.debug) Phlexible.console.info('START UPLOAD');
+    startUpload: function () {
+        if (this.debug) Phlexible.console.info('START UPLOAD');
 
         this.cancelBtn.show();
         this.uploadBtn.hide();
@@ -677,14 +687,14 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * SWFUpload stopUpload method
      * @param {Object} file
      */
-    stopUpload: function(file) {
-        if(this.debug) Phlexible.console.info('STOP UPLOAD');
+    stopUpload: function (file) {
+        if (this.debug) Phlexible.console.info('STOP UPLOAD');
 
         this.suo.stopUpload();
 
         this.upload_cancelled = true;
 
-        this.getStore().each(function() {
+        this.getStore().each(function () {
             if (this.data.status == 1) {
                 this.set('status', 0);
                 this.commit();
@@ -707,11 +717,11 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * Delete one or multiple rows
      * SWFUpload cancelUpload method
      */
-    removeFiles: function() {
-        if(this.debug) Phlexible.console.info('REMOVE FILES');
+    removeFiles: function () {
+        if (this.debug) Phlexible.console.info('REMOVE FILES');
 
         var selRecords = this.getSelections();
-        for (var i=0; i < selRecords.length; i++) {
+        for (var i = 0; i < selRecords.length; i++) {
             if (selRecords[i].data.status != 1) {
                 this.suo.cancelUpload(selRecords[i].id);
                 this.store.remove(selRecords[i]);
@@ -730,8 +740,8 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * Clear the Queue
      * SWFUpload cancelUpload method
      */
-    removeAllFiles: function() {
-        if(this.debug) Phlexible.console.info('REMOVE ALL');
+    removeAllFiles: function () {
+        if (this.debug) Phlexible.console.info('REMOVE ALL');
 
         // mark all internal files as cancelled
         var files_left = this.suo.getStats().files_queued;

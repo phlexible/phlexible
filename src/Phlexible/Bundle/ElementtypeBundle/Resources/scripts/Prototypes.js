@@ -1,4 +1,4 @@
-Phlexible.fields.Prototypes = function() {
+Phlexible.fields.Prototypes = function () {
 };
 Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
     ids: {},
@@ -7,12 +7,12 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
     mediaFields: ['image', 'flash', 'video', 'download', 'folder'],
     listFields: ['select', 'multiselect', 'form'],
 
-    clear: function() {
+    clear: function () {
         this.ids = {};
         this.prototypes = {};
     },
 
-    incCount: function(dsId, parentId) {
+    incCount: function (dsId, parentId) {
         if (parentId) {
             dsId = parentId + '___' + dsId;
         }
@@ -26,7 +26,7 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
         return this.ids[dsId];
     },
 
-    decCount: function(dsId, parentId) {
+    decCount: function (dsId, parentId) {
         if (parentId) {
             dsId = parentId + '___' + dsId;
         }
@@ -40,7 +40,7 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
         return this.ids[dsId];
     },
 
-    getCount: function(dsId, parentId) {
+    getCount: function (dsId, parentId) {
         if (parentId) {
             dsId = parentId + '___' + dsId;
         }
@@ -52,21 +52,21 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
         return this.ids[dsId];
     },
 
-    getPrototype: function(dsId) {
+    getPrototype: function (dsId) {
         return this.prototypes[dsId];
     },
 
-	hasPrototype: function(dsId) {
-		return !!this.prototypes[dsId];
-	},
+    hasPrototype: function (dsId) {
+        return !!this.prototypes[dsId];
+    },
 
-	setPrototype: function(dsId, pt) {
-		this.prototypes[dsid] = pt;
-	},
+    setPrototype: function (dsId, pt) {
+        this.prototypes[dsid] = pt;
+    },
 
-    addFieldPrototype: function(item) {
+    addFieldPrototype: function (item) {
 //        Phlexible.console.log('field pt: ' + item.ds_id);
-        if(this.hasPrototype(item.dsId)) {
+        if (this.hasPrototype(item.dsId)) {
             return false;
         }
 
@@ -92,7 +92,7 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
         };
 
         if (Phlexible.fields.FieldTypes[item.type].copyFields) {
-            Ext.each(Phlexible.fields.FieldTypes[item.type].copyFields, function(field) {
+            Ext.each(Phlexible.fields.FieldTypes[item.type].copyFields, function (field) {
                 pt[field] = item[field];
             });
         }
@@ -102,24 +102,24 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
         return pt;
     },
 
-    addGroupPrototype: function(item) {
+    addGroupPrototype: function (item) {
 //        Phlexible.console.log('group pt: ' + item.ds_id);
-        if(this.hasPrototype(item.dsId)) {
+        if (this.hasPrototype(item.dsId)) {
             return false;
         }
 
         var children = [],
-			pt;
+            pt;
         if (item.children) {
-            for (var i=0; i<item.children.length; i++) {
+            for (var i = 0; i < item.children.length; i++) {
                 if (item.children[i].type == 'group') {
                     pt = this.addGroupPrototype(item.children[i]);
                 } else {
                     pt = this.addFieldPrototype(item.children[i]);
                 }
-				if (pt) {
-					children.push(pt);
-				}
+                if (pt) {
+                    children.push(pt);
+                }
             }
         }
 

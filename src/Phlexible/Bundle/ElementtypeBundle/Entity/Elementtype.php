@@ -21,12 +21,12 @@ use Phlexible\Component\Identifier\IdentifiableInterface;
  */
 class Elementtype implements IdentifiableInterface
 {
-    const TYPE_FULL            = 'full';
-    const TYPE_STRUCTURE       = 'structure';
-    const TYPE_LAYOUTAREA      = 'layout';
+    const TYPE_FULL = 'full';
+    const TYPE_STRUCTURE = 'structure';
+    const TYPE_LAYOUTAREA = 'layout';
     const TYPE_LAYOUTCONTAINER = 'layoutcontainer';
-    const TYPE_PART            = 'part';
-    const TYPE_REFERENCE       = 'reference';
+    const TYPE_PART = 'part';
+    const TYPE_REFERENCE = 'reference';
 
     /**
      * @var int

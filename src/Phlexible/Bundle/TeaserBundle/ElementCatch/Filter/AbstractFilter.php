@@ -47,10 +47,8 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
     {
         $values = $this->_catch->getFilterValues();
 
-        foreach ($this->_fields as $field)
-        {
-            if (isset($values[$field]))
-            {
+        foreach ($this->_fields as $field) {
+            if (isset($values[$field])) {
                 return true;
             }
         }
@@ -66,10 +64,8 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
     public function getActiveParams()
     {
         $values = $this->_catch->getFilterValues();
-        foreach ($values as $key => $value)
-        {
-            if (empty($value))
-            {
+        foreach ($values as $key => $value) {
+            if (empty($value)) {
                 unset($values[$key]);
             }
         }
@@ -108,8 +104,7 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
 
             self::$_dsIds[$workingTitle] = $result;
 
-            if (!count($result))
-            {
+            if (!count($result)) {
                 MWF_Log::warn('No field ds_id found for working title: ' . $workingTitle);
             }
         }
@@ -120,8 +115,6 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
     /**
      * Fetch possible content.
      *
-     * @param array $dsIds
-     *
      * @return array
      */
     protected function _getContent()
@@ -131,12 +124,10 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
         $db = $select->getAdapter();
 
         // join each field
-        foreach (func_get_args() as $idx => $dsIds)
-        {
+        foreach (func_get_args() as $idx => $dsIds) {
             $dsIds = (array) $dsIds;
 
-            if (!count($dsIds))
-            {
+            if (!count($dsIds)) {
                 continue;
             }
 
@@ -172,11 +163,12 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
      * @param string|array    $whereValue
      * @param string|array    $whereExpr
      */
-    protected function _joinField(\Zend_Db_Select $select,
-                                  $index,
-                                  array $dsIds,
-                                  $whereValue = null,
-                                  $whereExpr = null)
+    protected function _joinField(
+        \Zend_Db_Select $select,
+        $index,
+        array $dsIds,
+        $whereValue = null,
+        $whereExpr = null)
     {
         $this->_internalJoinField('join', $select, $index, $dsIds, $whereValue, $whereExpr);
     }
@@ -190,11 +182,12 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
      * @param string          $whereValue
      * @param string          $whereExpr
      */
-    protected function _joinLeftField(\Zend_Db_Select $select,
-                                      $index,
-                                      array $dsIds,
-                                      $whereValue = null,
-                                      $whereExpr = null)
+    protected function _joinLeftField(
+        \Zend_Db_Select $select,
+        $index,
+        array $dsIds,
+        $whereValue = null,
+        $whereExpr = null)
     {
         $this->_internalJoinField('joinLeft', $select, $index, $dsIds, $whereValue, $whereExpr);
     }
@@ -209,12 +202,13 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
      * @param string|array    $whereValue
      * @param string          $whereExpr
      */
-    protected function _internalJoinField($joinMethod,
-                                          \Zend_Db_Select $select,
-                                          $index,
-                                          array $dsIds,
-                                          $whereValue = null,
-                                          $whereExpr = null)
+    protected function _internalJoinField(
+        $joinMethod,
+        \Zend_Db_Select $select,
+        $index,
+        array $dsIds,
+        $whereValue = null,
+        $whereExpr = null)
     {
         if (!count($dsIds)) {
             return;
@@ -229,7 +223,7 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
             $whereExpr = $filterDl . '.content';
         }
 
-        $language = 'de';//$this->_catch->getLanguage();
+        $language = 'de'; //$this->_catch->getLanguage();
         $select
             ->$joinMethod(
                 array($filterD => $db->prefix . 'element_data'),
@@ -256,29 +250,24 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
         }
     }
 
-    public function _joinConnection(\Zend_Db_Select $select,
-                                    $index,
-                                    $origin,
-                                    $type,
-                                    $whereValue)
+    public function _joinConnection(
+        \Zend_Db_Select $select,
+        $index,
+        $origin,
+        $type,
+        $whereValue)
     {
-        if (!strlen($whereValue))
-        {
+        if (!strlen($whereValue)) {
             return;
         }
 
-        if ('target' === $origin)
-        {
+        if ('target' === $origin) {
             $source = 'source';
             $target = 'target';
-        }
-        elseif ('source' === $origin)
-        {
+        } elseif ('source' === $origin) {
             $source = 'target';
             $target = 'source';
-        }
-        else
-        {
+        } else {
             throw new OutOfBoundsException(
                 'Origin must be "source" or "target" ' . $origin . ' given.'
             );
@@ -295,8 +284,7 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
             array('filter_content_' . $index => $target)
         );
 
-        if (self::SKIP_WHERE !== $whereValue)
-        {
+        if (self::SKIP_WHERE !== $whereValue) {
             $select->where("$filterEtc.$target = ?", $whereValue);
         }
     }
@@ -332,19 +320,16 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
             ->reset(Zend_Db_Select::ORDER)
             ->group($contentFilter);
 
-        foreach ($origColumns as $column)
-        {
-            if ($contentFilter === $column[2])
-            {
+        foreach ($origColumns as $column) {
+            if ($contentFilter === $column[2]) {
                 $select->columns(array($column[2] => $column[1]), $column[0]);
             }
         }
 
         $select->columns(array('counter' => new Zend_Db_Expr('count(ch.eid)')));
 
-        $cacheId = md5((string)$select);
-        if (!isset($cache[$cacheId]))
-        {
+        $cacheId = md5((string) $select);
+        if (!isset($cache[$cacheId])) {
             $db = $select->getAdapter();
             $cache[$cacheId] = $db->fetchPairs($select);
         }

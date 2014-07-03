@@ -29,16 +29,17 @@ class StatsCommand extends ContainerAwareCommand
     {
         $this
             ->setName('queue:stats')
-            ->setDefinition(array(
-                new InputOption('pending', null, InputOption::VALUE_NONE, 'Show statistics for pending jobs'),
-                new InputOption('running', null, InputOption::VALUE_NONE, 'Show statistics for running jobs'),
-                new InputOption('finished', null, InputOption::VALUE_NONE, 'Show statistics for finished jobs'),
-                new InputOption('failed', null, InputOption::VALUE_NONE, 'Show statistics for failed jobs'),
-                new InputOption('aborted', null, InputOption::VALUE_NONE, 'Show statistics for aborted jobs'),
-                new InputOption('suspended', null, InputOption::VALUE_NONE, 'Show statistics for suspended jobs'),
-            ))
-            ->setDescription('Show statistics')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('pending', null, InputOption::VALUE_NONE, 'Show statistics for pending jobs'),
+                    new InputOption('running', null, InputOption::VALUE_NONE, 'Show statistics for running jobs'),
+                    new InputOption('finished', null, InputOption::VALUE_NONE, 'Show statistics for finished jobs'),
+                    new InputOption('failed', null, InputOption::VALUE_NONE, 'Show statistics for failed jobs'),
+                    new InputOption('aborted', null, InputOption::VALUE_NONE, 'Show statistics for aborted jobs'),
+                    new InputOption('suspended', null, InputOption::VALUE_NONE, 'Show statistics for suspended jobs'),
+                )
+            )
+            ->setDescription('Show statistics');
     }
 
     /**
@@ -129,7 +130,9 @@ class StatsCommand extends ContainerAwareCommand
             $sum += $cnt = $jobManager->countBy(array('state' => $state));
 
             if ($cnt) {
-                $output->writeln(($cnt ? ($color ? '<'.$color.'>' : '') . $cnt : 'No') . ' ' . $state . ' jobs.' . ($cnt && $color ? '</'.$color.'>' : ''));
+                $output->writeln(
+                    ($cnt ? ($color ? '<' . $color . '>' : '') . $cnt : 'No') . ' ' . $state . ' jobs.' . ($cnt && $color ? '</' . $color . '>' : '')
+                );
             }
         }
 

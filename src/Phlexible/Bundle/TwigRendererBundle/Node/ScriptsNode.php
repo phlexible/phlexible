@@ -8,8 +8,20 @@
 
 namespace Phlexible\Bundle\TwigRendererBundle\Node;
 
+/**
+ * Scripts node
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class ScriptsNode extends \Twig_Node
 {
+    /**
+     * @param array               $assets
+     * @param array               $output
+     * @param \Twig_NodeInterface $body
+     * @param null|string         $lineno
+     * @param string              $tag
+     */
     public function __construct(array $assets, $output, \Twig_NodeInterface $body, $lineno, $tag = 'styles')
     {
         $attributes = array(
@@ -23,7 +35,7 @@ class ScriptsNode extends \Twig_Node
     /**
      * Compiles the node to PHP.
      *
-     * @param Twig_Compiler A Twig_Compiler instance
+     * @param \Twig_Compiler $compiler A Twig_Compiler instance
      */
     public function compile(\Twig_Compiler $compiler)
     {
@@ -33,8 +45,7 @@ class ScriptsNode extends \Twig_Node
         foreach ($this->attributes['assets'] as $asset) {
             $compiler
                 ->write('$context["url"] = "' . $asset . '";' . PHP_EOL)
-                ->subcompile($this->getNode('body'))
-            ;
+                ->subcompile($this->getNode('body'));
         }
     }
 }

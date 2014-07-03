@@ -4,12 +4,12 @@ Phlexible.fields.Accordion = Ext.extend(Ext.Panel, {
     hideMode: 'offsets',
 
     // private
-    initComponent: function() {
+    initComponent: function () {
         Phlexible.fields.Accordion.superclass.initComponent.call(this);
 
-        this.on('add', function(me, comp) {
+        this.on('add', function (me, comp) {
             if (this.isMaster && this.isSortable && !this.isDiff) {
-                comp.on('render', function(comp){
+                comp.on('render', function (comp) {
                     this.xsortable.enableElement(comp.id);
                 }, this);
             }
@@ -17,42 +17,44 @@ Phlexible.fields.Accordion = Ext.extend(Ext.Panel, {
     },
 
     // private
-    onRender : function(ct, position){
+    onRender: function (ct, position) {
         if (this.isMaster && !this.isDiff) {
-            this.tools = [{
-                id: 'right',
-                hidden: this.allowedItems ? false : true,
-                handler: function(event, tool, panel) {
-                    var coords = event.getXY();
+            this.tools = [
+                {
+                    id: 'right',
+                    hidden: this.allowedItems ? false : true,
+                    handler: function (event, tool, panel) {
+                        var coords = event.getXY();
 
-                    var menuConfig = [];
+                        var menuConfig = [];
 
-                    //                Phlexible.console.log(this.ownerCt.allowedItems);
-                    for (var dsId in this.allowedItems) {
-                        var item = this.allowedItems[dsId];
-                        disabled = false;
-                        if (this.element.prototypes.getCount(dsId, this.id) >= item.max) {
-                            disabled = true;
+                        //                Phlexible.console.log(this.ownerCt.allowedItems);
+                        for (var dsId in this.allowedItems) {
+                            var item = this.allowedItems[dsId];
+                            disabled = false;
+                            if (this.element.prototypes.getCount(dsId, this.id) >= item.max) {
+                                disabled = true;
+                            }
+                            menuConfig.push({
+                                text: item.title[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+                                disabled: disabled,
+                                handler: function (dsId) {
+                                    this.expand();
+                                    var pt = this.element.prototypes.getPrototype(dsId);
+                                    var pos = 0;
+                                    var factory = Phlexible.fields.Registry.getFactory(pt.factory);
+                                    factory(this, pt, pos, this.element, null, true, true);
+                                    this.doLayout();
+                                }.createDelegate(this, [dsId], false)
+                            });
                         }
-                        menuConfig.push({
-                            text: item.title[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
-                            disabled: disabled,
-                            handler: function(dsId){
-                                this.expand();
-                                var pt = this.element.prototypes.getPrototype(dsId);
-                                var pos = 0;
-                                var factory = Phlexible.fields.Registry.getFactory(pt.factory);
-                                factory(this, pt, pos, this.element, null, true, true);
-                                this.doLayout();
-                            }.createDelegate(this, [dsId], false)
-                        });
-                    }
 
-                    var menu = new Ext.menu.Menu(menuConfig);
-                    menu.showAt([coords[0], coords[1]]);
-                },
-                scope: this
-            }];
+                        var menu = new Ext.menu.Menu(menuConfig);
+                        menu.showAt([coords[0], coords[1]]);
+                    },
+                    scope: this
+                }
+            ];
         }
 
         Phlexible.fields.Accordion.superclass.onRender.call(this, ct, position);
@@ -69,11 +71,11 @@ Phlexible.fields.Accordion = Ext.extend(Ext.Panel, {
                     this.id
                 ]
             });
-            this.xsortable.on('startsort', function(dz, s) {
+            this.xsortable.on('startsort', function (dz, s) {
                 s.htmleditors = [];
                 var textareas = Ext.get(dz.dragData.ddel.id).query('textarea');
                 if (textareas.length) {
-                    for (var i=0; i<textareas.length; i++) {
+                    for (var i = 0; i < textareas.length; i++) {
                         var id = textareas[i].id;
                         var tc = Ext.getCmp(textareas[i].parentNode.id);
                         if (tc && tc.ed) {
@@ -84,13 +86,13 @@ Phlexible.fields.Accordion = Ext.extend(Ext.Panel, {
                     }
                 }
             });
-            this.xsortable.on('endsort', function(dz, s, dd, e, data) {
+            this.xsortable.on('endsort', function (dz, s, dd, e, data) {
                 var cmp = Ext.getCmp(data.ddel.id);
                 var parentCmp = cmp.ownerCt;
                 var oldPos = parentCmp.items.items.indexOf(cmp);
                 var parentNode = data.ddel.parentNode;
                 var newPos = false;
-                for (var i=0; i<parentNode.childNodes.length; i++) {
+                for (var i = 0; i < parentNode.childNodes.length; i++) {
                     if (parentNode.childNodes[i] === data.ddel) {
                         newPos = i;
                     }
@@ -105,7 +107,7 @@ Phlexible.fields.Accordion = Ext.extend(Ext.Panel, {
                 }
 
                 if (s.htmleditors && s.htmleditors.length) {
-                    for (var i=0; i<s.htmleditors.length; i++) {
+                    for (var i = 0; i < s.htmleditors.length; i++) {
                         s.htmleditors[i].restoreControl();
                     }
                 }
@@ -115,36 +117,36 @@ Phlexible.fields.Accordion = Ext.extend(Ext.Panel, {
 });
 Ext.reg('elementtypes-field-accordion', Phlexible.fields.Accordion);
 
-Phlexible.fields.Registry.addFactory('accordion', function(parentConfig, item, valueStructure, pos, element) {
+Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, valueStructure, pos, element) {
 //        var groupId = 'group_' + item.dsId + '_';
 //        if (item.data_id) {
 //            groupId += 'id-' + item.data_id;
 //        } else {
 //            groupId += Ext.id(null, 'new');
 //        }
-	var config = {
-		xtype: 'elementtypes-field-accordion',
-		title: item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
-		layout: 'form',
-		frame: false,
-		border: false,
-		collapsible: true,
-		collapsed: item.configuration.default_collapsed == 'on',
-		titleCollapse: true,
-		animCollapse: false,
+    var config = {
+        xtype: 'elementtypes-field-accordion',
+        title: item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+        layout: 'form',
+        frame: false,
+        border: false,
+        collapsible: true,
+        collapsed: item.configuration.default_collapsed == 'on',
+        titleCollapse: true,
+        animCollapse: false,
 
-		isMaster: element.master,
-		isDiff: !!element.data.diff,
-		isSortable: (item.configuration.sortable ? true : false),
-		//groupId: groupId,
-		element: element
-	};
+        isMaster: element.master,
+        isDiff: !!element.data.diff,
+        isSortable: (item.configuration.sortable ? true : false),
+        //groupId: groupId,
+        element: element
+    };
 
-	if (item.children) {
-		config.items = Phlexible.elements.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element);
-	}
+    if (item.children) {
+        config.items = Phlexible.elements.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element);
+    }
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('accordion', {
@@ -154,9 +156,9 @@ Phlexible.fields.FieldTypes.addField('accordion', {
     },
     iconCls: 'p-elementtype-container_accordion-icon',
     allowedIn: [
-		'tab',
-		'referenceroot'
-	],
+        'tab',
+        'referenceroot'
+    ],
     config: {
         labels: {
             field: 1,
@@ -171,7 +173,7 @@ Phlexible.fields.FieldTypes.addField('accordion', {
             height: 0,
             readonly: 0,
             hide_label: 0,
-			sortable: 1
+            sortable: 1
         }
     }
 });

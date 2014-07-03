@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\Loader;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
+use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Elementtype version database loader
@@ -76,20 +76,23 @@ class DatabaseLoader implements LoaderInterface
         $this->db->insert(
             $this->db->prefix . 'elementtype_version',
             array(
-                'elementtype_id'      => $elementtypeVersion->getElementtype()->getId(),
-                'version'             => $elementtypeVersion->getVersion(),
+                'elementtype_id' => $elementtypeVersion->getElementtype()->getId(),
+                'version' => $elementtypeVersion->getVersion(),
                 'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
-                'metaset_id'          => $elementtypeVersion->getMetaSetId(),
-                'comment'             => $elementtypeVersion->getComment(),
-                'mappings'            => $elementtypeVersion->getMappings() ? json_encode($elementtypeVersion->getMappings()) : null,
-                'create_user_id'      => $elementtypeVersion->getCreateUserId(),
-                'created_at'          => $elementtypeVersion->getCreatedAt()->format('Y-m-d H:i:s')
+                'metaset_id' => $elementtypeVersion->getMetaSetId(),
+                'comment' => $elementtypeVersion->getComment(),
+                'mappings' => $elementtypeVersion->getMappings() ? json_encode(
+                        $elementtypeVersion->getMappings()
+                    ) : null,
+                'create_user_id' => $elementtypeVersion->getCreateUserId(),
+                'created_at' => $elementtypeVersion->getCreatedAt()->format('Y-m-d H:i:s')
             )
         );
     }
 
     /**
      * @param array $row
+     *
      * @return ElementtypeVersion
      */
     private function mapRow(array $row)

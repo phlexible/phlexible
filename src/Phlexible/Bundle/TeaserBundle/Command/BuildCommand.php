@@ -26,8 +26,7 @@ class BuildCommand extends ContainerAwareCommand
     {
         $this
             ->setName('teasers:build')
-            ->setDescription('Build catch teaser helper data.')
-        ;
+            ->setDescription('Build catch teaser helper data.');
     }
 
     /**
@@ -44,8 +43,8 @@ class BuildCommand extends ContainerAwareCommand
         $db->delete($db->prefix . 'catchteaser_metaset_items');
 
         $select = $db->select()
-                     ->distinct()
-                     ->from($db->prefix . 'element_tree', 'eid');
+            ->distinct()
+            ->from($db->prefix . 'element_tree', 'eid');
 
         $eids = $db->fetchCol($select);
 
@@ -57,10 +56,10 @@ class BuildCommand extends ContainerAwareCommand
 
         $db->commit();
 
-        $endTime   = microtime(true);
-        $timeSpent = number_format(($endTime - $startTime)/60, 2, ',', '.');
+        $endTime = microtime(true);
+        $timeSpent = number_format(($endTime - $startTime) / 60, 2, ',', '.');
 
-        $mem = number_format(memory_get_peak_usage(true)/1024/1024, 2, ',', '.');
+        $mem = number_format(memory_get_peak_usage(true) / 1024 / 1024, 2, ',', '.');
 
         $output->writeln("Building catchteaser helper tables took $timeSpent minutes and used $mem MB.");
 

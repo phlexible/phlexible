@@ -21,8 +21,7 @@ class TeaserHasher extends ElementHasher
     {
         $identifier = $teaserId . '__' . $language . '__' . $version;
 
-        if (!empty($this->_hashes[$identifier]))
-        {
+        if (!empty($this->_hashes[$identifier])) {
             return $this->_hashes[$identifier];
         }
 
@@ -35,10 +34,9 @@ class TeaserHasher extends ElementHasher
 
         $hash = $this->_db->fetchOne($select);
 
-        if (!$hash)
-        {
+        if (!$hash) {
             $values = $this->_getHashValuesByTeaserId($teaserId, $language, $version);
-            $hash   = $this->_createHashFromValues($values);
+            $hash = $this->_createHashFromValues($values);
 
             $insertData = array(
                 'teaser_id' => $teaserId,
@@ -59,7 +57,7 @@ class TeaserHasher extends ElementHasher
     public function getHashValuesByTeaserId($teaserId, $language, $version)
     {
         $values = $this->_getHashValuesByTid($teaserId, $language, $version);
-        $hash   = $this->_createHashFromValues($values);
+        $hash = $this->_createHashFromValues($values);
 
         return array('values' => $values, 'hash' => $hash);
     }
@@ -70,7 +68,7 @@ class TeaserHasher extends ElementHasher
             ->from($this->_db->prefix . 'element_tree_teasers', array('teaser_eid', 'template_id'))
             ->where('id = ?', $teaserId)
             ->limit(1);
-#echo $selectPage.PHP_EOL;
+        #echo $selectPage.PHP_EOL;
 
         $teaserRow = $this->_db->fetchRow($selectTeaser);
         $eid = $teaserRow['teaser_eid'];

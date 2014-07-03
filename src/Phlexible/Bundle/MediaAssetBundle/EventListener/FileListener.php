@@ -53,7 +53,6 @@ class FileListener
         $this->metaReader->read($file, $metaBag);
 
         $file
-            ->setAttribute('assetmeta', $metaBag)
-        ;
+            ->setAttribute('assetmeta', $metaBag);
     }
 }

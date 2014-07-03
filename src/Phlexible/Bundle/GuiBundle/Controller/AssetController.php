@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Asset controller
@@ -94,14 +94,14 @@ class AssetController extends Controller
      */
     public function textimageAction(Request $request)
     {
-        $key       = $request->query->get('key', null);
-        $text      = $request->query->get('text', null);
-        $color     = $request->query->get('color', null);
-        $location  = $request->query->get('location', 'west');
+        $key = $request->query->get('key', null);
+        $text = $request->query->get('text', null);
+        $color = $request->query->get('color', null);
+        $location = $request->query->get('location', 'west');
         $component = $request->query->get('component', null);
-        $icon      = $request->query->get('icon', null);
+        $icon = $request->query->get('icon', null);
 
-        $user   = $this->getUser();
+        $user = $this->getUser();
 
         if (!$text) {
             if (!$key) {
@@ -113,7 +113,7 @@ class AssetController extends Controller
         }
 
         if (!$color) {
-            $color  = '7fa1cc';
+            $color = '7fa1cc';
         }
         $color = '#' . ltrim($color, '#');
 

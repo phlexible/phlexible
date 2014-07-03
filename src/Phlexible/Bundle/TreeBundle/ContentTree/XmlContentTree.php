@@ -8,13 +8,13 @@
 
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
-use Phlexible\Component\Identifier\IdentifiableInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
+use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -161,8 +161,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
                 ->setDefault((bool) $urlElement->getAttribute('default'))
                 ->setHostname((string) $urlElement->textContent)
                 ->setLanguage((bool) $urlElement->getAttribute('language'))
-                ->setTarget((bool) $urlElement->getAttribute('target'))
-            ;
+                ->setTarget((bool) $urlElement->getAttribute('target'));
             $siteroot->addUrl($url);
         }
 
@@ -173,8 +172,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
                 ->setSiteroot($siteroot)
                 ->setTitle((string) $navigationElement->getAttribute('title'))
                 ->setStartTreeId((int) $navigationElement->getAttribute('startTreeId'))
-                ->setMaxDepth((int) $navigationElement->getAttribute('maxDepth'))
-            ;
+                ->setMaxDepth((int) $navigationElement->getAttribute('maxDepth'));
             $siteroot->addNavigation($navigation);
         }
 
@@ -182,7 +180,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         foreach ($specialTidElements as $specialTidElement) {
             /* @var $specialTidElement \DOMElement */
             $key = $specialTidElement->getAttribute('key');
-            $language = $specialTidElement->getAttribute('language') ?: null;
+            $language = $specialTidElement->getAttribute('language') ? : null;
             $specialTids[$language][$key] = (int) $specialTidElement->textContent;
         }
         $siteroot->setAllSpecialTids($specialTids);
@@ -494,8 +492,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             ->setSlugs($slugs)
             ->setVersions($versions)
             ->setCreatedAt(new \DateTime((string) $element->getAttribute('createdAt')))
-            ->setCreateUserId((string) $element->getAttribute('createUserId'))
-        ;
+            ->setCreateUserId((string) $element->getAttribute('createUserId'));
 
         $this->nodes[$node->getId()] = $node;
 

@@ -80,7 +80,7 @@ class Contentchannel
     /**
      * Set title
      *
-     * @param string
+     * @param string $title
      *
      * @return $this
      */

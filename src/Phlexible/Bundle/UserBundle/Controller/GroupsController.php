@@ -9,12 +9,12 @@
 namespace Phlexible\Bundle\UserBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\UserBundle\UsersMessage;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\UserBundle\UsersMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -87,13 +87,12 @@ class GroupsController extends Controller
             ->setCreateUserId($this->getUser()->getId())
             ->setCreatedAt(new \DateTime())
             ->setModifyUserId($this->getUser()->getId())
-            ->setModifiedAt(new \DateTime())
-        ;
+            ->setModifiedAt(new \DateTime());
 
         $groupManager->updateGroup($group);
 
         $this->get('phlexible_message.message_poster')
-             ->post(UsersMessage::create('Group "' . $group->getName() . '" created.'));
+            ->post(UsersMessage::create('Group "' . $group->getName() . '" created.'));
 
         return new ResultResponse(true, "Group $name created.");
     }
@@ -125,13 +124,12 @@ class GroupsController extends Controller
         $group
             ->setName($name)
             ->setModifyUserId($this->getUser()->getId())
-            ->setModifiedAt(new \DateTime())
-        ;
+            ->setModifiedAt(new \DateTime());
 
         $groupManager->updateGroup($group);
 
         $this->get('phlexible_message.message_poster')
-             ->post(UsersMessage::create('Group "' . $group->getName() . '" updated.'));
+            ->post(UsersMessage::create('Group "' . $group->getName() . '" updated.'));
 
         return new ResultResponse(true, "Group $oldName renamed to $name.");
     }
@@ -158,7 +156,7 @@ class GroupsController extends Controller
         $groupManager->deleteGroup($group);
 
         $this->get('phlexible_message.message_poster')
-             ->post(UsersMessage::create('Group "' . $group->getName() . '" deleted.'));
+            ->post(UsersMessage::create('Group "' . $group->getName() . '" deleted.'));
 
         return new ResultResponse(true, "Group $name deleted.");
     }

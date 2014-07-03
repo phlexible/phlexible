@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -36,11 +36,11 @@ class ArchiveController extends Controller
         $mediaSiteManager = $this->get('mediasite.manager');
 
         $folderID = $request->get('folder_id');
-        $site     = $mediaSiteManager->getByFolderId($folderID);
-        $folder   = $site->getFolderPeer()->getByID($folderID);
+        $site = $mediaSiteManager->getByFolderId($folderID);
+        $folder = $site->getFolderPeer()->getByID($folderID);
 
         $path = $this->container->getParameter(':media.manager.temp_dir');
-        $filename = $folder->getName().'_'.date('YmdHis');
+        $filename = $folder->getName() . '_' . date('YmdHis');
         $filename = preg_replace('/[^a-zA-Z0-9-_]/', '_', $filename);
         $filename = $path . $filename . '.zip';
 
@@ -76,7 +76,7 @@ class ArchiveController extends Controller
         $subFolders = $folder->getFolders();
 
         foreach ($subFolders as $subFolder) {
-            $this->addFolderToZip($subFolder, $zip, $subFolder->getName().'/');
+            $this->addFolderToZip($subFolder, $zip, $subFolder->getName() . '/');
         }
     }
 }

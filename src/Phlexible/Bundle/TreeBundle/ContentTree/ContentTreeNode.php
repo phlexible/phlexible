@@ -66,7 +66,7 @@ class ContentTreeNode extends TreeNode
     public function getTitle($language)
     {
         if (!isset($this->titles[$language])) {
-            return "no-title-{$this->getId()}-$language-".print_r($this->titles, 1);
+            return "no-title-{$this->getId()}-$language-" . print_r($this->titles, 1);
         }
 
         return $this->titles[$language];

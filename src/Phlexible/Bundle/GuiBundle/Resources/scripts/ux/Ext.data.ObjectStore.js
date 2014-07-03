@@ -6,19 +6,19 @@
  * <p>
  * Example code:
  * <pre><code>
-var RecordDef = Ext.data.Record.create([
-   {name: 'name', mapping: 'name'},     // "mapping" property not needed if it's the same as "name"
-   {name: 'occupation'}                 // This field will use "occupation" as the mapping.
-]);
-var myReader = new Ext.data.ObjectReader({
+ var RecordDef = Ext.data.Record.create([
+ {name: 'name', mapping: 'name'},     // "mapping" property not needed if it's the same as "name"
+ {name: 'occupation'}                 // This field will use "occupation" as the mapping.
+ ]);
+ var myReader = new Ext.data.ObjectReader({
    id: "id"                             // The field that provides an ID for the record (optional)
 }, RecordDef);
-</code></pre>
+ </code></pre>
  * <p>
  * This would consume data like this:
  * <pre><code>
-[ {id:1, name:'Bill', occupation:'Gardener'}, {id:2, name:'Ben', occupation:'Horticulturalist'} ]
-</code></pre>
+ [ {id:1, name:'Bill', occupation:'Gardener'}, {id:2, name:'Ben', occupation:'Horticulturalist'} ]
+ </code></pre>
  * @cfg {String} id (optional) The field that provides an ID for the record
  * @constructor
  * Create a new ObjectReader
@@ -27,9 +27,9 @@ var myReader = new Ext.data.ObjectReader({
  * Record subclass created with {@link Ext.data.Record#create}, or an array of objects with which to call
  * Ext.data.Record.create.  See the {@link Ext.data.Record} class for more details.
  */
-Ext.data.ObjectReader = function(meta, recordType){
+Ext.data.ObjectReader = function (meta, recordType) {
     meta = meta || {};
-    Ext.data.ObjectReader.superclass.constructor.call(this, meta, recordType||meta.fields);
+    Ext.data.ObjectReader.superclass.constructor.call(this, meta, recordType || meta.fields);
 };
 Ext.extend(Ext.data.ObjectReader, Ext.data.DataReader, {
     /**
@@ -37,11 +37,11 @@ Ext.extend(Ext.data.ObjectReader, Ext.data.DataReader, {
      * <p>
      * Data should be provided in the following structure:
      * <pre><code>
-{
-  objects : [ { }, { }... ], // An array of objects
-  totalSize : 1234           // The total number of records (>= objects.length)
-}
-</code></pre>
+     {
+       objects : [ { }, { }... ], // An array of objects
+       totalSize : 1234           // The total number of records (>= objects.length)
+     }
+     </code></pre>
      * The 'objects' field is required; other fields are optional.
      * @param {Array} response An object containing an array of objects and meta data.
      * @return {Object} records A data block which is used by an {@link Ext.data.Store} as
@@ -52,13 +52,13 @@ Ext.extend(Ext.data.ObjectReader, Ext.data.DataReader, {
      * If these fields are unnatural for a proxy, it may call readRecords() directly and handle
      * this functionality itself.
      */
-    read : function(response){
-        if( undefined == response.objects ) {
+    read: function (response) {
+        if (undefined == response.objects) {
             throw {message: "ObjectReader.read: Objects not available"};
         }
         var result = this.readRecords(response.objects);
-        if ( undefined != response.totalSize )
-                result.totalRecords = response.totalSize;
+        if (undefined != response.totalSize)
+            result.totalRecords = response.totalSize;
         return result;
     },
 
@@ -68,14 +68,14 @@ Ext.extend(Ext.data.ObjectReader, Ext.data.DataReader, {
      * @return {Object} records A data block which is used by an {@link Ext.data.Store} as
      * a cache of Ext.data.Records.
      */
-    readRecords : function(objects){
+    readRecords: function (objects) {
         var records = [];
         var recordType = this.recordType, fields = recordType.prototype.fields;
         var idField = this.meta.id;
-        for(var i = 0; i < objects.length; i++) {
+        for (var i = 0; i < objects.length; i++) {
             var object = objects[i];
             var values = {};
-            for(var j = 0; j < fields.length; j++){
+            for (var j = 0; j < fields.length; j++) {
                 var field = fields.items[j];
                 var v = object[field.mapping || field.name] || field.defaultValue;
                 v = field.convert(v);
@@ -85,8 +85,8 @@ Ext.extend(Ext.data.ObjectReader, Ext.data.DataReader, {
             records[records.length] = new recordType(values, id);
         }
         return {
-            records      : records,
-            totalRecords : records.length
+            records: records,
+            totalRecords: records.length
         };
     }
 });
@@ -101,11 +101,11 @@ Ext.extend(Ext.data.ObjectReader, Ext.data.DataReader, {
  * @constructor
  * @param {Object} config
  */
-Ext.data.ObjectStore = function(config){
+Ext.data.ObjectStore = function (config) {
     Ext.data.ObjectStore.superclass.constructor.call(this, Ext.apply(config, {
         reader: new Ext.data.ObjectReader({
-            id: config.id
-        },
+                id: config.id
+            },
             Ext.data.Record.create(config.fields)
         )
     }));

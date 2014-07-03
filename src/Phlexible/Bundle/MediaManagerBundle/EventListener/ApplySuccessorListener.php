@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
+use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Apply successor listener
@@ -37,15 +37,15 @@ class ApplySuccessorListener
     public function onApplySuccessor(ApplySuccessorEvent $event)
     {
         $fromUser = $event->getFromUser();
-        $toUser   = $event->getToUser();
+        $toUser = $event->getToUser();
 
         $fromUid = $fromUser->getId();
-        $toUid   = $toUser->getId();
+        $toUid = $toUser->getId();
 
         $this->db->update(
             $this->db->prefix . 'mediamanager_files',
             array(
-                'create_user_id'  => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
                 'create_user_id = ?' => $fromUid
@@ -55,7 +55,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'mediamanager_files',
             array(
-                'modify_user_id'  => $toUid,
+                'modify_user_id' => $toUid,
             ),
             array(
                 'modify_user_id = ?' => $fromUid
@@ -65,7 +65,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'mediamanager_folders',
             array(
-                'create_user_id'  => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
                 'create_user_id = ?' => $fromUid
@@ -75,7 +75,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'mediamanager_folders',
             array(
-                'modify_user_id'  => $toUid,
+                'modify_user_id' => $toUid,
             ),
             array(
                 'modify_user_id = ?' => $fromUid
@@ -85,7 +85,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'mediamanager_folder_rights',
             array(
-                'create_user_id'  => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
                 'create_user_id = ?' => $fromUid
@@ -95,7 +95,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'mediamanager_folder_rights',
             array(
-                'modify_user_id'  => $toUid,
+                'modify_user_id' => $toUid,
             ),
             array(
                 'modify_user_id = ?' => $fromUid
@@ -105,7 +105,7 @@ class ApplySuccessorListener
         $this->db->update(
             $this->db->prefix . 'mediamanager_site',
             array(
-                'create_uid'  => $toUid,
+                'create_uid' => $toUid,
             ),
             array(
                 'create_uid = ?' => $fromUid

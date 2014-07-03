@@ -13,12 +13,12 @@ namespace Phlexible\Bundle\AccessControlBundle\ContentObject;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
- interface HierarchicalDomainObjectInterface extends DomainObjectInterface
+interface HierarchicalDomainObjectInterface extends DomainObjectInterface
 {
-     /**
-      * Return hierarchical domain identifiers
-      *
-      * @return array
-      */
-     public function getHierarchicalDomainIdentifiers();
- }
+    /**
+     * Return hierarchical domain identifiers
+     *
+     * @return array
+     */
+    public function getHierarchicalDomainIdentifiers();
+}

@@ -1,39 +1,39 @@
-Phlexible.fields.Registry.addFactory('folder', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('folder', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.ds_id);
+    element.prototypes.incCount(item.ds_id);
 
-	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
 
-	// TODO: wie?
-	item.media = item.media || {};
+    // TODO: wie?
+    item.media = item.media || {};
 
-	Ext.apply(config, {
-		xtype: 'folderfield',
-		hiddenName: config.name,
-		data_id: item.data_id,
+    Ext.apply(config, {
+        xtype: 'folderfield',
+        hiddenName: config.name,
+        data_id: item.data_id,
 
-		width: (parseInt(item.configuration.width, 10) || 200),
+        width: (parseInt(item.configuration.width, 10) || 200),
 
-		folder_id: item.media.folder_id || false,
-		folder_path: item.media.folder_path || false,
-		fileTitle: item.media.name,
-		menuConfig: {
-			minWidth: 300
-		},
+        folder_id: item.media.folder_id || false,
+        folder_path: item.media.folder_path || false,
+        fileTitle: item.media.name,
+        menuConfig: {
+            minWidth: 300
+        },
 
-		supportsPrefix: true,
-		supportsSuffix: true,
-		supportsDiff: true,
-		supportsUnlink: true,
-		supportsRepeatable: true
-	});
+        supportsPrefix: true,
+        supportsSuffix: true,
+        supportsDiff: true,
+        supportsUnlink: true,
+        supportsRepeatable: true
+    });
 
-	delete config.name;
+    delete config.name;
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('folder', {
@@ -43,11 +43,11 @@ Phlexible.fields.FieldTypes.addField('folder', {
     },
     iconCls: 'p-frontendmedia-field_folder-icon',
     allowedIn: [
-		'tab',
-		'accordion',
-		'group',
-		'referenceroot'
-	],
+        'tab',
+        'accordion',
+        'group',
+        'referenceroot'
+    ],
     config: {
         labels: {
             field: 1,

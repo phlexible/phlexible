@@ -1,5 +1,5 @@
 Phlexible.tasks.Manager = {
-    setStatus: function(task_id, new_status, comment, callback, scope) {
+    setStatus: function (task_id, new_status, comment, callback, scope) {
         Ext.Ajax.request({
             url: '/bla',//Phlexible.Router.generate('tasks_create_status'),
             params: {

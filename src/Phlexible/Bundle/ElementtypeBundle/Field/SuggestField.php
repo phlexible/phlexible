@@ -16,7 +16,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
 class SuggestField extends AbstractField
 {
     protected $hasOptions = true;
-    protected $icon       = 'p-elementtype-field_select-icon';
+    protected $icon = 'p-elementtype-field_select-icon';
 
     /**
      * Transform item values
@@ -32,19 +32,21 @@ class SuggestField extends AbstractField
         $item['rawContent'] = $item['data_content'];
 
         $data = array();
-#        if (!empty($options['source_source']))
-#        {
-#            $dataSourceRepository = MWF_Registry::getContainer()->dataSourcesRepository;
-#
-#            $sourceId = $options['source_source'];
-#            $item['source_id'] = $sourceId;
-#            $source = $dataSourceRepository->getDataSourceById($sourceId, $this->_language);
-#
-#            foreach ($source->getKeys() as $key)
-#            {
-#                $data[] = array($key, $key);
-#            }
-#        }
+        /*
+        if (!empty($options['source_source']))
+        {
+            $dataSourceRepository = MWF_Registry::getContainer()->dataSourcesRepository;
+
+            $sourceId = $options['source_source'];
+            $item['source_id'] = $sourceId;
+            $source = $dataSourceRepository->getDataSourceById($sourceId, $this->_language);
+
+            foreach ($source->getKeys() as $key)
+            {
+                $data[] = array($key, $key);
+            }
+        }
+        */
         $item['options'] = $data;
 
         return $item;
@@ -52,8 +54,7 @@ class SuggestField extends AbstractField
 
     public function transformSave($value, $eid, $version, $language)
     {
-        if (is_array($value))
-        {
+        if (is_array($value)) {
             $delimiter = MWF_Registry::getContainer()->getParam(':phlexible_elementtype.field.suggest_seperator');
             $value = implode($delimiter, $value);
         }
@@ -66,17 +67,15 @@ class SuggestField extends AbstractField
         $dataSourceId = $structureNode->getOptionsValue('source_source');
         $dataSourcesRepository = MWF_Registry::getContainer()->get('datasources.repository');
 
-        $dataSource     = $dataSourcesRepository->getDataSourceById($dataSourceId, $language);
+        $dataSource = $dataSourcesRepository->getDataSourceById($dataSourceId, $language);
         $dataSourceKeys = $dataSource->getKeys();
 
-        $delimiter           = MWF_Registry::getContainer()->getParam(':phlexible_elementtype.field.suggest_seperator');
-        $dataSourceValues    = explode($delimiter, $value);
+        $delimiter = MWF_Registry::getContainer()->getParam(':phlexible_elementtype.field.suggest_seperator');
+        $dataSourceValues = explode($delimiter, $value);
 
         $newDataSourceValues = array_diff($dataSourceValues, $dataSourceKeys);
-        if (count($newDataSourceValues))
-        {
-            foreach ($newDataSourceValues as $newDataSourceValue)
-            {
+        if (count($newDataSourceValues)) {
+            foreach ($newDataSourceValues as $newDataSourceValue) {
                 $dataSource->addKey($newDataSourceValue, true);
             }
             $dataSourcesRepository->save($dataSource, MWF_Env::getUid());

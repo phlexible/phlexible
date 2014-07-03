@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -33,9 +33,9 @@ class RightsController extends Controller
      */
     public function subjectsAction(Request $request)
     {
-        $rightType   = $request->get('right_type', null);
+        $rightType = $request->get('right_type', null);
         $contentType = $request->get('content_type', null);
-        $contentId   = $request->get('content_id', null);
+        $contentId = $request->get('content_id', null);
 
         $site = $this->get('mediasite.manager')->getByFolderId($contentId);
         $folder = $site->findFolder($contentId);
@@ -57,7 +57,7 @@ class RightsController extends Controller
             $contentId,
             $path,
             array(
-                'uid' => function(array $ids) use ($userManager) {
+                'uid' => function (array $ids) use ($userManager) {
                     $users = $userManager->findBy(array('uid' => $ids));
 
                     $subjects = array();
@@ -67,7 +67,7 @@ class RightsController extends Controller
 
                     return $subjects;
                 },
-                'gid' => function(array $ids) use ($groupManager) {
+                'gid' => function (array $ids) use ($groupManager) {
                     $groups = $groupManager->findBy(array('gid' => $ids));
 
                     $subjects = array();
@@ -94,11 +94,11 @@ class RightsController extends Controller
      */
     public function addAction(Request $request)
     {
-        $rightType   = $request->get('right_type', null);
+        $rightType = $request->get('right_type', null);
         $contentType = $request->get('content_type', null);
-        $contentId   = $request->get('content_id', null);
-        $objectType  = $request->get('object_type', null);
-        $objectId    = $request->get('object_id', null);
+        $contentId = $request->get('content_id', null);
+        $objectType = $request->get('object_type', null);
+        $objectId = $request->get('object_id', null);
 
         $site = $this->get('mediasite.manager')->getByFolderId($contentId);
         $folder = $site->findFolder($contentId);

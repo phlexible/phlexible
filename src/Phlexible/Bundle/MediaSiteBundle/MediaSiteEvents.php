@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\MediaSiteBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface MediaSiteEvents
+class MediaSiteEvents
 {
     /**
      * Before Store Upload Event

@@ -1,5 +1,5 @@
 Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
-    processDrop: function(targetNode, data, point, dd, e, dropNode) {
+    processDrop: function (targetNode, data, point, dd, e, dropNode) {
         //Phlexible.console.info(targetNode);
         //Phlexible.console.info(data);
         //Phlexible.console.info(dropNode);
@@ -23,7 +23,7 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
                 id: sourceId,
                 target: targetId
             },
-            success: function(response, options){
+            success: function (response, options) {
                 var data = Ext.decode(response.responseText);
 
                 if (!data.success) {
@@ -57,7 +57,7 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
         return true;
     },
 
-    onNodeOver : function(n, dd, e, data){
+    onNodeOver: function (n, dd, e, data) {
         // slightly modified from TreeDropZone
         // this just highlights the node currently hovering over.
         // without regard to leaf or not.  See original TreeDropZone
@@ -67,31 +67,33 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
         var node = n.node;
 
         // auto node expand check
-        if(!this.expandProcId && pt == "append" && node.hasChildNodes() && !n.node.isExpanded()){
+        if (!this.expandProcId && pt == "append" && node.hasChildNodes() && !n.node.isExpanded()) {
             this.queueExpand(node);
-        }else if(pt != "append"){
+        } else if (pt != "append") {
             this.cancelExpand();
         }
 
         // set the insert point style on the target node
         var returnCls = this.dropNotAllowed;
-        if(this.isValidDropPoint(n, pt, dd, e, data)){
-           if(pt){
-               var el = n.ddel;
-               var cls;
-               returnCls = "x-tree-drop-ok-append";
-               cls = "x-tree-drag-append";
-               if(this.lastInsertClass != cls){
-                   Ext.fly(el).replaceClass(this.lastInsertClass, cls);
-                   this.lastInsertClass = cls;
-               }
-           }
-       }
-       return returnCls;
+        if (this.isValidDropPoint(n, pt, dd, e, data)) {
+            if (pt) {
+                var el = n.ddel;
+                var cls;
+                returnCls = "x-tree-drop-ok-append";
+                cls = "x-tree-drag-append";
+                if (this.lastInsertClass != cls) {
+                    Ext.fly(el).replaceClass(this.lastInsertClass, cls);
+                    this.lastInsertClass = cls;
+                }
+            }
+        }
+        return returnCls;
     },
 
-    isValidDropPoint: function(n, pt, dd, e, data) {
-        if(!n || !data){ return false; }
+    isValidDropPoint: function (n, pt, dd, e, data) {
+        if (!n || !data) {
+            return false;
+        }
 
 //        Phlexible.console.log(n);
 //        Phlexible.console.log(data);
@@ -100,12 +102,12 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
         var result2 = false;
         var targetNode = n.node;
 
-        if(data.selections) {
+        if (data.selections) {
             // grid drag
             var r = data.selections[0];
 
             if (r.get('_type') == 'teaser') {
-            // from layoutarea
+                // from layoutarea
                 if (pt != 'append') {
                     return false;
                 }
@@ -115,7 +117,7 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
                     result2 = true;
                 }
             } else if (r.get('_type') == 'element') {
-            // from element list
+                // from element list
                 var dropNode = r;
 
                 var sourceTid = r.get('tid');
@@ -125,8 +127,7 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
 
                 var sourceNode = targetNode.getOwnerTree().getNodeById(sourceTid);
                 if (sourceNode) {
-                    if (targetNode.isAncestor(sourceNode))
-                    {
+                    if (targetNode.isAncestor(sourceNode)) {
                         return false;
                     }
                 }
@@ -147,8 +148,7 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
             if (sourceNode.id === targetNode.id) {
                 return false;
             }
-            if (targetNode.isAncestor(sourceNode))
-            {
+            if (targetNode.isAncestor(sourceNode)) {
                 return false;
             }
 

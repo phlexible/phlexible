@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\ProblemBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ProblemEvents
+class ProblemEvents
 {
     /**
      * Collect event

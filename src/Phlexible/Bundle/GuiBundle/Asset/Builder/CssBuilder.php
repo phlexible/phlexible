@@ -11,9 +11,9 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 use Assetic\Asset\AssetCache;
 use Assetic\Asset\AssetCollection;
 use Assetic\Cache\FilesystemCache;
-use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\FilenameFilter;
+use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\CssCompressorInterface;
 
 /**
@@ -49,15 +49,16 @@ class CssBuilder
      * @param string                  $cacheDir
      * @param bool                    $debug
      */
-    public function __construct(AssetProviderCollection $assetProviders,
-                                CssCompressorInterface $cssCompressor,
-                                $cacheDir,
-                                $debug)
+    public function __construct(
+        AssetProviderCollection $assetProviders,
+        CssCompressorInterface $cssCompressor,
+        $cacheDir,
+        $debug)
     {
         $this->assetProviders = $assetProviders;
-        $this->cssCompressor  = $cssCompressor;
-        $this->cacheDir       = $cacheDir;
-        $this->debug          = $debug;
+        $this->cssCompressor = $cssCompressor;
+        $this->cacheDir = $cacheDir;
+        $this->debug = $debug;
     }
 
     /**

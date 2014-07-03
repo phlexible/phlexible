@@ -1,5 +1,5 @@
 Phlexible.gui.menuhandle.Separator = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
-    createConfig: function(data) {
+    createConfig: function (data) {
         return '|';
     }
 });

@@ -21,11 +21,6 @@ use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
  * Proxy generator
  *
  * @author Stephan Wentz <sw@brainbits.net>
- *
- * Namespaces:
- * - Phlexible\Proxy\Article\Article
- * - Phlexible\Proxy\Article\DataGroup
- * - Phlexible\Proxy\Article\DataVideoGroup
  */
 class ProxyGenerator
 {
@@ -42,6 +37,12 @@ class ProxyGenerator
         $this->elementtypeService = $elementtypeService;
     }
 
+    /**
+     * @param ElementtypeVersion $elementtypeVersion
+     * @param FieldRegistry      $fieldRegistry
+     *
+     * @return array
+     */
     public function generate(ElementtypeVersion $elementtypeVersion, FieldRegistry $fieldRegistry)
     {
         $generator = new DefaultGeneratorStrategy();
@@ -65,17 +66,25 @@ class ProxyGenerator
 
         $data = array(
             'namespace' => $namespace,
-            'content' => array(
-                $classname => '<?php'.PHP_EOL.PHP_EOL.$generator->generate($class),
+            'content'   => array(
+                $classname => '<?php' . PHP_EOL . PHP_EOL . $generator->generate($class),
             )
         );
         foreach ($classes as $classname => $class) {
-            $data['content'][$classname] = '<?php'.PHP_EOL.PHP_EOL.$generator->generate($class);
+            $data['content'][$classname] = '<?php' . PHP_EOL . PHP_EOL . $generator->generate($class);
         }
 
         return $data;
     }
 
+    /**
+     * @param string $namespace
+     * @param string $prefix
+     * @param PhpClass $parentClass
+     * @param array $items
+     *
+     * @return array
+     */
     private function generateSubClasses($namespace, $prefix, PhpClass $parentClass, array $items)
     {
         $classes = array();
@@ -110,12 +119,22 @@ class ProxyGenerator
                     ->setMethod($adder)
                     ->setMethod($getter);
 
-                $classes = array_merge($classes, $this->generateSubClasses($namespace, $name, $class, $item['children']));
+                $classes = array_merge(
+                    $classes,
+                    $this->generateSubClasses($namespace, $name, $class, $item['children'])
+                );
             }
         }
+
         return $classes;
     }
 
+    /**
+     * @param string $className
+     * @param array  $items
+     *
+     * @return $this
+     */
     private function generateClass($className, array $items)
     {
         $class = PhpClass::create($className)
@@ -155,12 +174,19 @@ class ProxyGenerator
         return $class;
     }
 
+    /**
+     * @param string $str
+     * @param bool   $capitaliseFirstChar
+     *
+     * @return string
+     */
     private function toCamelCase($str, $capitaliseFirstChar = true)
     {
-        if($capitaliseFirstChar) {
+        if ($capitaliseFirstChar) {
             $str[0] = strtoupper($str[0]);
         }
         $func = create_function('$c', 'return strtoupper($c[1]);');
+
         return preg_replace_callback('/_([a-z])/', $func, $str);
     }
 }

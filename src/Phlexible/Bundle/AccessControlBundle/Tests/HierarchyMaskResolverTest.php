@@ -63,8 +63,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
     {
         $ace = new AccessControlEntry();
         $ace
-            ->setMask(1 | 2)
-        ;
+            ->setMask(1 | 2);
 
         $mask = $this->resolver->resolve(array($ace));
 
@@ -75,13 +74,11 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
     {
         $ace1 = new AccessControlEntry();
         $ace1
-            ->setMask(1 | 2)
-        ;
+            ->setMask(1 | 2);
 
         $ace2 = new AccessControlEntry();
         $ace2
-            ->setMask(4)
-        ;
+            ->setMask(4);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2));
 
@@ -92,13 +89,11 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
     {
         $ace1 = new AccessControlEntry();
         $ace1
-            ->setMask(1 | 2)
-        ;
+            ->setMask(1 | 2);
 
         $ace2 = new AccessControlEntry();
         $ace2
-            ->setStopMask(1 | 2)
-        ;
+            ->setStopMask(1 | 2);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2));
 
@@ -109,14 +104,12 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
     {
         $ace1 = new AccessControlEntry();
         $ace1
-            ->setMask(1 | 2)
-        ;
+            ->setMask(1 | 2);
 
         $ace2 = new AccessControlEntry();
         $ace2
             ->setMask(4)
-            ->setStopMask(1)
-        ;
+            ->setStopMask(1);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2));
 
@@ -128,13 +121,11 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace1 = new AccessControlEntry();
         $ace1
             ->setMask(1 | 2)
-            ->setNoInheritMask(2)
-        ;
+            ->setNoInheritMask(2);
 
         $ace2 = new AccessControlEntry();
         $ace2
-            ->setMask(4)
-        ;
+            ->setMask(4);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2));
 
@@ -146,14 +137,12 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace1 = new AccessControlEntry();
         $ace1
             ->setMask(1 | 2 | 4)
-            ->setNoInheritMask(2)
-        ;
+            ->setNoInheritMask(2);
 
         $ace2 = new AccessControlEntry();
         $ace2
             ->setStopMask(1)
-            ->setMask(8)
-        ;
+            ->setMask(8);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2));
 
@@ -164,18 +153,15 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
     {
         $ace1 = new AccessControlEntry();
         $ace1
-            ->setMask(1 | 2)
-        ;
+            ->setMask(1 | 2);
 
         $ace2 = new AccessControlEntry();
         $ace2
-            ->setMask(4)
-        ;
+            ->setMask(4);
 
         $ace3 = new AccessControlEntry();
         $ace3
-            ->setMask(8)
-        ;
+            ->setMask(8);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
 
@@ -186,18 +172,15 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
     {
         $ace1 = new AccessControlEntry();
         $ace1
-            ->setMask(1 | 2)
-        ;
+            ->setMask(1 | 2);
 
         $ace2 = new AccessControlEntry();
         $ace2
-            ->setMask(4)
-        ;
+            ->setMask(4);
 
         $ace3 = new AccessControlEntry();
         $ace3
-            ->setStopMask(1 | 2 | 4)
-        ;
+            ->setStopMask(1 | 2 | 4);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
 
@@ -208,20 +191,17 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
     {
         $ace1 = new AccessControlEntry();
         $ace1
-            ->setMask(1 | 2)
-        ;
+            ->setMask(1 | 2);
 
         $ace2 = new AccessControlEntry();
         $ace2
             ->setMask(4)
-            ->setStopMask(1)
-        ;
+            ->setStopMask(1);
 
         $ace3 = new AccessControlEntry();
         $ace3
             ->setMask(8)
-            ->setStopMask(4)
-        ;
+            ->setStopMask(4);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
 
@@ -233,19 +213,16 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace1 = new AccessControlEntry();
         $ace1
             ->setMask(1 | 2)
-            ->setNoInheritMask(2)
-        ;
+            ->setNoInheritMask(2);
 
         $ace2 = new AccessControlEntry();
         $ace2
             ->setMask(4)
-            ->setNoInheritMask(1)
-        ;
+            ->setNoInheritMask(1);
 
         $ace3 = new AccessControlEntry();
         $ace3
-            ->setMask(8)
-        ;
+            ->setMask(8);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
 
@@ -257,20 +234,17 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace1 = new AccessControlEntry();
         $ace1
             ->setMask(1 | 2 | 4)
-            ->setNoInheritMask(2)
-        ;
+            ->setNoInheritMask(2);
 
         $ace2 = new AccessControlEntry();
         $ace2
             ->setMask(8 | 16)
             ->setStopMask(1)
-            ->setNoInheritMask(8)
-        ;
+            ->setNoInheritMask(8);
 
         $ace3 = new AccessControlEntry();
         $ace3
-            ->setMask(32)
-        ;
+            ->setMask(32);
 
         $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
 

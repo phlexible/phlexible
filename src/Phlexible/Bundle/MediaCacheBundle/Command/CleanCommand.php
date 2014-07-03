@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
 use Brainbits_Util_FileLock as FileLock;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,11 +29,12 @@ class CleanCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-cache:clean')
-            ->setDefinition(array(
-                new InputOption('pretend', null, InputOption::VALUE_NONE, 'Only show files that will be deleted'),
-            ))
-            ->setDescription('Remove obsolete cache files')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('pretend', null, InputOption::VALUE_NONE, 'Only show files that will be deleted'),
+                )
+            )
+            ->setDescription('Remove obsolete cache files');
     }
 
     /**
@@ -44,8 +45,7 @@ class CleanCommand extends ContainerAwareCommand
         $container = $this->getContainer();
 
         $lock = new FileLock('mediacache_lock', $container->getParameter('app.lock_dir'));
-        if (!$lock->tryLock())
-        {
+        if (!$lock->tryAcquire()) {
             throw new AlreadyRunningException('Another media cache process is running.');
         }
 
@@ -62,48 +62,38 @@ class CleanCommand extends ContainerAwareCommand
 
         $ids = $db->fetchCol($select);
 
-        foreach ($ids as $id)
-        {
+        foreach ($ids as $id) {
             unset($files[$id]);
         }
 
         $pretend = $input->getOption('pretend');
 
-        if (count($files))
-        {
-            foreach ($files as $file)
-            {
-                if ($pretend || $output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET)
-                {
+        if (count($files)) {
+            foreach ($files as $file) {
+                if ($pretend || $output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET) {
                     $output->writeln('delete: ' . $file);
                 }
 
-                if (!$pretend)
-                {
-                    if (!is_writable(dirname($file)))
-                    {
-                         $output->writeln('Skipping, missing write permission on: ' . dirname($file));
-                         continue;
+                if (!$pretend) {
+                    if (!is_writable(dirname($file))) {
+                        $output->writeln('Skipping, missing write permission on: ' . dirname($file));
+                        continue;
                     }
 
-                    if (!unlink($file))
-                    {
+                    if (!unlink($file)) {
                         $output->writeln('Delete failed: ' . $file);
                     }
                 }
             }
 
             $output->writeln(count($files) . ' obsolete cache files.');
-        }
-        else
-        {
-            if ($pretend || $output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET)
-            {
+        } else {
+            if ($pretend || $output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET) {
                 $output->writeln('No obsolete cache files.');
             }
         }
 
-        $lock->unlock();
+        $lock->release();
 
         return 0;
     }
@@ -112,8 +102,7 @@ class CleanCommand extends ContainerAwareCommand
     {
         $filePaths = glob($site->getFrameDir() . '*/*/*');
         $files = array();
-        foreach ($filePaths as $key => $file)
-        {
+        foreach ($filePaths as $key => $file) {
             $dummy = explode('/', $file);
             $dummy = array_pop($dummy);
             $dummy = explode('.', $dummy);

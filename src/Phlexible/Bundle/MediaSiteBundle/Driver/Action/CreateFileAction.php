@@ -38,10 +38,14 @@ class CreateFileAction extends FileAction
     /**
      * @param FileInterface           $file
      * @param FileSourceInterface     $fileSource
-     * @param FolderInterface     $targetFolder
+     * @param FolderInterface         $targetFolder
      * @param HashCalculatorInterface $hashCalculator
      */
-    public function __construct(FileInterface $file, FileSourceInterface $fileSource, FolderInterface $targetFolder, HashCalculatorInterface $hashCalculator)
+    public function __construct(
+        FileInterface $file,
+        FileSourceInterface $fileSource,
+        FolderInterface $targetFolder,
+        HashCalculatorInterface $hashCalculator)
     {
         parent::__construct($file);
 

@@ -41,9 +41,10 @@ class ContentchannelConfigurator implements ConfiguratorInterface
      * @param LoggerInterface          $logger
      * @param ContentchannelRepository $contentchannelRepository
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                LoggerInterface $logger,
-                                ContentchannelRepository $contentchannelRepository)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger,
+        ContentchannelRepository $contentchannelRepository)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;

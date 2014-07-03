@@ -26,8 +26,7 @@ class FlushCacheCommand extends ContainerAwareCommand
     {
         $this
             ->setName('cache:flush')
-            ->setDescription('Flush cache. Warning - this might compromise shared caches.')
-        ;
+            ->setDescription('Flush cache. Warning - this might compromise shared caches.');
     }
 
     /**

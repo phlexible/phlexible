@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * Layout controller
@@ -27,7 +27,7 @@ class LayoutController extends Controller
     public function treeAction()
     {
         $language = $this->getParam('language');
-        $treeId   = $this->getParam('tid');
+        $treeId = $this->getParam('tid');
 
         if (!$treeId || !$language) {
             $this->_response
@@ -38,18 +38,18 @@ class LayoutController extends Controller
 
         $container = $this->getContainer();
 
-        $translator         = $container->get('translator');
-        $treeManager        = $container->get('phlexible_tree.manager');
-        $teaserService      = $container->get('phlexible_teaser.service');
-        $catchRepository    = $container->get('phlexible_teaser.service');
-        $elementService     = $container->get('phlexible_element.service');
+        $translator = $container->get('translator');
+        $treeManager = $container->get('phlexible_tree.manager');
+        $teaserService = $container->get('phlexible_teaser.service');
+        $catchRepository = $container->get('phlexible_teaser.service');
+        $elementService = $container->get('phlexible_element.service');
         $elementtypeService = $elementService->getElementtypeService();
 
-        $tree                  = $treeManager->getByNodeId($treeId);
-        $treeNode              = $tree->get($treeId);
-        $element               = $elementService->findElement($treeNode->getTypeId());
+        $tree = $treeManager->getByNodeId($treeId);
+        $treeNode = $tree->get($treeId);
+        $element = $elementService->findElement($treeNode->getTypeId());
         $elementMasterLanguage = $element->getMasterLanguage();
-        $elementtype           = $elementtypeService->findElementtype($element->getElementtypeId());
+        $elementtype = $elementtypeService->findElementtype($element->getElementtypeId());
 
         $treeNodePath = $tree->getPath($treeNode);
 
@@ -115,33 +115,38 @@ class LayoutController extends Controller
                     case 'catch':
                         $catch = $catchRepository->find($teaser->getTypeId());
 
-                        $teaserData = array_merge($teaserData, array(
-                            'icon'          => 'catch-icon',
-                            'text'          => $catch->getTitle(),
-                            'leaf'          => false,
-                            'expanded'      => true,
-                            'allowDrag'     => true,
-                            'catchConfig'   => array(
-                                'for_tree_id'            => $catch->getTreeId(),
-                                'for_tree_id_hidden'     => $catch->getTreeId(),
-                                'catch_element_type_id'  => implode(',', $catch->getElementtypeIds()),
-                                'catch_in_navigation'    => $catch->inNavigation(),
-                                'catch_max_depth'        => $catch->getMaxDepth() >= 0 ? $catch->getMaxDepth() + 1 : '',
-                                'catch_max_elements'     => $catch->getMaxResults(),
-                                'catch_rotation'         => $catch->hasRotation(),
-                                'catch_pool_size'        => $catch->getPoolSize(),
-                                'catch_sort_field'       => $catch->getSortField(),
-                                'catch_sort_order'       => $catch->getSortOrder(),
-                                'catch_filter'           => $catch->getFilter(),
-                                'catch_paginator'        => $catch->getResultsPerPage() !== PHP_INT_MAX,
-                                'catch_results_per_page' => $catch->getResultsPerPage() === PHP_INT_MAX ? '' : $catch->getResultsPerPage(),
-                            ),
-                        ));
+                        $teaserData = array_merge(
+                            $teaserData,
+                            array(
+                                'icon'        => 'catch-icon',
+                                'text'        => $catch->getTitle(),
+                                'leaf'        => false,
+                                'expanded'    => true,
+                                'allowDrag'   => true,
+                                'catchConfig' => array(
+                                    'for_tree_id'            => $catch->getTreeId(),
+                                    'for_tree_id_hidden'     => $catch->getTreeId(),
+                                    'catch_element_type_id'  => implode(',', $catch->getElementtypeIds()),
+                                    'catch_in_navigation'    => $catch->inNavigation(),
+                                    'catch_max_depth'        => $catch->getMaxDepth() >= 0 ? $catch->getMaxDepth(
+                                            ) + 1 : '',
+                                    'catch_max_elements'     => $catch->getMaxResults(),
+                                    'catch_rotation'         => $catch->hasRotation(),
+                                    'catch_pool_size'        => $catch->getPoolSize(),
+                                    'catch_sort_field'       => $catch->getSortField(),
+                                    'catch_sort_order'       => $catch->getSortOrder(),
+                                    'catch_filter'           => $catch->getFilter(),
+                                    'catch_paginator'        => $catch->getResultsPerPage() !== PHP_INT_MAX,
+                                    'catch_results_per_page' => $catch->getResultsPerPage(
+                                        ) === PHP_INT_MAX ? '' : $catch->getResultsPerPage(),
+                                ),
+                            )
+                        );
 
                         if ($catch->getMetaSearch()) {
                             $i = 1;
                             foreach ($catch->getMetaSearch() as $key => $value) {
-                                $teaserData['catchConfig']['catch_meta_key_' . $i]      = $key;
+                                $teaserData['catchConfig']['catch_meta_key_' . $i] = $key;
                                 $teaserData['catchConfig']['catch_meta_keywords_' . $i] = $value;
                                 $i++;
                             }
@@ -203,15 +208,15 @@ class LayoutController extends Controller
                         }
 
                         $teaserData += array(
-                            'text'          => $teaserElementVersion->getBackendTitle($language),
-                            'icon'          => $teaserElementVersion->getIconUrl(),
-                            'eid'           => $teaserElement->getEid(),
-                            'type'          => 'teaser',
-                            'inherited'     => $teaser->getTreeId() !== $treeId,
-                            'inherit'       => !$teaser->getStopInherit(),
-                            'stop_inherit'  => false,
-                            'cls'           => trim($cls),
-                            'no_display'    => $teaser->getNoDisplay() ? true : false,
+                            'text'         => $teaserElementVersion->getBackendTitle($language),
+                            'icon'         => $teaserElementVersion->getIconUrl(),
+                            'eid'          => $teaserElement->getEid(),
+                            'type'         => 'teaser',
+                            'inherited'    => $teaser->getTreeId() !== $treeId,
+                            'inherit'      => !$teaser->getStopInherit(),
+                            'stop_inherit' => false,
+                            'cls'          => trim($cls),
+                            'no_display'   => $teaser->getNoDisplay() ? true : false,
                         );
                         break;
 
@@ -241,33 +246,32 @@ class LayoutController extends Controller
     {
         $container = $this->getContainer();
 
-        $treeManager               = $container->get('phlexible_tree.manager');
-        $teaserManager             = $container->get('teasersManager');
-        $elementManager            = $container->get('elementsManager');
-        $elementVersionManager     = $container->get('elementsVersionManager');
-        $elementTypeManager        = Makeweb_Elementtypes_Elementtype_Manager::getInstance();
-        $layoutAreaManager         = Makeweb_Teasers_Layoutarea_Manager::getInstance();
+        $treeManager = $container->get('phlexible_tree.manager');
+        $teaserManager = $container->get('teasersManager');
+        $elementManager = $container->get('elementsManager');
+        $elementVersionManager = $container->get('elementsVersionManager');
+        $elementTypeManager = Makeweb_Elementtypes_Elementtype_Manager::getInstance();
+        $layoutAreaManager = Makeweb_Teasers_Layoutarea_Manager::getInstance();
         $elementTypeVersionManager = Makeweb_Elementtypes_Elementtype_Version_Manager::getInstance();
-        $layoutAreaManager         = Makeweb_Teasers_Layoutarea_Manager::getInstance();
+        $layoutAreaManager = Makeweb_Teasers_Layoutarea_Manager::getInstance();
 
         $data = array();
 
-        $tid                   = $this->_getParam('tid');
-        $node                  = $treeManager->getNodeByNodeId($tid);
-        $treePath              = $node->getTree()->getNodePath($tid);
-        $element               = $elementManager->getByEID($node->getEID());
+        $tid = $this->_getParam('tid');
+        $node = $treeManager->getNodeByNodeId($tid);
+        $treePath = $node->getTree()->getNodePath($tid);
+        $element = $elementManager->getByEID($node->getEID());
         $elementMasterLanguage = $element->getMasterLanguage();
-        $layoutAreaId          = $this->_getParam('area_id');
-        $language              = $this->_getParam('language', $elementMasterLanguage);
+        $layoutAreaId = $this->_getParam('area_id');
+        $language = $this->_getParam('language', $elementMasterLanguage);
 
-        $filter   = $this->_getParam('filter');
-        if ($filter)
-        {
+        $filter = $this->_getParam('filter');
+        if ($filter) {
             $filter = json_decode($filter, true);
         }
 
         $layoutArea = $elementTypeVersionManager->getLatest($layoutAreaId);
-        $teaserData = (object)$teaserManager->getAllByTIDPath($treePath, $layoutArea, $language, array(), true);
+        $teaserData = (object) $teaserManager->getAllByTIDPath($treePath, $layoutArea, $language, array(), true);
 
         $parent = array(
             'teaser_id'       => (int) $teaserData->id,
@@ -279,7 +283,7 @@ class LayoutController extends Controller
             'author'          => 'author',
             'version'         => $layoutArea->getVersion(),
             'create_time'     => $layoutArea->getModifyTime(),
-//            'change_time'     => '2007-01-01 01:01:01',
+            //            'change_time'     => '2007-01-01 01:01:01',
             'publish_time'    => null,
             'language'        => $language,
             'sort'            => 0,
@@ -289,91 +293,72 @@ class LayoutController extends Controller
             'version_online'  => (int) $layoutArea->getVersion(),
             'status'          => ' o_O ',
             'qtip'            =>
-                $layoutArea->getTitle() . ', Version '  . $layoutArea->getVersion() . '<br>' .
+                $layoutArea->getTitle() . ', Version ' . $layoutArea->getVersion() . '<br>' .
                 37 . ' Versions<br>'
         );
 
         $data = array();
 
-        foreach ($teaserData->children as $teaserItem)
-        {
-            $teaserItem = (object)$teaserItem;
+        foreach ($teaserData->children as $teaserItem) {
+            $teaserItem = (object) $teaserItem;
 
-            if (Makeweb_Teasers_Manager::TYPE_TEASER == $teaserItem->type)
-            {
-                try
-                {
-                    $teaserElementVersion     = $elementVersionManager->getLatest($teaserItem->eid);
+            if (Makeweb_Teasers_Manager::TYPE_TEASER == $teaserItem->type) {
+                try {
+                    $teaserElementVersion = $elementVersionManager->getLatest($teaserItem->eid);
                     $teaserElementTypeVersion = $teaserElementVersion->getElementTypeVersionObj();
-                }
-                catch (Exception $e)
-                {
+                } catch (Exception $e) {
                     continue;
                 }
 
                 $teaserNode = $teaserItem->node;
 
-                if (!empty($filter['status']))
-                {
+                if (!empty($filter['status'])) {
                     $status = explode(',', $filter['status']);
 
                     $show = false;
-                    if (in_array('online', $status) && $teaserNode->isPublished($language) && !$teaserNode->isAsync($language))
-                    {
+                    if (in_array('online', $status) && $teaserNode->isPublished($language) && !$teaserNode->isAsync(
+                            $language
+                        )
+                    ) {
                         $show = true;
-                    }
-                    elseif (in_array('async', $status) && $teaserNode->isAsync($language))
-                    {
+                    } elseif (in_array('async', $status) && $teaserNode->isAsync($language)) {
                         $show = true;
-                    }
-                    elseif (in_array('offline', $status) && !$teaserNode->isPublished($language))
-                    {
+                    } elseif (in_array('offline', $status) && !$teaserNode->isPublished($language)) {
                         $show = true;
                     }
 
-                    if (!$show)
-                    {
+                    if (!$show) {
                         continue;
                     }
                 }
 
-                if (!empty($filter['date']))
-                {
-                    $date     = $filter['date'];
+                if (!empty($filter['date'])) {
+                    $date = $filter['date'];
                     $dateFrom = !empty($filter['date_from']) ? strtotime($filter['date_from']) : '';
-                    $dateTo   = !empty($filter['date_to']) ? strtotime($filter['date_to']) : '';
+                    $dateTo = !empty($filter['date_to']) ? strtotime($filter['date_to']) : '';
 
                     $show = false;
-                    if ($date === 'create')
-                    {
+                    if ($date === 'create') {
                         $createDate = strtotime($teaserElementVersion->getCreateTime());
 
-                        if ((!$dateFrom || $createDate > $dateFrom) && (!$dateTo || $createDate < $dateTo))
-                        {
+                        if ((!$dateFrom || $createDate > $dateFrom) && (!$dateTo || $createDate < $dateTo)) {
                             $show = true;
                         }
-                    }
-                    elseif ($date === 'publish')
-                    {
+                    } elseif ($date === 'publish') {
                         $publishDate = strtotime($teaserNode->getPublishTime($language));
 
-                        if ((!$dateFrom || $publishDate > $dateFrom) && (!$dateTo || $publishDate < $dateTo))
-                        {
+                        if ((!$dateFrom || $publishDate > $dateFrom) && (!$dateTo || $publishDate < $dateTo)) {
                             $show = true;
                         }
-                    }
-                    elseif ($date === 'custom')
-                    {
+                    } elseif ($date === 'custom') {
                         $customDate = strtotime($teaserElementVersion->getCustomDate($language));
 
-                        if ((!$dateFrom || $customDate > $dateFrom) && (!$dateTo || $customDate < $dateTo))
-                        {
+                        if ((!$dateFrom || $customDate > $dateFrom) && (!$dateTo || $customDate < $dateTo)) {
                             $show = true;
                         }
                     }
 
-                    if (!$show)
-                    {
+                    if (!$show) {
                         continue;
                     }
                 }
@@ -391,7 +376,7 @@ class LayoutController extends Controller
                     'author'          => 'author',
                     'version'         => $teaserElementVersion->getVersion(),
                     'create_time'     => $teaserElementVersion->getCreateTime(),
-    //                'change_time'     => $child['modify_time'],
+                    //                'change_time'     => $child['modify_time'],
                     'publish_time'    => $teaserNode->getPublishTime($language),
                     'custom_date'     => $teaserElementVersion->getCustomDate($language),
                     'language'        => $language,
@@ -399,12 +384,11 @@ class LayoutController extends Controller
                     'version_latest'  => (int) $teaserNode->getLatestVersion(),
                     'version_online'  => (int) $teaserNode->getOnlineVersion($language),
                     'status'          => '>o>',
-                    'qtip'            => $teaserElementTypeVersion->getTitle() . ', Version '  . $teaserElementTypeVersion->getVersion() . '<br>' .
-                                         'Version ' . $teaserElementVersion->getVersion() . '<br>',
+                    'qtip'            => $teaserElementTypeVersion->getTitle(
+                        ) . ', Version ' . $teaserElementTypeVersion->getVersion() . '<br>' .
+                        'Version ' . $teaserElementVersion->getVersion() . '<br>',
                 );
-            }
-            elseif (Makeweb_Teasers_Manager::TYPE_CATCH == $teaserItem->type)
-            {
+            } elseif (Makeweb_Teasers_Manager::TYPE_CATCH == $teaserItem->type) {
                 $data[] = array(
                     'teaser_id'       => (int) $teaserItem->id,
                     'eid'             => null,
@@ -414,11 +398,12 @@ class LayoutController extends Controller
                     'element_type'    => '',
                     'navigation'      => 0,
                     'restricted'      => 0,
-                    'icon'            => $this->_request->getBaseUrl() . '/resources/asset/elementtypes/elementtypes/_left.gif',
+                    'icon'            => $this->_request->getBaseUrl(
+                        ) . '/resources/asset/elementtypes/elementtypes/_left.gif',
                     'author'          => 'author',
                     'version'         => 0,
                     'create_time'     => '',
-    //                'change_time'     => $child['modify_time'],
+                    //                'change_time'     => $child['modify_time'],
                     'publish_time'    => null,
                     'language'        => $language,
                     'sort'            => $teaserItem->sort,
@@ -427,9 +412,7 @@ class LayoutController extends Controller
                     'status'          => '>o>',
                     'qtip'            => $teaserItem->text,
                 );
-            }
-            elseif (Makeweb_Teasers_Manager::TYPE_INHERITED == $teaserItem->type)
-            {
+            } elseif (Makeweb_Teasers_Manager::TYPE_INHERITED == $teaserItem->type) {
                 $data[] = array(
                     'teaser_id'       => (int) $teaserItem->id,
                     'eid'             => null,
@@ -439,11 +422,12 @@ class LayoutController extends Controller
                     'element_type'    => '',
                     'navigation'      => 0,
                     'restricted'      => 0,
-                    'icon'            => $this->_request->getBaseUrl() . '/resources/asset/elementtypes/elementtypes/_up.gif',
+                    'icon'            => $this->_request->getBaseUrl(
+                        ) . '/resources/asset/elementtypes/elementtypes/_up.gif',
                     'author'          => 'author',
                     'version'         => 0,
                     'create_time'     => '',
-    //                'change_time'     => $child['modify_time'],
+                    //                'change_time'     => $child['modify_time'],
                     'publish_time'    => null,
                     'language'        => $language,
                     'sort'            => $teaserItem->sort,
@@ -457,10 +441,12 @@ class LayoutController extends Controller
 
         //$data['totalChilds'] = $element->getChildCount();
 
-        $this->getResponse()->setAjaxPayload(array(
-            'parent' => $parent,
-            'list'   => $data
-        ));
+        $this->getResponse()->setAjaxPayload(
+            array(
+                'parent' => $parent,
+                'list'   => $data
+            )
+        );
     }
 
     /**
@@ -477,19 +463,18 @@ class LayoutController extends Controller
         $elementTypeVersionManager = Makeweb_Elementtypes_Elementtype_Version_Manager::getInstance();
 
         // TODO use Brainbits_Filter_Input
-        $id                    = $this->_getParam('id');
-        $language              = $this->_getParam('language', $defaultLanguage);
+        $id = $this->_getParam('id');
+        $language = $this->_getParam('language', $defaultLanguage);
 
-//        $elementTypeVersionManager = Makeweb_Elementtypes_Elementtype_Version_Manager::getInstance();
+        //        $elementTypeVersionManager = Makeweb_Elementtypes_Elementtype_Version_Manager::getInstance();
         $elementTypeVersion = $elementTypeVersionManager->getLatest($id, $language);
-        $children           = $elementTypeVersion->getAllowedChildren();
+        $children = $elementTypeVersion->getAllowedChildren();
 
         $data = array();
-        foreach ($children as $childId => $child)
-        {
+        foreach ($children as $childId => $child) {
             /* @var $child Makeweb_Elementtypes_Elementtype */
 
-            $data[$child->getTitle().$childId] = array(
+            $data[$child->getTitle() . $childId] = array(
                 'id'    => $childId,
                 'title' => $child->getTitle(),
                 'icon'  => $this->_request->getBaseUrl() . '/elements/asset/' . $child->getIcon(),
@@ -508,15 +493,15 @@ class LayoutController extends Controller
      */
     public function childelementsAction()
     {
-        $container                 = $this->getContainer();
-        $translator                = $container->get('translator');
-        $treeManager               = $container->get('phlexible_tree.manager');
-        $teaserManager             = $container->teasersManager;
+        $container = $this->getContainer();
+        $translator = $container->get('translator');
+        $treeManager = $container->get('phlexible_tree.manager');
+        $teaserManager = $container->teasersManager;
         $elementTypeVersionManager = $container->elementtypesVersionManager;
 
-        $tid          = $this->_getParam('tree_id');
+        $tid = $this->_getParam('tree_id');
         $layoutAreaId = $this->_getParam('layoutarea_id');
-        $language     = 'de';
+        $language = 'de';
 
         $data = array();
         $data[] = array(
@@ -525,15 +510,14 @@ class LayoutController extends Controller
             'icon'  => $this->_request->getBaseUrl() . '/elements/asset/_top.gif'
         );
 
-        $node       = $treeManager->getNodeByNodeId($tid);
-        $treePath   = $node->getTree()->getNodePath($tid);
+        $node = $treeManager->getNodeByNodeId($tid);
+        $treePath = $node->getTree()->getNodePath($tid);
 
         $layoutArea = $elementTypeVersionManager->getLatest($layoutAreaId);
-        $teaserData = (object)$teaserManager->getAllByTIDPath($treePath, $layoutArea, $language, array(), true);
+        $teaserData = (object) $teaserManager->getAllByTIDPath($treePath, $layoutArea, $language, array(), true);
 
-        foreach ($teaserData->children as $pos => $teaserItem)
-        {
-            $teaserItem = (object)$teaserItem;
+        foreach ($teaserData->children as $pos => $teaserItem) {
+            $teaserItem = (object) $teaserItem;
 
             $data[] = array(
                 'id'    => $teaserItem->id,
@@ -551,24 +535,22 @@ class LayoutController extends Controller
     public function createteaserAction()
     {
         // TODO use Brainbits_Filter_Input
-        $siterootId       = $this->_getParam('siteroot_id');
-        $treeId           = $this->_getParam('tree_id');
-        $eid              = $this->_getParam('eid');
-        $layoutareaId     = $this->_getParam('layoutarea_id');
+        $siterootId = $this->_getParam('siteroot_id');
+        $treeId = $this->_getParam('tree_id');
+        $eid = $this->_getParam('eid');
+        $layoutareaId = $this->_getParam('layoutarea_id');
         $newElementTypeID = $this->_getParam('element_type_id');
-        $prevId           = $this->_getParam('prev_id', 0);
-        $inherit          = $this->_getParam('inherit') == 'on' ? true : false;
-        $noDisplay        = $this->_getParam('no_display') == 'on' ? true : false;
-        $masterLanguage   = $this->_getParam('masterlanguage', null);
+        $prevId = $this->_getParam('prev_id', 0);
+        $inherit = $this->_getParam('inherit') == 'on' ? true : false;
+        $noDisplay = $this->_getParam('no_display') == 'on' ? true : false;
+        $masterLanguage = $this->_getParam('masterlanguage', null);
 
-        if (!$masterLanguage)
-        {
+        if (!$masterLanguage) {
             $container = $this->getContainer();
             $masterLanguage = $container->getParameter('frontend.languages.frontend');
         }
 
-        try
-        {
+        try {
             $manager = Makeweb_Teasers_Manager::getInstance();
             $node = $manager->createTeaser(
                 $treeId,
@@ -590,12 +572,10 @@ class LayoutController extends Controller
             $result = MWF_Ext_Result::encode(
                 true,
                 $node->getId(),
-                'Teaser with ID "'.$node->getId().'" created.',
+                'Teaser with ID "' . $node->getId() . '" created.',
                 array('language' => $masterLanguage)
             );
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
         }
 
@@ -607,19 +587,16 @@ class LayoutController extends Controller
      */
     public function createinstanceAction()
     {
-        try
-        {
-            $treeId       = $this->_getParam('tid');
+        try {
+            $treeId = $this->_getParam('tid');
             $layoutAreaId = $this->_getParam('id');
-            $teaserId     = $this->_getParam('for_teaser_id');
+            $teaserId = $this->_getParam('for_teaser_id');
 
             $manager = Makeweb_Teasers_Manager::getInstance();
             $manager->createTeaserInstance($treeId, $teaserId, $layoutAreaId);
 
             $result = MWF_Ext_Result::encode(true, null, 'Instance created.');
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
         }
 
@@ -632,17 +609,18 @@ class LayoutController extends Controller
     public function deleteAction()
     {
         $teaserId = $this->_getParam('teaser_id');
-        $type     = $this->_getParam('type');
+        $type = $this->_getParam('type');
 
         $manager = Makeweb_Teasers_Manager::getInstance();
 
-        try
-        {
-            switch ($type)
-            {
+        try {
+            switch ($type) {
                 case 'teaser':
                     $db = $this->getContainer()->dbPool->default;
-                    $select = $db->select()->from($db->prefix . 'element_tree_teasers', 'teaser_eid')->where('id = ?', $teaserId);
+                    $select = $db->select()->from($db->prefix . 'element_tree_teasers', 'teaser_eid')->where(
+                        'id = ?',
+                        $teaserId
+                    );
                     $eid = $db->fetchOne($select);
 
                     $manager->deleteTeaser($teaserId);
@@ -654,7 +632,7 @@ class LayoutController extends Controller
                     //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
                     //$fileUsage->update($eid);
 
-                    $result = MWF_Ext_Result::encode(true, $teaserId, 'Teaser ID "'.$teaserId.'" deleted.');
+                    $result = MWF_Ext_Result::encode(true, $teaserId, 'Teaser ID "' . $teaserId . '" deleted.');
                     break;
 
                 case 'catch':
@@ -666,9 +644,7 @@ class LayoutController extends Controller
                     $result = MWF_Ext_Result::encode(false, null, 'No Teaser ID given.');
                     break;
             }
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
         }
 
@@ -681,35 +657,29 @@ class LayoutController extends Controller
     public function inheritAction()
     {
         // TODO use Brainbits_Filter_Input
-        $teaserId  = $this->_getParam('teaser_id');
+        $teaserId = $this->_getParam('teaser_id');
 
-        try
-        {
+        try {
             $container = $this->getContainer();
             $dispatcher = $container->get('event_dispatcher');
             $db = $container->dbPool->write;
 
             $select = $db->select()
-                         ->from($db->prefix . 'element_tree_teasers', 'stop_inherit')
-                         ->where('id = ?', $teaserId);
+                ->from($db->prefix . 'element_tree_teasers', 'stop_inherit')
+                ->where('id = ?', $teaserId);
 
             $inherit = $db->fetchOne($select);
 
             $node = new Makeweb_Teasers_Node($teaserId);
 
-            if (!$inherit)
-            {
+            if (!$inherit) {
                 $beforeEvent = new Makeweb_Teasers_Event_BeforeStopInheritTeaser($node);
-                if (false === $dispatcher->dispatch($beforeEvent))
-                {
+                if (false === $dispatcher->dispatch($beforeEvent)) {
                     throw new Exception('Stop inherit cancelled by event');
                 }
-            }
-            else
-            {
+            } else {
                 $beforeEvent = new Makeweb_Teasers_Event_BeforeInheritTeaser($node);
-                if (false === $dispatcher->dispatch($beforeEvent))
-                {
+                if (false === $dispatcher->dispatch($beforeEvent)) {
                     throw new Exception('Inherit cancelled by event');
                 }
             }
@@ -720,23 +690,18 @@ class LayoutController extends Controller
                 array('id = ?' => $teaserId)
             );
 
-            if (!$inherit)
-            {
+            if (!$inherit) {
                 $event = new Makeweb_Teasers_Event_StopInheritTeaser($node);
                 $dispatcher->dispatch($event);
 
                 $result = MWF_Ext_Result::encode(true, null, 'Inheritance stopped.');
-            }
-            else
-            {
+            } else {
                 $event = new Makeweb_Teasers_Event_InheritTeaser($node);
                 $dispatcher->dispatch($event);
 
                 $result = MWF_Ext_Result::encode(true, null, 'Inheritance stop removed.');
             }
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
         }
 
@@ -750,30 +715,27 @@ class LayoutController extends Controller
     {
         // TODO use Brainbits_Filter_Input
         $layoutAreaId = $this->_getParam('layoutarea_id');
-        $treeId       = $this->_getParam('tree_id');
-        $eid          = $this->_getParam('eid');
-        $teaserEid    = $this->_getParam('teaser_eid');
+        $treeId = $this->_getParam('tree_id');
+        $eid = $this->_getParam('eid');
+        $teaserEid = $this->_getParam('teaser_eid');
 
-        try
-        {
+        try {
             $dispatcher = $this->getContainer()->get('event_dispatcher');
 
             $db = $this->getContainer()->dbPool->default;
 
             $select = $db->select()
-                         ->from($db->prefix . 'element_tree_teasers', 'id')
-                         ->where('type = ?', 'stop')
-                         ->where('tree_id = ?', $treeId)
-                         ->where('eid = ?', $eid)
-                         ->where('teaser_eid = ?', $teaserEid);
+                ->from($db->prefix . 'element_tree_teasers', 'id')
+                ->where('type = ?', 'stop')
+                ->where('tree_id = ?', $treeId)
+                ->where('eid = ?', $eid)
+                ->where('teaser_eid = ?', $teaserEid);
 
             $stopInheritId = $db->fetchOne($select);
 
-            if ($stopInheritId)
-            {
+            if ($stopInheritId) {
                 $beforeEvent = new Makeweb_Teasers_Event_BeforeInheritInheritedTeaser($treeId, $eid, $teaserEid, $layoutAreaId);
-                if (false === $dispatcher->dispatch($beforeEvent))
-                {
+                if (false === $dispatcher->dispatch($beforeEvent)) {
                     throw new Exception('Stop inherit cancelled by event');
                 }
 
@@ -783,12 +745,9 @@ class LayoutController extends Controller
 
                 $event = new Makeweb_Teasers_Event_InheritInheritedTeaser($treeId, $eid, $teaserEid, $layoutAreaId, $stopInheritId);
                 $dispatcher->dispatch($event);
-            }
-            else
-            {
+            } else {
                 $beforeEvent = new Makeweb_Teasers_Event_BeforeStopInheritInheritedTeaser($treeId, $eid, $teaserEid, $layoutAreaId);
-                if (false === $dispatcher->dispatch($beforeEvent))
-                {
+                if (false === $dispatcher->dispatch($beforeEvent)) {
                     throw new Exception('Inherit cancelled by event');
                 }
 
@@ -813,9 +772,7 @@ class LayoutController extends Controller
             }
 
             $result = MWF_Ext_Result::encode(true, null, $msg);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
         }
 
@@ -829,10 +786,8 @@ class LayoutController extends Controller
     {
         $teaserId = (int) $this->_getParam('teaser_id');
 
-        try
-        {
-            if (!$teaserId)
-            {
+        try {
+            if (!$teaserId) {
                 throw new Exception('Missing parameter.');
             }
 
@@ -843,8 +798,7 @@ class LayoutController extends Controller
             $node = new Makeweb_Teasers_Node($teaserId);
 
             $beforeEvent = new Makeweb_Teasers_Event_BeforeShowTeaser($node);
-            if (false === $dispatcher->dispatch($beforeEvent))
-            {
+            if (false === $dispatcher->dispatch($beforeEvent)) {
                 throw new Exception('Show cancelled by event');
             }
 
@@ -858,9 +812,7 @@ class LayoutController extends Controller
             $dispatcher->dispatch($event);
 
             $result = MWF_Ext_Result::encode(true, null, 'Teaser will be displayed.');
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
         }
 
@@ -874,10 +826,8 @@ class LayoutController extends Controller
     {
         $teaserId = (int) $this->_getParam('teaser_id');
 
-        try
-        {
-            if (!$teaserId)
-            {
+        try {
+            if (!$teaserId) {
                 throw new Exception('Missing parameter.');
             }
 
@@ -888,8 +838,7 @@ class LayoutController extends Controller
             $node = new Makeweb_Teasers_Node($teaserId);
 
             $beforeEvent = new Makeweb_Teasers_Event_BeforeHideTeaser($node);
-            if (false === $dispatcher->dispatch($beforeEvent))
-            {
+            if (false === $dispatcher->dispatch($beforeEvent)) {
                 throw new Exception('Hide cancelled by event');
             }
 
@@ -905,9 +854,7 @@ class LayoutController extends Controller
             $msg = 'Teaser will not be displayed.';
 
             $result = MWF_Ext_Result::encode(true, null, $msg);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
         }
 
@@ -920,14 +867,12 @@ class LayoutController extends Controller
     public function showinheritedAction()
     {
         $layoutAreaId = (int) $this->_getParam('layoutarea_id');
-        $treeId       = (int) $this->_getParam('tree_id');
-        $eid          = (int) $this->_getParam('eid');
-        $teaserEid    = (int) $this->_getParam('teaser_eid');
+        $treeId = (int) $this->_getParam('tree_id');
+        $eid = (int) $this->_getParam('eid');
+        $teaserEid = (int) $this->_getParam('teaser_eid');
 
-        try
-        {
-            if (!$layoutAreaId || !$treeId || !$teaserEid)
-            {
+        try {
+            if (!$layoutAreaId || !$treeId || !$teaserEid) {
                 throw new Exception('Missing parameter.');
             }
 
@@ -944,11 +889,9 @@ class LayoutController extends Controller
 
             $hideId = $db->fetchOne($select);
 
-            if ($hideId)
-            {
+            if ($hideId) {
                 $beforeEvent = new Makeweb_Teasers_Event_BeforeShowInheritedTeaser($treeId, $eid, $teaserEid, $layoutAreaId);
-                if (false === $dispatcher->dispatch($beforeEvent))
-                {
+                if (false === $dispatcher->dispatch($beforeEvent)) {
                     throw new Exception('Show cancelled by event');
                 }
 
@@ -960,9 +903,7 @@ class LayoutController extends Controller
             }
 
             $result = MWF_Ext_Result::encode(true, null, 'Teaser will be displayed.');
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
         }
 
@@ -975,14 +916,12 @@ class LayoutController extends Controller
     public function hideinheritedAction()
     {
         $layoutAreaId = (int) $this->_getParam('layoutarea_id');
-        $treeId       = (int) $this->_getParam('tree_id');
-        $eid          = (int) $this->_getParam('eid');
-        $teaserEid    = (int) $this->_getParam('teaser_eid');
+        $treeId = (int) $this->_getParam('tree_id');
+        $eid = (int) $this->_getParam('eid');
+        $teaserEid = (int) $this->_getParam('teaser_eid');
 
-        try
-        {
-            if (!$layoutAreaId || !$treeId || !$eid || !$teaserEid)
-            {
+        try {
+            if (!$layoutAreaId || !$treeId || !$eid || !$teaserEid) {
                 throw new Exception('Missing parameter.');
             }
 
@@ -999,11 +938,9 @@ class LayoutController extends Controller
 
             $hideId = (int) $db->fetchOne($select);
 
-            if (!$hideId)
-            {
+            if (!$hideId) {
                 $beforeEvent = new Makeweb_Teasers_Event_BeforeHideInheritedTeaser($treeId, $eid, $teaserEid, $layoutAreaId);
-                if (false === $dispatcher->dispatch($beforeEvent))
-                {
+                if (false === $dispatcher->dispatch($beforeEvent)) {
                     throw new Exception('Hide cancelled by event');
                 }
 
@@ -1029,9 +966,7 @@ class LayoutController extends Controller
             $msg = 'Teaser will not be displayed.';
 
             $result = MWF_Ext_Result::encode(true, null, $msg);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
         }
 
@@ -1044,19 +979,17 @@ class LayoutController extends Controller
     public function sortAction()
     {
         // TODO use Brainbits_Filter_Input
-        $treeId       = $this->_getParam('tid');
-        $eid          = $this->_getParam('eid');
+        $treeId = $this->_getParam('tid');
+        $eid = $this->_getParam('eid');
         $layoutAreaId = $this->_getParam('area_id');
-        $sortIds      = $this->_getParam('sort_ids');
-        $sortIds      = json_decode($sortIds, true);
+        $sortIds = $this->_getParam('sort_ids');
+        $sortIds = json_decode($sortIds, true);
 
         $dispatcher = $this->getContainer()->get('event_dispatcher');
 
-        try
-        {
+        try {
             $beforeEvent = new Makeweb_Teasers_Event_BeforeReorderTeasers($treeId, $eid, $layoutAreaId, $sortIds);
-            if (false === $dispatcher->dispatch($beforeEvent))
-            {
+            if (false === $dispatcher->dispatch($beforeEvent)) {
                 throw new Exception('Teaser sort cancelled by event');
             }
 
@@ -1068,15 +1001,12 @@ class LayoutController extends Controller
                 ->from($db->prefix . 'element_tree_teasers', 'layoutarea_id')
                 ->where('id = :teaserId');
 
-            foreach ($sortIds as $sort => $teaserId)
-            {
-                if (!$teaserId)
-                {
+            foreach ($sortIds as $sort => $teaserId) {
+                if (!$teaserId) {
                     continue;
                 }
 
-                if (-1 == $teaserId)
-                {
+                if (-1 == $teaserId) {
                     $insertData = array(
                         'tree_id'       => $treeId,
                         'eid'           => $eid,
@@ -1097,14 +1027,13 @@ class LayoutController extends Controller
 
                 $exists = $db->fetchOne($select, array('teaserId' => $teaserId)) ? true : false;
 
-                if (!$exists)
-                {
+                if (!$exists) {
                     continue;
                 }
 
                 $db->update(
                     $db->prefix . 'element_tree_teasers',
-                    array('sort'   => $sort),
+                    array('sort' => $sort),
                     array('id = ?' => $teaserId)
                 );
             }
@@ -1114,9 +1043,7 @@ class LayoutController extends Controller
             $dispatcher->dispatch($event);
 
             $result = MWF_Ext_Result::encode(true, null, 'Teaser sort published.');
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $db->rollback();
 
             $result = MWF_Ext_Result::encode(false, null, $e->getMessage());

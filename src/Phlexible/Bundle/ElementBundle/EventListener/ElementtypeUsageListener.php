@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
+use Phlexible\Component\Database\ConnectionManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -51,19 +51,19 @@ class ElementtypeUsageListener
             ->select()
             ->distinct()
             ->from(
-                array('ev' => $this->db->prefix.'element_version'),
+                array('ev' => $this->db->prefix . 'element_version'),
                 array(
                     'eid',
                     $this->db->fn->expr('MAX(ev.elementtype_version) AS latest_version')
                 )
             )
             ->join(
-                array('e' => $this->db->prefix.'element'),
+                array('e' => $this->db->prefix . 'element'),
                 'ev.eid = e.eid AND e.elementtype_id = ' . $this->db->quote($elementtypeId),
                 array()
             )
             ->join(
-                array('et' => $this->db->prefix.'elementtype'),
+                array('et' => $this->db->prefix . 'elementtype'),
                 'e.elementtype_id = et.id',
                 array('type')
             )
@@ -73,14 +73,13 @@ class ElementtypeUsageListener
 
         $rows = $this->db->fetchAll($select);
 
-        foreach ($rows as $row)
-        {
+        foreach ($rows as $row) {
             //$elementVersion = $manager->getLatest($eid);
 
             $event->addUsage(
                 $row['type'] . ' element',
                 $row['eid'],
-                $row['eid'],//$elementVersion->getBackendTitle($defaultLanguage),
+                $row['eid'], //$elementVersion->getBackendTitle($defaultLanguage),
                 $row['latest_version']
             );
         }

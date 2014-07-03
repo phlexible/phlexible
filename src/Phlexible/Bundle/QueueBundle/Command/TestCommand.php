@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\QueueBundle\Command;
 
 use Phlexible\Bundle\QueueBundle\Entity\Job;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Phlexible\Bundle\QueueBundle\TestJob;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,18 +28,19 @@ class TestCommand extends ContainerAwareCommand
     {
         $this
             ->setName('queue:test')
-            ->setDefinition(array(
-                new InputOption('queue', null, InputOption::VALUE_NONE, 'Queue test job.'),
-                new InputOption('error', null, InputOption::VALUE_NONE, 'Triggers an error.'),
-                new InputOption('exception', null, InputOption::VALUE_NONE, 'Throws an exception.'),
-                new InputOption('exit', null, InputOption::VALUE_NONE, 'Calls exit(1).'),
-                new InputOption('exitCode', null, InputOption::VALUE_NONE, 'Returns exit code 1.'),
-                new InputOption('sleep5', null, InputOption::VALUE_NONE, 'Sleeps for 5 seconds.'),
-                new InputOption('sleep30', null, InputOption::VALUE_NONE, 'Sleeps 6 times for 30 seconds.'),
-                new InputOption('noop', null, InputOption::VALUE_NONE, 'Does nothing.'),
-            ))
-            ->setDescription('Create test job.')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('queue', null, InputOption::VALUE_NONE, 'Queue test job.'),
+                    new InputOption('error', null, InputOption::VALUE_NONE, 'Triggers an error.'),
+                    new InputOption('exception', null, InputOption::VALUE_NONE, 'Throws an exception.'),
+                    new InputOption('exit', null, InputOption::VALUE_NONE, 'Calls exit(1).'),
+                    new InputOption('exitCode', null, InputOption::VALUE_NONE, 'Returns exit code 1.'),
+                    new InputOption('sleep5', null, InputOption::VALUE_NONE, 'Sleeps for 5 seconds.'),
+                    new InputOption('sleep30', null, InputOption::VALUE_NONE, 'Sleeps 6 times for 30 seconds.'),
+                    new InputOption('noop', null, InputOption::VALUE_NONE, 'Does nothing.'),
+                )
+            )
+            ->setDescription('Create test job.');
     }
 
     /**
@@ -65,7 +65,9 @@ class TestCommand extends ContainerAwareCommand
         } elseif ($input->getOption('noop')) {
             $target = 'noop';
         } else {
-            $output->writeln('Your have to pass one of --error, --execption, --die, --exit, --exitCode, --sleep5 or --sleep30');
+            $output->writeln(
+                'Your have to pass one of --error, --execption, --die, --exit, --exitCode, --sleep5 or --sleep30'
+            );
 
             return 1;
         }

@@ -122,9 +122,9 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
     historyNext: false,
 
     // private
-    initComponent: function() {
+    initComponent: function () {
 
-        if(this.tree) {
+        if (this.tree) {
             this.bindTree(this.tree);
             delete this.tree;
         }
@@ -134,8 +134,8 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
         Ext.ux.LocationBar.superclass.initComponent.call(this);
     },
 
-    bindTree: function(tree) {
-        tree.getSelectionModel().addListener('selectionchange', function(sm, node) {
+    bindTree: function (tree) {
+        tree.getSelectionModel().addListener('selectionchange', function (sm, node) {
             if (node) {
                 this.setNode(node);
             } else {
@@ -146,23 +146,23 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
 
     // private
     autoCreate: {
-        cls:'x-toolbar x-small-editor x-locationbar',
-        html:'<table cellspacing="0"><tr></tr></table>'
+        cls: 'x-toolbar x-small-editor x-locationbar',
+        html: '<table cellspacing="0"><tr></tr></table>'
     },
 
     // private
-    onRender: function(ct, position) {
+    onRender: function (ct, position) {
         Ext.ux.LocationBar.superclass.onRender.call(this, ct, position);
 
         this.repaint();
     },
 
     // private
-    onClick: function(node) {
+    onClick: function (node) {
         if (this.selectHandler) {
             this.selectHandler(node);
         } else {
-            if(node.parentNode) {
+            if (node.parentNode) {
                 node.ensureVisible();
             }
             node.select();
@@ -171,10 +171,10 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
     },
 
     // private
-    onReload: function(node) {
+    onReload: function (node) {
         if (this.reloadHandler) {
             this.reloadHandler(node);
-        } else if(node.reload) {
+        } else if (node.reload) {
             node.reload();
         }
     },
@@ -182,7 +182,7 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
     /**
      * Clears all items from the LocationBar.
      */
-    clear: function() {
+    clear: function () {
         this.locationItems = [];
 
         this.repaint;
@@ -194,7 +194,7 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
      * be called automatically.
      * @param {Ext.ux.TreeNode} node The currently selected TreeNode
      */
-    setNode: function(node) {
+    setNode: function (node) {
         var path = [], pNode = node, i, isInvisibleRoot, conf, children, childNode;
         var tree = node.getOwnerTree();
         var rootNode = tree.getRootNode();
@@ -240,7 +240,7 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
 
         this.locationItems = [];
 
-        for(i=0; i<path.length; i++) {
+        for (i = 0; i < path.length; i++) {
             this.addPathItemRaw(path[i]);
         }
         this.currentItem = path[path.length - 1];
@@ -251,8 +251,8 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
     },
 
     // private
-    addHistoryItemRaw: function(item){
-        if(this.historyItems.indexOf(item.text) != -1) {
+    addHistoryItemRaw: function (item) {
+        if (this.historyItems.indexOf(item.text) != -1) {
             this.historyItems.remove(item.text);
             delete this.historyItemNodes[item.text];
         }
@@ -262,9 +262,9 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
     },
 
     // private
-    addPathItemRaw: function(item){
+    addPathItemRaw: function (item) {
         // if number of items > maxItems, remove last
-        if(this.maxItems && this.locationItems.length > this.maxItems) {
+        if (this.maxItems && this.locationItems.length > this.maxItems) {
             this.locationItems.pop();
         }
 
@@ -273,8 +273,8 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
     },
 
     // private
-    repaint: function() {
-        this.items.each(function(item){
+    repaint: function () {
+        this.items.each(function (item) {
             this.items.remove(item);
             item.destroy();
         }, this.items);
@@ -284,7 +284,7 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
             cls: 'x-btn-icon',
             iconCls: this.backwardIconCls,
             tooltip: this.strings.back,
-            handler: function() {
+            handler: function () {
                 this.historyNext = this.historyItems.pop();
                 var itemKey = this.historyItems.pop();
                 var item = this.historyItemNodes[itemKey];
@@ -300,7 +300,7 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
             cls: 'x-btn-icon',
             iconCls: this.forwardIconCls,
             tooltip: this.strings.forward,
-            handler: function() {
+            handler: function () {
                 var node = this.historyNext.node;
                 this.historyNext = false;
                 this.onClick(node);
@@ -310,40 +310,40 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
             disabled: true //this.historyNext ? false : true
         });
 
-        if(!this.noReload || !this.noHome) {
+        if (!this.noReload || !this.noHome) {
             this.add(' ');
             this.add('-');
         }
 
-        if(!this.noReload) {
+        if (!this.noReload) {
             this.add(' ');
             // reload button
             this.add({
                 cls: 'x-btn-icon',
                 iconCls: this.reloadIconCls,
                 tooltip: this.strings.reload,
-                handler: function() {
+                handler: function () {
                     this.onReload(this.currentItem.node);
                 },
                 scope: this
             });
         }
 
-        if(!this.noHome) {
+        if (!this.noHome) {
             this.add(' ');
             // home button
             this.add({
                 cls: 'x-btn-icon',
                 iconCls: this.homeIconCls,
                 tooltip: this.strings.home,
-                handler: function() {
+                handler: function () {
                     //this.onReload(this.currentItem.node);
                 },
                 scope: this
             });
         }
 
-        this.add(' ','-',' ');
+        this.add(' ', '-', ' ');
 
         if (this.locationItems.length) {
             // folder icon
@@ -367,7 +367,7 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
                 }
 
                 if (!item.isInvisibleRoot) {
-                    if(!item.text) {
+                    if (!item.text) {
                         item.text = 'n/a';
                     }
                     item.handler = this.onClick.createDelegate(this, [locationItem.node], false);
@@ -384,15 +384,15 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
             this.addItem(new Ext.ux.LocationBar.Fill());
 
             menu = [];
-            for(var i=this.historyItems.length-2; i>=0; i--) {
+            for (var i = this.historyItems.length - 2; i >= 0; i--) {
                 menu.push({
-                   text: this.historyItemNodes[this.historyItems[i]].fullPath,
-                   iconCls: this.folderIconCls,
-                   node: this.historyItemNodes[this.historyItems[i]].node,
-                   handler: function(item) {
-                       this.onClick(item.node);
-                   },
-                   scope: this
+                    text: this.historyItemNodes[this.historyItems[i]].fullPath,
+                    iconCls: this.folderIconCls,
+                    node: this.historyItemNodes[this.historyItems[i]].node,
+                    handler: function (item) {
+                        this.onClick(item.node);
+                    },
+                    scope: this
                 });
             }
             this.add({
@@ -409,7 +409,7 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
                 disabled: true
             });
 
-            if(this.emptyText) {
+            if (this.emptyText) {
                 this.add({
                     xtype: 'lbtext',
                     text: this.emptyText
@@ -426,7 +426,7 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
             });
         }
 
-        if(this.searchBox) {
+        if (this.searchBox) {
             this.add('-');
             this.add(this.searchBox);
         }
@@ -437,7 +437,7 @@ Ext.reg('locationbar', Ext.ux.LocationBar);
 
 Ext.ux.LocationBar.Fill = Ext.extend(Ext.Toolbar.Fill, {
     // private
-    render : function(td){
+    render: function (td) {
         td.className = 'x-locationbar-location';
 
         // insert a &nbsp;
@@ -451,7 +451,7 @@ Ext.reg('lbfill', Ext.ux.LocationBar.Fill);
 
 Ext.ux.LocationBar.TextItem = Ext.extend(Ext.Toolbar.TextItem, {
     // private
-    render : function(td){
+    render: function (td) {
         td.className = 'x-locationbar-location';
 
         Ext.ux.LocationBar.Fill.superclass.render.call(this, td);

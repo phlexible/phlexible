@@ -1,9 +1,9 @@
 Phlexible.elements.NewElementInstanceWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.elements.Strings.new_alias,
-    width:    530,
+    width: 530,
     minWidth: 530,
     maxWidth: 530,
-    height:    240,
+    height: 240,
     minHeight: 240,
     maxHeight: 240,
     iconCls: 'p-element-alias_add-icon',
@@ -18,13 +18,13 @@ Phlexible.elements.NewElementInstanceWindow = Ext.extend(Phlexible.gui.util.Dial
 
     noFocus: false,
 
-    getSubmitUrl: function() {
+    getSubmitUrl: function () {
         return Phlexible.Router.generate('elements_tree_createinstance');
     },
 
     labelWidth: 100,
 
-    getFormItems: function(){
+    getFormItems: function () {
         return [
             new Phlexible.elements.EidSelector({
                 fieldLabel: Phlexible.elements.Strings.source_element,
@@ -41,14 +41,14 @@ Phlexible.elements.NewElementInstanceWindow = Ext.extend(Phlexible.gui.util.Dial
                     width: 250
                 },
                 listeners: {
-                    render: function(c) {
+                    render: function (c) {
                         c.hiddenField = c.el.insertSibling({
                             tag: 'input',
                             type: 'hidden',
                             name: 'for_tree_id'
                         }, 'before', true);
                     },
-                    change: function(c) {
+                    change: function (c) {
                         c.hiddenField.value = c.getValue();
                     }
                 }
@@ -65,7 +65,7 @@ Phlexible.elements.NewElementInstanceWindow = Ext.extend(Phlexible.gui.util.Dial
                     autoLoad: true,
                     listeners: {
                         load: {
-                            fn: function() {
+                            fn: function () {
                                 this.posCombo.setValue('0');
                             },
                             scope: this

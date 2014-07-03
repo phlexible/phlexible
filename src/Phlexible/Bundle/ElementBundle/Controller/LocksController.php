@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\ElementBundle\Lock\ElementMasterLockIdentifier;
 use Phlexible\Bundle\ElementBundle\Lock\ElementSlaveLockIdentifier;
+use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -36,12 +36,12 @@ class LocksController extends Controller
     public function lockAction(Request $request)
     {
         // get request parameters
-        $eid      = (int) $request->get('eid');
+        $eid = (int) $request->get('eid');
         $language = $request->get('language');
 
         // get managers from container
         $elementService = $this->get('phlexible_element.service');
-        $lockService    = $this->get('phlexible_element.lock.service');
+        $lockService = $this->get('phlexible_element.lock.service');
 
         // get element object
         $element = $elementService->findElement($eid);
@@ -69,7 +69,7 @@ class LocksController extends Controller
     public function unlockAction(Request $request)
     {
         $unlockId = (int) $request->get('id');
-        $force    = $request->get('force', false);
+        $force = $request->get('force', false);
 
         $lockService = $this->get('locks.service');
         $userId = $this->getUser()->getId();
@@ -100,7 +100,7 @@ class LocksController extends Controller
     public function forceunlockAction(Request $request)
     {
         // get request parameters
-        $eid      = (int) $request->get('eid');
+        $eid = (int) $request->get('eid');
         $language = $request->get('language');
 
         // get helpers from container
@@ -123,7 +123,7 @@ class LocksController extends Controller
         } else {
             // if slave language should be unlocked, only master language must be unlocked too
             $lockIdentifierSlave = new ElementSlaveLockIdentifier($eid, $language);
-            $lockIdentifiers     = array($lockIdentifierMaster, $lockIdentifierSlave);
+            $lockIdentifiers = array($lockIdentifierMaster, $lockIdentifierSlave);
         }
 
         foreach ($lockIdentifiers as $lockIdentifier) {

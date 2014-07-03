@@ -12,7 +12,7 @@ Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
         forceFit: true
     },
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.ObjectStore({
             fields: [
                 {name: 'id', type: 'int'},
@@ -25,34 +25,38 @@ Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
             id: 0
         });
 
-        this.columns = [{
-            header: this.strings.icon,
-            dataIndex: 'icon',
-            width: 25,
-            renderer: function(s, meta, r) {
-                return '<img src=' + s + ' width="18" height="18" />';
-            }
-        },{
-            header: this.strings.tid,
-            dataIndex: 'id',
-            width: 30,
-            renderer: function(s, meta, r) {
-                if(r.data.instance_master) {
-                    return '<b>' + s + '</b>';
+        this.columns = [
+            {
+                header: this.strings.icon,
+                dataIndex: 'icon',
+                width: 25,
+                renderer: function (s, meta, r) {
+                    return '<img src=' + s + ' width="18" height="18" />';
                 }
+            },
+            {
+                header: this.strings.tid,
+                dataIndex: 'id',
+                width: 30,
+                renderer: function (s, meta, r) {
+                    if (r.data.instance_master) {
+                        return '<b>' + s + '</b>';
+                    }
 
-                return s;
+                    return s;
+                }
+            },
+            {
+                header: this.strings.date,
+                dataIndex: 'modify_time',
+                width: 80,
+                renderer: function (s) {
+                    return s.format('Y-m-d H:i:s');
+                }
             }
-        },{
-            header: this.strings.date,
-            dataIndex: 'modify_time',
-            width: 80,
-            renderer: function (s) {
-                return s.format('Y-m-d H:i:s');
-            }
-        }];
+        ];
 
-        this.on('rowdblclick', function(grid, index) {
+        this.on('rowdblclick', function (grid, index) {
             var r = this.store.getAt(index);
             if (r.data.link) {
                 var menu = r.data.link;
@@ -78,7 +82,7 @@ Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.elements.accordion.Instances.superclass.initComponent.call(this);
     },
 
-    load: function(data) {
+    load: function (data) {
         // Only show for full and part elements
         if (data.properties.et_type != 'full' && data.properties.et_type != 'part') {
             this.hide();
@@ -102,7 +106,7 @@ Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
         this.store.loadData(data.instances);
 
         var r = this.store.getById(data.properties.tid);
-        if(r) {
+        if (r) {
             this.getSelectionModel().selectRecords([r]);
         }
 

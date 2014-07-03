@@ -2,18 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
 <head>
     <title>{{ appTitle }} - {{ projectTitle }}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7"/>
 </head>
 <body>
 <noscript>{{ noScript }}</noscript>
 </body>
-<link href="{{ extjs("/resources/css/ext-all.css") }}" media="screen" rel="stylesheet" type="text/css" />
+<link href="{{ extjs("/resources/css/ext-all.css") }}" media="screen" rel="stylesheet" type="text/css"/>
 {% if theme and theme != "default" %}
-    <link id="theme" href="{{ extjs('/resources/css/xtheme-' ~ theme ~ '.css') }}" media="screen" rel="stylesheet" type="text/css" />
+    <link id="theme" href="{{ extjs('/resources/css/xtheme-' ~ theme ~ '.css') }}" media="screen" rel="stylesheet"
+          type="text/css"/>
 {% endif %}
-<link href="{{ path("security_asset_css") }}" media="screen" rel="stylesheet" type="text/css" />
-<link href="{{ path("security_asset_icons") }}" media="screen" rel="stylesheet" type="text/css" />
+<link href="{{ path("security_asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
+<link href="{{ path("security_asset_icons") }}" media="screen" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="{{ extjs('/adapter/ext/ext-base.js') }}"></script>
 {% if debug %}
     <script type="text/javascript" src="{{ extjs('/ext-all-debug.js') }}"></script>
@@ -40,7 +41,7 @@
 {{ scripts|raw }}
 <script type="text/javascript">
     //<![CDATA[
-    Ext.onReady(function() {
+    Ext.onReady(function () {
         win = new Phlexible.security.SetPasswordWindow({
             title: "{{ appTitle }} - {{ projectTitle }}",
             minLength: {{ minLength }},

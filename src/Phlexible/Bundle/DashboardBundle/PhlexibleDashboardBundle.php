@@ -25,7 +25,6 @@ class PhlexibleDashboardBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container
-            ->addCompilerPass(new AddPortletsPass())
-        ;
+            ->addCompilerPass(new AddPortletsPass());
     }
 }

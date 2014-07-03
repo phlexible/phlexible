@@ -37,7 +37,7 @@ class ExifExtensionMetaReader implements MetaReaderInterface
         }
 
         return strtolower($file->getAttribute('assettype') === 'image') &&
-            \exif_imagetype($file->getPhysicalPath()) === IMAGETYPE_JPEG;
+        \exif_imagetype($file->getPhysicalPath()) === IMAGETYPE_JPEG;
     }
 
     /**

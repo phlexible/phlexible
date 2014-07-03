@@ -14,28 +14,28 @@ Phlexible.search.SearchBox = Ext.extend(Ext.form.ComboBox, {
     triggerClass: 'x-form-search-trigger',
     itemSelector: 'div.search-item',
     listeners: {
-        focus: function(c) {
-            if(this.growWidth) {
+        focus: function (c) {
+            if (this.growWidth) {
                 this.setWidth(this.growWidth);
             }
         },
-        blur: function(c) {
-            if(this.growWidth) {
+        blur: function (c) {
+            if (this.growWidth) {
                 this.setWidth(this.origWidth);
             }
         },
-        beforeselect: function(combo, record){
+        beforeselect: function (combo, record) {
             var menu = record.get('menu');
 
             if (menu && menu.xtype) {
-				var xtype = Phlexible.evalClassString(menu.xtype),
-					handler = new xtype();
+                var xtype = Phlexible.evalClassString(menu.xtype),
+                    handler = new xtype();
 
-				if (menu.parameters) {
-					handler.setParameters(menu.parameters);
-				}
+                if (menu.parameters) {
+                    handler.setParameters(menu.parameters);
+                }
 
-				handler.handle();
+                handler.handle();
             }
 
             combo.collapse();
@@ -44,7 +44,7 @@ Phlexible.search.SearchBox = Ext.extend(Ext.form.ComboBox, {
             return false;
         }
     },
-    initComponent: function(){
+    initComponent: function () {
         this.origWidth = this.width;
         this.store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('search_search'),
@@ -73,8 +73,8 @@ Phlexible.search.SearchBox = Ext.extend(Ext.form.ComboBox, {
 
         Phlexible.search.SearchBox.superclass.initComponent.call(this);
 
-        this.on('render', function() {
-            Phlexible.globalKeyMap.accessKey({key:'f',alt:true}, this.focus, this);
+        this.on('render', function () {
+            Phlexible.globalKeyMap.accessKey({key: 'f', alt: true}, this.focus, this);
         }, this);
     }
 });

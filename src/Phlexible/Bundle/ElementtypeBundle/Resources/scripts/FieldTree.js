@@ -12,7 +12,7 @@ Phlexible.elementtypes.FieldTree = Ext.extend(Ext.tree.TreePanel, {
     dragEnabled: true,
     enabled: false,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.loader = new Ext.tree.TreeLoader({
             dataUrl: Phlexible.Router.generate('elementtypes_fields_categoryTree')
@@ -25,7 +25,7 @@ Phlexible.elementtypes.FieldTree = Ext.extend(Ext.tree.TreePanel, {
             expanded: true,
 
             listeners: {
-                load: function(node) {
+                load: function (node) {
                     node.getOwnerTree().enable();
                 }
             }
@@ -33,87 +33,101 @@ Phlexible.elementtypes.FieldTree = Ext.extend(Ext.tree.TreePanel, {
 
 //    this.dragZone = new Ext.tree.TreeDragZone(this);
 
-        this.tbar = [{
-            text: this.strings.new_field,
-            iconCls: 'p-elementtype-field-add-icon',
-            handler: function() {
-                var w = new Phlexible.elementtypes.NewFieldWindow({
-                    listeners: {
-                        save: function() {
-                            this.disable();
-                            this.root.reload();
-                        },
+        this.tbar = [
+            {
+                text: this.strings.new_field,
+                iconCls: 'p-elementtype-field-add-icon',
+                handler: function () {
+                    var w = new Phlexible.elementtypes.NewFieldWindow({
+                        listeners: {
+                            save: function () {
+                                this.disable();
+                                this.root.reload();
+                            },
+                            scope: this
+                        }
+                    });
+                    w.show();
+                },
+                scope: this
+            },
+            '-',
+            {
+                xtype: 'cycle',
+                showText: true,
+                iconCls: 'p-elementtype-field-refresh-icon',
+                changeHandler: function (btn, item) {
+                    this.disable();
+                    switch (item.source) {
+                        case 'categories':
+                            this.loader.dataUrl = Phlexible.Router.generate('elementtypes_fields_categorytree');
+                            break;
+                        case 'types':
+                            this.loader.dataUrl = Phlexible.Router.generate('elementtypes_fields_typetree');
+                            break;
+                        case 'groups':
+                            this.loader.dataUrl = Phlexible.Router.generate('elementtypes_fields_grouptree');
+                            break;
+                    }
+                    this.root.reload();
+                },
+                scope: this,
+                items: [
+                    {
+                        text: this.strings.categories,
+                        iconCls: 'p-elementtype-field-refresh-icon',
+                        checked: true,
+                        source: 'categories',
+                        scope: this
+                    },
+                    {
+                        text: this.strings.types,
+                        iconCls: 'p-elementtype-field-refresh-icon',
+                        source: 'types',
+                        scope: this
+                    },
+                    {
+                        text: this.strings.groups,
+                        iconCls: 'p-elementtype-field-refresh-icon',
+                        source: 'groups',
                         scope: this
                     }
-                });
-                w.show();
-            },
-            scope: this
-        }, '-', {
-            xtype: 'cycle',
-            showText: true,
-            iconCls: 'p-elementtype-field-refresh-icon',
-            changeHandler: function(btn, item) {
-                this.disable();
-                switch (item.source) {
-                    case 'categories':
-                        this.loader.dataUrl = Phlexible.Router.generate('elementtypes_fields_categorytree');
-                        break;
-                    case 'types':
-                        this.loader.dataUrl = Phlexible.Router.generate('elementtypes_fields_typetree');
-                        break;
-                    case 'groups':
-                        this.loader.dataUrl = Phlexible.Router.generate('elementtypes_fields_grouptree');
-                        break;
-                }
-                this.root.reload();
-            },
-            scope: this,
-            items: [{
-                text: this.strings.categories,
-            iconCls: 'p-elementtype-field-refresh-icon',
-                checked: true,
-                source: 'categories',
-                scope: this
-            }, {
-                text: this.strings.types,
-            iconCls: 'p-elementtype-field-refresh-icon',
-                source: 'types',
-                scope: this
-            }, {
-                text: this.strings.groups,
-            iconCls: 'p-elementtype-field-refresh-icon',
-                source: 'groups',
-                scope: this
-            }]
-        }];
+                ]
+            }
+        ];
 
         this.contextMenu = new Ext.menu.Menu({
-            items: [{
-                cls: 'x-btn-text-icon-bold',
-                text: '.'
-            },'-',{
-                text: this.strings.duplicate,
-                iconCls: 'p-elementtype-duplicate-icon',
-                handler: function(item){
-                    this.onDuplicate(item.parentMenu.node);
+            items: [
+                {
+                    cls: 'x-btn-text-icon-bold',
+                    text: '.'
                 },
-                scope: this
-            },'-',{
-                text: this.strings.del,
-                iconCls: 'p-elementtype-delete-icon',
-                handler: function(item){
-                    Ext.MessageBox.confirm('Confirm', 'Do you really want to delete this Field?', function(btn, text, x, item){
-                        if (btn == 'yes'){
-                            this.onDelete(item.parentMenu.node);
-                        }
-                    }.createDelegate(this, [item], true));
+                '-',
+                {
+                    text: this.strings.duplicate,
+                    iconCls: 'p-elementtype-duplicate-icon',
+                    handler: function (item) {
+                        this.onDuplicate(item.parentMenu.node);
+                    },
+                    scope: this
                 },
-                scope: this
-            }]
+                '-',
+                {
+                    text: this.strings.del,
+                    iconCls: 'p-elementtype-delete-icon',
+                    handler: function (item) {
+                        Ext.MessageBox.confirm('Confirm', 'Do you really want to delete this Field?', function (btn, text, x, item) {
+                            if (btn == 'yes') {
+                                this.onDelete(item.parentMenu.node);
+                            }
+                        }.createDelegate(this, [item], true));
+                    },
+                    scope: this
+                }
+            ]
         });
 
-        this.on('contextmenu', function(node, event) {
+        this.on('contextmenu', function (node, event) {
             event.stopEvent();
             var coords = event.getXY();
 
@@ -121,7 +135,7 @@ Phlexible.elementtypes.FieldTree = Ext.extend(Ext.tree.TreePanel, {
 
             this.contextMenu.items.items[0].setText(node.text);
 
-            if(node.isLeaf()) {
+            if (node.isLeaf()) {
                 this.contextMenu.items.items[2].enable();
                 this.contextMenu.items.items[4].enable();
             } else {
@@ -132,10 +146,10 @@ Phlexible.elementtypes.FieldTree = Ext.extend(Ext.tree.TreePanel, {
             this.contextMenu.showAt([coords[0], coords[1]]);
         }, this);
 
-        this.on('dblclick', function(node, e) {
+        this.on('dblclick', function (node, e) {
             var w = new Phlexible.elementtypes.NewFieldWindow({
                 listeners: {
-                    save: function() {
+                    save: function () {
                         this.disable();
                         this.root.reload();
                     },
@@ -150,7 +164,7 @@ Phlexible.elementtypes.FieldTree = Ext.extend(Ext.tree.TreePanel, {
         this.disable();
     },
 
-    initEvents: function() {
+    initEvents: function () {
         this.dragZone = new Phlexible.elementtypes.FieldDragZone(this, {
             ddGroup: this.ddGroup,
             scroll: this.ddScroll
@@ -160,7 +174,7 @@ Phlexible.elementtypes.FieldTree = Ext.extend(Ext.tree.TreePanel, {
         Phlexible.elementtypes.FieldTree.superclass.initEvents.call(this);
     },
 
-    onDelete: function(node) {
+    onDelete: function (node) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elementtypes_fields_delete', {id: node.id}),
             success: this.onDeleteSuccess,
@@ -168,11 +182,11 @@ Phlexible.elementtypes.FieldTree = Ext.extend(Ext.tree.TreePanel, {
         });
     },
 
-    onDeleteSuccess: function(response) {
+    onDeleteSuccess: function (response) {
         this.root.reload();
     },
 
-    onDuplicate: function(node) {
+    onDuplicate: function (node) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elementtypes_fields_duplicate', {id: node.id}),
             success: this.onDuplicateSuccess,
@@ -180,7 +194,7 @@ Phlexible.elementtypes.FieldTree = Ext.extend(Ext.tree.TreePanel, {
         });
     },
 
-    onDuplicateSuccess: function(response) {
+    onDuplicateSuccess: function (response) {
         this.root.reload();
     }
 });

@@ -152,7 +152,7 @@ class PublishController extends Controller
         $data     = json_decode($data, true);
 
         $lock = new \Brainbits_Util_FileLock($this->getContainer()->getParameter('app.lock_dir') . 'elements_publish_lock');
-        if (!$lock->tryLock()) {
+        if (!$lock->tryAcquire()) {
             throw new Makeweb_Elements_Element_Exception('Another advanced publish running.');
         }
 
@@ -200,7 +200,7 @@ class PublishController extends Controller
 
         $data['icon'] = $elementVersion->getIconUrl($node->getIconParams($language));
 
-        $lock->unlock();
+        $lock->release();
 
         return new ResultResponse(true, 'Successfully published.', $data);
     }

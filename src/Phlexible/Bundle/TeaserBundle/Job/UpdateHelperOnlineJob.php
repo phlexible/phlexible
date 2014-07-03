@@ -46,7 +46,7 @@ class UpdateHelperOnlineJob extends ContainerAwareJob
 
         $cnt = $helper->updateOnline($eid);
 
-        $output .= 'Wrote '.$cnt.' helper entries.';
+        $output .= 'Wrote ' . $cnt . ' helper entries.';
 
         return $output;
     }

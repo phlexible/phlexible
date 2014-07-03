@@ -10,26 +10,26 @@ Phlexible.locks.portlet.LockRecord = Ext.data.Record.create([
 
 Phlexible.locks.portlet.LocksTemplate = new Ext.XTemplate(
     '<table width="100%">',
-        '<colgroup>',
-            '<col width="*" />',
-            '<col width="*" />',
-            '<col width="*" />',
-            '<col width="120" />',
-        '</colgroup>',
-        '<tr>',
-            '<th>{[Phlexible.locks.Strings.lock_type]}</th>',
-            '<th>{[Phlexible.locks.Strings.object_type]}</th>',
-            '<th>{[Phlexible.locks.Strings.object_id]}</th>',
-            '<th>{[Phlexible.locks.Strings.date]}</th>',
-        '</tr>',
-        '<tpl for=".">',
-        '<tr class="locks-wrap" id="locks_{ident}">',
-            '<td class="locks-type">{lock_type}</td>',
-            '<td class="locks-type">{object_type}</td>',
-            '<td class="locks-id">{object_id}</td>',
-            '<td class="locks-time">{lock_time}</td>',
-        '</tr>',
-        '</tpl>',
+    '<colgroup>',
+    '<col width="*" />',
+    '<col width="*" />',
+    '<col width="*" />',
+    '<col width="120" />',
+    '</colgroup>',
+    '<tr>',
+    '<th>{[Phlexible.locks.Strings.lock_type]}</th>',
+    '<th>{[Phlexible.locks.Strings.object_type]}</th>',
+    '<th>{[Phlexible.locks.Strings.object_id]}</th>',
+    '<th>{[Phlexible.locks.Strings.date]}</th>',
+    '</tr>',
+    '<tpl for=".">',
+    '<tr class="locks-wrap" id="locks_{ident}">',
+    '<td class="locks-type">{lock_type}</td>',
+    '<td class="locks-type">{object_type}</td>',
+    '<td class="locks-id">{object_id}</td>',
+    '<td class="locks-time">{lock_time}</td>',
+    '</tr>',
+    '</tpl>',
     '</table>'
 );
 
@@ -40,7 +40,7 @@ Phlexible.locks.portlet.Locks = Ext.extend(Ext.ux.Portlet, {
     extraCls: 'locks-portlet',
     bodyStyle: 'padding: 5px',
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.SimpleStore({
             fields: Phlexible.locks.portlet.LockRecord,
             id: 'ident',
@@ -48,44 +48,46 @@ Phlexible.locks.portlet.Locks = Ext.extend(Ext.ux.Portlet, {
         });
 
         var data = this.record.get('data');
-        if(data) {
-            Ext.each(data, function(item) {
+        if (data) {
+            Ext.each(data, function (item) {
                 this.add(new Phlexible.locks.portlet.LockRecord(item, item.ident));
             }, this.store);
         }
 
-        this.items = [{
-            xtype: 'dataview',
-            itemSelector: 'tr.locks-wrap',
-            overClass: 'locks-wrap-over',
-            style: 'overflow: auto',
-            singleSelect: true,
-            emptyText: this.strings.no_locked_items,
-            deferEmptyText: false,
-            autoHeight: true,
-            store: this.store,
-            tpl: Phlexible.locks.portlet.LocksTemplate,
-            listeners: {
-                click: {
-                    fn: function(c, index, node){
-                        return;
-                    },
-                    scope: this
+        this.items = [
+            {
+                xtype: 'dataview',
+                itemSelector: 'tr.locks-wrap',
+                overClass: 'locks-wrap-over',
+                style: 'overflow: auto',
+                singleSelect: true,
+                emptyText: this.strings.no_locked_items,
+                deferEmptyText: false,
+                autoHeight: true,
+                store: this.store,
+                tpl: Phlexible.locks.portlet.LocksTemplate,
+                listeners: {
+                    click: {
+                        fn: function (c, index, node) {
+                            return;
+                        },
+                        scope: this
+                    }
                 }
             }
-        }];
+        ];
 
         Phlexible.locks.portlet.Locks.superclass.initComponent.call(this);
     },
 
-    updateData: function(data){
+    updateData: function (data) {
         var latestLocksMap = [];
 
-        for(var i=data.length-1; i>=0; i--) {
+        for (var i = data.length - 1; i >= 0; i--) {
             var row = data[i];
             latestLocksMap.push(row.ident);
             var r = this.store.getById(row.ident);
-            if(!r) {
+            if (!r) {
                 //row.time = new Date(row.time * 1000);
                 this.store.insert(0, new Phlexible.locks.portlet.LockRecord(row, row.ident));
 
@@ -93,14 +95,14 @@ Phlexible.locks.portlet.Locks = Ext.extend(Ext.ux.Portlet, {
             }
         }
 
-        for(var i=this.store.getCount()-1; i>=0; i--) {
+        for (var i = this.store.getCount() - 1; i >= 0; i--) {
             var r = this.store.getAt(i);
-            if(latestLocksMap.indexOf(r.id) == -1) {
+            if (latestLocksMap.indexOf(r.id) == -1) {
                 this.store.remove(r);
             }
         }
 
-        if(!this.store.getCount()) {
+        if (!this.store.getCount()) {
             this.store.removeAll();
         }
 

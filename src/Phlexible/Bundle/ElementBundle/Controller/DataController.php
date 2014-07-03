@@ -9,17 +9,17 @@
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Diff;
+use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\ElementBundle\Lock\ElementMasterLockIdentifier;
 use Phlexible\Bundle\ElementBundle\Lock\ElementSlaveLockIdentifier;
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
-use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\LockBundle\Entity\Lock;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,15 +42,15 @@ class DataController extends Controller
      */
     public function loadAction(Request $request)
     {
-        $treeId   = (int) $request->get('id');
+        $treeId = (int) $request->get('id');
         $teaserId = (int) $request->get('teaser_id');
         $language = $request->get('language');
-        $version  = $request->get('version');
+        $version = $request->get('version');
         $unlockId = $request->get('unlock');
-        $doLock   = (bool) $request->get('lock', false);
+        $doLock = (bool) $request->get('lock', false);
 
-        $teaserService  = $this->get('phlexible_teaser.service');
-        $treeManager    = $this->get('phlexible_tree.manager');
+        $teaserService = $this->get('phlexible_teaser.service');
+        $treeManager = $this->get('phlexible_tree.manager');
         $elementService = $this->get('phlexible_element.service');
 
         try {
@@ -78,9 +78,9 @@ class DataController extends Controller
             $isPublished = false;
 
             if ($teaserId) {
-                $isPublished = false;//$node->isPublished($language);
+                $isPublished = false; //$node->isPublished($language);
             } elseif ($treeId) {
-                $isPublished = false;//$node->isPublished($language);
+                $isPublished = false; //$node->isPublished($language);
             } else {
                 throw new \Exception('Unknown data requested.');
             }
@@ -94,10 +94,10 @@ class DataController extends Controller
 
             $elementtypeService = $elementService->getElementtypeService();
 
-            $elementtype          = $elementService->findElementtype($element);
-            $elementtypeVersion   = $elementService->findElementtypeVersion($elementVersion);
+            $elementtype = $elementService->findElementtype($element);
+            $elementtypeVersion = $elementService->findElementtypeVersion($elementVersion);
             $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
-            $type                 = $elementtype->getType();
+            $type = $elementtype->getType();
 
             // versions
 
@@ -129,7 +129,7 @@ class DataController extends Controller
             $versions = $db->fetchAll($versionsSelect);
             */
 
-            $onlineVersion = 123;//$node->getOnlineVersion($language);
+            $onlineVersion = 123; //$node->getOnlineVersion($language);
 
             $versions = array();
             foreach (array_reverse($elementService->getVersions($element)) as $version) {
@@ -215,10 +215,10 @@ class DataController extends Controller
                 );
             }
 
-            $diff            = $this->getParam('diff');
+            $diff = $this->getParam('diff');
             $diffVersionFrom = $this->getParam('diff_version_from');
-            $diffVersionTo   = $this->getParam('diff_version_to');
-            $diffLanguage    = $this->getParam('diff_language');
+            $diffVersionTo = $this->getParam('diff_version_to');
+            $diffLanguage = $this->getParam('diff_language');
 
             if ($diff && $diffVersionTo) {
                 $fromElementVersion = $elementService->findElementVersion($element, $diffVersionFrom);
@@ -260,7 +260,8 @@ class DataController extends Controller
             $securityContext = $this->get('security.context');
             if ($node instanceof ContentObjectInterface) {
                 if (!$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) &&
-                        !$securityContext->isGranted(array('right' => 'EDIT', 'language' => $language), $node)) {
+                    !$securityContext->isGranted(array('right' => 'EDIT', 'language' => $language), $node)
+                ) {
                     $doLock = false;
                 }
             }
@@ -383,18 +384,20 @@ class DataController extends Controller
                 $taskInfo = false;
                 if ($task) {
                     $latestStatus = $task->getLatestStatus();
-                    $creator   = $task->getCreateUser();
+                    $creator = $task->getCreateUser();
                     $recipient = $task->getRecipientUser();
 
                     /* @var $task Makeweb_Tasks_Task_Abstract */
                     $taskInfo = array(
                         'id'        => $task->getId(),
                         'status'    => $latestStatus->getStatus(),
-                        'type'      => $task->getCreateUid() == $this->getUser()->getId() ? 1 : ($task->getRecipientUserId() == $this->getUser()->getId() ? 2 : 3),
+                        'type'      => $task->getCreateUid() == $this->getUser()->getId()
+                            ? 1
+                            : ($task->getRecipientUserId() == $this->getUser()->getId() ? 2 : 3),
                         'generic'   => $task->isGeneric() ? 1 : 0,
                         'text'      => $task->getTitle(),
-                        'creator'   => $creator->getFirstname().' '.$creator->getLastname(),
-                        'recipient' => $recipient->getFirstname().' '.$recipient->getLastname(),
+                        'creator'   => $creator->getFirstname() . ' ' . $creator->getLastname(),
+                        'recipient' => $recipient->getFirstname() . ' ' . $recipient->getLastname(),
                         'date'      => date('Y-m-d', strtotime($task->getCreateDate())),
                         'time'      => date('H:i:s', strtotime($task->getCreateDate())),
                     );
@@ -406,12 +409,12 @@ class DataController extends Controller
             $metaSetArray = array();
             if (0) {
                 $metaSetIdentifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $language);
-                $metaSetId         = $elementtypeVersion->getMetaSetId();
+                $metaSetId = $elementtypeVersion->getMetaSetId();
 
                 if ($metaSetId) {
-                    $metaSet      = $this->getContainer()->get('metasets.repository')->find($metaSetId);
-                    $metaSetKeys  = $metaSet->getKeys();
-                    $metaSetItem  = Media_MetaSets_Item_Peer::get($metaSetId, $metaSetIdentifier);
+                    $metaSet = $this->getContainer()->get('metasets.repository')->find($metaSetId);
+                    $metaSetKeys = $metaSet->getKeys();
+                    $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $metaSetIdentifier);
                     $metaSetArray = array_values($metaSetItem->toArray($language));
 
                     foreach ($metaSetArray as $metaKey => $metaRow) {
@@ -447,11 +450,17 @@ class DataController extends Controller
             $onlineVersion = null;
             $latestVersion = null;
 
-            if (in_array($elementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART))) {
+            if (in_array(
+                $elementtype->getType(),
+                array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART)
+            )
+            ) {
                 if ($type == Elementtype::TYPE_FULL) {
-                    $blaNode = $this->getContainer()->get('phlexible_tree.content.manager')->findByTreeId($node->getId())->get($node->getId());
+                    $blaNode = $this->getContainer()->get('phlexible_tree.content.manager')->findByTreeId(
+                        $node->getId()
+                    )->get($node->getId());
                     $urls['preview'] = $this->getContainer()->get('phlexible_tree.router')->generate($blaNode);
-                    $urls['debug']   = $this->getContainer()->get('phlexible_tree.router')->generate($blaNode);
+                    $urls['debug'] = $this->getContainer()->get('phlexible_tree.router')->generate($blaNode);
 
                     if ($isPublished) {
                         $urls['online'] = $this->getContainer()->get('phlexible_tree.router')->generate($blaNode);
@@ -533,10 +542,12 @@ class DataController extends Controller
                         return null;
                     }
 
-                    $userRights = array();//$contentRightsManager->getRights($language);
+                    $userRights = array(); //$contentRightsManager->getRights($language);
                     $userRights = array_keys($userRights);
                 } else {
-                    $userRights = array_keys($this->getContainer()->get('accesscontrol.right.registry')->getRights('internal', 'treenode'));
+                    $userRights = array_keys(
+                        $this->getContainer()->get('accesscontrol.right.registry')->getRights('internal', 'treenode')
+                    );
                 }
             }
 
@@ -565,13 +576,26 @@ class DataController extends Controller
                 'is_published'     => $isPublished,
                 'master'           => $language == $element->getMasterLanguage() ? true : false,
                 'status'           => $status,
-                'backend_title'    => substr(strip_tags($elementVersion->getBackendTitle($language, $elementMasterLanguage)), 0, 30),
-                'page_title'       => substr(strip_tags($elementVersion->getPageTitle($language, $elementMasterLanguage)), 0, 30),
-                'navigation_title' => substr(strip_tags($elementVersion->getNavigationTitle($language, $elementMasterLanguage)), 0, 30),
+                'backend_title'    => substr(
+                    strip_tags($elementVersion->getBackendTitle($language, $elementMasterLanguage)),
+                    0,
+                    30
+                ),
+                'page_title'       => substr(
+                    strip_tags($elementVersion->getPageTitle($language, $elementMasterLanguage)),
+                    0,
+                    30
+                ),
+                'navigation_title' => substr(
+                    strip_tags($elementVersion->getNavigationTitle($language, $elementMasterLanguage)),
+                    0,
+                    30
+                ),
                 'unique_id'        => $element->getUniqueID(),
                 'et_id'            => $elementtype->getId(),
                 'et_title'         => $elementtype->getTitle(),
-                'et_version'       => $elementVersion->getElementTypeVersion() . ' ['.$elementtypeService->findLatestElementtypeVersion($elementtype)->getVersion().']',
+                'et_version'       => $elementVersion->getElementTypeVersion()
+                    . ' [' . $elementtypeService->findLatestElementtypeVersion($elementtype)->getVersion() . ']',
                 'et_unique_id'     => $elementtype->getUniqueId(),
                 'et_type'          => $elementtype->getType(),
                 'author'           => $createUser->getDisplayName(),
@@ -597,13 +621,13 @@ class DataController extends Controller
                 'properties'          => $properties,
                 'page'                => $page,
                 'teaser'              => $teaserId
-                    ? array(
-                        'disable_cache'  => $node->hasCacheDisabled($version) ? 1 : 0,
-                        'cache_lifetime' => $node->getCacheLifeTime($version)
-                            ? $node->getCacheLifeTime($version)
-                            : '',
-                    )
-                    : array(),
+                        ? array(
+                            'disable_cache'  => $node->hasCacheDisabled($version) ? 1 : 0,
+                            'cache_lifetime' => $node->getCacheLifeTime($version)
+                                    ? $node->getCacheLifeTime($version)
+                                    : '',
+                        )
+                        : array(),
                 'comment'             => $elementVersion->getComment(),
                 'meta'                => $metaSetArray,
                 'redirects'           => $redirects,
@@ -651,109 +675,94 @@ class DataController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $dispatcher            = $this->get('event_dispatcher');
-        $treeManager           = $this->get('phlexible_tree.manager');
-        $elementManager        = $this->get('elementsManager');
+        $dispatcher = $this->get('event_dispatcher');
+        $treeManager = $this->get('phlexible_tree.manager');
+        $elementManager = $this->get('elementsManager');
         $elementVersionManager = $this->get('elementsVersionManager');
 
-        $tid           = $request->get('tid');
-        $teaserId      = $request->get('teaser_id', null);
-        $eid           = $request->get('eid');
-        $language      = $request->get('language');
-        $data          = $request->get('data');
-        $oldVersion    = $request->get('version');
-        $comment       = $request->get('comment');
-        $isPublish     = $request->get('publish');
+        $tid = $request->get('tid');
+        $teaserId = $request->get('teaser_id', null);
+        $eid = $request->get('eid');
+        $language = $request->get('language');
+        $data = $request->get('data');
+        $oldVersion = $request->get('version');
+        $comment = $request->get('comment');
+        $isPublish = $request->get('publish');
         $notifications = $request->get('notifications');
-        $values        = $request->request->all();
+        $values = $request->request->all();
 
         unset($values['eid'],
-              $values['language'],
-              $values['version'],
-              $values['data'],
-              $values['module'],
-              $values['controller'],
-              $values['action'],
-              $values['comment'],
-              $values['publish']);
+        $values['language'],
+        $values['version'],
+        $values['data'],
+        $values['module'],
+        $values['controller'],
+        $values['action'],
+        $values['comment'],
+        $values['publish']);
 
         if ($data) {
             $data = json_decode($data, true);
         }
 
-//        echo '<pre>EID: '.$eid."\nLanguage:".$language."\nData: ".print_r($allValues, true);exit;
+        //        echo '<pre>EID: '.$eid."\nLanguage:".$language."\nData: ".print_r($allValues, true);exit;
 
         $db = $container->dbPool->write; // MWF_Db::getWriteDb();
 
-        try
-        {
+        try {
             $db->beginTransaction();
 
-            $node              = $treeManager->getNodeByNodeId($tid);
-            $element           = $elementManager->getByEID($eid);
+            $node = $treeManager->getNodeByNodeId($tid);
+            $element = $elementManager->getByEID($eid);
             $oldElementVersion = $element->getLatestVersion();
-            $oldLatestVersion  = $oldElementVersion->getVersion();
-            $isMaster          = $element->getMasterLanguage() == $language;
+            $oldLatestVersion = $oldElementVersion->getVersion();
+            $isMaster = $element->getMasterLanguage() == $language;
 
             $beforeSaveElementEvent = new Makeweb_Elements_Event_BeforeSaveElement($element, $language, $oldVersion);
             $dispatcher->dispatch($beforeSaveElementEvent);
 
             $comment = null;
-            if (!empty($data['comment']))
-            {
+            if (!empty($data['comment'])) {
                 $comment = $data['comment'];
             }
 
             $publishSlaveLanguages = array();
             $publishSlaves = array();
 
-            if ($isPublish)
-            {
-                if ($element->getMasterLanguage() == $language)
-                {
-                    foreach ($container->getParameter('frontend.languages.available') as $slaveLanguage)
-                    {
-                        if ($language == $slaveLanguage)
-                        {
+            if ($isPublish) {
+                if ($element->getMasterLanguage() == $language) {
+                    foreach ($container->getParameter('frontend.languages.available') as $slaveLanguage) {
+                        if ($language == $slaveLanguage) {
                             continue;
                         }
 
-                        if ($teaserId)
-                        {
+                        if ($teaserId) {
                             $teaserNode = new Makeweb_Teasers_Node($teaserId);
 
-                            if ($teaserNode->isPublished($slaveLanguage))
-                            {
-                                if (!$teaserNode->isAsync($slaveLanguage))
-                                {
+                            if ($teaserNode->isPublished($slaveLanguage)) {
+                                if (!$teaserNode->isAsync($slaveLanguage)) {
                                     $publishSlaveLanguages[] = $slaveLanguage;
                                 }
-                            }
-                            else
-                            {
-                                if ($container->getParameter('phlexible_element.publish.cross_language_publish_offline'))
-                                {
+                            } else {
+                                if ($container->getParameter(
+                                    'phlexible_element.publish.cross_language_publish_offline'
+                                )
+                                ) {
                                     $publishSlaves[] = array($teaserNode->getId(), $slaveLanguage, 0, '', 0);
                                 }
                             }
-                        }
-                        else
-                        {
-                            if ($node->isPublished($slaveLanguage))
-                            {
-                                if (!$node->isAsync($slaveLanguage))
-                                {
+                        } else {
+                            if ($node->isPublished($slaveLanguage)) {
+                                if (!$node->isAsync($slaveLanguage)) {
                                     $publishSlaveLanguages[] = $slaveLanguage;
-                                }
-                                else
-                                {
+                                } else {
                                     $publishSlaves[] = array($node->getId(), $slaveLanguage, 0, 'async', 1);
                                 }
-                            }
-                            else
-                            {
-                                if ($container->getParameter('phlexible_element.publish.cross_language_publish_offline'))
-                                {
+                            } else {
+                                if ($container->getParameter(
+                                    'phlexible_element.publish.cross_language_publish_offline'
+                                )
+                                ) {
                                     $publishSlaves[] = array($node->getId(), $slaveLanguage, 0, '', 0);
                                 }
                             }
@@ -763,33 +772,31 @@ class DataController extends Controller
             }
 
             $minor = 0;
-            $elementVersion        = $element->createVersion(null, $comment, $minor, $language);
-            $newVersion            = $elementVersion->getVersion();
+            $elementVersion = $element->createVersion(null, $comment, $minor, $language);
+            $newVersion = $elementVersion->getVersion();
             $elementTypeVersionObj = $elementVersion->getElementTypeVersionObj();
 
-            foreach ($publishSlaves as $publishSlaveKey => $publishSlaveRow)
-            {
+            foreach ($publishSlaves as $publishSlaveKey => $publishSlaveRow) {
                 $publishSlaves[$publishSlaveKey][2] = $newVersion;
             }
 
-                /*
-                Makeweb_Elements_Element_History::insert(Makeweb_Elements_Element_History::ACTION_CREATE_VERSION,
-                                                         $elementVersion->getEid(),
-                                                         $elementVersion->getVersion(),
-                                                         $language,
-                                                         $comment);
-                */
+            /*
+            Makeweb_Elements_Element_History::insert(Makeweb_Elements_Element_History::ACTION_CREATE_VERSION,
+                                                     $elementVersion->getEid(),
+                                                     $elementVersion->getVersion(),
+                                                     $language,
+                                                     $comment);
+            */
 
             // Copy tree item page values from old version to new version in all instances
 
             $select = $db->select()
-                ->from($db->prefix . 'element_tree', 'id')
-                ->where('eid = ?', $eid);
+                         ->from($db->prefix . 'element_tree', 'id')
+                         ->where('eid = ?', $eid);
 
             $treeIds = $db->fetchCol($select);
 
-            foreach ($treeIds as $treeId)
-            {
+            foreach ($treeIds as $treeId) {
                 $instanceNode = $treeManager->getNodeByNodeID($treeId);
                 $instanceNode->getTree()->copyPage($treeId, $newVersion, $oldElementVersion->getVersion());
             }
@@ -797,16 +804,14 @@ class DataController extends Controller
             // Copy meta values from old version to new version
 
             $setId = $elementTypeVersionObj->getMetaSetId();
-            if ($setId)
-            {
+            if ($setId) {
                 $select = $db->select()
                              ->from($db->prefix . 'element_version_metaset_items')
                              ->where('set_id = ?', $setId)
                              ->where('eid = ?', $eid)
                              ->where('version = ?', $oldLatestVersion);
 
-                foreach ($db->fetchAll($select) as $insertData)
-                {
+                foreach ($db->fetchAll($select) as $insertData) {
                     unset($insertData['id']);
                     $insertData['version'] = $newVersion;
 
@@ -816,35 +821,28 @@ class DataController extends Controller
 
             $elementData = $elementVersion->getData($language);
 
-            if ($isMaster)
-            {
+            if ($isMaster) {
                 $elementData->saveData($elementVersion, $values, $oldLatestVersion);
-            }
-            else
-            {
+            } else {
                 $elementData->saveData($elementVersion, $values, $oldLatestVersion, $element->getMasterLanguage());
             }
 
-            if (empty($teaserId))
-            {
+            if (empty($teaserId)) {
                 $elementVersion->getBackendTitle($language);
 
                 $select = $db->select()
-                    ->distinct()
-                    ->from($db->prefix . 'element_tree', 'parent_id')
-                    ->where('eid = ?', $eid);
+                             ->distinct()
+                             ->from($db->prefix . 'element_tree', 'parent_id')
+                             ->where('eid = ?', $eid);
 
                 $updateTids = $db->fetchCol($select);
 
                 $parentNode = $node->getParentNode();
-                if ($parentNode && $parentNode->getSortMode() != Makeweb_Elements_Tree::SORT_MODE_FREE)
-                {
-                    foreach ($updateTids as $updateTid)
-                    {
-                        if (!$updateTid)
-                        {
-                        continue;
-                    }
+                if ($parentNode && $parentNode->getSortMode() != Makeweb_Elements_Tree::SORT_MODE_FREE) {
+                    foreach ($updateTids as $updateTid) {
+                        if (!$updateTid) {
+                            continue;
+                        }
 
                         $sorter = $container->get('elementsTreeSorter');
                         $sorter->sortNode($parentNode);
@@ -854,21 +852,18 @@ class DataController extends Controller
 
             // accordion stuff
 
-            if (empty($teaserId))
-            {
+            if (empty($teaserId)) {
                 $beforeUpdateNodeEvent = new Makeweb_Elements_Event_BeforeUpdateNode($node);
                 $dispatcher->dispatch($beforeUpdateNodeEvent);
 
                 // save page
 
-                if (!empty($data['page']))
-                {
+                if (!empty($data['page'])) {
                     $page = $node->getPage($oldVersion);
 
                     $page['navigation'] = !empty($data['page']['navigation']) ? 1 : 0;
                     $page['restricted'] = !empty($data['page']['restricted']) ? 1 : 0;
-                    if (array_key_exists('code', $data['page']))
-                    {
+                    if (array_key_exists('code', $data['page'])) {
                         $page['disable_cache'] = !empty($data['page']['disable_cache']) ? 1 : 0;
                         $page['cache_lifetime'] = (int) Brainbits_Util_Array::get($data['page'], 'cache_lifetime', 0);
                         $page['https'] = !empty($data['page']['https']) ? 1 : 0;
@@ -889,53 +884,45 @@ class DataController extends Controller
                     );
 
                     //$tree->getNodeOnlineVersions($node->getId(), false);
-                    #$identifier = new Makeweb_Elements_Tree_Identifier($node->getTree()->getSiteRootId());
-                    #MWF_Core_Cache_Manager::remove($identifier);
-                    #$treeManager->getBySiteRootId($node->getTree()->getSiteRootId(), true);
+                    //$identifier = new Makeweb_Elements_Tree_Identifier($node->getTree()->getSiteRootId());
+                    //MWF_Core_Cache_Manager::remove($identifier);
+                    //$treeManager->getBySiteRootId($node->getTree()->getSiteRootId(), true);
                 }
 
                 // save meta
 
-                if (!empty($data['meta']))
-                {
-                    $metaSetId   = $elementVersion->getElementTypeVersionObj()->getMetaSetId();
+                if (!empty($data['meta'])) {
+                    $metaSetId = $elementVersion->getElementTypeVersionObj()->getMetaSetId();
                     /* @var $metaSet Media_MetaSets_Set */
-                    $metaSet     = $container->get('metasets.repository')->find($metaSetId);
+                    $metaSet = $container->get('metasets.repository')->find($metaSetId);
 
-                    $identifier  = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $language);
+                    $identifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $language);
                     /* @var $metaSetItem Media_MetaSets_Item */
                     $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $identifier);
                     $metaSetArray = $metaSetItem->toArray($language);
 
-                    foreach ($data['meta'] as $key => $value)
-                    {
-                        if (!$isMaster && $metaSetArray[$key]['synchronized'])
-                        {
-                            if ($metaSetItem->$key === null)
-                            {
+                    foreach ($data['meta'] as $key => $value) {
+                        if (!$isMaster && $metaSetArray[$key]['synchronized']) {
+                            if ($metaSetItem->$key === null) {
                                 $metaSetItem->$key = '';
                             }
 
                             continue;
                         }
 
-                        if ('suggest' === $metaSetItem->getType($key))
-                        {
+                        if ('suggest' === $metaSetItem->getType($key)) {
                             $dataSourceId = $metaSetItem->getOptions($key);
                             $dataSourcesRepository = $container->get('datasources.repository');
                             $dataSource = $dataSourcesRepository->getDataSourceById($dataSourceId, $language);
                             $dataSourceKeys = $dataSource->getKeys();
                             $dataSourceModified = false;
-                            foreach (explode(',', $value) as $singleValue)
-                            {
-                                if (!in_array($singleValue, $dataSourceKeys))
-                                {
+                            foreach (explode(',', $value) as $singleValue) {
+                                if (!in_array($singleValue, $dataSourceKeys)) {
                                     $dataSource->addKey($singleValue, true);
                                     $dataSourceModified = true;
                                 }
                             }
-                            if ($dataSourceModified)
-                            {
+                            if ($dataSourceModified) {
                                 $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
                             }
                         }
@@ -945,29 +932,21 @@ class DataController extends Controller
 
                     $metaSetItem->save();
 
-                    if ($isMaster)
-                    {
+                    if ($isMaster) {
                         $slaveLanguages = $container->getParameter('frontend.languages.available');
                         unset($slaveLanguages[array_search($language, $slaveLanguages)]);
 
-                        foreach ($slaveLanguages as $slaveLanguage)
-                        {
-                            $identifier  = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $slaveLanguage);
+                        foreach ($slaveLanguages as $slaveLanguage) {
+                            $identifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $slaveLanguage);
                             /* @var $metaSetItem Media_MetaSets_Item */
                             $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $identifier);
 
-                            foreach ($data['meta'] as $key => $value)
-                            {
-                                if (!$metaSetArray[$key]['synchronized'] && $metaSetItem->$key)
-                                {
+                            foreach ($data['meta'] as $key => $value) {
+                                if (!$metaSetArray[$key]['synchronized'] && $metaSetItem->$key) {
                                     continue;
-                                }
-                                elseif (!$metaSetArray[$key]['synchronized'] && !$metaSetItem->$key)
-                                {
+                                } elseif (!$metaSetArray[$key]['synchronized'] && !$metaSetItem->$key) {
                                     $metaSetItem->$key = '';
-                                }
-                                else
-                                {
+                                } else {
                                     $metaSetItem->$key = $value ? $value : '';
                                 }
                             }
@@ -979,16 +958,14 @@ class DataController extends Controller
 
                 // save context
 
-                if (isset($data['context']))
-                {
+                if (isset($data['context'])) {
                     $db->delete($db->prefix . 'element_tree_context', array('tid = ?' => $tid));
 
                     $insertData = array(
                         'tid' => $tid
                     );
 
-                    foreach ($data['context'] as $country)
-                    {
+                    foreach ($data['context'] as $country) {
                         $insertData['context'] = $country;
 
                         $db->insert($db->prefix . 'element_tree_context', $insertData);
@@ -1000,9 +977,7 @@ class DataController extends Controller
 
                 $event = new Makeweb_Elements_Event_UpdateNode($node);
                 $dispatcher->dispatch($event);
-            }
-            else
-            {
+            } else {
 
                 $teaserNode = new Makeweb_Teasers_Node($teaserId);
 
@@ -1011,33 +986,29 @@ class DataController extends Controller
 
                 // save teaser
 
-                if (!empty($data['teaser']))
-                {
+                if (!empty($data['teaser'])) {
                     $updateData = array(
                         'disable_cache'  => empty($data['teaser']['disable_cache']) ? 0 : 1,
                         'cache_lifetime' => (int) Brainbits_Util_Array::get($data['teaser'], 'cache_lifetime', 0),
                     );
 
-                    if ($updateData['disable_cache'])
-                    {
+                    if ($updateData['disable_cache']) {
                         $updateData['cache_lifetime'] = 0;
                     }
 
-                    $db->update($db->prefix.'element_tree_teasers', $updateData, 'id = ' . $db->quote($teaserId));
+                    $db->update($db->prefix . 'element_tree_teasers', $updateData, 'id = ' . $db->quote($teaserId));
                 }
 
                 // save context
 
-                if (isset($data['context']))
-                {
+                if (isset($data['context'])) {
                     $db->delete($db->prefix . 'element_tree_teasers_context', array('teaser_id = ?' => $teaserId));
 
                     $insertData = array(
                         'teaser_id' => $teaserId
                     );
 
-                    foreach ($data['context'] as $country)
-                    {
+                    foreach ($data['context'] as $country) {
                         $insertData['context'] = $country;
 
                         $db->insert($db->prefix . 'element_tree_teasers_context', $insertData);
@@ -1048,7 +1019,7 @@ class DataController extends Controller
                 $dispatcher->dispatch($event);
             }
 
-            $element        = $elementManager->getByEID($eid);
+            $element = $elementManager->getByEID($eid);
             $elementVersion = $elementVersionManager->get($eid, $newVersion);
 
             $node = $treeManager->getNodeByNodeId($tid);
@@ -1056,32 +1027,26 @@ class DataController extends Controller
             $event = new Makeweb_Elements_Event_SaveElement($elementVersion, $language, $oldVersion);
             $dispatcher->dispatch($event);
 
-            $msg = 'Element "'.$eid.'" master language "'.$language.'" saved as new version ' . $newVersion;
+            $msg = 'Element "' . $eid . '" master language "' . $language . '" saved as new version ' . $newVersion;
 
             $publishOther = array();
-            if ($isPublish)
-            {
+            if ($isPublish) {
                 $msg .= ' and published.';
 
-                if ($teaserId === null)
-                {
+                if ($teaserId === null) {
                     $node = $treeManager->getNodeByNodeId($tid);
                     $tree = $node->getTree();
 
                     // notification data
                     $notificationManager = $container->get('elementsNotifications');
-                    $checkNotify         = $notificationManager->getNotificationByTid($tid, $language);
+                    $checkNotify = $notificationManager->getNotificationByTid($tid, $language);
 
                     // check if there is a notification already
-                    if (count($checkNotify) && $notifications)
-                    {
+                    if (count($checkNotify) && $notifications) {
                         $notificationId = $checkNotify[0]['id'];
                         $notificationManager->update($notificationId, $language);
-                    }
-                    else
-                    {
-                        if ($notifications)
-                        {
+                    } else {
+                        if ($notifications) {
                             $notificationManager->save($tid, $language);
                         }
                     }
@@ -1095,10 +1060,8 @@ class DataController extends Controller
                         $comment
                     );
 
-                    if (count($publishSlaveLanguages))
-                    {
-                        foreach ($publishSlaveLanguages as $slaveLanguage)
-                        {
+                    if (count($publishSlaveLanguages)) {
+                        foreach ($publishSlaveLanguages as $slaveLanguage) {
                             // publish slave node
                             $tree->publishNode(
                                 $node,
@@ -1117,11 +1080,9 @@ class DataController extends Controller
                             );
                         }
                     }
-                }
-                else
-                {
+                } else {
                     $teasersManager = Makeweb_Teasers_Manager::getInstance();
-                    $tree           = $node->getTree();
+                    $tree = $node->getTree();
 
                     $eid = $teasersManager->publish(
                         $teaserId,
@@ -1131,10 +1092,8 @@ class DataController extends Controller
                         $tid
                     );
 
-                    if (count($publishSlaveLanguages))
-                    {
-                        foreach ($publishSlaveLanguages as $slaveLanguage)
-                        {
+                    if (count($publishSlaveLanguages)) {
+                        foreach ($publishSlaveLanguages as $slaveLanguage) {
                             // publish slave node
                             $teasersManager->publish(
                                 $teaserId,
@@ -1146,9 +1105,7 @@ class DataController extends Controller
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 $msg .= '.';
             }
 
@@ -1164,24 +1121,22 @@ class DataController extends Controller
             $queueService->addUniqueJob($updateUsageJob);
 
 
-//            $updateCatchHelperJob = new Makeweb_Teasers_Job_UpdateCatchHelper();
-//            $updateUsageJob->setEid($eid);
-//            $queueManager->addJob($updateCatchHelperJob);
+            //            $updateCatchHelperJob = new Makeweb_Teasers_Job_UpdateCatchHelper();
+            //            $updateUsageJob->setEid($eid);
+            //            $queueManager->addJob($updateCatchHelperJob);
 
             //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
             //$fileUsage->update($eid);
 
             $data = array();
 
-            if ($teaserId)
-            {
+            if ($teaserId) {
                 // workaround since we have no teaser manager that handles instances
                 $node = new Makeweb_Teasers_Node($teaserId);
             }
 
             $status = '';
-            if ($node->isPublished($language))
-            {
+            if ($node->isPublished($language)) {
                 $status = $node->isAsync($language) ? 'async' : 'online';
             }
 
@@ -1195,10 +1150,8 @@ class DataController extends Controller
             );
 
             $result = MWF_Ext_Result::encode(true, $eid, $msg, $data);
-        }
-        catch (Exception $e)
-        {
-            $result = MWF_Ext_Result::encode(false, $eid, $e->getMessage().PHP_EOL.$e->getTraceAsString());
+        } catch (Exception $e) {
+            $result = MWF_Ext_Result::encode(false, $eid, $e->getMessage() . PHP_EOL . $e->getTraceAsString());
 
             $db->rollBack();
 
@@ -1216,8 +1169,7 @@ class DataController extends Controller
         $result = $functionClass->get();
 
         $data = array();
-        foreach ($result as $row)
-        {
+        foreach ($result as $row) {
             $data[] = array(
                 'key'   => array_shift($row),
                 'value' => array_shift($row)
@@ -1234,8 +1186,7 @@ class DataController extends Controller
         $languages = $container->getParameter('frontend.languages.available');
 
         $data = array();
-        foreach ($languages as $language)
-        {
+        foreach ($languages as $language) {
             $data[] = array(
                 'id' => $language,
             );
@@ -1249,12 +1200,11 @@ class DataController extends Controller
      */
     public function XXXelementtypesAction()
     {
-        $manager      = Makeweb_Elementtypes_Elementtype_Manager::getInstance();
+        $manager = Makeweb_Elementtypes_Elementtype_Manager::getInstance();
         $elementTypes = $manager->getAll();
 
         $titles = array();
-        foreach ($elementTypes as $elementTypeID => $elementType)
-        {
+        foreach ($elementTypes as $elementTypeID => $elementType) {
             /* @var $elementType Makeweb_Elementtypes_Elementtype */
 
             $elementTypeVersion = $elementType->getLatest();
@@ -1276,11 +1226,12 @@ class DataController extends Controller
      * Remove data ids from field/group names.
      *
      * @param array $values
+     *
      * @return array
      */
     protected function _stripDataIds(array $origValues)
     {
-        $keys   = array_keys($origValues);
+        $keys = array_keys($origValues);
         $values = array_values($origValues);
 
         $keys = preg_replace('/_id\-\d+/', '', $keys);

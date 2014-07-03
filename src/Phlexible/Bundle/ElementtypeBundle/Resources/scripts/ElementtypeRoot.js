@@ -7,7 +7,7 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
     deferredRender: false,
     activeTab: 0,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents(
             /**
@@ -24,61 +24,68 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
             'saveRoot'
         );
 
-        this.items = [{
-            xtype: 'elementtypes-root-properties',
-            isRootAccordion: true
-        },{
-            xtype: 'elementtypes-root-mappings',
-            title: this.strings.field_mappings,
-            iconCls: 'p-elementtype-tab_mappings-icon',
-            border: false,
-            isRootAccordion: true
-        }];
-
-        this.tbar = [{
-            text: this.strings.save_properties,
-            iconCls: 'p-elementtype-property_save-icon',
-            handler: function() {
-                this.saveProperties();
-                //Phlexible.console.log('save');
+        this.items = [
+            {
+                xtype: 'elementtypes-root-properties',
+                isRootAccordion: true
             },
-            scope: this
-        },'-',{
-            text: this.strings.reset_properties,
-            iconCls: 'p-elementtype-reset-icon',
-            handler: function() {
-                this.loadProperties(this.node);
+            {
+                xtype: 'elementtypes-root-mappings',
+                title: this.strings.field_mappings,
+                iconCls: 'p-elementtype-tab_mappings-icon',
+                border: false,
+                isRootAccordion: true
+            }
+        ];
+
+        this.tbar = [
+            {
+                text: this.strings.save_properties,
+                iconCls: 'p-elementtype-property_save-icon',
+                handler: function () {
+                    this.saveProperties();
+                    //Phlexible.console.log('save');
+                },
+                scope: this
+            },
+            '-',
+            {
+                text: this.strings.reset_properties,
+                iconCls: 'p-elementtype-reset-icon',
+                handler: function () {
+                    this.loadProperties(this.node);
 
 //                Phlexible.msg('Element Type Action', 'Properties of "' + this.node.text + '" resetted.');
-            },
-            scope: this
-        }];
+                },
+                scope: this
+            }
+        ];
 
         Phlexible.elementtypes.ElementtypeRoot.superclass.initComponent.call(this);
     },
 
-    getRootPropertyPanel: function() {
+    getRootPropertyPanel: function () {
         return this.getComponent(0);
     },
 
-    getRootMappingsPanel: function() {
+    getRootMappingsPanel: function () {
         return this.getComponent(1);
     },
 
-    clear: function() {
+    clear: function () {
         this.disable();
 
         this.setTitle(this.strings.properties);
     },
 
-    loadProperties: function(node) {
+    loadProperties: function (node) {
         this.node = node;
         this.setTitle(this.strings.properties_of + ' "' + node.text + '" [' + node.attributes.type + ']');
         this.loadRootProperties(node);
         this.enable();
     },
 
-    getProperties: function(node)	{
+    getProperties: function (node) {
 
         var properties = {
             root: {
@@ -97,33 +104,33 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
         };
 
         if (node.attributes.properties) {
-            if(node.attributes.properties.root) {
+            if (node.attributes.properties.root) {
                 for (var j in properties.root) {
                     properties.root[j] = node.attributes.properties.root[j];
                 }
             }
             /*
-            if(node.attributes.properties.viability)
-            {
-                for(var j=0; j<node.attributes.properties.viability.length; j++)
-                {
-                    properties.viability.push(node.attributes.properties.viability[j]);
-                }
-            }
-            */
-            if(node.attributes.properties.mappings) {
+             if(node.attributes.properties.viability)
+             {
+             for(var j=0; j<node.attributes.properties.viability.length; j++)
+             {
+             properties.viability.push(node.attributes.properties.viability[j]);
+             }
+             }
+             */
+            if (node.attributes.properties.mappings) {
                 if (Ext.isArray(node.attributes.properties.mappings)) {
                     for (var j = 0; j < node.attributes.properties.mappings.length; j++) {
                         properties.mappings.push(node.attributes.properties.mappings[j]);
                     }
-                } else if(typeof node.attributes.properties.mappings == 'object') {
+                } else if (typeof node.attributes.properties.mappings == 'object') {
                     for (var j in node.attributes.properties.mappings) {
                         properties.mappings[j] = node.attributes.properties.mappings[j];
                     }
                 }
             }
-            if(node.attributes.properties.metasets) {
-                for(var j=0; j<node.attributes.properties.metasets.length; j++) {
+            if (node.attributes.properties.metasets) {
+                for (var j = 0; j < node.attributes.properties.metasets.length; j++) {
                     properties.metasets.push(node.attributes.properties.metasets[j]);
                 }
             }
@@ -141,11 +148,11 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
         return properties;
     },
 
-    loadRootProperties: function(node) {
+    loadRootProperties: function (node) {
 
         var properties = this.getProperties(node);
 
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             if (panel.isFieldAccordion) {
                 panel.hide();
             }
@@ -158,7 +165,7 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
         this.getRootMappingsPanel().loadRoot(properties, node);
     },
 
-    saveProperties: function() {
+    saveProperties: function () {
         if (this.node.attributes.type == 'root') {
             if (!this.saveRootProperties()) {
                 return;
@@ -172,7 +179,7 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
         this.loadProperties(this.node);
     },
 
-    saveRootProperties: function() {
+    saveRootProperties: function () {
         var valid = true;
         valid = (this.getRootPropertyPanel().hidden || this.getRootPropertyPanel().isValid()) && valid;
         valid = (this.getRootMappingsPanel().hidden || this.getRootMappingsPanel().isValid()) && valid;
@@ -200,10 +207,10 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
         this.fireEvent('saveRoot', this.node);
     },
 
-    saveReferenceRootProperties: function() {
+    saveReferenceRootProperties: function () {
         var propertiesValid = this.getRootPropertyPanel().isValid();
 
-        if(!propertiesValid) {
+        if (!propertiesValid) {
             Ext.MessageBox.alert('Error', this.strings.check_input);
             return;
         }
@@ -213,7 +220,7 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
             mappings: {}
         };
 
-        if(!this.fireEvent('beforeSaveRoot', this.node, properties)) {
+        if (!this.fireEvent('beforeSaveRoot', this.node, properties)) {
             return;
         }
 

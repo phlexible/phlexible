@@ -1,7 +1,7 @@
 Ext.namespace('Ext.ux.form');
 
 Ext.ux.form.LovField = Ext.extend(Ext.form.TriggerField, {
-    defaultAutoCreate : {tag: "input", type: "text", size: "16",style:"cursor:default;", autocomplete: "off"},
+    defaultAutoCreate: {tag: "input", type: "text", size: "16", style: "cursor:default;", autocomplete: "off"},
     triggerClass: 'x-form-search-trigger',
     validateOnBlur: false,
 
@@ -31,13 +31,13 @@ Ext.ux.form.LovField = Ext.extend(Ext.form.TriggerField, {
     // autoScroll, layout, bbar and items configurations are not changed by this option
     windowConfig: {},
 
-    showOnFocus : false,
+    showOnFocus: false,
 
-    minItem : 0,
-    minItemText : 'The minimum selected item number for this field is {0}',
+    minItem: 0,
+    minItemText: 'The minimum selected item number for this field is {0}',
 
-    maxItem : Number.MAX_VALUE,
-    maxItemText : 'The maximum selected item number for this field is {0}',
+    maxItem: Number.MAX_VALUE,
+    maxItemText: 'The maximum selected item number for this field is {0}',
 
     // Private
     isStoreLoaded: false,
@@ -46,37 +46,37 @@ Ext.ux.form.LovField = Ext.extend(Ext.form.TriggerField, {
     // Private
     selectedRecords: [],
 
-    initComponent: function(){
-        if((this.view.xtype != 'grid' && this.view.xtype != 'dataview') &&
-        (!(this.view instanceof Ext.grid.GridPanel) && !(this.view instanceof Ext.DataView))){
+    initComponent: function () {
+        if ((this.view.xtype != 'grid' && this.view.xtype != 'dataview') &&
+            (!(this.view instanceof Ext.grid.GridPanel) && !(this.view instanceof Ext.DataView))) {
             throw "Ext.ux.form.LovField.view option must be instance of Ext.grid.GridPanel or Ext.DataView!";
         }
 
         Ext.ux.form.LovField.superclass.initComponent.call(this);
 
         this.viewType = this.view.getXType();
-        if(this.viewType == 'grid' && !this.view.sm){
+        if (this.viewType == 'grid' && !this.view.sm) {
             this.view.sm = this.view.getSelectionModel();
         }
 
-        if(this.viewType == 'grid'){
+        if (this.viewType == 'grid') {
             this.view.sm.singleSelect = !this.multiSelect;
-        }else{
+        } else {
             this.view.singleSelect = !this.multiSelect;
             this.view.multiSelect = this.multiSelect;
         }
 
-        if(Ext.type(this.displayField) == 'array'){
+        if (Ext.type(this.displayField) == 'array') {
             this.displayField = this.displayField.join('');
         }
         if (/<tpl(.*)<\/tpl>/.test(this.displayField) && !(this.displayFieldTpl instanceof Ext.XTemplate)) {
             this.displayFieldTpl = new Ext.XTemplate(this.displayField).compile();
         }
 
-        if(Ext.type(this.qtipTpl) == 'array'){
+        if (Ext.type(this.qtipTpl) == 'array') {
             this.qtipTpl = this.qtipTpl.join('');
         }
-        if(/<tpl(.*)<\/tpl>/.test(this.qtipTpl) && !(this.qtipTpl instanceof Ext.XTemplate) ){
+        if (/<tpl(.*)<\/tpl>/.test(this.qtipTpl) && !(this.qtipTpl instanceof Ext.XTemplate)) {
             this.qtipTpl = new Ext.XTemplate(this.qtipTpl).compile();
         }
 
@@ -86,52 +86,52 @@ Ext.ux.form.LovField = Ext.extend(Ext.form.TriggerField, {
         }
     },
 
-    onRender: function(ct, position){
+    onRender: function (ct, position) {
         if (this.isRendered) {
             return;
         }
 
         this.readOnly = true;
-        if(this.textarea){
-            this.defaultAutoCreate = {tag: "textarea", style:"cursor:default;width:124px;height:65px;", autocomplete: "off"};
+        if (this.textarea) {
+            this.defaultAutoCreate = {tag: "textarea", style: "cursor:default;width:124px;height:65px;", autocomplete: "off"};
             this.displaySeparator = '\n';
         }
 
         Ext.ux.form.LovField.superclass.onRender.call(this, ct, position);
 
-        this.hiddenField = this.el.insertSibling({tag:'input', type:'hidden',
-        name: this.el.dom.getAttribute('name'), id: this.id + '-hidden'}, 'before', true);
+        this.hiddenField = this.el.insertSibling({tag: 'input', type: 'hidden',
+            name: this.el.dom.getAttribute('name'), id: this.id + '-hidden'}, 'before', true);
 
         // prevent input submission
         this.el.dom.removeAttribute('name');
 
-        if(this.showOnFocus){
-            this.on('focus',this.onTriggerClick,this);
+        if (this.showOnFocus) {
+            this.on('focus', this.onTriggerClick, this);
         }
 
         this.isRendered = true;
     },
 
-    validateValue : function(value){
-        if( Ext.ux.form.LovField.superclass.validateValue.call(this, value)){
-            if(this.selectedRecords.length < this.minItem){
+    validateValue: function (value) {
+        if (Ext.ux.form.LovField.superclass.validateValue.call(this, value)) {
+            if (this.selectedRecords.length < this.minItem) {
                 this.markInvalid(String.format(this.minItemText, this.minItem));
                 return false;
             }
-            if(this.selectedRecords.length > this.maxItem){
+            if (this.selectedRecords.length > this.maxItem) {
                 this.markInvalid(String.format(this.maxItemText, this.maxItem));
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
         return true;
     },
 
-    getSelectedRecords : function(){
-        if(this.viewType == 'grid'){
+    getSelectedRecords: function () {
+        if (this.viewType == 'grid') {
             this.selections = this.selectedRecords = this.view.sm.getSelections();
-        }else{
+        } else {
             this.selections = this.view.getSelectedIndexes();
             this.selectedRecords = this.view.getSelectedRecords();
         }
@@ -139,24 +139,24 @@ Ext.ux.form.LovField = Ext.extend(Ext.form.TriggerField, {
         return this.selectedRecords;
     },
 
-    clearSelections : function(){
-        return (this.viewType == 'grid')? this.view.sm.clearSelections() : this.view.clearSelections();
+    clearSelections: function () {
+        return (this.viewType == 'grid') ? this.view.sm.clearSelections() : this.view.clearSelections();
     },
 
-    select : function(selections){
-        if(this.viewType == 'grid'){
-            if(selections[0] instanceof Ext.data.Record){
+    select: function (selections) {
+        if (this.viewType == 'grid') {
+            if (selections[0] instanceof Ext.data.Record) {
                 this.view.sm.selectRecords(selections);
-            }else{
+            } else {
                 this.view.sm.selectRows(selections);
 
             }
-        }else{
+        } else {
             this.view.select(selections);
         }
     },
 
-    onSelect: function(){
+    onSelect: function () {
         var d = this.prepareValue(this.getSelectedRecords());
         var returnValue = d.hv ? d.hv.join(this.valueSeparator) : '';
         var displayValue = d.dv ? d.dv.join(this.displaySeparator) : '';
@@ -165,17 +165,17 @@ Ext.ux.form.LovField = Ext.extend(Ext.form.TriggerField, {
 
         this.hiddenField.setAttribute('value', returnValue);
 
-        if(Ext.QuickTips){ // fix for floating editors interacting with DND
+        if (Ext.QuickTips) { // fix for floating editors interacting with DND
             Ext.QuickTips.enable();
         }
         this.window.hide();
     },
 
-    prepareValue:function(sRec){
+    prepareValue: function (sRec) {
         this.el.dom.qtip = '';
         if (sRec.length > 0) {
-            var vals = {"hv": [],"dv": []};
-            Ext.each(sRec, function(i){
+            var vals = {"hv": [], "dv": []};
+            Ext.each(sRec, function (i) {
                 vals.hv.push(i.get(this.valueField));
                 if (this.displayFieldTpl) {
                     vals.dv.push(this.displayFieldTpl.apply(i.data));
@@ -183,7 +183,7 @@ Ext.ux.form.LovField = Ext.extend(Ext.form.TriggerField, {
                     vals.dv.push(i.get(this.displayField));
                 }
 
-                if(this.qtipTpl){
+                if (this.qtipTpl) {
                     this.el.dom.qtip += this.qtipTpl.apply(i.data);
                 }
 
@@ -193,15 +193,15 @@ Ext.ux.form.LovField = Ext.extend(Ext.form.TriggerField, {
         return false;
     },
 
-    getValue:function(){
+    getValue: function () {
         var v = this.hiddenField.value;
-        if(v === this.emptyText || v === undefined){
+        if (v === this.emptyText || v === undefined) {
             v = '';
         }
         return v;
     },
 
-    onTriggerClick: function(e){
+    onTriggerClick: function (e) {
         // Store Load
         if (!this.isStoreLoaded) {
             this.view.store.load();
@@ -211,30 +211,32 @@ Ext.ux.form.LovField = Ext.extend(Ext.form.TriggerField, {
         }
 
         this.windowConfig = Ext.apply(this.windowConfig,
-        {
-            title: this.lovTitle,
-            width: this.lovWidth,
-            height: this.lovHeight,
-            autoScroll: true,
-            layout: 'fit',
-            bbar: [
-            {text: 'Cancel', handler: function(){
-                this.select(this.selections);
-                this.window.hide();
-            },scope: this},
-            {text: 'Clear', handler: function(){this.clearSelections();},scope: this},
-            '->',
-            {text: 'Select',handler: this.onSelect,scope: this}
-            ],
-            items: this.view
-        },{shadow: false, frame: true});
+            {
+                title: this.lovTitle,
+                width: this.lovWidth,
+                height: this.lovHeight,
+                autoScroll: true,
+                layout: 'fit',
+                bbar: [
+                    {text: 'Cancel', handler: function () {
+                        this.select(this.selections);
+                        this.window.hide();
+                    }, scope: this},
+                    {text: 'Clear', handler: function () {
+                        this.clearSelections();
+                    }, scope: this},
+                    '->',
+                    {text: 'Select', handler: this.onSelect, scope: this}
+                ],
+                items: this.view
+            }, {shadow: false, frame: true});
 
-        if(!this.window){
+        if (!this.window) {
             this.window = new Ext.Window(this.windowConfig);
 
             this.window.setPagePosition(e.xy[0] + 16, e.xy[1] + 16);
 
-            this.window.on('beforeclose', function(){
+            this.window.on('beforeclose', function () {
                 this.window.hide();
                 return false;
             }, this);

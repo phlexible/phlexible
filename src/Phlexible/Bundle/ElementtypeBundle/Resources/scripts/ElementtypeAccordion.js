@@ -13,7 +13,7 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
     disabled: true,
     autoScroll: true,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents(
             /**
@@ -42,96 +42,113 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
             'saveField'
         );
 
-        this.items = [{
-            xtype: 'elementtypes-root-properties',
-            hidden: true,
-            isRootAccordion: true
-        },{
-            title: this.strings.field_mappings,
-            iconCls: 'p-elementtype-tab_mappings-icon',
-            border: false,
-            hidden: true,
-            items: [{
-                xtype: 'elementtypes-root-navigations'
-            }],
-            isRootAccordion: true
-        },{
-            xtype: 'elementtypes-field-properties',
-            hidden: true,
-            isFieldAccordion: true,
-            key: 'field'
-        },{
-            xtype: 'elementtypes-field-labels',
-            hidden: true,
-            isFieldAccordion: true,
-            key: 'labels'
-        },{
-            xtype: 'elementtypes-field-configurations',
-            hidden: true,
-            isFieldAccordion: true,
-            key: 'configuration'
-        },{
-            xtype: 'elementtypes-field-values',
-            hidden: true,
-            isFieldAccordion: true,
-            key: 'options'
-        },{
-            xtype: 'elementtypes-field-validations',
-            hidden: true,
-            isFieldAccordion: true,
-            key: 'validation'
-        },{
-            xtype: 'elementtypes-field-content-channels',
-            hidden: true,
-            isFieldAccordion: true,
-            key: 'content_channels'
-        },{
-            xtype: 'elementtypes-field-link',
-            hidden: true,
-            isFieldAccordion: true,
-            key: 'configuration'
-        },{
-            xtype: 'elementtypes-field-table',
-            hidden: true,
-            isFieldAccordion: true,
-            key: 'configuration'
-        }];
-
-        this.tbar = [{
-            text: this.strings.save_properties,
-            iconCls: 'p-elementtype-property_save-icon',
-            handler: function() {
-                this.saveProperties();
-                //Phlexible.console.log('save');
+        this.items = [
+            {
+                xtype: 'elementtypes-root-properties',
+                hidden: true,
+                isRootAccordion: true
             },
-            scope: this
-        },'-',{
-            text: this.strings.reset_properties,
-            iconCls: 'p-elementtype-reset-icon',
-            handler: function() {
-                this.loadProperties(this.node);
+            {
+                title: this.strings.field_mappings,
+                iconCls: 'p-elementtype-tab_mappings-icon',
+                border: false,
+                hidden: true,
+                items: [
+                    {
+                        xtype: 'elementtypes-root-navigations'
+                    }
+                ],
+                isRootAccordion: true
+            },
+            {
+                xtype: 'elementtypes-field-properties',
+                hidden: true,
+                isFieldAccordion: true,
+                key: 'field'
+            },
+            {
+                xtype: 'elementtypes-field-labels',
+                hidden: true,
+                isFieldAccordion: true,
+                key: 'labels'
+            },
+            {
+                xtype: 'elementtypes-field-configurations',
+                hidden: true,
+                isFieldAccordion: true,
+                key: 'configuration'
+            },
+            {
+                xtype: 'elementtypes-field-values',
+                hidden: true,
+                isFieldAccordion: true,
+                key: 'options'
+            },
+            {
+                xtype: 'elementtypes-field-validations',
+                hidden: true,
+                isFieldAccordion: true,
+                key: 'validation'
+            },
+            {
+                xtype: 'elementtypes-field-content-channels',
+                hidden: true,
+                isFieldAccordion: true,
+                key: 'content_channels'
+            },
+            {
+                xtype: 'elementtypes-field-link',
+                hidden: true,
+                isFieldAccordion: true,
+                key: 'configuration'
+            },
+            {
+                xtype: 'elementtypes-field-table',
+                hidden: true,
+                isFieldAccordion: true,
+                key: 'configuration'
+            }
+        ];
+
+        this.tbar = [
+            {
+                text: this.strings.save_properties,
+                iconCls: 'p-elementtype-property_save-icon',
+                handler: function () {
+                    this.saveProperties();
+                    //Phlexible.console.log('save');
+                },
+                scope: this
+            },
+            '-',
+            {
+                text: this.strings.reset_properties,
+                iconCls: 'p-elementtype-reset-icon',
+                handler: function () {
+                    this.loadProperties(this.node);
 
 //                Phlexible.msg('Element Type Action', 'Properties of "' + this.node.text + '" resetted.');
-            },
-            scope: this
-        }];
+                },
+                scope: this
+            }
+        ];
 
         Phlexible.elementtypes.ElementtypeAccordion.superclass.initComponent.call(this);
 
         //Phlexible.console.log(this.tbar);
     },
 
-    clear: function() {
+    clear: function () {
         this.disable();
 
         this.setTitle(this.strings.properties);
 
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             panel.hide();
         })
     },
 
-    loadProperties: function(node) {
+    loadProperties: function (node) {
 
         this.node = node;
 
@@ -146,7 +163,7 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
         this.enable();
     },
 
-    getProperties: function(node)	{
+    getProperties: function (node) {
 
         var properties = {
             root: {
@@ -164,52 +181,46 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
             metasets: []
         };
 
-        if (node.attributes.properties)
-        {
-            if(node.attributes.properties.root)
-            {
-                for (var j in properties.root)
-                {
+        if (node.attributes.properties) {
+            if (node.attributes.properties.root) {
+                for (var j in properties.root) {
                     properties.root[j] = node.attributes.properties.root[j];
                 }
             }
             /*
-            if(node.attributes.properties.viability)
-            {
-                for(var j=0; j<node.attributes.properties.viability.length; j++)
-                {
-                    properties.viability.push(node.attributes.properties.viability[j]);
-                }
-            }
-            */
-            if(node.attributes.properties.navigation)
-            {
+             if(node.attributes.properties.viability)
+             {
+             for(var j=0; j<node.attributes.properties.viability.length; j++)
+             {
+             properties.viability.push(node.attributes.properties.viability[j]);
+             }
+             }
+             */
+            if (node.attributes.properties.navigation) {
                 if (Ext.isArray(node.attributes.properties.navigation)) {
                     for (var j = 0; j < node.attributes.properties.navigation.length; j++) {
                         properties.navigation.push(node.attributes.properties.navigation[j]);
                     }
-                } else if(typeof node.attributes.properties.navigation == 'object') {
+                } else if (typeof node.attributes.properties.navigation == 'object') {
                     for (var j in node.attributes.properties.navigation) {
                         properties.navigation[j] = node.attributes.properties.navigation[j];
                     }
                 }
             }
-            if(node.attributes.properties.metasets)
-            {
-                for(var j=0; j<node.attributes.properties.metasets.length; j++)
-                {
+            if (node.attributes.properties.metasets) {
+                for (var j = 0; j < node.attributes.properties.metasets.length; j++) {
                     properties.metasets.push(node.attributes.properties.metasets[j]);
                 }
             }
             /*
-            if(node.attributes.properties.versions)
-            {
-                for(var j=0; j<node.attributes.properties.versions.length; j++)
-                {
-                    properties.versions.push(node.attributes.properties.versions[j]);
-                }
-            }
-            */
+             if(node.attributes.properties.versions)
+             {
+             for(var j=0; j<node.attributes.properties.versions.length; j++)
+             {
+             properties.versions.push(node.attributes.properties.versions[j]);
+             }
+             }
+             */
         }
 
 //        if (node.attributes.properties) {
@@ -224,45 +235,45 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
         return properties;
     },
 
-    getRootPropertyPanel: function() {
+    getRootPropertyPanel: function () {
         return this.getComponent(0);
     },
 
-    getRootNavigationWrap: function() {
+    getRootNavigationWrap: function () {
         return this.getComponent(1);
     },
 
-    getRootNavigationPanel: function() {
+    getRootNavigationPanel: function () {
         return this.getRootNavigationWrap().getComponent(0);
     },
 
     /*
-    getRootViabilityWrap: function() {
+     getRootViabilityWrap: function() {
+     return this.getComponent(2);
+     },
+
+     getRootViabilityPanel: function() {
+     return this.getRootViabilityWrap().getComponent(0);
+     },
+
+     getRootVersionsWrap: function() {
+     return this.getComponent(3);
+     },
+
+     getRootVersionsPanel: function() {
+     return this.getRootVersionsWrap().getComponent(0);
+     },
+     */
+
+    getFieldPropertyPanel: function () {
         return this.getComponent(2);
     },
 
-    getRootViabilityPanel: function() {
-        return this.getRootViabilityWrap().getComponent(0);
-    },
-
-    getRootVersionsWrap: function() {
-        return this.getComponent(3);
-    },
-
-    getRootVersionsPanel: function() {
-        return this.getRootVersionsWrap().getComponent(0);
-    },
-    */
-
-    getFieldPropertyPanel: function() {
-        return this.getComponent(2);
-    },
-
-    loadRootProperties: function(node) {
+    loadRootProperties: function (node) {
 
         var properties = this.getProperties(node);
 
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             if (panel.isFieldAccordion) {
                 panel.hide();
             }
@@ -283,34 +294,34 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
         }
 
         /*
-        // RootViability Accordion
-        if (node.attributes.type == 'root') {
-            this.getRootViabilityWrap().show();
-            this.getRootViabilityPanel().loadData(properties.viability);
-            this.getRootViabilityPanel().setType(properties.root.type);
-        }
-        else {
-            this.getRootViabilityWrap().hide();
-            this.getRootViabilityPanel().empty();
-        }
+         // RootViability Accordion
+         if (node.attributes.type == 'root') {
+         this.getRootViabilityWrap().show();
+         this.getRootViabilityPanel().loadData(properties.viability);
+         this.getRootViabilityPanel().setType(properties.root.type);
+         }
+         else {
+         this.getRootViabilityWrap().hide();
+         this.getRootViabilityPanel().empty();
+         }
 
-        // RootVersions Accordion
-        //if (node.attributes.type == 'root') {
-            this.getRootVersionsWrap().show();
-            this.getRootVersionsPanel().loadData(properties.versions);
-        //}
-        //else {
-        //    this.getComponent(5).hide();
-        //    this.rootVersions.empty();
-        //}
-        */
+         // RootVersions Accordion
+         //if (node.attributes.type == 'root') {
+         this.getRootVersionsWrap().show();
+         this.getRootVersionsPanel().loadData(properties.versions);
+         //}
+         //else {
+         //    this.getComponent(5).hide();
+         //    this.rootVersions.empty();
+         //}
+         */
 
         var expanded = this.getRootNavigationWrap().isVisible() && !this.getRootNavigationWrap().collapsed;
         /*
-            (this.getRootNavigationWrap().isVisible() && !this.getRootNavigationWrap().collapsed) ||
-            (this.getRootViabilityWrap().isVisible() && !this.getRootViabilityWrap().collapsed) ||
-            (this.getRootVersionsWrap().isVisible() && !this.getRootVersionsWrap().collapsed);
-            */
+         (this.getRootNavigationWrap().isVisible() && !this.getRootNavigationWrap().collapsed) ||
+         (this.getRootViabilityWrap().isVisible() && !this.getRootViabilityWrap().collapsed) ||
+         (this.getRootVersionsWrap().isVisible() && !this.getRootVersionsWrap().collapsed);
+         */
 
         if (!expanded) {
             this.getRootPropertyPanel().expand();
@@ -319,11 +330,11 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
         }
     },
 
-    loadFieldProperties: function(node) {
+    loadFieldProperties: function (node) {
 
         var properties = Phlexible.clone(node.attributes.properties);
 
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             if (panel.isRootAccordion) {
                 panel.hide();
             }
@@ -332,7 +343,7 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
         var fieldType = Phlexible.fields.FieldTypes[node.attributes.type];
 
         var expanded = false;
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             if (panel.isFieldAccordion) {
                 panel.loadField(properties, node, fieldType);
                 if (!panel.collapsed) {
@@ -346,7 +357,7 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
         }
     },
 
-    saveProperties: function() {
+    saveProperties: function () {
         if (this.node.attributes.type == 'root') {
             if (!this.saveRootProperties()) {
                 return;
@@ -364,9 +375,9 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
         this.loadProperties(this.node);
     },
 
-    saveRootProperties: function() {
+    saveRootProperties: function () {
         var valid = true;
-        valid = (this.getRootPropertyPanel().hidden  || this.getRootPropertyPanel().isValid())   && valid;
+        valid = (this.getRootPropertyPanel().hidden || this.getRootPropertyPanel().isValid()) && valid;
         valid = (this.getRootNavigationWrap().hidden || this.getRootNavigationPanel().isValid()) && valid;
         //valid = (this.getRootViabilityWrap().hidden  || this.getRootViabilityPanel().isValid())  && valid;
 
@@ -394,10 +405,10 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
         this.fireEvent('saveRoot', this.node);
     },
 
-    saveReferenceRootProperties: function() {
+    saveReferenceRootProperties: function () {
         var propertiesValid = this.getRootPropertyPanel().isValid();
 
-        if(!propertiesValid) {
+        if (!propertiesValid) {
             Ext.MessageBox.alert('Error', this.strings.check_input);
             return;
         }
@@ -408,7 +419,7 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
             navigation: {}
         };
 
-        if(!this.fireEvent('beforeSaveRoot', this.node, properties)) {
+        if (!this.fireEvent('beforeSaveRoot', this.node, properties)) {
             return;
         }
 
@@ -417,9 +428,9 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
         this.fireEvent('saveRoot', this.node);
     },
 
-    saveFieldProperties: function() {
+    saveFieldProperties: function () {
         var valid = true;
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             if (panel.isFieldAccordion && !panel.hidden && !panel.isValid() && valid) {
                 valid = false;
                 return false;
@@ -440,13 +451,13 @@ Phlexible.elementtypes.ElementtypeAccordion = Ext.extend(Ext.Panel, {
             content_channels: {}
         };
 
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             if (panel.isFieldAccordion) {
                 Ext.apply(properties[panel.key], panel.getSaveValues());
             }
         });
 
-        if(this.fireEvent('beforeSaveField', this.node, properties) === false) {
+        if (this.fireEvent('beforeSaveField', this.node, properties) === false) {
             return false;
         }
 

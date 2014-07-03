@@ -49,14 +49,14 @@ class OpenXmlAttributeReader implements AttributeReaderInterface
             $mydoc = \OpenXMLDocumentFactory::openDocument($filename);
             $data = $mydoc->getExtendedArray();
 
-            foreach($data as $key => $value) {
+            foreach ($data as $key => $value) {
                 if (!empty($value)) {
                     $metaData->set($key, $value);
                 }
             }
 
             $metaBag->add($metaData);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 }

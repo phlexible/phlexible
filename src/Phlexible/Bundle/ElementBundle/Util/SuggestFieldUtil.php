@@ -35,7 +35,7 @@ class SuggestFieldUtil
      */
     public function __construct(ConnectionManager $dbPool, $seperatorChar)
     {
-        $this->_dbPool        = $dbPool;
+        $this->_dbPool = $dbPool;
         $this->_seperatorChar = $seperatorChar;
     }
 
@@ -50,45 +50,45 @@ class SuggestFieldUtil
         $db = $this->_dbPool->read;
 
         $sql = $db->select()
-                  ->distinct()
+            ->distinct()
 
-                  // used to limit on element type version
-                  ->from(
-                      array('ev' => $db->prefix . 'element_version'),
-                      array()
-                  )
+            // used to limit on element type version
+            ->from(
+                array('ev' => $db->prefix . 'element_version'),
+                array()
+            )
 
-                  // used to limit on suggest fields and data source id
-                  ->join(
-                      array('ets' => $db->prefix . 'elementtype_structure'),
-                      'ets.element_type_id = ev.element_type_id AND ' .
-                      'ets.version = ev.element_type_version',
-                      array()
-                  )
+            // used to limit on suggest fields and data source id
+            ->join(
+                array('ets' => $db->prefix . 'elementtype_structure'),
+                'ets.element_type_id = ev.element_type_id AND ' .
+                'ets.version = ev.element_type_version',
+                array()
+            )
 
-                  // connection to content table element data language
-                  ->join(
-                      array('ed' => $db->prefix . 'element_data'),
-                      'ed.ds_id = ets.ds_id AND ' .
-                      'ev.eid = ed.eid AND ev.version = ed.version',
-                      array()
-                  )
+            // connection to content table element data language
+            ->join(
+                array('ed' => $db->prefix . 'element_data'),
+                'ed.ds_id = ets.ds_id AND ' .
+                'ev.eid = ed.eid AND ev.version = ed.version',
+                array()
+            )
 
-                  // fetch content
-                  ->join(
-                      array('edl' => $db->prefix . 'element_data_language'),
-                      'ed.eid = edl.eid AND ed.version = edl.version AND ed.data_id = edl.data_id',
-                      array('content')
-                  )
+            // fetch content
+            ->join(
+                array('edl' => $db->prefix . 'element_data_language'),
+                'ed.eid = edl.eid AND ed.version = edl.version AND ed.data_id = edl.data_id',
+                array('content')
+            )
 
-                  // limit on suggest fields
-                  ->where('ets.field_type = :field_type')
+            // limit on suggest fields
+            ->where('ets.field_type = :field_type')
 
-                  // limit on suggest fields
-                  ->where('edl.language = :language')
+            // limit on suggest fields
+            ->where('edl.language = :language')
 
-                  // limit on data source
-                  ->where('ets.options LIKE :options');
+            // limit on data source
+            ->where('ets.options LIKE :options');
 
         $bind = array(
             ':language'   => $language,
@@ -103,6 +103,7 @@ class SuggestFieldUtil
 
         return $uniqueKeys;
     }
+
     /**
      * Split list of suggest values into pieces and remove duplicates.
      *
@@ -113,16 +114,13 @@ class SuggestFieldUtil
     public function splitSuggestValues(array $concatenated)
     {
         $keys = array();
-        foreach ($concatenated as $value)
-        {
-            $splitted  = explode($this->_seperatorChar, $value);
-            foreach ($splitted as $key)
-            {
+        foreach ($concatenated as $value) {
+            $splitted = explode($this->_seperatorChar, $value);
+            foreach ($splitted as $key) {
                 $key = trim($key);
 
                 // skip empty values
-                if (strlen($key))
-                {
+                if (strlen($key)) {
                     $keys[] = $key;
                 }
             }
@@ -144,52 +142,52 @@ class SuggestFieldUtil
         $db = $this->_dbPool->read;
 
         $sql = $db->select()
-                  ->distinct()
+            ->distinct()
 
-                  // fetch only online element versions
-                  ->from(
-                      array('eto' => $db->prefix . 'element_tree_online'),
-                      array()
-                  )
+            // fetch only online element versions
+            ->from(
+                array('eto' => $db->prefix . 'element_tree_online'),
+                array()
+            )
 
-                  // used to limit on element type version
-                  ->join(
-                      array('ev' => $db->prefix . 'element_version'),
-                      'eto.eid = ev.eid AND eto.version = ev.version',
-                      array()
-                  )
+            // used to limit on element type version
+            ->join(
+                array('ev' => $db->prefix . 'element_version'),
+                'eto.eid = ev.eid AND eto.version = ev.version',
+                array()
+            )
 
-                  // used to limit on suggest fields and data source id
-                  ->join(
-                      array('ets' => $db->prefix . 'elementtype_structure'),
-                      'ets.element_type_id = ev.element_type_id AND ' .
-                      'ets.version = ev.element_type_version',
-                      array()
-                  )
+            // used to limit on suggest fields and data source id
+            ->join(
+                array('ets' => $db->prefix . 'elementtype_structure'),
+                'ets.element_type_id = ev.element_type_id AND ' .
+                'ets.version = ev.element_type_version',
+                array()
+            )
 
-                  // connection to content table element data language
-                  ->join(
-                      array('ed' => $db->prefix . 'element_data'),
-                      'ed.ds_id = ets.ds_id AND ' .
-                      'eto.eid = ed.eid AND eto.version = ed.version',
-                      array()
-                  )
+            // connection to content table element data language
+            ->join(
+                array('ed' => $db->prefix . 'element_data'),
+                'ed.ds_id = ets.ds_id AND ' .
+                'eto.eid = ed.eid AND eto.version = ed.version',
+                array()
+            )
 
-                  // fetch content
-                  ->join(
-                      array('edl' => $db->prefix . 'element_data_language'),
-                      'ed.eid = edl.eid AND ed.version = edl.version AND ed.data_id = edl.data_id AND eto.language = edl.language',
-                      array('content')
-                  )
+            // fetch content
+            ->join(
+                array('edl' => $db->prefix . 'element_data_language'),
+                'ed.eid = edl.eid AND ed.version = edl.version AND ed.data_id = edl.data_id AND eto.language = edl.language',
+                array('content')
+            )
 
-                  // limit on suggest fields
-                  ->where('eto.language = :language')
+            // limit on suggest fields
+            ->where('eto.language = :language')
 
-                  // limit on suggest fields
-                  ->where('ets.field_type = :field_type')
+            // limit on suggest fields
+            ->where('ets.field_type = :field_type')
 
-                  // limit on data source
-                  ->where('ets.options LIKE :options');
+            // limit on data source
+            ->where('ets.options LIKE :options');
 
         $bind = array(
             ':language'   => $language,

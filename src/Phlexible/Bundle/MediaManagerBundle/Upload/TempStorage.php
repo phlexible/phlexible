@@ -86,7 +86,10 @@ class TempStorage
      */
     public function remove(TempFile $file)
     {
-        if ($this->session->has('mediamanager.temp_files') && isset($this->session->get('mediamanager.temp_files')[$file->getId()])) {
+        if ($this->session->has('mediamanager.temp_files') && isset($this->session->get(
+                'mediamanager.temp_files'
+            )[$file->getId()])
+        ) {
             unset($this->session->has('mediamanager.temp_files')[$file->getId()]);
         }
     }
@@ -95,10 +98,10 @@ class TempStorage
      * Add upload to temp storage
      *
      * @param UploadedFileSource $file
-     * @param string           $folderId
-     * @param int              $uid
-     * @param string           $originalFileId
-     * @param bool             $useWizard
+     * @param string             $folderId
+     * @param int                $uid
+     * @param string             $originalFileId
+     * @param bool               $useWizard
      *
      * @return TempFile
      * @throws \Exception

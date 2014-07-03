@@ -51,10 +51,10 @@ class UsersController extends Controller
      */
     public function listAction(Request $request)
     {
-        $start  = $request->get('start');
-        $limit  = $request->get('limit', 20);
-        $sort   = $request->get('sort', 'username');
-        $dir    = $request->get('dir', 'ASC');
+        $start = $request->get('start');
+        $limit = $request->get('limit', 20);
+        $sort = $request->get('sort', 'username');
+        $dir = $request->get('dir', 'ASC');
         $search = $request->get('search', null);
 
         if ($search) {
@@ -71,18 +71,21 @@ class UsersController extends Controller
 
         foreach ($allUsers as $user) {
             if ($user->hasRole(Acl::ROLE_SUPERADMIN) &&
-                    !$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) &&
-                    !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)) {
+                !$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) &&
+                !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)
+            ) {
                 continue;
             }
 
             if ($user->hasRole(Acl::ROLE_DEVELOPER) &&
-                    !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)) {
+                !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)
+            ) {
                 continue;
             }
 
             if ($user->getId() === $systemUserUid &&
-                    !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)) {
+                !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)
+            ) {
                 continue;
             }
 
@@ -93,17 +96,18 @@ class UsersController extends Controller
                     }
 
                     if ($key == 'key' &&
-                            strpos($user->getUsername(), $value) === false &&
-                            strpos($user->getEmail(), $value) === false &&
-                            strpos($user->getFirstname(), $value) === false &&
-                            strpos($user->getLastname(), $value) === false) {
+                        strpos($user->getUsername(), $value) === false &&
+                        strpos($user->getEmail(), $value) === false &&
+                        strpos($user->getFirstname(), $value) === false &&
+                        strpos($user->getLastname(), $value) === false
+                    ) {
                         continue 2;
                     }
 
-//                    if ($key == 'account_active')
-//                    {
-//
-//                    }
+                    //                    if ($key == 'account_active')
+                    //                    {
+                    //
+                    //                    }
 
                     if ($key == 'account_expired') {
                         if (!$user->getExpiresAt() || $user->getExpiresAt()->format('U') > time()) {
@@ -205,10 +209,10 @@ class UsersController extends Controller
         $userManager = $this->get('phlexible_user.user_manager');
 
         if ($request->get('username') && $userManager->checkUsername($request->get('username'))) {
-            throw new \Exception('Username "'.$request->get('username').'" already exists.');
+            throw new \Exception('Username "' . $request->get('username') . '" already exists.');
         }
         if ($request->get('email') && $userManager->checkEmail($request->get('email'))) {
-            throw new \Exception('Email "'.$request->get('email').'" already exists.');
+            throw new \Exception('Email "' . $request->get('email') . '" already exists.');
         }
 
         $user = $userManager->create();
@@ -225,7 +229,7 @@ class UsersController extends Controller
         }
 
         $this->get('phlexible_message.message_poster')
-             ->post(UsersMessage::create('User "' . $user->getUsername() . '" created.'));
+            ->post(UsersMessage::create('User "' . $user->getUsername() . '" created.'));
 
         return new ResultResponse(true, "User {$user->getUsername()} created.");
     }
@@ -261,11 +265,16 @@ class UsersController extends Controller
         $user = $userManager->find($userId);
         /* @var $user User */
 
-        if ($request->get('username') && $request->get('username') !== $user->getUsername() && $userManager->checkUsername($request->get('username'))) {
-            throw new \Exception('Username "'.$request->get('username').'" already exists.');
+        if ($request->get('username') && $request->get('username') !== $user->getUsername(
+            ) && $userManager->checkUsername($request->get('username'))
+        ) {
+            throw new \Exception('Username "' . $request->get('username') . '" already exists.');
         }
-        if ($request->get('email') && $request->get('email') !== $user->getEmail() && $userManager->checkEmail($request->get('email'))) {
-            throw new \Exception('Email "'.$request->get('email').'" already exists.');
+        if ($request->get('email') && $request->get('email') !== $user->getEmail() && $userManager->checkEmail(
+                $request->get('email')
+            )
+        ) {
+            throw new \Exception('Email "' . $request->get('email') . '" already exists.');
         }
 
         $this->requestToUser($request, $user);
@@ -280,7 +289,7 @@ class UsersController extends Controller
         }
 
         $this->get('phlexible_message.message_poster')
-             ->post(UsersMessage::create('User "' . $user->getUsername() . '" updated.'));
+            ->post(UsersMessage::create('User "' . $user->getUsername() . '" updated.'));
 
         return new ResultResponse(true, "User {$user->getUsername()} updated.");
     }
@@ -420,7 +429,11 @@ class UsersController extends Controller
                 continue;
             }
 
-            if ($role == 'superadmin' && !in_array('superadmin', $currentUser->getRoles()) && !in_array('developer', $currentUser->getRoles())) {
+            if ($role == 'superadmin' && !in_array('superadmin', $currentUser->getRoles()) && !in_array(
+                    'developer',
+                    $currentUser->getRoles()
+                )
+            ) {
                 continue;
             }
 

@@ -43,7 +43,7 @@ class Makeweb_Elements_Event_BeforeSetNodeOffline extends Brainbits_Event_Notifi
      */
     public function __construct(Makeweb_Elements_Tree_Node $node, $language)
     {
-        $this->_node     = $node;
+        $this->_node = $node;
         $this->_language = $language;
     }
 

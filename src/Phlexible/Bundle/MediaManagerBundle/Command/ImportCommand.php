@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
 use Phlexible\Bundle\MediaSiteBundle\Folder;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,14 +30,15 @@ class ImportCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-manager:import')
-            ->setDefinition(array(
-                new InputArgument('source', InputArgument::REQUIRED, 'Source file'),
-                new InputArgument('targetDir', InputArgument::OPTIONAL, 'Target directory'),
-                new InputOption('targetSite', null, InputOption::VALUE_REQUIRED, 'Target site'),
-                new InputOption('delete', null, InputOption::VALUE_NONE, 'Delete source file after import'),
-            ))
-            ->setDescription('Import file')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('source', InputArgument::REQUIRED, 'Source file'),
+                    new InputArgument('targetDir', InputArgument::OPTIONAL, 'Target directory'),
+                    new InputOption('targetSite', null, InputOption::VALUE_REQUIRED, 'Target site'),
+                    new InputOption('delete', null, InputOption::VALUE_NONE, 'Delete source file after import'),
+                )
+            )
+            ->setDescription('Import file');
     }
 
     /**
@@ -64,7 +65,7 @@ class ImportCommand extends ContainerAwareCommand
             try {
                 $targetFolder = $site->getFolderPeer()->getByPath($targetDir);
             } catch (\Exception $e) {
-                $output->writeln('Folder "'.$targetDir.'" not found.');
+                $output->writeln('Folder "' . $targetDir . '" not found.');
 
                 return 1;
             }
@@ -119,19 +120,19 @@ class ImportCommand extends ContainerAwareCommand
                 } elseif (!is_readable($file->getPathName())) {
                     continue;
                 } elseif ($file->isDir()) {
-                    $dirName = (string)$file->getFileName();
-                    $pathName = (string)$file->getPathName();
+                    $dirName = (string) $file->getFileName();
+                    $pathName = (string) $file->getPathName();
 
                     $newFolder = $targetFolder->createSubFolder($dirName);
 
                     $this->importDir($pathName, $newFolder);
                 } elseif ($file->isFile()) {
-                    $sourceFile = (string)$file->getPathName();
-                    $fileName   = (string)$file->getFileName();
+                    $sourceFile = (string) $file->getPathName();
+                    $fileName = (string) $file->getFileName();
 
                     $targetFolder->importFile($sourceFile, $fileName);
 
-                    $message = new MediaManagerMessage('File "'.basename($sourceFile).'" imported.');
+                    $message = new MediaManagerMessage('File "' . basename($sourceFile) . '" imported.');
                     $message->post();
                 }
             }

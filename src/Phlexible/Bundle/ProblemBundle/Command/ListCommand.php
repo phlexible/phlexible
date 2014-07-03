@@ -8,9 +8,8 @@
 
 namespace Phlexible\Bundle\ProblemBundle\Command;
 
-use Phlexible\Bundle\ProblemBundle\ProblemsEvents;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\ProblemBundle\Problem;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,8 +28,7 @@ class ListCommand extends ContainerAwareCommand
     {
         $this
             ->setName('problems:list')
-            ->setDescription('List problems.')
-        ;
+            ->setDescription('List problems.');
     }
 
     /**

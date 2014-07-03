@@ -16,11 +16,11 @@ Phlexible.mediamanager.JavaUploadWindow = Ext.extend(Ext.Window, {
         afterUploadURL: 'javascript:alert(\"done\");'
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var html = '';
-        html += '<applet width="'+(this.width-30)+'" height="'+(this.height-40)+'" mayscript="" name="jupload" archive="/resources/asset/java/mediamanager/wjhk.jupload.jar, /resources/asset/java/mediamanager/jakarta-commons-oro.jar, /resources/asset/java/mediamanager/jakarta-commons-net.jar" code="wjhk.jupload2.JUploadApplet">';
+        html += '<applet width="' + (this.width - 30) + '" height="' + (this.height - 40) + '" mayscript="" name="jupload" archive="/resources/asset/java/mediamanager/wjhk.jupload.jar, /resources/asset/java/mediamanager/jakarta-commons-oro.jar, /resources/asset/java/mediamanager/jakarta-commons-net.jar" code="wjhk.jupload2.JUploadApplet">';
 
-        for(var i in this.params) {
+        for (var i in this.params) {
             html += '<param name="' + i + '" value="' + this.params[i] + '" />';
         }
 
@@ -32,7 +32,7 @@ Phlexible.mediamanager.JavaUploadWindow = Ext.extend(Ext.Window, {
         Phlexible.mediamanager.JavaUploadWindow.superclass.initComponent.call(this);
     },
 
-    show: function(btn, siteID, folderID, folderTitle) {
+    show: function (btn, siteID, folderID, folderTitle) {
         if (folderID) {
             if (folderTitle) {
                 this.setTitle(this.strings.upload_file_to_folder + ' "' + folderTitle + '"');
@@ -54,9 +54,9 @@ Phlexible.mediamanager.FileUploadWindow = Ext.extend(Ext.Window, {
     modal: true,
 
     // private
-    initComponent: function() {
+    initComponent: function () {
         var sessionID = Phlexible.Cookie.get('phlexible');
-        if(!sessionID) {
+        if (!sessionID) {
             alert("No session ID, upload _will_ fail!");
         }
 
@@ -113,7 +113,7 @@ Phlexible.mediamanager.FileUploadWindow = Ext.extend(Ext.Window, {
                 },
 
                 listeners: {
-                    startUpload: function(panel) {
+                    startUpload: function (panel) {
                         panel.addPostParam('upload_id', new Ext.ux.GUID().toString());
                     },
                     allUploadsComplete: {
@@ -127,7 +127,7 @@ Phlexible.mediamanager.FileUploadWindow = Ext.extend(Ext.Window, {
         Phlexible.mediamanager.FileUploadWindow.superclass.initComponent.call(this);
     },
 
-    show: function(btn, siteID, folderID, folderTitle) {
+    show: function (btn, siteID, folderID, folderTitle) {
         if (folderID) {
             if (folderTitle) {
                 this.setTitle(this.strings.upload_file_to_folder + ' "' + folderTitle + '"');
@@ -140,7 +140,7 @@ Phlexible.mediamanager.FileUploadWindow = Ext.extend(Ext.Window, {
         }
     },
 
-    onUploadComplete: function() {
+    onUploadComplete: function () {
         this.fireEvent('fileUploadComplete');
     }
 });

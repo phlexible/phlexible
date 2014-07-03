@@ -12,26 +12,28 @@ Phlexible.elements.accordion.AllowedChildren = Ext.extend(Ext.grid.GridPanel, {
         forceFit: true
     },
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.SimpleStore({
             fields: ['id', 'title', 'icon'],
             id: 0,
             sortInfo: {field: 'title', direction: 'ASC'}
         });
 
-        this.columns = [{
-            header: this.strings.title,
-            dataIndex: 'title',
-            renderer: function(value, meta, r) {
-                return '<img src="' + r.get('icon') + '" width="18" height="18" style="vertical-align: middle;" />' + value;
+        this.columns = [
+            {
+                header: this.strings.title,
+                dataIndex: 'title',
+                renderer: function (value, meta, r) {
+                    return '<img src="' + r.get('icon') + '" width="18" height="18" style="vertical-align: middle;" />' + value;
+                }
             }
-        }];
+        ];
 
         Phlexible.elements.accordion.AllowedChildren.superclass.initComponent.call(this);
     },
 
-    load: function(data) {
-        if(data.properties.et_type == 'part' || !data.children.length) {
+    load: function (data) {
+        if (data.properties.et_type == 'part' || !data.children.length) {
             this.hide();
             return;
         }

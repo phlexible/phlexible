@@ -1,4 +1,4 @@
-Ext.ux.Portal.DropZone = function(portal, cfg){
+Ext.ux.Portal.DropZone = function (portal, cfg) {
     this.portal = portal;
     Ext.dd.ScrollManager.register(portal.body);
     Ext.ux.Portal.DropZone.superclass.constructor.call(this, portal.bwrap.dom, cfg);
@@ -6,14 +6,14 @@ Ext.ux.Portal.DropZone = function(portal, cfg){
 };
 
 Ext.extend(Ext.ux.Portal.DropZone, Ext.dd.DropTarget, {
-    ddScrollConfig : {
+    ddScrollConfig: {
         vthresh: 50,
         hthresh: -1,
         animate: true,
         increment: 200
     },
 
-    createEvent : function(dd, e, data, col, c, pos){
+    createEvent: function (dd, e, data, col, c, pos) {
         return {
             portal: this.portal,
             panel: data.panel,
@@ -27,19 +27,19 @@ Ext.extend(Ext.ux.Portal.DropZone, Ext.dd.DropTarget, {
         };
     },
 
-    notifyOver : function(dd, e, data){
+    notifyOver: function (dd, e, data) {
         var xy = e.getXY(), portal = this.portal, px = dd.proxy;
 
         // case column widths
-        if(!this.grid){
+        if (!this.grid) {
             this.grid = this.getGrid();
         }
 
         // handle case scroll where scrollbars appear during drag
         var cw = portal.body.dom.clientWidth;
-        if(!this.lastCW){
+        if (!this.lastCW) {
             this.lastCW = cw;
-        }else if(this.lastCW != cw){
+        } else if (this.lastCW != cw) {
             this.lastCW = cw;
             portal.doLayout();
             this.grid = this.getGrid();
@@ -47,14 +47,14 @@ Ext.extend(Ext.ux.Portal.DropZone, Ext.dd.DropTarget, {
 
         // determine column
         var col = 0, xs = this.grid.columnX, cmatch = false;
-        for(var len = xs.length; col < len; col++){
-            if(xy[0] < (xs[col].x + xs[col].w)){
+        for (var len = xs.length; col < len; col++) {
+            if (xy[0] < (xs[col].x + xs[col].w)) {
                 cmatch = true;
                 break;
             }
         }
         // no match, fix last index
-        if(!cmatch){
+        if (!cmatch) {
             col--;
         }
 
@@ -63,10 +63,10 @@ Ext.extend(Ext.ux.Portal.DropZone, Ext.dd.DropTarget, {
             c = portal.items.itemAt(col),
             items = c.items.items;
 
-        for(var len = items.length; pos < len; pos++){
+        for (var len = items.length; pos < len; pos++) {
             p = items[pos];
             var h = p.el.getHeight();
-            if(h !== 0 && (p.el.getY()+(h/2)) > xy[1]){
+            if (h !== 0 && (p.el.getY() + (h / 2)) > xy[1]) {
                 match = true;
                 break;
             }
@@ -75,15 +75,15 @@ Ext.extend(Ext.ux.Portal.DropZone, Ext.dd.DropTarget, {
         var overEvent = this.createEvent(dd, e, data, col, c,
             match && p ? pos : c.items.getCount());
 
-        if(portal.fireEvent('validatedrop', overEvent) !== false &&
-            portal.fireEvent('beforedragover', overEvent) !== false){
+        if (portal.fireEvent('validatedrop', overEvent) !== false &&
+            portal.fireEvent('beforedragover', overEvent) !== false) {
 
             // make sure proxy width is fluid
             px.getProxy().setWidth('auto');
 
-            if(p){
+            if (p) {
                 px.moveProxy(p.el.dom.parentNode, match ? p.el.dom : null);
-            }else{
+            } else {
                 px.moveProxy(c.el.dom, null);
             }
 
@@ -97,11 +97,11 @@ Ext.extend(Ext.ux.Portal.DropZone, Ext.dd.DropTarget, {
         return overEvent.status;
     },
 
-    notifyOut : function(){
+    notifyOut: function () {
         delete this.grid;
     },
 
-    notifyDrop : function(dd, e, data){
+    notifyDrop: function (dd, e, data) {
         delete this.grid;
 
         var c = this.lastPos.c, col = this.lastPos.col, pos = this.lastPos.p;
@@ -109,14 +109,14 @@ Ext.extend(Ext.ux.Portal.DropZone, Ext.dd.DropTarget, {
         var dropEvent = this.createEvent(dd, e, data, col, c,
             pos !== false ? pos : c.items.getCount());
 
-        if(this.portal.fireEvent('validatedrop', dropEvent) !== false &&
-            this.portal.fireEvent('beforedrop', dropEvent) !== false){
+        if (this.portal.fireEvent('validatedrop', dropEvent) !== false &&
+            this.portal.fireEvent('beforedrop', dropEvent) !== false) {
 
             dd.proxy.getProxy().remove();
             dd.panel.el.dom.parentNode.removeChild(dd.panel.el.dom);
-            if(pos !== false){
+            if (pos !== false) {
                 c.insert(pos, dd.panel);
-            }else{
+            } else {
                 c.add(dd.panel);
             }
 
@@ -126,9 +126,9 @@ Ext.extend(Ext.ux.Portal.DropZone, Ext.dd.DropTarget, {
 
             // scroll position is lost on drop, fix it
             var st = this.scrollPos.top;
-            if(st){
+            if (st) {
                 var d = this.portal.body.dom;
-                setTimeout(function(){
+                setTimeout(function () {
                     d.scrollTop = st;
                 }, 10);
             }
@@ -137,10 +137,10 @@ Ext.extend(Ext.ux.Portal.DropZone, Ext.dd.DropTarget, {
     },
 
     // internal cache of body and column coords
-    getGrid : function(){
+    getGrid: function () {
         var box = this.portal.bwrap.getBox();
         box.columnX = [];
-        this.portal.items.each(function(c){
+        this.portal.items.each(function (c) {
             box.columnX.push({x: c.el.getX(), w: c.el.getWidth()});
         });
         return box;

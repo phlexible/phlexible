@@ -54,12 +54,13 @@ class LatestFilesPortlet extends Portlet
      * @param string                   $style
      * @param int                      $numItems
      */
-    public function __construct(TranslatorInterface $translator,
-                                SiteManager $siteManager,
-                                CacheManagerInterface $cacheManager,
-                                SecurityContextInterface $securityContext,
-                                $style,
-                                $numItems)
+    public function __construct(
+        TranslatorInterface $translator,
+        SiteManager $siteManager,
+        CacheManagerInterface $cacheManager,
+        SecurityContextInterface $securityContext,
+        $style,
+        $numItems)
     {
         $this
             ->setId('mediamanager-portlet')
@@ -74,6 +75,7 @@ class LatestFilesPortlet extends Portlet
         $this->style = $style;
         $this->numItems = $numItems;
     }
+
     /**
      * Return settings
      *
@@ -97,7 +99,7 @@ class LatestFilesPortlet extends Portlet
 
         try {
             $sites = $this->siteManager->getAll();
-            $site  = current($sites);
+            $site = current($sites);
             $files = $site->findLatestFiles($this->numItems);
 
             foreach ($files as $file) {
@@ -110,7 +112,8 @@ class LatestFilesPortlet extends Portlet
                 $cacheItems = $this->cacheManager->findByFile($file);
                 $cacheStatus = array();
                 foreach ($cacheItems as $cacheItem) {
-                    $cacheStatus[$cacheItem->getTemplateKey()] = $cacheItem->getStatus() . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
+                    $cacheStatus[$cacheItem->getTemplateKey()] = $cacheItem->getStatus(
+                        ) . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
                 }
 
                 $data[] = array(

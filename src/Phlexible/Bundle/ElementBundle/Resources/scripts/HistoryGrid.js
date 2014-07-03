@@ -5,7 +5,7 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
     autoExpandColumn: 6,
     loadMask: true,
 
-    initComponent: function() {
+    initComponent: function () {
         // create the data store
         this.store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('elements_history'),
@@ -19,58 +19,68 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
         });
 
         // create the column model
-        this.columns = [{
-            header: this.strings.type,
-            width: 60,
-            dataIndex: 'type',
-            sortable: true
-        },{
-            header: this.strings.action,
-            width: 170,
-            dataIndex: 'action',
-            sortable: true,
-            renderer: this.renderAction
-        },{
-            header: this.strings.tid,
-            width: 55,
-            dataIndex: 'tid',
-            sortable: true
-        },{
-            header: this.strings.eid,
-            width: 55,
-            dataIndex: 'eid',
-            sortable: true
-        },{
-            header: this.strings.version,
-            width: 55,
-            dataIndex: 'version',
-            sortable: true
-        },{
-            header: this.strings.language,
-            width: 100,
-            dataIndex: 'language',
-            sortable: true,
-            renderer: this.renderLanguage
-        },{
-            header: this.strings.comment,
-            width: 200,
-            dataIndex: 'comment',
-            sortable: true
-        },{
-            header: this.strings.username,
-            width: 100,
-            dataIndex: 'username',
-            sortable: true
-        },{
-            header: this.strings.date,
-            width: 130,
-            dataIndex: 'create_time',
-            sortable: true
-        }];
+        this.columns = [
+            {
+                header: this.strings.type,
+                width: 60,
+                dataIndex: 'type',
+                sortable: true
+            },
+            {
+                header: this.strings.action,
+                width: 170,
+                dataIndex: 'action',
+                sortable: true,
+                renderer: this.renderAction
+            },
+            {
+                header: this.strings.tid,
+                width: 55,
+                dataIndex: 'tid',
+                sortable: true
+            },
+            {
+                header: this.strings.eid,
+                width: 55,
+                dataIndex: 'eid',
+                sortable: true
+            },
+            {
+                header: this.strings.version,
+                width: 55,
+                dataIndex: 'version',
+                sortable: true
+            },
+            {
+                header: this.strings.language,
+                width: 100,
+                dataIndex: 'language',
+                sortable: true,
+                renderer: this.renderLanguage
+            },
+            {
+                header: this.strings.comment,
+                width: 200,
+                dataIndex: 'comment',
+                sortable: true
+            },
+            {
+                header: this.strings.username,
+                width: 100,
+                dataIndex: 'username',
+                sortable: true
+            },
+            {
+                header: this.strings.date,
+                width: 130,
+                dataIndex: 'create_time',
+                sortable: true
+            }
+        ];
 
         // create the selection model
         this.selModel = new Ext.grid.RowSelectionModel({
-            singleSelect : true
+            singleSelect: true
         });
 
         this.bbar = new Ext.PagingToolbar({
@@ -86,10 +96,10 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.elements.HistoryGrid.superclass.initComponent.call(this);
     },
 
-    renderLanguage: function(v) {
+    renderLanguage: function (v) {
         var s = v;
         var len = Phlexible.Config.get('set.language.frontend').length;
-        for(var i=0; i<len; i++) {
+        for (var i = 0; i < len; i++) {
             if (Phlexible.Config.get('set.language.frontend')[i][0] == v) {
                 s = Phlexible.Config.get('set.language.frontend')[i][1];
             }
@@ -97,10 +107,10 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
         return Phlexible.inlineIcon('p-flags-' + v + '-icon') + ' ' + s;
     },
 
-    renderAction: function(v) {
+    renderAction: function (v) {
         var icon = '';
 
-        switch(v) {
+        switch (v) {
             case 'create':
             case 'createVersion':
             case 'createNode':

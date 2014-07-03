@@ -7,45 +7,51 @@ Phlexible.mediatemplates.BasePreviewPanel = Ext.extend(Ext.Panel, {
     autoScroll: true,
     disabled: true,
 
-    initComponent: function() {
-        this.items = [{
-            border: false,
-            html: this.strings.no_preview_available,
-            bodyStyle: 'padding-bottom: 10px'
-        },{
-            xtype: 'fieldset',
-            title: this.strings.debug,
-            collapsible: true,
-            autoHeight: true,
-            hidden: true,
-            items: [{
+    initComponent: function () {
+        this.items = [
+            {
                 border: false,
-                html: '&nbsp;'
-            }]
-        },{
-            border: false,
-            html: '&nbsp;',
-            bodyStyle: 'padding: 10px;'
-        }];
+                html: this.strings.no_preview_available,
+                bodyStyle: 'padding-bottom: 10px'
+            },
+            {
+                xtype: 'fieldset',
+                title: this.strings.debug,
+                collapsible: true,
+                autoHeight: true,
+                hidden: true,
+                items: [
+                    {
+                        border: false,
+                        html: '&nbsp;'
+                    }
+                ]
+            },
+            {
+                border: false,
+                html: '&nbsp;',
+                bodyStyle: 'padding: 10px;'
+            }
+        ];
 
         Phlexible.mediatemplates.BasePreviewPanel.superclass.initComponent.call(this);
     },
 
-    clear: function() {
+    clear: function () {
         this.getComponent(0).body.update('&nbsp;');
         this.getComponent(1).getComponent(0).body.update('&nbsp;');
         this.getComponent(2).body.update('&nbsp;');
     },
 
-    getCreateUrl: function() {
+    getCreateUrl: function () {
         throw new Error('getCreateUrl() has to be implemented in Classes extending Phlexible.mediatemplates.BasePreviewPanel.');
     },
 
-    createPreview: function(params, debug) {
-         Ext.Ajax.request({
+    createPreview: function (params, debug) {
+        Ext.Ajax.request({
             url: this.getCreateUrl(),
             params: params,
-            success: function(response) {
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 if (data.success) {
@@ -60,14 +66,14 @@ Phlexible.mediatemplates.BasePreviewPanel = Ext.extend(Ext.Panel, {
         });
     },
 
-    updateFailure: function(msg) {
+    updateFailure: function (msg) {
         this.getComponent(0).body.update(msg);
     },
 
     getResult: Ext.emptyFn,
     getPreviewDomHelperConfig: Ext.emptyFn,
 
-    updatePreview: function(data, debug) {
+    updatePreview: function (data, debug) {
         this.getComponent(0).body.update(this.getResult(data));
 
         if (debug) {

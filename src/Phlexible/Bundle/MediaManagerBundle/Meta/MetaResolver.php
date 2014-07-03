@@ -14,6 +14,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 
 use Phlexible\Bundle\MediaAssetBundle\MetaBag;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Component\Util\ArrayUtil;
 
 /**
  * Meta resolver
@@ -28,8 +29,8 @@ class MetaResolver
     private $siteManager;
 
     /**
-      * @var FolderMetaManager
-      */
+     * @var FolderMetaManager
+     */
     private $folderMetaManager;
 
     /**
@@ -48,15 +49,16 @@ class MetaResolver
      * @param string            $languages
      * @param string            $defaultLanguage
      */
-    public function __construct(SiteManager $siteManager,
-                                FolderMetaManager $folderMetaManager,
-                                $languages,
-                                $defaultLanguage)
+    public function __construct(
+        SiteManager $siteManager,
+        FolderMetaManager $folderMetaManager,
+        $languages,
+        $defaultLanguage)
     {
-        $this->siteManager       = $siteManager;
+        $this->siteManager = $siteManager;
         $this->folderMetaManager = $folderMetaManager;
-        $this->metaLanguages     = explode(',', $languages);
-        $this->defaultLanguage   = $defaultLanguage;
+        $this->metaLanguages = explode(',', $languages);
+        $this->defaultLanguage = $defaultLanguage;
     }
 
     /**
@@ -69,11 +71,11 @@ class MetaResolver
      */
     public function getFileMeta($fileId, $fileVersion = -1)
     {
-        $site  = $this->siteManager->getByFileId($fileId);
-        $file  = $site->findFile($fileId, $fileVersion);
+        $site = $this->siteManager->getByFileId($fileId);
+        $file = $site->findFile($fileId, $fileVersion);
 
-        $setsDefaultLanguage = $asset->getMetas();//($this->defaultLanguage);
-        $setsSlaveLanguages  = array();
+        $setsDefaultLanguage = $asset->getMetas(); //($this->defaultLanguage);
+        $setsSlaveLanguages = array();
 
         foreach ($this->metaLanguages as $metaSlaveLanguage) {
             if ($metaSlaveLanguage !== $this->defaultLanguage) {
@@ -98,10 +100,8 @@ class MetaResolver
 
         $setsSlaveLanguages = array();
 
-        foreach ($this->metaLanguages as $metaSlaveLanguage)
-        {
-            if ($metaSlaveLanguage !== $this->defaultLanguage)
-            {
+        foreach ($this->metaLanguages as $metaSlaveLanguage) {
+            if ($metaSlaveLanguage !== $this->defaultLanguage) {
                 $setsSlaveLanguages[$metaSlaveLanguage] =
                     $this->folderMetaManager->getMeta($folderId, $metaSlaveLanguage);
             }
@@ -113,6 +113,7 @@ class MetaResolver
     /**
      * @param MetaBag $setsDefaultLanguage
      * @param array   $setsSlaveLanguages
+     *
      * @return array
      */
     protected function _getMeta(MetaBag $setsDefaultLanguage, array $setsSlaveLanguages)
@@ -121,21 +122,21 @@ class MetaResolver
 
         foreach ($setsDefaultLanguage->getAll() as $name => $metaData) {
             $set = array(
-                'id' => $name,
-                'name' => $name,
+                'id'     => $name,
+                'name'   => $name,
                 'values' => array()
             );
             foreach ($metaData->getValues() as $key => $value) {
                 $set['values'][] = array(
-                    'type'     => 'text',
-                    'options'  => array(),
-                    'required' => false,
+                    'type'         => 'text',
+                    'options'      => array(),
+                    'required'     => false,
                     'synchronized' => false,
-                    'readonly' => false,
-                    'key'      => $key,
-                    'tkey'     => $key,
-                    'value_de' => $value,
-                    'value_en' => $value,
+                    'readonly'     => false,
+                    'key'          => $key,
+                    'tkey'         => $key,
+                    'value_de'     => $value,
+                    'value_en'     => $value,
                 );
             }
             $meta[] = $set;
@@ -143,19 +144,16 @@ class MetaResolver
 
         return $meta;
 
-        foreach (array_values($setsDefaultLanguage) as $metaKey => $metaRow)
-        {
-            $metaRow['set_id']                          = $metaRow['setId'];
+        foreach (array_values($setsDefaultLanguage) as $metaKey => $metaRow) {
+            $metaRow['set_id'] = $metaRow['setId'];
             $metaRow['value_' . $this->defaultLanguage] = $metaRow['value'];
             unset($metaRow['setId']);
             unset($metaRow['value']);
 
-            if ($metaRow['type'] == 'select')
-            {
-                $metaRow['options'] = \Brainbits_Util_Array::keyToValue($metaRow['options']);
-            }
-            elseif ($metaRow['type'] == 'suggest')
-            {
+            if ($metaRow['type'] == 'select') {
+                $util = new ArrayUtil();
+                $metaRow['options'] = $util->keyToValue($metaRow['options']);
+            } elseif ($metaRow['type'] == 'suggest') {
                 $metaRow['options']['values_' . $this->defaultLanguage]
                     = $metaRow['options']['values'];
 
@@ -165,17 +163,13 @@ class MetaResolver
             $meta[$metaKey] = $metaRow;
         }
 
-        foreach ($setsSlaveLanguages as $slaveLanguage => $slaveMetaItems)
-        {
-            foreach (array_values($slaveMetaItems) as $metaKey => $metaRow)
-            {
-                if (!empty($metaRow['value']))
-                {
+        foreach ($setsSlaveLanguages as $slaveLanguage => $slaveMetaItems) {
+            foreach (array_values($slaveMetaItems) as $metaKey => $metaRow) {
+                if (!empty($metaRow['value'])) {
                     $meta[$metaKey]['value_' . $slaveLanguage] = $metaRow['value'];
                 }
 
-                if ($metaRow['type'] == 'suggest')
-                {
+                if ($metaRow['type'] == 'suggest') {
                     $meta[$metaKey]['options']['values_' . $slaveLanguage]
                         = $metaRow['options']['values'];
                 }

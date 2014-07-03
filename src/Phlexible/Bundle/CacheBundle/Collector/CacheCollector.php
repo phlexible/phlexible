@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\CacheBundle\Collector;
 
 use Phlexible\Bundle\CacheBundle\Cache\CacheCollection;
+use Phlexible\Component\Formatter\FilesizeFormatter;
 use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
 
 /**
@@ -57,9 +58,10 @@ class CacheCollector implements DataCollectorInterface
         foreach ($this->caches as $name => $cache) {
             $stats = $cache->getStats();
 
+            $formatter = new FilesizeFormatter();
 
-            $available = \Brainbits_Format_Filesize::format($stats['memory_available']);
-            $usage = \Brainbits_Format_Filesize::format($stats['memory_usage']);
+            $available = $formatter->formatFilesize($stats['memory_available']);
+            $usage = $formatter->formatFilesize($stats['memory_usage']);
 
             $data[] = array(
                 'name'           => $name,

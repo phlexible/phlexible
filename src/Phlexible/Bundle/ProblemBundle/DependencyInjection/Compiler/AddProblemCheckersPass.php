@@ -19,6 +19,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddProblemCheckersPass implements CompilerPassInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function process(ContainerBuilder $container)
     {
         $problemCheckers = array();

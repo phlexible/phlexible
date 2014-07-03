@@ -25,13 +25,16 @@ class PhlexibleTeaserExtension extends Extension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $container->setParameter('phlexible_teaser.catch.use_master_language_as_fallback', $config['catch']['use_master_language_as_fallback']);
+        $container->setParameter(
+            'phlexible_teaser.catch.use_master_language_as_fallback',
+            $config['catch']['use_master_language_as_fallback']
+        );
 
         $container->setAlias('phlexible_teaser.catch.cache', 'phlexible_cache.managed_cache');
     }

@@ -47,8 +47,7 @@ class CollectProblemsListener
                 ->setHint('Run media cache write command')
                 ->setIconClass('p-mediacache-component-icon')
                 ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime())
-            ;
+                ->setLastCheckedAt(new \DateTime());
 
             $event->addProblem($problem);
         } elseif (time() - strtotime($lastRun) > 86400) {
@@ -59,8 +58,7 @@ class CollectProblemsListener
                 ->setHint('Install a cronjob for running media cache write command')
                 ->setIconClass('p-mediacache-component-icon')
                 ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime())
-            ;
+                ->setLastCheckedAt(new \DateTime());
 
             $event->addProblem($problem);
         }

@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Queue;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\QueueItem;
 use Phlexible\Bundle\MediaSiteBundle\File;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
@@ -64,8 +63,7 @@ class BatchBuilder
     {
         return $this->create()
             ->addFile($file)
-            ->addTemplate($template)
-        ;
+            ->addTemplate($template);
     }
 
     /**

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mediaTemplate id="4accadad-dfac-481b-8004-583ac0a80063" title="image" revision="1">
-    <field key="title" type="textfield" options="" readonly="" required="" synchronized="" />
-    <field key="caption" type="textfield" options="" readonly="" required="" synchronized="" />
-    <field key="description" type="textfield" options="" readonly="" required="" synchronized="" />
-    <field key="author" type="textfield" options="" readonly="" required="" synchronized="" />
-    <field key="createDate" type="textfield" options="" readonly="" required="" synchronized="" />
-    <field key="alttext" type="textfield" options="" readonly="" required="" synchronized="" />
+    <field key="title" type="textfield" options="" readonly="" required="" synchronized=""/>
+    <field key="caption" type="textfield" options="" readonly="" required="" synchronized=""/>
+    <field key="description" type="textfield" options="" readonly="" required="" synchronized=""/>
+    <field key="author" type="textfield" options="" readonly="" required="" synchronized=""/>
+    <field key="createDate" type="textfield" options="" readonly="" required="" synchronized=""/>
+    <field key="alttext" type="textfield" options="" readonly="" required="" synchronized=""/>
 </mediaTemplate>

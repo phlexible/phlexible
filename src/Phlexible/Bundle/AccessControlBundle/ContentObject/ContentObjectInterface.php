@@ -13,19 +13,19 @@ namespace Phlexible\Bundle\AccessControlBundle\ContentObject;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
- interface ContentObjectInterface
- {
-     /**
-      * Return content object identifier
-      *
-      * @return array
-      */
-     public function getContentObjectIdentifiers();
+interface ContentObjectInterface
+{
+    /**
+     * Return content object identifier
+     *
+     * @return array
+     */
+    public function getContentObjectIdentifiers();
 
-     /**
-      * Return content object path
-      *
-      * @return array
-      */
-     public function getContentObjectPath();
- }
+    /**
+     * Return content object path
+     *
+     * @return array
+     */
+    public function getContentObjectPath();
+}

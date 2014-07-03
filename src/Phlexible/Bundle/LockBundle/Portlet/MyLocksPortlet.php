@@ -8,12 +8,7 @@
 
 namespace Phlexible\Bundle\LockBundle\Portlet;
 
-use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
-use Phlexible\Bundle\LockBundle\Entity\Lock;
-use Phlexible\Bundle\LockBundle\Model\LockManagerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;use Phlexible\Bundle\LockBundle\Entity\Lock;use Phlexible\Bundle\LockBundle\Model\LockManagerInterface;use Symfony\Component\Security\Core\SecurityContextInterface;use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * My locks portlet
@@ -37,9 +32,10 @@ class MyLocksPortlet extends Portlet
      * @param LockManagerInterface     $lockManager
      * @param SecurityContextInterface $securityContext
      */
-    public function __construct(TranslatorInterface $translator,
-                                LockManagerInterface $lockManager,
-                                SecurityContextInterface $securityContext)
+    public function __construct(
+        TranslatorInterface $translator,
+        LockManagerInterface $lockManager,
+        SecurityContextInterface $securityContext)
     {
         $this
             ->setId('locks-portlet')

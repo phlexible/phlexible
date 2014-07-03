@@ -3,10 +3,10 @@ Ext.ux.Portlet = Ext.extend(Ext.Panel, {
     frame: true,
     collapsible: true,
     draggable: true,
-    cls:'x-portlet',
+    cls: 'x-portlet',
 
-    initComponent: function() {
-        if(this.extraCls) {
+    initComponent: function () {
+        if (this.extraCls) {
             this.cls += ' ' + this.extraCls;
         }
         Ext.ux.Portlet.superclass.initComponent.call(this);

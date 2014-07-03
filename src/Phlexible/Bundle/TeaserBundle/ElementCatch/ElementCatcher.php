@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\TeaserBundle\ElementCatch;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\Filter\ResultFilterInterface;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\Filter\SelectFilterInterface;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\Matcher\TreeNodeMatcher;
+use Phlexible\Component\Database\ConnectionManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -21,11 +21,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class ElementCatcher
 {
-    const SORT_TITLE_BACKEND    = '__backend_title';
-    const SORT_TITLE_PAGE       = '__page_title';
+    const SORT_TITLE_BACKEND = '__backend_title';
+    const SORT_TITLE_PAGE = '__page_title';
     const SORT_TITLE_NAVIGATION = '__navigation_title';
-    const SORT_PUBLISH_DATE     = '__publish_date';
-    const SORT_CUSTOM_DATE      = '__custom_date';
+    const SORT_PUBLISH_DATE = '__publish_date';
+    const SORT_CUSTOM_DATE = '__custom_date';
 
     const FIELD_SORT = 'sort_field';
 
@@ -58,10 +58,11 @@ class ElementCatcher
      * @param TreeNodeMatcher          $treeNodeMatcher
      * @param bool                     $useElementLanguageAsFallback
      */
-    public function __construct(ConnectionManager $connectionManager,
-                                EventDispatcherInterface $dispatcher,
-                                TreeNodeMatcher $treeNodeMatcher,
-                                $useElementLanguageAsFallback)
+    public function __construct(
+        ConnectionManager $connectionManager,
+        EventDispatcherInterface $dispatcher,
+        TreeNodeMatcher $treeNodeMatcher,
+        $useElementLanguageAsFallback)
     {
         $this->db = $connectionManager->default;
         $this->dispatcher = $dispatcher;
@@ -88,7 +89,12 @@ class ElementCatcher
      *
      * @return ElementCatchResultPool
      */
-    public function catchElements(ElementCatch $elementCatch, array $languages, $isPreview, $filter = null, $country = null)
+    public function catchElements(
+        ElementCatch $elementCatch,
+        array $languages,
+        $isPreview,
+        $filter = null,
+        $country = null)
     {
         $resultPool = new ElementCatchResultPool(
             $elementCatch->getResultsPerPage(),
@@ -145,7 +151,7 @@ class ElementCatcher
             //if ($elementCatch->hasRotation()) {
             //    $limit = $elementCatch->getPoolSize() ?: 0;
             //} else {
-                $limit = $elementCatch->getMaxResults() ?: 0;
+            $limit = $elementCatch->getMaxResults() ? : 0;
             //}
 
             if ($limit) {
@@ -173,12 +179,13 @@ class ElementCatcher
      *
      * @return \Zend_Db_Select
      */
-    private function createReducedSelect(ElementCatch $elementCatch,
-                                         ElementCatchResultPool $resultPool,
-                                         $isPreview,
-                                         array $languages,
-                                         $filter,
-                                         $country)
+    private function createReducedSelect(
+        ElementCatch $elementCatch,
+        ElementCatchResultPool $resultPool,
+        $isPreview,
+        array $languages,
+        $filter,
+        $country)
     {
         $select = $this->createFullSelect($elementCatch, $resultPool, $isPreview, $languages, $country);
 
@@ -192,7 +199,7 @@ class ElementCatcher
 
         // set absolut limit clause
         if (!$this->isNatSort && $this->hasSelectSort($select, $elementCatch)) {
-            $limit = $elementCatch->getMaxResults() ?: 0;
+            $limit = $elementCatch->getMaxResults() ? : 0;
 
             if ($limit) {
                 $select->limit($limit);
@@ -213,16 +220,17 @@ class ElementCatcher
      *
      * @return \Zend_Db_Select
      */
-    private function createFullSelect(ElementCatch $elementCatch,
-                                      ElementCatchResultPool $resultPool,
-                                      $isPreview,
-                                      array $languages,
-                                      $country = null)
+    private function createFullSelect(
+        ElementCatch $elementCatch,
+        ElementCatchResultPool $resultPool,
+        $isPreview,
+        array $languages,
+        $country = null)
     {
         $select = $this->db
             ->select()
             ->from(
-            array('ch' => $this->db->prefix . 'catch_lookup_element'),
+                array('ch' => $this->db->prefix . 'catch_lookup_element'),
                 array(
                     'tree_id AS tid',
                     'eid',
@@ -239,10 +247,17 @@ class ElementCatcher
             );
 
         $whereChunk = array();
-        $matchedTreeIds = $this->treeNodeMatcher->getMatchingTreeIdsByLanguage($elementCatch->getTreeId(), $elementCatch->getMaxDepth(), $isPreview, $languages);
+        $matchedTreeIds = $this->treeNodeMatcher->getMatchingTreeIdsByLanguage(
+            $elementCatch->getTreeId(),
+            $elementCatch->getMaxDepth(),
+            $isPreview,
+            $languages
+        );
         $resultPool->setMatchedTreeIds($matchedTreeIds);
         foreach ($matchedTreeIds as $language => $tids) {
-            $whereChunk[] = '(ch.tree_id IN (' . $this->db->quote($tids) . ') AND ch.language = ' . $this->db->quote($language) . ')';
+            $whereChunk[] = '(ch.tree_id IN (' . $this->db->quote($tids) . ') AND ch.language = ' . $this->db->quote(
+                    $language
+                ) . ')';
         }
         $select->where(implode(' OR ', $whereChunk));
 
@@ -258,17 +273,19 @@ class ElementCatcher
                 $alias = 'evmi' . ++$metaI;
                 $select
                     ->join(
-                        array($alias => $this->db->prefix.'catch_lookup_meta'),
+                        array($alias => $this->db->prefix . 'catch_lookup_meta'),
                         $alias . '.eid = ch.eid AND ' . $alias . '.version = ch.version AND ' . $alias . '.language = ch.language',
                         array()
                     )
-                    ->where($alias . '.key = ?', $key)
-                ;
+                    ->where($alias . '.key = ?', $key);
 
                 $multiValueSelects = array();
                 foreach (explode(',', $value) as $singleValue) {
                     $singleValue = trim($singleValue);
-                    $multiValueSelects[] = $this->db->quoteInto("$alias.value = ?", mb_strtolower(html_entity_decode($singleValue, ENT_COMPAT, 'UTF-8')));
+                    $multiValueSelects[] = $this->db->quoteInto(
+                        "$alias.value = ?",
+                        mb_strtolower(html_entity_decode($singleValue, ENT_COMPAT, 'UTF-8'))
+                    );
                 }
 
                 if (count($multiValueSelects)) {
@@ -291,9 +308,14 @@ class ElementCatcher
 
         if ($country) {
             if ($country !== 'global') {
-                $select->where('(ch.tree_id IN (SELECT DISTINCT tid FROM '.$this->db->prefix.'element_tree_context WHERE context = ? OR context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from '.$this->db->prefix.'element_tree_context))', $country);
+                $select->where(
+                    '(ch.tree_id IN (SELECT DISTINCT tid FROM ' . $this->db->prefix . 'element_tree_context WHERE context = ? OR context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from ' . $this->db->prefix . 'element_tree_context))',
+                    $country
+                );
             } else {
-                $select->where('(ch.tree_id IN (SELECT DISTINCT tid FROM '.$this->db->prefix.'element_tree_context WHERE context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from '.$this->db->prefix.'element_tree_context))');
+                $select->where(
+                    '(ch.tree_id IN (SELECT DISTINCT tid FROM ' . $this->db->prefix . 'element_tree_context WHERE context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from ' . $this->db->prefix . 'element_tree_context))'
+                );
             }
         }
 
@@ -347,10 +369,11 @@ class ElementCatcher
             )
             ->join(
                 array('sort_dl' => $db->prefix . 'element_data_language'),
-                'sort_d.data_id = sort_dl.data_id AND sort_d.version = sort_dl.version AND sort_d.eid = sort_dl.eid AND sort_d.ds_id = ' . $db->quote($elementCatch->getSortField()) . ' AND sort_dl.language = ch.language',
+                'sort_d.data_id = sort_dl.data_id AND sort_d.version = sort_dl.version AND sort_d.eid = sort_dl.eid AND sort_d.ds_id = ' . $db->quote(
+                    $elementCatch->getSortField()
+                ) . ' AND sort_dl.language = ch.language',
                 array(self::FIELD_SORT => 'content')
-            )
-        ;
+            );
 
         if (!$this->isNatSort) {
             $select->order(self::FIELD_SORT . ' ' . $elementCatch->getSortOrder());

@@ -28,12 +28,13 @@ class MigrateCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-manager:migrate')
-            ->setDefinition(array(
-                new InputArgument('site', InputArgument::OPTIONAL, 'Site to migrate'),
-                new InputOption('pretend', null, InputOption::VALUE_NONE, 'Simulate migration'),
-            ))
-            ->setDescription('Migrate a site from Db to Db2')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('site', InputArgument::OPTIONAL, 'Site to migrate'),
+                    new InputOption('pretend', null, InputOption::VALUE_NONE, 'Simulate migration'),
+                )
+            )
+            ->setDescription('Migrate a site from Db to Db2');
     }
 
     /**
@@ -56,9 +57,12 @@ class MigrateCommand extends ContainerAwareCommand
 
         $this->migrateFolder($root, $pretend);
 
-        if (!$pretend)
-        {
-            $db->update($db->prefix . 'mediamanager_site', array('driver' => 'Media_SiteDb2_Site'), $db->quoteIdentifier('key') . ' = ' . $db->quote($siteKey));
+        if (!$pretend) {
+            $db->update(
+                $db->prefix . 'mediamanager_site',
+                array('driver' => 'Media_SiteDb2_Site'),
+                $db->quoteIdentifier('key') . ' = ' . $db->quote($siteKey)
+            );
         }
 
         return 0;
@@ -66,38 +70,31 @@ class MigrateCommand extends ContainerAwareCommand
 
     protected function migrateFolder(Folder $folder, $pretend = true)
     {
-        echo $folder->getPhysicalPath().PHP_EOL;
-        if ($folder->hasFiles())
-        {
-            foreach ($folder->getFiles() as $file)
-            {
+        echo $folder->getPhysicalPath() . PHP_EOL;
+        if ($folder->hasFiles()) {
+            foreach ($folder->getFiles() as $file) {
                 $id = $file->getId();
                 $source = $file->getFilePath();
                 $targetDir = $file->getSite()->getRootDir() . $id[0] . '/' . $id[0] . $id[1] . '/' . $id . '/';
                 $target = $targetDir . '1';
 
-                if (!file_exists($source))
-                {
-                    echo 'skipping "'.$source.'", file not found' . PHP_EOL;
+                if (!file_exists($source)) {
+                    echo 'skipping "' . $source . '", file not found' . PHP_EOL;
                     continue;
                 }
 
-                if (!$pretend)
-                {
+                if (!$pretend) {
                     mkdir($targetDir, 0777, true);
                 }
-//                echo 'cp ('.$source.', '.$target.')'.PHP_EOL;
-                if (!$pretend)
-                {
+                //                echo 'cp ('.$source.', '.$target.')'.PHP_EOL;
+                if (!$pretend) {
                     copy($source, $target);
                 }
             }
         }
 
-        if ($folder->hasSubFolders())
-        {
-            foreach ($folder->getFolders() as $childFolder)
-            {
+        if ($folder->hasSubFolders()) {
+            foreach ($folder->getFolders() as $childFolder) {
                 $this->migrateFolder($childFolder, $pretend);
             }
         }

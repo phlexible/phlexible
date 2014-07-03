@@ -1,19 +1,19 @@
 Phlexible.fields.FieldHelper = {
-    defaults: function(parentConfig, item, element, repeatablePostfix, forceAdd) {
+    defaults: function (parentConfig, item, element, repeatablePostfix, forceAdd) {
         // labels
         var hideLabel,
-			label,
-			labelSeparator = ':',
-			language = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
+            label,
+            labelSeparator = ':',
+            language = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
 
         if (parentConfig.singleLineLabel) {
             label = parentConfig.singleLineLabel;
-			parentConfig.singleLineLabel = '';
+            parentConfig.singleLineLabel = '';
             hideLabel = false;
-        } else if(parentConfig.singleLine) {
+        } else if (parentConfig.singleLine) {
             hideLabel = true;
             label = item.labels.fieldlabel[language];
-        } else if(item.configuration.hide_label) {
+        } else if (item.configuration.hide_label) {
             hideLabel = false;
             label = '';
             labelSeparator = '';
@@ -24,7 +24,7 @@ Phlexible.fields.FieldHelper = {
 
         // prefix
         var field_prefix = 'field_' + item.ds_id + '_';
-        if(item.data_id) {
+        if (item.data_id) {
             field_prefix += 'id-' + item.data_id;
         } else {
             field_prefix += Ext.id(null, 'new');
@@ -63,36 +63,36 @@ Phlexible.fields.FieldHelper = {
             element: element,
             diff: item.diff,
 
-			listeners: {
-				render: function(c) {
-					if (c.supportsPrefix) {
-						Phlexible.fields.FieldHelper.prefix.call(c);
-					}
-					if (c.supportsSuffix) {
-						Phlexible.fields.FieldHelper.suffix.call(c);
-					}
-					if (c.supportsDiff) {
-						Phlexible.fields.FieldHelper.diff.call(c);
-					}
-					if (c.supportsInlineDiff) {
-						Phlexible.fields.FieldHelper.inlineDiff.call(c);
-					}
-					if (c.supportsUnlink) {
-						var styleEl = false;
-						var unlinkEl = false;
-						if (c.supportsUnlink.styleEl && this[c.supportsUnlink.styleEl]) {
-							styleEl = this[c.supportsUnlink.styleEl];
-						}
-						if (c.supportsUnlink.unlinkEl && this[c.supportsUnlink.unlinkEl]) {
-							unlinkEl = this[c.supportsUnlink.unlinkEl];
-						}
-						Phlexible.fields.FieldHelper.unlink.call(c, styleEl, unlinkEl);
-					}
-					if (c.supportsRepeatable) {
-						Phlexible.fields.FieldHelper.repeatable.call(c);
-					}
-				}
-			}
+            listeners: {
+                render: function (c) {
+                    if (c.supportsPrefix) {
+                        Phlexible.fields.FieldHelper.prefix.call(c);
+                    }
+                    if (c.supportsSuffix) {
+                        Phlexible.fields.FieldHelper.suffix.call(c);
+                    }
+                    if (c.supportsDiff) {
+                        Phlexible.fields.FieldHelper.diff.call(c);
+                    }
+                    if (c.supportsInlineDiff) {
+                        Phlexible.fields.FieldHelper.inlineDiff.call(c);
+                    }
+                    if (c.supportsUnlink) {
+                        var styleEl = false;
+                        var unlinkEl = false;
+                        if (c.supportsUnlink.styleEl && this[c.supportsUnlink.styleEl]) {
+                            styleEl = this[c.supportsUnlink.styleEl];
+                        }
+                        if (c.supportsUnlink.unlinkEl && this[c.supportsUnlink.unlinkEl]) {
+                            unlinkEl = this[c.supportsUnlink.unlinkEl];
+                        }
+                        Phlexible.fields.FieldHelper.unlink.call(c, styleEl, unlinkEl);
+                    }
+                    if (c.supportsRepeatable) {
+                        Phlexible.fields.FieldHelper.repeatable.call(c);
+                    }
+                }
+            }
         };
 
         if (item.configuration.readonly) {
@@ -107,7 +107,7 @@ Phlexible.fields.FieldHelper = {
         return config;
     },
 
-    prefix: function() {
+    prefix: function () {
         if (this.prefix) {
             this.el.insertSibling({
                 tag: 'span',
@@ -117,7 +117,7 @@ Phlexible.fields.FieldHelper = {
         }
     },
 
-    suffix: function() {
+    suffix: function () {
         if (this.suffix) {
             this.el.insertSibling({
                 tag: 'span',
@@ -127,7 +127,7 @@ Phlexible.fields.FieldHelper = {
         }
     },
 
-    diff: function(styleEl) {
+    diff: function (styleEl) {
         if (this.diff) {
             if (!styleEl) styleEl = this.el;
 
@@ -143,14 +143,14 @@ Phlexible.fields.FieldHelper = {
         }
     },
 
-    inlineDiff: function(targetEl, clickEl) {
+    inlineDiff: function (targetEl, clickEl) {
         if (!this.element || !this.diff) return;
 
         if (!targetEl) targetEl = this.el;
         if (!clickEl) clickEl = targetEl;
 
-        targetEl.on('click', function() {
-            if (this.element.activeDiffEl && this.element.activeDiffEl.isVisible() && !e.within(targetEl.dom, false, true) && !e.within(this.element.activeDiffEl.dom, false, true)){
+        targetEl.on('click', function () {
+            if (this.element.activeDiffEl && this.element.activeDiffEl.isVisible() && !e.within(targetEl.dom, false, true) && !e.within(this.element.activeDiffEl.dom, false, true)) {
                 this.element.activeDiffEl.hide();
                 this.element.activeDiffEl = null;
             }
@@ -184,8 +184,8 @@ Phlexible.fields.FieldHelper = {
         }, this);
     },
 
-    unlink: function(styleEl, unlinkEl) {
-        if(this.isSynchronized) {
+    unlink: function (styleEl, unlinkEl) {
+        if (this.isSynchronized) {
             if (!styleEl) styleEl = this.el;
             if (!unlinkEl) unlinkEl = this.el;
             if (this.isMaster) {
@@ -217,7 +217,7 @@ Phlexible.fields.FieldHelper = {
                         height: 16,
                         qtip: this.isUnlinked ? 'Link' : 'Unlink'
                     }, 'after');
-                    this.button_unlink.on('click', function() {
+                    this.button_unlink.on('click', function () {
                         if (this.isUnlinked) {
                             this.isUnlinked = false;
                             this.hidden_unlink.set({
@@ -258,14 +258,14 @@ Phlexible.fields.FieldHelper = {
         }
     },
 
-    repeatable: function() {
-        if(this.isRepeatable) {
+    repeatable: function () {
+        if (this.isRepeatable) {
             var button_remove = this.el.insertSibling({tag: 'div', cls: 'x-tool x-tool-minus p-repeat-minus'}, 'before');
             var button_add = this.el.insertSibling({tag: 'div', cls: 'x-tool x-tool-plus p-repeat-plus'}, 'before');
             //var button_remove = this.el.insertSibling({tag: 'img', src: Phlexible.component('/elements/asset/image/name/field_delete.png'), name: this.id+'-remove'}, 'after');
             //var button_add = this.el.insertSibling({tag: 'img', src: Phlexible.component('/elements/asset/image/name/field_add.png'), name: this.id+'-add'}, 'after');
 
-            button_remove.on('click', function() {
+            button_remove.on('click', function () {
                 if (this.element.prototypes.getCount(this.ds_id) > this.minRepeat) {
                     this.element.prototypes.decCount(this.ds_id);
 
@@ -281,7 +281,7 @@ Phlexible.fields.FieldHelper = {
                     }
                 }
             }, this);
-            button_add.on('click', function() {
+            button_add.on('click', function () {
                 if (!this.element.prototypes.getCount(this.ds_id)) {
                     this.element.prototypes.incCount(this.ds_id);
                     this.el.removeClass('x-item-disabled');

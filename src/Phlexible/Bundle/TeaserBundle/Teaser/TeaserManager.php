@@ -84,10 +84,10 @@ class TeaserManager
     public function findForLayoutAreaAndTreeNode($layoutarea, TreeNodeInterface $treeNode)
     {
         $teasers = $this->entityManager->getRepository('PhlexibleTeaserBundle:Teaser')->findBy(
-                                       array(
-                                           'layoutarea_id' => $layoutarea->getId(),
-                                           'tree_id'       => $treeNode->getId()
-                                       )
+            array(
+                'layoutarea_id' => $layoutarea->getId(),
+                'tree_id'       => $treeNode->getId()
+            )
         );
 
         return $teasers;
@@ -192,12 +192,12 @@ class TeaserManager
             $elementMasterLanguage = $element->getMasterLanguage();
 
             $teasers = $teaserManager->getAllByTID(
-                                     $currentTreeId,
-                                         $layoutArea->getId(),
-                                         $language,
-                                         null,
-                                         $availableLanguages,
-                                         true
+                $currentTreeId,
+                $layoutArea->getId(),
+                $language,
+                null,
+                $availableLanguages,
+                true
             );
 
             // first loop - only flags
@@ -437,43 +437,43 @@ class TeaserManager
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $select = $db->select()
-                     ->from(
-                     array('ett' => $db->prefix . 'element_tree_teasers'),
-                         array(
-                             'tree_id',
-                             'eid',
-                             'layoutarea_id',
-                             'teaser_eid',
-                             'type',
-                             'sort',
-                             'modify_uid',
-                             'modify_time',
-                             'configuration',
-                             'stop_inherit',
-                             'id',
-                             'template_id',
-                             'no_display',
-                         )
+            ->from(
+                array('ett' => $db->prefix . 'element_tree_teasers'),
+                array(
+                    'tree_id',
+                    'eid',
+                    'layoutarea_id',
+                    'teaser_eid',
+                    'type',
+                    'sort',
+                    'modify_uid',
+                    'modify_time',
+                    'configuration',
+                    'stop_inherit',
+                    'id',
+                    'template_id',
+                    'no_display',
+                )
             )
-                     ->where('tree_id = ?', (int) $tid)
-                     ->order('sort ASC');
+            ->where('tree_id = ?', (int) $tid)
+            ->order('sort ASC');
 
         if ($isPreview) {
             $select
                 ->joinLeft(
-                array('e' => $db->prefix . 'element'),
+                    array('e' => $db->prefix . 'element'),
                     'e.eid = ett.teaser_eid',
                     array(
                         'latest_version',
                     )
                 )
                 ->joinLeft(
-                array('eh' => $db->prefix . 'element_history'),
+                    array('eh' => $db->prefix . 'element_history'),
                     'eh.eid = ett.teaser_eid AND NOT ISNULL(eh.language)',
                     'language'
                 )
                 ->joinLeft(
-                array('etto' => $db->prefix . 'element_tree_teasers_online'),
+                    array('etto' => $db->prefix . 'element_tree_teasers_online'),
                     'etto.teaser_id = ett.id AND eh.language = etto.language',
                     array(
                         'online_version' => 'version'
@@ -483,12 +483,12 @@ class TeaserManager
         } else {
             $select
                 ->joinLeft(
-                array('e' => $db->prefix . 'element'),
+                    array('e' => $db->prefix . 'element'),
                     'e.eid = ett.teaser_eid',
                     'latest_version'
                 )
                 ->joinLeft(
-                array('etto' => $db->prefix . 'element_tree_teasers_online'),
+                    array('etto' => $db->prefix . 'element_tree_teasers_online'),
                     'etto.teaser_id = ett.id',
                     array(
                         'online_version' => 'version',
@@ -512,8 +512,8 @@ class TeaserManager
         $results = $db->fetchAll($select);
 
         $groupedResults = Brainbits_Util_Array::groupBy(
-                                              $results,
-                                                  array('sort', 'teaser_eid', 'language')
+            $results,
+            array('sort', 'teaser_eid', 'language')
         );
 
         $hasInherit = false;
@@ -609,9 +609,9 @@ class TeaserManager
         $teasers = array();
         foreach ($path as $pathEid) {
             $select = $db->select()
-                         ->from($db->prefix . 'element_tree_teasers')
-                         ->where('eid = ?', $pathEid)
-                         ->order('sort ASC');
+                ->from($db->prefix . 'element_tree_teasers')
+                ->where('eid = ?', $pathEid)
+                ->order('sort ASC');
 
             if (!is_null($areaId)) {
                 $select->where('layoutarea_id = ?', $areaId);
@@ -714,8 +714,8 @@ class TeaserManager
             $sort = 0;
             if ($prevId) {
                 $select = $db->select()
-                             ->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('sort + 1'))
-                             ->where('id = ?', $prevId);
+                    ->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('sort + 1'))
+                    ->where('id = ?', $prevId);
 
                 $sort = $db->fetchOne($select);
             }
@@ -724,9 +724,9 @@ class TeaserManager
             $uid = MWF_Env::getUid();
 
             $db->update(
-               $db->prefix . 'element_tree_teasers',
-                   array('sort' => new Zend_Db_Expr('sort + 1')),
-                   array('tree_id = ?' => $treeId, 'sort >= ?' => $sort)
+                $db->prefix . 'element_tree_teasers',
+                array('sort' => new Zend_Db_Expr('sort + 1')),
+                array('tree_id = ?' => $treeId, 'sort >= ?' => $sort)
             );
 
             // place new teaser in element_tree_teasers
@@ -783,9 +783,9 @@ class TeaserManager
             }
 
             $select = $db->select()
-                         ->from($db->prefix . 'element_tree_teasers')
-                         ->where('id = ?', $teaserId)
-                         ->limit(1);
+                ->from($db->prefix . 'element_tree_teasers')
+                ->where('id = ?', $teaserId)
+                ->limit(1);
 
             $row = $db->fetchRow($select);
 
@@ -799,9 +799,9 @@ class TeaserManager
             $newTeaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
 
             Makeweb_Teasers_History::insert(
-                                   Makeweb_Teasers_History::ACTION_CREATE_INSTANCE,
-                                       $teaserId,
-                                       $row['teaser_eid']
+                Makeweb_Teasers_History::ACTION_CREATE_INSTANCE,
+                $teaserId,
+                $row['teaser_eid']
             );
 
             $node = new Makeweb_Teasers_Node($newTeaserId);
@@ -997,23 +997,23 @@ class TeaserManager
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $select = $db->select()
-                     ->from($db->prefix . 'element_tree_teasers', 'teaser_eid')
-                     ->where('id = ?', $teaserId)
-                     ->limit(1);
+            ->from($db->prefix . 'element_tree_teasers', 'teaser_eid')
+            ->where('id = ?', $teaserId)
+            ->limit(1);
 
         $eid = $db->fetchOne($select);
 
         $db->delete(
-           $db->prefix . 'element_tree_teasers',
-               array(
-                   'id = ?' => $teaserId
-               )
+            $db->prefix . 'element_tree_teasers',
+            array(
+                'id = ?' => $teaserId
+            )
         );
 
         Makeweb_Teasers_History::insert(
-                               Makeweb_Teasers_History::ACTION_DELETE_TEASER,
-                                   $teaserId,
-                                   $eid
+            Makeweb_Teasers_History::ACTION_DELETE_TEASER,
+            $teaserId,
+            $eid
         );
 
         $event = new Makeweb_Teasers_Event_DeleteTeaser($node);
@@ -1037,10 +1037,10 @@ class TeaserManager
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $db->delete(
-           $db->prefix . 'element_tree_teasers',
-               array(
-                   'id = ?' => $catchId
-               )
+            $db->prefix . 'element_tree_teasers',
+            array(
+                'id = ?' => $catchId
+            )
         );
 
         $event = new Makeweb_Teasers_Event_DeleteCatch($catchId);
@@ -1060,8 +1060,8 @@ class TeaserManager
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $select = $db->select()
-                     ->from($db->prefix . 'element_tree_teasers', 'teaser_eid')
-                     ->where('id = :id');
+            ->from($db->prefix . 'element_tree_teasers', 'teaser_eid')
+            ->where('id = :id');
 
         $result = (int) $db->fetchOne($select, array(':id' => $id));
 
@@ -1081,8 +1081,8 @@ class TeaserManager
         $db = MWF_Registry::getContainer()->dbPool->default;
 
         $select = $db->select()
-                     ->from($db->prefix . 'element_tree_teasers', 'layoutarea_id')
-                     ->where('id = :id');
+            ->from($db->prefix . 'element_tree_teasers', 'layoutarea_id')
+            ->where('id = :id');
 
         $result = (int) $db->fetchOne($select, array(':id' => $id));
 
@@ -1119,11 +1119,11 @@ class TeaserManager
         }
 
         $db->delete(
-           $db->prefix . 'element_tree_teasers_online',
-               array(
-                   'teaser_id = ?' => $teaserId,
-                   'language = ?'  => $language,
-               )
+            $db->prefix . 'element_tree_teasers_online',
+            array(
+                'teaser_id = ?' => $teaserId,
+                'language = ?'  => $language,
+            )
         );
 
         $insertData = array(
@@ -1138,12 +1138,12 @@ class TeaserManager
         $db->insert($db->prefix . 'element_tree_teasers_online', $insertData);
 
         Makeweb_Teasers_History::insert(
-                               Makeweb_Teasers_History::ACTION_PUBLISH,
-                                   $teaserId,
-                                   $eid,
-                                   $version,
-                                   $language,
-                                   $comment
+            Makeweb_Teasers_History::ACTION_PUBLISH,
+            $teaserId,
+            $eid,
+            $version,
+            $language,
+            $comment
         );
 
         $node = new Makeweb_Teasers_Node($teaserId);
@@ -1167,20 +1167,20 @@ class TeaserManager
         }
 
         $db->delete(
-           $db->prefix . 'element_tree_teasers_online',
-               array(
-                   'teaser_id = ?' => $teaserId,
-                   'language = ?'  => $language,
-               )
+            $db->prefix . 'element_tree_teasers_online',
+            array(
+                'teaser_id = ?' => $teaserId,
+                'language = ?'  => $language,
+            )
         );
 
 
         Makeweb_Teasers_History::insert(
-                               Makeweb_Teasers_History::ACTION_PUBLISH,
-                                   $teaserId,
-                                   $node->getEid(),
-                                   null,
-                                   $language
+            Makeweb_Teasers_History::ACTION_PUBLISH,
+            $teaserId,
+            $node->getEid(),
+            null,
+            $language
         );
 
         $node = new Makeweb_Teasers_Node($teaserId);
@@ -1205,10 +1205,10 @@ class TeaserManager
             $db = MWF_Registry::getContainer()->dbPool->default;
 
             $select = $db->select()
-                         ->from($db->prefix . 'element_tree_teasers_online', new Zend_Db_Expr('1'))
-                         ->where('eid = ?', $eid)
-                         ->where('language = ?', $language)
-                         ->limit(1);
+                ->from($db->prefix . 'element_tree_teasers_online', new Zend_Db_Expr('1'))
+                ->where('eid = ?', $eid)
+                ->where('language = ?', $language)
+                ->limit(1);
 
             $result = $db->fetchOne($select);
 
@@ -1234,9 +1234,9 @@ class TeaserManager
             $db = MWF_Registry::getContainer()->dbPool->default;
 
             $select = $db->select()
-                         ->from($db->prefix . 'element_tree_teasers', 'tree_id')
-                         ->where('id = ?', $teaserId)
-                         ->limit(1);
+                ->from($db->prefix . 'element_tree_teasers', 'tree_id')
+                ->where('id = ?', $teaserId)
+                ->limit(1);
 
             $result = $db->fetchOne($select);
 

@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -31,8 +31,7 @@ class OptionsController extends Controller
         $user = $this->getUser()
             ->setFirstname($request->query->get('firstname'))
             ->setLastname($request->query->get('lastname'))
-            ->setEmail($request->query->get('email'))
-        ;
+            ->setEmail($request->query->get('email'));
 
         $this->get('phlexible_user.user_manager')->updateUser($user);
 
@@ -69,8 +68,7 @@ class OptionsController extends Controller
     public function savepreferencesAction(Request $request)
     {
         $user = $this->getUser()
-            ->setInterfaceLanguage($request->request->get('interfaceLanguage', 'en'))
-        ;
+            ->setInterfaceLanguage($request->request->get('interfaceLanguage', 'en'));
 
         $this->get('phlexible_user.user_manager')->updateUser($user);
 
@@ -87,8 +85,7 @@ class OptionsController extends Controller
     public function savethemeAction(Request $request)
     {
         $user = $this->getUser()
-            ->setProperty('theme', $request->request->get('theme', 'default'))
-        ;
+            ->setProperty('theme', $request->request->get('theme', 'default'));
 
         $this->get('phlexible_user.user_manager')->updateUser($user);
 

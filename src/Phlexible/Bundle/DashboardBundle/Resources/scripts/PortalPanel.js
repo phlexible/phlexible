@@ -5,7 +5,7 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
     cols: 3,
     panels: {},
 
-    initComponent: function() {
+    initComponent: function () {
         this.addEvents(
             'portletAdd',
             'portletClose',
@@ -16,11 +16,11 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         Phlexible.Frame.getSystemMessage().on('message', this.processMessage, this);
 
         var items = [];
-        for (var i=0; i<this.cols; i++) {
+        for (var i = 0; i < this.cols; i++) {
             items.push({
                 id: 'col' + i,
                 col: i,
-                columnWidth: 1/this.cols,
+                columnWidth: 1 / this.cols,
                 style: 'padding:10px 10px 10px 10px'
                 //,items: [{title: 'Column' + (i+1), html: 'test'}]
             });
@@ -39,29 +39,29 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         Phlexible.dashboard.PortalPanel.superclass.initComponent.call(this);
 
         this.on({
-			render: function() {
-				Ext.DomHelper.append(this.el, {
-					tag: 'img',
-					src: Phlexible.component('/phlexiblegui/images/watermark.gif'),
-					width: 250,
-					height: 89,
-					cls: 'p-dashboard-watermark'
-				});
+            render: function () {
+                Ext.DomHelper.append(this.el, {
+                    tag: 'img',
+                    src: Phlexible.component('/phlexiblegui/images/watermark.gif'),
+                    width: 250,
+                    height: 89,
+                    cls: 'p-dashboard-watermark'
+                });
 
-				if (Phlexible.User.isGranted('admin')) {
-					Ext.DomHelper.append(this.el, {
-						tag: 'div',
-						cls: 'p-dashboard-info'
-					}, true).load(Phlexible.url('/dashboard/info'));
-				}
-			},
-			scope: this
-		});
+                if (Phlexible.User.isGranted('admin')) {
+                    Ext.DomHelper.append(this.el, {
+                        tag: 'div',
+                        cls: 'p-dashboard-info'
+                    }, true).load(Phlexible.url('/dashboard/info'));
+                }
+            },
+            scope: this
+        });
     },
 
-    updatePanels: function() {
+    updatePanels: function () {
 
-        for(var i=0; i<this.store.getCount(); i++){
+        for (var i = 0; i < this.store.getCount(); i++) {
             var r = this.store.getAt(i);
             this.addRecordPanel(r);
         }
@@ -70,22 +70,22 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
 
     },
 
-    getCol: function(pos) {
+    getCol: function (pos) {
         return this.items.get(pos);
     },
 
-    getBestCol: function() {
+    getBestCol: function () {
         var childs = {};
         var best;
         var max = 999;
 
-        for(i=0; i<this.items.getCount(); i++) {
+        for (i = 0; i < this.items.getCount(); i++) {
             var item = this.items.get(i);
-            if(!item.items.getCount()) {
+            if (!item.items.getCount()) {
                 return item;
             }
             var cnt = item.getSize().height;
-            if(cnt < max) {
+            if (cnt < max) {
                 max = cnt;
                 best = item;
             }
@@ -94,9 +94,9 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         return best;
     },
 
-    addRecordPanel: function(r, skipEvent) {
+    addRecordPanel: function (r, skipEvent) {
         var col = parseInt(r.get('col'), 10);
-        if (col!==false && col < this.cols) {
+        if (col !== false && col < this.cols) {
             col = this.getCol(col);
         } else {
             col = this.getBestCol();
@@ -112,7 +112,7 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
 
                 tools.push({
                     id: 'close',
-                    handler: function(e, target, panel){
+                    handler: function (e, target, panel) {
                         delete this.panels[panel.record.id];
                         this.fireEvent('portletClose', panel, panel.record);
                     },
@@ -126,17 +126,17 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
                     tools: tools,
                     plugins: plugins,
                     listeners: {
-                        collapse: function(panel){
-							panel.record.set('mode', 'collapsed');
+                        collapse: function (panel) {
+                            panel.record.set('mode', 'collapsed');
 
-							this.fireEvent('portletCollapse', panel, panel.record);
-						},
-                        expand: function(panel){
-							panel.record.set('mode', 'expanded');
+                            this.fireEvent('portletCollapse', panel, panel.record);
+                        },
+                        expand: function (panel) {
+                            panel.record.set('mode', 'expanded');
 
-							this.fireEvent('portletExpand', panel, panel.record);
-						},
-						scope: this
+                            this.fireEvent('portletExpand', panel, panel.record);
+                        },
+                        scope: this
                     }
                 });
                 var panel = col.add(o);
@@ -152,11 +152,11 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         }
     },
 
-    getSaveData: function() {
-        var data = {},x = 0, y = 0;
+    getSaveData: function () {
+        var data = {}, x = 0, y = 0;
 
-        this.items.each(function(col) {
-            col.items.each(function(item) {
+        this.items.each(function (col) {
+            col.items.each(function (item) {
                 data[item.id] = {
                     id: item.id,
                     mode: item.record.data.mode,
@@ -172,15 +172,15 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         return data;
     },
 
-    processMessage: function(event){
-        if(typeof event == "object" && event.type == "start") {
+    processMessage: function (event) {
+        if (typeof event == "object" && event.type == "start") {
             var data = event.data;
 
             var r;
-            for(var id in data) {
+            for (var id in data) {
                 var panel = this.panels[id];
 
-                if(!panel || !panel.updateData) {
+                if (!panel || !panel.updateData) {
                     continue;
                 }
 

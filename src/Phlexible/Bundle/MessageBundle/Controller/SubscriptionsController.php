@@ -67,8 +67,7 @@ class SubscriptionsController extends Controller
         $subscription = $subscriptionManager->create()
             ->setUserId($this->getUser()->getId())
             ->setFilter($filter)
-            ->setHandler($handler)
-        ;
+            ->setHandler($handler);
 
         $subscriptionManager->updateSubscription($subscription);
 

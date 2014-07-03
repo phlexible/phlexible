@@ -24,12 +24,13 @@ class DataController extends Controller
     {
         $query = $this->_getParam('query');
 
-        $results = array_merge(Makeweb_Elements_Search_Eid::search($query),
-                               Makeweb_Elements_Search_Title::search($query));
+        $results = array_merge(
+            Makeweb_Elements_Search_Eid::search($query),
+            Makeweb_Elements_Search_Title::search($query)
+        );
 
         $data = array();
-        foreach($results as $result)
-        {
+        foreach ($results as $result) {
             /* @var $result MWF_Core_Search_Result */
             $row = $result->toArray();
 

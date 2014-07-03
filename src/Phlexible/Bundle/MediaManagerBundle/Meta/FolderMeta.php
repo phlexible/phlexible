@@ -18,13 +18,13 @@ use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
 class FolderMeta
 {
     /**
-      * @var FolderInterface
-      */
+     * @var FolderInterface
+     */
     private $folder;
 
     /**
-      * @var Media_Site_Folder_Meta_Manager
-      */
+     * @var Media_Site_Folder_Meta_Manager
+     */
     private $_metaManager;
 
     /**
@@ -34,7 +34,7 @@ class FolderMeta
     {
         $this->folder = $folder;
 
-        $container          = MWF_Registry::getContainer();
+        $container = MWF_Registry::getContainer();
         $this->_metaManager = $container->mediaSiteFolderMetaManager;
     }
 

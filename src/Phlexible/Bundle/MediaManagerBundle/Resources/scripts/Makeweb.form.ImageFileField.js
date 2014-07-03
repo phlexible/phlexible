@@ -7,17 +7,17 @@
  * Creates a new TextField
  * @param {Object} config Configuration options
  */
-Ext.form.ImageFileField = Ext.extend(Ext.form.FileField,  {
+Ext.form.ImageFileField = Ext.extend(Ext.form.FileField, {
     addIconCls: 'p-mediamanager-image_add-icon',
     removeIconCls: 'p-mediamanager-image_delete-icon',
 
     emptyAddText: Phlexible.mediamanager.Strings.click_to_add_image,
 
-	getPlaceholder: function() {
-		return Phlexible.component('/mediamanagerbundle/images/form-file-image.gif');
-	},
+    getPlaceholder: function () {
+        return Phlexible.component('/mediamanagerbundle/images/form-file-image.gif');
+    },
 
-    onAdd: function() {
+    onAdd: function () {
         if (this.disabled) return;
 
         var w = new Phlexible.mediamanager.MediamanagerWindow({
@@ -41,7 +41,7 @@ Ext.form.ImageFileField = Ext.extend(Ext.form.FileField,  {
         w.show();
     },
 
-    onFileSelect: function(w, file_id, file_version, file_name, folder_id) {
+    onFileSelect: function (w, file_id, file_version, file_name, folder_id) {
         this.setFile(file_id, file_version, file_name, folder_id);
 
         w.close();

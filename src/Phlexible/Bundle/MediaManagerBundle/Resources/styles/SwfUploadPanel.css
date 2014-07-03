@@ -1,15 +1,15 @@
 .SwfUploadPanel_iconAdd {
-	background-image:url(/COMPONENTSPATH/mediamanager/icons/upload_add.png) !important;
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/upload_add.png) !important;
 }
 
 .SwfUploadPanel_iconUpload {
-	background-image:url(/COMPONENTSPATH/mediamanager/icons/upload_upload.png) !important;
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/upload_upload.png) !important;
 }
 
 .SwfUploadPanel_iconCancel {
-	background-image:url(/COMPONENTSPATH/mediamanager/icons/upload_cancel.png) !important;
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/upload_cancel.png) !important;
 }
 
 .SwfUploadPanel_iconClear {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/upload_clear.png) !important;
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/upload_clear.png) !important;
 }

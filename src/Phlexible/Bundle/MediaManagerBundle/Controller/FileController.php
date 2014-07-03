@@ -10,12 +10,12 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Alchemy\Zippy\Zippy;
 use Phlexible\Bundle\DocumenttypeBundle\Documenttype\Documenttype;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -50,11 +50,11 @@ class FileController extends Controller
      */
     public function listAction(Request $request)
     {
-        $folderId   = $request->get('folder_id', null);
-        $start      = $request->get('start', 0);
-        $limit      = $request->get('limit', 25);
-        $sort       = $request->get('sort', 'name');
-        $dir        = $request->get('dir', 'ASC');
+        $folderId = $request->get('folder_id', null);
+        $start = $request->get('start', 0);
+        $limit = $request->get('limit', 25);
+        $sort = $request->get('sort', 'name');
+        $dir = $request->get('dir', 'ASC');
         $showHidden = $request->get('show_hidden', false);
 
         if (!$folderId) {
@@ -72,7 +72,7 @@ class FileController extends Controller
         if ($securityContext->isGranted('FILE_READ', $folder)) {
             $files = $site->findFilesByFolder($folder, $start, $limit, $sort, $dir, $showHidden);
             $total = $site->countFilesByFolder($folder, $showHidden);
-            $data  = $this->filesToArray($files);
+            $data = $this->filesToArray($files);
         }
 
         return new JsonResponse(array('files' => $data, 'totalCount' => $total));
@@ -93,7 +93,7 @@ class FileController extends Controller
 
         foreach ($files as $file) {
             try {
-                $createUser     = $userRepository->find($file->getCreateUserID());
+                $createUser = $userRepository->find($file->getCreateUserID());
                 $createUserName = $createUser->getFirstname() . ' ' . $createUser->getLastname();
             } catch (\Exception $e) {
                 $createUserName = 'Unknown';
@@ -101,7 +101,7 @@ class FileController extends Controller
 
             try {
                 if ($file->getModifyUserID()) {
-                    $modifyUser     = $userRepository->find($file->getModifyUserID());
+                    $modifyUser = $userRepository->find($file->getModifyUserID());
                     $modifyUserName = $modifyUser->getFirstname() . ' ' . $modifyUser->getLastname();
                 } else {
                     $modifyUserName = '';
@@ -113,8 +113,8 @@ class FileController extends Controller
             $properties = array(
                 //'attributes'    => array(),
                 //'attributesCnt' => 0,
-                'versions'      => $file->getSite()->hasFeature('versions'),
-                'debug'         => array(
+                'versions' => $file->getSite()->hasFeature('versions'),
+                'debug'    => array(
                     'mimeType'     => $file->getMimeType(),
                     'documentType' => strtolower($file->getAttribute('documenttype')),
                     'assetType'    => strtolower($file->getAttribute('assettype')),
@@ -130,8 +130,8 @@ class FileController extends Controller
             //        $meta[$metaData->getTitle()][$key] = $value;
             //    }
             //}
-            $properties['meta']          = $meta;
-            $properties['metaCnt']       = count($properties['meta']);
+            $properties['meta'] = $meta;
+            $properties['metaCnt'] = count($properties['meta']);
 
             $documentType = $documenttypesRepository->find(strtolower($file->getAttribute('documenttype')));
 
@@ -188,7 +188,7 @@ class FileController extends Controller
                 'properties'        => $properties,
                 'used_in'           => $usedIn,
                 'used'              => $usage,
-                'focal'				=> $focal,
+                'focal'             => $focal,
             );
         }
 
@@ -205,7 +205,7 @@ class FileController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $fileId  = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
         $siteManager = $this->get('mediasite.manager');
@@ -229,7 +229,7 @@ class FileController extends Controller
      */
     public function hideAction(Request $request)
     {
-        $fileId  = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
         $siteManager = $this->get('mediasite.manager');
@@ -253,7 +253,7 @@ class FileController extends Controller
      */
     public function showAction(Request $request)
     {
-        $fileId  = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
         $siteManager = $this->get('mediasite.manager');
@@ -277,13 +277,13 @@ class FileController extends Controller
      */
     public function propertiesAction(Request $request)
     {
-        $fileId      = $request->get('id');
+        $fileId = $request->get('id');
         $fileVersion = $request->get('version', 1);
 
         $siteManager = $this->get('mediasite.manager');
 
-        $site   = $siteManager->getByFileId($fileId);
-        $file   = $site->findFile($fileId, $fileVersion);
+        $site = $siteManager->getByFileId($fileId);
+        $file = $site->findFile($fileId, $fileVersion);
         $folder = $site->findFolder($file->getFolderId());
 
         $attributes = array(); //$asset->getAttributes()->toArray();
@@ -294,26 +294,26 @@ class FileController extends Controller
         }
 
         $properties = array();
-        $properties['id']                = $fileId;
-        $properties['version']           = $fileVersion;
-        $properties['path']              = '/' . $folder->getPath();
-        $properties['name']              = $file->getName();
-        $properties['size']              = $file->getSize();
+        $properties['id'] = $fileId;
+        $properties['version'] = $fileVersion;
+        $properties['path'] = '/' . $folder->getPath();
+        $properties['name'] = $file->getName();
+        $properties['size'] = $file->getSize();
         $properties['document_type_key'] = strtolower($file->getAttribute('documenttype'));
-        $properties['asset_type']        = strtolower($file->getAttribute('assettype'));
-        $properties['create_user_id']    = $file->getCreateUserId();
-        $properties['create_time']       = $file->getCreatedAt()->format('U');
+        $properties['asset_type'] = strtolower($file->getAttribute('assettype'));
+        $properties['create_user_id'] = $file->getCreateUserId();
+        $properties['create_time'] = $file->getCreatedAt()->format('U');
 
-        $properties['attributes']    = $attributes;
+        $properties['attributes'] = $attributes;
         $properties['attributesCnt'] = count($properties['attributes']);
 
-        $properties['versions']    = $versions;
+        $properties['versions'] = $versions;
         $properties['versionsCnt'] = count($properties['versions']);
 
-        $properties['keywords']    = array();
+        $properties['keywords'] = array();
         $properties['keywordsCnt'] = count($properties['keywords']);
 
-        $properties['debug']         = array(
+        $properties['debug'] = array(
             'mimeType'     => $file->getMimeType(),
             'documentType' => strtolower($file->getAttribute('documenttype')),
             'assetType'    => strtolower($file->getAttribute('assettype')),
@@ -356,7 +356,7 @@ class FileController extends Controller
     public function copyAction(Request $request)
     {
         $folderId = $request->get('folderID');
-        $fileIDs  = json_decode($request->get('fileIDs'));
+        $fileIDs = json_decode($request->get('fileIDs'));
 
         $site = $this->getSiteByFolderId($folderId);
         $folder = $site->findFolder($folderId);
@@ -380,7 +380,7 @@ class FileController extends Controller
     public function moveAction(Request $request)
     {
         $folderId = $request->get('folderID');
-        $fileIDs  = json_decode($request->get('fileIDs'));
+        $fileIDs = json_decode($request->get('fileIDs'));
 
         $site = $this->getSiteByFolderId($folderId);
         $folder = $site->findFolder($folderId);
@@ -409,7 +409,7 @@ class FileController extends Controller
      */
     public function renameAction(Request $request)
     {
-        $fileId  = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $name = $request->get('file_name');
 
         $site = $this->get('mediasite.manager')->getByFileId($fileId);
@@ -432,7 +432,7 @@ class FileController extends Controller
         $fileIds = json_decode($fileIds);
 
         $site = $this->get('mediasite.manager')->getByFileId(current($fileIds));
-        $filename = $this->container->getParameter('media.manager.temp_dir') . 'files_'.date('YmdHis').'.zip';
+        $filename = $this->container->getParameter('media.manager.temp_dir') . 'files_' . date('YmdHis') . '.zip';
 
         $zippy = Zippy::load();
         $archive = $zippy->create($filename);

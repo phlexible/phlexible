@@ -134,6 +134,7 @@ class ElementStructureWrap implements \ArrayAccess
 
         return null;
     }
+
     /**
      * @param mixed $offset
      *
@@ -169,5 +170,6 @@ class ElementStructureWrap implements \ArrayAccess
     public function offsetUnset($offset)
     {
         // TODO: Implement offsetUnset() method.
-}}
+    }
+}
 

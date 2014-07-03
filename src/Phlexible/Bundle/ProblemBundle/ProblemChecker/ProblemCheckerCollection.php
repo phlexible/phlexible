@@ -32,11 +32,13 @@ class ProblemCheckerCollection implements \IteratorAggregate
 
     /**
      * @param ProblemCheckerInterface $problemChecker
+     *
      * @return $this
      */
     public function addProblemChecker(ProblemCheckerInterface $problemChecker)
     {
         $this->problemCheckers[] = $problemChecker;
+
         return $this;
     }
 

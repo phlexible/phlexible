@@ -27,12 +27,13 @@ class SuccessorCommand extends ContainerAwareCommand
     {
         $this
             ->setName('user:successor')
-            ->setDefinition(array(
-                new InputArgument('fromUsername', InputArgument::REQUIRED, 'From username'),
-                new InputArgument('toUsername', null, InputArgument::REQUIRED, 'Successor username'),
-            ))
-            ->setDescription('Set successor.')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('fromUsername', InputArgument::REQUIRED, 'From username'),
+                    new InputArgument('toUsername', null, InputArgument::REQUIRED, 'Successor username'),
+                )
+            )
+            ->setDescription('Set successor.');
     }
 
     /**
@@ -41,7 +42,7 @@ class SuccessorCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $fromUsername = $input->getArgument('fromUsername');
-        $toUsername   = $input->getArgument('toUsername');
+        $toUsername = $input->getArgument('toUsername');
 
         $userRepository = $this->getContainer()->get('phlexible_user.user_manager');
 

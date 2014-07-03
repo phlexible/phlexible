@@ -26,8 +26,7 @@ class StatsCommand extends ContainerAwareCommand
     {
         $this
             ->setName('cache:stats')
-            ->setDescription('Show cache statistics.')
-        ;
+            ->setDescription('Show cache statistics.');
     }
 
     /**

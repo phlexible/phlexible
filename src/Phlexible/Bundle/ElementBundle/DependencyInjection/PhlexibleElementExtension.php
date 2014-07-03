@@ -25,7 +25,7 @@ class PhlexibleElementExtension extends Extension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('tasks.yml');
 
@@ -37,7 +37,10 @@ class PhlexibleElementExtension extends Extension
         $container->setParameter('phlexible_element.portlet.num_items', $config['portlet']['num_items']);
         $container->setParameter('phlexible_element.publish.comment_required', $config['publish']['comment_required']);
         $container->setParameter('phlexible_element.publish.confirm_required', $config['publish']['confirm_required']);
-        $container->setParameter('phlexible_element.publish.cross_language_publish_offline', $config['publish']['cross_language_publish_offline']);
+        $container->setParameter(
+            'phlexible_element.publish.cross_language_publish_offline',
+            $config['publish']['cross_language_publish_offline']
+        );
         $container->setParameter('phlexible_element.tree.sync_page', $config['tree']['sync_page']);
         $container->setParameter('phlexible_element.context.enabled', $config['context']['enabled']);
         $container->setParameter('phlexible_element.context.default_country', $config['context']['default_country']);

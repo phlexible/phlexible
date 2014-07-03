@@ -18,12 +18,12 @@ class TemplateRepository
     /**
      * @var TemplateLoader
      */
-    private $loader = null;
+    private $loader;
 
     /**
      * @var TemplateCollection
      */
-    private $templates = null;
+    private $templates;
 
     /**
      * @param TemplateLoader $loader
@@ -49,6 +49,7 @@ class TemplateRepository
      * Return a template by ID
      *
      * @param string $templateId
+     *
      * @return Template
      */
     public function find($templateId)
@@ -60,6 +61,7 @@ class TemplateRepository
      * Return template by filename
      *
      * @param string $filename
+     *
      * @return Template
      */
     public function findByFilename($filename)

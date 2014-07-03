@@ -2,20 +2,23 @@ Phlexible.templates.TemplateTabPanel = Ext.extend(Ext.TabPanel, {
     activeTab: 0,
     layoutOnTabChange: true,
     deferredRender: false,
-    initComponent: function() {
+    initComponent: function () {
 
-        this.items = [{
-            xtype: 'templates-viewpanel'
-        },{
-            xtype: 'templates-editorpanel'
-        }];
+        this.items = [
+            {
+                xtype: 'templates-viewpanel'
+            },
+            {
+                xtype: 'templates-editorpanel'
+            }
+        ];
 
         this.disable();
 
         Phlexible.templates.TemplateTabPanel.superclass.initComponent.call(this);
     },
 
-    load: function(r) {
+    load: function (r) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('templates_template'),
             params: {
@@ -26,7 +29,7 @@ Phlexible.templates.TemplateTabPanel = Ext.extend(Ext.TabPanel, {
         });
     },
 
-    onSuccess: function(response) {
+    onSuccess: function (response) {
         this.enable();
 
         var data = Ext.decode(response.responseText);

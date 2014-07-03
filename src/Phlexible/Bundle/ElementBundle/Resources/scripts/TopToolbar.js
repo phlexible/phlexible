@@ -5,7 +5,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
     strings: Phlexible.elements.Strings,
     cls: 'p-elements-main-panel',
 
-    initComponent: function() {
+    initComponent: function () {
         this.element.on({
             load: {
                 fn: this.onLoadElement,
@@ -43,7 +43,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         Phlexible.elements.TopToolbar.superclass.initComponent.call(this);
     },
 
-    populateTbar: function() {
+    populateTbar: function () {
         var langBtns = this.element.languages;
 
         var saveBtn = {
@@ -85,36 +85,43 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         if (!Phlexible.Config.get('elements.publish.comment_required')) {
             publishBtn.xtype = 'tbsplit';
             publishBtn.handler = this.onQuickPublish;
-            publishBtn.menu = [{
-                text: this.strings.publish_element,
-                iconCls: 'p-element-publish-icon',
-                handler: this.onQuickPublish,
-                scope: this
-            },{
-                text: this.strings.publish_element_with_notification,
-                iconCls: 'p-element-publish-icon',
-                handler: this.onPublishWithNotification,
-                scope: this
-            },{
-                text: this.strings.publish_element_advanced,
-                iconCls: 'p-element-publish-icon',
-                handler: this.onExtendedPublish,
-                scope: this
-            }];
+            publishBtn.menu = [
+                {
+                    text: this.strings.publish_element,
+                    iconCls: 'p-element-publish-icon',
+                    handler: this.onQuickPublish,
+                    scope: this
+                },
+                {
+                    text: this.strings.publish_element_with_notification,
+                    iconCls: 'p-element-publish-icon',
+                    handler: this.onPublishWithNotification,
+                    scope: this
+                },
+                {
+                    text: this.strings.publish_element_advanced,
+                    iconCls: 'p-element-publish-icon',
+                    handler: this.onExtendedPublish,
+                    scope: this
+                }
+            ];
 
             setOfflineBtn.xtype = 'tbsplit';
             setOfflineBtn.handler = this.onQuickSetOffline;
-            setOfflineBtn.menu = [{
-                text: this.strings.set_element_offline,
-                iconCls: 'p-element-set_offline-icon',
-                handler: this.onQuickSetOffline,
-                scope: this
-            },{
-                text: this.strings.set_element_offline_advanced,
-                iconCls: 'p-element-set_offline-icon',
-                handler: this.onExtendedSetOffline,
-                scope: this
-            }];
+            setOfflineBtn.menu = [
+                {
+                    text: this.strings.set_element_offline,
+                    iconCls: 'p-element-set_offline-icon',
+                    handler: this.onQuickSetOffline,
+                    scope: this
+                },
+                {
+                    text: this.strings.set_element_offline_advanced,
+                    iconCls: 'p-element-set_offline-icon',
+                    handler: this.onExtendedSetOffline,
+                    scope: this
+                }
+            ];
         }
 
         this.tbarIndex = new Ext.util.MixedCollection();
@@ -125,7 +132,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             items: langBtns,
             listeners: {
                 change: {
-                    fn: function(cycle, btn) {
+                    fn: function (cycle, btn) {
                         this.element.setLanguage(btn.langKey);
                     },
                     scope: this
@@ -133,12 +140,12 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             }
         });
 
-        this.element.on('setLanguage', function(element, language) {
+        this.element.on('setLanguage', function (element, language) {
             var cycle = this.items.items[this.tbarIndex.indexOfKey('lang')];
             if (cycle.activeItem.langKey == language) return;
 
             var foundItem = null;
-            cycle.menu.items.each(function(item) {
+            cycle.menu.items.each(function (item) {
                 if (item.langKey == language) {
                     foundItem = item;
                     return false;
@@ -154,7 +161,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             text: this.strings.add_element,
             iconCls: 'p-element-add-icon',
             disabled: true,
-            handler: function(){
+            handler: function () {
                 this.element.showNewElementWindow();
             },
             scope: this
@@ -165,7 +172,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             text: this.strings.edit_element,
             iconCls: 'p-element-edit-icon',
             disabled: true,
-            handler: function(btn){
+            handler: function (btn) {
                 var lockStatus = this.element.getLockStatus();
 
                 if (lockStatus == 'idle') {
@@ -187,7 +194,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             // items[10]
             text: this.strings.delete_element,
             iconCls: 'p-element-delete-icon',
-            handler: function(){
+            handler: function () {
                 Ext.MessageBox.alert('Oh, wait...', 'To be done!');
             },
             scope: this,
@@ -203,39 +210,42 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             this.tbarIndex.add('debug', {
                 text: 'Debug',
                 iconCls: 'p-element-debug-icon',
-                menu: [{
-                    text: 'Dump element',
-                    handler: function() {
-                        Phlexible.console.log(this.element);
-                        var dump = Phlexible.dumpHtml(this.element, true, ['events', 'scope', 'treeNode', 'teaserNode', 'structure']);
-                        var w = new Ext.Window({
-                            title: 'Element Debug',
-                            width: 800,
-                            height: 500,
-                            layout: 'fit',
-                            maximizable: true,
-                            items: {
-                                border: false,
+                menu: [
+                    {
+                        text: 'Dump element',
+                        handler: function () {
+                            Phlexible.console.log(this.element);
+                            var dump = Phlexible.dumpHtml(this.element, true, ['events', 'scope', 'treeNode', 'teaserNode', 'structure']);
+                            var w = new Ext.Window({
+                                title: 'Element Debug',
+                                width: 800,
+                                height: 500,
                                 layout: 'fit',
-                                bodyStyle: 'padding: 5px;',
-                                autoScroll: true,
-                                html: '<pre>' + dump + '</pre>'
-                            }
-                        });
-                        w.show();
+                                maximizable: true,
+                                items: {
+                                    border: false,
+                                    layout: 'fit',
+                                    bodyStyle: 'padding: 5px;',
+                                    autoScroll: true,
+                                    html: '<pre>' + dump + '</pre>'
+                                }
+                            });
+                            w.show();
+                        },
+                        scope: this
                     },
-                    scope: this
-                },{
-                    text: 'Link to this element',
-                    handler: function() {
-                        var link = document.location.href;
-                        link += '?&e=elements';
-                        link += '&p[id]=' + this.element.tid;
-                        link += '&p[siteroot_id]=' + this.element.siteroot_id;
-                        Ext.MessageBox.prompt('Link', 'Link to this element', null, null, true, link);
-                    },
-                    scope: this
-                }]
+                    {
+                        text: 'Link to this element',
+                        handler: function () {
+                            var link = document.location.href;
+                            link += '?&e=elements';
+                            link += '&p[id]=' + this.element.tid;
+                            link += '&p[siteroot_id]=' + this.element.siteroot_id;
+                            Ext.MessageBox.prompt('Link', 'Link to this element', null, null, true, link);
+                        },
+                        scope: this
+                    }
+                ]
             });
         }
 
@@ -243,7 +253,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('locks', {
             iconCls: 'p-element-status_idle-icon',
             hidden: true,
-            handler: function() {
+            handler: function () {
                 if (Phlexible.User.isGranted('locks')) {
                     return;
                 }
@@ -254,7 +264,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('lock', {
             text: ' ',
             hidden: true,
-            handler: function() {
+            handler: function () {
                 if (this.element.getLockStatus() !== 'locked') {
                     return;
                 }
@@ -263,7 +273,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     return;
                 }
 
-                Ext.MessageBox.confirm('Warning', String.format(this.strings.unlock_warning, Phlexible.Format.age(this.element.data.lockinfo.age)), function(btn) {
+                Ext.MessageBox.confirm('Warning', String.format(this.strings.unlock_warning, Phlexible.Format.age(this.element.data.lockinfo.age)), function (btn) {
                     if (btn != 'yes') {
                         return;
                     }
@@ -275,7 +285,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                             force: 1,
                             language: this.element.language
                         },
-                        success: function(response){
+                        success: function (response) {
                             var data = Ext.decode(response.responseText);
 
                             if (data.success) {
@@ -297,7 +307,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('pager_first', {
             iconCls: 'p-element-resultset_first-icon',
             hidden: true,
-            handler: function(btn) {
+            handler: function (btn) {
                 this.element.load(btn.tid, null, this.element.language, 1);
             },
             scope: this
@@ -305,7 +315,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('pager_prev', {
             iconCls: 'p-element-resultset_previous-icon',
             hidden: true,
-            handler: function(btn) {
+            handler: function (btn) {
                 this.element.reload({
                     id: btn.tid,
                     version: null,
@@ -317,7 +327,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('pager_reload', {
             iconCls: 'p-element-reload-icon',
             hidden: true,
-            handler: function(btn) {
+            handler: function (btn) {
                 this.element.reload({
                     lock: 1,
                     version: null
@@ -328,7 +338,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('pager_next', {
             iconCls: 'p-element-resultset_next-icon',
             hidden: true,
-            handler: function(btn) {
+            handler: function (btn) {
                 this.element.reload({
                     id: btn.tid,
                     version: null,
@@ -340,7 +350,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('pager_last', {
             iconCls: 'p-element-resultset_last-icon',
             hidden: true,
-            handler: function(btn) {
+            handler: function (btn) {
                 this.element.reload({
                     id: btn.tid,
                     version: null,
@@ -351,7 +361,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         });
     },
 
-    populateExtendedMenu: function() {
+    populateExtendedMenu: function () {
         this.extendedMenuIndex = new Ext.util.MixedCollection();
 
         if (Phlexible.tasks.Strings) {
@@ -360,7 +370,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                 iconCls: 'p-tasks-component-icon',
                 hidden: Phlexible.User.isGranted('tasks'),
                 disabled: true,
-                handler: function(){
+                handler: function () {
                     var payload = {
                         tid: this.element.tid
                         //language: this.element.language
@@ -375,7 +385,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                         component_filter: 'elements',
                         listeners: {
                             create: {
-                                fn: function() {
+                                fn: function () {
                                     this.element.reload({
                                         unlock: this.element.eid
                                     });
@@ -396,7 +406,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             // items[13]
             text: this.strings.history,
             iconCls: 'p-element-tab_history-icon',
-            handler: function() {
+            handler: function () {
                 var w = new Phlexible.elements.HistoryWindow();
                 w.show();
             },
@@ -405,7 +415,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
 
     },
 
-    updateLockInfo: function() {
+    updateLockInfo: function () {
         var targetItem1 = this.items.items[this.tbarIndex.indexOfKey('lock')];
         var targetItem2 = this.items.items[this.tbarIndex.indexOfKey('locks')];
 
@@ -428,8 +438,8 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
 
             case 'locked_permanently':
                 targetItem1.setText('<span style="font-weight: bold; color: red;">'
-                                    + String.format(this.strings.locked_by_user_permanently, this.element.data.lockinfo.username)
-                                    + '</span>');
+                    + String.format(this.strings.locked_by_user_permanently, this.element.data.lockinfo.username)
+                    + '</span>');
                 targetItem1.show();
                 targetItem2.setIconClass('p-element-status_locked-icon');
                 targetItem2.show();
@@ -443,7 +453,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         }
     },
 
-    onLoadElement: function() {
+    onLoadElement: function () {
         // add button
         if (Phlexible.User.isGranted('elements_create') && this.element.data.rights.indexOf('CREATE') !== -1) {
             this.items.items[this.tbarIndex.indexOfKey('add')].enable();
@@ -503,7 +513,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.updateLockInfo();
     },
 
-    onBeforeLoadElement: function(params) {
+    onBeforeLoadElement: function (params) {
         var langBtn = this.items.items[this.tbarIndex.indexOfKey('lang')];
         if (this.element.language != params.language) {
             items = langBtn.items;
@@ -515,7 +525,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         }
     },
 
-    onGetLock: function() {
+    onGetLock: function () {
         Phlexible.console.log('TopToolbar: GET LOCK');
 
         this.updateLockInfo();
@@ -557,7 +567,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             this.element.isAllowed('DELETE')) {
             if (!this.element.properties.is_published ||
                 (Phlexible.User.isGranted('elements_publish') &&
-                this.element.data.rights.indexOf('PUBLISH') !== -1)) {
+                    this.element.data.rights.indexOf('PUBLISH') !== -1)) {
                 this.items.items[this.tbarIndex.indexOfKey('delete')].enable();
             } else {
                 this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
@@ -573,7 +583,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         }
     },
 
-    onIsLocked: function() {
+    onIsLocked: function () {
         Phlexible.console.log('TopToolbar: IS LOCKED');
 
         this.updateLockInfo();
@@ -589,7 +599,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
     },
 
-    onRemoveLock: function() {
+    onRemoveLock: function () {
         Phlexible.console.log('TopToolbar: REMOVE LOCKED');
 
         this.updateLockInfo();
@@ -614,9 +624,9 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
     },
 
-    onQuickPublish: function() {
+    onQuickPublish: function () {
         if (Phlexible.Config.get('elements.publish.confirm_required')) {
-            Ext.MessageBox.confirm(this.strings.warning, this.strings.confirm_publish_dialog, function(btn) {
+            Ext.MessageBox.confirm(this.strings.warning, this.strings.confirm_publish_dialog, function (btn) {
                 if (btn == 'yes') {
                     this.onPublish();
                 }
@@ -626,31 +636,31 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         }
     },
 
-    onPublishWithNotification: function() {
+    onPublishWithNotification: function () {
         this.onUpdatePublish();
     },
 
-    onSave: function() {
+    onSave: function () {
         this.element.fireEvent('internalSave');
     },
 
-    onSaveMinor: function() {
+    onSaveMinor: function () {
         alert('To be implemented!');
     },
 
-    onSavePublish: function() {
+    onSavePublish: function () {
         alert('To be implemented!');
     },
 
-    onEnableSave: function() {
+    onEnableSave: function () {
         this.items.items[this.tbarIndex.indexOfKey('save')].enable();
     },
 
-    onDisableSave: function() {
+    onDisableSave: function () {
         this.items.items[this.tbarIndex.indexOfKey('save')].disable();
     },
 
-    onExtendedPublish: function() {
+    onExtendedPublish: function () {
         var windowClass;
         if (this.element.properties.teaser_id) {
             windowClass = Phlexible.elements.PublishTeaserWindow;
@@ -667,12 +677,12 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             version: this.element.version,
             listeners: {
                 submit: {
-                    fn: function(values) {
+                    fn: function (values) {
                         var comment = values.comment || false;
                         if (values.include_sub_elements) {
                             this.onPublishRecursive(comment);
                         } else {
-                          this.onPublish(comment);
+                            this.onPublish(comment);
                         }
 
                         this.element.reload();
@@ -680,7 +690,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     scope: this
                 },
                 success: {
-                    fn: function() {
+                    fn: function () {
                         if (this.element.treeNode) {
                             var iconEl = this.element.treeNode.getUI().getIconEl();
                             if (iconEl.src.match(/\/status\/[a-z]+/)) {
@@ -691,7 +701,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
 
                             if (this.element.treeNode.hasChildNodes()) {
                                 this.element.treeNode.attributes.children = false;
-                                this.element.treeNode.reload(function(node) {
+                                this.element.treeNode.reload(function (node) {
                                     var tree = this.element.treeNode.getOwnerTree();
                                     var n = tree.getNodeById(this.element.tid);
                                     if (n) {
@@ -710,7 +720,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         w.show();
     },
 
-    onPublish: function(comment) {
+    onPublish: function (comment) {
         if (this.element.fireEvent('beforePublish', this.element, comment) === false) {
             return;
         }
@@ -718,7 +728,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.element.fireEvent('internalSave', comment, true);
     },
 
-    onUpdatePublish: function(comment) {
+    onUpdatePublish: function (comment) {
         if (this.element.fireEvent('beforePublish', this.element, comment) === false) {
             return;
         }
@@ -726,7 +736,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.element.fireEvent('internalSave', comment, true, true);
     },
 
-    onPublishRecursive: function(comment) {
+    onPublishRecursive: function (comment) {
         if (this.element.fireEvent('beforePublishAdvanced', this.element, comment) === false) {
             return;
         }
@@ -739,7 +749,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                 language: this.element.language,
                 comment: comment
             },
-            success: function(response) {
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 if (!data) {
@@ -760,7 +770,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                 }
 
             },
-            failure: function(response) {
+            failure: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 if (!data) {
@@ -777,13 +787,13 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         });
     },
 
-    xonPublishRecursive: function(comment) {
+    xonPublishRecursive: function (comment) {
         Ext.MessageBox.show({
             title: this.strings.confirm_publish,
             msg: this.strings.confirm_publish_text,
             buttons: Ext.Msg.OKCANCEL,
             icon: Ext.MessageBox.QUESTION,
-            fn: function(btn) {
+            fn: function (btn) {
                 if (btn == 'ok') {
                     Ext.Ajax.request({
                         url: Phlexible.Router.generate('elements_element_publishrecursive'),
@@ -793,7 +803,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                             language: this.element.language,
                             comment: comment
                         },
-                        success: function(response) {
+                        success: function (response) {
                             var data = Ext.decode(response.responseText);
 
                             if (data.success) {
@@ -810,14 +820,13 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         });
     },
 
-    onQuickSetOffline: function() {
+    onQuickSetOffline: function () {
         this.onSetOffline();
     },
 
-    onExtendedSetOffline: function() {
+    onExtendedSetOffline: function () {
         var windowClass;
-        if (this.element.properties.teaser_id)
-        {
+        if (this.element.properties.teaser_id) {
             windowClass = Phlexible.elements.SetTeaserOfflineWindow;
         } else {
             windowClass = Phlexible.elements.SetTreeNodeOfflineWindow;
@@ -827,7 +836,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             comment_required: Phlexible.Config.get('elements.publish.comment_required'),
             listeners: {
                 submit: {
-                    fn: function(values){
+                    fn: function (values) {
                         var comment = values.comment || false;
                         if (values.include_sub_elements) {
                             this.onSetOfflineRecursive(comment);
@@ -842,7 +851,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         w.show();
     },
 
-    onSetOffline: function(comment) {
+    onSetOffline: function (comment) {
         if (this.element.fireEvent('beforeSetOffline', this.element, comment) === false) {
             return;
         }
@@ -855,7 +864,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                 language: this.element.language,
                 comment: comment
             },
-            success: function(response) {
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 if (!data) {
@@ -875,7 +884,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
 
                 this.element.reload();
             },
-            failure: function(response) {
+            failure: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 if (!data) {
@@ -892,7 +901,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         });
     },
 
-    onSetOfflineRecursive: function(comment) {
+    onSetOfflineRecursive: function (comment) {
         if (this.element.fireEvent('beforeSetOfflineAdvanced', this.element, comment) === false) {
             return;
         }
@@ -905,7 +914,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                 language: this.element.language,
                 comment: comment
             },
-            success: function(response) {
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 if (!data) {
@@ -925,7 +934,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
 
                 this.element.reload();
             },
-            failure: function(response) {
+            failure: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 if (!data) {
@@ -942,13 +951,13 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         });
     },
 
-    xonSetOfflineRecursive: function(comment) {
+    xonSetOfflineRecursive: function (comment) {
         Ext.MessageBox.show({
             title: this.strings.confirm_set_offline,
             msg: this.strings.confirm_set_offline_text,
             buttons: Ext.Msg.OKCANCEL,
             icon: Ext.MessageBox.QUESTION,
-            fn: function(btn){
+            fn: function (btn) {
                 if (btn == 'ok') {
                     Ext.Ajax.request({
                         url: Phlexible.Router.generate('elements_element_setofflinerecursive'),
@@ -958,7 +967,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                             language: this.element.language,
                             comment: comment
                         },
-                        success: function(response) {
+                        success: function (response) {
                             var data = Ext.decode(response.responseText);
 
                             if (data.success) {

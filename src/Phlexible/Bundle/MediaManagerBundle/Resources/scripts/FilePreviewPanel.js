@@ -8,7 +8,7 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
     file_version: null,
 
     // private
-    initComponent: function() {
+    initComponent: function () {
         if (this.file_id && this.file_version && this.file_name && this.document_type_key && this.cache) {
             this.html = this.getHtml(this.file_id, this.file_version, this.file_name, this.document_type_key, this.asset_type, this.cache);
         }
@@ -19,7 +19,7 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
         Phlexible.mediamanager.FilePreviewPanel.superclass.initComponent.call(this);
     },
 
-    loadRecord: function(r) {
+    loadRecord: function (r) {
         var file_id = r.get('id');
         var file_name = r.get('name');
         var file_version = r.get('version');
@@ -30,7 +30,7 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
         this.load(file_id, file_version, file_name, document_type_key, asset_type, cache);
     },
 
-    load: function(file_id, file_version, file_name, document_type_key, asset_type, cache) {
+    load: function (file_id, file_version, file_name, document_type_key, asset_type, cache) {
         if (this.file_id != file_id || this.file_version != file_version) {
             this.file_id = file_id;
             this.file_version = file_version;
@@ -39,8 +39,8 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    getHtml: function(file_id, file_version, file_name, document_type_key, asset_type, cache) {
-        switch(asset_type.toUpperCase()) {
+    getHtml: function (file_id, file_version, file_name, document_type_key, asset_type, cache) {
+        switch (asset_type.toUpperCase()) {
             case Phlexible.mediamanager.AUDIO:
                 if (cache._mm_preview_audio.substr(0, 2) == 'ok') {
                     return this.createAudioPlayer(256, 256, file_id, file_version, file_name, cache);
@@ -70,7 +70,7 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    getLink: function(file_id, template_key, file_version, cache) {
+    getLink: function (file_id, template_key, file_version, cache) {
         var parameters = {
             file_id: file_id,
             template_key: template_key
@@ -87,31 +87,35 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
         return Phlexible.Router.generate('mediamanager_media', parameters);
     },
 
-    empty: function() {
+    empty: function () {
         this.body.update('');
         this.body.insertFirst(this.createNoPreview());
     },
 
-    createNoPreview: function() {
+    createNoPreview: function () {
         return {
             tag: 'table',
             border: 0,
             width: '100%',
             height: '100%',
-            children: [{
-                tag: 'tr',
-                children: [{
-                    tag: 'td',
-                    align: 'center',
-                    valign: 'middle',
-                    html: this.strings.no_preview_available
-                }]
-            }]
+            children: [
+                {
+                    tag: 'tr',
+                    children: [
+                        {
+                            tag: 'td',
+                            align: 'center',
+                            valign: 'middle',
+                            html: this.strings.no_preview_available
+                        }
+                    ]
+                }
+            ]
         };
         return '<table border="0" width="100%" height="100%"><tr><td align="center" valign="middle">' + this.strings.no_preview_available + '</td></tr></table>';
     },
 
-    createFlashPlayer: function(width, height, file_id, file_version, file_name, cache) {
+    createFlashPlayer: function (width, height, file_id, file_version, file_name, cache) {
         var link = this.getLink(file_id, file_version) + '/' + file_name + '.swf';
 
         return {
@@ -127,7 +131,7 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
         return '<embed src="' + link + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
     },
 
-    createAudioPlayer: function(width, height, file_id, file_version, file_name, cache) {
+    createAudioPlayer: function (width, height, file_id, file_version, file_name, cache) {
         var image = this.getLink(file_id, '_mm_preview_player', file_version, cache);
         var audio = this.getLink(file_id, '_mm_preview_audio', file_version, false) + '/name/' + file_name + '.mp3';
         //var link = '&file=' + audio + '&image=' + image + '&height=' + height + '&width=' + width + '';
@@ -136,16 +140,18 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
             tag: 'audio',
             controls: 'controls',
             poster: image,
-            children: [{
-                tag: 'source',
-                src: audio,
-                type: 'audio/mpeg'
-            }]
+            children: [
+                {
+                    tag: 'source',
+                    src: audio,
+                    type: 'audio/mpeg'
+                }
+            ]
         };
         return '<embed src="' + Phlexible.component('/mediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
     },
 
-    createVideoPlayer: function(width, height, file_id, file_version, file_name, cache) {
+    createVideoPlayer: function (width, height, file_id, file_version, file_name, cache) {
         var image = this.getLink(file_id, '_mm_preview_player', file_version, cache);
         var video_mp4 = this.getLink(file_id, '_mm_preview_video_mp4', file_version, false) + '/name/' + file_name + '.mp4';
         var video_ogg = this.getLink(file_id, '_mm_preview_video_ogg', file_version, false) + '/name/' + file_name + '.ogv';
@@ -157,20 +163,23 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
             poster: image,
             width: width,
             height: height,
-            children: [{
-                tag: 'source',
-                src: video_mp4,
-                type: 'video/mp4'
-            },{
-                tag: 'source',
-                src: video_ogg,
-                type: 'video/ogg'
-            }]
+            children: [
+                {
+                    tag: 'source',
+                    src: video_mp4,
+                    type: 'video/mp4'
+                },
+                {
+                    tag: 'source',
+                    src: video_ogg,
+                    type: 'video/ogg'
+                }
+            ]
         };
         return '<embed src="' + Phlexible.component('/mediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
     },
 
-    createImage: function(width, height, file_id, file_version, file_name, cache) {
+    createImage: function (width, height, file_id, file_version, file_name, cache) {
         var link = this.getLink(file_id, '_mm_extra', file_version, cache);
 
         return {
@@ -184,7 +193,7 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
         return '<img style="border: 1px solid lightgray;" alt="' + file_name + '" src="' + link + '" width="' + width + '" height="' + height + '" />';
     },
 
-    createText: function(width, height, file_id, file_name) {
+    createText: function (width, height, file_id, file_name) {
 
     }
 });

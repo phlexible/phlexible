@@ -35,10 +35,8 @@ class ContentExtractorResolver implements ContentExtractorResolverInterface
      */
     public function resolve(FileInterface $file)
     {
-        foreach ($this->extractors as $reader)
-        {
-            if ($reader->isAvailable() && $reader->supports($file))
-            {
+        foreach ($this->extractors as $reader) {
+            if ($reader->isAvailable() && $reader->supports($file)) {
                 return $reader;
             }
         }

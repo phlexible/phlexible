@@ -22,6 +22,6 @@ class CatchIdentifier extends Identifier
      */
     public function __construct($id)
     {
-        parent::__construct("teasers_rotation_position_".$id);
+        parent::__construct("teasers_rotation_position_" . $id);
     }
 }

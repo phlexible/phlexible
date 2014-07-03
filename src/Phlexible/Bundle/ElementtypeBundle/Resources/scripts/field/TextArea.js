@@ -1,50 +1,50 @@
-        /*
-        if (this.growHeight) {
-            this.setHeight(1);
-            this.setHeight(this.el.dom.scrollHeight + 25);
+/*
+ if (this.growHeight) {
+ this.setHeight(1);
+ this.setHeight(this.el.dom.scrollHeight + 25);
 
-            this.on('keyup', function(c) {
-                c.setHeight(1);
-                c.setHeight(c.el.dom.scrollHeight + 25);
-                //c.el.setHeight(1);
-                //c.el.setHeight(c.el.dom.scrollHeight + 25);
-            }, this);
-        }
-        */
+ this.on('keyup', function(c) {
+ c.setHeight(1);
+ c.setHeight(c.el.dom.scrollHeight + 25);
+ //c.el.setHeight(1);
+ //c.el.setHeight(c.el.dom.scrollHeight + 25);
+ }, this);
+ }
+ */
 
-Phlexible.fields.Registry.addFactory('textarea', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('textarea', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.dsId);
+    element.prototypes.incCount(item.dsId);
 
-	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
 
-	Ext.apply(config, {
-		xtype: 'textarea',
-		minLength: (item.validation.min_length || 0),
-		maxLength: (item.validation.max_length || Number.MAX_VALUE),
-		vtype: (item.validation.validator || null),
-		regex: (item.validation.regexp ? new RegExp(item.validation.regexp, (item.validation.ignore ? 'i' : '') + (item.validation.multiline ? 'm' : '')) : null),
+    Ext.apply(config, {
+        xtype: 'textarea',
+        minLength: (item.validation.min_length || 0),
+        maxLength: (item.validation.max_length || Number.MAX_VALUE),
+        vtype: (item.validation.validator || null),
+        regex: (item.validation.regexp ? new RegExp(item.validation.regexp, (item.validation.ignore ? 'i' : '') + (item.validation.multiline ? 'm' : '')) : null),
 
-		supportsPrefix: true,
-		supportsSuffix: true,
-		supportsDiff: true,
-		supportsInlineDiff: true,
-		supportsUnlink: true,
-		supportsRepeatable: true
-	});
+        supportsPrefix: true,
+        supportsSuffix: true,
+        supportsDiff: true,
+        supportsInlineDiff: true,
+        supportsUnlink: true,
+        supportsRepeatable: true
+    });
 
-	var height = parseInt(item.configuration.height, 10);
-	if (height) {
-		config.height = height;
-	}
-	else {
-		config.grow = true;
-	}
+    var height = parseInt(item.configuration.height, 10);
+    if (height) {
+        config.height = height;
+    }
+    else {
+        config.grow = true;
+    }
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('textarea', {
@@ -54,11 +54,11 @@ Phlexible.fields.FieldTypes.addField('textarea', {
     },
     iconCls: 'p-elementtype-field_textarea-icon',
     allowedIn: [
-		'tab',
-		'accordion',
-		'group',
-		'referenceroot'
-	],
+        'tab',
+        'accordion',
+        'group',
+        'referenceroot'
+    ],
     defaultValueField: 'default_value_textarea',
     config: {
         labels: {

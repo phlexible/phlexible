@@ -55,10 +55,10 @@ class Makeweb_Elements_Event_BeforeCreateNodeInstance extends Brainbits_Event_No
      */
     public function __construct(Makeweb_Elements_Tree $tree, $targetId, $instanceId, $prevId)
     {
-        $this->_tree       = $tree;
-        $this->_targetId   = $targetId;
+        $this->_tree = $tree;
+        $this->_targetId = $targetId;
         $this->_instanceId = $instanceId;
-        $this->_prevId     = $prevId;
+        $this->_prevId = $prevId;
     }
 
     /**

@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\MessageBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface MessageEvents
+class MessageEvents
 {
     /**
      * Message Event

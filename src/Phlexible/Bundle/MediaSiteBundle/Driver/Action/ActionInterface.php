@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
 
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
-
 /**
  * Action interface
  *

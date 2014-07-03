@@ -16,7 +16,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Usage;
 class FolderUsage implements UsageInterface
 {
     const TYPE_ELEMENT = 'element';
-    const TYPE_LDAP    = 'ldap';
+    const TYPE_LDAP = 'ldap';
 
     /**
      * @var string

@@ -42,7 +42,7 @@ abstract class ElementHasher
             ->where('eid = ?', $eid)
             ->where('version = ?', $version)
             ->limit(1);
-#echo $selectEid.PHP_EOL;
+        //echo $selectEid.PHP_EOL;
 
         $elementType = $this->_db->fetchOne($selectElementType);
 
@@ -53,7 +53,7 @@ abstract class ElementHasher
             ->where('version = ?', $version)
             ->where('value IS NOT NULL')
             ->where('value != ""');
-#echo $selectMeta.PHP_EOL;
+        //echo $selectMeta.PHP_EOL;
 
         $meta = $this->_db->fetchCol($selectMeta);
         sort($meta);
@@ -65,7 +65,7 @@ abstract class ElementHasher
             ->where('version = ?', $version)
             ->where('value IS NOT NULL')
             ->where('value != ""');
-#echo $selectMeta.PHP_EOL;
+        //echo $selectMeta.PHP_EOL;
 
         $context = $this->_db->fetchCol($selectContext);
         sort($context);
@@ -77,7 +77,7 @@ abstract class ElementHasher
             ->where('version = ?', $version)
             ->where('content IS NOT NULL')
             ->where('content != ""');
-#echo $selectContent.PHP_EOL;
+        //echo $selectContent.PHP_EOL;
 
         $content = $this->_db->fetchCol($selectContent);
         sort($content);

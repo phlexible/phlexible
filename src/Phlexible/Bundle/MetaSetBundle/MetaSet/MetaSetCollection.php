@@ -29,6 +29,7 @@ class MetaSetCollection
      * Add meta set
      *
      * @param MetaSetInterface $metaSet
+     *
      * @return $this
      */
     public function add(MetaSetInterface $metaSet)
@@ -41,6 +42,7 @@ class MetaSetCollection
 
     /**
      * @param string $id
+     *
      * @return MetaSetInterface
      */
     public function get($id)
@@ -54,6 +56,7 @@ class MetaSetCollection
 
     /**
      * @param string $title
+     *
      * @return MetaSetInterface
      */
     public function getByTitle($title)

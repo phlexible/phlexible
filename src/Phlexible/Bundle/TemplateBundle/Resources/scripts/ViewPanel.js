@@ -4,17 +4,17 @@ Phlexible.templates.ViewPanel = Ext.extend(Ext.Panel, {
     layout: 'fit',
     autoScroll: true,
 
-    loadSrc: function(templateID, src) {
+    loadSrc: function (templateID, src) {
         this.templateID = templateID;
 
-        if(this.body.first()) {
+        if (this.body.first()) {
             this.body.first().remove();
         }
 
         this.pre = this.body.insertFirst({
-             tag: 'pre',
-             cls: 'brush: dwoo',
-             html: src.replace('<', '&lt;')
+            tag: 'pre',
+            cls: 'brush: dwoo',
+            html: src.replace('<', '&lt;')
         });
 
         SyntaxHighlighter.highlight({}, this.pre.dom);

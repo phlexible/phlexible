@@ -3,7 +3,7 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.siteroots.Strings,
     autoExpandColumn: 'title',
 
-    initComponent: function(){
+    initComponent: function () {
 
         this.addEvents(
             /**
@@ -21,29 +21,33 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
         );
 
         this.contextMenu = new Ext.menu.Menu({
-            items: [{
-                text: this.strings.remove,
-                iconCls: 'p-siteroot-siteroot_delete-icon',
-                handler: function(item) {
-                    var r = item.parentMenu.record;
+            items: [
+                {
+                    text: this.strings.remove,
+                    iconCls: 'p-siteroot-siteroot_delete-icon',
+                    handler: function (item) {
+                        var r = item.parentMenu.record;
 
-                    Ext.MessageBox.confirm(
-                        this.strings.remove,
-                        this.strings.sure,
-                        this.onDeleteSiteroot.createDelegate(this, [r], true)
-                    );
-                },
-                scope: this
-            }]
+                        Ext.MessageBox.confirm(
+                            this.strings.remove,
+                            this.strings.sure,
+                            this.onDeleteSiteroot.createDelegate(this, [r], true)
+                        );
+                    },
+                    scope: this
+                }
+            ]
         });
 
 
-        this.tbar = [{
-            text: this.strings.add_siteroot,
-            iconCls: 'p-siteroot-siteroot_add-icon',
-            handler: this.onAddSiteroot,
-            scope: this
-        }];
+        this.tbar = [
+            {
+                text: this.strings.add_siteroot,
+                iconCls: 'p-siteroot-siteroot_add-icon',
+                handler: this.onAddSiteroot,
+                scope: this
+            }
+        ];
 
         this.store = new Ext.data.JsonStore({
             autoLoad: true,
@@ -56,30 +60,33 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
                 field: 'title',
                 direction: 'ASC'
             },
-            listeners:{
-                load:{
+            listeners: {
+                load: {
                     fn: this.onLoadStore,
-                    scope:this
+                    scope: this
                 }
             }
         });
 
-        this.columns = [{
-            id:'id',
-            header: this.strings.id,
-            hidden: true,
-            dataIndex: 'id'
-        }, {
-            id:'title',
-            header: this.strings.siteroots,
-            dataIndex: 'title',
-            sortable: true
-        }];
+        this.columns = [
+            {
+                id: 'id',
+                header: this.strings.id,
+                hidden: true,
+                dataIndex: 'id'
+            },
+            {
+                id: 'title',
+                header: this.strings.siteroots,
+                dataIndex: 'title',
+                sortable: true
+            }
+        ];
 
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true,
             listeners: {
-                'rowselect' : {
+                'rowselect': {
                     fn: this.onSelectSiteroot,
                     scope: this
                 }
@@ -107,7 +114,7 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
      * @param {Number} rowIndex
      * @param {Object} event
      */
-    onRowContextMenu: function(grid, rowIndex, event) {
+    onRowContextMenu: function (grid, rowIndex, event) {
         event.stopEvent();
 
         var r = grid.store.getAt(rowIndex);
@@ -117,7 +124,7 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
         this.contextMenu.showAt([coords[0], coords[1]]);
 
         var sm = grid.getSelectionModel();
-        if(!sm.hasSelection() || (sm.getSelected().id != r.id)) {
+        if (!sm.hasSelection() || (sm.getSelected().id != r.id)) {
             sm.selectRow(rowIndex);
         }
     },
@@ -128,11 +135,11 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
      *
      * @param {Object} store
      */
-    onLoadStore: function(store){
+    onLoadStore: function (store) {
 
         var sm = this.getSelectionModel();
 
-        if((store.getCount() > 0)) {
+        if ((store.getCount() > 0)) {
             if (!this.selected) {
                 sm.selectFirstRow();
             } else {
@@ -150,15 +157,15 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
      * @param {Number} rowIndex
      * @param {Object} record
      */
-    onSelectSiteroot: function(selModel, rowIndex, record) {
+    onSelectSiteroot: function (selModel, rowIndex, record) {
         this.fireEvent('siterootChange', record.get('id'), record.get('title'));
     },
 
     /**
      * Action if site
      */
-    onAddSiteroot: function() {
-        Ext.MessageBox.prompt(this.strings.new_siteroot, this.strings.siteroot_title, function(btn, text) {
+    onAddSiteroot: function () {
+        Ext.MessageBox.prompt(this.strings.new_siteroot, this.strings.siteroot_title, function (btn, text) {
             if (btn !== 'ok') {
                 return;
             }
@@ -168,18 +175,17 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
                 params: {
                     title: text
                 },
-                success: function(response){
+                success: function (response) {
                     var data = Ext.decode(response.responseText);
-                    if(data.success)
-                    {
+                    if (data.success) {
                         this.fireEvent('siterootDataChange');
                     }
-                    else{
+                    else {
                         Ext.Msg.alert(this.strings.failure, data.msg);
                     }
                 },
-                scope:this
-             });
+                scope: this
+            });
         }, this);
     },
 
@@ -190,7 +196,7 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
      * @param {String} text
      * @param {Object} r
      */
-    onDeleteSiteroot: function(btn, text, x, r) {
+    onDeleteSiteroot: function (btn, text, x, r) {
 
         if (btn == 'yes') {
             Ext.Ajax.request({
@@ -198,7 +204,7 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
                 params: {
                     id: r.id
                 },
-                success: function(response){
+                success: function (response) {
                     var data = Ext.decode(response.responseText);
                     if (data.success) {
                         this.fireEvent('siterootDataChange');
@@ -217,7 +223,7 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
      *  - new siteroot added
      *  - title of siteroot changed
      */
-    onSiterootDataChange: function() {
+    onSiterootDataChange: function () {
         this.store.reload();
     }
 

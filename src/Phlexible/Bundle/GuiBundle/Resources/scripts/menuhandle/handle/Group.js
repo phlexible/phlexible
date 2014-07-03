@@ -1,9 +1,9 @@
 Phlexible.gui.menuhandle.handle.Group = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
-    createConfig: function(data) {
+    createConfig: function (data) {
         var btns = [];
 
         if (data.menu && Ext.isArray(data.menu)) {
-            Ext.each(data.menu, function(menuItem) {
+            Ext.each(data.menu, function (menuItem) {
                 var handlerCls = Phlexible.evalClassString(menuItem.xtype),
                     handler;
 

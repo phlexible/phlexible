@@ -40,12 +40,13 @@ class ViewEvent extends Event
      * @param AbstractView             $view
      * @param SecurityContextInterface $securityContext
      */
-    public function __construct(Request $request,
-                                AbstractView $view,
-                                SecurityContextInterface $securityContext)
+    public function __construct(
+        Request $request,
+        AbstractView $view,
+        SecurityContextInterface $securityContext)
     {
-        $this->request         = $request;
-        $this->view            = $view;
+        $this->request = $request;
+        $this->view = $view;
         $this->securityContext = $securityContext;
     }
 

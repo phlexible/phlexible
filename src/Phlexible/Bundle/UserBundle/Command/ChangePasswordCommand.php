@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\UserBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Phlexible\Bundle\UserBundle\Entity\User;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,12 +27,13 @@ class ChangePasswordCommand extends ContainerAwareCommand
     {
         $this
             ->setName('user:change-password')
-            ->setDefinition(array(
-                new InputArgument('username', InputArgument::REQUIRED, 'Username'),
-                new InputArgument('password', InputArgument::REQUIRED, 'Password'),
-            ))
-            ->setDescription('Change password for user.')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('username', InputArgument::REQUIRED, 'Username'),
+                    new InputArgument('password', InputArgument::REQUIRED, 'Password'),
+                )
+            )
+            ->setDescription('Change password for user.');
     }
 
     /**
@@ -41,15 +41,14 @@ class ChangePasswordCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $username  = $input->getArgument('username');
+        $username = $input->getArgument('username');
         $password = $input->getArgument('password');
 
         $userRepository = $this->getContainer()->get('phlexible_user.user_manager');
 
         $user = $userRepository->findByUsername($username);
         $user
-            ->setPlainPassword($password)
-        ;
+            ->setPlainPassword($password);
         $userRepository->updateUser($user);
 
         $output->writeln("Changed password for user $username.");

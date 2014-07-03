@@ -15,18 +15,20 @@ Phlexible.mediamanager.RenameFolderWindow = Ext.extend(Phlexible.gui.util.Dialog
 
     labelWidth: 70,
 
-    formItems: [{
-        fieldLabel: Phlexible.mediamanager.Strings.name,
-        name: 'folder_name',
-        msgTarget: 'under',
-        anchor: '-70'
-    }],
+    formItems: [
+        {
+            fieldLabel: Phlexible.mediamanager.Strings.name,
+            name: 'folder_name',
+            msgTarget: 'under',
+            anchor: '-70'
+        }
+    ],
 
     /**
      * Return the Submit URL
      * @return string
      */
-    getSubmitUrl: function() {
+    getSubmitUrl: function () {
         return Phlexible.Router.generate('mediamanager_folder_rename');
     }
 });

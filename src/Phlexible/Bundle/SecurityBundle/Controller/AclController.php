@@ -54,7 +54,8 @@ class AclController extends Controller
             );
 
             if (in_array($role, array(Acl::ROLE_SUPERADMIN, Acl::ROLE_DEVELOPER, Acl::ROLE_ANONYMOUS))
-                    && !$this->get('security.context')->isGranted(Acl::RESOURCE_DEBUG)) {
+                && !$this->get('security.context')->isGranted(Acl::RESOURCE_DEBUG)
+            ) {
                 continue;
             }
 
@@ -155,8 +156,7 @@ class AclController extends Controller
             ->setCreateUserId($this->getUser()->getId())
             ->setCreatedAt(new \DateTime())
             ->setModifyUserId($this->getUser()->getId())
-            ->setModifiedAt(new \DateTime())
-        ;
+            ->setModifiedAt(new \DateTime());
         $em->persist($role);
 
         $resources = null;
@@ -175,8 +175,7 @@ class AclController extends Controller
                 $resource
                     ->setRole($role)
                     ->setResource($resource)
-                    ->setOp('allow');
-                ;
+                    ->setOp('allow');;
                 $em->persist($resource);
             }
         }
@@ -316,9 +315,9 @@ class AclController extends Controller
         }
 
         $body = 'Changes:' . PHP_EOL
-              . (count($added) ? '+ ' . implode(PHP_EOL . '+ ', $added) . PHP_EOL : '')
-              . (count($added) ? '- ' . implode(PHP_EOL . '- ', $removed) . PHP_EOL : '')
-              . '  ' . implode(PHP_EOL . '  ', $same);
+            . (count($added) ? '+ ' . implode(PHP_EOL . '+ ', $added) . PHP_EOL : '')
+            . (count($added) ? '- ' . implode(PHP_EOL . '- ', $removed) . PHP_EOL : '')
+            . '  ' . implode(PHP_EOL . '  ', $same);
 
         foreach ($added as $resourceName) {
             if (!$acl->has($resourceName)) {

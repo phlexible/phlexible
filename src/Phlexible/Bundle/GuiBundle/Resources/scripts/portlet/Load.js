@@ -10,7 +10,7 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
     COLOR5: '#ea8f00',
     COLOR15: '#b1441e',
 
-    initComponent: function() {
+    initComponent: function () {
 //        if (Phlexible.StartMessage) {
 //            Phlexible.StartMessage.on('task', this.processMessage, this);
 //        }
@@ -45,31 +45,34 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
             data: [data]
         });
 
-        this.items = [{
-            xtype: 'box',
-            hidden: true,
-            autoEl: {
-                tag: !Ext.isIE ? 'canvas' : 'div',
-                style: 'border: 1px solid black;',
-                id: 'canvastest',
-                height: 100
-            },
-            listeners: {
-                render: {
-                    fn: function(c){
-                        //console.log('RENDER');
-                        //console.log(this.getSize());
-                        //console.log(c);
-                        //c.setWidth(this.getSize().width - 20);
-                    },
-                    scope: this
+        this.items = [
+            {
+                xtype: 'box',
+                hidden: true,
+                autoEl: {
+                    tag: !Ext.isIE ? 'canvas' : 'div',
+                    style: 'border: 1px solid black;',
+                    id: 'canvastest',
+                    height: 100
+                },
+                listeners: {
+                    render: {
+                        fn: function (c) {
+                            //console.log('RENDER');
+                            //console.log(this.getSize());
+                            //console.log(c);
+                            //c.setWidth(this.getSize().width - 20);
+                        },
+                        scope: this
+                    }
                 }
+            },
+            {
+                html: Phlexible.gui.Strings.waiting_for_data
             }
-        },{
-            html: Phlexible.gui.Strings.waiting_for_data
-        }];
+        ];
 
-        this.on('resize', function(c){
+        this.on('resize', function (c) {
             if (this.getComponent(0).rendered && !Ext.isIE) {
                 this.updateCanvas();
             }
@@ -78,7 +81,7 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
         Phlexible.gui.portlet.Load.superclass.initComponent.call(this);
     },
 
-    updateData: function(data){
+    updateData: function (data) {
         var r = new Ext.data.Record({l1: data[0], l5: data[1], l15: data[2]});
         this.store.add(r);
 
@@ -88,7 +91,7 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
         this.updateTable(r);
     },
 
-    updateTable: function(r) {
+    updateTable: function (r) {
         if (!r) {
             return;
         }
@@ -96,10 +99,10 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
         this.tpl.overwrite(this.getComponent(1).el, r.data);
     },
 
-    updateCanvas: function() {
+    updateCanvas: function () {
         var canvas = this.getComponent(0).el.dom;
 
-        if (canvas.getContext){
+        if (canvas.getContext) {
             this.getComponent(0).show();
             this.getComponent(0).el.dom.setAttribute('width', this.getSize().width - 20);
 
@@ -109,7 +112,7 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
             var length = range.length;
 
             var max = 0, drawMax = 0;
-            for (var i=0; i < length; i++) {
+            for (var i = 0; i < length; i++) {
                 if (range[i].data.l1 > max) max = range[i].data.l1;
                 if (range[i].data.l5 > max) max = range[i].data.l5;
                 if (range[i].data.l15 > max) max = range[i].data.l15;
@@ -130,15 +133,15 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
             var ctx = canvas.getContext('2d');
             var ri, h, y;
             var startX = 30;
-            var endX   = width;
+            var endX = width;
             var startY = 20;
-            var endY   = height - 10;
+            var endY = height - 10;
 
             if (this.store.getCount() >= steps) {
                 this.store.remove(this.store.getAt(0));
             }
 
-            ctx.clearRect(0,0,width,height);
+            ctx.clearRect(0, 0, width, height);
 
             // gradient background
             var lingrad = ctx.createLinearGradient(0, 0, 0, height);
@@ -156,7 +159,7 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
             ctx.lineWidth = 1;
 //            console.log('gutter: ' + (height / mod));
             var gutterMod = drawMax / 5;
-            for (var i = drawMax - gutterMod; i > gutterMod / 2; i-= gutterMod) {
+            for (var i = drawMax - gutterMod; i > gutterMod / 2; i -= gutterMod) {
                 y = i * mod;
 
                 ctx.fillStyle = "#bbb";
@@ -169,22 +172,22 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
             }
 
             /*
-            for (var i = 0; i < length; i++) {
-                ri = range[i];
+             for (var i = 0; i < length; i++) {
+             ri = range[i];
 
-                h = parseInt(ri.data.l1 * mod, 10);
-                ctx.fillStyle = "red";
-                ctx.fillRect(i * 20 + 0, height - h, 5, h);
+             h = parseInt(ri.data.l1 * mod, 10);
+             ctx.fillStyle = "red";
+             ctx.fillRect(i * 20 + 0, height - h, 5, h);
 
-                h = parseInt(ri.data.l5 * mod, 10);
-                ctx.fillStyle = "orange";
-                ctx.fillRect(i * 20 + 5, height - h, 5, h);
+             h = parseInt(ri.data.l5 * mod, 10);
+             ctx.fillStyle = "orange";
+             ctx.fillRect(i * 20 + 5, height - h, 5, h);
 
-                h = parseInt(ri.data.l15 * mod, 10);
-                ctx.fillStyle = "yellow";
-                ctx.fillRect(i * 20 + 10, height - h, 5, h);
-            }
-            */
+             h = parseInt(ri.data.l15 * mod, 10);
+             ctx.fillStyle = "yellow";
+             ctx.fillRect(i * 20 + 10, height - h, 5, h);
+             }
+             */
 
             if (length > 1) {
                 h = parseInt(range[0].data.l1 * mod, 10);

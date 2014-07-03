@@ -7,17 +7,17 @@
  * Creates a new TextField
  * @param {Object} config Configuration options
  */
-Ext.form.FlashFileField = Ext.extend(Ext.form.FileField,  {
+Ext.form.FlashFileField = Ext.extend(Ext.form.FileField, {
     addIconCls: 'p-mediamanager-flash_add-icon',
     removeIconCls: 'p-mediamanager-flash_delete-icon',
 
     emptyAddText: Phlexible.mediamanager.Strings.click_to_add_flash,
 
-	getPlaceholder: function() {
-		return Phlexible.component('/mediamanagerbundle/images/form-file-flash.gif');
-	},
+    getPlaceholder: function () {
+        return Phlexible.component('/mediamanagerbundle/images/form-file-flash.gif');
+    },
 
-    onAdd: function() {
+    onAdd: function () {
         if (this.disabled) return;
 
         var w = new Phlexible.mediamanager.MediamanagerWindow({
@@ -41,19 +41,19 @@ Ext.form.FlashFileField = Ext.extend(Ext.form.FileField,  {
         w.show();
     },
 
-    onFileSelect: function(w, file_id, file_version, file_name, folder_id) {
+    onFileSelect: function (w, file_id, file_version, file_name, folder_id) {
         this.setFile(file_id, file_version, file_name, folder_id);
 
         w.close();
     },
 
     // private
-    xonRender: function(ct, position){
+    xonRender: function (ct, position) {
         Ext.form.Field.superclass.onRender.call(this, ct, position);
-        if(!this.el){
+        if (!this.el) {
             this.el = ct.createChild({
-                tag: "div",
-                cls: 'x-form-field x-form-empty-field p-form-file p-form-file-flash'
+                    tag: "div",
+                    cls: 'x-form-field x-form-empty-field p-form-file p-form-file-flash'
                 }, position
             );
             this.hiddenEl = this.el.createChild({
@@ -145,7 +145,7 @@ Ext.form.FlashFileField = Ext.extend(Ext.form.FileField,  {
                 html: this.fileTitle || ''
             });
         }
-        if(this.tabIndex !== undefined){
+        if (this.tabIndex !== undefined) {
             this.el.dom.setAttribute('tabIndex', this.tabIndex);
         }
 

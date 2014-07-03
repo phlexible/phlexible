@@ -11,13 +11,13 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
         //activeOnTop: true
     },
 
-    initComponent: function() {
+    initComponent: function () {
         this.element.on({
             load: this.onLoadElement,
             getlock: this.onGetLock,
             islocked: this.onIsLocked,
             removelock: this.onRemoveLock,
-			scope: this
+            scope: this
         });
 
         this.populateItems();
@@ -25,11 +25,13 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
         Phlexible.elements.ElementAccordion.superclass.initComponent.call(this);
     },
 
-    populateItems: function() {
-        this.items = [{
-            xtype: 'elements-dataaccordion',
-            collapsed: true
-        }];
+    populateItems: function () {
+        this.items = [
+            {
+                xtype: 'elements-dataaccordion',
+                collapsed: true
+            }
+        ];
 
         if (Phlexible.User.isGranted('elements_accordion_meta')) {
             this.items.push({
@@ -43,14 +45,14 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
                 xtype: 'elements-allowedchildrenaccordion',
                 collapsed: true,
                 listeners: {
-                    rowdblclick: function(grid, index) {
-						if (this.element.data.rights.indexOf('CREATE') === -1) return;
+                    rowdblclick: function (grid, index) {
+                        if (this.element.data.rights.indexOf('CREATE') === -1) return;
 
-						var r = grid.store.getAt(index);
-						var et_id = r.id;
-						this.element.showNewElementWindow(false, et_id);
-					},
-					scope: this
+                        var r = grid.store.getAt(index);
+                        var et_id = r.id;
+                        this.element.showNewElementWindow(false, et_id);
+                    },
+                    scope: this
                 }
             });
         }
@@ -60,12 +62,12 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
                 xtype: 'elements-versionsaccordion',
                 collapsed: true,
                 listeners: {
-                    loadVersion: function(version) {
-						this.element.reload({
-							version: version
-						});
-					},
-					scope: this
+                    loadVersion: function (version) {
+                        this.element.reload({
+                            version: version
+                        });
+                    },
+                    scope: this
                 }
             });
         }
@@ -75,17 +77,17 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
                 xtype: 'elements-instancesaccordion',
                 collapsed: true,
                 listeners: {
-                    loadElement: function(id) {
-						this.element.reload({
-							id: id
-						});
-					},
-                    loadTeaser: function(id) {
-						this.element.reload({
-							teaser_id: id
-						});
-					},
-					scope: this
+                    loadElement: function (id) {
+                        this.element.reload({
+                            id: id
+                        });
+                    },
+                    loadTeaser: function (id) {
+                        this.element.reload({
+                            teaser_id: id
+                        });
+                    },
+                    scope: this
                 }
             });
         }
@@ -110,12 +112,12 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
         }
     },
 
-    onLoadElement: function(element) {
-        this.eid      = element.eid;
-        this.version  = element.version;
+    onLoadElement: function (element) {
+        this.eid = element.eid;
+        this.version = element.version;
         this.language = element.language;
 
-        this.items.each(function(acc) {
+        this.items.each(function (acc) {
             acc.load(element.data, element);
         });
 
@@ -132,10 +134,10 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
 //        this.commentAcc.load(element.data);
     },
 
-    getData: function() {
+    getData: function () {
         var data = {};
 
-        this.items.each(function(acc) {
+        this.items.each(function (acc) {
             if (!acc.hidden && !acc.disabled && acc.key && acc.getData && typeof acc.getData === 'function') {
                 data[acc.key] = acc.getData();
             }
@@ -144,10 +146,10 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
         return data;
     },
 
-    isValid: function() {
+    isValid: function () {
         var valid = true;
 
-        this.items.each(function(acc) {
+        this.items.each(function (acc) {
             if (!acc.hidden && !acc.disabled && acc.key && acc.isValid && typeof acc.isValid === 'function') {
                 valid &= !!acc.isValid();
             }
@@ -156,16 +158,16 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
         return valid;
     },
 
-    saveData: function() {
-        this.items.each(function(acc) {
+    saveData: function () {
+        this.items.each(function (acc) {
             if (!acc.hidden && !acc.disabled && acc.saveData && typeof acc.saveData === 'function') {
                 acc.saveData();
             }
         });
     },
 
-    onGetLock: function() {
-        this.items.each(function(acc) {
+    onGetLock: function () {
+        this.items.each(function (acc) {
             if ((acc.getData && typeof acc.getData === 'function') || (acc.saveData && typeof acc.saveData === 'function')) {
                 acc.enable();
             }
@@ -173,8 +175,8 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
     },
 
 
-    onIsLocked: function() {
-        this.items.each(function(acc) {
+    onIsLocked: function () {
+        this.items.each(function (acc) {
             if ((acc.getData && typeof acc.getData === 'function') || (acc.saveData && typeof acc.saveData === 'function')) {
                 acc.disable();
             }
@@ -182,8 +184,8 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
     },
 
 
-    onRemoveLock: function() {
-        this.items.each(function(acc) {
+    onRemoveLock: function () {
+        this.items.each(function (acc) {
             if ((acc.getData && typeof acc.getData === 'function') || (acc.saveData && typeof acc.saveData === 'function')) {
                 acc.disable();
             }

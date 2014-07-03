@@ -14,9 +14,6 @@ use Phlexible\Component\Database\ConnectionManager;
  * Utility class for suggest fields.
  *
  * @author Phillip Look <pl@brainbits.net>
- *
- * @see Phlexible\Bundle\DataSourceBundle\DataSource
- * @see Makeweb_Fields_Field_Suggest
  */
 class SuggestFieldUtil
 {
@@ -51,8 +48,7 @@ class SuggestFieldUtil
     public function fetchUsedValues($dataSourceId, array $languages)
     {
         $valueSelects = array();
-        foreach ($languages as $language)
-        {
+        foreach ($languages as $language) {
             $language = trim($language);
 
             $valueSelects[] = $this->db
@@ -103,16 +99,13 @@ class SuggestFieldUtil
     public function splitSuggestValues(array $concatenated)
     {
         $keys = array();
-        foreach ($concatenated as $value)
-        {
+        foreach ($concatenated as $value) {
             $splitted = explode($this->seperatorChar, $value);
-            foreach ($splitted as $key)
-            {
+            foreach ($splitted as $key) {
                 $key = trim($key);
 
                 // skip empty values
-                if (strlen($key))
-                {
+                if (strlen($key)) {
                     $keys[] = $key;
                 }
             }

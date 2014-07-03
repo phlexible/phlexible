@@ -197,7 +197,7 @@ class MessageManager implements MessageManagerInterface
             $query->setFilter($andFilter);
         }
 
-        if ($limit !==null && $offset !== null) {
+        if ($limit !== null && $offset !== null) {
             $query
                 ->setSize($limit)
                 ->setFrom($offset);
@@ -286,6 +286,7 @@ class MessageManager implements MessageManagerInterface
 
     /**
      * @param ResultSet $resultSet
+     *
      * @return Message[]
      */
     private function mapDocuments(ResultSet $resultSet)
@@ -301,6 +302,7 @@ class MessageManager implements MessageManagerInterface
 
     /**
      * @param array $row
+     *
      * @return Message
      */
     private function mapDocument(array $row)
@@ -336,29 +338,28 @@ class MessageManager implements MessageManagerInterface
 
         $andFilter = new BoolAnd();
 
-        foreach ($criteria as $criterium)
-        {
+        foreach ($criteria as $criterium) {
             if ($criterium instanceof Criteria) {
                 $this->applyCriteriaToQuery($criterium, $query, $prefix);
                 continue;
             }
 
-            $type  = $criterium->getType();
+            $type = $criterium->getType();
             $value = $criterium->getValue();
 
-            if (is_string($value) && !strlen($value))
-            {
+            if (is_string($value) && !strlen($value)) {
                 continue;
             }
 
-            switch ($type)
-            {
+            switch ($type) {
                 case Criteria::CRITERIUM_SUBJECT_LIKE:
                     $andFilter->addFilter(new \Elastica\Filter\Query(new Wildcard('subject', '*' . $value . '*')));
                     break;
 
                 case Criteria::CRITERIUM_SUBJECT_NOT_LIKE:
-                    $andFilter->addFilter(new BoolNot(new \Elastica\Filter\Query(new Wildcard('subject', '*' . $value . '*'))));
+                    $andFilter->addFilter(
+                        new BoolNot(new \Elastica\Filter\Query(new Wildcard('subject', '*' . $value . '*')))
+                    );
                     break;
 
                 case Criteria::CRITERIUM_BODY_LIKE:
@@ -366,7 +367,9 @@ class MessageManager implements MessageManagerInterface
                     break;
 
                 case Criteria::CRITERIUM_BODY_NOT_LIKE:
-                    $andFilter->addFilter(new BoolNot(new \Elastica\Filter\Query(new Wildcard('body', '*' . $value . '*'))));
+                    $andFilter->addFilter(
+                        new BoolNot(new \Elastica\Filter\Query(new Wildcard('body', '*' . $value . '*')))
+                    );
                     break;
 
                 case Criteria::CRITERIUM_PRIORITY_IS:
@@ -442,10 +445,12 @@ class MessageManager implements MessageManagerInterface
                     break;
 
                 case Criteria::CRITERIUM_DATE_IS:
-                    $andFilter->addFilter(new Range('created_at', array(
-                        'gte' => $value->format('U'),
-                        'lt' => $value->format('U'),
-                    )));
+                    $andFilter->addFilter(
+                        new Range('created_at', array(
+                            'gte' => $value->format('U'),
+                            'lt'  => $value->format('U'),
+                        ))
+                    );
                     break;
             }
         }

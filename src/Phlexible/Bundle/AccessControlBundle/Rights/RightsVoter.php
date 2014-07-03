@@ -22,12 +22,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 class RightsVoter implements VoterInterface
 {
-    const RIGHT_STATUS_UNSET         = -1;
-    const RIGHT_STATUS_STOPPED       =  0;
-    const RIGHT_STATUS_SINGLE        =  1;
-    const RIGHT_STATUS_INHERITABLE   =  2;
-    const RIGHT_STATUS_INHERITED     =  3;
-    const RIGHT_STATUS_STOPPED_UNSET =  4;
+    const RIGHT_STATUS_UNSET = -1;
+    const RIGHT_STATUS_STOPPED = 0;
+    const RIGHT_STATUS_SINGLE = 1;
+    const RIGHT_STATUS_INHERITABLE = 2;
+    const RIGHT_STATUS_INHERITED = 3;
+    const RIGHT_STATUS_STOPPED_UNSET = 4;
 
     /**
      * @var AccessManagerInterface
@@ -110,14 +110,15 @@ class RightsVoter implements VoterInterface
      *
      * @return CalculatedRights
      */
-    public function calculateRights($rightType,
-                                    ContentObjectInterface $contentObject,
-                                    array $rightIdentifiers = array())
+    public function calculateRights(
+        $rightType,
+        ContentObjectInterface $contentObject,
+        array $rightIdentifiers = array())
     {
         $calculatedRights = new CalculatedRights();
 
         // get the path from the root down to this object
-        $contentObjectPath        = $contentObject->getContentObjectPath();
+        $contentObjectPath = $contentObject->getContentObjectPath();
         $contentObjectIdentifiers = $contentObject->getContentObjectIdentifiers();
 
         // fetch rights delivered by group-memberships
@@ -182,7 +183,7 @@ class RightsVoter implements VoterInterface
 
             foreach ($result as $row) {
                 $langage = $row['content_language'] ? $row['content_language'] : '_all_';
-                $right   = $row['right'];
+                $right = $row['right'];
 
                 switch ((int) $row['inherit']) {
                     case self::RIGHT_STATUS_SINGLE:
@@ -199,7 +200,7 @@ class RightsVoter implements VoterInterface
                         break;
 
                     default:
-                        $msg = 'Unknown status for right "'.$right.'" -> "'.$row['inherit'].'"';
+                        $msg = 'Unknown status for right "' . $right . '" -> "' . $row['inherit'] . '"';
                         throw new \Exception($msg);
                         break;
                 }
@@ -246,8 +247,9 @@ class RightsVoter implements VoterInterface
                             unset($rights[$language][$key]);
                         }
                     } elseif ($right['type'] == self::RIGHT_STATUS_UNSET
-                            //|| $right['type'] == self::RIGHT_STATUS_STOPPED
-                            || $right['type'] == self::RIGHT_STATUS_STOPPED_UNSET) {
+                        //|| $right['type'] == self::RIGHT_STATUS_STOPPED
+                        || $right['type'] == self::RIGHT_STATUS_STOPPED_UNSET
+                    ) {
                         unset($rights[$language][$key]);
                     }
                 }

@@ -1,7 +1,7 @@
-Phlexible.gui.util.Config = function(values) {
+Phlexible.gui.util.Config = function (values) {
     this.values = values;
 };
-Phlexible.gui.util.Config.prototype.get = function(key, defaultValue) {
+Phlexible.gui.util.Config.prototype.get = function (key, defaultValue) {
     if (!this.has(key)) {
         if (defaultValue !== undefined) {
             return defaultValue;
@@ -10,9 +10,10 @@ Phlexible.gui.util.Config.prototype.get = function(key, defaultValue) {
     }
     return this.values[key];
 };
-Phlexible.gui.util.Config.prototype.has = function(key) {
+Phlexible.gui.util.Config.prototype.has = function (key) {
     return this.values[key] !== undefined;
 };
-Phlexible.gui.util.Config.prototype.set = function(key, value) {
-    this.values[key] = value;;
+Phlexible.gui.util.Config.prototype.set = function (key, value) {
+    this.values[key] = value;
+    ;
 };

@@ -1,6 +1,6 @@
 Phlexible.elements.ElementsTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
     // private
-    renderElements : function(n, a, targetNode, bulkRender){
+    renderElements: function (n, a, targetNode, bulkRender) {
         // add some indent caching, this helps performance when rendering a large tree
         this.indentMarkup = n.parentNode ? n.parentNode.ui.getChildIndent() : '';
 
@@ -15,18 +15,18 @@ Phlexible.elements.ElementsTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
         //}
 
         var href = a.href ? a.href : Ext.isGecko ? "" : "#";
-        var buf = ['<li class="x-tree-node"><div ext:tree-node-id="',n.id,'" class="x-tree-node-el x-tree-node-leaf x-unselectable ', a.cls,'" unselectable="on">',
-            '<span class="x-tree-node-indent">',this.indentMarkup,"</span>",
+        var buf = ['<li class="x-tree-node"><div ext:tree-node-id="', n.id, '" class="x-tree-node-el x-tree-node-leaf x-unselectable ', a.cls, '" unselectable="on">',
+            '<span class="x-tree-node-indent">', this.indentMarkup, "</span>",
             '<img src="', this.emptyIcon, '" class="x-tree-ec-icon x-tree-elbow" />',
-            '<img src="', a.icon || this.emptyIcon, '" class="x-tree-node-icon',(a.icon ? " x-tree-node-inline-icon" : ""),(a.iconCls ? " "+a.iconCls : ""),'" unselectable="on" />',
+            '<img src="', a.icon || this.emptyIcon, '" class="x-tree-node-icon', (a.icon ? " x-tree-node-inline-icon" : ""), (a.iconCls ? " " + a.iconCls : ""), '" unselectable="on" />',
             cb ? ('<input class="x-tree-node-cb" type="checkbox" ' + (a.checked ? 'checked="checked" />' : '/>')) : '',
-            '<a hidefocus="on" class="x-tree-node-anchor" href="',href,'" tabIndex="1" ',
-             a.hrefTarget ? ' target="'+a.hrefTarget+'"' : "", '><span unselectable="on">',text,"</span></a></div>",
+            '<a hidefocus="on" class="x-tree-node-anchor" href="', href, '" tabIndex="1" ',
+            a.hrefTarget ? ' target="' + a.hrefTarget + '"' : "", '><span unselectable="on">', text, "</span></a></div>",
             '<ul class="x-tree-node-ct" style="display:none;"></ul>',
             "</li>"].join('');
 
         var nel;
-        if (bulkRender !== true && n.nextSibling && (nel = n.nextSibling.ui.getEl())){
+        if (bulkRender !== true && n.nextSibling && (nel = n.nextSibling.ui.getEl())) {
             this.wrap = Ext.DomHelper.insertHtml("beforeBegin", nel, buf);
         } else {
             this.wrap = Ext.DomHelper.insertHtml("beforeEnd", targetNode, buf);
@@ -39,7 +39,7 @@ Phlexible.elements.ElementsTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
         this.ecNode = cs[1];
         this.iconNode = cs[2];
         var index = 3;
-        if(cb){
+        if (cb) {
             this.checkbox = cs[3];
             // fix for IE6
             this.checkbox.defaultChecked = this.checkbox.checked;
@@ -50,7 +50,7 @@ Phlexible.elements.ElementsTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
     },
 
     // private
-    onTextChange : function(node, text, oldText){
+    onTextChange: function (node, text, oldText) {
         text = this.applyNodeConfigToText(node, node.attributes, text);
 
         Phlexible.elements.ElementsTreeNodeUI.superclass.onTextChange.call(this, node, text, oldText);
@@ -75,15 +75,15 @@ Phlexible.elements.ElementsTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
     },
 
     // private
-    onDblClick : function(e){
+    onDblClick: function (e) {
         e.preventDefault();
-        if(this.disabled){
+        if (this.disabled) {
             return;
         }
-        if(this.checkbox){
+        if (this.checkbox) {
             this.toggleCheck();
         }
-        if(!this.animating && this.node.isExpandable() && !this.node.isExpanded()){
+        if (!this.animating && this.node.isExpandable() && !this.node.isExpanded()) {
             this.node.expand();
         }
         this.fireEvent("dblclick", this.node, e);

@@ -1,7 +1,7 @@
 /**
  * @constructor
  */
-Phlexible.gui.util.Router = function() {
+Phlexible.gui.util.Router = function () {
 };
 /**
  * Set routing data
@@ -19,7 +19,7 @@ Phlexible.gui.util.Router = function() {
  *     }
  * }
  */
-Phlexible.gui.util.Router.prototype.setData = function(data){
+Phlexible.gui.util.Router.prototype.setData = function (data) {
     if (data.baseUrl) {
         this.baseUrl = data.baseUrl;
     }
@@ -35,13 +35,14 @@ Phlexible.gui.util.Router.prototype.setData = function(data){
  *
  * @param {String} part Route name part for searches, optional
  */
-Phlexible.gui.util.Router.prototype.dump = function(part) {
+Phlexible.gui.util.Router.prototype.dump = function (part) {
     for (var key in this.routes) {
         var route = this.routes[key];
         if (!part || key.match(new RegExp(part))) {
             Phlexible.console.info(key, route.path);
         }
-    };
+    }
+    ;
 };
 /**
  * Generate URL
@@ -50,7 +51,7 @@ Phlexible.gui.util.Router.prototype.dump = function(part) {
  * @param {Object} parameters Route parameters
  * @return {String} Generated URL
  */
-Phlexible.gui.util.Router.prototype.generate = function(name, parameters) {
+Phlexible.gui.util.Router.prototype.generate = function (name, parameters) {
     if (!this.routes[name]) {
         throw new Error('Unknown route ' + name);
     }
@@ -62,9 +63,9 @@ Phlexible.gui.util.Router.prototype.generate = function(name, parameters) {
 
     if (variables) {
         parameters = Phlexible.clone(parameters || {});
-        Ext.each(variables, function(variable) {
+        Ext.each(variables, function (variable) {
             var placeholder = '{' + variable + '}';
-            if (parameters[variable] !== undefined ) {
+            if (parameters[variable] !== undefined) {
                 path = path.replace(placeholder, parameters[variable]);
                 delete parameters[variable];
                 return;
@@ -78,7 +79,7 @@ Phlexible.gui.util.Router.prototype.generate = function(name, parameters) {
         var query = '';
         for (var key in parameters) {
             if (typeof(parameters[key]) !== 'object')
-            query += '&' + key + '=' + parameters[key];
+                query += '&' + key + '=' + parameters[key];
         }
         if (query) {
             path += '?' + query;

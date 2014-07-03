@@ -1,5 +1,5 @@
 Phlexible.gui.menuhandle.handle.WindowHandle = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
-    handle: function() {
+    handle: function () {
         var component = Phlexible.evalClassString(this.getComponent()),
             parameters = {};
 

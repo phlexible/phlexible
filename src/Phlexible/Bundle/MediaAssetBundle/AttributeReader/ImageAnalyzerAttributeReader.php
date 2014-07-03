@@ -73,8 +73,7 @@ class ImageAnalyzerAttributeReader implements AttributeReaderInterface
                 ->set('depth', $result->getDepth())
                 ->set('quality', $result->getQuality())
                 ->set('resolution', $result->getWidth() . 'x' . $result->getHeight())
-                ->set('profiles', implode(',', $result->getProfiles()))
-            ;
+                ->set('profiles', implode(',', $result->getProfiles()));
 
             $metaBag->add($metaData);
         } catch (\Exception $e) {

@@ -49,9 +49,9 @@ class Makeweb_Elements_Event_LoadNodeData extends Brainbits_Event_Notification_A
      */
     public function __construct(Makeweb_Elements_Tree_Node_Interface $node, $language, $data)
     {
-        $this->_node     = $node;
+        $this->_node = $node;
         $this->_language = $language;
-        $this->_data     = $data;
+        $this->_data = $data;
     }
 
     /**

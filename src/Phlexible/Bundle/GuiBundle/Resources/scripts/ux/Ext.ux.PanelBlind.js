@@ -1,6 +1,6 @@
 Ext.ux.PanelBlind = Ext.extend(Ext.Panel, {
 
-    constructor: function(config) {
+    constructor: function (config) {
         config = Ext.apply({
             autoHeight: true,
             floating: true,
@@ -9,16 +9,18 @@ Ext.ux.PanelBlind = Ext.extend(Ext.Panel, {
                 'border-width': '0px'
             },
             buttonAlign: 'center',
-            buttons: [{
-                text: 'Dismiss',
-                handler: this.dismiss,
-                scope: this
-            }]
+            buttons: [
+                {
+                    text: 'Dismiss',
+                    handler: this.dismiss,
+                    scope: this
+                }
+            ]
         }, config);
         Ext.ux.PanelBlind.superclass.constructor.call(this, config);
     },
 
-    init: function(client) {
+    init: function (client) {
         this.client = client;
         client.blind = this;
         this.client.constructor.prototype.showBlind = this.clientShowBlind;
@@ -26,28 +28,28 @@ Ext.ux.PanelBlind = Ext.extend(Ext.Panel, {
         this.client.on('destroy', this.destroy, this);
     },
 
-    clientShowBlind: function() {
+    clientShowBlind: function () {
         this.blind.show();
     },
 
-    clientDismissBlind: function() {
+    clientDismissBlind: function () {
         this.blind.dismiss();
     },
-    
-    show: function() {
+
+    show: function () {
         var mask = this.client.getEl().mask();
         if (!this.rendered) {
             this.render(this.client.getEl());
         }
 
 //      Synchronize this blind's z-index to be one above the client Element's mask
-        this.el.setZIndex(Number(mask.getStyle('z-index')) + 1);            
+        this.el.setZIndex(Number(mask.getStyle('z-index')) + 1);
 
         this.el.disableShadow();
         this.setWidth(this.client.body.getSize(true).width);
         this.el.alignTo(this.client.body, 'tl-tl');
         this.el.slideIn('t', {
-            callback: function() {
+            callback: function () {
                 this.el.visible = true; // Ext bug. Flag not set causes enableShadow to fail.
                 this.el.enableShadow(true);
             },
@@ -55,7 +57,7 @@ Ext.ux.PanelBlind = Ext.extend(Ext.Panel, {
         });
     },
 
-    dismiss: function() {
+    dismiss: function () {
         this.el.disableShadow();
         this.el.slideOut('t');
         this.client.getEl().unmask();

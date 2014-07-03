@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -32,10 +32,10 @@ class MessagesController extends Controller
      */
     public function listAction(Request $request)
     {
-        $limit  = $request->get('limit', 25);
-        $start  = $request->get('start', 0);
-        $sort   = $request->get('sort', 'createdAt');
-        $dir    = $request->get('dir', 'DESC');
+        $limit = $request->get('limit', 25);
+        $start = $request->get('start', 0);
+        $sort = $request->get('sort', 'createdAt');
+        $dir = $request->get('dir', 'DESC');
         $filter = $request->get('filter', null);
 
         if ($filter) {
@@ -48,12 +48,12 @@ class MessagesController extends Controller
 
         $messageManager = $this->get('phlexible_message.message_manager');
 
-        $priorityList    = $messageManager->getPriorityNames();
-        $typeList        = $messageManager->getTypeNames();
+        $priorityList = $messageManager->getPriorityNames();
+        $typeList = $messageManager->getTypeNames();
 
         $priorityFilter = array();
-        $typeFilter     = array();
-        $channelFilter  = array();
+        $typeFilter = array();
+        $channelFilter = array();
         $resourceFilter = array();
 
         $criteria = new Criteria();
@@ -139,9 +139,9 @@ class MessagesController extends Controller
     {
         $messageManager = $this->get('phlexible_message.message_manager');
 
-        $filterSets   = $messageManager->getFacets();
+        $filterSets = $messageManager->getFacets();
         $priorityList = $messageManager->getPriorityNames();
-        $typeList     = $messageManager->getTypeNames();
+        $typeList = $messageManager->getTypeNames();
 
         $priorities = array();
         arsort($filterSets['priorities']);
@@ -158,13 +158,13 @@ class MessagesController extends Controller
         $channels = array();
         sort($filterSets['channels']);
         foreach ($filterSets['channels'] as $channel) {
-            $channels[] = array('id' => $channel, 'title' => $channel ?: '(no channel)');
+            $channels[] = array('id' => $channel, 'title' => $channel ? : '(no channel)');
         }
 
         $resources = array();
         sort($filterSets['resources']);
         foreach ($filterSets['resources'] as $resource) {
-            $resources[] = array('id' => $resource, 'title' => $resource ?: '(no resource)');
+            $resources[] = array('id' => $resource, 'title' => $resource ? : '(no resource)');
         }
 
         return new JsonResponse(array(

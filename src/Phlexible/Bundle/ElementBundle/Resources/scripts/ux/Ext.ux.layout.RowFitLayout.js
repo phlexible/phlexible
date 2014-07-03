@@ -1,38 +1,38 @@
 /*jsl:ignoreall*/
 Ext.namespace('Ext.ux.layout');
 
-/** 
- * @class Ext.ux.layout.RowFitLayout 
- * @extends Ext.layout.ContainerLayout 
- * <p>Layout that distributes heights of elements so they take 100% of the 
- * container height.</p> 
- * <p>Height of the child element can be given in pixels (as an integer) or 
- * in percent. All elements with absolute height (i.e. in pixels) always will 
- * have the given height. All "free" space (that is not filled with elements 
- * with 'absolute' height) will be distributed among other elements in 
- * proportion of their height percentage. Elements without 'height' in the 
- * config will take equal portions of the "unallocated" height.</p> 
- * <p>Supports panel collapsing, hiding, removal/addition. The adapter is provided 
- * to use with Ext.SplitBar: <b>Ext.ux.layout.RowFitLayout.SplitAdapter</b>.</p> 
- * <p>Example usage:</p> 
- * <pre><code> 
- var vp = new Ext.Viewport({ 
-   layout: 'row-fit', 
-   items: [ 
-     { xtype: 'panel', height: 100, title: 'Height in pixels', html: 'panel height = 100px' }, 
-     { xtype: 'panel', height: "50%", title: '1/2', html: 'Will take half of remaining height' }, 
-     { xtype: 'panel', title: 'No height 1', html: 'Panel without given height', id: '' }, 
-     { xtype: 'panel', title: 'No height 2', html: 'Another panel' } 
-   ] 
- }); 
- * </code></pre> 
- * Usage of the split bar adapter: 
- * <pre><code> 
- var split = new Ext.SplitBar("elementToDrag", "elementToSize", Ext.SplitBar.VERTICAL, Ext.SplitBar.TOP); 
- // note the Ext.SplitBar object is passed to the adapter constructor to set 
- // correct minSize and maxSize: 
- split.setAdapter(new Ext.ux.layout.RowFitLayout.SplitAdapter(split)); 
- * </code></pre> 
+/**
+ * @class Ext.ux.layout.RowFitLayout
+ * @extends Ext.layout.ContainerLayout
+ * <p>Layout that distributes heights of elements so they take 100% of the
+ * container height.</p>
+ * <p>Height of the child element can be given in pixels (as an integer) or
+ * in percent. All elements with absolute height (i.e. in pixels) always will
+ * have the given height. All "free" space (that is not filled with elements
+ * with 'absolute' height) will be distributed among other elements in
+ * proportion of their height percentage. Elements without 'height' in the
+ * config will take equal portions of the "unallocated" height.</p>
+ * <p>Supports panel collapsing, hiding, removal/addition. The adapter is provided
+ * to use with Ext.SplitBar: <b>Ext.ux.layout.RowFitLayout.SplitAdapter</b>.</p>
+ * <p>Example usage:</p>
+ * <pre><code>
+ var vp = new Ext.Viewport({
+   layout: 'row-fit',
+   items: [
+     { xtype: 'panel', height: 100, title: 'Height in pixels', html: 'panel height = 100px' },
+     { xtype: 'panel', height: "50%", title: '1/2', html: 'Will take half of remaining height' },
+     { xtype: 'panel', title: 'No height 1', html: 'Panel without given height', id: '' },
+     { xtype: 'panel', title: 'No height 2', html: 'Another panel' }
+   ]
+ });
+ * </code></pre>
+ * Usage of the split bar adapter:
+ * <pre><code>
+ var split = new Ext.SplitBar("elementToDrag", "elementToSize", Ext.SplitBar.VERTICAL, Ext.SplitBar.TOP);
+ // note the Ext.SplitBar object is passed to the adapter constructor to set
+ // correct minSize and maxSize:
+ split.setAdapter(new Ext.ux.layout.RowFitLayout.SplitAdapter(split));
+ * </code></pre>
  */
 
 Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
@@ -47,12 +47,12 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
     rendered: false,
 
     // private
-    renderItem: function(c, position, target) {
+    renderItem: function (c, position, target) {
         Ext.ux.layout.RowFitLayout.superclass.renderItem.apply(this, arguments);
 
         // add event listeners
         for (var i = 0,
-        n = this.trackChildEvents.length; i < n; i++) {
+                 n = this.trackChildEvents.length; i < n; i++) {
             var ev = this.trackChildEvents[i];
             //c.on(this.trackChildEvents[i], this.itemListener, this);
             c.on(ev, this['_item_' + ev], this);
@@ -62,7 +62,7 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
         this.checkRelHeight(c);
     },
 
-    checkRelHeight: function(c) {
+    checkRelHeight: function (c) {
 
         // store some layout-specific calculations
         if (!c.rowFit) {
@@ -96,7 +96,7 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
     },
 
     // private
-    onLayout: function(ct, target) {
+    onLayout: function (ct, target) {
 
         Ext.ux.layout.RowFitLayout.superclass.onLayout.call(this, ct, target);
 
@@ -109,22 +109,22 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
         // sums of absolute and relative heights etc.
         var absHeightSum = 0,
         // sum of elements' absolute heights
-        relHeightSum = 0,
+            relHeightSum = 0,
         // sum of all percent heights given in
         // children configs
-        relHeightRatio = 1,
+            relHeightRatio = 1,
         // "scale" ratio used in case sum <>
         // 100%
-        noHeightCount = 0,
+            noHeightCount = 0,
         // number of elements with no height
         // given
-        relHeightElements = []; // array of elements with 'relative'
+            relHeightElements = []; // array of elements with 'relative'
         // height for the second loop
 
         var targetSize = target.getStyleSize();
 
         for (var i = 0,
-        n = ct.items.length; i < n; i++) {
+                 n = ct.items.length; i < n; i++) {
             var c = ct.items.itemAt(i);
 
             if (!c.isVisible()) {
@@ -177,20 +177,20 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
 
         var freeHeight = target.getStyleSize().height - absHeightSum,
         // "unallocated" height we have
-        absHeightLeft = freeHeight; // track how much free space we
+            absHeightLeft = freeHeight; // track how much free space we
         // have
 
         while (relHeightElements.length) {
             var c = relHeightElements.shift(),
             // element we're
             // working with
-            relH = c.rowFit.relHeight * relHeightRatio,
+                relH = c.rowFit.relHeight * relHeightRatio,
             // height of
             // this
             // element
             // in
             // percent
-            absH = 0; // height in pixels
+                absH = 0; // height in pixels
 
             // no height in config
             if (!relH) {
@@ -220,7 +220,7 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
         }
 
         for (var i = 0,
-        n = ct.items.length; i < n; i++) {
+                 n = ct.items.length; i < n; i++) {
             var c = ct.items.itemAt(i);
             if (c.isSlider && c.el2resize) {
                 // this.checkRelHeight(c);
@@ -239,13 +239,13 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
         }
     },
     // private - called from Ext.Container
-    setContainer: function(ct) {
+    setContainer: function (ct) {
         Ext.ux.layout.RowFitLayout.superclass.setContainer.call(this, ct);
         this._addSliders(ct);
     },
 
     // private
-    _addSliders: function(ct) {
+    _addSliders: function (ct) {
         var sh = ct.splitHeight || this.splitHeight;
         var skip1 = true;
         var n = ct.items.length;
@@ -273,13 +273,13 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
     },
 
     /**
-   * Add event listener for container children
-   * @private
-   */
-    itemListener: function(item) {
+     * Add event listener for container children
+     * @private
+     */
+    itemListener: function (item) {
         item.ownerCt.doLayout();
     },
-    _item_show: function(comp) {
+    _item_show: function (comp) {
         if (!comp.isSlider && comp.sliderId) {
             var sl = comp.ownerCt.findById(comp.sliderId);
             if (!sl.isVisible()) {
@@ -289,7 +289,7 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
         }
         comp.ownerCt.doLayout();
     },
-    _item_hide: function(comp) {
+    _item_hide: function (comp) {
         if (!comp.isSlider && comp.sliderId) {
             var sl = comp.ownerCt.findById(comp.sliderId);
             if (sl.isVisible()) {
@@ -299,22 +299,22 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
         }
         comp.ownerCt.doLayout();
     },
-    _item_expand: function(comp) {
+    _item_expand: function (comp) {
         this._item_show(comp);
     },
-    _item_collapse: function(comp) {
+    _item_collapse: function (comp) {
         this._item_hide(comp);
     },
 
     /**
-   * Event listener for the container (on add, remove)
-   * @private
-   */
-    ctAddItem: function(ct, comp, idx) {
+     * Event listener for the container (on add, remove)
+     * @private
+     */
+    ctAddItem: function (ct, comp, idx) {
         // TODO: ev. add slider & splitbar
         ct.doLayout();
     },
-    ctDelItem: function(ct, comp) {
+    ctDelItem: function (ct, comp) {
         // TODO: ev. remove slider & splitbar
         ct.doLayout();
     }
@@ -325,13 +325,13 @@ Ext.ux.layout.RowFitLayout = Ext.extend(Ext.layout.ContainerLayout, {
 if (Ext.SplitBar.BasicLayoutAdapter) {
 
     /**
-   * @param {Ext.SplitBar} splitbar to which adapter is applied.
-   *   If supplied, will set correct minSize and maxSize.
-   */
-    Ext.ux.layout.RowFitLayout.SplitAdapter = function(splitbar) {
+     * @param {Ext.SplitBar} splitbar to which adapter is applied.
+     *   If supplied, will set correct minSize and maxSize.
+     */
+    Ext.ux.layout.RowFitLayout.SplitAdapter = function (splitbar) {
         if (splitbar && splitbar.el.dom.nextSibling) {
             var next = Ext.getCmp(splitbar.el.dom.nextSibling.id),
-            resized = Ext.getCmp(splitbar.resizingEl.id);
+                resized = Ext.getCmp(splitbar.resizingEl.id);
 
             // skip abs-height non-resizable components
             while (next && (next.collapsed || !next.isVisible() || !next.isResizable)) {
@@ -340,7 +340,7 @@ if (Ext.SplitBar.BasicLayoutAdapter) {
 
             if (next) {
                 //splitbar.maxSize = (resized.height || resized.rowFit.calcAbsHeight) +
-                splitbar.maxSize = (resized.rowFit.hasAbsHeight ? resized.rowFit.calcAbsHeight: resized.getSize().height) + next.getInnerHeight() - 1; // seems can't set height=0 in IE, "1" works fine
+                splitbar.maxSize = (resized.rowFit.hasAbsHeight ? resized.rowFit.calcAbsHeight : resized.getSize().height) + next.getInnerHeight() - 1; // seems can't set height=0 in IE, "1" works fine
             }
             splitbar.minSize = resized.getFrameHeight() + 1;
         }
@@ -348,7 +348,7 @@ if (Ext.SplitBar.BasicLayoutAdapter) {
 
     Ext.extend(Ext.ux.layout.RowFitLayout.SplitAdapter, Ext.SplitBar.BasicLayoutAdapter, {
 
-        setElementSize: function(splitbar, newSize, onComplete) {
+        setElementSize: function (splitbar, newSize, onComplete) {
             var resized = Ext.getCmp(splitbar.resizingEl.id);
 
             // can't resize absent, collapsed or hidden panel
@@ -371,12 +371,12 @@ if (Ext.SplitBar.BasicLayoutAdapter) {
 
                     var deltaAbsHeight = newSize - resized.rowFit.calcAbsHeight,
                     // pixels
-                    nsRf = nextSibling.rowFit,
+                        nsRf = nextSibling.rowFit,
                     // shortcut
-                    rzRf = resized.rowFit,
+                        rzRf = resized.rowFit,
                     // pixels in a percent
-                    pctPxRatio = rzRf.calcRelHeight / rzRf.calcAbsHeight,
-                    deltaRelHeight = pctPxRatio * deltaAbsHeight; // change in height in percent
+                        pctPxRatio = rzRf.calcRelHeight / rzRf.calcAbsHeight,
+                        deltaRelHeight = pctPxRatio * deltaAbsHeight; // change in height in percent
 
                     rzRf.relHeight = rzRf.calcRelHeight + deltaRelHeight;
 

@@ -49,9 +49,9 @@ class Makeweb_Elements_Event_SaveNodeData extends Brainbits_Event_Notification_A
      */
     public function __construct(Makeweb_Elements_Tree_Node $node, $language, array $data)
     {
-        $this->_node     = $node;
+        $this->_node = $node;
         $this->_language = $language;
-        $this->_data     = $data;
+        $this->_data = $data;
     }
 
     /**

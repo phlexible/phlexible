@@ -34,30 +34,80 @@ class InfoController extends Controller
         $lines = array();
 
         if ($securityContext->isGranted(Acl::RESOURCE_DEBUG)) {
-            $lines[] = array('Release:', $this->container->getParameter('app.app_title') . ' ' . $this->container->getParameter('app.app_version'));
-            $lines[] = array('Project:', $this->container->getParameter('app.project_title') . ' ' . $this->container->getParameter('app.project_version'));
-            $lines[] = array('Env:', $this->container->getParameter('kernel.environment') . ($this->container->getParameter('kernel.debug') ? ' [DEBUG]' : ''));
+            $lines[] = array(
+                'Release:',
+                $this->container->getParameter('app.app_title') . ' ' . $this->container->getParameter(
+                    'app.app_version'
+                )
+            );
+            $lines[] = array(
+                'Project:',
+                $this->container->getParameter('app.project_title') . ' ' . $this->container->getParameter(
+                    'app.project_version'
+                )
+            );
+            $lines[] = array(
+                'Env:',
+                $this->container->getParameter('kernel.environment') . ($this->container->getParameter(
+                    'kernel.debug'
+                ) ? ' [DEBUG]' : '')
+            );
             $lines[] = array('Host:', $_SERVER['SERVER_NAME'] . ' [' . PHP_SAPI . ']');
 
             $connection = $this->getDoctrine()->getConnection();
             /* @var $connection \Doctrine\DBAL\Connection */
 
-            $lines[] = array('Default Database:', $connection->getHost() . ' / ' . $connection->getDatabase() . ' [' . $connection->getDriver()->getName() . ']');
+            $lines[] = array(
+                'Default Database:',
+                $connection->getHost() . ' / ' . $connection->getDatabase() . ' [' . $connection->getDriver()->getName(
+                ) . ']'
+            );
 
-            $lines[] = array('Session:', session_id() . ' ['.$_SERVER['REMOTE_ADDR'].']');
+            $lines[] = array('Session:', session_id() . ' [' . $_SERVER['REMOTE_ADDR'] . ']');
 
-            $lines[] = array('User:', $this->getUser()->getUsername() . ' ['.implode(', ', $this->getUser()->getRoles()).']');
+            $lines[] = array(
+                'User:',
+                $this->getUser()->getUsername() . ' [' . implode(', ', $this->getUser()->getRoles()) . ']'
+            );
 
             $lines[] = array('UserAgent:', $_SERVER['HTTP_USER_AGENT']);
         } elseif ($securityContext->isGranted(Acl::RESOURCE_ADMIN)) {
-            $lines[] = array('Release:', $this->container->getParameter('app.app_title') . ' ' . $this->container->getParameter('app.app_version'));
-            $lines[] = array('Project:', $this->container->getParameter('app.project_title') . ' ' . $this->container->getParameter('app.project_version'));
-            $lines[] = array('Env:', $this->container->getParameter('kernel.environment') . ($this->container->getParameter('kernel.debug') ? ' [DEBUG]' : ''));
+            $lines[] = array(
+                'Release:',
+                $this->container->getParameter('app.app_title') . ' ' . $this->container->getParameter(
+                    'app.app_version'
+                )
+            );
+            $lines[] = array(
+                'Project:',
+                $this->container->getParameter('app.project_title') . ' ' . $this->container->getParameter(
+                    'app.project_version'
+                )
+            );
+            $lines[] = array(
+                'Env:',
+                $this->container->getParameter('kernel.environment') . ($this->container->getParameter(
+                    'kernel.debug'
+                ) ? ' [DEBUG]' : '')
+            );
 
-            $lines[] = array('User:', $this->getUser()->getUsername() . ' ['.implode(', ', $this->getUser()->getRoles()).']');
+            $lines[] = array(
+                'User:',
+                $this->getUser()->getUsername() . ' [' . implode(', ', $this->getUser()->getRoles()) . ']'
+            );
         } else {
-            $lines[] = array('Release:', $this->container->getParameter('app.app_title') . ' ' . $this->container->getParameter('app.app_version'));
-            $lines[] = array('Project:', $this->container->getParameter('app.project_title') . ' ' . $this->container->getParameter('app.project_version'));
+            $lines[] = array(
+                'Release:',
+                $this->container->getParameter('app.app_title') . ' ' . $this->container->getParameter(
+                    'app.app_version'
+                )
+            );
+            $lines[] = array(
+                'Project:',
+                $this->container->getParameter('app.project_title') . ' ' . $this->container->getParameter(
+                    'app.project_version'
+                )
+            );
         }
 
         $l1 = 0;

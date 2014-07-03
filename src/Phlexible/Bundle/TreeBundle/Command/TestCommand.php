@@ -8,9 +8,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Phlexible\Bundle\TreeBundle\ContentTree\Dumper\XmlDumper;
 use Phlexible\Bundle\TreeBundle\ContentTree\XmlContentTree;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,8 +29,7 @@ class TestCommand extends ContainerAwareCommand
         $this
             ->setName('tree:test')
             ->setDescription('Test tree.')
-            ->addArgument('siterootId', InputArgument::REQUIRED, 'Siteroot ID')
-        ;
+            ->addArgument('siterootId', InputArgument::REQUIRED, 'Siteroot ID');
     }
 
     /**

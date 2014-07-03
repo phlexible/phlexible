@@ -26,8 +26,7 @@ class DumpRouterCommand extends ContainerAwareCommand
     {
         $this
             ->setName('cms:router:dump')
-            ->setDescription('Dump router.')
-        ;
+            ->setDescription('Dump router.');
     }
 
     /**
@@ -39,7 +38,6 @@ class DumpRouterCommand extends ContainerAwareCommand
         $router = $container->get('cmsFrontRouter');
 
         foreach ($router->getRoutes() as $name => $route) {
-            /* @var $route \Zend_Controller_Router_Route */
             $vars = $route->getVariables();
             $data = array();
             foreach ($vars as $var) {

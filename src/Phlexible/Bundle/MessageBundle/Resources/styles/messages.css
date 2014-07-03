@@ -2,8 +2,8 @@
     padding-bottom: 8px;
 }
 
-.p-messages-main-panel  .x-layout-collapsed-west {
-    background-image:url(/BASEURL/admin/gui/asset/textimage/?key=messages.filter&component=messages&icon=filter);
-    background-repeat:no-repeat;
-    background-position:center;
+.p-messages-main-panel .x-layout-collapsed-west {
+    background-image: url(/BASEURL/admin/gui/asset/textimage/?key=messages.filter&component=messages&icon=filter);
+    background-repeat: no-repeat;
+    background-position: center;
 }

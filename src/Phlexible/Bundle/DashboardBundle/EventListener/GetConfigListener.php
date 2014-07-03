@@ -22,11 +22,11 @@ class GetConfigListener
      */
     public function onGetConfig(GetConfigEvent $event)
     {
-        $user  = $event->getSecurityContext()->getToken()->getUser();
+        $user = $event->getSecurityContext()->getToken()->getUser();
         $config = $event->getConfig();
 
         $defaultPortlets = array(
-            'online-portlet' => array(
+            'online-portlet'   => array(
                 'mode' => 'opened',
                 'col'  => 1,
                 'pos'  => 1

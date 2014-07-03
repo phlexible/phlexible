@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\ElementBundle\ContentElement;
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ContentElement\Dumper\XmlDumper;
 use Phlexible\Bundle\ElementBundle\ContentElement\Loader\XmlLoader;
-use Phlexible\Bundle\ElementBundle\ElementService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -54,11 +53,12 @@ class ContentElementLoader
      * @param XmlLoader                $loader
      * @param XmlDumper                $dumper
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                LoggerInterface $logger,
-                                ContentElementBuilder $builder,
-                                XmlLoader $loader,
-                                XmlDumper $dumper)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger,
+        ContentElementBuilder $builder,
+        XmlLoader $loader,
+        XmlDumper $dumper)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;

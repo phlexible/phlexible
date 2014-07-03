@@ -2,7 +2,7 @@ Ext.util.Utf8 = {
 
     // public method for url encoding
     encode: function (string) {
-        string = string.replace(/rn/g,"\n");
+        string = string.replace(/rn/g, "\n");
         var utftext = "";
 
         for (var n = 0; n < string.length; n++) {
@@ -12,7 +12,7 @@ Ext.util.Utf8 = {
             if (c < 128) {
                 utftext += String.fromCharCode(c);
             }
-            else if((c > 127) && (c < 2048)) {
+            else if ((c > 127) && (c < 2048)) {
                 utftext += String.fromCharCode((c >> 6) | 192);
                 utftext += String.fromCharCode((c & 63) | 128);
             }
@@ -35,7 +35,7 @@ Ext.util.Utf8 = {
         var c1 = 0;
         var c2 = 0;
 
-        while ( i < utftext.length ) {
+        while (i < utftext.length) {
 
             c = utftext.charCodeAt(i);
 
@@ -43,14 +43,14 @@ Ext.util.Utf8 = {
                 string += String.fromCharCode(c);
                 i++;
             }
-            else if((c > 191) && (c < 224)) {
-                c2 = utftext.charCodeAt(i+1);
+            else if ((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i + 1);
                 string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
                 i += 2;
             }
             else {
-                c2 = utftext.charCodeAt(i+1);
-                c3 = utftext.charCodeAt(i+2);
+                c2 = utftext.charCodeAt(i + 1);
+                c3 = utftext.charCodeAt(i + 2);
                 string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
                 i += 3;
             }

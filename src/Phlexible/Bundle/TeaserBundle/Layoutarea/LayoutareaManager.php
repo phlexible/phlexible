@@ -16,16 +16,9 @@ namespace Phlexible\Bundle\TeaserBundle\Layoutarea;
 class LayoutareaManager
 {
     /**
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
      * Return all Teasers for the given EID
      *
-     * @param $elementTypeID string
+     * @param string $elementTypeID
      *
      * @return array
      */
@@ -37,17 +30,15 @@ class LayoutareaManager
 
         $layoutAreas = array();
 
-        foreach ($layoutElementTypes as $layoutElementTypeID => $layoutElementType)
-        {
+        foreach ($layoutElementTypes as $layoutElementTypeID => $layoutElementType) {
             $layoutElementTypeVersion = $layoutElementType->getVersion();
             $viabilityIDs = $layoutElementTypeVersion->getViabilityIDs();
 
-            if (!in_array($elementTypeID, $viabilityIDs))
-            {
+            if (!in_array($elementTypeID, $viabilityIDs)) {
                 continue;
             }
 
-//            $layoutAreas[$layoutElementTypeID] = new Makeweb_Teasers_Layoutarea($layoutElementTypeVersion);
+            //            $layoutAreas[$layoutElementTypeID] = new Makeweb_Teasers_Layoutarea($layoutElementTypeVersion);
             $layoutAreas[$layoutElementTypeID] = $layoutElementType->getLatest();
         }
 

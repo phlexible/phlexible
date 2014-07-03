@@ -15,11 +15,11 @@ namespace Phlexible\Bundle\TeaserBundle\Teaser;
  */
 class TeaserHistory
 {
-    const ACTION_CREATE_TEASER   = 'createTeaser';
-    const ACTION_DELETE_TEASER   = 'deleteTeaser';
+    const ACTION_CREATE_TEASER = 'createTeaser';
+    const ACTION_DELETE_TEASER = 'deleteTeaser';
     const ACTION_CREATE_INSTANCE = 'createInstance';
-    const ACTION_PUBLISH         = 'publish';
-    const ACTION_SET_OFFLINE     = 'setOffline';
+    const ACTION_PUBLISH = 'publish';
+    const ACTION_SET_OFFLINE = 'setOffline';
 
     /**
      * Insert new history entry
@@ -46,6 +46,6 @@ class TeaserHistory
             'create_uid'  => MWF_Env::getUid(),
         );
 
-        $db->insert($db->prefix.'element_tree_teasers_history', $insertData);
+        $db->insert($db->prefix . 'element_tree_teasers_history', $insertData);
     }
 }

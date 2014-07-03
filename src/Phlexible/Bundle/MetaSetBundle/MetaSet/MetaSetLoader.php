@@ -31,6 +31,7 @@ class MetaSetLoader
      * @var LoaderInterface[]
      */
     private $loaders = array();
+
     /**
      * @param array             $bundles
      * @param string            $fileDir

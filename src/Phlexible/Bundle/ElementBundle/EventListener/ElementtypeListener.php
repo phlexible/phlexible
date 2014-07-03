@@ -22,47 +22,43 @@ class ElementtypeListener
         return;
         $container = $params['container'];
 
-        try
-        {
+        try {
             $db = $container->dbPool->default;
             $newElementTypeVersion = $event->getNewElementTypeVersion();
             $oldElementTypeVersion = $event->getOldElementTypeVersion();
 
-            if ($oldElementTypeVersion->getID() !== $newElementTypeVersion->getID())
-            {
+            if ($oldElementTypeVersion->getID() !== $newElementTypeVersion->getID()) {
                 return;
             }
 
             $select = $db->select()
-                         ->distinct()
-                         ->from($db->prefix . 'element_version', 'eid')
-                         ->where('element_type_id = ?', $oldElementTypeVersion->getID());
+                ->distinct()
+                ->from($db->prefix . 'element_version', 'eid')
+                ->where('element_type_id = ?', $oldElementTypeVersion->getID());
 
             $eids = $db->fetchCol($select);
 
             $elementManager = $container->elementsManager;
 
-            foreach ($eids as $eid)
-            {
+            foreach ($eids as $eid) {
                 set_time_limit(45);
 
                 $element = $elementManager->getByEID($eid);
                 $oldElementVersion = $element->getLatestVersion();
 
                 $newElementVersion = $oldElementVersion->copy(
-                                                       null,
-                                                           $newElementTypeVersion->getVersion()
+                    null,
+                    $newElementTypeVersion->getVersion()
                 );
 
                 $select = $db->select()
-                             ->from($db->prefix . 'element_tree_page')
-                             ->where('eid = ?', $eid)
-                             ->where('version = ?', $oldElementVersion->getVersion());
+                    ->from($db->prefix . 'element_tree_page')
+                    ->where('eid = ?', $eid)
+                    ->where('version = ?', $oldElementVersion->getVersion());
 
                 $pages = $db->fetchAll($select);
 
-                foreach ($pages as $row)
-                {
+                foreach ($pages as $row) {
                     $row['version'] = $newElementVersion->getVersion();
 
                     $db->insert($db->prefix . 'element_tree_page', $row);
@@ -70,19 +66,16 @@ class ElementtypeListener
 
                 // update element version titles
                 $languages = $container->getParam(':frontend.languages.available');
-                foreach ($languages as $language)
-                {
+                foreach ($languages as $language) {
                     $title = $newElementVersion->getBackendTitle($language);
                 }
             }
-        }
-        catch (\Exception $e)
-        {
-            echo $select.PHP_EOL;
-            echo $oldElementVersion->getVersion().PHP_EOL;
-            echo $newElementVersion->getVersion().PHP_EOL;
+        } catch (\Exception $e) {
+            echo $select . PHP_EOL;
+            echo $oldElementVersion->getVersion() . PHP_EOL;
+            echo $newElementVersion->getVersion() . PHP_EOL;
             print_r($row);
-            echo $e->getMessage().PHP_EOL.$e->getTraceAsString();
+            echo $e->getMessage() . PHP_EOL . $e->getTraceAsString();
             die;
         }
     }
@@ -91,20 +84,16 @@ class ElementtypeListener
     {
         return;
         /* @var $container MWF_Container_ContainerInterface */
-        $container       = $params['container'];
+        $container = $params['container'];
         $siterootManager = $container->siterootManager;
-        $treeManager     = $container->get('phlexible_tree.manager');
+        $treeManager = $container->get('phlexible_tree.manager');
 
         $siteroots = $siterootManager->getAllSiteRoots();
 
-        foreach ($siteroots as $siterootId => $siteroot)
-        {
-            try
-            {
+        foreach ($siteroots as $siterootId => $siteroot) {
+            try {
                 $tree = $treeManager->getBySiteRootId($siterootId, true);
-            }
-            catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 MWF_Log::exception($e);
             }
         }

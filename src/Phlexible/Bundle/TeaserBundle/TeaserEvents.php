@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\TeaserBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface TeaserEvents
+class TeaserEvents
 {
     /**
      * Before Catch Get Result Pool

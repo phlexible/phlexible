@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\SiterootBundle\Exception;
 /**
  * Base exception
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class Exception extends \Exception
 {

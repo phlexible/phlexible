@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
-use Phlexible\Bundle\ElementRendererBundle\VersionStrategy\OnlineVersionStrategy;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\VersionStrategy\OnlineVersionStrategy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,11 +53,12 @@ class ElementConfigurator implements ConfiguratorInterface
      * @param ContentElementLoader     $loader
      * @param SecurityContextInterface $securityContext
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                LoggerInterface $logger,
-                                ElementService $elementService,
-                                ContentElementLoader $loader,
-                                SecurityContextInterface $securityContext)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger,
+        ElementService $elementService,
+        ContentElementLoader $loader,
+        SecurityContextInterface $securityContext)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
@@ -75,13 +76,15 @@ class ElementConfigurator implements ConfiguratorInterface
             return;
         }
 
-        $elementEid      = $renderConfiguration->get('eid');
-        $elementVersion  = $renderConfiguration->get('version');
+        $elementEid = $renderConfiguration->get('eid');
+        $elementVersion = $renderConfiguration->get('version');
         $elementLanguage = $renderConfiguration->get('language');
 
-        #$versionStrategy = new OnlineVersionStrategy($this->elementService);
-        #$availableLanguages = $request->attributes->get('availableLanguages', array('de'));
-        #$elementLanguage = $versionStrategy->findLanguage($request, $element, $availableLanguages);
+        /*
+        $versionStrategy = new OnlineVersionStrategy($this->elementService);
+        $availableLanguages = $request->attributes->get('availableLanguages', array('de'));
+        $elementLanguage = $versionStrategy->findLanguage($request, $element, $availableLanguages);
+        */
 
         $contentElement = $this->loader->load(
             $elementEid,
@@ -95,8 +98,7 @@ class ElementConfigurator implements ConfiguratorInterface
             ->addFeature('element')
             ->set('contentElement', $contentElement)
             ->addFeature('templateFile')
-            ->set('templateFile', $template)
-        ;
+            ->set('templateFile', $template);
 
         return;
         // Before Init Element Event
@@ -132,7 +134,7 @@ class ElementConfigurator implements ConfiguratorInterface
             throw new Makeweb_Renderers_Html_Exception_ElementNotOnlineException($msg);
         }
 
-        $elementtype        = $this->elementService->findElementtype($element);
+        $elementtype = $this->elementService->findElementtype($element);
         $elementtypeVersion = $this->elementService->findElementtypeVersion($elementVersion);
 
         /*
@@ -169,7 +171,7 @@ class ElementConfigurator implements ConfiguratorInterface
 
         $elementStructure = $this->elementService->findElementStructure($elementVersion, $elementLanguage);
 
-        $this->logger->debug('Element: '.$elementVersion->getPageTitle($elementLanguage));
+        $this->logger->debug('Element: ' . $elementVersion->getPageTitle($elementLanguage));
 
         $contentElement = new ContentElement(
             $element->getEid(),
@@ -189,8 +191,7 @@ class ElementConfigurator implements ConfiguratorInterface
             ->addFeature('element')
             ->set('contentElement', $contentElement)
             ->addFeature('template')
-            ->set('template', $template)
-        ;
+            ->set('template', $template);
 
         // Init Element Event
         /*

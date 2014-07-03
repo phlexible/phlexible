@@ -31,7 +31,6 @@ class PhlexibleGuiBundle extends Bundle
         $container
             ->addCompilerPass(new AddAssetProvidersPass())
             ->addCompilerPass(new AddCompressorsPass())
-            ->addCompilerPass(new AddDatabaseConnectionsPass())
-        ;
+            ->addCompilerPass(new AddDatabaseConnectionsPass());
     }
 }

@@ -54,11 +54,11 @@ class ChangepasswordController extends Controller
                 'projectTitle' => $container->getParameter('app.project_title'),
                 'scripts'      => $viewChangePassword->get($this->getRequest(), $this->getSecurityContext()),
                 'noScript'     => $viewChangePassword->getNoScript(
-                    $request->getBaseUrl(),
-                    $container->getParameter('app.app_title'),
-                    $container->getParameter('app.project_title')
-                ),
-                'csrfToken' => $csrfToken
+                        $request->getBaseUrl(),
+                        $container->getParameter('app.app_title'),
+                        $container->getParameter('app.project_title')
+                    ),
+                'csrfToken'    => $csrfToken
             )
         );
 
@@ -70,54 +70,75 @@ class ChangepasswordController extends Controller
     public function saveAction()
     {
         $currentPassword = $this->getParam('current_password');
-        $newPassword     = $this->getParam('new_password');
-        $newPasswordRep  = $this->getParam('new_password_repeat');
+        $newPassword = $this->getParam('new_password');
+        $newPasswordRep = $this->getParam('new_password_repeat');
 
         $user = $this->getUser();
 
         $container = $this->getContainer();
         $passwordCheck = $container->get('usersPasswordCheck');
-        $t9n  = $this->getContainer()->t9n;
+        $t9n = $this->getContainer()->t9n;
         $page = $t9n->users;
 
-        if (!$user->checkPassword($currentPassword))
-        {
-            $this->_response->setResult(false, null, '', array(), array(
+        if (!$user->checkPassword($currentPassword)) {
+            $this->_response->setResult(
+                false,
+                null,
+                '',
+                array(),
                 array(
-                    'id' => 'current_password',
-                    'msg' => $page->current_password_wrong
+                    array(
+                        'id'  => 'current_password',
+                        'msg' => $page->current_password_wrong
+                    )
                 )
-            ));
+            );
+
             return;
-        }
-        elseif ($newPassword != $newPasswordRep)
-        {
-            $this->_response->setResult(false, null, '', array(), array(
+        } elseif ($newPassword != $newPasswordRep) {
+            $this->_response->setResult(
+                false,
+                null,
+                '',
+                array(),
                 array(
-                    'id' => 'new_password_repeat',
-                    'msg' => $page->passwords_dont_match
+                    array(
+                        'id'  => 'new_password_repeat',
+                        'msg' => $page->passwords_dont_match
+                    )
                 )
-            ));
+            );
+
             return;
-        }
-        elseif ($currentPassword == $newPassword)
-        {
-            $this->_response->setResult(false, null, '', array(), array(
+        } elseif ($currentPassword == $newPassword) {
+            $this->_response->setResult(
+                false,
+                null,
+                '',
+                array(),
                 array(
-                    'id' => 'new_password',
-                    'msg' => $page->password_are_the_same
+                    array(
+                        'id'  => 'new_password',
+                        'msg' => $page->password_are_the_same
+                    )
                 )
-            ));
+            );
+
             return;
-        }
-        elseif ($result = $passwordCheck->test($newPassword, $user))
-        {
-            $this->_response->setResult(false, null, '', array(), array(
+        } elseif ($result = $passwordCheck->test($newPassword, $user)) {
+            $this->_response->setResult(
+                false,
+                null,
+                '',
+                array(),
                 array(
-                    'id' => 'new_password',
-                    'msg' => $result
+                    array(
+                        'id'  => 'new_password',
+                        'msg' => $result
+                    )
                 )
-            ));
+            );
+
             return;
         }
 
@@ -125,11 +146,13 @@ class ChangepasswordController extends Controller
         $user->setFlag(User::FLAG_FORCE_PASSWORD_CHANGE, false);
         $user->save();
 
-        $this->getContainer()->get('logger')->notice('User "'.$user->getUsername().'" set new password due to force password change or expiration.');
+        $this->getContainer()->get('logger')->notice(
+            'User "' . $user->getUsername() . '" set new password due to force password change or expiration.'
+        );
 
         // post cleartext message
         $message = UsersMessage::create(
-            'User "'.$user->getUsername().'" set new password due to force password change or expiration.',
+            'User "' . $user->getUsername() . '" set new password due to force password change or expiration.',
             null,
             UsersMessage::PRIORITY_LOW
         );

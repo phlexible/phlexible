@@ -13,7 +13,7 @@
  * @constructor
  * @param {Object} config A config object that sets properties.
  */
-Phlexible.gui.util.SystemMessage = function(config){
+Phlexible.gui.util.SystemMessage = function (config) {
     this.addEvents({
         /**
          * @event message
@@ -23,9 +23,9 @@ Phlexible.gui.util.SystemMessage = function(config){
         "message": true
     });
 
-    if(!config) config = {};
+    if (!config) config = {};
     this.pollBtn = null;
-    if(config.noButton) this.noButton = true;
+    if (config.noButton) this.noButton = true;
 
     Phlexible.gui.util.SystemMessage.superclass.constructor.call(this, config);
 };
@@ -38,10 +38,10 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
 
     noButton: false,
 
-    getButton: function() {
-        if(this.noButton) return false;
+    getButton: function () {
+        if (this.noButton) return false;
 
-        if(!this.pollBtn) {
+        if (!this.pollBtn) {
             this.pollBtn = Phlexible.Frame.taskbar.trayPanel.add({
                 id: 'update',
                 cls: 'x-btn-icon',
@@ -54,7 +54,7 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
         return this.pollBtn;
     },
 
-    getTask: function() {
+    getTask: function () {
         return {
             run: this.poll,
             interval: this.interval,
@@ -62,7 +62,7 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
         };
     },
 
-    poll: function() {
+    poll: function () {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('messages_poll'),
             params: {
@@ -71,7 +71,7 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
             method: 'post',
             scope: this,
             success: this.processResponse,
-            failure: function(response, options) {
+            failure: function (response, options) {
                 Phlexible.console.log(response);
                 Phlexible.console.log(options);
             }
@@ -81,7 +81,7 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
     /**
      * Activate message system
      */
-    activate: function(){
+    activate: function () {
         if (!this.noButton) {
             btn = this.getButton();
             btn.setIconClass('p-gui-update_active-icon');
@@ -92,7 +92,7 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
     /**
      * Deactivate message system
      */
-    deactivate: function(){
+    deactivate: function () {
         if (!this.noButton) {
             btn = this.getButton();
             btn.setIconClass('p-gui-update_inactive-icon');
@@ -103,7 +103,7 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
     /**
      * Start message system with delay
      */
-    start: function(){
+    start: function () {
         this.stop();
 
         this.activate();
@@ -115,7 +115,7 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
     /**
      * Stop message system
      */
-    stop: function() {
+    stop: function () {
         if (this.task) {
             Ext.TaskMgr.stop(this.task);
 
@@ -128,11 +128,11 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
     /**
      * Process message response
      */
-    processResponse: function(response){
-        if(!this.noButton) Ext.fly(this.getButton().getEl()).frame('#8db2e3', 1);
-        if(response.responseText) {
+    processResponse: function (response) {
+        if (!this.noButton) Ext.fly(this.getButton().getEl()).frame('#8db2e3', 1);
+        if (response.responseText) {
             var events = Ext.decode(response.responseText);
-            for(var i=0; i<events.length; i++){
+            for (var i = 0; i < events.length; i++) {
                 this.fireEvent('message', events[i]);
             }
         }

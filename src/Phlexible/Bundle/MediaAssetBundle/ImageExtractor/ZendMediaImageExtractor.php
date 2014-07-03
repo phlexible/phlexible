@@ -63,7 +63,7 @@ class ZendMediaImageExtractor implements ImageExtractorInterface
         $imageFile = null;
 
         try {
-            $id3   = new \Zend_Media_Id3v2($filename);
+            $id3 = new \Zend_Media_Id3v2($filename);
             $frame = $id3->getFramesByIdentifier('APIC'); // for attached picture
 
             if (!empty($frame[0])) {

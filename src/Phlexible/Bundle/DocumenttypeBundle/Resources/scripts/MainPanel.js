@@ -4,32 +4,35 @@ Phlexible.documenttypes.MainPanel = Ext.extend(Ext.Panel, {
     closable: true,
     layout: 'border',
 
-    initComponent: function() {
-        this.items = [{
-			xtype: 'documenttypes-documenttypesgrid',
-			region: 'center',
-			listeners: {
-				documenttypeChange: function(r) {
-					var mimetypes;
-					if (r) {
-						mimetypes = r.get('mimetypes');
-					} else {
-						mimetypes = null;
-					}
-					this.getComponent(1).loadMimetypes(mimetypes);
-				},
-				scope: this
-			}
-		},{
-			xtype: 'documenttypes-mimetypesgrid',
-			region: 'east',
-			width: 400
-		}];
+    initComponent: function () {
+        this.items = [
+            {
+                xtype: 'documenttypes-documenttypesgrid',
+                region: 'center',
+                listeners: {
+                    documenttypeChange: function (r) {
+                        var mimetypes;
+                        if (r) {
+                            mimetypes = r.get('mimetypes');
+                        } else {
+                            mimetypes = null;
+                        }
+                        this.getComponent(1).loadMimetypes(mimetypes);
+                    },
+                    scope: this
+                }
+            },
+            {
+                xtype: 'documenttypes-mimetypesgrid',
+                region: 'east',
+                width: 400
+            }
+        ];
 
         Phlexible.documenttypes.MainPanel.superclass.initComponent.call(this);
     },
 
-    loadParams: function() {
+    loadParams: function () {
 
     }
 });

@@ -35,11 +35,13 @@ class CacheCollection implements \IteratorAggregate, \Countable
     /**
      * @param string $name
      * @param Cache  $cache
+     *
      * @return $this
      */
     public function addCache($name, Cache $cache)
     {
         $this->caches[$name] = $cache;
+
         return $this;
     }
 

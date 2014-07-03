@@ -9,36 +9,36 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
     autoWidth: false,
     deferredRender: false,
     hideMode: 'offsets',
-	layout: 'fit',
+    layout: 'fit',
 
     currentETID: null,
     currentActive: null,
 
-    initComponent: function() {
+    initComponent: function () {
         this.element.on({
             load: this.onLoadElement,
             getlock: this.onGetLock,
             islocked: this.onIsLocked,
             removelock: this.onRemoveLock,
-			scope: this
+            scope: this
         });
 
         this.on({
-            render: function(c) {
+            render: function (c) {
                 Ext.dd.ScrollManager.register(c.body);
             },
-			scope: this
+            scope: this
         });
 
         Phlexible.elements.ElementContentPanel.superclass.initComponent.call(this);
     },
 
-    onLoadElement: function(element) {
+    onLoadElement: function (element) {
         element.prototypes.clear();
         this.removeAll();
 
         this.structure = element.data.structure;
-		this.valueStructure = element.data.valueStructure;
+        this.valueStructure = element.data.valueStructure;
 
         if (!Ext.isEmpty(element.data.structure)) { // Ext.type(element.data.structure) == 'object') {
             //if(this.isVisible()) {
@@ -51,70 +51,70 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    lateRender: function() {
+    lateRender: function () {
         if (this.structure) {
             var structure = this.structure,
-				valueStructure = this.valueStructure,
-				targetPanel = this,
-				lazy = false,
-				noTitle = true;
+                valueStructure = this.valueStructure,
+                targetPanel = this,
+                lazy = false,
+                noTitle = true;
 
 //            this.disable();
 
-			if (structure[0].type === 'root') {
-				structure = structure[0].children;
-			}
+            if (structure[0].type === 'root') {
+                structure = structure[0].children;
+            }
 
-			if (structure[0].type === 'tab' && structure.length > 1) {
-				targetPanel = {
-					xtype: 'elements-elementcontenttabpanel',
-					items: []
-				};
-				lazy = true;
-				noTitle = false;
-			}
-
-			items = Phlexible.elements.ElementDataTabHelper.loadItems(structure, valueStructure, this, this.element);
-
-			/*
-            Ext.each(structure, function(item) {
-                var config = {
-                    xtype: 'panel',
-                    title: noTitle ? null : item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
-                    iconCls: noTitle ? null : 'p-element-tab-icon',
-                    hideMode: 'offsets',
-                    autoScroll: true,
-                    items: {
-						xtype: 'elements-elementdatatab',
-						hideMode: 'offsets',
-						element: this.element,
-						structure: item.children,
-						valueStructure: valueStructure
-					},
-                    listeners: {
-                        activate: function(c) {
-							this.currentETID = this.element.data.properties.et_id;
-							this.currentActive = this.items.indexOf(this.layout.activeItem);
-						},
-						scope: this
-                    }
+            if (structure[0].type === 'tab' && structure.length > 1) {
+                targetPanel = {
+                    xtype: 'elements-elementcontenttabpanel',
+                    items: []
                 };
-				if (lazy) {
-					targetPanel.items.push(config);
-				} else {
-					targetPanel.add(config);
-				}
-            }, this);
-            */
+                lazy = true;
+                noTitle = false;
+            }
 
-			if (lazy) {
-				targetPanel.items = items;
-				this.add(targetPanel);
-			} else {
-				Ext.each(items, function(item) {
-					targetPanel.add(item);
-				});
-			}
+            items = Phlexible.elements.ElementDataTabHelper.loadItems(structure, valueStructure, this, this.element);
+
+            /*
+             Ext.each(structure, function(item) {
+             var config = {
+             xtype: 'panel',
+             title: noTitle ? null : item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+             iconCls: noTitle ? null : 'p-element-tab-icon',
+             hideMode: 'offsets',
+             autoScroll: true,
+             items: {
+             xtype: 'elements-elementdatatab',
+             hideMode: 'offsets',
+             element: this.element,
+             structure: item.children,
+             valueStructure: valueStructure
+             },
+             listeners: {
+             activate: function(c) {
+             this.currentETID = this.element.data.properties.et_id;
+             this.currentActive = this.items.indexOf(this.layout.activeItem);
+             },
+             scope: this
+             }
+             };
+             if (lazy) {
+             targetPanel.items.push(config);
+             } else {
+             targetPanel.add(config);
+             }
+             }, this);
+             */
+
+            if (lazy) {
+                targetPanel.items = items;
+                this.add(targetPanel);
+            } else {
+                Ext.each(items, function (item) {
+                    targetPanel.add(item);
+                });
+            }
 
 //            for(var i=0; i<structure.length; i++) {
 //
@@ -131,26 +131,26 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
 //            }
 
             if (this.element.getLockStatus() != 'edit') {
-                this.items.each(function(panel) {
-					panel.disable();
+                this.items.each(function (panel) {
+                    panel.disable();
                 });
             }
 
-			this.doLayout();
+            this.doLayout();
 //            this.enable();
 
             this.structure = false;
         }
     },
 
-    syncData: function(c) {
-        if(!c.items) return;
+    syncData: function (c) {
+        if (!c.items) return;
 
-        c.items.each(function(i) {
-            if(i.isFormField && i.syncValue && typeof i.syncValue == 'function') {
+        c.items.each(function (i) {
+            if (i.isFormField && i.syncValue && typeof i.syncValue == 'function') {
                 //Phlexible.console.log('sync item value');
                 i.syncValue();
-            } else if (!i.isFormField){
+            } else if (!i.isFormField) {
                 this.syncData(i);
             }
         }, this);
@@ -170,16 +170,16 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
 //        }, this);
 //    },
 
-    isValid: function() {
+    isValid: function () {
         var valid = true;
 
-        var chk = function(item) {
-            if(item.isFormField) {
+        var chk = function (item) {
+            if (item.isFormField) {
                 if (!item.isValid()) {
                     valid = false;
                     return false;
                 }
-            } else if(item.items) {
+            } else if (item.items) {
                 item.items.each(chk);
             }
             return true;
@@ -189,20 +189,20 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
         return valid;
     },
 
-    onGetLock: function() {
-        this.items.each(function(panel) {
-			panel.enable();
+    onGetLock: function () {
+        this.items.each(function (panel) {
+            panel.enable();
         });
     },
 
-    onIsLocked: function() {
-		this.items.each(function(panel) {
+    onIsLocked: function () {
+        this.items.each(function (panel) {
             panel.disable();
         });
     },
 
-    onRemoveLock: function() {
-		this.items.each(function(panel) {
+    onRemoveLock: function () {
+        this.items.each(function (panel) {
             panel.disable();
         });
     }

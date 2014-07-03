@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\CacheBundle\Portlet;
 
-use Brainbits_Format_Filesize as FilesizeFormatter;
 use Phlexible\Bundle\CacheBundle\Cache\CacheCollection;
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
+use Phlexible\Component\Formatter\FilesizeFormatter;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -61,11 +61,12 @@ class CacheUsagePortlet extends Portlet
 
             $percent = $memoryTotal ? $memoryUsage / $memoryTotal : 0;
 
+            $formatter = new FilesizeFormatter();
             $data[] = array(
                 'title'   => $name,
-                'used'    => FilesizeFormatter::format($memoryUsage),
-                'free'    => FilesizeFormatter::format($memoryAvailable),
-                'total'   => FilesizeFormatter::format($memoryTotal),
+                'used'    => $formatter->formatFilesize($memoryUsage),
+                'free'    => $formatter->formatFilesize($memoryAvailable),
+                'total'   => $formatter->formatFilesize($memoryTotal),
                 'percent' => $percent,
             );
 

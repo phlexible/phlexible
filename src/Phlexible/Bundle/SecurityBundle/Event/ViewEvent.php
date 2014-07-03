@@ -36,7 +36,7 @@ class ViewEvent extends Event
     public function __construct(Request $request, LoginView $view)
     {
         $this->request = $request;
-        $this->view    = $view;
+        $this->view = $view;
     }
 
     /**

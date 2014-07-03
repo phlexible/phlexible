@@ -1,9 +1,9 @@
 Ext.namespace('Phlexible.frontend.accordion');
 
-Phlexible.elements.ElementTabPanel.prototype.populateItems = Phlexible.elements.ElementTabPanel.prototype.populateItems.createSequence(function() {
+Phlexible.elements.ElementTabPanel.prototype.populateItems = Phlexible.elements.ElementTabPanel.prototype.populateItems.createSequence(function () {
     var index = false;
 
-    for (var i=0; i<this.items.length; i++) {
+    for (var i = 0; i < this.items.length; i++) {
         if (this.items[i].xtype == 'elements-elementhistorygrid') {
             index = i;
             break;
@@ -20,7 +20,7 @@ Phlexible.elements.ElementTabPanel.prototype.populateItems = Phlexible.elements.
 });
 
 Phlexible.elements.TopToolbar.prototype.populateExtendedMenu =
-    Phlexible.elements.TopToolbar.prototype.populateExtendedMenu.createSequence(function() {
+    Phlexible.elements.TopToolbar.prototype.populateExtendedMenu.createSequence(function () {
         this.extendedMenuIndex.insert(0, 'preview_sep', '-');
         this.extendedMenuIndex.insert(0, 'preview', {
             // items[6]
@@ -28,43 +28,47 @@ Phlexible.elements.TopToolbar.prototype.populateExtendedMenu =
             text: Phlexible.frontend.Strings.preview,
             iconCls: 'p-frontend-preview_page-icon',
             disabled: true,
-            handler: function(){
+            handler: function () {
                 var src = this.element.data.urls.preview;
                 window.open(src, 'latest_preview'); //, 'width=1000,height=700,scrollbars=yes');
             },
             scope: this,
-            menu: [{
-                text: Phlexible.frontend.Strings.preview,
-                iconCls: 'p-frontend-preview_preview-icon',
-                handler: function(){
-                    var src = this.element.data.urls.preview;
-                    window.open(src, 'preview'); //, 'width=1000,height=700,scrollbars=yes');
+            menu: [
+                {
+                    text: Phlexible.frontend.Strings.preview,
+                    iconCls: 'p-frontend-preview_preview-icon',
+                    handler: function () {
+                        var src = this.element.data.urls.preview;
+                        window.open(src, 'preview'); //, 'width=1000,height=700,scrollbars=yes');
+                    },
+                    scope: this
                 },
-                scope: this
-            },{
-                text: Phlexible.frontend.Strings.preview_debug,
-                iconCls: 'p-frontend-preview_debug-icon',
-                hidden: Phlexible.User.isGranted('debug'),
-                handler: function(){
-                    var src = this.element.data.urls.debug;
-                    window.open(src, 'preview_debug'); //, 'width=1000,height=700,scrollbars=yes');
+                {
+                    text: Phlexible.frontend.Strings.preview_debug,
+                    iconCls: 'p-frontend-preview_debug-icon',
+                    hidden: Phlexible.User.isGranted('debug'),
+                    handler: function () {
+                        var src = this.element.data.urls.debug;
+                        window.open(src, 'preview_debug'); //, 'width=1000,height=700,scrollbars=yes');
+                    },
+                    scope: this
                 },
-                scope: this
-            },{
-                text: Phlexible.frontend.Strings.preview_online,
-                iconCls: 'p-frontend-preview_online-icon',
-                disabled: true,
-                handler: function(){
-                    var src = this.element.data.urls.online;
-                    window.open(src, 'preview_live'); //, 'width=1000,height=700,scrollbars=yes');
-                },
-                scope: this
-            }]
+                {
+                    text: Phlexible.frontend.Strings.preview_online,
+                    iconCls: 'p-frontend-preview_online-icon',
+                    disabled: true,
+                    handler: function () {
+                        var src = this.element.data.urls.online;
+                        window.open(src, 'preview_live'); //, 'width=1000,height=700,scrollbars=yes');
+                    },
+                    scope: this
+                }
+            ]
         });
     });
 
 Phlexible.elements.TopToolbar.prototype.onLoadElement =
-    Phlexible.elements.TopToolbar.prototype.onLoadElement.createSequence(function(element) {
+    Phlexible.elements.TopToolbar.prototype.onLoadElement.createSequence(function (element) {
         //var properties = element.properties;
 
         // enable preview button only for full elements
@@ -85,10 +89,10 @@ Phlexible.elements.TopToolbar.prototype.onLoadElement =
     });
 
 Phlexible.elements.ElementAccordion.prototype.populateItems =
-    Phlexible.elements.ElementAccordion.prototype.populateItems.createSequence(function() {
+    Phlexible.elements.ElementAccordion.prototype.populateItems.createSequence(function () {
         var index = false;
 
-        for (var i=0; i<this.items.length; i++) {
+        for (var i = 0; i < this.items.length; i++) {
             if (this.items[i].xtype == 'elements-dataaccordion') {
                 index = i;
                 break;

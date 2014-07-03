@@ -28,12 +28,10 @@ class TextField extends AbstractField
      */
     protected function _transform(array $item, array $media, array $options)
     {
-        if (strlen($options['default_value']))
-        {
+        if (strlen($options['default_value'])) {
             $item['default_content'] = $options['default_value'];
 
-            if ($item['data_content'] === null)
-            {
+            if ($item['data_content'] === null) {
                 $item['data_content'] = $options['default_value'];
             }
         }

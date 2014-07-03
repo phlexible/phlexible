@@ -15,10 +15,10 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  */
 abstract class AbstractField extends Field
 {
-    protected $isField     = true;
+    protected $isField = true;
     protected $isContainer = true;
-    protected $hasContent  = true;
-    protected $hasOptions  = false;
+    protected $hasContent = true;
+    protected $hasOptions = false;
 
     /**
      * @var string

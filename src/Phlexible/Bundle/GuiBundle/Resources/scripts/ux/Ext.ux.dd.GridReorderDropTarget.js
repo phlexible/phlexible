@@ -2,12 +2,12 @@
 // this code goes in a javascript include file somewhere
 Ext.namespace('Ext.ux.dd');
 
-Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
+Ext.ux.dd.GridReorderDropTarget = function (grid, config) {
     this.target = new Ext.dd.DropTarget(grid.getEl(), {
         ddGroup: grid.ddGroup || 'GridDD',
         grid: grid,
         gridDropTarget: this,
-        notifyDrop: function(dd, e, data) {
+        notifyDrop: function (dd, e, data) {
             // Remove drag lines. The If condition prevents null error when
             // drop occurs without dragging out of the selection area.
             if (this.currentRowEl) {
@@ -15,7 +15,7 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
                 this.currentRowEl.removeClass("grid-row-insert-above");
             }
 
-           if(!data.selections) return false;
+            if (!data.selections) return false;
 
             // determine the row
             var t = Ext.lib.Event.getTarget(e);
@@ -31,8 +31,8 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
             var selections = new Array();
             var keys = ds.data.keys;
             for (key in keys) {
-                for(i = 0; i < data.selections.length; i++) {
-                    if (keys[key]==data.selections[i].id) {
+                for (i = 0; i < data.selections.length; i++) {
+                    if (keys[key] == data.selections[i].id) {
                         // Exit to prevent drop of selected records on itself.
                         if (rindex == key) return false;
                         selections.push(data.selections[i]);
@@ -53,16 +53,16 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
             if (rindex == data.rowIndex) return false;
 
             // fire the before move/copy event
-            if (this.gridDropTarget.fireEvent(this.copy?'beforerowcopy':'beforerowmove', this.gridDropTarget, data.rowIndex, rindex, data.selections, 123) === false) return false;
+            if (this.gridDropTarget.fireEvent(this.copy ? 'beforerowcopy' : 'beforerowmove', this.gridDropTarget, data.rowIndex, rindex, data.selections, 123) === false) return false;
 
             if (!this.copy) {
-                for(i = 0; i < data.selections.length; i++) {
+                for (i = 0; i < data.selections.length; i++) {
                     ds.remove(ds.getById(data.selections[i].id));
                 }
             }
 
 //            Phlexible.log(selections);
-            for(var i = selections.length-1; i>=0; i--) {
+            for (var i = selections.length - 1; i >= 0; i--) {
                 // Logic (convoluted) depending on if rows were moved up or down.
                 ds.insert(rindex, selections[i]);
             }
@@ -72,12 +72,12 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
             if (sm) sm.selectRecords(data.selections);
 
             // fire the after move/copy event
-            this.gridDropTarget.fireEvent(this.copy?'afterrowcopy':'afterrowmove', this.gridDropTarget, data.rowIndex, rindex, data.selections);
+            this.gridDropTarget.fireEvent(this.copy ? 'afterrowcopy' : 'afterrowmove', this.gridDropTarget, data.rowIndex, rindex, data.selections);
 
             return true;
         },
-        notifyOver: function(dd, e, data) {
-        	if(!data.selections) return;
+        notifyOver: function (dd, e, data) {
+            if (!data.selections) return;
 
             var t = Ext.lib.Event.getTarget(e);
             var rindex = this.grid.getView().findRowIndex(t);
@@ -87,8 +87,8 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
             var ds = this.grid.getStore();
             var keys = ds.data.keys;
             for (key in keys) {
-                for(i = 0; i < data.selections.length; i++) {
-                    if (keys[key]==data.selections[i].id) {
+                for (i = 0; i < data.selections.length; i++) {
+                    if (keys[key] == data.selections[i].id) {
                         if (rindex == key) {
                             if (this.currentRowEl) {
                                 this.currentRowEl.removeClass("grid-row-insert-below");
@@ -115,7 +115,7 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
 
                 // Cursor relative to a row. -ve value implies cursor is above the
                 // row's middle and +ve value implues cursor is below the row's middle.
-                this.rowPosition = e.getPageY() - resolvedRow - (rowHeight/2);
+                this.rowPosition = e.getPageY() - resolvedRow - (rowHeight / 2);
 
                 // Clear drag line.
                 if (this.currentRowEl) {
@@ -129,8 +129,8 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
                     this.currentRowEl.addClass("grid-row-insert-below");
                 } else {
                     // If the pointer is on the top half of the row.
-                    if (rindex-1 >= 0) {
-                        var previousRow = this.grid.getView().getRow(rindex-1);
+                    if (rindex - 1 >= 0) {
+                        var previousRow = this.grid.getView().getRow(rindex - 1);
                         this.currentRowEl = new Ext.Element(previousRow);
                         this.currentRowEl.addClass("grid-row-insert-below");
                     } else {
@@ -143,9 +143,9 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
                 rindex = false;
             }
 
-            return (rindex === false)? this.dropNotAllowed : this.dropAllowed;
+            return (rindex === false) ? this.dropNotAllowed : this.dropAllowed;
         },
-        notifyOut: function(dd, e, data) {
+        notifyOut: function (dd, e, data) {
             // Remove drag lines when pointer leaves the gridView.
             if (this.currentRowEl) {
                 this.currentRowEl.removeClass("grid-row-insert-above");
@@ -155,12 +155,12 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
     });
 
     if (config) {
-        if(config.locked) {
+        if (config.locked) {
             this.target.lock();
             delete config.locked;
         }
         Ext.apply(this.target, config);
-        if (config.listeners) Ext.apply(this,{listeners: config.listeners});
+        if (config.listeners) Ext.apply(this, {listeners: config.listeners});
     }
 
     this.addEvents({
@@ -174,25 +174,25 @@ Ext.ux.dd.GridReorderDropTarget = function(grid, config) {
 };
 
 Ext.extend(Ext.ux.dd.GridReorderDropTarget, Ext.util.Observable, {
-    getTarget: function() {
+    getTarget: function () {
         return this.target;
     },
-    getGrid: function() {
+    getGrid: function () {
         return this.target.grid;
     },
-    getCopy: function() {
-        return this.target.copy?true:false;
+    getCopy: function () {
+        return this.target.copy ? true : false;
     },
-    setCopy: function(b) {
-        this.target.copy = b?true:false;
+    setCopy: function (b) {
+        this.target.copy = b ? true : false;
     },
-    lock: function() {
+    lock: function () {
         this.target.lock();
     },
-    unlock: function() {
+    unlock: function () {
         this.target.unlock();
     },
-    isLocked: function() {
+    isLocked: function () {
         this.target.isLocked();
     }
 });

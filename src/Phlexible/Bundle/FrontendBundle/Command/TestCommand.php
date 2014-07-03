@@ -27,8 +27,7 @@ class TestCommand extends ContainerAwareCommand
     {
         $this
             ->setName('frontend:test')
-            ->setDescription('Test request')
-        ;
+            ->setDescription('Test request');
     }
 
     /**
@@ -38,7 +37,7 @@ class TestCommand extends ContainerAwareCommand
     {
         $_SERVER['SCRIPT_FILENAME'] = '/app_dev.php';
         $_SERVER['SCRIPT_NAME'] = 'app_dev.php';
-        $url ='http://brainbits.stephan.brainbits-gmbh.local/app_dev.php/de/text1.1192.html';
+        $url = 'http://brainbits.stephan.brainbits-gmbh.local/app_dev.php/de/text1.1192.html';
         $request = Request::create($url, 'GET', array(), array(), array(), $_SERVER);
 
         $router = $this->getContainer()->get('frontend.router');
@@ -48,7 +47,7 @@ class TestCommand extends ContainerAwareCommand
 
         $generatedUrl = $router->generate($treeNode, array());
 
-        echo $url.PHP_EOL.$generatedUrl.PHP_EOL;
+        echo $url . PHP_EOL . $generatedUrl . PHP_EOL;
 
         $configurator = $this->getContainer()->get('elementrenderer.configurator');
         $config = $configurator->configure($request, array());

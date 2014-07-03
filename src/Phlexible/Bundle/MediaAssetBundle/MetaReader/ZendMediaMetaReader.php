@@ -59,8 +59,7 @@ class ZendMediaMetaReader implements MetaReaderInterface
         $metaData = new MetaData();
         $metaData->setTitle('Media');
 
-        try
-        {
+        try {
             $id3 = new \Zend_Media_Id3v2($filename);
 
             if ($title = $id3->tit2->text) {

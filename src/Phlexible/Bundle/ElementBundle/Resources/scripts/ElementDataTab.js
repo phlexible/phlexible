@@ -11,13 +11,13 @@ Phlexible.elements.ElementDataTab = Ext.extend(Ext.Panel, {
     hideMode: 'offsets',
     layout: 'form',
 
-	xinitComponent: function() {
-		this.items = Phlexible.elements.ElementDataTabHelper.loadItems(this.structure, this.valueStructure, this, this.element);
+    xinitComponent: function () {
+        this.items = Phlexible.elements.ElementDataTabHelper.loadItems(this.structure, this.valueStructure, this, this.element);
 
-		Phlexible.elements.ElementDataTab.superclass.initComponent.call(this);
-	},
+        Phlexible.elements.ElementDataTab.superclass.initComponent.call(this);
+    },
 
-    xloadData: function(structure) {
+    xloadData: function (structure) {
         Phlexible.elements.ElementDataTabHelper.loadItems(structure, this, this.element);
     }
 });

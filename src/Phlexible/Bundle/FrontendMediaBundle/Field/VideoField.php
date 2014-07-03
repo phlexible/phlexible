@@ -29,63 +29,58 @@ class VideoField extends AbstractField
      */
     protected function _transform(array $item, array $media, array $options)
     {
-        $item['templates']        = array();
+        $item['templates'] = array();
         $item['templates_config'] = array();
-        $item['media']            = array();
+        $item['media'] = array();
 
-        try
-        {
-            if (!empty($item['data_content']))
-            {
+        try {
+            if (!empty($item['data_content'])) {
                 $file = $this->_getFile($item['data_content']);
 
-                if ($file !== null)
-                {
-                    $item['media']  = $this->_getMediaData($file);
+                if ($file !== null) {
+                    $item['media'] = $this->_getMediaData($file);
                     $item['master'] = $this->_getMasterData($item);
 
-                    $item['media']['media'] = BASE_URL . '/media/' . $file->getId(). '/' . $file->getName();
+                    $item['media']['media'] = BASE_URL . '/media/' . $file->getId() . '/' . $file->getName();
 
-                    try
-                    {
-                        $item['templates'] = array_merge($item['templates'], $this->_getImageTemplates($item, $media, $file));
-                    }
-                    catch(Exception $e)
-                    {
+                    try {
+                        $item['templates'] = array_merge(
+                            $item['templates'],
+                            $this->_getImageTemplates($item, $media, $file)
+                        );
+                    } catch (Exception $e) {
                         MWF_Log::exception($e);
                     }
 
-                    try
-                    {
-                        $item['templates'] = array_merge($item['templates'], $this->_getVideoTemplates($item, $media, $file));
-                    }
-                    catch(Exception $e)
-                    {
+                    try {
+                        $item['templates'] = array_merge(
+                            $item['templates'],
+                            $this->_getVideoTemplates($item, $media, $file)
+                        );
+                    } catch (Exception $e) {
                         MWF_Log::exception($e);
                     }
 
-                    try
-                    {
-                        $item['templates'] = array_merge($item['templates'], $this->_getAudioTemplates($item, $media, $file));
-                    }
-                    catch(Exception $e)
-                    {
+                    try {
+                        $item['templates'] = array_merge(
+                            $item['templates'],
+                            $this->_getAudioTemplates($item, $media, $file)
+                        );
+                    } catch (Exception $e) {
                         MWF_Log::exception($e);
                     }
 
-                    try
-                    {
-                        $item['templates_config'] = array_merge($item['templates_config'], $this->_getTemplateConfig($media, $file));
-                    }
-                    catch(Exception $e)
-                    {
+                    try {
+                        $item['templates_config'] = array_merge(
+                            $item['templates_config'],
+                            $this->_getTemplateConfig($media, $file)
+                        );
+                    } catch (Exception $e) {
                         MWF_Log::exception($e);
                     }
                 }
             }
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             MWF_Log::exception($e);
             $item['data_content'] = '';
             $item['media'] = array();

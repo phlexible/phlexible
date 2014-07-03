@@ -8,14 +8,12 @@
 
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
-use Phlexible\Component\Identifier\IdentifiableInterface;
-use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Tree\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
+use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

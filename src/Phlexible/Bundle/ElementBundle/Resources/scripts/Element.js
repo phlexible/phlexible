@@ -1,4 +1,4 @@
-Phlexible.elements.Element = function(config) {
+Phlexible.elements.Element = function (config) {
     this.addEvents(
         'beforeLoad',
         'load',
@@ -63,7 +63,7 @@ Phlexible.elements.Element = function(config) {
         this.startParams = config.startParams;
     }
 
-    Ext.getDoc().on('mousedown', function(e) {
+    Ext.getDoc().on('mousedown', function (e) {
         if (this.activeDiffEl && this.activeDiffEl.isVisible()) {
             this.activeDiffEl.hide();
             this.activeDiffEl = null;
@@ -88,7 +88,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     preview_url: null,
     loaded: false,
 
-    loadEid: function(eid, version, language, doLock) {
+    loadEid: function (eid, version, language, doLock) {
         var loadParams = {
             id: null,
             eid: eid || null,
@@ -101,7 +101,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         this.reload(loadParams);
     },
 
-    loadTeaser: function(teaser_id, version, language, doLock) {
+    loadTeaser: function (teaser_id, version, language, doLock) {
         var loadParams = {
             id: null,
             teaser_id: teaser_id,
@@ -114,7 +114,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         this.reload(loadParams);
     },
 
-    load: function(id, version, language, doLock) {
+    load: function (id, version, language, doLock) {
         var loadParams = {
             id: id || null,
             teaser_id: null,
@@ -133,7 +133,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         //return;
     },
 
-    reload: function(params) {
+    reload: function (params) {
         if (!params) {
             params = {};
         }
@@ -185,7 +185,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         });
     },
 
-    onLoadSuccess: function(response){
+    onLoadSuccess: function (response) {
         var elementData = Ext.decode(response.responseText);
 
         if (elementData.success) {
@@ -225,16 +225,16 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         this.fireEvent('historychange', this, this.history);
     },
 
-    onLoadFailure: function() {
+    onLoadFailure: function () {
         Ext.MessageBox.alert('Error connecting to server.');
         this.setStatusLocked();
     },
 
-    getLanguage: function() {
+    getLanguage: function () {
         return this.language;
     },
 
-    setLanguage: function(language, noReload) {
+    setLanguage: function (language, noReload) {
         if (language !== this.language) {
             this.fireEvent('setLanguage', this, language);
             if (!noReload && this.loaded) {
@@ -246,7 +246,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         }
     },
 
-    getRights: function() {
+    getRights: function () {
         if (!this.data || !this.data.rights) {
             return [];
         }
@@ -254,30 +254,30 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         return this.data.rights;
     },
 
-    isAllowed: function(right) {
+    isAllowed: function (right) {
         var rights = this.getRights();
 
         return rights.indexOf(right) !== -1;
     },
 
-    setTreeNode: function(node) {
+    setTreeNode: function (node) {
         this.treeNode = node;
         this.teaserNode = null;
     },
 
-    getTreeNode: function() {
+    getTreeNode: function () {
         return this.treeNode;
     },
 
-    setTeaserNode: function(node) {
+    setTeaserNode: function (node) {
         this.teaserNode = node;
     },
 
-    getTeaserNode: function() {
+    getTeaserNode: function () {
         return this.teaserNode;
     },
 
-    showNewElementWindow: function(node, element_type_id) {
+    showNewElementWindow: function (node, element_type_id) {
         if (!node) {
             node = this.getTreeNode();
         }
@@ -298,7 +298,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
                 id: node ? node.id : this.tid
             },
             listeners: {
-                success: function(dialog, result, node) {
+                success: function (dialog, result, node) {
                     this.fireEvent('createElement', this, result.data, node);
                     this.load(result.data.tid, null, result.data.master_language, true);
                 }.createDelegate(this, [node], true)
@@ -307,7 +307,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         w.show();
     },
 
-    showNewAliasWindow: function(node, element_type_id) {
+    showNewAliasWindow: function (node, element_type_id) {
         if (!node) {
             node = this.getTreeNode();
         }
@@ -321,7 +321,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
                 id: node.id
             },
             listeners: {
-                success: function(node) {
+                success: function (node) {
                     node.attributes.children = false;
                     node.reload();
                 }.createDelegate(this, [node], false)
@@ -330,15 +330,15 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         w.show();
     },
 
-    diff: function(diff, cb, scope) {
+    diff: function (diff, cb, scope) {
         this.fireEvent('diff', diff, cb, scope);
     },
 
-    clearDiff: function() {
+    clearDiff: function () {
         this.fireEvent('clearDiff');
     },
 
-    getLockStatus: function() {
+    getLockStatus: function () {
         if (this.lockinfo && (this.lockinfo.status == 'edit' || this.lockinfo.status == 'locked' || this.lockinfo.status == 'locked_permanently')) {
             return this.lockinfo.status;
         }
@@ -347,7 +347,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     },
 
     // protected
-    setLockStatus: function(lockinfo) {
+    setLockStatus: function (lockinfo) {
         if (!lockinfo) {
             this.setStatusIdle();
             return;
@@ -374,7 +374,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     },
 
     // protected
-    setStatusLocked: function() {
+    setStatusLocked: function () {
         if (!this.lockinfo) {
             this.lockinfo = {};
         }
@@ -385,7 +385,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     },
 
     // protected
-    setStatusLockedPermanently: function() {
+    setStatusLockedPermanently: function () {
         if (!this.lockinfo) {
             this.lockinfo = {};
         }
@@ -396,7 +396,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     },
 
     // protected
-    setStatusEdit: function() {
+    setStatusEdit: function () {
         if (!this.lockinfo) {
             this.lockinfo = {};
         }
@@ -407,13 +407,13 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     },
 
     // protected
-    setStatusIdle: function() {
+    setStatusIdle: function () {
         this.lockinfo = null;
 
         this.fireEvent('removelock', this);
     },
 
-    lock: function(callback) {
+    lock: function (callback) {
         if (this.lockinfo) {
             return false;
         }
@@ -422,7 +422,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             return false;
         }
 
-        if(!callback) callback = this.onLockSuccess;
+        if (!callback) callback = this.onLockSuccess;
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elements_locks_lock'),
@@ -434,11 +434,11 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             scope: this
         });
 
-       return true;
+        return true;
     },
 
     // private
-    onLockSuccess: function(response) {
+    onLockSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
         if (data.success) {
@@ -452,7 +452,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         }
     },
 
-    unlock: function(callback) {
+    unlock: function (callback) {
         if (!this.lockinfo || this.lockinfo.status != 'edit') {
             return false;
         }
@@ -461,7 +461,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             return false;
         }
 
-        if(!callback) callback = this.onUnlockSuccess;
+        if (!callback) callback = this.onUnlockSuccess;
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elements_locks_unlock'),
@@ -476,7 +476,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     },
 
     // private
-    onUnlockSuccess: function(response) {
+    onUnlockSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
         if (data.success) {
@@ -490,7 +490,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     }
 });
 
-Phlexible.elements.Teaser = function(config) {
+Phlexible.elements.Teaser = function (config) {
     this.addEvents(
         'beforeLoad',
         'load'
@@ -514,7 +514,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
     properties: null,
     loaded: false,
 
-    load: function(eid, version, language) {
+    load: function (eid, version, language) {
         if (!language) {
             language = this.language;
         }
@@ -533,7 +533,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
         this.reload(loadParams);
     },
 
-    reload: function(params) {
+    reload: function (params) {
         if (!params) {
             params = {};
         }
@@ -555,12 +555,14 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
             url: Phlexible.Router.generate('elements_data_load'),
             params: params,
             success: this.onLoadSuccess,
-            failure: function() { alert("failure"); },
+            failure: function () {
+                alert("failure");
+            },
             scope: this
         });
     },
 
-    onLoadSuccess: function(response){
+    onLoadSuccess: function (response) {
         var elementData = Ext.decode(response.responseText);
         var properties = elementData.properties;
 
@@ -582,30 +584,30 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
         this.fireEvent('load', this);
     },
 
-    showNewTeaserWindow: function(node, element_type_id) {
+    showNewTeaserWindow: function (node, element_type_id) {
         /*
-        if(!node) {
-            node = this.getTreeNode();
-        }
-        var w = new Phlexible.elements.NewElementWindow({
-            element_type_id: element_type_id,
-            submitParams: {
-                siteroot_id: this.siteroot_id,
-                eid: node.attributes.eid,
-                id: node.id
-            },
-            listeners: {
-                success: function(node) {
-                    node.attributes.children = false;
-                    node.reload();
-                }.createDelegate(this, [node], false)
-            }
-        });
-        w.show();
-        */
+         if(!node) {
+         node = this.getTreeNode();
+         }
+         var w = new Phlexible.elements.NewElementWindow({
+         element_type_id: element_type_id,
+         submitParams: {
+         siteroot_id: this.siteroot_id,
+         eid: node.attributes.eid,
+         id: node.id
+         },
+         listeners: {
+         success: function(node) {
+         node.attributes.children = false;
+         node.reload();
+         }.createDelegate(this, [node], false)
+         }
+         });
+         w.show();
+         */
     },
 
-    getLockStatus: function() {
+    getLockStatus: function () {
         if (this.lockinfo && (this.lockinfo.status == 'edit' || this.lockinfo.status == 'locked')) {
             return this.lockinfo.status;
         }
@@ -614,7 +616,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
     },
 
     // protected
-    setLockStatus: function(lockinfo) {
+    setLockStatus: function (lockinfo) {
         if (!lockinfo) {
             this.setStatusIdle();
             return;
@@ -641,7 +643,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
     },
 
     // protected
-    setStatusLocked: function() {
+    setStatusLocked: function () {
         if (!this.lockinfo) this.lockinfo = {};
 
         this.lockinfo.status = 'locked';
@@ -650,7 +652,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
     },
 
     // protected
-    setStatusEdit: function() {
+    setStatusEdit: function () {
         if (!this.lockinfo) this.lockinfo = {};
 
         this.lockinfo.status = 'edit';
@@ -659,14 +661,14 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
     },
 
     // protected
-    setStatusIdle: function() {
+    setStatusIdle: function () {
         this.lockinfo = null;
 
         this.fireEvent('removelock', this);
     },
 
-    lock: function(callback) {
-        if(this.lockinfo) {
+    lock: function (callback) {
+        if (this.lockinfo) {
             return false;
         }
 
@@ -674,7 +676,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
             return false;
         }
 
-        if(!callback) callback = this.onLockSuccess;
+        if (!callback) callback = this.onLockSuccess;
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elements_locks_lock'),
@@ -686,14 +688,14 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
             scope: this
         });
 
-       return true;
+        return true;
     },
 
     // private
-    onLockSuccess: function(response) {
+    onLockSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
-        if(data.success) {
+        if (data.success) {
             this.setStatusEdit();
             Phlexible.success('Lock acquired.');
         }
@@ -703,8 +705,8 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
         }
     },
 
-    unlock: function(callback) {
-        if(!this.lockinfo || this.lockinfo.status != 'edit') {
+    unlock: function (callback) {
+        if (!this.lockinfo || this.lockinfo.status != 'edit') {
             return false;
         }
 
@@ -712,7 +714,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
             return false;
         }
 
-        if(!callback) callback = this.onUnlockSuccess;
+        if (!callback) callback = this.onUnlockSuccess;
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elements_locks_unlock'),
@@ -727,10 +729,10 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
     },
 
     // private
-    onUnlockSuccess: function(response) {
+    onUnlockSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
-        if(data.success) {
+        if (data.success) {
             this.setStatusIdle();
             Phlexible.success('Lock released.');
         }

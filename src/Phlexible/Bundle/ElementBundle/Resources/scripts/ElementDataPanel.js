@@ -1,24 +1,24 @@
 /*Phlexible.elements.xElementDataTabs = Ext.extend(Ext.TabPanel, {
-    // private
-    xadjustBodyWidth : function(w){
-        if(this.header){
-            this.header.setWidth(w);
-        }
-        if(this.footer){
-            this.footer.setWidth(w);
-        }
-        return w;
-    }
-});*/
+ // private
+ xadjustBodyWidth : function(w){
+ if(this.header){
+ this.header.setWidth(w);
+ }
+ if(this.footer){
+ this.footer.setWidth(w);
+ }
+ return w;
+ }
+ });*/
 
 Phlexible.elements.DiffVersionComboTemplate = new Ext.XTemplate(
     '<tpl for=".">',
     '<div class="x-combo-list-item">',
-        '<tpl if="values.is_published"><b></tpl>',
-        '<tpl if="values.was_published"><i></tpl>',
-        '{version} [{date}]',
-        '<tpl if="values.was_published"></i></tpl>',
-        '<tpl if="values.is_published"></b></tpl>',
+    '<tpl if="values.is_published"><b></tpl>',
+    '<tpl if="values.was_published"><i></tpl>',
+    '{version} [{date}]',
+    '<tpl if="values.was_published"></i></tpl>',
+    '<tpl if="values.is_published"></b></tpl>',
     '</div>',
     '</tpl>'
 );
@@ -39,7 +39,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
 
     accordionCollapsed: false,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents(
             'save'
@@ -51,7 +51,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
             islocked: this.onIsLocked,
             removelock: this.onRemoveLock,
             internalSave: this.onSave,
-			scope: this
+            scope: this
         });
 
         this.compareElement = new Phlexible.elements.Element({
@@ -59,224 +59,250 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
             language: this.element.language
         });
 
-        this.items = [{
-			xtype: 'form',
-			region: 'center',
-			layout: 'fit',
-			hideMode: 'offsets',
-			items: {
-				xtype: 'elements-elementcontentpanel',
-				element: this.element,
-				listeners: {
-					tabchange: function(tabPanel, panel) {
-						var index = tabPanel.items.items.indexOf(panel);
-						var targetPanel = this.getComponent(1).getComponent(1).getComponent(index);
-						if (targetPanel) {
-							this.getComponent(1).getComponent(1).setActiveTab(targetPanel);
-						}
-					},
-					scope: this
-				}
-			}
-		},{
-            border: true,
-            region: 'east',
-            layout: 'card',
-            split: true,
-            collapsible: true,
-            collapseMode: 'mini',
-            collapsed: this.accordionCollapsed,
-            activeItem: 0,
-            listeners: {
-                expand: function() {
-					if (this.isDiffMode) {
-						this.getComponent(1).setWidth(this.getInnerWidth() / 2);
-						this.getComponent(1).ownerCt.doLayout();
-					}
-				},
-				scope: this
-            },
-            items: [{
-                border: false,
-                width: 220,
-                minWidth: 220,
-                title: this.strings.properties,
-                autoScroll: true,
-                items: [{
-					xtype: 'elements-accordion-quickinfo',
-					region: 'north',
-		            //height: 300
-					autoHeight: true
-				},{
-					xtype: 'elements-elementaccordion',
-					region: 'center',
-					border: false,
-					element: this.element
-				}]
-            },{
-                xtype: 'elements-elementcontentpanel',
-                element: this.compareElement,
-                listeners: {
-                    tabchange: function(tabPanel, panel) {
-						var index = tabPanel.items.items.indexOf(panel);
-						this.getContentPanel().setActiveTab(this.getContentPanel().getComponent(index));
-					},
-					scope: this
-                }
-            }]
-        }];
-
-        this.tbar = [{
-            // 0
-            text: this.strings.save_element,
-            iconCls: 'p-element-save-icon',
-            disabled: true,
-            hidden: true,
-            handler: this.onSave,
-            scope: this
-        },{
-            // 1
-            xtype: 'checkbox',
-            hideLabel: true,
-            hidden: true,
-            boxLabel: this.strings.minor_update
-        },{
-            // 2
-            text: this.strings.reset,
-            iconCls: 'p-element-reload-icon',
-            disabled: true,
-            hidden: true,
-            handler: this.onReset,
-            scope: this
-        },{
-            // 3
-            text: this.strings.publish_element,
-            iconCls: 'p-element-publish-icon',
-            disabled: true,
-            hidden: true,
-            handler: this.onPublish,
-            scope: this
-        },'->',{
-            // 5
-            xtype: 'tbtext',
-            text: this.strings.show,
-            hidden: true
-        },' ',{
-            // 7
-            xtype: 'iconcombo',
-            hidden: true,
-            width: 140,
-            value: this.element.language,
-            emptyText: this.strings.language,
-            store: new Ext.data.ObjectStore({
-                fields: ['langKey', 'text', 'iconCls'],
-                data: this.element.languages
-            }),
-            valueField: 'langKey',
-            displayField: 'text',
-            iconClsField: 'iconCls',
-            mode: 'local',
-            forceSelection: true,
-            typeAhead: false,
-            editable: false,
-            triggerAction: 'all',
-            selectOnFocus: true
-        },' ',{
-            // 9
-            xtype: 'combo',
-            hidden: true,
-            width: 80,
-            listWidth: 200,
-            emptyText: this.strings.from_version,
-            tpl: Phlexible.elements.DiffVersionComboTemplate,
-            //value: (parseInt(this.element.version, 10) - 1),
-            store: new Ext.data.SimpleStore({
-                fields: [
-                     {name: 'version'},
-                     {name: 'format'},
-                     {name: 'date'},
-                     {name: 'was_published', type: 'boolean'},
-                     {name: 'is_published', type: 'boolean'}
-                ],
-                id: 0,
-                data: []
-            }),
-            displayField: 'version',
-            mode: 'local',
-            forceSelection: true,
-            typeAhead: false,
-            editable: false,
-            triggerAction: 'all',
-            selectOnFocus: true
-        },{
-            // 10
-            text: this.strings.compare_to,
-            enableToggle: true,
-            hidden: true,
-            toggleHandler: function(btn, state) {
-                this.getTopToolbar().items.items[this.btnIndex.version_to].setDisabled(!state);
-            },
-            scope: this
-        },{
-            // 11
-            xtype: 'combo',
-            width: 80,
-            hidden: true,
-            disabled: true,
-            listWidth: 200,
-            emptyText: this.strings.to_version,
-            tpl: Phlexible.elements.DiffVersionComboTemplate,
-            //value: (parseInt(this.element.version, 10) - 1),
-            store: new Ext.data.SimpleStore({
-                fields: [
-                     {name: 'version'},
-                     {name: 'format'},
-                     {name: 'date'},
-                     {name: 'was_published', type: 'boolean'},
-                     {name: 'is_published', type: 'boolean'}
-                ],
-                id: 0,
-                data: []
-            }),
-            displayField: 'version',
-            mode: 'local',
-            forceSelection: true,
-            typeAhead: false,
-            editable: false,
-            triggerAction: 'all',
-            selectOnFocus: true
-        },' ',{
-            // 13
-            text: this.strings.load,
-            hidden: true,
-            handler: this.loadDiff,
-            scope: this
-        },'-',{
-            // 15
-            text: this.strings.compare,
-            iconCls: 'p-element-diff-icon',
-            enableToggle: true,
-            toggleHandler: function(btn, state) {
-                if (state) {
-                    this.showDiff();
-                } else {
-                    this.hideDiff();
-
-                    if (this.element.data.diff && this.element.data.diff.enabled) {
-                        this.element.reload();
+        this.items = [
+            {
+                xtype: 'form',
+                region: 'center',
+                layout: 'fit',
+                hideMode: 'offsets',
+                items: {
+                    xtype: 'elements-elementcontentpanel',
+                    element: this.element,
+                    listeners: {
+                        tabchange: function (tabPanel, panel) {
+                            var index = tabPanel.items.items.indexOf(panel);
+                            var targetPanel = this.getComponent(1).getComponent(1).getComponent(index);
+                            if (targetPanel) {
+                                this.getComponent(1).getComponent(1).setActiveTab(targetPanel);
+                            }
+                        },
+                        scope: this
                     }
                 }
             },
-            scope: this,
-            listeners: {
-                render: function() {
-                    var tb = this.getTopToolbar();
-                    tb.items.items[this.btnIndex.show].hide();
-                    tb.items.items[this.btnIndex.sep].hide();
+            {
+                border: true,
+                region: 'east',
+                layout: 'card',
+                split: true,
+                collapsible: true,
+                collapseMode: 'mini',
+                collapsed: this.accordionCollapsed,
+                activeItem: 0,
+                listeners: {
+                    expand: function () {
+                        if (this.isDiffMode) {
+                            this.getComponent(1).setWidth(this.getInnerWidth() / 2);
+                            this.getComponent(1).ownerCt.doLayout();
+                        }
+                    },
+                    scope: this
+                },
+                items: [
+                    {
+                        border: false,
+                        width: 220,
+                        minWidth: 220,
+                        title: this.strings.properties,
+                        autoScroll: true,
+                        items: [
+                            {
+                                xtype: 'elements-accordion-quickinfo',
+                                region: 'north',
+                                //height: 300
+                                autoHeight: true
+                            },
+                            {
+                                xtype: 'elements-elementaccordion',
+                                region: 'center',
+                                border: false,
+                                element: this.element
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'elements-elementcontentpanel',
+                        element: this.compareElement,
+                        listeners: {
+                            tabchange: function (tabPanel, panel) {
+                                var index = tabPanel.items.items.indexOf(panel);
+                                this.getContentPanel().setActiveTab(this.getContentPanel().getComponent(index));
+                            },
+                            scope: this
+                        }
+                    }
+                ]
+            }
+        ];
+
+        this.tbar = [
+            {
+                // 0
+                text: this.strings.save_element,
+                iconCls: 'p-element-save-icon',
+                disabled: true,
+                hidden: true,
+                handler: this.onSave,
+                scope: this
+            },
+            {
+                // 1
+                xtype: 'checkbox',
+                hideLabel: true,
+                hidden: true,
+                boxLabel: this.strings.minor_update
+            },
+            {
+                // 2
+                text: this.strings.reset,
+                iconCls: 'p-element-reload-icon',
+                disabled: true,
+                hidden: true,
+                handler: this.onReset,
+                scope: this
+            },
+            {
+                // 3
+                text: this.strings.publish_element,
+                iconCls: 'p-element-publish-icon',
+                disabled: true,
+                hidden: true,
+                handler: this.onPublish,
+                scope: this
+            },
+            '->',
+            {
+                // 5
+                xtype: 'tbtext',
+                text: this.strings.show,
+                hidden: true
+            },
+            ' ',
+            {
+                // 7
+                xtype: 'iconcombo',
+                hidden: true,
+                width: 140,
+                value: this.element.language,
+                emptyText: this.strings.language,
+                store: new Ext.data.ObjectStore({
+                    fields: ['langKey', 'text', 'iconCls'],
+                    data: this.element.languages
+                }),
+                valueField: 'langKey',
+                displayField: 'text',
+                iconClsField: 'iconCls',
+                mode: 'local',
+                forceSelection: true,
+                typeAhead: false,
+                editable: false,
+                triggerAction: 'all',
+                selectOnFocus: true
+            },
+            ' ',
+            {
+                // 9
+                xtype: 'combo',
+                hidden: true,
+                width: 80,
+                listWidth: 200,
+                emptyText: this.strings.from_version,
+                tpl: Phlexible.elements.DiffVersionComboTemplate,
+                //value: (parseInt(this.element.version, 10) - 1),
+                store: new Ext.data.SimpleStore({
+                    fields: [
+                        {name: 'version'},
+                        {name: 'format'},
+                        {name: 'date'},
+                        {name: 'was_published', type: 'boolean'},
+                        {name: 'is_published', type: 'boolean'}
+                    ],
+                    id: 0,
+                    data: []
+                }),
+                displayField: 'version',
+                mode: 'local',
+                forceSelection: true,
+                typeAhead: false,
+                editable: false,
+                triggerAction: 'all',
+                selectOnFocus: true
+            },
+            {
+                // 10
+                text: this.strings.compare_to,
+                enableToggle: true,
+                hidden: true,
+                toggleHandler: function (btn, state) {
+                    this.getTopToolbar().items.items[this.btnIndex.version_to].setDisabled(!state);
                 },
                 scope: this
+            },
+            {
+                // 11
+                xtype: 'combo',
+                width: 80,
+                hidden: true,
+                disabled: true,
+                listWidth: 200,
+                emptyText: this.strings.to_version,
+                tpl: Phlexible.elements.DiffVersionComboTemplate,
+                //value: (parseInt(this.element.version, 10) - 1),
+                store: new Ext.data.SimpleStore({
+                    fields: [
+                        {name: 'version'},
+                        {name: 'format'},
+                        {name: 'date'},
+                        {name: 'was_published', type: 'boolean'},
+                        {name: 'is_published', type: 'boolean'}
+                    ],
+                    id: 0,
+                    data: []
+                }),
+                displayField: 'version',
+                mode: 'local',
+                forceSelection: true,
+                typeAhead: false,
+                editable: false,
+                triggerAction: 'all',
+                selectOnFocus: true
+            },
+            ' ',
+            {
+                // 13
+                text: this.strings.load,
+                hidden: true,
+                handler: this.loadDiff,
+                scope: this
+            },
+            '-',
+            {
+                // 15
+                text: this.strings.compare,
+                iconCls: 'p-element-diff-icon',
+                enableToggle: true,
+                toggleHandler: function (btn, state) {
+                    if (state) {
+                        this.showDiff();
+                    } else {
+                        this.hideDiff();
+
+                        if (this.element.data.diff && this.element.data.diff.enabled) {
+                            this.element.reload();
+                        }
+                    }
+                },
+                scope: this,
+                listeners: {
+                    render: function () {
+                        var tb = this.getTopToolbar();
+                        tb.items.items[this.btnIndex.show].hide();
+                        tb.items.items[this.btnIndex.sep].hide();
+                    },
+                    scope: this
+                }
             }
-        }];
+        ];
 
         this.btnIndex = {
             save: 0,
@@ -292,72 +318,74 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
             compare: 15
         };
 
-        this.keys = [{
-            key: 's',
-            alt: true,
-            stopEvent: true,
-            fn: this.onSave,
-            scope: this
-        }];
-
-        /*
-		 this.getContentPanel().on({
-            render: {
-                fn: function(c) {
-                    c.body.on({
-                        scroll: {
-                            fn: function(e) {
-         Phlexible.console.log(e);
-
-                                this.getComponent(1).getComponent(1).el.scrollTo('top', 100, false);
-                            },
-                            scope: this
-                        }
-                    });
-                },
+        this.keys = [
+            {
+                key: 's',
+                alt: true,
+                stopEvent: true,
+                fn: this.onSave,
                 scope: this
             }
-        })
-        */
+        ];
+
+        /*
+         this.getContentPanel().on({
+         render: {
+         fn: function(c) {
+         c.body.on({
+         scroll: {
+         fn: function(e) {
+         Phlexible.console.log(e);
+
+         this.getComponent(1).getComponent(1).el.scrollTo('top', 100, false);
+         },
+         scope: this
+         }
+         });
+         },
+         scope: this
+         }
+         })
+         */
 
         this.diffParams = (this.element.startParams && this.element.startParams.diff)
-			? this.element.startParams.diff
-			: {};
+            ? this.element.startParams.diff
+            : {};
 
         Phlexible.elements.ElementDataPanel.superclass.initComponent.call(this);
     },
 
-	getFormPanel: function() {
-		return this.getComponent(0);
-	},
+    getFormPanel: function () {
+        return this.getComponent(0);
+    },
 
-	getContentPanel: function() {
-		return this.getFormPanel().getComponent(0);
-	},
+    getContentPanel: function () {
+        return this.getFormPanel().getComponent(0);
+    },
 
-	getCardPanel: function() {
-		return this.getComponent(1);
-	},
+    getCardPanel: function () {
+        return this.getComponent(1);
+    },
 
-	getSidebarPanel: function() {
-		return this.getCardPanel().getComponent(0);
-	},
+    getSidebarPanel: function () {
+        return this.getCardPanel().getComponent(0);
+    },
 
-	getQuickInfoPanel: function() {
-		return this.getSidebarPanel().getComponent(0);
-	},
+    getQuickInfoPanel: function () {
+        return this.getSidebarPanel().getComponent(0);
+    },
 
-	getAccordionPanel: function() {
-		return this.getSidebarPanel().getComponent(1);
-	},
+    getAccordionPanel: function () {
+        return this.getSidebarPanel().getComponent(1);
+    },
 
-    onLoadElement: function(element) {
+    onLoadElement: function (element) {
         this.getQuickInfoPanel().load(element);
 
         // load diff data
         var tb = this.getTopToolbar();
         var v = [];
-        for (var i=0; i<element.data.versions.length; i++) {
+        for (var i = 0; i < element.data.versions.length; i++) {
             if (element.data.versions[i][1] > 1) {
                 v.push(element.data.versions[i]);
             }
@@ -388,7 +416,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         this.diffParams = {};
     },
 
-    loadDiff: function() {
+    loadDiff: function () {
         var tb = this.getTopToolbar();
 
         var lang = tb.items.items[this.btnIndex.language];
@@ -430,7 +458,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         });
     },
 
-    toggleDiff: function(diff) {
+    toggleDiff: function (diff) {
         var tb = this.getTopToolbar();
 
         if (diff.enabled) {
@@ -446,7 +474,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    showDiff: function() {
+    showDiff: function () {
         this.isDiffMode = true;
         var tb = this.getTopToolbar();
 
@@ -470,7 +498,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         }
     },
 
-    hideDiff: function() {
+    hideDiff: function () {
         this.isDiffMode = false;
         var tb = this.getTopToolbar();
 
@@ -492,11 +520,11 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         this.getComponent(1).ownerCt.doLayout();
     },
 
-    onReset: function() {
+    onReset: function () {
         this.element.reload();
     },
 
-    onSave: function(publishComment, isPublish, sendNotifications) {
+    onSave: function (publishComment, isPublish, sendNotifications) {
         if (!this.element.tid) {
             Ext.MessageBox.alert('Failure', 'Save not possible, no element loaded.');
             return;
@@ -509,7 +537,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
 
         var data = this.getAccordionPanel().getData();
 
-		this.getContentPanel().syncData(this.getContentPanel());
+        this.getContentPanel().syncData(this.getContentPanel());
 
         if (!this.getContentPanel().isValid()) {
             Ext.MessageBox.alert('Failure', 'Save not possible, required fields are missing.');
@@ -538,7 +566,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
                 data: Ext.encode(data),
                 notifications: sendNotifications
             },
-            success: function(form, action) {
+            success: function (form, action) {
                 var result = action.result;
 
                 if (!result) {
@@ -575,7 +603,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
                     this.element.fireEvent('saveFailure', this.element, result);
                 }
             },
-            failure: function(action, result) {
+            failure: function (action, result) {
                 Phlexible.console.log('failure');
                 var data = result.result;
 
@@ -594,48 +622,48 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         return;
     },
 
-    onGetLock: function() {
+    onGetLock: function () {
         Phlexible.console.log('ElementDataPanel: GET LOCK');
 
         var tb = this.getTopToolbar();
 
         /*
-        var x = function() {
-            this.getTopToolbar().items.items[this.btnIndex.save].enable();
-        };
-        x.defer(5000, this);
+         var x = function() {
+         this.getTopToolbar().items.items[this.btnIndex.save].enable();
+         };
+         x.defer(5000, this);
 
-        tb.items.items[this.btnIndex.save].disable();
-        tb.items.items[this.btnIndex.minor].enable();
-        tb.items.items[this.btnIndex.reset].enable();
-        */
+         tb.items.items[this.btnIndex.save].disable();
+         tb.items.items[this.btnIndex.minor].enable();
+         tb.items.items[this.btnIndex.reset].enable();
+         */
         tb.items.items[this.btnIndex.compare].enable();
     },
 
-    onIsLocked: function() {
+    onIsLocked: function () {
         Phlexible.console.log('ElementDataPanel: IS LOCKED');
 
         var tb = this.getTopToolbar();
 
         /*
-        tb.items.items[this.btnIndex.save].disable();
-        tb.items.items[this.btnIndex.minor].disable();
-        tb.items.items[this.btnIndex.reset].disable();
-        */
+         tb.items.items[this.btnIndex.save].disable();
+         tb.items.items[this.btnIndex.minor].disable();
+         tb.items.items[this.btnIndex.reset].disable();
+         */
         tb.items.items[this.btnIndex.compare].disable();
         this.hideDiff();
     },
 
-    onRemoveLock: function() {
+    onRemoveLock: function () {
         Phlexible.console.log('ElementDataPanel: DROP LOCK');
 
         var tb = this.getTopToolbar();
 
         /*
-        tb.items.items[this.btnIndex.save].disable();
-        tb.items.items[this.btnIndex.minor].disable();
-        tb.items.items[this.btnIndex.reset].disable();
-        */
+         tb.items.items[this.btnIndex.save].disable();
+         tb.items.items[this.btnIndex.minor].disable();
+         tb.items.items[this.btnIndex.reset].disable();
+         */
         tb.items.items[this.btnIndex.compare].disable();
         this.hideDiff();
     }

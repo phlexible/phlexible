@@ -36,8 +36,8 @@ class UploadHandler
     private $mimeDetector;
 
     /**
-     * @param SiteManager  $siteManager
-     * @param TempStorage  $tempStorage
+     * @param SiteManager $siteManager
+     * @param TempStorage $tempStorage
      * @param MimeDetector $mimeDetector
      */
     public function __construct(SiteManager $siteManager, TempStorage $tempStorage, MimeDetector $mimeDetector)
@@ -81,7 +81,13 @@ class UploadHandler
         $useWizard = $this->useWizard();
 
         if ($originalFileId || $useWizard) {
-            return $this->tempStorage->addUploadFile($uploadFileSource, $folderId, $userId, $originalFileId, $useWizard);
+            return $this->tempStorage->addUploadFile(
+                $uploadFileSource,
+                $folderId,
+                $userId,
+                $originalFileId,
+                $useWizard
+            );
         }
 
         $file = $site->createFile($folder, $uploadFileSource, $userId);

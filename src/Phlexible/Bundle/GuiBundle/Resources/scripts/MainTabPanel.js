@@ -7,15 +7,15 @@ Phlexible.gui.MainTabPanel = Ext.extend(Ext.TabPanel, {
     dirtyTitles: new Ext.util.MixedCollection(),
     enableTabScroll: true,
 
-    initComponent: function() {
+    initComponent: function () {
         this.addEvents(
             'beforeLoadPanel',
             'loadPanel'
         );
 
         this.addListener({
-            beforeremove: function(main, panel) {
-                if(panel.isDirty && panel.isDirty()) {
+            beforeremove: function (main, panel) {
+                if (panel.isDirty && panel.isDirty()) {
                     Ext.Msg.alert('Warning', "Panel dirty. Close aborted.");
                     return false;
                 }
@@ -25,7 +25,7 @@ Phlexible.gui.MainTabPanel = Ext.extend(Ext.TabPanel, {
         Phlexible.gui.MainTabPanel.superclass.initComponent.call(this);
     },
 
-    loadPanel: function(id, cls, params) {
+    loadPanel: function (id, cls, params) {
         if (!params) {
             params = {};
         }
@@ -40,7 +40,7 @@ Phlexible.gui.MainTabPanel = Ext.extend(Ext.TabPanel, {
                     params: params,
                     listeners: {
                         dirty: {
-                            fn: function(panel){
+                            fn: function (panel) {
                                 return;
                                 this.dirtyTitles.add(panel.id, panel.title);
 
@@ -53,7 +53,7 @@ Phlexible.gui.MainTabPanel = Ext.extend(Ext.TabPanel, {
                             scope: this
                         },
                         clean: {
-                            fn: function(panel){
+                            fn: function (panel) {
                                 return;
                                 this.dirtyTitles.remove(panel.id);
 
@@ -70,7 +70,7 @@ Phlexible.gui.MainTabPanel = Ext.extend(Ext.TabPanel, {
                 });
                 this.add(panel);
             } else {
-                if(!panel.dirty && panel.loadParams) {
+                if (!panel.dirty && panel.loadParams) {
                     panel.loadParams(params);
                 }
             }

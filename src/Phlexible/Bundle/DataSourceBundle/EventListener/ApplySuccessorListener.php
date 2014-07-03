@@ -42,10 +42,10 @@ class ApplySuccessorListener
         $datasourceRepository = $this->entityManager->getRepository('PhlexibleDataSourceBundle:DataSource');
 
         $fromUser = $event->getFromUser();
-        $toUser   = $event->getToUser();
+        $toUser = $event->getToUser();
 
         $fromUserId = $fromUser->getId();
-        $toUserId   = $toUser->getId();
+        $toUserId = $toUser->getId();
 
         foreach ($datasourceRepository->findByCreateUserId($fromUserId) as $datasource) {
             $datasource->setCreateUserId($toUserId);

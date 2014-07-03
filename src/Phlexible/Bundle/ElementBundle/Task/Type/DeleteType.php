@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\Task\Type;
 
-use Symfony\Component\Translation\TranslatorInterface;
-
 /**
  * Delete element task type
  *

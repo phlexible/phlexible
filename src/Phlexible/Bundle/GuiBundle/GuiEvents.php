@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\GuiBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface GuiEvents
+class GuiEvents
 {
     /**
      * Get config event

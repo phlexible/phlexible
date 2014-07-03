@@ -42,6 +42,7 @@ class MessageDigestHashCalculator implements HashCalculatorInterface
 
     /**
      * @param FileSourceInterface $fileSource
+     *
      * @throws \RuntimeException
      * @return string
      */

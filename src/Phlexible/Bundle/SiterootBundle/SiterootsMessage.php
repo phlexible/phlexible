@@ -13,7 +13,7 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 /**
  * Siteroots message
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class SiterootsMessage extends Message
 {

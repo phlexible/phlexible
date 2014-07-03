@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -73,7 +73,7 @@ class MediaController extends Controller
         }
 
         return $this->get('igorw_file_serve.response_factory')
-                    ->create($filePath, $mimeType, array('absolute_path' => true));
+            ->create($filePath, $mimeType, array('absolute_path' => true));
     }
 
     /**
@@ -97,7 +97,7 @@ class MediaController extends Controller
             $filePath = $cacheItem->getFilePath();
             $mimeType = $cacheItem->getMimeType();
 
-            $file     = $this->getMediaItem($cacheItem->getFileId());
+            $file = $this->getMediaItem($cacheItem->getFileId());
             $fileName = $file->getName();
 
             if ($track) {
@@ -125,7 +125,7 @@ class MediaController extends Controller
         }
 
         return $this->get('igorw_file_serve.response_factory')
-                    ->create($filePath, $mimeType, array('absolute_path' => true, 'inline' => false));
+            ->create($filePath, $mimeType, array('absolute_path' => true, 'inline' => false));
     }
 
     /**
@@ -142,45 +142,41 @@ class MediaController extends Controller
 
         $response = $this->_getResponse($id);
 
-        $container      = $this->getContainer();
+        $container = $this->getContainer();
         $contactManager = $container->get('contactsManager');
 
         $extranetMediaInstalled = $container->components->has('extranetmedia');
-        if ($extranetMediaInstalled)
-        {
+        if ($extranetMediaInstalled) {
             /* @var $extranetMediaViewRights Makeweb_ExtranetMedia_ViewRights */
             $extranetMediaViewRights = $container->extranetMediaViewRights;
 
             $authenticated = $contactManager->isAuthenticated();
-            if (!$authenticated)
-            {
+            if (!$authenticated) {
                 $this->_response->setHttpResponseCode(403);
+
                 return;
             }
 
             $contact = Makeweb_Contacts_Contact::getInstance();
             $contact->setNew(false);
 
-            $file     = $this->getMediaItem($id);
+            $file = $this->getMediaItem($id);
             $folderId = $file->getFolderID();
-            if ($extranetMediaViewRights->hasRightsSet($folderId))
-            {
-                if ($extranetMediaViewRights->hasViewRight($folderId))
-                {
+            if ($extranetMediaViewRights->hasRightsSet($folderId)) {
+                if ($extranetMediaViewRights->hasViewRight($folderId)) {
                     $contentDisposition = Brainbits_Http_Response::MODE_INLINE;
                     $response->setContentDisposition($contentDisposition)
                         ->send();
-                }
-                else
-                {
+                } else {
                     $this->_response->setHttpResponseCode(403);
+
                     return;
                 }
             }
         }
 
         return $this->get('igorw_file_serve.response_factory')
-                    ->create($filePath, $mimeType, array('absolute_path' => true));
+            ->create($filePath, $mimeType, array('absolute_path' => true));
     }
 
     /**
@@ -213,18 +209,20 @@ class MediaController extends Controller
         $icon = $documentType->getIcon($size);
 
         return $this->get('igorw_file_serve.response_factory')
-                    ->create($icon, 'image/gif', array('absolute_path' => true));
+            ->create($icon, 'image/gif', array('absolute_path' => true));
     }
 
     protected function getCacheItem($id)
     {
         $cacheManager = Media_Cache_Manager::getInstance();
+
         return $cacheManager->getById($id);
     }
 
     protected function getMediaItem($id)
     {
         $site = Media_Site_Manager::getInstance()->get('mediamanager');
+
         return $site->getFilePeer()->getById($id);
     }
 }

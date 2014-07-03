@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,15 +31,15 @@ class RedirectController extends Controller
      */
     public function listAction(Request $request)
     {
-        $tid            = $request->get('tid');
-        $language       = $request->get('language');
+        $tid = $request->get('tid');
+        $language = $request->get('language');
 
         $db = $this->getContainer()->dbPool->default;
 
         try {
             $select = $db->select(array('url'))
-                         ->from($db->prefix.'element_redirect', 'url')
-                         ->where("tid = ?",      $tid)
+                         ->from($db->prefix . 'element_redirect', 'url')
+                         ->where("tid = ?", $tid)
                          ->where("language = ?", $language);
 
             $data = $db->fetchAll($select);

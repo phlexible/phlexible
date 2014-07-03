@@ -1,6 +1,6 @@
 Phlexible.frontendmedia.FieldHelper = {
 
-    diffFn: function(diff, panel) {
+    diffFn: function (diff, panel) {
         var content_from;
         if (diff.content_from) {
             var split = diff.content_from.split(';');
@@ -18,21 +18,21 @@ Phlexible.frontendmedia.FieldHelper = {
         var content_to = '<img src="' + Phlexible.Router.generate('mediamanager_media', {file_id: id, template_key: '_mm_large', file_version: version}) + '" width="96" height="96" style="border: 1px solid #99BBE8;" />';
 
         var html = '<label>' + Phlexible.elements.Strings.version + ' ' + panel.diff.version_from + '</label>' +
-                   '<div>' + content_from + '</div>' +
-                   '<label>' + Phlexible.elements.Strings.version + ' ' + panel.diff.version_to + '</label>' +
-                   '<div>' + content_to + '</div>';
+            '<div>' + content_from + '</div>' +
+            '<label>' + Phlexible.elements.Strings.version + ' ' + panel.diff.version_to + '</label>' +
+            '<div>' + content_to + '</div>';
 
         panel.body.update(html);
     },
 
-    inlineDiff: function(targetEl, clickEl) {
+    inlineDiff: function (targetEl, clickEl) {
         if (!this.element || !this.diff || (this.diff['type'] && !this.diff.content_from)) return;
 
         if (!targetEl) targetEl = this.el;
         if (!clickEl) clickEl = targetEl;
 
-        targetEl.on('click', function() {
-            if (this.element.activeDiffEl && this.element.activeDiffEl.isVisible() && !e.within(targetEl.dom, false, true) && !e.within(this.element.activeDiffEl.dom, false, true)){
+        targetEl.on('click', function () {
+            if (this.element.activeDiffEl && this.element.activeDiffEl.isVisible() && !e.within(targetEl.dom, false, true) && !e.within(this.element.activeDiffEl.dom, false, true)) {
                 this.element.activeDiffEl.hide();
                 this.element.activeDiffEl = null;
             }
@@ -70,7 +70,7 @@ Phlexible.frontendmedia.FieldHelper = {
         }, this);
     },
 
-    unlink: function(){
+    unlink: function () {
         if (this.isSynchronized) {
             if (this.isMaster) {
                 this.el.addClass('p-fields-synchronized-master');
@@ -99,7 +99,7 @@ Phlexible.frontendmedia.FieldHelper = {
                         style: 'cursor: pointer; padding-left: 3px; vertical-align: middle;',
                         qtip: this.isUnlinked ? 'Link' : 'Unlink'
                     }, 'after');
-                    this.button_unlink.on('click', function(){
+                    this.button_unlink.on('click', function () {
                         if (this.isUnlinked) {
                             this.isUnlinked = false;
                             this.hidden_unlink.set({

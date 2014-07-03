@@ -11,36 +11,36 @@ Phlexible.elements.ElementContentTabPanel = Ext.extend(Ext.TabPanel, {
     tabPosition: 'top',
     deferredRender: false,
     hideMode: 'offsets',
-	activeTab: 0,
+    activeTab: 0,
 
     currentETID: null,
     currentActive: null,
 
-    initComponent: function() {
+    initComponent: function () {
         this.on({
-            render: function(c) {
+            render: function (c) {
                 Ext.dd.ScrollManager.register(c.body);
             },
-            tabchange: function(){
-				this.ownerCt.doLayout();
-			},
-			scope: this
+            tabchange: function () {
+                this.ownerCt.doLayout();
+            },
+            scope: this
         });
 
         Phlexible.elements.ElementContentTabPanel.superclass.initComponent.call(this);
     },
 
-    bla: function(element) {
+    bla: function (element) {
 
-		if (this.currentETID !== null && this.currentActive !== null && element.data.properties.etId == this.currentETID) {
-			this.setActiveTab(this.currentActive);
-		}
-		else if (element.data.default_content_tab) {
-			this.setActiveTab(parseInt(element.data.default_content_tab, 10));
-		}
-		else {
-			this.setActiveTab(0);
-		}
+        if (this.currentETID !== null && this.currentActive !== null && element.data.properties.etId == this.currentETID) {
+            this.setActiveTab(this.currentActive);
+        }
+        else if (element.data.default_content_tab) {
+            this.setActiveTab(parseInt(element.data.default_content_tab, 10));
+        }
+        else {
+            this.setActiveTab(0);
+        }
     },
 
 //    fetchDisabled: function(c) {
@@ -57,16 +57,16 @@ Phlexible.elements.ElementContentTabPanel = Ext.extend(Ext.TabPanel, {
 //        }, this);
 //    },
 
-    isValid: function() {
+    isValid: function () {
         var valid = true;
 
-        var chk = function(item) {
-            if(item.isFormField) {
+        var chk = function (item) {
+            if (item.isFormField) {
                 if (!item.isValid()) {
                     valid = false;
                     return false;
                 }
-            } else if(item.items) {
+            } else if (item.items) {
                 Ext.each(item.items.items, chk);
             }
             return true;

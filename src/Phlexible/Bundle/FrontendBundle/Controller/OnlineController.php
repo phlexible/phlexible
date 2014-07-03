@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\FrontendBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,19 +52,15 @@ class OnlineController extends Controller
         // get response
         $response = $this->getResponse();
 
-        try
-        {
+        try {
             // create request
             $request = new Makeweb_Frontend_Request($response, null, false, $this->getRequest()->getBaseUrl());
-        }
-        catch (Makeweb_Elements_Context_Exception $e)
-        {
+        } catch (Makeweb_Elements_Context_Exception $e) {
             Brainbits_Debug_Error::outputException($e);
             $this->_response->setHttpResponseCode(500);
+
             return;
-        }
-        catch (Makeweb_Frontend_Request_Exception $e)
-        {
+        } catch (Makeweb_Frontend_Request_Exception $e) {
             if ($this->getContainer()->get('application')->getDebug()) {
                 echo 'whoops';
                 exit(1);
@@ -77,9 +73,7 @@ class OnlineController extends Controller
                 ->setBody('Page not found.');
 
             return;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             if ($this->getContainer()->get('application')->getDebug()) {
                 echo 'whoops';
                 exit(1);
@@ -88,7 +82,8 @@ class OnlineController extends Controller
             MWF_Log::exception($e);
             MWF_Log::firephp($e);
 
-            echo $e->getMessage().'<pre>'.$e->getTraceAsString();die;
+            echo $e->getMessage() . '<pre>' . $e->getTraceAsString();
+            die;
             $response
                 ->setHttpResponseCode(500)
                 ->setBody('Error occured.');
@@ -96,16 +91,13 @@ class OnlineController extends Controller
             return;
         }
 
-        try
-        {
-            if ($response->isException())
-            {
+        try {
+            if ($response->isException()) {
                 $e = current($response->getException());
                 throw ($e);
             }
 
-            if (!$response->isRedirect())
-            {
+            if (!$response->isRedirect()) {
                 // Set the frontend user
                 $frontendUser = new Makeweb_Frontend_User();
                 $frontendUser->setInterfaceLanguage($request->getLanguage());
@@ -118,27 +110,20 @@ class OnlineController extends Controller
 
                 $renderer->render($request, $response);
             }
-        }
-        catch (Makeweb_Elements_Context_Exception $e)
-        {
+        } catch (Makeweb_Elements_Context_Exception $e) {
             MWF_Log::exception($e);
 
-            if ($request->hasContext())
-            {
+            if ($request->hasContext()) {
                 $container = $this->getContainer();
                 $country = $request->getContext()->getCountry();
                 if (isset(MWF_Registry::getConfig()->context->defaults) &&
-                    isset(MWF_Registry::getConfig()->context->defaults->{$country}))
-                {
+                    isset(MWF_Registry::getConfig()->context->defaults->{$country})
+                ) {
                     $languages = $container->config->context->defaults->{$country}->toArray();
                     $request->setLanguage(current($languages));
-                }
-                elseif ($request->getLanguage())
-                {
+                } elseif ($request->getLanguage()) {
 
-                }
-                else
-                {
+                } else {
                     $language = $container->getParam(':phlexible_cms.languages.default');
                     $request->setLanguage($language);
                 }
@@ -150,10 +135,9 @@ class OnlineController extends Controller
             );
 
             $this->forward('index', 'error', null, $params);
+
             return;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             MWF_Log::exception($e);
 
             $params = array(
@@ -162,6 +146,7 @@ class OnlineController extends Controller
             );
 
             $this->forward('index', 'error', null, $params);
+
             return;
         }
     }

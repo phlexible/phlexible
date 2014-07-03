@@ -30,31 +30,29 @@ class Makeweb_Elements_Callback
 
         $manager = Makeweb_Tasks_Task_Manager::getInstance();
 
-        try
-        {
+        try {
             $task = $manager->getByPayload(array('tid' => $node->getId()), $neededTask);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             $task = null;
         }
 
         /* @var $task Makeweb_Tasks_Task_Abstract */
 
-        if ($task && get_class($task) === $neededTask)
-        {
+        if ($task && get_class($task) === $neededTask) {
             $payload = $task->getPayload();
 
-            if (!empty($payload['language']) && $payload['language'] != $language)
-            {
+            if (!empty($payload['language']) && $payload['language'] != $language) {
                 return;
             }
 
-            if (!in_array($task->getLatestStatus()->getStatus(), array(
-                Makeweb_Tasks_Task_Abstract::STATUS_OPEN,
-                Makeweb_Tasks_Task_Abstract::STATUS_REOPENED,
-            )))
-            {
+            if (!in_array(
+                $task->getLatestStatus()->getStatus(),
+                array(
+                    Makeweb_Tasks_Task_Abstract::STATUS_OPEN,
+                    Makeweb_Tasks_Task_Abstract::STATUS_REOPENED,
+                )
+            )
+            ) {
                 return;
             }
 
@@ -72,8 +70,7 @@ class Makeweb_Elements_Callback
 
         $manager = Makeweb_Tasks_Task_Manager::getInstance();
 
-        try
-        {
+        try {
             $onlyStatus = array(
                 Makeweb_Tasks_Task_Abstract::STATUS_OPEN,
                 Makeweb_Tasks_Task_Abstract::STATUS_REJECTED,
@@ -82,16 +79,13 @@ class Makeweb_Elements_Callback
             );
 
             $task = $manager->getByPayload(array('tid' => $node->getId()), null, $onlyStatus);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             return;
         }
 
         /* @var $task Makeweb_Tasks_Task_Abstract */
 
-        if ($task)
-        {
+        if ($task) {
             $payload = $task->getPayload();
 
             $t9n = MWF_Registry::getContainer()->t9n;

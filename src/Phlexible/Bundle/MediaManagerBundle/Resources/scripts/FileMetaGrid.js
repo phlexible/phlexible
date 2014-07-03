@@ -16,28 +16,31 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     key: 'key',
     params: {},
 
-    initComponent: function() {
+    initComponent: function () {
         if (this.small) {
             this.enableColumnHide = false;
             this.viewConfig.forceFit = true;
         }
 
-        var columns = [{
-            header: this.strings.key,
-            dataIndex: 'key',
-            width: 100
-        },{
-            header: '&nbsp;',
-            dataIndex: 'required',
-            width: 30,
-            renderer: function(v) {
-                return 1 == v ? Phlexible.inlineIcon('p-mediamanager-wizard_required-icon') : '';
+        var columns = [
+            {
+                header: this.strings.key,
+                dataIndex: 'key',
+                width: 100
+            },
+            {
+                header: '&nbsp;',
+                dataIndex: 'required',
+                width: 30,
+                renderer: function (v) {
+                    return 1 == v ? Phlexible.inlineIcon('p-mediamanager-wizard_required-icon') : '';
+                }
             }
-        }];
+        ];
 
         var fields = ['key', 'type', 'options', 'required', 'synchronized', 'readonly'];
 
-        Ext.each(Phlexible.Config.get('set.language.meta'), function(language) {
+        Ext.each(Phlexible.Config.get('set.language.meta'), function (language) {
             fields.push('value_' + language[0]);
             columns.push({
                 header: this.strings.value + ' ' + Phlexible.inlineIcon(language[2]) + ' ' + language [1],
@@ -53,7 +56,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         this.store = new Ext.data.JsonStore({
             fields: fields,
             listeners: {
-                load: function(store, records) {
+                load: function (store, records) {
                     // if no required fields are present for a file
                     // -> hide the 'required' column
                     var hasRequiredFields = false;
@@ -88,19 +91,19 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         Phlexible.mediamanager.FileMetaGrid.superclass.initComponent.call(this);
 
         this.on({
-            render: function() {
+            render: function () {
                 if (this.data) {
                     this.setData(this.data);
                     delete this.data;
                 }
             },
-            beforeedit: function(e) {
+            beforeedit: function (e) {
                 // skip editing english values if language is synchronized
-                var record         = e.record;
-                var ci             = e.column;
+                var record = e.record;
+                var ci = e.column;
                 var isSynchronized = (1 == record.get('synchronized'));
-                var cm             = this.getColumnModel();
-                var column         = cm.getColumnById(cm.getColumnId(ci));
+                var cm = this.getColumnModel();
+                var column = cm.getColumnById(cm.getColumnId(ci));
                 if (isSynchronized && (!column.language || column.language !== Phlexible.Config.get('language.metasets'))) {
                     return false;
                 }
@@ -108,7 +111,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                     return false;
                 }
             },
-            afteredit: function(e) {
+            afteredit: function (e) {
                 this.validateMeta();
             },
             scope: this
@@ -116,15 +119,15 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     },
 
-    setData: function(data) {
+    setData: function (data) {
         this.store.loadData(data);
     },
 
-    getData: function() {
+    getData: function () {
         var data = {};
         var records = this.store.getRange();
 
-        for(var i=0; i<records.length; i++) {
+        for (var i = 0; i < records.length; i++) {
             var key = records[i].data.key;
             var values = records[i].data;
             if (values.type == 'date') {
@@ -140,7 +143,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         return data;
     },
 
-    formatDate: function(v)  {
+    formatDate: function (v) {
         if (typeof v !== 'object') {
             var dt = Date.parseDate(v, 'Y-m-d');
         }
@@ -155,7 +158,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         return v;
     },
 
-    formatField: function(v, md, r, ri, ci, store) {
+    formatField: function (v, md, r, ri, ci, store) {
 
         var isSynchronized = (1 == r.data['synchronized']);
 
@@ -176,8 +179,8 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         if (v && r.data.type == 'date') {
             v = this.formatDate(v);
         }
-        else if(v && r.data.type === 'select') {
-            for(var i=0; i<r.data.options.length; i++) {
+        else if (v && r.data.type === 'select') {
+            for (var i = 0; i < r.data.options.length; i++) {
                 if (r.data.options[i][0] == v) {
                     v = r.data.options[i][1];
                     break;
@@ -188,7 +191,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         return v;
     },
 
-    validateMeta: function() {
+    validateMeta: function () {
         var valid = true;
         var languages = Phlexible.Config.get('set.language.meta');
         var language;
@@ -196,7 +199,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         var metaRecords = this.getStore().getRange();
 
-        for(var i=0; i<metaRecords.length; i++) {
+        for (var i = 0; i < metaRecords.length; i++) {
             row = metaRecords[i].data;
 
             if (1 == row['synchronized']) {
@@ -214,13 +217,13 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         }
 
         /*
-        var tbar = this.getTopToolbar();
-        if (valid) {
-            tbar.items.items[0].enable();
-        } else {
-            tbar.items.items[0].disable();
-        }
-        */
+         var tbar = this.getTopToolbar();
+         if (valid) {
+         tbar.items.items[0].enable();
+         } else {
+         tbar.items.items[0].disable();
+         }
+         */
 
         return valid;
     },
@@ -230,7 +233,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         var languages = Phlexible.Config.get('set.language.meta');
 
         for (var i = 0; i < languages.length; ++i) {
-            code  = languages[i][0];
+            code = languages[i][0];
             field = 'value_' + code;
 
             if (!data[field]) {

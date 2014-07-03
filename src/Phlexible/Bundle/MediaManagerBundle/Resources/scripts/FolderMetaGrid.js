@@ -4,7 +4,7 @@ Phlexible.mediamanager.FolderMetaGrid = Ext.extend(Phlexible.mediamanager.FileMe
 
     right: Phlexible.mediamanager.Rights.FOLDER_MODIFY,
 
-    initUrls: function() {
+    initUrls: function () {
         this.urls = {
             load: Phlexible.Router.generate('mediamanager_folder_meta'),
             save: Phlexible.Router.generate('mediamanager_folder_meta_save')

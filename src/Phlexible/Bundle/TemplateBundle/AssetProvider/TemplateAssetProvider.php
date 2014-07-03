@@ -39,11 +39,21 @@ class TemplateAssetProvider implements AssetProviderInterface
     public function getUxScriptsCollection()
     {
         $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shCore.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shBrushXml.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shBrushDwoo.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shBrushCss.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shBrushJScript.js')),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shCore.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shBrushXml.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shBrushDwoo.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shBrushCss.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleTemplateBundle/Resources/scripts/syntaxhighlighter/shBrushJScript.js'
+            )),
         ));
 
         return $collection;
@@ -55,8 +65,12 @@ class TemplateAssetProvider implements AssetProviderInterface
     public function getUxCssCollection()
     {
         $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/styles/syntaxhighlighter/shCore.css')),
-            new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/styles/syntaxhighlighter/shThemeDefault.css')),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleTemplateBundle/Resources/styles/syntaxhighlighter/shCore.css'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleTemplateBundle/Resources/styles/syntaxhighlighter/shThemeDefault.css'
+            )),
         ));
 
         return $collection;
@@ -69,15 +83,15 @@ class TemplateAssetProvider implements AssetProviderInterface
     {
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/Definitions.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/TemplatesGrid.js')),
             new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/TemplateTabPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/DataPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/ViewPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/EditorPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/MainPanel.js')),
-
-            new FileAsset($this->locator->locate('@PhlexibleTemplateBundle/Resources/scripts/menuhandle/TemplatesHandle.js')),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleTemplateBundle/Resources/scripts/menuhandle/TemplatesHandle.js'
+            )),
         ));
 
         return $collection;

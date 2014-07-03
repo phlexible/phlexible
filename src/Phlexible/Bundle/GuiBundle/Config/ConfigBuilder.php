@@ -46,10 +46,11 @@ class ConfigBuilder
      * @param string                   $availableLanguages
      * @param string                   $defaultLanguage
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                SecurityContextInterface $securityContext,
-                                $availableLanguages,
-                                $defaultLanguage)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        SecurityContextInterface $securityContext,
+        $availableLanguages,
+        $defaultLanguage)
     {
         $this->dispatcher = $dispatcher;
         $this->securityContext = $securityContext;
@@ -86,8 +87,8 @@ class ConfigBuilder
         $sets['themes'] = array(
             array('default', 'Default Theme', 'theme_default.png'),
             array('gray', 'Gray Theme', 'theme_gray.png'),
-//            array('slate', 'Slate Theme', 'theme_slate.png'),
-//            array('slickness', 'Slickness Theme', 'theme_slate.png'),
+            //            array('slate', 'Slate Theme', 'theme_slate.png'),
+            //            array('slickness', 'Slickness Theme', 'theme_slate.png'),
         );
 
         $sets['dateFormats'] = array(

@@ -9,8 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Phlexible\Bundle\ElementBundle\ContentElement\Dumper\XmlDumper;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -28,8 +26,7 @@ class TestCommand extends ContainerAwareCommand
     {
         $this
             ->setName('elements:test')
-            ->setDescription('test.')
-        ;
+            ->setDescription('test.');
     }
 
     /**

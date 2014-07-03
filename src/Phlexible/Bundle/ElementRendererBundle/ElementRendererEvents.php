@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\ElementRendererBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ElementRendererEvents
+class ElementRendererEvents
 {
     /**
      * Fired after providing data

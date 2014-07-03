@@ -28,7 +28,7 @@ interface FilterInterface
     /**
      * Option name: Valid values
      */
-    const OPTION_VALUES   = 'values';
+    const OPTION_VALUES = 'values';
 
     /**
      * Option name: Valid values for dependent fields

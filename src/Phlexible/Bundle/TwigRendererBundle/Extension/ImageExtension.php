@@ -36,6 +36,7 @@ class ImageExtension extends \Twig_Extension
         if (is_object($path)) {
             return get_class($path);
         }
+
         return $path;
     }
 
@@ -49,6 +50,7 @@ class ImageExtension extends \Twig_Extension
         if (is_object($path)) {
             return get_class($path);
         }
+
         return $path;
     }
 

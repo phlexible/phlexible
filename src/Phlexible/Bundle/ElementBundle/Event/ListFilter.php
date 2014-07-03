@@ -26,7 +26,7 @@ class Makeweb_Elements_Event_ListFilter extends Brainbits_Event_Notification_Abs
     public function __construct(array $filterData, Zend_Db_Select $select)
     {
         $this->_filterData = $filterData;
-        $this->_select     = $select;
+        $this->_select = $select;
     }
 
     /**

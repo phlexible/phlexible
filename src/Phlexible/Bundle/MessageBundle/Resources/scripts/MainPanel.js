@@ -3,22 +3,24 @@ Phlexible.messages.MainPanel = Ext.extend(Ext.Panel, {
     iconCls: 'p-message-component-icon',
     layout: 'fit',
 
-    initComponent: function() {
-        var mainItems = [{
-            xtype: 'messages-view-mainpanel'
-        }];
+    initComponent: function () {
+        var mainItems = [
+            {
+                xtype: 'messages-view-mainpanel'
+            }
+        ];
 
         if (Phlexible.User.isGranted('messages_filters')) {
             mainItems.push({
                 xtype: 'messages-filter-mainpanel',
-				listeners: {
-					filterDeleted: function() {
-						if (Phlexible.User.isGranted('messages_subscriptions')) {
-							this.getComponent(0).getComponent(2).reloadSubscriptions();
-						}
-					},
-					scope: this
-				}
+                listeners: {
+                    filterDeleted: function () {
+                        if (Phlexible.User.isGranted('messages_subscriptions')) {
+                            this.getComponent(0).getComponent(2).reloadSubscriptions();
+                        }
+                    },
+                    scope: this
+                }
             });
         }
         if (Phlexible.User.isGranted('messages_subscriptions')) {

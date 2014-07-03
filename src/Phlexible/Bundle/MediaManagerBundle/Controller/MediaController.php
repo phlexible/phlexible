@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,7 +34,7 @@ class MediaController extends Controller
      */
     public function mediaAction(Request $request)
     {
-        $fileId      = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
         $templateKey = $request->get('template_key');
 

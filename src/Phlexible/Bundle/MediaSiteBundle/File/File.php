@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\File;
 
-use Phlexible\Component\Identifier\IdentifiableInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
+use Phlexible\Bundle\MediaSiteBundle\Site;
+use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**
  * File
@@ -117,6 +117,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setSite(SiteInterface $site)
     {
         $this->site = $site;
+
         return $this;
     }
 
@@ -134,6 +135,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -151,6 +153,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setVersion($version)
     {
         $this->version = (int) $version;
+
         return $this;
     }
 
@@ -168,6 +171,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setFolderId($folderId)
     {
         $this->folderId = $folderId;
+
         return $this;
     }
 
@@ -185,6 +189,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -202,6 +207,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
+
         return $this;
     }
 
@@ -219,6 +225,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setPhysicalPath($physicalPath)
     {
         $this->physicalPath = $physicalPath;
+
         return $this;
     }
 
@@ -236,6 +243,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setSize($size)
     {
         $this->size = (int) $size;
+
         return $this;
     }
 
@@ -253,6 +261,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setHash($hash)
     {
         $this->hash = $hash;
+
         return $this;
     }
 
@@ -270,6 +279,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setHidden($hidden = true)
     {
         $this->hidden = (bool) $hidden;
+
         return $this;
     }
 
@@ -287,6 +297,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes;
+
         return $this;
     }
 
@@ -308,6 +319,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setAttribute($key, $value)
     {
         $this->attributes[$key] = $value;
+
         return $this;
     }
 
@@ -325,6 +337,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -342,6 +355,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setCreateUserId($createUserId)
     {
         $this->createUserId = $createUserId;
+
         return $this;
     }
 
@@ -359,6 +373,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setModifiedAt(\DateTime $modifiedAt)
     {
         $this->modifiedAt = $modifiedAt;
+
         return $this;
     }
 
@@ -376,6 +391,7 @@ class File implements FileInterface, IdentifiableInterface
     public function setModifyUserId($modifyUserId)
     {
         $this->modifyUserId = $modifyUserId;
+
         return $this;
     }
 }

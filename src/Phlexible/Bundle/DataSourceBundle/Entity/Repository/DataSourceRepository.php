@@ -74,6 +74,11 @@ class DataSourceRepository extends EntityRepository
         return $ids;
     }
 
+    /**
+     * @param string    $sourceId
+     * @param string    $language
+     * @param null|bool $isActive
+     */
     public function getAllValuesByDataSourceId($sourceId, $language, $isActive = null)
     {
 
@@ -97,36 +102,36 @@ class DataSourceRepository extends EntityRepository
 
         // delete values removed from data source
         $this->_deleteValues(
-             $dataSourceId,
-                 array_keys(array_diff($oldKeysL, $this->_lowerValue($allKeys)))
+            $dataSourceId,
+            array_keys(array_diff($oldKeysL, $this->_lowerValue($allKeys)))
         );
 
         // insert values added to data source
         $this->_insertValues(
-             $dataSourceId,
-                 $language,
-                 array_diff_key($this->_lowerValueAsKey($activeKeys), $this->_lowerValueAsKey($oldKeys)),
-                 true
+            $dataSourceId,
+            $language,
+            array_diff_key($this->_lowerValueAsKey($activeKeys), $this->_lowerValueAsKey($oldKeys)),
+            true
         );
 
         $this->_insertValues(
-             $dataSourceId,
-                 $language,
-                 array_diff_key($this->_lowerValueAsKey($inactiveKeys), $this->_lowerValueAsKey($oldKeys)),
-                 false
+            $dataSourceId,
+            $language,
+            array_diff_key($this->_lowerValueAsKey($inactiveKeys), $this->_lowerValueAsKey($oldKeys)),
+            false
         );
 
         // fix existing values
         $this->_fixValues(
-             $dataSourceId,
-                 array_keys(array_intersect($oldKeysL, $this->_lowerValue($activeKeys))),
-                 true
+            $dataSourceId,
+            array_keys(array_intersect($oldKeysL, $this->_lowerValue($activeKeys))),
+            true
         );
 
         $this->_fixValues(
-             $dataSourceId,
-                 array_keys(array_intersect($oldKeysL, $this->_lowerValue($inactiveKeys))),
-                 false
+            $dataSourceId,
+            array_keys(array_intersect($oldKeysL, $this->_lowerValue($inactiveKeys))),
+            false
         );
 
     }
@@ -145,14 +150,14 @@ class DataSourceRepository extends EntityRepository
         }
 
         $this->db->update(
-                 $this->db->prefix . self::T_DATASOURCE_VALUE,
-                     array(
-                         self::C_DATASOURCE_VALUE_ACTIVE => (int) $isActive,
-                     ),
-                     array(
-                         self::C_DATASOURCE_VALUE_ID . ' in (?)'     => $existingIds,
-                         self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
-                     )
+            $this->db->prefix . self::T_DATASOURCE_VALUE,
+            array(
+                self::C_DATASOURCE_VALUE_ACTIVE => (int) $isActive,
+            ),
+            array(
+                self::C_DATASOURCE_VALUE_ID . ' in (?)'     => $existingIds,
+                self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
+            )
         );
     }
 
@@ -177,15 +182,15 @@ class DataSourceRepository extends EntityRepository
             $hashableString = $dataSourceId . $insertedKey . $language;
 
             $this->db->insert(
-                     $this->db->prefix . self::T_DATASOURCE_VALUE,
-                         array(
-                             self::C_DATASOURCE_VALUE_ID        => Uuid::generate(),
-                             self::C_DATASOURCE_VALUE_SOURCE_ID => $dataSourceId,
-                             self::C_DATASOURCE_VALUE_LANGUAGE  => $language,
-                             self::C_DATASOURCE_VALUE_KEY       => $insertedKey,
-                             self::C_DATASOURCE_VALUE_ACTIVE    => (int) $isActive,
-                             self::C_DATASOURCE_VALUE_HASH      => md5($hashableString),
-                         )
+                $this->db->prefix . self::T_DATASOURCE_VALUE,
+                array(
+                    self::C_DATASOURCE_VALUE_ID        => Uuid::generate(),
+                    self::C_DATASOURCE_VALUE_SOURCE_ID => $dataSourceId,
+                    self::C_DATASOURCE_VALUE_LANGUAGE  => $language,
+                    self::C_DATASOURCE_VALUE_KEY       => $insertedKey,
+                    self::C_DATASOURCE_VALUE_ACTIVE    => (int) $isActive,
+                    self::C_DATASOURCE_VALUE_HASH      => md5($hashableString),
+                )
             );
         }
     }
@@ -194,25 +199,25 @@ class DataSourceRepository extends EntityRepository
      * Insert new values to an data source.
      *
      * @param string $dataSourceId
-     * @param array  $deletedIds [Optinal] if null all values are deleted
+     * @param array  $deletedIds
      */
     protected function _deleteValues($dataSourceId, array $deletedIds = null)
     {
         if (null === $deletedIds) {
             // delete all
             $this->db->delete(
-                     $this->db->prefix . self::T_DATASOURCE_VALUE,
-                         array(
-                             self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
-                         )
+                $this->db->prefix . self::T_DATASOURCE_VALUE,
+                array(
+                    self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
+                )
             );
         } elseif (count($deletedIds)) {
             $this->db->delete(
-                     $this->db->prefix . self::T_DATASOURCE_VALUE,
-                         array(
-                             self::C_DATASOURCE_VALUE_ID . ' in (?)'     => $deletedIds,
-                             self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
-                         )
+                $this->db->prefix . self::T_DATASOURCE_VALUE,
+                array(
+                    self::C_DATASOURCE_VALUE_ID . ' in (?)'     => $deletedIds,
+                    self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
+                )
             );
         }
     }

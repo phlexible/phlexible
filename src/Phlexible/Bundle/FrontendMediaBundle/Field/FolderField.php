@@ -30,26 +30,21 @@ class FolderField extends AbstractField
      */
     protected function _transform(array $item, array $media, array $options)
     {
-        $item['templates']        = array();
+        $item['templates'] = array();
         $item['templates_config'] = array();
-        $item['media']            = array();
+        $item['media'] = array();
 
-        try
-        {
-            if (!empty($item['data_content']))
-            {
+        try {
+            if (!empty($item['data_content'])) {
                 $folder = $this->_getFolder($item['data_content']);
 
-                if ($folder !== null)
-                {
-                    $item['media']  = $this->_getFolderMediaData($folder);
+                if ($folder !== null) {
+                    $item['media'] = $this->_getFolderMediaData($folder);
                     // $item['master'] = $this->_getMasterData($item);
                 }
             }
 
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             MWF_Log::exception($e);
             $item['data_content'] = '';
             $item['media'] = false;
@@ -69,15 +64,12 @@ class FolderField extends AbstractField
      */
     protected function _getFolder($folderId)
     {
-        try
-        {
+        try {
             $siteManager = Media_Site_Manager::getInstance();
             $folderPeer = $siteManager->getByFolderId($folderId)->getFolderPeer();
 
             $folder = $folderPeer->getByID($folderId);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             MWF_Log::exception($e);
             $folder = null;
         }
@@ -89,15 +81,12 @@ class FolderField extends AbstractField
     {
         $media = array();
 
-        try
-        {
-            $media['folder_id']      = $folder->getID();
+        try {
+            $media['folder_id'] = $folder->getID();
             $media['folder_id_path'] = $folder->getIdPath();
-            $media['name']           = $folder->getName();
-            $media['folder_path']    = $folder->getPath();
-        }
-        catch (Exception $e)
-        {
+            $media['name'] = $folder->getName();
+            $media['folder_path'] = $folder->getPath();
+        } catch (Exception $e) {
             MWF_Log::exception($e);
             $media = array();
         }

@@ -11,9 +11,9 @@ namespace Phlexible\Bundle\SiterootBundle;
 /**
  * Siteroot events
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
-interface SiterootEvents
+class SiterootEvents
 {
     /**
      * Before Create Siteroot Event

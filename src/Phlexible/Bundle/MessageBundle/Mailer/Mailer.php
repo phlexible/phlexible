@@ -58,12 +58,13 @@ class Mailer
      * @param string            $projectTitle
      * @param array             $parameters
      */
-    public function __construct(Twig_Environment $templating,
-                                \Swift_Mailer $mailer,
-                                LoggerInterface $logger,
-                                $appTitle,
-                                $projectTitle,
-                                array $parameters)
+    public function __construct(
+        Twig_Environment $templating,
+        \Swift_Mailer $mailer,
+        LoggerInterface $logger,
+        $appTitle,
+        $projectTitle,
+        array $parameters)
     {
         $this->templating = $templating;
         $this->mailer = $mailer;
@@ -118,8 +119,7 @@ class Mailer
                 ->setSubject($subject)
                 ->setBody($body)
                 ->setFrom($from)
-                ->addTo($recipient)
-            ;
+                ->addTo($recipient);
 
             $this->mailer->send($mail);
         } catch (\Exception $e) {

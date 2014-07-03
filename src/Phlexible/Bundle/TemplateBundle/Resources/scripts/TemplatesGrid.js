@@ -6,7 +6,7 @@ Phlexible.templates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
 //        forceFit: true
 //    },
 
-    initComponent: function() {
+    initComponent: function () {
         // create the data store
         this.store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('templates_list'),
@@ -19,38 +19,44 @@ Phlexible.templates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
         });
 
         // create the column model
-        this.columns = [{
-            id: 'name',
-            header: this.strings.name,
-            width: 100,
-            dataIndex: 'name',
-            fixed: true,
-            resizable: false
-        },{
-            header: this.strings.path,
-            width: 100,
-            dataIndex: 'path',
-            fixed: true,
-            resizable: false
-        },{
-            header: this.strings.filename,
-            width: 100,
-            dataIndex: 'filename',
-            fixed: true,
-            resizable: false
-        }];
+        this.columns = [
+            {
+                id: 'name',
+                header: this.strings.name,
+                width: 100,
+                dataIndex: 'name',
+                fixed: true,
+                resizable: false
+            },
+            {
+                header: this.strings.path,
+                width: 100,
+                dataIndex: 'path',
+                fixed: true,
+                resizable: false
+            },
+            {
+                header: this.strings.filename,
+                width: 100,
+                dataIndex: 'filename',
+                fixed: true,
+                resizable: false
+            }
+        ];
 
         // create the selection model
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true
         });
 
-        this.tbar = [{
-            text: this.strings.reload,
-            handler: function() {
-            },
-            scope: this
-        }];
+        this.tbar = [
+            {
+                text: this.strings.reload,
+                handler: function () {
+                },
+                scope: this
+            }
+        ];
 
         Phlexible.templates.TemplatesGrid.superclass.initComponent.call(this);
     }

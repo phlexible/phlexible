@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\TemplateBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\TemplateBundle\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -68,7 +68,7 @@ class DataController extends Controller
         $templateId = $request->get('id');
 
         $templateRepository = $this->get('templates.repository');
-        $template           = $templateRepository->find($templateId);
+        $template = $templateRepository->find($templateId);
 
         $settings = array(
             'id'       => $template->getId(),

@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\MediaCacheBundle\Commit\TemplateChangeCommitter;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,11 +28,12 @@ class ChangesCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-cache:changes')
-            ->setDefinition(array(
-                new InputOption('commit', null, InputOption::VALUE_NONE, 'Commit changes'),
-            ))
-            ->setDescription('Show media template changes')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('commit', null, InputOption::VALUE_NONE, 'Commit changes'),
+                )
+            )
+            ->setDescription('Show media template changes');
     }
 
     /**

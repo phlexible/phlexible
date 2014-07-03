@@ -23,15 +23,13 @@ class CreateSiterootListener
     public function onCreateSiteroot(CreateSiterootEvent $event)
     {
         $siteroot = $event->getSiteroot();
-        $title    = $siteroot->getTitle();
+        $title = $siteroot->getTitle();
         $siterootID = $siteroot->getId();
 
-        try
-        {
+        try {
             $elementTypeManager = Makeweb_Elementtypes_Elementtype_Manager::getInstance();
 
-            if (!$title)
-            {
+            if (!$title) {
                 $title = $siteroot->getTitle('en');
             }
 
@@ -42,13 +40,13 @@ class CreateSiterootListener
             );
             $sysRootVersion = $sysRoot->getLatest();
 
-            $elementTypeId      = $sysRoot->getId(); //$row['element_type_id'];
+            $elementTypeId = $sysRoot->getId(); //$row['element_type_id'];
             $elementTypeVersion = $sysRootVersion->getVersion(); //$row['version'];
 
             $insertData = array(
-                'element_type_id'  => $elementTypeId,
-                'create_uid'       => MWF_Env::getUid(),
-                'create_time'      => $db->fn->now(),
+                'element_type_id' => $elementTypeId,
+                'create_uid'      => MWF_Env::getUid(),
+                'create_time'     => $db->fn->now(),
             );
 
             $db->insert($db->prefix . 'element', $insertData);
@@ -69,9 +67,7 @@ class CreateSiterootListener
             // create element in tree
             $tree = new Tree($siterootID);
             $tree->add(null, $eid);
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }

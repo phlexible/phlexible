@@ -31,7 +31,7 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
     values: {},
     formConfig: {},
 
-    initComponent: function() {
+    initComponent: function () {
         this.addEvents(
             'beforeSubmit',
             'submit',
@@ -41,26 +41,28 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
             'failure'
         );
 
-        var formItems = [{
-            xtype: 'panel',
-            cls: 'p-header',
-            frame: false,
-            border: false,
-            plain: true,
-            header: false,
-            html: '<div class="p-header-image"></div>' +
-                  '<div class="p-header-title">' + this.textHeader + '</div>' +
-                  '<div class="p-header-description">' + this.textDescription + '</div>'
+        var formItems = [
+            {
+                xtype: 'panel',
+                cls: 'p-header',
+                frame: false,
+                border: false,
+                plain: true,
+                header: false,
+                html: '<div class="p-header-image"></div>' +
+                    '<div class="p-header-title">' + this.textHeader + '</div>' +
+                    '<div class="p-header-description">' + this.textDescription + '</div>'
 
 
-        }];
+            }
+        ];
 
         var additionalFormItems = this.getFormItems();
 
-        for(var i=0; i<additionalFormItems.length; i++) {
-            if(this.values[additionalFormItems[i].name]) {
+        for (var i = 0; i < additionalFormItems.length; i++) {
+            if (this.values[additionalFormItems[i].name]) {
                 additionalFormItems[i].value = this.values[additionalFormItems[i].name];
-            } else if(this.values[additionalFormItems[i].hiddenName]) {
+            } else if (this.values[additionalFormItems[i].hiddenName]) {
                 additionalFormItems[i].value = this.values[additionalFormItems[i].hiddenName];
             }
             formItems.push(additionalFormItems[i]);
@@ -76,18 +78,18 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
             defaultType: 'textfield',
             cls: 'p-dialog-form',
             items: formItems,
-            bindHandler : function(){
+            bindHandler: function () {
                 var valid = true;
-                this.form.items.each(function(f){
-                    if(!f.isValid(true)){
+                this.form.items.each(function (f) {
+                    if (!f.isValid(true)) {
                         valid = false;
                         return false;
                     }
                 });
-                if(this.ownerCt.buttons){
-                    for(var i = 0, len = this.ownerCt.buttons.length; i < len; i++){
+                if (this.ownerCt.buttons) {
+                    for (var i = 0, len = this.ownerCt.buttons.length; i < len; i++) {
                         var btn = this.ownerCt.buttons[i];
-                        if(btn.formBind === true && btn.disabled === valid){
+                        if (btn.formBind === true && btn.disabled === valid) {
                             btn.setDisabled(!valid);
                         }
                     }
@@ -98,38 +100,41 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
 
         Ext.apply(this.items, this.formConfig);
 
-        this.buttons = [{
-			text: this.textCancel,
-			iconCls: this.iconClsCancel,
-			handler: function() {
-				this.close();
-			},
-			scope: this
-		},{
-            text: this.textOk,
-            iconCls: this.iconClsOk,
-            handler: this.submitForm,
-            formBind: true,
-            scope: this
-        }];
+        this.buttons = [
+            {
+                text: this.textCancel,
+                iconCls: this.iconClsCancel,
+                handler: function () {
+                    this.close();
+                },
+                scope: this
+            },
+            {
+                text: this.textOk,
+                iconCls: this.iconClsOk,
+                handler: this.submitForm,
+                formBind: true,
+                scope: this
+            }
+        ];
 
-        if(this.extraCls) {
+        if (this.extraCls) {
             this.cls += ' ' + this.extraCls;
         }
 
-        this.on('show', function() {
-            if (!this.noFocus && this.getComponent(0) && this.getComponent(0).getComponent(1)) {
-               this.getComponent(0).getComponent(1).focus(false, 10);
-           }
-        }, this);
-
-        this.on('move', function() {
+        this.on('show', function () {
             if (!this.noFocus && this.getComponent(0) && this.getComponent(0).getComponent(1)) {
                 this.getComponent(0).getComponent(1).focus(false, 10);
             }
         }, this);
 
-        this.on('resize', function() {
+        this.on('move', function () {
+            if (!this.noFocus && this.getComponent(0) && this.getComponent(0).getComponent(1)) {
+                this.getComponent(0).getComponent(1).focus(false, 10);
+            }
+        }, this);
+
+        this.on('resize', function () {
             if (!this.noFocus && this.getComponent(0) && this.getComponent(0).getComponent(1)) {
                 this.getComponent(0).getComponent(1).focus(false, 10);
             }
@@ -137,11 +142,11 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
 
         Phlexible.gui.util.Dialog.superclass.initComponent.call(this);
 
-        this.addListener('render', function(){
+        this.addListener('render', function () {
             var keyMap = this.getKeyMap();
             keyMap.addBinding({
                 key: Ext.EventObject.ENTER,
-                fn: function(a, e) {
+                fn: function (a, e) {
                     e.stopEvent();
                     this.submitForm();
                 },
@@ -154,7 +159,7 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
      * Return the FormPanel Component
      * @return Ext.form.FormPanel
      */
-    getForm: function() {
+    getForm: function () {
         return this.getComponent(0);
     },
 
@@ -162,7 +167,7 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
      * Return the BasicForm Component
      * @return Ext.form.BasicForm
      */
-    getBasicForm: function() {
+    getBasicForm: function () {
         return this.getComponent(0).getForm();
     },
 
@@ -170,7 +175,7 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
      * Return all Form Items for this Dialog
      * @return array
      */
-    getFormItems: function() {
+    getFormItems: function () {
         return this.formItems;
     },
 
@@ -178,7 +183,7 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
      * Return the Submit URL
      * @return string
      */
-    getSubmitUrl: function() {
+    getSubmitUrl: function () {
         return this.submitUrl;
     },
 
@@ -186,18 +191,17 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
      * Return the Submit Parameters
      * @return object
      */
-    getSubmitParams: function() {
+    getSubmitParams: function () {
         return this.submitParams;
     },
 
-    submitForm: function() {
-        if(!this.getBasicForm().isValid())
-        {
+    submitForm: function () {
+        if (!this.getBasicForm().isValid()) {
             return;
         }
 
         var values = this.getBasicForm().getValues();
-        if(!this.fireEvent('beforeSubmit', values, this)) {
+        if (!this.fireEvent('beforeSubmit', values, this)) {
             return;
         }
 
@@ -218,7 +222,7 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
         }
     },
 
-    onSuccess: function(form, action) {
+    onSuccess: function (form, action) {
         if (action.result.success) {
             this.fireEvent('success', this, action.result);
             this.fireEvent('submitSuccess', this, action.result);
@@ -230,7 +234,7 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
         }
     },
 
-    onFailure: function(form, action) {
+    onFailure: function (form, action) {
         this.fireEvent('failure', this, action.result);
         this.fireEvent('submitFailure', this, action.result);
 

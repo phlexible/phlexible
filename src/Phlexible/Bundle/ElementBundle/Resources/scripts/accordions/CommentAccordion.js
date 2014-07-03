@@ -8,22 +8,24 @@ Phlexible.elements.accordion.Comment = Ext.extend(Ext.FormPanel, {
 
     key: 'comment',
 
-    initComponent: function() {
-        this.items = [{
-            xtype: 'textarea',
-            hideLabel: true,
-            anchor: '100%',
-            height: 200
-        }];
+    initComponent: function () {
+        this.items = [
+            {
+                xtype: 'textarea',
+                hideLabel: true,
+                anchor: '100%',
+                height: 200
+            }
+        ];
 
         Phlexible.elements.accordion.Comment.superclass.initComponent.call(this);
     },
 
-    load: function(data) {
+    load: function (data) {
         this.getComponent(0).setValue(data.comment);
     },
 
-    getData: function() {
+    getData: function () {
         return this.getComponent(0).getValue();
     }
 });

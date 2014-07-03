@@ -1,12 +1,14 @@
-.p-imageselect .x-panel-body{
+.p-imageselect .x-panel-body {
     font: 11px Arial, Helvetica, sans-serif;
 }
-.p-imageselect .thumb-wrap{
+
+.p-imageselect .thumb-wrap {
     float: left;
     margin: 0;
     padding: 0;
 }
-.p-imageselect .thumb-wrap .thumb{
+
+.p-imageselect .thumb-wrap .thumb {
     background: #fff;
     padding: 2px;
     width: 18px;
@@ -14,22 +16,27 @@
     overflow: hidden;
     border: 2px solid white;
 }
+
 .p-imageselect .thumb-wrap-over {
     cursor: pointer;
 }
-.p-imageselect .thumb-wrap-over .thumb{
+
+.p-imageselect .thumb-wrap-over .thumb {
     border: 2px solid #AAA;
 }
-.p-imageselect .x-view-selected .thumb{
+
+.p-imageselect .x-view-selected .thumb {
     border: 2px solid #888;
     background-color: #CCC;
 }
-.p-imageselect .thumb-wrap .thumb img{
+
+.p-imageselect .thumb-wrap .thumb img {
     width: 18px;
     height: 18px;
     vertical-align: middle;
     padding-right: 2px;
 }
+
 .p-imageselect .thumb-wrap-hideText .thumb span {
     display: none;
 }

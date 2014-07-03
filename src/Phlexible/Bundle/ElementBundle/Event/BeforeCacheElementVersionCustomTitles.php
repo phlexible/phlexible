@@ -43,8 +43,8 @@ class Makeweb_Elements_Event_BeforeCacheElementVersionCustomTitles extends Brain
     /**
      * Constructor
      *
-     * @param Makeweb_Elements_Element_Version $elementVersion
-     * @param string $language
+     * @param Makeweb_Elements_Element_Version              $elementVersion
+     * @param string                                        $language
      * @param Makeweb_Elements_Element_Version_CustomTitles $customTitles
      */
     public function __construct(
@@ -54,8 +54,8 @@ class Makeweb_Elements_Event_BeforeCacheElementVersionCustomTitles extends Brain
     )
     {
         $this->_elementVersion = $elementVersion;
-        $this->_language       = $language;
-        $this->_customTitles   = $customTitles;
+        $this->_language = $language;
+        $this->_customTitles = $customTitles;
     }
 
     /**

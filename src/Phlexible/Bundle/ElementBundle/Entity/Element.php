@@ -225,32 +225,32 @@ class Element
 
         // fetch new version
         $select = $db->select()
-                     ->from($db->prefix.'element_version', array(
-                           'version',
-                           new Zend_Db_Expr('version + 1 AS new_version'),
-                           'element_type_version'))
-                     ->where('eid = ?', $eid)
-                     ->order('version DESC')
-                     ->limit(1);
+            ->from(
+                $db->prefix . 'element_version',
+                array(
+                    'version',
+                    new Zend_Db_Expr('version + 1 AS new_version'),
+                    'element_type_version'
+                )
+            )
+            ->where('eid = ?', $eid)
+            ->order('version DESC')
+            ->limit(1);
 
         $row = $db->fetchRow($select);
 
-        if (!$row)
-        // First version
+        if (!$row) // First version
         {
             $oldVersion = null;
             $newVersion = 1;
 
-            if ($elementTypeVersion === null)
-            {
+            if ($elementTypeVersion === null) {
                 $elementTypeVersion = $this->getElementType()->getLatest()->getVersion();
             }
-        }
-        else
-        // Increase version
+        } else // Increase version
         {
-            $oldVersion         = $row['version'];
-            $newVersion         = $row['new_version'];
+            $oldVersion = $row['version'];
+            $newVersion = $row['new_version'];
             $elementTypeVersion = $row['element_type_version'];
         }
 
@@ -275,7 +275,7 @@ class Element
             'comment'              => $comment,
         );
 
-        $db->insert($db->prefix.'element_version', $insertData);
+        $db->insert($db->prefix . 'element_version', $insertData);
 
         // update latest_version column in element-table
         $updateData = array(
@@ -301,7 +301,7 @@ class Element
         );
 
         // post message
-        $message = new Makeweb_Elements_Message('Version '.$newVersion.' created for Element EID "'.$eid.'"');
+        $message = new Makeweb_Elements_Message('Version ' . $newVersion . ' created for Element EID "' . $eid . '"');
         $message->post();
 
         // post event

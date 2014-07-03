@@ -7,6 +7,7 @@
  */
 
 namespace Phlexible\Bundle\MediaSiteBundle\Folder;
+
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 
 /**
@@ -23,19 +24,16 @@ class FolderIterator implements \Iterator, \RecursiveIterator
 
     /**
      * @param FolderInterface|SiteInterface $folder
+     *
      * @throws \RuntimeException
      */
     public function __construct($folder)
     {
-        if ($folder instanceof FolderInterface)
-        {
+        if ($folder instanceof FolderInterface) {
             $this->iterator = new \ArrayIterator($folder->getSite()->findFoldersByParentFolder($folder));
-        }
-        elseif ($folder instanceof SiteInterface)
-        {
+        } elseif ($folder instanceof SiteInterface) {
             $this->iterator = new \ArrayIterator(array($folder->findRootFolder()));
-        }
-        else {
+        } else {
             throw new \RuntimeException('FolderIterator needs either Site or Folder.');
         }
     }

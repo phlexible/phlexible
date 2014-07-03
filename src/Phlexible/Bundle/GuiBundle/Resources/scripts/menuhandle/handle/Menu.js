@@ -1,17 +1,17 @@
 Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
     menu: [],
 
-    createConfig: function(data) {
-		if (!data.menu || !Ext.isArray(data.menu)) {
-			return null;
-		}
+    createConfig: function (data) {
+        if (!data.menu || !Ext.isArray(data.menu)) {
+            return null;
+        }
 
         var config = this.createBasicConfig();
 
         if (data.menu && Ext.isArray(data.menu)) {
             config.menu = [];
 
-            Ext.each(data.menu, function(menuItem) {
+            Ext.each(data.menu, function (menuItem) {
                 var handlerCls = Phlexible.evalClassString(menuItem.xtype),
                     handler;
 
@@ -23,9 +23,9 @@ Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handl
 
                 handler = new handlerCls();
 
-				if (menuItem.parameters) {
-					handler.setParameters(menuItem.parameters);
-				}
+                if (menuItem.parameters) {
+                    handler.setParameters(menuItem.parameters);
+                }
 
                 config.menu.push(handler.createConfig(menuItem));
             }, this);

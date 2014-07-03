@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MessageBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -29,16 +29,17 @@ class PostCommand extends ContainerAwareCommand
     {
         $this
             ->setName('message:post')
-            ->setDefinition(array(
-                new InputArgument('subject', InputArgument::OPTIONAL, 'Message subject'),
-                new InputOption('body', null, InputOption::VALUE_REQUIRED, 'Message body'),
-                new InputOption('priority', null, InputOption::VALUE_REQUIRED, 'Message priority', 1),
-                new InputOption('type', null, InputOption::VALUE_REQUIRED, 'Message type', 0),
-                new InputOption('channel', null, InputOption::VALUE_REQUIRED, 'Message channel'),
-                new InputOption('resource', null, InputOption::VALUE_REQUIRED, 'Message resource'),
-            ))
-            ->setDescription('Post message')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('subject', InputArgument::OPTIONAL, 'Message subject'),
+                    new InputOption('body', null, InputOption::VALUE_REQUIRED, 'Message body'),
+                    new InputOption('priority', null, InputOption::VALUE_REQUIRED, 'Message priority', 1),
+                    new InputOption('type', null, InputOption::VALUE_REQUIRED, 'Message type', 0),
+                    new InputOption('channel', null, InputOption::VALUE_REQUIRED, 'Message channel'),
+                    new InputOption('resource', null, InputOption::VALUE_REQUIRED, 'Message resource'),
+                )
+            )
+            ->setDescription('Post message');
     }
 
     /**

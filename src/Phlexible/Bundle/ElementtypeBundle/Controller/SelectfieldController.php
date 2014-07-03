@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\ElementtypeBundle\SelectFieldProvider\SelectFieldProviderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -35,7 +35,7 @@ class SelectfieldController extends Controller
     public function listAction(Request $request)
     {
         $providerClassname = $request->get('provider');
-        $language          = $this->getUser()->getInterfaceLanguage();
+        $language = $this->getUser()->getInterfaceLanguage();
 
         $data = array();
 
@@ -60,9 +60,9 @@ class SelectfieldController extends Controller
      */
     public function suggestAction(Request $request)
     {
-        $dsId        = $request->get('ds_id');
-        $language    = $request->get('language');
-        $query       = $request->get('query', null);
+        $dsId = $request->get('ds_id');
+        $language = $request->get('language');
+        $query = $request->get('query', null);
         $valuesQuery = $request->get('valuesqry', '');
 
         $data = array();
@@ -85,8 +85,7 @@ class SelectfieldController extends Controller
             $item['source_id'] = $sourceId;
             $source = $dataSourceRepository->getDataSourceById($sourceId, $language);
 
-            if ($query && $valuesQuery)
-            {
+            if ($query && $valuesQuery) {
                 $queryArray = explode('|', $query);
             }
 

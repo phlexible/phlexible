@@ -98,7 +98,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     public function getParentDsId($dsId)
     {
         if (!array_key_exists($dsId, $this->parentMap)) {
-            throw new ElementtypeStructureException('Unknown ds_id ' , $dsId);
+            throw new ElementtypeStructureException('Unknown ds_id ', $dsId);
         }
 
         return $this->parentMap[$dsId];
@@ -209,6 +209,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     public function getAllChildrenDsIds($dsId)
     {
         $childrenDsIds = $this->getChildrenDsIds($dsId, PHP_INT_MAX);
+
         return $childrenDsIds;
     }
 
@@ -381,14 +382,12 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
 
         $couter = 0;
         $lastDepth = -1;
-        foreach ($rii as $node) /* @var $node ElementtypeStructureNode */
-        {
+        foreach ($rii as $node) /* @var $node ElementtypeStructureNode */ {
             // get current depth
             $depth = $rii->getDepth();
 
             // set missing right markers
-            while ($lastDepth-- >= $depth)
-            {
+            while ($lastDepth-- >= $depth) {
                 /* @var $lastNode ElementtypeStructureNode */
                 $lastNode = array_pop($nodeStack);
                 $lastNode->setRight(++$couter);
@@ -404,8 +403,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
         }
 
         // set right marker up to root node
-        while($depth-- >= 0)
-        {
+        while ($depth-- >= 0) {
             /* @var $lastNode ElementtypeStructureNode */
             $lastNode = array_pop($nodeStack);
             $lastNode->setRight(++$couter);

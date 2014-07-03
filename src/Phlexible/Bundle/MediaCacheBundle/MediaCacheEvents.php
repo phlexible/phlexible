@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\MediaCacheBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface MediaCacheEvents
+class MediaCacheEvents
 {
     /**
      * Fired before a media cache item is saved

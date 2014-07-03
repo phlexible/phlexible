@@ -49,10 +49,11 @@ class TitleResolver
      *
      * @return string
      */
-    public function replace($headTitle,
-                            $language,
-                            Siteroot $siteroot,
-                            ElementVersion $elementVersion)
+    public function replace(
+        $headTitle,
+        $language,
+        Siteroot $siteroot,
+        ElementVersion $elementVersion)
     {
         $replace = array(
             '%s' => $siteroot->getTitle(),
@@ -78,7 +79,12 @@ class TitleResolver
             '%s' => $siteroot->getTitle(),
             '%b' => '[' . $this->translator->trans('siteroots.element_backend_title', array(), 'gui', $language) . ']',
             '%p' => '[' . $this->translator->trans('siteroots.element_page_title', array(), 'gui', $language) . ']',
-            '%n' => '[' . $this->translator->trans('siteroots.element_navigation_title', array(), 'gui', $language) . ']',
+            '%n' => '[' . $this->translator->trans(
+                    'siteroots.element_navigation_title',
+                    array(),
+                    'gui',
+                    $language
+                ) . ']',
             '%r' => $this->projectTitle,
         );
 
@@ -93,11 +99,36 @@ class TitleResolver
     public function getPlaceholders($language)
     {
         return array(
-            array('placeholder' => '%s', 'title' => $this->translator->trans('siteroots.siteroot_title', array(), 'gui', $language)),
-            array('placeholder' => '%b', 'title' => $this->translator->trans('siteroots.element_backend_title', array(), 'gui', $language)),
-            array('placeholder' => '%p', 'title' => $this->translator->trans('siteroots.element_page_title', array(), 'gui', $language)),
-            array('placeholder' => '%n', 'title' => $this->translator->trans('siteroots.element_navigation_title', array(), 'gui', $language)),
-            array('placeholder' => '%r', 'title' => $this->translator->trans('siteroots.project_title', array(), 'gui', $language)),
+            array(
+                'placeholder' => '%s',
+                'title'       => $this->translator->trans('siteroots.siteroot_title', array(), 'gui', $language)
+            ),
+            array(
+                'placeholder' => '%b',
+                'title'       => $this->translator->trans(
+                        'siteroots.element_backend_title',
+                        array(),
+                        'gui',
+                        $language
+                    )
+            ),
+            array(
+                'placeholder' => '%p',
+                'title'       => $this->translator->trans('siteroots.element_page_title', array(), 'gui', $language)
+            ),
+            array(
+                'placeholder' => '%n',
+                'title'       => $this->translator->trans(
+                        'siteroots.element_navigation_title',
+                        array(),
+                        'gui',
+                        $language
+                    )
+            ),
+            array(
+                'placeholder' => '%r',
+                'title'       => $this->translator->trans('siteroots.project_title', array(), 'gui', $language)
+            ),
         );
     }
 }

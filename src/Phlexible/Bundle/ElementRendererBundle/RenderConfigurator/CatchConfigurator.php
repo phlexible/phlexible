@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatchResultPool;
 use Phlexible\Bundle\TeaserBundle\Teaser\Teaser;
 use Psr\Log\LoggerInterface;
@@ -51,10 +51,11 @@ class CatchConfigurator implements ConfiguratorInterface
      * @param ElementService           $elementService
      * @param SecurityContextInterface $securityContext
      */
-    public function __construct(EventDispatcherInterface $dispatcher,
-                                LoggerInterface $logger,
-                                ElementService $elementService,
-                                SecurityContextInterface $securityContext)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger,
+        ElementService $elementService,
+        SecurityContextInterface $securityContext)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
@@ -97,8 +98,7 @@ class CatchConfigurator implements ConfiguratorInterface
 
         $renderConfiguration
             ->addFeature('catch')
-            ->set('catchResults', $catchResults)
-        ;
+            ->set('catchResults', $catchResults);
 
         // Init Element Event
         /*

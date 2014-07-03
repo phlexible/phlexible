@@ -17,7 +17,6 @@ use Phlexible\Component\Database\ConnectionManager;
  */
 class FolderMetaManager
 {
-    /** @var string */
     const META_SET_CLASSNAME = 'Media_MetaSets_Item';
 
     /**
@@ -36,7 +35,7 @@ class FolderMetaManager
      */
     public function __construct(ConnectionManager $connectionManager, $defaultLanguage)
     {
-        $this->db              = $connectionManager->default;
+        $this->db = $connectionManager->default;
         $this->defaultLanguage = $defaultLanguage;
     }
 
@@ -52,28 +51,23 @@ class FolderMetaManager
         $metaSetItems = $this->getMetaSetItems($folderId, $language);
 
         $meta = array();
-        foreach ($metaSetItems as $metaSetItemKey => $metaSetItem)
-        {
+        foreach ($metaSetItems as $metaSetItemKey => $metaSetItem) {
             /* @var $metaSetItem Media_MetaSets_Item */
-            foreach ($metaSetItem->toArray($language) as $metaKey => $metaRow)
-            {
-                $meta[$metaKey]          = $metaRow;
+            foreach ($metaSetItem->toArray($language) as $metaKey => $metaRow) {
+                $meta[$metaKey] = $metaRow;
                 $meta[$metaKey]['setId'] = $metaSetItemKey;
             }
         }
 
         // apply value from default language as fallback if value is not set
-        if ($this->defaultLanguage !== $language)
-        {
+        if ($this->defaultLanguage !== $language) {
             $fallback = $this->getMeta($folderId, $this->defaultLanguage);
 
-            foreach (array_keys($meta) as $metaKey)
-            {
+            foreach (array_keys($meta) as $metaKey) {
                 if (!strlen($meta[$metaKey]['value'])
                     && isset($fallback[$metaKey]['value'])
                     && strlen($fallback[$metaKey]['value'])
-                )
-                {
+                ) {
                     $meta[$metaKey]['value'] = $fallback[$metaKey]['value'];
                 }
             }
@@ -114,8 +108,7 @@ class FolderMetaManager
         }
 
         $sets = array();
-        foreach ($existingSetIds as $setId)
-        {
+        foreach ($existingSetIds as $setId) {
             $sets[$setId] = $this->getMetaSetItem($folderId, $setId, $language);
         }
 
@@ -125,7 +118,7 @@ class FolderMetaManager
     /**
      * Add default meta set
      *
-     * @param string $folderId
+     * @param string             $folderId
      * @param Media_MetaSets_Set $set
      *
      * @return Media_MetaSets_Item
@@ -141,8 +134,7 @@ class FolderMetaManager
 
         $isExisting = (bool) $db->fetchOne($select);
 
-        if (!$isExisting)
-        {
+        if (!$isExisting) {
             $insertData = array(
                 'set_id'    => $set->id,
                 'folder_id' => $folderId,
@@ -189,7 +181,7 @@ class FolderMetaManager
     /**
      * Remove meta set
      *
-     * @param string $folderId
+     * @param string             $folderId
      * @param Media_MetaSets_Set $set
      */
     public function removeMetaSet($folderId, Media_MetaSets_Set $set)

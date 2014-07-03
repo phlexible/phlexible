@@ -120,7 +120,7 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
             } else {
                 $count['priorities'][$message['priority']] = array(
                     'count' => 1,
-                    'name' => $message['priorityName'],
+                    'name'  => $message['priorityName'],
                 );
             }
 
@@ -129,7 +129,7 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
             } else {
                 $count['types'][$message['type']] = array(
                     'count' => 1,
-                    'name' => $message['typeName'],
+                    'name'  => $message['typeName'],
                 );
             }
             if ($message['type'] === 'error') {

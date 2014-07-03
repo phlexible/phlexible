@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\ElementBundle\ElementStructure;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersion;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
+use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Element version data
@@ -42,7 +42,10 @@ class ElementStructureLoader
      * @param FieldRegistry      $fieldRegistry
      * @param ElementtypeService $elementtypeService
      */
-    public function __construct(ConnectionManager $connectionManager, FieldRegistry $fieldRegistry, ElementtypeService $elementtypeService)
+    public function __construct(
+        ConnectionManager $connectionManager,
+        FieldRegistry $fieldRegistry,
+        ElementtypeService $elementtypeService)
     {
         $this->db = $connectionManager->default;
         $this->fieldRegistry = $fieldRegistry;
@@ -66,7 +69,10 @@ class ElementStructureLoader
         }
 
         $elementtype = $this->elementtypeService->findElementtype($elementVersion->getElement()->getElementtypeId());
-        $elementtypeVersion = $this->elementtypeService->findElementtypeVersion($elementtype, $elementVersion->getElementtypeVersion());
+        $elementtypeVersion = $this->elementtypeService->findElementtypeVersion(
+            $elementtype,
+            $elementVersion->getElementtypeVersion()
+        );
         $elementtypeStructure = $this->elementtypeService->findElementtypeStructure($elementtypeVersion);
 
         $structureRows = $this->queryStructure($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
@@ -95,8 +101,7 @@ class ElementStructureLoader
                     ->setDsId($row['ds_id'])
                     ->setParentDsId($myNode->getParentDsId())
                     ->setName($row['name'])
-                    ->setParentName($myParentNode->getName())
-                ;
+                    ->setParentName($myParentNode->getName());
                 $rootStructure->addStructure($structure);
                 $dummy[$row['id']] = $structure;
 
@@ -128,7 +133,8 @@ class ElementStructureLoader
             }
         }
 
-        $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+        $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(
+        ), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $node) {
             /* @var $node ElementtypeStructureNode */
             if ($node->isRepeatable() || $node->isOptional()) {
@@ -153,8 +159,7 @@ class ElementStructureLoader
                             ->setDsId($row['ds_id'])
                             ->setParentDsId($myNode->getParentDsId())
                             ->setName($row['name'])
-                            ->setParentName($myParentNode->getName())
-                        ;
+                            ->setParentName($myParentNode->getName());
                         /* @var $parentStructure ElementStructure */
                         $parentStructure = $dummy[$row['repeatable_id']];
                         $parentStructure->addStructure($structure);
@@ -193,7 +198,7 @@ class ElementStructureLoader
         $select = $this->db
             ->select()
             ->from(
-                $this->db->prefix.'element_structure',
+                $this->db->prefix . 'element_structure',
                 array(
                     'data_id AS id',
                     'repeatable_node',
@@ -207,8 +212,7 @@ class ElementStructureLoader
             )
             ->where('eid = ?', $eid)
             ->where('version = ?', $version)
-            ->order('sort ASC')
-        ;
+            ->order('sort ASC');
 
         $result = $this->db->fetchAll($select);
 
@@ -232,7 +236,7 @@ class ElementStructureLoader
         $select = $this->db
             ->select()
             ->from(
-                $this->db->prefix.'element_structure_data',
+                $this->db->prefix . 'element_structure_data',
                 array(
                     'ds_id',
                     'repeatable_id',
@@ -244,8 +248,7 @@ class ElementStructureLoader
             )
             ->where('eid = ?', $eid)
             ->where('version = ?', $version)
-            ->where('language = ?', $language)
-        ;
+            ->where('language = ?', $language);
 
         $result = $this->db->fetchAll($select);
 

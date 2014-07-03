@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Phlexible\Bundle\MediaCacheBundle\Queue\Batch;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,18 +29,19 @@ class CreateCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-cache:create')
-            ->setDefinition(array(
-                new InputOption('all', null, InputOption::VALUE_NONE, 'Create all cachable templates and files.'),
-                new InputOption('template', null, InputOption::VALUE_REQUIRED, 'Create cache items by template key.'),
-                new InputOption('file', null, InputOption::VALUE_REQUIRED, 'Create cache items by File ID.'),
-                new InputOption('notCached', null, InputOption::VALUE_NONE, 'Only create items that are not yet cached.'),
-                new InputOption('missing', null, InputOption::VALUE_NONE, 'Only create items that are marked as status missing.'),
-                new InputOption('error', null, InputOption::VALUE_NONE, 'Only create items that are marked as status error.'),
-                new InputOption('queue', null, InputOption::VALUE_NONE, 'Use queue instead of immediate creation.'),
-                new InputOption('show', null, InputOption::VALUE_NONE, 'Show matches.'),
-            ))
-            ->setDescription('Create chache items.')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('all', null, InputOption::VALUE_NONE, 'Create all cachable templates and files.'),
+                    new InputOption('template', null, InputOption::VALUE_REQUIRED, 'Create cache items by template key.'),
+                    new InputOption('file', null, InputOption::VALUE_REQUIRED, 'Create cache items by File ID.'),
+                    new InputOption('notCached', null, InputOption::VALUE_NONE, 'Only create items that are not yet cached.'),
+                    new InputOption('missing', null, InputOption::VALUE_NONE, 'Only create items that are marked as status missing.'),
+                    new InputOption('error', null, InputOption::VALUE_NONE, 'Only create items that are marked as status error.'),
+                    new InputOption('queue', null, InputOption::VALUE_NONE, 'Use queue instead of immediate creation.'),
+                    new InputOption('show', null, InputOption::VALUE_NONE, 'Show matches.'),
+                )
+            )
+            ->setDescription('Create chache items.');
     }
 
     /**
@@ -50,12 +50,15 @@ class CreateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (!$input->getOption('all')
-                && !$input->getOption('template')
-                && !$input->getOption('file')
-                && !$input->getOption('missing')
-                && !$input->getOption('error')
-                && !$input->getOption('notCached')) {
-            $output->writeln('Please provide either --all or --template and/or --file and/or --error and/or --missing and/or --error');
+            && !$input->getOption('template')
+            && !$input->getOption('file')
+            && !$input->getOption('missing')
+            && !$input->getOption('error')
+            && !$input->getOption('notCached')
+        ) {
+            $output->writeln(
+                'Please provide either --all or --template and/or --file and/or --error and/or --missing and/or --error'
+            );
 
             return 1;
         }
@@ -119,7 +122,14 @@ class CreateCommand extends ContainerAwareCommand
                 $site = $siteManager->getByFileId($queueItem->getFileId());
                 $file = $site->findFile($queueItem->getFileId(), $queueItem->getFileVersion());
                 $folder = $site->findFolder($file->getFolderId());
-                $table->addRow(array($idx, $queueItem->getTemplateKey(), $folder->getPath() . $file->getName(), $queueItem->getFileId()));
+                $table->addRow(
+                    array(
+                        $idx,
+                        $queueItem->getTemplateKey(),
+                        $folder->getPath() . $file->getName(),
+                        $queueItem->getFileId()
+                    )
+                );
             }
             $table->render();
             $output->writeln(count($queue) . ' total.');
@@ -143,7 +153,6 @@ class CreateCommand extends ContainerAwareCommand
             $output->writeln('');
             $output->writeln(count($queue) . ' items processed.');
         }
-
 
 
         return 0;

@@ -7,6 +7,7 @@
  */
 
 namespace Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion;
+
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
 
 /**
@@ -31,14 +32,14 @@ class ElementtypeVersionCollection
      */
     public function __construct(array $elementtypeVersions = array())
     {
-        foreach ($elementtypeVersions as $elementtypeVersion)
-        {
+        foreach ($elementtypeVersions as $elementtypeVersion) {
             $this->add($elementtypeVersion);
         }
     }
 
     /**
      * @param ElementtypeVersion $elementtypeVersion
+     *
      * @return $this
      */
     public function add(ElementtypeVersion $elementtypeVersion)
@@ -76,7 +77,8 @@ class ElementtypeVersionCollection
 
     /**
      * @param Elementtype $elementtype
-     * @param array $versions
+     * @param array       $versions
+     *
      * @return $this
      */
     public function setVersions(Elementtype $elementtype, array $versions)
@@ -88,12 +90,12 @@ class ElementtypeVersionCollection
 
     /**
      * @param Elementtype $elementtype
+     *
      * @return null
      */
     public function getVersions(Elementtype $elementtype)
     {
-        if (isset($this->versions[$elementtype->getId()]))
-        {
+        if (isset($this->versions[$elementtype->getId()])) {
             return $this->versions[$elementtype->getId()];
         }
 

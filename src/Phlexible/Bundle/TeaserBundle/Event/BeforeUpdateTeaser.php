@@ -49,9 +49,9 @@ class Makeweb_Teasers_Event_BeforeUpdateTeaser extends Brainbits_Event_Notificat
      */
     public function __construct(Makeweb_Teasers_Node $node, $language, array $data)
     {
-        $this->_node     = $node;
+        $this->_node = $node;
         $this->_language = $language;
-        $this->_data     = $data;
+        $this->_data = $data;
     }
 
     /**

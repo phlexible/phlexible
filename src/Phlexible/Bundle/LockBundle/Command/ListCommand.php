@@ -27,8 +27,7 @@ class ListCommand extends ContainerAwareCommand
     {
         $this
             ->setName('locks:list')
-            ->setDescription('List locks')
-        ;
+            ->setDescription('List locks');
     }
 
     /**
@@ -49,13 +48,15 @@ class ListCommand extends ContainerAwareCommand
             foreach ($locks as $lock) {
                 $user = $userManager->find($lock->getUserId());
 
-                $table->addRow(array(
-                    $user->getUsername(),
-                    $lock->getLockedAt()->format('Y-m-d H:i:s'),
-                    $lock->getObjectType(),
-                    $lock->getObjectId(),
-                    $lock->getType()
-                ));
+                $table->addRow(
+                    array(
+                        $user->getUsername(),
+                        $lock->getLockedAt()->format('Y-m-d H:i:s'),
+                        $lock->getObjectType(),
+                        $lock->getObjectId(),
+                        $lock->getType()
+                    )
+                );
             }
 
             $table->render($output);

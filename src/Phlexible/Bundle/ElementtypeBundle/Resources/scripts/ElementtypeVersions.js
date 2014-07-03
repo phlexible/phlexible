@@ -9,7 +9,7 @@ Phlexible.elementtypes.ElementtypeVersions = Ext.extend(Ext.grid.GridPanel, {
     },
 //    autoExpandColumn: 'title',
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.JsonStore({
             url: '',//Phlexible.Router.generate('elementtypes_list_versions'),
             id: 'version',
@@ -21,7 +21,7 @@ Phlexible.elementtypes.ElementtypeVersions = Ext.extend(Ext.grid.GridPanel, {
             ],
             sortInfo: {field: 'version', direction: 'DESC'},
             listeners: {
-                load: function(store) {
+                load: function (store) {
                     var r, index = 0;
                     if (this.elementtypeVersion !== undefined) {
                         index = store.find('version', this.elementtypeVersion);
@@ -39,29 +39,33 @@ Phlexible.elementtypes.ElementtypeVersions = Ext.extend(Ext.grid.GridPanel, {
             }
         });
 
-        this.columns = [{
-            id: 'version',
-            header: this.strings.version,
-            dataIndex: 'version',
-            width: 60
-        },{
-            id: 'create_user',
-            header: this.strings.create_user,
-            dataIndex: 'create_user',
-            width: 200
-        },{
-            id: 'create_time',
-            header: this.strings.create_time,
-            dataIndex: 'create_time',
-            width: 150
-        }];
+        this.columns = [
+            {
+                id: 'version',
+                header: this.strings.version,
+                dataIndex: 'version',
+                width: 60
+            },
+            {
+                id: 'create_user',
+                header: this.strings.create_user,
+                dataIndex: 'create_user',
+                width: 200
+            },
+            {
+                id: 'create_time',
+                header: this.strings.create_time,
+                dataIndex: 'create_time',
+                width: 150
+            }
+        ];
 
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true
         });
 
         this.on({
-            rowdblclick: function(grid, rowIndex) {
+            rowdblclick: function (grid, rowIndex) {
                 var r = grid.getStore().getAt(rowIndex);
                 this.fireEvent('loadVersion', this.elementtypeId, this.elementtypeTitle, r.get('version'), this.elementtypeType);
             },
@@ -70,11 +74,11 @@ Phlexible.elementtypes.ElementtypeVersions = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.elementtypes.ElementtypeVersions.superclass.initComponent.call(this);
     },
 
-    empty: function() {
+    empty: function () {
         this.store.removeAll();
     },
 
-    load: function(id, title, version, type) {
+    load: function (id, title, version, type) {
         this.elementtypeId = id;
         this.elementtypeVersion = parseInt(version, 10);
         this.elementtypeTitle = title;
@@ -84,7 +88,7 @@ Phlexible.elementtypes.ElementtypeVersions = Ext.extend(Ext.grid.GridPanel, {
         this.store.reload();
     },
 
-    isValid: function() {
+    isValid: function () {
         return true;
     }
 });

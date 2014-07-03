@@ -26,8 +26,7 @@ class ClearCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-cache:clear')
-            ->setDescription('Clear waiting cache items')
-        ;
+            ->setDescription('Clear waiting cache items');
     }
 
     /**
@@ -39,7 +38,7 @@ class ClearCommand extends ContainerAwareCommand
 
         $cnt = $queueRepository->deleteAll();
 
-        $output->writeln('Deleted '.$cnt.' items.');
+        $output->writeln('Deleted ' . $cnt . ' items.');
 
         return 0;
     }

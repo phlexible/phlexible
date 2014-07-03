@@ -37,11 +37,11 @@ class Makeweb_Teasers_Event_BeforeCatchGetResultPool extends Brainbits_Event_Not
 
     /**
      * @param Makeweb_Teasers_Catch $catch
-     * @param Zend_Db_Select $select
+     * @param Zend_Db_Select        $select
      */
     public function __construct(Makeweb_Teasers_Catch $catch, Zend_Db_Select $select)
     {
-        $this->_catch  = $catch;
+        $this->_catch = $catch;
         $this->_select = $select;
     }
 

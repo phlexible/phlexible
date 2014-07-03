@@ -1,19 +1,19 @@
-Phlexible.fields.Registry.addFactory('label', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.dsId);
+    element.prototypes.incCount(item.dsId);
 
-	var config = {
-		xtype: 'panel',
-		html: item.content || item.labels.context_help[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
-		plain: true,
-		border: false,
-		cls: 'p-fields-label'
-	};
+    var config = {
+        xtype: 'panel',
+        html: item.content || item.labels.context_help[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+        plain: true,
+        border: false,
+        cls: 'p-fields-label'
+    };
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('label', {
@@ -23,11 +23,11 @@ Phlexible.fields.FieldTypes.addField('label', {
     },
     iconCls: 'p-elementtype-field_label-icon',
     allowedIn: [
-		'tab',
-		'accordion',
-		'group',
-		'referenceroot'
-	],
+        'tab',
+        'accordion',
+        'group',
+        'referenceroot'
+    ],
     config: {
         labels: {
             field: 1,

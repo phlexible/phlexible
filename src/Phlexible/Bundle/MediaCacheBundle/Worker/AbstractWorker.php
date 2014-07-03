@@ -8,18 +8,10 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
-use Phlexible\Bundle\MediaAssetBundle\Transmutor;
-use Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
-use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
-use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
-use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Abstract worker
@@ -31,14 +23,20 @@ abstract class AbstractWorker implements WorkerInterface
     /**
      * Apply error to cache item
      *
-     * @param CacheItem         $cacheItem
-     * @param int               $status
-     * @param string            $message
-     * @param string            $inputFilename
+     * @param CacheItem $cacheItem
+     * @param int $status
+     * @param string $message
+     * @param string $inputFilename
      * @param TemplateInterface $template
-     * @param FileInterface     $file
+     * @param FileInterface $file
      */
-    protected function applyError(CacheItem $cacheItem, $status, $message, $inputFilename, TemplateInterface $template, FileInterface $file)
+    protected function applyError(
+        CacheItem $cacheItem,
+        $status,
+        $message,
+        $inputFilename,
+        TemplateInterface $template,
+        FileInterface $file)
     {
         $error = $message . PHP_EOL
             . PHP_EOL

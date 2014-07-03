@@ -24,8 +24,8 @@ class User implements AdvancedUserInterface
 {
     const PROPERTY_THEME = 'theme';
     const PROPERTY_INTERFACE_LANGUAGE = 'interfaceLanguage';
-    const PROPERTY_NO_PASSWORD_CHANGE    = 'noPasswordChange';
-    const PROPERTY_NO_PASSWORD_EXPIRE    = 'noPasswordExpire';
+    const PROPERTY_NO_PASSWORD_CHANGE = 'noPasswordChange';
+    const PROPERTY_NO_PASSWORD_EXPIRE = 'noPasswordExpire';
     const PROPERTY_FORCE_PASSWORD_CHANGE = 'forcePasswordChange';
 
     /**

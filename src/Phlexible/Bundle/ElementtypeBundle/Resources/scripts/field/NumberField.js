@@ -1,31 +1,31 @@
-Phlexible.fields.Registry.addFactory('numberfield', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('numberfield', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.dsId);
+    element.prototypes.incCount(item.dsId);
 
-	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
 
-	Ext.apply(config, {
-		xtype: 'numberfield',
-		allowDecimals: (item.validation.allow_decimals ? true : false),
-		allowNegative: (item.validation.allow_negative ? true : false),
-		minLength: (item.validation.min_length || 0),
-		maxLength: (item.validation.max_length || Number.MAX_VALUE),
-		minValue: (item.validation.min_value || Number.NEGATIVE_INFINITY),
-		maxValue: (item.validation.max_value || Number.MAX_VALUE),
-		regex: (item.validation.regexp ? new RegExp(item.validation.regexp, (item.validation.global ? 'g' : '') + (item.validation.ignore ? 'i' : '') + (item.validation.multiline ? 'm' : '')) : null),
+    Ext.apply(config, {
+        xtype: 'numberfield',
+        allowDecimals: (item.validation.allow_decimals ? true : false),
+        allowNegative: (item.validation.allow_negative ? true : false),
+        minLength: (item.validation.min_length || 0),
+        maxLength: (item.validation.max_length || Number.MAX_VALUE),
+        minValue: (item.validation.min_value || Number.NEGATIVE_INFINITY),
+        maxValue: (item.validation.max_value || Number.MAX_VALUE),
+        regex: (item.validation.regexp ? new RegExp(item.validation.regexp, (item.validation.global ? 'g' : '') + (item.validation.ignore ? 'i' : '') + (item.validation.multiline ? 'm' : '')) : null),
 
-		supportsPrefix: true,
-		supportsSuffix: true,
-		supportsDiff: true,
-		supportsInlineDiff: true,
-		supportsUnlink: true,
-		supportsRepeatable: true
-	});
+        supportsPrefix: true,
+        supportsSuffix: true,
+        supportsDiff: true,
+        supportsInlineDiff: true,
+        supportsUnlink: true,
+        supportsRepeatable: true
+    });
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('numberfield', {
@@ -34,7 +34,7 @@ Phlexible.fields.FieldTypes.addField('numberfield', {
         en: 'Numberfield'
     },
     iconCls: 'p-elementtype-field_number-icon',
-    allowedIn: ['tab','accordion','group','referenceroot'],
+    allowedIn: ['tab', 'accordion', 'group', 'referenceroot'],
     defaultValueField: 'default_value_numberfield',
     config: {
         labels: {

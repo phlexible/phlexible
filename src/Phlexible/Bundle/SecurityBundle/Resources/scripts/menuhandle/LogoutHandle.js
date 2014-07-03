@@ -1,7 +1,7 @@
 Phlexible.security.menuhandle.LogoutHandle = Ext.extend(Phlexible.gui.menuhandle.handle.FunctionHandle, {
     text: Phlexible.security.Strings.logout,
     iconCls: 'p-security-logout-icon',
-    component: function() {
+    component: function () {
         var close = Phlexible.Frame.checkClose();
 
         if (close !== false) {

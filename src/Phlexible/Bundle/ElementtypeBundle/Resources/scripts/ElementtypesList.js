@@ -1,5 +1,5 @@
 Phlexible.elementtypes.ElementtypesGridView = Ext.extend(Ext.grid.GridView, {
-    getRowClass: function(record, index, rowParams, store) {
+    getRowClass: function (record, index, rowParams, store) {
 
     }
 });
@@ -18,7 +18,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
 
     mode: Phlexible.elementtypes.TYPE_FULL,
 
-    initComponent: function() {
+    initComponent: function () {
         if (!this.params) {
             this.params = {};
         }
@@ -59,7 +59,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
             },
 
             listeners: {
-                load: function(store) {
+                load: function (store) {
                     if (this.params.elementtype_id && this.params.version) {
                         var r = store.getById(this.params.elementtype_id);
                         if (!r) return;
@@ -77,35 +77,39 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         });
 
         // create the column model
-        this.columns = [{
-            header: 'ID',
-            width: 34,
-            dataIndex: 'id',
+        this.columns = [
+            {
+                header: 'ID',
+                width: 34,
+                dataIndex: 'id',
 //            fixed: true,
-            resizable: false,
-            hidden: true
-        },{
-            header: this.strings.name,
-            width: 120,
-            dataIndex: 'title',
+                resizable: false,
+                hidden: true
+            },
+            {
+                header: this.strings.name,
+                width: 120,
+                dataIndex: 'title',
 //            fixed: true,
-            resizable: false,
-            renderer: Phlexible.elementtypes.Format.title
-        },{
-            header: '#',
-            width: 35,
-            dataIndex: 'version',
+                resizable: false,
+                renderer: Phlexible.elementtypes.Format.title
+            },
+            {
+                header: '#',
+                width: 35,
+                dataIndex: 'version',
 //            fixed: true,
-            resizable: false//,
-            //renderer: Phlexible.ElementtypeFormat.version
-        }];
+                resizable: false//,
+                //renderer: Phlexible.ElementtypeFormat.version
+            }
+        ];
 
         // create the selection model
         this.sm = new Ext.grid.RowSelectionModel({
-            singleSelect : true,
+            singleSelect: true,
 
             listeners: {
-                rowselect: function(selModel){
+                rowselect: function (selModel) {
                     //var sel = selModel.getSelected();
                 },
                 scope: this
@@ -119,112 +123,131 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
             }
         };
 
-        this.tbar = [{
-            xtype: 'cycle',
-            showText: true,
-            changeHandler: function(btn, item) {
-                this.mode = item.source;
-                this.store.proxy.conn.url = Phlexible.Router.generate('elementtypes_list', {type: this.mode});
-                this.store.reload();
-            },
-            scope: this,
-            items: [{
-                text: this.strings.full,
-                iconCls: 'p-elementtype-type_full-icon',
-                checked: this.params.type == Phlexible.elementtypes.TYPE_FULL,
-                source: Phlexible.elementtypes.TYPE_FULL,
-                scope: this
-            },{
-                text: this.strings.structure,
-                iconCls: 'p-elementtype-type_structure-icon',
-                checked: this.params.type == Phlexible.elementtypes.TYPE_STRUCTURE,
-                source: Phlexible.elementtypes.TYPE_STRUCTURE,
-                scope: this
-            },{
-                text: this.strings.reference,
-                iconCls: 'p-elementtype-type_reference-icon',
-                checked: this.params.type == Phlexible.elementtypes.TYPE_REFERENCE,
-                source: Phlexible.elementtypes.TYPE_REFERENCE,
-                scope: this
-            },{
-                text: this.strings.layout,
-                iconCls: 'p-elementtype-type_layoutarea-icon',
-                checked: this.params.type == Phlexible.elementtypes.TYPE_LAYOUTAREA,
-                source: Phlexible.elementtypes.TYPE_LAYOUTAREA,
-                scope: this
-            },{
-                text: this.strings.layoutcontainer,
-                iconCls: 'p-elementtype-type_layoutcontainer-icon',
-                checked: this.params.type == Phlexible.elementtypes.TYPE_LAYOUTCONTAINER,
-                source: Phlexible.elementtypes.TYPE_LAYOUTCONTAINER,
-                scope: this
-            },{
-                text: this.strings.part,
-                iconCls: 'p-elementtype-type_part-icon',
-                checked: this.params.type == Phlexible.elementtypes.TYPE_PART,
-                source: Phlexible.elementtypes.TYPE_PART,
-                scope: this
-            }]
-        },'-',{
-            text: this.strings.create,
-            iconCls: 'p-elementtype-elementtype_add-icon',
-            handler: function() {
-                //Phlexible.console.log('new');
-                var w = new Phlexible.elementtypes.NewElementtypeWindow({
-                    type: this.mode,
-                    listeners: {
-                        success: this.onElementtypeCreate,
+        this.tbar = [
+            {
+                xtype: 'cycle',
+                showText: true,
+                changeHandler: function (btn, item) {
+                    this.mode = item.source;
+                    this.store.proxy.conn.url = Phlexible.Router.generate('elementtypes_list', {type: this.mode});
+                    this.store.reload();
+                },
+                scope: this,
+                items: [
+                    {
+                        text: this.strings.full,
+                        iconCls: 'p-elementtype-type_full-icon',
+                        checked: this.params.type == Phlexible.elementtypes.TYPE_FULL,
+                        source: Phlexible.elementtypes.TYPE_FULL,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.structure,
+                        iconCls: 'p-elementtype-type_structure-icon',
+                        checked: this.params.type == Phlexible.elementtypes.TYPE_STRUCTURE,
+                        source: Phlexible.elementtypes.TYPE_STRUCTURE,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.reference,
+                        iconCls: 'p-elementtype-type_reference-icon',
+                        checked: this.params.type == Phlexible.elementtypes.TYPE_REFERENCE,
+                        source: Phlexible.elementtypes.TYPE_REFERENCE,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.layout,
+                        iconCls: 'p-elementtype-type_layoutarea-icon',
+                        checked: this.params.type == Phlexible.elementtypes.TYPE_LAYOUTAREA,
+                        source: Phlexible.elementtypes.TYPE_LAYOUTAREA,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.layoutcontainer,
+                        iconCls: 'p-elementtype-type_layoutcontainer-icon',
+                        checked: this.params.type == Phlexible.elementtypes.TYPE_LAYOUTCONTAINER,
+                        source: Phlexible.elementtypes.TYPE_LAYOUTCONTAINER,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.part,
+                        iconCls: 'p-elementtype-type_part-icon',
+                        checked: this.params.type == Phlexible.elementtypes.TYPE_PART,
+                        source: Phlexible.elementtypes.TYPE_PART,
                         scope: this
                     }
-                });
-                w.show();
+                ]
             },
-            scope: this
-        }];
+            '-',
+            {
+                text: this.strings.create,
+                iconCls: 'p-elementtype-elementtype_add-icon',
+                handler: function () {
+                    //Phlexible.console.log('new');
+                    var w = new Phlexible.elementtypes.NewElementtypeWindow({
+                        type: this.mode,
+                        listeners: {
+                            success: this.onElementtypeCreate,
+                            scope: this
+                        }
+                    });
+                    w.show();
+                },
+                scope: this
+            }
+        ];
 
         this.contextMenu = new Ext.menu.Menu({
-            items: [{
-                // 0
-                cls: 'x-btn-text-icon-bold',
-                text: '.'
-            },'-',{
-                // 2
-                text: this.strings['delete'],
-                iconCls: 'p-elementtype-delete-icon',
-                handler: function(item){
-                    Ext.MessageBox.confirm('Confirm', 'Do you really want to delete this Element Type?<br /><br /><br /><b>PLEASE NOTE:</b><br /><br />All Elements based on this Element Type will also be deleted.', function(btn, text, x, item){
-                        if (btn == 'yes'){
-                            this.onDelete(item.parentMenu.record);
-                        }
-                    }.createDelegate(this, [item], true));
+            items: [
+                {
+                    // 0
+                    cls: 'x-btn-text-icon-bold',
+                    text: '.'
                 },
-                scope: this
-            },'-',{
-                // 4
-                text: this.strings.duplicate,
-                iconCls: 'p-elementtype-duplicate-icon',
-                handler: function(item){
-                    this.onDuplicate(item.parentMenu.record);
+                '-',
+                {
+                    // 2
+                    text: this.strings['delete'],
+                    iconCls: 'p-elementtype-delete-icon',
+                    handler: function (item) {
+                        Ext.MessageBox.confirm('Confirm', 'Do you really want to delete this Element Type?<br /><br /><br /><b>PLEASE NOTE:</b><br /><br />All Elements based on this Element Type will also be deleted.', function (btn, text, x, item) {
+                            if (btn == 'yes') {
+                                this.onDelete(item.parentMenu.record);
+                            }
+                        }.createDelegate(this, [item], true));
+                    },
+                    scope: this
                 },
-                scope: this
-            },'-',{
-                // 6
-                text: 'Load in Template Tree',
-                iconCls: 'p-elementtype-tree_template-icon',
-                handler: function(item){
-                    this.onElementtypeTemplateSelect(this, item.parentMenu.index);
+                '-',
+                {
+                    // 4
+                    text: this.strings.duplicate,
+                    iconCls: 'p-elementtype-duplicate-icon',
+                    handler: function (item) {
+                        this.onDuplicate(item.parentMenu.record);
+                    },
+                    scope: this
                 },
-                scope: this
-            }]
+                '-',
+                {
+                    // 6
+                    text: 'Load in Template Tree',
+                    iconCls: 'p-elementtype-tree_template-icon',
+                    handler: function (item) {
+                        this.onElementtypeTemplateSelect(this, item.parentMenu.index);
+                    },
+                    scope: this
+                }
+            ]
         });
 
         this.addListener({
-            rowcontextmenu: function(grid, index, event) {
+            rowcontextmenu: function (grid, index, event) {
                 event.stopEvent();
 
                 var r = grid.store.getAt(index);
 
-                this.contextMenu.index  = index;
+                this.contextMenu.index = index;
                 this.contextMenu.record = r;
 
                 this.contextMenu.items.items[0].setText(this.contextMenu.record.get('title'));
@@ -239,11 +262,11 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.elementtypes.ElementtypesList.superclass.initComponent.call(this);
     },
 
-    load: function(type, elementtype_id, version) {
+    load: function (type, elementtype_id, version) {
         var cycle = this.getTopToolbar().items.items[0];
         //Phlexible.console.log(cycle);
         var foundBtn = false;
-        cycle.menu.items.each(function(btn) {
+        cycle.menu.items.each(function (btn) {
             if (type == btn.source) {
                 foundBtn = btn;
                 return false;
@@ -258,28 +281,29 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         }
     },
 
-    onLoad:function(store){
+    onLoad: function (store) {
         if (!this.selectedRecord) {
-            if(this.store.getCount()) {
+            if (this.store.getCount()) {
                 this.selModel.selectFirstRow();
                 var index = this.store.indexOf(this.selModel.getSelected());
                 this.onElementtypeSelect(this, index);
             }
-        }/* else {
-            var index = this.store.indexOf(this.selModel.getSelected());
-            this.onElementtypeSelect(this, index)
-            this.selModel.selectRecords([this.selectedRecord]);
-        }*/
+        }
+        /* else {
+         var index = this.store.indexOf(this.selModel.getSelected());
+         this.onElementtypeSelect(this, index)
+         this.selModel.selectRecords([this.selectedRecord]);
+         }*/
     },
 
-    onElementtypeCreate: function(values){
+    onElementtypeCreate: function (values) {
         this.store.reload();
 
         // activate to switch to created ElementType
         //this.nextSelectedID = id;
     },
 
-    onElementtypeSelect: function(grid, index, e, version, force) {
+    onElementtypeSelect: function (grid, index, e, version, force) {
         var r = this.store.getAt(index);
 
         if (!version) {
@@ -295,7 +319,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         }
     },
 
-    elementtypeSelect: function(index, r, version) {
+    elementtypeSelect: function (index, r, version) {
         if (this.selectedRecord) {
             var selectedIndex = this.store.indexOf(this.selectedRecord);
             if (selectedIndex != -1) {
@@ -312,16 +336,16 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         this.fireEvent('elementtypeChange', r.id, r.get('title'), version, r.get('type'));
     },
 
-    onElementtypeTemplateSelect: function(grid, index) {
+    onElementtypeTemplateSelect: function (grid, index) {
         var r = this.store.getAt(index);
-        if(this.fireEvent('beforeElementtypeTemplateChange', r.id, r.get('title')) === false) {
+        if (this.fireEvent('beforeElementtypeTemplateChange', r.id, r.get('title')) === false) {
             return;
         }
 
         this.fireEvent('elementtypeTemplateChange', r.id, r.get('title'));
     },
 
-    onViewRefresh: function(view) {
+    onViewRefresh: function (view) {
         if (this.selectedRecord) {
             var selectedIndex = this.store.indexOf(this.selectedRecord);
             if (selectedIndex != -1) {
@@ -331,7 +355,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         }
     },
 
-    onDelete: function(r) {
+    onDelete: function (r) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elementtypes_list_delete', {id: r.id}),
             success: this.onDeleteSuccess,
@@ -339,7 +363,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         });
     },
 
-    onDeleteSuccess: function(response) {
+    onDeleteSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
         if (data.success) {
@@ -355,7 +379,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         this.store.reload();
     },
 
-    onDuplicate: function(r) {
+    onDuplicate: function (r) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elementtypes_list_duplicate', {id: r.id}),
             success: this.onDuplicateSuccess,
@@ -363,7 +387,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         });
     },
 
-    onDuplicateSuccess: function(response) {
+    onDuplicateSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
         if (data.success) {

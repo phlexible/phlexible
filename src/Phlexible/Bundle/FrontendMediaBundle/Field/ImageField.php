@@ -30,48 +30,43 @@ class ImageField extends AbstractField
      */
     protected function _transform(array $item, array $media, array $options)
     {
-        $item['templates']        = array();
+        $item['templates'] = array();
         $item['templates_config'] = array();
-        $item['media']            = array();
+        $item['media'] = array();
 
-        try
-        {
-            if (!empty($item['data_content']))
-            {
+        try {
+            if (!empty($item['data_content'])) {
                 $file = $this->_getFile($item['data_content']);
 
-                if ($file !== null)
-                {
-                    $item['media']  = $this->_getMediaData($file);
+                if ($file !== null) {
+                    $item['media'] = $this->_getMediaData($file);
                     $item['master'] = $this->_getMasterData($item);
 
-                    $attributes              = $file->getAsset()->getAttributes();
-                    $item['media']['width']  = $attributes->width;
+                    $attributes = $file->getAsset()->getAttributes();
+                    $item['media']['width'] = $attributes->width;
                     $item['media']['height'] = $attributes->height;
 
-                    try
-                    {
-                        $item['templates'] = array_merge($item['templates'], $this->_getImageTemplates($item, $media, $file));
-                    }
-                    catch(Exception $e)
-                    {
+                    try {
+                        $item['templates'] = array_merge(
+                            $item['templates'],
+                            $this->_getImageTemplates($item, $media, $file)
+                        );
+                    } catch (Exception $e) {
                         MWF_Log::exception($e);
                     }
 
-                    try
-                    {
-                        $item['templates_config'] = array_merge($item['templates_config'], $this->_getTemplateConfig($media, $file));
-                    }
-                    catch(Exception $e)
-                    {
+                    try {
+                        $item['templates_config'] = array_merge(
+                            $item['templates_config'],
+                            $this->_getTemplateConfig($media, $file)
+                        );
+                    } catch (Exception $e) {
                         MWF_Log::exception($e);
                     }
                 }
             }
 
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             MWF_Log::exception($e);
             $item['data_content'] = '';
             $item['media'] = false;

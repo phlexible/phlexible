@@ -42,7 +42,7 @@ class Quota
      */
     public function __construct(SiteInterface $site)
     {
-        $this->site      = $site;
+        $this->site = $site;
         $this->hardQuota = $site->getQuota();
     }
 
@@ -53,16 +53,16 @@ class Quota
      */
     public function __toString()
     {
-        return '<pre>'.
-            'Hard Quota:     ' . $this->getHardQuota().PHP_EOL.
-            'Soft Quota:     ' . $this->getSoftQuota().PHP_EOL.
-            'Soft Quota %:   ' . $this->getSoftQuotaPercent().PHP_EOL.
-            'Usage:          ' . $this->getUsage().PHP_EOL.
-            'Usage %:        ' . $this->getUsagePercent().PHP_EOL.
-            'Remaining SQ:   ' . $this->getRemainingSoftQuota().PHP_EOL.
-            'Remaining SQ %: ' . $this->getRemainingSoftQuotaPercent().PHP_EOL.
-            'Remaining HQ:   ' . $this->getRemainingHardQuota().PHP_EOL.
-            'Remaining HQ %: ' . $this->getRemainingHardQuotaPercent().PHP_EOL.
+        return '<pre>' .
+        'Hard Quota:     ' . $this->getHardQuota() . PHP_EOL .
+        'Soft Quota:     ' . $this->getSoftQuota() . PHP_EOL .
+        'Soft Quota %:   ' . $this->getSoftQuotaPercent() . PHP_EOL .
+        'Usage:          ' . $this->getUsage() . PHP_EOL .
+        'Usage %:        ' . $this->getUsagePercent() . PHP_EOL .
+        'Remaining SQ:   ' . $this->getRemainingSoftQuota() . PHP_EOL .
+        'Remaining SQ %: ' . $this->getRemainingSoftQuotaPercent() . PHP_EOL .
+        'Remaining HQ:   ' . $this->getRemainingHardQuota() . PHP_EOL .
+        'Remaining HQ %: ' . $this->getRemainingHardQuotaPercent() . PHP_EOL .
         '';
     }
 
@@ -123,14 +123,17 @@ class Quota
      */
     public function getUsage()
     {
-        if ($this->usage === null)
-        {
+        if ($this->usage === null) {
             $db = $this->site->getReadDb();
 
             $select = $db->select()
-                         ->from(array('fo' => $db->prefix . 'mediamanager_folders'), array())
-                         ->join(array('fi' => $db->prefix . 'mediamanager_files'), 'fi.folder_id = fo.id', new Zend_Db_Expr('SUM(size)'))
-                         ->where('site_id = ?', $this->site->getId());
+                ->from(array('fo' => $db->prefix . 'mediamanager_folders'), array())
+                ->join(
+                    array('fi' => $db->prefix . 'mediamanager_files'),
+                    'fi.folder_id = fo.id',
+                    new Zend_Db_Expr('SUM(size)')
+                )
+                ->where('site_id = ?', $this->site->getId());
 
             $this->usage = $db->fetchOne($select);
         }
@@ -147,8 +150,7 @@ class Quota
     {
         $usagePercent = $this->getUsage() / $this->hardQuota;
 
-        if($usagePercent > 1)
-        {
+        if ($usagePercent > 1) {
             return 1;
         }
 
@@ -164,8 +166,7 @@ class Quota
     {
         $remainingSoftQuota = $this->getSoftQuota() - $this->getUsage();
 
-        if ($remainingSoftQuota < 0)
-        {
+        if ($remainingSoftQuota < 0) {
             return 0;
         }
 
@@ -181,8 +182,7 @@ class Quota
     {
         $remainingSoftQuota = $this->getRemainingSoftQuota();
 
-        if (!$remainingSoftQuota)
-        {
+        if (!$remainingSoftQuota) {
             return 0;
         }
 
@@ -198,8 +198,7 @@ class Quota
     {
         $remainingHardQuota = $this->hardQuota - $this->getUsage();
 
-        if($remainingHardQuota < 0)
-        {
+        if ($remainingHardQuota < 0) {
             return 0;
         }
 
@@ -215,8 +214,7 @@ class Quota
     {
         $remainingHardQuota = $this->getRemainingHardQuota();
 
-        if (!$remainingHardQuota)
-        {
+        if (!$remainingHardQuota) {
             return 0;
         }
 
@@ -228,10 +226,10 @@ class Quota
         $db = $this->site->getReadDb();
 
         $select = $db->select()
-                     ->from($db->prefix . 'mediamanager_site_usage_day', array('day', 'usage'))
-                     ->where('day >= ?', $from)
-                     ->where('day <= ?', $to)
-                     ->order('day ASC');
+            ->from($db->prefix . 'mediamanager_site_usage_day', array('day', 'usage'))
+            ->where('day >= ?', $from)
+            ->where('day <= ?', $to)
+            ->order('day ASC');
 
         return $db->fetchPairs($select);
     }

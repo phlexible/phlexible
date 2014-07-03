@@ -19,6 +19,7 @@ interface LoaderResolverInterface
      * Resolve loader for file
      *
      * @param string $file
+     *
      * @return LoaderInterface
      */
     public function resolve($file);

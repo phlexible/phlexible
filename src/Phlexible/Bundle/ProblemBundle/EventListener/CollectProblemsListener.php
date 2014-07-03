@@ -47,20 +47,18 @@ class CollectProblemsListener
                 ->setHint('Run cached problem check command')
                 ->setIconClass('p-problem-component-icon')
                 ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime())
-            ;
+                ->setLastCheckedAt(new \DateTime());
 
             $event->addProblem($problem);
         } elseif (time() - strtotime($lastRun) > 86400) {
             $problem = new Problem();
             $problem
                 ->setSeverity(Problem::SEVERITY_WARNING)
-                ->setMessage('Cached problems last check run was on "'.$lastRun.'", more than 24h ago.')
+                ->setMessage('Cached problems last check run was on "' . $lastRun . '", more than 24h ago.')
                 ->setHint('Install a cronjob for running the cached problem check command')
                 ->setIconClass('p-problem-component-icon')
                 ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime())
-            ;
+                ->setLastCheckedAt(new \DateTime());
 
             $event->addProblem($problem);
         }

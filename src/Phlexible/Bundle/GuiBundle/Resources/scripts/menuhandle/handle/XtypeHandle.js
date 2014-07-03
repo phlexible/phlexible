@@ -1,5 +1,5 @@
 Phlexible.gui.menuhandle.handle.XtypeHandle = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
-    handle: function() {
+    handle: function () {
         var identifier = this.getIdentifier(),
             component = this.getComponent(),
             parameters = this.getParameters();
@@ -13,15 +13,15 @@ Phlexible.gui.menuhandle.handle.XtypeHandle = Ext.extend(Phlexible.gui.menuhandl
         Phlexible.Frame.loadPanel(identifier, component, parameters);
     },
 
-    getIdentifier: function() {
+    getIdentifier: function () {
         return this.getComponent();
     },
 
-    getParameters: function() {
+    getParameters: function () {
         return this.parameters || {};
     },
 
-	setParameters: function(parameters) {
-		this.parameters = parameters;
-	}
+    setParameters: function (parameters) {
+        this.parameters = parameters;
+    }
 });

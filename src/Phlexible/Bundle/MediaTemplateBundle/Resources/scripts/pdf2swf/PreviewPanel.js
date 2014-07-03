@@ -1,9 +1,9 @@
 Phlexible.mediatemplates.pdf2swf.PreviewPanel = Ext.extend(Phlexible.mediatemplates.BasePreviewPanel, {
-    getCreateUrl: function() {
+    getCreateUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_pdf');
     },
 
-    getResult: function(data) {
+    getResult: function (data) {
         var s = '';
         if (data.template) {
             s += data.template;
@@ -17,7 +17,7 @@ Phlexible.mediatemplates.pdf2swf.PreviewPanel = Ext.extend(Phlexible.mediatempla
         return s;
     },
 
-    getPreviewDomHelperConfig: function(data) {
+    getPreviewDomHelperConfig: function (data) {
         return {
             tag: 'embed',
             src: Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()}),

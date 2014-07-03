@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\MediaSiteBundle\Folder;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
-use Phlexible\Component\Identifier\IdentifiableInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
+use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**
  * Folder
@@ -120,6 +120,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
             $path[] = $current->getParentId();
             $current = $this->site->findFolder($current->getParentId());
         }
+
         return array_reverse($path);
     }
 
@@ -137,6 +138,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setSite(SiteInterface $site)
     {
         $this->site = $site;
+
         return $this;
     }
 
@@ -154,6 +156,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -171,6 +174,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setParentId($parentId)
     {
         $this->parentId = $parentId;
+
         return $this;
     }
 
@@ -188,6 +192,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -205,6 +210,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setPath($path)
     {
         $this->path = $path;
+
         return $this;
     }
 
@@ -222,6 +228,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setPhysicalPath($physicalPath)
     {
         $this->physicalPath = $physicalPath;
+
         return $this;
     }
 
@@ -239,6 +246,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes;
+
         return $this;
     }
 
@@ -260,6 +268,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setAttribute($key, $value)
     {
         $this->attributes[$key] = $value;
+
         return $this;
     }
 
@@ -277,6 +286,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setCreatedAt(\DateTime $createTime)
     {
         $this->createdAt = $createTime;
+
         return $this;
     }
 
@@ -294,6 +304,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setCreateUserId($createUserId)
     {
         $this->createUserId = $createUserId;
+
         return $this;
     }
 
@@ -311,6 +322,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setModifiedAt(\DateTime $modifyTime)
     {
         $this->modifiedAt = $modifyTime;
+
         return $this;
     }
 
@@ -328,6 +340,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setModifyUserId($modifyUserId)
     {
         $this->modifyUserId = $modifyUserId;
+
         return $this;
     }
 

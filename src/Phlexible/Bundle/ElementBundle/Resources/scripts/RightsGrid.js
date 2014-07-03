@@ -3,11 +3,11 @@ Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
     languageEnabled: false,
     element: null,
 
-    initComponent: function() {
+    initComponent: function () {
         this.element.on({
-           load: {
-               fn: this.onLoadElement,
-               scope: this
+            load: {
+                fn: this.onLoadElement,
+                scope: this
             },
             getlock: {
                 fn: this.onGetLock,
@@ -25,7 +25,7 @@ Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
 
         this.on({
             show: {
-                fn: function() {
+                fn: function () {
                     this.lazyLoad(this.element.tid, this.element.data.properties.teaser_id);
                 },
                 scope: this
@@ -35,20 +35,20 @@ Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
         Phlexible.elements.RightsGrid.superclass.initComponent.call(this);
     },
 
-    getLanguageData: function() {
+    getLanguageData: function () {
         var languageData = Phlexible.clone(Phlexible.Config.get('set.language.frontend'));
         languageData.unshift(['_all_', this.strings.all, 'p-contentrights-all-icon']);
 
         return languageData;
     },
 
-    onLoadElement: function(element){
-        if(!this.hidden) {
+    onLoadElement: function (element) {
+        if (!this.hidden) {
             this.lazyLoad(element.tid, element.data.properties.teaser_id);
         }
     },
 
-    lazyLoad: function(tid, teaser_id) {
+    lazyLoad: function (tid, teaser_id) {
         var content_type, content_id;
 
         if (teaser_id && teaser_id !== undefined) {
@@ -63,7 +63,7 @@ Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
         this.doLoad(content_type, content_id);
     },
 
-    onGetLock: function(element) {
+    onGetLock: function (element) {
         if (this.right && element.data.rights.indexOf(this.right) === -1) {
             this.disable();
         }
@@ -72,11 +72,11 @@ Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
         }
     },
 
-    onIsLocked: function() {
+    onIsLocked: function () {
         this.disable();
     },
 
-    onRemoveLock: function() {
+    onRemoveLock: function () {
         this.disable();
     }
 });

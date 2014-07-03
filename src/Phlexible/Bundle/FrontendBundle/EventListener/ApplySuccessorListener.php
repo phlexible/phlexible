@@ -22,15 +22,15 @@ class ApplySuccessorListener
         $db = $params['container']->dbPool->write;
 
         $fromUser = $event->getFromUser();
-        $toUser   = $event->getToUser();
+        $toUser = $event->getToUser();
 
         $fromUid = $fromUser->getId();
-        $toUid   = $toUser->getId();
+        $toUid = $toUser->getId();
 
         $db->update(
             $db->prefix . 'request_urls',
             array(
-                'create_uid'  => $toUid,
+                'create_uid' => $toUid,
             ),
             array(
                 'create_uid = ?' => $fromUid

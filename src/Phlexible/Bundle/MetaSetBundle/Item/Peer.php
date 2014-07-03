@@ -20,23 +20,20 @@ class Media_MetaSets_Item_Peer
      *
      * @param string        $setId
      * @param ItemInterface $itemIdentifier
-     * @param string $id
+     * @param string        $id
      */
     public static function get($setId, ItemInterface $itemIdentifier, $metaSetItemClass = null)
     {
-        if ($metaSetItemClass !== null && !class_exists($metaSetItemClass))
-        {
-            throw new ItemException('Unknown meta set item class "'.$metaSetItemClass.'"');
+        if ($metaSetItemClass !== null && !class_exists($metaSetItemClass)) {
+            throw new ItemException('Unknown meta set item class "' . $metaSetItemClass . '"');
         }
 
         if ($metaSetItemClass !== null &&
             $metaSetItemClass !== 'Media_MetaSets_Item' &&
-            !is_subclass_of($metaSetItemClass, 'Media_MetaSets_Item'))
-        {
+            !is_subclass_of($metaSetItemClass, 'Media_MetaSets_Item')
+        ) {
             throw new ItemException('Meta set item class must be a subclass of Media_MetaSets_Item');
-        }
-        elseif ($metaSetItemClass === null)
-        {
+        } elseif ($metaSetItemClass === null) {
             $metaSetItemClass = 'Media_MetaSets_Item';
         }
 

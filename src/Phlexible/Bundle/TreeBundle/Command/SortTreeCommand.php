@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\TreeBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,8 +26,7 @@ class SortTreeCommand extends ContainerAwareCommand
     {
         $this
             ->setName('tree:sort')
-            ->setDescription('Sort tree.')
-        ;
+            ->setDescription('Sort tree.');
     }
 
     /**
@@ -48,28 +46,24 @@ class SortTreeCommand extends ContainerAwareCommand
 
         if (empty($commandArgs->options['tid'])
             && empty($commandArgs->options['siterootid'])
-            && empty($commandArgs->options['allsiteroots']))
-        {
+            && empty($commandArgs->options['allsiteroots'])
+        ) {
             $outputter->writeln('You have to use either -t or -a or -s.');
+
             return 1;
         }
 
-        if (!empty($commandArgs->options['tid']))
-        {
+        if (!empty($commandArgs->options['tid'])) {
             $tid = $commandArgs->options['tid'];
             $node = Makeweb_Elements_Tree_Manager::getInstance()->getNodeByNodeId($tid);
 
             $this->sortByNode($node);
-        }
-        elseif (!empty($commandArgs->options['siterootid']))
-        {
+        } elseif (!empty($commandArgs->options['siterootid'])) {
             $siterootId = $commandArgs->options['siterootid'];
             $siteroots = array($siterootId => Makeweb_Siteroots_Siteroot_Manager::getInstance()->getById($siterootId));
 
             $this->sortBySiteroots($siteroots);
-        }
-        else
-        {
+        } else {
             $siteroots = Makeweb_Siteroots_Siteroot_Manager::getInstance()->getAllSiteRoots();
 
             $this->sortBySiteroots($siteroots);
@@ -85,8 +79,7 @@ class SortTreeCommand extends ContainerAwareCommand
 
         $sorter = $container->get('elementsTreeSorter');
 
-        try
-        {
+        try {
             $time1 = microtime(true);
 
             $sorter->sortNode($node);
@@ -95,11 +88,13 @@ class SortTreeCommand extends ContainerAwareCommand
             $time = number_format($time2 - $time1, 2);
 
             $outputter->writeln('Node "' . $node->getId() . '" sorted in ' . $time . ' s.');
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             MWF_Log::exception($e);
-            $outputter->writeln('Siteroot "' . $node->getTree()->getSiteRoot()->getTitle('en') . '" not sorted because of ' . get_class($e) . ': ' . $e->getMessage());
+            $outputter->writeln(
+                'Siteroot "' . $node->getTree()->getSiteRoot()->getTitle('en') . '" not sorted because of ' . get_class(
+                    $e
+                ) . ': ' . $e->getMessage()
+            );
         }
     }
 
@@ -112,10 +107,8 @@ class SortTreeCommand extends ContainerAwareCommand
         $db = $container->dbPool->read;
         $sorter = $container->elementsTreeSorter;
 
-        foreach ($siteroots as $siterootId => $siteroot)
-        {
-            try
-            {
+        foreach ($siteroots as $siterootId => $siteroot) {
+            try {
                 $time1 = microtime(true);
 
                 $tree = $treeManager->getBySiteRootId($siterootId, true);
@@ -126,19 +119,20 @@ class SortTreeCommand extends ContainerAwareCommand
                 $time = number_format($time2 - $time1, 2);
 
                 $outputter->writeln('Siteroot "' . $siteroot->getTitle('en') . '" sorted in ' . $time . ' s.');
-            }
-            catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 MWF_Log::exception($e);
-                $outputter->writeln('Siteroot "' . $siteroot->getTitle('en') . '" not sorted because of ' . get_class($e) . ': ' . $e->getMessage());
+                $outputter->writeln(
+                    'Siteroot "' . $siteroot->getTitle('en') . '" not sorted because of ' . get_class(
+                        $e
+                    ) . ': ' . $e->getMessage()
+                );
             }
         }
 
         $db->getProfiler()->setEnabled(false);
 
         $profiles = $db->getProfiler()->getQueryProfiles();
-        foreach ($profiles as $profile)
-        {
+        foreach ($profiles as $profile) {
             #$outputter->writeln($profile->getElapsedSecs() . ' ' . str_replace("\n", ' ', $profile->getQuery()));
         }
         #$outputter->writeln($db->getProfiler()->getTotalNumQueries());

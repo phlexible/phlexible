@@ -20,16 +20,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Job
 {
-    const STATE_PENDING   = 'pending';
-    const STATE_RUNNING   = 'running';
-    const STATE_FINISHED  = 'finished';
-    const STATE_FAILED    = 'failed';
+    const STATE_PENDING = 'pending';
+    const STATE_RUNNING = 'running';
+    const STATE_FINISHED = 'finished';
+    const STATE_FAILED = 'failed';
     const STATE_SUSPENDED = 'suspended';
-    const STATE_ABORTED   = 'aborted';
+    const STATE_ABORTED = 'aborted';
 
-    const PRIORITY_LOW     = -5;
+    const PRIORITY_LOW = -5;
     const PRIORITY_DEFAULT = 0;
-    const PRIORITY_HIGH    = 5;
+    const PRIORITY_HIGH = 5;
 
     /**
      * @var string
@@ -147,7 +147,12 @@ class Job
      */
     public function __toString()
     {
-        return sprintf('Job(id = %s, command = "%s", arguments="%s")', $this->id, $this->command, implode(' ', $this->arguments));
+        return sprintf(
+            'Job(id = %s, command = "%s", arguments="%s")',
+            $this->id,
+            $this->command,
+            implode(' ', $this->arguments)
+        );
     }
 
     /**

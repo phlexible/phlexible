@@ -18,7 +18,7 @@ Phlexible.gui.menuhandle.handle.Handle = Ext.extend(Ext.util.Observable, {
      * Return text
      * @return {String}
      */
-    getText: function() {
+    getText: function () {
         return this.text;
     },
 
@@ -26,7 +26,7 @@ Phlexible.gui.menuhandle.handle.Handle = Ext.extend(Ext.util.Observable, {
      * Return iconCls
      * @return {String}
      */
-    getIconCls: function() {
+    getIconCls: function () {
         return this.iconCls;
     },
 
@@ -34,14 +34,14 @@ Phlexible.gui.menuhandle.handle.Handle = Ext.extend(Ext.util.Observable, {
      * Return iconCls
      * @return {String}
      */
-    getComponent: function() {
+    getComponent: function () {
         return this.component;
     },
 
     /**
      * Handle menu item
      */
-    handle: function() {
+    handle: function () {
     },
 
     /**
@@ -51,10 +51,10 @@ Phlexible.gui.menuhandle.handle.Handle = Ext.extend(Ext.util.Observable, {
      * @param {Object} data
      * @return {Object}
      */
-    createConfig: function(data) {
+    createConfig: function (data) {
         var btnConfig = this.createBasicConfig();
 
-        btnConfig.handler = function() {
+        btnConfig.handler = function () {
             this.handle();
         };
         btnConfig.scope = this;
@@ -68,7 +68,7 @@ Phlexible.gui.menuhandle.handle.Handle = Ext.extend(Ext.util.Observable, {
      * @private
      * @return {Object}
      */
-    createBasicConfig: function() {
+    createBasicConfig: function () {
         var btnConfig = {
             text: this.getText(),
             iconCls: this.getIconCls()

@@ -7,15 +7,15 @@
  * Creates a new TextField
  * @param {Object} config Configuration options
  */
-Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField,  {
+Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField, {
     addIconCls: 'p-mediamanager-download_add-icon',
     removeIconCls: 'p-mediamanager-download_delete-icon',
 
-	getPlaceholder: function() {
-		return Phlexible.component('/mediamanagerbundle/images/form-file-download.gif');
-	},
+    getPlaceholder: function () {
+        return Phlexible.component('/mediamanagerbundle/images/form-file-download.gif');
+    },
 
-    onAdd: function() {
+    onAdd: function () {
         if (this.disabled) return;
 
         var w = new Phlexible.mediamanager.MediamanagerWindow({
@@ -38,19 +38,19 @@ Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField,  {
         w.show();
     },
 
-    onFileSelect: function(w, file_id, file_version, file_name, folder_id) {
+    onFileSelect: function (w, file_id, file_version, file_name, folder_id) {
         this.setFile(file_id, file_version, file_name, folder_id);
 
         w.close();
     },
 
     // private
-    xonRender: function(ct, position){
+    xonRender: function (ct, position) {
         Ext.form.Field.superclass.onRender.call(this, ct, position);
-        if(!this.el){
+        if (!this.el) {
             this.el = ct.createChild({
-                tag: "div",
-                cls: 'x-form-field x-form-empty-field p-form-file p-form-file-download'
+                    tag: "div",
+                    cls: 'x-form-field x-form-empty-field p-form-file p-form-file-download'
                 }, position
             );
             this.hiddenEl = this.el.createChild({
@@ -113,12 +113,12 @@ Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField,  {
                 width: 80
             });
             /*
-            this.fileBoxLegend = this.el.createChild({
-                tag: 'div',
-                cls: 'FileBoxLegend'
-            });
-            this.createTable();
-            */
+             this.fileBoxLegend = this.el.createChild({
+             tag: 'div',
+             cls: 'FileBoxLegend'
+             });
+             this.createTable();
+             */
             this.el.createChild({
                 tag: 'div',
                 cls: 'x-form-clear-left'
@@ -145,7 +145,7 @@ Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField,  {
                 html: this.fileTitle ? this.fileTitle.shorten(16) : ''
             });
         }
-        if(this.tabIndex !== undefined){
+        if (this.tabIndex !== undefined) {
             this.el.dom.setAttribute('tabIndex', this.tabIndex);
         }
 

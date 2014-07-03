@@ -103,10 +103,10 @@ class MessageRepository extends EntityRepository
      */
     public function getFacets()
     {
-        $channels   = $this->createQueryBuilder('m')->select('DISTINCT m.channel')->getQuery()->getScalarResult();
-        $types      = $this->createQueryBuilder('m')->select('DISTINCT m.type')->getQuery()->getScalarResult();
+        $channels = $this->createQueryBuilder('m')->select('DISTINCT m.channel')->getQuery()->getScalarResult();
+        $types = $this->createQueryBuilder('m')->select('DISTINCT m.type')->getQuery()->getScalarResult();
         $priorities = $this->createQueryBuilder('m')->select('DISTINCT m.priority')->getQuery()->getScalarResult();
-        $resources  = $this->createQueryBuilder('m')->select('DISTINCT m.resource')->getQuery()->getScalarResult();
+        $resources = $this->createQueryBuilder('m')->select('DISTINCT m.resource')->getQuery()->getScalarResult();
 
         return array(
             'channels'   => array_column($channels, 'channel'),
@@ -206,7 +206,7 @@ class MessageRepository extends EntityRepository
      */
     private function applyCriteriumToQueryBuilder(Criterium $criterium, QueryBuilder $qb, Composite $composite, $prefix)
     {
-        $type  = $criterium->getType();
+        $type = $criterium->getType();
         $value = $criterium->getValue();
 
         if (is_string($value) && !strlen($value)) {
@@ -260,7 +260,12 @@ class MessageRepository extends EntityRepository
 
             case Criteria::CRITERIUM_CHANNEL_IN:
                 $value = (array) $value;
-                $values = array_map(function($value) use ($qb) {return $qb->expr()->literal($value);}, $value);
+                $values = array_map(
+                    function ($value) use ($qb) {
+                        return $qb->expr()->literal($value);
+                    },
+                    $value
+                );
                 $composite->add($qb->expr()->in("$prefix.channel", $values));
                 break;
 
@@ -270,24 +275,43 @@ class MessageRepository extends EntityRepository
 
             case Criteria::CRITERIUM_RESOURCE_IN:
                 $value = (array) $value;
-                $values = array_map(function($value) use ($qb) {return $qb->expr()->literal($value);}, $value);
+                $values = array_map(
+                    function ($value) use ($qb) {
+                        return $qb->expr()->literal($value);
+                    },
+                    $value
+                );
                 $composite->add($qb->expr()->in("$prefix.resource", $values));
                 break;
 
             case Criteria::CRITERIUM_MAX_AGE:
-                $composite->add($qb->expr()->gte("$prefix.createdAt", $qb->expr()->literal(date('Y-m-d H:i:s', time() - ($value * 24 * 60 * 60)))));
+                $composite->add(
+                    $qb->expr()->gte(
+                        "$prefix.createdAt",
+                        $qb->expr()->literal(date('Y-m-d H:i:s', time() - ($value * 24 * 60 * 60)))
+                    )
+                );
                 break;
 
             case Criteria::CRITERIUM_MIN_AGE:
-                $composite->add($qb->expr()->lte("$prefix.createdAt", $qb->expr()->literal(date('Y-m-d H:i:s', time() - ($value * 24 * 60 * 60)))));
+                $composite->add(
+                    $qb->expr()->lte(
+                        "$prefix.createdAt",
+                        $qb->expr()->literal(date('Y-m-d H:i:s', time() - ($value * 24 * 60 * 60)))
+                    )
+                );
                 break;
 
             case Criteria::CRITERIUM_START_DATE:
-                $composite->add($qb->expr()->gte("$prefix.createdAt", $qb->expr()->literal($value->format('Y-m-d H:i:s'))));
+                $composite->add(
+                    $qb->expr()->gte("$prefix.createdAt", $qb->expr()->literal($value->format('Y-m-d H:i:s')))
+                );
                 break;
 
             case Criteria::CRITERIUM_END_DATE:
-                $composite->add($qb->expr()->lte("$prefix.createdAt", $qb->expr()->literal($value->format('Y-m-d H:i:s'))));
+                $composite->add(
+                    $qb->expr()->lte("$prefix.createdAt", $qb->expr()->literal($value->format('Y-m-d H:i:s')))
+                );
                 break;
 
             case Criteria::CRITERIUM_DATE_IS:

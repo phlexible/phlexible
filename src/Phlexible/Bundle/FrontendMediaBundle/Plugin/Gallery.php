@@ -17,18 +17,21 @@ class Gallery extends \Dwoo\Plugin
 {
     /**
      * ID of media folder
+     *
      * @var int
      */
     protected $_folderId;
 
     /**
      * Path to partial for rendering gallery
+     *
      * @var string
      */
     protected $_partial;
 
     /**
      * Limit of images per page
+     *
      * @var int
      */
     protected $_limit;
@@ -43,10 +46,10 @@ class Gallery extends \Dwoo\Plugin
     public function process($folder, $partial, $limit = 49, $templates = array('_mm_small', '_mm_medium'))
     {
         /* @var $request Makeweb_Frontend_Request */
-        $request   = MWF_Registry::get('request');
+        $request = MWF_Registry::get('request');
         $paginator = new Zend_Paginator($this->getPaginatorAdapter($folder));
         $paginator->setItemCountPerPage($limit)
-                  ->setCurrentPageNumber($request->getParam('page', 1));
+            ->setCurrentPageNumber($request->getParam('page', 1));
 
         $partialAssigns = array(
             'paginator' => $paginator,
@@ -55,10 +58,10 @@ class Gallery extends \Dwoo\Plugin
             'language'  => $request->getLanguage(),
         );
 
-        if (!function_exists('Dwoo_Plugin_include'))
-        {
+        if (!function_exists('Dwoo_Plugin_include')) {
             $this->dwoo->getLoader()->loadPlugin('include');
         }
+
         return Dwoo_Plugin_include($this->dwoo, $partial, null, null, null, $partialAssigns);
     }
 
@@ -66,14 +69,15 @@ class Gallery extends \Dwoo\Plugin
      * Returns the Media Folder Paginator Adapter
      *
      * @param string $folderId ID of mediafolder
+     *
      * @return Makeweb_Frontendmediamanager_Folder_PaginatorAdapter
      */
     public function getPaginatorAdapter($folderId)
     {
         $siteManager = Media_Site_Manager::getInstance();
-        $site        = $siteManager->getByFolderId($folderId);
-        $folderPeer  = $site->getFolderPeer();
-        $folder      = $folderPeer->getByID($folderId);
+        $site = $siteManager->getByFolderId($folderId);
+        $folderPeer = $site->getFolderPeer();
+        $folder = $folderPeer->getByID($folderId);
 
         return new Makeweb_Frontendmediamanager_Folder_PaginatorAdapter($folder);
     }
@@ -82,29 +86,27 @@ class Gallery extends \Dwoo\Plugin
      * Converts an array with files to an array with element nodes
      *
      * @param array $files Array with files retrieved by folder peer
-     * @param array with templates $templates
+     * @param       array  with templates $templates
+     *
      * @return array Array with element nodes
      */
-    public function _transformFilesToNodes($files, $templates=array())
+    public function _transformFilesToNodes($files, $templates = array())
     {
         $field = new Makeweb_Frontendmediamanager_Field_Image();
         $nodes = array();
 
-        foreach ($templates as $key => $template)
-        {
+        foreach ($templates as $key => $template) {
             if (!is_array($template)) {
                 $templates[$key] = array($template);
             }
         }
 
         /* @var $file Media_SiteDb_File */
-        foreach ($files as $fileId => $file)
-        {
-            if ($file->getAssetType() == 'IMAGE')
-            {
+        foreach ($files as $fileId => $file) {
+            if ($file->getAssetType() == 'IMAGE') {
                 $item = array(
                     'data_content' => $fileId,
-                    'media'        => array( 'imageList' => $templates )
+                    'media'        => array('imageList' => $templates)
                 );
                 $nodes[] = $field->transform($item, 1, 2, 'de');
             }

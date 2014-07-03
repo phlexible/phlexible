@@ -25,8 +25,8 @@ class FolderMetaIdentifier implements Media_MetaSets_Item_Interface
     private $folderId;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     private $language;
 
     /**

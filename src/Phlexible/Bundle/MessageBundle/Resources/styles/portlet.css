@@ -1,26 +1,32 @@
-.messages-portlet .x-panel-body{
+.messages-portlet .x-panel-body {
     font: 11px Arial, Helvetica, sans-serif;
 }
-.messages-portlet table, 
-.messages-portlet tbody, 
-.messages-portlet tr, 
-.messages-portlet td, 
+
+.messages-portlet table,
+.messages-portlet tbody,
+.messages-portlet tr,
+.messages-portlet td,
 .messages-portlet th {
     padding: 0;
     margin: 0;
     vertical-align: top;
 }
+
 .messages-portlet th {
     font-weight: bold;
 }
+
 .messages-portlet .messages-wrap-over {
     background-color: #BBBBBB;
 }
+
 .messages-portlet .messages-subject {
 }
+
 .messages-portlet .messages-icon img {
     vertical-align: middle;
 }
+
 .elementtypes-portlet .messages-date {
     color: #8B8B8B;
 }

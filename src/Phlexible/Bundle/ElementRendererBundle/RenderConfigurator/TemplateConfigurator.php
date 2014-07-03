@@ -42,7 +42,10 @@ class TemplateConfigurator implements ConfiguratorInterface
      * @param LoggerInterface          $logger
      * @param TemplateRepository       $templateRepository
      */
-    public function __construct(EventDispatcherInterface $dispatcher, LoggerInterface $logger, TemplateRepository $templateRepository)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger,
+        TemplateRepository $templateRepository)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;

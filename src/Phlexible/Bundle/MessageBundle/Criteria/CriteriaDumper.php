@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\MessageBundle\Criteria;
 
-use Phlexible\Bundle\MessageBundle\Exception\InvalidArgumentException;
-
 /**
  * Message criteria dumper
  *

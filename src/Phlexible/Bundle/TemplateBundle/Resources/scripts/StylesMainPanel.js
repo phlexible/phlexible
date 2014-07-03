@@ -3,13 +3,13 @@ Phlexible.templates.StylesMainPanel = Ext.extend(Ext.Panel, {
     layout: 'border',
     iconCls: 'p-template-component-icon',
 
-    initComponent: function() {
+    initComponent: function () {
         this.templatesGrid = new Phlexible.templates.TemplatesGrid({
             region: 'west',
             width: 300,
             listeners: {
                 rowclick: {
-                    fn: function(grid, index) {
+                    fn: function (grid, index) {
                         this.templateTabPanel.load(grid.store.getAt(index));
                     },
                     scope: this

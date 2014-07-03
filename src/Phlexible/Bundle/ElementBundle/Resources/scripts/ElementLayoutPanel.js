@@ -5,7 +5,7 @@ Phlexible.elements.ElementLayoutPanel = Ext.extend(Ext.Panel, {
     layout: 'border',
     border: false,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.element.on({
             load: {
@@ -46,7 +46,7 @@ Phlexible.elements.ElementLayoutPanel = Ext.extend(Ext.Panel, {
                 element: this.element,
                 listeners: {
                     teaserselect: {
-                        fn: function(eid) {
+                        fn: function (eid) {
 //                            this.dataPanel.disable();
                             this.getTopToolbar().show();
                             this.getComponent(1).getLayout().setActiveItem(0);
@@ -70,48 +70,53 @@ Phlexible.elements.ElementLayoutPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        this.tbar = [{
-            xtype: 'tbtext',
-            text: 'Sorting of teaser elements:'
-        },{
-            text: 'Publish',
-            iconCls: 'p-element-sort-publish-icon',
-            handler: function() {
-                this.onPublishSort();
+        this.tbar = [
+            {
+                xtype: 'tbtext',
+                text: 'Sorting of teaser elements:'
             },
-            scope: this,
-            disabled: true
-        },'-',{
-            text: 'Reset',
-            iconCls: 'p-element-sort-reset-icon',
-            handler: function() {
-                this.store.reload();
-                var tb = this.getTopToolbar();
-                tb.items.items[1].disable();
-                tb.items.items[3].disable();
+            {
+                text: 'Publish',
+                iconCls: 'p-element-sort-publish-icon',
+                handler: function () {
+                    this.onPublishSort();
+                },
+                scope: this,
+                disabled: true
             },
-            scope: this,
-            disabled: true
-        }];
+            '-',
+            {
+                text: 'Reset',
+                iconCls: 'p-element-sort-reset-icon',
+                handler: function () {
+                    this.store.reload();
+                    var tb = this.getTopToolbar();
+                    tb.items.items[1].disable();
+                    tb.items.items[3].disable();
+                },
+                scope: this,
+                disabled: true
+            }
+        ];
 
         Phlexible.elements.ElementLayoutPanel.superclass.initComponent.call(this);
     },
 
-    onLoadElement: function(){
+    onLoadElement: function () {
 //        this.dataPanel.disable();
         this.getComponent(1).getLayout().setActiveItem(0);
     },
 
-    onLoadTeaser: function(element) {
+    onLoadTeaser: function (element) {
 //        this.dataPanel.enable();
     },
 
-    onPublishSort: function() {
+    onPublishSort: function () {
         var records = this.store.getRange();
         Phlexible.console.log(records);
         var data = [];
-        for(var i=0; i<records.length; i++) {
-            if((records[i].get('_type') == 'teaser' || records[i].get('_type') == 'inherit') && records[i].get('_level') == 2) {
+        for (var i = 0; i < records.length; i++) {
+            if ((records[i].get('_type') == 'teaser' || records[i].get('_type') == 'inherit') && records[i].get('_level') == 2) {
                 data.push({
                     type: records[i].get('_type'),
                     eid: records[i].id,
@@ -129,13 +134,13 @@ Phlexible.elements.ElementLayoutPanel = Ext.extend(Ext.Panel, {
         });
     },
 
-    onGetLock: function() {
+    onGetLock: function () {
         if (0 === this.getComponent(1).getLayout().activeItem) {
             this.getTopToolbar().enable();
         }
     },
 
-    onRemoveLock: function() {
+    onRemoveLock: function () {
         this.getTopToolbar().disable();
     }
 });

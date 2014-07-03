@@ -24,6 +24,7 @@ class MetaBag
 
     /**
      * @param string $id
+     *
      * @return MetaDataInterface
      */
     public function get($id)

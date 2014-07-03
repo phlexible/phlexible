@@ -30,11 +30,11 @@ class EidSearch extends AbstractSearch
     {
         $select = $this->db->select()
             ->from(
-                array('e' => $this->db->prefix.'element'),
+                array('e' => $this->db->prefix . 'element'),
                 array()
             )
             ->join(
-                array('et' => $this->db->prefix.'element_tree'),
+                array('et' => $this->db->prefix . 'element_tree'),
                 'e.eid = et.eid',
                 array('id')
             )

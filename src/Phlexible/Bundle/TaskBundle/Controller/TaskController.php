@@ -10,12 +10,12 @@ namespace Phlexible\Bundle\TaskBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\TaskBundle\Entity\Task;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\TaskBundle\Entity\Task;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -60,7 +60,7 @@ class TaskController extends Controller
     {
         $type = $request->request->get('tasks', 'involved');
         $sort = $request->request->get('sort', 'createdAt');
-        $dir  = $request->request->get('dir', 'DESC');
+        $dir = $request->request->get('dir', 'DESC');
         $limit = $request->request->get('limit', 20);
         $start = $request->request->get('start', 0);
 
@@ -118,18 +118,22 @@ class TaskController extends Controller
         foreach ($tasks as $task) {
             $currentStatus = $task->getCurrentStatus();
 
-            if (in_array($currentStatus, array(Task::STATUS_OPEN, Task::STATUS_REOPENED, Task::STATUS_CLOSED ))) {
+            if (in_array($currentStatus, array(Task::STATUS_OPEN, Task::STATUS_REOPENED, Task::STATUS_CLOSED))) {
                 $assignedUser = $userManager->find($task->getRecipientUserId());
-            } elseif (in_array($currentStatus, array(Task::STATUS_REJECTED, Task::STATUS_FINISHED, Task::STATUS_CLOSED ))) {
+            } elseif (in_array(
+                $currentStatus,
+                array(Task::STATUS_REJECTED, Task::STATUS_FINISHED, Task::STATUS_CLOSED)
+            )
+            ) {
                 $assignedUser = $userManager->find($task->getCreateUserId());
             } else {
                 throw new \Exception('Unknown status.');
             }
 
-            $createUser     = $userManager->find($task->getCreateUserId());
+            $createUser = $userManager->find($task->getCreateUserId());
             // $recipientUser = $task->getRecipientUser();
-            $latestStatus   = $task->getLatestStatus();
-            $latestUser     = $userManager->find($latestStatus->getCreateUserId());
+            $latestStatus = $task->getLatestStatus();
+            $latestUser = $userManager->find($latestStatus->getCreateUserId());
 
             $historyItems = $task->getStatus();
 
@@ -283,10 +287,10 @@ class TaskController extends Controller
      */
     public function createtaskAction(Request $request)
     {
-        $taskType        = $request->request->get('type');
+        $taskType = $request->request->get('type');
         $recipientUserId = $request->request->get('recipient');
-        $comment         = $request->request->get('comment');
-        $payload         = $request->request->get('payload');
+        $comment = $request->request->get('comment');
+        $payload = $request->request->get('payload');
 
         if ($payload) {
             $payload = json_decode($payload, true);
@@ -320,9 +324,9 @@ class TaskController extends Controller
      */
     public function createstatusAction(Request $request)
     {
-        $taskId    = $request->request->get('task_id');
+        $taskId = $request->request->get('task_id');
         $newStatus = $request->request->get('new_status');
-        $comment   = $request->request->get('comment');
+        $comment = $request->request->get('comment');
 
         if ($comment) {
             $comment = urldecode($comment);
@@ -336,6 +340,7 @@ class TaskController extends Controller
 
         return new ResultResponse(true, 'Task status created.');
     }
+
     /**
      * View task
      *
@@ -362,9 +367,9 @@ class TaskController extends Controller
         $task = $taskManager->find($taskId);
         $latestStatus = $task->getLatestStatus();
 
-        $createUser    = $userManager->find($task->getCreateUserId());
+        $createUser = $userManager->find($task->getCreateUserId());
         $recipientUser = $userManager->find($task->getRecipientUserId());
-        $latestUser    = $userManager->find($latestStatus->getCreateUserId());
+        $latestUser = $userManager->find($latestStatus->getCreateUserId());
 
         if (in_array($latestStatus->getStatus(), array(Task::STATUS_OPEN, Task::STATUS_REOPENED))) {
             $assignedUser = $recipientUser;

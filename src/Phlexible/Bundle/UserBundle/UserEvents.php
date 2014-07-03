@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\UserBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface UserEvents
+class UserEvents
 {
     /**
      * Before create user event

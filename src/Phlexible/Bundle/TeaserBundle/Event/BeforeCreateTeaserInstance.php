@@ -49,9 +49,9 @@ class Makeweb_Teasers_Event_BeforeCreateTeaserInstance extends Brainbits_Event_N
      */
     public function __construct($treeId, $teaserId, $layoutAreaId)
     {
-        $this->_treeId        = $treeId;
-        $this->_teaserId      = $teaserId;
-        $this->_layoutAreaId  = $layoutAreaId;
+        $this->_treeId = $treeId;
+        $this->_teaserId = $teaserId;
+        $this->_layoutAreaId = $layoutAreaId;
     }
 
     public function getTreeId()

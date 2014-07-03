@@ -1,6 +1,6 @@
 Phlexible.frontendmedia.ImageFileField = Ext.extend(Ext.form.ImageFileField, {
     // private
-    onRender : function(ct, position){
+    onRender: function (ct, position) {
         Phlexible.frontendmedia.ImageFileField.superclass.onRender.call(this, ct, position);
 
         this.templatesButton = this.leftButtons.createChild({
@@ -17,7 +17,7 @@ Phlexible.frontendmedia.ImageFileField = Ext.extend(Ext.form.ImageFileField, {
         } else if (!this.file_id) {
             this.templatesButton.addClass('x-item-disabled');
         }
-        this.templatesButton.on('click', function() {
+        this.templatesButton.on('click', function () {
             if (!this.templates_config || (Ext.isArray(this.templates_config) && !this.templates_config.length)) return;
             if (!this.file_id) return;
             var w = new Phlexible.frontendmedia.MediaTemplatesWindow({
@@ -31,19 +31,19 @@ Phlexible.frontendmedia.ImageFileField = Ext.extend(Ext.form.ImageFileField, {
             w.show();
         }, this);
         this.on({
-            select: function(){
-				if (!this.templates_config || (Ext.isArray(this.templates_config) && !this.templates_config.length)) {
-					return;
-				}
-				this.templatesButton.removeClass('x-item-disabled');
-			},
-            clear: function(){
-				if (!this.templates_config || (Ext.isArray(this.templates_config) && !this.templates_config.length)) {
-					return;
-				}
-				this.templatesButton.addClass('x-item-disabled');
-			},
-			scope: this
+            select: function () {
+                if (!this.templates_config || (Ext.isArray(this.templates_config) && !this.templates_config.length)) {
+                    return;
+                }
+                this.templatesButton.removeClass('x-item-disabled');
+            },
+            clear: function () {
+                if (!this.templates_config || (Ext.isArray(this.templates_config) && !this.templates_config.length)) {
+                    return;
+                }
+                this.templatesButton.addClass('x-item-disabled');
+            },
+            scope: this
         });
 
         Phlexible.frontendmedia.FieldHelper.inlineDiff.call(this);
@@ -55,29 +55,29 @@ Phlexible.frontendmedia.ImageFileField = Ext.extend(Ext.form.ImageFileField, {
              alert(data);
              return true;
              }*/
-            getTargetFromEvent: function(e){
+            getTargetFromEvent: function (e) {
                 return e.getTarget('.x-form-item');
             },
-            xonNodeEnter: function(target, dd, e, data){
+            xonNodeEnter: function (target, dd, e, data) {
                 Phlexible.console.log('onNodeEnter');
                 //Ext.fly(target).addClass('flower-target-hover');
             },
-            xonNodeOut: function(target, dd, e, data){
+            xonNodeOut: function (target, dd, e, data) {
                 Phlexible.console.log('onNodeOut');
                 //Ext.fly(target).removeClass('flower-target-hover');
             },
-            onNodeOver: function(target, dd, e, data){
+            onNodeOver: function (target, dd, e, data) {
                 return Ext.dd.DropZone.prototype.dropAllowed;
             },
-            onNodeDrop: function(target, dd, e, data){
+            onNodeDrop: function (target, dd, e, data) {
                 this.setFile(data.record.data.id, data.record.data.version, data.record.data.name, data.record.data.folder_id);
-              /*  var rowIndex = g.getView().findRowIndex(target);
-                var h = g.getStore().getAt(rowIndex);
-                var targetEl = Ext.get(target);
-                targetEl.update(data.patientData.name + ', ' + targetEl.dom.innerHTML);
-                Ext.Msg.alert('Drop gesture', 'Dropped patient ' + data.patientData.name +
-                ' on hospital ' +
-                h.data.name);*/
+                /*  var rowIndex = g.getView().findRowIndex(target);
+                 var h = g.getStore().getAt(rowIndex);
+                 var targetEl = Ext.get(target);
+                 targetEl.update(data.patientData.name + ', ' + targetEl.dom.innerHTML);
+                 Ext.Msg.alert('Drop gesture', 'Dropped patient ' + data.patientData.name +
+                 ' on hospital ' +
+                 h.data.name);*/
                 return true;
             }.createDelegate(this)
         });
@@ -85,40 +85,40 @@ Phlexible.frontendmedia.ImageFileField = Ext.extend(Ext.form.ImageFileField, {
 });
 Ext.reg('frontendmedia-field-imagefilefield', Phlexible.frontendmedia.ImageFileField);
 
-Phlexible.fields.Registry.addFactory('image', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('image', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.ds_id);
+    element.prototypes.incCount(item.ds_id);
 
-	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
 
-	// TODO: wie?
-	item.media = item.media || {};
+    // TODO: wie?
+    item.media = item.media || {};
 
-	Ext.apply(config, {
-		xtype: 'frontendmedia-field-imagefilefield',
-		data_id: item.data_id,
+    Ext.apply(config, {
+        xtype: 'frontendmedia-field-imagefilefield',
+        data_id: item.data_id,
 
-		file_id: item.media.file_id || false,
-		folder_id: item.media.folder_id || false,
-		folder_path: item.media.folder_path || false,
-		fileTitle: item.media.name,
+        file_id: item.media.file_id || false,
+        folder_id: item.media.folder_id || false,
+        folder_path: item.media.folder_path || false,
+        fileTitle: item.media.name,
 
-		templates: {},//item.templates || {},
-		templates_config: {},//item.templates_config || {}
+        templates: {},//item.templates || {},
+        templates_config: {},//item.templates_config || {}
 
-		supportsPrefix: true,
-		supportsSuffix: true,
-		supportsDiff: true,
-		supportsRepeatable: true
-	});
+        supportsPrefix: true,
+        supportsSuffix: true,
+        supportsDiff: true,
+        supportsRepeatable: true
+    });
 
-	delete config.width;
-	delete config.height;
+    delete config.width;
+    delete config.height;
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('image', {
@@ -128,11 +128,11 @@ Phlexible.fields.FieldTypes.addField('image', {
     },
     iconCls: 'p-frontendmedia-field_image-icon',
     allowedIn: [
-		'tab',
-		'accordion',
-		'group',
-		'referenceroot'
-	],
+        'tab',
+        'accordion',
+        'group',
+        'referenceroot'
+    ],
     config: {
         properties: {
         },

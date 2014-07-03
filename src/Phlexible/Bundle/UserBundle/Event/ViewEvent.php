@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\UserBundle\Event;
 
 use Phlexible\Bundle\GuiBundle\View\AbstractView;
 use Symfony\Component\EventDispatcher\Event;
-use Zend_Controller_Request_Abstract as Request;
 
 /**
  * View event

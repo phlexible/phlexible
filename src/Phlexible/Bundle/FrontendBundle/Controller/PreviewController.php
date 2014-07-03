@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\FrontendBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -46,15 +46,12 @@ class PreviewController extends Controller
         // get response
         $response = $this->getResponse();
 
-        try
-        {
+        try {
             // create request
             $requestHandler = Makeweb_Frontend_Request_Handler::getPreviewHandler();
             $requestHandler->setPathPrefix($this->getRequest()->getBaseUrl() . '/preview');
             $request = new Makeweb_Frontend_Request($response, null, $requestHandler);
-        }
-        catch (Makeweb_Frontend_Request_Exception $e)
-        {
+        } catch (Makeweb_Frontend_Request_Exception $e) {
             if ($this->getContainer()->get('application')->getDebug()) {
                 echo 'Whoops';
                 exit(1);
@@ -67,9 +64,7 @@ class PreviewController extends Controller
                 ->setBody('Page not found.');
 
             return;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             if ($this->getContainer()->get('application')->getDebug()) {
                 echo 'Whoops';
                 exit(1);
@@ -84,10 +79,8 @@ class PreviewController extends Controller
             return;
         }
 
-        try
-        {
-            if (!$response->isRedirect())
-            {
+        try {
+            if (!$response->isRedirect()) {
                 $renderer = $this->getContainer()->get('renderersHtml');
 
                 $event = new Makeweb_Frontend_Event_InitRenderer($renderer);
@@ -95,9 +88,7 @@ class PreviewController extends Controller
 
                 $renderer->render($request, $response);
             }
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             MWF_Log::exception($e);
             FirePHP::getInstance(true)->error($e);
 
@@ -112,8 +103,7 @@ class PreviewController extends Controller
 
     public function debugAction()
     {
-        try
-        {
+        try {
             ini_set('display_errors', 1);
 
             // get dispatcher
@@ -127,11 +117,10 @@ class PreviewController extends Controller
             $request = new Makeweb_Frontend_Request($response, null, $requestHandler);
             $request->setParam('debug', 1);
 
-            if (!$response->isRedirect())
-            {
-//                $frontendUser = new Makeweb_Frontend_User();
-//                $frontendUser->setInterfaceLanguage($request->getLanguage());
-//                MWF_Env::setUser($frontendUser);
+            if (!$response->isRedirect()) {
+                //                $frontendUser = new Makeweb_Frontend_User();
+                //                $frontendUser->setInterfaceLanguage($request->getLanguage());
+                //                MWF_Env::setUser($frontendUser);
 
                 $rendererClassname = $request->getContentChannel()->getRendererClassname();
                 $renderer = new $rendererClassname();
@@ -145,20 +134,14 @@ class PreviewController extends Controller
                 $renderer->render();
                 ob_end_clean();
 
-                if ($response->isRedirect())
-                {
+                if ($response->isRedirect()) {
                     $this->_displayRedirect($response);
                 }
-            }
-            else
-            {
+            } else {
                 $this->_displayRedirect($response);
             }
-        }
-        catch (Exception $e)
-        {
-            while (ob_get_status())
-            {
+        } catch (Exception $e) {
+            while (ob_get_status()) {
                 ob_end_clean();
             }
 
@@ -185,7 +168,7 @@ class PreviewController extends Controller
 
         if ($node) {
             $urls['preview'] = $this->getContainer()->get('phlexible_tree.router')->generate($node);
-            $urls['debug']   = str_replace('/preview/', '/debug/', $urls['preview']);
+            $urls['debug'] = str_replace('/preview/', '/debug/', $urls['preview']);
 
             if (1 || $node->isPublished($language)) {
                 $urls['online'] = $this->getContainer()->get('phlexible_tree.router')->generate($node);

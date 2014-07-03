@@ -32,11 +32,13 @@ class LoaderResolver implements LoaderResolverInterface
 
     /**
      * @param LoaderInterface $loader
+     *
      * @return $this
      */
     public function addLoader(LoaderInterface $loader)
     {
         $this->loaders[] = $loader;
+
         return $this;
     }
 
@@ -45,10 +47,8 @@ class LoaderResolver implements LoaderResolverInterface
      */
     public function resolve($file)
     {
-        foreach ($this->loaders as $loader)
-        {
-            if ($loader->supports($file))
-            {
+        foreach ($this->loaders as $loader) {
+            if ($loader->supports($file)) {
                 return $loader;
             }
         }

@@ -1,9 +1,9 @@
 Phlexible.elements.SetTeaserOfflineWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.elements.Strings.set_teaser_offline,
-    width:    530,
+    width: 530,
     minWidth: 530,
     maxWidth: 530,
-    height:    440,
+    height: 440,
     minHeight: 440,
     maxHeight: 440,
     iconCls: 'p-element-set_offline-icon',
@@ -22,29 +22,31 @@ Phlexible.elements.SetTeaserOfflineWindow = Ext.extend(Phlexible.gui.util.Dialog
 
     comment_required: false,
 
-    getFormItems: function(){
-        return [{
-/*            xtype: 'checkbox',
-            name: 'include_sub_elements',
-            boxLabel: 'With all sub elements'
-        },{
-            xtype: 'checkbox',
-            name: 'include_teasers',
-            boxLabel: 'With all teasers'
-        },{
-            xtype: 'checkbox',
-            name: 'only_offline',
-            boxLabel: 'Only publish offline nodes'
-        },{
-            xtype: 'checkbox',
-            name: 'only_modified',
-            boxLabel: 'Only publish modified nodes'
-        },{*/
-            xtype: 'textarea',
-            name: 'comment',
-            fieldLabel: Phlexible.elements.Strings.comment,
-            allowBlank: !this.comment_required,
-            anchor: '-80'
-        }];
+    getFormItems: function () {
+        return [
+            {
+                /*            xtype: 'checkbox',
+                 name: 'include_sub_elements',
+                 boxLabel: 'With all sub elements'
+                 },{
+                 xtype: 'checkbox',
+                 name: 'include_teasers',
+                 boxLabel: 'With all teasers'
+                 },{
+                 xtype: 'checkbox',
+                 name: 'only_offline',
+                 boxLabel: 'Only publish offline nodes'
+                 },{
+                 xtype: 'checkbox',
+                 name: 'only_modified',
+                 boxLabel: 'Only publish modified nodes'
+                 },{*/
+                xtype: 'textarea',
+                name: 'comment',
+                fieldLabel: Phlexible.elements.Strings.comment,
+                allowBlank: !this.comment_required,
+                anchor: '-80'
+            }
+        ];
     }
 });

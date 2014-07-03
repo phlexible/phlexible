@@ -1,13 +1,13 @@
 Phlexible.users.OptionsWindowThemeTemplate = new Ext.XTemplate(
     '<tpl for=".">',
-        '<div class="thumb-wrap" id="{id}">',
-        '<div class="thumb"><img src="' + Phlexible.component('/phlexibleuser/images/{preview}') + '" title="{name}"></div>',
-        '<span class="x-editable">{name}</span></div>',
+    '<div class="thumb-wrap" id="{id}">',
+    '<div class="thumb"><img src="' + Phlexible.component('/phlexibleuser/images/{preview}') + '" title="{name}"></div>',
+    '<span class="x-editable">{name}</span></div>',
     '</tpl>',
     '<div class="x-clear"></div>'
 );
 
-Phlexible.users.OptionsWindow = Ext.extend(Ext.Window,{
+Phlexible.users.OptionsWindow = Ext.extend(Ext.Window, {
     title: Phlexible.users.Strings.options,
     strings: Phlexible.users.Strings,
     plain: true,
@@ -23,47 +23,49 @@ Phlexible.users.OptionsWindow = Ext.extend(Ext.Window,{
     activeItem: 0,
 //    deferredRender: true,
 
-    initComponent: function() {
+    initComponent: function () {
         var lis = '';
         var items = [];
         var actions = {
-            'view_overview': function(owner) {
+            'view_overview': function (owner) {
                 owner.layout.setActiveItem(0);
             }
         };
 
         var optionCards = Phlexible.PluginRegistry.get('userOptionCards');
 
-        for(var i=0; i<optionCards.length; i++) {
+        for (var i = 0; i < optionCards.length; i++) {
             var item = optionCards[i];
 
             lis += '<li>' +
-                       '<img src="' + Ext.BLANK_IMAGE_URL + '" class="' + item.iconCls + '" />' +
-                       '<a id="view_' + item.xtype + '" href="#">' + item.title + '</a><br />' +
-                       '<span>' + item.description + '</span>' +
-                   '</li>';
+                '<img src="' + Ext.BLANK_IMAGE_URL + '" class="' + item.iconCls + '" />' +
+                '<a id="view_' + item.xtype + '" href="#">' + item.title + '</a><br />' +
+                '<span>' + item.description + '</span>' +
+                '</li>';
             items.push({
                 xtype: item.xtype,
                 listeners: {
                     save: this.viewOverview,
                     cancel: this.viewOverview,
-					scope: this
+                    scope: this
                 }
             });
-            actions['view_' + item.xtype] = function(owner, cardIndex) {
+            actions['view_' + item.xtype] = function (owner, cardIndex) {
                 owner.layout.setActiveItem(cardIndex);
-            }.createDelegate(this, [i+1], true);
+            }.createDelegate(this, [i + 1], true);
         }
 
         items.unshift({
             bodyStyle: 'padding: 15px',
             border: false,
             html: '<ul class="user">' + lis + '</ul>',
-            buttons: [{
-                text: this.strings.close,
-                handler: this.close,
-                scope: this
-            }]
+            buttons: [
+                {
+                    text: this.strings.close,
+                    handler: this.close,
+                    scope: this
+                }
+            ]
         });
 
         this.items = items;
@@ -72,16 +74,16 @@ Phlexible.users.OptionsWindow = Ext.extend(Ext.Window,{
         Phlexible.users.UserWindow.superclass.initComponent.call(this);
     },
 
-    doAction : function(e, t){
+    doAction: function (e, t) {
         e.stopEvent();
         this.actions[t.id](this);
     },
 
-    viewOverview: function() {
+    viewOverview: function () {
         this.actions['view_overview'](this);
     },
 
-    afterRender: function() {
+    afterRender: function () {
         this.body.on({
             'mousedown': {
                 fn: this.doAction,

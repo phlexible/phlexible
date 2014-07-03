@@ -8,7 +8,7 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
     enableTabScroll: true,
     activeTab: 0,
 
-    initComponent: function() {
+    initComponent: function () {
 
         this.addEvents(
             /**
@@ -27,85 +27,96 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
 
         this.initMyItems();
 
-        this.tbar = [{
-            text: this.strings.save_properties,
-            iconCls: 'p-elementtype-property_save-icon',
-            handler: function() {
-                this.saveProperties();
-                //Phlexible.console.log('save');
+        this.tbar = [
+            {
+                text: this.strings.save_properties,
+                iconCls: 'p-elementtype-property_save-icon',
+                handler: function () {
+                    this.saveProperties();
+                    //Phlexible.console.log('save');
+                },
+                scope: this
             },
-            scope: this
-        },'-',{
-            text: this.strings.reset_properties,
-            iconCls: 'p-elementtype-reset-icon',
-            handler: function() {
-                this.loadProperties(this.node);
+            '-',
+            {
+                text: this.strings.reset_properties,
+                iconCls: 'p-elementtype-reset-icon',
+                handler: function () {
+                    this.loadProperties(this.node);
 
 //                Phlexible.msg('Element Type Action', 'Properties of "' + this.node.text + '" resetted.');
-            },
-            scope: this
-        }];
+                },
+                scope: this
+            }
+        ];
 
         Phlexible.elementtypes.ElementtypeField.superclass.initComponent.call(this);
 
         //Phlexible.console.log(this.tbar);
     },
 
-    initMyItems: function() {
-        this.items = [{
-            xtype: 'elementtypes-configuration-field-property',
-            isFieldAccordion: true,
-            key: 'field'
-        },{
-            xtype: 'elementtypes-configuration-field-label',
-            isFieldAccordion: true,
-            key: 'labels'
-        },{
-            xtype: 'elementtypes-configuration-field-configuration',
-            isFieldAccordion: true,
-            key: 'configuration'
-        },{
-            xtype: 'elementtypes-configuration-field-value',
-            isFieldAccordion: true,
-            key: 'options'
-        },{
-            xtype: 'elementtypes-configuration-field-validation',
-            isFieldAccordion: true,
-            key: 'validation'
-        },{
-            xtype: 'elementtypes-configuration-field-contentchannel',
-            isFieldAccordion: true,
-            key: 'content_channels'
-        }];
+    initMyItems: function () {
+        this.items = [
+            {
+                xtype: 'elementtypes-configuration-field-property',
+                isFieldAccordion: true,
+                key: 'field'
+            },
+            {
+                xtype: 'elementtypes-configuration-field-label',
+                isFieldAccordion: true,
+                key: 'labels'
+            },
+            {
+                xtype: 'elementtypes-configuration-field-configuration',
+                isFieldAccordion: true,
+                key: 'configuration'
+            },
+            {
+                xtype: 'elementtypes-configuration-field-value',
+                isFieldAccordion: true,
+                key: 'options'
+            },
+            {
+                xtype: 'elementtypes-configuration-field-validation',
+                isFieldAccordion: true,
+                key: 'validation'
+            },
+            {
+                xtype: 'elementtypes-configuration-field-contentchannel',
+                isFieldAccordion: true,
+                key: 'content_channels'
+            }
+        ];
     },
 
-    getFieldPropertyPanel: function() {
+    getFieldPropertyPanel: function () {
         return this.getComponent(2);
     },
 
-    clear: function() {
+    clear: function () {
         this.disable();
 
         this.setTitle(this.strings.properties);
 
         /*
-        this.items.each(function(panel) {
-            panel.hide();
-        });
-        */
+         this.items.each(function(panel) {
+         panel.hide();
+         });
+         */
     },
 
-    loadProperties: function(node) {
+    loadProperties: function (node) {
         this.node = node;
         this.loadFieldProperties(node);
         this.enable();
     },
 
-    loadFieldProperties: function(node) {
+    loadFieldProperties: function (node) {
         var properties = Phlexible.clone(node.attributes.properties);
         var fieldType = Phlexible.fields.FieldTypes[node.attributes.type];
 
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             if (panel.isFieldAccordion) {
                 panel.loadField(properties, node, fieldType);
             }
@@ -116,7 +127,7 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
         }
     },
 
-    saveProperties: function() {
+    saveProperties: function () {
         if (!this.saveFieldProperties()) {
             return;
         }
@@ -124,9 +135,9 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
         this.loadProperties(this.node);
     },
 
-    saveFieldProperties: function() {
+    saveFieldProperties: function () {
         var valid = true;
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             if (panel.isFieldAccordion && !panel.isValid() && !panel.hidden && valid) {
                 valid = false;
                 return false;
@@ -147,13 +158,13 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
             content_channels: {}
         };
 
-        this.items.each(function(panel) {
+        this.items.each(function (panel) {
             if (panel.isFieldAccordion) {
                 Ext.apply(properties[panel.key], panel.getSaveValues());
             }
         });
 
-        if(this.fireEvent('beforeSaveField', this.node, properties) === false) {
+        if (this.fireEvent('beforeSaveField', this.node, properties) === false) {
             return false;
         }
 

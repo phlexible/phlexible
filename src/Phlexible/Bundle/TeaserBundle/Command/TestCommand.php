@@ -26,8 +26,7 @@ class TestCommand extends ContainerAwareCommand
     {
         $this
             ->setName('teasers:test')
-            ->setDescription('Test teasers.')
-        ;
+            ->setDescription('Test teasers.');
     }
 
     /**

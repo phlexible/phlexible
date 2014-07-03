@@ -40,9 +40,10 @@ class Mailer
      * @param Swift_Mailer     $mailer
      * @param array            $parameters
      */
-    public function __construct(Twig_Environment $templating,
-                                Swift_Mailer $mailer,
-                                array $parameters)
+    public function __construct(
+        Twig_Environment $templating,
+        Swift_Mailer $mailer,
+        array $parameters)
     {
         $this->templating = $templating;
         $this->mailer = $mailer;
@@ -110,8 +111,7 @@ class Mailer
             ->setFrom($from)
             ->setTo($email)
             ->setSubject($subject)
-            ->setBody($body)
-        ;
+            ->setBody($body);
 
         $this->mailer->send($mail);
     }

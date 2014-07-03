@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver;
 
-use Phlexible\Bundle\MediaSiteBundle\Exception;
 use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotWritableException;
+use Phlexible\Bundle\MediaSiteBundle\Exception;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
@@ -58,8 +58,7 @@ Abstract class AbstractDriver implements DriverInterface
     {
         $this->deletePhysicalFolder($folder, $userId);
 
-        try
-        {
+        try {
             $this->db->delete(
                 $this->folderTable,
                 array(
@@ -67,9 +66,7 @@ Abstract class AbstractDriver implements DriverInterface
                     'path LIKE ?' => $folder->getPath() . '%'
                 )
             );
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             throw new IOException("Delete folder failed.", 0, $e);
         }
 
@@ -84,15 +81,12 @@ Abstract class AbstractDriver implements DriverInterface
         $folder = $this->findFolderByFileId($file->getId());
         $physicalPath = $this->site->getRootDir() . $folder->getPath() . '/' . $file->getName();
 
-        if ($filesystem->exists($physicalPath))
-        {
-            if (!is_file($physicalPath))
-            {
+        if ($filesystem->exists($physicalPath)) {
+            if (!is_file($physicalPath)) {
                 throw new IOException('Delete file failed, not a file.');
             }
 
-            if (!is_writable(dirname($physicalPath)))
-            {
+            if (!is_writable(dirname($physicalPath))) {
                 throw new NotWritableException("Delete file failed.");
             }
         }
@@ -104,8 +98,7 @@ Abstract class AbstractDriver implements DriverInterface
             )
         );
 
-        if ($filesystem->exists($physicalPath))
-        {
+        if ($filesystem->exists($physicalPath)) {
             $filesystem->remove($physicalPath);
         }
     }

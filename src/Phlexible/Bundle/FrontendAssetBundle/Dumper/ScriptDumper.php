@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\FrontendAssetBundle\Dumper;
 
-use Phlexible\CoreComponent\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
 use Phlexible\Bundle\FrontendAssetBundle\Collector\Block;
+use Phlexible\CoreComponent\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
 use Psr\Log\LoggerInterface;
 
 /**

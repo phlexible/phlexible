@@ -29,9 +29,9 @@ class MetaIdentifier implements \Media_MetaSets_Item_Interface
 
     public function __construct($fileId, $fileVersion = 1, $language = 'de')
     {
-        $this->_fileId      = $fileId;
+        $this->_fileId = $fileId;
         $this->_fileVersion = $fileVersion;
-        $this->_language    = $language;
+        $this->_language = $language;
     }
 
     /**

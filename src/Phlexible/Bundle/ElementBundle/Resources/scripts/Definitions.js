@@ -5,7 +5,7 @@ Ext.namespace(
     'Phlexible.tasks.Strings'
 );
 
-Phlexible.EntryManager.register('elements', function(params) {
+Phlexible.EntryManager.register('elements', function (params) {
     return {
         handler: Phlexible.LoadHandler.handlePanel,
         identifier: 'Phlexible_elements_MainPanel_' + params.title,
@@ -19,11 +19,11 @@ Phlexible.elements.STATUS_ASYNC = 'async';
 Phlexible.elements.STATUS_OFFLINE = '';
 
 Phlexible.elements.Format = {
-    elementIcon: function(icon, meta, record){
+    elementIcon: function (icon, meta, record) {
         return '<img src="' + icon + '" width="18" height="18" border="0" title="' + record.get('element_type') + '" alt="' + record.get('element_type') + '" />';
     },
 
-    status: function(status, meta, record){
+    status: function (status, meta, record) {
         return '';
     }
 };

@@ -6,7 +6,7 @@ Phlexible.cache.portlet.CacheUsage = Ext.extend(Ext.ux.Portlet, {
     iconCls: 'p-cache-stats-icon',
     bodyStyle: 'padding: 5px 5px 5px 5px',
 
-    initComponent: function() {
+    initComponent: function () {
         var data = this.record.get('data');
 
 
@@ -19,7 +19,7 @@ Phlexible.cache.portlet.CacheUsage = Ext.extend(Ext.ux.Portlet, {
                 text: data[i].title
             });
             this.items.push({
-                cls: this.getPercentClass(data[i].percent) + (i < (len-1) ? ' m-cache-spacer' : ''),
+                cls: this.getPercentClass(data[i].percent) + (i < (len - 1) ? ' m-cache-spacer' : ''),
                 xtype: 'progress',
                 value: data[i].percent,
                 text: data[i].total ? Math.ceil(data[i].percent * 100) + '%' + ' (' + data[i].used + ' / ' + data[i].total + ')' : 'No stats provided by cache type.'
@@ -29,7 +29,7 @@ Phlexible.cache.portlet.CacheUsage = Ext.extend(Ext.ux.Portlet, {
         Phlexible.cache.portlet.CacheUsage.superclass.initComponent.call(this);
     },
 
-    updateData: function(data) {
+    updateData: function (data) {
         for (var i = 0; i < data.length; i++) {
             var pb = this.getComponent((i * 2) + 1);
             var el = pb.getEl();
@@ -41,11 +41,11 @@ Phlexible.cache.portlet.CacheUsage = Ext.extend(Ext.ux.Portlet, {
         }
     },
 
-    getPercentClass: function(percent) {
-        if(percent < 0.5) {
+    getPercentClass: function (percent) {
+        if (percent < 0.5) {
             return 'p-cache-status-low';
         }
-        else if(percent > 0.8) {
+        else if (percent > 0.8) {
             return 'p-cache-status-high';
         }
 

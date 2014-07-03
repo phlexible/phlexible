@@ -42,10 +42,11 @@ class MessagesPortlet extends Portlet
      * @param MessageManagerInterface      $messageManager
      * @param SecurityContextInterface     $securityContext
      */
-    public function __construct(TranslatorInterface $translator,
-                                SubscriptionManagerInterface $subscriptionManager,
-                                MessageManagerInterface $messageManager,
-                                SecurityContextInterface $securityContext)
+    public function __construct(
+        TranslatorInterface $translator,
+        SubscriptionManagerInterface $subscriptionManager,
+        MessageManagerInterface $messageManager,
+        SecurityContextInterface $securityContext)
     {
         $this
             ->setId('messages-portlet')
@@ -67,7 +68,9 @@ class MessagesPortlet extends Portlet
     public function getData()
     {
         $subscription = $this->subscriptionManager
-            ->findOneBy(array('userId' => $this->securityContext->getToken()->getUser()->getId(), 'handler' => 'portlet'));
+            ->findOneBy(
+                array('userId' => $this->securityContext->getToken()->getUser()->getId(), 'handler' => 'portlet')
+            );
 
         if (!$subscription) {
             return array();
@@ -82,7 +85,7 @@ class MessagesPortlet extends Portlet
         $messages = $this->messageManager->findByCriteria($filter->getCriteria(), array('createdAt' => 'DESC'), 20);
 
         $priorityList = $this->messageManager->getPriorityNames();
-        $typeList     = $this->messageManager->getTypeNames();
+        $typeList = $this->messageManager->getTypeNames();
 
         $data = array();
         foreach ($messages as $message) {

@@ -55,9 +55,9 @@ class VideoPreview implements PreviewerInterface
      */
     public function create(array $params)
     {
-        $assetPath     = dirname(__DIR__) . '/Resources/public/video/';
-        $previewVideo  = 'test.mpg';
-        $filePath      = $assetPath . $previewVideo;
+        $assetPath = dirname(__DIR__) . '/Resources/public/video/';
+        $previewVideo = 'test.mpg';
+        $filePath = $assetPath . $previewVideo;
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {

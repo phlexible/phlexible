@@ -15,7 +15,7 @@ namespace Phlexible\Bundle\MediaTemplateBundle\Model;
  */
 class AudioTemplate extends AbstractTemplate
 {
-    const TYPE_AUDIO  = 'audio';
+    const TYPE_AUDIO = 'audio';
 
     public function __construct()
     {

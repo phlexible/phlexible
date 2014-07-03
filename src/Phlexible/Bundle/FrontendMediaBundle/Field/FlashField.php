@@ -29,31 +29,26 @@ class FlashField extends AbstractField
      */
     protected function _transform(array $item, array $media, array $options)
     {
-        $item['templates']        = array();
+        $item['templates'] = array();
         $item['templates_config'] = array();
-        $item['media']            = array();
+        $item['media'] = array();
 
-        try
-        {
-            if (!empty($item['data_content']))
-            {
+        try {
+            if (!empty($item['data_content'])) {
                 $file = $this->_getFile($item['data_content']);
 
-                if ($file !== null)
-                {
-                    $item['media']  = $this->_getMediaData($file);
+                if ($file !== null) {
+                    $item['media'] = $this->_getMediaData($file);
                     $item['master'] = $this->_getMasterData($item);
 
                     $attributes = $file->getAsset()->getAttributes();
-                    $item['media']['width']  = $attributes->width;
+                    $item['media']['width'] = $attributes->width;
                     $item['media']['height'] = $attributes->height;
 
                     $item['media']['src'] = BASE_URL . '/flash/' . $file->getId() . '/' . $file->getName();
                 }
             }
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             MWF_Log::exception($e);
             $item['data_content'] = '';
             $item['media'] = array();

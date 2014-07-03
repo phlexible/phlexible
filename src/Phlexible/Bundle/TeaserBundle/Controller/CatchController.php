@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatch;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * Catch controller
@@ -78,14 +78,17 @@ class CatchController extends Controller
 
             $result[] = array(
                 'ds_id' => $dsId,
-                'title' => $node->getName() . ' (' . $node->getLabels('fieldlabel', $this->getUser()->getInterfaceLanguage()) . ')',
+                'title' => $node->getName() . ' (' . $node->getLabels(
+                        'fieldlabel',
+                        $this->getUser()->getInterfaceLanguage()
+                    ) . ')',
                 'icon'  => 'm-fields-field_' . $fieldType . '-icon',
             );
         }
 
         array_multisort(array_column($result, 'title'), $result);
 
-        $translator  = $this->getContainer()->get('translator');
+        $translator = $this->getContainer()->get('translator');
         array_unshift(
             $result,
             array(
@@ -131,11 +134,10 @@ class CatchController extends Controller
     public function elementtypesAction()
     {
         $elementtypeService = $this->getContainer()->get('phlexible_elementtype.service');
-        $elementtypes       = $elementtypeService->findElementtypeByType('full');
+        $elementtypes = $elementtypeService->findElementtypeByType('full');
 
         $data = array();
-        foreach ($elementtypes as $elementtype)
-        {
+        foreach ($elementtypes as $elementtype) {
             $data[$elementtype->getTitle() . $elementtype->getId()] = array(
                 'id'    => $elementtype->getId(),
                 'title' => $elementtype->getTitle(),
@@ -164,11 +166,10 @@ class CatchController extends Controller
             array('key' => '', 'value' => $translator->get('teasers.no_filter', array(), 'gui')),
         );
 
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key) {
             $result[] = array(
-               'key'   => $key,
-               'value' => $key,
+                'key'   => $key,
+                'value' => $key,
             );
         }
 
@@ -177,6 +178,7 @@ class CatchController extends Controller
 
     /**
      * List all element types
+     *
      * @todo
      *
      * @Route("/metakeywords", name="teasers_catch_metakeywords")
@@ -251,8 +253,9 @@ class CatchController extends Controller
         $catchMetaSearch = array();
         do {
             if ($this->hasParam('catch_meta_key_' . $i) &&
-                    $this->hasParam('catch_meta_keywords_' . $i)) {
-                $catchMetaSearchKey     = $metaFilter->filter($this->getParam('catch_meta_key_' . $i));
+                $this->hasParam('catch_meta_keywords_' . $i)
+            ) {
+                $catchMetaSearchKey = $metaFilter->filter($this->getParam('catch_meta_key_' . $i));
                 $catchMetaSearchKeyword = $metaFilter->filter($this->getParam('catch_meta_keywords_' . $i));
                 $i++;
                 if (strlen($catchMetaSearchKey) && strlen($catchMetaSearchKeyword)) {
@@ -276,8 +279,7 @@ class CatchController extends Controller
             ->setRotation($this->getParam('catch_rotation') === 'on')
             ->setPoolSize($this->getParam('catch_pool_size'))
             ->setResultsPerPage($this->getParam('catch_elements_per_page'))
-            ->setMetaSearch($catchMetaSearch)
-        ;
+            ->setMetaSearch($catchMetaSearch);
         $catchRepository->save($catch);
 
         $this->_response->setResult(true, 0, 'Catch created.');

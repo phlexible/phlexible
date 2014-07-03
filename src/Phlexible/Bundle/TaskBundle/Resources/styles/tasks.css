@@ -1,7 +1,7 @@
-.p-tasks-main-panel .x-layout-collapsed-west{
-    background-image:url(/BASEURL/admin/gui/asset/textimage?key=filter.tasks&icon=filter);
-    background-repeat:no-repeat;
-    background-position:center;
+.p-tasks-main-panel .x-layout-collapsed-west {
+    background-image: url(/BASEURL/admin/gui/asset/textimage?key=filter.tasks&icon=filter);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .p-tasks-filter-panel .x-panel {
@@ -11,6 +11,7 @@
 .p-tasks-history {
     padding: 5px;
 }
+
 .p-tasks-history .history-header {
     padding-bottom: 10px;
     font-weight: bold;
@@ -23,13 +24,16 @@
     padding-right: 20px;
     border-bottom: 1px solid black;
 }
+
 .p-tasks-history .history-table td {
     vertical-align: top;
     padding-right: 10px;
 }
+
 .p-tasks-history .history-table td.active {
     font-style: italic;
 }
+
 .p-tasks-history .history-table td img {
     vertical-align: middle;
 }

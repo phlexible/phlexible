@@ -26,8 +26,7 @@ class GarbageCollectCommand extends ContainerAwareCommand
     {
         $this
             ->setName('datasource:garbage-collect')
-            ->setDescription('Cleanup unused data source values')
-        ;
+            ->setDescription('Cleanup unused data source values');
     }
 
     /**

@@ -49,16 +49,16 @@ class Makeweb_Teasers_Event_BeforeReorderTeasers extends Brainbits_Event_Notific
     /**
      * Constructor
      *
-     * @param $treeId
-     * @param $eid
-     * @param $areaId
+     * @param       $treeId
+     * @param       $eid
+     * @param       $areaId
      * @param array $sortIds
      */
     public function __construct($treeId, $eid, $areaId, array $sortIds = array())
     {
-        $this->_treeId  = $treeId;
-        $this->_eid     = $eid;
-        $this->_areaId  = $areaId;
+        $this->_treeId = $treeId;
+        $this->_eid = $eid;
+        $this->_areaId = $areaId;
         $this->_sortIds = $sortIds;
     }
 

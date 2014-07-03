@@ -45,11 +45,12 @@ class LatestElementsPortlet extends Portlet
      * @param MWF_Db_Pool                              $dbPool
      * @param int                                      $numItems
      */
-    public function __construct(TranslatorInterface $translator,
-                                Makeweb_Elements_Element_Version_Manager $versionManager,
-                                Makeweb_Elements_Tree_Manager $treeManager,
-                                MWF_Db_Pool $dbPool,
-                                $numItems)
+    public function __construct(
+        TranslatorInterface $translator,
+        Makeweb_Elements_Element_Version_Manager $versionManager,
+        Makeweb_Elements_Tree_Manager $treeManager,
+        MWF_Db_Pool $dbPool,
+        $numItems)
     {
         $this
             ->setId('elements-portlet')
@@ -73,7 +74,11 @@ class LatestElementsPortlet extends Portlet
     {
         $select = $this->db->select()
             ->from(array('ev' => $this->db->prefix . 'element_version'), array('eid', 'trigger_language AS language'))
-            ->join(array('e' => $this->db->prefix . 'element'), 'ev.eid = e.eid AND ev.version = e.latest_version', 'latest_version AS version')
+            ->join(
+                array('e' => $this->db->prefix . 'element'),
+                'ev.eid = e.eid AND ev.version = e.latest_version',
+                'latest_version AS version'
+            )
             ->join(array('et' => $this->db->prefix . 'element_tree'), 'ev.eid = et.eid', array('id'))
             ->order('ev.create_time DESC')
             ->limit($this->numItems);
@@ -85,8 +90,7 @@ class LatestElementsPortlet extends Portlet
 
         $data = array();
 
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             $elementVersion = $elementVersionManager->get($item['eid'], $item['version']);
             $node = $treeManager->getNodeByNodeId($item['id']);
             $siteroot = $node->getTree()->getSiteroot();
@@ -96,40 +100,39 @@ class LatestElementsPortlet extends Portlet
             $title = '';
 
             $first = true;
-            foreach ($baseTitleArr as $chunk)
-            {
+            foreach ($baseTitleArr as $chunk) {
                 $title .= ($first ? '<wbr />' : '') . $chunk;
                 $first = false;
             }
 
             $title .= ' [' . $item['id'] . ']';
-/*
-            $i = 0;
-            do
-            {
-                $title .= ($i ? '<wbr />' : '') . substr($baseTitle, $i, $i + 16);
-                $i += 16;
-            }
-            while($i <= strlen($baseTitle));
-*/
+            /*
+                        $i = 0;
+                        do
+                        {
+                            $title .= ($i ? '<wbr />' : '') . substr($baseTitle, $i, $i + 16);
+                            $i += 16;
+                        }
+                        while($i <= strlen($baseTitle));
+            */
 
             $menuItem = new MWF_Core_Menu_Item_Panel();
             $menuItem->setIdentifier('Makeweb_elements_MainPanel_' . $siteroot->getTitle())
-                    ->setText($siteroot->getTitle())
-                    ->setIconClass('p-element-component-icon')
-                    ->setPanel('Makeweb.elements.MainPanel')
-                    ->setParam('siteroot_id', $siteroot->getId())
-                    ->setParam('title', $siteroot->getTitle())
-                    ->setParam('id', $node->getId())
-                    ->setParam('start_tid_path', '/' . implode('/', $node->getPath()))
-                    ->setCheck(array('elements'));
+                ->setText($siteroot->getTitle())
+                ->setIconClass('p-element-component-icon')
+                ->setPanel('Makeweb.elements.MainPanel')
+                ->setParam('siteroot_id', $siteroot->getId())
+                ->setParam('title', $siteroot->getTitle())
+                ->setParam('id', $node->getId())
+                ->setParam('start_tid_path', '/' . implode('/', $node->getPath()))
+                ->setCheck(array('elements'));
 
             $menu = $menuItem->get();
 
             $data[] = array(
                 'ident'    => $item['eid'] . '_' .
-                              'de' . '_' .
-                              $item['version'],
+                    'de' . '_' .
+                    $item['version'],
                 'eid'      => $item['eid'],
                 'language' => $item['language'],
                 'version'  => $item['version'],

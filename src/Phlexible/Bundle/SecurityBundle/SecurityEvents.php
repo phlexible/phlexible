@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\SecurityBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface SecurityEvents
+class SecurityEvents
 {
     /**
      * Login view event

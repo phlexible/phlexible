@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +31,7 @@ class UploadController extends Controller
      *
      * @param Request $request
      *
+     * @return ResultResponse
      * @Route("", name="mediamanager_upload")
      */
     public function uploadAction(Request $request)
@@ -47,8 +48,8 @@ class UploadController extends Controller
                     false,
                     'Target folder not found.',
                     array(
-                        'params'  => $request->request->all(),
-                        'files'   => $request->files->all(),
+                        'params' => $request->request->all(),
+                        'files'  => $request->files->all(),
                     )
                 );
             }
@@ -58,8 +59,8 @@ class UploadController extends Controller
                     false,
                     'No files received.',
                     array(
-                        'params'  => $request->request->all(),
-                        'files'   => $request->files->all(),
+                        'params' => $request->request->all(),
+                        'files'  => $request->files->all(),
                     )
                 );
             }
@@ -73,12 +74,12 @@ class UploadController extends Controller
                 if ($file) {
                     $cnt++;
 
-                    $body = 'Filename: '.$file->getName() . PHP_EOL
-                        . 'Folder:   '.$folder->getName() . PHP_EOL
-                        . 'Filesize: '.$file->getSize() . PHP_EOL
-                        . 'Filetype: '.$file->getMimeType() . PHP_EOL;
+                    $body = 'Filename: ' . $file->getName() . PHP_EOL
+                        . 'Folder:   ' . $folder->getName() . PHP_EOL
+                        . 'Filesize: ' . $file->getSize() . PHP_EOL
+                        . 'Filetype: ' . $file->getMimeType() . PHP_EOL;
 
-                    $message = MediaManagerMessage::create('File "'.$file->getName().'" uploaded.', $body);
+                    $message = MediaManagerMessage::create('File "' . $file->getName() . '" uploaded.', $body);
                     $this->get('phlexible_message.message_poster')->post($message);
                 }
             }
@@ -87,8 +88,8 @@ class UploadController extends Controller
                 true,
                 $cnt . ' file(s) uploaded.',
                 array(
-                    'params'  => $request->request->all(),
-                    'files'   => $request->files->all(),
+                    'params' => $request->request->all(),
+                    'files'  => $request->files->all(),
                 )
             );
         } catch (\Exception $e) {
@@ -96,9 +97,9 @@ class UploadController extends Controller
                 false,
                 $e->getMessage(),
                 array(
-                    'params'  => $request->request->all(),
-                    'files'   => $request->files->all(),
-                    'trace'   => $e->getTraceAsString(),
+                    'params' => $request->request->all(),
+                    'files'  => $request->files->all(),
+                    'trace'  => $e->getTraceAsString(),
                 )
             );
         }
@@ -123,9 +124,9 @@ class UploadController extends Controller
                 $site = $siteManager->getByFolderId($tempFile->getFolderId());
                 $supportsVersions = $site->hasFeature('versions');
                 $folder = $site->findFolder($tempFile->getFolderId());
-                $newName  = basename($tempFile->getName());
+                $newName = basename($tempFile->getName());
                 $mimetype = $this->getContainer()->get('mediaToolsMime')->detect($tempFile->getTempName());
-                $newType  = $documenttypeRepository->getByMimetype($mimetype)->getKey();
+                $newType = $documenttypeRepository->getByMimetype($mimetype)->getKey();
 
                 $temp = array(
                     'versions' => $supportsVersions,
@@ -142,10 +143,10 @@ class UploadController extends Controller
 
                     $alternativeName = $this->createAlternateFilename($tempFile->getTempName(), $folder);
 
-                    $temp['old_name']         = $tempFile['name'];
-                    $temp['old_id']           = $tempFile['original_id'];
-                    $temp['old_type']         = $oldFile->getDocumentTypeKey();
-                    $temp['old_size']         = $oldFile->getSize();
+                    $temp['old_name'] = $tempFile['name'];
+                    $temp['old_id'] = $tempFile['original_id'];
+                    $temp['old_type'] = $oldFile->getDocumentTypeKey();
+                    $temp['old_size'] = $oldFile->getSize();
                     $temp['alternative_name'] = $alternativeName;
                 }
 
@@ -181,21 +182,21 @@ class UploadController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $all     = $request->get('all');
-        $action  = $request->get('do');
+        $all = $request->get('all');
+        $action = $request->get('do');
         $tempKey = $request->get('temp_key');
-        $tempID  = $request->get('temp_id');
+        $tempID = $request->get('temp_id');
 
         $metaSetId = $request->get('metaset', null);
-        $metaData  = $request->get('meta', null);
+        $metaData = $request->get('meta', null);
         if ($metaData) {
             $metaData = json_decode($metaData, true);
         }
 
-        die(__METHOD__." session");
+        die(__METHOD__ . " session");
         $uploadTempSession = new Zend_Session_Namespace('uploadTemp');
 
-        $container        = $this->getContainer();
+        $container = $this->getContainer();
         $mediaSiteManager = $container->get('mediasite.manager');
 
         if (isset($uploadTempSession->siteId)) {
@@ -206,11 +207,9 @@ class UploadController extends Controller
 
         $tempFiles = $uploadTempSession->files[$tempKey];
 
-        $data  = array();
-        if (!$all)
-        {
-            if (!empty($tempFiles[$tempID]))
-            {
+        $data = array();
+        if (!$all) {
+            if (!empty($tempFiles[$tempID])) {
                 $tempFile = $tempFiles[$tempID];
 
                 unset($uploadTempSession->files[$tempKey][$tempID]);
@@ -221,12 +220,14 @@ class UploadController extends Controller
                     $file = $site->getFilePeer()->getByID($tempFile['original_id']);
                 }
 
-                switch($action) {
+                switch ($action) {
                     case 'save':
                         try {
                             $newFile = $folder->importFile($tempFile['tmp_name'], $tempFile['name']);
                         } catch (\Exception $e) {
-                            $this->getContainer()->get('logger')->error(__METHOD__ . ' save: '.$e->getMessage().PHP_EOL.$e->getTraceAsString());
+                            $this->getContainer()->get('logger')->error(
+                                __METHOD__ . ' save: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
+                            );
 
                             throw new Media_Site_Folder_Exception($e->getMessage());
                         }
@@ -242,8 +243,8 @@ class UploadController extends Controller
                             if (false === $dispatcher->dispatch($event)) {
                                 throw new Media_Site_Folder_Exception(
                                     'Can\'t replace file "'
-                                        . $file->getFilePath()
-                                        . '", callback returned false.'
+                                    . $file->getFilePath()
+                                    . '", callback returned false.'
                                 );
                             }
 
@@ -265,7 +266,9 @@ class UploadController extends Controller
 
                             $newFile = $file;
                         } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(__METHOD__ . ' replace: '.$e->getMessage().PHP_EOL.$e->getTraceAsString());
+                            $this->getContainer()->get('logger')->error(
+                                __METHOD__ . ' replace: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
+                            );
 
                             throw new Media_Site_Folder_Exception($e->getMessage());
                         }
@@ -278,7 +281,9 @@ class UploadController extends Controller
 
                             $newFile = $folder->importFile($tempFile['tmp_name'], $newName);
                         } catch (\Exception $e) {
-                            $this->getContainer()->get('logger')->error(__METHOD__ . ' keep: '.$e->getMessage().PHP_EOL.$e->getTraceAsString());
+                            $this->getContainer()->get('logger')->error(
+                                __METHOD__ . ' keep: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
+                            );
 
                             throw new Media_Site_Folder_Exception($e->getMessage());
                         }
@@ -288,14 +293,15 @@ class UploadController extends Controller
                     case 'version':
                         try {
                             $fileId = $tempFile['original_id'];
-                            if (!empty($tempFile['file_id']))
-                            {
+                            if (!empty($tempFile['file_id'])) {
                                 $fileId = $tempFile['file_id'];
                             }
 
                             $newFile = $folder->importFileVersion($tempFile['tmp_name'], $tempFile['name'], $fileId);
                         } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(__METHOD__ . ' version: '.$e->getMessage().PHP_EOL.$e->getTraceAsString());
+                            $this->getContainer()->get('logger')->error(
+                                __METHOD__ . ' version: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
+                            );
 
                             throw new Media_Site_Folder_Exception($e->getMessage());
                         }
@@ -319,7 +325,7 @@ class UploadController extends Controller
                 if ($newFile) {
                     try {
                         $asset = $newFile->getAsset();
-                    } catch(Exception $e) {
+                    } catch (Exception $e) {
                     }
 
                     if ($metaSetId) {
@@ -327,7 +333,9 @@ class UploadController extends Controller
                             $metaSet = $this->getContainer()->get('metasets.repository')->find($metaSetId);
                             $asset->addMetaSet($metaSet);
                         } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(__METHOD__ . ' newFile: '.$e->getMessage().PHP_EOL.$e->getTraceAsString());
+                            $this->getContainer()->get('logger')->error(
+                                __METHOD__ . ' newFile: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
+                            );
                         }
                     }
 
@@ -356,12 +364,14 @@ class UploadController extends Controller
                     $file = $site->getFilePeer()->getByID($tempFile['original_id']);
                 }
 
-                switch($action) {
+                switch ($action) {
                     case 'save':
                         try {
                             $newFileID = $folder->importFile($tempFile['tmp_name'], $tempFile['name']);
                         } catch (\Exception $e) {
-                            $this->getContainer()->get('logger')->error(__METHOD__ . ' save: '.$e->getMessage().PHP_EOL.$e->getTraceAsString());
+                            $this->getContainer()->get('logger')->error(
+                                __METHOD__ . ' save: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
+                            );
 
                             throw new Media_Site_Folder_Exception($e->getMessage());
                         }
@@ -376,7 +386,9 @@ class UploadController extends Controller
 
                             $file->reRead();
                         } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(__METHOD__ . ' replace: '.$e->getMessage().PHP_EOL.$e->getTraceAsString());
+                            $this->getContainer()->get('logger')->error(
+                                __METHOD__ . ' replace: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
+                            );
 
                             throw new Media_Site_Folder_Exception($e->getMessage());
                         }
@@ -389,7 +401,9 @@ class UploadController extends Controller
 
                             $newFileID = $folder->importFile($tempFile['tmp_name'], $newName);
                         } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(__METHOD__ . ' keep: '.$e->getMessage().PHP_EOL.$e->getTraceAsString());
+                            $this->getContainer()->get('logger')->error(
+                                __METHOD__ . ' keep: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
+                            );
 
                             throw new Media_Site_Folder_Exception($e->getMessage());
                         }
@@ -431,7 +445,7 @@ class UploadController extends Controller
 
         $template = $this->getContainer()->get('mediatemplates.repository')->find($templateKey);
 
-        die(__METHOD__." session");
+        die(__METHOD__ . " session");
         $uploadTempSession = new Zend_Session_Namespace('uploadTemp');
 
         if (isset($uploadTempSession->siteId)) {
@@ -444,10 +458,13 @@ class UploadController extends Controller
         $tempFile = $tempFiles[$tempId];
 
         $toolkit = $template->getAppliedToolkit($tempFile['tmp_name']);
-        $filename = $toolkit->save($this->getContainer()->getParam(':media.manager.temp_dir') . 'upload_preview/', true);
+        $filename = $toolkit->save(
+            $this->getContainer()->getParam(':media.manager.temp_dir') . 'upload_preview/',
+            true
+        );
 
         return $this->get('igorw_file_serve.response_factory')
-                    ->create($filename);
+            ->create($filename);
     }
 
     /**
@@ -459,9 +476,9 @@ class UploadController extends Controller
         $allSets = $this->getContainer()->get('metasets.repository')->getAll();
 
         $sets = array();
-        foreach($allSets as $key => $set) {
+        foreach ($allSets as $key => $set) {
             $sets[] = array(
-                'key'   => $key,
+                'key' => $key,
                 'title' => $set->getTitle()
             );
         }
@@ -482,19 +499,19 @@ class UploadController extends Controller
 
         $meta = array();
 
-        $t9n  = $this->getContainer()->t9n;
+        $t9n = $this->getContainer()->t9n;
         $pageKeys = $t9n->{'metadata-keys'}->toArray();
         $pageSelect = $t9n->{'metadata-selectvalues'}->toArray();
 
         $container = $this->getContainer();
         $dataSourceRepository = $container->get('dataSourcesRepository');
 
-        foreach($keys as $key => $row) {
+        foreach ($keys as $key => $row) {
             $meta[$key] = $row;
             $meta[$key]['set_id'] = $metaSet->getId();
-            $meta[$key]['key']    = $key;
-            $meta[$key]['value_de']  = '';
-            $meta[$key]['value_en']  = '';
+            $meta[$key]['key'] = $key;
+            $meta[$key]['value_de'] = '';
+            $meta[$key]['value_en'] = '';
             $meta[$key]['required'] = (int) $meta[$key]['required'];
 
             $meta[$key]['tkey'] = $key;
@@ -506,10 +523,9 @@ class UploadController extends Controller
                 $options = explode(',', $row['options']);
 
                 foreach ($options as $k => $okey) {
-                    $okey   = trim($okey);
+                    $okey = trim($okey);
                     $value = $okey;
-                    if (!empty($pageSelect[$okey]))
-                    {
+                    if (!empty($pageSelect[$okey])) {
                         $value = $pageSelect[$okey];
                     }
                     $options[$k] = array($okey, $value);
@@ -518,7 +534,7 @@ class UploadController extends Controller
                 $meta[$key]['options'] = $options;
             } elseif ($row['type'] == 'suggest') {
                 $sourceId = $row['options'];
-                $options  = array('source_id' => $sourceId);
+                $options = array('source_id' => $sourceId);
 
                 foreach (array('de', 'en') as $language) {
                     $source = $dataSourceRepository->getDataSourceById(
@@ -541,12 +557,12 @@ class UploadController extends Controller
         if ($additionalMetaSet) {
             try {
                 $metaSet = $this->getContainer()->get('metasets.repository')->find($additionalMetaSet);
-                $keys    = $metaSet->getKeys();
+                $keys = $metaSet->getKeys();
 
-                foreach($keys as $key => $row) {
+                foreach ($keys as $key => $row) {
                     $meta[$key] = $row;
                     $meta[$key]['set_id'] = $metaSet->getId();
-                    $meta[$key]['key']   = $key;
+                    $meta[$key]['key'] = $key;
                     $meta[$key]['value_de'] = '';
                     $meta[$key]['value_en'] = '';
                     $meta[$key]['required'] = (int) $meta[$key]['required'];
@@ -560,10 +576,9 @@ class UploadController extends Controller
                         $options = explode(',', $row['options']);
 
                         foreach ($options as $k => $okey) {
-                            $okey   = trim($okey);
+                            $okey = trim($okey);
                             $value = $okey;
-                            if (!empty($pageSelect[$okey]))
-                            {
+                            if (!empty($pageSelect[$okey])) {
                                 $value = $pageSelect[$okey];
                             }
                             $options[$k] = array($okey, $value);
@@ -572,7 +587,7 @@ class UploadController extends Controller
                         $meta[$key]['options'] = $options;
                     } elseif ($row['type'] == 'suggest') {
                         $sourceId = $row['options'];
-                        $options  = array('source_id' => $sourceId);
+                        $options = array('source_id' => $sourceId);
 
                         foreach (array('de', 'en') as $language) {
                             $source = $dataSourceRepository->getDataSourceById(
@@ -602,8 +617,8 @@ class UploadController extends Controller
 
     private function createAlternateFilename($filename, $folder)
     {
-        $newNameParts   = pathinfo($filename);
-        $newNameFormat  = basename($newNameParts['basename'], '.'.$newNameParts['extension']);
+        $newNameParts = pathinfo($filename);
+        $newNameFormat = basename($newNameParts['basename'], '.' . $newNameParts['extension']);
         $newNameFormat .= '(%s).' . $newNameParts['extension'];
 
         $i = 1;

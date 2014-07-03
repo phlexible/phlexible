@@ -49,9 +49,10 @@ class ElementStructureBuilder
      * @param ElementStructure        $elementStructure
      * @param ElementStructureBuilder $parent
      */
-    public function __construct(ElementtypeStructure $elementtypeStructure,
-                                ElementStructure $elementStructure = null,
-                                ElementStructureBuilder $parent = null)
+    public function __construct(
+        ElementtypeStructure $elementtypeStructure,
+        ElementStructure $elementStructure = null,
+        ElementStructureBuilder $parent = null)
     {
         $this->elementtypeStructure = $elementtypeStructure;
 
@@ -86,8 +87,7 @@ class ElementStructureBuilder
             ->setId($id)
             ->setDsId($dsId)
             ->setName($name)
-            ->setParentId($this->parent ? $this->parent->getNode()->getId() : null)
-        ;
+            ->setParentId($this->parent ? $this->parent->getNode()->getId() : null);
 
         $this->elementStructure->addNode($elementNode);
 

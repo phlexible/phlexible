@@ -135,7 +135,11 @@ interface SiteInterface extends FindInterface
      *
      * @return CreateFileAction
      */
-    public function createFile(FolderInterface $targetFolder, FileSourceInterface $fileSource, $userId, array $attributes = array());
+    public function createFile(
+        FolderInterface $targetFolder,
+        FileSourceInterface $fileSource,
+        $userId,
+        array $attributes = array());
 
     /**
      * @param FileInterface $file

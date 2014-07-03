@@ -1,32 +1,37 @@
 .p-dialog {
-    
+
 }
+
 .p-dialog .p-header {
-    
+
 }
+
 .p-dialog .p-header .p-header-image {
     float: left;
     width: 60px;
     height: 60px;
     margin-top: 15px;
 }
+
 .p-dialog .p-header .p-header-title {
     padding-left: 15px;
-    padding-bottom:15px;
-    padding-left:60px;
-    padding-top:20px;
-    border:medium none !important;
-    color:#3A5AAB;
-    font-size:15px;
-    font-weight:bold !important;
+    padding-bottom: 15px;
+    padding-left: 60px;
+    padding-top: 20px;
+    border: medium none !important;
+    color: #3A5AAB;
+    font-size: 15px;
+    font-weight: bold !important;
 }
+
 .p-dialog .p-header .p-header-description {
-    line-height:15px;
+    line-height: 15px;
     padding-bottom: 22px !important;
     padding-right: 12px !important;
-    padding-left:60px !important;
-    padding-top:0pt !important;
+    padding-left: 60px !important;
+    padding-top: 0pt !important;
 }
+
 .p-dialog .p-dialog-form .x-form-item {
-    padding-left:60px !important;
+    padding-left: 60px !important;
 }

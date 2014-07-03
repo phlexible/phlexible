@@ -22,7 +22,7 @@ class SpecialTidChecker implements ProblemCheckerInterface
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * @param EntityManager $entityManager
@@ -48,8 +48,7 @@ class SpecialTidChecker implements ProblemCheckerInterface
                     ->setIconClass('p-frontend-component-icon')
                     ->setSeverity(Problem::SEVERITY_CRITICAL)
                     ->setMessage("No special tid for 404 page found in siteroot {$siteroot->getTitle()}.")
-                    ->setHint('Create a special tid "error_404"')
-                ;
+                    ->setHint('Create a special tid "error_404"');
 
                 $problems[] = $problem;
             }
@@ -62,8 +61,7 @@ class SpecialTidChecker implements ProblemCheckerInterface
                     ->setIconClass('p-frontend-component-icon')
                     ->setSeverity(Problem::SEVERITY_CRITICAL)
                     ->setMessage("No special tid for 500 page found in siteroot {$siteroot->getTitle()}.")
-                    ->setHint('Create a special tid "error_500"')
-                ;
+                    ->setHint('Create a special tid "error_500"');
 
                 $problems[] = $problem;
             }

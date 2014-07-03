@@ -26,8 +26,7 @@ class FlushCommand extends ContainerAwareCommand
     {
         $this
             ->setName('problems:flush')
-            ->setDescription('Flush cached problems.')
-        ;
+            ->setDescription('Flush cached problems.');
     }
 
     /**

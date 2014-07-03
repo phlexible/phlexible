@@ -4,7 +4,7 @@ Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
     hint: false,
     cls: 'p-gui-component-grid',
 
-    initComponent: function() {
+    initComponent: function () {
         this.addEvents(
             'dirty'
         );
@@ -24,10 +24,10 @@ Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
             }, Phlexible.gui.ComponentRecord),
 
             autoLoad: true,
-            sortInfo: {field: 'id',direction: 'ASC'},
+            sortInfo: {field: 'id', direction: 'ASC'},
             listeners: {
                 load: {
-                    fn: function() {
+                    fn: function () {
                         if (this.filterData) {
                             this.setFilterData(this.filterData);
                         }
@@ -37,35 +37,40 @@ Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
             }
         });
 
-        this.columns = [{
-            header: this.strings.bundle,
-            width: 250,
-            dataIndex: 'id',
-            renderer: function(id, md, r) {
-                return Phlexible.inlineIcon(r.get('icon')) + ' ' + id;
+        this.columns = [
+            {
+                header: this.strings.bundle,
+                width: 250,
+                dataIndex: 'id',
+                renderer: function (id, md, r) {
+                    return Phlexible.inlineIcon(r.get('icon')) + ' ' + id;
+                },
+                resizable: false
             },
-            resizable: false
-        },{
-            header: this.strings.package,
-            width: 100,
-            dataIndex: 'package',
-            resizable: false
-        },{
-            header: this.strings.classname,
-            width: 400,
-            dataIndex: 'classname',
-            resizable: false
-        },{
-            header: this.strings.path,
-            width: 500,
-            dataIndex: 'path',
-			hidden: true,
-            resizable: false
-        }];
+            {
+                header: this.strings.package,
+                width: 100,
+                dataIndex: 'package',
+                resizable: false
+            },
+            {
+                header: this.strings.classname,
+                width: 400,
+                dataIndex: 'classname',
+                resizable: false
+            },
+            {
+                header: this.strings.path,
+                width: 500,
+                dataIndex: 'path',
+                hidden: true,
+                resizable: false
+            }
+        ];
 
         this.view = new Ext.grid.GroupingView({
-			emptyText: Phlexible.gui.Strings.no_bundles,
-			deferEmptyText: true,
+            emptyText: Phlexible.gui.Strings.no_bundles,
+            deferEmptyText: true,
             hideGroupedColumn: true,
             groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? Phlexible.gui.Strings.bundles : Phlexible.gui.Strings.bundle]})'
         });
@@ -73,10 +78,10 @@ Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.gui.BundlesGrid.superclass.initComponent.call(this);
     },
 
-    setFilterData: function(data) {
+    setFilterData: function (data) {
         this.filterData = data;
         this.store.clearFilter();
-        this.store.filterBy(function(record, id, data){
+        this.store.filterBy(function (record, id, data) {
             if (data.packages.length && data.packages.indexOf(record.data['package']) === -1) {
                 return false;
             }

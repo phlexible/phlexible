@@ -56,11 +56,13 @@ class FrontendAssetProvider implements AssetProviderInterface
     {
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate('@PhlexibleFrontendBundle/Resources/scripts/Definitions.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleFrontendBundle/Resources/scripts/ElementPreviewPanel.js')),
-
-            new FileAsset($this->locator->locate('@PhlexibleFrontendBundle/Resources/scripts/accordion/PageAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendBundle/Resources/scripts/accordion/TeaserAccordion.js')),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleFrontendBundle/Resources/scripts/accordion/PageAccordion.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleFrontendBundle/Resources/scripts/accordion/TeaserAccordion.js'
+            )),
         ));
 
         return $collection;

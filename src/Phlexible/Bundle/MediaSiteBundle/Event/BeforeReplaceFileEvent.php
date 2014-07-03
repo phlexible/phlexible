@@ -24,13 +24,14 @@ class Media_Site_Event_BeforeReplaceFile extends Brainbits_Event_Notification_Ab
      * @param Media_Site_Folder_Abstract $folder
      * @param Media_Site_File_Abstract   $file
      */
-    public function __construct(Media_Site_Abstract        $site,
-                                Media_Site_Folder_Abstract $folder,
-                                Media_Site_File_Abstract   $file)
+    public function __construct(
+        Media_Site_Abstract $site,
+        Media_Site_Folder_Abstract $folder,
+        Media_Site_File_Abstract $file)
     {
-        $this->_site   = $site;
+        $this->_site = $site;
         $this->_folder = $folder;
-        $this->_file   = $file;
+        $this->_file = $file;
     }
 
     /**

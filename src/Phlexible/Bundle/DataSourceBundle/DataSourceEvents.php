@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\DataSourceBundle;
  *
  * @author Phillip Look <pl@brainbits.net>
  */
-interface DataSourceEvents
+class DataSourceEvents
 {
     /**
      * Fired before values are marked inactive

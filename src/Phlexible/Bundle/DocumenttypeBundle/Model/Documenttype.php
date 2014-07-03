@@ -143,7 +143,8 @@ class Documenttype
     {
         $this->mimetypes = $mimetypes;
         if (!is_array($mimetypes)) {
-            print_r($this);die;
+            print_r($this);
+            die;
         }
 
         return $this;
@@ -168,8 +169,8 @@ class Documenttype
     {
         $documentTypeKey = $this->key;
 
-        $sizes    = array(-1, 16, 32, 48, 256);
-        $imgDir  = __DIR__ . '/../Resources/public/mimetypes';
+        $sizes = array(-1, 16, 32, 48, 256);
+        $imgDir = __DIR__ . '/../Resources/public/mimetypes';
 
         if ($documentTypeKey !== null) {
             $imgFile = $documentTypeKey . '.gif';
@@ -199,8 +200,8 @@ class Documenttype
     {
         $documentTypeKey = $this->key;
 
-        $sizes    = array(-1, 16, 32, 48, 256);
-        $imgDir  = __DIR__ . '/../Resources/public/mimetypes';
+        $sizes = array(-1, 16, 32, 48, 256);
+        $imgDir = __DIR__ . '/../Resources/public/mimetypes';
 
         if ($documentTypeKey !== null) {
             $imgFile = $documentTypeKey . '.gif';

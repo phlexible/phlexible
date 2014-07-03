@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\SiterootBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -63,14 +63,14 @@ class DataController extends Controller
         // get all siteroot navigations
         foreach ($siteroot->getNavigations() as $navigation) {
             $data['navigations'][] = array(
-                'id'          => $navigation->getId(),
-                'title'       => $navigation->getTitle(),
-                'handler'     => $navigation->getHandler(),
-                'start_tid'   => $navigation->getStartTreeId(),
-                'max_depth'   => $navigation->getMaxDepth(),
-                'supports'    => '',//call_user_func(array($navigation->getHandler(), 'getSupportedFlags')),
-                'flags'       => $navigation->getFlags(),
-                'additional'  => $navigation->getAdditional()
+                'id'         => $navigation->getId(),
+                'title'      => $navigation->getTitle(),
+                'handler'    => $navigation->getHandler(),
+                'start_tid'  => $navigation->getStartTreeId(),
+                'max_depth'  => $navigation->getMaxDepth(),
+                'supports'   => '', //call_user_func(array($navigation->getHandler(), 'getSupportedFlags')),
+                'flags'      => $navigation->getFlags(),
+                'additional' => $navigation->getAdditional()
             );
         }
 
@@ -85,8 +85,8 @@ class DataController extends Controller
         foreach ($siteroot->getShortUrls() as $shortUrl) {
             $data['shorturls'][] = array(
                 'id'             => $shortUrl->getId(),
-                'global_default' => 0,//$shortUrl->getGlobalDefault(),
-                'default'        => 0,//$shortUrl->getDefault(),
+                'global_default' => 0, //$shortUrl->getGlobalDefault(),
+                'default'        => 0, //$shortUrl->getDefault(),
                 'siteroot_id'    => $siterootId,
                 'hostname'       => $shortUrl->getHostname(),
                 'path'           => $shortUrl->getPath(),
@@ -143,8 +143,8 @@ class DataController extends Controller
             foreach ($allLanguageKeys as $languageKey) {
                 /* @var $siteroot Url */
                 $languages[] = array(
-                    'language'  => $languageKey,
-                    'title' => $languageKey,
+                    'language' => $languageKey,
+                    'title'    => $languageKey,
                 );
             }
 
@@ -168,8 +168,7 @@ class DataController extends Controller
         $list = Makeweb_Navigations_Handler::getHandlers();
 
         $result = array();
-        foreach ($list as $item)
-        {
+        foreach ($list as $item) {
             $result[] = array(
                 'title'    => $item,
                 'supports' => call_user_func(array($item, 'getSupportedFlags')),

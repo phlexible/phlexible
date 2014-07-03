@@ -43,8 +43,7 @@ class XmlLoader implements LoaderInterface
             ->setTitle((string) $xml->title)
             ->setIcon((string) $xml->icon)
             ->setTemplateFolder((string) $xml->templateFolder)
-            ->setRendererClassname((string) $xml->rendererClassname)
-        ;
+            ->setRendererClassname((string) $xml->rendererClassname);
 
         return $template;
     }

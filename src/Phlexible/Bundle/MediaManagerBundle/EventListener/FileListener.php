@@ -42,7 +42,6 @@ class FileListener
 
         $file
             ->setAttribute('documenttype', $documenttype->getKey())
-            ->setAttribute('assettype', $documenttype->getType())
-        ;
+            ->setAttribute('assettype', $documenttype->getType());
     }
 }

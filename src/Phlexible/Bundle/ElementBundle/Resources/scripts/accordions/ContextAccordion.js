@@ -12,7 +12,7 @@ Phlexible.elements.ContextAccordion = Ext.extend(Ext.grid.EditorGridPanel, {
 
     key: 'context',
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.ObjectStore({
             fields: ['id', 'country', 'active'],
             id: 'id'
@@ -24,7 +24,7 @@ Phlexible.elements.ContextAccordion = Ext.extend(Ext.grid.EditorGridPanel, {
             header: this.strings.active,
             dataIndex: 'active',
             width: 50,
-            xrenderer: function(v) {
+            xrenderer: function (v) {
                 var iconCls = v ? 'tick' : 'cross';
 
                 return '<img src="' + Ext.BLANK_IMAGE_URL + '" width="16" height="16" class="p-elements-' + iconCls + '-icon" />';
@@ -35,20 +35,20 @@ Phlexible.elements.ContextAccordion = Ext.extend(Ext.grid.EditorGridPanel, {
 
         this.columns = [
             c1,
-        {
-            header: this.strings.country,
-            dataIndex: 'country',
-            renderer: function(v, md, r) {
-                var icon = Phlexible.inlineIcon('p-flags-' + r.data.id + '-icon');
+            {
+                header: this.strings.country,
+                dataIndex: 'country',
+                renderer: function (v, md, r) {
+                    var icon = Phlexible.inlineIcon('p-flags-' + r.data.id + '-icon');
 
-                return icon + ' ' + v;
-            }
-        }];
+                    return icon + ' ' + v;
+                }
+            }];
 
         Phlexible.elements.ContextAccordion.superclass.initComponent.call(this);
     },
 
-    load: function(data) {
+    load: function (data) {
         if (!Ext.isArray(data.context) || !data.context.length) {
             this.hide();
             return;
@@ -59,12 +59,12 @@ Phlexible.elements.ContextAccordion = Ext.extend(Ext.grid.EditorGridPanel, {
         this.show();
     },
 
-    getData: function() {
+    getData: function () {
         var data = [];
 
         var records = this.store.getRange();
 
-        for(var i=0; i<records.length; i++) {
+        for (var i = 0; i < records.length; i++) {
             if (records[i].data.active) {
                 data.push(records[i].data.id);
             }

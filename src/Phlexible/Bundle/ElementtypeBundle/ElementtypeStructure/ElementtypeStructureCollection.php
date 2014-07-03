@@ -27,19 +27,20 @@ class ElementtypeStructureCollection
      */
     public function __construct(array $structures = array())
     {
-        foreach ($structures as $structure)
-        {
+        foreach ($structures as $structure) {
             $this->add($structure);
         }
     }
 
     /**
      * @param ElementtypeStructure $structure
+     *
      * @return $this
      */
     public function add(ElementtypeStructure $structure)
     {
-        $index = $structure->getElementTypeVersion()->getElementtype()->getId() . '___' . $structure->getElementTypeVersion()->getVersion();
+        $index = $structure->getElementTypeVersion()->getElementtype()->getId(
+            ) . '___' . $structure->getElementTypeVersion()->getVersion();
         $this->structures[$index] = $structure;
 
         return $this;
@@ -47,6 +48,7 @@ class ElementtypeStructureCollection
 
     /**
      * @param ElementtypeVersion $elementtypeVersion
+     *
      * @return ElementtypeStructure|null
      */
     public function get(ElementtypeVersion $elementtypeVersion)

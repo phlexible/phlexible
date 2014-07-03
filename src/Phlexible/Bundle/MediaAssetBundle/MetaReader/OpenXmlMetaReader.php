@@ -48,54 +48,54 @@ class OpenXmlMetaReader implements MetaReaderInterface
         try {
             $mydoc = \OpenXMLDocumentFactory::openDocument($filename);
 
-            $createdBy = (string)$mydoc->getCreator();
+            $createdBy = (string) $mydoc->getCreator();
             if (!empty($createdBy)) {
-                $metaData->set('createdBy', (string)$createdBy);
+                $metaData->set('createdBy', (string) $createdBy);
             }
 
-            $subject = (string)$mydoc->getSubject();
+            $subject = (string) $mydoc->getSubject();
             if (!empty($subject)) {
-                $metaData->set('subject', (string)$subject);
+                $metaData->set('subject', (string) $subject);
             }
 
-            $keywords = (string)$mydoc->getKeywords();
+            $keywords = (string) $mydoc->getKeywords();
             if (!empty($keywords)) {
-                $metaData->set('keywords', (string)$keywords);
+                $metaData->set('keywords', (string) $keywords);
             }
 
-            $description = (string)$mydoc->getDescription();
+            $description = (string) $mydoc->getDescription();
             if (!empty($description)) {
-                $metaData->set('description', (string)$description);
+                $metaData->set('description', (string) $description);
             }
 
-            $createdAt = (string)$mydoc->getCreationDate();
+            $createdAt = (string) $mydoc->getCreationDate();
             if (!empty($createdAt)) {
-                $metaData->set('createdAt', (string)$createdAt);
+                $metaData->set('createdAt', (string) $createdAt);
             }
 
-            $lastModified = (string)$mydoc->getLastModificationDate();
+            $lastModified = (string) $mydoc->getLastModificationDate();
             if (!empty($lastModified)) {
-                $metaData->set('lastModified', (string)$lastModified);
+                $metaData->set('lastModified', (string) $lastModified);
             }
 
-            $lastModifiedBy = (string)$mydoc->getLastWriter();
+            $lastModifiedBy = (string) $mydoc->getLastWriter();
             if (!empty($lastModifiedBy)) {
-                $metaData->set('lastModified', (string)$lastModifiedBy);
+                $metaData->set('lastModified', (string) $lastModifiedBy);
             }
 
-            $revision = (string)$mydoc->getRevision();
+            $revision = (string) $mydoc->getRevision();
             if (!empty($revision)) {
-                $metaData->set('revision', (string)$revision);
+                $metaData->set('revision', (string) $revision);
             }
 
-            $application = (string)$mydoc->getApplication();
+            $application = (string) $mydoc->getApplication();
             if (!empty($application)) {
-                $metaData->set('application', (string)$application);
+                $metaData->set('application', (string) $application);
             }
 
-            $company = (string)$mydoc->getCompany();
+            $company = (string) $mydoc->getCompany();
             if (!empty($company)) {
-                $metaData->set('company', (string)$company);
+                $metaData->set('company', (string) $company);
             }
 
             $metaBag->add($metaData);

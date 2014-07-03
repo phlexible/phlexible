@@ -1,4 +1,4 @@
-Phlexible.dashboard.Message = function(){
+Phlexible.dashboard.Message = function () {
     this.addEvents(
         'start'
     );

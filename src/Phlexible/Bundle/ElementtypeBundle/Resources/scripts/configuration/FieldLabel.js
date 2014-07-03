@@ -8,99 +8,120 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
     defaultType: 'textfield',
     labelWidth: 120,
 
-    initComponent: function() {
-        this.items = [{
-            xtype: 'fieldset',
-            title: this.strings.fieldlabel,
-            autoHeight: true,
-            width: 350,
-            items:[ {
-                xtype: 'textfield',
-                fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
-                name: 'fieldlabel_de',
-                allowBlank: false,
-                width: 200
-            },{
-                xtype: 'textfield',
-                fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
-                name: 'fieldlabel_en',
-                allowBlank: false,
-                width: 200
-            }]
-        },{
-            xtype: 'fieldset',
-            title: this.strings.boxlabel,
-            autoHeight: true,
-            width: 350,
-            items:[ {
-                xtype: 'textfield',
-                fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
-                name: 'boxlabel_de',
-                width: 200
-            },{
-                xtype: 'textfield',
-                fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
-                name: 'boxlabel_en',
-                width: 200
-            }]
-        },{
-            xtype: 'fieldset',
-            title: this.strings.prefix,
-            autoHeight: true,
-            collapsible: true,
-            collapsed: true,
-            width: 350,
-            items:[ {
-                xtype: 'textfield',
-                fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
-                name: 'prefix_de',
-                width: 200
-            },{
-                xtype: 'textfield',
-                fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
-                name: 'prefix_en',
-                width: 200
-            }]
-        },{
-            xtype: 'fieldset',
-            title: this.strings.suffix,
-            autoHeight: true,
-            collapsible: true,
-            collapsed: true,
-            width: 350,
-            items:[ {
-                xtype: 'textfield',
-                fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
-                name: 'suffix_de',
-                width: 200
-            },{
-                xtype: 'textfield',
-                fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
-                name: 'suffix_en',
-                width: 200
-            }]
-        },{
-            xtype: 'fieldset',
-            title: this.strings.context_help,
-            autoHeight: true,
-            width: 350,
-            items: [{
-                xtype: 'textarea',
-                fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
-                name: 'context_help_de',
-                width: 200
-            },{
-                xtype: 'textarea',
-                fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
-                name: 'context_help_en',
-                width: 200
-            }]
-        }];
+    initComponent: function () {
+        this.items = [
+            {
+                xtype: 'fieldset',
+                title: this.strings.fieldlabel,
+                autoHeight: true,
+                width: 350,
+                items: [
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        name: 'fieldlabel_de',
+                        allowBlank: false,
+                        width: 200
+                    },
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        name: 'fieldlabel_en',
+                        allowBlank: false,
+                        width: 200
+                    }
+                ]
+            },
+            {
+                xtype: 'fieldset',
+                title: this.strings.boxlabel,
+                autoHeight: true,
+                width: 350,
+                items: [
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        name: 'boxlabel_de',
+                        width: 200
+                    },
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        name: 'boxlabel_en',
+                        width: 200
+                    }
+                ]
+            },
+            {
+                xtype: 'fieldset',
+                title: this.strings.prefix,
+                autoHeight: true,
+                collapsible: true,
+                collapsed: true,
+                width: 350,
+                items: [
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        name: 'prefix_de',
+                        width: 200
+                    },
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        name: 'prefix_en',
+                        width: 200
+                    }
+                ]
+            },
+            {
+                xtype: 'fieldset',
+                title: this.strings.suffix,
+                autoHeight: true,
+                collapsible: true,
+                collapsed: true,
+                width: 350,
+                items: [
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        name: 'suffix_de',
+                        width: 200
+                    },
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        name: 'suffix_en',
+                        width: 200
+                    }
+                ]
+            },
+            {
+                xtype: 'fieldset',
+                title: this.strings.context_help,
+                autoHeight: true,
+                width: 350,
+                items: [
+                    {
+                        xtype: 'textarea',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        name: 'context_help_de',
+                        width: 200
+                    },
+                    {
+                        xtype: 'textarea',
+                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        name: 'context_help_en',
+                        width: 200
+                    }
+                ]
+            }
+        ];
 
         Phlexible.elementtypes.configuration.FieldLabel.superclass.initComponent.call(this);
     },
 
-    updateVisibility: function(fieldType) {
+    updateVisibility: function (fieldType) {
         // field
         if (fieldType.config.labels.field) {
             this.getComponent(0).show();
@@ -141,24 +162,24 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
         }
     },
 
-    loadData: function(fieldData, fieldType) {
+    loadData: function (fieldData, fieldType) {
         this.updateVisibility(fieldType);
 
-		fieldData.fieldlabel = fieldData.fieldlabel || {};
-		fieldData.boxlabel = fieldData.boxlabel || {};
-		fieldData.prefix = fieldData.prefix || {};
-		fieldData.suffix = fieldData.suffix || {};
-		fieldData.context_help = fieldData.context_help || {};
+        fieldData.fieldlabel = fieldData.fieldlabel || {};
+        fieldData.boxlabel = fieldData.boxlabel || {};
+        fieldData.prefix = fieldData.prefix || {};
+        fieldData.suffix = fieldData.suffix || {};
+        fieldData.context_help = fieldData.context_help || {};
 
         this.getForm().setValues([
-            {id: 'fieldlabel_de',   value: fieldData.fieldlabel.de},
-            {id: 'fieldlabel_en',   value: fieldData.fieldlabel.en},
-            {id: 'boxlabel_de',     value: fieldData.boxlabel.de},
-            {id: 'boxlabel_en',     value: fieldData.boxlabel.en},
-            {id: 'prefix_de',       value: fieldData.prefix.de},
-            {id: 'prefix_en',       value: fieldData.prefix.en},
-            {id: 'suffix_de',       value: fieldData.suffix.de},
-            {id: 'suffix_en',       value: fieldData.suffix.en},
+            {id: 'fieldlabel_de', value: fieldData.fieldlabel.de},
+            {id: 'fieldlabel_en', value: fieldData.fieldlabel.en},
+            {id: 'boxlabel_de', value: fieldData.boxlabel.de},
+            {id: 'boxlabel_en', value: fieldData.boxlabel.en},
+            {id: 'prefix_de', value: fieldData.prefix.de},
+            {id: 'prefix_en', value: fieldData.prefix.en},
+            {id: 'suffix_de', value: fieldData.suffix.de},
+            {id: 'suffix_en', value: fieldData.suffix.en},
             {id: 'context_help_de', value: fieldData.context_help.de},
             {id: 'context_help_en', value: fieldData.context_help.en}
         ]);
@@ -166,7 +187,7 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
         this.isValid();
     },
 
-    getSaveValues: function() {
+    getSaveValues: function () {
         var values = this.getForm().getValues();
 
         return {
@@ -193,8 +214,8 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
         };
     },
 
-    isValid: function() {
-        if(this.getForm().isValid()) {
+    isValid: function () {
+        if (this.getForm().isValid()) {
             //this.header.child('span').removeClass('error');
             this.setIconClass('p-elementtype-tab_labels-icon');
 
@@ -207,7 +228,7 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
         }
     },
 
-    loadField: function(properties, node, fieldType) {
+    loadField: function (properties, node, fieldType) {
         if (fieldType.config.labels) {
             this.ownerCt.getTabEl(this).hidden = false;
             this.loadData(properties.labels, fieldType);

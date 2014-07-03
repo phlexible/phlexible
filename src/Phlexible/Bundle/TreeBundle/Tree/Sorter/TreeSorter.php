@@ -41,25 +41,23 @@ class TreeSorter
      * Return meta
      *
      * @param Tree $tree
+     *
      * @return array
      */
     public function sortTree(Tree $tree)
     {
         $rii = new \RecursiveIteratorIterator($tree->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
 
-        foreach ($rii as $node)
-        {
+        foreach ($rii as $node) {
             /* @var $node TreeNode */
 
-            if (!$node->hasChildren())
-            {
+            if (!$node->hasChildren()) {
                 continue;
             }
 
             $sortedChildren = $this->_getSortedChildren($node);
 
-            foreach ($sortedChildren as $sort => $tid)
-            {
+            foreach ($sortedChildren as $sort => $tid) {
                 $sort++;
                 $this->_db->update(
                     $this->_db->prefix . 'element_tree',
@@ -72,17 +70,18 @@ class TreeSorter
         $tree->_getMeta(true);
     }
 
+    /**
+     * @param TreeNode $node
+     */
     public function sortNode(TreeNode $node)
     {
-        if (!$node->hasChildren())
-        {
+        if (!$node->hasChildren()) {
             return;
         }
 
         $sortedChildren = $this->_getSortedChildren($node);
 
-        foreach ($sortedChildren as $sort => $tid)
-        {
+        foreach ($sortedChildren as $sort => $tid) {
             $sort++;
             $this->_db->update(
                 $this->_db->prefix . 'element_tree',
@@ -96,12 +95,12 @@ class TreeSorter
 
     protected function _getSortedChildren(TreeNode $node)
     {
-        $db       = $this->_db;
+        $db = $this->_db;
         $sortLang = $this->_sortLang;
 
         $parentId = $node->getId();
         $sortMode = $node->getSortMode();
-        $sortDir  = $node->getSortDir();
+        $sortDir = $node->getSortDir();
 
         $select = $db->select()
             ->from(
@@ -112,8 +111,7 @@ class TreeSorter
             )
             ->where('et.parent_id = ?', $parentId);
 
-        switch ($sortMode)
-        {
+        switch ($sortMode) {
             case TreeInterface::SORT_MODE_TITLE:
                 $select
                     ->joinLeft(
@@ -123,7 +121,9 @@ class TreeSorter
                     )
                     ->joinLeft(
                         array('evt' => $db->prefix . 'element_version_titles'),
-                        'e.eid = evt.eid AND e.latest_version = evt.version AND evt.language = ' . $db->quote($sortLang),
+                        'e.eid = evt.eid AND e.latest_version = evt.version AND evt.language = ' . $db->quote(
+                            $sortLang
+                        ),
                         array()
                     )
                     ->order('evt.backend ' . $sortDir);
@@ -152,7 +152,9 @@ class TreeSorter
                     )
                     ->joinLeft(
                         array('evt' => $db->prefix . 'element_version_titles'),
-                        'e.eid = evt.eid AND e.latest_version = evt.version AND evt.language = ' . $db->quote($sortLang),
+                        'e.eid = evt.eid AND e.latest_version = evt.version AND evt.language = ' . $db->quote(
+                            $sortLang
+                        ),
                         array()
                     )
                     ->order('evt.date ' . $sortDir);

@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\TreeBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\TreeBundle\ContentTree\Dumper\XmlDumper;
 use Phlexible\Bundle\TreeBundle\ContentTree\XmlContentTree;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,8 +30,7 @@ class DumpCommand extends ContainerAwareCommand
         $this
             ->setName('tree:dump')
             ->setDescription('Dump tree.')
-            ->addArgument('siterootId', InputArgument::REQUIRED, 'Siteroot ID')
-        ;
+            ->addArgument('siterootId', InputArgument::REQUIRED, 'Siteroot ID');
     }
 
     /**
@@ -55,18 +54,18 @@ class DumpCommand extends ContainerAwareCommand
         print_r($loadedTree->getUrls());
         die;
         $root = $loadedTree->getRoot();
-        echo $root->getId().PHP_EOL;
+        echo $root->getId() . PHP_EOL;
         foreach ($loadedTree->getChildren($root) as $node) {
-            echo ' ' .$node->getId().PHP_EOL;
+            echo ' ' . $node->getId() . PHP_EOL;
             foreach ($loadedTree->getChildren($node) as $subNode) {
-                echo '  '.$subNode->getId().PHP_EOL;
+                echo '  ' . $subNode->getId() . PHP_EOL;
             }
         }
-        echo $loadedTree->isParentOf(1086, 1088).PHP_EOL;
-        echo $loadedTree->isParentOf(1088, 1086).PHP_EOL;
-        echo $loadedTree->isChildOf(1088, 1086).PHP_EOL;
-        echo $loadedTree->isChildOf(1086, 1088).PHP_EOL;
-        echo $loadedTree->isParentOf(1, 1088).PHP_EOL;
+        echo $loadedTree->isParentOf(1086, 1088) . PHP_EOL;
+        echo $loadedTree->isParentOf(1088, 1086) . PHP_EOL;
+        echo $loadedTree->isChildOf(1088, 1086) . PHP_EOL;
+        echo $loadedTree->isChildOf(1086, 1088) . PHP_EOL;
+        echo $loadedTree->isParentOf(1, 1088) . PHP_EOL;
 
         return 0;
     }

@@ -16,8 +16,8 @@ use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface FindInterface {
-
+interface FindInterface
+{
     /**
      * @return FolderInterface
      */
@@ -90,7 +90,12 @@ interface FindInterface {
      *
      * @return FileInterface[]
      */
-    public function findFilesByFolder(FolderInterface $folder, $order = null, $limit = null, $start = null, $includeHidden = false);
+    public function findFilesByFolder(
+        FolderInterface $folder,
+        $order = null,
+        $limit = null,
+        $start = null,
+        $includeHidden = false);
 
     /**
      * @param FolderInterface $folder

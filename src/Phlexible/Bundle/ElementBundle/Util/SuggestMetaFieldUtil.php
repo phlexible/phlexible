@@ -35,7 +35,7 @@ class SuggestMetaFieldUtil
      */
     public function __construct(ConnectionManager $dbPool, $seperatorChar)
     {
-        $this->_dbPool        = $dbPool;
+        $this->_dbPool = $dbPool;
         $this->_seperatorChar = $seperatorChar;
     }
 
@@ -50,32 +50,32 @@ class SuggestMetaFieldUtil
         $db = $this->_dbPool->read;
 
         $sql = $db->select()
-                  ->distinct()
+            ->distinct()
 
-                  // used to limit on element type version
-                  ->from(
-                      array('ev' => $db->prefix . 'element_version'),
-                      array()
-                  )
+            // used to limit on element type version
+            ->from(
+                array('ev' => $db->prefix . 'element_version'),
+                array()
+            )
 
-                  // connection to content table element data language
-                  ->join(
-                      array('evmi' => $db->prefix . 'element_version_metaset_items'),
-                      'evmi.eid = ev.eid AND ' .
-                      'evmi.version = ev.version AND ' .
-                      'evmi.language = :language',
-                      array('value')
-                  )
+            // connection to content table element data language
+            ->join(
+                array('evmi' => $db->prefix . 'element_version_metaset_items'),
+                'evmi.eid = ev.eid AND ' .
+                'evmi.version = ev.version AND ' .
+                'evmi.language = :language',
+                array('value')
+            )
 
-                  // used to limit on suggest fields and data source id
-                  ->join(
-                      array('msk' => $db->prefix . 'meta_set_keys'),
-                      'msk.set_id = evmi.set_id AND ' .
-                      'msk.key = evmi.key AND ' .
-                      'msk.type = :field_type AND ' .
-                      'msk.options = :datasource_id',
-                      array()
-                  );
+            // used to limit on suggest fields and data source id
+            ->join(
+                array('msk' => $db->prefix . 'meta_set_keys'),
+                'msk.set_id = evmi.set_id AND ' .
+                'msk.key = evmi.key AND ' .
+                'msk.type = :field_type AND ' .
+                'msk.options = :datasource_id',
+                array()
+            );
 
         $bind = array(
             ':language'      => $language,
@@ -102,39 +102,39 @@ class SuggestMetaFieldUtil
         $db = $this->_dbPool->read;
 
         $sql = $db->select()
-                  ->distinct()
+            ->distinct()
 
-                  // fetch only online element versions
-                  ->from(
-                      array('eto' => $db->prefix . 'element_tree_online'),
-                      array()
-                  )
+            // fetch only online element versions
+            ->from(
+                array('eto' => $db->prefix . 'element_tree_online'),
+                array()
+            )
 
-                  // used to limit on element type version
-                  ->join(
-                      array('ev' => $db->prefix . 'element_version'),
-                      'eto.eid = ev.eid AND eto.version = ev.version',
-                      array()
-                  )
+            // used to limit on element type version
+            ->join(
+                array('ev' => $db->prefix . 'element_version'),
+                'eto.eid = ev.eid AND eto.version = ev.version',
+                array()
+            )
 
-                  // connection to content table element data language
-                  ->join(
-                      array('evmi' => $db->prefix . 'element_version_metaset_items'),
-                      'evmi.eid = ev.eid AND ' .
-                      'evmi.version = ev.version AND ' .
-                      'evmi.language = :language',
-                      array('value')
-                  )
+            // connection to content table element data language
+            ->join(
+                array('evmi' => $db->prefix . 'element_version_metaset_items'),
+                'evmi.eid = ev.eid AND ' .
+                'evmi.version = ev.version AND ' .
+                'evmi.language = :language',
+                array('value')
+            )
 
-                  // used to limit on suggest fields and data source id
-                  ->join(
-                      array('msk' => $db->prefix . 'meta_set_keys'),
-                      'msk.set_id = evmi.set_id AND ' .
-                      'msk.key = evmi.key AND ' .
-                      'msk.type = :field_type AND ' .
-                      'msk.options = :datasource_id',
-                      array()
-                  );
+            // used to limit on suggest fields and data source id
+            ->join(
+                array('msk' => $db->prefix . 'meta_set_keys'),
+                'msk.set_id = evmi.set_id AND ' .
+                'msk.key = evmi.key AND ' .
+                'msk.type = :field_type AND ' .
+                'msk.options = :datasource_id',
+                array()
+            );
 
         $bind = array(
             ':language'      => $language,
@@ -160,16 +160,13 @@ class SuggestMetaFieldUtil
     public function splitSuggestValues(array $concatenated)
     {
         $keys = array();
-        foreach ($concatenated as $value)
-        {
+        foreach ($concatenated as $value) {
             $splitted = explode($this->_seperatorChar, $value);
-            foreach ($splitted as $key)
-            {
+            foreach ($splitted as $key) {
                 $key = trim($key);
 
                 // skip empty values
-                if (strlen($key))
-                {
+                if (strlen($key)) {
                     $keys[] = $key;
                 }
             }

@@ -27,12 +27,13 @@ class DeleteCommand extends ContainerAwareCommand
     {
         $this
             ->setName('user:delete')
-            ->setDefinition(array(
-                new InputArgument('username', InputArgument::REQUIRED, 'Username / User ID to delete'),
-                new InputArgument('successor', null, InputArgument::REQUIRED, 'Username / User ID to set as successor'),
-            ))
-            ->setDescription('Delete user')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('username', InputArgument::REQUIRED, 'Username / User ID to delete'),
+                    new InputArgument('successor', null, InputArgument::REQUIRED, 'Username / User ID to set as successor'),
+                )
+            )
+            ->setDescription('Delete user');
     }
 
     /**
@@ -40,7 +41,7 @@ class DeleteCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $username  = $input->getArgument('username');
+        $username = $input->getArgument('username');
         $successorUsername = $input->getArgument('successor');
 
         $uid = $this->findUser($username);
@@ -58,11 +59,10 @@ class DeleteCommand extends ContainerAwareCommand
 
     private function findUser($username)
     {
-        $validator      = new \Brainbits_Validate_Uuid();
-        $usernameIsUid  = $validator->isValid($username);
+        $validator = new \Brainbits_Validate_Uuid();
+        $usernameIsUid = $validator->isValid($username);
 
-        if ($usernameIsUid)
-        {
+        if ($usernameIsUid) {
             return $username;
         }
 
@@ -73,9 +73,8 @@ class DeleteCommand extends ContainerAwareCommand
             ->where('username = ?', $username);
         $uid = $db->fetchOne($select);
 
-        if (!$uid)
-        {
-            throw new \Exception('User '.$username.' not found.');
+        if (!$uid) {
+            throw new \Exception('User ' . $username . ' not found.');
         }
 
         return $uid;

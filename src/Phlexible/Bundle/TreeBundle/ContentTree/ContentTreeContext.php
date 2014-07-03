@@ -43,7 +43,11 @@ class ContentTreeContext
      * @param int               $maxDepth
      * @param int               $depth
      */
-    public function __construct(TreeNodeInterface $node, TreeNodeInterface $referenceNode = null, $maxDepth = null, $depth = 0)
+    public function __construct(
+        TreeNodeInterface $node,
+        TreeNodeInterface $referenceNode = null,
+        $maxDepth = null,
+        $depth = 0)
     {
         $this->node = $node;
         $this->referenceNode = $referenceNode;
@@ -144,7 +148,9 @@ class ContentTreeContext
      */
     public function parent()
     {
-        return new self($this->node->getTree()->getParent($this->node), $this->referenceNode, $this->maxDepth, $this->depth - 1);
+        return new self($this->node->getTree()->getParent(
+            $this->node
+        ), $this->referenceNode, $this->maxDepth, $this->depth - 1);
     }
 
     /**

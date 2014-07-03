@@ -1,4 +1,4 @@
-Phlexible.metasets.Fields = function(config) {
+Phlexible.metasets.Fields = function (config) {
     this.initFields();
     this.initEditors();
     this.initSelectEditorCallbacks();
@@ -8,27 +8,27 @@ Phlexible.metasets.Fields = function(config) {
     Phlexible.metasets.Fields.superclass.constructor.call(this, config);
 };
 Ext.extend(Phlexible.metasets.Fields, Ext.util.Observable, {
-    getFields: function() {
+    getFields: function () {
         return this.fields;
     },
 
-    getEditors: function() {
+    getEditors: function () {
         return this.editors;
     },
 
-    getSelectEditorCallbacks: function() {
+    getSelectEditorCallbacks: function () {
         return this.selectEditorCallbacks;
     },
 
-    getBeforeEditCallbacks: function() {
+    getBeforeEditCallbacks: function () {
         return this.beforeEditCallbacks;
     },
 
-    getAfterEditCallbacks: function() {
+    getAfterEditCallbacks: function () {
         return this.afterEditCallbacks;
     },
 
-    initFields: function() {
+    initFields: function () {
         this.fields = [
             ['textfield', 'Textfield'],
             ['textarea', 'Textarea'],
@@ -39,7 +39,7 @@ Ext.extend(Phlexible.metasets.Fields, Ext.util.Observable, {
         ];
     },
 
-    initEditors: function() {
+    initEditors: function () {
         this.editors = {
             textfield: new Ext.form.TextField(),
             textarea: new Ext.form.TextArea(),
@@ -49,7 +49,10 @@ Ext.extend(Phlexible.metasets.Fields, Ext.util.Observable, {
             'boolean': new Ext.form.ComboBox({
                 store: new Ext.data.SimpleStore({
                     fields: ['value'],
-                    data: [['true'], ['false']]
+                    data: [
+                        ['true'],
+                        ['false']
+                    ]
                 }),
                 displayField: 'value',
                 mode: 'local',
@@ -71,17 +74,17 @@ Ext.extend(Phlexible.metasets.Fields, Ext.util.Observable, {
         };
     },
 
-    initSelectEditorCallbacks: function() {
+    initSelectEditorCallbacks: function () {
         this.selectEditorCallbacks = {
-            select: function(editor, record) {
+            select: function (editor, record) {
                 editor.field.store.loadData(record.data.options);
             }
         };
     },
 
-    initBeforeEditCallbacks: function() {
+    initBeforeEditCallbacks: function () {
         this.beforeEditCallbacks = {
-            suggest: function(grid, field, record) {
+            suggest: function (grid, field, record) {
                 if (grid.master !== undefined) {
                     var isSynchronized = (1 == record.get('synchronized'));
 
@@ -96,7 +99,7 @@ Ext.extend(Phlexible.metasets.Fields, Ext.util.Observable, {
                     valueField: field,
                     metaLanguage: grid.language,
                     listeners: {
-                        store: function() {
+                        store: function () {
                             grid.validateMeta();
                         }
                     }
@@ -109,7 +112,7 @@ Ext.extend(Phlexible.metasets.Fields, Ext.util.Observable, {
         };
     },
 
-    initAfterEditCallbacks: function() {
+    initAfterEditCallbacks: function () {
         this.afterEditCallbacks = {};
     }
 });

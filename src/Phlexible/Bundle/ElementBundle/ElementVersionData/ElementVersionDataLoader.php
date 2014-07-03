@@ -8,13 +8,13 @@
 
 namespace Phlexible\Bundle\ElementBundle\ElementVersionData;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersion;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureIterator;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
+use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Element version data
@@ -26,9 +26,9 @@ class ElementVersionDataLoader
 {
     const CACHE_VERSION = 1;
 
-    const MODE_BACKEND  = 'backend';
+    const MODE_BACKEND = 'backend';
     const MODE_FRONTEND = 'frontend';
-    const MODE_DIFF     = 'diff';
+    const MODE_DIFF = 'diff';
 
     /**
      * @var \Zend_Db_Adapter_Abstract
@@ -52,7 +52,10 @@ class ElementVersionDataLoader
      * @param FieldRegistry      $fieldRegistry
      * @param ElementtypeService $elementtypeService
      */
-    public function __construct(ConnectionManager $connectionManager, FieldRegistry $fieldRegistry, ElementtypeService $elementtypeService)
+    public function __construct(
+        ConnectionManager $connectionManager,
+        FieldRegistry $fieldRegistry,
+        ElementtypeService $elementtypeService)
     {
         $this->db = $connectionManager->default;
         $this->fieldRegistry = $fieldRegistry;
@@ -78,7 +81,7 @@ class ElementVersionDataLoader
         $this->version = $elementVersion->getVersion();
         $this->language = $language;
 
-        $contentFlat  = $this->queryData($this->eid, $this->language, $this->version);
+        $contentFlat = $this->queryData($this->eid, $this->language, $this->version);
 
         $contentArray = array();
 
@@ -119,7 +122,7 @@ class ElementVersionDataLoader
         $select = $this->db
             ->select()
             ->from(
-                array('ed' => $this->db->prefix.'element_data'),
+                array('ed' => $this->db->prefix . 'element_data'),
                 array(
                     'data_id AS id',
                     'repeatable_node',
@@ -131,8 +134,10 @@ class ElementVersionDataLoader
                 )
             )
             ->joinLeft(
-                array('edl' => $this->db->prefix.'element_data_language'),
-                'ed.eid = edl.eid AND ed.version = edl.version AND ed.data_id = edl.data_id AND edl.language = ' . $this->db->quote($language),
+                array('edl' => $this->db->prefix . 'element_data_language'),
+                'ed.eid = edl.eid AND ed.version = edl.version AND ed.data_id = edl.data_id AND edl.language = ' . $this->db->quote(
+                    $language
+                ),
                 array('content', 'content_options' => 'options')
             )
             ->where('ed.eid = ?', $eid)
@@ -143,10 +148,11 @@ class ElementVersionDataLoader
         return $result;
     }
 
-    protected function recurseData(ElementtypeStructure $tree,
-                                   array $contentArray,
-                                   $currentDsId = null,
-                                   $repeatableId = null)
+    protected function recurseData(
+        ElementtypeStructure $tree,
+        array $contentArray,
+        $currentDsId = null,
+        $repeatableId = null)
     {
         $data = array();
         $indexCnt = 0;
@@ -163,14 +169,13 @@ class ElementVersionDataLoader
             $currentNode = $tree->getNode($currentDsId);
         }
 
-if(!$currentNode)
-{
-    echo '<pre>No current node!'.PHP_EOL;
-    echo 'current ds id: '.$currentDsId.PHP_EOL;
-    print_r($tree);
-    echo Brainbits_Debug_Backtrace::staticStackDump(true);
-    die;
-}
+        if (!$currentNode) {
+            echo '<pre>No current node!' . PHP_EOL;
+            echo 'current ds id: ' . $currentDsId . PHP_EOL;
+            print_r($tree);
+            echo Brainbits_Debug_Backtrace::staticStackDump(true);
+            die;
+        }
 
         $sortable = false;
         if ($currentNode->getConfigurationValue('sortable') === 'on') {
@@ -192,12 +197,12 @@ if(!$currentNode)
                 $node = $dummy[0];
             }
 
-            $dsId     = $node->getDsId();
-            $type     = $node->getType();
+            $dsId = $node->getDsId();
+            $type = $node->getType();
 
             $useNewRepeatableId = false;
             if (!empty($contentArray['node'][$dsId])) {
-                $useNewRepeatableId   = true;
+                $useNewRepeatableId = true;
                 $childRepeatableNodes = $contentArray['node'][$dsId];
             }
             if (!empty($contentArray['repeatable'][$repeatableId][$dsId])) {
@@ -212,7 +217,7 @@ if(!$currentNode)
                 if ($useNewRepeatableId) {
                     $newRepeatableId = $childRepeatableId;
                 } else {
-                     $newRepeatableId = $repeatableId;
+                    $newRepeatableId = $repeatableId;
                 }
 
                 $children = $this->recurseData($tree, $contentArray, $node->getDsId(), $newRepeatableId);
@@ -238,7 +243,7 @@ if(!$currentNode)
                         'ds_id'            => $dsId,
                         'parent_id'        => $node->getParentId(),
                         'type'             => $type,
-//                        'data_content'     => '',
+                        //                        'data_content'     => '',
                         'working_title'    => $node->getName(),
                         'configuration'    => $node->getConfiguration(),
                         'validation'       => $node->getValidation(),
@@ -249,11 +254,11 @@ if(!$currentNode)
                     );
 
                     if ($contentNode) {
-                        $dataNode['data_id']      = $contentNode['id'];
-                        $dataNode['data_sort']    = $contentNode['sort'];
+                        $dataNode['data_id'] = $contentNode['id'];
+                        $dataNode['data_sort'] = $contentNode['sort'];
                         $dataNode['data_content'] = $contentNode['content'];
                         $dataNode['data_options'] = $contentNode['content_options'];
-                        $dataNode['data_cnt']     = 1;
+                        $dataNode['data_cnt'] = 1;
 
                         if (mb_strlen($dataNode['data_options'])) {
                             $dataNode['data_options'] = unserialize($dataNode['data_options']);
@@ -261,7 +266,7 @@ if(!$currentNode)
                             if (!empty($dataNode['data_options']['unlinked'])) {
                                 $dummySelect = $this->db
                                     ->select()
-                                    ->from($this->db->prefix.'element_data_language', 'content')
+                                    ->from($this->db->prefix . 'element_data_language', 'content')
                                     ->where('eid = ?', $this->eid)
                                     ->where('version = ?', $this->version)
                                     ->where('data_id = ?', $dataNode['data_id'])
@@ -272,7 +277,10 @@ if(!$currentNode)
                         }
                     }
 
-                    if ($type != 'group' && $type != 'accordion' && $type != 'tab' && !mb_strlen($dataNode['data_content'])) {
+                    if ($type != 'group' && $type != 'accordion' && $type != 'tab' && !mb_strlen(
+                            $dataNode['data_content']
+                        )
+                    ) {
                         $dataNode['empty'] = true;
                     }
 
@@ -281,8 +289,8 @@ if(!$currentNode)
                     try {
                         $dataNode = $field->transform($dataNode, $this->eid, $this->version, $this->language);
                     } catch (\Exception $e) {
-                        echo $e->getMessage().'<pre>';
-                        echo $e->getTraceAsString().PHP_EOL;
+                        echo $e->getMessage() . '<pre>';
+                        echo $e->getTraceAsString() . PHP_EOL;
                         print_r($dataNode);
                         die;
                     }
@@ -298,12 +306,14 @@ if(!$currentNode)
                             $dataNode['empty'] = true;
                         }
                     }
-                } else if (count($children)) {
-                    reset($children);
-                    $dataNode = current($children);
                 } else {
-                    print_r($children);
-                    die('ERROR');
+                    if (count($children)) {
+                        reset($children);
+                        $dataNode = current($children);
+                    } else {
+                        print_r($children);
+                        die('ERROR');
+                    }
                 }
 
                 if ($sortable && isset($dataNode['data_sort'])) {
@@ -324,7 +334,8 @@ if(!$currentNode)
                     isset($dataNode['configuration']['repeat_min']) &&
                     strlen($dataNode['configuration']['repeat_min']) &&
                     $dataNode['configuration']['repeat_min'] == 0 &&
-                    empty($dataNode['data_cnt'])) {
+                    empty($dataNode['data_cnt'])
+                ) {
                     unset($data[$key]);
                     continue;
                 }
@@ -332,15 +343,15 @@ if(!$currentNode)
                 $repeatable = false;
 
                 if (!empty($dataNode['configuration']['repeat_max']) && $dataNode['configuration']['repeat_max'] > 1) {
-                   $repeatable = true;
+                    $repeatable = true;
                 }
 
                 unset($dataNode['data_options']);
                 unset($dataNode['configuration']);
                 unset($dataNode['validation']);
                 unset($dataNode['help']);
-//                unset($dataNode['prefix']);
-//                unset($dataNode['suffix']);
+                //                unset($dataNode['prefix']);
+                //                unset($dataNode['suffix']);
 
                 $workingTitle = $dataNode['working_title'];
 

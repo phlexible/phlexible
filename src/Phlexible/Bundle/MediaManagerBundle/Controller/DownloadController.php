@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,7 +30,7 @@ class DownloadController extends Controller
      */
     public function fileAction(Request $request)
     {
-        $fileId      = $request->get('id');
+        $fileId = $request->get('id');
         $fileVersion = $request->get('version', null);
 
         $site = $this->get('mediasite.manager')->getByFileId($fileId);
@@ -64,6 +64,6 @@ class DownloadController extends Controller
         }
 
         return $this->get('igorw_file_serve.response_factory')
-                    ->create($filepath, 'application/zip', array('absolute_path' => true));
+            ->create($filepath, 'application/zip', array('absolute_path' => true));
     }
 }

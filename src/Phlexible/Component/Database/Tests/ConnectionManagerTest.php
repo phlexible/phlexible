@@ -84,7 +84,7 @@ class ConnectionManagerTest extends TestCase
      */
     protected function createManager()
     {
-       return new ConnectionManager();
+        return new ConnectionManager();
     }
 
     /**
@@ -94,14 +94,13 @@ class ConnectionManagerTest extends TestCase
      */
     protected function createDummyConnection()
     {
-       static $database = null;
+        static $database = null;
 
-       if (null === $database)
-       {
-           $database = new \Zend_Test_DbAdapter();
-       }
+        if (null === $database) {
+            $database = new \Zend_Test_DbAdapter();
+        }
 
-       return $database;
+        return $database;
     }
 
 }

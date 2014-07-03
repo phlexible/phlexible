@@ -71,11 +71,16 @@ class TextimageRenderer
             $loc = 'west';
         }
 
-        $cacheId = md5(implode('__', array(
-            $text .
-            $loc .
-            $color . $iconPath
-        )));
+        $cacheId = md5(
+            implode(
+                '__',
+                array(
+                    $text .
+                    $loc .
+                    $color . $iconPath
+                )
+            )
+        );
 
         $cacheFilename = $this->cacheDir . '/' . $cacheId . '.png';
 
@@ -90,7 +95,7 @@ class TextimageRenderer
 
         $class = $this->bundles['PhlexibleGuiBundle'];
         $reflection = new \ReflectionClass($class);
-        $font  = dirname($reflection->getFileName()) . '/Resources/public/fonts/arial.ttf';
+        $font = dirname($reflection->getFileName()) . '/Resources/public/fonts/arial.ttf';
 
         $options = $this->convert->options()
             ->background('transparent')

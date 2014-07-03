@@ -38,7 +38,10 @@ class PhpCompiler implements CompilerInterface
         $constructorBody = '';
         foreach ($documenttypes->getAll() as $documenttype) {
             $titles = count($documenttype->getTitles()) ? var_export($documenttype->getTitles(), true) : 'array()';
-            $mimetypes = count($documenttype->getMimetypes()) ? var_export($documenttype->getMimetypes(), true) : 'array()';
+            $mimetypes = count($documenttype->getMimetypes()) ? var_export(
+                $documenttype->getMimetypes(),
+                true
+            ) : 'array()';
 
             $constructorBody .= <<<EOF
 \$this->add(
@@ -51,22 +54,22 @@ class PhpCompiler implements CompilerInterface
 EOF;
         }
 
-            $constructor = PhpMethod::create('__construct');
-            $constructor->setBody($constructorBody);
+        $constructor = PhpMethod::create('__construct');
+        $constructor->setBody($constructorBody);
 
-            $getHashBody = 'return "' . $documenttypes->getHash() . '";';
+        $getHashBody = 'return "' . $documenttypes->getHash() . '";';
 
-            $getHashMethod = PhpMethod::create('getHash');
-            $getHashMethod->setBody($getHashBody);
+        $getHashMethod = PhpMethod::create('getHash');
+        $getHashMethod->setBody($getHashBody);
 
-            $class = PhpClass::create($className)
-                ->setFinal(true)
-                ->setParentClassName('Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeCollection')
-                ->setMethod($constructor)
-                ->setMethod($getHashMethod);
+        $class = PhpClass::create($className)
+            ->setFinal(true)
+            ->setParentClassName('Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeCollection')
+            ->setMethod($constructor)
+            ->setMethod($getHashMethod);
 
         $generator = new DefaultGeneratorStrategy();
 
-        return "<?php\n\n".$generator->generate($class);
+        return "<?php\n\n" . $generator->generate($class);
     }
 }

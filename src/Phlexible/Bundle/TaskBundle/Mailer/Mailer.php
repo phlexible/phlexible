@@ -8,12 +8,11 @@
 
 namespace Phlexible\Bundle\TaskBundle\Mailer;
 
-use Phlexible\Security\User\UserInterface;
-use Phlexible\Bundle\TaskBundle\Task\Task;
-use Phlexible\Bundle\TaskBundle\Task\TaskStatus;
+use Phlexible\Bundle\TaskBundle\Entity\Status;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeInterface;
 use Swift_Mailer;
 use Swift_Message;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Twig_Environment;
 
 /**
@@ -55,10 +54,14 @@ class Mailer
      *
      * @param UserInterface $createUser
      * @param UserInterface $recipientUser
-     * @param TaskStatus    $taskStatus
+     * @param Status        $taskStatus
      * @param TypeInterface $type
      */
-    public function sendNewTaskEmailMessage(UserInterface $createUser, UserInterface $recipientUser, TaskStatus $taskStatus, TypeInterface $type)
+    public function sendNewTaskEmailMessage(
+        UserInterface $createUser,
+        UserInterface $recipientUser,
+        Status $taskStatus,
+        TypeInterface $type)
     {
         // $createUser, $recipientUser, $task, $link
         $template = $this->parameters['new_task']['template'];
@@ -86,10 +89,14 @@ class Mailer
      *
      * @param UserInterface $createUser
      * @param UserInterface $recipientUser
-     * @param TaskStatus    $taskStatus
+     * @param Status        $taskStatus
      * @param TypeInterface $type
      */
-    public function sendNewStatusEmailMessage(UserInterface $createUser, UserInterface $recipientUser, TaskStatus $taskStatus, TypeInterface $type)
+    public function sendNewStatusEmailMessage(
+        UserInterface $createUser,
+        UserInterface $recipientUser,
+        Status $taskStatus,
+        TypeInterface $type)
     {
         $template = $this->parameters['new_status']['template'];
         $from = $this->parameters['new_status']['from'];
@@ -126,8 +133,7 @@ class Mailer
             ->setFrom($from)
             ->setTo($email)
             ->setSubject($subject)
-            ->setBody($body)
-        ;
+            ->setBody($body);
 
         $this->mailer->send($mail);
     }

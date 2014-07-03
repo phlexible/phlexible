@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\SecurityBundle\Mailer;
 
 use Swift_Mailer;
 use Swift_Message;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Twig_Environment;
 
 /**
@@ -61,7 +62,7 @@ class Mailer
             $template,
             array(
                 'user' => $user,
-                'url' => $baseUrl
+                'url'  => $baseUrl
             )
         );
         $this->sendEmailMessage($content, $from, $user->getEmail());
@@ -82,8 +83,7 @@ class Mailer
             ->setFrom($from)
             ->setTo($email)
             ->setSubject($subject)
-            ->setBody($body)
-        ;
+            ->setBody($body);
 
         $this->mailer->send($mail);
     }

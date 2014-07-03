@@ -28,12 +28,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('catch')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('use_master_language_as_fallback')->defaultValue(false)->end()
-                    ->end()
-                ->end()
+            ->arrayNode('catch')
+            ->addDefaultsIfNotSet()
+            ->children()
+            ->booleanNode('use_master_language_as_fallback')->defaultValue(false)->end()
+            ->end()
+            ->end()
             ->end();
 
         return $treeBuilder;

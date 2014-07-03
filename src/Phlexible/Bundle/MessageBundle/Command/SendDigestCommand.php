@@ -26,8 +26,7 @@ class SendDigestCommand extends ContainerAwareCommand
     {
         $this
             ->setName('message:digest:send')
-            ->setDescription('Send digest mail')
-        ;
+            ->setDescription('Send digest mail');
     }
 
     /**

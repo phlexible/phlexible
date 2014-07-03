@@ -17,6 +17,7 @@ interface DataProviderInterface
 {
     /**
      * @param RenderConfiguration $renderConfiguration
+     *
      * @return \ArrayObject
      */
     public function provide(RenderConfiguration $renderConfiguration);

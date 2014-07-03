@@ -45,9 +45,12 @@ class ElementtypeRepository
     /**
      * @param EventDispatcherInterface $dispatcher
      * @param LoaderInterface          $loader
-     * @param MessagePoster           $messageService
+     * @param MessagePoster            $messageService
      */
-    public function __construct(EventDispatcherInterface $dispatcher, LoaderInterface $loader, MessagePoster $messageService)
+    public function __construct(
+        EventDispatcherInterface $dispatcher,
+        LoaderInterface $loader,
+        MessagePoster $messageService)
     {
         $this->dispatcher = $dispatcher;
         $this->loader = $loader;
@@ -82,6 +85,7 @@ class ElementtypeRepository
      * Find element type by unique ID
      *
      * @param string $uniqueID
+     *
      * @return Elementtype
      */
     public function findByUniqueID($uniqueID)
@@ -93,6 +97,7 @@ class ElementtypeRepository
      * Find element types by type
      *
      * @param string $type
+     *
      * @return Elementtype[]
      */
     public function findByType($type)
@@ -114,6 +119,7 @@ class ElementtypeRepository
      * Save element type
      *
      * @param Elementtype $elementtype
+     *
      * @throws \Exception
      *
      * @return $this
@@ -132,7 +138,7 @@ class ElementtypeRepository
             $this->dispatcher->dispatch(ElementtypeEvents::CREATE, $event);
 
             // post message
-            $message = ElementtypesMessage::create('Element Type "'.$elementtype->getId().' created.');
+            $message = ElementtypesMessage::create('Element Type "' . $elementtype->getId() . ' created.');
             $this->messageService->post($message);
         } else {
             $event = new ElementtypeEvent($elementtype);
@@ -146,7 +152,7 @@ class ElementtypeRepository
             $this->dispatcher->dispatch(ElementtypeEvents::UPDATE, $event);
 
             // post message
-            $message = ElementtypesMessage::create('Element Type "'.$elementtype->getId().' updated.');
+            $message = ElementtypesMessage::create('Element Type "' . $elementtype->getId() . ' updated.');
             $this->messageService->post($message);
         }
 
@@ -157,6 +163,7 @@ class ElementtypeRepository
      * Delete an Element Type
      *
      * @param Elementtype $elementtype
+     *
      * @return $this
      * @throws ElementtypeException
      */
@@ -171,51 +178,47 @@ class ElementtypeRepository
 
         $delete = true;
 
-        if ($elementtype->getType() == ElementtypeVersion::TYPE_REFERENCE)
-        {
+        if ($elementtype->getType() == ElementtypeVersion::TYPE_REFERENCE) {
             $db = MWF_Registry::getContainer()->dbPool->default;
             $select = $db->select()
-                         ->distinct()
-                         ->from($db->prefix.'elementtype_structure', array('elementtype_id', new Zend_Db_Expr('MAX(version) AS max_version')))
-                         ->where('reference_id = ?', $elementtype->getId())
-                         ->group('elementtype_id');
+                ->distinct()
+                ->from(
+                    $db->prefix . 'elementtype_structure',
+                    array('elementtype_id', new Zend_Db_Expr('MAX(version) AS max_version'))
+                )
+                ->where('reference_id = ?', $elementtype->getId())
+                ->group('elementtype_id');
 
             $result = $db->fetchAll($select);
 
-            if (count($result))
-            {
+            if (count($result)) {
                 $delete = false;
 
                 $select = $db->select()
-                             ->from($db->prefix . 'elementtype', 'latest_version')
-                             ->where('elementtype_id = ?');
+                    ->from($db->prefix . 'elementtype', 'latest_version')
+                    ->where('elementtype_id = ?');
 
-                foreach($result as $row)
-                {
+                foreach ($result as $row) {
                     $latestElementTypeVersion = $db->fetchOne($select, $row['elementtype_id']);
 
-                    if ($latestElementTypeVersion == $row['max_version'])
-                    {
+                    if ($latestElementTypeVersion == $row['max_version']) {
                         throw new ElementtypeException('Reference in use, can\'t delete.');
                     }
                 }
             }
         }
 
-        if ($delete)
-        {
+        if ($delete) {
             $this->loader->delete($elementtype);
 
             // send message
-            $message = ElementtypesMessage::create('Element type "'.$elementtype->getId().'" deleted.');
+            $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" deleted.');
             $this->messageService->post($message);
-        }
-        else
-        {
+        } else {
             $this->loader->softDelete($elementtype);
 
             // send message
-            $message = ElementtypesMessage::create('Element type "'.$elementtype->getId().'" soft deleted.');
+            $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" soft deleted.');
             $this->messageService->post($message);
         }
 

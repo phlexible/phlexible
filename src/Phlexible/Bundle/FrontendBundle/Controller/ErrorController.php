@@ -40,7 +40,7 @@ class ErrorController extends Controller
                 return;
             }
 
-            $request  = $this->_getParam('request');
+            $request = $this->_getParam('request');
             $language = $request->getLanguage();
 
             $specialTid = 'error_500';
@@ -49,8 +49,7 @@ class ErrorController extends Controller
                 $exception = $this->_getParam('exception');
                 $code = $exception->getCode();
 
-                if ($code && is_int($code))
-                {
+                if ($code && is_int($code)) {
                     $specialTid = 'error_' . $code;
                 }
             }
@@ -70,6 +69,7 @@ class ErrorController extends Controller
         } catch (\Exception $e) {
             if ($this->getContainer()->getParameter('kernel.debug')) {
                 Brainbits_Debug_Error::outputException($e);
+
                 return;
             }
 
@@ -78,7 +78,7 @@ class ErrorController extends Controller
 
             // write message
             $subject = 'Error 500 occured (TID: ' . $tid . ')';
-            $body    = 'An server error occurred with the following message:' . PHP_EOL . $e->getMessage()
+            $body = 'An server error occurred with the following message:' . PHP_EOL . $e->getMessage()
                 . PHP_EOL . 'with the following stack trace: ' . PHP_EOL . $e->getTraceAsString();
 
             $message = new Makeweb_Frontend_Message(
@@ -90,9 +90,10 @@ class ErrorController extends Controller
             $message->post();
         }
 
-        echo $e->getMessage().'<pre>'.$e->getTraceAsString();die;
+        echo $e->getMessage() . '<pre>' . $e->getTraceAsString();
+        die;
 
         $this->getResponse()->setHttpResponseCode(500)
-                            ->setBody('Error occured.');
+            ->setBody('Error occured.');
     }
 }

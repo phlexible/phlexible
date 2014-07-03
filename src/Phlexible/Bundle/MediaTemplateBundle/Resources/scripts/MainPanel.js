@@ -5,16 +5,16 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
     layout: 'border',
     border: false,
 
-    loadParams: function() {},
+    loadParams: function () {
+    },
 
-    initComponent: function() {
+    initComponent: function () {
         this.templatesGrid = new Phlexible.mediatemplates.TemplatesGrid({
             region: 'west',
             width: '200',
             listeners: {
-                templatechange: function(r) {
-                    switch(r.get('type'))
-                    {
+                templatechange: function (r) {
+                    switch (r.get('type')) {
                         case 'image':
                             this.cardPanel.getLayout().setActiveItem(0);
                             this.imagePanel.loadParameters(r.get('key'));
@@ -40,9 +40,8 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
                     }
 
                 },
-                create: function(template_id, template_title, template_type) {
-                    switch(template_type)
-                    {
+                create: function (template_id, template_title, template_type) {
+                    switch (template_type) {
                         case 'image':
                             this.imagePanel.loadParameters(template_id, template_title);
                             this.cardPanel.getLayout().setActiveItem(0);
@@ -73,10 +72,10 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
 
         this.imagePanel = new Phlexible.mediatemplates.image.MainPanel({
             listeners: {
-                paramsload: function() {
+                paramsload: function () {
 
                 },
-                paramssave: function() {
+                paramssave: function () {
                     this.templatesGrid.getStore().reload();
                 },
                 scope: this
@@ -85,10 +84,10 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
 
         this.videoFormPanel = new Phlexible.mediatemplates.video.MainPanel({
             listeners: {
-                paramsload: function() {
+                paramsload: function () {
 
                 },
-                paramssave: function() {
+                paramssave: function () {
                     this.templatesGrid.getStore().reload();
                 },
                 scope: this
@@ -97,10 +96,10 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
 
         this.audioFormPanel = new Phlexible.mediatemplates.audio.MainPanel({
             listeners: {
-                paramsload: function() {
+                paramsload: function () {
 
                 },
-                paramssave: function() {
+                paramssave: function () {
                     this.templatesGrid.getStore().reload();
                 },
                 scope: this
@@ -109,10 +108,10 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
 
         this.pdfFormPanel = new Phlexible.mediatemplates.pdf2swf.MainPanel({
             listeners: {
-                paramsload: function() {
+                paramsload: function () {
 
                 },
-                paramssave: function() {
+                paramssave: function () {
                     this.templatesGrid.getStore().reload();
                 },
                 scope: this

@@ -1,25 +1,25 @@
-Phlexible.fields.Registry.addFactory('time', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('time', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.dsId);
+    element.prototypes.incCount(item.dsId);
 
-	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
 
-	Ext.apply(config, {
-		xtype: 'timefield',
-		format: 'H:i:s',
+    Ext.apply(config, {
+        xtype: 'timefield',
+        format: 'H:i:s',
 
-		supportsPrefix: true,
-		supportsSuffix: true,
-		supportsDiff: true,
-		supportsInlineDiff: true,
-		supportsUnlink: {unlinkEl: 'trigger'},
-		supportsRepeatable: true
-	});
+        supportsPrefix: true,
+        supportsSuffix: true,
+        supportsDiff: true,
+        supportsInlineDiff: true,
+        supportsUnlink: {unlinkEl: 'trigger'},
+        supportsRepeatable: true
+    });
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('time', {
@@ -29,11 +29,11 @@ Phlexible.fields.FieldTypes.addField('time', {
     },
     iconCls: 'p-elementtype-field_time-icon',
     allowedIn: [
-		'tab',
-		'accordion',
-		'group',
-		'referenceroot'
-	],
+        'tab',
+        'accordion',
+        'group',
+        'referenceroot'
+    ],
     defaultValueField: 'default_value_timefield',
     config: {
         properties: {

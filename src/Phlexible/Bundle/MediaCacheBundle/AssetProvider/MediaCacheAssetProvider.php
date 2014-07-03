@@ -55,7 +55,9 @@ class MediaCacheAssetProvider implements AssetProviderInterface
     public function getScriptsCollection()
     {
         $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMediaCacheBundle/Resources/scripts/portlet/CacheStatus.js')),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleMediaCacheBundle/Resources/scripts/portlet/CacheStatus.js'
+            )),
         ));
 
         return $collection;

@@ -24,6 +24,7 @@ interface FolderInterface
 
     /**
      * @param SiteInterface $site
+     *
      * @return $this
      */
     public function setSite(SiteInterface $site);
@@ -35,6 +36,7 @@ interface FolderInterface
 
     /**
      * @param string $id
+     *
      * @return $this
      */
     public function setId($id);
@@ -46,6 +48,7 @@ interface FolderInterface
 
     /**
      * @param string $parentId
+     *
      * @return $this
      */
     public function setParentId($parentId);
@@ -57,6 +60,7 @@ interface FolderInterface
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name);
@@ -68,6 +72,7 @@ interface FolderInterface
 
     /**
      * @param string $path
+     *
      * @return $this
      */
     public function setPath($path);
@@ -79,6 +84,7 @@ interface FolderInterface
 
     /**
      * @param string $physicalPath
+     *
      * @return $this
      */
     public function setPhysicalPath($physicalPath);
@@ -90,6 +96,7 @@ interface FolderInterface
 
     /**
      * @param array $attributes
+     *
      * @return $this
      */
     public function setAttributes(array $attributes);
@@ -97,6 +104,7 @@ interface FolderInterface
     /**
      * @param string $key
      * @param mixed  $default
+     *
      * @return mixed
      */
     public function getAttribute($key, $default = null);
@@ -104,6 +112,7 @@ interface FolderInterface
     /**
      * @param string $key
      * @param mixed  $value
+     *
      * @return $this
      */
     public function setAttribute($key, $value);
@@ -115,6 +124,7 @@ interface FolderInterface
 
     /**
      * @param \DateTime $createTime
+     *
      * @return $this
      */
     public function setCreatedAt(\DateTime $createTime);
@@ -126,6 +136,7 @@ interface FolderInterface
 
     /**
      * @param string $createUserId
+     *
      * @return $this
      */
     public function setCreateUserId($createUserId);
@@ -137,6 +148,7 @@ interface FolderInterface
 
     /**
      * @param \DateTime $modifyTime
+     *
      * @return $this
      */
     public function setModifiedAt(\DateTime $modifyTime);
@@ -148,6 +160,7 @@ interface FolderInterface
 
     /**
      * @param string $modifyUserId
+     *
      * @return $this
      */
     public function setModifyUserId($modifyUserId);

@@ -46,7 +46,7 @@ class UpdateHelperPreview extends ContainerAwareJob
 
         $cnt = $helper->updatePreview($eid);
 
-        $output .= 'Wrote '.$cnt.' helper entries.';
+        $output .= 'Wrote ' . $cnt . ' helper entries.';
 
         return $output;
     }

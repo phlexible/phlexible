@@ -8,8 +8,9 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver;
 
-use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MediaSiteBundle\Exception;
+use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotFoundException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotWritableException;
@@ -85,8 +86,7 @@ class DatabaseSyncDriver implements DriverInterface
      */
     public function findFolder($id)
     {
-        if ($id === -1)
-        {
+        if ($id === -1) {
             return $this->findRootFolder();
         }
 
@@ -181,7 +181,11 @@ class DatabaseSyncDriver implements DriverInterface
     {
         $select = $this->db->select()
             ->from(array('fo' => $this->folderTable))
-            ->join(array('fi' => $this->fileTable), 'fo.id = fi.folder_id AND fi.id = ' . $this->db->quote($fileId), array());
+            ->join(
+                array('fi' => $this->fileTable),
+                'fo.id = fi.folder_id AND fi.id = ' . $this->db->quote($fileId),
+                array()
+            );
 
         $row = $this->db->fetchRow($select);
 
@@ -241,7 +245,12 @@ class DatabaseSyncDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function findFilesByFolder(FolderInterface $folder, $order = null, $limit = null, $start = null, $includeHidden = false)
+    public function findFilesByFolder(
+        FolderInterface $folder,
+        $order = null,
+        $limit = null,
+        $start = null,
+        $includeHidden = false)
     {
         $select = $this->db
             ->select()
@@ -302,15 +311,14 @@ class DatabaseSyncDriver implements DriverInterface
         // prepare folder's name and id
         $folder = new Folder();
         $folder
-            ->setId(\Brainbits_Util_Uuid::generate())
+            ->setId(Uuid::generate())
             ->setName($name)
             ->setParentId($targetFolder->getId())
             ->setPath($folderPath)
             ->setCreatedAt(new \DateTime())
             ->setCreateUserid($userId)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserid($userId)
-        ;
+            ->setModifyUserid($userId);
 
         $siteId = $this->site->getId();
         $path = $this->site->getRootDir() . $folder->getPath();
@@ -331,8 +339,7 @@ class DatabaseSyncDriver implements DriverInterface
 
         $filesystem->mkdir($path, 0777);
 
-        try
-        {
+        try {
             $this->db->insert(
                 $this->folderTable,
                 array(
@@ -347,9 +354,7 @@ class DatabaseSyncDriver implements DriverInterface
                     'modify_time'    => $folder->getModifiedAt()->format('Y-m-d H:i:s'),
                 )
             );
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $filesystem->remove($path);
 
             throw new IOException("Create folder $name failed", 0, $e);
@@ -369,27 +374,23 @@ class DatabaseSyncDriver implements DriverInterface
         $folder
             ->setName($name)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId)
-        ;
+            ->setModifyUserId($userId);
 
-        if (!$folder->isRoot())
-        {
+        if (!$folder->isRoot()) {
             $parentFolder = $this->findFolder($folder->getParentId());
             $oldPath = $folder->getPath();
             $newPath = ltrim($parentFolder->getPath() . '/' . $name, '/');
             $oldPhysicalPath = $this->site->getRootDir() . '/' . $oldPath;
             $newPhysicalPath = $this->site->getRootDir() . '/' . $newPath;
 
-            if ($filesystem->exists($newPhysicalPath))
-            {
+            if ($filesystem->exists($newPhysicalPath)) {
                 throw new AlreadyExistsException('Can\'t rename folder to "' . $newPhysicalPath . '": already exists');
             }
 
             $folder->setPath($newPath);
         }
 
-        try
-        {
+        try {
             $this->db->update(
                 $this->folderTable,
                 array(
@@ -401,31 +402,27 @@ class DatabaseSyncDriver implements DriverInterface
                     'id = ?' => $folder->getId()
                 )
             );
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             throw new IOException("Rename folder to $name failed", 0, $e);
         }
 
-        if (!empty($newPath) && !empty($oldPath))
-        {
+        if (!empty($newPath) && !empty($oldPath)) {
             $filesystem->rename($oldPhysicalPath, $newPhysicalPath);
 
-            try
-            {
+            try {
                 $this->db->update(
                     $this->folderTable,
                     array(
-                        'path' => $this->db->fn->expr('REPLACE(path, ' . $this->db->quote($oldPath) . ', ' . $this->db->quote($newPath) . ')')
+                        'path' => $this->db->fn->expr(
+                                'REPLACE(path, ' . $this->db->quote($oldPath) . ', ' . $this->db->quote($newPath) . ')'
+                            )
                     ),
                     array(
                         'site_id = ?' => $this->site->getId(),
                         'path LIKE ?' => $oldPath . '%',
                     )
                 );
-            }
-            catch (\Exception $e)
-            {
+            } catch (\Exception $e) {
                 throw new IOException("Can't rename folder from $oldPath to $newPath failed", 0, $e);
             }
         }
@@ -440,13 +437,11 @@ class DatabaseSyncDriver implements DriverInterface
 
     public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
     {
-        if ($folder->getParentId() === $targetFolder->getId())
-        {
+        if ($folder->getParentId() === $targetFolder->getId()) {
             return $folder;
         }
 
-        if ($folder->getId() === $targetFolder->getId())
-        {
+        if ($folder->getId() === $targetFolder->getId()) {
             return $folder;
         }
 
@@ -462,13 +457,11 @@ class DatabaseSyncDriver implements DriverInterface
             ->setParentId($targetFolder->getId())
             ->setPath($newPath)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId)
-        ;
+            ->setModifyUserId($userId);
 
         $filesystem->rename($oldPhysicalPath, $newPhysicalPath);
 
-        try
-        {
+        try {
             $this->db->update(
                 $this->folderTable,
                 array(
@@ -482,13 +475,16 @@ class DatabaseSyncDriver implements DriverInterface
                 )
             );
 
-            if ($parentFolder->isRoot())
-            {
-                $pathExpression = $this->db->fn->expr('CONCAT(' . $this->db->quote($targetFolder->getPath()) . ', path)');
-            }
-            else
-            {
-                $pathExpression = $this->db->fn->expr('REPLACE(path, ' . $this->db->quote($parentFolder->getPath()) . ', ' . $this->db->quote($targetFolder->getPath()) . ')');
+            if ($parentFolder->isRoot()) {
+                $pathExpression = $this->db->fn->expr(
+                    'CONCAT(' . $this->db->quote($targetFolder->getPath()) . ', path)'
+                );
+            } else {
+                $pathExpression = $this->db->fn->expr(
+                    'REPLACE(path, ' . $this->db->quote($parentFolder->getPath()) . ', ' . $this->db->quote(
+                        $targetFolder->getPath()
+                    ) . ')'
+                );
             }
 
             $this->db->update(
@@ -501,9 +497,7 @@ class DatabaseSyncDriver implements DriverInterface
                     'path LIKE ?' => $oldPath . '%',
                 )
             );
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             throw new IOException("Move folder from $oldPath to $newPath failed.", 0, $e);
         }
 
@@ -514,8 +508,7 @@ class DatabaseSyncDriver implements DriverInterface
     {
         $this->deletePhysicalFolder($folder, $userId);
 
-        try
-        {
+        try {
             $this->db->delete(
                 $this->folderTable,
                 array(
@@ -523,9 +516,7 @@ class DatabaseSyncDriver implements DriverInterface
                     'path LIKE ?' => $folder->getPath() . '%'
                 )
             );
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             throw new IOException("Delete folder failed.", 0, $e);
         }
 
@@ -542,14 +533,13 @@ class DatabaseSyncDriver implements DriverInterface
         // prepare folder's name and id
         $file = new File();
         $file
-            ->setId(\Brainbits_Util_Uuid::generate())
+            ->setId(Uuid::generate())
             ->setFolderId($targetFolder->getId())
             ->setName($name)
             ->setCreatedAt(new \DateTime())
             ->setCreateUserid($userId)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserid($userId)
-        ;
+            ->setModifyUserid($userId);
 
         $path = $this->site->getRootDir() . trim($targetFolder->getPath() . '/' . $name, '/');
 
@@ -588,8 +578,7 @@ class DatabaseSyncDriver implements DriverInterface
             ->setSize(filesize($path))
             ->setHash($hashCalculator->fromPath($path));
 
-        try
-        {
+        try {
             $this->db->insert(
                 $this->fileTable,
                 array(
@@ -605,9 +594,7 @@ class DatabaseSyncDriver implements DriverInterface
                     'modify_time'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
                 )
             );
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $filesystem->remove($path);
 
             throw new IOException("Create file $name failed.", 0, $e);
@@ -629,21 +616,18 @@ class DatabaseSyncDriver implements DriverInterface
         $newPhysicalPath = $this->site->getRootDir() . $folder->getPath() . '/' . $name;
         $oldName = $file->getName();
 
-        if ($filesystem->exists($newPhysicalPath))
-        {
+        if ($filesystem->exists($newPhysicalPath)) {
             throw new AlreadyExistsException("Rename file from $oldName to $name failed.");
         }
 
         $file
             ->setName($name)
             ->setModifiedAt(new \DateTime)
-            ->setModifyUserId($userId)
-        ;
+            ->setModifyUserId($userId);
 
         $filesystem->rename($oldPhysicalPath, $newPhysicalPath);
 
-        try
-        {
+        try {
             $this->db->update(
                 $this->fileTable,
                 array(
@@ -655,9 +639,7 @@ class DatabaseSyncDriver implements DriverInterface
                     'id = ?' => $file->getId()
                 )
             );
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             throw new IOException("Rename file from $oldName to $name failed.", 0, $e);
         }
     }
@@ -674,8 +656,7 @@ class DatabaseSyncDriver implements DriverInterface
         $oldPhysicalPath = $this->site->getRootDir() . $sourceFolder->getPath() . '/' . $file->getName();
         $newPhysicalPath = $this->site->getRootDir() . $targetFolder->getPath() . '/' . $file->getName();
 
-        if ($filesystem->exists($newPhysicalPath))
-        {
+        if ($filesystem->exists($newPhysicalPath)) {
             throw new AlreadyExistsException("Move file from $oldPhysicalPath to $newPhysicalPath failed");
         }
 
@@ -684,10 +665,8 @@ class DatabaseSyncDriver implements DriverInterface
         $file
             ->setFolderId($targetFolder->getId())
             ->setModifiedAt(new \DateTime)
-            ->setModifyUserId($userId)
-        ;
-        try
-        {
+            ->setModifyUserId($userId);
+        try {
             $this->db->update(
                 $this->fileTable,
                 array(
@@ -699,9 +678,7 @@ class DatabaseSyncDriver implements DriverInterface
                     'id = ?' => $file->getId()
                 )
             );
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             throw new IOException("Move file failed.", 0, $e);
         }
     }
@@ -713,15 +690,12 @@ class DatabaseSyncDriver implements DriverInterface
         $folder = $this->findFolderByFileId($file->getId());
         $physicalPath = $this->site->getRootDir() . $folder->getPath() . '/' . $file->getName();
 
-        if ($filesystem->exists($physicalPath))
-        {
-            if (!is_file($physicalPath))
-            {
+        if ($filesystem->exists($physicalPath)) {
+            if (!is_file($physicalPath)) {
                 throw new IOException('Delete file failed, not a file.');
             }
 
-            if (!is_writable(dirname($physicalPath)))
-            {
+            if (!is_writable(dirname($physicalPath))) {
                 throw new NotWritableException("Delete file failed.");
             }
         }
@@ -733,8 +707,7 @@ class DatabaseSyncDriver implements DriverInterface
             )
         );
 
-        if ($filesystem->exists($physicalPath))
-        {
+        if ($filesystem->exists($physicalPath)) {
             $filesystem->remove($physicalPath);
         }
     }
@@ -745,23 +718,19 @@ class DatabaseSyncDriver implements DriverInterface
 
         $physicalPath = $this->site->getRootDir() . $folder->getPath();
 
-        if ($filesystem->exists($physicalPath) && !is_dir($physicalPath))
-        {
+        if ($filesystem->exists($physicalPath) && !is_dir($physicalPath)) {
             throw new IOException('Delete folder failed, not a folder.');
         }
 
-        if ($filesystem->exists($physicalPath) && !is_writable($physicalPath))
-        {
+        if ($filesystem->exists($physicalPath) && !is_writable($physicalPath)) {
             throw new NotWritableException('Delete folder failed.');
         }
 
-        foreach ($this->findFoldersByParentFolder($folder) as $subFolder)
-        {
+        foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
             $this->deletePhysicalFolder($subFolder, $userId);
         }
 
-        foreach ($this->findFilesByFolder($folder) as $file)
-        {
+        foreach ($this->findFilesByFolder($folder) as $file) {
             $this->deleteFile($file, $userId);
         }
 
@@ -776,15 +745,16 @@ class DatabaseSyncDriver implements DriverInterface
     private function mapFolderRows(array $rows)
     {
         $folders = array();
-        foreach ($rows as $row)
-        {
+        foreach ($rows as $row) {
             $folders[] = $this->mapFolderRow($row);
         }
+
         return $folders;
     }
 
     /**
      * @param array $row
+     *
      * @return Folder
      */
     private function mapFolderRow(array $row)
@@ -804,14 +774,14 @@ class DatabaseSyncDriver implements DriverInterface
             ->setCreatedAt(new \DateTime($row['create_time']))
             ->setCreateUserId($row['create_user_id'])
             ->setModifiedAt(new \DateTime($row['modify_time']))
-            ->setModifyUserId($row['modify_user_id'])
-        ;
+            ->setModifyUserId($row['modify_user_id']);
 
         return $folder;
     }
 
     /**
      * @param array $rows
+     *
      * @return File[]
      */
     private function mapFileRows(array $rows)
@@ -820,11 +790,13 @@ class DatabaseSyncDriver implements DriverInterface
         foreach ($rows as $row) {
             $files[] = $this->mapFileRow($row);
         }
+
         return $files;
     }
 
     /**
      * @param array $row
+     *
      * @return File
      */
     private function mapFileRow(array $row)
@@ -852,8 +824,7 @@ class DatabaseSyncDriver implements DriverInterface
             ->setCreatedAt(new \DateTime($row['create_time']))
             ->setCreateUserId($row['create_user_id'])
             ->setModifiedAt(new \DateTime($row['modify_time']))
-            ->setModifyUserId($row['modify_user_id'])
-        ;
+            ->setModifyUserId($row['modify_user_id']);
 
         return $file;
     }

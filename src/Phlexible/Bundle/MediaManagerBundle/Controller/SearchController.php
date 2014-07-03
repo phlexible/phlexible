@@ -8,12 +8,10 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -60,18 +58,18 @@ class SearchController extends Controller
         $db = $this->get('connection_manager')->default;
 
         $query = $db->select()
-                    ->distinct()
-                    ->from(array('fi' => $db->prefix . 'mediamanager_files'), 'fi.id');
+            ->distinct()
+            ->from(array('fi' => $db->prefix . 'mediamanager_files'), 'fi.id');
 
         $searchTitle = array();
-        $searchSize  = array();
+        $searchSize = array();
         $searchAsset = array();
-        $searchAge   = array();
+        $searchAge = array();
 
         foreach ($searchValues as $key => $value) {
             if ($key == 'basic_term') {
                 if (!is_array($value)) {
-                     $value = array($value);
+                    $value = array($value);
                 }
 
                 if (!empty($searchValues['basic_in_title'])) {
@@ -100,18 +98,18 @@ class SearchController extends Controller
             }
 
             if (substr($key, 0, 6) == 'asset_') {
-                $searchAsset[] = 'fi.asset_type = '.$db->quote(strtoupper(substr($key, 6)));
+                $searchAsset[] = 'fi.asset_type = ' . $db->quote(strtoupper(substr($key, 6)));
             }
 
             if ($key == 'size_size') {
-                $size  = $searchValues['size_size'];
+                $size = $searchValues['size_size'];
                 $value = $searchValues['size_value'];
-                $unit  = $searchValues['size_unit'];
+                $unit = $searchValues['size_unit'];
 
                 if (!is_array($searchValues['size_size'])) {
-                    $size  = array($size);
+                    $size = array($size);
                     $value = array($value);
-                    $unit  = array($unit);
+                    $unit = array($unit);
                 }
 
                 foreach ($size as $sizeKey => $dummy) {
@@ -139,7 +137,7 @@ class SearchController extends Controller
                             continue;
                     }
 
-                    switch($size[$sizeKey]) {
+                    switch ($size[$sizeKey]) {
                         case '<':
                             $searchSize[] = 'fi.size < ' . $db->quote($value[$sizeKey]);
                             break;
@@ -216,31 +214,31 @@ class SearchController extends Controller
                 }
             }
 
-//            if (!empty($searchValues['below']))
-//            {
-//                $query->where('folder_id IN (SELECT f2.id FROM '.$db->prefix.'mediamanager_folders f1, '.$db->prefix.'mediamanager_folders f2 WHERE f1.id=? AND f2.path LIKE CONCAT(f1.path, "%"))', $searchValues['below']);
-//            }
+            //            if (!empty($searchValues['below']))
+            //            {
+            //                $query->where('folder_id IN (SELECT f2.id FROM '.$db->prefix.'mediamanager_folders f1, '.$db->prefix.'mediamanager_folders f2 WHERE f1.id=? AND f2.path LIKE CONCAT(f1.path, "%"))', $searchValues['below']);
+            //            }
 
             if ($key == 'duplicate' && $value) {
                 switch ($value) {
                     case 'identical':
                         $query->group('hash')
-                              ->having('COUNT(id) > 1')
-                              ->limit(20);
+                            ->having('COUNT(id) > 1')
+                            ->limit(20);
 
                         break;
 
                     case 'name':
                         $query->group('name')
-                              ->having('COUNT(id) > 1')
-                              ->limit(20);
+                            ->having('COUNT(id) > 1')
+                            ->limit(20);
 
                         break;
 
                     case 'filesize':
                         $query->group('size')
-                              ->having('COUNT(id) > 1')
-                              ->limit(20);
+                            ->having('COUNT(id) > 1')
+                            ->limit(20);
 
                         break;
                 }
@@ -263,7 +261,7 @@ class SearchController extends Controller
             $query->where(implode(' OR ', $searchAge));
         }
 
-//        echo $query;die;
+        //        echo $query;die;
 
         $ids = $db->fetchCol($query);
 

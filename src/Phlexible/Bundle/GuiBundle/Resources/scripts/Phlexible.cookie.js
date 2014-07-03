@@ -1,5 +1,5 @@
 Phlexible.Cookie = {
-    set: function(name, value, options){
+    set: function (name, value, options) {
         options = options || {};
         var expires = '';
         if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {
@@ -21,7 +21,7 @@ Phlexible.Cookie = {
         document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');
     },
 
-    get: function(name){
+    get: function (name) {
         var nameEQ = name + "=";
         var ca = document.cookie.split(';');
         for (var i = 0; i < ca.length; i++) {

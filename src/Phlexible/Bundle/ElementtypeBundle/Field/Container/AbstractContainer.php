@@ -18,8 +18,8 @@ use Phlexible\Bundle\ElementtypeBundle\Field\Field;
 abstract class AbstractContainer extends Field
 {
     protected $isContainer = true;
-    protected $isField     = false;
-    protected $hasContent  = false;
+    protected $isField = false;
+    protected $hasContent = false;
 
     /**
      * Transform item values

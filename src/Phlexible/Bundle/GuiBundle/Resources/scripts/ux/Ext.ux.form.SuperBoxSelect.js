@@ -2,7 +2,7 @@ Ext.namespace('Ext.ux.form');
 /**
  * <p>SuperBoxSelect is an extension of the ComboBox component that displays selected items as labelled boxes within the form field. As seen on facebook, hotmail and other sites.</p>
  * <p>The SuperBoxSelect component was inspired by the BoxSelect component found here: http://efattal.fr/en/extjs/extuxboxselect/</p>
- * 
+ *
  * @author <a href="mailto:dan.humphrey@technomedia.co.uk">Dan Humphrey</a>
  * @class Ext.ux.form.SuperBoxSelect
  * @extends Ext.form.ComboBox
@@ -10,10 +10,10 @@ Ext.namespace('Ext.ux.form');
  * @component
  * @version 1.0
  * @license TBA (To be announced)
- * 
+ *
  */
-Ext.ux.form.SuperBoxSelect = function(config) {
-    Ext.ux.form.SuperBoxSelect.superclass.constructor.call(this,config);
+Ext.ux.form.SuperBoxSelect = function (config) {
+    Ext.ux.form.SuperBoxSelect.superclass.constructor.call(this, config);
     this.addEvents(
         /**
          * Fires before an item is added to the component via user interaction. Return false from the callback function to prevent the item from being added.
@@ -69,12 +69,12 @@ Ext.ux.form.SuperBoxSelect = function(config) {
          */
         'clear'
     );
-    
+
 };
 /**
  * @private hide from doc gen
  */
-Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.ComboBox,{
+Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect, Ext.form.ComboBox, {
     /**
      * @cfg {Boolean} allowAddNewData When set to true, allows items to be added (via the setValueEx and addItem methods) that do not already exist in the data store. Defaults to false.
      */
@@ -119,16 +119,16 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
      * @cfg {Boolean} fixFocusOnTabSelect When set to true, the component will not lose focus when a list item is selected with the TAB key. Defaults to true.
      */
     fixFocusOnTabSelect: true,
-    
-     /**
-     * @cfg {Boolean} forceFormValue When set to true, the component will always return a value to the parent form getValues method, and when the parent form is submitted manually. Defaults to false, meaning the component will only be included in the parent form submission (or getValues) if at least 1 item has been selected.  
+
+    /**
+     * @cfg {Boolean} forceFormValue When set to true, the component will always return a value to the parent form getValues method, and when the parent form is submitted manually. Defaults to false, meaning the component will only be included in the parent form submission (or getValues) if at least 1 item has been selected.
      */
     forceFormValue: true,
     /**
      * @cfg {Number} itemDelimiterKey The key code which terminates keying in of individual items, and adds the current
      * item to the list. Defaults to the ENTER key.
      */
-    itemDelimiterKey: Ext.EventObject.ENTER,    
+    itemDelimiterKey: Ext.EventObject.ENTER,
     /**
      * @cfg {Boolean} navigateItemsWithTab When set to true the tab key will navigate between selected items. Defaults to true.
      */
@@ -143,12 +143,12 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
      * @cfg {Boolean} preventDuplicates When set to true unique item values will be enforced. Defaults to true.
      */
     preventDuplicates: true,
-    
+
     /**
      * @cfg {String} queryValuesDelimiter Used to delimit multiple values queried from the server when mode is remote.
      */
     queryValuesDelimiter: '|',
-    
+
     /**
      * @cfg {String} queryValuesIndicator A request variable that is sent to the server (as true) to indicate that we are querying values rather than display data (as used in autocomplete) when mode is remote.
      */
@@ -172,219 +172,219 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
     /**
      * @cfg {String} styleField The underlying data field that will be used to supply additional css styles to each item.
      */
-    styleField : null,
-    
-     /**
+    styleField: null,
+
+    /**
      * @cfg {Boolean} supressClearValueRemoveEvents When true, the removeitem event will not be fired for each item when the clearValue method is called, or when the clear button is used. Defaults to false.
      */
-    supressClearValueRemoveEvents : false,
-    
+    supressClearValueRemoveEvents: false,
+
     /**
      * @cfg {String/Boolean} validationEvent The event that should initiate field validation. Set to false to disable automatic validation (defaults to 'blur').
      */
-	validationEvent : 'blur',
-	
+    validationEvent: 'blur',
+
     /**
      * @cfg {String} valueDelimiter The delimiter to use when joining and splitting value arrays and strings.
      */
     valueDelimiter: ',',
-    initComponent:function() {
-       Ext.apply(this, {
-            items           : new Ext.util.MixedCollection(false),
-            usedRecords     : new Ext.util.MixedCollection(false),
-            addedRecords	: [],
-            remoteLookup	: [],
-            hideTrigger     : true,
-            grow            : false,
-            resizable       : false,
-            multiSelectMode : false,
-            preRenderValue  : null
+    initComponent: function () {
+        Ext.apply(this, {
+            items: new Ext.util.MixedCollection(false),
+            usedRecords: new Ext.util.MixedCollection(false),
+            addedRecords: [],
+            remoteLookup: [],
+            hideTrigger: true,
+            grow: false,
+            resizable: false,
+            multiSelectMode: false,
+            preRenderValue: null
         });
-        
-        if(this.transform){
+
+        if (this.transform) {
             this.doTransform();
         }
-        if(this.forceFormValue){
-        	this.items.on({
-        	   add: this.manageNameAttribute,
-        	   remove: this.manageNameAttribute,
-        	   clear: this.manageNameAttribute,
-        	   scope: this
-        	});
+        if (this.forceFormValue) {
+            this.items.on({
+                add: this.manageNameAttribute,
+                remove: this.manageNameAttribute,
+                clear: this.manageNameAttribute,
+                scope: this
+            });
         }
-        
+
         Ext.ux.form.SuperBoxSelect.superclass.initComponent.call(this);
-        if(this.mode === 'remote' && this.store){
-        	this.store.on('load', this.onStoreLoad, this);
+        if (this.mode === 'remote' && this.store) {
+            this.store.on('load', this.onStoreLoad, this);
         }
     },
-    onRender:function(ct, position) {
-    	var h = this.hiddenName;
-    	this.hiddenName = null;
+    onRender: function (ct, position) {
+        var h = this.hiddenName;
+        this.hiddenName = null;
         Ext.ux.form.SuperBoxSelect.superclass.onRender.call(this, ct, position);
         this.hiddenName = h;
         this.manageNameAttribute();
-       
+
         var extraClass = (this.stackItems === true) ? 'x-superboxselect-stacked' : '';
-        if(this.renderFieldBtns){
+        if (this.renderFieldBtns) {
             extraClass += ' x-superboxselect-display-btns';
         }
         this.el.removeClass('x-form-text').addClass('x-superboxselect-input-field');
-        
+
         this.wrapEl = this.el.wrap({
-            tag : 'ul'
+            tag: 'ul'
         });
-        
+
         this.outerWrapEl = this.wrapEl.wrap({
-            tag : 'div',
+            tag: 'div',
             cls: 'x-form-text x-superboxselect ' + extraClass
         });
-       
+
         this.inputEl = this.el.wrap({
-            tag : 'li',
-            cls : 'x-superboxselect-input'
+            tag: 'li',
+            cls: 'x-superboxselect-input'
         });
-        
-        if(this.renderFieldBtns){
+
+        if (this.renderFieldBtns) {
             this.setupFieldButtons().manageClearBtn();
         }
-        
+
         this.setupFormInterception();
     },
-    onStoreLoad : function(store, records, options){
-    	//accomodating for bug in Ext 3.0.0 where options.params are empty
-    	var q = options.params[this.queryParam] || store.baseParams[this.queryParam] || "",
-    		isValuesQuery = options.params[this.queryValuesIndicator] || store.baseParams[this.queryValuesIndicator];
-    	
-    	if(this.removeValuesFromStore){
-    		this.store.each(function(record) {
-				if(this.usedRecords.containsKey(record.get(this.valueField))){
-					this.store.remove(record);
-				}
-			}, this);
-    	}
-    	//queried values
-    	if(isValuesQuery){
-    		var params = q.split(this.queryValuesDelimiter);
-    		Ext.each(params,function(p){
-    			this.remoteLookup.remove(p);
-    			var rec = this.findRecord(this.valueField,p);
-    			if(rec){
-    				this.addRecord(rec);
-    			}
-    		},this);
-    		
-    		if(this.setOriginal){
-    			this.setOriginal = false;
-    			this.originalValue = this.getValue();
-    		}
-    	}
+    onStoreLoad: function (store, records, options) {
+        //accomodating for bug in Ext 3.0.0 where options.params are empty
+        var q = options.params[this.queryParam] || store.baseParams[this.queryParam] || "",
+            isValuesQuery = options.params[this.queryValuesIndicator] || store.baseParams[this.queryValuesIndicator];
 
-    	//queried display (autocomplete) & addItem
-    	if(q !== '' && this.allowAddNewData){
-    		Ext.each(this.remoteLookup,function(r){
-    			if(typeof r == "object" && r[this.displayField] == q){
-    				this.remoteLookup.remove(r);
-					if(records.length && records[0].get(this.displayField) === q) {
-						this.addRecord(records[0]);
-						return;
-					}
-					var rec = this.createRecord(r);
-					this.store.add(rec);
-		        	this.addRecord(rec);
-		        	this.addedRecords.push(rec); //keep track of records added to store
-		        	(function(){
-		        		if(this.isExpanded()){
-			        		this.collapse();
-		        		}
-		        	}).defer(10,this);
-		        	return;
-    			}
-    		},this);
-    	}
-    	
-    	var toAdd = [];
-    	if(q === ''){
-	    	Ext.each(this.addedRecords,function(rec){
-	    		if(this.preventDuplicates && this.usedRecords.containsKey(rec.get(this.valueField))){
-					return;	    			
-	    		}
-	    		toAdd.push(rec);
-	    		
-	    	},this);
-	    	
-    	}else{
-    		var re = new RegExp(Ext.escapeRe(q) + '.*','i');
-    		Ext.each(this.addedRecords,function(rec){
-	    		if(this.preventDuplicates && this.usedRecords.containsKey(rec.get(this.valueField))){
-					return;	    			
-	    		}
-	    		if(re.test(rec.get(this.displayField))){
-	    			toAdd.push(rec);
-	    		}
-	    	},this);
-	    }
-    	this.store.add(toAdd);
-    	this.store.sort(this.displayField, 'ASC');
-    	
-		if(this.store.getCount() === 0 && this.isExpanded()){
-			this.collapse();
-		}
-		
-	},
-    doTransform : function() {
-    	var s = Ext.getDom(this.transform), transformValues = [];
-            if(!this.store){
-                this.mode = 'local';
-                var d = [], opts = s.options;
-                for(var i = 0, len = opts.length;i < len; i++){
-                    var o = opts[i], oe = Ext.get(o),
-                        value = oe.getAttributeNS(null,'value') || '',
-                        cls = oe.getAttributeNS(null,'className') || '',
-                        style = oe.getAttributeNS(null,'style') || '';
-                    if(o.selected) {
-                        transformValues.push(value);
-                    }
-                    d.push([value, o.text, cls, typeof(style) === "string" ? style : style.cssText]);
+        if (this.removeValuesFromStore) {
+            this.store.each(function (record) {
+                if (this.usedRecords.containsKey(record.get(this.valueField))) {
+                    this.store.remove(record);
                 }
-                this.store = new Ext.data.SimpleStore({
-                    'id': 0,
-                    fields: ['value', 'text', 'cls', 'style'],
-                    data : d
-                });
-                Ext.apply(this,{
-                    valueField: 'value',
-                    displayField: 'text',
-                    classField: 'cls',
-                    styleField: 'style'
-                });
+            }, this);
+        }
+        //queried values
+        if (isValuesQuery) {
+            var params = q.split(this.queryValuesDelimiter);
+            Ext.each(params, function (p) {
+                this.remoteLookup.remove(p);
+                var rec = this.findRecord(this.valueField, p);
+                if (rec) {
+                    this.addRecord(rec);
+                }
+            }, this);
+
+            if (this.setOriginal) {
+                this.setOriginal = false;
+                this.originalValue = this.getValue();
             }
-           
-            if(transformValues.length){
-                this.value = transformValues.join(',');
-            }
+        }
+
+        //queried display (autocomplete) & addItem
+        if (q !== '' && this.allowAddNewData) {
+            Ext.each(this.remoteLookup, function (r) {
+                if (typeof r == "object" && r[this.displayField] == q) {
+                    this.remoteLookup.remove(r);
+                    if (records.length && records[0].get(this.displayField) === q) {
+                        this.addRecord(records[0]);
+                        return;
+                    }
+                    var rec = this.createRecord(r);
+                    this.store.add(rec);
+                    this.addRecord(rec);
+                    this.addedRecords.push(rec); //keep track of records added to store
+                    (function () {
+                        if (this.isExpanded()) {
+                            this.collapse();
+                        }
+                    }).defer(10, this);
+                    return;
+                }
+            }, this);
+        }
+
+        var toAdd = [];
+        if (q === '') {
+            Ext.each(this.addedRecords, function (rec) {
+                if (this.preventDuplicates && this.usedRecords.containsKey(rec.get(this.valueField))) {
+                    return;
+                }
+                toAdd.push(rec);
+
+            }, this);
+
+        } else {
+            var re = new RegExp(Ext.escapeRe(q) + '.*', 'i');
+            Ext.each(this.addedRecords, function (rec) {
+                if (this.preventDuplicates && this.usedRecords.containsKey(rec.get(this.valueField))) {
+                    return;
+                }
+                if (re.test(rec.get(this.displayField))) {
+                    toAdd.push(rec);
+                }
+            }, this);
+        }
+        this.store.add(toAdd);
+        this.store.sort(this.displayField, 'ASC');
+
+        if (this.store.getCount() === 0 && this.isExpanded()) {
+            this.collapse();
+        }
+
     },
-    setupFieldButtons : function(){
+    doTransform: function () {
+        var s = Ext.getDom(this.transform), transformValues = [];
+        if (!this.store) {
+            this.mode = 'local';
+            var d = [], opts = s.options;
+            for (var i = 0, len = opts.length; i < len; i++) {
+                var o = opts[i], oe = Ext.get(o),
+                    value = oe.getAttributeNS(null, 'value') || '',
+                    cls = oe.getAttributeNS(null, 'className') || '',
+                    style = oe.getAttributeNS(null, 'style') || '';
+                if (o.selected) {
+                    transformValues.push(value);
+                }
+                d.push([value, o.text, cls, typeof(style) === "string" ? style : style.cssText]);
+            }
+            this.store = new Ext.data.SimpleStore({
+                'id': 0,
+                fields: ['value', 'text', 'cls', 'style'],
+                data: d
+            });
+            Ext.apply(this, {
+                valueField: 'value',
+                displayField: 'text',
+                classField: 'cls',
+                styleField: 'style'
+            });
+        }
+
+        if (transformValues.length) {
+            this.value = transformValues.join(',');
+        }
+    },
+    setupFieldButtons: function () {
         this.buttonWrap = this.outerWrapEl.createChild({
             cls: 'x-superboxselect-btns'
         });
-        
+
         this.buttonClear = this.buttonWrap.createChild({
-            tag:'div',
+            tag: 'div',
             cls: 'x-superboxselect-btn-clear ' + this.clearBtnCls
         });
-        
+
         this.buttonExpand = this.buttonWrap.createChild({
-            tag:'div',
+            tag: 'div',
             cls: 'x-superboxselect-btn-expand ' + this.expandBtnCls
         });
-        
+
         this.initButtonEvents();
-        
+
         return this;
     },
-    initButtonEvents : function() {
-        this.buttonClear.addClassOnOver('x-superboxselect-btn-over').on('click', function(e) {
+    initButtonEvents: function () {
+        this.buttonClear.addClassOnOver('x-superboxselect-btn-over').on('click', function (e) {
             e.stopEvent();
             if (this.disabled) {
                 return;
@@ -393,7 +393,7 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
             this.el.focus();
         }, this);
 
-        this.buttonExpand.addClassOnOver('x-superboxselect-btn-over').on('click', function(e) {
+        this.buttonExpand.addClassOnOver('x-superboxselect-btn-over').on('click', function (e) {
             e.stopEvent();
             if (this.disabled) {
                 return;
@@ -406,30 +406,30 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
             this.onTriggerClick();
         }, this);
     },
-    removeButtonEvents : function() {
+    removeButtonEvents: function () {
         this.buttonClear.removeAllListeners();
         this.buttonExpand.removeAllListeners();
         return this;
     },
-    clearCurrentFocus : function(){
-        if(this.currentFocus){
+    clearCurrentFocus: function () {
+        if (this.currentFocus) {
             this.currentFocus.onLnkBlur();
             this.currentFocus = null;
-        }  
-        return this;        
+        }
+        return this;
     },
-    initEvents : function() {
+    initEvents: function () {
         var el = this.el;
 
         el.on({
-            click   : this.onClick,
-            focus   : this.clearCurrentFocus,
-            blur    : this.onBlur,
+            click: this.onClick,
+            focus: this.clearCurrentFocus,
+            blur: this.onBlur,
 
-            keydown : this.onKeyDownHandler,
-            keyup   : this.onKeyUpBuffered,
+            keydown: this.onKeyDownHandler,
+            keyup: this.onKeyUpBuffered,
 
-            scope   : this
+            scope: this
         });
 
         this.on({
@@ -440,15 +440,15 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
 
         this.wrapEl.on('click', this.onWrapClick, this);
         this.outerWrapEl.on('click', this.onWrapClick, this);
-        
-        this.inputEl.focus = function() {
+
+        this.inputEl.focus = function () {
             el.focus();
         };
 
         Ext.ux.form.SuperBoxSelect.superclass.initEvents.call(this);
 
         Ext.apply(this.keyNav, {
-            tab: function(e) {
+            tab: function (e) {
                 if (this.fixFocusOnTabSelect && this.isExpanded()) {
                     e.stopEvent();
                     el.blur();
@@ -465,7 +465,7 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
                 return true;
             },
 
-            down: function(e) {
+            down: function (e) {
                 if (!this.isExpanded() && !this.currentFocus) {
                     this.onTriggerClick();
                 } else {
@@ -474,11 +474,12 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
                 }
             },
 
-            enter: function(){}
+            enter: function () {
+            }
         });
     },
 
-    onClick: function() {
+    onClick: function () {
         this.clearCurrentFocus();
         this.collapse();
         this.autoSize();
@@ -486,13 +487,13 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
 
     beforeBlur: Ext.form.ComboBox.superclass.beforeBlur,
 
-    onFocus: function() {
+    onFocus: function () {
         this.outerWrapEl.addClass(this.focusClass);
 
         Ext.ux.form.SuperBoxSelect.superclass.onFocus.call(this);
     },
 
-    onBlur: function() {
+    onBlur: function () {
         this.outerWrapEl.removeClass(this.focusClass);
 
         this.clearCurrentFocus();
@@ -505,21 +506,21 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         Ext.ux.form.SuperBoxSelect.superclass.onBlur.call(this);
     },
 
-    onCollapse: function() {
-    	this.view.clearSelections();
+    onCollapse: function () {
+        this.view.clearSelections();
         this.multiSelectMode = false;
     },
 
-    onWrapClick: function(e) {
+    onWrapClick: function (e) {
         e.stopEvent();
         this.collapse();
         this.el.focus();
         this.clearCurrentFocus();
     },
-    markInvalid : function(msg) {
+    markInvalid: function (msg) {
         var elp, t;
 
-        if (!this.rendered || this.preventMark ) {
+        if (!this.rendered || this.preventMark) {
             return;
         }
         this.outerWrapEl.addClass(this.invalidClass);
@@ -528,12 +529,12 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         switch (this.msgTarget) {
             case 'qtip':
                 Ext.apply(this.el.dom, {
-                    qtip    : msg,
-                    qclass  : 'x-form-invalid-tip'
+                    qtip: msg,
+                    qclass: 'x-form-invalid-tip'
                 });
                 Ext.apply(this.wrapEl.dom, {
-                    qtip    : msg,
-                    qclass  : 'x-form-invalid-tip'
+                    qtip: msg,
+                    qclass: 'x-form-invalid-tip'
                 });
                 if (Ext.QuickTips) { // fix for floating editors interacting with DND
                     Ext.QuickTips.enable();
@@ -551,7 +552,7 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
                         this.el.dom.title = msg;
                         break;
                     }
-                    this.errorEl = elp.createChild({cls:'x-form-invalid-msg'});
+                    this.errorEl = elp.createChild({cls: 'x-form-invalid-msg'});
                     this.errorEl.setWidth(elp.getWidth(true) - 20);
                 }
                 this.errorEl.update(msg);
@@ -564,12 +565,12 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
                         this.el.dom.title = msg;
                         break;
                     }
-                    this.errorIcon = elp.createChild({cls:'x-form-invalid-icon'});
+                    this.errorIcon = elp.createChild({cls: 'x-form-invalid-icon'});
                 }
                 this.alignErrorIcon();
                 Ext.apply(this.errorIcon.dom, {
-                    qtip    : msg,
-                    qclass  : 'x-form-invalid-tip'
+                    qtip: msg,
+                    qclass: 'x-form-invalid-tip'
                 });
                 this.errorIcon.show();
                 this.on('resize', this.alignErrorIcon, this);
@@ -582,15 +583,15 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         }
         this.fireEvent('invalid', this, msg);
     },
-    clearInvalid : function(){
-        if(!this.rendered || this.preventMark){ // not rendered
+    clearInvalid: function () {
+        if (!this.rendered || this.preventMark) { // not rendered
             return;
         }
         this.outerWrapEl.removeClass(this.invalidClass);
-        switch(this.msgTarget){
+        switch (this.msgTarget) {
             case 'qtip':
                 this.el.dom.qtip = '';
-                this.wrapEl.dom.qtip ='';
+                this.wrapEl.dom.qtip = '';
                 break;
             case 'title':
                 this.el.dom.title = '';
@@ -598,12 +599,12 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
                 this.outerWrapEl.dom.title = '';
                 break;
             case 'under':
-                if(this.errorEl){
+                if (this.errorEl) {
                     Ext.form.Field.msgFx[this.msgFx].hide(this.errorEl, this);
                 }
                 break;
             case 'side':
-                if(this.errorIcon){
+                if (this.errorIcon) {
                     this.errorIcon.dom.qtip = '';
                     this.errorIcon.hide();
                     this.un('resize', this.alignErrorIcon, this);
@@ -617,12 +618,12 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         }
         this.fireEvent('valid', this);
     },
-    alignErrorIcon : function(){
-        if(this.wrap){
+    alignErrorIcon: function () {
+        if (this.wrap) {
             this.errorIcon.alignTo(this.wrap, 'tl-tr', [Ext.isIE ? 5 : 2, 3]);
         }
     },
-    expand : function(){
+    expand: function () {
         if (this.isExpanded() || !this.hasFocus) {
             return;
         }
@@ -635,106 +636,106 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         });
         this.fireEvent('expand', this);
     },
-    restrictHeight : function(){
+    restrictHeight: function () {
         var inner = this.innerList.dom,
-            st = inner.scrollTop, 
+            st = inner.scrollTop,
             list = this.list;
-        
+
         inner.style.height = '';
-        
-        var pad = list.getFrameWidth('tb')+(this.resizable?this.handleHeight:0)+this.assetHeight,
+
+        var pad = list.getFrameWidth('tb') + (this.resizable ? this.handleHeight : 0) + this.assetHeight,
             h = Math.max(inner.clientHeight, inner.offsetHeight, inner.scrollHeight),
-            ha = this.getPosition()[1]-Ext.getBody().getScroll().top,
-            hb = Ext.lib.Dom.getViewHeight()-ha-this.getSize().height,
-            space = Math.max(ha, hb, this.minHeight || 0)-list.shadowOffset-pad-5;
-        
+            ha = this.getPosition()[1] - Ext.getBody().getScroll().top,
+            hb = Ext.lib.Dom.getViewHeight() - ha - this.getSize().height,
+            space = Math.max(ha, hb, this.minHeight || 0) - list.shadowOffset - pad - 5;
+
         h = Math.min(h, space, this.maxHeight);
         this.innerList.setHeight(h);
 
         list.beginUpdate();
-        list.setHeight(h+pad);
+        list.setHeight(h + pad);
         list.alignTo(this.outerWrapEl, this.listAlign);
         list.endUpdate();
-        
-        if(this.multiSelectMode){
+
+        if (this.multiSelectMode) {
             inner.scrollTop = st;
         }
     },
-    
-    validateValue: function(val){
-        if(this.items.getCount() === 0){
-             if(this.allowBlank){
-                 this.clearInvalid();
-                 return true;
-             }else{
-                 this.markInvalid(this.blankText);
-                 return false;
-             }
+
+    validateValue: function (val) {
+        if (this.items.getCount() === 0) {
+            if (this.allowBlank) {
+                this.clearInvalid();
+                return true;
+            } else {
+                this.markInvalid(this.blankText);
+                return false;
+            }
         }
-        
+
         this.clearInvalid();
         return true;
     },
 
-    manageNameAttribute :  function(){
-    	if(this.items.getCount() === 0 && this.forceFormValue){
-    	   this.el.dom.setAttribute('name', this.hiddenName || this.name);
-    	}else{
-    		this.el.dom.removeAttribute('name');
-    	}
+    manageNameAttribute: function () {
+        if (this.items.getCount() === 0 && this.forceFormValue) {
+            this.el.dom.setAttribute('name', this.hiddenName || this.name);
+        } else {
+            this.el.dom.removeAttribute('name');
+        }
     },
-    setupFormInterception : function(){
+    setupFormInterception: function () {
         var form;
-        this.findParentBy(function(p){ 
-            if(p.getForm){
+        this.findParentBy(function (p) {
+            if (p.getForm) {
                 form = p.getForm();
             }
         });
-        if(form){
-        	
-        	var formGet = form.getValues;
-            form.getValues = function(asString){
+        if (form) {
+
+            var formGet = form.getValues;
+            form.getValues = function (asString) {
                 this.el.dom.disabled = true;
                 var oldVal = this.el.dom.value;
                 this.setRawValue('');
                 var vals = formGet.call(form);
                 this.el.dom.disabled = false;
                 this.setRawValue(oldVal);
-                if(this.forceFormValue && this.items.getCount() === 0){
-                	vals[this.name] = '';
+                if (this.forceFormValue && this.items.getCount() === 0) {
+                    vals[this.name] = '';
                 }
-                return asString ? Ext.urlEncode(vals) : vals ;
+                return asString ? Ext.urlEncode(vals) : vals;
             }.createDelegate(this);
         }
     },
-    onResize : function(w, h, rw, rh) {
+    onResize: function (w, h, rw, rh) {
         var reduce = Ext.isIE6 ? 4 : Ext.isIE7 ? 1 : Ext.isIE8 ? 1 : 0;
-        if(this.wrapEl){
+        if (this.wrapEl) {
             this._width = w;
             this.outerWrapEl.setWidth(w - reduce);
             if (this.renderFieldBtns) {
                 reduce += (this.buttonWrap.getWidth() + 20);
                 this.wrapEl.setWidth(w - reduce);
-        }
+            }
         }
         Ext.ux.form.SuperBoxSelect.superclass.onResize.call(this, w, h, rw, rh);
         this.autoSize();
     },
-    onEnable: function(){
+    onEnable: function () {
         Ext.ux.form.SuperBoxSelect.superclass.onEnable.call(this);
-        this.items.each(function(item){
+        this.items.each(function (item) {
             item.enable();
         });
         if (this.renderFieldBtns) {
             this.initButtonEvents();
         }
     },
-    onDisable: function(){
+    onDisable: function () {
         Ext.ux.form.SuperBoxSelect.superclass.onDisable.call(this);
-        this.items.each(function(item){
+        this.items.each(function (item) {
             item.disable();
         });
-        if(this.renderFieldBtns){
+        if (this.renderFieldBtns) {
             this.removeButtonEvents();
         }
     },
@@ -742,242 +743,246 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
      * Clears all values from the component.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name clearValue
-     * @param {Boolean} supressRemoveEvent [Optional] When true, the 'removeitem' event will not fire for each item that is removed.    
+     * @param {Boolean} supressRemoveEvent [Optional] When true, the 'removeitem' event will not fire for each item that is removed.
      */
-    clearValue : function(supressRemoveEvent){
+    clearValue: function (supressRemoveEvent) {
         Ext.ux.form.SuperBoxSelect.superclass.clearValue.call(this);
         this.preventMultipleRemoveEvents = supressRemoveEvent || this.supressClearValueRemoveEvents || false;
-    	this.removeAllItems();
-    	this.preventMultipleRemoveEvents = false;
-        this.fireEvent('clear',this);
+        this.removeAllItems();
+        this.preventMultipleRemoveEvents = false;
+        this.fireEvent('clear', this);
         return this;
     },
-    onKeyUp : function(e) {
+    onKeyUp: function (e) {
         if (this.editable !== false && (!e.isSpecialKey() || e.getKey() === e.BACKSPACE) && e.getKey() !== this.itemDelimiterKey && (!e.hasModifier() || e.shiftKey)) {
             this.lastKey = e.getKey();
             this.dqTask.delay(this.queryDelay);
-        }        
+        }
     },
-    onKeyDownHandler : function(e,t) {
-    	    	
-        var toDestroy,nextFocus,idx;
-        if ((e.getKey() === e.DELETE || e.getKey() === e.SPACE) && this.currentFocus){
+    onKeyDownHandler: function (e, t) {
+
+        var toDestroy, nextFocus, idx;
+        if ((e.getKey() === e.DELETE || e.getKey() === e.SPACE) && this.currentFocus) {
             e.stopEvent();
             toDestroy = this.currentFocus;
-            this.on('expand',function(){this.collapse();},this,{single: true});
+            this.on('expand', function () {
+                this.collapse();
+            }, this, {single: true});
             idx = this.items.indexOfKey(this.currentFocus.key);
-            
+
             this.clearCurrentFocus();
-            
-            if(idx < (this.items.getCount() -1)){
-                nextFocus = this.items.itemAt(idx+1);
+
+            if (idx < (this.items.getCount() - 1)) {
+                nextFocus = this.items.itemAt(idx + 1);
             }
-            
+
             toDestroy.preDestroy(true);
-            if(nextFocus){
-                (function(){
+            if (nextFocus) {
+                (function () {
                     nextFocus.onLnkFocus();
                     this.currentFocus = nextFocus;
-                }).defer(200,this);
+                }).defer(200, this);
             }
-        
+
             return true;
         }
-        
+
         var val = this.el.dom.value, it, ctrl = e.ctrlKey;
-        if(e.getKey() === this.itemDelimiterKey){
+        if (e.getKey() === this.itemDelimiterKey) {
             e.stopEvent();
             if (val !== "") {
-                if (ctrl || !this.isExpanded())  {  //ctrl+enter for new items
-                	this.view.clearSelections();
+                if (ctrl || !this.isExpanded()) {  //ctrl+enter for new items
+                    this.view.clearSelections();
                     this.collapse();
                     this.setRawValue('');
                     this.fireEvent('newitem', this, val);
                 }
                 else {
-                	this.onViewClick();
+                    this.onViewClick();
                     //removed from 3.0.1
-                    if(this.unsetDelayCheck){
+                    if (this.unsetDelayCheck) {
                         this.delayedCheck = true;
                         this.unsetDelayCheck.defer(10, this);
                     }
                 }
-            }else{
-                if(!this.isExpanded()){
+            } else {
+                if (!this.isExpanded()) {
                     return;
                 }
                 this.onViewClick();
                 //removed from 3.0.1
-                if(this.unsetDelayCheck){
+                if (this.unsetDelayCheck) {
                     this.delayedCheck = true;
                     this.unsetDelayCheck.defer(10, this);
                 }
             }
             return true;
         }
-        
-        if(val !== '') {
+
+        if (val !== '') {
             this.autoSize();
             return;
         }
-        
+
         //select first item
-        if(e.getKey() === e.HOME){
+        if (e.getKey() === e.HOME) {
             e.stopEvent();
-            if(this.items.getCount() > 0){
+            if (this.items.getCount() > 0) {
                 this.collapse();
                 it = this.items.get(0);
                 it.el.focus();
-                
+
             }
             return true;
         }
         //backspace remove
-        if(e.getKey() === e.BACKSPACE){
+        if (e.getKey() === e.BACKSPACE) {
             e.stopEvent();
-            if(this.currentFocus) {
+            if (this.currentFocus) {
                 toDestroy = this.currentFocus;
-                this.on('expand',function(){
+                this.on('expand', function () {
                     this.collapse();
-                },this,{single: true});
-                
+                }, this, {single: true});
+
                 idx = this.items.indexOfKey(toDestroy.key);
-                
+
                 this.clearCurrentFocus();
-                if(idx < (this.items.getCount() -1)){
-                    nextFocus = this.items.itemAt(idx+1);
+                if (idx < (this.items.getCount() - 1)) {
+                    nextFocus = this.items.itemAt(idx + 1);
                 }
-                
+
                 toDestroy.preDestroy(true);
-                
-                if(nextFocus){
-                    (function(){
+
+                if (nextFocus) {
+                    (function () {
                         nextFocus.onLnkFocus();
                         this.currentFocus = nextFocus;
-                    }).defer(200,this);
+                    }).defer(200, this);
                 }
-                
+
                 return;
-            }else{
-                it = this.items.get(this.items.getCount() -1);
-                if(it){
-                    if(this.backspaceDeletesLastItem){
-                        this.on('expand',function(){this.collapse();},this,{single: true});
+            } else {
+                it = this.items.get(this.items.getCount() - 1);
+                if (it) {
+                    if (this.backspaceDeletesLastItem) {
+                        this.on('expand', function () {
+                            this.collapse();
+                        }, this, {single: true});
                         it.preDestroy(true);
-                    }else{
-                        if(this.navigateItemsWithTab){
+                    } else {
+                        if (this.navigateItemsWithTab) {
                             it.onElClick();
-                        }else{
-                            this.on('expand',function(){
+                        } else {
+                            this.on('expand', function () {
                                 this.collapse();
                                 this.currentFocus = it;
-                                this.currentFocus.onLnkFocus.defer(20,this.currentFocus);
-                            },this,{single: true});
+                                this.currentFocus.onLnkFocus.defer(20, this.currentFocus);
+                            }, this, {single: true});
                         }
                     }
                 }
                 return true;
             }
         }
-        
-        if(!e.isNavKeyPress()){
+
+        if (!e.isNavKeyPress()) {
             this.multiSelectMode = false;
             this.clearCurrentFocus();
             return;
         }
         //arrow nav
-        if(e.getKey() === e.LEFT || (e.getKey() === e.UP && !this.isExpanded())){
+        if (e.getKey() === e.LEFT || (e.getKey() === e.UP && !this.isExpanded())) {
             e.stopEvent();
             this.collapse();
             //get last item
-            it = this.items.get(this.items.getCount()-1);
-            if(this.navigateItemsWithTab){ 
+            it = this.items.get(this.items.getCount() - 1);
+            if (this.navigateItemsWithTab) {
                 //focus last el
-                if(it){
-                    it.focus(); 
+                if (it) {
+                    it.focus();
                 }
-            }else{
+            } else {
                 //focus prev item
-                if(this.currentFocus){
+                if (this.currentFocus) {
                     idx = this.items.indexOfKey(this.currentFocus.key);
                     this.clearCurrentFocus();
-                    
-                    if(idx !== 0){
-                        this.currentFocus = this.items.itemAt(idx-1);
+
+                    if (idx !== 0) {
+                        this.currentFocus = this.items.itemAt(idx - 1);
                         this.currentFocus.onLnkFocus();
                     }
-                }else{
+                } else {
                     this.currentFocus = it;
-                    if(it){
+                    if (it) {
                         it.onLnkFocus();
                     }
                 }
             }
             return true;
         }
-        if(e.getKey() === e.DOWN){
-            if(this.currentFocus){
+        if (e.getKey() === e.DOWN) {
+            if (this.currentFocus) {
                 this.collapse();
                 e.stopEvent();
                 idx = this.items.indexOfKey(this.currentFocus.key);
-                if(idx == (this.items.getCount() -1)){
-                    this.clearCurrentFocus.defer(10,this);
-                }else{
+                if (idx == (this.items.getCount() - 1)) {
+                    this.clearCurrentFocus.defer(10, this);
+                } else {
                     this.clearCurrentFocus();
-                    this.currentFocus = this.items.itemAt(idx+1);
-                    if(this.currentFocus){
+                    this.currentFocus = this.items.itemAt(idx + 1);
+                    if (this.currentFocus) {
                         this.currentFocus.onLnkFocus();
                     }
                 }
                 return true;
             }
         }
-        if(e.getKey() === e.RIGHT){
+        if (e.getKey() === e.RIGHT) {
             this.collapse();
             it = this.items.itemAt(0);
-            if(this.navigateItemsWithTab){ 
+            if (this.navigateItemsWithTab) {
                 //focus first el
-                if(it){
-                    it.focus(); 
+                if (it) {
+                    it.focus();
                 }
-            }else{
-                if(this.currentFocus){
+            } else {
+                if (this.currentFocus) {
                     idx = this.items.indexOfKey(this.currentFocus.key);
                     this.clearCurrentFocus();
-                    if(idx < (this.items.getCount() -1)){
-                        this.currentFocus = this.items.itemAt(idx+1);
-                        if(this.currentFocus){
+                    if (idx < (this.items.getCount() - 1)) {
+                        this.currentFocus = this.items.itemAt(idx + 1);
+                        if (this.currentFocus) {
                             this.currentFocus.onLnkFocus();
                         }
                     }
-                }else{
+                } else {
                     this.currentFocus = it;
-                    if(it){
+                    if (it) {
                         it.onLnkFocus();
                     }
                 }
             }
         }
     },
-    onKeyUpBuffered : function(e){
-        if(!e.isNavKeyPress()){
+    onKeyUpBuffered: function (e) {
+        if (!e.isNavKeyPress()) {
             this.autoSize();
         }
     },
-    reset :  function(){
-    	this.killItems();
+    reset: function () {
+        this.killItems();
         Ext.ux.form.SuperBoxSelect.superclass.reset.call(this);
         this.addedRecords = [];
         this.autoSize().setRawValue('');
     },
-    applyEmptyText : function(){
-		this.setRawValue('');
-        if(this.items.getCount() > 0){
+    applyEmptyText: function () {
+        this.setRawValue('');
+        if (this.items.getCount() > 0) {
             this.el.removeClass(this.emptyClass);
             this.setRawValue('');
             return this;
         }
-        if(this.rendered && this.emptyText && this.getRawValue().length < 1){
+        if (this.rendered && this.emptyText && this.getRawValue().length < 1) {
             this.setRawValue(this.emptyText);
             this.el.addClass(this.emptyClass);
         }
@@ -985,59 +990,59 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
     },
     /**
      * @private
-     * 
+     *
      * Use clearValue instead
      */
-    removeAllItems: function(){
-    	this.items.each(function(item){
+    removeAllItems: function () {
+        this.items.each(function (item) {
             item.preDestroy(true);
-        },this);
+        }, this);
         this.manageClearBtn();
         return this;
     },
-    killItems : function(){
-    	this.items.each(function(item){
+    killItems: function () {
+        this.items.each(function (item) {
             item.kill();
-        },this);
+        }, this);
         this.resetStore();
         this.items.clear();
         this.manageClearBtn();
         return this;
     },
-    resetStore: function(){
+    resetStore: function () {
         this.store.clearFilter();
-        if(!this.removeValuesFromStore){
+        if (!this.removeValuesFromStore) {
             return this;
         }
-        this.usedRecords.each(function(rec){
+        this.usedRecords.each(function (rec) {
             this.store.add(rec);
-        },this);
+        }, this);
         this.usedRecords.clear();
         this.sortStore();
         return this;
     },
-    sortStore: function(){
+    sortStore: function () {
         var ss = this.store.getSortState();
-        if(ss && ss.field){
+        if (ss && ss.field) {
             this.store.sort(ss.field, ss.direction);
         }
         return this;
     },
-    getCaption: function(dataObject){
-        if(typeof this.displayFieldTpl === 'string') {
+    getCaption: function (dataObject) {
+        if (typeof this.displayFieldTpl === 'string') {
             this.displayFieldTpl = new Ext.XTemplate(this.displayFieldTpl);
         }
         var caption, recordData = dataObject instanceof Ext.data.Record ? dataObject.data : dataObject;
-      
-        if(this.displayFieldTpl) {
+
+        if (this.displayFieldTpl) {
             caption = this.displayFieldTpl.apply(recordData);
-        } else if(this.displayField) {
+        } else if (this.displayField) {
             caption = recordData[this.displayField];
         }
-        
+
         return caption;
     },
-    addRecord : function(record) {
+    addRecord: function (record) {
         var display = record.data[this.displayField],
             caption = this.getCaption(record),
             val = record.data[this.valueField],
@@ -1048,20 +1053,20 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
             this.usedRecords.add(val, record);
             this.store.remove(record);
         }
-        
+
         this.addItemBox(val, display, caption, cls, style);
         this.fireEvent('additem', this, val, record);
     },
-    createRecord : function(recordData){
-        if(!this.recordConstructor){
+    createRecord: function (recordData) {
+        if (!this.recordConstructor) {
             var recordFields = [
                 {name: this.valueField},
                 {name: this.displayField}
             ];
-            if(this.classField){
+            if (this.classField) {
                 recordFields.push({name: this.classField});
             }
-            if(this.styleField){
+            if (this.styleField) {
                 recordFields.push({name: this.styleField});
             }
             this.recordConstructor = Ext.data.Record.create(recordFields);
@@ -1072,44 +1077,44 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
      * Adds an array of items to the SuperBoxSelect component if the {@link #Ext.ux.form.SuperBoxSelect-allowAddNewData} config is set to true.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name addItem
-     * @param {Array} newItemObjects An Array of object literals containing the property names and values for an item. The property names must match those specified in {@link #Ext.ux.form.SuperBoxSelect-displayField}, {@link #Ext.ux.form.SuperBoxSelect-valueField} and {@link #Ext.ux.form.SuperBoxSelect-classField} 
+     * @param {Array} newItemObjects An Array of object literals containing the property names and values for an item. The property names must match those specified in {@link #Ext.ux.form.SuperBoxSelect-displayField}, {@link #Ext.ux.form.SuperBoxSelect-valueField} and {@link #Ext.ux.form.SuperBoxSelect-classField}
      */
-    addItems : function(newItemObjects){
-    	if (Ext.isArray(newItemObjects)) {
-			Ext.each(newItemObjects, function(item) {
-				this.addItem(item);
-			}, this);
-		} else {
-			this.addItem(newItemObjects);
-		}
+    addItems: function (newItemObjects) {
+        if (Ext.isArray(newItemObjects)) {
+            Ext.each(newItemObjects, function (item) {
+                this.addItem(item);
+            }, this);
+        } else {
+            this.addItem(newItemObjects);
+        }
     },
     /**
      * Adds a new non-existing item to the SuperBoxSelect component if the {@link #Ext.ux.form.SuperBoxSelect-allowAddNewData} config is set to true.
      * This method should be used in place of addItem from within the newitem event handler.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name addNewItem
-     * @param {Object} newItemObject An object literal containing the property names and values for an item. The property names must match those specified in {@link #Ext.ux.form.SuperBoxSelect-displayField}, {@link #Ext.ux.form.SuperBoxSelect-valueField} and {@link #Ext.ux.form.SuperBoxSelect-classField} 
+     * @param {Object} newItemObject An object literal containing the property names and values for an item. The property names must match those specified in {@link #Ext.ux.form.SuperBoxSelect-displayField}, {@link #Ext.ux.form.SuperBoxSelect-valueField} and {@link #Ext.ux.form.SuperBoxSelect-classField}
      */
-    addNewItem : function(newItemObject){
-    	this.addItem(newItemObject,true);
+    addNewItem: function (newItemObject) {
+        this.addItem(newItemObject, true);
     },
     /**
      * Adds an item to the SuperBoxSelect component if the {@link #Ext.ux.form.SuperBoxSelect-allowAddNewData} config is set to true.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name addItem
-     * @param {Object} newItemObject An object literal containing the property names and values for an item. The property names must match those specified in {@link #Ext.ux.form.SuperBoxSelect-displayField}, {@link #Ext.ux.form.SuperBoxSelect-valueField} and {@link #Ext.ux.form.SuperBoxSelect-classField} 
+     * @param {Object} newItemObject An object literal containing the property names and values for an item. The property names must match those specified in {@link #Ext.ux.form.SuperBoxSelect-displayField}, {@link #Ext.ux.form.SuperBoxSelect-valueField} and {@link #Ext.ux.form.SuperBoxSelect-classField}
      */
-    addItem : function(newItemObject, /*hidden param*/ forcedAdd){
-        
+    addItem: function (newItemObject, /*hidden param*/ forcedAdd) {
+
         var val = newItemObject[this.valueField];
 
-        if(this.disabled) {
+        if (this.disabled) {
             return false;
         }
-        if(this.preventDuplicates && this.hasValue(val)){
+        if (this.preventDuplicates && this.hasValue(val)) {
             return;
         }
-        
+
         //use existing record if found
         var record = this.findRecord(this.valueField, val);
         if (record) {
@@ -1118,33 +1123,33 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         } else if (!this.allowAddNewData) { // else it's a new item
             return;
         }
-        
-        if(this.mode === 'remote'){
-        	this.remoteLookup.push(newItemObject); 
-        	this.doQuery(val,false,false,forcedAdd);
-        	return;
+
+        if (this.mode === 'remote') {
+            this.remoteLookup.push(newItemObject);
+            this.doQuery(val, false, false, forcedAdd);
+            return;
         }
-        
+
         var rec = this.createRecord(newItemObject);
         this.store.add(rec);
         this.addRecord(rec);
-        
+
         return true;
     },
-    addItemBox : function(itemVal,itemDisplay,itemCaption, itemClass, itemStyle) {
-        var hConfig, parseStyle = function(s){
+    addItemBox: function (itemVal, itemDisplay, itemCaption, itemClass, itemStyle) {
+        var hConfig, parseStyle = function (s) {
             var ret = '';
-            if(typeof s == 'function'){
+            if (typeof s == 'function') {
                 ret = s.call();
-            }else if(typeof s == 'object'){
-                for(var p in s){
-                    ret+= p +':'+s[p]+';';
+            } else if (typeof s == 'object') {
+                for (var p in s) {
+                    ret += p + ':' + s[p] + ';';
                 }
-            }else if(typeof s == 'string'){
+            } else if (typeof s == 'string') {
                 ret = s + ';';
             }
             return ret;
-        }, itemKey = Ext.id(null,'sbx-item'), box = new Ext.ux.form.SuperBoxSelectItem({
+        }, itemKey = Ext.id(null, 'sbx-item'), box = new Ext.ux.form.SuperBoxSelectItem({
             owner: this,
             disabled: this.disabled,
             renderTo: this.wrapEl,
@@ -1152,29 +1157,29 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
             style: parseStyle(this.extraItemStyle) + ' ' + itemStyle,
             caption: itemCaption,
             display: itemDisplay,
-            value:  itemVal,
+            value: itemVal,
             key: itemKey,
             listeners: {
-                'remove': function(item){
-                    if(this.fireEvent('beforeremoveitem',this,item.value) === false){
+                'remove': function (item) {
+                    if (this.fireEvent('beforeremoveitem', this, item.value) === false) {
                         return;
                     }
                     this.items.removeKey(item.key);
-                    if(this.removeValuesFromStore){
-                        if(this.usedRecords.containsKey(item.value)){
+                    if (this.removeValuesFromStore) {
+                        if (this.usedRecords.containsKey(item.value)) {
                             this.store.add(this.usedRecords.get(item.value));
                             this.usedRecords.removeKey(item.value);
                             this.sortStore();
-                            if(this.view){
+                            if (this.view) {
                                 this.view.render();
                             }
                         }
                     }
-                    if(!this.preventMultipleRemoveEvents){
-                    	this.fireEvent.defer(250,this,['removeitem',this,item.value, this.findInStore(item.value)]);
+                    if (!this.preventMultipleRemoveEvents) {
+                        this.fireEvent.defer(250, this, ['removeitem', this, item.value, this.findInStore(item.value)]);
                     }
                 },
-                destroy: function(){
+                destroy: function () {
                     this.collapse();
                     this.autoSize().manageClearBtn().validateValue();
                 },
@@ -1182,25 +1187,25 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
             }
         });
         box.render();
-        
-        hConfig = {
-            tag :'input', 
-            type :'hidden', 
-            value : itemVal,
-            name : (this.hiddenName || this.name)
-        };
-        
-        if(this.disabled){
-        	Ext.apply(hConfig,{
-        	   disabled : 'disabled'
-        	})
-        }
-        box.hidden = this.el.insertSibling(hConfig,'before');
 
-        this.items.add(itemKey,box);
+        hConfig = {
+            tag: 'input',
+            type: 'hidden',
+            value: itemVal,
+            name: (this.hiddenName || this.name)
+        };
+
+        if (this.disabled) {
+            Ext.apply(hConfig, {
+                disabled: 'disabled'
+            })
+        }
+        box.hidden = this.el.insertSibling(hConfig, 'before');
+
+        this.items.add(itemKey, box);
         this.applyEmptyText().autoSize().manageClearBtn().validateValue();
     },
-    manageClearBtn : function() {
+    manageClearBtn: function () {
         if (!this.renderFieldBtns || !this.rendered || !this.buttonClear) {
             return this;
         }
@@ -1212,9 +1217,9 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
         }
         return this;
     },
-    findInStore : function(val){
+    findInStore: function (val) {
         var index = this.store.find(this.valueField, val);
-        if(index > -1){
+        if (index > -1) {
             return this.store.getAt(index);
         }
         return false;
@@ -1223,11 +1228,11 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
      * Returns a String value containing a concatenated list of item values. The list is concatenated with the {@link #Ext.ux.form.SuperBoxSelect-valueDelimiter}.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name getValue
-     * @return {String} a String value containing a concatenated list of item values. 
+     * @return {String} a String value containing a concatenated list of item values.
      */
-    getValue : function() {
+    getValue: function () {
         var ret = [];
-        this.items.each(function(item){
+        this.items.each(function (item) {
             ret.push(item.value);
         });
         return ret.join(this.valueDelimiter);
@@ -1236,97 +1241,97 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
      * Returns an Array of item objects containing the {@link #Ext.ux.form.SuperBoxSelect-displayField}, {@link #Ext.ux.form.SuperBoxSelect-valueField}, {@link #Ext.ux.form.SuperBoxSelect-classField} and {@link #Ext.ux.form.SuperBoxSelect-styleField} properties.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name getValueEx
-     * @return {Array} an array of item objects. 
+     * @return {Array} an array of item objects.
      */
-    getValueEx : function() {
+    getValueEx: function () {
         var ret = [];
-        this.items.each(function(item){
+        this.items.each(function (item) {
             var newItem = {};
             newItem[this.valueField] = item.value;
             newItem[this.displayField] = item.display;
-            if(this.classField){
+            if (this.classField) {
                 newItem[this.classField] = item.cls || '';
             }
-            if(this.styleField){
+            if (this.styleField) {
                 newItem[this.styleField] = item.style || '';
             }
             ret.push(newItem);
-        },this);
+        }, this);
         return ret;
     },
     // private
-    initValue : function(){
- 
+    initValue: function () {
+
         Ext.ux.form.SuperBoxSelect.superclass.initValue.call(this);
-        if(this.mode === 'remote') {
-        	this.setOriginal = true;
+        if (this.mode === 'remote') {
+            this.setOriginal = true;
         }
     },
     /**
      * Sets the value of the SuperBoxSelect component.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name setValue
-     * @param {String|Array} value An array of item values, or a String value containing a delimited list of item values. (The list should be delimited with the {@link #Ext.ux.form.SuperBoxSelect-valueDelimiter) 
+     * @param {String|Array} value An array of item values, or a String value containing a delimited list of item values. (The list should be delimited with the {@link #Ext.ux.form.SuperBoxSelect-valueDelimiter)
      */
-    setValue : function(value){
-        if(!this.rendered || !this.wrapEl){
+    setValue: function (value) {
+        if (!this.rendered || !this.wrapEl) {
             this.value = value;
             return;
         }
-            
+
         this.removeAllItems().resetStore();
         this.remoteLookup = [];
-        
-        if(Ext.isEmpty(value)){
-        	return;
+
+        if (Ext.isEmpty(value)) {
+            return;
         }
-        
+
         var values = value;
-        if(!Ext.isArray(value)){
+        if (!Ext.isArray(value)) {
             value = '' + value;
-            values = value.split(this.valueDelimiter); 
+            values = value.split(this.valueDelimiter);
         }
-        
-        Ext.each(values,function(val){
+
+        Ext.each(values, function (val) {
             var record = this.findRecord(this.valueField, val);
-            if(record){
+            if (record) {
                 this.addRecord(record);
-            }else if(this.mode === 'remote'){
-				this.remoteLookup.push(val);            	
+            } else if (this.mode === 'remote') {
+                this.remoteLookup.push(val);
             }
-        },this);
-        
-        if(this.mode === 'remote'){
-      		var q = this.remoteLookup.join(this.queryValuesDelimiter); 
-      		this.doQuery(q,false, true); //3rd param to specify a values query
+        }, this);
+
+        if (this.mode === 'remote') {
+            var q = this.remoteLookup.join(this.queryValuesDelimiter);
+            this.doQuery(q, false, true); //3rd param to specify a values query
         }
-        
+
     },
     /**
      * Sets the value of the SuperBoxSelect component, adding new items that don't exist in the data store if the {@link #Ext.ux.form.SuperBoxSelect-allowAddNewData} config is set to true.
      * @methodOf Ext.ux.form.SuperBoxSelect
      * @name setValue
-     * @param {Array} data An Array of item objects containing the {@link #Ext.ux.form.SuperBoxSelect-displayField}, {@link #Ext.ux.form.SuperBoxSelect-valueField} and {@link #Ext.ux.form.SuperBoxSelect-classField} properties.  
+     * @param {Array} data An Array of item objects containing the {@link #Ext.ux.form.SuperBoxSelect-displayField}, {@link #Ext.ux.form.SuperBoxSelect-valueField} and {@link #Ext.ux.form.SuperBoxSelect-classField} properties.
      */
-    setValueEx : function(data){
+    setValueEx: function (data) {
         this.removeAllItems().resetStore();
-        
-        if(!Ext.isArray(data)){
+
+        if (!Ext.isArray(data)) {
             data = [data];
         }
         this.remoteLookup = [];
-        
-        if(this.allowAddNewData && this.mode === 'remote'){ // no need to query
-            Ext.each(data, function(d){
-            	var r = this.findRecord(this.valueField, d[this.valueField]) || this.createRecord(d);
+
+        if (this.allowAddNewData && this.mode === 'remote') { // no need to query
+            Ext.each(data, function (d) {
+                var r = this.findRecord(this.valueField, d[this.valueField]) || this.createRecord(d);
                 this.addRecord(r);
-            },this);
+            }, this);
             return;
         }
-        
-        Ext.each(data,function(item){
+
+        Ext.each(data, function (item) {
             this.addItem(item);
-        },this);
+        }, this);
     },
     /**
      * Returns true if the SuperBoxSelect component has a selected item with a value matching the 'val' parameter.
@@ -1335,38 +1340,38 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
      * @param {Mixed} val The value to test.
      * @return {Boolean} true if the component has the selected value, false otherwise.
      */
-    hasValue: function(val){
+    hasValue: function (val) {
         var has = false;
-        this.items.each(function(item){
-            if(item.value == val){
+        this.items.each(function (item) {
+            if (item.value == val) {
                 has = true;
                 return false;
             }
-        },this);
+        }, this);
         return has;
     },
-    onSelect : function(record, index) {
-    	if (this.fireEvent('beforeselect', this, record, index) !== false){
+    onSelect: function (record, index) {
+        if (this.fireEvent('beforeselect', this, record, index) !== false) {
             var val = record.data[this.valueField];
-            
-            if(this.preventDuplicates && this.hasValue(val)){
+
+            if (this.preventDuplicates && this.hasValue(val)) {
                 return;
             }
-            
+
             this.setRawValue('');
             this.lastSelectionText = '';
-            
-            if(this.fireEvent('beforeadditem',this,val) !== false){
+
+            if (this.fireEvent('beforeadditem', this, val) !== false) {
                 this.addRecord(record);
             }
-            if(this.store.getCount() === 0 || !this.multiSelectMode){
+            if (this.store.getCount() === 0 || !this.multiSelectMode) {
                 this.collapse();
-            }else{
+            } else {
                 this.restrictHeight();
             }
-    	}
+        }
     },
-    onDestroy : function() {
+    onDestroy: function () {
         this.items.purgeListeners();
         this.killItems();
         if (this.renderFieldBtns) {
@@ -1385,71 +1390,71 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
 
         Ext.ux.form.SuperBoxSelect.superclass.onDestroy.call(this);
     },
-    autoSize : function(){
-        if(!this.rendered){
+    autoSize: function () {
+        if (!this.rendered) {
             return this;
         }
-        if(!this.metrics){
+        if (!this.metrics) {
             this.metrics = Ext.util.TextMetrics.createInstance(this.el);
         }
         var el = this.el,
             v = el.dom.value,
             d = document.createElement('div');
 
-        if(v === "" && this.emptyText && this.items.getCount() < 1){
+        if (v === "" && this.emptyText && this.items.getCount() < 1) {
             v = this.emptyText;
         }
         d.appendChild(document.createTextNode(v));
         v = d.innerHTML;
         d = null;
         v += "&#160;";
-        var w = Math.max(this.metrics.getWidth(v) +  24, 24);
-        if(typeof this._width != 'undefined'){
+        var w = Math.max(this.metrics.getWidth(v) + 24, 24);
+        if (typeof this._width != 'undefined') {
             w = Math.min(this._width, w);
         }
         this.el.setWidth(w);
-        
-        if(Ext.isIE){
-            this.el.dom.style.top='0';
+
+        if (Ext.isIE) {
+            this.el.dom.style.top = '0';
         }
         return this;
     },
-    doQuery : function(q, forceAll,valuesQuery, forcedAdd){
+    doQuery: function (q, forceAll, valuesQuery, forcedAdd) {
         q = Ext.isEmpty(q) ? '' : q;
         var qe = {
             query: q,
             forceAll: forceAll,
             combo: this,
-            cancel:false
+            cancel: false
         };
-        if(this.fireEvent('beforequery', qe)===false || qe.cancel){
+        if (this.fireEvent('beforequery', qe) === false || qe.cancel) {
             return false;
         }
         q = qe.query;
         forceAll = qe.forceAll;
-        if(forceAll === true || (q.length >= this.minChars) || valuesQuery && !Ext.isEmpty(q)){
-            if(this.lastQuery !== q || forcedAdd){
-            	this.lastQuery = q;
-                if(this.mode == 'local'){
+        if (forceAll === true || (q.length >= this.minChars) || valuesQuery && !Ext.isEmpty(q)) {
+            if (this.lastQuery !== q || forcedAdd) {
+                this.lastQuery = q;
+                if (this.mode == 'local') {
                     this.selectedIndex = -1;
-                    if(forceAll){
+                    if (forceAll) {
                         this.store.clearFilter();
-                    }else{
+                    } else {
                         this.store.filter(this.displayField, q);
                     }
                     this.onLoad();
-                }else{
-                	
+                } else {
+
                     this.store.baseParams[this.queryParam] = q;
                     this.store.baseParams[this.queryValuesIndicator] = valuesQuery;
                     this.store.load({
                         params: this.getParams(q)
                     });
-                    if(!forcedAdd){
+                    if (!forcedAdd) {
                         this.expand();
                     }
                 }
-            }else{
+            } else {
                 this.selectedIndex = -1;
                 this.onLoad();
             }
@@ -1460,103 +1465,103 @@ Ext.reg('superboxselect', Ext.ux.form.SuperBoxSelect);
 /*
  * @private
  */
-Ext.ux.form.SuperBoxSelectItem = function(config){
-    Ext.apply(this,config);
-    Ext.ux.form.SuperBoxSelectItem.superclass.constructor.call(this); 
+Ext.ux.form.SuperBoxSelectItem = function (config) {
+    Ext.apply(this, config);
+    Ext.ux.form.SuperBoxSelectItem.superclass.constructor.call(this);
 };
 /*
  * @private
  */
-Ext.ux.form.SuperBoxSelectItem = Ext.extend(Ext.ux.form.SuperBoxSelectItem,Ext.Component, {
-    initComponent : function(){
-        Ext.ux.form.SuperBoxSelectItem.superclass.initComponent.call(this); 
+Ext.ux.form.SuperBoxSelectItem = Ext.extend(Ext.ux.form.SuperBoxSelectItem, Ext.Component, {
+    initComponent: function () {
+        Ext.ux.form.SuperBoxSelectItem.superclass.initComponent.call(this);
     },
-    onElClick : function(e){
+    onElClick: function (e) {
         var o = this.owner;
         o.clearCurrentFocus().collapse();
-        if(o.navigateItemsWithTab){
+        if (o.navigateItemsWithTab) {
             this.focus();
-        }else{
+        } else {
             o.el.dom.focus();
             var that = this;
-            (function(){
+            (function () {
                 this.onLnkFocus();
                 o.currentFocus = this;
-            }).defer(10,this);
+            }).defer(10, this);
         }
     },
-    
-    onLnkClick : function(e){
-        if(e) {
+
+    onLnkClick: function (e) {
+        if (e) {
             e.stopEvent();
         }
         this.preDestroy();
-        if(!this.owner.navigateItemsWithTab){
+        if (!this.owner.navigateItemsWithTab) {
             this.owner.el.focus();
         }
     },
-    onLnkFocus : function(){
+    onLnkFocus: function () {
         this.el.addClass("x-superboxselect-item-focus");
         this.owner.outerWrapEl.addClass("x-form-focus");
     },
-    
-    onLnkBlur : function(){
+
+    onLnkBlur: function () {
         this.el.removeClass("x-superboxselect-item-focus");
         this.owner.outerWrapEl.removeClass("x-form-focus");
     },
-    
-    enableElListeners : function() {
-        this.el.on('click', this.onElClick, this, {stopEvent:true});
-       
+
+    enableElListeners: function () {
+        this.el.on('click', this.onElClick, this, {stopEvent: true});
+
         this.el.addClassOnOver('x-superboxselect-item x-superboxselect-item-hover');
     },
 
-    enableLnkListeners : function() {
+    enableLnkListeners: function () {
         this.lnk.on({
             click: this.onLnkClick,
             focus: this.onLnkFocus,
-            blur:  this.onLnkBlur,
+            blur: this.onLnkBlur,
             scope: this
         });
     },
-    
-    enableAllListeners : function() {
+
+    enableAllListeners: function () {
         this.enableElListeners();
         this.enableLnkListeners();
     },
-    disableAllListeners : function() {
+    disableAllListeners: function () {
         this.el.removeAllListeners();
         this.lnk.un('click', this.onLnkClick, this);
         this.lnk.un('focus', this.onLnkFocus, this);
         this.lnk.un('blur', this.onLnkBlur, this);
     },
-    onRender : function(ct, position){
-        
+    onRender: function (ct, position) {
+
         Ext.ux.form.SuperBoxSelectItem.superclass.onRender.call(this, ct, position);
-        
+
         var el = this.el;
-        if(el){
+        if (el) {
             el.remove();
         }
-        
+
         this.el = el = ct.createChild({ tag: 'li' }, ct.last());
         el.addClass('x-superboxselect-item');
-        
+
         var btnEl = this.owner.navigateItemsWithTab ? ( Ext.isSafari ? 'button' : 'a') : 'span';
         var itemKey = this.key;
-        
+
         Ext.apply(el, {
-            focus: function(){
-                var c = this.down(btnEl +'.x-superboxselect-item-close');
-                if(c){
-                	c.focus();
+            focus: function () {
+                var c = this.down(btnEl + '.x-superboxselect-item-close');
+                if (c) {
+                    c.focus();
                 }
             },
-            preDestroy: function(){
+            preDestroy: function () {
                 this.preDestroy();
             }.createDelegate(this)
         });
-        
+
         this.enableElListeners();
 
         el.update(this.caption);
@@ -1564,20 +1569,20 @@ Ext.ux.form.SuperBoxSelectItem = Ext.extend(Ext.ux.form.SuperBoxSelectItem,Ext.C
         var cfg = {
             tag: btnEl,
             'class': 'x-superboxselect-item-close',
-            tabIndex : this.owner.navigateItemsWithTab ? '0' : '-1'
+            tabIndex: this.owner.navigateItemsWithTab ? '0' : '-1'
         };
-        if(btnEl === 'a'){
+        if (btnEl === 'a') {
             cfg.href = '#';
         }
         this.lnk = el.createChild(cfg);
-        
-        
-        if(!this.disabled) {
+
+
+        if (!this.disabled) {
             this.enableLnkListeners();
-        }else {
+        } else {
             this.disableAllListeners();
         }
-        
+
         this.on({
             disable: this.disableAllListeners,
             enable: this.enableAllListeners,
@@ -1586,38 +1591,39 @@ Ext.ux.form.SuperBoxSelectItem = Ext.extend(Ext.ux.form.SuperBoxSelectItem,Ext.C
 
         this.setupKeyMap();
     },
-    setupKeyMap : function(){
+    setupKeyMap: function () {
         this.keyMap = new Ext.KeyMap(this.lnk, [
             {
                 key: [
-                    Ext.EventObject.BACKSPACE, 
-                    Ext.EventObject.DELETE, 
+                    Ext.EventObject.BACKSPACE,
+                    Ext.EventObject.DELETE,
                     Ext.EventObject.SPACE
                 ],
                 fn: this.preDestroy,
                 scope: this
-            }, {
+            },
+            {
                 key: [
                     Ext.EventObject.RIGHT,
                     Ext.EventObject.DOWN
                 ],
-                fn: function(){
+                fn: function () {
                     this.moveFocus('right');
                 },
                 scope: this
             },
             {
-                key: [Ext.EventObject.LEFT,Ext.EventObject.UP],
-                fn: function(){
+                key: [Ext.EventObject.LEFT, Ext.EventObject.UP],
+                fn: function () {
                     this.moveFocus('left');
                 },
                 scope: this
             },
             {
                 key: [Ext.EventObject.HOME],
-                fn: function(){
+                fn: function () {
                     var l = this.owner.items.get(0).el.focus();
-                    if(l){
+                    if (l) {
                         l.el.focus();
                     }
                 },
@@ -1625,39 +1631,39 @@ Ext.ux.form.SuperBoxSelectItem = Ext.extend(Ext.ux.form.SuperBoxSelectItem,Ext.C
             },
             {
                 key: [Ext.EventObject.END],
-                fn: function(){
+                fn: function () {
                     this.owner.el.focus();
                 },
                 scope: this
             },
             {
                 key: Ext.EventObject.ENTER,
-                fn: function(){
+                fn: function () {
                 }
             }
         ]);
         this.keyMap.stopEvent = true;
     },
-    moveFocus : function(dir) {
+    moveFocus: function (dir) {
         var el = this.el[dir == 'left' ? 'prev' : 'next']() || this.owner.el;
-	
-        el.focus.defer(100,el);
+
+        el.focus.defer(100, el);
     },
 
-    preDestroy : function(supressEffect) {
-    	if(this.fireEvent('remove', this) === false){
-	    	return;
-	    }	
-    	var actionDestroy = function(){
-            if(this.owner.navigateItemsWithTab){
+    preDestroy: function (supressEffect) {
+        if (this.fireEvent('remove', this) === false) {
+            return;
+        }
+        var actionDestroy = function () {
+            if (this.owner.navigateItemsWithTab) {
                 this.moveFocus('right');
             }
             this.hidden.remove();
             this.hidden = null;
             this.destroy();
         };
-        
-        if(supressEffect){
+
+        if (supressEffect) {
             actionDestroy.call(this);
         } else {
             this.el.hide({
@@ -1668,32 +1674,32 @@ Ext.ux.form.SuperBoxSelectItem = Ext.extend(Ext.ux.form.SuperBoxSelectItem,Ext.C
         }
         return this;
     },
-    kill : function(){
-    	this.hidden.remove();
+    kill: function () {
+        this.hidden.remove();
         this.hidden = null;
         this.purgeListeners();
         this.destroy();
     },
-    onDisable : function() {
-    	if(this.hidden){
-    	    this.hidden.dom.setAttribute('disabled', 'disabled');
-    	}
-    	this.keyMap.disable();
-    	Ext.ux.form.SuperBoxSelectItem.superclass.onDisable.call(this);
+    onDisable: function () {
+        if (this.hidden) {
+            this.hidden.dom.setAttribute('disabled', 'disabled');
+        }
+        this.keyMap.disable();
+        Ext.ux.form.SuperBoxSelectItem.superclass.onDisable.call(this);
     },
-    onEnable : function() {
-    	if(this.hidden){
-    	    this.hidden.dom.removeAttribute('disabled');
-    	}
-    	this.keyMap.enable();
-    	Ext.ux.form.SuperBoxSelectItem.superclass.onEnable.call(this);
+    onEnable: function () {
+        if (this.hidden) {
+            this.hidden.dom.removeAttribute('disabled');
+        }
+        this.keyMap.enable();
+        Ext.ux.form.SuperBoxSelectItem.superclass.onEnable.call(this);
     },
-    onDestroy : function() {
+    onDestroy: function () {
         Ext.destroy(
             this.lnk,
             this.el
         );
-        
+
         Ext.ux.form.SuperBoxSelectItem.superclass.onDestroy.call(this);
     }
 });

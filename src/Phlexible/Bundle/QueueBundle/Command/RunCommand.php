@@ -12,8 +12,8 @@ use Brainbits_Util_FileLock as FileLock;
 use Phlexible\Bundle\QueueBundle\Entity\Job;
 use Phlexible\Bundle\QueueBundle\Model\JobManagerInterface;
 use Phlexible\Bundle\QueueBundle\Model\RunningJob;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\QueueBundle\QueueMessage;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,13 +48,14 @@ class RunCommand extends ContainerAwareCommand
     {
         $this
             ->setName('queue:run')
-            ->setDefinition(array(
-                new InputOption('idle-time', 'i', InputOption::VALUE_REQUIRED, 'Idle time in seconds if no job was found.', 1),
-                new InputOption('max-concurrent-jobs', 'j', InputOption::VALUE_REQUIRED, 'Maximum number of concurrent jobs.', 2),
-                new InputOption('max-runtime', 'r', InputOption::VALUE_REQUIRED, 'Maximum runtime in seconds.', 600),
-            ))
-            ->setDescription('Run queued job(s).')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('idle-time', 'i', InputOption::VALUE_REQUIRED, 'Idle time in seconds if no job was found.', 1),
+                    new InputOption('max-concurrent-jobs', 'j', InputOption::VALUE_REQUIRED, 'Maximum number of concurrent jobs.', 2),
+                    new InputOption('max-runtime', 'r', InputOption::VALUE_REQUIRED, 'Maximum runtime in seconds.', 600),
+                )
+            )
+            ->setDescription('Run queued job(s).');
     }
 
     /**
@@ -63,7 +64,7 @@ class RunCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $lock = new FileLock('queue_lock', $this->getContainer()->getParameter('app.lock_dir'));
-        if (!$lock->tryLock()) {
+        if (!$lock->tryAcquire()) {
             $output->writeln('Another job running.');
 
             return 1;
@@ -107,7 +108,7 @@ class RunCommand extends ContainerAwareCommand
 
         $properties->set('queue', 'last_run', date('Y-m-d H:i:s'));
 
-        $lock->unlock();
+        $lock->release();
 
         return 0;
     }
@@ -131,11 +132,23 @@ class RunCommand extends ContainerAwareCommand
 
             if ($this->verbose) {
                 if (!empty($newOutput)) {
-                    $this->output->writeln('Job '.$runningJob->getJob()->getId().': '.str_replace("\n", "\nJob ".$runningJob->getJob()->getId().": ", $newOutput));
+                    $this->output->writeln(
+                        'Job ' . $runningJob->getJob()->getId() . ': ' . str_replace(
+                            "\n",
+                            "\nJob " . $runningJob->getJob()->getId() . ": ",
+                            $newOutput
+                        )
+                    );
                 }
 
                 if (!empty($newErrorOutput)) {
-                    $this->output->writeln('Job '.$runningJob->getJob()->getId().': '.str_replace("\n", "\nJob ".$runningJob->getJob()->getId().": ", $newErrorOutput));
+                    $this->output->writeln(
+                        'Job ' . $runningJob->getJob()->getId() . ': ' . str_replace(
+                            "\n",
+                            "\nJob " . $runningJob->getJob()->getId() . ": ",
+                            $newErrorOutput
+                        )
+                    );
                 }
             }
 
@@ -145,7 +158,7 @@ class RunCommand extends ContainerAwareCommand
             if ($runningJob->getJob()->getMaxRuntime() > 0 && $runtime > $runningJob->getJob()->getMaxRuntime()) {
                 $runningJob->getProcess()->stop(5);
 
-                $this->output->writeln($runningJob->getJob().' terminated; maximum runtime exceeded.');
+                $this->output->writeln($runningJob->getJob() . ' terminated; maximum runtime exceeded.');
                 $runningJob->getJob()->setState(Job::STATE_ABORTED);
                 $runningJob->getJob()->setFinishedAt(new \DateTime());
                 $this->getJobManager()->updateJob($runningJob->getJob());
@@ -166,7 +179,9 @@ class RunCommand extends ContainerAwareCommand
                 continue;
             }
 
-            $this->output->writeln($runningJob->getJob().' finished with exit code '.$runningJob->getProcess()->getExitCode().'.');
+            $this->output->writeln(
+                $runningJob->getJob() . ' finished with exit code ' . $runningJob->getProcess()->getExitCode() . '.'
+            );
 
             // If the Job exited with an exception, let's reload it so that we
             // get access to the stack trace. This might be useful for listeners.
@@ -192,8 +207,7 @@ class RunCommand extends ContainerAwareCommand
     {
         $job
             ->setState(Job::STATE_RUNNING)
-            ->setStartedAt(new \DateTime())
-        ;
+            ->setStartedAt(new \DateTime());
         $this->getJobManager()->updateJob($job);
 
         $processBuilder = new ProcessBuilder();
@@ -204,10 +218,9 @@ class RunCommand extends ContainerAwareCommand
 
         $processBuilder
             ->add('php')
-            ->add($this->getContainer()->getParameter('kernel.root_dir').'/console')
+            ->add($this->getContainer()->getParameter('kernel.root_dir') . '/console')
             ->setEnv('phlexibleJobId', $job->getId())
-            ->add($job->getCommand())
-        ;
+            ->add($job->getCommand());
 
         foreach ($job->getArguments() as $argument) {
             $processBuilder->add($argument);
@@ -254,8 +267,7 @@ class RunCommand extends ContainerAwareCommand
             "Output:" . PHP_EOL .
             $job->getOutput() . PHP_EOL .
             "Error output:" . PHP_EOL .
-            $job->getErrorOutput()
-        ;
+            $job->getErrorOutput();
 
         $message = QueueMessage::create($subject, $body, $priority, $type);
         $this->getContainer()->get('phlexible_message.message_poster')->post($message);

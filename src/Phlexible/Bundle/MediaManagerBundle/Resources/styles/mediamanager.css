@@ -1,4 +1,6 @@
-.x-panel-tbar {line-height: 0;}
+.x-panel-tbar {
+    line-height: 0;
+}
 
 .p-mediamanager-search-panel {
     float: left;
@@ -7,10 +9,11 @@
 .t-mediamanager-root {
     margin-top: 5px;
 }
-.p-mediamanager-main-panel .x-layout-collapsed-east{
-    background-image:url(/BASEURL/admin/gui/asset/textimage?key=mediamanager.properties&location=east);
-    background-repeat:no-repeat;
-    background-position:center;
+
+.p-mediamanager-main-panel .x-layout-collapsed-east {
+    background-image: url(/BASEURL/admin/gui/asset/textimage?key=mediamanager.properties&location=east);
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .p-mediamanager-properties-window .x-window-body {
@@ -18,102 +21,123 @@
 }
 
 .p-mediamanager-newfolder .p-header-image {
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/folderdialog.gif) no-repeat !important;
-}
-.p-mediamanager-renamefolder .p-header-image {
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/folderdialog.gif) no-repeat !important;
-}
-.p-mediamanager-renamefile .p-header-image {
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/folderdialog.gif) no-repeat !important;
 }
 
+.p-mediamanager-renamefolder .p-header-image {
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/folderdialog.gif) no-repeat !important;
+}
+
+.p-mediamanager-renamefile .p-header-image {
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+}
 
 .x-btn-text-icon-bold {
     font-weight: bold;
 }
 
-
-.p-mediamanager-files-grid{
+.p-mediamanager-files-grid {
     background: white;
     font: 11px Arial, Helvetica, sans-serif;
- }
+}
 
 .p-foldertree .x-tree-node .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder.png);
 }
+
 .p-foldertree .x-tree-node-expanded .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open.png);
 }
+
 .p-foldertree .x-tree-node-leaf .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder.png);
 }
+
 .p-foldertree .x-tree-node-green .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-green.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-green.png);
 }
+
 .p-foldertree .x-tree-node-green.x-tree-node-expanded .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-green.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-green.png);
 }
+
 .p-foldertree .x-tree-node-green.x-tree-node-leaf .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-green.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-green.png);
 }
+
 .p-foldertree .x-tree-node-yellow .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-yellow.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-yellow.png);
 }
+
 .p-foldertree .x-tree-node-yellow.x-tree-node-expanded .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-yellow.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-yellow.png);
 }
+
 .p-foldertree .x-tree-node-yellow.x-tree-node-leaf .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-yellow.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-yellow.png);
 }
+
 .p-foldertree .x-tree-node-orange .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-orange.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-orange.png);
 }
+
 .p-foldertree .x-tree-node-orange.x-tree-node-expanded .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-orange.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-orange.png);
 }
+
 .p-foldertree .x-tree-node-orange.x-tree-node-leaf .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-orange.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-orange.png);
 }
+
 .p-foldertree .x-tree-node-black .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-black.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-black.png);
 }
+
 .p-foldertree .x-tree-node-black.x-tree-node-expanded .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-black.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-black.png);
 }
+
 .p-foldertree .x-tree-node-black.x-tree-node-leaf .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-black.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-black.png);
 }
+
 .p-foldertree .x-tree-node-gray .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-gray.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-gray.png);
 }
+
 .p-foldertree .x-tree-node-gray.x-tree-node-expanded .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-gray.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-gray.png);
 }
+
 .p-foldertree .x-tree-node-gray.x-tree-node-leaf .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/mediamanager/icons/folder-open-gray.png);
+    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-gray.png);
 }
 
 .p-foldertree .p-trash-node .x-tree-node-icon {
-    background-image:url(/COMPONENTSPATH/documenttypes/mimetypes16/_trash_empty.gif);
+    background-image: url(/COMPONENTSPATH/documenttypes/mimetypes16/_trash_empty.gif);
 }
+
 .p-item {
-    clear:both;
-    cursor:default;
-    display:block;
+    clear: both;
+    cursor: default;
+    display: block;
 }
+
 .p-folder {
 }
 
 .p-mediamanager-files-grid .x-panel-body .x-panel-body {
-    border-left-width:1px !important;
+    border-left-width: 1px !important;
 }
+
 .p-mediamanager-files-grid .x-grid3-cell-inner span {
-    background-repeat:no-repeat;
-    display:block;
-    padding-bottom:2px;
-    padding-left:20px;
-    padding-top:1px;
+    background-repeat: no-repeat;
+    display: block;
+    padding-bottom: 2px;
+    padding-left: 20px;
+    padding-top: 1px;
 }
+
 /*
 .p-mediamanager-files-grid .x-grid3-row {
     border: 1px solid white;
@@ -142,10 +166,12 @@
     padding-top: 4px;
     width: auto !important;
 }
+
 .p-mediamanager-files-grid .x-grid-group-hd {
     overflow: hidden;
     padding-bottom: 3px;
 }
+
 .p-mediamanager-files-grid .x-grid-group .x-grid-group-hd div {
     display: inline;
 }
@@ -155,7 +181,7 @@
 }
 
 .ext-gecko .p-mediamanager-files-grid .x-grid3-body {
-    float:left;
+    float: left;
 }
 
 /*
@@ -163,49 +189,58 @@
  */
 
 .p-mediamanager-box-default {
-    background:transparent none repeat scroll 0% !important;
+    background: transparent none repeat scroll 0% !important;
     /*border:medium none;*/
-    clear:none !important;
-    float:left;
-    margin:1px;
-    overflow:hidden;
+    clear: none !important;
+    float: left;
+    margin: 1px;
+    overflow: hidden;
     /*width:auto !important;*/
 }
+
 .p-mediamanager-box-default .p-icon-area,
 .p-mediamanager-box-default .p-icon-area table {
-    text-align:center;
+    text-align: center;
 }
+
 .p-mediamanager-box-default .p-icon-area table {
 }
+
 .p-mediamanager-box-default .p-icon-area table td {
-    padding:0pt !important;
-    text-align:center !important;
-    vertical-align:bottom;
+    padding: 0pt !important;
+    text-align: center !important;
+    vertical-align: bottom;
 }
+
 .p-mediamanager-box-default .p-icon-area .z-image-wrap {
-    background-color:#FFFFFF;
-    border-color:#E0E0E0 rgb(193, 193, 193) rgb(193, 193, 193) rgb(224, 224, 224);
-    border-style:solid;
-    border-width:1px;
+    background-color: #FFFFFF;
+    border-color: #E0E0E0 rgb(193, 193, 193) rgb(193, 193, 193) rgb(224, 224, 224);
+    border-style: solid;
+    border-width: 1px;
 }
+
 .p-mediamanager-box-default .p-icon-area img {
     /*border:1px solid #CECECE;*/
-    margin:2px;
+    margin: 2px;
 }
+
 .p-mediamanager-box-default .p-text-area {
-    height:14px;
-    margin-left:3px;
-    margin-right:3px;
-    margin-top:4px;
-    white-space:nowrap;
+    height: 14px;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-top: 4px;
+    white-space: nowrap;
 }
+
 .p-mediamanager-box-default * {
 }
+
 .p-mediamanager-box-default .p-text-area .p-text {
-    overflow:hidden;
+    overflow: hidden;
 }
+
 .ext-ie .p-mediamanager-box-default .p-text-area {
-    height:19px;
+    height: 19px;
 }
 
 /*
@@ -213,46 +248,56 @@
  */
 
 .p-mediamanager-extralarge-box {
-    width:270px;
-    height:278px;
+    width: 270px;
+    height: 278px;
 }
+
 .p-mediamanager-extralarge-thumbs {
-    width:270px;
-    height:278px;
-    margin-bottom:30px;
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/bg-extralarge-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    width: 270px;
+    height: 278px;
+    margin-bottom: 30px;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-extralarge-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
+
 .x-grid3-row-over .p-mediamanager-extralarge-thumbs {
-    background-position:0pt 0px;
+    background-position: 0pt 0px;
 }
+
 .x-grid3-row-selected .p-mediamanager-extralarge-thumbs {
-    background-position:0pt -278px;
+    background-position: 0pt -278px;
 }
+
 .p-mediamanager-extralarge-thumbs .p-icon-area {
-    background-color:transparent;
-    background-position:50%;
-    background-repeat:no-repeat;
-    height:260px;
+    background-color: transparent;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    height: 260px;
 }
+
 .p-mediamanager-extralarge-thumbs .p-icon-area table td {
-    height:264px;
+    height: 264px;
 }
+
 .p-mediamanager-extralarge-thumbs .p-text-area {
-    overflow:hidden;
-    text-align:center;
-    width:264px;
+    overflow: hidden;
+    text-align: center;
+    width: 264px;
 }
+
 .ext-ie .p-mediamanager-extralarge-thumbs .p-text-area {
-    margin-top:0pt;
+    margin-top: 0pt;
 }
+
 .p-mediamanager-extralarge-thumbs .p-icon-area {
-    background-position:0pt;
+    background-position: 0pt;
 }
+
 .x-grid3-row-over .p-mediamanager-extralarge-thumbs .p-icon-area {
-    background-position:0pt -278px;
+    background-position: 0pt -278px;
 }
+
 .x-grid3-row-selected .p-mediamanager-extralarge-thumbs .p-icon-area {
-    background-position:0pt -556px;
+    background-position: 0pt -556px;
 }
 
 /*
@@ -260,43 +305,52 @@
  */
 
 .p-mediamanager-large-box {
-    width:114px;
-    height:118px;
+    width: 114px;
+    height: 118px;
 }
+
 .x-grid3-row .p-mediamanager-large-thumbs {
-    width:114px;
-    height:118px;
-    margin-bottom:30px;
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/bg-large-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    width: 114px;
+    height: 118px;
+    margin-bottom: 30px;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-large-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
+
 .x-grid3-row-over .p-mediamanager-large-thumbs {
-    background-position:0pt 0px;
+    background-position: 0pt 0px;
 }
+
 .x-grid3-row-selected .p-mediamanager-large-thumbs {
-    background-position:0pt -118px;
+    background-position: 0pt -118px;
 }
+
 .p-mediamanager-large-thumbs .p-icon-area {
-    background-color:transparent;
-    background-position:50%;
-    background-repeat:no-repeat;
-    height:99px;
+    background-color: transparent;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    height: 99px;
 }
+
 .p-mediamanager-large-thumbs .p-icon-area table td {
-    height:99px;
+    height: 99px;
 }
+
 .p-mediamanager-large-thumbs .p-text-area {
-    overflow:hidden;
-    text-align:center;
-    width:108px;
+    overflow: hidden;
+    text-align: center;
+    width: 108px;
 }
+
 .p-mediamanager-large-thumbs .p-icon-area {
-    background-position:0pt;
+    background-position: 0pt;
 }
+
 .x-grid3-row-over .p-mediamanager-large-thumbs .p-icon-area {
-    background-position:0pt -118px;
+    background-position: 0pt -118px;
 }
+
 .x-grid3-row-selected .p-mediamanager-large-thumbs .p-icon-area {
-    background-position:0pt -236px;
+    background-position: 0pt -236px;
 }
 
 /*
@@ -304,41 +358,49 @@
  */
 
 .p-mediamanager-medium-box {
-    width:114px;
-    height:70px;
+    width: 114px;
+    height: 70px;
 }
+
 .p-mediamanager-medium-thumbs {
-    width:114px;
-    height:70px;
-    margin-bottom:30px;
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/bg-medium-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    width: 114px;
+    height: 70px;
+    margin-bottom: 30px;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-medium-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
+
 .x-grid3-row-over .p-mediamanager-medium-thumbs {
-    background-position:0pt 0px;
+    background-position: 0pt 0px;
 }
+
 .x-grid3-row-selected .p-mediamanager-medium-thumbs {
-    background-position:0pt -70px;
+    background-position: 0pt -70px;
 }
+
 .p-mediamanager-medium-thumbs .p-icon-area {
-    background-color:transparent;
-    background-position:50%;
-    background-repeat:no-repeat;
-    height:50px;
-    background-position:0pt;
+    background-color: transparent;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    height: 50px;
+    background-position: 0pt;
 }
+
 .p-mediamanager-medium-thumbs .p-icon-area table td {
-    height:50px;
+    height: 50px;
 }
+
 .p-mediamanager-medium-thumbs .p-text-area {
-    overflow:hidden;
-    text-align:center;
-    width:108px;
+    overflow: hidden;
+    text-align: center;
+    width: 108px;
 }
+
 .x-grid3-row-over .p-mediamanager-medium-thumbs .p-icon-area {
-    background-position:0pt -70px;
+    background-position: 0pt -70px;
 }
+
 .x-grid3-row-selected .p-mediamanager-medium-thumbs .p-icon-area {
-    background-position:0pt -140px;
+    background-position: 0pt -140px;
 }
 
 /*
@@ -346,45 +408,53 @@
  */
 
 .p-mediamanager-small-box {
-    width:243px;
-    height:19px;
+    width: 243px;
+    height: 19px;
 }
+
 .p-mediamanager-small-thumbs {
-    width:243px;
-    height:19px;
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/bg-small-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    width: 243px;
+    height: 19px;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-small-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
+
 .x-grid3-row-over .p-mediamanager-small-thumbs {
-    background-position:0pt 0px;
+    background-position: 0pt 0px;
 }
+
 .x-grid3-row-selected .p-mediamanager-small-thumbs {
-    background-position:0pt -19px;
+    background-position: 0pt -19px;
 }
+
 .p-mediamanager-small-thumbs .p-icon-area {
-    background-color:transparent;
-    background-position:50%;
-    background-repeat:no-repeat;
-    float:left;
-    height:19px;
-    width:22px;
+    background-color: transparent;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    float: left;
+    height: 19px;
+    width: 22px;
 }
+
 .p-mediamanager-small-thumbs .p-icon-area .z-image-wrap {
-    border:medium none;
+    border: medium none;
 }
+
 .p-mediamanager-small-thumbs .p-icon-area img {
-    border:medium none;
-    margin:0pt;
-    padding:0pt;
+    border: medium none;
+    margin: 0pt;
+    padding: 0pt;
 }
+
 .p-mediamanager-small-thumbs .p-icon-area table td {
-    height:19px;
-    vertical-align:middle;
+    height: 19px;
+    vertical-align: middle;
 }
+
 .p-mediamanager-small-thumbs .p-text-area {
-    float:left;
-    margin-top:3px;
-    overflow:hidden;
-    width:215px;
+    float: left;
+    margin-top: 3px;
+    overflow: hidden;
+    width: 215px;
 }
 
 /*
@@ -392,60 +462,73 @@
  */
 
 .p-mediamanager-tile-box {
-    width:219px;
-    height:52px;
+    width: 219px;
+    height: 52px;
 }
+
 .p-mediamanager-files-grid .x-grid3-row {
-    border:medium none;
+    border: medium none;
 }
+
 .x-grid3-row .p-mediamanager-tile-thumbs {
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/bg-tile-thumbnail.gif) no-repeat scroll 0pt -3000px;
-    height:52px;
-    width:219px;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-tile-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    height: 52px;
+    width: 219px;
 }
+
 .x-grid3-row-over .p-mediamanager-tile-thumbs {
-    background-position:0pt 0px;
+    background-position: 0pt 0px;
 }
+
 .x-grid3-row-selected .p-mediamanager-tile-thumbs {
-    background-position:0pt -52px;
+    background-position: 0pt -52px;
 }
+
 .p-mediamanager-tile-thumbs .p-icon-area {
-    background-color:transparent;
-    background-position:3px 50%;
-    background-repeat:no-repeat;
-    float:left;
-    height:50px;
-    width:55px;
+    background-color: transparent;
+    background-position: 3px 50%;
+    background-repeat: no-repeat;
+    float: left;
+    height: 50px;
+    width: 55px;
 }
+
 .p-mediamanager-tile-thumbs .p-icon-area img {
-    padding:0pt;
+    padding: 0pt;
 }
+
 .p-mediamanager-tile-thumbs .p-icon-area table td {
-    height:50px;
-    vertical-align:middle;
+    height: 50px;
+    vertical-align: middle;
 }
+
 .p-mediamanager-tile-thumbs .p-text-area {
-    float:left;
-    height:45px;
-    margin-top:5px;
-    width:158px;
+    float: left;
+    height: 45px;
+    margin-top: 5px;
+    width: 158px;
 }
+
 .p-mediamanager-tile-thumbs .p-text-area .p-text {
-    overflow:hidden;
-    width:158px;
+    overflow: hidden;
+    width: 158px;
 }
+
 .p-mediamanager-tile-thumbs .p-text-area .p-mimetype,
 .p-mediamanager-tile-thumbs .p-text-area .p-fileSize {
-    color:#8B8B8B;
+    color: #8B8B8B;
 }
+
 .p-mediamanager-tile-thumbs .p-icon-area {
-    background-position:0pt;
+    background-position: 0pt;
 }
+
 .x-grid3-row-over .p-mediamanager-tile-thumbs .p-icon-area {
-    background-position:0pt -50px;
+    background-position: 0pt -50px;
 }
+
 .x-grid3-row-selected .p-mediamanager-tile-thumbs .p-icon-area {
-    background-position:0pt -100px;
+    background-position: 0pt -100px;
 }
 
 /*
@@ -453,46 +536,54 @@
  */
 
 .p-mediamanager-timeline-box {
-    background:transparent none repeat scroll 0% !important;
+    background: transparent none repeat scroll 0% !important;
     /*border:medium none;*/
-    margin:5px;
-    overflow:hidden;
+    margin: 5px;
+    overflow: hidden;
     /*width:auto !important;*/
-    width:610px;
-    height:118px;
+    width: 610px;
+    height: 118px;
 }
+
 .p-mediamanager-timeline-thumbs {
-    width:610px;
-    height:118px;
-    margin-bottom:30px;
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/bg-timeline-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    width: 610px;
+    height: 118px;
+    margin-bottom: 30px;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-timeline-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
+
 .x-grid3-row-over .p-mediamanager-timeline-thumbs {
-    background-position:0pt 0px;
+    background-position: 0pt 0px;
 }
+
 .x-grid3-row-selected .p-mediamanager-timeline-thumbs {
-    background-position:0pt -118px;
+    background-position: 0pt -118px;
 }
+
 .p-mediamanager-timeline-thumbs .p-icon-area {
-    background-color:transparent;
-    background-position:50%;
-    background-repeat:no-repeat;
-    height:96px;
-    background-position:0pt;
+    background-color: transparent;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    height: 96px;
+    background-position: 0pt;
     padding: 2px 5px 0 5px;
 }
+
 .p-mediamanager-timeline-thumbs .p-icon-area table td {
-    height:96px;
+    height: 96px;
 }
+
 .p-mediamanager-timeline-thumbs .p-text-area {
-    overflow:hidden;
+    overflow: hidden;
     /*text-align:center;*/
-    width:610px;
+    width: 610px;
     padding: 2px 5px 2px 5px;
 }
+
 .p-mediamanager-timeline-thumbs .p-text-area span {
-    color:#8B8B8B;
+    color: #8B8B8B;
 }
+
 /*.x-grid3-row-over .p-mediamanager-timeline-thumbs .p-icon-area {
     xbackground-position:0pt -70px;
 }
@@ -500,85 +591,84 @@
     xbackground-position:0pt -140px;
 }*/
 
-
-
-
-
-
 .x-dd-drag-proxy .p-dragsingleThumbnails .thumb {
     width: 86px;
     height: 86px;
 }
+
 .x-dd-drag-proxy .p-dragmultiThumbnails .thumb {
     width: 42px;
     height: 42px;
-    margin:1px;
+    margin: 1px;
 }
-
-
-
-
 
 .p-filereplace-wrap {
     padding: 5px 10px 20px 10px;
     cursor: pointer;
     border: 1px solid transparent;
 }
+
 .p-filereplace-wrap-over {
     background-color: #EAF8FF;
     border: 1px solid lightblue;
 }
+
 .p-filereplace-header {
     font-size: 13px;
     font-weight: bolder;
 }
+
 .p-filereplace-img {
-    float:left;
+    float: left;
     padding: 5px;
 }
+
 .p-filereplace-desc {
     padding: 5px 5px 5px 50px;
 }
+
 .p-filereplace-name {
     font-weight: bold;
 }
+
 .p-filereplace .x-form-check-wrap {
     padding-top: 10px;
 }
 
-
-
 .p-mediamanager-check-col {
-    background-color:transparent;
-    background-image:url(/COMPONENTSPATH/mediamanager/images/checkbox-off.gif);
-    background-position:center center;
-    background-repeat:no-repeat;
-    height:16px;
-    width:100%;
+    background-color: transparent;
+    background-image: url(/COMPONENTSPATH/mediamanager/images/checkbox-off.gif);
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 16px;
+    width: 100%;
 }
+
 .p-mediamanager-check-col-on {
-    background-color:transparent;
-    background-image:url(/COMPONENTSPATH/mediamanager/images/checkbox-on.gif);
-    background-position:center center;
-    background-repeat:no-repeat;
-    height:16px;
-    width:100%;
+    background-color: transparent;
+    background-image: url(/COMPONENTSPATH/mediamanager/images/checkbox-on.gif);
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 16px;
+    width: 100%;
 }
+
 .p-mediamanager-check-inherit-col {
-    background-color:transparent;
-    background-image:url(/COMPONENTSPATH/mediamanager/images/checkbox-inherit-off.gif);
-    background-position:center center;
-    background-repeat:no-repeat;
-    height:16px;
-    width:100%;
+    background-color: transparent;
+    background-image: url(/COMPONENTSPATH/mediamanager/images/checkbox-inherit-off.gif);
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 16px;
+    width: 100%;
 }
+
 .p-mediamanager-check-inherit-col-on {
-    background-color:transparent;
-    background-image:url(/COMPONENTSPATH/mediamanager/images/checkbox-inherit-on.gif);
-    background-position:center center;
-    background-repeat:no-repeat;
-    height:16px;
-    width:100%;
+    background-color: transparent;
+    background-image: url(/COMPONENTSPATH/mediamanager/images/checkbox-inherit-on.gif);
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 16px;
+    width: 100%;
 }
 
 /* Preview Panel */
@@ -592,21 +682,26 @@
 .p-mediamanager-versions-view {
     padding: 3px;
 }
+
 .p-mediamanager-versions-view .version-wrap {
     padding: 2px;
     margin: 2px;
     border: 1px solid transparent;
     cursor: pointer;
 }
+
 .p-mediamanager-versions-view .x-view-over {
     border: 1px solid #bbb;
 }
+
 .p-mediamanager-versions-view .x-view-selected {
     border: 1px solid #888;
 }
+
 .p-mediamanager-versions-view .version-wrap .thumb {
     float: left;
 }
+
 .p-mediamanager-versions-view .version-wrap .text {
     float: left;
     padding: 5px;

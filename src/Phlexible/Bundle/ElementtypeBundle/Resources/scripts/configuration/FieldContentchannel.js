@@ -3,7 +3,7 @@ Phlexible.elementtypes.configuration.FieldContentchannel = Ext.extend(Ext.form.F
     title: Phlexible.elementtypes.Strings.content_channels,
     iconCls: 'p-contentchannels-component-icon',
     border: false,
-	autoScroll: true,
+    autoScroll: true,
     bodyStyle: 'padding:3px',
     defaultType: 'textfield',
     labelWidth: 100,
@@ -11,51 +11,55 @@ Phlexible.elementtypes.configuration.FieldContentchannel = Ext.extend(Ext.form.F
 //        width: 200
     },
 
-    initComponent: function() {
-        this.items = [{
-            xtype: 'checkbox',
-            fieldLabel: 'Deactivation',
-            boxLabel: this.strings.allow,
-            name: 'allow_deactivation'
-        },{
-            xtype: 'checkbox',
-            fieldLabel: 'Unlink',
-            boxLabel: this.strings.allow,
-            name: 'allow_unlink'
-        },{
-			xtype: 'elementtypes-configuration-field-contentchannel-grid',
-            listeners: {
-                defaultchange: function(key) {
-                    this.getComponent(0).setValue(key);
-                },
-                scope: this
+    initComponent: function () {
+        this.items = [
+            {
+                xtype: 'checkbox',
+                fieldLabel: 'Deactivation',
+                boxLabel: this.strings.allow,
+                name: 'allow_deactivation'
+            },
+            {
+                xtype: 'checkbox',
+                fieldLabel: 'Unlink',
+                boxLabel: this.strings.allow,
+                name: 'allow_unlink'
+            },
+            {
+                xtype: 'elementtypes-configuration-field-contentchannel-grid',
+                listeners: {
+                    defaultchange: function (key) {
+                        this.getComponent(0).setValue(key);
+                    },
+                    scope: this
+                }
             }
-        }];
+        ];
 
         Phlexible.elementtypes.configuration.FieldContentchannel.superclass.initComponent.call(this);
     },
 
-	getContentchannelGrid: function() {
-		return this.getComponent(2);
-	},
+    getContentchannelGrid: function () {
+        return this.getComponent(2);
+    },
 
-    loadData: function(fieldData, fieldType) {
-		fieldData = fieldData || {list: []};
+    loadData: function (fieldData, fieldType) {
+        fieldData = fieldData || {list: []};
 
         this.getForm().setValues([
-            {id: 'allow_deactivation',   value: fieldData.allow_deactivation},
-            {id: 'allow_unlink',   value: fieldData.allow_unlink}
+            {id: 'allow_deactivation', value: fieldData.allow_deactivation},
+            {id: 'allow_unlink', value: fieldData.allow_unlink}
         ]);
 
         this.getContentchannelGrid().loadData(fieldData.list);
     },
 
-    getSaveValues: function() {
+    getSaveValues: function () {
         var values = this.getForm().getValues();
 
         var list = [];
 
-        for(var i=0; i<this.getContentchannelGrid().getStore().getCount(); i++) {
+        for (var i = 0; i < this.getContentchannelGrid().getStore().getCount(); i++) {
             var r = this.getContentchannelGrid().getStore().getAt(i);
             if (r.get('available')) {
                 list.push(r.get('id'));
@@ -68,8 +72,8 @@ Phlexible.elementtypes.configuration.FieldContentchannel = Ext.extend(Ext.form.F
         return values;
     },
 
-    isValid: function() {
-        if(this.getForm().isValid()) {
+    isValid: function () {
+        if (this.getForm().isValid()) {
             //this.header.child('span').removeClass('error');
             this.setIconClass('p-contentchannels-component-icon');
 
@@ -82,7 +86,7 @@ Phlexible.elementtypes.configuration.FieldContentchannel = Ext.extend(Ext.form.F
         }
     },
 
-    loadField: function(properties, node, fieldType) {
+    loadField: function (properties, node, fieldType) {
         this.ownerCt.getTabEl(this).hidden = false;
         this.loadData(properties.content_channels, fieldType);
     }
@@ -99,7 +103,7 @@ Phlexible.elementtypes.configuration.FieldContentchannelGrid = Ext.extend(Ext.gr
         forceFit: true
     },
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('elementtypes_data_contentchannels'),
             root: 'contentChannels',
@@ -108,33 +112,36 @@ Phlexible.elementtypes.configuration.FieldContentchannelGrid = Ext.extend(Ext.gr
             autoLoad: true
         });
 
-        this.columns = [{
-            id: 'title',
-            header: this.strings.contentchannel,
-            dataIndex: 'title',
-            width: 200
-        }, this.cc1 = new Ext.grid.CheckColumn({
-            header: this.strings.available,
-            dataIndex: 'available',
-            width: 50
-        })];
+        this.columns = [
+            {
+                id: 'title',
+                header: this.strings.contentchannel,
+                dataIndex: 'title',
+                width: 200
+            },
+            this.cc1 = new Ext.grid.CheckColumn({
+                header: this.strings.available,
+                dataIndex: 'available',
+                width: 50
+            })
+        ];
 
         this.plugins = [this.cc1];
 
         this.sm = new Ext.grid.RowSelectionModel({
-            singleSelect : true
+            singleSelect: true
         });
 
         Phlexible.elementtypes.configuration.FieldContentchannelGrid.superclass.initComponent.call(this);
     },
 
-    loadData: function(data) {
-        this.store.each(function(r) {
+    loadData: function (data) {
+        this.store.each(function (r) {
             r.set('available', false);
         });
-        for(var i=0; i<data.length; i++) {
+        for (var i = 0; i < data.length; i++) {
             var r = this.store.getById(data[i]);
-            if(r) {
+            if (r) {
                 r.set('available', true);
             }
         }

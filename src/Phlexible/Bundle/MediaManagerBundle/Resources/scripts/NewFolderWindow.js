@@ -14,19 +14,21 @@ Phlexible.mediamanager.NewFolderWindow = Ext.extend(Phlexible.gui.util.Dialog, {
 
     labelWidth: 70,
 
-    formItems: [{
-        xtype: 'textfield',
-        fieldLabel: Phlexible.mediamanager.Strings.name,
-        name: 'folder_name',
-        anchor: '-70',
-        msgTarget: 'under'
-    }],
+    formItems: [
+        {
+            xtype: 'textfield',
+            fieldLabel: Phlexible.mediamanager.Strings.name,
+            name: 'folder_name',
+            anchor: '-70',
+            msgTarget: 'under'
+        }
+    ],
 
     /**
      * Return the Submit URL
      * @return string
      */
-    getSubmitUrl: function() {
+    getSubmitUrl: function () {
         return Phlexible.Router.generate('mediamanager_folder_create');
     }
 });

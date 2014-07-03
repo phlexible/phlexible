@@ -56,12 +56,11 @@ class CacheAssetProvider implements AssetProviderInterface
     {
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate('@PhlexibleCacheBundle/Resources/scripts/Definitions.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleCacheBundle/Resources/scripts/CacheStatsWindow.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleCacheBundle/Resources/scripts/portlet/CacheUsage.js')),
-
-            new FileAsset($this->locator->locate('@PhlexibleCacheBundle/Resources/scripts/menuhandle/CacheStatsHandle.js')),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleCacheBundle/Resources/scripts/menuhandle/CacheStatsHandle.js'
+            )),
         ));
 
         return $collection;

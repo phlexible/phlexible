@@ -43,22 +43,20 @@ class Search
      * Query
      *
      * @param string $query
+     *
      * @return SearchResult[]
      */
     public function search($query)
     {
         $searchProviders = array();
 
-        foreach ($this->searchProviders as $searchProvider)
-        {
-            if (!$searchProvider instanceof SearchProviderInterface)
-            {
+        foreach ($this->searchProviders as $searchProvider) {
+            if (!$searchProvider instanceof SearchProviderInterface) {
                 continue;
             }
 
             $resource = $searchProvider->getResource();
-            if ($resource && !$this->securityContext->isGranted($resource))
-            {
+            if ($resource && !$this->securityContext->isGranted($resource)) {
                 continue;
             }
 
@@ -66,33 +64,27 @@ class Search
         }
 
         $explodedQuery = explode(':', $query);
-        if (count($explodedQuery) > 1)
-        {
+        if (count($explodedQuery) > 1) {
             $keySearchProviders = array();
             $keyWord = strtolower(array_shift($explodedQuery));
 
-            foreach ($searchProviders as $searchProvider)
-            {
+            foreach ($searchProviders as $searchProvider) {
                 $searchKey = $searchProvider->getSearchKey();
-                if ($searchKey === $keyWord)
-                {
+                if ($searchKey === $keyWord) {
                     $keySearchProviders[] = $searchProvider;
                 }
             }
 
-            if (count($keySearchProviders))
-            {
+            if (count($keySearchProviders)) {
                 $searchProviders = $keySearchProviders;
                 $query = trim(implode(':', $explodedQuery));
             }
         }
 
         $results = array();
-        foreach ($searchProviders as $searchProvider)
-        {
+        foreach ($searchProviders as $searchProvider) {
             $searchResults = $searchProvider->search($query);
-            foreach ($searchResults as $searchResult)
-            {
+            foreach ($searchResults as $searchResult) {
                 $results[] = $searchResult->toArray();
             }
         }

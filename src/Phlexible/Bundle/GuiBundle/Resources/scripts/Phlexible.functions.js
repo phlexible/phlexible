@@ -2,7 +2,7 @@
  * @param {String} path
  * @returns {String}
  */
-Phlexible.url = function(path) {
+Phlexible.url = function (path) {
     return Phlexible.baseUrl + path;
 }
 
@@ -10,7 +10,7 @@ Phlexible.url = function(path) {
  * @param {String} path
  * @returns {String}
  */
-Phlexible.path = function(path) {
+Phlexible.path = function (path) {
     return Phlexible.basePath + path;
 }
 
@@ -18,7 +18,7 @@ Phlexible.path = function(path) {
  * @param {String} path
  * @returns {String}
  */
-Phlexible.component = function(path) {
+Phlexible.component = function (path) {
     return Phlexible.componentsPath + path;
 }
 
@@ -64,7 +64,7 @@ Phlexible.dumpRep = function (v, level, lastPadding, skipFunctions, skipObjectKe
             for (var key in v) {
                 if (skipObjectKeys.indexOf(key) === -1) {
                     value = v[key];
-                    sub2 = Phlexible.dumpRep(value, level+1, levelPadding, skipFunctions, skipObjectKeys, html);
+                    sub2 = Phlexible.dumpRep(value, level + 1, levelPadding, skipFunctions, skipObjectKeys, html);
                 }
                 else {
                     sub2 = '';
@@ -146,13 +146,13 @@ Phlexible.dumpRep = function (v, level, lastPadding, skipFunctions, skipObjectKe
  * @param {String} title Title of the message
  * @param {String} text Text of the message
  */
-Phlexible.msg = function(title, text, extraParams){
+Phlexible.msg = function (title, text, extraParams) {
     var params = Ext.apply({
-        iconCls:     'p-gui-msg_information-icon',
-        title:       title,
-        html:        text,
+        iconCls: 'p-gui-msg_information-icon',
+        title: title,
+        html: text,
         autoDestroy: true,
-        hideDelay:   5000
+        hideDelay: 5000
     }, extraParams);
     new Ext.ux.Notification(params).show(document);
     return;
@@ -161,22 +161,22 @@ Phlexible.msg = function(title, text, extraParams){
  * Shortcut for success messages
  * @param {String} text
  */
-Phlexible.success = function(text) {
+Phlexible.success = function (text) {
     Phlexible.msg(Phlexible.gui.Strings.success, text);
 };
 /**
  * Shortcut for failure messages
  * @param {String} text
  */
-Phlexible.failure = function(text) {
+Phlexible.failure = function (text) {
     Phlexible.msg(Phlexible.gui.Strings.error, text, {
         iconCls: 'p-gui-msg_error-icon'
     });
 };
 
-Phlexible.error = function() {
+Phlexible.error = function () {
     var response = null, result = null;
-    Ext.each(arguments, function(obj) {
+    Ext.each(arguments, function (obj) {
         if (obj.responseText) {
             response = obj;
             return false;
@@ -208,11 +208,13 @@ Phlexible.error = function() {
         contrainHeader: true,
         bodyStyle: 'padding: 10px; background-color: #DFE8F6;',
         layout: 'fit',
-        items: [{
-            border: false,
-            autoScroll: true,
-            items: []
-        }]
+        items: [
+            {
+                border: false,
+                autoScroll: true,
+                items: []
+            }
+        ]
     };
 
     if (result.data.message && result.msg != result.data.message) {
@@ -253,57 +255,57 @@ Phlexible.error = function() {
     var w = new Ext.Window(config);
     w.show();
 };
-Phlexible.getStackTrace = function(delimiter) {
-  var callstack = [];
-  var isCallstackPopulated = false;
-  try {
-    i.dont.exist+=0; //doesn't exist- that's the point
-  } catch(e) {
-    if (e.stack) { //Firefox
-      var lines = e.stack.split("\n");
-      for (var i=0, len=lines.length; i<len; i++) {
+Phlexible.getStackTrace = function (delimiter) {
+    var callstack = [];
+    var isCallstackPopulated = false;
+    try {
+        i.dont.exist += 0; //doesn't exist- that's the point
+    } catch (e) {
+        if (e.stack) { //Firefox
+            var lines = e.stack.split("\n");
+            for (var i = 0, len = lines.length; i < len; i++) {
 //        if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
-          callstack.push(lines[i]);
+                callstack.push(lines[i]);
 //        }
-      }
-      //Remove call to printStackTrace()
-      callstack.shift();
-      isCallstackPopulated = true;
-    }
-    else if (window.opera && e.message) { //Opera
-      var lines = e.message.split("\n");
-      for (var i=0, len=lines.length; i<len; i++) {
-        if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
-          var entry = lines[i];
-          //Append next line also since it has the file info
-          if (lines[i+1]) {
-            entry += " at " + lines[i+1];
-            i++;
-          }
-          callstack.push(entry);
+            }
+            //Remove call to printStackTrace()
+            callstack.shift();
+            isCallstackPopulated = true;
         }
-      }
-      //Remove call to printStackTrace()
-      callstack.shift();
-      isCallstackPopulated = true;
+        else if (window.opera && e.message) { //Opera
+            var lines = e.message.split("\n");
+            for (var i = 0, len = lines.length; i < len; i++) {
+                if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
+                    var entry = lines[i];
+                    //Append next line also since it has the file info
+                    if (lines[i + 1]) {
+                        entry += " at " + lines[i + 1];
+                        i++;
+                    }
+                    callstack.push(entry);
+                }
+            }
+            //Remove call to printStackTrace()
+            callstack.shift();
+            isCallstackPopulated = true;
+        }
     }
-  }
-  if (!isCallstackPopulated) { //IE and Safari
-    var currentFunction = arguments.callee.caller;
-    while (currentFunction) {
-      var fn = currentFunction.toString();
-      var fname = fn.substring(fn.indexOf("function") + 8, fn.indexOf("(")) || "anonymous";
-      callstack.push(fname);
-      currentFunction = currentFunction.caller;
+    if (!isCallstackPopulated) { //IE and Safari
+        var currentFunction = arguments.callee.caller;
+        while (currentFunction) {
+            var fn = currentFunction.toString();
+            var fname = fn.substring(fn.indexOf("function") + 8, fn.indexOf("(")) || "anonymous";
+            callstack.push(fname);
+            currentFunction = currentFunction.caller;
+        }
     }
-  }
-  if (delimiter) {
-      return callstack.join(delimiter);
-  }
-  return callstack;
+    if (delimiter) {
+        return callstack.join(delimiter);
+    }
+    return callstack;
 };
 
-Phlexible.clone = function(myObj){
+Phlexible.clone = function (myObj) {
     if (Ext.type(myObj) == 'object') {
         if (myObj === null)
             return myObj;
@@ -319,7 +321,7 @@ Phlexible.clone = function(myObj){
 
         var myNewObj = [];
 
-        for (var i=0; i<myObj.length; i++) {
+        for (var i = 0; i < myObj.length; i++) {
             myNewObj.push(Phlexible.clone(myObj[i]));
         }
     } else {
@@ -329,11 +331,11 @@ Phlexible.clone = function(myObj){
     return myNewObj;
 };
 
-Phlexible.evalClassString = function(s) {
+Phlexible.evalClassString = function (s) {
     var a = s.split('.');
     var n = window;
-    for(var i=0; i<a.length; i++) {
-        if(!n[a[i]]) return false;
+    for (var i = 0; i < a.length; i++) {
+        if (!n[a[i]]) return false;
         n = n[a[i]];
     }
 
@@ -342,8 +344,8 @@ Phlexible.evalClassString = function(s) {
 
 Phlexible.globalKeyMap = new Ext.KeyMap(document);
 
-Phlexible.globalKeyMap.accessKey = function(key, handler, scope) {
-    var h = function(keyCode, e) {
+Phlexible.globalKeyMap.accessKey = function (key, handler, scope) {
+    var h = function (keyCode, e) {
         if (Ext.isIE) {
             // IE6 doesn't allow cancellation of the F5 key,
             // so trick it into thinking some other key was pressed (backspace in this case)
@@ -361,7 +363,7 @@ Phlexible.EntryManager = new Phlexible.gui.util.EntryManager();
 Phlexible.PluginRegistry = new Phlexible.gui.util.PluginRegistry();
 Phlexible.Router = new Phlexible.gui.util.Router();
 
-Phlexible.inlineIcon = function(iconCls, attr) {
+Phlexible.inlineIcon = function (iconCls, attr) {
     if (!attr) attr = {};
 
     attr = Ext.applyIf(attr, {
@@ -376,7 +378,7 @@ Phlexible.inlineIcon = function(iconCls, attr) {
         s += ' ' + i + '="' + attr[i] + '"';
     }
 
-    s+= ' />';
+    s += ' />';
 
     return s;
 };

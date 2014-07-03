@@ -30,11 +30,11 @@ class UniqueIdSearch extends AbstractSearch
     {
         $select = $this->db->select()
             ->from(
-                array('et' => $this->db->prefix.'element_tree'),
+                array('et' => $this->db->prefix . 'element_tree'),
                 array('id')
             )
             ->join(
-                array('e' => $this->db->prefix.'element'),
+                array('e' => $this->db->prefix . 'element'),
                 'e.eid = et.eid AND e.unique_id LIKE ' . $this->db->quote('%' . $query . '%'),
                 array()
             );

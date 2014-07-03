@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Viability;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
+use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Viability manager
@@ -70,6 +70,7 @@ class ViabilityManager
      *
      * @param Elementtype $elementtype
      * @param array       $parentIds
+     *
      * @throws \Exception
      *
      * @return $this
@@ -77,13 +78,13 @@ class ViabilityManager
     public function saveAllowedParentIds(Elementtype $elementtype, array $parentIds)
     {
         $this->db->delete(
-             $this->db->prefix . 'elementtype_apply',
-             array('elementtype_id = ?' => $elementtype->getId())
+            $this->db->prefix . 'elementtype_apply',
+            array('elementtype_id = ?' => $elementtype->getId())
         );
 
         foreach ($parentIds as $parentId) {
             $this->db->insert(
-                 $this->db->prefix . 'elementtype_apply',
+                $this->db->prefix . 'elementtype_apply',
                 array(
                     'elementtype_id' => $elementtype->getId(),
                     'apply_under_id' => $parentId,

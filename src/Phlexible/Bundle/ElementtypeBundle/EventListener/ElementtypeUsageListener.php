@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\EventListener;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
+use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Elementtype usage listeners
@@ -42,14 +42,14 @@ class ElementtypeUsageListener
             ->select()
             ->distinct()
             ->from(
-                array('es' => $this->db->prefix.'elementtype_structure'),
+                array('es' => $this->db->prefix . 'elementtype_structure'),
                 array(
                     'elementtype_id',
                     $this->db->fn->expr('MAX(es.reference_version) AS latest_version')
                 )
             )
             ->join(
-                array('e' => $this->db->prefix.'elementtype'),
+                array('e' => $this->db->prefix . 'elementtype'),
                 'es.elementtype_id = e.id',
                 array('title', 'type')
             )
@@ -60,10 +60,10 @@ class ElementtypeUsageListener
 
         foreach ($rows as $row) {
             $event->addUsage(
-                  $row['type'] . ' elementtype',
-                  $row['elementtype_id'],
-                  $row['title'],
-                  $row['latest_version']
+                $row['type'] . ' elementtype',
+                $row['elementtype_id'],
+                $row['title'],
+                $row['latest_version']
             );
         }
     }

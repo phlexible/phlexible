@@ -2,15 +2,16 @@
     padding-left: 5px;
 }
 
-
 .x-locationbar .x-locationbar-location {
     background-color: white;
     border-top: 1px solid #96969D;
     border-bottom: 1px solid #96969D;
 }
+
 .x-locationbar .x-locationbar-location-first {
     border-left: 1px solid #96969D;
 }
+
 .x-locationbar .x-locationbar-location-last {
     border-right: 1px solid #96969D;
 }
@@ -18,34 +19,42 @@
 .x-locationbar-folder-icon {
     background-image: url(/COMPONENTSPATH/mediamanager/icons/location_folder.png) !important;
 }
+
 .x-locationbar-back-icon {
     background-image: url(/COMPONENTSPATH/mediamanager/icons/location_back.png) !important;
 }
+
 .x-locationbar-forward-icon {
     background-image: url(/COMPONENTSPATH/mediamanager/icons/location_forward.png) !important;
 }
+
 .x-locationbar-reload-icon {
     background-image: url(/COMPONENTSPATH/mediamanager/icons/location_reload.png) !important;
 }
 
 .x-locationbar .x-btn-menu-arrow-wrap .x-btn-center button {
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/btn-arrow.gif) no-repeat scroll 0 3px;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/btn-arrow.gif) no-repeat scroll 0 3px;
     width: 12px;
 }
+
 .x-locationbar .x-btn-menu-active .x-btn-menu-arrow-wrap .x-btn-center button {
     background-position: 0 -97px;
 }
+
 .x-locationbar .x-btn-with-menu .x-btn-center em {
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/btn-arrow.gif) no-repeat scroll 0 0;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/btn-arrow.gif) no-repeat scroll 0 0;
 }
+
 .x-locationbar .x-btn-menu-active .x-btn-with-menu .x-btn-center em {
     background-position: 0 -150px;
 }
+
 .x-locationbar .x-btn-with-menu .x-btn-center button {
     width: 0;
 }
+
 .x-locationbar .x-btn-click .x-btn-center,
 .x-locationbar .x-btn-pressed .x-btn-center,
 .x-locationbar .x-btn-menu-active .x-btn-center {
-    background:transparent url(/COMPONENTSPATH/mediamanager/images/tb-btn-sprite.gif) repeat-x scroll 0pt -105px;
+    background: transparent url(/COMPONENTSPATH/mediamanager/images/tb-btn-sprite.gif) repeat-x scroll 0pt -105px;
 }

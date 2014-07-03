@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\FrontendAssetBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface FrontendAssetEvents
+class FrontendAssetEvents
 {
     /**
      * Fired on collect

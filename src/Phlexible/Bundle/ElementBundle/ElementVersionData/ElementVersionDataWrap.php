@@ -31,15 +31,11 @@ class ElementVersionDataWrap
     {
         return $this->_data['content'];
 
-        if (sizeof($this->_data) == 1)
-        {
+        if (sizeof($this->_data) == 1) {
             $item = current($this->_data);
-            if (is_array($item))
-            {
+            if (is_array($item)) {
                 return new self($item);
-            }
-            else
-            {
+            } else {
                 return $item;
             }
         }
@@ -47,8 +43,7 @@ class ElementVersionDataWrap
 
     public function getValue($key)
     {
-        if (!isset($this->_data[$key]))
-        {
+        if (!isset($this->_data[$key])) {
             return null;
         }
 
@@ -57,8 +52,7 @@ class ElementVersionDataWrap
 
     public function count()
     {
-        if (!isset($this->_data['children']))
-        {
+        if (!isset($this->_data['children'])) {
             return null;
         }
 
@@ -69,8 +63,7 @@ class ElementVersionDataWrap
     {
         $item = current($this->_data['children']);
 
-        if ($item)
-        {
+        if ($item) {
             return new self($item);
         }
 
@@ -84,24 +77,24 @@ class ElementVersionDataWrap
 
     public function next()
     {
-        if(empty($this->_data['children']))
-        {
+        if (empty($this->_data['children'])) {
             $this->_valid = false;
+
             return;
         }
 
-        $this->_valid = (FALSE !== next($this->_data['children']));
+        $this->_valid = (false !== next($this->_data['children']));
     }
 
     public function rewind()
     {
-        if(empty($this->_data['children']))
-        {
+        if (empty($this->_data['children'])) {
             $this->_valid = false;
+
             return;
         }
 
-        $this->_valid = (FALSE !== reset($this->_data['children']));
+        $this->_valid = (false !== reset($this->_data['children']));
     }
 
     public function valid()
@@ -116,16 +109,12 @@ class ElementVersionDataWrap
 
     public function offsetGet($offset)
     {
-        if (array_key_exists($offset, $this->_data))
-        {
+        if (array_key_exists($offset, $this->_data)) {
             return $this->_data[$offset];
 
-            if (is_array($this->_data[$offset]))
-            {
+            if (is_array($this->_data[$offset])) {
                 return new self($this->_data[$offset]);
-            }
-            else
-            {
+            } else {
                 return $this->_data[$offset];
             }
         }
@@ -138,7 +127,7 @@ class ElementVersionDataWrap
 
     public function offsetUnset($offset)
     {
-//        unset($this->_data[$offset]);
+        //        unset($this->_data[$offset]);
     }
 
     public function hasChildren()
@@ -152,8 +141,7 @@ class ElementVersionDataWrap
 
         $children = $this->childrenAsArray();
         $return = array();
-        foreach($children as $key => $child)
-        {
+        foreach ($children as $key => $child) {
             $return[$key] = new self($child);
         }
 
@@ -170,24 +158,20 @@ class ElementVersionDataWrap
      */
     public function first($offset, $returnContent = false)
     {
-        if(empty($this->_data['children']))
-        {
+        if (empty($this->_data['children'])) {
             return array();
         }
 
-        foreach ($this->_data['children'] as $key => $child)
-        {
+        foreach ($this->_data['children'] as $key => $child) {
             $node = $this->child($key);
 
-            if ($child['working_title'] == $offset)
-            {
+            if ($child['working_title'] == $offset) {
                 return $returnContent ? $node->getValue('content') : $node;
             }
 
             $return = $node->first($offset, $returnContent);
 
-            if (!empty($return))
-            {
+            if (!empty($return)) {
                 return $return;
             }
         }
@@ -205,23 +189,19 @@ class ElementVersionDataWrap
      */
     public function firstDsId($offset, $returnContent = false)
     {
-        if(empty($this->_data['children']))
-        {
+        if (empty($this->_data['children'])) {
             return array();
         }
 
-        foreach($this->_data['children'] as $key => $child)
-        {
+        foreach ($this->_data['children'] as $key => $child) {
             $node = $this->child($key);
 
-            if ($child['ds_id'] == $offset)
-            {
+            if ($child['ds_id'] == $offset) {
                 return $returnContent ? $node->getValue('content') : $node;
             }
 
             $return = $node->firstDsId($offset, $returnContent);
-            if(!empty($return))
-            {
+            if (!empty($return)) {
                 return $return;
             }
         }
@@ -252,22 +232,17 @@ class ElementVersionDataWrap
      */
     public function all($offset)
     {
-        if(empty($this->_data['children']))
-        {
+        if (empty($this->_data['children'])) {
             return array();
         }
 
         $data = array();
-        foreach($this->_data['children'] as $key => $child)
-        {
+        foreach ($this->_data['children'] as $key => $child) {
             $node = $this->child($key);
 
-            if ($child['working_title'] == $offset)
-            {
+            if ($child['working_title'] == $offset) {
                 $data[] = $node;
-            }
-            elseif(!empty($child['children']))
-            {
+            } elseif (!empty($child['children'])) {
                 $data = array_merge($data, $node->all($offset));
             }
         }
@@ -284,20 +259,15 @@ class ElementVersionDataWrap
      */
     public function children($offset = null)
     {
-        if ($offset !== null)
-        {
+        if ($offset !== null) {
             $node = $this->first($offset);
-        }
-        else
-        {
+        } else {
             return $this->_data['children'];
         }
 
-        if($node)
-        {
+        if ($node) {
             $children = $node->childrenAsArray();
-            foreach(array_keys($children) as $key)
-            {
+            foreach (array_keys($children) as $key) {
                 // build complete _childWraps array
                 $node->child($key);
             }
@@ -306,7 +276,7 @@ class ElementVersionDataWrap
         }
 
         return array();
-        throw new \Exception('[data->children(): offset "'.$offset.'" not found]');
+        throw new \Exception('[data->children(): offset "' . $offset . '" not found]');
     }
 
     public function childrenOf($offset)
@@ -343,11 +313,9 @@ class ElementVersionDataWrap
     public function child($offset)
     {
         // check child wraps cache
-        if (!isset($this->_childWraps[$offset]))
-        {
+        if (!isset($this->_childWraps[$offset])) {
             // if offset is not existing retuen empty array
-            if (empty($this->_data['children'][$offset]))
-            {
+            if (empty($this->_data['children'][$offset])) {
                 return array();
             }
 
@@ -362,8 +330,7 @@ class ElementVersionDataWrap
 
     public function childrenAsArray()
     {
-        if (empty($this->_data['children']))
-        {
+        if (empty($this->_data['children'])) {
             return array();
         }
 

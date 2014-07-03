@@ -17,6 +17,7 @@ interface TreeFactoryInterface
 {
     /**
      * @param string $siterootId
+     *
      * @return TreeInterface
      */
     public function factory($siterootId);

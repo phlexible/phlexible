@@ -47,8 +47,7 @@ class CollectProblemsListener
                 ->setHint('Run queue command')
                 ->setIconClass('p-queue-component-icon')
                 ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime())
-            ;
+                ->setLastCheckedAt(new \DateTime());
 
             $event->addProblem($problem);
         } elseif (time() - strtotime($lastRun) > 86400) {
@@ -59,8 +58,7 @@ class CollectProblemsListener
                 ->setHint('Install a cronjob for running the queue command')
                 ->setIconClass('p-queue-component-icon')
                 ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime())
-            ;
+                ->setLastCheckedAt(new \DateTime());
 
             $event->addProblem($problem);
         }

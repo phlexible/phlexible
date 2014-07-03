@@ -1,6 +1,6 @@
 Ext.namespace('Phlexible.gui.grid');
 
-Phlexible.gui.grid.TypeColumnModel = function(config) {
+Phlexible.gui.grid.TypeColumnModel = function (config) {
 
 //    if (editorsConfig) {
 //        Ext.apply(config, editorsConfig);
@@ -21,8 +21,8 @@ Phlexible.gui.grid.TypeColumnModel = function(config) {
     if (config.grid) {
         config.grid.on({
             beforeedit: {
-                fn: function(e) {
-                    var grid   = e.grid;
+                fn: function (e) {
+                    var grid = e.grid;
                     var record = e.record;
 
                     // call before edit callbacks
@@ -31,8 +31,7 @@ Phlexible.gui.grid.TypeColumnModel = function(config) {
                         var field = e.field;
 
                         if (this.beforeEditCallbacks[type]
-                            && false === this.beforeEditCallbacks[type](grid, field, record))
-                        {
+                            && false === this.beforeEditCallbacks[type](grid, field, record)) {
                             return false;
                         }
                     }
@@ -40,8 +39,8 @@ Phlexible.gui.grid.TypeColumnModel = function(config) {
                 scope: this
             },
             afteredit: {
-                fn: function(e) {
-                    var grid   = e.grid;
+                fn: function (e) {
+                    var grid = e.grid;
                     var record = e.record;
 
                     // call after edit callbacks
@@ -88,7 +87,7 @@ Ext.extend(Phlexible.gui.grid.TypeColumnModel, Ext.grid.ColumnModel, {
         return Phlexible.gui.grid.TypeColumnModel.superclass.getCellEditor.call(this, cellIndex, rowIndex);
     },
 
-    onEditorSelect: function(editor, record) {
+    onEditorSelect: function (editor, record) {
         var type = record.data[this.editorField];
         if (this.selectEditorCallbacks[type]) {
             this.selectEditorCallbacks[type](editor, record);
@@ -99,21 +98,21 @@ Ext.extend(Phlexible.gui.grid.TypeColumnModel, Ext.grid.ColumnModel, {
      * Set the different Cell Editors
      * @param {Array} editors Array of Form Fields
      */
-    setEditors: function(editors) {
+    setEditors: function (editors) {
         this.editors = {};
 
-        for(var i in editors) {
-            if(editors[i].isFormField) {
+        for (var i in editors) {
+            if (editors[i].isFormField) {
                 this.editors[i] = new Ext.grid.GridEditor(editors[i]);
             }
         }
     },
 
-    setEditorField: function(field)  {
+    setEditorField: function (field) {
         this.editorField = field;
     },
 
-    setStore: function(store) {
+    setStore: function (store) {
         this.store = store;
     }
 });

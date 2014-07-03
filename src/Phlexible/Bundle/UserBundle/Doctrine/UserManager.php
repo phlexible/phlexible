@@ -70,12 +70,13 @@ class UserManager implements UserManagerInterface, UserProviderInterface
      * @param string                   $systemUserId
      * @param string                   $everyoneGroupId
      */
-    public function __construct(EntityManager $entityManager,
-                                EncoderFactoryInterface $encoderFactory,
-                                EventDispatcherInterface $dispatcher,
-                                $userClass,
-                                $systemUserId,
-                                $everyoneGroupId)
+    public function __construct(
+        EntityManager $entityManager,
+        EncoderFactoryInterface $encoderFactory,
+        EventDispatcherInterface $dispatcher,
+        $userClass,
+        $systemUserId,
+        $everyoneGroupId)
     {
         $this->entityManager = $entityManager;
         $this->encoderFactory = $encoderFactory;
@@ -163,8 +164,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
             ->where($qb->expr()->like('u.username', $qb->expr()->literal("%$term%")))
             ->orWhere($qb->expr()->like('u.email', $qb->expr()->literal("%$term%")))
             ->orWhere($qb->expr()->like('u.firstname', $qb->expr()->literal("%$term%")))
-            ->orWhere($qb->expr()->like('u.lastname', $qb->expr()->literal("%$term%")))
-        ;
+            ->orWhere($qb->expr()->like('u.lastname', $qb->expr()->literal("%$term%")));
 
         return $qb->getQuery()->getResult();
     }
@@ -225,11 +225,11 @@ class UserManager implements UserManagerInterface, UserProviderInterface
      */
     public function updatePassword(UserInterface $user)
     {
-         if (0 !== strlen($password = $user->getPlainPassword())) {
-             $encoder = $this->encoderFactory->getEncoder($user);
-             $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-             $user->eraseCredentials();
-         }
+        if (0 !== strlen($password = $user->getPlainPassword())) {
+            $encoder = $this->encoderFactory->getEncoder($user);
+            $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
+            $user->eraseCredentials();
+        }
     }
 
     /**

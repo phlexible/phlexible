@@ -5,10 +5,10 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
     rootVisible: false,
     border: true,
     loadMask: true,
-    margins:'0 0 0 0',
+    margins: '0 0 0 0',
 //    useArrows: true,
     viewConfig: {
-        forceFit:true
+        forceFit: true
     },
     lines: true,
     autoScroll: true,
@@ -23,7 +23,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
     mode: 'edit',
     dirty: false,
 
-    initComponent: function() {
+    initComponent: function () {
         this.addEvents(
             /**
              * @event activate
@@ -74,7 +74,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
             dataUrl: Phlexible.Router.generate('elementtypes_tree', {mode: this.mode}),
             applyLoader: false,
             listeners: {
-                load: function(loader, node, response) {
+                load: function (loader, node, response) {
                     if (!node.hasChildNodes()) {
                         var data = Ext.decode(response.responseText);
                         if (data.error) {
@@ -103,29 +103,35 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
 
         // toolbar only in edit mode
         if (this.mode == 'edit') {
-            this.tbar = [{
-                text: this.strings.publish,
-                iconCls: 'p-elementtype-elementtype_publish-icon',
-                handler: this.publish,
-                scope: this,
-                disabled: true
-            },'-',{
-                text: this.strings.reset_element_type,
-                iconCls: 'p-elementtype-reset-icon',
-                handler: function() {
-                    Ext.Msg.confirm('Warning', 'Do you really want to reset? All changed will be lost.', function(btn) {
-                        if(btn == 'yes') {
-                            this.onReset();
-                        }
-                    }, this);
+            this.tbar = [
+                {
+                    text: this.strings.publish,
+                    iconCls: 'p-elementtype-elementtype_publish-icon',
+                    handler: this.publish,
+                    scope: this,
+                    disabled: true
                 },
-                scope: this,
-                disabled: true
-            }];
+                '-',
+                {
+                    text: this.strings.reset_element_type,
+                    iconCls: 'p-elementtype-reset-icon',
+                    handler: function () {
+                        Ext.Msg.confirm('Warning', 'Do you really want to reset? All changed will be lost.', function (btn) {
+                            if (btn == 'yes') {
+                                this.onReset();
+                            }
+                        }, this);
+                    },
+                    scope: this,
+                    disabled: true
+                }
+            ];
         } else {
-            this.tbar = [{
-                text: 'dummy'
-            }];
+            this.tbar = [
+                {
+                    text: 'dummy'
+                }
+            ];
         }
 
         // context menu only in edit mode
@@ -138,66 +144,80 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
             this.submenuAddChild = new Ext.menu.Menu();
 
             this.contextMenu = new Ext.menu.Menu({
-                items: [{
-                    cls: 'x-btn-text-icon-bold',
-                    text: '.',
-                    canActivate: false
-                }, '-', {
-                    text: this.strings.add_field_before,
-                    iconCls: 'p-elementtype-drop_over-icon',
-                    menu: this.submenuAddBefore
-                }, {
-                    text: this.strings.add_field_after,
-                    iconCls: 'p-elementtype-drop_under-icon',
-                    menu: this.submenuAddAfter
+                items: [
+                    {
+                        cls: 'x-btn-text-icon-bold',
+                        text: '.',
+                        canActivate: false
+                    },
+                    '-',
+                    {
+                        text: this.strings.add_field_before,
+                        iconCls: 'p-elementtype-drop_over-icon',
+                        menu: this.submenuAddBefore
+                    },
+                    {
+                        text: this.strings.add_field_after,
+                        iconCls: 'p-elementtype-drop_under-icon',
+                        menu: this.submenuAddAfter
 
-                }, {
-                    text: this.strings.add_field_as_child,
-                    iconCls: 'p-elementtype-drop_add-icon',
-                    menu: this.submenuAddChild
+                    },
+                    {
+                        text: this.strings.add_field_as_child,
+                        iconCls: 'p-elementtype-drop_add-icon',
+                        menu: this.submenuAddChild
 
-                }, '-', {
-                    text: this.strings.copy,
-                    iconCls: 'p-elementtype-copy-icon',
-                    handler: function(){
-                        alert('copy');
                     },
-                    disabled: true
-                }, {
-                    text: this.strings.cut,
-                    iconCls: 'p-elementtype-cut-icon',
-                    handler: function(){
-                        alert('cut');
+                    '-',
+                    {
+                        text: this.strings.copy,
+                        iconCls: 'p-elementtype-copy-icon',
+                        handler: function () {
+                            alert('copy');
+                        },
+                        disabled: true
                     },
-                    disabled: true
-                }, {
-                    text: this.strings.paste,
-                    iconCls: 'p-elementtype-paste-icon',
-                    handler: function(){
-                        alert('paste');
+                    {
+                        text: this.strings.cut,
+                        iconCls: 'p-elementtype-cut-icon',
+                        handler: function () {
+                            alert('cut');
+                        },
+                        disabled: true
                     },
-                    disabled: true
-                }, '-', {
-                    text: 'Transform to reference', //this.strings.remove,
-                    iconCls: 'p-elementtype-transform-icon',
-                    handler: function(item){
-                        this.transform(item.parentMenu.node);
+                    {
+                        text: this.strings.paste,
+                        iconCls: 'p-elementtype-paste-icon',
+                        handler: function () {
+                            alert('paste');
+                        },
+                        disabled: true
+                    },
+                    '-',
+                    {
+                        text: 'Transform to reference', //this.strings.remove,
+                        iconCls: 'p-elementtype-transform-icon',
+                        handler: function (item) {
+                            this.transform(item.parentMenu.node);
 
-                        this.setDirty();
+                            this.setDirty();
+                        },
+                        scope: this
                     },
-                    scope: this
-                }, '-', {
-                    text: this.strings.remove,
-                    iconCls: 'p-elementtype-delete-icon',
-                    handler: function(item){
-                        item.parentMenu.node.remove();
+                    '-',
+                    {
+                        text: this.strings.remove,
+                        iconCls: 'p-elementtype-delete-icon',
+                        handler: function (item) {
+                            item.parentMenu.node.remove();
 
 //                        Phlexible.msg('Element Type Action', 'Node "' + item.parentMenu.node.text + '" removed.');
 
-                        this.setDirty();
-                    },
-                    scope: this
-                }]
+                            this.setDirty();
+                        },
+                        scope: this
+                    }
+                ]
             });
 
             this.addListener({
@@ -212,7 +232,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         this.disable();
     },
 
-    initEvents: function() {
+    initEvents: function () {
         this.dropZone = new Phlexible.elementtypes.ElementtypeStructureTreeDropZone(this, {
             ddGroup: this.ddGroup,
             appendOnly: this.ddAppendOnly === true
@@ -223,7 +243,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         Phlexible.elementtypes.ElementtypeStructureTree.superclass.initEvents.call(this);
     },
 
-    onSubmenuClick: function(item,event) {
+    onSubmenuClick: function (item, event) {
 
         var activeNode = item.nodeObject;
         var parentNode = activeNode.parentNode;
@@ -243,25 +263,22 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         newNode.attributes.properties.field.working_title = '';
         newNode.attributes.properties.field.type = item.id;
 
-        if(item.appendMode == 'child')
-        {
+        if (item.appendMode == 'child') {
             var newNode = activeNode.appendChild(newNode);
             activeNode.expand();
 
 //            Phlexible.msg('Element Type Action', 'Node of Type "' + newNode.attributes.properties.field.type + '" created as child of "' + activeNode.text + '".');
         }
 
-        if(item.appendMode == 'before')
-        {
+        if (item.appendMode == 'before') {
             var newNode = parentNode.insertBefore(newNode, activeNode);
 
 //            Phlexible.msg('Element Type Action', 'Node of Type "' + newNode.attributes.properties.field.type + '" created before "' + activeNode.text + '".');
         }
 
-        if(item.appendMode == 'after')
-        {
+        if (item.appendMode == 'after') {
             var nextSiblingNode = activeNode.nextSibling;
-            var newNode = parentNode.insertBefore(newNode,nextSiblingNode);
+            var newNode = parentNode.insertBefore(newNode, nextSiblingNode);
 
 //            Phlexible.msg('Element Type Action', 'Node of Type "' + newNode.attributes.properties.field.type + '" created after "' + activeNode.text + '".');
         }
@@ -272,7 +289,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         this.nodeChange(newNode);
     },
 
-    onContextMenu: function(node, event){
+    onContextMenu: function (node, event) {
         event.stopEvent();
 
         if (node.attributes.type === 'root' && node.attributes.properties.root.type === 'layout') {
@@ -284,7 +301,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
             this.submenuAddBefore.removeAll();
             this.submenuAddAfter.removeAll();
             this.submenuAddChild.removeAll();
-        } else if (node.attributes.reference){
+        } else if (node.attributes.reference) {
             this.contextMenu.items.items[2].disable();
             this.contextMenu.items.items[3].disable();
             this.contextMenu.items.items[4].disable();
@@ -351,7 +368,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
                     }
                 }
                 if (fieldTypeMatrix && Phlexible.fields.FieldTypes[fieldId].allowedIn.indexOf(currentId) != -1) {
-                    if(node.attributes.type == 'referenceroot' && node.firstChild) {
+                    if (node.attributes.type == 'referenceroot' && node.firstChild) {
                         break;
                     }
                     hasChild = true;
@@ -369,11 +386,11 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
                 }
             }
 
-            if(!hasSibling) {
+            if (!hasSibling) {
                 this.contextMenu.items.items[2].disable();
                 this.contextMenu.items.items[3].disable();
             }
-            if(!hasChild) {
+            if (!hasChild) {
                 this.contextMenu.items.items[4].disable();
             }
 
@@ -390,7 +407,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
             this.contextMenu.items.items[10].disable();
             this.contextMenu.items.items[12].disable();
         }
-        else if(node.ownerTree.root.firstChild.attributes.type == 'referenceroot') {
+        else if (node.ownerTree.root.firstChild.attributes.type == 'referenceroot') {
             this.contextMenu.items.items[10].disable();
             this.contextMenu.items.items[12].enable();
         }
@@ -401,33 +418,33 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         this.contextMenu.showAt([coords[0], coords[1]]);
     },
 
-    setDirty: function() {
+    setDirty: function () {
         this.dirty = true;
 
         this.fireEvent('dirty', this);
         this.onDirty();
     },
 
-    onDirty: function() {
+    onDirty: function () {
         var tb = this.getTopToolbar();
         tb.items.items[0].enable();
         tb.items.items[2].enable();
     },
 
-    setClean: function() {
+    setClean: function () {
         this.dirty = false;
 
         this.fireEvent('clean', this);
         this.onClean();
     },
 
-    onClean: function() {
+    onClean: function () {
         var tb = this.getTopToolbar();
         tb.items.items[0].disable();
         tb.items.items[2].disable();
     },
 
-    onActivate: function(view, id, node, event){
+    onActivate: function (view, id, node, event) {
 //        Phlexible.console.log(view);
 //        Phlexible.console.log(id);
 //        Phlexible.console.log(node);
@@ -438,10 +455,10 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
 //        this.load(id);
     },
 
-    load: function(id, title, version){
+    load: function (id, title, version) {
         this.disable();
 
-        if(title) {
+        if (title) {
             if (this.mode == 'edit') {
                 this.setTitle(this.strings.elementtype + ' "' + title + '"');
             } else {
@@ -459,14 +476,14 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         this.root.reload();
         this.expandAll();
 
-        if(this.mode == 'edit') {
+        if (this.mode == 'edit') {
             this.setClean();
         }
 
 //        Phlexible.msg('Element Type Action', 'Element Type "' + title + '" loaded to ' + (this.mode == 'edit' ? 'Edit' : 'Template') + ' Tree.');
     },
 
-    onReset: function() {
+    onReset: function () {
         if (this.fireEvent('beforereset', this) === false) {
             return;
         }
@@ -481,33 +498,33 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         this.fireEvent('reset', this);
     },
 
-    transform: function(node) {
+    transform: function (node) {
         if (this.fireEvent('beforetransform', this) === false) {
             return;
         }
 
         /*
-            var refNode = new Ext.tree.TreeNode({
-                text: 'test',
-                type: 'reference',
-                reference: {
-                    refID:      123,
-                    refVersion: 1
-                }
-            });
+         var refNode = new Ext.tree.TreeNode({
+         text: 'test',
+         type: 'reference',
+         reference: {
+         refID:      123,
+         refVersion: 1
+         }
+         });
 
-            node.parentNode.appendChild(refNode);
-            refNode.appendChild(node);
+         node.parentNode.appendChild(refNode);
+         refNode.appendChild(node);
 
-            refNode.cascade(function(x) {
+         refNode.cascade(function(x) {
          Phlexible.console.log(x.text);
-            });
-return;
-*/
+         });
+         return;
+         */
 
 
         this.saveNodes = [];
-        this.saveNode  = node;
+        this.saveNode = node;
 
         this.pushSaveNode(node, 0);
         this.processSaveNodes(node);
@@ -524,18 +541,18 @@ return;
         });
     },
 
-    onTransformSuccess: function(response) {
+    onTransformSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 //        this.setClean();
 
-        if(data.success) {
+        if (data.success) {
             Phlexible.success('Node "' + this.saveNode.attributes.text + '" transformed to Reference Element Type "' + data.data.title + '" created.');
 
             var refNode = new Ext.tree.TreeNode({
                 text: data.data.title,
                 type: 'reference',
                 reference: {
-                    refID:      data.data.element_type_id,
+                    refID: data.data.element_type_id,
                     refVersion: data.data.element_type_version
                 },
                 expanded: true,
@@ -553,7 +570,7 @@ return;
             refNode.getUI().addClass('p-elementtypes-type-reference');
             Ext.get(refNode.getUI().getIconEl()).addClass('p-elementtype-field_reference-icon');
 
-            refNode.firstChild.cascade(function(node) {
+            refNode.firstChild.cascade(function (node) {
                 if (node.id != refNode.id) {
                     node.attributes.reference = true;
                     node.attributes.cls += ' p-elementtypes-reference';
@@ -575,7 +592,7 @@ return;
         delete this.saveNode;
     },
 
-    publish: function() {
+    publish: function () {
         if (this.fireEvent('beforepublish', this) === false) {
             return;
         }
@@ -599,10 +616,10 @@ return;
         });
     },
 
-    onPublishSuccess: function(response) {
+    onPublishSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
-        if(data.success) {
+        if (data.success) {
             this.setClean();
 
             var rootNode = this.getRootNode();
@@ -620,13 +637,13 @@ return;
     },
 
     /*
-    Recursive function
-    sweeps the tree in all levels
-    */
-    processSaveNodes: function(node){
+     Recursive function
+     sweeps the tree in all levels
+     */
+    processSaveNodes: function (node) {
         var child = node.childNodes;
 
-        for(var i=0;i<child.length;i++){
+        for (var i = 0; i < child.length; i++) {
             this.pushSaveNode(child[i], node.id, node.attributes.ds_id);
             if (child[i].attributes.type != 'reference') {
                 this.processSaveNodes(child[i]);
@@ -634,43 +651,43 @@ return;
         }
     },
 
-    pushSaveNode: function(saveNode, parent_id, parent_ds_id) {
+    pushSaveNode: function (saveNode, parent_id, parent_ds_id) {
         this.saveNodes.push({
             id: saveNode.id,
             parent_id: parent_id,
             ds_id: saveNode.attributes.ds_id || 0,
             parent_ds_id: parent_ds_id,
             type: saveNode.attributes.type,
-            reference:saveNode.attributes.reference,
+            reference: saveNode.attributes.reference,
             properties: saveNode.attributes.properties
         });
     },
 
-    nodeChange: function(node) {
+    nodeChange: function (node) {
         //Phlexible.console.log(node);
         this.fireEvent('nodeChange', node);
     },
 
-    cleanNodes: function(node) {
+    cleanNodes: function (node) {
         var child = node.childNodes;
 
-        for(var i=0;i<child.length;i++){
+        for (var i = 0; i < child.length; i++) {
             child[i].ui.removeClass('dirty');
             child[i].ui.removeClass('error');
             this.cleanNodes(child[i]);
         }
     },
 
-    findWorkingTitle: function(node, id, wt) {
+    findWorkingTitle: function (node, id, wt) {
         var child = node.childNodes;
 
-        for(var i=0;i<child.length;i++){
+        for (var i = 0; i < child.length; i++) {
             //Phlexible.console.log(child[i].attributes.type);
-            if(child[i].attributes.type != 'root' && child[i].attributes.type != 'referenceroot' &&
-               child[i].id != id && child[i].attributes.properties.field.working_title == wt) {
+            if (child[i].attributes.type != 'root' && child[i].attributes.type != 'referenceroot' &&
+                child[i].id != id && child[i].attributes.properties.field.working_title == wt) {
                 return true;
             }
-            if(this.findWorkingTitle(child[i], id, wt)) {
+            if (this.findWorkingTitle(child[i], id, wt)) {
                 return true;
             }
         }

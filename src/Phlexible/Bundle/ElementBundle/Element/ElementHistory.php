@@ -17,13 +17,13 @@ use Phlexible\Component\Database\ConnectionManager;
  */
 class ElementHistory
 {
-    const ACTION_CREATE          = 'create';
-    const ACTION_CREATE_VERSION  = 'createVersion';
-    const ACTION_SAVE            = 'save';
-    const ACTION_SAVE_MASTER     = 'saveMaster';
-    const ACTION_SAVE_LANGUAGE   = 'saveLanguage';
-    const ACTION_LOCK            = 'lock';
-    const ACTION_UNLOCK          = 'unlock';
+    const ACTION_CREATE = 'create';
+    const ACTION_CREATE_VERSION = 'createVersion';
+    const ACTION_SAVE = 'save';
+    const ACTION_SAVE_MASTER = 'saveMaster';
+    const ACTION_SAVE_LANGUAGE = 'saveLanguage';
+    const ACTION_LOCK = 'lock';
+    const ACTION_UNLOCK = 'unlock';
 
     /**
      * @var \Zend_Db_Adapter_Abstract

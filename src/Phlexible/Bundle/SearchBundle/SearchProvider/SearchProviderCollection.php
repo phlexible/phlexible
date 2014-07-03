@@ -32,11 +32,13 @@ class SearchProviderCollection implements \IteratorAggregate
 
     /**
      * @param SearchProviderInterface $searchProvider
+     *
      * @return $this
      */
     public function addSearchProvider(SearchProviderInterface $searchProvider)
     {
         $this->searchProviders[] = $searchProvider;
+
         return $this;
     }
 

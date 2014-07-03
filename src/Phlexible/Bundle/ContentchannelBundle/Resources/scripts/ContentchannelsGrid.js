@@ -4,7 +4,7 @@ Phlexible.contentchannels.ContentchannelsGrid = Ext.extend(Ext.grid.GridPanel, {
     autoExpandColumn: 1,
     disabled: true,
 
-    initComponent: function(){
+    initComponent: function () {
         this.store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('contentchannels_list'),
             root: 'contentchannels',
@@ -13,7 +13,7 @@ Phlexible.contentchannels.ContentchannelsGrid = Ext.extend(Ext.grid.GridPanel, {
             autoLoad: true,
             listeners: {
                 load: {
-                    fn: function() {
+                    fn: function () {
                         this.enable();
                     },
                     scope: this
@@ -25,7 +25,7 @@ Phlexible.contentchannels.ContentchannelsGrid = Ext.extend(Ext.grid.GridPanel, {
             singleSelect: true,
             listeners: {
                 selectionchange: {
-                    fn: function(sm) {
+                    fn: function (sm) {
                         if (sm.getSelected()) {
                             this.getTopToolbar().items.items[2].enable();
                         }
@@ -38,29 +38,34 @@ Phlexible.contentchannels.ContentchannelsGrid = Ext.extend(Ext.grid.GridPanel, {
             }
         });
 
-        this.columns = [{
-            header: this.strings.id,
-            dataIndex: 'id',
-            sortable: true,
-            width: 50,
-            hidden: true
-        },{
-            header: this.strings.title,
-            dataIndex: 'title',
-            sortable: true,
-            width: 200
-        }];
+        this.columns = [
+            {
+                header: this.strings.id,
+                dataIndex: 'id',
+                sortable: true,
+                width: 50,
+                hidden: true
+            },
+            {
+                header: this.strings.title,
+                dataIndex: 'title',
+                sortable: true,
+                width: 200
+            }
+        ];
 
-        this.tbar = [{
-            text: this.strings.add,
-            iconCls: 'p-contentchannel-add-icon',
-            handler: this.newContentchannel,
-            scope: this
-        }];
+        this.tbar = [
+            {
+                text: this.strings.add,
+                iconCls: 'p-contentchannel-add-icon',
+                handler: this.newContentchannel,
+                scope: this
+            }
+        ];
 
         this.on({
             rowdblclick: {
-                fn: function(grid, rowIndex) {
+                fn: function (grid, rowIndex) {
                     var r = grid.getStore().getAt(rowIndex);
 
                     if (!r) {
@@ -76,14 +81,13 @@ Phlexible.contentchannels.ContentchannelsGrid = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.contentchannels.ContentchannelsGrid.superclass.initComponent.call(this);
     },
 
-    newContentchannel: function(){
+    newContentchannel: function () {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('contentchannels_create'),
-            success: function(response){
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
-                if(data.success)
-                {
-                    this.store.on('load', function(id) {
+                if (data.success) {
+                    this.store.on('load', function (id) {
                         var r = this.store.getById(id);
                         var index = this.store.indexOf(r);
                         this.selModel.selectRange(index);
@@ -92,20 +96,20 @@ Phlexible.contentchannels.ContentchannelsGrid = Ext.extend(Ext.grid.GridPanel, {
                     }.createDelegate(this, [data.id]));
                     this.store.reload();
                 }
-                else{
+                else {
                     Ext.Msg.alert('Failure', data.msg);
                 }
             },
-            scope:this
+            scope: this
 
         });
     },
 
-    saveContentchannel: function() {
+    saveContentchannel: function () {
         var mr = this.store.getModifiedRecords();
 
         var data = [];
-        Ext.each(mr, function(r) {
+        Ext.each(mr, function (r) {
             data.push(r.data);
         }, this);
 
@@ -114,7 +118,7 @@ Phlexible.contentchannels.ContentchannelsGrid = Ext.extend(Ext.grid.GridPanel, {
             params: {
                 data: Ext.encode(data)
             },
-            success: function(response) {
+            success: function (response) {
                 var result = Ext.decode(response.responseText);
 
                 if (result.success) {

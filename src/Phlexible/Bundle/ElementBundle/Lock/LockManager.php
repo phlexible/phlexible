@@ -144,8 +144,8 @@ class LockManager extends BaseLockManager
      */
     public function isElementLocked(Element $element, $language = null)
     {
-        $eid                  = $element->getEid();
-        $masterLanguage       = $element->getMasterLanguage();
+        $eid = $element->getEid();
+        $masterLanguage = $element->getMasterLanguage();
         $lockIdentifierMaster = new ElementIdentifier($eid);
 
         if ($masterLanguage === $language || null === $language) {
@@ -171,7 +171,7 @@ class LockManager extends BaseLockManager
      */
     public function lockElement(Element $element, $uid, $language = null)
     {
-        $eid            = $element->getEid();
+        $eid = $element->getEid();
         $masterLanguage = $element->getMasterLanguage();
 
         // use master or slave lock
@@ -198,7 +198,7 @@ class LockManager extends BaseLockManager
      */
     public function unlockElement(Element $element, $uid, $language = null)
     {
-        $eid            = $element->getEid();
+        $eid = $element->getEid();
         $masterLanguage = $element->getMasterLanguage();
 
         // use master or slave lock

@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ContentchannelBundle\File;
 
-use Phlexible\Bundle\ContentchannelBundle\File\Dumper\DumperInterface;
 use Phlexible\Bundle\ContentchannelBundle\Entity\Contentchannel;
+use Phlexible\Bundle\ContentchannelBundle\File\Dumper\DumperInterface;
 
 /**
  * Content channel dumper

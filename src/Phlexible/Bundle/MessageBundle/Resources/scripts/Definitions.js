@@ -1,9 +1,9 @@
 Ext.namespace(
-	'Phlexible.messages.filter',
-	'Phlexible.messages.menuhandle',
-	'Phlexible.messages.model',
-	'Phlexible.messages.subscription',
-	'Phlexible.messages.view'
+    'Phlexible.messages.filter',
+    'Phlexible.messages.menuhandle',
+    'Phlexible.messages.model',
+    'Phlexible.messages.subscription',
+    'Phlexible.messages.view'
 );
 
 Phlexible.messages.Handlers = [

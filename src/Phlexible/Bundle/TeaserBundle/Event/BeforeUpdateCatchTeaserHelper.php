@@ -41,8 +41,8 @@ class Makeweb_Teasers_Event_BeforeUpdateCatchTeaserHelper extends Brainbits_Even
      */
     public function __construct($eid, $preview = false)
     {
-        $this->_eid      = $eid;
-        $this->_preview  = $preview;
+        $this->_eid = $eid;
+        $this->_preview = $preview;
     }
 
     public function getEid()

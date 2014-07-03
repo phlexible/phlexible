@@ -64,16 +64,16 @@ class UserProvider implements ProviderInterface
             $name = $user->getFirstname() . ' ' . $user->getLastname();
 
             $data[] = array(
-                'type' => 'user',
+                'type'        => 'user',
                 'object_type' => 'uid',
-                'object_id' => $user->getId(),
-                'label' => $name
+                'object_id'   => $user->getId(),
+                'label'       => $name
             );
         }
 
         return array(
             'total' => $this->userManager->countAll(),
-            'data' => $data,
+            'data'  => $data,
         );
     }
 }

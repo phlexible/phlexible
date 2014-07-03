@@ -11,27 +11,27 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
     },
     autoExpandColumn: 'field',
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.JsonStore({
             fields: ['ds_id', 'field', 'index'],
             listeners: {
-                add: function(store) {
+                add: function (store) {
                     var fields = [];
-                    Ext.each(store.getRange(), function(r) {
+                    Ext.each(store.getRange(), function (r) {
                         fields.push({ds_id: r.get('ds_id'), field: r.get('field'), index: r.get('index')});
                     });
                     this.fireEvent('change', fields);
                 },
-                remove: function(store) {
+                remove: function (store) {
                     var fields = [];
-                    Ext.each(store.getRange(), function(r) {
+                    Ext.each(store.getRange(), function (r) {
                         fields.push({ds_id: r.get('ds_id'), field: r.get('field'), index: r.get('index')});
                     });
                     this.fireEvent('change', fields);
                 },
-                clear: function(store) {
+                clear: function (store) {
                     var fields = [];
-                    Ext.each(store.getRange(), function(r) {
+                    Ext.each(store.getRange(), function (r) {
                         fields.push({ds_id: r.get('ds_id'), field: r.get('field'), index: r.get('index')});
                     });
                     this.fireEvent('change', fields);
@@ -40,54 +40,62 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
             }
         });
 
-        this.columns = [{
-            header: this.strings.index,
-            dataIndex: 'index',
-            width: 50,
-            renderer: function(v) {
-                return '$' + v;
+        this.columns = [
+            {
+                header: this.strings.index,
+                dataIndex: 'index',
+                width: 50,
+                renderer: function (v) {
+                    return '$' + v;
+                }
+            },
+            {
+                header: this.strings.ds_id,
+                dataIndex: 'ds_id',
+                width: 200,
+                hidden: true
+            },
+            {
+                id: 'field',
+                header: this.strings.field,
+                dataIndex: 'field',
+                width: 200
             }
-        },{
-            header: this.strings.ds_id,
-            dataIndex: 'ds_id',
-            width: 200,
-            hidden: true
-        },{
-            id: 'field',
-            header: this.strings.field,
-            dataIndex: 'field',
-            width: 200
-        }];
+        ];
 
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true
         });
 
-        this.tbar = [{
-            text: this.strings.clear,
-            iconCls: 'p-elementtype-clear-icon',
-            handler: function() {
-                this.store.removeAll();
-            },
-            scope: this
-        }];
-
-        this.contextMenu = new Ext.menu.Menu({
-            items: [{
-                text: this.strings.remove,
-                iconCls: 'p-elementtype-delete-icon',
-                handler: function(item){
-                    item.parentMenu.store.remove(item.parentMenu.record);
-                    if(!item.parentMenu.store.getCount()) {
-                        item.parentMenu.store.removeAll();
-                    }
+        this.tbar = [
+            {
+                text: this.strings.clear,
+                iconCls: 'p-elementtype-clear-icon',
+                handler: function () {
+                    this.store.removeAll();
                 },
                 scope: this
-            }]
+            }
+        ];
+
+        this.contextMenu = new Ext.menu.Menu({
+            items: [
+                {
+                    text: this.strings.remove,
+                    iconCls: 'p-elementtype-delete-icon',
+                    handler: function (item) {
+                        item.parentMenu.store.remove(item.parentMenu.record);
+                        if (!item.parentMenu.store.getCount()) {
+                            item.parentMenu.store.removeAll();
+                        }
+                    },
+                    scope: this
+                }
+            ]
         });
 
         this.on({
-            rowcontextmenu: function(grid, index, event) {
+            rowcontextmenu: function (grid, index, event) {
                 event.stopEvent();
                 var coords = event.getXY();
 
@@ -96,7 +104,7 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
 
                 this.showAt([coords[0], coords[1]]);
             },
-            render: function(grid){
+            render: function (grid) {
                 this.addEvents("beforetooltipshow");
 
                 var v = this.view;
@@ -104,11 +112,11 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
                     ddGroup: 'elementtypesDD'
                 });
 
-                this.dropZone.getTargetFromEvent = function(e) {
+                this.dropZone.getTargetFromEvent = function (e) {
                     return this.el.dom;
                 };
 
-                this.dropZone.onNodeDrop = function(node, dd, e, dragData) {
+                this.dropZone.onNodeDrop = function (node, dd, e, dragData) {
                     if (dragData.node.attributes.properties.field && this.store.find('id', dragData.node.attributes.id) == -1) {
                         switch (dragData.node.attributes.properties.field.type) {
                             case 'textfield':
@@ -125,7 +133,7 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
                     var fieldTitle = dragData.node.attributes.properties.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] + ' (' + dragData.node.attributes.properties.field.working_title + ')';
 
                     var index = 0;
-                    Ext.each(this.store.getRange(), function(r) {
+                    Ext.each(this.store.getRange(), function (r) {
                         r.set('index', ++index);
                         r.commit();
                     });
@@ -138,7 +146,7 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
                     this.store.add(r);
                 }.createDelegate(this);
 
-                this.dropZone.onNodeOver = function(node, dd, e, dragData) {
+                this.dropZone.onNodeOver = function (node, dd, e, dragData) {
                     if (dragData.node.attributes.properties.field && this.store.find('id', dragData.node.attributes.id) == -1) {
                         switch (dragData.node.attributes.properties.field.type) {
                             case 'textfield':
@@ -163,14 +171,14 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
         Phlexible.elementtypes.RootMappedTitleGrid.superclass.initComponent.call(this);
     },
 
-    loadData: function(navigation) {
+    loadData: function (navigation) {
         this.store.loadData(navigation);
     },
 
-    getSaveValues: function() {
+    getSaveValues: function () {
         var navigation = [];
 
-        for (var i=0; i<this.store.getCount(); i++) {
+        for (var i = 0; i < this.store.getCount(); i++) {
             var r = this.store.getAt(i);
             navigation.push([r.get('id'), r.get('field')]);
         }

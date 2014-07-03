@@ -154,8 +154,7 @@ class AccessManager implements AccessManagerInterface
                 ->setContentId($contentId)
                 ->setSecurityType($securityType)
                 ->setSecurityId($securityId)
-                ->setContentLanguage($contentLanguage)
-            ;
+                ->setContentLanguage($contentLanguage);
         }
 
         $mask = 0;
@@ -165,8 +164,7 @@ class AccessManager implements AccessManagerInterface
         $ace
             ->setMask($mask)
             ->setStopMask($stopMask)
-            ->setNoInheritMask($inheritMask)
-        ;
+            ->setNoInheritMask($inheritMask);
 
         $event = new AccessControlEntryEvent($ace);
         if ($this->dispatcher->dispatch(AccessControlEvents::BEFORE_SET_RIGHT, $event)->isPropagationStopped()) {

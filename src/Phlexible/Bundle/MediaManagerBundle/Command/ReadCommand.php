@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
 use Brainbits\Mime\MimeDetector;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIterator;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,11 +30,12 @@ class ReadCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-manager:read')
-            ->setDefinition(array(
-                new InputArgument('folderId', InputArgument::OPTIONAL, 'Folder ID'),
-            ))
-            ->setDescription('Re-read all metadata')
-        ;
+            ->setDefinition(
+                array(
+                    new InputArgument('folderId', InputArgument::OPTIONAL, 'Folder ID'),
+                )
+            )
+            ->setDescription('Re-read all metadata');
     }
 
     /**
@@ -48,7 +49,7 @@ class ReadCommand extends ContainerAwareCommand
         $documenttypeRepository = $this->getContainer()->get('documenttypes.repository');
 
         if ($folderId) {
-            $site   = $this->getContainer()->get('mediasite.manager')->getByFolderId($folderId);
+            $site = $this->getContainer()->get('mediasite.manager')->getByFolderId($folderId);
             $folder = $site->getFolderPeer()->getById($folderId);
 
             $cnt = $folder->reRead();

@@ -33,12 +33,13 @@ class CatchHelper
     /**
      * @var MWF_Db_Pool
      */
-    public function __construct(MWF_Db_Pool $dbPool,
-                                Makeweb_Elements_Element_Manager $elementManager,
-                                Makeweb_Elements_Element_Version_Manager $elementVersionManager)
+    public function __construct(
+        MWF_Db_Pool $dbPool,
+        Makeweb_Elements_Element_Manager $elementManager,
+        Makeweb_Elements_Element_Version_Manager $elementVersionManager)
     {
-        $this->_db                    = $dbPool->write;
-        $this->_elementManager        = $elementManager;
+        $this->_db = $dbPool->write;
+        $this->_elementManager = $elementManager;
         $this->_elementVersionManager = $elementVersionManager;
     }
 
@@ -189,8 +190,7 @@ class CatchHelper
         $dispatcher = Brainbits_Event_Dispatcher::getInstance();
 
         $beforeEvent = new Makeweb_Teasers_Event_BeforeUpdateCatchTeaserHelper($eid, true);
-        if (false === $dispatcher->dispatch($beforeEvent))
-        {
+        if (false === $dispatcher->dispatch($beforeEvent)) {
             return null;
         }
 
@@ -233,8 +233,7 @@ class CatchHelper
 
         $nodes = $this->_db->fetchAll($select);
 
-        foreach ($nodes as $node)
-        {
+        foreach ($nodes as $node) {
             $elementVersion = $this->_elementVersionManager->get($eid, $node['latest_version']);
 
             $this->_updateVersion(
@@ -261,8 +260,7 @@ class CatchHelper
         $dispatcher = Brainbits_Event_Dispatcher::getInstance();
 
         $beforeEvent = new Makeweb_Teasers_Event_BeforeUpdateCatchTeaserHelper($eid);
-        if (false === $dispatcher->dispatch($beforeEvent))
-        {
+        if (false === $dispatcher->dispatch($beforeEvent)) {
             return null;
         }
 
@@ -286,8 +284,7 @@ class CatchHelper
 
         $nodes = $this->_db->fetchAll($select);
 
-        foreach ($nodes as $node)
-        {
+        foreach ($nodes as $node) {
             $elementVersion = $this->_elementVersionManager->get($eid, $node['version']);
 
             $this->_updateVersion(
@@ -309,18 +306,19 @@ class CatchHelper
         return count($nodes);
     }
 
-    protected function _updateVersion(Makeweb_Elements_Element $element,
-                                      Makeweb_Elements_Element_Version $elementVersion,
-                                      $tid,
-                                      $time,
-                                      $preview,
-                                      $language,
-                                      $navigation,
-                                      $restricted,
-                                      $onlineVersion)
+    protected function _updateVersion(
+        Makeweb_Elements_Element $element,
+        Makeweb_Elements_Element_Version $elementVersion,
+        $tid,
+        $time,
+        $preview,
+        $language,
+        $navigation,
+        $restricted,
+        $onlineVersion)
     {
-        $eid        = $element->getEid();
-        $version    = $elementVersion->getVersion();
+        $eid = $element->getEid();
+        $version = $elementVersion->getVersion();
         $customDate = $elementVersion->getCustomDate($language);
 
         // fill catchteaser_metaset_itmes
@@ -330,17 +328,17 @@ class CatchHelper
         // fill catchteaser_helper
 
         $insertData = array(
-            'eid'             => $eid,
-            'tid'             => $tid,
-            'publish_time'    => $time,
-            'custom_date'     => $customDate,
-            'preview'         => $preview ? 1 : 0,
-            'elementtype_id'  => $element->getElementTypeId(),
-            'version'         => $version,
-            'language'        => $language,
-            'online_version'  => $onlineVersion,
-            'in_navigation'   => (int) $navigation,
-            'restricted'      => (int) $restricted,
+            'eid'            => $eid,
+            'tid'            => $tid,
+            'publish_time'   => $time,
+            'custom_date'    => $customDate,
+            'preview'        => $preview ? 1 : 0,
+            'elementtype_id' => $element->getElementTypeId(),
+            'version'        => $version,
+            'language'       => $language,
+            'online_version' => $onlineVersion,
+            'in_navigation'  => (int) $navigation,
+            'restricted'     => (int) $restricted,
         );
 
         $this->_db->insert($this->_db->prefix . 'catchteaser_helper', $insertData);
@@ -360,8 +358,7 @@ class CatchHelper
 
         $this->removeMetaByEidAndVersionAndLanguage($eid, $version, $language);
 
-        foreach ($metasetItems as $metaset)
-        {
+        foreach ($metasetItems as $metaset) {
             $cleanString = str_replace(
                 array(',', ';'),
                 array('===', '==='),
@@ -370,9 +367,8 @@ class CatchHelper
 
             $tmp = explode('===', $cleanString);
 
-            foreach ($tmp as $item)
-            {
-                $metaset['tid']   = $tid;
+            foreach ($tmp as $item) {
+                $metaset['tid'] = $tid;
                 $metaset['value'] = mb_strtolower(trim($item));
                 $this->_db->insert($this->_db->prefix . 'catchteaser_metaset_items', $metaset);
             }

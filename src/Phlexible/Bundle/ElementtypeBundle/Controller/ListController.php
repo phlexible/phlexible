@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
+use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -172,8 +172,8 @@ class ListController extends Controller
      */
     public function createAction(Request $request)
     {
-        $title    = $request->get('title');
-        $type     = $request->get('type');
+        $title = $request->get('title');
+        $type = $request->get('type');
         $uniqueId = $request->get('unique_id');
 
         if (!$uniqueId) {

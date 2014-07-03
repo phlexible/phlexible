@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -27,11 +27,12 @@ class CleanupCommand extends ContainerAwareCommand
     {
         $this
             ->setName('elementtypes:cleanup')
-            ->setDefinition(array(
-                new InputOption('delete', null, InputOption::VALUE_NONE, 'Really delete'),
-            ))
-            ->setDescription('Cleanup old/unused elementtypes.')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('delete', null, InputOption::VALUE_NONE, 'Really delete'),
+                )
+            )
+            ->setDescription('Cleanup old/unused elementtypes.');
     }
 
     /**
@@ -47,7 +48,7 @@ class CleanupCommand extends ContainerAwareCommand
 
         $etVersionsCntSelect = $db->select()
             ->from($db->prefix . 'elementtype_version', new Zend_Db_Expr('COUNT(*)'));
-        $etVersionCnt        = $db->fetchOne($etVersionsCntSelect);
+        $etVersionCnt = $db->fetchOne($etVersionsCntSelect);
 
 
         $etSelect = $db->select()
@@ -66,14 +67,11 @@ class CleanupCommand extends ContainerAwareCommand
 
         $deleteUpToETVersion = array();
 
-        foreach ($etIds as $etId)
-        {
+        foreach ($etIds as $etId) {
             $versions = $db->fetchCol($etvSelect, $etId);
 
-            foreach ($versions as $version)
-            {
-                if ($this->_isUsedInElement($etId, $version))
-                {
+            foreach ($versions as $version) {
+                if ($this->_isUsedInElement($etId, $version)) {
 
                     continue 2;
                 }
@@ -87,21 +85,15 @@ class CleanupCommand extends ContainerAwareCommand
         $output .= '---------'.PHP_EOL;
         */
 
-        if (count($deleteUpToETVersion))
-        {
+        if (count($deleteUpToETVersion)) {
             $cnt = $this->_deleteVersions($deleteUpToETVersion, $reallyDelete);
-            if ($reallyDelete)
-            {
+            if ($reallyDelete) {
                 $output->write('Deleted ');
-            }
-            else
-            {
+            } else {
                 $output->write('Would delete ');
             }
-            $output->writeln($cnt . ' old elementtype versions (of '.$etVersionCnt.')');
-        }
-        else
-        {
+            $output->writeln($cnt . ' old elementtype versions (of ' . $etVersionCnt . ')');
+        } else {
             $output->writeln('No old elementtype versions.');
         }
 
@@ -114,8 +106,7 @@ class CleanupCommand extends ContainerAwareCommand
         $db->beginTransaction();
 
         $total = 0;
-        foreach ($versions as $etId => $version)
-        {
+        foreach ($versions as $etId => $version) {
             $cnt = $db->delete(
                 $db->prefix . 'elementtype_version',
                 array(
@@ -128,12 +119,9 @@ class CleanupCommand extends ContainerAwareCommand
             //echo $eid . ' => '.$cnt.PHP_EOL;
         }
 
-        if ($reallyDelete)
-        {
+        if ($reallyDelete) {
             $db->commit();
-        }
-        else
-        {
+        } else {
             $db->rollback();
         }
 

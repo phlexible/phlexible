@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -34,12 +34,12 @@ class ListController extends Controller
      */
     public function listAction(Request $request)
     {
-        $start        = $request->get('start', 0);
-        $limit        = $request->get('limit', 25);
-        $sort         = $request->get('sort');
-        $dir          = $request->get('dir');
-        $tid          = $request->get('tid');
-        $language     = $request->get('language');
+        $start = $request->get('start', 0);
+        $limit = $request->get('limit', 25);
+        $sort = $request->get('sort');
+        $dir = $request->get('dir');
+        $tid = $request->get('tid');
+        $language = $request->get('language');
         $filterValues = $request->get('filter');
         if ($filterValues) {
             $filterValues = json_decode($filterValues, true);
@@ -49,17 +49,17 @@ class ListController extends Controller
 
         $data = array();
 
-        $dispatcher            = $this->get('event_dispatcher');
-        $treeManager           = $this->get('phlexible_tree.manager');
-        $elementManager        = $this->get('elementsManager');
+        $dispatcher = $this->get('event_dispatcher');
+        $treeManager = $this->get('phlexible_tree.manager');
+        $elementManager = $this->get('elementsManager');
         $elementVersionManager = $this->get('elementsVersionManager');
-        $node                  = $treeManager->getNodeByNodeID($tid);
-        $tree                  = $node->getTree();
-        $eid                   = $node->getEid();
-        $element               = $elementManager->getByEID($eid);
+        $node = $treeManager->getNodeByNodeID($tid);
+        $tree = $node->getTree();
+        $eid = $node->getEid();
+        $element = $elementManager->getByEID($eid);
         $elementMasterLanguage = $element->getMasterLanguage();
-        $elementVersion        = $element->getLatestVersion();
-        $elementTypeVersion    = $elementVersion->getElementTypeVersionObj();
+        $elementVersion = $element->getLatestVersion();
+        $elementTypeVersion = $elementVersion->getElementTypeVersionObj();
         //$elementData = $element->getData(0, 'en');
 
         if (!$language) {
@@ -77,7 +77,8 @@ class ListController extends Controller
 
         $userAdminRights = null;
         if (MWF_Env::getUser()->isAllowed(MWF_Core_Acl_Acl::RESOURCE_SUPERADMIN) ||
-            MWF_Env::getUser()->isAllowed(MWF_Core_Acl_Acl::RESOURCE_DEVELOPMENT)) {
+            MWF_Env::getUser()->isAllowed(MWF_Core_Acl_Acl::RESOURCE_DEVELOPMENT)
+        ) {
             $contentRightsHelper = $container->contentRightsHelper;
             $userAdminRights = array_keys($contentRightsHelper->getRights('internal', 'treenode'));
         }
@@ -88,11 +89,14 @@ class ListController extends Controller
             $contentRightsManager->calculateRights('internal', $node, $rightsIdentifiers);
 
             if (!$contentRightsManager->hasRight('VIEW', $language)) {
-                $this->getResponse()->setAjaxPayload(array(
-                    'parent' => null,
-                    'list'   => array(),
-                    'total'  => 0
-                ));
+                $this->getResponse()->setAjaxPayload(
+                    array(
+                        'parent' => null,
+                        'list'   => array(),
+                        'total'  => 0
+                    )
+                );
+
                 return;
             }
 
@@ -112,7 +116,7 @@ class ListController extends Controller
             'author'          => 'author',
             'version'         => $elementVersion->getVersion(),
             'create_time'     => $elementVersion->getCreateTime(),
-//            'change_time'     => '2007-01-01 01:01:01',
+            //            'change_time'     => '2007-01-01 01:01:01',
             'publish_time'    => $node->getPublishDate($language),
             'custom_date'     => $elementVersion->getCustomDate($language),
             'language'        => $language,
@@ -124,7 +128,7 @@ class ListController extends Controller
             'status'          => ' o_O ',
             'rights'          => $userRights,
             'qtip'            =>
-                $elementTypeVersion->getTitle() . ', Version '  . $elementTypeVersion->getVersion() . '<br>' .
+                $elementTypeVersion->getTitle() . ', Version ' . $elementTypeVersion->getVersion() . '<br>' .
                 'Version ' . $elementVersion->getVersion() . '<br>' .
                 37 . ' Versions<br>'
         );
@@ -158,9 +162,9 @@ class ListController extends Controller
                 $userRights = $userAdminRights;
             }
 
-            $childElementVersion     = $elementVersionManager->getLatest($childNode->getEid(), $latestVersion);
-            $childElement            = $childElementVersion->getElement();
-            $childTitle              = $childElementVersion->getBackendTitle($language, $childElement->getMasterLanguage());
+            $childElementVersion = $elementVersionManager->getLatest($childNode->getEid(), $latestVersion);
+            $childElement = $childElementVersion->getElement();
+            $childTitle = $childElementVersion->getBackendTitle($language, $childElement->getMasterLanguage());
             $childElementTypeVersion = $childElementVersion->getElementTypeVersionObj();
 
             $data[] = array(
@@ -176,7 +180,7 @@ class ListController extends Controller
                 'author'          => 'author',
                 'version'         => $childElementVersion->getVersion(),
                 'create_time'     => $childNode->getCreateDate(),
-//                'change_time'     => $child['modify_time'],
+                //                'change_time'     => $child['modify_time'],
                 'publish_time'    => $childNode->getPublishDate($language),
                 'custom_date'     => $childElementVersion->getCustomDate($language),
                 'language'        => $language,
@@ -185,8 +189,9 @@ class ListController extends Controller
                 'version_online'  => (int) $childNode->getOnlineVersion($language),
                 'status'          => '>o>',
                 'rights'          => $userRights,
-                'qtip'            => $childElementTypeVersion->getTitle() . ', Version '  . $childElementTypeVersion->getVersion() . '<br>' .
-                                     'Version ' . $childElementVersion->getVersion() . '<br>',
+                'qtip'            => $childElementTypeVersion->getTitle(
+                    ) . ', Version ' . $childElementTypeVersion->getVersion() . '<br>' .
+                    'Version ' . $childElementVersion->getVersion() . '<br>',
             );
         }
 
@@ -209,9 +214,9 @@ class ListController extends Controller
      */
     public function sortAction(Request $request)
     {
-        $tid      = $request->get('tid');
-        $mode     = $request->get('mode');
-        $dir      = strtolower($request->get('dir'));
+        $tid = $request->get('tid');
+        $mode = $request->get('mode');
+        $dir = strtolower($request->get('dir'));
         $sortTids = $request->get('sort_ids');
         $sortTids = json_decode($sortTids, true);
 

@@ -19,44 +19,39 @@ class ElementListener
      * callback to save distributionlist and folder
      *
      * @param Makeweb_Elements_Event_SaveElement $event
-     * @param array                              $params
      */
-    public function onSaveElement(Makeweb_Elements_Event_SaveElement $event, array $params)
+    public function onSaveElement(Makeweb_Elements_Event_SaveElement $event)
     {
         /* @var $container MWF_Container_ContainerInterface */
         $container = $params['container'];
 
-        if (!$container->components->has('distributionlists'))
-        {
+        if (!$container->components->has('distributionlists')) {
             return;
         }
 
         $folderRepository = $container->get('frontendmediamanagerChangeFolderRepository');
 
         $elementVersion = $event->getElementVersion();
-        $eid            = $elementVersion->getEid();
-        $elementData    = $elementVersion->getData($event->getLanguage());
-        $documentlists  = $elementData->getWrap()->all('documentlist');
+        $eid = $elementVersion->getEid();
+        $elementData = $elementVersion->getData($event->getLanguage());
+        $documentlists = $elementData->getWrap()->all('documentlist');
 
         // delete old items
         $folderRepository->deleteByEid($eid);
 
-        foreach ($documentlists as $documentlist)
-        {
+        foreach ($documentlists as $documentlist) {
             $listId = (int) $documentlist->first('documentlist_distribution', true);
 
-            if (!strlen($listId))
-            {
+            if (!strlen($listId)) {
                 continue;
             }
 
             $folderId = $documentlist->first('documentlist_folder', true);
-            if (strlen($folderId))
-            {
-                $folder           = $folderRepository->create();
-                $folder->listId   = $listId;
+            if (strlen($folderId)) {
+                $folder = $folderRepository->create();
+                $folder->listId = $listId;
                 $folder->folderId = $folderId;
-                $folder->eid      = (int) $eid;
+                $folder->eid = (int) $eid;
                 $folderRepository->save($folder);
             }
         }

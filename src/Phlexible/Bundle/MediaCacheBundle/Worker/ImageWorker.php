@@ -78,14 +78,15 @@ class ImageWorker extends AbstractWorker
      * @param LoggerInterface              $logger
      * @param string                       $tempDir
      */
-    public function __construct(StorageManager $storageManager,
-                                Transmutor $transmutor,
-                                CacheManagerInterface $cacheManager,
-                                DocumenttypeManagerInterface $documenttypeManager,
-                                CacheIdStrategyInterface $cacheIdStrategy,
-                                ImageTemplateApplier $applier,
-                                LoggerInterface $logger,
-                                $tempDir)
+    public function __construct(
+        StorageManager $storageManager,
+        Transmutor $transmutor,
+        CacheManagerInterface $cacheManager,
+        DocumenttypeManagerInterface $documenttypeManager,
+        CacheIdStrategyInterface $cacheIdStrategy,
+        ImageTemplateApplier $applier,
+        LoggerInterface $logger,
+        $tempDir)
     {
         $this->storageManager = $storageManager;
         $this->transmutor = $transmutor;
@@ -137,11 +138,11 @@ class ImageWorker extends AbstractWorker
     {
         $cacheFilename = null;
 
-        $site        = $file->getSite();
-        $fileId      = $file->getId();
+        $site = $file->getSite();
+        $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
-        $cacheId      = $this->cacheIdStrategy->createCacheId($template, $file);
+        $cacheId = $this->cacheIdStrategy->createCacheId($template, $file);
         $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $template->getParameter('format');
 
         $pathinfo = pathinfo($file->getPhysicalPath());
@@ -167,11 +168,32 @@ class ImageWorker extends AbstractWorker
             ->setCreatedAt(new \DateTime());
 
         if ($missing) {
-            $this->applyError($cacheItem, CacheItem::STATUS_MISSING, 'Input file not found.', $inputFilename, $template, $file);
+            $this->applyError(
+                $cacheItem,
+                CacheItem::STATUS_MISSING,
+                'Input file not found.',
+                $inputFilename,
+                $template,
+                $file
+            );
         } elseif ($inputFilename === null) {
-            $this->applyError($cacheItem, CacheItem::STATUS_MISSING, 'No preview image.', $inputFilename, $template, $file);
+            $this->applyError(
+                $cacheItem,
+                CacheItem::STATUS_MISSING,
+                'No preview image.',
+                $inputFilename,
+                $template,
+                $file
+            );
         } elseif (!$this->applier->isAvailable($inputFilename)) {
-            $this->applyError($cacheItem, CacheItem::STATUS_MISSING, 'No suitable image template applier found.', $inputFilename, $template, $file);
+            $this->applyError(
+                $cacheItem,
+                CacheItem::STATUS_MISSING,
+                'No suitable image template applier found.',
+                $inputFilename,
+                $template,
+                $file
+            );
         } else {
             $filesystem = new Filesystem();
             if (!$filesystem->exists($this->tempDir)) {

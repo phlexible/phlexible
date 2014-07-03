@@ -1,10 +1,10 @@
 Phlexible.Format = {
-    size: function(size, binarySuffix){
+    size: function (size, binarySuffix) {
         if (!size) {
             return 0;
         }
 
-        if(!binarySuffix || binarySuffix === undefined) {
+        if (!binarySuffix || binarySuffix === undefined) {
             var suffix = ["Byte", "kB", "MB", "GB", "TB", "PB"];
             var divisor = 1000;
         } else {
@@ -24,20 +24,20 @@ Phlexible.Format = {
         return result;
     },
 
-    date: function(date) {
+    date: function (date) {
         var newDate = "";
-        if(date) {
+        if (date) {
             newDate = new Date(date).format('Y-m-d H:i:s');
         }
         return newDate;
     },
 
-    age: function(time, items, noseconds) {
+    age: function (time, items, noseconds) {
         if (!items) {
             items = 2;
         }
 
-        if(!parseInt(time, 10)) {
+        if (!parseInt(time, 10)) {
             return '0s';
         }
 
@@ -71,7 +71,7 @@ Phlexible.Format = {
         // year
         m = (60 * 60 * 24 * 30 * 12);
         if (items && time > m) {
-        items--;
+            items--;
             v = parseInt(time / m, 10);
             results.push(v + ' ' + (v == 1 ? ssuffix[loop] : msuffix[loop]));
             time = parseInt(time % m, 10);
@@ -81,7 +81,7 @@ Phlexible.Format = {
         // month
         m = (60 * 60 * 24 * 30);
         if (items && time > m) {
-        items--;
+            items--;
             v = parseInt(time / m, 10);
             results.push(v + ' ' + (v == 1 ? ssuffix[loop] : msuffix[loop]));
             time = parseInt(time % m, 10);
@@ -91,7 +91,7 @@ Phlexible.Format = {
         // week
         m = (60 * 60 * 24 * 7);
         if (items && time > m) {
-        items--;
+            items--;
             v = parseInt(time / m, 10);
             results.push(v + ' ' + (v == 1 ? ssuffix[loop] : msuffix[loop]));
             time = parseInt(time % m, 10);
@@ -101,7 +101,7 @@ Phlexible.Format = {
         // day
         m = (60 * 60 * 24);
         if (items && time > m) {
-        items--;
+            items--;
             v = parseInt(time / m, 10);
             results.push(v + ' ' + (v == 1 ? ssuffix[loop] : msuffix[loop]));
             time = parseInt(time % m, 10);
@@ -111,7 +111,7 @@ Phlexible.Format = {
         // hour
         m = (60 * 60);
         if (items && time > m) {
-        items--;
+            items--;
             v = parseInt(time / m, 10);
             results.push(v + ' ' + (v == 1 ? ssuffix[loop] : msuffix[loop]));
             time = parseInt(time % m, 10);
@@ -121,7 +121,7 @@ Phlexible.Format = {
         // minute
         m = (60);
         if (items && time > m) {
-        items--;
+            items--;
             v = parseInt(time / m, 10);
             results.push(v + ' ' + (v == 1 ? ssuffix[loop] : msuffix[loop]));
             time = parseInt(time % m, 10);
@@ -134,21 +134,21 @@ Phlexible.Format = {
             results.push(v + ' ' + (v == 1 ? ssuffix[loop] : msuffix[loop]));
         }
 
-        if(!results.length) {
+        if (!results.length) {
             return '-';
         }
 
-        if(results.length == 1) {
+        if (results.length == 1) {
             return results.pop();
         }
 
-        while(results.length > 3) {
+        while (results.length > 3) {
             results.pop();
         }
 
         results.reverse();
 
-        while(results.length > 1) {
+        while (results.length > 1) {
             v = results.pop();
             result += (result ? ', ' : '') + v;
         }

@@ -60,6 +60,7 @@ class ElementtypeStructureRepository
 
     /**
      * @param ElementtypeVersion $elementtypeVersion
+     *
      * @return ElementtypeStructure
      */
     public function find(ElementtypeVersion $elementtypeVersion)
@@ -76,6 +77,7 @@ class ElementtypeStructureRepository
 
     /**
      * @param ElementtypeStructure $elementtypeStructure
+     *
      * @throws \Exception
      */
     public function save(ElementtypeStructure $elementtypeStructure)

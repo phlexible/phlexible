@@ -18,6 +18,12 @@ use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
  */
 class SizeCalculator
 {
+    /**
+     * @param SiteInterface   $site
+     * @param FolderInterface $folder
+     *
+     * @return array
+     */
     public function calculate(SiteInterface $site, FolderInterface $folder)
     {
         $totalSize = 0;

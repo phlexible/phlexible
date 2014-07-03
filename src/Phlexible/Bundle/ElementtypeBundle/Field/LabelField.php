@@ -30,8 +30,7 @@ class LabelField extends AbstractField
     {
         $interfaceLang = MWF_Env::getUser()->getInterfaceLanguage();
 
-        if (!$item['data_content'] && !empty($options['text_' . $interfaceLang]))
-        {
+        if (!$item['data_content'] && !empty($options['text_' . $interfaceLang])) {
             $item['data_content'] = $options['text_' . $interfaceLang];
         }
 

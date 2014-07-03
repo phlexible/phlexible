@@ -9,7 +9,7 @@ Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
 
     includeIncoming: 0,
 
-    initComponent: function() {
+    initComponent: function () {
         this.element.on('load', this.onLoadElement, this);
 
         // create the data store
@@ -18,35 +18,40 @@ Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
             root: 'links',
             totalProperty: 'total',
             id: 'id',
-            fields: ['id','iconCls','type','title','content','link','raw']
+            fields: ['id', 'iconCls', 'type', 'title', 'content', 'link', 'raw']
         });
 
         // create the column model
-        this.columns = [{
-            header: this.strings.type,
-            width: 100,
-            dataIndex: 'type',
-            renderer: function(v, md, r) {
-                if (r.data.iconCls) {
-                    v = Phlexible.inlineIcon(r.data.iconCls) + ' ' + v;
-                }
+        this.columns = [
+            {
+                header: this.strings.type,
+                width: 100,
+                dataIndex: 'type',
+                renderer: function (v, md, r) {
+                    if (r.data.iconCls) {
+                        v = Phlexible.inlineIcon(r.data.iconCls) + ' ' + v;
+                    }
 
-                return v;
+                    return v;
+                }
+            },
+            {
+                header: this.strings.field,
+                width: 250,
+                dataIndex: 'title'
+            },
+            {
+                header: this.strings.content,
+                width: 300,
+                dataIndex: 'content'
+            },
+            {
+                header: this.strings.raw,
+                width: 200,
+                hidden: true,
+                dataIndex: 'raw'
             }
-        },{
-            header: this.strings.field,
-            width: 250,
-            dataIndex: 'title'
-        },{
-            header: this.strings.content,
-            width: 300,
-            dataIndex: 'content'
-        },{
-            header: this.strings.raw,
-            width: 200,
-            hidden: true,
-            dataIndex: 'raw'
-        }];
+        ];
 
         // create the selection model
         this.selModel = new Ext.grid.RowSelectionModel({
@@ -64,24 +69,26 @@ Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
         });
 
 
-        this.tbar = [{
-            text: this.strings.include_incoming_links,
-            iconCls: 'p-fields-field_link-icon',
-            enableToggle: true,
-            pressed: this.includeIncoming,
-            toggleHandler: function(btn, state) {
-                this.includeIncoming = state ? 1 : 0;
+        this.tbar = [
+            {
+                text: this.strings.include_incoming_links,
+                iconCls: 'p-fields-field_link-icon',
+                enableToggle: true,
+                pressed: this.includeIncoming,
+                toggleHandler: function (btn, state) {
+                    this.includeIncoming = state ? 1 : 0;
 
-                this.store.baseParams.incoming = this.includeIncoming;
+                    this.store.baseParams.incoming = this.includeIncoming;
 
-                this.store.reload();
-            },
-            scope: this
-        }];
+                    this.store.reload();
+                },
+                scope: this
+            }
+        ];
 
         this.on({
             show: {
-                fn: function() {
+                fn: function () {
                     if (this.store.baseParams.tid != this.element.tid ||
                         this.store.baseParams.version != this.element.version ||
                         this.store.baseParams.language != this.element.language) {
@@ -91,7 +98,7 @@ Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
                 scope: this
             },
             rowdblclick: {
-                fn: function(grid, rowIndex) {
+                fn: function (grid, rowIndex) {
                     var record = grid.store.getAt(rowIndex);
                     if (record) {
                         var link = record.get('link');
@@ -99,7 +106,7 @@ Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
                         if (link && link.handler) {
                             var handler = link.handler;
                             if (typeof handler == 'string') {
-                               handler = Phlexible.evalClassString(handler);
+                                handler = Phlexible.evalClassString(handler);
                             }
                             handler(link);
                         }
@@ -112,7 +119,7 @@ Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.elements.ElementLinksGrid.superclass.initComponent.call(this);
     },
 
-    onLoadElement: function(element){
+    onLoadElement: function (element) {
         this.store.removeAll();
 
         if (element.properties.et_type == Phlexible.elementtypes.TYPE_FULL) {
@@ -126,7 +133,7 @@ Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
         }
     },
 
-    onRealLoad: function(tid, version, language) {
+    onRealLoad: function (tid, version, language) {
         this.store.baseParams = {
             tid: tid,
             version: version,

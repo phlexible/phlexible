@@ -42,9 +42,10 @@ class TreeNodeMatcher
      * @param ElementService     $elementService
      * @param bool               $useElementLanguageAsFallback
      */
-    public function __construct(ContentTreeManager $contentTreeManager,
-                                ElementService $elementService,
-                                $useElementLanguageAsFallback)
+    public function __construct(
+        ContentTreeManager $contentTreeManager,
+        ElementService $elementService,
+        $useElementLanguageAsFallback)
     {
         $this->contentTreeManager = $contentTreeManager;
         $this->elementService = $elementService;
@@ -68,6 +69,7 @@ class TreeNodeMatcher
             $tree = $this->contentTreeManager->findByTreeId($treeId);
         } catch (\Exception $e) {
             \MWF_Log::warn("Missing tree node ($treeId) of catch, maybe it is deleted");
+
             return array('');
         }
 
@@ -90,7 +92,7 @@ class TreeNodeMatcher
                     $childNode->getTypeId()
                 );
             } else {
-                $onlineLanguages = array('de');//$childNode->getOnlineLanguages();
+                $onlineLanguages = array('de'); //$childNode->getOnlineLanguages();
             }
 
             $childTreeId = (int) $childNode->getId();
@@ -110,7 +112,11 @@ class TreeNodeMatcher
             // and child node was not found yet
             // -> use master language as fallback
             // TODO: problem - $language might be unset
-            if ($this->useElementLanguageAsFallback && (!isset($catched[$language]) || !in_array($childTreeId, $catched[$language]))) {
+            if ($this->useElementLanguageAsFallback && (!isset($catched[$language]) || !in_array(
+                        $childTreeId,
+                        $catched[$language]
+                    ))
+            ) {
                 $masterLanguage = $this->elementService
                     ->findElement($childNode->getTypeId())
                     ->getMasterLanguage();

@@ -1,22 +1,22 @@
-Phlexible.fields.Registry.addFactory('editor', function(parentConfig, item, valueStructure, pos, element, repeatablePostfix) {
-	if (element.master) {
-		element.prototypes.addFieldPrototype(item);
-	}
+Phlexible.fields.Registry.addFactory('editor', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix) {
+    if (element.master) {
+        element.prototypes.addFieldPrototype(item);
+    }
 
-	element.prototypes.incCount(item.dsId);
+    element.prototypes.incCount(item.dsId);
 
-	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix);
 
-	Ext.apply(config, {
-		xtype: 'htmleditor'
-	});
+    Ext.apply(config, {
+        xtype: 'htmleditor'
+    });
 
-	if (item.configuration.readonly) {
-		config.readOnly = true;
-		config.ctCls = 'x-item-disabled';
-	}
+    if (item.configuration.readonly) {
+        config.readOnly = true;
+        config.ctCls = 'x-item-disabled';
+    }
 
-	return config;
+    return config;
 });
 
 Phlexible.fields.FieldTypes.addField('editor', {
@@ -26,18 +26,18 @@ Phlexible.fields.FieldTypes.addField('editor', {
     },
     iconCls: 'p-elementtype-field_editor-icon',
     allowedIn: [
-		'tab',
-		'accordion',
-		'group',
-		'referenceroot'
-	],
+        'tab',
+        'accordion',
+        'group',
+        'referenceroot'
+    ],
     config: {
         labels: {
             field: 1,
             box: 0,
             prefix: 1,
             suffix: 1,
-			help: 1
+            help: 1
         },
         configuration: {
             sync: 1,

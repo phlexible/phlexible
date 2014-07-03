@@ -1,10 +1,10 @@
-Phlexible.elements.Clipboard = function() {
+Phlexible.elements.Clipboard = function () {
     this.text = null;
     this.item = null;
     this.type = null;
     this.active = false;
 
-    Phlexible.gui.util.Frame.prototype.removeSplash = Phlexible.gui.util.Frame.prototype.removeSplash.createSequence(function() {
+    Phlexible.gui.util.Frame.prototype.removeSplash = Phlexible.gui.util.Frame.prototype.removeSplash.createSequence(function () {
         this.clipBtn = Phlexible.Frame.taskbar.trayPanel.add({
             id: 'clipboard',
             cls: 'x-btn-icon',
@@ -23,8 +23,8 @@ Phlexible.elements.Clipboard = function() {
 Ext.extend(Phlexible.elements.Clipboard, Ext.util.Observable, {
     strings: Phlexible.elements.Strings,
 
-    set: function(text, item, type) {
-        if(!type) type = null;
+    set: function (text, item, type) {
+        if (!type) type = null;
 
         this.setText(text);
         this.setItem(item);
@@ -41,53 +41,53 @@ Ext.extend(Phlexible.elements.Clipboard, Ext.util.Observable, {
         this.fireEvent('set', this);
     },
 
-    setItem: function(item) {
+    setItem: function (item) {
         this.item = item;
     },
 
-    getItem: function() {
+    getItem: function () {
         return this.item;
     },
 
-    setText: function(newText) {
+    setText: function (newText) {
         this.text = newText;
     },
 
-    getText: function() {
+    getText: function () {
         return this.text;
     },
 
-    setType: function(newType) {
+    setType: function (newType) {
         this.type = newType;
     },
 
-    getType: function() {
+    getType: function () {
         return this.type;
     },
 
-    setActive: function() {
+    setActive: function () {
         this.active = true;
 
         this.clipBtn.setIconClass('p-element-clipboard_active-icon');
         this.clipBtn.show();
     },
 
-    isActive: function() {
+    isActive: function () {
         return this.active ? true : false;
     },
 
-    setInactive: function() {
+    setInactive: function () {
         this.active = false;
 
         this.clipBtn.setIconClass('p-element-clipboard_inactive-icon');
         this.clipBtn.hide();
     },
 
-    isInactive: function() {
+    isInactive: function () {
         return this.active ? false : true;
     },
 
-    clear: function() {
+    clear: function () {
         this.item = null;
         this.text = null;
         this.setInactive();
@@ -96,7 +96,7 @@ Ext.extend(Phlexible.elements.Clipboard, Ext.util.Observable, {
     }
 });
 
-Ext.onReady(function() {
+Ext.onReady(function () {
     Phlexible.Clipboard = new Phlexible.elements.Clipboard();
 });
 

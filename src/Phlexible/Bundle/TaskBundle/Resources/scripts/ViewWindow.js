@@ -14,43 +14,48 @@ Phlexible.tasks.ViewWindow = Ext.extend(Ext.Window, {
     task_id: false,
     data: {},
 
-    initComponent: function() {
-        this.items = [{
-            border: false,
-            region: 'north',
-            cls: 'p-tasks-view-header',
-            height: 100,
-            html: 'test1',
-            listeners: {
-                render: function(c) {
-					Phlexible.tasks.ViewTemplate.overwrite(c.el, this.data);
-				},
-				scope: this
+    initComponent: function () {
+        this.items = [
+            {
+                border: false,
+                region: 'north',
+                cls: 'p-tasks-view-header',
+                height: 100,
+                html: 'test1',
+                listeners: {
+                    render: function (c) {
+                        Phlexible.tasks.ViewTemplate.overwrite(c.el, this.data);
+                    },
+                    scope: this
+                }
+            },
+            {
+                border: false,
+                region: 'center',
+                cls: 'p-tasks-view-history',
+                autoScroll: true,
+                html: 'test2',
+                listeners: {
+                    render: function (c) {
+                        Phlexible.tasks.HistoryTemplate.overwrite(c.el, this.data);
+                    },
+                    scope: this
+                }
             }
-        },{
-            border: false,
-            region: 'center',
-            cls: 'p-tasks-view-history',
-            autoScroll: true,
-            html: 'test2',
-            listeners: {
-                render: function(c) {
-					Phlexible.tasks.HistoryTemplate.overwrite(c.el, this.data);
-				},
-				scope: this
+        ];
+
+        this.buttons = [
+            {
+                text: this.strings.close,
+                handler: this.close,
+                scope: this
             }
-        }];
+        ];
 
-        this.buttons = [{
-            text: this.strings.close,
-            handler: this.close,
-            scope: this
-        }];
-
-		Phlexible.tasks.ViewWindow.superclass.initComponent.call(this);
+        Phlexible.tasks.ViewWindow.superclass.initComponent.call(this);
     },
 
-    show: function(task_id) {
+    show: function (task_id) {
         if (!task_id) {
             return;
         }
@@ -62,7 +67,7 @@ Phlexible.tasks.ViewWindow = Ext.extend(Ext.Window, {
             params: {
                 task_id: task_id
             },
-            success: function(response) {
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 this.data = data;

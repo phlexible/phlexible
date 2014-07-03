@@ -101,8 +101,8 @@ abstract class AbstractType implements TypeInterface
             return $textKeys;
         }
 
-        $tid      = $this->_payload['tid'];
-        $version  = !empty($this->_payload['version']) ? $this->_payload['version'] : null;
+        $tid = $this->_payload['tid'];
+        $version = !empty($this->_payload['version']) ? $this->_payload['version'] : null;
         $language = !empty($this->_payload['language']) ? $this->_payload['language'] : 'de';
 
         $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
@@ -110,7 +110,7 @@ abstract class AbstractType implements TypeInterface
 
         try {
             $node = $treeManager->getNodeByNodeId($tid);
-            $eid  = $node->getEid();
+            $eid = $node->getEid();
 
             if ($version !== null) {
                 $elementVersion = $elementVersionManager->get($eid, $version);
@@ -151,11 +151,11 @@ abstract class AbstractType implements TypeInterface
 
         $menuItem = new MWF_Core_Menu_Item_Panel();
         $menuItem->setPanel('Makeweb.elements.MainPanel')
-                 ->setIdentifier('Makeweb_elements_MainPanel_' . $siteRoot->getTitle($language))
-                 ->setParam('id', $tid)
-                 ->setParam('siteroot_id', $siteRoot->getId())
-                 ->setParam('title', $siteRoot->getTitle())
-                 ->setParam('start_tid_path', '/' . implode('/', $node->getPath()));
+            ->setIdentifier('Makeweb_elements_MainPanel_' . $siteRoot->getTitle($language))
+            ->setParam('id', $tid)
+            ->setParam('siteroot_id', $siteRoot->getId())
+            ->setParam('title', $siteRoot->getTitle())
+            ->setParam('start_tid_path', '/' . implode('/', $node->getPath()));
 
         return $menuItem;
     }

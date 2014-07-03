@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Elementtype\Loader;
 
-use Phlexible\Component\Database\ConnectionManager;
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Elementtype\ElementtypeCollection;
+use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Elementtype database loader
@@ -111,7 +111,7 @@ class DatabaseLoader implements LoaderInterface
     public function softDelete(Elementtype $elementtype)
     {
         $this->db->update(
-            $this->db->prefix.'elementtype',
+            $this->db->prefix . 'elementtype',
             array(
                 'deleted' => true
             ),
@@ -154,8 +154,7 @@ class DatabaseLoader implements LoaderInterface
             ->setHideChildren($row['hide_children'] ? true : false)
             ->setLatestVersion($row['latest_version'])
             ->setCreatedAt(new \DateTime($row['created_at']))
-            ->setCreateUserId($row['create_user_id'])
-        ;
+            ->setCreateUserId($row['create_user_id']);
 
         return $elementtype;
     }

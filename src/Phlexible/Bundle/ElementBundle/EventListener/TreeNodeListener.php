@@ -17,7 +17,7 @@ class TreeNodeListener
 {
     public function onPublishNode(Makeweb_Elements_Event_PublishNode $event)
     {
-        $node     = $event->getNode();
+        $node = $event->getNode();
         $language = $event->getLanguage();
 
         self::_doTask($node, $language, 'Makeweb_Elements_Task_Publish');
@@ -27,7 +27,7 @@ class TreeNodeListener
 
     public function onSetNodeOffline(Makeweb_Elements_Event_SetNodeOffline $event)
     {
-        $node     = $event->getNode();
+        $node = $event->getNode();
         $language = $event->getLanguage();
 
         self::_doTask($node, $language, 'Makeweb_Elements_Task_SetOffline');
@@ -35,9 +35,9 @@ class TreeNodeListener
         self::_queueDataSourceCleanup();
     }
 
-    public  function onDeleteNode(Makeweb_Elements_Event_DeleteNode $event)
+    public function onDeleteNode(Makeweb_Elements_Event_DeleteNode $event)
     {
-        $node     = $event->getNode();
+        $node = $event->getNode();
         $language = null;
 
         self::_doTask($node, $language, 'Makeweb_Elements_Task_Delete');

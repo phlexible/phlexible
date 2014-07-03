@@ -16,7 +16,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
 class CheckgroupField extends AbstractField
 {
     protected $hasOptions = true;
-    protected $icon       = 'p-elementtype-field_checkgroup-icon';
+    protected $icon = 'p-elementtype-field_checkgroup-icon';
 
     /**
      * Transform item values
@@ -32,12 +32,10 @@ class CheckgroupField extends AbstractField
         $item['rawContent'] = $item['data_content'];
 
         $data = array();
-        if(!empty($options['source_list']))
-        {
+        if (!empty($options['source_list'])) {
             $interfaceLang = MWF_Env::getUser()->getInterfaceLanguage();
 
-            foreach($options['source_list'] as $values)
-            {
+            foreach ($options['source_list'] as $values) {
                 $data[] = array($values['key'], $values[$interfaceLang]);
             }
 

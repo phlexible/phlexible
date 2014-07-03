@@ -5,29 +5,32 @@ Phlexible.gui.BundlesMainPanel = Ext.extend(Ext.Panel, {
     closable: true,
     layout: 'border',
 
-    initComponent: function() {
-        this.items = [{
-            xtype: 'gui-bundles-filter',
-            region: 'west',
-            width: 200,
-            listeners: {
-                updateFilter: {
-                    fn: function(data){
-                        this.getComponent(1).setFilterData(data);
-                    },
-                    scope: this
+    initComponent: function () {
+        this.items = [
+            {
+                xtype: 'gui-bundles-filter',
+                region: 'west',
+                width: 200,
+                listeners: {
+                    updateFilter: {
+                        fn: function (data) {
+                            this.getComponent(1).setFilterData(data);
+                        },
+                        scope: this
+                    }
                 }
+            },
+            {
+                xtype: 'gui-bundles-grid',
+                region: 'center',
+                border: true
             }
-        },{
-            xtype: 'gui-bundles-grid',
-            region: 'center',
-            border: true
-        }];
+        ];
 
         Phlexible.gui.BundlesMainPanel.superclass.initComponent.call(this);
     },
 
-    loadParams: function() {
+    loadParams: function () {
 
     }
 });

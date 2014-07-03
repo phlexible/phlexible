@@ -26,7 +26,7 @@ class PhlexibleFrontendExtension extends Extension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
         $configuration = $this->getConfiguration($config, $container);
@@ -38,12 +38,21 @@ class PhlexibleFrontendExtension extends Extension
         $container->setParameter('frontend.request.edit_handler', $config['request']['edit_handler']);
         $container->setParameter('frontend.request.debug_handler', $config['request']['debug_handler']);
         $container->setParameter('frontend.request.stayssl', $config['request']['stayssl']);
-        $container->setParameter('frontend.request.redirect_to_default_siteroot', $config['request']['redirect_to_default_siteroot']);
-        $container->setParameter('frontend.request.protocol_businesslogic', $config['request']['protocol_businesslogic']);
+        $container->setParameter(
+            'frontend.request.redirect_to_default_siteroot',
+            $config['request']['redirect_to_default_siteroot']
+        );
+        $container->setParameter(
+            'frontend.request.protocol_businesslogic',
+            $config['request']['protocol_businesslogic']
+        );
         $container->setParameter('frontend.request.force_protocol', $config['request']['force_protocol']);
 
         if (array_key_exists('FrontendPublishBundle', $container->getParameter('kernel.bundles'))) {
-            $container->setDefinition('frontendFrontendPublishItems', new Definition('Phlexible\Bundle\FrontendBundle\FrontendPublish\Items'));
+            $container->setDefinition(
+                'frontendFrontendPublishItems',
+                new Definition('Phlexible\Bundle\FrontendBundle\FrontendPublish\Items')
+            );
         }
     }
 }

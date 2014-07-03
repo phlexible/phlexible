@@ -34,7 +34,7 @@ class SuccessorService
 
     /**
      * @param EventDispatcherInterface $dispatcher
-     * @param MessagePoster           $messageService
+     * @param MessagePoster            $messageService
      */
     public function __construct(EventDispatcherInterface $dispatcher, MessagePoster $messageService)
     {
@@ -53,7 +53,9 @@ class SuccessorService
         $event = new ApplySuccessorEvent($fromUser, $toUser);
         $this->dispatcher->dispatch(UserEvents::APPLY_SUCCESSOR, $event);
 
-        $message = UsersMessage::create(sprintf('Set "%s" as successor for "%s".', $toUser->getUsername(), $fromUser->getUsername()));
+        $message = UsersMessage::create(
+            sprintf('Set "%s" as successor for "%s".', $toUser->getUsername(), $fromUser->getUsername())
+        );
         $this->messageService->post($message);
     }
 }

@@ -8,10 +8,9 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Phlexible\Bundle\ElementBundle\Proxy\ProxyGenerator;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -31,8 +30,7 @@ class GenerateProxyCommand extends ContainerAwareCommand
         $this
             ->setName('elements:proxy:generate')
             ->setDescription('Generate proxy.')
-            ->addArgument('elementtypeId', InputArgument::REQUIRED, 'Elementtype ID')
-        ;
+            ->addArgument('elementtypeId', InputArgument::REQUIRED, 'Elementtype ID');
     }
 
     /**

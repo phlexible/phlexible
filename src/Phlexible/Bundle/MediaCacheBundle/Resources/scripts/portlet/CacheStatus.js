@@ -9,7 +9,7 @@ Phlexible.mediacache.portlet.CacheStatus = Ext.extend(Ext.ux.Portlet, {
     firstData: null,
     firstTs: null,
 
-    initComponent: function() {
+    initComponent: function () {
         var itemsLeft = parseInt(this.record.get('data'), 10);
 
         if (itemsLeft) {
@@ -24,7 +24,7 @@ Phlexible.mediacache.portlet.CacheStatus = Ext.extend(Ext.ux.Portlet, {
         Phlexible.mediacache.portlet.CacheStatus.superclass.initComponent.call(this);
     },
 
-    updateData: function(itemsLeft) {
+    updateData: function (itemsLeft) {
         if (!this.rendered) {
             return;
         }

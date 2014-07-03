@@ -13,14 +13,14 @@
  * @param {Object} config Configuration options
  * @xtype displayfield
  */
-Ext.ux.form.DisplayField = Ext.extend(Ext.form.Field,  {
-    validationEvent : false,
-    validateOnBlur : false,
-    defaultAutoCreate : {tag: "div"},
+Ext.ux.form.DisplayField = Ext.extend(Ext.form.Field, {
+    validationEvent: false,
+    validateOnBlur: false,
+    defaultAutoCreate: {tag: "div"},
     /**
      * @cfg {String} fieldClass The default CSS class for the field (defaults to <tt>"x-form-display-field"</tt>)
      */
-    fieldClass : "x-form-display-field",
+    fieldClass: "x-form-display-field",
     /**
      * @cfg {Boolean} htmlEncode <tt>false</tt> to skip HTML-encoding the text when rendering it (defaults to
      * <tt>false</tt>). This might be useful if you want to include tags in the field's innerHTML rather than
@@ -29,43 +29,43 @@ Ext.ux.form.DisplayField = Ext.extend(Ext.form.Field,  {
     htmlEncode: false,
 
     // private
-    initEvents : Ext.emptyFn,
+    initEvents: Ext.emptyFn,
 
-    isValid : function(){
+    isValid: function () {
         return true;
     },
 
-    validate : function(){
+    validate: function () {
         return true;
     },
 
-    getRawValue : function(){
+    getRawValue: function () {
         var v = this.rendered ? this.el.dom.innerHTML : Ext.value(this.value, '');
-        if(v === this.emptyText){
+        if (v === this.emptyText) {
             v = '';
         }
-        if(this.htmlEncode){
+        if (this.htmlEncode) {
             v = Ext.util.Format.htmlDecode(v);
         }
         return v;
     },
 
-    getValue : function(){
+    getValue: function () {
         return this.getRawValue();
     },
 
-    getName: function() {
+    getName: function () {
         return this.name;
     },
 
-    setRawValue : function(v){
-        if(this.htmlEncode){
+    setRawValue: function (v) {
+        if (this.htmlEncode) {
             v = Ext.util.Format.htmlEncode(v);
         }
         return this.rendered ? (this.el.dom.innerHTML = (Ext.isEmpty(v) ? '' : v)) : (this.value = v);
     },
 
-    setValue : function(v){
+    setValue: function (v) {
         this.setRawValue(v);
         return this;
     }

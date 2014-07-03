@@ -26,8 +26,7 @@ class ClearCommand extends ContainerAwareCommand
     {
         $this
             ->setName('locks:clear')
-            ->setDescription('Delete all locks')
-        ;
+            ->setDescription('Delete all locks');
     }
 
     /**

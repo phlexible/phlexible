@@ -57,7 +57,7 @@ class Makeweb_Elements_Notifications
         // insert data
         $data = array(
             'tid'         => $tid,
-            'language'	  => $language,
+            'language'    => $language,
             'create_time' => new Zend_Db_Expr('NOW()'),
             'update_time' => new Zend_Db_Expr('NOW()'),
         );
@@ -80,7 +80,7 @@ class Makeweb_Elements_Notifications
         $db = $this->_dbPool->write;
 
         $data = array(
-            'language'	  => $language,
+            'language'    => $language,
             'update_time' => new Zend_Db_Expr('NOW()'),
         );
 
@@ -121,6 +121,7 @@ class Makeweb_Elements_Notifications
             ->limit(1);
 
         $result = $db->fetchAll($select);
+
         return $result;
     }
 }

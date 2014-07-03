@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -36,7 +36,7 @@ class StatusController extends Controller
 
         foreach ($sites as $siteKey => $site) {
             $out .= 'Site: ' . $siteKey . PHP_EOL;
-//            $out .= '  Driver:   ' . $site->getDriver() . PHP_EOL;
+            //            $out .= '  Driver:   ' . $site->getDriver() . PHP_EOL;
             $out .= '  ID:       ' . $site->getId() . PHP_EOL;
             $out .= '  Quota:    ' . $site->getQuota() . PHP_EOL;
             $out .= '  RootDir:  ' . $site->getRootDir() . PHP_EOL;

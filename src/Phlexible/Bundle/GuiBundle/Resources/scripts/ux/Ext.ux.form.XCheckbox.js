@@ -11,22 +11,19 @@
  * the Open Source LGPL 3.0 license.  Commercial use is permitted to the extent
  * that the code/component(s) do NOT become part of another Open Source or Commercially
  * licensed development library or toolkit without explicit permission.
- * 
+ *
  * License details: http://www.gnu.org/licenses/lgpl.html
  */
 
 /*global Ext */
 
 /**
-  * @class Ext.ux.XCheckbox
-  * @extends Ext.form.Checkbox
-  */
+ * @class Ext.ux.XCheckbox
+ * @extends Ext.form.Checkbox
+ */
 Ext.ns('Ext.ux.form');
 Ext.ux.form.XCheckbox = Ext.extend(Ext.form.Checkbox, {
-     submitOffValue:'false'
-    ,submitOnValue:'true'
-
-    ,onRender:function() {
+    submitOffValue: 'false', submitOnValue: 'true', onRender: function () {
 
         this.inputValue = this.submitOnValue;
 
@@ -34,11 +31,11 @@ Ext.ux.form.XCheckbox = Ext.extend(Ext.form.Checkbox, {
         Ext.ux.form.XCheckbox.superclass.onRender.apply(this, arguments);
 
         // create hidden field that is submitted if checkbox is not checked
-        this.hiddenField = this.wrap.insertFirst({tag:'input', type:'hidden'});
+        this.hiddenField = this.wrap.insertFirst({tag: 'input', type: 'hidden'});
 
         // support tooltip
-        if(this.tooltip) {
-            this.imageEl.set({qtip:this.tooltip});
+        if (this.tooltip) {
+            this.imageEl.set({qtip: this.tooltip});
         }
 
         // update value of hidden field
@@ -49,8 +46,7 @@ Ext.ux.form.XCheckbox = Ext.extend(Ext.form.Checkbox, {
     /**
      * Calls parent and updates hiddenField
      * @private
-     */
-    ,setValue:function(v) {
+     */, setValue: function (v) {
         v = this.convertValue(v);
         this.updateHidden(v);
         Ext.ux.form.XCheckbox.superclass.setValue.apply(this, arguments);
@@ -59,11 +55,10 @@ Ext.ux.form.XCheckbox = Ext.extend(Ext.form.Checkbox, {
     /**
      * Updates hiddenField
      * @private
-     */
-    ,updateHidden:function(v) {
+     */, updateHidden: function (v) {
         v = undefined !== v ? v : this.checked;
         v = this.convertValue(v);
-        if(this.hiddenField) {
+        if (this.hiddenField) {
             this.hiddenField.dom.value = v ? this.submitOnValue : this.submitOffValue;
             this.hiddenField.dom.name = v ? '' : this.el.dom.name;
         }
@@ -72,8 +67,7 @@ Ext.ux.form.XCheckbox = Ext.extend(Ext.form.Checkbox, {
     /**
      * Converts value to boolean
      * @private
-     */
-    ,convertValue:function(v) {
+     */, convertValue: function (v) {
         return (v === true || v === 'true' || v === this.submitOnValue || String(v).toLowerCase() === 'on');
     } // eo function convertValue
 
@@ -82,4 +76,4 @@ Ext.ux.form.XCheckbox = Ext.extend(Ext.form.Checkbox, {
 // register xtype
 Ext.reg('xcheckbox', Ext.ux.form.XCheckbox);
 
-// eo file 
+// eo file

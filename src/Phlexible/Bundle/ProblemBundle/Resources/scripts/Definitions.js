@@ -1,6 +1,6 @@
 Ext.namespace(
-	'Phlexible.problems.menuhandle',
-	'Phlexible.problems.model'
+    'Phlexible.problems.menuhandle',
+    'Phlexible.problems.model'
 );
 
 

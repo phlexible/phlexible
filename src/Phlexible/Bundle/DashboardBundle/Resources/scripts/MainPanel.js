@@ -6,79 +6,82 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
     border: false,
     layout: 'border',
 
-    initComponent: function() {
+    initComponent: function () {
         this.closable = false;
 
-        this.items = [{
-			xtype: 'dashboard-listpanel',
-			region: 'west',
-			collapsible: true,
-			collapsed: true,
+        this.items = [
+            {
+                xtype: 'dashboard-listpanel',
+                region: 'west',
+                collapsible: true,
+                collapsed: true,
 //                collapseMode: 'mini',
-			listeners: {
-				portletOpen: function(store, r){
-					r.set('mode', 'opened');
-					this.getPortletPanel().addRecordPanel(r);
-					store.remove(r);
-				},
-				portletSave: this.onDoSave,
-				scope: this
-			}
-		},{
-			xtype: 'dashboard-portalpanel',
-			region: 'center',
-			listeners: {
-				portletAdd: function(panel, record) {
-					this.onSave();
-				},
-				portletClose: function(panel, record) {
-					Phlexible.dashboard.ListStore.add(record);
-					Phlexible.dashboard.ListStore.sort('title', 'ASC');
-					panel.ownerCt.remove(panel, true);
-					panel.destroy();
+                listeners: {
+                    portletOpen: function (store, r) {
+                        r.set('mode', 'opened');
+                        this.getPortletPanel().addRecordPanel(r);
+                        store.remove(r);
+                    },
+                    portletSave: this.onDoSave,
+                    scope: this
+                }
+            },
+            {
+                xtype: 'dashboard-portalpanel',
+                region: 'center',
+                listeners: {
+                    portletAdd: function (panel, record) {
+                        this.onSave();
+                    },
+                    portletClose: function (panel, record) {
+                        Phlexible.dashboard.ListStore.add(record);
+                        Phlexible.dashboard.ListStore.sort('title', 'ASC');
+                        panel.ownerCt.remove(panel, true);
+                        panel.destroy();
 
-					this.onSave();
-				},
-				portletCollapse: function(panel, record) {
-					this.onSave();
-				},
-				portletExpand: function(panel, record) {
-					this.onSave();
-				},
-				drop: function(e) {
-					var r = e.panel.record;
-					r.set('col', e.columnIndex);
-					r.set('pos', e.position);
+                        this.onSave();
+                    },
+                    portletCollapse: function (panel, record) {
+                        this.onSave();
+                    },
+                    portletExpand: function (panel, record) {
+                        this.onSave();
+                    },
+                    drop: function (e) {
+                        var r = e.panel.record;
+                        r.set('col', e.columnIndex);
+                        r.set('pos', e.position);
 
-					this.onSave();
-				},
-				scope: this
-			}
-		}];
+                        this.onSave();
+                    },
+                    scope: this
+                }
+            }
+        ];
 
         this.saveTask = new Ext.util.DelayedTask(this.onDoSave, this);
 
         Phlexible.dashboard.MainPanel.superclass.initComponent.call(this);
     },
 
-	getPortletPanel: function() {
-		return this.getComponent(1);
-	},
+    getPortletPanel: function () {
+        return this.getComponent(1);
+    },
 
-    onRender: function(ct, position) {
+    onRender: function (ct, position) {
         Phlexible.dashboard.MainPanel.superclass.onRender.call(this, ct, position);
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('dashboard_portlets'),
             success: this.onLoad,
-			failure: function() {
-				Ext.MessageBox.alert('Load error', 'Error loading portlets.');
-			},
-			scope: this
+            failure: function () {
+                Ext.MessageBox.alert('Load error', 'Error loading portlets.');
+            },
+            scope: this
         });
     },
 
-    onLoad: function(response) {
+    onLoad: function (response) {
         var data = Ext.decode(response.responseText);
         var matrix = [];
         var id, i, row, r;
@@ -88,7 +91,7 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
             matrix.push(new Ext.util.MixedCollection());
         }
 
-        for (i=0; i<data.length; i++) {
+        for (i = 0; i < data.length; i++) {
             row = data[i];
             id = row.id;
 
@@ -97,8 +100,8 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
             row.mode = 'closed';
 
             if (Phlexible.Config.get('user.portlets')[id]) {
-                row.col  = parseInt(Phlexible.Config.get('user.portlets')[id].col, 10);
-                row.pos  = parseInt(Phlexible.Config.get('user.portlets')[id].pos, 10);
+                row.col = parseInt(Phlexible.Config.get('user.portlets')[id].col, 10);
+                row.pos = parseInt(Phlexible.Config.get('user.portlets')[id].pos, 10);
                 row.mode = Phlexible.Config.get('user.portlets')[id].mode;
             }
 
@@ -111,20 +114,20 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
             }
         }
 
-        for(i = 0; i< cols; i++) {
-            matrix[i].each(function(item) {
+        for (i = 0; i < cols; i++) {
+            matrix[i].each(function (item) {
                 r = new Phlexible.dashboard.PortletRecord(item, item.id);
-				this.getPortletPanel().addRecordPanel(r, true);
+                this.getPortletPanel().addRecordPanel(r, true);
             }, this);
         }
     },
 
-    onSave: function() {
+    onSave: function () {
         this.saveTask.cancel();
         this.saveTask.delay(1000);
     },
 
-    onDoSave: function() {
+    onDoSave: function () {
         this.saveTask.cancel();
 
         var data = this.getPortletPanel().getSaveData();
@@ -134,9 +137,9 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
             params: {
                 portlets: Ext.encode(data)
             },
-            success: function(response) {
+            success: function (response) {
                 var data = Ext.decode(response.responseText);
-                if(!data.success) {
+                if (!data.success) {
                     Ext.MessageBox.alert('Failure', data.msg);
                 }
             }

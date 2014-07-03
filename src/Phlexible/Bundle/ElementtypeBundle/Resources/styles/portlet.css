@@ -1,41 +1,52 @@
-.elementtypes-portlet .x-panel-body{
+.elementtypes-portlet .x-panel-body {
     font: 11px Arial, Helvetica, sans-serif;
 }
-.elementtypes-portlet table, 
-.elementtypes-portlet tbody, 
-.elementtypes-portlet tr, 
-.elementtypes-portlet td, 
+
+.elementtypes-portlet table,
+.elementtypes-portlet tbody,
+.elementtypes-portlet tr,
+.elementtypes-portlet td,
 .elementtypes-portlet th {
     padding: 0;
     margin: 0;
     vertical-align: middle;
 }
+
 .elementtypes-portlet td,
 .elementtypes-portlet th {
     padding: 2px;
 }
+
 .elementtypes-portlet td {
     cursor: pointer;
 }
+
 .elementtypes-portlet th {
     font-weight: bold;
 }
+
 .elementtypes-portlet .elementtypes-wrap-over {
     background-color: #BBBBBB;
 }
+
 .elementtypes-portlet .elementtypes-portlet-title {
 }
-.elementtypes-portlet .elementtypes-portlet-title img{
+
+.elementtypes-portlet .elementtypes-portlet-title img {
     width: 18px;
     height: 18px;
     vertical-align: middle;
 }
+
 .elementtypes-portlet .elementtypes-portlet-langver {
 }
+
 .elementtypes-portlet .elementtypes-portlet-author {
 }
+
 .elementtypes-portlet .elementtypes-portlet-date {
 }
+
 .elementtypes-portlet .elementtypes-portlet-date {
     color: #8B8B8B;
 }

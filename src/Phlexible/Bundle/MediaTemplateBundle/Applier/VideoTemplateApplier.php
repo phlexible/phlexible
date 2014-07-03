@@ -27,7 +27,7 @@ class VideoTemplateApplier
     private $converter;
 
     /**
-     * @param FFMpeg  $converter
+     * @param FFMpeg $converter
      */
     public function __construct(FFMpeg $converter)
     {

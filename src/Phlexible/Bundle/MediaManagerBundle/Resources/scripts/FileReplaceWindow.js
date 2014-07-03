@@ -1,29 +1,29 @@
 Phlexible.mediamanager.FileReplaceWindowTemplate = new Ext.XTemplate(
     '<tpl for=".">',
     '<div class="m-filereplace-wrap">',
-       '<div style="float: left;">',
-           Phlexible.inlineIcon('p-mediamanager-arrow_right-icon'),
-       '</div>',
-       '<div style="padding-left: 20px;">',
-           '<div class="m-filereplace-header">',
-               '{header}',
-           '</div>',
-           '<div class="m-filereplace-text">',
-               '{text}',
-           '</div>',
-           '<tpl if="src">',
-           '<div>',
-               '<div class="m-filereplace-img">',
-                   '<img src="{src}" width="48" height="48">',
-               '</div>',
-               '<div class="m-filereplace-desc">',
-                   '<div class="m-filereplace-name" style="font-weight: bold">{[values.name.shorten(50)]}</div>',
-                   '<div class="m-filereplace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
-                   '<div class="m-filereplace-size">' + Phlexible.mediamanager.Strings.size + ': {[Phlexible.Format.size(values.size)]}</div>',
-               '</div>',
-           '</div>',
-           '</tpl>',
-       '</div>',
+    '<div style="float: left;">',
+    Phlexible.inlineIcon('p-mediamanager-arrow_right-icon'),
+    '</div>',
+    '<div style="padding-left: 20px;">',
+    '<div class="m-filereplace-header">',
+    '{header}',
+    '</div>',
+    '<div class="m-filereplace-text">',
+    '{text}',
+    '</div>',
+    '<tpl if="src">',
+    '<div>',
+    '<div class="m-filereplace-img">',
+    '<img src="{src}" width="48" height="48">',
+    '</div>',
+    '<div class="m-filereplace-desc">',
+    '<div class="m-filereplace-name" style="font-weight: bold">{[values.name.shorten(50)]}</div>',
+    '<div class="m-filereplace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
+    '<div class="m-filereplace-size">' + Phlexible.mediamanager.Strings.size + ': {[Phlexible.Format.size(values.size)]}</div>',
+    '</div>',
+    '</div>',
+    '</tpl>',
+    '</div>',
     '</div>',
     '</tpl>'
 );
@@ -39,58 +39,63 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
     files: [],
     pointer: 0,
 
-    initComponent: function(){
+    initComponent: function () {
         this.store = new Ext.data.SimpleStore({
             fields: ['action', 'header', 'text', 'id', 'name', 'type', 'size', 'src']
         });
 
-        this.items = [{
-            xtype: 'panel',
-            border: false,
-            plain: true,
-            bodyStyle: 'font-size: 13px; font-weight: bold;',
-            html: this.strings.uploaded_file_conflict_text
-        },{
-            xtype: 'panel',
-            border: false,
-            plain: true,
-            bodyStyle: 'padding-bottom: 10px;',
-            html: this.strings.uploaded_file_conflict_desc
-        },{
-            xtype: 'dataview',
-            itemSelector: 'div.m-filereplace-wrap',
-            overClass: 'p-filereplace-wrap-over',
-            style: 'overflow:auto',
-            singleSelect: true,
-            store: this.store,
-            tpl: Phlexible.mediamanager.FileReplaceWindowTemplate,
-            listeners: {
-                click: {
-                    fn: this.saveFile,
-                    scope: this
-                },
-                render: {
-                    fn: this.showFile,
-                    scope: this
+        this.items = [
+            {
+                xtype: 'panel',
+                border: false,
+                plain: true,
+                bodyStyle: 'font-size: 13px; font-weight: bold;',
+                html: this.strings.uploaded_file_conflict_text
+            },
+            {
+                xtype: 'panel',
+                border: false,
+                plain: true,
+                bodyStyle: 'padding-bottom: 10px;',
+                html: this.strings.uploaded_file_conflict_desc
+            },
+            {
+                xtype: 'dataview',
+                itemSelector: 'div.m-filereplace-wrap',
+                overClass: 'p-filereplace-wrap-over',
+                style: 'overflow:auto',
+                singleSelect: true,
+                store: this.store,
+                tpl: Phlexible.mediamanager.FileReplaceWindowTemplate,
+                listeners: {
+                    click: {
+                        fn: this.saveFile,
+                        scope: this
+                    },
+                    render: {
+                        fn: this.showFile,
+                        scope: this
+                    }
                 }
+            },
+            {
+                xtype: 'checkbox',
+                boxLabel: this.strings.apply_to_remaining_files
             }
-        }, {
-            xtype: 'checkbox',
-            boxLabel: this.strings.apply_to_remaining_files
-        }];
+        ];
 
         Phlexible.mediamanager.FileReplaceWindow.superclass.initComponent.call(this);
     },
 
-    saveFile: function(view, index) {
+    saveFile: function (view, index) {
         var all = 0;
-        if(this.getComponent(3).getValue()) {
+        if (this.getComponent(3).getValue()) {
             all = 1;
         }
 
         var r = this.store.getAt(index);
 
-        switch(r.data.action) {
+        switch (r.data.action) {
             case 'replace':
                 var params = {
                     'do': 'replace',
@@ -133,22 +138,22 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
         var request = {
             url: Phlexible.Router.generate('mediamanager_upload_save'),
             params: params,
-            failure: function(response) {
-            	var result = Ext.decode(response.responseText);
+            failure: function (response) {
+                var result = Ext.decode(response.responseText);
 
-            	Ext.MessageBox.alert('Failure', result.msg);
-            	this.nextFile();
+                Ext.MessageBox.alert('Failure', result.msg);
+                this.nextFile();
             },
             scope: this
         };
 
-        if(all) {
-            request.success = function(response) {
+        if (all) {
+            request.success = function (response) {
                 this.fireEvent('update');
                 this.close();
             };
         } else {
-            request.success = function(response) {
+            request.success = function (response) {
                 this.nextFile();
             };
         }
@@ -156,10 +161,10 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
         Ext.Ajax.request(request);
     },
 
-    nextFile: function() {
+    nextFile: function () {
         this.fireEvent('update');
 
-        if(this.pointer >= (this.files.length-1)) {
+        if (this.pointer >= (this.files.length - 1)) {
             this.close();
             return;
         }
@@ -169,7 +174,7 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
         this.showFile();
     },
 
-    showFile: function() {
+    showFile: function () {
         var file = this.files[this.pointer];
 
         var data = [];

@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\CacheBundle\Controller;
 
+use Phlexible\Component\Formatter\AgeFormatter;
+use Phlexible\Component\Formatter\FilesizeFormatter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -59,11 +61,14 @@ class DataController extends Controller
                 $misses = (int) $stats['misses'];
                 $reqs   = $hits + $misses;
 
+                $ageFormatter = new AgeFormatter();
+                $filesizeFormatter = new FilesizeFormatter();
+
                 $server['04 Starttime']            = date('Y-m-d H:i:s', $startTime);
-                $server['05 Uptime']               = \Brainbits_Format_Age::formatTimestamp($startTime, $time);
-                $server['06 Used cache size']      = \Brainbits_Format_Filesize::format($stats['memory_usage']);
-                $server['07 Available cache size'] = \Brainbits_Format_Filesize::format($stats['memory_available']);
-                $server['08 Total cache size']     = \Brainbits_Format_Filesize::format($stats['memory_usage'] + $stats['memory_available']);
+                $server['05 Uptime']               = $ageFormatter->formatTimestamp($startTime, $time);
+                $server['06 Used cache size']      = $filesizeFormatter->formatFilesize($stats['memory_usage']);
+                $server['07 Available cache size'] = $filesizeFormatter->formatFilesize($stats['memory_available']);
+                $server['08 Total cache size']     = $filesizeFormatter->formatFilesize($stats['memory_usage'] + $stats['memory_available']);
                 $server['09 Requests']             = $reqs;
                 $server['10 Hits']                 = (int) $stats['hits'];
                 $server['11 Misses']               = (int) $stats['misses'];

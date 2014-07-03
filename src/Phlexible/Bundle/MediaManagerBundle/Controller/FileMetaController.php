@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -32,7 +32,7 @@ class FileMetaController extends Controller
      */
     public function metaAction(Request $request)
     {
-        $fileId      = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
         $file = $this->get('mediasite.manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
@@ -44,7 +44,10 @@ class FileMetaController extends Controller
         $meta = array();
         foreach ($file->getAttribute('metasets') as $id) {
             $metaset = $metasetRepository->find($id);
-            $metadata = $metadataRepository->load($metaset, array('file_id' => $fileId, 'file_version' => $fileVersion));
+            $metadata = $metadataRepository->load(
+                $metaset,
+                array('file_id' => $fileId, 'file_version' => $fileVersion)
+            );
 
             $fieldDatas = array();
             foreach ($metaset->getFields() as $field) {
@@ -81,11 +84,11 @@ class FileMetaController extends Controller
      */
     public function listsetsAction(Request $request)
     {
-        $fileId      = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
-        $site  = $this->get('mediasite.manager')->getByFileId($fileId);
-        $file  = $site->findFile($fileId, $fileVersion);
+        $site = $this->get('mediasite.manager')->getByFileId($fileId);
+        $file = $site->findFile($fileId, $fileVersion);
 
         $metasetIds = $file->getAttribute('metasets');
 
@@ -108,11 +111,11 @@ class FileMetaController extends Controller
      */
     public function availablesetsAction(Request $request)
     {
-        $fileId      = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
-        $site  = $this->get('mediasite.manager')->getByFileId($fileId);
-        $file  = $site->findFile($fileId, $fileVersion);
+        $site = $this->get('mediasite.manager')->getByFileId($fileId);
+        $file = $site->findFile($fileId, $fileVersion);
 
         $metasetsRepository = $this->get('metasets.repository');
 
@@ -144,12 +147,12 @@ class FileMetaController extends Controller
      */
     public function addsetAction(Request $request)
     {
-        $fileId      = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
-        $setId       = $request->get('set_id');
+        $setId = $request->get('set_id');
 
-        $site  = $this->get('mediasite.manager')->getByFileId($fileId);
-        $file  = $site->findFile($fileId, $fileVersion);
+        $site = $this->get('mediasite.manager')->getByFileId($fileId);
+        $file = $site->findFile($fileId, $fileVersion);
 
         $metasets = $file->getAttribute('metasets', array());
         if (!in_array($setId, $metasets)) {
@@ -169,12 +172,12 @@ class FileMetaController extends Controller
      */
     public function removesetAction(Request $request)
     {
-        $fileId      = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
-        $setId       = $request->get('set_id');
+        $setId = $request->get('set_id');
 
-        $site  = $this->get('mediasite.manager')->getByFileId($fileId);
-        $file  = $site->findFile($fileId, $fileVersion);
+        $site = $this->get('mediasite.manager')->getByFileId($fileId);
+        $file = $site->findFile($fileId, $fileVersion);
 
 
         $metasets = $file->getAttribute('metasets', array());
@@ -195,51 +198,46 @@ class FileMetaController extends Controller
      */
     public function savemetaAction(Request $request)
     {
-        $fileId      = $request->get('file_id');
+        $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
-        $data        = $request->get('data');
-        $data        = json_decode($data);
+        $data = $request->get('data');
+        $data = json_decode($data);
 
         $dispatcher = $container->dispatcher;
 
         $metaDefaultLanguage = $registry->getValue('system.languages.language.meta');
         $metaLanguages = $languagesManager->getSet('meta');
 
-        $site  = $this->getContainer()->get('mediasite.manager')->getByFileId($fileId);
-        $file  = $site->findFile($fileId, $fileVersion);
+        $site = $this->getContainer()->get('mediasite.manager')->getByFileId($fileId);
+        $file = $site->findFile($fileId, $fileVersion);
         $asset = $this->getContainer()->mediaAssetManager->find($file);
 
         $event = new BeforeSaveMetaEvent($file);
-        if ($dispatcher->dispatch($event) === false)
-        {
+        if ($dispatcher->dispatch($event) === false) {
             $this->_response->setResult(false, null, $event->getCancelReason());
+
             return;
         }
 
         $metaSetItems = $asset->getMetaSetItems($metaDefaultLanguage);
 
-        foreach ($data as $key => $row)
-        {
-            if ('suggest' === $metaSetItems[$row['set_id']]->getType($key))
-            {
-                $dataSourceId          = $metaSetItems[$row['set_id']]->getOptions($key);
+        foreach ($data as $key => $row) {
+            if ('suggest' === $metaSetItems[$row['set_id']]->getType($key)) {
+                $dataSourceId = $metaSetItems[$row['set_id']]->getOptions($key);
                 $dataSourcesRepository = $container->dataSourcesRepository;
-                $dataSource            = $dataSourcesRepository->getDataSourceById(
+                $dataSource = $dataSourcesRepository->getDataSourceById(
                     $dataSourceId,
                     $metaDefaultLanguage
                 );
-                $dataSourceKeys        = $dataSource->getKeys();
-                $dataSourceModified    = false;
-                foreach (explode(',', $row['value_' . $metaDefaultLanguage]) as $singleValue)
-                {
-                    if (!in_array($singleValue, $dataSourceKeys))
-                    {
+                $dataSourceKeys = $dataSource->getKeys();
+                $dataSourceModified = false;
+                foreach (explode(',', $row['value_' . $metaDefaultLanguage]) as $singleValue) {
+                    if (!in_array($singleValue, $dataSourceKeys)) {
                         $dataSource->addKey($singleValue, true);
                         $dataSourceModified = true;
                     }
                 }
-                if ($dataSourceModified)
-                {
+                if ($dataSourceModified) {
                     $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
                 }
             }
@@ -247,44 +245,36 @@ class FileMetaController extends Controller
             $metaSetItems[$row['set_id']]->$key = $row['value_' . $metaDefaultLanguage];
         }
 
-        foreach ($metaSetItems as $metaSetItem)
-        {
+        foreach ($metaSetItems as $metaSetItem) {
             $metaSetItem->save();
         }
 
         unset($metaSetItems);
 
-        foreach ($metaLanguages as $metaLanguage)
-        {
-            if ($metaLanguage === $metaDefaultLanguage)
-            {
+        foreach ($metaLanguages as $metaLanguage) {
+            if ($metaLanguage === $metaDefaultLanguage) {
                 continue;
             }
 
             $metaSetItems = $asset->getMetaSetItems($metaLanguage);
 
-            foreach ($data as $key => $row)
-            {
-                if ('suggest' === $metaSetItems[$row['set_id']]->getType($key))
-                {
-                    $dataSourceId          = $metaSetItems[$row['set_id']]->getOptions($key);
+            foreach ($data as $key => $row) {
+                if ('suggest' === $metaSetItems[$row['set_id']]->getType($key)) {
+                    $dataSourceId = $metaSetItems[$row['set_id']]->getOptions($key);
                     $dataSourcesRepository = $container->dataSourcesRepository;
-                    $dataSource            = $dataSourcesRepository->getDataSourceById(
+                    $dataSource = $dataSourcesRepository->getDataSourceById(
                         $dataSourceId,
                         $metaLanguage
                     );
-                    $dataSourceKeys        = $dataSource->getKeys();
-                    $dataSourceModified    = false;
-                    foreach (explode(',', $row['value_' . $metaLanguage]) as $singleValue)
-                    {
-                        if (!in_array($singleValue, $dataSourceKeys))
-                        {
+                    $dataSourceKeys = $dataSource->getKeys();
+                    $dataSourceModified = false;
+                    foreach (explode(',', $row['value_' . $metaLanguage]) as $singleValue) {
+                        if (!in_array($singleValue, $dataSourceKeys)) {
                             $dataSource->addKey($singleValue, true);
                             $dataSourceModified = true;
                         }
                     }
-                    if ($dataSourceModified)
-                    {
+                    if ($dataSourceModified) {
                         $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
                     }
                 }
@@ -292,8 +282,7 @@ class FileMetaController extends Controller
                 $metaSetItems[$row['set_id']]->$key = $row['value_' . $metaLanguage];
             }
 
-            foreach ($metaSetItems as $metaSetItem)
-            {
+            foreach ($metaSetItems as $metaSetItem) {
                 $metaSetItem->save();
             }
         }
@@ -306,8 +295,8 @@ class FileMetaController extends Controller
             'modify_user_id' => $this->getUser()->getId(),
             'modify_time'    => $db->fn->now(),
         );
-        $where      = array(
-            'id = ?' => $file->getId(),
+        $where = array(
+            'id = ?'      => $file->getId(),
             'version = ?' => $file->getVersion(),
         );
         $db->update(

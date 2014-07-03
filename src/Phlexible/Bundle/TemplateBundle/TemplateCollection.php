@@ -29,6 +29,7 @@ class TemplateCollection
      * Add template
      *
      * @param Template $template
+     *
      * @return $this
      */
     public function add(Template $template)
@@ -41,6 +42,7 @@ class TemplateCollection
 
     /**
      * @param string $id
+     *
      * @return Template
      */
     public function get($id)
@@ -54,6 +56,7 @@ class TemplateCollection
 
     /**
      * @param string $filename
+     *
      * @return Template
      */
     public function getByFilename($filename)

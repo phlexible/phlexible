@@ -92,97 +92,82 @@ abstract class Field
      */
     public function transform($item, $eid, $version, $language)
     {
-        $this->_eid      = $eid;
-        $this->_version  = $version;
+        $this->_eid = $eid;
+        $this->_version = $version;
         $this->_language = $language;
 
         $item['configuration'] = !empty($item['configuration']) ? ($item['configuration']) : array();
 
-        $labels          = !empty($item['labels']) ? ($item['labels']) : array();
-        $validation      = !empty($item['validation']) ? ($item['validation']) : array();
-        $options         = !empty($item['options']) ? ($item['options']) : array();
-        $media           = !empty($item['media']) ? ($item['media']) : array();
+        $labels = !empty($item['labels']) ? ($item['labels']) : array();
+        $validation = !empty($item['validation']) ? ($item['validation']) : array();
+        $options = !empty($item['options']) ? ($item['options']) : array();
+        $media = !empty($item['media']) ? ($item['media']) : array();
         $contentChannels = !empty($item['content_channels']) ? ($item['content_channels']) : array();
 
         unset($item['labels']);
-//        unset($item['validation']);
+        //        unset($item['validation']);
         unset($item['options']);
         unset($item['media']);
         unset($item['content_channels']);
 
-//        if($validation === null)
-//        {
-//            $validation = array();
-//        }
+        //        if($validation === null)
+        //        {
+        //            $validation = array();
+        //        }
 
-        if($options === null)
-        {
+        if ($options === null) {
             $options = array();
         }
 
-        if($media === null)
-        {
+        if ($media === null) {
             $media = array();
         }
 
-//        $item['validation'] = $validation;
+        //        $item['validation'] = $validation;
 
-        $interfaceLang = 'de';//MWF_Env::getUser()->getInterfaceLanguage();
+        $interfaceLang = 'de'; //MWF_Env::getUser()->getInterfaceLanguage();
 
         $item['name'] = array();
-        if (!empty($labels['fieldlabel']))
-        {
+        if (!empty($labels['fieldlabel'])) {
             $item['name'] = $labels['fieldlabel'];
         }
 
         $item['boxlabel'] = array();
-        if (!empty($labels['boxlabel']))
-        {
+        if (!empty($labels['boxlabel'])) {
             $item['boxlabel'] = $labels['boxlabel'];
         }
 
         $item['help'] = array();
-        if (!empty($labels['context_help']))
-        {
+        if (!empty($labels['context_help'])) {
             $item['help'] = $labels['context_help'];
         }
 
         $item['prefix'] = array();
-        if (!empty($labels['prefix']))
-        {
+        if (!empty($labels['prefix'])) {
             $item['prefix'] = $labels['prefix'];
         }
 
         $item['suffix'] = array();
-        if (!empty($labels['suffix']))
-        {
+        if (!empty($labels['suffix'])) {
             $item['suffix'] = $labels['suffix'];
         }
 
         // call field specific transformations
-//        $field = self::get($item['type']);
+        //        $field = self::get($item['type']);
         $item = $this->_transform($item, $media, $options);
 
-        if (!array_key_exists('content', $item))
-        {
-            if (strlen($item['data_content']))
-            {
+        if (!array_key_exists('content', $item)) {
+            if (strlen($item['data_content'])) {
                 $item['content'] = $item['data_content'];
-            }
-            else
-            {
+            } else {
                 $item['content'] = '';
             }
         }
 
-        if (!array_key_exists('rawContent', $item))
-        {
-            if (strlen($item['data_content']))
-            {
+        if (!array_key_exists('rawContent', $item)) {
+            if (strlen($item['data_content'])) {
                 $item['rawContent'] = $item['data_content'];
-            }
-            else
-            {
+            } else {
                 $item['rawContent'] = '';
             }
         }
@@ -194,8 +179,7 @@ abstract class Field
 
     public function transformSave($value, $eid, $version, $language)
     {
-        if (is_array($value))
-        {
+        if (is_array($value)) {
             $value = implode(',', $value);
         }
 

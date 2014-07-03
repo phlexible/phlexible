@@ -9,11 +9,9 @@
 namespace Phlexible\Bundle\TreeBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Phlexible\Bundle\TreeBundle\ContentTree\Dumper\XmlDumper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Cache tree command
@@ -30,8 +28,7 @@ class CacheTreeCommand extends ContainerAwareCommand
         $this
             ->setName('tree:cache')
             ->setDescription('Cache tree.')
-            ->addArgument('siterootId', InputArgument::REQUIRED, 'Siteroot ID')
-        ;
+            ->addArgument('siterootId', InputArgument::REQUIRED, 'Siteroot ID');
     }
 
     /**

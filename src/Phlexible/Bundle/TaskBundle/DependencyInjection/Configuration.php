@@ -29,13 +29,13 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
-                ->arrayNode('portlet')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->integerNode('num_items')->defaultValue(10)->end()
-                    ->end()
-                ->end()
-                ->booleanNode('mail_on_close')->defaultValue(true)->end()
+            ->arrayNode('portlet')
+            ->addDefaultsIfNotSet()
+            ->children()
+            ->integerNode('num_items')->defaultValue(10)->end()
+            ->end()
+            ->end()
+            ->booleanNode('mail_on_close')->defaultValue(true)->end()
             ->end();
 
         return $treeBuilder;

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Site;
 
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFolderAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFileAction;
@@ -234,7 +235,12 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function findFilesByFolder(FolderInterface $folder, $order = null, $limit = null, $start = null, $includeHidden = false)
+    public function findFilesByFolder(
+        FolderInterface $folder,
+        $order = null,
+        $limit = null,
+        $start = null,
+        $includeHidden = false)
     {
         return $this->driver->findFilesByFolder($folder, $order, $limit, $start, $includeHidden);
     }
@@ -256,10 +262,14 @@ class Site implements SiteInterface, \IteratorAggregate
     }
 
     /**
-    /**
+     * /**
      * {@inheritdoc}
      */
-    public function createFile(FolderInterface $targetFolder, FileSourceInterface $fileSource, $userId, array $attributes = array())
+    public function createFile(
+        FolderInterface $targetFolder,
+        FileSourceInterface $fileSource,
+        $userId,
+        array $attributes = array())
     {
         $hashCalculator = new MessageDigestHashCalculator();
         $hash = $hashCalculator->fromFileSource($fileSource);
@@ -269,7 +279,7 @@ class Site implements SiteInterface, \IteratorAggregate
         $file = new File();
         $file
             ->setSite($this)
-            ->setId(\Brainbits_Util_Uuid::generate())
+            ->setId(Uuid::generate())
             ->setFolderId($targetFolder->getId())
             ->setPhysicalPath($path)
             ->setName($fileSource->getName())
@@ -280,8 +290,7 @@ class Site implements SiteInterface, \IteratorAggregate
             ->setMimeType($fileSource->getMimeType())
             ->setSize($fileSource->getSize())
             ->setHash($hash)
-            ->setAttributes($attributes)
-        ;
+            ->setAttributes($attributes);
 
         $action = new CreateFileAction($file, $fileSource, $targetFolder, $hashCalculator);
 
@@ -307,15 +316,14 @@ class Site implements SiteInterface, \IteratorAggregate
         $folder = new Folder();
         $folder
             ->setSite($this)
-            ->setId(\Brainbits_Util_Uuid::generate())
+            ->setId(Uuid::generate())
             ->setName($name)
             ->setParentId($targetFolder->getId())
             ->setPath($folderPath)
             ->setCreatedAt(new \DateTime())
             ->setCreateUserid($userId)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserid($userId)
-        ;
+            ->setModifyUserid($userId);
 
         $action = new CreateFolderAction($folder, $targetFolder);
 

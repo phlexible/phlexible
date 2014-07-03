@@ -28,11 +28,12 @@ class WriteDelegatesCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-cache:write:delegates')
-            ->setDefinition(array(
-                new InputOption('force', null, InputOption::VALUE_NONE, 'Force creation, even if not modified.'),
-            ))
-            ->setDescription('Write delegate thumbs')
-        ;
+            ->setDefinition(
+                array(
+                    new InputOption('force', null, InputOption::VALUE_NONE, 'Force creation, even if not modified.'),
+                )
+            )
+            ->setDescription('Write delegate thumbs');
     }
 
     /**
@@ -44,17 +45,22 @@ class WriteDelegatesCommand extends ContainerAwareCommand
 
         $delegateWorker = $this->getContainer()->get('mediacache.image_delegate.worker');
 
-        $delegateWorker->writeAll($force, function() use ($output) {
-            $args = func_get_args();
-            if ($args[0] === 'count') {
-                $this->bar = new ProgressBar($output, $args[1]);
-                $this->bar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s% %message%');
-                $this->bar->start();
-            } elseif ($args[0] === 'update') {
-                $this->bar->setMessage($args[1] . ' / ' . $args[2]);
-                $this->bar->advance();
+        $delegateWorker->writeAll(
+            $force,
+            function () use ($output) {
+                $args = func_get_args();
+                if ($args[0] === 'count') {
+                    $this->bar = new ProgressBar($output, $args[1]);
+                    $this->bar->setFormat(
+                        ' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s% %message%'
+                    );
+                    $this->bar->start();
+                } elseif ($args[0] === 'update') {
+                    $this->bar->setMessage($args[1] . ' / ' . $args[2]);
+                    $this->bar->advance();
+                }
             }
-        });
+        );
 
         $output->writeln('');
         $output->writeln('Done.');

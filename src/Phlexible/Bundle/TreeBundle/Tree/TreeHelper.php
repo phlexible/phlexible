@@ -35,10 +35,11 @@ class TreeHelper
      * @param Makeweb_Elements_Tree_Manager            $treeManager
      * @param Makeweb_Elements_Element_Version_Manager $elementVersionManager
      */
-    public function __construct(Makeweb_Elements_Tree_Manager            $treeManager,
-                                Makeweb_Elements_Element_Version_Manager $elementVersionManager)
+    public function __construct(
+        Makeweb_Elements_Tree_Manager $treeManager,
+        Makeweb_Elements_Element_Version_Manager $elementVersionManager)
     {
-        $this->_treeManager           = $treeManager;
+        $this->_treeManager = $treeManager;
         $this->_elementVersionManager = $elementVersionManager;
     }
 
@@ -53,13 +54,12 @@ class TreeHelper
     public function getOnlineWrapByTid($tid, $language)
     {
         $elementVersion = $this->getOnlineVersionByTid($tid, $language);
-        if (!$elementVersion)
-        {
+        if (!$elementVersion) {
             return null;
         }
 
         $elementData = $elementVersion->getData($language);
-        $wrap        = $elementData->getWrap();
+        $wrap = $elementData->getWrap();
 
         return $wrap;
     }
@@ -74,13 +74,11 @@ class TreeHelper
      */
     public function getOnlineVersionByTid($tid, $language)
     {
-        try
-        {
+        try {
             $node = $this->_treeManager->getNodeByNodeId($tid);
-        }
-        catch (Makeweb_Elements_Tree_Exception $e)
-        {
+        } catch (Makeweb_Elements_Tree_Exception $e) {
             MWF_Log::exception($e);
+
             return null;
         }
 
@@ -100,10 +98,9 @@ class TreeHelper
     public function getOnlineVersionByNode(Makeweb_Elements_Tree_Node $node, $language)
     {
         // get element online version
-        $eid     = $node->getEid();
+        $eid = $node->getEid();
         $version = $node->getOnlineVersion($language);
-        if (!$version)
-        {
+        if (!$version) {
             return null;
         }
 
@@ -118,15 +115,14 @@ class TreeHelper
      * @param int    $tid
      * @param string $language
      * @param string $section
-     * @param string $fallbackLanguage (optional)
+     * @param string $fallbackLanguage
      *
      * @return string|null if tid is not found or language is not online
      */
     public function getOnlineTitleByTid($tid, $language, $section = 'navigation', $fallbackLanguage = null)
     {
         $elementVersion = $this->getOnlineVersionByTid($tid, $language);
-        if (!$elementVersion)
-        {
+        if (!$elementVersion) {
             return null;
         }
 
@@ -141,7 +137,7 @@ class TreeHelper
      * @param int    $tid
      * @param string $language
      * @param string $section
-     * @param string $fallbackLanguage (optional)
+     * @param string $fallbackLanguage
      *
      * @return string|null if tid is not found or language is not online
      */
@@ -149,32 +145,28 @@ class TreeHelper
     {
         $childTitles = array();
 
-        try
-        {
+        try {
             $node = $this->_treeManager->getNodeByNodeId($tid);
-        }
-        catch (Makeweb_Elements_Tree_Exception $e)
-        {
+        } catch (Makeweb_Elements_Tree_Exception $e) {
             MWF_Log::exception($e);
+
             return array();
         }
 
-        foreach ($node->getChildren() as $childNode)
-        {
+        foreach ($node->getChildren() as $childNode) {
             /* @var $childNode Makeweb_Elements_Tree_Node */
             $childTid = $childNode->getId();
 
-			$childTitle = $this->getOnlineTitleByTid(
-			    $childTid,
-        		$language,
-        		$section,
-        		$fallbackLanguage
-			);
+            $childTitle = $this->getOnlineTitleByTid(
+                $childTid,
+                $language,
+                $section,
+                $fallbackLanguage
+            );
 
-			if (mb_strlen($childTitle))
-			{
-			    $childTitles[$childTid] = $childTitle;
-			}
+            if (mb_strlen($childTitle)) {
+                $childTitles[$childTid] = $childTitle;
+            }
         }
 
         asort($childTitles);

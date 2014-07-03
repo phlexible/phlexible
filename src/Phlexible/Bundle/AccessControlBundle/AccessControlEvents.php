@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\AccessControlBundle;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface AccessControlEvents
+class AccessControlEvents
 {
     /**
      * Before set right event

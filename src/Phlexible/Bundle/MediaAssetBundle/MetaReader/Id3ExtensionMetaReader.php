@@ -24,7 +24,7 @@ class Id3ExtensionMetaReader implements MetaReaderInterface
      */
     public function isAvailable()
     {
-       return extension_loaded('id3') && function_exists('id3_get_tag');
+        return extension_loaded('id3') && function_exists('id3_get_tag');
     }
 
     /**
@@ -51,31 +51,31 @@ class Id3ExtensionMetaReader implements MetaReaderInterface
 
         $tag = \id3_get_tag($filename, ID3_BEST);
 
-        if(!empty($tag['title'])) {
+        if (!empty($tag['title'])) {
             $metaData->set('title', $tag['title']);
         }
 
-        if(!empty($tag['album'])) {
+        if (!empty($tag['album'])) {
             $metaData->set('album', $tag['album']);
         }
 
-        if(!empty($tag['artist'])) {
+        if (!empty($tag['artist'])) {
             $metaData->set('artist', $tag['artist']);
         }
 
-        if(!empty($tag['year'])) {
+        if (!empty($tag['year'])) {
             $metaData->set('year', $tag['year']);
         }
 
-        if(!empty($tag['genre'])) {
+        if (!empty($tag['genre'])) {
             $metaData->set('genre', $tag['genre']);
         }
 
-        if(!empty($tag['track'])) {
+        if (!empty($tag['track'])) {
             $metaData->set('track', $tag['track']);
         }
 
-        if(!empty($tag['comment'])) {
+        if (!empty($tag['comment'])) {
             $metaData->set('comment', $tag['comment']);
         }
 

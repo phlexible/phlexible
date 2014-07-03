@@ -64,7 +64,7 @@ class TreeFilter
     /**
      * Constructor
      *
-     * @param MWF_Db_Pool 			   $dbPool
+     * @param MWF_Db_Pool              $dbPool
      * @param EventDispatcherInterface $dispatcher
      * @param int                      $tid
      * @param string                   $language
@@ -78,18 +78,15 @@ class TreeFilter
 
         $this->_storage = new Zend_Session_Namespace('elements_filter_' . $tid . '_' . $language);
 
-        if (isset($this->_storage->filterValues))
-        {
+        if (isset($this->_storage->filterValues)) {
             $this->setFilterValues($this->_storage->filterValues);
         }
 
-        if (isset($this->_storage->sortMode))
-        {
+        if (isset($this->_storage->sortMode)) {
             $this->setSortMode($this->_storage->sortMode);
         }
 
-        if (isset($this->_storage->sortDir))
-        {
+        if (isset($this->_storage->sortDir)) {
             $this->setSortDir($this->_storage->sortDir);
         }
     }
@@ -103,6 +100,7 @@ class TreeFilter
      * Set filter values
      *
      * @param array $filterValues
+     *
      * @return Makeweb_Elements_Tree_Filter
      */
     public function setFilterValues(array $filterValues)
@@ -126,6 +124,7 @@ class TreeFilter
      * Set sort mode
      *
      * @param string $sortMode
+     *
      * @return Makeweb_Elements_Tree_Filter
      */
     public function setSortMode($sortMode)
@@ -149,6 +148,7 @@ class TreeFilter
      * Set sort dir
      *
      * @param string $sortDir
+     *
      * @return Makeweb_Elements_Tree_Filter
      */
     public function setSortDir($sortDir)
@@ -183,13 +183,11 @@ class TreeFilter
             'total'   => count($ids),
         );
 
-        if ($pos > 0)
-        {
+        if ($pos > 0) {
             $pager['prev'] = $ids[$pos - 1];
         }
 
-        if ($pos < count($ids) - 1)
-        {
+        if ($pos < count($ids) - 1) {
             $pager['next'] = $ids[$pos + 1];
         }
 
@@ -209,10 +207,10 @@ class TreeFilter
     protected function _fetchCount()
     {
         $select = $this->_getFilterSelect();
-        #$select->columns(array(new Zend_Db_Expr('COUNT(et.id)')));
+        //$select->columns(array(new Zend_Db_Expr('COUNT(et.id)')));
         $select->columns(array('et.id'));
 
-        #$cnt = $this->_db->fetchOne($select);
+        //$cnt = $this->_db->fetchOne($select);
         $cnt = count($this->_db->fetchCol($select));
 
         return $cnt;
@@ -228,13 +226,13 @@ class TreeFilter
         return $ids;
 
     }
+
     protected function _fetchRangeIds($limit, $start)
     {
         $select = $this->_getFilterAndSortSelect();
         $select->columns(array('et.id', 'e.latest_version'));
 
-        if (null !== $limit)
-        {
+        if (null !== $limit) {
             $select->limit($limit, $start);
         }
         $ids = $this->_db->fetchPairs($select);
@@ -246,13 +244,14 @@ class TreeFilter
     {
         $select = $this->_getFilterSelect();
 
-        switch ($this->_sortMode)
-        {
+        switch ($this->_sortMode) {
             case 'title':
                 $select
                     ->joinLeft(
                         array('evt_sort' => $this->_db->prefix . 'element_version_titles'),
-                        'evt_sort.eid = et.eid AND evt_sort.version = e.latest_version and evt_sort.language = ' . $this->_db->quote($this->_language),
+                        'evt_sort.eid = et.eid AND evt_sort.version = e.latest_version and evt_sort.language = ' . $this->_db->quote(
+                            $this->_language
+                        ),
                         array()
                     )
                     ->order('evt_sort.backend ' . $this->_sortDir);
@@ -276,7 +275,9 @@ class TreeFilter
                 $select
                     ->joinLeft(
                         array('evt_sort' => $this->_db->prefix . 'element_version_titles'),
-                        'evt_sort.eid = et.eid AND evt_sort.version = e.latest_version and evt_sort.language = ' . $this->_db->quote($this->_language),
+                        'evt_sort.eid = et.eid AND evt_sort.version = e.latest_version and evt_sort.language = ' . $this->_db->quote(
+                            $this->_language
+                        ),
                         array()
                     )
                     ->order('evt_sort.date ' . $this->_sortDir);
@@ -300,14 +301,13 @@ class TreeFilter
                 array()
             )
             ->joinLeft(
-                    array('e' => $this->_db->prefix . 'element'),
-                    'et.eid = e.eid',
-                    array()
-                )
+                array('e' => $this->_db->prefix . 'element'),
+                'et.eid = e.eid',
+                array()
+            )
             ->where('et.parent_id = ?', $this->_tid);
 
-        if (!empty($this->_filterValues['status']))
-        {
+        if (!empty($this->_filterValues['status'])) {
             $select->joinLeft(
                 array('eto_1' => $this->_db->prefix . 'element_tree_online'),
                 'eto_1.tree_id = et.id AND eto_1.language = ' . $this->_db->quote($this->_language),
@@ -318,12 +318,10 @@ class TreeFilter
 
             $filterStatus = explode(',', $this->_filterValues['status']);
 
-            if (in_array('online', $filterStatus))
-            {
+            if (in_array('online', $filterStatus)) {
                 $where .= ' OR eto_1.version = e.latest_version';
             }
-            if (in_array('async', $filterStatus))
-            {
+            if (in_array('async', $filterStatus)) {
                 $select->joinLeft(
                     array('eth_1' => $this->_db->prefix . 'element_tree_hash'),
                     'eth_1.tid = eto_1.tree_id AND eth_1.language = eto_1.language AND eth_1.version = eto_1.version',
@@ -337,58 +335,44 @@ class TreeFilter
 
                 $where .= ' OR (eto_1.version != e.latest_version AND eth_1.hash != eth_2.hash)';
             }
-            if (in_array('offline', $filterStatus))
-            {
+            if (in_array('offline', $filterStatus)) {
                 $where .= ' OR eto_1.version IS NULL';
             }
 
             $select->where($where);
         }
 
-        if (!empty($this->_filterValues['navigation']) || !empty($this->_filterValues['restricted']))
-        {
+        if (!empty($this->_filterValues['navigation']) || !empty($this->_filterValues['restricted'])) {
             $select->joinLeft(
                 array('etp_1' => $this->_db->prefix . 'element_tree_page'),
                 'etp_1.tree_id = et.id AND etp_1.version = e.latest_version',
                 array()
             );
 
-            if (!empty($this->_filterValues['navigation']))
-            {
-                if ($this->_filterValues['navigation'] == 'in_navigation')
-                {
+            if (!empty($this->_filterValues['navigation'])) {
+                if ($this->_filterValues['navigation'] == 'in_navigation') {
                     $select->where('etp_1.navigation = 1');
-                }
-                else
-                {
+                } else {
                     $select->where('etp_1.navigation = 0');
                 }
             }
 
-            if (!empty($this->_filterValues['restricted']))
-            {
-                if ($this->_filterValues['restricted'] == 'is_restricted')
-                {
+            if (!empty($this->_filterValues['restricted'])) {
+                if ($this->_filterValues['restricted'] == 'is_restricted') {
                     $select->where('etp_1.restricted = 1');
-                }
-                else
-                {
+                } else {
                     $select->where('etp_1.restricted =0');
                 }
             }
         }
 
-        if (!empty($this->_filterValues['date']) && (!empty($this->_filterValues['date_from']) || !empty($this->_filterValues['date_to'])))
-        {
-            switch ($this->_filterValues['date'])
-            {
+        if (!empty($this->_filterValues['date']) && (!empty($this->_filterValues['date_from']) || !empty($this->_filterValues['date_to']))) {
+            switch ($this->_filterValues['date']) {
                 case 'create':
-                    if (!empty($this->_filterValues['date_from']))
-                    {
+                    if (!empty($this->_filterValues['date_from'])) {
                         $select->where('e.create_time >= ?', $this->_filterValues['date_from']);
                     }
-                    if (!empty($this->_filterValues['date_to']))
-                    {
+                    if (!empty($this->_filterValues['date_to'])) {
                         $select->where('e.create_time <= ?', $this->_filterValues['date_to']);
                     }
                     break;
@@ -399,12 +383,10 @@ class TreeFilter
                         'eto_2.tree_id = et.id AND eto_2.language = ' . $this->_db->quote($this->_language),
                         array()
                     );
-                    if (!empty($this->_filterValues['date_from']))
-                    {
+                    if (!empty($this->_filterValues['date_from'])) {
                         $select->where('eto_2.publish_time >= ?', $this->_filterValues['date_from']);
                     }
-                    if (!empty($this->_filterValues['date_to']))
-                    {
+                    if (!empty($this->_filterValues['date_to'])) {
                         $select->where('eto_2.publish_time <= ?', $this->_filterValues['date_to']);
                     }
                     break;
@@ -412,26 +394,27 @@ class TreeFilter
                 case 'custom':
                     $select->joinLeft(
                         array('evt_1' => $this->_db->prefix . 'element_version_titles'),
-                        'evt_1.eid = e.eid AND evt_1.version = e.latest_version AND evt_1.language = ' . $this->_db->quote($this->_language),
+                        'evt_1.eid = e.eid AND evt_1.version = e.latest_version AND evt_1.language = ' . $this->_db->quote(
+                            $this->_language
+                        ),
                         array()
                     );
-                    if (!empty($this->_filterValues['date_from']))
-                    {
+                    if (!empty($this->_filterValues['date_from'])) {
                         $select->where('evt_1.date >= ?', $this->_filterValues['date_from']);
                     }
-                    if (!empty($this->_filterValues['date_to']))
-                    {
+                    if (!empty($this->_filterValues['date_to'])) {
                         $select->where('evt_1.date <= ?', $this->_filterValues['date_to']);
                     }
                     break;
             }
         }
 
-        if (!empty($this->_filterValues['search']))
-        {
+        if (!empty($this->_filterValues['search'])) {
             $select->join(
                 array('edl_1' => $this->_db->prefix . 'element_data_language'),
-                'edl_1.eid = e.eid AND edl_1.version = e.latest_version AND edl_1.language = ' . $this->_db->quote($this->_language) . ' AND edl_1.content LIKE ' . $this->_db->quote('%' . $this->_filterValues['search'] . '%'),
+                'edl_1.eid = e.eid AND edl_1.version = e.latest_version AND edl_1.language = ' . $this->_db->quote(
+                    $this->_language
+                ) . ' AND edl_1.content LIKE ' . $this->_db->quote('%' . $this->_filterValues['search'] . '%'),
                 array()
             );
             $select->group(array('et.id', 'e.latest_version'));

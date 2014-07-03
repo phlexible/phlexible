@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mediaTemplate key="_mm_medium" type="image" class="Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate" cache="1" revision="1">
-  <parameter key="width">48</parameter>
-  <parameter key="height">48</parameter>
-  <parameter key="method">exactFit</parameter>
-  <parameter key="format">png</parameter>
-  <parameter key="quality">90</parameter>
+<mediaTemplate key="_mm_medium" type="image" class="Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate" cache="1"
+               revision="1">
+    <parameter key="width">48</parameter>
+    <parameter key="height">48</parameter>
+    <parameter key="method">exactFit</parameter>
+    <parameter key="format">png</parameter>
+    <parameter key="quality">90</parameter>
 </mediaTemplate>

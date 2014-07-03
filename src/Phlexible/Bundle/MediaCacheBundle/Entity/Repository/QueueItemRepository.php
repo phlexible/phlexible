@@ -40,8 +40,7 @@ class QueueItemRepository extends EntityRepository
     public function countAll()
     {
         $qb = $this->createQueryBuilder('c')
-                   ->select('COUNT(c.id)')
-        ;
+            ->select('COUNT(c.id)');
 
         return $qb->getQuery()->getSingleScalarResult();
     }

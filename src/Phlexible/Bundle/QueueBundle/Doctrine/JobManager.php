@@ -83,8 +83,7 @@ class JobManager implements JobManagerInterface
             ->andWhere($qb->expr()->lte('j.executeAfter', $qb->expr()->literal(date('Y-m-d H:i:s'))))
             ->orderBy('j.priority', 'DESC')
             ->orderBy('j.createdAt', 'ASC')
-            ->setMaxResults(1)
-        ;
+            ->setMaxResults(1);
 
         $result = $qb->getQuery()->getResult();
         if (count($result)) {
@@ -121,7 +120,9 @@ class JobManager implements JobManagerInterface
      */
     public function addUniqueJob(Job $job)
     {
-        $queueItem = $this->jobRepository->findBy(array('command' => $job->getCommand(), 'arguments' => $job->getArguments()));
+        $queueItem = $this->jobRepository->findBy(
+            array('command' => $job->getCommand(), 'arguments' => $job->getArguments())
+        );
 
         if ($queueItem) {
             return;
@@ -196,8 +197,7 @@ class JobManager implements JobManagerInterface
         $qb = $this->jobRepository->createQueryBuilder('j');
         $qb
             ->delete('PhlexibleQueueBundle:Job', 'j')
-            ->where($qb->expr()->eq('j.state', $qb->expr()->literal($state)))
-        ;
+            ->where($qb->expr()->eq('j.state', $qb->expr()->literal($state)));
 
         $qb->getQuery()->execute();
     }

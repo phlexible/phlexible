@@ -17,12 +17,14 @@ class Documentlist extends \Dwoo\Plugin
 {
     /**
      * ID of media folder
+     *
      * @var int
      */
     protected $_folderId;
 
     /**
      * Path to partial for rendering list
+     *
      * @var string
      */
     protected $_partial;
@@ -40,7 +42,7 @@ class Documentlist extends \Dwoo\Plugin
     public function process($folderId, $partial, $docView, $data, $countPerPage = 10, $filter = false)
     {
         $request = $this->core->getData()['request'];
-        $tid      = $request->getTid();
+        $tid = $request->getTid();
         $language = $request->getLanguage();
 
         // variables for partial view
@@ -51,11 +53,10 @@ class Documentlist extends \Dwoo\Plugin
             'doc_view'     => $docView,
             'folder'       => $folderId,
             'countPerPage' => $countPerPage,
-            'filter'	   => $filter,
+            'filter'       => $filter,
         );
 
-        if (!function_exists('Dwoo_Plugin_include'))
-        {
+        if (!function_exists('Dwoo_Plugin_include')) {
             $this->core->getLoader()->loadPlugin('include');
         }
 

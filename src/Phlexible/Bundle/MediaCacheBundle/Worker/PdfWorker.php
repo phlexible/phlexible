@@ -71,13 +71,14 @@ class PdfWorker extends AbstractWorker
      * @param LoggerInterface              $logger
      * @param string                       $tempDir
      */
-    public function __construct(StorageManager $storageManager,
-                                CacheManagerInterface $cacheManager,
-                                DocumenttypeManagerInterface $documenttypeManager,
-                                CacheIdStrategyInterface $cacheIdStrategy,
-                                PdfTemplateApplier $applier,
-                                LoggerInterface $logger,
-                                $tempDir)
+    public function __construct(
+        StorageManager $storageManager,
+        CacheManagerInterface $cacheManager,
+        DocumenttypeManagerInterface $documenttypeManager,
+        CacheIdStrategyInterface $cacheIdStrategy,
+        PdfTemplateApplier $applier,
+        LoggerInterface $logger,
+        $tempDir)
     {
         $this->storageManager = $storageManager;
         $this->cacheManager = $cacheManager;
@@ -115,11 +116,11 @@ class PdfWorker extends AbstractWorker
      */
     private function work(PdfTemplate $template, FileInterface $file, $inputFilename)
     {
-        $site        = $file->getSite();
-        $fileId      = $file->getId();
+        $site = $file->getSite();
+        $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
-        $cacheId      = $this->cacheIdStrategy->createCacheId($template, $file);
+        $cacheId = $this->cacheIdStrategy->createCacheId($template, $file);
         $tempFilename = $this->tempDir . '/' . $cacheId . '.swf';
 
         $cacheItem = $this->cacheManager->find($cacheId);
@@ -143,9 +144,23 @@ class PdfWorker extends AbstractWorker
             ->setCreatedAt(new \DateTime());
 
         if (!file_exists($inputFilename)) {
-            $this->applyError($cacheItem, CacheItem::STATUS_MISSING, 'Input file not found.', $inputFilename, $template, $file);
+            $this->applyError(
+                $cacheItem,
+                CacheItem::STATUS_MISSING,
+                'Input file not found.',
+                $inputFilename,
+                $template,
+                $file
+            );
         } elseif (!$this->applier->isAvailable($inputFilename)) {
-            $this->applyError($cacheItem, CacheItem::STATUS_MISSING, 'No suitable pdf template applier found.', $inputFilename, $template, $file);
+            $this->applyError(
+                $cacheItem,
+                CacheItem::STATUS_MISSING,
+                'No suitable pdf template applier found.',
+                $inputFilename,
+                $template,
+                $file
+            );
         } else {
             $filesystem = new Filesystem();
             if (!$filesystem->exists($this->tempDir)) {

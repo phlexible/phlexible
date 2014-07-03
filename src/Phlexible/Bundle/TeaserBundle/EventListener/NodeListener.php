@@ -32,43 +32,59 @@ class NodeListener implements EventSubscriberInterface
         );
     }
 
+    /**
+     * @param NodeEvent $event
+     * @param array     $params
+     */
     public function onPublishNode(NodeEvent $event, array $params)
     {
         /* @var $container MWF_Container_ContainerInterface */
         $container = $params['container'];
 
         $node = $event->getNode();
-        $eid  = $node->getEid();
+        $eid = $node->getEid();
 
         $catchHelper = $container->get('phlexible_teaser.catch.helper');
         $catchHelper->updateOnline($eid);
     }
 
+    /**
+     * @param NodeEvent $event
+     * @param array     $params
+     */
     public function onSetNodeOffline(NodeEvent $event, array $params)
     {
         /* @var $container MWF_Container_ContainerInterface */
         $container = $params['container'];
 
-        $node     = $event->getNode();
-        $tid      = $node->getId();
+        $node = $event->getNode();
+        $tid = $node->getId();
         $language = $event->getLanguage();
 
         $catchHelper = $container->get('phlexible_teaser.catch.helper');
         $catchHelper->removeOnlineByTidAndLanguage($tid, $language);
     }
 
+    /**
+     * @param NodeEvent $event
+     * @param array     $params
+     */
     public function onDeleteNode(NodeEvent $event, array $params)
     {
         /* @var $container MWF_Container_ContainerInterface */
         $container = $params['container'];
 
         $node = $event->getNode();
-        $tid  = $node->getId();
+        $tid = $node->getId();
 
         $catchHelper = $container->get('phlexible_teaser.catch.helper');
         $catchHelper->removeByTid($tid);
     }
 
+    /**
+     * @param NodeEvent $event
+     * @param array     $params
+     */
     public function onUpdateNode(NodeEvent $event, array $params)
     {
         return;
@@ -76,19 +92,23 @@ class NodeListener implements EventSubscriberInterface
         $container = $params['container'];
 
         $node = $event->getNode();
-        $eid  = $node->getEid();
+        $eid = $node->getEid();
 
         $catchHelper = $container->get('phlexible_teaser.catch.helper');
         $catchHelper->updatePreview($eid);
     }
 
+    /**
+     * @param NodeEvent $event
+     * @param array     $params
+     */
     public function onCreateNodeInstance(NodeEvent $event, array $params)
     {
         /* @var $container MWF_Container_ContainerInterface */
         $container = $params['container'];
 
         $node = $event->getNode();
-        $eid  = $node->getEid();
+        $eid = $node->getEid();
 
         $catchHelper = $container->get('phlexible_teaser.catch.helper');
         $catchHelper->updatePreview($eid);

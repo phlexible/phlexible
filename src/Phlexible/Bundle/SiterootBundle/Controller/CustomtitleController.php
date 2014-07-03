@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\SiterootBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,7 +42,7 @@ class CustomtitleController extends Controller
 
         $siteroot = $siterootRepository->find($siterootId);
 
-        $headTitle      = $siteroot->getHeadTitle();
+        $headTitle = $siteroot->getHeadTitle();
         $startHeadTitle = $siteroot->getStartHeadTitle();
 
         // get all siteroot urls
