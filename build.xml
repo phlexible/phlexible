@@ -2,6 +2,11 @@
 
 <project name="phlexible" default="help">
 
+    <property name="src.dir" value="src/Phlexible" />
+    <property name="reports.dir" value="./reports" />
+    <property name="phpmd.rulesets" value="cleancode,codesize,naming" />
+    <property name="phpdoc.template" value="responsive-twig" />
+
     <!-- ============================================  -->
     <!-- Target: help                                  -->
     <!-- ============================================  -->
@@ -14,7 +19,7 @@
     <!-- ============================================  -->
     <target name="lint">
         <phplint>
-            <fileset dir="src/Phlexible">
+            <fileset dir="${src.dir}">
                 <include name="**/*.php"/>
             </fileset>
         </phplint>
@@ -24,8 +29,8 @@
     <!-- Target: prepare                               -->
     <!-- ============================================  -->
     <target name="prepare">
-        <echo msg="Making directory ./reports" />
-        <mkdir dir="./reports" />
+        <echo msg="Making directory ${reports.dir}" />
+        <mkdir dir="${reports.dir}" />
     </target>
 
     <!-- ============================================  -->
@@ -33,11 +38,11 @@
     <!-- ============================================  -->
     <target name="phpcpd" depends="prepare">
         <phpcpd>
-            <fileset dir="src/Phlexible">
+            <fileset dir="${src.dir}">
                 <include name="**/*.php"/>
             </fileset>
-            <formatter type="default" outfile="reports/phpcpd.txt"/>
-            <formatter type="pmd" outfile="reports/phpcpd.xml"/>
+            <formatter type="default" outfile="${reports.dir}/phpcpd.txt"/>
+            <formatter type="pmd" outfile="${reports.dir}/phpcpd.xml"/>
         </phpcpd>
     </target>
 
@@ -48,8 +53,8 @@
         <phploc countTests="true"
                 reportType="txt"
                 reportName="phploc"
-                reportDirectory="reports">
-            <fileset dir="src/Phlexible">
+                reportDirectory="${reports.dir}">
+            <fileset dir="${src.dir}">
                 <include name="**/*.php"/>
             </fileset>
         </phploc>
@@ -62,14 +67,44 @@
         <phpcodesniffer standard="Symfony2"
                         showSniffs="true"
                         showWarnings="true"
-                        file="src/Phlexible"
+                        file="${src.dir}"
                         docGenerator="HTML"
-                        docFile="reports/phpcs-standard.html"
-                        allowedFileExtensions="php">
-            <formatter type="html" outfile="reports/phpcs.html"/>
-            <formatter type="full" outfile="reports/phpcs.txt"/>
-            <formatter type="checkstyle" outfile="reports/phpcs.xml"/>
+                        docFile="${reports.dir}/phpcs-standard.html"
+                        allowedFileExtensions="php"
+                        ignorePatterns="*Test.php">
+            <formatter type="html" outfile="${reports.dir}/phpcs.html"/>
+            <formatter type="full" outfile="${reports.dir}/phpcs.txt"/>
+            <formatter type="checkstyle" outfile="${reports.dir}/phpcs.xml"/>
         </phpcodesniffer>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: phpmd                                 -->
+    <!-- ============================================  -->
+    <target name="phpmd" depends="prepare">
+        <phpmd rulesets="${phpmd.rulesets}"
+               allowedFileExtensions="php">
+            <fileset dir="${src.dir}">
+                <include name="**/*.php"/>
+            </fileset>
+            <formatter type="html" outfile="${reports.dir}/phpmd.html"/>
+            <formatter type="text" outfile="${reports.dir}/phpmd.txt"/>
+            <formatter type="xml" outfile="${reports.dir}/phpmd.xml"/>
+        </phpmd>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: pdepend                               -->
+    <!-- ============================================  -->
+    <target name="pdepend" depends="prepare">
+        <phpdepend allowedFileExtensions="php">
+            <fileset dir="${src.dir}">
+                <include name="**/*.php"/>
+            </fileset>
+            <logger type="jdepend-xml" outfile="${reports.dir}/pdepend-jdepend.xml"/>
+            <logger type="summary-xml" outfile="${reports.dir}/pdepend-summary.xml"/>
+            <analyzer type="coderank-mode" value="method"/>
+        </phpdepend>
     </target>
 
     <!-- ============================================  -->
@@ -77,11 +112,11 @@
     <!-- ============================================  -->
     <target name="phpdoc" depends="prepare">
         <echo msg="Making directory ./reports/apidocs" />
-        <mkdir dir="./reports/apidocs" />
+        <mkdir dir="${reports.dir}/apidocs" />
         <phpdoc2 title="phlexible API Documentation"
-                 destdir="reports/apidocs"
-                 template="responsive-twig">
-            <fileset dir="src/Phlexible">
+                 destdir="${reports.dir}/apidocs"
+                 template="${phpdoc.template}">
+            <fileset dir="${src.dir}">
                 <include name="**/*.php"/>
             </fileset>
         </phpdoc2>
