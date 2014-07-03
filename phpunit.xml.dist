@@ -9,9 +9,21 @@
     <testsuite name="phlexible">
         <directory>src/Phlexible/</directory>
     </testsuite>
+    <testsuite name="phlexible-bundles">
+        <directory>src/Phlexible/Bundle/</directory>
+    </testsuite>
+    <testsuite name="phlexible-components">
+        <directory>src/Phlexible/Component/</directory>
+    </testsuite>
+    <testsuite name="phlexible-access-control">
+        <directory>src/Phlexible/Bundle/AccessControlBundle</directory>
+    </testsuite>
+    <testsuite name="phlexible-data-source">
+        <directory>src/Phlexible/Bundle/DataSourceBundle</directory>
+    </testsuite>
     <filter>
-        <whitelist>
-            <directory suffix=".php">src/Phlexible/</directory>
-        </whitelist>
+        <blacklist>
+            <directory suffix=".php">src/Phlexible/Bundle/ElementBundle/Tests/Util/</directory>
+        </blacklist>
     </filter>
 </phpunit>
