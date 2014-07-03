@@ -75,6 +75,7 @@ class GarbageCollector
      */
     private function doRun(array $ids)
     {
+        $candidates = count($ids);
         $removed = 0;
         $activated = 0;
         $deactivated = 0;
@@ -90,8 +91,9 @@ class GarbageCollector
         }
 
         return array(
+            'candidates'  => $candidates,
             'removed'     => $removed,
-            '$activated'  => $activated,
+            'activated'   => $activated,
             'deactivated' => $deactivated,
         );
     }
@@ -191,7 +193,7 @@ class GarbageCollector
 
         // dispatch post event
         $event = new CollectionEvent($dataSource, $collection);
-        $this->dispatcher->dispatch(DataSourceEvents::BEFORE_MARK_ACTIVE, $event);
+        $this->dispatcher->dispatch(DataSourceEvents::MARK_INACTIVE, $event);
 
         return $count;
     }

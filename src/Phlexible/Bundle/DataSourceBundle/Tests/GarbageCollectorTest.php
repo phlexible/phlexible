@@ -8,26 +8,94 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\Tests;
 
+use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
+use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
+use Phlexible\Bundle\DataSourceBundle\GarbageCollector\GarbageCollector;
+use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class MWF_Core_DataSources_GarbageCollectorTest extends \PHPUnit_Framework_TestCase
+/**
+ * DataSource Test
+ *
+ * @author Phillip Look <pl@brainbits.net>
+ */
+class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
+     * @var GarbageCollector
      */
-    protected function setUp()
-    {
-        parent::setUp();
-    }
+    private $garbageCollector;
 
     /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
+     * @var DataSourceManagerInterface|MockObject
      */
-    protected function tearDown()
+    private $managerMock;
+
+    /**
+     * @var EventDispatcherInterface|MockObject
+     */
+    private $dispatcherMock;
+
+    public function setUp()
     {
-        parent::tearDown();
+        $this->dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
+        $this->managerMock = $this->getMockBuilder('Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface')->getMock();
+        $this->garbageCollector = new GarbageCollector($this->managerMock, $this->dispatcherMock);
+
+        $this->dispatcherMock
+            ->expects($this->any())
+            ->method('dispatch')
+            ->will($this->returnValue(new Event()));
+
+        $this->managerMock
+            ->expects($this->any())
+            ->method('getAllDataSourceLanguages')
+            ->will($this->returnValue(array('de')));
+
+        $datasource = new DataSource();
+
+        $this->managerMock
+            ->expects($this->any())
+            ->method('find')
+            ->will($this->returnValue($datasource));
+    }
+
+    public function testEvents()
+    {
+        $this->dispatcherMock
+            ->expects($this->at(0))
+            ->method('dispatch')
+            ->with(DataSourceEvents::BEFORE_DELETE_VALUES);
+
+        $this->dispatcherMock
+            ->expects($this->at(1))
+            ->method('dispatch')
+            ->with(DataSourceEvents::DELETE_VALUES);
+
+        $this->dispatcherMock
+            ->expects($this->at(2))
+            ->method('dispatch')
+            ->with(DataSourceEvents::BEFORE_MARK_ACTIVE);
+
+        $this->dispatcherMock
+            ->expects($this->at(3))
+            ->method('dispatch')
+            ->with(DataSourceEvents::MARK_ACTIVE);
+
+        $this->dispatcherMock
+            ->expects($this->at(4))
+            ->method('dispatch')
+            ->with(DataSourceEvents::BEFORE_MARK_INACTIVE);
+
+        $this->dispatcherMock
+            ->expects($this->at(5))
+            ->method('dispatch')
+            ->with(DataSourceEvents::MARK_INACTIVE);
+
+        $this->garbageCollector->run(Uuid::generate());
     }
 
     /**
@@ -35,17 +103,9 @@ class MWF_Core_DataSources_GarbageCollectorTest extends \PHPUnit_Framework_TestC
      */
     public function testRunWithSingleIdShouldCallInternalRunWithArray()
     {
-        // SETUP
-        $singleId = Uuid::generate();
+        $result = $this->garbageCollector->run(Uuid::generate());
 
-        $garbageCollector = $this->createGarbageCollectorMock(array('_run'));
-
-        $garbageCollector->expects($this->once())
-                         ->method('_run')
-                         ->with($this->equalTo(array($singleId)));
-
-        // EXERCISE
-        $garbageCollector->run($singleId);
+        $this->assertEquals(array('candidates' => 1, 'removed' => 0, 'activated' => 0, 'deactivated' => 0), $result);
     }
 
     /**
@@ -53,17 +113,11 @@ class MWF_Core_DataSources_GarbageCollectorTest extends \PHPUnit_Framework_TestC
      */
     public function testRunWithMultipleIdsShouldCallInternalRunWithArray()
     {
-        // SETUP
-        $multipleIds = $this->createArrayWithDataSourceIds();
+        $multipleIds = $this->createArrayWithDataSourceIds(5);
 
-        $garbageCollector = $this->createGarbageCollectorMock(array('_run'));
+        $result = $this->garbageCollector->run($multipleIds);
 
-        $garbageCollector->expects($this->once())
-                         ->method('_run')
-                         ->with($this->equalTo($multipleIds));
-
-        // EXERCISE
-        $garbageCollector->run($multipleIds);
+        $this->assertEquals(array('candidates' => 5, 'removed' => 0, 'activated' => 0, 'deactivated' => 0), $result);
     }
 
     /**
@@ -71,54 +125,16 @@ class MWF_Core_DataSources_GarbageCollectorTest extends \PHPUnit_Framework_TestC
      */
     public function testRunWithWithoutArgumentsShouldFetchAllIdsFromRepository()
     {
-        // SETUP
-        $dataSourceIds = $this->createArrayWithDataSourceIds();
+        $dataSourceIds = $this->createArrayWithDataSourceIds(10);
 
-        $repository       = $this->createRepositoryMock();
-        $garbageCollector = $this->createGarbageCollectorMock(array('_run'), $repository);
+        $this->managerMock
+            ->expects($this->any())
+            ->method('getAllDataSourceIds')
+            ->will($this->returnValue($dataSourceIds));
 
-        $repository->expects($this->any())
-                   ->method('getAllDataSourceIds')
-                   ->will($this->returnValue($dataSourceIds));
+        $result = $this->garbageCollector->run();
 
-        $garbageCollector->expects($this->once())
-                         ->method('_run')
-                         ->with($this->equalTo($dataSourceIds));
-
-        // EXERCISE
-        $garbageCollector->run();
-    }
-
-    /**
-     * Create a MWF_Core_DataSources_Repository mock object.
-     *
-     * @param array $allDataSourceIds ids returned by getAllDataSourceIds() [Optional]
-     *
-     * @return MWF_Core_DataSources_Repository
-     */
-    public function createRepositoryMock(array $allDataSourceIds = array())
-    {
-        $repository = $this->getMock('MWF_Core_DataSources_Repository', array(), array(), '', false);
-
-        return $repository;
-    }
-
-    public function createGarbageCollectorMock(array $methods = array(),
-                                               MWF_Core_DataSources_Repository $repository = null)
-    {
-        $dispatcher = $this->getMock('Brainbits_Event_Dispatcher', array(), array(), '', false);
-
-        if (null === $repository) {
-            $repository = $this->createRepositoryMock();
-        }
-
-        $garbageCollectorMock = $this->getMock(
-            'MWF_Core_DataSources_GarbageCollector',
-            $methods,
-            array($dispatcher, $repository)
-        );
-
-        return $garbageCollectorMock;
+        $this->assertEquals(array('candidates' => 10, 'removed' => 0, 'activated' => 0, 'deactivated' => 0), $result);
     }
 
     /**

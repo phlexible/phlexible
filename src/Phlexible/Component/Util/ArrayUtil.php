@@ -96,7 +96,7 @@ class ArrayUtil
         // do subsequent group by calls
         if (count($columns)) {
             foreach (array_keys($result) as $key) {
-                $result[$key] = self::groupBy($result[$key], $columns);
+                $result[$key] = $this->groupBy($result[$key], $columns);
             }
         }
 
@@ -186,51 +186,5 @@ class ArrayUtil
         }
 
         return false;
-    }
-
-    /**
-     * @param array  $inputData
-     * @param string $column
-     * @param bool   $reverse
-     * @param bool   $caseAware
-     *
-     * @return array
-     */
-    public function sortByColumn(array $inputData, $column, $reverse = false, $caseAware = true)
-    {
-        if (!count($inputData)) {
-            return array();
-        }
-
-        // extract key/value pairs for asort (array_multisort cannot sort UTF-8 correctly)
-        $keys = array_keys($inputData);
-        $columnData = Brainbits_Util_Array::column($inputData, $column);
-
-        if (!$caseAware) {
-            array_walk($columnData, array(__CLASS__, 'mbStrToLower'));
-        }
-
-        $toSort = array_combine($keys, $columnData);
-
-        $sortFunction = $reverse ? 'arsort' : 'asort';
-
-        $sortFunction($toSort, SORT_LOCALE_STRING);
-
-        $outputData = array();
-        foreach ($toSort as $key => $value) {
-            $outputData[$key] = $inputData[$key];
-        }
-
-        return $outputData;
-    }
-
-    /**
-     * @param string $str
-     *
-     * @return string
-     */
-    protected function mbStrToLower($str)
-    {
-        return mb_strtolower($str);
     }
 }

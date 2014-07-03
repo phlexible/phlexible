@@ -10,26 +10,13 @@ namespace Phlexible\Bundle\DataSourceBundle\Tests;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 
+/**
+ * DataSource Test
+ *
+ * @author Phillip Look <pl@brainbits.net>
+ */
 class DataSourceTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-    }
-
     /**
      * Set title
      */
