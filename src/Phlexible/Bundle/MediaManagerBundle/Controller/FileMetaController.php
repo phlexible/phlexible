@@ -48,7 +48,7 @@ class FileMetaController extends Controller
             if (!$metaData) {
                 continue;
             }
-            
+
             $fieldDatas = array();
             foreach ($metaSet->getFields() as $field) {
                 $fieldData = array(
