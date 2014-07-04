@@ -172,7 +172,7 @@ class AbstractField extends BaseAbstractField
             }
 
             $container = MWF_Registry::getContainer();
-            $mediaSiteManager = $container->get('mediasite.manager')->getByFileId($file->getID());
+            $mediaSiteManager = $container->get('phlexible_media_site.manager')->getByFileId($file->getID());
             $storageDriver = $mediaSiteManager->getStorageDriver();
 
             $urls = $storageDriver->getUrls($file);
@@ -202,7 +202,7 @@ class AbstractField extends BaseAbstractField
 
         if ($file !== null) {
             $container = MWF_Registry::getContainer();
-            $mediaSiteManager = $container->get('mediasite.manager')->getByFileId($file->getID());
+            $mediaSiteManager = $container->get('phlexible_media_site.manager')->getByFileId($file->getID());
             $storageDriver = $mediaSiteManager->getStorageDriver();
         }
 
@@ -273,7 +273,7 @@ class AbstractField extends BaseAbstractField
 
         if ($file !== null) {
             $container = MWF_Registry::getContainer();
-            $mediaSiteManager = $container->get('mediasite.manager')->getByFileId($file->getID());
+            $mediaSiteManager = $container->get('phlexible_media_site.manager')->getByFileId($file->getID());
             $storageDriver = $mediaSiteManager->getStorageDriver();
         }
 
@@ -337,7 +337,7 @@ class AbstractField extends BaseAbstractField
 
         if ($file !== null) {
             $container = MWF_Registry::getContainer();
-            $mediaSiteManager = $container->get('mediasite.manager')->getByFileId($file->getID());
+            $mediaSiteManager = $container->get('phlexible_media_site.manager')->getByFileId($file->getID());
             $storageDriver = $mediaSiteManager->getStorageDriver();
         }
 

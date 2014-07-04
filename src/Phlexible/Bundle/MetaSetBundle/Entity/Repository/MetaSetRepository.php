@@ -6,14 +6,15 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MetaSetBundle;
+namespace Phlexible\Bundle\MetaSetBundle\Entity\Repository;
+
+use Doctrine\ORM\EntityRepository;
 
 /**
- * Meta item exception
+ * Meta set repository
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ItemException extends \Exception
+class MetaSetRepository extends EntityRepository
 {
-
 }

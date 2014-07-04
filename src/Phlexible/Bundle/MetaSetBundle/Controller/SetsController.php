@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MetaSetBundle\MetaSet;
+use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -33,45 +33,45 @@ class SetsController extends Controller
      */
     public function listAction()
     {
-        $repository = $this->get('metasets.repository');
-        $sets = $repository->findAll();
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $metaSet = $metaSetManager->findAll();
 
         $data = array();
-        foreach ($sets as $set) {
+        foreach ($metaSet as $set) {
             $data[] = array(
                 'id'    => $set->getId(),
-                'title' => $set->getTitle(),
+                'title' => $set->getName(),
             );
         }
 
-        return new JsonResponse(array('sets'=> $data));
+        return new JsonResponse(array('sets' => $data));
     }
 
     /**
-     * List keys
+     * List fields
      *
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/keys", name="metasets_sets_keys")
+     * @Route("/fields", name="metasets_sets_fields")
      */
-    public function keysAction(Request $request)
+    public function fieldsAction(Request $request)
     {
         $id = $request->get('id');
 
-        $repository = $this->get('metasets.repository');
-        $set     = $repository->find($id);
-        $values  = $set->getKeys();
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $metaSet = $metaSetManager->find($id);
+        $fields = $metaSet->getFields();
 
         $data = array();
-        foreach ($values as $row) {
+        foreach ($fields as $field) {
             $data[] = array(
-                'key'          => $row['key'],
-                'type'         => $row['type'],
-                'required'     => $row['required'],
-                'synchronized' => $row['synchronized'],
-                'readonly'     => $row['readonly'],
-                'options'      => $row['options'],
+                'key'          => $field->getName(),
+                'type'         => $field->getType(),
+                'required'     => $field->isRequired(),
+                'synchronized' => $field->isSynchronized(),
+                'readonly'     => $field->isReadonly(),
+                'options'      => $field->getOptions(),
             );
         }
 
@@ -90,13 +90,13 @@ class SetsController extends Controller
     {
         $title = $request->get('title', 'new_set');
 
-        $set = new MetaSet();
-        $set->setTitle($title);
+        $metaSet = new MetaSet();
+        $metaSet->setName($title);
 
-        $repository = $this->get('metasets.repository');
-        $repository->save($set);
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $metaSetManager->updateMetaSet($metaSet);
 
-        return new ResultResponse(true, 'Set "'.$set->getTitle().'" created.');
+        return new ResultResponse(true, 'Meta Set "' . $metaSet->getName() . '" created.');
     }
 
     /**
@@ -109,11 +109,13 @@ class SetsController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $id   = $request->get('id');
+        $id = $request->get('id');
         $data = $request->get('data');
         $data = json_decode($data);
 
-        $keys    = array();
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $metaSet = $metaSetManager->find($id);
+
         foreach ($data as $item) {
             if (!empty($item['options'])) {
                 $options = array();
@@ -123,19 +125,23 @@ class SetsController extends Controller
                 $item['options'] = implode(',', $options);
             }
 
-            $keys[$item['key']] = array(
-                'type'         => $item['type'],
-                'required'     => !empty($item['required']) ? 1 : 0,
-                'synchronized' => !empty($item['synchronized']) ? 1 : 0,
-                'readonly'     => !empty($item['readonly']) ? 1 : 0,
-                'options'      => !empty($item['options']) ? $item['options'] : null,
-            );
+            if ($metaSet->hasField($item['key'])) {
+                $field = $metaSet->getField($item['key']);
+            } else {
+                $field = $metaSetManager->createMetaSetField();
+                $metaSet->addField($field);
+            }
+
+            $field
+                ->setType($item['type'])
+                ->setRequired(!empty($item['required']) ? 1 : 0)
+                ->setSynchronized(!empty($item['synchronized']) ? 1 : 0)
+                ->setReadonly(!empty($item['readonly']) ? 1 : 0)
+                ->setOptions(!empty($item['options']) ? $item['options'] : null);
         }
 
-        $set = $this->get('metasets.repository')->find($id);
-        $set->setKeys($keys)
-            ->save();
+        $metaSetManager->updateMetaSet($metaSet);
 
-        return new ResultResponse(true, 'Values for set "'.$set->getTitle().'" saved.');
+        return new ResultResponse(true, 'Values for set "' . $metaSet->getTitle() . '" saved.');
     }
 }

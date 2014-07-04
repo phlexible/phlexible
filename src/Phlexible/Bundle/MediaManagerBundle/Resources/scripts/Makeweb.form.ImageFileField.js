@@ -14,7 +14,7 @@ Ext.form.ImageFileField = Ext.extend(Ext.form.FileField, {
     emptyAddText: Phlexible.mediamanager.Strings.click_to_add_image,
 
     getPlaceholder: function () {
-        return Phlexible.component('/mediamanagerbundle/images/form-file-image.gif');
+        return Phlexible.component('/phlexiblemediamanager/images/form-file-image.gif');
     },
 
     onAdd: function () {

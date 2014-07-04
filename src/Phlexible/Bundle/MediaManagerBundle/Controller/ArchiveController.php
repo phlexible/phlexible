@@ -33,7 +33,7 @@ class ArchiveController extends Controller
      */
     public function zipAction(Request $request)
     {
-        $mediaSiteManager = $this->get('mediasite.manager');
+        $mediaSiteManager = $this->get('phlexible_media_site.manager');
 
         $folderID = $request->get('folder_id');
         $site = $mediaSiteManager->getByFolderId($folderID);

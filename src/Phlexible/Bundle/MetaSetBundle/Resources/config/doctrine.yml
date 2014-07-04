@@ -1,0 +1,4 @@
+services:
+    phlexible_meta_set.doctrine.meta_set_manager:
+        class: Phlexible\Bundle\MetaSetBundle\Doctrine\MetaSetManager
+        arguments: [@doctrine.orm.entity_manager]

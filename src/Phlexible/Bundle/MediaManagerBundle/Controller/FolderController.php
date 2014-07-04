@@ -40,7 +40,7 @@ class FolderController extends Controller
      */
     private function getSite($siteId = null)
     {
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
 
         if ($siteId) {
             return $siteManager->getSiteById($siteId);
@@ -60,6 +60,7 @@ class FolderController extends Controller
         $subFolders = $site->findFoldersByParentFolder($folder);
 
         $securityContext = $this->get('security.context');
+        $permissions = $this->get('phlexible_access_control.permissions');
 
         $children = array();
         foreach ($subFolders as $subFolder) {
@@ -77,7 +78,7 @@ class FolderController extends Controller
             }
             $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
             */
-            $userRights = array_keys($this->get('accesscontrol.right.registry')->getRights('internal', 'folder'));
+            $userRights = array_keys($permissions->getByType('folder-internal'));
 
             $tmp = array(
                 'id'        => $subFolder->getId(),
@@ -119,9 +120,10 @@ class FolderController extends Controller
         $data = array();
 
         $slots = new Slots();
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
         $dispatcher = $this->get('event_dispatcher');
         $securityContext = $this->get('security.context');
+        $permissions = $this->get('phlexible_access_control.permissions');
 
         if (!$folderId || $folderId === 'root') {
             foreach ($siteManager->getAll() as $site) {
@@ -140,7 +142,7 @@ class FolderController extends Controller
                 }
                 $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
                 */
-                $userRights = array_keys($this->get('accesscontrol.right.registry')->getRights('internal', 'folder'));
+                $userRights = array_keys($permissions->getByType('folder-internal'));
 
                 $slot = new SiteSlot();
                 $slot->setData(
@@ -209,11 +211,9 @@ class FolderController extends Controller
                     }
                     $userRights = array();
                     */
-                    $userRights = array_keys(
-                        $this->get('accesscontrol.right.registry')->getRights('internal', 'folder')
-                    );
+                    $userRights = array_keys($permissions->getByType('folder-internal'));;
 
-                    $folderUsageService = $this->get('mediamanager.usage.folder_usage_service');
+                    $folderUsageService = $this->get('phlexible_media_manager.folder_usage_manager');
                     $usage = $folderUsageService->getStatus($folder);
                     $usedIn = $folderUsageService->getUsedIn($folder);
                     // TODO: also files in folder!
@@ -267,7 +267,7 @@ class FolderController extends Controller
         $parentId = $request->get('parent_id');
         $name = $request->get('folder_name');
 
-        $site = $this->get('mediasite.manager')->getByFolderId($parentId);
+        $site = $this->get('phlexible_media_site.manager')->getByFolderId($parentId);
         $parentFolder = $site->findFolder($parentId);
 
         try {
@@ -373,7 +373,7 @@ class FolderController extends Controller
     public function propertiesAction(Request $request)
     {
         $folderId = $request->get('folder_id');
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
         $site = $siteManager->getByFolderId($folderId);
 
         try {

@@ -500,20 +500,20 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
 
         /*
          if (!r.data.present) {
-         prefix += '<img src="'+Phlexible.component('/mediamanager/images/bullet_cross.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
+         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_cross.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
          }
 
          if (r.data.used & 8) {
-         prefix += '<img src="'+Phlexible.component('/mediamanager/images/bullet_green.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
+         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_green.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
          }
          if (r.data.used & 4) {
-         prefix += '<img src="'+Phlexible.component('/mediamanager/images/bullet_yellow.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
+         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_yellow.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
          }
          if (r.data.used & 2) {
-         prefix += '<img src="'+Phlexible.component('/mediamanager/images/bullet_gray.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
+         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_gray.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
          }
          if (r.data.used & 1) {
-         prefix += '<img src="'+Phlexible.component('/mediamanager/images/bullet_black.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
+         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_black.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
          }
          if (r.data.used) {
          prefix += ' ';

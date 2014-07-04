@@ -6,7 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MetaSetBundle\MetaData;
+namespace Phlexible\Bundle\MetaSetBundle\Model;
+
+use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 
 /**
  * Meta data
@@ -19,6 +21,11 @@ class MetaData implements MetaDataInterface, \Countable
      * @var array
      */
     private $identifiers;
+
+    /**
+     * @var MetaSet
+     */
+    private $metaSet;
 
     /**
      * @var array
@@ -41,6 +48,32 @@ class MetaData implements MetaDataInterface, \Countable
         $this->identifiers = $identifiers;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMetaSet()
+    {
+        return $this->metaSet;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setMetaSet($metaSet)
+    {
+        $this->metaSet = $metaSet;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLanguages()
+    {
+        return array_keys($this->values);
     }
 
     /**

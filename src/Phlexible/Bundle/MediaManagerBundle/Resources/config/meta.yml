@@ -1,0 +1,16 @@
+services:
+    phlexible_media_manager.file_meta_set_resolver:
+        class: Phlexible\Bundle\MediaManagerBundle\Meta\FileMetaSetResolver
+        arguments: [@phlexible_meta_set.meta_set_manager]
+
+    phlexible_media_manager.folder_meta_set_resolver:
+        class: Phlexible\Bundle\MediaManagerBundle\Meta\FolderMetaSetResolver
+        arguments: [@phlexible_meta_set.meta_set_manager]
+
+    phlexible_media_manager.doctrine.file_meta_data_manager:
+        class: Phlexible\Bundle\MediaManagerBundle\Meta\FileMetaDataManager
+        arguments: [@doctrine.orm.entity_manager, "media_file_meta"]
+
+    phlexible_media_manager.doctrine.folder_meta_data_manager:
+        class: Phlexible\Bundle\MediaManagerBundle\Meta\FolderMetaDataManager
+        arguments: [@doctrine.orm.entity_manager, "media_folder_meta"]

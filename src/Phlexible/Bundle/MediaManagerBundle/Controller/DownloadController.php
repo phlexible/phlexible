@@ -33,7 +33,7 @@ class DownloadController extends Controller
         $fileId = $request->get('id');
         $fileVersion = $request->get('version', null);
 
-        $site = $this->get('mediasite.manager')->getByFileId($fileId);
+        $site = $this->get('phlexible_media_site.manager')->getByFileId($fileId);
         if ($fileVersion !== null) {
             $file = $site->getFilePeer()->getById($fileId, $fileVersion);
         } else {

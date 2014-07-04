@@ -6,7 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MetaSetBundle\MetaData;
+namespace Phlexible\Bundle\MetaSetBundle\Model;
+
+use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 
 /**
  * Meta data interface
@@ -26,6 +28,23 @@ interface MetaDataInterface
      * @return $this
      */
     public function setIdentifiers(array $identifiers);
+
+    /**
+     * @return MetaSet
+     */
+    public function getMetaSet();
+
+    /**
+     * @param MetaSet $metaSet
+     *
+     * @return $this
+     */
+    public function setMetaSet($metaSet);
+
+    /**
+     * @return array
+     */
+    public function getLanguages();
 
     /**
      * @param string $field

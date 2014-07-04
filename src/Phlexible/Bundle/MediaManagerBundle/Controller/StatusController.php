@@ -30,7 +30,7 @@ class StatusController extends Controller
      */
     public function indexAction()
     {
-        $sites = $this->get('mediasite.manager')->getAll();
+        $sites = $this->get('phlexible_media_site.manager')->getAll();
 
         $out = '<pre>';
 

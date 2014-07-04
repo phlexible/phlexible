@@ -21,15 +21,15 @@
 }
 
 .p-mediamanager-newfolder .p-header-image {
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/folderdialog.gif) no-repeat !important;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/folderdialog.gif) no-repeat !important;
 }
 
 .p-mediamanager-renamefolder .p-header-image {
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/folderdialog.gif) no-repeat !important;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/folderdialog.gif) no-repeat !important;
 }
 
 .p-mediamanager-renamefile .p-header-image {
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 .x-btn-text-icon-bold {
@@ -42,79 +42,79 @@
 }
 
 .p-foldertree .x-tree-node .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder.png);
 }
 
 .p-foldertree .x-tree-node-expanded .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open.png);
 }
 
 .p-foldertree .x-tree-node-leaf .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder.png);
 }
 
 .p-foldertree .x-tree-node-green .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-green.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-green.png);
 }
 
 .p-foldertree .x-tree-node-green.x-tree-node-expanded .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-green.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-green.png);
 }
 
 .p-foldertree .x-tree-node-green.x-tree-node-leaf .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-green.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-green.png);
 }
 
 .p-foldertree .x-tree-node-yellow .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-yellow.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-yellow.png);
 }
 
 .p-foldertree .x-tree-node-yellow.x-tree-node-expanded .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-yellow.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-yellow.png);
 }
 
 .p-foldertree .x-tree-node-yellow.x-tree-node-leaf .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-yellow.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-yellow.png);
 }
 
 .p-foldertree .x-tree-node-orange .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-orange.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-orange.png);
 }
 
 .p-foldertree .x-tree-node-orange.x-tree-node-expanded .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-orange.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-orange.png);
 }
 
 .p-foldertree .x-tree-node-orange.x-tree-node-leaf .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-orange.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-orange.png);
 }
 
 .p-foldertree .x-tree-node-black .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-black.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-black.png);
 }
 
 .p-foldertree .x-tree-node-black.x-tree-node-expanded .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-black.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-black.png);
 }
 
 .p-foldertree .x-tree-node-black.x-tree-node-leaf .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-black.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-black.png);
 }
 
 .p-foldertree .x-tree-node-gray .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-gray.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-gray.png);
 }
 
 .p-foldertree .x-tree-node-gray.x-tree-node-expanded .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-gray.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-gray.png);
 }
 
 .p-foldertree .x-tree-node-gray.x-tree-node-leaf .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/mediamanager/icons/folder-open-gray.png);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/icons/folder-open-gray.png);
 }
 
 .p-foldertree .p-trash-node .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/documenttypes/mimetypes16/_trash_empty.gif);
+    background-image: url(/COMPONENTSPATH/phlexibledocumenttypes/mimetypes16/_trash_empty.gif);
 }
 
 .p-item {
@@ -256,7 +256,7 @@
     width: 270px;
     height: 278px;
     margin-bottom: 30px;
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-extralarge-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/bg-extralarge-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
 
 .x-grid3-row-over .p-mediamanager-extralarge-thumbs {
@@ -313,7 +313,7 @@
     width: 114px;
     height: 118px;
     margin-bottom: 30px;
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-large-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/bg-large-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
 
 .x-grid3-row-over .p-mediamanager-large-thumbs {
@@ -366,7 +366,7 @@
     width: 114px;
     height: 70px;
     margin-bottom: 30px;
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-medium-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/bg-medium-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
 
 .x-grid3-row-over .p-mediamanager-medium-thumbs {
@@ -415,7 +415,7 @@
 .p-mediamanager-small-thumbs {
     width: 243px;
     height: 19px;
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-small-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/bg-small-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
 
 .x-grid3-row-over .p-mediamanager-small-thumbs {
@@ -471,7 +471,7 @@
 }
 
 .x-grid3-row .p-mediamanager-tile-thumbs {
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-tile-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/bg-tile-thumbnail.gif) no-repeat scroll 0pt -3000px;
     height: 52px;
     width: 219px;
 }
@@ -549,7 +549,7 @@
     width: 610px;
     height: 118px;
     margin-bottom: 30px;
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/bg-timeline-thumbnail.gif) no-repeat scroll 0pt -3000px;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/bg-timeline-thumbnail.gif) no-repeat scroll 0pt -3000px;
 }
 
 .x-grid3-row-over .p-mediamanager-timeline-thumbs {
@@ -637,7 +637,7 @@
 
 .p-mediamanager-check-col {
     background-color: transparent;
-    background-image: url(/COMPONENTSPATH/mediamanager/images/checkbox-off.gif);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/images/checkbox-off.gif);
     background-position: center center;
     background-repeat: no-repeat;
     height: 16px;
@@ -646,7 +646,7 @@
 
 .p-mediamanager-check-col-on {
     background-color: transparent;
-    background-image: url(/COMPONENTSPATH/mediamanager/images/checkbox-on.gif);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/images/checkbox-on.gif);
     background-position: center center;
     background-repeat: no-repeat;
     height: 16px;
@@ -655,7 +655,7 @@
 
 .p-mediamanager-check-inherit-col {
     background-color: transparent;
-    background-image: url(/COMPONENTSPATH/mediamanager/images/checkbox-inherit-off.gif);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/images/checkbox-inherit-off.gif);
     background-position: center center;
     background-repeat: no-repeat;
     height: 16px;
@@ -664,7 +664,7 @@
 
 .p-mediamanager-check-inherit-col-on {
     background-color: transparent;
-    background-image: url(/COMPONENTSPATH/mediamanager/images/checkbox-inherit-on.gif);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/images/checkbox-inherit-on.gif);
     background-position: center center;
     background-repeat: no-repeat;
     height: 16px;

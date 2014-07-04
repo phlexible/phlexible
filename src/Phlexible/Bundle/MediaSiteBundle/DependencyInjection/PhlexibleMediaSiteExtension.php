@@ -35,9 +35,7 @@ class PhlexibleMediaSiteExtension extends Extension
 
         $ids = array();
         foreach ($config['sites'] as $name => $siteConfig) {
-            $driverId = 'phlexible_media_site.driver.' . strtolower($name);
-            $driverDefinition = new Definition($siteConfig['driver'], array(new Reference('database.connection.default'), $name));
-            $container->setDefinition($driverId, $driverDefinition);
+            $driverId = $siteConfig['driver'];
 
             $siteDefinition = new Definition('Phlexible\Bundle\MediaSiteBundle\Site\Site', array(
                 $siteConfig['id'],

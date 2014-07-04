@@ -51,9 +51,9 @@ class ImportCommand extends ContainerAwareCommand
 
         $site = $input->getOption('targetSite');
         if ($site) {
-            $site = $this->getContainer()->get('mediasite.manager')->get($site);
+            $site = $this->getContainer()->get('phlexible_media_site.manager')->get($site);
         } else {
-            $site = $this->getContainer()->get('mediasite.manager')->get('mediamanager');
+            $site = $this->getContainer()->get('phlexible_media_site.manager')->get('mediamanager');
         }
 
         $targetDir = $input->getArgument('targetDir');

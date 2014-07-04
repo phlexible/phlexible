@@ -33,7 +33,7 @@ class MediaController extends Controller
     {
         $templateKey = str_replace('.jpg', '', $template);
 
-        $file = $this->get('mediasite.manager')->getByFileId($fileId)->findFile($fileId);
+        $file = $this->get('phlexible_media_site.manager')->getByFileId($fileId)->findFile($fileId);
         $template = $this->get('mediaTemplatesRepository')->find($templateKey);
 
         $outfile = $this->container->getParameter('app.web_dir') . '/media/' . $fileId . '/' . $templateKey . '.jpg';

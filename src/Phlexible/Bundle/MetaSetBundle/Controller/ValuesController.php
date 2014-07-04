@@ -34,8 +34,8 @@ class ValuesController extends Controller
         $sourceId = $request->get('source_id');
         $language = $request->get('language', 'en');
 
-        $repository = $this->get('datasources.repository');
-        $datasource = $repository->getDataSourceById($sourceId, $language);
+        $repository = $this->get('phlexible_data_source.data_source_manager');
+        $datasource = $repository->find($sourceId);
         $keys = $datasource->getKeys();
 
         $data = array();

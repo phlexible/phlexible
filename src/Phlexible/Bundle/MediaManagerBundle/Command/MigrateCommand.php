@@ -45,7 +45,7 @@ class MigrateCommand extends ContainerAwareCommand
         $siteKey = $input->getArgument('site');
         $pretend = $input->getOption('pretend');
 
-        $site = $this->getContainer()->get('mediasite.manager')->get($siteKey);
+        $site = $this->getContainer()->get('phlexible_media_site.manager')->get($siteKey);
 
         if (get_class($site) !== 'Media_SiteDb_Site') {
             return 'Site has to be Media_SiteDb_Site.' . PHP_EOL;

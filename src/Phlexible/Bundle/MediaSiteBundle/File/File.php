@@ -95,7 +95,6 @@ class File implements FileInterface, IdentifiableInterface
     private $modifiedAt;
 
     /**
-     *
      * @return FileIdentifier
      */
     public function getIdentifier()

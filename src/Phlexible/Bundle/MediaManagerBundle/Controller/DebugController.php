@@ -35,7 +35,7 @@ class DebugController extends Controller
     {
         $fileId = $request->get('file_id');
 
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
 
         $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId);
@@ -63,7 +63,7 @@ class DebugController extends Controller
     {
         $fileId = $request->get('file_id');
 
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
         $cacheRepository = $this->get('mediacache.repository');
         $templateRepository = $this->get('mediatemplates.repository');
 

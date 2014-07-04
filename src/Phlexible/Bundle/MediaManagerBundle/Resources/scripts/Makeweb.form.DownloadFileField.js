@@ -12,7 +12,7 @@ Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField, {
     removeIconCls: 'p-mediamanager-download_delete-icon',
 
     getPlaceholder: function () {
-        return Phlexible.component('/mediamanagerbundle/images/form-file-download.gif');
+        return Phlexible.component('/phlexiblemediamanager/images/form-file-download.gif');
     },
 
     onAdd: function () {
@@ -66,7 +66,7 @@ Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField, {
 
             var addButton = fileBoxButtons.createChild({
                 tag: 'img',
-                src: Phlexible.component('/mediamanager/icons/download_add.png'),
+                src: Phlexible.component('/phlexiblemediamanager/icons/download_add.png'),
                 alt: 'add',
                 width: 16,
                 height: 16
@@ -75,7 +75,7 @@ Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField, {
 
 //            var disableButton = fileBoxButtons.createChild({
 //                tag: 'img',
-//                src: Phlexible.component('/mediamanager/icons/download_delete.png'),
+//                src: Phlexible.component('/phlexiblemediamanager/icons/download_delete.png'),
 //                alt: 'add',
 //                width: 16,
 //                height: 16
@@ -84,7 +84,7 @@ Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField, {
 
             this.delButton = fileBoxButtons.createChild({
                 tag: 'img',
-                src: Phlexible.component('/mediamanager/icons/download_delete.png'),
+                src: Phlexible.component('/phlexiblemediamanager/icons/download_delete.png'),
                 alt: 'add',
                 width: 16,
                 height: 16
@@ -132,7 +132,7 @@ Ext.form.DownloadFileField = Ext.extend(Ext.form.FileField, {
             this.fileBoxLink.hide();
             var gotoButton = this.fileBoxLink.createChild({
                 tag: 'img',
-                src: Phlexible.component('/mediamanager/icons/download_link.png'),
+                src: Phlexible.component('/phlexiblemediamanager/icons/download_link.png'),
                 alt: 'preview',
                 width: 16,
                 height: 16

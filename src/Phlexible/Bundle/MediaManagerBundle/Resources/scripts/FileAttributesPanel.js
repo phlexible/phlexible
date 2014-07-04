@@ -157,16 +157,16 @@ Phlexible.mediamanager.FileAttributesPanel = Ext.extend(Ext.Panel, {
                         renderer: function (v) {
                             var out = '';
                             if (v & 8) {
-                                out += '<img src="' + Phlexible.component('/mediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                                out += '<img src="' + Phlexible.component('/phlexiblemediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
                             }
                             if (v & 4) {
-                                out += '<img src="' + Phlexible.component('/mediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                                out += '<img src="' + Phlexible.component('/phlexiblemediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
                             }
                             if (v & 2) {
-                                out += '<img src="' + Phlexible.component('/mediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                                out += '<img src="' + Phlexible.component('/phlexiblemediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
                             }
                             if (v & 1) {
-                                out += '<img src="' + Phlexible.component('/mediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                                out += '<img src="' + Phlexible.component('/phlexiblemediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
                             }
                             return out;
                         }
@@ -203,16 +203,16 @@ Phlexible.mediamanager.FileAttributesPanel = Ext.extend(Ext.Panel, {
                         renderer: function (v) {
                             var out = '';
                             if (v & 8) {
-                                out += '<img src="' + Phlexible.component('/mediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                                out += '<img src="' + Phlexible.component('/phlexiblemediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
                             }
                             if (v & 4) {
-                                out += '<img src="' + Phlexible.component('/mediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                                out += '<img src="' + Phlexible.component('/phlexiblemediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
                             }
                             if (v & 2) {
-                                out += '<img src="' + Phlexible.component('/mediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                                out += '<img src="' + Phlexible.component('/phlexiblemediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
                             }
                             if (v & 1) {
-                                out += '<img src="' + Phlexible.component('/mediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                                out += '<img src="' + Phlexible.component('/phlexiblemediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
                             }
                             return out;
                         }

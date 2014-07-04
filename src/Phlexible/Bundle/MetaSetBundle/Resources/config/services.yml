@@ -5,24 +5,6 @@ parameters:
     phlexible_meta_set.suggest.seperator: ,
 
 services:
-    phlexible_meta_set.dumper.xml:
-        class: Phlexible\Bundle\MetaSetBundle\Dumper\XmlDumper
-
-    phlexible_meta_set.dumper:
-        class: Phlexible\Bundle\MetaSetBundle\MetaSet\MetaSetDumper
-        arguments: [@phlexible_meta_set.dumper.xml, %phlexible_meta_set.file_dir%]
-
-    phlexible_meta_set.loader.xml:
-        class: Phlexible\Bundle\MetaSetBundle\Loader\XmlLoader
-
-    phlexible_meta_set.loader:
-        class: Phlexible\Bundle\MetaSetBundle\MetaSet\MetaSetLoader
-        arguments: [%kernel.bundles%, %phlexible_meta_set.file_dir%, [@phlexible_meta_set.loader.xml]]
-
-    phlexible_meta_set.repository:
-        class: Phlexible\Bundle\MetaSetBundle\MetaSet\MetaSetRepository
-        arguments: [@phlexible_meta_set.loader, @phlexible_meta_set.dumper]
-
     phlexible_meta_set.data.repository:
         class: Phlexible\Bundle\MetaSetBundle\MetaData\MetaDataRepository
         arguments: [@connection_manager]

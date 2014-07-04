@@ -38,7 +38,7 @@ class MediaController extends Controller
         $fileVersion = $request->get('file_version', 1);
         $templateKey = $request->get('template_key');
 
-        $cacheRepository = $this->get('phlexible_media_cache.repository');
+        $cacheManager = $this->get('phlexible_media_cache.cache_manager');
         $storageManager = $this->get('phlexible_media_cache.storage_manager');
         $templateManager = $this->get('phlexible_media_template.template_manager');
         $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
@@ -46,7 +46,7 @@ class MediaController extends Controller
         $siteManager = $this->get('phlexible_media_site.manager');
 
         try {
-            $cacheItem = $cacheRepository->findByTemplateAndFile($templateKey, $fileId, $fileVersion);
+            $cacheItem = $cacheManager->findByTemplateAndFile($templateKey, $fileId, $fileVersion);
             if ($cacheItem->getTemplateKey() !== $templateKey) {
                 throw new \Exception('Requested template key <=> cache item template key mismatch.');
             }

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Alchemy\Zippy\Zippy;
-use Phlexible\Bundle\DocumenttypeBundle\Documenttype\Documenttype;
+use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
@@ -35,7 +35,7 @@ class FileController extends Controller
      */
     private function getSiteByFolderId($folderId)
     {
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
 
         return $siteManager->getByFolderId($folderId);
     }
@@ -70,9 +70,9 @@ class FileController extends Controller
         $folder = $site->findFolder($folderId);
 
         if ($securityContext->isGranted('FILE_READ', $folder)) {
-            $files = $site->findFilesByFolder($folder, $start, $limit, $sort, $dir, $showHidden);
+            $files = $site->findFilesByFolder($folder, array($sort => $dir), $limit, $start, $showHidden);
             $total = $site->countFilesByFolder($folder, $showHidden);
-            $data = $this->filesToArray($files);
+            $data = $this->filesToArray($site, $files);
         }
 
         return new JsonResponse(array('files' => $data, 'totalCount' => $total));
@@ -81,19 +81,22 @@ class FileController extends Controller
     /**
      * Build file list
      *
+     * @param SiteInterface   $site
      * @param FileInterface[] $files
      *
      * @return array
      */
-    private function filesToArray(array $files)
+    private function filesToArray(SiteInterface $site, array $files)
     {
         $data = array();
-        $userRepository = $this->get('users.repository');
-        $documenttypesRepository = $this->get('documenttypes.repository');
+        $userManager = $this->get('phlexible_user.user_manager');
+        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+
+        $hasVersions = $site->hasFeature('versions');
 
         foreach ($files as $file) {
             try {
-                $createUser = $userRepository->find($file->getCreateUserID());
+                $createUser = $userManager->find($file->getCreateUserID());
                 $createUserName = $createUser->getFirstname() . ' ' . $createUser->getLastname();
             } catch (\Exception $e) {
                 $createUserName = 'Unknown';
@@ -101,7 +104,7 @@ class FileController extends Controller
 
             try {
                 if ($file->getModifyUserID()) {
-                    $modifyUser = $userRepository->find($file->getModifyUserID());
+                    $modifyUser = $userManager->find($file->getModifyUserID());
                     $modifyUserName = $modifyUser->getFirstname() . ' ' . $modifyUser->getLastname();
                 } else {
                     $modifyUserName = '';
@@ -113,7 +116,7 @@ class FileController extends Controller
             $properties = array(
                 //'attributes'    => array(),
                 //'attributesCnt' => 0,
-                'versions' => $file->getSite()->hasFeature('versions'),
+                'versions' => $hasVersions,
                 'debug'    => array(
                     'mimeType'     => $file->getMimeType(),
                     'documentType' => strtolower($file->getAttribute('documenttype')),
@@ -133,7 +136,7 @@ class FileController extends Controller
             $properties['meta'] = $meta;
             $properties['metaCnt'] = count($properties['meta']);
 
-            $documentType = $documenttypesRepository->find(strtolower($file->getAttribute('documenttype')));
+            $documentType = $documenttypeManager->find(strtolower($file->getAttribute('documenttype')));
 
             if (!$documentType) {
                 $documentType = new Documenttype();
@@ -144,30 +147,30 @@ class FileController extends Controller
             $documentTypeTitle = $documentType->getTitle($interfaceLanguage);
 
             $version = 1;
-            if ($file->getSite()->hasFeature('versions')) {
+            if ($hasVersions) {
                 $version = $file->getVersion();
             }
 
-            $cacheItems = $this->get('mediacache.repository')->findByFile($file->getID(), $version);
+            $cacheItems = $this->get('phlexible_media_cache.cache_manager')->findByFile($file->getID(), $version);
             $cache = array();
             foreach ($cacheItems as $cacheItem) {
                 $cache[$cacheItem->getTemplateKey()] = $cacheItem->getStatus();
             }
 
-            $fileUsageService = $this->get('mediamanager.usage.file_usage_service');
-            $usage = $fileUsageService->getStatus($file);
-            $usedIn = $fileUsageService->getUsedIn($file);
+            $fileUsageManager = $this->get('phlexible_media_manager.file_usage_manager');
+            $usage = $fileUsageManager->getStatus($file);
+            $usedIn = $fileUsageManager->getUsedIn($file);
 
             $focal = 0;
             if ($file->getAttribute('focalpoint')) {
                 $focal = 1;
             }
 
-            $folder = $file->getSite()->findFolder($file->getFolderId());
+            $folder = $site->findFolder($file->getFolderId());
             $data[] = array(
                 'id'                => $file->getID(),
                 'name'              => $file->getName(),
-                'site_id'           => $file->getSite()->getId(),
+                'site_id'           => $site->getId(),
                 'folder_id'         => $file->getFolderID(),
                 'folder'            => '/Root/' . $folder->getPath(),
                 'asset_type'        => strtolower($file->getAttribute('assettype')),
@@ -208,7 +211,7 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
 
         foreach ($fileIds as $fileId) {
             $site = $siteManager->getByFileId($fileId);
@@ -232,7 +235,7 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
 
         foreach ($fileIds as $fileId) {
             $site = $siteManager->getByFileId($fileId);
@@ -256,7 +259,7 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
 
         foreach ($fileIds as $fileId) {
             $site = $siteManager->getByFileId($fileId);
@@ -280,7 +283,7 @@ class FileController extends Controller
         $fileId = $request->get('id');
         $fileVersion = $request->get('version', 1);
 
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
 
         $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId, $fileVersion);
@@ -412,7 +415,7 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $name = $request->get('file_name');
 
-        $site = $this->get('mediasite.manager')->getByFileId($fileId);
+        $site = $this->get('phlexible_media_site.manager')->getByFileId($fileId);
 
         $file = $site->findFile($fileId);
         $site->renameFile($file, $name, $this->getUser()->getId());
@@ -431,7 +434,7 @@ class FileController extends Controller
         $fileIds = $request->get('data');
         $fileIds = json_decode($fileIds);
 
-        $site = $this->get('mediasite.manager')->getByFileId(current($fileIds));
+        $site = $this->get('phlexible_media_site.manager')->getByFileId(current($fileIds));
         $filename = $this->container->getParameter('media.manager.temp_dir') . 'files_' . date('YmdHis') . '.zip';
 
         $zippy = Zippy::load();
@@ -456,7 +459,7 @@ class FileController extends Controller
     {
         $id = $request->get('id');
 
-        $site = $this->get('mediasite.manager')->getByFileId($id);
+        $site = $this->get('phlexible_media_site.manager')->getByFileId($id);
 
         $detail = array();
         foreach ($site->findFileVersions($id) as $file) {

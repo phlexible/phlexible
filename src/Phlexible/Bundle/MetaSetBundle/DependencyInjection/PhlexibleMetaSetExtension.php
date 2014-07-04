@@ -34,5 +34,8 @@ class PhlexibleMetaSetExtension extends Extension
         $container->setParameter('phlexible_meta_set.languages.default', $config['languages']['default']);
         $container->setParameter('phlexible_meta_set.languages.available', $config['languages']['available']);
         $container->setParameter('phlexible_meta_set.suggest.seperator', $config['suggest']['seperator']);
+
+        $loader->load('doctrine.yml');
+        $container->setAlias('phlexible_meta_set.meta_set_manager', 'phlexible_meta_set.doctrine.meta_set_manager');
     }
 }

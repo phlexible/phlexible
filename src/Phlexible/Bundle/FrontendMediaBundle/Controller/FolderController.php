@@ -34,7 +34,7 @@ class FolderController extends Controller
 
         $securityContext = $this->get('security.context');
 
-        foreach ($this->get('mediasite.manager')->getAll() as $site) {
+        foreach ($this->get('phlexible_media_site.manager')->getAll() as $site) {
             $rootFolder = $site->findRootFolder();
 
 

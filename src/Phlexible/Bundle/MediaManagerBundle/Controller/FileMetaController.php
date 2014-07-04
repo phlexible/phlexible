@@ -35,43 +35,42 @@ class FileMetaController extends Controller
         $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
-        $file = $this->get('mediasite.manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
+        $file = $this->get('phlexible_media_site.manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
 
-        //$metaResolver = $this->get('mediamanager.meta.resolver');
-        $metasetRepository = $this->get('metasets.repository');
-        $metadataRepository = $this->get('metasets.data.repository');
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
 
         $meta = array();
-        foreach ($file->getAttribute('metasets') as $id) {
-            $metaset = $metasetRepository->find($id);
-            $metadata = $metadataRepository->load(
-                $metaset,
-                array('file_id' => $fileId, 'file_version' => $fileVersion)
-            );
+        foreach ($file->getAttribute('metasets', array()) as $metaSetId) {
+            $metaSet = $metaSetManager->find($metaSetId);
+            $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
 
+            if (!$metaData) {
+                continue;
+            }
+            
             $fieldDatas = array();
-            foreach ($metaset->getFields() as $field) {
+            foreach ($metaSet->getFields() as $field) {
                 $fieldData = array(
-                    'key'          => $field->getKey(),
+                    'key'          => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $field->getOptions(),
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
-                    'value_de'     => $metadata->get($field->getKey(), 'de'),
-                    'value_en'     => $metadata->get($field->getKey(), 'en'),
                 );
+                foreach ($metaData->getLanguages() as $language) {
+                    $fieldData["value_$language"] = $metaData->get($field->getName(), $language);
+                }
                 $fieldDatas[] = $fieldData;
             }
 
             $meta[] = array(
-                'set_id' => $id,
-                'title'  => $metaset->getTitle(),
+                'set_id' => $metaSetId,
+                'title'  => $metaSet->getName(),
                 'fields' => $fieldDatas
             );
         }
-
-        //$meta = array();//$metaResolver->getFileMeta($fileId, $fileVersion);
 
         return new JsonResponse(array('meta' => $meta));
     }
@@ -87,16 +86,17 @@ class FileMetaController extends Controller
         $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
-        $site = $this->get('mediasite.manager')->getByFileId($fileId);
-        $file = $site->findFile($fileId, $fileVersion);
+        $siteManager = $this->get('phlexible_media_site.manager');
+        $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
 
-        $metasetIds = $file->getAttribute('metasets');
+        $folder = $siteManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
+        $metaSets = $fileMetaSetResolver->resolve($folder);
 
         $sets = array();
-        foreach ($metasetIds as $metasetId) {
+        foreach ($metaSets as $metaSet) {
             $sets[] = array(
-                'set_id' => $metasetId,
-                'name'   => $metasetId
+                'set_id' => $metaSet->getId(),
+                'name'   => $metaSet->getName(),
             );
         }
 
@@ -114,25 +114,24 @@ class FileMetaController extends Controller
         $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
-        $site = $this->get('mediasite.manager')->getByFileId($fileId);
-        $file = $site->findFile($fileId, $fileVersion);
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
+        $siteManager = $this->get('phlexible_media_site.manager');
 
-        $metasetsRepository = $this->get('metasets.repository');
+        $file = $siteManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
 
-        $metasets = $file->getAttribute('metasets');
-
-        $availableSets = array();
-        foreach ($metasetsRepository->findAll() as $metaset) {
-            if (!isset($metasets[$metaset->getId()])) {
-                $availableSets[] = $metaset;
+        $metaSets = $metaSetManager->findAll();
+        foreach ($fileMetaSetResolver->resolve($file) as $index => $metaSet) {
+            if (in_array($metaSet, $metaSets)) {
+                unset($metaSets[$index]);
             }
         }
 
         $sets = array();
-        foreach ($availableSets as $metaset) {
+        foreach ($metaSets as $metaSet) {
             $sets[] = array(
-                'set_id' => $metaset->getId(),
-                'name'   => $metaset->getTitle()
+                'set_id' => $metaSet->getId(),
+                'name'   => $metaSet->getTitle(),
             );
         }
 
@@ -151,14 +150,18 @@ class FileMetaController extends Controller
         $fileVersion = $request->get('file_version', 1);
         $setId = $request->get('set_id');
 
-        $site = $this->get('mediasite.manager')->getByFileId($fileId);
+        $siteManager = $this->get('phlexible_media_site.manager');
+
+        $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId, $fileVersion);
 
-        $metasets = $file->getAttribute('metasets', array());
-        if (!in_array($setId, $metasets)) {
-            $metasets[] = $setId;
-            $file->setAttribute('metasets', $metasets);
-            $site->setFileAttributes($file, $file->getAttributes());
+        $attributes = $file->getAttributes();
+        if (!isset($attributes['metasets'])) {
+            $attributes['metasets'] = array();
+        }
+        if (!in_array($setId, $attributes['metasets'])) {
+            $attributes['metasets'][] = $setId;
+            $site->setFileAttributes($file, $attributes);
         }
 
         return new ResultResponse(true, 'Set added.');
@@ -176,15 +179,15 @@ class FileMetaController extends Controller
         $fileVersion = $request->get('file_version', 1);
         $setId = $request->get('set_id');
 
-        $site = $this->get('mediasite.manager')->getByFileId($fileId);
+        $siteManager = $this->get('phlexible_media_site.manager');
+
+        $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId, $fileVersion);
 
-
-        $metasets = $file->getAttribute('metasets', array());
-        if (in_array($setId, $metasets)) {
-            unset($metasets[array_search($setId, $metasets)]);
-            $file->setAttribute('metasets', $metasets);
-            $site->setFileAttributes($file, $file->getAttributes());
+        $attributes = $file->getAttributes();
+        if (isset($attributes['metasets']) && in_array($setId, $attributes['metasets'])) {
+            unset($attributes['metasets'][array_search($setId, $attributes['metasets'])]);
+            $site->setFileAttributes($file, $attributes);
         }
 
         return new ResultResponse(true, 'Set removed.');
@@ -208,7 +211,7 @@ class FileMetaController extends Controller
         $metaDefaultLanguage = $registry->getValue('system.languages.language.meta');
         $metaLanguages = $languagesManager->getSet('meta');
 
-        $site = $this->getContainer()->get('mediasite.manager')->getByFileId($fileId);
+        $site = $this->getContainer()->get('phlexible_media_site.manager')->getByFileId($fileId);
         $file = $site->findFile($fileId, $fileVersion);
         $asset = $this->getContainer()->mediaAssetManager->find($file);
 

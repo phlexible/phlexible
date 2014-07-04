@@ -50,7 +50,7 @@ class CleanCommand extends ContainerAwareCommand
         }
 
         $files = array();
-        $sites = $container->get('mediasite.manager')->getAll();
+        $sites = $container->get('phlexible_media_site.manager')->getAll();
         foreach ($sites as $site) {
             $files = array_merge($files, $this->_getFiles($site));
         }

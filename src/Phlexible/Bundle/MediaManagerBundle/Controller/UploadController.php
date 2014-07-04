@@ -39,7 +39,7 @@ class UploadController extends Controller
         $folderId = $request->get('folder_id', null);
 
         try {
-            $siteManager = $this->get('mediasite.manager');
+            $siteManager = $this->get('phlexible_media_site.manager');
             $site = $siteManager->getByFolderId($folderId);
             $folder = $site->findFolder($folderId);
 
@@ -111,8 +111,8 @@ class UploadController extends Controller
      */
     public function checkAction()
     {
-        $tempStorage = $this->get('mediamanager.upload.storage.temp');
-        $siteManager = $this->get('mediasite.manager');
+        $tempStorage = $this->get('phlexible_media_manager.upload.storage.temp');
+        $siteManager = $this->get('phlexible_media_site.manager');
         $documenttypeRepository = $this->get('documenttypes.repository');
 
         $data = array();
@@ -197,7 +197,7 @@ class UploadController extends Controller
         $uploadTempSession = new Zend_Session_Namespace('uploadTemp');
 
         $container = $this->getContainer();
-        $mediaSiteManager = $container->get('mediasite.manager');
+        $mediaSiteManager = $container->get('phlexible_media_site.manager');
 
         if (isset($uploadTempSession->siteId)) {
             $site = $mediaSiteManager->getSiteById($uploadTempSession->siteId);

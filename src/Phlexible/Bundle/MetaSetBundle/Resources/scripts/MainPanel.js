@@ -86,7 +86,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                     text: 'blubb'
                 },
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('metasets_sets_keys'),
+                    url: Phlexible.Router.generate('metasets_sets_fields'),
                     baseParams: {
                         id: ''
                     },

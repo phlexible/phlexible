@@ -30,7 +30,7 @@ class SearchController extends Controller
      */
     private function getSiteByFolderId($folderId)
     {
-        $siteManager = $this->get('mediasite.manager');
+        $siteManager = $this->get('phlexible_media_site.manager');
 
         return $siteManager->getByFolderId($folderId);
     }
@@ -53,7 +53,7 @@ class SearchController extends Controller
         }
 
         // TODO: need site_id
-        $site = $this->get('mediasite.manager')->get('mediamanager');
+        $site = $this->get('phlexible_media_site.manager')->get('mediamanager');
 
         $db = $this->get('connection_manager')->default;
 

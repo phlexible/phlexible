@@ -14,7 +14,7 @@ Ext.form.VideoFileField = Ext.extend(Ext.form.FileField, {
     emptyAddText: Phlexible.mediamanager.Strings.click_to_add_video,
 
     getPlaceholder: function () {
-        return Phlexible.component('/mediamanagerbundle/images/form-file-video.gif');
+        return Phlexible.component('/phlexiblemediamanager/images/form-file-video.gif');
     },
 
     onAdd: function () {

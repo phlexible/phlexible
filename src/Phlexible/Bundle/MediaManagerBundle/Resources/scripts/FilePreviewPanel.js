@@ -148,7 +148,7 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
                 }
             ]
         };
-        return '<embed src="' + Phlexible.component('/mediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
+        return '<embed src="' + Phlexible.component('/phlexiblemediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
     },
 
     createVideoPlayer: function (width, height, file_id, file_version, file_name, cache) {
@@ -176,7 +176,7 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
                 }
             ]
         };
-        return '<embed src="' + Phlexible.component('/mediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
+        return '<embed src="' + Phlexible.component('/phlexiblemediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
     },
 
     createImage: function (width, height, file_id, file_version, file_name, cache) {

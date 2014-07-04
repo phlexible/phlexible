@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\MediaSiteBundle\Entity\File;
+use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 
 /**
  * File usage
@@ -48,7 +49,7 @@ class FileUsage
     private $status;
 
     /**
-     * @var File
+     * @var FileInterface
      * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaSiteBundle\Entity\File")
      * @ORM\JoinColumns(
      *   @ORM\JoinColumn(name="file_id", referencedColumnName="id"),
@@ -56,4 +57,74 @@ class FileUsage
      * )
      */
     private $file;
+
+    /**
+     * @param FileInterface $file
+     * @param string        $usageType
+     * @param string        $usageId
+     * @param int           $status
+     */
+    public function __construct(FileInterface $file, $usageType, $usageId, $status)
+    {
+        $this->file = $file;
+        $this->usageType = $usageType;
+        $this->usageId = $usageId;
+        $this->status = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return FileInterface
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsageType()
+    {
+        return $this->usageType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsageId()
+    {
+        return $this->usageId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Return array represenattion of this usage
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'fileId'      => $this->file->getId(),
+            'fileVersion' => $this->file->getVersion(),
+            'usageType'   => $this->usageType,
+            'usageId'     => $this->usageId,
+            'status'      => $this->status,
+        );
+    }
 }

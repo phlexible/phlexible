@@ -27,6 +27,8 @@ class PhlexibleMediaManagerExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('meta.yml');
+        $loader->load('usage.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
@@ -39,6 +41,9 @@ class PhlexibleMediaManagerExtension extends Extension
         $container->setParameter('phlexible_media_manager.upload.disable_flash', $config['upload']['disable_flash']);
         $container->setParameter('phlexible_media_manager.delete_policy', $config['delete_policy']);
 
-        $container->setAlias('phlexible_media_manager.usage.datamapper', 'phlexible_media_manager.usage.datamapper.database');
+        $container->setAlias('phlexible_media_manager.folder_usage_manager', 'phlexible_media_manager.doctrine.folder_usage_manager');
+        $container->setAlias('phlexible_media_manager.file_usage_manager', 'phlexible_media_manager.doctrine.file_usage_manager');
+        $container->setAlias('phlexible_media_manager.folder_meta_data_manager', 'phlexible_media_manager.doctrine.folder_meta_data_manager');
+        $container->setAlias('phlexible_media_manager.file_meta_data_manager', 'phlexible_media_manager.doctrine.file_meta_data_manager');
     }
 }

@@ -14,7 +14,7 @@ Ext.form.FlashFileField = Ext.extend(Ext.form.FileField, {
     emptyAddText: Phlexible.mediamanager.Strings.click_to_add_flash,
 
     getPlaceholder: function () {
-        return Phlexible.component('/mediamanagerbundle/images/form-file-flash.gif');
+        return Phlexible.component('/phlexiblemediamanager/images/form-file-flash.gif');
     },
 
     onAdd: function () {
@@ -69,7 +69,7 @@ Ext.form.FlashFileField = Ext.extend(Ext.form.FileField, {
 
             var addButton = fileBoxButtons.createChild({
                 tag: 'img',
-                src: Phlexible.component('/mediamanager/icons/flash_add.png'),
+                src: Phlexible.component('/phlexiblemediamanager/icons/flash_add.png'),
                 alt: 'add',
                 width: 16,
                 height: 16
@@ -78,7 +78,7 @@ Ext.form.FlashFileField = Ext.extend(Ext.form.FileField, {
 
 //            var disableButton = fileBoxButtons.createChild({
 //                tag: 'img',
-//                src: Phlexible.component('/mediamanager/icons/flash_delete.png'),
+//                src: Phlexible.component('/phlexiblemediamanager/icons/flash_delete.png'),
 //                alt: 'add',
 //                width: 16,
 //                height: 16
@@ -87,7 +87,7 @@ Ext.form.FlashFileField = Ext.extend(Ext.form.FileField, {
 
             this.delButton = fileBoxButtons.createChild({
                 tag: 'img',
-                src: Phlexible.component('/mediamanager/icons/flash_delete.png'),
+                src: Phlexible.component('/phlexiblemediamanager/icons/flash_delete.png'),
                 alt: 'add',
                 width: 16,
                 height: 16
@@ -133,7 +133,7 @@ Ext.form.FlashFileField = Ext.extend(Ext.form.FileField, {
             this.fileBoxLink.hide();
             var gotoButton = this.fileBoxLink.createChild({
                 tag: 'img',
-                src: Phlexible.component('/mediamanager/icons/flash_link.png'),
+                src: Phlexible.component('/phlexiblemediamanager/icons/flash_link.png'),
                 alt: 'preview',
                 width: 16,
                 height: 16
