@@ -24,6 +24,7 @@ class MetaSet
     /**
      * @var string
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
     private $id;
@@ -60,7 +61,7 @@ class MetaSet
 
     /**
      * @var MetaSetField[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="MetaSetField", mappedBy="metaSet")
+     * @ORM\OneToMany(targetEntity="MetaSetField", mappedBy="metaSet", indexBy="name")
      */
     private $fields;
 

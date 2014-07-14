@@ -30,7 +30,6 @@ Ext.extend(Phlexible.mediamanager.CustomGridView, Ext.grid.GroupingView, {
             medium: Phlexible.mediamanager.templates.GridRowMedium,
             small: Phlexible.mediamanager.templates.GridRowSmall,
             tile: Phlexible.mediamanager.templates.GridRowTile
-            //timeline: Phlexible.mediamanager.templates.GridRowTimeline
         };
         this.customCellTemplate = null;
         this.restoreState();

@@ -2,7 +2,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.meta,
     cls: 'p-mediamanager-meta-grid',
-    //iconCls: 'p-metasets-component-icon',
+    //iconCls: 'p-metaset-component-icon',
     stripeRows: true,
     emptyText: Phlexible.metasets.Strings.no_meta_values,
     enableColumnMove: false,

@@ -8,6 +8,8 @@ mediamanager:
     x_files: '{0} files'
     keywords: Keywords
     meta: Meta
+    file_meta: 'File Meta'
+    folder_meta: 'Folder Meta'
     no_meta_values: 'No meta data'
     key: Key
     value: Value

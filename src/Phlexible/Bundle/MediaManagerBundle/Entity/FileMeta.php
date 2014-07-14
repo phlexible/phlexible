@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\MediaSiteBundle\Entity\File;
+use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
 
 /**
  * File meta
@@ -37,21 +38,22 @@ class FileMeta
 
     /**
      * @var string
-     * @ORM\Column(name="meta_key", type="string", length=255)
+     * @ORM\Column(name="language", type="string", length=2, options={"fixed"=true})
      */
-    private $metaKey;
+    private $language;
 
     /**
      * @var string
-     * @ORM\Column(name="meta_language", type="string", length=2, options={"fixed"=true})
+     * @ORM\Column(name="value", type="text")
      */
-    private $metaLanguage;
+    private $value;
 
     /**
-     * @var string
-     * @ORM\Column(name="meta_value", type="text")
+     * @var MetaSetField
+     * @ORM\OneToOne(targetEntity="Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField")
+     * @ORM\JoinColumn(name="field_id", referencedColumnName="id")
      */
-    private $metaValue;
+    private $field;
 
     /**
      * @var File

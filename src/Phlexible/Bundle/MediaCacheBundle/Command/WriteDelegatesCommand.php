@@ -43,7 +43,7 @@ class WriteDelegatesCommand extends ContainerAwareCommand
     {
         $force = $input->getOption('force');
 
-        $delegateWorker = $this->getContainer()->get('mediacache.image_delegate.worker');
+        $delegateWorker = $this->getContainer()->get('phlexible_media_cache.image_delegate.worker');
 
         $delegateWorker->writeAll(
             $force,

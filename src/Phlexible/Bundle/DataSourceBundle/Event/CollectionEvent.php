@@ -8,21 +8,21 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\Event;
 
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
+use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Phlexible\Bundle\DataSourceBundle\Value\ValueCollection;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Mark inactive
+ * Collection event
  *
  * @author Phillip Look <pl@brainbits.net>
  */
 class CollectionEvent extends Event
 {
     /**
-     * @var DataSource
+     * @var DataSourceValueBag
      */
-    private $dataSource;
+    private $values;
 
     /**
      * @var ValueCollection
@@ -30,22 +30,22 @@ class CollectionEvent extends Event
     private $collection;
 
     /**
-     * @param DataSource      $dataSource
-     * @param ValueCollection $collection
+     * @param DataSourceValueBag $values
+     * @param ValueCollection    $collection
      */
-    public function __construct(DataSource $dataSource,
+    public function __construct(DataSourceValueBag $values,
                                 ValueCollection $collection)
     {
-        $this->dataSource = $dataSource;
+        $this->values = $values;
         $this->collection = $collection;
     }
 
     /**
-     * @return DataSource
+     * @return DataSourceValueBag
      */
-    public function getDataSource()
+    public function getDataSourceValueBag()
     {
-        return $this->dataSource;
+        return $this->values;
     }
 
     /**

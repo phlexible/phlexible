@@ -20,11 +20,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CacheItem
 {
-    const STATUS_WAITING = -1;
-    const STATUS_OK       = 0;
-    const STATUS_DELEGATE = 1;
-    const STATUS_ERROR    = 2;
-    const STATUS_MISSING  = 3;
+    const STATUS_WAITING  = 'waiting';
+    const STATUS_OK       = 'ok';
+    const STATUS_DELEGATE = 'delegate';
+    const STATUS_ERROR    = 'error';
+    const STATUS_MISSING  = 'missing';
 
     /**
      * @var string
@@ -64,8 +64,8 @@ class CacheItem
     private $templateRevision;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var string
+     * @ORM\Column(type="string", options={"length"=20})
      */
     private $status;
 
@@ -238,7 +238,7 @@ class CacheItem
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getStatus()
     {
@@ -246,7 +246,7 @@ class CacheItem
     }
 
     /**
-     * @param int $status
+     * @param string $status
      *
      * @return $this
      */

@@ -39,25 +39,34 @@ class FolderMetaController extends Controller
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
+        $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
         $meta = array();
+
         foreach ($folder->getAttribute('metasets', array()) as $metaSetId) {
             $metaSet = $metaSetManager->find($metaSetId);
             $metaData = $folderMetaDataManager->findByMetaSetAndFolder($metaSet, $folder);
 
             $fieldDatas = array();
+
             foreach ($metaSet->getFields() as $field) {
+                $options = $optionResolver->resolve($field);
+
                 $fieldData = array(
                     'key'          => $field->getName(),
                     'type'         => $field->getType(),
-                    'options'      => $field->getOptions(),
+                    'options'      => $options,
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
                 );
-                foreach ($metaData->getLanguages() as $language) {
-                    $fieldData["value_$language"] = $metaData->get($field->getName(), $language);
+
+                if ($metaData) {
+                    foreach ($metaData->getLanguages() as $language) {
+                        $fieldData["value_$language"] = $metaData->get($field->getId(), $language);
+                    }
                 }
+
                 $fieldDatas[] = $fieldData;
             }
 
@@ -75,7 +84,7 @@ class FolderMetaController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/listsets", name="mediamanager_folder_meta_listsets")
+     * @Route("/listsets", name="mediamanager_folder_meta_set_list")
      */
     public function listsetsAction(Request $request)
     {
@@ -102,7 +111,7 @@ class FolderMetaController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/availablesets", name="mediamanager_folder_meta_availablesets")
+     * @Route("/availablesets", name="mediamanager_folder_meta_set_available")
      */
     public function availablesetsAction(Request $request)
     {
@@ -125,7 +134,7 @@ class FolderMetaController extends Controller
         foreach ($metaSets as $metaSet) {
             $sets[] = array(
                 'set_id' => $metaSet->getId(),
-                'name'   => $metaSet->getTitle(),
+                'name'   => $metaSet->getName(),
             );
         }
 
@@ -136,7 +145,7 @@ class FolderMetaController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/addset", name="mediamanager_folder_meta_addset")
+     * @Route("/addset", name="mediamanager_folder_meta_set_add")
      */
     public function addsetAction(Request $request)
     {
@@ -164,7 +173,7 @@ class FolderMetaController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/removeset", name="mediamanager_folder_meta_removeset")
+     * @Route("/removeset", name="mediamanager_folder_meta_set_remove")
      */
     public function removesetAction(Request $request)
     {
@@ -197,18 +206,18 @@ class FolderMetaController extends Controller
         $data = $request->get('data');
         $data = json_decode($data, true);
 
-        $registry = $container->registry;
-        $languagesManager = $container->languagesManager;
-        $dispatcher = $container->dispatcher;
-        $metaManager = $container->mediaSiteFolderMetaManager;
+        $metaDefaultLanguage = $this->container->getParameter('phlexible_meta_set.languages.default');
+        $metaLanguages = explode(',', $this->container->getParameter('phlexible_meta_set.languages.available'));
 
-        $metaDefaultLanguage = $registry->getValue('system.languages.language.meta');
-        $metaLanguages = $languagesManager->getSet('meta');
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
+        $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
 
-        $site = Media_Site_Manager::getInstance()->getByFolderId($folderId);
-        $folder = $site->getFolderPeer()->getByID($folderId);
+        $site = $this->get('phlexible_media_site.manager')->getByFolderId($folderId);
+        $folder = $site->findFolder($folderId);
 
-        $beforeEvent = new Media_Manager_Event_BeforeSaveFolderMeta($folder);
+        /*
+        $beforeEvent = new BeforeSaveFolderMeta($folder);
         if ($dispatcher->dispatch($beforeEvent) === false) {
             $this->getResponse()->setAjaxPayload(
                 MWF_Ext_Result::encode(false, null, $beforeEvent->getCancelReason())
@@ -216,78 +225,48 @@ class FolderMetaController extends Controller
 
             return;
         }
+        */
 
-        $metaSetItems = $metaManager->getMetaSetItems($folderId, $metaDefaultLanguage);
+        $metaSetIds = $folder->getAttribute('metasets', array());
 
-        foreach ($data as $key => $row) {
-            if ('suggest' === $metaSetItems[$row['set_id']]->getType($key)) {
-                $dataSourceId = $metaSetItems[$row['set_id']]->getOptions($key);
-                $dataSourcesRepository = $container->get('dataSourcesRepository');
-                $dataSource = $dataSourcesRepository->getDataSourceById(
-                    $dataSourceId,
-                    $metaDefaultLanguage
-                );
-                $dataSourceKeys = $dataSource->getKeys();
-                $dataSourceModified = false;
-                foreach (explode(',', $row['value_' . $metaDefaultLanguage]) as $singleValue) {
-                    if (!in_array($singleValue, $dataSourceKeys)) {
-                        $dataSource->addKey($singleValue, true);
-                        $dataSourceModified = true;
+        foreach ($data as $metaSetId => $fields) {
+            $metaSet = $metaSetManager->find($metaSetId);
+            $metaData = $folderMetaDataManager->findByMetaSetAndFolder($metaSet, $folder);
+
+            if (!$metaData) {
+                $metaData = $folderMetaDataManager->createFolderMetaData($metaSet, $folder);
+            }
+
+            foreach ($fields as $fieldname => $row) {
+                foreach ($metaLanguages as $language) {
+                    if (!isset($row["value_$language"])) {
+                        continue;
                     }
-                }
-                if ($dataSourceModified) {
-                    $dataSourcesRepository->save($dataSource, MWF_Env::getUid());
+
+                    if (!$metaSet->hasField($fieldname)) {
+                        continue;
+                    }
+
+                    // TODO: löschen?
+                    if (empty($row["value_$language"])) {
+                        continue;
+                    }
+
+                    $value = $row["value_$language"];
+
+                    $metaData->set($fieldname, $value, $language);
                 }
             }
 
-            $metaSetItems[$row['set_id']]->$key = $row['value_' . $metaDefaultLanguage];
+            $folderMetaDataManager->updateMetaData($metaData);
         }
 
-        foreach ($metaSetItems as $metaSetItem) {
-            $metaSetItem->save();
-        }
-
-        unset($metaSetItems);
-
-        foreach ($metaLanguages as $metaLanguage) {
-            if ($metaLanguage === $metaDefaultLanguage) {
-                continue;
-            }
-
-            $metaSetItems = $metaManager->getMetaSetItems($folderId, $metaLanguage);
-
-            foreach ($data as $key => $row) {
-                if ('suggest' === $metaSetItems[$row['set_id']]->getType($key)) {
-                    $dataSourceId = $metaSetItems[$row['set_id']]->getOptions($key);
-                    $dataSourcesRepository = $container->get('dataSourcesRepository');
-                    $dataSource = $dataSourcesRepository->getDataSourceById(
-                        $dataSourceId,
-                        $metaLanguage
-                    );
-                    $dataSourceKeys = $dataSource->getKeys();
-                    $dataSourceModified = false;
-                    foreach (explode(',', $row['value_' . $metaLanguage]) as $singleValue) {
-                        if (!in_array($singleValue, $dataSourceKeys)) {
-                            $dataSource->addKey($singleValue, true);
-                            $dataSourceModified = true;
-                        }
-                    }
-                    if ($dataSourceModified) {
-                        $dataSourcesRepository->save($dataSource, MWF_Env::getUid());
-                    }
-                }
-
-                $metaSetItems[$row['set_id']]->$key = $row['value_' . $metaLanguage];
-            }
-
-            foreach ($metaSetItems as $metaSetItem) {
-                $metaSetItem->save();
-            }
-        }
-
+        /*
         $event = new Media_Manager_Event_SaveFolderMeta($folder);
         $dispatcher->dispatch($event);
+        */
 
+        /*
         $db = $container->dbPool->write;
         $updateData = array(
             'modify_user_id' => MWF_Env::getUid(),
@@ -301,6 +280,7 @@ class FolderMetaController extends Controller
             $updateData,
             $where
         );
+        */
 
         return new ResultResponse(true, 'Meta saved.');
     }

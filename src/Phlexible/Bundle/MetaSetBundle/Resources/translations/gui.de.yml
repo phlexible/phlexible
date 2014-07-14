@@ -1,7 +1,6 @@
 metasets:
     metasets: 'Meta sets'
-    meta: Datei-Meta
-    folder_meta: Ordner-Meta
+    meta: Meta
     no_meta_values: 'Keine Metadaten'
     key: Schlüssel
     value: Wert

@@ -90,7 +90,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 items: [
                     this.createFolderTreeConfig(),
                     this.createFilesGridConfig(),
-                    this.createFileAttributesPanelConfig()
+                    this.createAttributesPanelConfig()
                 ],
                 tbar: [
                     {
@@ -552,9 +552,9 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         });
     },
 
-    createFileAttributesPanelConfig: function () {
+    createAttributesPanelConfig: function () {
         return {
-            xtype: 'mediamanager-fileattributespanel',
+            xtype: 'mediamanager-attributespanel',
             region: 'east',
             width: 290,
             collapsible: true,

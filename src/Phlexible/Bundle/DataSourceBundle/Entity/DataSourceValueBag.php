@@ -11,14 +11,14 @@ namespace Phlexible\Bundle\DataSourceBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Data source value
+ * Data source value bag
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="datasource_value", indexes={@ORM\Index(columns={"datasource_id", "language", "key"})})
+ * @ORM\Table(name="datasource_value", indexes={@ORM\Index(columns={"datasource_id", "language"})})
  */
-class DataSourceValue
+class DataSourceValueBag
 {
     /**
      * @var string
@@ -36,21 +36,15 @@ class DataSourceValue
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(name="active_values", type="json_array")
      */
-    private $key;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    private $active;
+    private $activeValues = array();
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=32, unique=true, options={"fixed"=true})
+     * @ORM\Column(name="inactive_values", type="json_array")
      */
-    private $hash;
+    private $inactiveValues = array();
 
     /**
      * @var DataSource
@@ -100,63 +94,107 @@ class DataSourceValue
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getKey()
+    public function getActiveValues()
     {
-        return $this->key;
+        return $this->activeValues;
     }
 
     /**
-     * @param string $key
+     * @param array $activeValues
      *
      * @return $this
      */
-    public function setKey($key)
+    public function setActiveValues(array $activeValues)
     {
-        $this->key = $key;
+        $this->activeValues = $activeValues;
 
         return $this;
     }
 
     /**
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param bool $active
+     * @param string $activeValue
      *
      * @return $this
      */
-    public function setActive($active)
+    public function addActiveValue($activeValue)
     {
-        $this->active = $active;
+        if (!in_array($activeValue, $this->activeValues)) {
+            $this->activeValues[] = $activeValue;
+        }
 
         return $this;
     }
 
     /**
-     * @return string
-     */
-    public function getHash()
-    {
-        return $this->hash;
-    }
-
-    /**
-     * @param string $hash
+     * @param string $activeValue
      *
      * @return $this
      */
-    public function setHash($hash)
+    public function removeActiveValue($activeValue)
     {
-        $this->hash = $hash;
+        if (in_array($activeValue, $this->activeValues)) {
+            unset($this->activeValues[array_search($activeValue, $this->activeValues)]);
+        }
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInactiveValues()
+    {
+        return $this->inactiveValues;
+    }
+
+    /**
+     * @param array $inactiveValues
+     *
+     * @return $this
+     */
+    public function setInactiveValues(array $inactiveValues)
+    {
+        $this->inactiveValues = $inactiveValues;
+
+        return $this;
+    }
+
+    /**
+     * @param string $inactiveValue
+     *
+     * @return $this
+     */
+    public function addInactiveValue($inactiveValue)
+    {
+        if (!in_array($inactiveValue, $this->inactiveValues)) {
+            $this->inactiveValues[] = $inactiveValue;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $inactiveValue
+     *
+     * @return $this
+     */
+    public function removeInactiveValue($inactiveValue)
+    {
+        if (in_array($inactiveValue, $this->inactiveValues)) {
+            unset($this->activeValues[array_search($inactiveValue, $this->inactiveValues)]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getValues()
+    {
+        return $this->getActiveValues() + $this->getInactiveValues();
     }
 
     /**

@@ -26,7 +26,7 @@ services:
 
     phlexible_media_manager.util.suggest_field:
         class: Phlexible\Bundle\MediaManagerBundle\Util\SuggestFieldUtil
-        arguments: [@connection_manager, %phlexible_meta_set.suggest.seperator%]
+        arguments: [@phlexible_meta_set.meta_set_manager, @phlexible_media_manager.folder_meta_data_manager, %phlexible_meta_set.suggest.seperator%]
 
     # access control permission providers
     phlexible_media_manager.permission_provider:

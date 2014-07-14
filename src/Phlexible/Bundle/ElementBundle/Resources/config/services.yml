@@ -115,7 +115,7 @@ services:
         class: Phlexible\Bundle\ElementBundle\EventListener\DatasourceListener
         arguments: [@phlexible_element.util.suggest_field, @phlexible_element.util.suggest_meta_field]
         tags:
-            - {name: kernel.event_subscriber}
+            - {name: xkernel.event_subscriber}
 
     phlexible_element.listener.get_config:
         class: Phlexible\Bundle\ElementBundle\EventListener\GetConfigListener

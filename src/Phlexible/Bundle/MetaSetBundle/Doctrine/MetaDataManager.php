@@ -9,6 +9,8 @@
 namespace Phlexible\Bundle\MetaSetBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
+use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaData;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
@@ -27,17 +29,24 @@ class MetaDataManager implements MetaDataManagerInterface
     private $entityManager;
 
     /**
+     * @var DataSourceManagerInterface
+     */
+    private $dataSourceManager;
+
+    /**
      * @var string
      */
     private $tableName;
 
     /**
-     * @param EntityManager $entityManager
-     * @param string        $tableName
+     * @param EntityManager              $entityManager
+     * @param DataSourceManagerInterface $dataSourceManager
+     * @param string                     $tableName
      */
-    public function __construct(EntityManager $entityManager, $tableName)
+    public function __construct(EntityManager $entityManager, DataSourceManagerInterface $dataSourceManager, $tableName)
     {
         $this->entityManager = $entityManager;
+        $this->dataSourceManager = $dataSourceManager;
         $this->tableName = $tableName;
     }
 
@@ -98,17 +107,36 @@ class MetaDataManager implements MetaDataManagerInterface
 
         foreach ($metaData->getLanguages() as $language) {
             foreach ($metaData->getMetaSet()->getFields() as $field) {
+
+                // TODO: löschen?
+                if (!$metaData->get($field->getName(), $language)) {
+                    continue;
+                }
+
+                $value = $metaData->get($field->getName(), $language);
+
+                if ('suggest' === $field->getType()) {
+                    $dataSourceId = $field->getOptions();
+                    $dataSource = $this->dataSourceManager->find($dataSourceId);
+                    foreach (explode(',', $value) as $singleValue) {
+                        $dataSource->addValueForLanguage($language, $singleValue, true);
+                    }
+                    $this->dataSourceManager->updateDataSource($dataSource);
+                }
+
                 $insertData = $baseData;
 
-                $insertData['field'] = $field->getName();
-                $insertData['value'] = $metaData->get($field->getName(), $language);
+                $insertData['id'] = Uuid::generate();
+                $insertData['field_id'] = $field->getId();
+                $insertData['value'] = $value;
+                $insertData['language'] = $language;
 
                 $connection->insert($this->tableName, $insertData);
             }
         }
 
-
-        $this->_queueDataSourceCleanup();
+        // TODO: job!
+        //$this->_queueDataSourceCleanup();
     }
 
     /**
@@ -155,7 +183,7 @@ class MetaDataManager implements MetaDataManagerInterface
                 $metaData = $metaDatas[$id];
             }
 
-            $metaData->set($row['meta_key'], $row['meta_value'], $row['meta_language']);
+            $metaData->set($row['field_id'], $row['value'], $row['language']);
         }
 
         return $metaDatas;

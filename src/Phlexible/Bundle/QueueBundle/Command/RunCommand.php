@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\QueueBundle\Command;
 
-use Brainbits_Util_FileLock as FileLock;
 use Phlexible\Bundle\QueueBundle\Entity\Job;
 use Phlexible\Bundle\QueueBundle\Model\JobManagerInterface;
 use Phlexible\Bundle\QueueBundle\Model\RunningJob;
 use Phlexible\Bundle\QueueBundle\QueueMessage;
+use Phlexible\Component\Util\FileLock;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -64,7 +64,7 @@ class RunCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $lock = new FileLock('queue_lock', $this->getContainer()->getParameter('app.lock_dir'));
-        if (!$lock->tryAcquire()) {
+        if (!$lock->acquire()) {
             $output->writeln('Another job running.');
 
             return 1;

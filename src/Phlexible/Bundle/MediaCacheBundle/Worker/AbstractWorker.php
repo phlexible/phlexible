@@ -23,12 +23,12 @@ abstract class AbstractWorker implements WorkerInterface
     /**
      * Apply error to cache item
      *
-     * @param CacheItem $cacheItem
-     * @param int $status
-     * @param string $message
-     * @param string $inputFilename
+     * @param CacheItem         $cacheItem
+     * @param string            $status
+     * @param string            $message
+     * @param string            $inputFilename
      * @param TemplateInterface $template
-     * @param FileInterface $file
+     * @param FileInterface     $file
      */
     protected function applyError(
         CacheItem $cacheItem,

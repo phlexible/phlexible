@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Queue;
 
-use Brainbits_Util_FileLock as FileLock;
 use Phlexible\Bundle\GuiBundle\Properties\Properties;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Entity\QueueItem;
@@ -17,6 +16,7 @@ use Phlexible\Bundle\MediaCacheBundle\Queue as BaseQueue;
 use Phlexible\Bundle\MediaCacheBundle\Worker\WorkerResolver;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\Util\FileLock;
 
 /**
  * Queue worker
@@ -93,7 +93,7 @@ class Worker
     private function lock()
     {
         $lock = new FileLock('mediacache_lock', $this->lockDir);
-        if (!$lock->tryAcquire()) {
+        if (!$lock->acquire()) {
             throw new AlreadyRunningException('Another cache worker process running.');
         }
 
@@ -132,35 +132,12 @@ class Worker
             if (!$cacheItem) {
                 call_user_func($callback, 'no_cacheitem', $worker, $queueItem, null);
             } else {
-                call_user_func($callback, $this->mapStatus($cacheItem->getStatus()), $worker, $queueItem, $cacheItem);
+                call_user_func($callback, $cacheItem->getStatus(), $worker, $queueItem, $cacheItem);
             }
         }
 
         $this->properties->set('mediacache', 'last_run', date('Y-m-d H:i:s'));
 
         return $cacheItem;
-    }
-
-    /**
-     * @param int $status
-     *
-     * @return string
-     */
-    private function mapStatus($status)
-    {
-        switch ($status) {
-            case CacheItem::STATUS_ERROR:
-                return 'error';
-            case CacheItem::STATUS_DELEGATE:
-                return 'delegate';
-            case CacheItem::STATUS_MISSING:
-                return 'missing';
-            case CacheItem::STATUS_WAITING:
-                return 'waiting';
-            case CacheItem::STATUS_OK:
-                return 'ok';
-        }
-
-        return 'unknown';
     }
 }

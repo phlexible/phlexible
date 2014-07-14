@@ -32,6 +32,7 @@
 		"symfony-cmf/routing-bundle": "~1.1",
         "twig/twig": "~1.15",
 		"brainbits/toolkit": "dev-master",
+        "rhumsaa/uuid": "~2.7",
 		"php-ffmpeg/php-ffmpeg": "~0.4",
 		"igorw/file-serve-bundle": "~1",
 		"alchemy/zippy": "~0.2",

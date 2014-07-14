@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\DataSourceBundle\GarbageCollector;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
+use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
 use Phlexible\Bundle\DataSourceBundle\Value\ValueCollection;
@@ -48,153 +48,148 @@ class GarbageCollector
     /**
      * Start garbage collection.
      *
-     * @param array|string $ids id/ids of data sources [Optional]
+     * @param boolean $pretend
      *
      * @return array
      */
-    public function run($ids = null)
+    public function run($pretend = false)
     {
-        if (null === $ids) {
-            // if none id is given -> process all data sources
-            $ids = $this->dataSourceManager->getAllDataSourceIds();
-        } elseif (!is_array($ids)) {
-            // if a single data source is selected
-            $ids = array($ids);
-        }
+        $numRemoved = 0;
+        $numActivated = 0;
+        $numDeactivated = 0;
+        $offset = 0;
 
-        // run garbage collector on all data sources
-        return $this->doRun($ids);
-    }
+        foreach ($this->dataSourceManager->findBy(array(), null, 10, $offset) as $dataSource) {
+            foreach ($dataSource->getValueBags() as $values) {
+                $unused = $this->removeUnusedValues($values, $pretend);
+                $numRemoved += count($unused);
 
-    /**
-     * Start garbage collection.
-     *
-     * @param array $ids ids of data sources to process
-     *
-     * @return array
-     */
-    private function doRun(array $ids)
-    {
-        $candidates = count($ids);
-        $removed = 0;
-        $activated = 0;
-        $deactivated = 0;
+                $activated = $this->activateActiveValues($values, $pretend);
+                $numActivated += count($activated);
 
-        foreach ($ids as $id) {
-            $languages = $this->dataSourceManager->getAllDataSourceLanguages($id);
-            $dataSource = $this->dataSourceManager->find($id);
-            foreach ($languages as $language) {
-                $removed += $this->removeUnusedValues($dataSource, $language);
-                $activated += $this->activateActiveValues($dataSource, $language);
-                $deactivated += $this->deactivateInactiveValues($dataSource, $language);
+                $deactivated = $this->deactivateInactiveValues($values, $pretend);
+                $numDeactivated += count($deactivated);
+            }
+
+            if (!$pretend) {
+                $this->dataSourceManager->updateDataSource($dataSource);
             }
         }
 
         return array(
-            'candidates'  => $candidates,
-            'removed'     => $removed,
-            'activated'   => $activated,
-            'deactivated' => $deactivated,
+            'removed'     => $numRemoved,
+            'activated'   => $numActivated,
+            'deactivated' => $numDeactivated,
         );
     }
 
     /**
      * Remove unused values.
      *
-     * @param DataSource $dataSource
+     * @param DataSourceValueBag $valueBag
+     * @param boolean            $pretend
      *
-     * @return int
+     * @return ValueCollection
      */
-    private function removeUnusedValues(DataSource $dataSource)
+    private function removeUnusedValues(DataSourceValueBag $valueBag, $pretend = false)
     {
-        // dispatch pre event
-        $collection = new ValueCollection($dataSource->getKeys());
-        $event = new CollectionEvent($dataSource, $collection);
+        $values = new ValueCollection($valueBag->getValues());
+        $event = new CollectionEvent($valueBag, $values);
         if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_DELETE_VALUES, $event)->isPropagationStopped()) {
             return 0;
         }
 
-        $count = count($collection);
-
-        if ($count) {
-            // get deactivatable values
-            $removeable = $collection->toArray();
-
-            // apply changes if there is changeable data
-            $dataSource->removeKeys($removeable);
-            $this->dataSourceManager->updateDataSource($dataSource);
+        if ($pretend) {
+            return $values;
         }
 
-        // dispatch post event
-        $event = new CollectionEvent($dataSource, $collection);
+        if (count($values)) {
+            // apply changes if there is changeable data
+            foreach ($values as $value) {
+                $valueBag->removeActiveValue($value);
+                $valueBag->removeInactiveValue($value);
+            }
+        }
+
+        $event = new CollectionEvent($valueBag, $values);
         $this->dispatcher->dispatch(DataSourceEvents::DELETE_VALUES, $event);
 
-        return $count;
+        return $values;
     }
 
     /**
      * Active active values.
      *
-     * @param DataSource $dataSource
+     * @param DataSourceValueBag $valueBag
+     * @param boolean            $pretend
      *
-     * @return int
+     * @return ValueCollection
      */
-    protected function activateActiveValues(DataSource $dataSource)
+    protected function activateActiveValues(DataSourceValueBag $valueBag, $pretend = false)
     {
         // dispatch pre event
-        $collection = new ValueCollection();
-        $event = new CollectionEvent($dataSource, $collection);
+        $values = new ValueCollection();
+        $event = new CollectionEvent($valueBag, $values);
         if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_MARK_ACTIVE, $event)->isPropagationStopped()) {
             return 0;
         }
 
-        // get deactivatable values
-        $activatable = array_intersect($dataSource->getInactiveKeys(), $collection->toArray());
+        if ($pretend) {
+            return $values;
+        }
 
-        $count = count($activatable);
+        // get deactivatable values
+        $intersectedValues = array_intersect($valueBag->getInactiveValues(), $values->toArray());
+
+        $count = count($intersectedValues);
         if ($count) {
             // apply changes if there is changeable data
-            $dataSource->activateKeys($activatable);
-            $this->dataSourceManager->updateDataSource($dataSource);
+            foreach ($intersectedValues as $value) {
+                $valueBag->addActiveValue($value);
+                $valueBag->removeInactiveValue($value);
+            }
         }
 
         // dispatch post event
-        $event = new CollectionEvent($dataSource, $collection);
+        $event = new CollectionEvent($valueBag, $values);
         $this->dispatcher->dispatch(DataSourceEvents::MARK_ACTIVE, $event);
 
-        return $count;
+        return $values;
     }
 
     /**
      * Deactivate inactive values.
      *
-     * @param DataSource $dataSource
+     * @param DataSourceValueBag $valueBag
+     * @param boolean            $pretend
      *
-     * @return int
+     * @return ValueCollection
      */
-    protected function deactivateInactiveValues(DataSource $dataSource)
+    protected function deactivateInactiveValues(DataSourceValueBag $valueBag, $pretend = false)
     {
         // dispatch pre event
-        $collection = new ValueCollection($dataSource->getActiveKeys());
-        $beforeEvent = new CollectionEvent($dataSource, $collection);
+        $values = new ValueCollection($valueBag->getActiveValues());
+        $beforeEvent = new CollectionEvent($valueBag, $values);
         if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_MARK_INACTIVE, $beforeEvent)->isPropagationStopped()) {
             return 0;
         }
 
-        // get deactivatable values
-        $deactivatable = $collection->toArray();
+        if ($pretend) {
+            return $values;
+        }
 
-        $count = count($deactivatable);
-        if ($count) {
+        if (count($values)) {
             // apply changes if there is changeable data
-            $dataSource->deactivateKeys($deactivatable);
-            $this->dataSourceManager->updateDataSource($dataSource);
+            foreach ($values as $value) {
+                $valueBag->addInactiveValue($value);
+                $valueBag->removeActiveValue($value);
+            }
         }
 
         // dispatch post event
-        $event = new CollectionEvent($dataSource, $collection);
+        $event = new CollectionEvent($valueBag, $values);
         $this->dispatcher->dispatch(DataSourceEvents::MARK_INACTIVE, $event);
 
-        return $count;
+        return $values;
     }
 }

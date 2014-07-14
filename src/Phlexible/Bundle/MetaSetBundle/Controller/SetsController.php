@@ -96,7 +96,7 @@ class SetsController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSetManager->updateMetaSet($metaSet);
 
-        return new ResultResponse(true, 'Meta Set "' . $metaSet->getName() . '" created.');
+        return new ResultResponse(true, "Meta Set {$metaSet->getName()} created.");
     }
 
     /**
@@ -111,7 +111,7 @@ class SetsController extends Controller
     {
         $id = $request->get('id');
         $data = $request->get('data');
-        $data = json_decode($data);
+        $data = json_decode($data, true);
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSet = $metaSetManager->find($id);
@@ -129,19 +129,22 @@ class SetsController extends Controller
                 $field = $metaSet->getField($item['key']);
             } else {
                 $field = $metaSetManager->createMetaSetField();
-                $metaSet->addField($field);
             }
 
             $field
+                ->setName($item['key'])
+                ->setMetaSet($metaSet)
                 ->setType($item['type'])
                 ->setRequired(!empty($item['required']) ? 1 : 0)
                 ->setSynchronized(!empty($item['synchronized']) ? 1 : 0)
                 ->setReadonly(!empty($item['readonly']) ? 1 : 0)
                 ->setOptions(!empty($item['options']) ? $item['options'] : null);
+
+            $metaSet->addField($field);
         }
 
         $metaSetManager->updateMetaSet($metaSet);
 
-        return new ResultResponse(true, 'Values for set "' . $metaSet->getTitle() . '" saved.');
+        return new ResultResponse(true, "Fields saved for set {$metaSet->getName()}.");
     }
 }

@@ -8,7 +8,7 @@ Phlexible.mediamanager.templates.Details = new Ext.XTemplate(
     '</div>'
 );
 
-Phlexible.mediamanager.FileAttributesPanel = Ext.extend(Ext.Panel, {
+Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediamanager.Strings.no_file_selected,
     strings: Phlexible.mediamanager.Strings,
 //    collapsible: true,
@@ -41,7 +41,7 @@ Phlexible.mediamanager.FileAttributesPanel = Ext.extend(Ext.Panel, {
                 }
             },
             {
-                xtype: 'mediamanager-foldermetagrid',
+                xtype: 'mediamanager-foldermeta',
                 border: false,
                 autoHeight: true,
                 collapsed: true,
@@ -62,7 +62,7 @@ Phlexible.mediamanager.FileAttributesPanel = Ext.extend(Ext.Panel, {
             accordionPanels.push({
                 xtype: 'editorgrid',
                 title: 'Debug File',
-                iconCls: 'p-frame-menu_debug-icon',
+                iconCls: 'p-gui-menu_debug-icon',
                 border: false,
                 stripeRows: true,
                 autoHeight: true,
@@ -89,7 +89,7 @@ Phlexible.mediamanager.FileAttributesPanel = Ext.extend(Ext.Panel, {
             accordionPanels.push({
                 xtype: 'editorgrid',
                 title: 'Debug Cache',
-                iconCls: 'p-frame-menu_debug-icon',
+                iconCls: 'p-gui-menu_debug-icon',
                 border: false,
                 stripeRows: true,
                 autoHeight: true,
@@ -245,7 +245,7 @@ Phlexible.mediamanager.FileAttributesPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        Phlexible.mediamanager.FileAttributesPanel.superclass.initComponent.call(this);
+        Phlexible.mediamanager.AttributesPanel.superclass.initComponent.call(this);
     },
 
     getPreviewPanel: function () {
@@ -367,7 +367,7 @@ Phlexible.mediamanager.FileAttributesPanel = Ext.extend(Ext.Panel, {
                 cacheData.push([
                     i,
                     r.data.cache[i],
-                    Phlexible.Router.generate('mediamanager_media', {file_id: this.file_id, template_key: i, file_version: this.file_version, cache: r.data.cache[i]})
+                    r.data.cache[i]
                 ]);
             }
             this.getCacheDebugPanel().store.loadData(cacheData);
@@ -414,4 +414,4 @@ Phlexible.mediamanager.FileAttributesPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('mediamanager-fileattributespanel', Phlexible.mediamanager.FileAttributesPanel);
+Ext.reg('mediamanager-attributespanel', Phlexible.mediamanager.AttributesPanel);

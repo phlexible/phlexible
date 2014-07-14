@@ -50,6 +50,14 @@ class MetaSetManager implements MetaSetManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->metaSetRepository->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
      * @param string $name
      *
      * @return MetaSet
@@ -89,6 +97,10 @@ class MetaSetManager implements MetaSetManagerInterface
     public function updateMetaSet(MetaSet $metaSet)
     {
         $this->entityManager->persist($metaSet);
-        $this->entityManager->flush($metaSet);
+        foreach ($metaSet->getFields() as $field) {
+            $this->entityManager->persist($field);
+        }
+
+        $this->entityManager->flush();
     }
 }

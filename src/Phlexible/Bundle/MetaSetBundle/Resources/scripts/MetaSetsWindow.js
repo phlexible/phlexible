@@ -1,6 +1,6 @@
-Phlexible.mediamanager.MetaSetsWindow = Ext.extend(Ext.Window, {
+Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
     title: 'Meta sets',
-    iconCls: 'p-metasets-component-icon',
+    iconCls: 'p-metaset-component-icon',
     width: 400,
     height: 300,
     layout: 'fit',
@@ -10,7 +10,6 @@ Phlexible.mediamanager.MetaSetsWindow = Ext.extend(Ext.Window, {
     urls: {},
 
     initComponent: function () {
-
         if (!this.urls.list || !this.urls.available || !this.urls.add || !this.urls.remove) {
             throw 'Missing url config';
         }
@@ -37,18 +36,16 @@ Phlexible.mediamanager.MetaSetsWindow = Ext.extend(Ext.Window, {
                 sm: new Ext.grid.RowSelectionModel({
                     singleSelect: true,
                     listeners: {
-                        selectionchange: {
-                            fn: function (sm) {
-                                var selections = sm.getSelections();
+                        selectionchange: function (sm) {
+                            var selections = sm.getSelections();
 
-                                if (selections.length === 1) {
-                                    this.getTopToolbar().items.items[3].enable();
-                                } else {
-                                    this.getTopToolbar().items.items[3].disable();
-                                }
-                            },
-                            scope: this
-                        }
+                            if (selections.length === 1) {
+                                this.getTopToolbar().items.items[3].enable();
+                            } else {
+                                this.getTopToolbar().items.items[3].disable();
+                            }
+                        },
+                        scope: this
                     }
                 })
             }
@@ -70,8 +67,8 @@ Phlexible.mediamanager.MetaSetsWindow = Ext.extend(Ext.Window, {
                 triggerAction: 'all'
             },
             {
-                text: 'Add',
-                iconCls: 'p-metasets-add-icon',
+                text: '_add',
+                iconCls: 'p-metaset-add-icon',
                 handler: function () {
                     var set_id = this.getTopToolbar().items.items[0].getValue();
 
@@ -106,8 +103,8 @@ Phlexible.mediamanager.MetaSetsWindow = Ext.extend(Ext.Window, {
             },
             '-',
             {
-                text: 'Remove',
-                iconCls: 'p-metasets-delete-icon',
+                text: '_remove',
+                iconCls: 'p-metaset-delete-icon',
                 disabled: true,
                 handler: function () {
                     var r = this.getComponent(0).getSelectionModel().getSelected();
@@ -143,6 +140,6 @@ Phlexible.mediamanager.MetaSetsWindow = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.mediamanager.MetaSetsWindow.superclass.initComponent.call(this);
+        Phlexible.metasets.MetaSetsWindow.superclass.initComponent.call(this);
     }
 });

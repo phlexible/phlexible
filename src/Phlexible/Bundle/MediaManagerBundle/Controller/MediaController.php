@@ -30,7 +30,7 @@ class MediaController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @route("", name="mediamanager_media")
+     * @Route("", name="mediamanager_media")
      */
     public function mediaAction(Request $request)
     {
@@ -47,7 +47,7 @@ class MediaController extends Controller
 
         try {
             $cacheItem = $cacheManager->findByTemplateAndFile($templateKey, $fileId, $fileVersion);
-            if ($cacheItem->getTemplateKey() !== $templateKey) {
+            if ($cacheItem && $cacheItem->getTemplateKey() !== $templateKey) {
                 throw new \Exception('Requested template key <=> cache item template key mismatch.');
             }
         } catch (\Exception $e) {
@@ -80,6 +80,30 @@ class MediaController extends Controller
             $fileSize = filesize($filePath);
             $mimeType = 'image/gif';
         }
+
+        return $this->get('igorw_file_serve.response_factory')
+            ->create($filePath, $mimeType, array('absolute_path' => true));
+    }
+
+    /**
+     * @param string $templateKey
+     * @param string $documenttypeKey
+     *
+     * @return Response
+     * @Route("/delegate/{templateKey}/{documenttypeKey}", name="mediamanager_media_delegate")
+     */
+    public function delegateAction($templateKey, $documenttypeKey)
+    {
+        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $templateManager = $this->get('phlexible_media_template.template_manager');
+        $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
+
+        $template = $templateManager->find($templateKey);
+
+        $documenttype = $documenttypeManager->find(strtolower($documenttypeKey));
+        $filePath = $delegateService->getClean($template, $documenttype);
+        $fileSize = filesize($filePath);
+        $mimeType = 'image/gif';
 
         return $this->get('igorw_file_serve.response_factory')
             ->create($filePath, $mimeType, array('absolute_path' => true));

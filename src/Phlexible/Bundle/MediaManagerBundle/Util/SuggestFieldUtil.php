@@ -8,7 +8,11 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Util;
 
-use Phlexible\Component\Database\ConnectionManager;
+use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaDataManagerInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 
 /**
  * Utility class for suggest fields.
@@ -18,9 +22,14 @@ use Phlexible\Component\Database\ConnectionManager;
 class SuggestFieldUtil
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var MetaSetManagerInterface
      */
-    private $db;
+    private $metaSetManager;
+
+    /**
+     * @var MetaDataManagerInterface
+     */
+    private $metaDataManager;
 
     /**
      * @var string
@@ -28,25 +37,52 @@ class SuggestFieldUtil
     private $seperatorChar;
 
     /**
-     * @param ConnectionManager $dbPool
-     * @param string            $seperatorChar
+     * @param MetaSetManagerInterface  $metaSetManager
+     * @param MetaDataManagerInterface $metaDataManager
+     * @param string                   $seperatorChar
      */
-    public function __construct(ConnectionManager $dbPool, $seperatorChar)
+    public function __construct(MetaSetManagerInterface $metaSetManager, MetaDataManagerInterface $metaDataManager, $seperatorChar)
     {
-        $this->db = $dbPool->default;
+        $this->metaSetManager = $metaSetManager;
+        $this->metaDataManager = $metaDataManager;
         $this->seperatorChar = $seperatorChar;
     }
 
     /**
      * Fetch all data source values used in any media file metaset.
      *
-     * @param string $dataSourceId
-     * @param array  $languages
+     * @param DataSourceValueBag $values
      *
      * @return array
      */
-    public function fetchUsedValues($dataSourceId, array $languages)
+    public function fetchUsedValues(DataSourceValueBag $valueBag)
     {
+        $metaSets = $this->metaSetManager->findAll();
+
+        $fields = array();
+        foreach ($metaSets as $metaSet) {
+            foreach ($metaSet->getFields() as $field) {
+                if ($field->getOptions() === $valueBag->getDatasource()->getId()) {
+                    $fields[] = $field;
+                }
+            }
+        }
+
+        $values = array();
+        foreach ($fields as $field) {
+            /* @var $field MetaSetField */
+            foreach ($this->metaDataManager->findByMetaSet($field->getMetaSet()) as $metaData) {
+                /* @var $metaData MetaDataInterface */
+                $value = $metaData->get($field->getId(), $valueBag->getLanguage());
+
+                $values[] = $value;
+            }
+        }
+
+        $values = $this->splitSuggestValues($values);
+
+        return $values;
+
         $valueSelects = array();
         foreach ($languages as $language) {
             $language = trim($language);

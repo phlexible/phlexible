@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 use Alchemy\Zippy\Zippy;
 use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -154,7 +155,18 @@ class FileController extends Controller
             $cacheItems = $this->get('phlexible_media_cache.cache_manager')->findByFile($file->getID(), $version);
             $cache = array();
             foreach ($cacheItems as $cacheItem) {
-                $cache[$cacheItem->getTemplateKey()] = $cacheItem->getStatus();
+                if ($cacheItem->getStatus() === CacheItem::STATUS_OK) {
+                    $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media', array(
+                        'file_id'      => $file->getId(),
+                        'file_version' => $file->getVersion(),
+                        'template_key' => $cacheItem->getTemplateKey(),
+                    ));
+                } else {
+                    $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', array(
+                        'documenttypeKey' => $file->getAttribute('documenttype'),
+                        'templateKey'     => $cacheItem->getTemplateKey(),
+                    ));
+                }
             }
 
             $fileUsageManager = $this->get('phlexible_media_manager.file_usage_manager');

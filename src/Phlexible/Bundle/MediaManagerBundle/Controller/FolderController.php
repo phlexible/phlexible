@@ -324,17 +324,13 @@ class FolderController extends Controller
         $folderId = $request->get('folder_id');
 
         $site = $this->getSite($siteId);
-        $folder = $site->getFolder($folderId);
+        $folder = $site->findFolder($folderId);
 
         if ($folder->isRoot()) {
-            $this->_response->setResult(false, $folder->getId(), 'Can\'t delete the root folder.');
-
-            return;
+            return new ResultResponse(false, "Can't delete the root folder.");
         }
 
-        $parentFolder = $site->getFolder($folder->getParentId());
-
-        $site->delete($folder, $this->getUser()->getId());
+        $site->deleteFolder($folder, $this->getUser()->getId());
 
         return new ResultResponse(true);
     }

@@ -66,27 +66,25 @@ Phlexible.metasets.MetaSuggestWindow = Ext.extend(Ext.Window, {
                                 language: this.metaLanguage
                             },
                             listeners: {
-                                load: {
-                                    fn: function (store) {
-                                        if (this.metaValue !== undefined) {
-                                            var values = this.metaValue.split(',');
-                                            for (var i = 0; i < values.length; i++) {
-                                                if (!store.getById(values[i])) {
-                                                    var newObj = {
-                                                        key: values[i],
-                                                        value: values[i]
-                                                    };
-                                                    var newRecord = new Ext.data.Record(newObj);
-                                                    store.add(newRecord);
-                                                    //this.getComponent(0).getComponent(0).addItem(newObj);
-                                                }
+                                load: function (store) {
+                                    if (this.metaValue !== undefined) {
+                                        var values = this.metaValue.split(',');
+                                        for (var i = 0; i < values.length; i++) {
+                                            if (!store.getById(values[i])) {
+                                                var newObj = {
+                                                    key: values[i],
+                                                    value: values[i]
+                                                };
+                                                var newRecord = new Ext.data.Record(newObj);
+                                                store.add(newRecord);
+                                                //this.getComponent(0).getComponent(0).addItem(newObj);
                                             }
-                                            this.getComponent(0).getComponent(0).setValue(this.metaValue);
                                         }
-                                        this.getComponent(0).enable();
-                                    },
-                                    scope: this
-                                }
+                                        this.getComponent(0).getComponent(0).setValue(this.metaValue);
+                                    }
+                                    this.getComponent(0).enable();
+                                },
+                                scope: this
                             }
                         }),
                         displayField: 'value',

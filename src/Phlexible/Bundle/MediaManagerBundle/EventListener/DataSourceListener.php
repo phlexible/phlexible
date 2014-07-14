@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
+use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
 use Phlexible\Bundle\DataSourceBundle\Value\ValueCollection;
 use Phlexible\Bundle\MediaManagerBundle\Util\SuggestFieldUtil;
@@ -54,13 +55,9 @@ class DataSourceListener implements EventSubscriberInterface
      */
     public function onMarkActive(CollectionEvent $event)
     {
-        $dataSource = $event->getDataSource();
-        $dataSourceId = $dataSource->getId();
-        $language = $dataSource->getLanguage();
+        $values = $this->fetchValues($event->getDataSourceValueBag());
 
-        $usedValues = $this->suggestFieldUtil->fetchUsedValues($dataSourceId, array($language));
-
-        $event->getCollection()->addValues($usedValues);
+        $event->getCollection()->addValues($values);
     }
 
     /**
@@ -68,7 +65,9 @@ class DataSourceListener implements EventSubscriberInterface
      */
     public function onBeforeMarkInactive(CollectionEvent $event)
     {
-        $this->cleanupValues($event->getDataSource(), $event->getCollection());
+        $values = $this->fetchValues($event->getDataSourceValueBag());
+
+        $event->getCollection()->removeValues($values);
     }
 
     /**
@@ -76,22 +75,22 @@ class DataSourceListener implements EventSubscriberInterface
      */
     public function onBeforeDeleteValues(CollectionEvent $event)
     {
-        $this->cleanupValues($event->getDataSource(), $event->getCollection());
-    }
+        $values = $this->fetchValues($event->getDataSourceValueBag());
 
+        $event->getCollection()->removeValues($values);
+
+    }
     /**
      * Ensure used values are not deleted from data source.
      *
-     * @param DataSource      $dataSource
-     * @param ValueCollection $collection
+     * @param DataSourceValueBag $values
+     *
+     * @return array
      */
-    public function cleanupValues(DataSource $dataSource, ValueCollection $collection)
+    private function fetchValues(DataSourceValueBag $values)
     {
-        $dataSourceId = $dataSource->getId();
-        $language = $dataSource->getLanguage();
+        $language = $values->getLanguage();
 
-        $usedValues = $this->suggestFieldUtil->fetchUsedValues($dataSourceId, array($language));
-
-        $collection->removeValuesByKey($usedValues);
+        return $this->suggestFieldUtil->fetchUsedValues($values, array($language));
     }
 }

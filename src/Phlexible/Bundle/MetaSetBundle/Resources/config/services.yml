@@ -5,9 +5,8 @@ parameters:
     phlexible_meta_set.suggest.seperator: ,
 
 services:
-    phlexible_meta_set.data.repository:
-        class: Phlexible\Bundle\MetaSetBundle\MetaData\MetaDataRepository
-        arguments: [@connection_manager]
+    phlexible_meta_set.option_resolver:
+        class: Phlexible\Bundle\MetaSetBundle\Model\OptionResolver
 
     # acl providers
     phlexible_meta_set.acl_provider:

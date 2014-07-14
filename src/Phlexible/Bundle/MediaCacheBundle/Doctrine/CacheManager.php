@@ -66,7 +66,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function findByTemplateAndFile($templateKey, $fileId, $fileVersion)
     {
-        return $this->cacheRepository->findOneBy(array('template' => $templateKey, 'fileId' => $fileId, 'fileVersion' => $fileVersion));
+        return $this->cacheRepository->findOneBy(array('templateKey' => $templateKey, 'fileId' => $fileId, 'fileVersion' => $fileVersion));
     }
 
     /**

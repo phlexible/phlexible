@@ -60,29 +60,14 @@ class DataSource
     private $modifiedAt;
 
     /**
-     * @var DataSourceValue[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="DataSourceValue", mappedBy="datasource")
+     * @var DataSourceValueBag[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="DataSourceValueBag", mappedBy="datasource")
      */
-    private $values;
-
-    /**
-     * @var string
-     */
-    private $language;
-
-    /**
-     * @var array
-     */
-    private $activeKeys = array();
-
-    /**
-     * @var array
-     */
-    private $inactiveKeys = array();
+    private $valueBags;
 
     public function __construct()
     {
-        $this->values = new ArrayCollection();
+        $this->valueBags = new ArrayCollection();
     }
 
     /**
@@ -101,26 +86,6 @@ class DataSource
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return $this
-     */
-    public function setLanguage($language)
-    {
-        $this->language = $language;
 
         return $this;
     }
@@ -226,22 +191,35 @@ class DataSource
     }
 
     /**
-     * @return DataSourceValue[]|ArrayCollection
+     * @return array
      */
-    public function getValues()
+    public function getLanguages()
     {
-        return $this->values;
+        $languages = array();
+        foreach ($this->valueBags as $value) {
+            $languages[] = $value->getLanguage();
+        }
+
+        return array_unique($languages);
     }
 
     /**
-     * @param DataSourceValue $value
+     * @return DataSourceValueBag[]|ArrayCollection
+     */
+    public function getValueBags()
+    {
+        return $this->valueBags;
+    }
+
+    /**
+     * @param DataSourceValueBag $value
      *
      * @return $this
      */
-    public function addValue(DataSourceValue $value)
+    public function addValueBag(DataSourceValueBag $value)
     {
-        if (!$this->values->contains($value)) {
-            $this->values->add($value);
+        if (!$this->valueBags->contains($value)) {
+            $this->valueBags->add($value);
             $value->setDatasource($this);
         }
 
@@ -249,14 +227,14 @@ class DataSource
     }
 
     /**
-     * @param DataSourceValue $value
+     * @param DataSourceValueBag $value
      *
      * @return $this
      */
-    public function removeValue(DataSourceValue $value)
+    public function removeValueBag(DataSourceValueBag $value)
     {
-        if ($this->values->contains($value)) {
-            $this->values->removeElement($value);
+        if ($this->valueBags->contains($value)) {
+            $this->valueBags->removeElement($value);
             $value->setDatasource(null);
         }
 
@@ -264,92 +242,129 @@ class DataSource
     }
 
     /**
+     * @param string $language
+     *
      * @return array
      */
-    public function getKeys()
+    public function getValuesForLanguage($language)
     {
-        return array_merge($this->activeKeys, $this->inactiveKeys);
+        return array_merge($this->getActiveValuesForLanguage($language), $this->getInactiveValuesForLanguage($language));
     }
 
     /**
+     * @param string $language
+     *
      * @return array
      */
-    public function getActiveKeys()
+    public function getActiveValuesForLanguage($language)
     {
-        return $this->activeKeys;
+        foreach ($this->valueBags as $value) {
+            if ($value->getLanguage() === $language) {
+                return $value->getActiveValues();
+            }
+        }
+
+        return array();
     }
 
     /**
+     * @param string $language
+     *
      * @return array
      */
-    public function getInactiveKeys()
+    public function getInactiveValuesForLanguage($language)
     {
-        return $this->inactiveKeys;
+        foreach ($this->valueBags as $value) {
+            if ($value->getLanguage() === $language) {
+                return $value->getInactiveValues();
+            }
+        }
+
+        return array();
     }
 
     /**
-     * @param array $keys
+     * @param string $language
+     * @param array  $values
      *
      * @return $this
      */
-    public function setKeys(array $keys)
+    public function setValues($language, array $values)
     {
-        $this->setActiveKeys($keys);
+        return $this->setActiveValuesForLanguage($language, $values);
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return DataSourceValueBag
+     */
+    private function findValueBagForLanguage($language)
+    {
+        $targetValueBag = null;
+        foreach ($this->valueBags as $valueBag) {
+            if ($valueBag->getLanguage() === $language) {
+                $targetValueBag = $valueBag;
+            }
+        }
+
+        if (!$targetValueBag) {
+            $targetValueBag = new DataSourceValueBag();
+            $targetValueBag
+                ->setDatasource($this)
+                ->setLanguage($language);
+
+            $this->valueBags->add($targetValueBag);
+        }
+
+        return $targetValueBag;
+    }
+
+    /**
+     * @param string $language
+     * @param array  $values
+     *
+     * @return $this
+     */
+    public function setActiveValuesForLanguage($language, array $values)
+    {
+        $this->findValueBagForLanguage($language)
+            ->setActiveValues($values);
 
         return $this;
     }
 
     /**
-     * @param array $keys
+     * @param string $language
+     * @param array  $values
      *
      * @return $this
      */
-    public function setActiveKeys(array $keys)
+    public function setInactiveValuesForLanguage($language, array $values)
     {
-        $this->activeKeys = $keys;
+        $this->findValueBagForLanguage($language)
+            ->setInactiveValues($values);
 
         return $this;
     }
 
     /**
-     * @param array $keys
-     *
-     * @return $this
-     */
-    public function setInactiveKeys(array $keys)
-    {
-        $this->inactiveKeys = $keys;
-
-        return $this;
-    }
-
-    /**
-     * @param string $key
+     * @param string $language
+     * @param string $value
      * @param bool   $active
      *
      * @return $this
      */
-    public function addKey($key, $active = true)
+    public function addValueForLanguage($language, $value, $active = true)
     {
-        $key = trim($key);
+        $valueBag = $this->findValueBagForLanguage($language);
 
         if ($active) {
-            $keyStore = & $this->activeKeys;
-            $otherKeyStore = & $this->inactiveKeys;
+            $valueBag->addActiveValue($value);
+            $valueBag->removeInactiveValue($value);
         } else {
-            $keyStore = & $this->inactiveKeys;
-            $otherKeyStore = & $this->activeKeys;
-        }
-
-        // add to one key store
-        if (!in_array($key, $keyStore)) {
-            $keyStore[] = $key;
-        }
-
-        // remove from other key store
-        $removableKey = array_search($key, $otherKeyStore);
-        if (false !== $removableKey) {
-            unset($otherKeyStore[$removableKey]);
+            $valueBag->addInactiveValue($value);
+            $valueBag->removeActiveValue($value);
         }
 
         return $this;
@@ -358,14 +373,19 @@ class DataSource
     /**
      * Remove keys from data source.
      *
-     * @param array $removeableKeys
+     * @param string $language
+     * @param array  $values
      *
      * @return $this
      */
-    public function removeKeys($removeableKeys)
+    public function removeValuesForLanguage($language, array $values)
     {
-        $this->activeKeys = array_diff($this->activeKeys, $removeableKeys);
-        $this->inactiveKeys = array_diff($this->inactiveKeys, $removeableKeys);
+        $valueBag = $this->findValueBagForLanguage($language);
+
+        foreach ($values as $value) {
+            $valueBag->removeActiveValue($value);
+            $valueBag->removeInactiveValue($value);
+        }
 
         return $this;
     }
@@ -373,20 +393,19 @@ class DataSource
     /**
      * Remove keys from data source.
      *
-     * @param array $deactivatableKeys
+     * @param string $language
+     * @param array  $values
      *
      * @return $this
      */
-    public function deactivateKeys($deactivatableKeys)
+    public function deactivateValuesForLanguage($language, $values)
     {
-        $oldActiveKeys = $this->activeKeys;
+        $valueBag = $this->findValueBagForLanguage($language);
 
-        $this->activeKeys = array_diff($this->activeKeys, $deactivatableKeys);
-
-        $this->inactiveKeys = array_merge(
-            $this->inactiveKeys,
-            array_diff($oldActiveKeys, $this->activeKeys)
-        );
+        foreach ($values as $value) {
+            $valueBag->addInactiveValue($value);
+            $valueBag->removeActiveValue($value);
+        }
 
         return $this;
     }
@@ -394,20 +413,19 @@ class DataSource
     /**
      * Remove keys from data source.
      *
-     * @param array $activatableKeys
+     * @param string $language
+     * @param array  $values
      *
      * @return $this
      */
-    public function activateKeys($activatableKeys)
+    public function activateValuesForLanguage($language, $values)
     {
-        $oldInactiveKeys = $this->inactiveKeys;
+        $valueBag = $this->findValueBagForLanguage($language);
 
-        $this->inactiveKeys = array_diff($this->inactiveKeys, $activatableKeys);
-
-        $this->activeKeys = array_merge(
-            $this->activeKeys,
-            array_diff($oldInactiveKeys, $this->inactiveKeys)
-        );
+        foreach ($values as $value) {
+            $valueBag->addActiveValue($value);
+            $valueBag->removeInactiveValue($value);
+        }
 
         return $this;
     }

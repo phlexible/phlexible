@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\DataSourceBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -26,7 +27,8 @@ class GarbageCollectCommand extends ContainerAwareCommand
     {
         $this
             ->setName('datasource:garbage-collect')
-            ->setDescription('Cleanup unused data source values');
+            ->setDescription('Cleanup unused data source values')
+            ->addOption('run', null, InputOption::VALUE_NONE, 'Execute. Otherwise only stats are shown.');
     }
 
     /**
@@ -36,17 +38,27 @@ class GarbageCollectCommand extends ContainerAwareCommand
     {
         $gc = $this->getContainer()->get('phlexible_data_source.garbage_collector');
 
-        $stats = $gc->run();
+        $pretend = !$input->getOption('run');
+        $stats = $gc->run($pretend);
 
         $cntActivated   = $stats['activated'];
         $cntDeactivated = $stats['deactivated'];
         $cntRemoved     = $stats['removed'];
 
-        $output->writeln(
-            "Garbage collect has activated $cntActivated, "
-            . "deactivated $cntDeactivated "
-            . "and removed $cntRemoved values."
-        );
+        if ($pretend) {
+            $output->writeln(
+                "Garbage collect run will activate $cntActivated, "
+                . "deactivate $cntDeactivated "
+                . "and remove $cntRemoved values."
+            );
+        } else {
+            $output->writeln(
+                "Garbage collect run has activated $cntActivated, "
+                . "deactivated $cntDeactivated "
+                . "and removed $cntRemoved values."
+            );
+
+        }
 
         return 0;
     }

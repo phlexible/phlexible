@@ -115,8 +115,8 @@ class RightsController extends Controller
             array_pop($abovePath);
         }
 
-        $contentRightsHelper = $this->get('accesscontrol.right.registry');
-        $contentRights = array_keys($contentRightsHelper->getRights($rightType, $contentType));
+        $permissions = $this->get('phlexible_access_control.permissions');
+        $contentRights = array_keys($permissions->getByType("$contentType-$rightType"));
         $rights = array();
         foreach ($contentRights as $right) {
             $rights[$right] = array(
@@ -129,7 +129,7 @@ class RightsController extends Controller
         $subject = null;
 
         if ($objectType === 'uid') {
-            $user = $this->get('users.repository')->find($objectId);
+            $user = $this->get('phlexible_user.user_manager')->find($objectId);
 
             $subject = array(
                 'type'        => 'user',
@@ -144,7 +144,7 @@ class RightsController extends Controller
                 'restore'     => 0,
             );
         } elseif ($objectType === 'gid') {
-            $group = $this->get('users.group.repository')->find($objectId);
+            $group = $this->get('phlexible_user.group_manager')->find($objectId);
 
             $subject = array(
                 'type'        => 'group',

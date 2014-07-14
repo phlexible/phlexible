@@ -36,7 +36,7 @@ class RightsController extends Controller
         $limit  = $request->get('limit', 20);
         $offset = $request->get('start', 0);
 
-        $userProvider = $this->get('accesscontrol.provider.user');
+        $userProvider = $this->get('phlexible_access_control.provider.user');
 
         $data = $userProvider->getAll($query, $limit, $offset);
 
@@ -55,7 +55,7 @@ class RightsController extends Controller
         $limit  = $request->get('limit', 20);
         $offset = $request->get('start', 0);
 
-        $userProvider = $this->get('accesscontrol.provider.group');
+        $userProvider = $this->get('phlexible_access_control.provider.group');
 
         $data = $userProvider->getAll($query, $limit, $offset);
 
@@ -73,8 +73,8 @@ class RightsController extends Controller
         $rightType   = $request->get('right_type');
         $contentType = $request->get('content_type');
 
-        $rightRegistry = $this->get('accesscontrol.right.registry');
-        $contentRights = $rightRegistry->getRights($rightType, $contentType);
+        $permissions = $this->get('phlexible_access_control.permissions');
+        $contentRights = $permissions->getByType("$contentType-$rightType");
 
         return new JsonResponse($contentRights);
     }
@@ -105,9 +105,9 @@ class RightsController extends Controller
         }
 
         $contentRightsManager = $this->get('phlexible_access_control.rights');
-        $contentRightsHelper = $this->get('phlexible_access_control.right.registry');
+        $permissions = $this->get('phlexible_access_control.permissions');
 
-        $contentRights = $contentRightsHelper->getRights();
+        $contentRights = $permissions->getAll();
 
         if ($deleted) {
             foreach ($deleted as $deletedRow) {

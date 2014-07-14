@@ -1,8 +1,8 @@
 Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
     strings: Phlexible.mediamanager.Strings,
-    title: Phlexible.mediamanager.Strings.meta,
-    cls: 'p-mediamanager-meta-grid',
-    iconCls: 'p-metasets-component-icon',
+    title: Phlexible.mediamanager.Strings.file_meta,
+    cls: 'p-mediamanager-meta',
+    iconCls: 'p-metaset-component-icon',
 
     small: false,
     right: Phlexible.mediamanager.Rights.FILE_MODIFY,
@@ -24,7 +24,6 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
     },
 
     initComponent: function () {
-
         this.initUrls();
 
         this.items = [];
@@ -56,73 +55,37 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
             items: languageBtns,
             hidden: !this.small,
             changeHandler: function (btn, item) {
-                var cm = this.getColumnModel();
-                Ext.each(cm.columns, function (column) {
-                    if (!column.language) {
-                        return;
-                    }
-
-                    cm.setHidden(column.id, column.language != item.language);
-                }, this);
-                this.view.layout();
+                this.changeLanguage(item.language);
             },
             scope: this
         };
 
-        this.tbar = [
-            {
-                text: this.strings.save,
-                iconCls: 'p-mediamanager-meta_save-icon',
-                handler: function () {
-                    if (!this.validateMeta()) {
-                        Ext.MessageBox.alert(this.strings.error, this.strings.fill_required_fields);
-                        return;
-                    }
-
-                    var source = this.getData();
-                    var params = this.params;
-                    params.data = Ext.encode(source);
-
-                    Ext.Ajax.request({
-                        url: this.urls.save,
-                        params: params,
-                        success: function (response) {
-                            var result = Ext.decode(response.responseText);
-                            if (result.success === false) {
-                                Ext.MessageBox.alert(this.strings.error, result.msg);
-                            }
-                            this.store.reload();
-                        },
+        this.tbar = [{
+            text: this.strings.save,
+            iconCls: 'p-mediamanager-meta_save-icon',
+            handler: this.save,
+            scope: this
+        },
+        '->',
+        cycleBtn,
+        '-',
+        {
+            text: this.strings.metasets,
+            iconCls: 'p-metaset-component-icon',
+            handler: function () {
+                var w = new Phlexible.metasets.MetaSetsWindow({
+                    baseParams: this.params,
+                    urls: this.metasetUrls,
+                    listeners: {
+                        addset: this.reloadMeta,
+                        removeset: this.reloadMeta,
                         scope: this
-                    });
-                },
-                scope: this
+                    }
+                });
+                w.show();
             },
-            '->',
-            cycleBtn,
-            '-',
-            {
-                text: this.strings.metasets,
-                iconCls: 'p-metasets-component-icon',
-                handler: function () {
-                    var w = new Phlexible.mediamanager.MetaSetsWindow({
-                        baseParams: this.params,
-                        urls: this.metasetUrls,
-                        listeners: {
-                            addset: function () {
-                                this.store.reload();
-                            },
-                            removeset: function () {
-                                this.store.reload();
-                            },
-                            scope: this
-                        }
-                    });
-                    w.show();
-                },
-                scope: this
-            }
-        ];
+            scope: this
+        }];
     },
 
     loadMeta: function (params) {
@@ -135,20 +98,69 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
 
                 this.removeAll();
                 Ext.each(data.meta, function (meta) {
-                    this.add({
-                        xtype: 'mediamanager-filemetagrid',
-                        title: meta.title,
-                        height: 180,
-                        border: false,
-                        small: this.small,
-                        data: meta.fields
-                    });
+                    this.add(this.createMetaGridConfig(meta.set_id, meta.title, meta.fields, this.small));
                 }, this);
 
                 this.doLayout();
             },
             scope: this
         });
+    },
+
+    reloadMeta: function() {
+        Ext.Ajax.request({
+            url: this.urls.load,
+            params: this.params,
+            success: function (response) {
+                var data = Ext.decode(response.responseText);
+
+                this.items.each(function(p) {
+                    Ext.each(data.meta, function(meta) {
+                        if (meta.set_id === p.setId) {
+                            p.setData(meta.fields);
+                        }
+                    })
+                });
+
+                this.doLayout();
+            },
+            scope: this
+        });
+    },
+
+    createMetaGridConfig: function(setId, title, fields, small) {
+        return {
+            xtype: 'mediamanager-filemetagrid',
+            setId: setId,
+            title: title,
+            height: 180,
+            border: false,
+            small: small,
+            data: fields
+        };
+    },
+
+    validateMeta: function() {
+        this.items.each(function(p) {
+            if (!p.validateMeta()) {
+                Ext.MessageBox.alert(this.strings.error, this.strings.fill_required_fields);
+                return false;
+            }
+        }, this);
+    },
+
+    changeLanguage: function(language) {
+        this.items.each(function(p) {
+            var cm = p.getColumnModel();
+            Ext.each(cm.columns, function (column) {
+                if (!column.language) {
+                    return;
+                }
+
+                cm.setHidden(column.id, column.language != language);
+                p.getView().layout();
+            }, this);
+        }, this);
     },
 
     setRights: function (rights) {
@@ -163,6 +175,30 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
 
     empty: function () {
         this.removeAll();
+    },
+
+    save: function () {
+        this.validateMeta();
+
+        var sources = {};
+        this.items.each(function(p) {
+            sources[p.setId] = p.getData();
+        })
+        var params = this.params;
+        params.data = Ext.encode(sources);
+
+        Ext.Ajax.request({
+            url: this.urls.save,
+            params: params,
+            success: function (response) {
+                var result = Ext.decode(response.responseText);
+                if (result.success === false) {
+                    Ext.MessageBox.alert(this.strings.error, result.msg);
+                }
+                this.reloadMeta();
+            },
+            scope: this
+        });
     },
 
     getData: function () {

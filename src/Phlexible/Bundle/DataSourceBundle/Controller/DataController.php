@@ -38,16 +38,16 @@ class DataController extends Controller
         $key = $request->get('key');
         $language = $request->get('language', 'de');
 
-        $dataSourcesRepository = $this->get('datasources.repository');
+        $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
 
         // load
-        $source = $dataSourcesRepository->getDataSourceById($sourceId, $language);
+        $source = $dataSourceManager->find($sourceId);
 
         // add new key
-        $source->addKey($key, false);
+        $source->addValueForLanguage($key, false);
 
         // save
-        $dataSourcesRepository->save($source, $this->getUser()->getId());
+        $dataSourceManager->save($source, $this->getUser()->getId());
 
         return new ResultResponse(true);
     }
@@ -60,9 +60,9 @@ class DataController extends Controller
      */
     public function listAction()
     {
-        $dataSourcesRepository = $this->get('datasources.repository');
+        $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
 
-        $titles = $dataSourcesRepository->getAllDataSourceTitles();
+        $titles = $dataSourceManager->getAllDataSourceTitles();
         asort($titles);
 
         $sources = array();

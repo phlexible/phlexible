@@ -51,6 +51,14 @@ class DataSourceManager implements DataSourceManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->dataSourceRepository->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getAllDataSourceTitles($sorted = false)
     {
         return $this->dataSourceRepository->getAllDataSourceTitles($sorted);
@@ -86,7 +94,10 @@ class DataSourceManager implements DataSourceManagerInterface
     public function updateDataSource(DataSource $dataSource)
     {
         $this->entityManager->persist($dataSource);
-        $this->entityManager->flush($dataSource);
+        foreach ($dataSource->getValueBags() as $value) {
+            $this->entityManager->persist($value);
+        }
+        $this->entityManager->flush();
     }
 
     /**

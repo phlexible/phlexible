@@ -23,6 +23,7 @@ class MetaSetField
     /**
      * @var string
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
     private $id;
@@ -219,13 +220,13 @@ class MetaSetField
     }
 
     /**
-     * @param MetaSet $metaset
+     * @param MetaSet $metaSet
      *
      * @return $this
      */
-    public function setMetaSet($metaset)
+    public function setMetaSet($metaSet)
     {
-        $this->metaset = $metaset;
+        $this->metaSet = $metaSet;
 
         return $this;
     }

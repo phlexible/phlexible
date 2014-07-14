@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
-use Brainbits_Util_FileLock as FileLock;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
+use Phlexible\Component\Util\FileLock;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -45,7 +45,7 @@ class CleanCommand extends ContainerAwareCommand
         $container = $this->getContainer();
 
         $lock = new FileLock('mediacache_lock', $container->getParameter('app.lock_dir'));
-        if (!$lock->tryAcquire()) {
+        if (!$lock->acquire()) {
             throw new AlreadyRunningException('Another media cache process is running.');
         }
 

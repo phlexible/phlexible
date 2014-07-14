@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
 use Phlexible\Bundle\MetaSetBundle\Doctrine\MetaDataManager;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaData;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
 
 /**
@@ -20,6 +21,21 @@ use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
  */
 class FolderMetaDataManager extends MetaDataManager
 {
+    /**
+     * @param MetaSet         $metaSet
+     * @param FolderInterface $folder
+     *
+     * @return MetaData|MetaDataInterface
+     */
+    public function createFolderMetaData(MetaSet $metaSet, FolderInterface $folder)
+    {
+        $metaData = $this->createMetaData($metaSet);
+        $metaData
+            ->setIdentifiers($this->getIdentifiersFromFolder($folder));
+
+        return $metaData;
+    }
+
     /**
      * @param MetaSet         $metaSet
      * @param FolderInterface $folder

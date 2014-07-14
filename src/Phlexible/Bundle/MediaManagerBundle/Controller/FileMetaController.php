@@ -39,6 +39,7 @@ class FileMetaController extends Controller
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
+        $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
         $meta = array();
         foreach ($file->getAttribute('metasets', array()) as $metaSetId) {
@@ -51,10 +52,12 @@ class FileMetaController extends Controller
 
             $fieldDatas = array();
             foreach ($metaSet->getFields() as $field) {
+                $options = $optionResolver->resolve($field);
+
                 $fieldData = array(
                     'key'          => $field->getName(),
                     'type'         => $field->getType(),
-                    'options'      => $field->getOptions(),
+                    'options'      => $options,
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
@@ -131,7 +134,7 @@ class FileMetaController extends Controller
         foreach ($metaSets as $metaSet) {
             $sets[] = array(
                 'set_id' => $metaSet->getId(),
-                'name'   => $metaSet->getTitle(),
+                'name'   => $metaSet->getName(),
             );
         }
 

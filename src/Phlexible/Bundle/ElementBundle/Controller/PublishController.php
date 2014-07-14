@@ -7,6 +7,7 @@
  */
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
+use Phlexible\Component\Util\FileLock;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -151,8 +152,8 @@ class PublishController extends Controller
         $data     = $request->get('data');
         $data     = json_decode($data, true);
 
-        $lock = new \Brainbits_Util_FileLock($this->getContainer()->getParameter('app.lock_dir') . 'elements_publish_lock');
-        if (!$lock->tryAcquire()) {
+        $lock = new FileLock($this->getContainer()->getParameter('app.lock_dir') . 'elements_publish_lock');
+        if (!$lock->acquire()) {
             throw new Makeweb_Elements_Element_Exception('Another advanced publish running.');
         }
 

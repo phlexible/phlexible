@@ -26,6 +26,16 @@ interface MetaSetManagerInterface
     public function find($id);
 
     /**
+     * @param array      $criteria
+     * @param null|array $orderBy
+     * @param null|int   $limit
+     * @param null|int   $offset
+     *
+     * @return MetaSet[]
+     */
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
+
+    /**
      * @param string $name
      *
      * @return MetaSet

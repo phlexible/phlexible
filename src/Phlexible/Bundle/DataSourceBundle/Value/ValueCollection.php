@@ -8,12 +8,14 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\Value;
 
+use Traversable;
+
 /**
  * Value collection
  *
  * @author Phillip Look <pl@brainbits.net>
  */
-class ValueCollection implements \Countable
+class ValueCollection implements \Countable, \IteratorAggregate
 {
     /**
      * Data source value collection.
@@ -61,13 +63,13 @@ class ValueCollection implements \Countable
     /**
      * Remove values from collection by its key value.
      *
-     * @param array $keys
+     * @param array $values
      *
      * @return $this
      */
-    public function removeValuesByKey(array $keys)
+    public function removeValues(array $values)
     {
-        $this->values = array_diff($this->values, $keys);
+        $this->values = array_diff($this->values, $values);
 
         return $this;
     }
@@ -75,27 +77,13 @@ class ValueCollection implements \Countable
     /**
      * Hold values from collection by its key value.
      *
-     * @param array $keys
+     * @param array $values
      *
      * @return $this
      */
-    public function holdValuesByKey(array $keys)
+    public function holdValues(array $values)
     {
-        $this->values = array_intersect($this->values, $keys);
-
-        return $this;
-    }
-
-    /**
-     * Remove values from collection by its key value.
-     *
-     * @param array $ids
-     *
-     * @return $this
-     */
-    public function removeValuesById(array $ids)
-    {
-        $this->values = array_diff_key($this->values, array_flip($ids));
+        $this->values = array_intersect($this->values, $values);
 
         return $this;
     }
@@ -103,7 +91,7 @@ class ValueCollection implements \Countable
     /**
      * Get values in collection.
      *
-     * @return array <id> => <key>
+     * @return array
      */
     public function toArray()
     {
@@ -116,5 +104,13 @@ class ValueCollection implements \Countable
     public function count()
     {
         return count($this->values);
+    }
+
+    /**
+     * @return \Traversable
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->values);
     }
 }

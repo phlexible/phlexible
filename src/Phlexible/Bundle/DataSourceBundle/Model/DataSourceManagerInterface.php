@@ -25,6 +25,16 @@ interface DataSourceManagerInterface
     public function find($id);
 
     /**
+     * @param array      $criteria
+     * @param null|array $orderBy
+     * @param null|int   $limit
+     * @param null|int   $offset
+     *
+     * @return array|DataSource[]
+     */
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
+
+    /**
      * Return all data source titles
      *
      * @param bool $sorted
