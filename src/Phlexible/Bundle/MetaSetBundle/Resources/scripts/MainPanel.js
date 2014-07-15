@@ -167,7 +167,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 ],
                 tbar: [
                     {
-                        text: 'Add field',
+                        text: '_add_field',
                         iconCls: 'p-metaset-add-icon',
                         handler: function () {
                             var r = new Ext.data.Record({key: '', type: 'textfield'});
@@ -179,7 +179,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                     },
                     '-',
                     {
-                        text: 'Save',
+                        text: '_save',
                         iconCls: 'p-metaset-save-icon',
                         handler: function () {
                             var params = [];
@@ -235,11 +235,27 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
 
     configureField: function(grid, record) {
         if (record.get('type') === 'suggest') {
-            var w = new Phlexible.metasets.SuggestConfigurationWindow();
+            var w = new Phlexible.metasets.SuggestConfigurationWindow({
+                options: record.get('options'),
+                listeners: {
+                    select: function(options) {
+                        record.set('options', options);
+                    },
+                    scope: this
+                }
+            });
             w.show();
         }
         else if (record.get('type') === 'select') {
-            var w = new Phlexible.metasets.SelectConfigurationWindow();
+            var w = new Phlexible.metasets.SelectConfigurationWindow({
+                options: record.get('options'),
+                listeners: {
+                    store: function(options) {
+                        record.set('options', options);
+                    },
+                    scope: this
+                }
+            });
             w.show();
         }
     },

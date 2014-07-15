@@ -1,28 +1,46 @@
-Phlexible.metasets.SuggestConfigurationWindow = Ext.extends(Ext.Window, {
+Phlexible.metasets.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
     title: '_suggest',
-    width: 400,
-    height: 200,
+    width: 300,
+    height: 400,
+    layout: 'fit',
     modal: true,
 
     initComponent: function() {
         this.items = [{
-            xtype: 'form',
+            xtype: 'grid',
             border: false,
-            items: [{
-                xtype: 'combo',
-                fieldLabel: '_datasource',
-                store: new Ext.data.SimpleStore({
-                    fields: ['id', 'name'],
-                    data: [[1, 'a'], [2, 'b'], [3, 'c']]
-                }),
-                mode: 'local',
-                valueField: 'id',
-                displayField: 'name',
-                typeAhead: false,
-                triggerAction: 'all',
-                selectOnFocus: true,
-                editable: false
-            }]
+            autoExpandColumn: 'datasource',
+            store: new Ext.data.JsonStore({
+                url: Phlexible.Router.generate('datasources_list'),
+                fields: ['id', 'title'],
+                id: 'id',
+                root: 'datasources',
+                autoLoad: true,
+                listeners: {
+                    load: function(store, records) {
+                        if (!this.options) {
+                            return;
+                        }
+
+                        var row = store.find('id', this.options);
+
+                        if (row === -1) {
+                            return;
+                        }
+
+                        this.getComponent(0).getSelectionModel().selectRow(row);
+                    },
+                    scope: this
+                }
+            }),
+            columns: [{
+                id: 'datasource',
+                header: '_datasource',
+                dataIndex: 'title'
+            }],
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true
+            })
         }];
 
         this.buttons = [{
@@ -32,9 +50,11 @@ Phlexible.metasets.SuggestConfigurationWindow = Ext.extends(Ext.Window, {
             },
             scope: this
         },{
-            text: '_store',
+            text: '_select',
             handler: function() {
-
+                var options = this.getComponent(0).getSelectionModel().getSelected().get('id');
+                this.fireEvent('select', options);
+                this.close();
             },
             scope: this
         }];

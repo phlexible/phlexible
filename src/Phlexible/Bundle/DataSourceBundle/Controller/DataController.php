@@ -27,6 +27,29 @@ class DataController extends Controller
     /**
      * Return something
      *
+     * @return JsonResponse
+     * @Route("/list", name="datasources_list")
+     */
+    public function listAction()
+    {
+        $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
+
+        $dataSources = $dataSourceManager->findBy(array());
+
+        $sources = array();
+        foreach ($dataSources as $dataSource) {
+            $sources[] = array(
+                'id' => $dataSource->getId(),
+                'title' => $dataSource->getTitle()
+            );
+        }
+
+        return new JsonResponse(array('datasources' => $sources));
+    }
+
+    /**
+     * Return something
+     *
      * @param Request $request
      *
      * @return ResultResponse
@@ -50,26 +73,5 @@ class DataController extends Controller
         $dataSourceManager->save($source, $this->getUser()->getId());
 
         return new ResultResponse(true);
-    }
-
-    /**
-     * Return something
-     *
-     * @return JsonResponse
-     * @Route("/list", name="datasources_list")
-     */
-    public function listAction()
-    {
-        $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
-
-        $titles = $dataSourceManager->getAllDataSourceTitles();
-        asort($titles);
-
-        $sources = array();
-        foreach ($titles as $id => $title) {
-            $sources[] = array('id' => $id, 'title' => $title);
-        }
-
-        return new JsonResponse(array('sources' => $sources));
     }
 }
