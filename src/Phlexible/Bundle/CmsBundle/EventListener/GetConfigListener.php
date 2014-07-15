@@ -46,7 +46,7 @@ class GetConfigListener
 
         $languages = array();
         foreach ($this->availableLanguages as $language) {
-            $name = \Zend_Locale::getTranslation($language, 'language', 'de');
+            $name = \Locale::getDisplayName($language, $event->getSecurityContext()->getToken()->getUser()->getInterfaceLanguage());
             $languages[$name] = $language;
         }
 

@@ -10,3 +10,12 @@ services:
         tags:
             - {name: monolog.logger, channel: media_tools}
 
+
+    phlexible_media_tool.pdfinfo:
+        class: Brainbits\PdfToText\PdfInfo
+        factory_class: Brainbits\PdfToText\PdfInfo
+        factory_method: load
+        arguments: [[%phlexible_media_tool.pdftotext.pdfinfo%], @logger]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+

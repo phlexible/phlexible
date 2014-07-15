@@ -35,40 +35,6 @@ interface DataSourceManagerInterface
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * Return all data source titles
-     *
-     * @param bool $sorted
-     *
-     * @return array
-     */
-    public function getAllDataSourceTitles($sorted = false);
-
-    /**
-     * Return all data source languages
-     *
-     * @param string $dataSourceId
-     *
-     * @return array
-     */
-    public function getAllDataSourceLanguages($dataSourceId);
-
-    /**
-     * Return all data source ids
-     *
-     * @return array
-     */
-    public function getAllDataSourceIds();
-
-    /**
-     * @param string    $sourceId
-     * @param string    $language
-     * @param null|bool $isActive
-     *
-     * @return array
-     */
-    public function getAllValuesByDataSourceId($sourceId, $language, $isActive = null);
-
-    /**
      * @param DataSource $dataSource
      */
     public function updateDataSource(DataSource $dataSource);

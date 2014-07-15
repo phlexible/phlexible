@@ -284,8 +284,6 @@ class StatusController extends Controller
     {
         $output = '';
         $output .= '<div>PHP: ' . PHP_VERSION . '</div>';
-        $output .= '<div>Zend Framework: ' . \Zend_Version::VERSION . '</div>';
-        $output .= '<div>Doctrine: ' . \Doctrine_Core::VERSION . '</div>';
 
         return new Response($output);
     }

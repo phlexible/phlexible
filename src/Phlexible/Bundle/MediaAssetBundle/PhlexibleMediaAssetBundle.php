@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaAssetBundle;
 
 use Phlexible\Bundle\MediaAssetBundle\DependencyInjection\Compiler\AddAttributeReadersPass;
-use Phlexible\Bundle\MediaAssetBundle\DependencyInjection\Compiler\AddMetaReadersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,6 +25,5 @@ class PhlexibleMediaAssetBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new AddAttributeReadersPass());
-        $container->addCompilerPass(new AddMetaReadersPass());
     }
 }

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\DataSourceBundle\Event;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Bundle\DataSourceBundle\Value\ValueCollection;
+use Phlexible\Bundle\DataSourceBundle\Model\ValueCollection;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

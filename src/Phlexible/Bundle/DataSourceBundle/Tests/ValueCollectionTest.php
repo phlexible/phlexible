@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\Tests;
 
-use Phlexible\Bundle\DataSourceBundle\Value\ValueCollection;
+use Phlexible\Bundle\DataSourceBundle\Model\ValueCollection;
 
 /**
  * DataSource Test
@@ -96,7 +96,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $collection->setValues($values);
 
         // EXERCISE
-        $collection->removeValuesByKey($removeKeys);
+        $collection->removeValues($removeKeys);
 
         // VERIFY
         $this->assertEquals(
@@ -130,48 +130,13 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
         $collection->setValues($values);
 
         // EXERCISE
-        $collection->holdValuesByKey($holdKeys);
+        $collection->holdValues($holdKeys);
 
         // VERIFY
         $this->assertEquals(
             $expected,
             $collection->toArray(),
             'holdValuesByKey() holds incorrect values'
-        );
-    }
-
-    /**
-     * removeById() removes correct entries.
-     */
-    public function testRemoveByIdRemovesCorrectEntries()
-    {
-        // SETUP
-        $values = array(
-            'id1' => 'key1',
-            'id2' => 'key2',
-            'id3' => 'key3',
-        );
-
-        $removeIds = array(
-            'id2',
-            'id3',
-        );
-
-        $expected = array(
-            'id1' => 'key1',
-        );
-
-        $collection = new ValueCollection();
-        $collection->setValues($values);
-
-        // EXERCISE
-        $collection->removeValuesById($removeIds);
-
-        // VERIFY
-        $this->assertEquals(
-            $expected,
-            $collection->toArray(),
-            'removeValuesByKey() removes incorrect values'
         );
     }
 }

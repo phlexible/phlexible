@@ -6,8 +6,8 @@ services:
         tags:
             - {name: phlexible_media_asset.image_extractor}
 
-    phlexible_media_asset.extractor.image.zend_media:
-        class: Phlexible\Bundle\MediaAssetBundle\ImageExtractor\ZendMediaImageExtractor
+    phlexible_media_asset.extractor.image.getid3:
+        class: Phlexible\Bundle\MediaAssetBundle\ImageExtractor\GetId3ImageExtractor
         public: false
         arguments: [%phlexible_media_asset.asset_temp_dir%, @logger]
         tags:

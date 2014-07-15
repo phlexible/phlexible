@@ -12,7 +12,7 @@ use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
-use Phlexible\Bundle\DataSourceBundle\Value\ValueCollection;
+use Phlexible\Bundle\DataSourceBundle\Model\ValueCollection;
 use Phlexible\Bundle\MediaManagerBundle\Util\SuggestFieldUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

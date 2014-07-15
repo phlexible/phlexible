@@ -55,7 +55,7 @@ class VideoAnalyzerAttributeReader implements AttributeReaderInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('assettype')) === 'video';
+        return strtolower($file->getAttribute('assettype')) === 'video' || strtolower($file->getAttribute('assettype')) === 'audio';
     }
 
     /**

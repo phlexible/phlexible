@@ -7,14 +7,32 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
     initComponent: function () {
         var metaFields = new Phlexible.metasets.Fields();
 
+        // Create RowActions Plugin
+        var actions = new Ext.ux.grid.RowActions({
+            header: '_actions',
+            width: 40,
+            actions: [
+                {
+                    iconCls: 'p-metaset-delete-icon',
+                    tooltip: '_delete',
+                    callback: this.deleteField.createDelegate(this),
+                    scope: this
+                },
+                {
+                    iconCls: 'p-metaset-edit-icon',
+                    tooltip: '_configure',
+                    callback: this.configureField.createDelegate(this),
+                    scope: this
+                }
+            ]
+        });
+
         this.items = [
             {
                 xtype: 'grid',
                 region: 'west',
                 width: 200,
-                loadMask: {
-                    text: 'bla'
-                },
+                loadMask: true,
                 viewConfig: {
                     forceFit: true
                 },
@@ -30,18 +48,18 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 }),
                 columns: [
                     {
-                        header: 'ID',
+                        header: '_id',
                         dataIndex: 'id',
                         hidden: true
                     },
                     {
-                        header: 'Title',
+                        header: '_title',
                         dataIndex: 'title'
                     }
                 ],
                 tbar: [
                     {
-                        text: 'Add',
+                        text: '_add',
                         iconCls: 'p-metaset-add-icon',
                         handler: function () {
                             Ext.Ajax.request({
@@ -64,16 +82,14 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                     }
                 ],
                 listeners: {
-                    rowdblclick: {
-                        fn: function (grid, rowIndex) {
-                            var id = grid.store.getAt(rowIndex).get('id');
-                            this.getComponent(1).set_id = id;
-                            this.getComponent(1).enable();
-                            this.getComponent(1).store.baseParams.id = id;
-                            this.getComponent(1).store.load();
-                        },
-                        scope: this
-                    }
+                    rowdblclick: function (grid, rowIndex) {
+                        var id = grid.store.getAt(rowIndex).get('id');
+                        this.getComponent(1).setId = id;
+                        this.getComponent(1).enable();
+                        this.getComponent(1).store.baseParams.id = id;
+                        this.getComponent(1).store.load();
+                    },
+                    scope: this
                 }
             },
             {
@@ -96,13 +112,13 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 sm: new Ext.grid.RowSelectionModel(),
                 columns: [
                     {
-                        header: 'Name',
+                        header: '_name',
                         dataIndex: 'key',
                         width: 200,
                         editor: new Ext.form.TextField()
                     },
                     {
-                        header: 'Type',
+                        header: '_type',
                         dataIndex: 'type',
                         width: 200,
                         editor: new Ext.form.ComboBox({
@@ -120,29 +136,34 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                         })
                     },
                     {
-                        header: 'Required',
+                        header: '_required',
                         dataIndex: 'required',
                         width: 60,
                         editor: new Ext.form.NumberField()
                     },
                     {
-                        header: 'Synchronized',
+                        header: '_synchronized',
                         dataIndex: 'synchronized',
                         width: 85,
                         editor: new Ext.form.NumberField()
                     },
                     {
-                        header: 'Readonly',
+                        header: '_readonly',
                         dataIndex: 'readonly',
                         width: 75,
                         editor: new Ext.form.NumberField()
                     },
                     {
-                        header: 'Options',
+                        header: '_options',
                         dataIndex: 'options',
                         width: 200,
-                        editor: new Ext.form.TextField()
-                    }
+                        //editor: new Ext.form.TextField(),
+                        hidden: true
+                    },
+                    actions
+                ],
+                plugins: [
+                    actions
                 ],
                 tbar: [
                     {
@@ -153,21 +174,6 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                             r.set('key', 'key-' + r.id);
                             this.getComponent(1).store.add(r);
 
-                        },
-                        scope: this
-                    },
-                    '-',
-                    {
-                        text: 'Delete field',
-                        iconCls: 'p-metaset-delete-icon',
-                        handler: function () {
-                            var selections = this.getComponent(1).getSelectionModel().getSelections();
-
-                            if (selections.length) {
-                                for (var i = 0; i < selections.length; i++) {
-                                    this.getComponent(1).store.remove(selections[i]);
-                                }
-                            }
                         },
                         scope: this
                     },
@@ -193,7 +199,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                             Ext.Ajax.request({
                                 url: Phlexible.Router.generate('metasets_sets_save'),
                                 params: {
-                                    id: this.getComponent(1).set_id,
+                                    id: this.getComponent(1).setId,
                                     data: Ext.encode(params)
                                 },
                                 success: function (response) {
@@ -214,19 +220,33 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                     }
                 ],
                 listeners: {
-                    render: {
-                        fn: function (grid) {
-                            this.ddrow = new Ext.ux.dd.GridReorderDropTarget(grid, {
-                                copy: false
-                            });
-                        },
-                        scope: this
-                    }
+                    render: function (grid) {
+                        this.ddrow = new Ext.ux.dd.GridReorderDropTarget(grid, {
+                            copy: false
+                        });
+                    },
+                    scope: this
                 }
             }
         ];
 
         Phlexible.metasets.MainPanel.superclass.initComponent.call(this);
+    },
+
+    configureField: function(grid, record) {
+        if (record.get('type') === 'suggest') {
+            var w = new Phlexible.metasets.SuggestConfigurationWindow();
+            w.show();
+        }
+        else if (record.get('type') === 'select') {
+            var w = new Phlexible.metasets.SelectConfigurationWindow();
+            w.show();
+        }
+    },
+
+    deleteField: function (grid, record) {
+        grid.getStore().remove(record);
     }
 });
+
 Ext.reg('metasets-main', Phlexible.metasets.MainPanel);

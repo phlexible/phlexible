@@ -41,6 +41,7 @@ class PhlexibleMediaToolExtension extends Extension
         $container->setParameter('phlexible_media_tool.swftools.swfdump', $config['swftools']['swfdump']);
         $container->setParameter('phlexible_media_tool.swftools.swfcombine', $config['swftools']['swfcombine']);
         $container->setParameter('phlexible_media_tool.pdftotext.pdftotext', $config['pdftotext']['pdftotext']);
+        $container->setParameter('phlexible_media_tool.pdftotext.pdfinfo', $config['pdftotext']['pdfinfo']);
         $container->setParameter('phlexible_media_tool.imagemagick.identify', $config['imagemagick']['identify']);
         $container->setParameter('phlexible_media_tool.imagemagick.convert', $config['imagemagick']['convert']);
         $container->setParameter('phlexible_media_tool.imagemagick.mogrify', $config['imagemagick']['mogrify']);

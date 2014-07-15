@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('pdftotext')->defaultValue('pdftotext')->end()
+                        ->scalarNode('pdfinfo')->defaultValue('pdfinfo')->end()
                     ->end()
                 ->end()
                 ->arrayNode('mime')

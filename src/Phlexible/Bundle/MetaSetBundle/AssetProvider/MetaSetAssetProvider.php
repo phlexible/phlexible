@@ -62,6 +62,9 @@ class MetaSetAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/MetaSetsWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/MetaSuggestWindow.js')),
 
+            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/SelectConfigurationWindow.js')),
+            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/SuggestConfigurationWindow.js')),
+
             new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/menuhandle/MetaSetsHandle.js')),
         ));
 

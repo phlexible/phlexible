@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\DataSourceBundle\Exception;
  *
  * @author Phillip Look <pl@brainbits.net>
  */
-class NotFoundException extends Exception
+class NotFoundException extends \Exception
 {
 
 }

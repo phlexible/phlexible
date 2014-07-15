@@ -69,7 +69,7 @@ class ConfigBuilder
 
         $languages = array();
         foreach ($this->availableLanguages as $key => $language) {
-            $name = \Zend_Locale::getTranslation($language, 'language', 'de');
+            $name = \Locale::getDisplayName($language, $this->securityContext->getToken()->getUser()->getInterfaceLanguage());
             $languages[$name] = $language;
             unset($languages[$key]);
         }

@@ -8,23 +8,37 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
+use Brainbits\PdfToText\PdfInfo;
 use Phlexible\Bundle\MediaAssetBundle\AttributeMetaData;
 use Phlexible\Bundle\MediaAssetBundle\MetaBag;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 
 /**
- * Zip extension attribute reader
+ * pdfinfo attribute reader
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ZipExtensionAttributeReader implements AttributeReaderInterface
+class PdfInfoAttributeReader implements AttributeReaderInterface
 {
+    /**
+     * @var PdfInfo
+     */
+    private $pdfinfo;
+
+    /**
+     * @param PdfInfo $pdfinfo
+     */
+    public function __construct(PdfInfo $pdfinfo)
+    {
+        $this->pdfinfo = $pdfinfo;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function isAvailable()
     {
-       return extension_loaded('zip');
+       return true;
     }
 
     /**
@@ -32,7 +46,7 @@ class ZipExtensionAttributeReader implements AttributeReaderInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('documenttype')) === 'zip';
+        return strtolower($file->getAttribute('documenttype')) === 'pdf';
     }
 
     /**
@@ -43,19 +57,19 @@ class ZipExtensionAttributeReader implements AttributeReaderInterface
         $filename = $file->getPhysicalPath();
 
         $metaData = new AttributeMetaData();
-        $metaData->setTitle('ZIP attributes');
+        $metaData->setTitle('PDF attributes');
 
-        $zip = new \ZipArchive();
-        $zip->open($filename);
 
-        if (!empty($zip->numFiles)) {
-            $metaData
-                ->set('num_files', $zip->numFiles)
-                ->set('comment', $zip->comment);
+
+        try {
+            $infos = $this->pdfinfo->getInfo($filename);
+
+            foreach ($infos as $key => $value) {
+                $metaData->set(strtolower($key), $value);
+            }
+
+            $metaBag->add($metaData);
+        } catch (\Exception $e) {
         }
-
-        $zip->close();
-
-        $metaBag->add($metaData);
     }
 }

@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
+use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Phlexible\Component\Util\FileLock;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -55,15 +56,10 @@ class CleanCommand extends ContainerAwareCommand
             $files = array_merge($files, $this->_getFiles($site));
         }
 
-        $db = $container->dbPool->default;
+        $cacheItems = $container->get('phlexible_media_cache.cache_manager')->findAll();
 
-        $select = $db->select()
-            ->FROM($db->prefix . 'media_cache', 'id');
-
-        $ids = $db->fetchCol($select);
-
-        foreach ($ids as $id) {
-            unset($files[$id]);
+        foreach ($cacheItems as $cacheItem) {
+            unset($files[$cacheItem->getFileId()]);
         }
 
         $pretend = $input->getOption('pretend');
@@ -98,7 +94,7 @@ class CleanCommand extends ContainerAwareCommand
         return 0;
     }
 
-    protected function _getFiles(Site $site)
+    protected function _getFiles(SiteInterface $site)
     {
         $filePaths = glob($site->getFrameDir() . '*/*/*');
         $files = array();

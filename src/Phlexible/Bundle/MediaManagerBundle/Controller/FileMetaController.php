@@ -209,108 +209,64 @@ class FileMetaController extends Controller
         $data = $request->get('data');
         $data = json_decode($data);
 
-        $dispatcher = $container->dispatcher;
+        $metaLanguages = explode(',', $this->container->getParameter('phlexible_meta_set.languages.available'));
 
-        $metaDefaultLanguage = $registry->getValue('system.languages.language.meta');
-        $metaLanguages = $languagesManager->getSet('meta');
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
 
-        $site = $this->getContainer()->get('phlexible_media_site.manager')->getByFileId($fileId);
+        $site = $this->get('phlexible_media_site.manager')->getByFileId($fileId);
         $file = $site->findFile($fileId, $fileVersion);
-        $asset = $this->getContainer()->mediaAssetManager->find($file);
 
-        $event = new BeforeSaveMetaEvent($file);
-        if ($dispatcher->dispatch($event) === false) {
-            $this->_response->setResult(false, null, $event->getCancelReason());
+        /*
+        $beforeEvent = new BeforeSaveFileMeta($file);
+        if ($dispatcher->dispatch($beforeEvent) === false) {
+            $this->getResponse()->setAjaxPayload(
+                MWF_Ext_Result::encode(false, null, $beforeEvent->getCancelReason())
+            );
 
             return;
         }
+        */
 
-        $metaSetItems = $asset->getMetaSetItems($metaDefaultLanguage);
+        $metaSetIds = $file->getAttribute('metasets', array());
 
-        foreach ($data as $key => $row) {
-            if ('suggest' === $metaSetItems[$row['set_id']]->getType($key)) {
-                $dataSourceId = $metaSetItems[$row['set_id']]->getOptions($key);
-                $dataSourcesRepository = $container->dataSourcesRepository;
-                $dataSource = $dataSourcesRepository->getDataSourceById(
-                    $dataSourceId,
-                    $metaDefaultLanguage
-                );
-                $dataSourceKeys = $dataSource->getKeys();
-                $dataSourceModified = false;
-                foreach (explode(',', $row['value_' . $metaDefaultLanguage]) as $singleValue) {
-                    if (!in_array($singleValue, $dataSourceKeys)) {
-                        $dataSource->addKey($singleValue, true);
-                        $dataSourceModified = true;
+        foreach ($data as $metaSetId => $fields) {
+            $metaSet = $metaSetManager->find($metaSetId);
+            $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
+
+            if (!$metaData) {
+                $metaData = $fileMetaDataManager->createFileMetaData($metaSet, $file);
+            }
+
+            foreach ($fields as $fieldname => $row) {
+                foreach ($metaLanguages as $language) {
+                    if (!isset($row["value_$language"])) {
+                        continue;
                     }
-                }
-                if ($dataSourceModified) {
-                    $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
+
+                    if (!$metaSet->hasField($fieldname)) {
+                        continue;
+                    }
+
+                    // TODO: löschen?
+                    if (empty($row["value_$language"])) {
+                        continue;
+                    }
+
+                    $value = $row["value_$language"];
+
+                    $metaData->set($fieldname, $value, $language);
                 }
             }
 
-            $metaSetItems[$row['set_id']]->$key = $row['value_' . $metaDefaultLanguage];
+            $fileMetaDataManager->updateMetaData($metaData);
         }
 
-        foreach ($metaSetItems as $metaSetItem) {
-            $metaSetItem->save();
-        }
-
-        unset($metaSetItems);
-
-        foreach ($metaLanguages as $metaLanguage) {
-            if ($metaLanguage === $metaDefaultLanguage) {
-                continue;
-            }
-
-            $metaSetItems = $asset->getMetaSetItems($metaLanguage);
-
-            foreach ($data as $key => $row) {
-                if ('suggest' === $metaSetItems[$row['set_id']]->getType($key)) {
-                    $dataSourceId = $metaSetItems[$row['set_id']]->getOptions($key);
-                    $dataSourcesRepository = $container->dataSourcesRepository;
-                    $dataSource = $dataSourcesRepository->getDataSourceById(
-                        $dataSourceId,
-                        $metaLanguage
-                    );
-                    $dataSourceKeys = $dataSource->getKeys();
-                    $dataSourceModified = false;
-                    foreach (explode(',', $row['value_' . $metaLanguage]) as $singleValue) {
-                        if (!in_array($singleValue, $dataSourceKeys)) {
-                            $dataSource->addKey($singleValue, true);
-                            $dataSourceModified = true;
-                        }
-                    }
-                    if ($dataSourceModified) {
-                        $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
-                    }
-                }
-
-                $metaSetItems[$row['set_id']]->$key = $row['value_' . $metaLanguage];
-            }
-
-            foreach ($metaSetItems as $metaSetItem) {
-                $metaSetItem->save();
-            }
-        }
-
-        $event = new SaveMetaEvent($file);
+        /*
+        $event = new Media_Manager_Event_SaveFileMeta($file);
         $dispatcher->dispatch($event);
+        */
 
-        $db = $this->getContainer()->dbPool->default;
-        $updateData = array(
-            'modify_user_id' => $this->getUser()->getId(),
-            'modify_time'    => $db->fn->now(),
-        );
-        $where = array(
-            'id = ?'      => $file->getId(),
-            'version = ?' => $file->getVersion(),
-        );
-        $db->update(
-            $db->prefix . 'mediamanager_files',
-            $updateData,
-            $where
-        );
-
-        return new ResultResponse(true, 'Meta saved.');
+        return new ResultResponse(true, 'File meta saved.');
     }
 }

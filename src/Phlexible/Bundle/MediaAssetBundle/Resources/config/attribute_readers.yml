@@ -1,4 +1,16 @@
 services:
+    phlexible_media_asset.reader.attribute.exif_extension:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ExifExtensionAttributeReader
+        public: false
+        tags:
+            - {name: phlexible_media_asset.meta_reader}
+
+    phlexible_media_asset.reader.attribute.getid3:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\GetId3AttributeReader
+        public: false
+        tags:
+            - {name: phlexible_media_asset.meta_reader}
+
     phlexible_media_asset.reader.attribute.imageanalyzer:
         class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ImageAnalyzerAttributeReader
         public: false
@@ -6,9 +18,10 @@ services:
         tags:
             - {name: phlexible_media_asset.attribute_reader}
 
-    phlexible_media_asset.reader.attribute.openxml:
-        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\OpenXmlAttributeReader
+    phlexible_media_asset.reader.attribute.pdfinfo:
+        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\PdfInfoAttributeReader
         public: false
+        arguments: [@phlexible_media_tool.pdfinfo]
         tags:
             - {name: phlexible_media_asset.attribute_reader}
 
@@ -19,20 +32,6 @@ services:
         tags:
             - {name: phlexible_media_asset.attribute_reader}
             - {name: monolog.logger, channel: media_asset}
-
-    phlexible_media_asset.reader.attribute.zendmedia:
-        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ZendMediaAttributeReader
-        public: false
-        arguments: [@logger]
-        tags:
-            - {name: phlexible_media_asset.attribute_reader}
-            - {name: monolog.logger, channel: media_asset}
-
-    phlexible_media_asset.reader.attribute.zendpdf:
-        class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ZendPdfAttributeReader
-        public: false
-        tags:
-            - {name: phlexible_media_asset.attribute_reader}
 
     phlexible_media_asset.reader.attribute.zipextension:
         class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ZipExtensionAttributeReader

@@ -206,12 +206,10 @@ class FolderMetaController extends Controller
         $data = $request->get('data');
         $data = json_decode($data, true);
 
-        $metaDefaultLanguage = $this->container->getParameter('phlexible_meta_set.languages.default');
         $metaLanguages = explode(',', $this->container->getParameter('phlexible_meta_set.languages.available'));
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
-        $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
 
         $site = $this->get('phlexible_media_site.manager')->getByFolderId($folderId);
         $folder = $site->findFolder($folderId);
@@ -266,22 +264,6 @@ class FolderMetaController extends Controller
         $dispatcher->dispatch($event);
         */
 
-        /*
-        $db = $container->dbPool->write;
-        $updateData = array(
-            'modify_user_id' => MWF_Env::getUid(),
-            'modify_time'    => $db->fn->now(),
-        );
-        $where = array(
-            'id = ?' => $folder->getId(),
-        );
-        $db->update(
-            $db->prefix . 'mediamanager_folders',
-            $updateData,
-            $where
-        );
-        */
-
-        return new ResultResponse(true, 'Meta saved.');
+        return new ResultResponse(true, 'Folder meta saved.');
     }
 }

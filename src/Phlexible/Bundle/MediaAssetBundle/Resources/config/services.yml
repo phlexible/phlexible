@@ -5,7 +5,7 @@ services:
     phlexible_media_asset.transmutor:
         class: Phlexible\Bundle\MediaAssetBundle\Transmutor
         arguments:
-            - [@phlexible_media_asset.extractor.image.video_converter, @phlexible_media_asset.extractor.image.zend_media, @phlexible_media_asset.extractor.image.raw]
+            - [@phlexible_media_asset.extractor.image.video_converter, @phlexible_media_asset.extractor.image.getid3, @phlexible_media_asset.extractor.image.raw]
             - [@phlexible_media_asset.extractor.video.raw]
             - [@phlexible_media_asset.extractor.audio.raw]
             - [@phlexible_media_asset.extractor.flash.raw]
@@ -13,6 +13,6 @@ services:
     # event listeners
     phlexible_media_asset.listener.file:
         class: Phlexible\Bundle\MediaAssetBundle\EventListener\FileListener
-        arguments: [@phlexible_media_asset.reader.attribute, @phlexible_media_asset.reader.meta]
+        arguments: [@phlexible_media_asset.reader.attribute]
         tags:
             - {name: kernel.event_listener, event: phlexible_media_site.before_create_file, method: onBeforeCreateFile}

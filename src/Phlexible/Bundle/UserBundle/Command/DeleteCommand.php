@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Command;
 
+use Phlexible\Bundle\UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -44,39 +45,40 @@ class DeleteCommand extends ContainerAwareCommand
         $username = $input->getArgument('username');
         $successorUsername = $input->getArgument('successor');
 
-        $uid = $this->findUser($username);
-        $successorUid = $this->findUser($successorUsername);
+        $user = $this->findUser($username);
+        $successorUser = $this->findUser($successorUsername);
 
-        $output->writeln("Using delete UID $uid");
-        $output->writeln("Using successor UID $successorUid");
+        $output->writeln("Using delete user {$user->getId()}");
+        $output->writeln("Using successor user {$successorUser->getId()}");
 
-        \MWF_Core_Users_User_Peer::deleteByUserID($uid, $successorUid);
+        $userManager = $this->getContainer()->get('phlexible_user.user_manager');
+        $userManager->deleteUser($user, $successorUser);
 
         $output->writeln('User deleted.');
 
         return 0;
     }
 
+    /**
+     * @param string $username
+     *
+     * @return User
+     * @throws \Exception
+     */
     private function findUser($username)
     {
-        $validator = new \Brainbits_Validate_Uuid();
-        $usernameIsUid = $validator->isValid($username);
+        $userManager = $this->getContainer()->get('phlexible_user.user_manager');
 
-        if ($usernameIsUid) {
-            return $username;
+        $user = $userManager->find($username);
+
+        if (!$user) {
+            $user = $userManager->findByUsername($username);
         }
 
-        $db = $this->getContainer()->dbPool->default;
-
-        $select = $db->select()
-            ->from($db->prefix . 'user', 'uid')
-            ->where('username = ?', $username);
-        $uid = $db->fetchOne($select);
-
-        if (!$uid) {
-            throw new \Exception('User ' . $username . ' not found.');
+        if (!$user) {
+            throw new \Exception("User $username not found.");
         }
 
-        return $uid;
+        return $user;
     }
 }
