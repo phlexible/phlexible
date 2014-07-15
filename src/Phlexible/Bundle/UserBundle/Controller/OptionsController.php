@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\UserBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Options controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Route("/users/options")
  */
 class OptionsController extends Controller
 {
@@ -25,6 +27,7 @@ class OptionsController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
+     * @Route("/savedetails", name="users_options_savedetails")
      */
     public function savedetailsAction(Request $request)
     {
@@ -44,6 +47,7 @@ class OptionsController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
+     * @Route("/savepassword", name="users_options_savepassword")
      */
     public function savepasswordAction(Request $request)
     {
@@ -64,6 +68,7 @@ class OptionsController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
+     * @Route("/savepreferences", name="users_options_savepreferences")
      */
     public function savepreferencesAction(Request $request)
     {
@@ -81,6 +86,7 @@ class OptionsController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
+     * @Route("/savetheme", name="users_options_savetheme")
      */
     public function savethemeAction(Request $request)
     {

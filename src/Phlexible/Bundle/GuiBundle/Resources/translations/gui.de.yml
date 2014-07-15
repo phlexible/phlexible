@@ -10,6 +10,7 @@ gui:
     initialising: Initialisiere
     setup: Setup
     help: Hilfe
+    home: Startseite
     debug: Debug
     styles_and_images: 'Styles und Bilder'
     what_do_you_want_to_do: 'Was möchten Sie tun?'
