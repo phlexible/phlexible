@@ -284,6 +284,7 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
                                             record.set('member', 1);
                                         }
                                     }, this);
+                                    store.commitChanges();
                                 },
                                 scope: this
                             }
@@ -322,6 +323,7 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
                                             record.set('member', 1);
                                         }
                                     }, this);
+                                    store.commitChanges();
                                 },
                                 scope: this
                             }

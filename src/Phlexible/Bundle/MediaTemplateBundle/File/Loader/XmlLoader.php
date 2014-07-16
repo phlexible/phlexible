@@ -38,6 +38,7 @@ class XmlLoader implements LoaderInterface
         $type = (string) $xmlAttributes['type'];
         $class = (string) $xmlAttributes['class'];
         $cache = (bool) $xmlAttributes['cache'];
+        $system = (bool) $xmlAttributes['system'];
         $revision = (int) $xmlAttributes['revision'];
 
         if (!class_exists($class)) {
@@ -50,6 +51,7 @@ class XmlLoader implements LoaderInterface
             ->setKey($key)
             ->setType($type)
             ->setCache($cache)
+            ->setSystem($system)
             ->setRevision($revision)
             ->setCreatedAt(\DateTime::createFromFormat('U', filectime($file)))
             ->setModifiedAt(\DateTime::createFromFormat('U', filemtime($file)));

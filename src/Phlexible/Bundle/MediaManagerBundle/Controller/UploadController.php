@@ -65,7 +65,7 @@ class UploadController extends Controller
                 );
             }
 
-            $uploadHandler = $this->get('mediamanager.upload.handler');
+            $uploadHandler = $this->get('phlexible_media_manager.upload.handler');
 
             $cnt = 0;
             foreach ($request->files->all() as $uploadedFile) {

@@ -32,9 +32,9 @@ class OptionsController extends Controller
     public function savedetailsAction(Request $request)
     {
         $user = $this->getUser()
-            ->setFirstname($request->query->get('firstname'))
-            ->setLastname($request->query->get('lastname'))
-            ->setEmail($request->query->get('email'));
+            ->setFirstname($request->request->get('firstname'))
+            ->setLastname($request->request->get('lastname'))
+            ->setEmail($request->request->get('email'));
 
         $this->get('phlexible_user.user_manager')->updateUser($user);
 
@@ -54,7 +54,7 @@ class OptionsController extends Controller
         $user = $this->getUser();
 
         if ($request->request->has('password')) {
-            $user->setPlainPassword($request->query->get('password'));
+            $user->setPlainPassword($request->request->get('password'));
         }
 
         $this->get('phlexible_user.user_manager')->updateUser($user);

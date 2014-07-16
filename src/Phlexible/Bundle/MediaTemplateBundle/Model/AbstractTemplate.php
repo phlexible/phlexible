@@ -38,6 +38,11 @@ abstract class AbstractTemplate implements TemplateInterface
     private $cache = false;
 
     /**
+     * @var bool
+     */
+    private $system = false;
+
+    /**
      * @var string
      */
     private $storage = 'default';
@@ -130,6 +135,24 @@ abstract class AbstractTemplate implements TemplateInterface
     public function setCache($cache = true)
     {
         $this->cache = (bool) $cache;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSystem()
+    {
+        return $this->system;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSystem($system = true)
+    {
+        $this->system = (bool) $system;
 
         return $this;
     }

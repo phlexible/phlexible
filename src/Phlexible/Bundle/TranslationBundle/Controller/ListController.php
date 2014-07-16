@@ -39,18 +39,22 @@ class ListController extends Controller
      */
     public function listAction(Request $request)
     {
+        $sort = $request->get('sort', 'key');
+        $dir = $request->get('dir', 'ASC');
+
         $keySearch = $request->get('key');
         $deSearch = $request->get('de_value');
         $deEmpty = $request->get('de_empty');
         $enSearch = $request->get('en_value');
         $enEmpty = $request->get('en_empty');
 
-        $accessor = $this->get('translations.catalog_accessor');
+        $accessor = $this->get('phlexible_gui.catalog_accessor');
 
         $deData = $accessor->getCatalogues('de')->all();
         $enData = $accessor->getCatalogues('en')->all();
 
         $items = array();
+        $sorter = array();
         foreach ($deData as $domain => $values) {
             foreach ($values as $key => $value) {
                 $deValue = $value;
@@ -71,15 +75,23 @@ class ListController extends Controller
                 if ($enEmpty && $enValue) {
                     continue;
                 }
-                $items[] = array(
+                $items[] = $item = array(
                     'id'     => $domain . '.' . $key,
                     'domain' => $domain,
                     'key'    => $key,
                     'de'     => $deValue,
                     'en'     => $enValue,
                 );
+                $sorter[] = $item[$sort];
             }
         }
+
+        if ($dir === 'ASC') {
+            $sort = SORT_ASC;
+        } else {
+            $sort = SORT_DESC;
+        }
+        array_multisort($sorter, $sort, SORT_STRING, $items);
 
         return new JsonResponse(array(
             'total' => count($items),

@@ -84,19 +84,7 @@ Phlexible.users.GroupsMainPanel = Ext.extend(Ext.Panel, {
                     actions
                 ],
                 sm: new Ext.grid.RowSelectionModel({
-                    singleSelect: true,
-                    listeners: {
-                        selectionchange: function (sm) {
-                            var r = sm.getSelected();
-
-                            if (r && !r.get('readonly')) {
-                                this.getTopToolbar().items.items[1].enable();
-                            } else {
-                                this.getTopToolbar().items.items[1].disable();
-                            }
-                        },
-                        scope: this
-                    }
+                    singleSelect: true
                 }),
                 listeners: {
                     beforeedit: function (e) {
@@ -122,16 +110,6 @@ Phlexible.users.GroupsMainPanel = Ext.extend(Ext.Panel, {
                 text: this.strings.add,
                 iconCls: 'p-user-add-icon',
                 handler: this.addGroup,
-                scope: this
-            },
-            '-',
-            {
-                text: this.strings.reset,
-                iconCls: 'p-user-reset-icon',
-//            disabled: true,
-                handler: function () {
-                    this.getComponent(0).store.reload();
-                },
                 scope: this
             }
         ];
@@ -188,7 +166,7 @@ Phlexible.users.GroupsMainPanel = Ext.extend(Ext.Panel, {
                 },
                 scope: this
             });
-        }, this);
+        }, this, false, record.get('name'));
     },
 
     deleteGroup: function (grid, record) {

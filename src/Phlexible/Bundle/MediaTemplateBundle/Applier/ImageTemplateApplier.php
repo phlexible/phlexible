@@ -129,16 +129,18 @@ class ImageTemplateApplier
 
         $backgroundColor = null;
         if ($template->hasParameter('backgroundcolor', true)) {
-            $backgroundColor = $template->getParameter('backgroundcolor');
+            //$backgroundColor = $template->getParameter('backgroundcolor');
+            $image->setBackgroundColor($template->getParameter('backgroundcolor'));
         }
 
-        /*
-        $scale = ImageToolkit::SCALE_NONE;
-        if ($template->hasParameter('scale', true))
-        {
-            $scale = $template->getParameter('scale');
+        $scale = DriverInterface::SCALE_NONE;
+        if ($template->hasParameter('scale', true)) {
+            if ($template->getParameter('scale') === 'up') {
+                $scale = DriverInterface::SCALE_UP;
+            } elseif ($template->getParameter('scale') === 'down') {
+                $scale = DriverInterface::SCALE_DOWN;
+            }
         }
-        */
 
         $method = $template->getParameter('method');
 
@@ -146,7 +148,7 @@ class ImageTemplateApplier
             $method,
             $template->getParameter('width'),
             $template->getParameter('height'),
-            //$scale,
+            $scale,
             $backgroundColor
         );
 

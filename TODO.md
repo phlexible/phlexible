@@ -4,6 +4,7 @@ TODO
 - [ ] manager events
 - [ ] collecting kernel resource locator instead of component loader
 - [ ] glob -> Finder
+- [ ] foreign keys in entities, user_id
 
 # ElementBundle
 

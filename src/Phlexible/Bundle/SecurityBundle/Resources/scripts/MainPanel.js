@@ -89,7 +89,7 @@ Phlexible.security.MainPanel = Ext.extend(Ext.Panel, {
                         }
                         this.getComponent(1).setTitle(String.format(this.strings.resources_for_role, r.get('id')));
                         this.getComponent(1).role = r.get('id');
-                        this.getComponent(1).getStore().proxy.conn.url = Phlexible.Router.generate('security_acl_role_resources', {role: r.get('id')});
+                        this.getComponent(1).getStore().proxy.conn.url = Phlexible.Router.generate('security_acl_role_resources', {role: encodeURIComponent(r.get('id'))});
                         this.getComponent(1).store.reload({
                             callback: function () {
                                 this.getComponent(1).enable();
@@ -188,7 +188,7 @@ Phlexible.security.MainPanel = Ext.extend(Ext.Panel, {
                 return;
             }
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('security_acl_rename', {role: record.get('id')}),
+                url: Phlexible.Router.generate('security_acl_rename', {role: encodeURIComponent(record.get('id'))}),
                 method: 'PATCH',
                 params: {
                     name: name
@@ -214,7 +214,7 @@ Phlexible.security.MainPanel = Ext.extend(Ext.Panel, {
                 return;
             }
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('security_acl_delete', {role: record.get('id')}),
+                url: Phlexible.Router.generate('security_acl_delete', {role: encodeURIComponent(record.get('id'))}),
                 method: 'DELETE',
                 success: function (response) {
                     var data = Ext.decode(response.responseText);
@@ -247,7 +247,7 @@ Phlexible.security.MainPanel = Ext.extend(Ext.Panel, {
         if (!data.length) return;
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('security_acl_save', {role: this.getComponent(1).role}),
+            url: Phlexible.Router.generate('security_acl_save', {role: encodeURIComponent(this.getComponent(1).role)}),
             method: 'PUT',
             params: {
                 resources: data.join(',')

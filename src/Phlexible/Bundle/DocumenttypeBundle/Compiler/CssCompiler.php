@@ -52,7 +52,7 @@ class CssCompiler implements CompilerInterface
             $key = $documenttype->getKey();
 
             foreach ($sizes as $size => $sizeTitle) {
-                $style .= '.p-' . $classname . '-' . $key . '-small {background-image:url(/BASEPATH/bundles/documenttypes/mimetypes16/' . $key . '.gif) !important;}' . PHP_EOL;
+                $style .= '.p-' . $classname . '-' . $key . '-small {background-image:url(/BASEPATH/bundles/phlexibledocumenttype/mimetypes16/' . $key . '.gif) !important;}' . PHP_EOL;
 //                $style .= '.m-smallThumbnails .m-'.$cMimeType.' {background-image:url(/BASEPATH/resources/resources/mimetypes16/documenttypes/'.$desc['img'].'.gif) !important;}' . PHP_EOL;
 //                $style .= '.m-mediumThumbnails .m-'.$cMimeType.' {background-image:url(/BASEPATH/resources/resources/mimetypes32/documenttypes/'.$desc['img'].'.gif) !important;}' . PHP_EOL;
 //                $style .= '.m-tileThumbnails .m-'.$cMimeType.' {background-image:url(/BASEPATH/resources/resources/mimetypes48/documenttypes/'.$desc['img'].'.gif) !important;}' . PHP_EOL;

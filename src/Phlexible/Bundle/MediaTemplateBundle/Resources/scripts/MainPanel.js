@@ -139,4 +139,5 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
         Phlexible.mediatemplates.MainPanel.superclass.initComponent.call(this);
     }
 });
+
 Ext.reg('mediatemplates-main', Phlexible.mediatemplates.MainPanel);

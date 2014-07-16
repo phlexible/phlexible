@@ -65,7 +65,7 @@ class UploadedFileSource implements PathSourceInterface
         if ($mimeType) {
             $this->mimeType = $mimeType;
         } else {
-            $this->mimeType = $file['type'];
+            $this->mimeType = $file->getMimeType();
         }
     }
 

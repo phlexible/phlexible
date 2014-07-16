@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->booleanNode('use_log_handler')->defaultValue(true)->end()
-                ->booleanNode('audit_entities')->defaultValue(true)->end()
+                ->booleanNode('audit_entities')->defaultValue(false)->end()
             ->end();
 
         return $treeBuilder;

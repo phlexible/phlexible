@@ -41,6 +41,7 @@ class XmlDumper implements DumperInterface
         $xml->addAttribute('type', $template->getType());
         $xml->addAttribute('class', get_class($template));
         $xml->addAttribute('cache', $template->getCache() ? 1 : 0);
+        $xml->addAttribute('system', $template->getSystem() ? 1 : 0);
         $xml->addAttribute('revision', $template->getRevision());
 
         foreach ($template->getParameters() as $key => $value) {

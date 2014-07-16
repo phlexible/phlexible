@@ -111,9 +111,9 @@ mediatemplates:
     deliver_thumb: 'Als verkleinertes Bild ausliefern'
     deliver_icon: 'Als Dokumenttype Icon ausliefern'
     deliver_download: 'Als download ausliefern'
-    scale_up: 'Nur hochskalieren'
-    scale_up_and_down: 'Hoch- und herunterskalieren'
-    scale_down: 'Nur herunterskalieren'
+    scale_up: 'Nur kleinere hochskalieren'
+    scale_up_and_down: 'Keine Einschränkung'
+    scale_down: 'Nur größere herunterskalieren'
     colorspace_rgb: RGB
     colorspace_cmyk: CMYK
     colorspace_gray: Graustufen
@@ -148,3 +148,6 @@ mediatemplates:
     white: Weiss
     black: Schwarz
     random: Zufällig
+
+    filter: Filter
+    no_filter: Kein Filter

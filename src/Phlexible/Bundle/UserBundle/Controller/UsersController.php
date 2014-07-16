@@ -219,6 +219,10 @@ class UsersController extends Controller
 
         $this->requestToUser($request, $user);
 
+        $user
+            ->setCreatedAt(new \DateTime())
+            ->setModifiedAt(new \DateTime());
+
         $userManager->updateUser($user);
 
         if ($notify && $request->request->get('password')) {
@@ -278,6 +282,9 @@ class UsersController extends Controller
         }
 
         $this->requestToUser($request, $user);
+
+        $user
+            ->setModifiedAt(new \DateTime());
 
         $userManager->updateUser($user);
 

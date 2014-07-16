@@ -66,20 +66,80 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
                         scope: this
                     }
                 ]
+            },
+            '->',
+            {
+                text: this.strings.no_filter,
+                iconCls: 'p-metatemplate-filter-icon',
+                menu: [
+                    {
+                        cls: 'x-btn-text-icon-bold',
+                        text: this.strings.filter,
+                        canActivate: false,
+                        hideOnClick: false
+                    },
+                    '-',
+                    {
+                        text: this.strings.no_filter,
+                        iconCls: 'p-metatemplate-filter-icon',
+                        filter: '',
+                        handler: this.toggleFilter,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.image,
+                        iconCls: 'p-mediatemplate-type_image-icon',
+                        filter: 'image',
+                        handler: this.toggleFilter,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.video,
+                        iconCls: 'p-mediatemplate-type_video-icon',
+                        filter: 'video',
+                        handler: this.toggleFilter,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.audio,
+                        iconCls: 'p-mediatemplate-type_audio-icon',
+                        filter: 'audio',
+                        handler: this.toggleFilter,
+                        scope: this
+                    },
+                    {
+                        text: this.strings.pdf2swf,
+                        iconCls: 'p-mediatemplate-type_pdf-icon',
+                        filter: 'pdf',
+                        handler: this.toggleFilter,
+                        scope: this
+                    }
+                ]
             }
         ];
 
         this.addListener({
-            rowdblclick: {
-                fn: function (grid, rowIndex) {
-                    var r = grid.store.getAt(rowIndex);
-                    this.fireEvent('templatechange', r);
-                },
-                scope: this
-            }
+            rowdblclick: function (grid, rowIndex) {
+                var r = grid.store.getAt(rowIndex);
+                this.fireEvent('templatechange', r);
+            },
+            scope: this
         });
 
         Phlexible.mediatemplates.TemplatesGrid.superclass.initComponent.call(this);
+    },
+
+    toggleFilter: function (btn) {
+        if (btn.filter === undefined) {
+            return;
+        }
+        this.getTopToolbar().items.items[2].setIconClass(btn.iconCls);
+        this.getTopToolbar().items.items[2].setText(btn.text);
+        if (!btn.filter) {
+            this.getStore().clearFilter();
+        } else {
+            this.getStore().filter('type', btn.filter);
+        }
     },
 
     newImageTemplate: function () {

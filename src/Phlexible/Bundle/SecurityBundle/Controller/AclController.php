@@ -74,17 +74,22 @@ class AclController extends Controller
     /**
      * Return resources for a role
      *
-     * @param string $role
+     * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/roles/{role}/resources", name="security_acl_role_resources")
+     * @Route("/role/resources", name="security_acl_role_resources")
      * @Method("GET")
      * @ApiDoc(
-     *   description="Returns a list of acl resources"
+     *   description="Returns a list of acl resources",
+     *   requirements={
+     *     {"name"="role", "dataType"="string", "required"=true, "description"="Role"}
+     *   }
      * )
      */
-    public function roleResourcesAction($role)
+    public function roleResourcesAction(Request $request)
     {
+        $roleId = $request->query->get('role');
+
         $acl = $this->get('phlexible_security.acl');
 
         $resources = array();
@@ -92,7 +97,7 @@ class AclController extends Controller
             $resources[] = array(
                 'id'      => $resource,
                 'name'    => ucfirst(str_replace('_', ' ', $resource)),
-                'allowed' => $acl->isAllowed($role, $resource)
+                'allowed' => $acl->isAllowed($roleId, $resource)
             );
         }
 
@@ -130,7 +135,7 @@ class AclController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/roles", name="security_acl_create")
+     * @Route("/role/create", name="security_acl_create")
      * @Method("POST")
      * @ApiDoc(
      *   description="Create role",
@@ -192,24 +197,24 @@ class AclController extends Controller
      * Rename role
      *
      * @param Request $request
-     * @param string  $role
      *
      * @return ResultResponse
-     * @Route("/roles/{role}", name="security_acl_rename")
+     * @Route("/role/rename", name="security_acl_rename")
      * @Method("PATCH")
      * @ApiDoc(
      *   description="Rename role",
      *   requirements={
+     *     {"name"="role", "dataType"="string", "required"=true, "description"="Role"},
      *     {"name"="name", "dataType"="string", "required"=true, "description"="New role name"}
      *   }
      * )
      */
-    public function renameAction(Request $request, $role)
+    public function renameAction(Request $request)
     {
-        $roleId = $role;
+        $roleId = $request->query->get('role');
 
         $acl = $this->get('phlexible_security.acl');
-        if (!$acl->hasRole($role)) {
+        if (!$acl->hasRole($roleId)) {
             return new ResultResponse(false, "Unknown role $roleId.");
         }
 
@@ -236,25 +241,26 @@ class AclController extends Controller
     }
 
     /**
-     * @param string $role
+     * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/roles/{role}", name="security_acl_delete")
+     * @Route("/role/delete", name="security_acl_delete")
      * @Method("DELETE")
      * @ApiDoc(
      *   description="Delete role",
      *   parameters={
+     *     {"name"="role", "dataType"="string", "required"=true, "description"="Role"},
      *     {"name"="role", "dataType"="string", "required"=true, "description"="Role to delete"}
      *   }
      * )
      */
-    public function deleteAction($role)
+    public function deleteAction(Request $request)
     {
-        $roleId = $role;
+        $roleId = $request->query->get('role');
 
         $acl = $this->get('phlexible_security.acl');
-        if (!$acl->hasRole($role)) {
-            return new ResultResponse(false, "Unknown role $role.");
+        if (!$acl->hasRole($roleId)) {
+            return new ResultResponse(false, "Unknown role $roleId.");
         }
 
         $roleRepository = $this->getDoctrine()->getRepository('PhlexibleSecurityBundle:Role');
@@ -273,28 +279,28 @@ class AclController extends Controller
 
     /**
      * @param Request $request
-     * @param string  $role
      *
      * @return ResultResponse
-     * @Route("/roles/{role}", name="security_acl_save")
+     * @Route("/role/save", name="security_acl_save")
      * @Method("PUT")
      * @ApiDoc(
      *   description="Save role",
      *   requirements={
+     *     {"name"="role", "dataType"="string", "required"=true, "description"="Role"},
      *     {"name"="resources", "dataType"="string", "required"=true, "description"="Resources for role"}
      *   }
      * )
      */
-    public function saveAction(Request $request, $role)
+    public function saveAction(Request $request)
     {
-        $roleId = $role;
+        $roleId = $request->query->get('role');
 
         $resources = $request->get('resources');
         $resources = explode(',', $resources);
 
         $acl = $this->get('phlexible_security.acl');
         if (!$acl->hasRole($roleId)) {
-            return new ResultResponse(false, "Unknown role $role.");
+            return new ResultResponse(false, "Unknown role $roleId.");
         }
 
         $roleRepository = $this->getDoctrine()->getRepository('PhlexibleSecurityBundle:Role');

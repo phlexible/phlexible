@@ -72,9 +72,9 @@ Phlexible.mediatemplates.image.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         store: new Ext.data.SimpleStore({
                             fields: ['id', 'scale'],
                             data: [
+                                ['updown', this.strings.scale_up_and_down],
                                 ['down', this.strings.scale_down],
-                                ['up', this.strings.scale_up],
-                                ['updown', this.strings.scale_up_and_down]
+                                ['up', this.strings.scale_up]
                             ]
                         }),
                         displayField: 'scale',
@@ -90,7 +90,6 @@ Phlexible.mediatemplates.image.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         hiddenName: 'scale',
                         width: 280,
                         //listWidth: 550,
-                        emptyText: this.strings.select_scale,
                         helpText: this.strings.help_scale
                     },
                     {

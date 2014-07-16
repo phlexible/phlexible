@@ -84,14 +84,24 @@ class FileListener implements EventSubscriberInterface
      */
     public function onAddFile(CreateFileEvent $event)
     {
-        $file = $event->getFile();
+        $file = $event->getAction()->getFile();
 
-        $templates = $this->templateManager->findAll();
+        $systemTemplates = $this->templateManager->findBy(array('system' => 1));
+        $otherTemplates = $this->templateManager->findBy(array('system' => 0));
+        foreach ($systemTemplates as $index => $systemTemplate) {
+            if ($systemTemplate->getType() !== 'image') {
+                $otherTemplates[] = $systemTemplate;
+                unset($systemTemplates[$index]);
+            }
+        }
+
         $batch = new Batch();
 
         if ($this->immediatelyCacheFile) {
-            $batch->file($file);
-            die(__METHOD__);
+            $batch
+                ->addFile($file)
+                ->addTemplates($systemTemplates);
+
             $this->batchResolver->resolve($batch);
 
             return;

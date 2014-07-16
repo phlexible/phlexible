@@ -64,6 +64,18 @@ interface TemplateInterface
     public function setCache($cache = true);
 
     /**
+     * @return bool
+     */
+    public function getSystem();
+
+    /**
+     * @param bool $system
+     *
+     * @return $this
+     */
+    public function setSystem($system = true);
+
+    /**
      * @return string
      */
     public function getStorage();

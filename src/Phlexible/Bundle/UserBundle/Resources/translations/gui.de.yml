@@ -68,7 +68,7 @@ users:
     rename: Umbenennen
     delete: Löschen
     add_group: 'Bitte geben Sie einen Titel für die neue Gruppe ein.'
-    remame_group: 'Bitte geben Sie einen neuen Titel für die Gruppe "{0}" ein.'
+    rename_group: 'Bitte geben Sie einen neuen Titel für die Gruppe "{0}" ein.'
     delete_group: 'Möchten Sie die Gruppe "{0}" wirklich löschen?'
     empty_msg: 'Keine Benutzer gefunden'
     display_msg: 'Zeige Benutzer {0} - {1} von {2}'

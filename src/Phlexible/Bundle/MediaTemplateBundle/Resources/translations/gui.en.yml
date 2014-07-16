@@ -111,9 +111,9 @@ mediatemplates:
     deliver_thumb: 'Deliver as resized image'
     deliver_icon: 'Deliver document type icon'
     deliver_download: 'Deliver as download'
-    scale_up: 'Only scale up'
-    scale_up_and_down: 'Scale up and down'
-    scale_down: 'Only scale down'
+    scale_up: 'Only enlarge smaller images'
+    scale_up_and_down: 'No restriction'
+    scale_down: 'Only shrink larger images'
     colorspace_rgb: RGB
     colorspace_cmyk: CMYK
     colorspace_gray: Grayscale
@@ -148,3 +148,6 @@ mediatemplates:
     white: White
     black: Black
     random: Random
+
+    filter: Filter
+    no_filter: No filter
