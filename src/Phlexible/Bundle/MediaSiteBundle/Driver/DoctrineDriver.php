@@ -245,7 +245,7 @@ class DoctrineDriver extends AbstractDriver
             ->where($qb->expr()->eq('fi.id', $qb->expr()->literal($id)))
             ->orderBy('fi.version', 'DESC');
 
-        $rows = $this->connection->fetchAssoc($qb->getSQL());
+        $rows = $this->connection->fetchAll($qb->getSQL());
 
         return $this->mapFileRows($rows);
     }
