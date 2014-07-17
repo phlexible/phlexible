@@ -38,10 +38,11 @@ class FileListener
     public function onBeforeCreateFile(BeforeCreateFileEvent $event)
     {
         $file = $event->getAction()->getFile();
+        $fileSource = $event->getAction()->getFileSource();
 
         $attributes = new AttributesBag();
 
-        $this->attributeReader->read($file, $attributes);
+        $this->attributeReader->read($file, $fileSource, $attributes);
 
         $file
             ->setAttribute('attributes', $attributes->all());

@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
-use Phlexible\Bundle\MediaAssetBundle\Attributes;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 
 /**
  * Exif extension attribute reader
@@ -30,22 +30,18 @@ class ExifExtensionAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file)
+    public function supports(FileInterface $file, PathSourceInterface $fileSource)
     {
-        if (!file_exists($file->getPhysicalPath())) {
-            return false;
-        }
-
         return strtolower($file->getAttribute('assettype') === 'image')
-            && \exif_imagetype($file->getPhysicalPath()) === IMAGETYPE_JPEG;
+            && \exif_imagetype($fileSource->getPath()) === IMAGETYPE_JPEG;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, AttributesBag $attributes)
+    public function read(FileInterface $file, PathSourceInterface $fileSource, AttributesBag $attributes)
     {
-        $filename = $file->getPhysicalPath();
+        $filename = $fileSource->getPath();
 
         $result = \exif_read_data($filename, '', true);
 

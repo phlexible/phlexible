@@ -8,10 +8,9 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaAssetBundle\AttributeMetaData;
-use Phlexible\Bundle\MediaAssetBundle\Attributes;
 use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 
 /**
  * Zip extension attribute reader
@@ -31,7 +30,7 @@ class ZipExtensionAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file)
+    public function supports(FileInterface $file, PathSourceInterface $fileSource)
     {
         return strtolower($file->getAttribute('documenttype')) === 'zip';
     }
@@ -39,19 +38,38 @@ class ZipExtensionAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, AttributesBag $attributes)
+    public function read(FileInterface $file, PathSourceInterface $fileSource, AttributesBag $attributes)
     {
-        $filename = $file->getPhysicalPath();
+        $filename = $fileSource->getPath();
 
-        $zip = new \ZipArchive();
-        $zip->open($filename);
+        try {
+            $zip = new \ZipArchive();
+            $result = $zip->open($filename);
 
-        if (!empty($zip->numFiles)) {
-            $attributes
-                ->set('zip.num_files', $zip->numFiles)
-                ->set('zip.comment', $zip->comment);
+            if ($result === true) {
+                if ($zip->comment) {
+                    $attributes
+                        ->set('zip.comment', $zip->comment);
+                }
+
+                if ($zip->numFiles) {
+                    $attributes
+                        ->set('zip.numFiles', $zip->numFiles);
+                }
+
+                if ($zip->status) {
+                    $attributes
+                        ->set('zip.status', $zip->status);
+                }
+
+                if ($zip->statusSys) {
+                    $attributes
+                        ->set('zip.statusSys', $zip->statusSys);
+                }
+
+                $zip->close();
+            }
+        } catch (\Exception $e) {
         }
-
-        $zip->close();
     }
 }

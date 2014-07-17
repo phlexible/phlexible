@@ -9,10 +9,9 @@
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use Brainbits\PdfToText\PdfInfo;
-use Phlexible\Bundle\MediaAssetBundle\AttributeMetaData;
-use Phlexible\Bundle\MediaAssetBundle\Attributes;
 use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 
 /**
  * pdfinfo attribute reader
@@ -45,7 +44,7 @@ class PdfInfoAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file)
+    public function supports(FileInterface $file, PathSourceInterface $fileSource)
     {
         return strtolower($file->getAttribute('documenttype')) === 'pdf';
     }
@@ -53,9 +52,9 @@ class PdfInfoAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, AttributesBag $attributes)
+    public function read(FileInterface $file, PathSourceInterface $fileSource, AttributesBag $attributes)
     {
-        $filename = $file->getPhysicalPath();
+        $filename = $fileSource->getPath();
 
         try {
             $infos = $this->pdfinfo->getInfo($filename);

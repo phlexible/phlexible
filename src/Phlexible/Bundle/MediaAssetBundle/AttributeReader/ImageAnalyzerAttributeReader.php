@@ -9,10 +9,9 @@
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use Brainbits\ImageAnalyzer\ImageAnalyzer;
-use Phlexible\Bundle\MediaAssetBundle\AttributeMetaData;
-use Phlexible\Bundle\MediaAssetBundle\Attributes;
 use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 
 /**
  * Imagemagick based attribute reader
@@ -45,7 +44,7 @@ class ImageAnalyzerAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file)
+    public function supports(FileInterface $file, PathSourceInterface $fileSource)
     {
         return strtolower($file->getAttribute('assettype')) === 'image';
     }
@@ -53,9 +52,9 @@ class ImageAnalyzerAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, AttributesBag $attributes)
+    public function read(FileInterface $file, PathSourceInterface $fileSource, AttributesBag $attributes)
     {
-        $filename = $file->getPhysicalPath();
+        $filename = $fileSource->getPath();
 
         try {
             $result = $this->analyzer->analyze($filename);
