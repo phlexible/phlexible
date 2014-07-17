@@ -16,10 +16,9 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
         };
 
         this.metasetUrls = {
-            list: Phlexible.Router.generate('mediamanager_file_meta_set_list'),
-            available: Phlexible.Router.generate('mediamanager_file_meta_set_available'),
-            add: Phlexible.Router.generate('mediamanager_file_meta_set_add'),
-            remove: Phlexible.Router.generate('mediamanager_file_meta_set_remove')
+            list: Phlexible.Router.generate('mediamanager_file_meta_sets_list'),
+            save: Phlexible.Router.generate('mediamanager_file_meta_sets_save'),
+            available: Phlexible.Router.generate('metasets_sets_list')
         };
     },
 
@@ -77,8 +76,7 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
                     baseParams: this.params,
                     urls: this.metasetUrls,
                     listeners: {
-                        addset: this.reloadMeta,
-                        removeset: this.reloadMeta,
+                        savesets: this.reloadMeta,
                         scope: this
                     }
                 });
@@ -97,9 +95,18 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
                 var data = Ext.decode(response.responseText);
 
                 this.removeAll();
-                Ext.each(data.meta, function (meta) {
-                    this.add(this.createMetaGridConfig(meta.set_id, meta.title, meta.fields, this.small));
-                }, this);
+                if (data.meta && data.meta.length) {
+                    Ext.each(data.meta, function (meta) {
+                        this.add(this.createMetaGridConfig(meta.set_id, meta.title, meta.fields, this.small));
+                    }, this);
+                } else {
+                    this.add({
+                        border: false,
+                        xbodyStyle: 'padding: 5px;',
+                        ctCls: 'x-grid-empty',
+                        html: this.strings.no_meta_values
+                    });
+                }
 
                 this.doLayout();
             },
@@ -108,24 +115,7 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
     },
 
     reloadMeta: function() {
-        Ext.Ajax.request({
-            url: this.urls.load,
-            params: this.params,
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                this.items.each(function(p) {
-                    Ext.each(data.meta, function(meta) {
-                        if (meta.set_id === p.setId) {
-                            p.setData(meta.fields);
-                        }
-                    })
-                });
-
-                this.doLayout();
-            },
-            scope: this
-        });
+        this.loadMeta(this.params);
     },
 
     createMetaGridConfig: function(setId, title, fields, small) {

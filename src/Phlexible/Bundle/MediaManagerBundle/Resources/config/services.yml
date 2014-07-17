@@ -54,7 +54,7 @@ services:
         class: Phlexible\Bundle\MediaManagerBundle\EventListener\FileListener
         arguments: [@phlexible_documenttype.documenttype_manager]
         tags:
-            - {name: kernel.event_listener, event: phlexible_media_site.before_create_file, method: onBeforeCreateFile}
+            - {name: kernel.event_listener, event: phlexible_media_site.before_create_file, method: onBeforeCreateFile, priority: 500}
 
     phlexible_media_manager.listener.data_source:
         class: Phlexible\Bundle\MediaManagerBundle\EventListener\DataSourceListener

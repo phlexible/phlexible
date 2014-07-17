@@ -81,124 +81,6 @@ class FileMetaController extends Controller
     /**
      * @param Request $request
      *
-     * @return JsonResponse
-     * @Route("/listsets", name="mediamanager_file_meta_set_list")
-     */
-    public function listsetsAction(Request $request)
-    {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
-
-        $siteManager = $this->get('phlexible_media_site.manager');
-        $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
-
-        $folder = $siteManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
-        $metaSets = $fileMetaSetResolver->resolve($folder);
-
-        $sets = array();
-        foreach ($metaSets as $metaSet) {
-            $sets[] = array(
-                'set_id' => $metaSet->getId(),
-                'name'   => $metaSet->getName(),
-            );
-        }
-
-        return new JsonResponse(array('sets' => $sets));
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/availablesets", name="mediamanager_file_meta_set_available")
-     */
-    public function availablesetsAction(Request $request)
-    {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
-
-        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
-        $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
-        $siteManager = $this->get('phlexible_media_site.manager');
-
-        $file = $siteManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
-
-        $metaSets = $metaSetManager->findAll();
-        foreach ($fileMetaSetResolver->resolve($file) as $index => $metaSet) {
-            if (in_array($metaSet, $metaSets)) {
-                unset($metaSets[$index]);
-            }
-        }
-
-        $sets = array();
-        foreach ($metaSets as $metaSet) {
-            $sets[] = array(
-                'set_id' => $metaSet->getId(),
-                'name'   => $metaSet->getName(),
-            );
-        }
-
-        return new JsonResponse(array('sets' => $sets));
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/addset", name="mediamanager_file_meta_set_add")
-     */
-    public function addsetAction(Request $request)
-    {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
-        $setId = $request->get('set_id');
-
-        $siteManager = $this->get('phlexible_media_site.manager');
-
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId, $fileVersion);
-
-        $attributes = $file->getAttributes();
-        if (!isset($attributes['metasets'])) {
-            $attributes['metasets'] = array();
-        }
-        if (!in_array($setId, $attributes['metasets'])) {
-            $attributes['metasets'][] = $setId;
-            $site->setFileAttributes($file, $attributes);
-        }
-
-        return new ResultResponse(true, 'Set added.');
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/removeset", name="mediamanager_file_meta_set_remove")
-     */
-    public function removesetAction(Request $request)
-    {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
-        $setId = $request->get('set_id');
-
-        $siteManager = $this->get('phlexible_media_site.manager');
-
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId, $fileVersion);
-
-        $attributes = $file->getAttributes();
-        if (isset($attributes['metasets']) && in_array($setId, $attributes['metasets'])) {
-            unset($attributes['metasets'][array_search($setId, $attributes['metasets'])]);
-            $site->setFileAttributes($file, $attributes);
-        }
-
-        return new ResultResponse(true, 'Set removed.');
-    }
-
-    /**
-     * @param Request $request
-     *
      * @return ResultResponse
      * @Route("/save", name="mediamanager_file_meta_save")
      */
@@ -268,5 +150,62 @@ class FileMetaController extends Controller
         */
 
         return new ResultResponse(true, 'File meta saved.');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @Route("/listsets", name="mediamanager_file_meta_sets_list")
+     */
+    public function listsetsAction(Request $request)
+    {
+        $fileId = $request->get('file_id');
+        $fileVersion = $request->get('file_version', 1);
+
+        $siteManager = $this->get('phlexible_media_site.manager');
+        $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
+
+        $folder = $siteManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
+        $metaSets = $fileMetaSetResolver->resolve($folder);
+
+        $sets = array();
+        foreach ($metaSets as $metaSet) {
+            $sets[] = array(
+                'id'   => $metaSet->getId(),
+                'name' => $metaSet->getName(),
+            );
+        }
+
+        return new JsonResponse(array('sets' => $sets));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/savesets", name="mediamanager_file_meta_sets_save")
+     */
+    public function savesetsAction(Request $request)
+    {
+        $fileId = $request->get('file_id');
+        $fileVersion = $request->get('file_version', 1);
+        $joinedIds = $request->get('ids');
+        if ($joinedIds) {
+            $ids = explode(',', $joinedIds);
+        } else {
+            $ids = array();
+        }
+
+        $siteManager = $this->get('phlexible_media_site.manager');
+
+        $site = $siteManager->getByFileId($fileId);
+        $file = $site->findFile($fileId, $fileVersion);
+
+        $attributes = $file->getAttributes();
+        $attributes['metasets'] = $ids;
+        $site->setFileAttributes($file, $attributes);
+
+        return new ResultResponse(true, 'Set added.');
     }
 }

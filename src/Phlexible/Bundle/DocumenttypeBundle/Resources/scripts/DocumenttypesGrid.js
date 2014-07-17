@@ -1,4 +1,4 @@
-Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.EditorGridPanel, {
+Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.documenttypes.Strings.document_types,
     strings: Phlexible.documenttypes.Strings,
     iconCls: 'p-documenttype-component-icon',
@@ -40,28 +40,19 @@ Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.EditorGridPanel,
                 header: this.strings.key,
                 dataIndex: 'key',
                 sortable: true,
-                width: 100,
-                editor: new Ext.form.TextField({
-                    allowBlank: false
-                })
+                width: 100
             },
             {
                 header: 'de', //this.strings.type,
                 dataIndex: 'de',
                 sortable: true,
-                width: 250,
-                editor: new Ext.form.TextField({
-                    allowBlank: false
-                })
+                width: 250
             },
             {
                 header: 'en', //this.strings.type,
                 dataIndex: 'en',
                 sortable: true,
-                width: 250,
-                editor: new Ext.form.TextField({
-                    allowBlank: false
-                })
+                width: 250
             },
             {
                 header: this.strings.mimetypes,

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaAssetBundle\EventListener;
 
 use Phlexible\Bundle\MediaAssetBundle\AttributeReader\AttributeReaderInterface;
-use Phlexible\Bundle\MediaAssetBundle\MetaBag;
+use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
 
 /**
@@ -39,11 +39,11 @@ class FileListener
     {
         $file = $event->getAction()->getFile();
 
-        $metaBag = new MetaBag();
+        $attributes = new AttributesBag();
 
-        $this->attributeReader->read($file, $metaBag);
+        $this->attributeReader->read($file, $attributes);
 
         $file
-            ->setAttribute('assetmeta', $metaBag);
+            ->setAttribute('attributes', $attributes->all());
     }
 }

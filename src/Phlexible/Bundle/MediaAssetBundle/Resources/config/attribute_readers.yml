@@ -3,13 +3,13 @@ services:
         class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ExifExtensionAttributeReader
         public: false
         tags:
-            - {name: phlexible_media_asset.meta_reader}
+            - {name: phlexible_media_asset.attribute_reader}
 
     phlexible_media_asset.reader.attribute.getid3:
         class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\GetId3AttributeReader
         public: false
         tags:
-            - {name: phlexible_media_asset.meta_reader}
+            - {name: phlexible_media_asset.attribute_reader}
 
     phlexible_media_asset.reader.attribute.imageanalyzer:
         class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\ImageAnalyzerAttributeReader

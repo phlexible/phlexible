@@ -49,23 +49,23 @@ class FileListener implements EventSubscriberInterface
     /**
      * @var bool
      */
-    private $immediatelyCacheFile;
+    private $immediatelyCacheSystemTemplates;
 
     /**
      * @param TemplateManagerInterface $templateManager
      * @param Worker                   $queueWorker
      * @param BatchResolver            $batchResolver
-     * @param bool                     $immediatelyCacheFile
+     * @param bool                     $immediatelyCacheSystemTemplates
      */
     public function __construct(TemplateManagerInterface $templateManager,
                                 Worker $queueWorker,
                                 BatchResolver $batchResolver,
-                                $immediatelyCacheFile)
+                                $immediatelyCacheSystemTemplates)
     {
         $this->templateManager = $templateManager;
         $this->queueWorker = $queueWorker;
         $this->batchResolver = $batchResolver;
-        $this->immediatelyCacheFile = $immediatelyCacheFile;
+        $this->immediatelyCacheSystemTemplates = $immediatelyCacheSystemTemplates;
     }
 
     /**
@@ -86,8 +86,8 @@ class FileListener implements EventSubscriberInterface
     {
         $file = $event->getAction()->getFile();
 
-        $systemTemplates = $this->templateManager->findBy(array('system' => 1));
-        $otherTemplates = $this->templateManager->findBy(array('system' => 0));
+        $systemTemplates = $this->templateManager->findBy(array('system' => true, 'cache' => true));
+        $otherTemplates = $this->templateManager->findBy(array('system' => false, 'cache' => true));
         foreach ($systemTemplates as $index => $systemTemplate) {
             if ($systemTemplate->getType() !== 'image') {
                 $otherTemplates[] = $systemTemplate;
@@ -97,40 +97,26 @@ class FileListener implements EventSubscriberInterface
 
         $batch = new Batch();
 
-        if ($this->immediatelyCacheFile) {
+        if ($this->immediatelyCacheSystemTemplates) {
             $batch
                 ->addFile($file)
                 ->addTemplates($systemTemplates);
 
-            $this->batchResolver->resolve($batch);
+            $queue = $this->batchResolver->resolve($batch);
 
-            return;
-        }
-
-        $systemImageTemplates = array();
-        $queueTemplates = array();
-
-        foreach ($templates as $template) {
-            if ($template->getType() === 'image' && substr($template->getKey(), 0, 4) === '_mm_') {
-                $systemImageTemplates[] = $template;
-            } else {
-                $queueTemplates[] = $template;
-            }
-        }
-
-        foreach ($systemImageTemplates as $systemImageTemplate) {
-            try {
-                $queueItem = $this->queue->add($systemImageTemplate, $file);
-
+            foreach ($queue->all() as $queueItem) {
                 $this->queueWorker->process($queueItem);
-            } catch (\Exception $e) {
-                $queueTemplates[] = $systemImageTemplate;
             }
         }
 
         $batch
-            ->file($file)
-            ->templates($queueTemplates);
+            ->addFile($file)
+            ->addTemplates($otherTemplates);
+
+        $queue = $this->batchResolver->resolve($batch);
+
+        // TODO: queue items
+        return;
 
         $this->batchProcessor->add($batch);
     }

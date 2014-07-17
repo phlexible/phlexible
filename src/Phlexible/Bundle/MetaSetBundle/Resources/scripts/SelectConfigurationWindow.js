@@ -1,5 +1,6 @@
 Phlexible.metasets.SelectConfigurationWindow = Ext.extend(Ext.Window, {
-    title: '_select',
+    title: Phlexible.metasets.Strings.configure_select,
+    strings: Phlexible.metasets.Strings,
     width: 300,
     height: 400,
     layout: 'fit',
@@ -7,12 +8,12 @@ Phlexible.metasets.SelectConfigurationWindow = Ext.extend(Ext.Window, {
 
     initComponent: function() {
         var actions = new Ext.ux.grid.RowActions({
-            header: '_actions',
+            header: this.strings.actions,
             width: 40,
             actions: [
                 {
                     iconCls: 'p-metaset-delete-icon',
-                    tooltip: '_remove_value',
+                    tooltip: this.strings.remove_value,
                     callback: this.deleteValue,
                     scope: this
                 }
@@ -20,21 +21,28 @@ Phlexible.metasets.SelectConfigurationWindow = Ext.extend(Ext.Window, {
         });
 
         var values = [];
-        Ext.each(this.options.split(','), function(value) {
-            values.push([value]);
-        });
+        if (this.options) {
+            Ext.each(this.options.split(','), function(value) {
+                values.push([value]);
+            });
+        }
 
         this.items = [{
             xtype: 'editorgrid',
             border: false,
             autoExpandColumn: 'value',
+            viewConfig: {
+                deferEmptyText: false,
+                emptyText: this.strings.use_add,
+                stripeRows: true
+            },
             store: new Ext.data.SimpleStore({
                 fields: ['value'],
                 data: values
             }),
             columns: [{
                 id: 'value',
-                header: '_value',
+                header: this.strings.value,
                 dataIndex: 'value',
                 editor: new Ext.form.TextField()
             },
@@ -42,7 +50,7 @@ Phlexible.metasets.SelectConfigurationWindow = Ext.extend(Ext.Window, {
             ],
             plugins: [actions],
             tbar: [{
-                text: '_add_value',
+                text: this.strings.add_value,
                 iconCls: 'p-metaset-add-icon',
                 handler: this.addValue,
                 scope: this
@@ -50,16 +58,21 @@ Phlexible.metasets.SelectConfigurationWindow = Ext.extend(Ext.Window, {
         }];
 
         this.buttons = [{
-            text: '_cancel',
+            text: this.strings.cancel,
             handler: function() {
                 this.close();
             },
             scope: this
         },{
-            text: '_store',
+            text: this.strings.store,
             handler: function() {
-                var options = [];
-                Ext.each(this.getComponent(0).getStore().getRange(), function(r) {
+                var options = [],
+                    records = this.getComponent(0).getStore().getRange();
+                if (!records.length) {
+                    Ext.MessageBox.alert(this.strings.failure, this.strings.add_at_least_one_value);
+                    return;
+                }
+                Ext.each(records, function(r) {
                     options.push(r.get('value'));
                 });
                 this.fireEvent('store', options.join(','));

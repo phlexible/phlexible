@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use GetId3\GetId3Core;
-use Phlexible\Bundle\MediaAssetBundle\MetaBag;
-use Phlexible\Bundle\MediaAssetBundle\MetaData;
+use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
+use Phlexible\Bundle\MediaAssetBundle\Attributes;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 
 /**
@@ -39,7 +39,7 @@ class GetId3AttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, MetaBag $metaBag)
+    public function read(FileInterface $file, AttributesBag $attributes)
     {
         $filename = $file->getPhysicalPath();
 
@@ -47,42 +47,37 @@ class GetId3AttributeReader implements AttributeReaderInterface
             return null;
         }
 
-        $metaData = new MetaData();
-        $metaData->setTitle('ID3');
-
         $getId3 = new GetId3Core();
         $info = $getId3->analyze($filename);
         ldd($info);
 
         if (!empty($info['title'])) {
-            $metaData->set('title', $info['title']);
+            $attributes->set('id3.title', $info['title']);
         }
 
         if (!empty($info['album'])) {
-            $metaData->set('album', $info['album']);
+            $attributes->set('id3.album', $info['album']);
         }
 
         if (!empty($info['artist'])) {
-            $metaData->set('artist', $info['artist']);
+            $attributes->set('id3.artist', $info['artist']);
         }
 
         if (!empty($info['year'])) {
-            $metaData->set('year', $info['year']);
+            $attributes->set('id3.year', $info['year']);
         }
 
         if (!empty($info['genre'])) {
-            $metaData->set('genre', $info['genre']);
+            $attributes->set('id3.genre', $info['genre']);
         }
 
         if (!empty($info['track'])) {
-            $metaData->set('track', $info['track']);
+            $attributes->set('id3.track', $info['track']);
         }
 
         if (!empty($info['comment'])) {
-            $metaData->set('comment', $info['comment']);
+            $attributes->set('id3.comment', $info['comment']);
         }
-
-        $metaBag->add($metaData);
     }
 
 }

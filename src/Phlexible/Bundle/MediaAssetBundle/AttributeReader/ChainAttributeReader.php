@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaAssetBundle\MetaBag;
+use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 
 /**
@@ -54,11 +54,11 @@ class ChainAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, MetaBag $metaBag)
+    public function read(FileInterface $file, AttributesBag $attributes)
     {
         foreach ($this->readers as $reader) {
             if ($reader->isAvailable() && $reader->supports($file)) {
-                $reader->read($file, $metaBag);
+                $reader->read($file, $attributes);
             }
         }
     }

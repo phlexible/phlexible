@@ -68,7 +68,7 @@ services:
             - @phlexible_media_template.template_manager
             - @phlexible_media_cache.queue.worker
             - @phlexible_media_cache.queue.batch_resolver
-            - %phlexible_media_cache.asynchronous_system_cache%
+            - %phlexible_media_cache.immediately_cache_system_templates%
         tags:
             - {name: kernel.event_subscriber}
 

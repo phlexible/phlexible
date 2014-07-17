@@ -54,7 +54,7 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
                 scope: this
             }
         },{
-            xtype: 'mediamanager-foldermetagrid',
+            xtype: 'mediamanager-foldermeta',
             border: false,
             stripeRows: true,
             listeners: {

@@ -329,7 +329,7 @@ class DoctrineDriver extends AbstractDriver
 
         $siteId = $this->getSite()->getId();
 
-        if ($this->findFolderByPath($path)) {
+        if ($this->findFolderByPath($folderPath)) {
             throw new AlreadyExistsException("Create folder {$action->getFolder()->getName()} failed.");
         }
     }
@@ -784,7 +784,7 @@ class DoctrineDriver extends AbstractDriver
             $this->connection->update(
                 $this->folderTable,
                 array(
-                    'attributes' => !$action->getAttributes() ? json_encode($action->getAttributes()) : null,
+                    'attributes' => $action->getAttributes() ? json_encode($action->getAttributes()) : null,
                 ),
                 array(
                     'id' => $action->getFolder()->getId(),

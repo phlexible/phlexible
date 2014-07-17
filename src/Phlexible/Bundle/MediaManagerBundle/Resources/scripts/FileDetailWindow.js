@@ -11,7 +11,7 @@ Phlexible.mediamanager.FileDetailAttributesTemplate = new Ext.XTemplate(
     '<div style="padding-top: 8px;">',
     '<tpl for="attributes">',
     '<tpl if="value">',
-    '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{tkey}:</div> {value}</div>',
+    '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{key}:</div> {value}</div>',
     '</tpl>',
     '</tpl>',
     '</div>',
@@ -116,7 +116,7 @@ Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
             },
             {
                 title: 'Attributes',
-                iconCls: 'p-metasets-component-icon',
+                iconCls: 'p-mediamanager-file_properties-icon',
                 hidden: true
             },
             {

@@ -1,5 +1,6 @@
 metasets:
-    metasets: 'Meta sets'
+    metasets: 'Meta Sets'
+    metaset: 'Meta Set'
     meta: Meta
     no_meta_values: 'Keine Metadaten'
     key: Schlüssel
@@ -7,3 +8,35 @@ metasets:
     save: Speichern
     error: Fehler
     fill_required_fields: 'Bitte füllen Sie alle Pflichtfelder aus.'
+
+    add: Hinzufügen
+    remove: Entfernen
+    id: ID
+    no_fields: Keine Felder
+    add_field: Feld hinzufügen
+    remove_field: Feld entfernen
+    save: Speichern
+    name: Name
+    type: Typ
+    required: Pflicht
+    synchronized: Synchronisiert
+    readonly: Schreibgeschützt
+    options: Optionen
+    actions: Aktionen
+    configure: Konfigurieren
+    failure: Fehler
+    select_needs_options: Bitte konfigurieren Sie das Select-Feld.
+    suggest_needs_options: Bitte konfigurieren Sie das Suggest-Feld.
+    select: Auswählen
+    configure_select: Select-Feld konfigurieren
+    configure_suggest: Suggest-Feld konfigurieren
+    remove_value: Wert entfernen
+    use_add: Klicken Sie auf "Hinzufügen" um einen neuen Wert hinzuzufügen
+    value: Wert
+    add_value: Wert hinzufügen
+    cancel: Abbrechen
+    store: Übernehmen
+    add_at_least_one_value: Bitte fügen Sie mindestens einen Wert hinzu.
+    datasource: DataSource
+    select_metaset: Meta Set auswählen...
+    remove_metaset: Meta Set entfernen

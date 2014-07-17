@@ -10,7 +10,8 @@ namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use Brainbits\PdfToText\PdfInfo;
 use Phlexible\Bundle\MediaAssetBundle\AttributeMetaData;
-use Phlexible\Bundle\MediaAssetBundle\MetaBag;
+use Phlexible\Bundle\MediaAssetBundle\Attributes;
+use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 
 /**
@@ -52,23 +53,16 @@ class PdfInfoAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, MetaBag $metaBag)
+    public function read(FileInterface $file, AttributesBag $attributes)
     {
         $filename = $file->getPhysicalPath();
-
-        $metaData = new AttributeMetaData();
-        $metaData->setTitle('PDF attributes');
-
-
 
         try {
             $infos = $this->pdfinfo->getInfo($filename);
 
             foreach ($infos as $key => $value) {
-                $metaData->set(strtolower($key), $value);
+                $attributes->set(strtolower("pdf.$key"), $value);
             }
-
-            $metaBag->add($metaData);
         } catch (\Exception $e) {
         }
     }

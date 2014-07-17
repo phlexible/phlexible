@@ -10,7 +10,8 @@ namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use Brainbits\ImageAnalyzer\ImageAnalyzer;
 use Phlexible\Bundle\MediaAssetBundle\AttributeMetaData;
-use Phlexible\Bundle\MediaAssetBundle\MetaBag;
+use Phlexible\Bundle\MediaAssetBundle\Attributes;
+use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 
 /**
@@ -52,30 +53,23 @@ class ImageAnalyzerAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, MetaBag $metaBag)
+    public function read(FileInterface $file, AttributesBag $attributes)
     {
         $filename = $file->getPhysicalPath();
-
-        $metaData = new AttributeMetaData();
-        $metaData->setTitle('Image attributes');
 
         try {
             $result = $this->analyzer->analyze($filename);
 
-            $metaData
-                ->set('width', $result->getWidth())
-                ->set('height', $result->getHeight())
-                ->set('x_ratio', $metaData->get('width') / $metaData->get('height'))
-                ->set('y_ratio', $metaData->get('height') / $metaData->get('width'))
-                ->set('format', $result->getFormat())
-                ->set('colors', $result->getColors())
-                ->set('colorspace', strtoupper($result->getColorspace()))
-                ->set('depth', $result->getDepth())
-                ->set('quality', $result->getQuality())
-                ->set('resolution', $result->getWidth() . 'x' . $result->getHeight())
-                ->set('profiles', implode(',', $result->getProfiles()));
-
-            $metaBag->add($metaData);
+            $attributes
+                ->set('image.width', $result->getWidth())
+                ->set('image.height', $result->getHeight())
+                ->set('image.format', $result->getFormat())
+                ->set('image.colors', $result->getColors())
+                ->set('image.colorspace', strtoupper($result->getColorspace()))
+                ->set('image.depth', $result->getDepth())
+                ->set('image.quality', $result->getQuality())
+                ->set('image.resolution', $result->getWidth() . 'x' . $result->getHeight())
+                ->set('image.profiles', implode(',', $result->getProfiles()));
         } catch (\Exception $e) {
         }
     }

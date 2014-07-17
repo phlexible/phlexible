@@ -1,5 +1,6 @@
 Phlexible.metasets.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
-    title: '_suggest',
+    title: Phlexible.metasets.Strings.configure_suggest,
+    strings: Phlexible.metasets.Strings,
     width: 300,
     height: 400,
     layout: 'fit',
@@ -35,7 +36,7 @@ Phlexible.metasets.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
             }),
             columns: [{
                 id: 'datasource',
-                header: '_datasource',
+                header: this.strings.datasource,
                 dataIndex: 'title'
             }],
             sm: new Ext.grid.RowSelectionModel({
@@ -44,13 +45,13 @@ Phlexible.metasets.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
         }];
 
         this.buttons = [{
-            text: '_cancel',
+            text: this.strings.cancel,
             handler: function() {
                 this.close();
             },
             scope: this
         },{
-            text: '_select',
+            text: this.strings.select,
             handler: function() {
                 var options = this.getComponent(0).getSelectionModel().getSelected().get('id');
                 this.fireEvent('select', options);

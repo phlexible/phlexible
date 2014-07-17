@@ -13,3 +13,7 @@
 .ext-chrome .x-form-text {
     height: 18px;
 }
+
+table.x-date-inner {
+    table-layout: auto;
+}

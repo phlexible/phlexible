@@ -10,10 +10,9 @@ Phlexible.mediamanager.FolderMeta = Ext.extend(Phlexible.mediamanager.FileMeta, 
         };
 
         this.metasetUrls = {
-            list: Phlexible.Router.generate('mediamanager_folder_meta_set_list'),
-            available: Phlexible.Router.generate('mediamanager_folder_meta_set_available'),
-            add: Phlexible.Router.generate('mediamanager_folder_meta_set_add'),
-            remove: Phlexible.Router.generate('mediamanager_folder_meta_set_remove')
+            list: Phlexible.Router.generate('mediamanager_folder_meta_sets_list'),
+            save: Phlexible.Router.generate('mediamanager_folder_meta_sets_save'),
+            available: Phlexible.Router.generate('metasets_sets_list')
         };
     },
 

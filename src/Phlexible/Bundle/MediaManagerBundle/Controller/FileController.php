@@ -301,7 +301,10 @@ class FileController extends Controller
         $file = $site->findFile($fileId, $fileVersion);
         $folder = $site->findFolder($file->getFolderId());
 
-        $attributes = array(); //$asset->getAttributes()->toArray();
+        $attributes = array();
+        foreach ($file->getAttribute('attributes', array()) as $key => $value) {
+            $attributes[] = array('key' => $key, 'value' => $value);
+        }
 
         $versions = array();
         if ($site->hasFeature('versions')) {

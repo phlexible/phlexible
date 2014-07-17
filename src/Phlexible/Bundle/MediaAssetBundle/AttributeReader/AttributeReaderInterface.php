@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaAssetBundle\MetaBag;
+use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 
 /**
@@ -38,8 +38,8 @@ interface AttributeReaderInterface
      * Read attributes
      *
      * @param FileInterface $file
-     * @param MetaBag       $metaBag
+     * @param AttributesBag $attributes
      */
-    public function read(FileInterface $file, MetaBag $metaBag);
+    public function read(FileInterface $file, AttributesBag $attributes);
 
 }

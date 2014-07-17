@@ -9,19 +9,20 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
 
         // Create RowActions Plugin
         var actions = new Ext.ux.grid.RowActions({
-            header: '_actions',
+            header: this.strings.actions,
             width: 40,
             actions: [
                 {
-                    iconCls: 'p-metaset-delete-icon',
-                    tooltip: '_delete',
-                    callback: this.deleteField.createDelegate(this),
+                    iconCls: 'p-metaset-edit-icon',
+                    tooltip: this.strings.configure,
+                    hideIndex: 'type!=\'select\'&&type!=\'suggest\'',
+                    callback: this.configureField.createDelegate(this),
                     scope: this
                 },
                 {
-                    iconCls: 'p-metaset-edit-icon',
-                    tooltip: '_configure',
-                    callback: this.configureField.createDelegate(this),
+                    iconCls: 'p-metaset-delete-icon',
+                    tooltip: this.strings.remove_field,
+                    callback: this.deleteField.createDelegate(this),
                     scope: this
                 }
             ]
@@ -39,27 +40,27 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('metasets_sets_list'),
                     root: 'sets',
-                    fields: ['id', 'title'],
+                    fields: ['id', 'name'],
                     autoLoad: true,
                     sortInfo: {
-                        field: 'title',
+                        field: 'name',
                         direction: 'ASC'
                     }
                 }),
                 columns: [
                     {
-                        header: '_id',
+                        header: this.strings.id,
                         dataIndex: 'id',
                         hidden: true
                     },
                     {
-                        header: '_title',
-                        dataIndex: 'title'
+                        header: this.strings.name,
+                        dataIndex: 'name'
                     }
                 ],
                 tbar: [
                     {
-                        text: '_add',
+                        text: this.strings.add,
                         iconCls: 'p-metaset-add-icon',
                         handler: function () {
                             Ext.Ajax.request({
@@ -101,6 +102,11 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 loadMask: {
                     text: 'blubb'
                 },
+                viewConfig: {
+                    deferEmptyText: false,
+                    emptyText: this.strings.no_fields,
+                    stripeRows: true
+                },
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('metasets_sets_fields'),
                     baseParams: {
@@ -112,13 +118,13 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 sm: new Ext.grid.RowSelectionModel(),
                 columns: [
                     {
-                        header: '_name',
+                        header: this.strings.name,
                         dataIndex: 'key',
                         width: 200,
                         editor: new Ext.form.TextField()
                     },
                     {
-                        header: '_type',
+                        header: this.strings.type,
                         dataIndex: 'type',
                         width: 200,
                         editor: new Ext.form.ComboBox({
@@ -132,32 +138,51 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                             typeAhead: false,
                             triggerAction: 'all',
                             selectOnFocus: true,
-                            editable: false
+                            editable: false,
+                            listeners: {
+                                change: function(field, newValue, oldValue) {
+                                    if (newValue !== 'select' && newValue !== 'suggest') {
+                                        var r = this.getComponent(1).getSelectionModel().getSelected();
+                                        r.set('options', '');
+                                    }
+                                    console.log('change', arguments);
+                                },
+                                scope: this
+                            }
+
                         })
                     },
                     {
-                        header: '_required',
+                        header: this.strings.required,
                         dataIndex: 'required',
                         width: 60,
-                        editor: new Ext.form.NumberField()
+                        renderer: function(v, md) {
+                            md.attr += 'style="text-align: center;"';
+                            return v ? Phlexible.inlineIcon('p-metaset-checked-icon') : Phlexible.inlineIcon('p-metaset-unchecked-icon');
+                        }
                     },
                     {
-                        header: '_synchronized',
+                        header: this.strings.synchronized,
                         dataIndex: 'synchronized',
                         width: 85,
-                        editor: new Ext.form.NumberField()
+                        renderer: function(v, md) {
+                            md.attr += 'style="text-align: center;"';
+                            return v ? Phlexible.inlineIcon('p-metaset-checked-icon') : Phlexible.inlineIcon('p-metaset-unchecked-icon');
+                        }
                     },
                     {
-                        header: '_readonly',
+                        header: this.strings.readonly,
                         dataIndex: 'readonly',
                         width: 75,
-                        editor: new Ext.form.NumberField()
+                        renderer: function(v, md) {
+                            md.attr += 'style="text-align: center;"';
+                            return v ? Phlexible.inlineIcon('p-metaset-checked-icon') : Phlexible.inlineIcon('p-metaset-unchecked-icon');
+                        }
                     },
                     {
-                        header: '_options',
+                        header: this.strings.options,
                         dataIndex: 'options',
                         width: 200,
-                        //editor: new Ext.form.TextField(),
                         hidden: true
                     },
                     actions
@@ -167,55 +192,16 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 ],
                 tbar: [
                     {
-                        text: '_add_field',
+                        text: this.strings.add_field,
                         iconCls: 'p-metaset-add-icon',
-                        handler: function () {
-                            var r = new Ext.data.Record({key: '', type: 'textfield'});
-                            r.set('key', 'key-' + r.id);
-                            this.getComponent(1).store.add(r);
-
-                        },
+                        handler: this.addField,
                         scope: this
                     },
                     '-',
                     {
-                        text: '_save',
+                        text: this.strings.save,
                         iconCls: 'p-metaset-save-icon',
-                        handler: function () {
-                            var params = [];
-
-                            for (var i = 0; i < this.getComponent(1).store.getCount(); i++) {
-                                var r = this.getComponent(1).store.getAt(i);
-                                params.push({
-                                    key: r.data.key,
-                                    type: r.data.type,
-                                    required: r.data.required,
-                                    'synchronized': r.data['synchronized'],
-                                    readonly: r.data['readonly'],
-                                    options: r.data.options
-                                });
-                            }
-
-                            Ext.Ajax.request({
-                                url: Phlexible.Router.generate('metasets_sets_save'),
-                                params: {
-                                    id: this.getComponent(1).setId,
-                                    data: Ext.encode(params)
-                                },
-                                success: function (response) {
-                                    var data = Ext.decode(response.responseText);
-
-                                    if (data.success) {
-                                        this.getComponent(1).store.reload();
-
-                                        Phlexible.success(data.msg);
-                                    } else {
-                                        Ext.MessageBox.alert('Success', data.msg);
-                                    }
-                                },
-                                scope: this
-                            });
-                        },
+                        handler: this.save,
                         scope: this
                     }
                 ],
@@ -225,12 +211,30 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                             copy: false
                         });
                     },
+                    celldblclick: function(grid, rowIndex, cellIndex) {
+                        var r = grid.getStore().getAt(rowIndex);
+                        if (cellIndex === 2) {
+                            r.set('required', !r.get('required'));
+                        }
+                        if (cellIndex === 3) {
+                            r.set('synchronized', !r.get('synchronized'));
+                        }
+                        if (cellIndex === 4) {
+                            r.set('readonly', !r.get('readonly'));
+                        }
+                    },
                     scope: this
                 }
             }
         ];
 
         Phlexible.metasets.MainPanel.superclass.initComponent.call(this);
+    },
+
+    addField: function() {
+        var r = new Ext.data.Record({key: '', type: 'textfield'});
+        r.set('key', 'field-' + r.id);
+        this.getComponent(1).store.add(r);
     },
 
     configureField: function(grid, record) {
@@ -262,6 +266,52 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
 
     deleteField: function (grid, record) {
         grid.getStore().remove(record);
+    },
+
+    save: function () {
+        var params = [];
+
+        for (var i = 0; i < this.getComponent(1).store.getCount(); i++) {
+            var r = this.getComponent(1).store.getAt(i);
+
+            if (r.get('type') === 'select' && !r.get('options')) {
+                Ext.MessageBox.alert(this.strings.failure, this.strings.select_needs_options);
+                return;
+            }
+            if (r.get('type') === 'suggest' && !r.get('options')) {
+                Ext.MessageBox.alert(this.strings.failure, this.strings.suggest_needs_options);
+                return;
+            }
+
+            params.push({
+                key: r.data.key,
+                type: r.data.type,
+                required: r.data.required,
+                'synchronized': r.data['synchronized'],
+                readonly: r.data['readonly'],
+                options: r.data.options
+            });
+        }
+
+        Ext.Ajax.request({
+            url: Phlexible.Router.generate('metasets_sets_save'),
+            params: {
+                id: this.getComponent(1).setId,
+                data: Ext.encode(params)
+            },
+            success: function (response) {
+                var data = Ext.decode(response.responseText);
+
+                if (data.success) {
+                    this.getComponent(1).store.reload();
+
+                    Phlexible.success(data.msg);
+                } else {
+                    Ext.MessageBox.alert('Success', data.msg);
+                }
+            },
+            scope: this
+        });
     }
 });
 

@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaAssetBundle\MetaBag;
-use Phlexible\Bundle\MediaAssetBundle\MetaData;
+use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
+use Phlexible\Bundle\MediaAssetBundle\Attributes;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 
 /**
@@ -36,29 +36,24 @@ class ExifExtensionAttributeReader implements AttributeReaderInterface
             return false;
         }
 
-        return strtolower($file->getAttribute('assettype') === 'image') &&
-        \exif_imagetype($file->getPhysicalPath()) === IMAGETYPE_JPEG;
+        return strtolower($file->getAttribute('assettype') === 'image')
+            && \exif_imagetype($file->getPhysicalPath()) === IMAGETYPE_JPEG;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, MetaBag $metaBag)
+    public function read(FileInterface $file, AttributesBag $attributes)
     {
         $filename = $file->getPhysicalPath();
-
-        $metaData = new MetaData();
-        $metaData->setTitle('EXIF');
 
         $result = \exif_read_data($filename, '', true);
 
         if (!empty($result['IFD0'])) {
             foreach ($result['IFD0'] as $key => $value) {
-                $metaData->set($key, $value);
+                $attributes->set("exif.$key", $value);
             }
         }
-
-        $metaBag->add($metaData);
     }
 
 }

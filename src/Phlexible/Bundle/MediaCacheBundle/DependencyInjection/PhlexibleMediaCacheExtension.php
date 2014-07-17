@@ -35,7 +35,7 @@ class PhlexibleMediaCacheExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $container->setParameter('phlexible_media_cache.asynchronous_system_cache', $config['asynchronous_system_cache']);
+        $container->setParameter('phlexible_media_cache.immediately_cache_system_templates', $config['immediately_cache_system_templates']);
 
         $ids = array();
         foreach ($config['storages'] as $name => $storageConfig) {

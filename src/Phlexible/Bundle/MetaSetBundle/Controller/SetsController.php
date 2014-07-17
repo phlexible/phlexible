@@ -39,8 +39,8 @@ class SetsController extends Controller
         $data = array();
         foreach ($metaSet as $set) {
             $data[] = array(
-                'id'    => $set->getId(),
-                'title' => $set->getName(),
+                'id'   => $set->getId(),
+                'name' => $set->getName(),
             );
         }
 
@@ -88,10 +88,15 @@ class SetsController extends Controller
      */
     public function createAction(Request $request)
     {
-        $title = $request->get('title', 'new_set');
+        $name = $request->get('title', 'new_set');
 
         $metaSet = new MetaSet();
-        $metaSet->setName($title);
+        $metaSet
+            ->setCreateUserId($this->getUser()->getId())
+            ->setCreatedAt(new \DateTime())
+            ->setModifyUserId($this->getUser()->getId())
+            ->setModifiedAt(new \DateTime())
+            ->setName($name);
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSetManager->updateMetaSet($metaSet);
@@ -142,6 +147,10 @@ class SetsController extends Controller
 
             $metaSet->addField($field);
         }
+
+        $metaSet
+            ->setModifyUserId($this->getUser()->getId())
+            ->setModifiedAt(new \DateTime());
 
         $metaSetManager->updateMetaSet($metaSet);
 

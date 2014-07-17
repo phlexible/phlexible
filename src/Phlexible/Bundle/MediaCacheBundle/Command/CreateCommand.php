@@ -137,6 +137,8 @@ class CreateCommand extends ContainerAwareCommand
         } elseif ($input->getOption('queue')) {
             // via queue
 
+            // TODO: add to queue
+
             $output->writeln(count($queue) . ' items queued.');
         } else {
             // create immediately

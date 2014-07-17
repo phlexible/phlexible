@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->booleanNode('asynchronous_system_cache')->defaultValue(false)->end()
+                ->booleanNode('immediately_cache_system_templates')->defaultValue(true)->end()
                 ->arrayNode('storages')
                     ->isRequired()
                     ->requiresAtLeastOneElement()

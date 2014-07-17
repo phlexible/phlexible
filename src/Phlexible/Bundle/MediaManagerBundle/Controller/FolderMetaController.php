@@ -83,120 +83,6 @@ class FolderMetaController extends Controller
     /**
      * @param Request $request
      *
-     * @return JsonResponse
-     * @Route("/listsets", name="mediamanager_folder_meta_set_list")
-     */
-    public function listsetsAction(Request $request)
-    {
-        $folderId = $request->get('folder_id');
-
-        $siteManager = $this->get('phlexible_media_site.manager');
-        $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
-
-        $folder = $siteManager->getByFolderId($folderId)->findFolder($folderId);
-        $metaSets = $folderMetaSetResolver->resolve($folder);
-
-        $sets = array();
-        foreach ($metaSets as $metaSet) {
-            $sets[] = array(
-                'set_id' => $metaSet->getId(),
-                'name'   => $metaSet->getName(),
-            );
-        }
-
-        return new JsonResponse(array('sets' => $sets));
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/availablesets", name="mediamanager_folder_meta_set_available")
-     */
-    public function availablesetsAction(Request $request)
-    {
-        $folderId = $request->get('folder_id');
-
-        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
-        $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
-        $siteManager = $this->get('phlexible_media_site.manager');
-
-        $folder = $siteManager->getByFolderId($folderId)->findFolder($folderId);
-
-        $metaSets = $metaSetManager->findAll();
-        foreach ($folderMetaSetResolver->resolve($folder) as $index => $metaSet) {
-            if (in_array($metaSet, $metaSets)) {
-                unset($metaSets[$index]);
-            }
-        }
-
-        $sets = array();
-        foreach ($metaSets as $metaSet) {
-            $sets[] = array(
-                'set_id' => $metaSet->getId(),
-                'name'   => $metaSet->getName(),
-            );
-        }
-
-        return new JsonResponse(array('sets' => $sets));
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/addset", name="mediamanager_folder_meta_set_add")
-     */
-    public function addsetAction(Request $request)
-    {
-        $folderId = $request->get('folder_id');
-        $setId = $request->get('set_id');
-
-        $siteManager = $this->get('phlexible_media_site.manager');
-
-        $site = $siteManager->getByFolderId($folderId);
-        $folder = $site->findFolder($folderId);
-
-        $attributes = $folder->getAttributes();
-        if (!isset($attributes['metasets'])) {
-            $attributes['metasets'] = array();
-        }
-        if (!in_array($setId, $attributes['metasets'])) {
-            $attributes['metasets'][] = $setId;
-            $site->setFolderAttributes($folder, $attributes);
-        }
-
-        return new ResultResponse(true, 'Set added.');
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/removeset", name="mediamanager_folder_meta_set_remove")
-     */
-    public function removesetAction(Request $request)
-    {
-        $folderId = $request->get('folder_id');
-        $setId = $request->get('set_id');
-
-        $siteManager = $this->get('phlexible_media_site.manager');
-
-        $site = $siteManager->getByFolderId($folderId);
-        $folder = $site->findFolder($folderId);
-
-        $attributes = $folder->getAttributes();
-        if (isset($attributes['metasets']) && in_array($setId, $attributes['metasets'])) {
-            unset($attributes['metasets'][array_search($setId, $attributes['metasets'])]);
-            $site->setFolderAttributes($folder, $attributes);
-        }
-
-        return new ResultResponse(true, 'Set removed.');
-    }
-
-    /**
-     * @param Request $request
-     *
      * @return ResultResponse
      * @Route("/save", name="mediamanager_folder_meta_save")
      */
@@ -265,5 +151,60 @@ class FolderMetaController extends Controller
         */
 
         return new ResultResponse(true, 'Folder meta saved.');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @Route("/listsets", name="mediamanager_folder_meta_sets_list")
+     */
+    public function listsetsAction(Request $request)
+    {
+        $folderId = $request->get('folder_id');
+
+        $siteManager = $this->get('phlexible_media_site.manager');
+        $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
+
+        $folder = $siteManager->getByFolderId($folderId)->findFolder($folderId);
+        $metaSets = $folderMetaSetResolver->resolve($folder);
+
+        $sets = array();
+        foreach ($metaSets as $metaSet) {
+            $sets[] = array(
+                'id'   => $metaSet->getId(),
+                'name' => $metaSet->getName(),
+            );
+        }
+
+        return new JsonResponse(array('sets' => $sets));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/savesets", name="mediamanager_folder_meta_sets_save")
+     */
+    public function savesetsAction(Request $request)
+    {
+        $folderId = $request->get('folder_id');
+        $joinedIds = $request->get('ids');
+        if ($joinedIds) {
+            $ids = explode(',', $joinedIds);
+        } else {
+            $ids = array();
+        }
+
+        $siteManager = $this->get('phlexible_media_site.manager');
+
+        $site = $siteManager->getByFolderId($folderId);
+        $folder = $site->findFolder($folderId);
+
+        $attributes = $folder->getAttributes();
+        $attributes['metasets'] = $ids;
+        $site->setFolderAttributes($folder, $attributes);
+
+        return new ResultResponse(true, 'Set added.');
     }
 }
