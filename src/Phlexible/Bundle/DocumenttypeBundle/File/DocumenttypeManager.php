@@ -84,7 +84,7 @@ class DocumenttypeManager implements DocumenttypeManagerInterface
             return $documentType;
         }
 
-        throw new NotFoundException('Documenttype key "' . $key . '" not found.');
+        throw new NotFoundException("Documenttype key $key not found.");
     }
 
     /**
@@ -106,7 +106,7 @@ class DocumenttypeManager implements DocumenttypeManagerInterface
             return $documentType;
         }
 
-        throw new NotFoundException('Documenttype for mimetype "' . $mimetype . '" not found.');
+        throw new NotFoundException("Documenttype for mimetype $mimetype not found.");
     }
 
     /**

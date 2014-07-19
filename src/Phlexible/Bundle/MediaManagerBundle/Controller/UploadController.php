@@ -8,11 +8,17 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
+use Brainbits\Mime\MimeDetector;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
+use Phlexible\Bundle\MediaManagerBundle\Upload\TempFile;
+use Phlexible\Bundle\MediaSiteBundle\File\File;
+use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,14 +75,16 @@ class UploadController extends Controller
 
             $cnt = 0;
             foreach ($request->files->all() as $uploadedFile) {
+                /* @var $uploadedFile UploadedFile */
+
                 $file = $uploadHandler->handle($uploadedFile, $folderId, $this->getUser()->getId());
 
                 if ($file) {
                     $cnt++;
 
-                    $body = 'Filename: ' . $file->getName() . PHP_EOL
+                    $body = 'Filename: ' . $uploadedFile->getClientOriginalName() . PHP_EOL
                         . 'Folder:   ' . $folder->getName() . PHP_EOL
-                        . 'Filesize: ' . $file->getSize() . PHP_EOL
+                        . 'Filesize: ' . $uploadedFile->getSize() . PHP_EOL
                         . 'Filetype: ' . $file->getMimeType() . PHP_EOL;
 
                     $message = MediaManagerMessage::create('File "' . $file->getName() . '" uploaded.', $body);
@@ -100,6 +108,7 @@ class UploadController extends Controller
                     'params' => $request->request->all(),
                     'files'  => $request->files->all(),
                     'trace'  => $e->getTraceAsString(),
+                    'traceArray'  => $e->getTrace(),
                 )
             );
         }
@@ -111,81 +120,90 @@ class UploadController extends Controller
      */
     public function checkAction()
     {
-        $tempStorage = $this->get('phlexible_media_manager.upload.storage.temp');
+        $tempHandler = $this->get('phlexible_media_manager.upload.temp_handler');
+        $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
         $siteManager = $this->get('phlexible_media_site.manager');
-        $documenttypeRepository = $this->get('documenttypes.repository');
+        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
 
         $data = array();
 
         if ($tempStorage->count()) {
-            $useWizard = 0;
-
-            foreach ($tempStorage->getAll() as $tempFile) {
-                $site = $siteManager->getByFolderId($tempFile->getFolderId());
-                $supportsVersions = $site->hasFeature('versions');
-                $folder = $site->findFolder($tempFile->getFolderId());
-                $newName = basename($tempFile->getName());
-                $mimetype = $this->getContainer()->get('mediaToolsMime')->detect($tempFile->getTempName());
-                $newType = $documenttypeRepository->getByMimetype($mimetype)->getKey();
-
-                $temp = array(
-                    'versions' => $supportsVersions,
-                    'temp_key' => $tempFile->getId(),
-                    'temp_id'  => $tempFile->getId(),
-                    'new_id'   => $tempFile->getOriginalFileId(),
-                    'new_name' => $newName,
-                    'new_type' => $newType,
-                    'new_size' => $tempFile->getSize()
-                );
-
-                if ($tempFile->getOriginalFileId()) {
-                    $oldFile = $site->findFile($tempFile->getOriginalFileId());
-
-                    $alternativeName = $this->createAlternateFilename($tempFile->getTempName(), $folder);
-
-                    $temp['old_name'] = $tempFile['name'];
-                    $temp['old_id'] = $tempFile['original_id'];
-                    $temp['old_type'] = $oldFile->getDocumentTypeKey();
-                    $temp['old_size'] = $oldFile->getSize();
-                    $temp['alternative_name'] = $alternativeName;
-                }
-
-                if (!empty($tempFile['file_id'])) {
-                    $temp['file_id'] = $tempFile['file_id'];
-                }
-
-                if (!empty($tempFile['use_wizard'])) {
-                    $useWizard = true;
-                }
-
-                if (!empty($tempFile['parsed'])) {
-                    $temp['parsed'] = $tempFile['parsed'];
-                }
-
-                $data['files'][] = $temp;
+            $tempFile = $tempStorage->next();
+            $site = $siteManager->getByFolderId($tempFile->getFolderId());
+            $supportsVersions = $site->hasFeature('versions');
+            $newName = basename($tempFile->getName());
+            $mimetype = $this->get('phlexible_media_tool.mime.detector')->detect($tempFile->getPath(), MimeDetector::RETURN_STRING);
+            if (trim($mimetype)) {
+                $newType = $documenttypeManager->findByMimetype($mimetype);
+            } else {
+                $newType = $documenttypeManager->find('binary');
             }
 
-            if ($useWizard) {
-                $data['wizard'] = 1;
+            $data = array(
+                'versions' => $supportsVersions,
+                'temp_key' => $tempFile->getId(),
+                'temp_id'  => $tempFile->getId(),
+                'new_id'   => $tempFile->getFileId(),
+                'new_name' => $newName,
+                'new_type' => $newType->getKey(),
+                'new_size' => $tempFile->getSize(),
+                'wizard'   => false,
+            );
+
+            if ($tempFile->getFileId()) {
+                $oldFile = $site->findFile($tempFile->getFileId());
+
+                $alternativeName = $tempHandler->createAlternateFilename($tempFile, $site);
+
+                $data['old_name'] = $tempFile->getName();
+                $data['old_id']   = $tempFile->getFileId();
+                $data['old_type'] = $oldFile->getAttribute('documenttype');
+                $data['old_size'] = $oldFile->getSize();
+                $data['alternative_name'] = $alternativeName;
             }
+
+            if (!empty($tempFile->getFileId())) {
+                $data['file_id'] = $tempFile->getFileId();
+            }
+
+            if (!empty($tempFile->getUseWizard())) {
+                $data['wizard'] = true;
+            }
+
+            /*
+            // TODO: parser stuff
+            if (!empty($tempFile['parsed'])) {
+                $temp['parsed'] = $tempFile['parsed'];
+            }
+            */
         }
 
         return new JsonResponse($data);
     }
 
     /**
+     * @return JsonResponse
+     * @Route("/clear", name="mediamanager_upload_clear")
+     */
+    public function clearAction()
+    {
+        $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
+        $tempStorage->removeAll();
+
+        return new ResultResponse(true);
+    }
+
+    /**
      * @param Request $request
      *
      * @return ResultResponse
-     * @throws Media_Site_Folder_Exception
      * @Route("/save", name="mediamanager_upload_save")
      */
     public function saveAction(Request $request)
     {
         $all = $request->get('all');
         $action = $request->get('do');
-        $tempKey = $request->get('temp_key');
-        $tempID = $request->get('temp_id');
+        $tempId = $request->get('temp_id');
 
         $metaSetId = $request->get('metaset', null);
         $metaData = $request->get('meta', null);
@@ -193,278 +211,43 @@ class UploadController extends Controller
             $metaData = json_decode($metaData, true);
         }
 
-        die(__METHOD__ . " session");
-        $uploadTempSession = new Zend_Session_Namespace('uploadTemp');
-
-        $container = $this->getContainer();
-        $mediaSiteManager = $container->get('phlexible_media_site.manager');
-
-        if (isset($uploadTempSession->siteId)) {
-            $site = $mediaSiteManager->getSiteById($uploadTempSession->siteId);
-        } else {
-            $site = $mediaSiteManager->get('mediamanager');
-        }
-
-        $tempFiles = $uploadTempSession->files[$tempKey];
+        $tempHandler = $this->get('phlexible_media_manager.upload.temp_handler');
 
         $data = array();
-        if (!$all) {
-            if (!empty($tempFiles[$tempID])) {
-                $tempFile = $tempFiles[$tempID];
-
-                unset($uploadTempSession->files[$tempKey][$tempID]);
-                /* @var $folder Media_Site_Folder_Abstract */
-                $folder = $site->getFolderPeer()->getByID($tempFile['folder_id']);
-
-                if (!empty($tempFile['original_id'])) {
-                    $file = $site->getFilePeer()->getByID($tempFile['original_id']);
-                }
-
-                switch ($action) {
-                    case 'save':
-                        try {
-                            $newFile = $folder->importFile($tempFile['tmp_name'], $tempFile['name']);
-                        } catch (\Exception $e) {
-                            $this->getContainer()->get('logger')->error(
-                                __METHOD__ . ' save: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-                            );
-
-                            throw new Media_Site_Folder_Exception($e->getMessage());
-                        }
-
-                        break;
-
-                    case 'replace':
-                        try {
-                            $dispatcher = $container->get('event_dispatcher');
-
-                            // post before replace file event
-                            $event = new Media_Site_Event_BeforeReplaceFile($site, $folder, $file);
-                            if (false === $dispatcher->dispatch($event)) {
-                                throw new Media_Site_Folder_Exception(
-                                    'Can\'t replace file "'
-                                    . $file->getFilePath()
-                                    . '", callback returned false.'
-                                );
-                            }
-
-                            // replace file on disc
-                            if (!copy($tempFile['tmp_name'], $file->getFilePath())) {
-                                throw new Media_Site_Folder_Exception('Copy failed.');
-                            }
-
-                            // re-read file information
-                            $file->reRead();
-
-                            // queue mediacache item regeneration
-                            $queueBatch = new Media_Cache_Queue_Batch();
-                            $queueBatch->add(null, array($file->getId()));
-
-                            // post replace file event
-                            $event = new Media_Site_Event_ReplaceFile($site, $folder, $file);
-                            $dispatcher->dispatch($event);
-
-                            $newFile = $file;
-                        } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(
-                                __METHOD__ . ' replace: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-                            );
-
-                            throw new Media_Site_Folder_Exception($e->getMessage());
-                        }
-
-                        break;
-
-                    case 'keep':
-                        try {
-                            $newName = $this->_getAlternativeFilename($tempFile['name'], $folder);
-
-                            $newFile = $folder->importFile($tempFile['tmp_name'], $newName);
-                        } catch (\Exception $e) {
-                            $this->getContainer()->get('logger')->error(
-                                __METHOD__ . ' keep: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-                            );
-
-                            throw new Media_Site_Folder_Exception($e->getMessage());
-                        }
-
-                        break;
-
-                    case 'version':
-                        try {
-                            $fileId = $tempFile['original_id'];
-                            if (!empty($tempFile['file_id'])) {
-                                $fileId = $tempFile['file_id'];
-                            }
-
-                            $newFile = $folder->importFileVersion($tempFile['tmp_name'], $tempFile['name'], $fileId);
-                        } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(
-                                __METHOD__ . ' version: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-                            );
-
-                            throw new Media_Site_Folder_Exception($e->getMessage());
-                        }
-
-                        break;
-
-                    case 'discard':
-                    default:
-
-                        break;
-                }
-
-                $dirname = dirname($tempFile['tmp_name']);
-                if (file_exists($tempFile['tmp_name'])) {
-                    unlink($tempFile['tmp_name']);
-                }
-                if (!glob($dirname . '/*')) {
-                    rmdir($dirname);
-                }
-
-                if ($newFile) {
-                    try {
-                        $asset = $newFile->getAsset();
-                    } catch (Exception $e) {
-                    }
-
-                    if ($metaSetId) {
-                        try {
-                            $metaSet = $this->getContainer()->get('metasets.repository')->find($metaSetId);
-                            $asset->addMetaSet($metaSet);
-                        } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(
-                                __METHOD__ . ' newFile: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-                            );
-                        }
-                    }
-
-                    if ($metaData) {
-                        foreach (array('de', 'en') as $language) {
-                            $metaSetItems = $asset->getMetaSetItems($language);
-
-                            foreach ($metaData as $key => $row) {
-                                $metaSetItems[$row['set_id']]->$key = $row['value_' . $language];
-                            }
-
-                            foreach ($metaSetItems as $metaSetItem) {
-                                $metaSetItem->save();
-                            }
-                        }
-                    }
-                }
-            }
+        if ($all) {
+            $tempHandler->handleAll($action);
         } else {
-            foreach ($tempFiles as $tempID => $tempFile) {
-                unset($uploadTempSession->files[$tempKey][$tempID]);
-
-                $folder = $site->getFolderPeer()->getByID($tempFile['folder_id']);
-
-                if (!empty($tempFile['original_id'])) {
-                    $file = $site->getFilePeer()->getByID($tempFile['original_id']);
-                }
-
-                switch ($action) {
-                    case 'save':
-                        try {
-                            $newFileID = $folder->importFile($tempFile['tmp_name'], $tempFile['name']);
-                        } catch (\Exception $e) {
-                            $this->getContainer()->get('logger')->error(
-                                __METHOD__ . ' save: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-                            );
-
-                            throw new Media_Site_Folder_Exception($e->getMessage());
-                        }
-
-                        break;
-
-                    case 'replace':
-                        try {
-                            if (!copy($tempFile['tmp_name'], $file->getFilePath())) {
-                                throw new Media_Site_Folder_Exception('Copy failed.');
-                            }
-
-                            $file->reRead();
-                        } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(
-                                __METHOD__ . ' replace: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-                            );
-
-                            throw new Media_Site_Folder_Exception($e->getMessage());
-                        }
-
-                        break;
-
-                    case 'keep':
-                        try {
-                            $newName = $this->_getAlternativeFilename($tempFile['name'], $folder);
-
-                            $newFileID = $folder->importFile($tempFile['tmp_name'], $newName);
-                        } catch (Exception $e) {
-                            $this->getContainer()->get('logger')->error(
-                                __METHOD__ . ' keep: ' . $e->getMessage() . PHP_EOL . $e->getTraceAsString()
-                            );
-
-                            throw new Media_Site_Folder_Exception($e->getMessage());
-                        }
-
-                        break;
-
-                    case 'discard':
-                    default:
-
-                        break;
-                }
-
-                $dirname = dirname($tempFile['tmp_name']);
-                if (file_exists($tempFile['tmp_name'])) {
-                    unlink($tempFile['tmp_name']);
-                }
-                if (!glob($dirname . '/*')) {
-                    rmdir($dirname);
-                }
-            }
-        }
-
-        if (!count($tempFiles)) {
-            unset($uploadTempSession->files[$tempKey]);
+            $tempHandler->handle($action, $tempId);
         }
 
         return new ResultResponse(true);
     }
 
     /**
+     * @param Request $request
+     *
      * @return Response
      * @Route("/preview", name="mediamanager_upload_preview")
      */
-    public function previewAction()
+    public function previewAction(Request $request)
     {
-        $tempKey = $this->_getParam('key');
-        $tempId = $this->_getParam('id');
-        $templateKey = $this->_getParam('template');
+        $tempId = $request->get('id');
+        $templateKey = $request->get('template');
 
-        $template = $this->getContainer()->get('mediatemplates.repository')->find($templateKey);
+        $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
+        $templateManager = $this->get('phlexible_media_template.template_manager');
+        $imageApplier = $this->get('phlexible_media_template.applier.image');
 
-        die(__METHOD__ . " session");
-        $uploadTempSession = new Zend_Session_Namespace('uploadTemp');
+        $template = $templateManager->find($templateKey);
+        $tempFile = $tempStorage->get($tempId);
 
-        if (isset($uploadTempSession->siteId)) {
-            $site = Media_Site_Manager::getInstance()->getSiteById($uploadTempSession->siteId);
-        } else {
-            $site = Media_Site_Manager::getInstance()->get('mediamanager');
-        }
-
-        $tempFiles = $uploadTempSession->files[$tempKey];
-        $tempFile = $tempFiles[$tempId];
-
-        $toolkit = $template->getAppliedToolkit($tempFile['tmp_name']);
-        $filename = $toolkit->save(
-            $this->getContainer()->getParam(':media.manager.temp_dir') . 'upload_preview/',
-            true
-        );
+        $outFilename = $this->container->getParameter('phlexible_media_manager.temp_dir') . 'preview.png';
+        $imageApplier->apply($template, new File(), $tempFile->getPath(), $outFilename);
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($filename);
+            ->create($outFilename, 'image/png', array(
+                'absolute_path' => true,
+            ));
     }
 
     /**
@@ -613,21 +396,5 @@ class UploadController extends Controller
         $meta = array_values($meta);
 
         return new JsonResponse($meta);
-    }
-
-    private function createAlternateFilename($filename, $folder)
-    {
-        $newNameParts = pathinfo($filename);
-        $newNameFormat = basename($newNameParts['basename'], '.' . $newNameParts['extension']);
-        $newNameFormat .= '(%s).' . $newNameParts['extension'];
-
-        $i = 1;
-
-        do {
-            $i++;
-            $newName = sprintf($newNameFormat, $i);
-        } while ($folder->hasFile($newName));
-
-        return $newName;
     }
 }

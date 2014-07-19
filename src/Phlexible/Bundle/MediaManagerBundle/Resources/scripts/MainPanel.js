@@ -550,6 +550,8 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         plupload.addEvent(c.body.dom, 'drop', function (e) {
             e.preventDefault();
         });
+
+        return div;
     },
 
     createAttributesPanelConfig: function () {
@@ -588,12 +590,13 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         //}
         var sessionID = Phlexible.Cookie.get('phlexible');
         if (!sessionID) {
-            Phlexible.console.error("No session ID, upload _will_ fail!");
+            Phlexible.console.error("No session ID, upload via flash _will_ fail!");
         }
 
-        var suoID = Ext.id();
         var addBtn = this.getMainPanel().getTopToolbar().items.items[this.tbarIndex.upload];
+        /*
         var btn = addBtn.el.child('button');
+        var suoID = Ext.id();
         var p = btn.parent();
         var em = p.createChild({
             tag: 'em',
@@ -608,29 +611,32 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             id: suoID,
             style: 'display: block; position: absolute; top: 0pt; left: 0pt;'
         });
+        */
 
-        suoID = btn.id;
+        var dropper = this.createDropper(this.getFilesGrid());
 
         var uploader = new plupload.Uploader({
             runtimes: 'html5,flash,silverlight,html4',
             file_data_name: 'Filedata',
-            browse_button: suoID,
+            browse_button: addBtn.id,
             //container: 'container',
-            max_file_size: '100mb',
+            filters: {
+                max_file_size: '2000mb'
+            },
             url: Phlexible.Router.generate('mediamanager_upload'),
-            flash_swf_url: Phlexible.component('/phlexiblemediamanager/flash/plupload.flash.swf'),
-            silverlight_xap_url: Phlexible.component('/phlexiblemediamanager/silverlight/plupload.silverlight.xap'),
-            drop_element: 'dropper',
+            flash_swf_url: Phlexible.component('/phlexiblemediamanager/plupload/Moxie.swf'),
+            silverlight_xap_url: Phlexible.component('/phlexiblemediamanager/plupload/Moxie.xap'),
+            drop_element: dropper,
             multipart: true,
             multipart_params: {
             }
         });
 
         uploader.bind('Init', function (up, params) {
-            Phlexible.console.debug('uploader::Init', 'runtime:' + params.runtime);
+            Phlexible.console.debug('uploader::Init', 'runtime:' + params.runtime, 'features:', up.features, 'caps:', up.caps);
 
-            if (up.features.dragdrop) {
-                this.createDropper(this.getFilesGrid());
+            if (!up.features.dragdrop) {
+                dropper.style.visibility = 'hidden';
             }
 
             if (params.runtime === 'flash') {
@@ -639,13 +645,6 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         }, this);
 
         uploader.bind('FilesAdded', function (up, files) {
-            Ext.each(files, function (file) {
-                this.getStatusBar().addFile(file.id, file.name, file.size, function (up, file) {
-                    up.removeFile(file);
-                }.createDelegate(this, [up, file], false));
-                Phlexible.console.debug('uploader::FilesAdded', 'id:' + file.id, 'name:' + file.name, 'size:' + plupload.formatSize(file.size));
-            }, this);
-
             up.refresh(); // Reposition Flash/Silverlight
 
             up.settings.multipart_params.folder_id = this.folder_id;
@@ -659,29 +658,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             }
         }, this);
 
-        uploader.bind('StateChanged', function (up) {
-            Phlexible.console.debug('uploader::StateChanged', 'state:' + up.state);
-            if (up.state == plupload.STARTED) {
-                this.getStatusBar().start();
-            } else if (up.state == plupload.STOPPED) {
-                this.getStatusBar().stop();
-            }
-        }, this);
-
-        uploader.bind('BeforeUpload', function (up, file) {
-            this.getStatusBar().setActive(file.id);
-            Phlexible.console.debug('uploader::BeforeUpload', 'id:' + file.id, file);
-        }, this);
-
-        uploader.bind('UploadProgress', function (up, file) {
-            this.getStatusBar().setProgress(file.id, file.percent);
-            Phlexible.console.debug('uploader::UploadProgress', 'id:' + file.id, 'percent:' + file.percent);
-        }, this);
-
         uploader.bind('Error', function (up, err) {
-            this.getStatusBar().setError(err.code, err.message, err.file ? err.file.id : "", err.file ? err.file.name : "");
-            Phlexible.console.debug('uploader::Error', 'code:' + err.code, 'message:' + err.message, 'file:' + (err.file ? err.file.name : ""));
-
             up.refresh(); // Reposition Flash/Silverlight
             this.getFilesGrid().getStore().reload();
         }, this);
@@ -691,19 +668,13 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         }, this);
 
         uploader.bind('FileUploaded', function (up, file, info) {
-            this.getStatusBar().setFinished(file.id);
-            Phlexible.console.debug('uploader::FileUploaded', 'id:' + file.id, 'info:', info);
-            this.getFilesGrid().getStore().reload();
+            this.onUploadComplete();
         }, this);
 
+        this.getStatusBar().bindUploader(uploader);
+
         uploader.init();
-        this.getStatusBar().bind(function () { // start
-            uploader.start();
-        }, function () { // stop
-            uploader.stop();
-        }, function (id) { // remove file
-            uploader.removeFile(uploader.getFile(id));
-        });
+
         window.up = uploader;
     },
 
@@ -886,63 +857,10 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
     },
 
     onUploadComplete: function () {
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_upload_check'),
-            success: function (response) {
-                if (response.responseText) {
-                    var data = Ext.decode(response.responseText);
-
-                    if (data) {
-                        if (data.wizard) {
-                            var w = new Phlexible.mediamanager.FileUploadWizard({
-                                files: data.files,
-                                listeners: {
-                                    update: {
-                                        fn: function () {
-                                            this.getFilesGrid().getStore().reload();
-                                        },
-                                        scope: this
-                                    }
-                                }
-                            });
-                        }
-                        else {
-                            var w = new Phlexible.mediamanager.FileReplaceWindow({
-                                files: data.files,
-                                listeners: {
-                                    update: function () {
-                                        this.getFilesGrid().getStore().reload();
-                                    },
-                                    scope: this
-                                }
-                            });
-                        }
-
-                        w.show();
-
-                        return;
-                    }
-                }
-
-                var store = this.getFilesGrid().getStore();
-                if (Phlexible.Config.get('mediamanager.upload.enable_upload_sort')) {
-                    if (!store.lastOptions) store.lastOptions = {};
-                    if (!store.lastOptions.params) store.lastOptions.params = {};
-                    store.lastOptions.params.start = 0;
-                    var sort = store.getSortState();
-                    if (sort.field != 'create_time' || sort.direction != 'DESC') {
-                        store.sort('create_time', 'DESC');
-                    }
-                    else {
-                        store.reload();
-                    }
-                }
-                else {
-                    store.reload();
-                }
-            },
-            scope: this
-        });
+        if (!this.uploadChecker) {
+            this.uploadChecker = new Phlexible.mediamanager.UploadChecker();
+        }
+        this.uploadChecker.check();
     },
 
     onSearch: function (search_values) {

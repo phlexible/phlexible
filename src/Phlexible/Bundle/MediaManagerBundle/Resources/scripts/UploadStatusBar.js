@@ -61,11 +61,6 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
         Phlexible.mediamanager.UploadStatusBar.superclass.initComponent.call(this);
     },
 
-    bind: function (startFn, stopFn) {
-        this.startFn = startFn;
-        this.stopFn = stopFn;
-    },
-
     addFile: function (id, name, size, removeFn) {
         Phlexible.console.log('UploadStatusBar::addFile(' + id + ')');
         var iconCls = 'm-mediamanager-file-icon';
@@ -155,6 +150,55 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
 
     getComponent: function (index) {
         return this.items.items[index];
+    },
+
+    bindUploader: function(uploader) {
+        this.startFn = function () {
+            uploader.start();
+        };
+
+        this.stopFn = function () {
+            uploader.stop();
+        };
+
+        uploader.bind('FilesAdded', function (up, files) {
+            Ext.each(files, function (file) {
+                this.addFile(file.id, file.name, file.size, function (up, file) {
+                    up.removeFile(file);
+                }.createDelegate(this, [up, file], false));
+                Phlexible.console.debug('uploader::FilesAdded', 'id:' + file.id, 'name:' + file.name, 'size:' + plupload.formatSize(file.size));
+            }, this);
+        }, this);
+
+        uploader.bind('StateChanged', function (up) {
+            Phlexible.console.debug('uploader::StateChanged', 'state:' + up.state);
+            if (up.state == plupload.STARTED) {
+                this.start();
+            } else if (up.state == plupload.STOPPED) {
+                this.stop();
+            }
+        }, this);
+
+        uploader.bind('BeforeUpload', function (up, file) {
+            this.setActive(file.id);
+            Phlexible.console.debug('uploader::BeforeUpload', 'id:' + file.id, file);
+        }, this);
+
+        uploader.bind('UploadProgress', function (up, file) {
+            this.setProgress(file.id, file.percent);
+            Phlexible.console.debug('uploader::UploadProgress', 'id:' + file.id, 'percent:' + file.percent);
+        }, this);
+
+        uploader.bind('Error', function (up, err) {
+            this.setError(err.code, err.message, err.file ? err.file.id : "", err.file ? err.file.name : "");
+            Phlexible.console.debug('uploader::Error', 'code:' + err.code, 'message:' + err.message, 'file:' + (err.file ? err.file.name : ""));
+        }, this);
+
+        uploader.bind('FileUploaded', function (up, file, info) {
+            this.setFinished(file.id);
+            Phlexible.console.debug('uploader::FileUploaded', 'id:' + file.id, 'info:', info);
+        }, this);
+
     }
 });
 

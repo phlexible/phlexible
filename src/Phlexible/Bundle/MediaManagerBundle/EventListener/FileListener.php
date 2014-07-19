@@ -38,7 +38,11 @@ class FileListener
     {
         $file = $event->getAction()->getFile();
 
-        $documenttype = $this->documenttypeManager->findByMimetype($file->getMimeType());
+        try {
+            $documenttype = $this->documenttypeManager->findByMimetype($file->getMimeType());
+        } catch (\Exception $e) {
+            $documenttype = $this->documenttypeManager->find('binary');
+        }
 
         $file
             ->setAttribute('documenttype', $documenttype->getKey())

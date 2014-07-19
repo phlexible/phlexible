@@ -39,15 +39,19 @@ class MediaManagerAssetProvider implements AssetProviderInterface
     public function getUxScriptsCollection()
     {
         $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/Makeweb.form.FileField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/Makeweb.form.DownloadFileField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/Makeweb.form.ImageFileField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/Makeweb.form.FlashFileField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/Makeweb.form.VideoFileField.js')),
+            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.FileField.js')),
+            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.DownloadFileField.js')),
+            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.ImageFileField.js')),
+            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.FlashFileField.js')),
+            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.VideoFileField.js')),
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/plupload.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/SwfUpload.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/Ext.ux.SwfUploadPanel.js')),
+            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.js')),
+            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/moxie.js')),
+            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.dev.js')),
+            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.full.min.js')),
+            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/SwfUpload.js')),
+            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.SwfUploadPanel.js')),
+            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.LocationBar.js')),
         ));
 
         return $collection;
@@ -91,7 +95,6 @@ class MediaManagerAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/RenameFolderWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/RenameFileWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/CustomGridView.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/Ext.ux.LocationBar.js')),
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FileMeta.js')),
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FileMetaGrid.js')),
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FolderMeta.js')),
@@ -106,6 +109,7 @@ class MediaManagerAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FolderDetailWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FolderPropertiesPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/UploadStatusBar.js')),
+            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/UploadChecker.js')),
 
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/options/MediaSettings.js')),
 

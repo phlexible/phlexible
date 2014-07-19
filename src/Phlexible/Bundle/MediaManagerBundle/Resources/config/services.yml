@@ -13,15 +13,19 @@ services:
         class: Phlexible\Bundle\MediaSiteBundle\Driver\DoctrineDriver
         arguments: [@doctrine.dbal.default_connection]
 
-    phlexible_media_manager.upload.storage.temp:
+    phlexible_media_manager.upload.temp_storage:
         class: Phlexible\Bundle\MediaManagerBundle\Upload\TempStorage
         arguments: [@session, %phlexible_media_manager.temp_dir%]
+
+    phlexible_media_manager.upload.temp_handler:
+        class: Phlexible\Bundle\MediaManagerBundle\Upload\TempHandler
+        arguments: [@phlexible_media_manager.upload.temp_storage, @phlexible_media_site.manager]
 
     phlexible_media_manager.upload.handler:
         class: Phlexible\Bundle\MediaManagerBundle\Upload\UploadHandler
         arguments:
             - @phlexible_media_site.manager
-            - @phlexible_media_manager.upload.storage.temp
+            - @phlexible_media_manager.upload.temp_storage
             - @phlexible_media_tool.mime.detector
 
     phlexible_media_manager.util.suggest_field:

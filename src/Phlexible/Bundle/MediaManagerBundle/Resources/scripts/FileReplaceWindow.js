@@ -1,29 +1,29 @@
 Phlexible.mediamanager.FileReplaceWindowTemplate = new Ext.XTemplate(
     '<tpl for=".">',
-    '<div class="m-filereplace-wrap">',
-    '<div style="float: left;">',
-    Phlexible.inlineIcon('p-mediamanager-arrow_right-icon'),
-    '</div>',
-    '<div style="padding-left: 20px;">',
-    '<div class="m-filereplace-header">',
-    '{header}',
-    '</div>',
-    '<div class="m-filereplace-text">',
-    '{text}',
-    '</div>',
-    '<tpl if="src">',
-    '<div>',
-    '<div class="m-filereplace-img">',
-    '<img src="{src}" width="48" height="48">',
-    '</div>',
-    '<div class="m-filereplace-desc">',
-    '<div class="m-filereplace-name" style="font-weight: bold">{[values.name.shorten(50)]}</div>',
-    '<div class="m-filereplace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
-    '<div class="m-filereplace-size">' + Phlexible.mediamanager.Strings.size + ': {[Phlexible.Format.size(values.size)]}</div>',
-    '</div>',
-    '</div>',
-    '</tpl>',
-    '</div>',
+    '<div class="p-filereplace-wrap">',
+        '<div style="float: left;">',
+        Phlexible.inlineIcon('p-mediamanager-arrow_right-icon'),
+        '</div>',
+        '<div style="padding-left: 20px;">',
+            '<div class="p-filereplace-header">',
+                '{header}',
+            '</div>',
+                '<div class="p-filereplace-text">',
+            '{text}',
+            '</div>',
+            '<tpl if="src">',
+            '<div>',
+                '<div class="p-filereplace-img">',
+                    '<img src="{src}" width="48" height="48">',
+                '</div>',
+                '<div class="p-filereplace-desc">',
+                    '<div class="p-filereplace-name" style="font-weight: bold">{[values.name.shorten(50)]}</div>',
+                    '<div class="p-filereplace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
+                    '<div class="p-filereplace-size">' + Phlexible.mediamanager.Strings.size + ': {[Phlexible.Format.size(values.size)]}</div>',
+                '</div>',
+            '</div>',
+            '</tpl>',
+        '</div>',
     '</div>',
     '</tpl>'
 );
@@ -32,18 +32,14 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
     title: Phlexible.mediamanager.Strings.uploaded_file_conflict,
     strings: Phlexible.mediamanager.Strings,
     width: 500,
+    minWidth: 500,
     height: 400,
+    minHeight: 400,
     bodyStyle: 'padding: 10px;',
     cls: 'p-filereplace',
-
-    files: [],
-    pointer: 0,
+    modal: true,
 
     initComponent: function () {
-        this.store = new Ext.data.SimpleStore({
-            fields: ['action', 'header', 'text', 'id', 'name', 'type', 'size', 'src']
-        });
-
         this.items = [
             {
                 xtype: 'panel',
@@ -61,21 +57,17 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
             },
             {
                 xtype: 'dataview',
-                itemSelector: 'div.m-filereplace-wrap',
+                itemSelector: 'div.p-filereplace-wrap',
                 overClass: 'p-filereplace-wrap-over',
                 style: 'overflow:auto',
                 singleSelect: true,
-                store: this.store,
+                store: new Ext.data.JsonStore({
+                    fields: ['action', 'header', 'text', 'id', 'name', 'type', 'size', 'src']
+                }),
                 tpl: Phlexible.mediamanager.FileReplaceWindowTemplate,
                 listeners: {
-                    click: {
-                        fn: this.saveFile,
-                        scope: this
-                    },
-                    render: {
-                        fn: this.showFile,
-                        scope: this
-                    }
+                    click: this.saveFile,
+                    scope: this
                 }
             },
             {
@@ -87,17 +79,75 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
         Phlexible.mediamanager.FileReplaceWindow.superclass.initComponent.call(this);
     },
 
+    getDataView: function() {
+        return this.getComponent(2);
+    },
+
+    loadFile: function () {
+        var file = this.uploadChecker.getCurrent(),
+            data = [];
+
+        data.push({
+            action: 'discard',
+            header: this.strings.delete_uploaded_file,
+            text: this.strings.delete_uploaded_file_desc,
+            id: file.old_id,
+            name: file.old_name,
+            type: file.old_type,
+            size: file.old_size,
+            src: Phlexible.Router.generate('mediamanager_media', {file_id: file.old_id, template_key: '_mm_medium'})
+        });
+
+        if (!file.versions) {
+            data.push({
+                action: 'replace',
+                header: this.strings.replace_existing_file,
+                text: this.strings.replace_existing_file_desc,
+                id: file.new_id,
+                name: file.old_name,
+                type: file.new_type,
+                size: file.new_size,
+                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.temp_key, id: file.temp_id, template: '_mm_medium'})
+            });
+        } else {
+            data.push({
+                action: 'add_version',
+                header: 'Als neue Version der bestehenden Datei speichern.',
+                text: 'Es werden keine Daten verändert. Die vorhandene Datei wird um diese Datei ergänzt:',
+                id: file.new_id,
+                name: file.new_name,
+                type: file.new_type,
+                size: file.new_size,
+                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.temp_key, id: file.temp_id, template: '_mm_medium'})
+            });
+        }
+
+        data.push({
+            action: 'keep',
+            header: this.strings.keep_both_files,
+            text: String.format(this.strings.keep_both_files_desc, file.alternative_name.shorten(60)),
+            id: '',
+            name: '',
+            type: '',
+            size: '',
+            src: ''
+        });
+
+        this.getDataView().getStore().loadData(data);
+    },
+
     saveFile: function (view, index) {
-        var all = 0;
+        var all = 0,
+            r = this.getDataView().getStore().getAt(index),
+            params;
+
         if (this.getComponent(3).getValue()) {
             all = 1;
         }
 
-        var r = this.store.getAt(index);
-
         switch (r.data.action) {
             case 'replace':
-                var params = {
+                params = {
                     'do': 'replace',
                     all: all,
                     temp_key: this.files[this.pointer].temp_key,
@@ -106,7 +156,7 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
                 break;
 
             case 'keep':
-                var params = {
+                params = {
                     'do': 'keep',
                     all: all,
                     temp_key: this.files[this.pointer].temp_key,
@@ -115,7 +165,7 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
                 break;
 
             case 'add_version':
-                var params = {
+                params = {
                     'do': 'version',
                     all: all,
                     temp_key: this.files[this.pointer].temp_key,
@@ -125,7 +175,7 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
 
             case 'discard':
             default:
-                var params = {
+                params = {
                     'do': 'discard',
                     all: all,
                     temp_key: this.files[this.pointer].temp_key,
@@ -149,82 +199,15 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
 
         if (all) {
             request.success = function (response) {
-                this.fireEvent('update');
+                this.fireEvent('all');
                 this.close();
             };
         } else {
             request.success = function (response) {
-                this.nextFile();
+                this.fireEvent('next');
             };
         }
 
         Ext.Ajax.request(request);
-    },
-
-    nextFile: function () {
-        this.fireEvent('update');
-
-        if (this.pointer >= (this.files.length - 1)) {
-            this.close();
-            return;
-        }
-
-        this.pointer++;
-
-        this.showFile();
-    },
-
-    showFile: function () {
-        var file = this.files[this.pointer];
-
-        var data = [];
-
-        data.push([
-            'discard',
-            this.strings.delete_uploaded_file,
-            this.strings.delete_uploaded_file_desc,
-            file.old_id,
-            file.old_name,
-            file.old_type,
-            file.old_size,
-            Phlexible.Router.generate('mediamanager_media', {file_id: file.old_id, template_key: '_mm_medium'})
-        ]);
-
-        if (!file.versions) {
-            data.push([
-                'replace',
-                this.strings.replace_existing_file,
-                this.strings.replace_existing_file_desc,
-                file.new_id,
-                file.old_name,
-                file.new_type,
-                file.new_size,
-                Phlexible.Router.generate('mediamanager_upload_preview', {key: file.temp_key, id: file.temp_id, template: '_mm_medium'})
-            ]);
-        } else {
-            data.push([
-                'add_version',
-                'Als neue Version der bestehenden Datei speichern.',
-                'Es werden keine Daten verändert. Die vorhandene Datei wird um diese Datei ergänzt:',
-                file.new_id,
-                file.new_name,
-                file.new_type,
-                file.new_size,
-                Phlexible.Router.generate('mediamanager_upload_preview', {key: file.temp_key, id: file.temp_id, template: '_mm_medium'})
-            ]);
-        }
-
-        data.push([
-            'keep',
-            this.strings.keep_both_files,
-            String.format(this.strings.keep_both_files_desc, file.alternative_name.shorten(60)),
-            '',
-            '',
-            '',
-            '',
-            ''
-        ]);
-
-        this.store.loadData(data);
     }
 });

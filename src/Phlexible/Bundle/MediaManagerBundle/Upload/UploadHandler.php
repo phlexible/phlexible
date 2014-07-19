@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
 use Brainbits\Mime\MimeDetector;
+use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\UploadedFileSource;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -36,8 +37,8 @@ class UploadHandler
     private $mimeDetector;
 
     /**
-     * @param SiteManager $siteManager
-     * @param TempStorage $tempStorage
+     * @param SiteManager  $siteManager
+     * @param TempStorage  $tempStorage
      * @param MimeDetector $mimeDetector
      */
     public function __construct(SiteManager $siteManager, TempStorage $tempStorage, MimeDetector $mimeDetector)
@@ -62,7 +63,7 @@ class UploadHandler
      * @param string       $folderId
      * @param string       $userId
      *
-     * @return TempFile|UploadFile
+     * @return TempFile|FileInterface
      */
     public function handle(UploadedFile $uploadedFile, $folderId, $userId)
     {
@@ -81,7 +82,7 @@ class UploadHandler
         $useWizard = $this->useWizard();
 
         if ($originalFileId || $useWizard) {
-            return $this->tempStorage->addUploadFile(
+            return $this->tempStorage->store(
                 $uploadFileSource,
                 $folderId,
                 $userId,

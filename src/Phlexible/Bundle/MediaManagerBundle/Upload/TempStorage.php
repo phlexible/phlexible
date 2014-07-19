@@ -42,7 +42,7 @@ class TempStorage
     /**
      * @return TempFile[]
      */
-    public function getAll()
+    public function all()
     {
         if (!$this->count()) {
             return array();
@@ -60,9 +60,41 @@ class TempStorage
     }
 
     /**
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function has($id)
+    {
+        if (!$this->count()) {
+            return false;
+        }
+
+        $tempFiles = $this->session->get('mediamanager.temp_files');
+
+        return isset($tempFiles[$id]);
+    }
+
+    /**
+     * @param string $id
+     *
      * @return TempFile|null
      */
-    public function getNext()
+    public function get($id)
+    {
+        if ($this->has($id)) {
+            $tempFiles = $this->all();
+
+            return $tempFiles[$id];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return TempFile|null
+     */
+    public function next()
     {
         if (!$this->count()) {
             return null;
@@ -72,71 +104,86 @@ class TempStorage
     }
 
     /**
-     *
+     * @return $this
      */
     public function removeAll()
     {
         if ($this->session->has('mediamanager.temp_files')) {
             $this->session->remove('mediamanager.temp_files');
         }
+
+        return $this;
     }
 
     /**
      * @param TempFile $file
+     *
+     * @return $this
      */
     public function remove(TempFile $file)
     {
-        if ($this->session->has('mediamanager.temp_files') && isset($this->session->get(
-                'mediamanager.temp_files'
-            )[$file->getId()])
-        ) {
+        // TODO: cleanup file?
+
+        if ($this->session->has('mediamanager.temp_files') && isset($this->session->get('mediamanager.temp_files')[$file->getId()])) {
             unset($this->session->has('mediamanager.temp_files')[$file->getId()]);
         }
+
+        return $this;
     }
 
     /**
-     * Add upload to temp storage
+     * Store upload
      *
      * @param UploadedFileSource $file
      * @param string             $folderId
-     * @param int                $uid
+     * @param int                $userId
      * @param string             $originalFileId
      * @param bool               $useWizard
      *
      * @return TempFile
      * @throws \Exception
      */
-    public function addUploadFile(UploadedFileSource $file, $folderId, $uid, $originalFileId, $useWizard)
+    public function store(UploadedFileSource $file, $folderId, $userId, $originalFileId, $useWizard)
     {
         $tempId = uniqid();
         $tempDir = $this->tempDir . '/' . $tempId . '/';
-        $tempName = $tempDir . basename($file->getTempName());
+        $tempName = $tempDir . basename($file->getPath());
 
         if (!file_exists($tempDir) && !mkdir($tempDir, 0777, true)) {
             throw new \Exception('Error occured while creating temp upload folder.');
         }
 
-        if (!move_uploaded_file($file->getTempName(), $tempName)) {
+        if (!move_uploaded_file($file->getPath(), $tempName)) {
             throw new \Exception('Error occured during uploaded file move.');
         }
 
-        $tempFile = new TempFile($file->getName(), $tempName, $file->getType(), $file->getSize(), 0);
-        $tempFile
-            ->setId($tempId)
-            ->setOriginalFileId($originalFileId)
-            ->setFolderId($folderId)
-            ->setWizard($useWizard)
-            ->setUserId($uid);
+        $tempFile = new TempFile(
+            $tempId,
+            $file->getName(),
+            $tempName,
+            $file->getMimeType(),
+            $file->getSize(),
+            $originalFileId,
+            $folderId,
+            $userId,
+            $useWizard
+        );
 
+        /*
         $event = new BeforeStoreUploadEvent($this, $tempFile);
         if ($this->dispatcher->dispatch(MediaSiteEvents::BEFORE_STORE_UPLOAD, $event) === false) {
             return null;
         }
+        */
 
-        $this->session[$tempId] = $tempFile;
+        $tempFiles = $this->session->get('mediamanager.temp_files');
+        $tempFiles[$tempId] = $tempFile;
+        $this->session->set('mediamanager.temp_files', $tempFiles);
 
+        /*
         $event = new StoreUploadEvent($this, $tempFile);
         $this->dispatcher->dispatch(MediaSiteEvents::STORE_UPLOAD, $event);
+        */
 
         return $tempFile;
     }
