@@ -34,6 +34,7 @@
         "brainbits/toolkit": "dev-master",
         "rhumsaa/uuid": "~2.7",
         "php-ffmpeg/php-ffmpeg": "~0.4",
+        "php-ffmpeg/extras": "~0.3",
         "igorw/file-serve-bundle": "~1",
         "alchemy/zippy": "~0.2",
         "cocur/slugify": "~0.8",

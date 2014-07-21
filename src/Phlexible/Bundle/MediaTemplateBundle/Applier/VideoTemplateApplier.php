@@ -60,6 +60,9 @@ class VideoTemplateApplier
     public function getExtension(VideoTemplate $template)
     {
         switch ($template->getParameter('format')) {
+            case 'flv':
+                return 'flv';
+
             case 'ogg':
                 return 'ogv';
 
@@ -70,6 +73,10 @@ class VideoTemplateApplier
             case 'wmv3':
                 return 'wmv';
 
+            case '3gp':
+                return '3gp';
+
+            case 'mp4':
             case 'x264':
             default:
                 return 'mp4';
@@ -84,6 +91,9 @@ class VideoTemplateApplier
     public function getMimetype(VideoTemplate $template)
     {
         switch ($template->getParameter('format')) {
+            case 'flv':
+                return 'video/x-flv';
+
             case 'ogg':
                 return 'video/ogg';
 
@@ -94,6 +104,10 @@ class VideoTemplateApplier
             case 'wmv3':
                 return 'video/wmv';
 
+            case '3gp':
+                return 'video/3gp';
+
+            case 'mp4':
             case 'x264':
             default:
                 return 'video/mp4';
@@ -113,6 +127,10 @@ class VideoTemplateApplier
 
         if ($template->hasParameter('format', true)) {
             switch ($template->getParameter('format')) {
+                case 'flv';
+                    $format = new \Phlexible\Bundle\MediaTemplateBundle\Ffmpeg\Format\Video\Flv();
+                    break;
+
                 case 'ogg';
                     $format = new \FFMpeg\Format\Video\Ogg();
                     break;
@@ -129,6 +147,11 @@ class VideoTemplateApplier
                     $format = new \FFMpeg\Format\Video\WMV3();
                     break;
 
+                case '3gp';
+                    $format = new \FFMpeg\Format\Video\ThreeGP();
+                    break;
+
+                case 'mp4';
                 case 'x264';
                 default:
                     $format = new \FFMpeg\Format\Video\X264();
@@ -138,9 +161,9 @@ class VideoTemplateApplier
             $format = new \FFMpeg\Format\Video\X264();
         }
 
-        if ($template->hasParameter('video_format', true)) {
-            $format->setVideoCodec($template->getParameter('video_format'));
-        }
+        //if ($template->hasParameter('video_format', true)) {
+        //    $format->setVideoCodec($template->getParameter('video_format'));
+        //}
 
         if ($template->hasParameter('video_width', true) && $template->hasParameter('video_height', true)) {
             $width = $template->getParameter('video_width');
@@ -160,9 +183,9 @@ class VideoTemplateApplier
             $video->filters()->framerate($framerate, $gop);
         }
 
-        if ($template->hasParameter('audio_format', true)) {
-            $format->setAudioCodec($template->getParameter('audio_format'));
-        }
+        //if ($template->hasParameter('audio_format', true)) {
+        //    $format->setAudioCodec($template->getParameter('audio_format'));
+        //}
 
         if ($template->hasParameter('audio_bitrate', true)) {
             $format->setAudioKiloBitrate($template->getParameter('audio_bitrate'));

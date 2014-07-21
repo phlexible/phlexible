@@ -9,16 +9,18 @@ Ext.namespace(
 Phlexible.mediatemplates.VideoFormats = [
     ['', Phlexible.mediatemplates.Strings.keep_format],
     ['flv', 'FLV'],
-    ['m4v', 'M4V'],
     ['mp4', 'MP4'],
-    ['wm7', 'WM7'],
-    ['mov', 'MOV'],
-    ['mpg1', 'MPG1']
+    ['ogg', 'OGG'],
+    ['wmv', 'WMV'],
+    ['wmv3', 'WMV3'],
+    ['webm', 'WEBM'],
+    ['3gp', '3GP']
 ];
 
 Phlexible.mediatemplates.VideoFormatsWeb = [
     ['flv', 'FLV'],
-    ['mp4', 'MP4']
+    ['mp4', 'MP4'],
+    ['ogg', 'OGG']
 ];
 
 Phlexible.mediatemplates.VideoBitrates = [
@@ -37,6 +39,17 @@ Phlexible.mediatemplates.VideoFramerates = [
     ['15', '15'],
     ['20', '20'],
     ['25', '25']
+];
+
+Phlexible.mediatemplates.AudioFormats = [
+    ['', Phlexible.mediatemplates.Strings.keep_format],
+    ['mp3', 'MP3'],
+    ['flac', 'FLAC'],
+    ['vorbis', 'VORBIS']
+];
+
+Phlexible.mediatemplates.AudioFormatsWeb = [
+    ['mp3', 'MP3']
 ];
 
 Phlexible.mediatemplates.AudioBitrates = [
