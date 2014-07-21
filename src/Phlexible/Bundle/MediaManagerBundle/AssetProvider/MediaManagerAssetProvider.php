@@ -111,8 +111,6 @@ class MediaManagerAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/UploadStatusBar.js')),
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/UploadChecker.js')),
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/options/MediaSettings.js')),
-
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/portlet/LatestFiles.js')),
 
             new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/menuhandle/MediaHandle.js')),

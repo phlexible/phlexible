@@ -569,6 +569,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                     }
                     else {
                         var w = new Phlexible.mediamanager.FileDetailWindow({
+                            iconCls: document_type_key,
                             file_id: file_id,
                             file_version: file_version,
                             file_name: file_name,
@@ -648,7 +649,6 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             up.refresh(); // Reposition Flash/Silverlight
 
             up.settings.multipart_params.folder_id = this.folder_id;
-            console.log(up.settings);
         }, this);
 
         uploader.bind('QueueChanged', function (up) {
@@ -857,17 +857,38 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
     },
 
     onUploadComplete: function () {
+        this.reloadFilesSortedLatest();
         if (!this.uploadChecker) {
             this.uploadChecker = new Phlexible.mediamanager.UploadChecker({
                 listeners: {
                     reload: function() {
-                        this.getFilesGrid().getStore().reload();
+                        this.reloadFilesSortedLatest();
                     },
                     scope: this
                 }
             });
         }
         this.uploadChecker.check();
+    },
+
+    reloadFilesSortedLatest: function() {
+        var store = this.getFilesGrid().getStore();
+        if (Phlexible.Config.get('mediamanager.upload.enable_upload_sort')) {
+            if (!store.lastOptions) store.lastOptions = {};
+            if (!store.lastOptions.params) store.lastOptions.params = {};
+            store.lastOptions.params.start = 0;
+            var sort = store.getSortState();
+            if (sort.field != 'create_time' || sort.direction != 'DESC') {
+                store.sort('create_time', 'DESC');
+            }
+            else {
+                store.reload();
+            }
+        }
+        else {
+            store.reload();
+        }
+
     },
 
     onSearch: function (search_values) {

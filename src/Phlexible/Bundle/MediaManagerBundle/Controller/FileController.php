@@ -178,6 +178,8 @@ class FileController extends Controller
                 $focal = 1;
             }
 
+            $attributes = $file->getAttribute('attributes', array());
+
             $folder = $site->findFolder($file->getFolderId());
             $data[] = array(
                 'id'                => $file->getID(),
@@ -204,6 +206,7 @@ class FileController extends Controller
                 'used_in'           => $usedIn,
                 'used'              => $usage,
                 'focal'             => $focal,
+                'attributes'        => $attributes,
             );
         }
 
@@ -301,10 +304,7 @@ class FileController extends Controller
         $file = $site->findFile($fileId, $fileVersion);
         $folder = $site->findFolder($file->getFolderId());
 
-        $attributes = array();
-        foreach ($file->getAttribute('attributes', array()) as $key => $value) {
-            $attributes[] = array('key' => $key, 'value' => $value);
-        }
+        $attributes = $file->getAttribute('attributes', array());
 
         $versions = array();
         if ($site->hasFeature('versions')) {
@@ -339,6 +339,18 @@ class FileController extends Controller
             'folderId'     => $folder->getId(),
         );
 
+        $properties['detail'] = array(
+            'id'                => $file->getId(),
+            'folder_id'         => $file->getFolderId(),
+            'name'              => $file->getName(),
+            'size'              => $file->getSize(),
+            'version'           => $file->getVersion(),
+            'document_type_key' => strtolower($file->getAttribute('documenttype')),
+            'asset_type'        => strtolower($file->getAttribute('assettype')),
+            'create_user_id'    => $file->getCreateUserId(),
+            'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
+        );
+
         /*
         $previousFile = $site->findPreviousFile($file, 'name ASC');
         $nextFile = $site->findNextFile($file, 'name ASC');
@@ -361,6 +373,40 @@ class FileController extends Controller
         }
 
         return new JsonResponse($properties);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @Route("/detail", name="mediamanager_file_detail")
+     */
+    public function detailAction(Request $request)
+    {
+        $id = $request->get('id');
+
+        $site = $this->get('phlexible_media_site.manager')->getByFileId($id);
+
+        $detail = array();
+        foreach ($site->findFileVersions($id) as $file) {
+            $detail[] = array(
+                'id'                => $file->getId(),
+                'folder_id'         => $file->getFolderId(),
+                'name'              => $file->getName(),
+                'size'              => $file->getSize(),
+                'version'           => $file->getVersion(),
+                'document_type_key' => strtolower($file->getAttribute('documenttype')),
+                'asset_type'        => strtolower($file->getAttribute('assettype')),
+                'create_user_id'    => $file->getCreateUserId(),
+                'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
+            );
+        }
+
+        return new JsonResponse(
+            array(
+                'detail' => $detail
+            )
+        );
     }
 
     /**
@@ -462,39 +508,5 @@ class FileController extends Controller
         }
 
         return new ResultResponse(true, 'Zip finished', array('filename' => basename($filename)));
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/detail", name="mediamanager_file_detail")
-     */
-    public function detailAction(Request $request)
-    {
-        $id = $request->get('id');
-
-        $site = $this->get('phlexible_media_site.manager')->getByFileId($id);
-
-        $detail = array();
-        foreach ($site->findFileVersions($id) as $file) {
-            $detail[] = array(
-                'id'                => $file->getId(),
-                'folder_id'         => $file->getFolderId(),
-                'name'              => $file->getName(),
-                'size'              => $file->getSize(),
-                'version'           => $file->getVersion(),
-                'document_type_key' => strtolower($file->getAttribute('documenttype')),
-                'asset_type'        => strtolower($file->getAttribute('assettype')),
-                'create_user_id'    => $file->getCreateUserId(),
-                'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
-            );
-        }
-
-        return new JsonResponse(
-            array(
-                'detail' => $detail
-            )
-        );
     }
 }

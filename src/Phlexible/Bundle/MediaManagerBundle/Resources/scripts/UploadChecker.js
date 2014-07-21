@@ -42,14 +42,26 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
 
     onCheckResponse: function(response) {
         if (!response.responseText) {
-            // this.getFilesGrid().getStore().reload();
+            this.running = false;
+            if (this.replace) {
+                this.replace.hide();
+            }
+            if (this.wizard) {
+                this.wizard.hide();
+            }
             return;
         }
 
         var data = Ext.decode(response.responseText);
 
         if (!data || !data.temp_id) {
-            // this.getFilesGrid().getStore().reload();
+            this.running = false;
+            if (this.replace) {
+                this.replace.hide();
+            }
+            if (this.wizard) {
+                this.wizard.hide();
+            }
             return;
         }
 
@@ -81,15 +93,31 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
                 this.replace = new Phlexible.mediamanager.FileReplaceWindow({
                     uploadChecker: this,
                     listeners: {
-                        all: function () {
-                            this.fireEvent('reload', this);
-                            this.running = false;
-                            this.replace.hide();
-                            this.wizard.hide();
-                        },
-                        next: function () {
-                            this.fireEvent('reload', this);
-                            this.next();
+                        save: function(action, all) {
+                            var file = this.getCurrent(),
+                                params = {
+                                    all: all ? 1 : 0,
+                                    temp_key: file.temp_key,
+                                    temp_id: file.temp_id,
+                                    'do': action
+                                };
+
+                            var request = {
+                                url: Phlexible.Router.generate('mediamanager_upload_save'),
+                                params: params,
+                                success: function (response) {
+                                    this.fireEvent('reload');
+                                    this.next();
+                                },
+                                failure: function (response) {
+                                    var result = Ext.decode(response.responseText);
+
+                                    Ext.MessageBox.alert('Failure', result.msg);
+                                },
+                                scope: this
+                            };
+
+                            Ext.Ajax.request(request);
                         },
                         scope: this
                     }
@@ -100,24 +128,5 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
         }
 
         this.running = true;
-
-        return;
-
-        var store = this.getFilesGrid().getStore();
-        if (Phlexible.Config.get('mediamanager.upload.enable_upload_sort')) {
-            if (!store.lastOptions) store.lastOptions = {};
-            if (!store.lastOptions.params) store.lastOptions.params = {};
-            store.lastOptions.params.start = 0;
-            var sort = store.getSortState();
-            if (sort.field != 'create_time' || sort.direction != 'DESC') {
-                store.sort('create_time', 'DESC');
-            }
-            else {
-                store.reload();
-            }
-        }
-        else {
-            store.reload();
-        }
     }
 });

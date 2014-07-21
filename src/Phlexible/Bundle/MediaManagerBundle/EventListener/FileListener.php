@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
 use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFolderEvent;
 
 /**
  * File listener
@@ -47,5 +48,21 @@ class FileListener
         $file
             ->setAttribute('documenttype', $documenttype->getKey())
             ->setAttribute('assettype', $documenttype->getType());
+    }
+
+    /**
+     * @param BeforeCreateFolderEvent $event
+     */
+    public function onBeforeCreateFolder(BeforeCreateFolderEvent $event)
+    {
+        $folder = $event->getAction()->getFolder();
+
+        return;
+        try {
+            $attributes = $folder->getAttributes();
+            $attributes['metasets'][] = 'x';
+            $site->setFolderAttributes($folder, $attributes);
+        } catch (\Exception $e) {
+        }
     }
 }

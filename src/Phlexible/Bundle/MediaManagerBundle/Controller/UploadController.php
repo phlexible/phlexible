@@ -148,6 +148,7 @@ class UploadController extends Controller
                 'new_type' => $newType->getKey(),
                 'new_size' => $tempFile->getSize(),
                 'wizard'   => false,
+                'total'    => $tempStorage->count(),
             );
 
             if ($tempFile->getFileId()) {
@@ -219,7 +220,7 @@ class UploadController extends Controller
             $tempHandler->handle($action, $tempId);
         }
 
-        return new ResultResponse(true);
+        return new ResultResponse(true, ($all ? 'All' : 'File') . ' saved with action ' . $action);
     }
 
     /**

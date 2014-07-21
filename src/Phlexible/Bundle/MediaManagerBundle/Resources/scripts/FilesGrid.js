@@ -496,7 +496,7 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
         var prefix = '';
         var style = '';
 
-        prefix += Phlexible.mediamanager.templates.Bullets.getWithTrailingSpace(r.data);
+        prefix += Phlexible.mediamanager.Bullets.getWithTrailingSpace(r.data);
 
         /*
          if (!r.data.present) {

@@ -56,7 +56,11 @@ class TempStorage
      */
     public function count()
     {
-        return $this->session->has('mediamanager.temp_files') && count($this->session->get('mediamanager.temp_files'));
+        if (!$this->session->has('mediamanager.temp_files')) {
+            return 0;
+        }
+
+        return count($this->session->get('mediamanager.temp_files'));
     }
 
     /**
@@ -125,7 +129,9 @@ class TempStorage
         // TODO: cleanup file?
 
         if ($this->session->has('mediamanager.temp_files') && isset($this->session->get('mediamanager.temp_files')[$file->getId()])) {
-            unset($this->session->has('mediamanager.temp_files')[$file->getId()]);
+            $tempFiles = $this->session->get('mediamanager.temp_files');
+            unset($tempFiles[$file->getId()]);
+            $this->session->set('mediamanager.temp_files', $tempFiles);
         }
 
         return $this;

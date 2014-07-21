@@ -138,59 +138,10 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
     },
 
     saveFile: function (view, index) {
-        var file = this.uploadChecker.getCurrent(),
-            all = this.getComponent(3).getValue() ? true : false,
+        var all = this.getComponent(3).getValue() ? true : false,
             r = this.getDataView().getStore().getAt(index),
-            params = {
-                all: all,
-                temp_key: file.temp_key,
-                temp_id: file.temp_id
-            };
+            action = r.get('action');
 
-        switch (r.data.action) {
-            case 'replace':
-                params['do'] = 'replace';
-                break;
-
-            case 'keep':
-                params['do'] = 'keep';
-                break;
-
-            case 'add_version':
-                params['do'] = 'version';
-                break;
-
-            case 'discard':
-            default:
-                params['do'] = 'discard';
-                break;
-
-        }
-
-        var request = {
-            url: Phlexible.Router.generate('mediamanager_upload_save'),
-            params: params,
-            failure: function (response) {
-                var result = Ext.decode(response.responseText);
-
-                Ext.MessageBox.alert('Failure', result.msg);
-
-                this.fireEvent('failure');
-            },
-            scope: this
-        };
-
-        if (all) {
-            request.success = function (response) {
-                this.fireEvent('all');
-                this.close();
-            };
-        } else {
-            request.success = function (response) {
-                this.fireEvent('next');
-            };
-        }
-
-        Ext.Ajax.request(request);
+        this.fireEvent('save', action, all);
     }
 });

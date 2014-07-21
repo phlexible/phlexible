@@ -38,6 +38,7 @@ mediamanager:
     type: Type
     version: Version
     name: Name
+    id: ID
     no_files_in_this_folder: 'No files in this folder'
     all_files: 'All files'
     upload_file_to_folder: 'Upload file to folder'
