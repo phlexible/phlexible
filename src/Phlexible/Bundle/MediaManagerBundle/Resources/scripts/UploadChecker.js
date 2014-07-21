@@ -1,16 +1,30 @@
-Phlexible.mediamanager.UploadChecker = function() {
+Phlexible.mediamanager.UploadChecker = function(config) {
+    config = config || {};
+
     this.running = false;
+
+    this.addEvents({
+        "reload": true
+    });
+
+    if (config.listeners) {
+        this.listeners = config.listeners;
+        Phlexible.mediamanager.UploadChecker.superclass.constructor.call(this);
+    }
 };
 Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
     check: function() {
-        this.next();
-    },
-
-    next: function() {
         if (this.isRunning()) {
             return;
         }
 
+        this.next();
+    },
+
+    /**
+     * @private
+     */
+    next: function() {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('mediamanager_upload_check'),
             success: this.onCheckResponse,
@@ -34,7 +48,7 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
 
         var data = Ext.decode(response.responseText);
 
-        if (!data) {
+        if (!data || !data.temp_id) {
             // this.getFilesGrid().getStore().reload();
             return;
         }
@@ -67,8 +81,15 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
                 this.replace = new Phlexible.mediamanager.FileReplaceWindow({
                     uploadChecker: this,
                     listeners: {
-                        update: function () {
-                            this.getFilesGrid().getStore().reload()
+                        all: function () {
+                            this.fireEvent('reload', this);
+                            this.running = false;
+                            this.replace.hide();
+                            this.wizard.hide();
+                        },
+                        next: function () {
+                            this.fireEvent('reload', this);
+                            this.next();
                         },
                         scope: this
                     }

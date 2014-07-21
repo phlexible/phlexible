@@ -213,7 +213,6 @@ class UploadController extends Controller
 
         $tempHandler = $this->get('phlexible_media_manager.upload.temp_handler');
 
-        $data = array();
         if ($all) {
             $tempHandler->handleAll($action);
         } else {

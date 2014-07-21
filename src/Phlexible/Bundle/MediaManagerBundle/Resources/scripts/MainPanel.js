@@ -858,7 +858,14 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
 
     onUploadComplete: function () {
         if (!this.uploadChecker) {
-            this.uploadChecker = new Phlexible.mediamanager.UploadChecker();
+            this.uploadChecker = new Phlexible.mediamanager.UploadChecker({
+                listeners: {
+                    reload: function() {
+                        this.getFilesGrid().getStore().reload();
+                    },
+                    scope: this
+                }
+            });
         }
         this.uploadChecker.check();
     },

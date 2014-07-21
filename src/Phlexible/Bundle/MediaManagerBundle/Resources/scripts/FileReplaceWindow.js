@@ -38,6 +38,7 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
     bodyStyle: 'padding: 10px;',
     cls: 'p-filereplace',
     modal: true,
+    closable: false,
 
     initComponent: function () {
         this.items = [
@@ -137,50 +138,31 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
     },
 
     saveFile: function (view, index) {
-        var all = 0,
+        var file = this.uploadChecker.getCurrent(),
+            all = this.getComponent(3).getValue() ? true : false,
             r = this.getDataView().getStore().getAt(index),
-            params;
-
-        if (this.getComponent(3).getValue()) {
-            all = 1;
-        }
+            params = {
+                all: all,
+                temp_key: file.temp_key,
+                temp_id: file.temp_id
+            };
 
         switch (r.data.action) {
             case 'replace':
-                params = {
-                    'do': 'replace',
-                    all: all,
-                    temp_key: this.files[this.pointer].temp_key,
-                    temp_id: this.files[this.pointer].temp_id
-                };
+                params['do'] = 'replace';
                 break;
 
             case 'keep':
-                params = {
-                    'do': 'keep',
-                    all: all,
-                    temp_key: this.files[this.pointer].temp_key,
-                    temp_id: this.files[this.pointer].temp_id
-                };
+                params['do'] = 'keep';
                 break;
 
             case 'add_version':
-                params = {
-                    'do': 'version',
-                    all: all,
-                    temp_key: this.files[this.pointer].temp_key,
-                    temp_id: this.files[this.pointer].temp_id
-                };
+                params['do'] = 'version';
                 break;
 
             case 'discard':
             default:
-                params = {
-                    'do': 'discard',
-                    all: all,
-                    temp_key: this.files[this.pointer].temp_key,
-                    temp_id: this.files[this.pointer].temp_id
-                };
+                params['do'] = 'discard';
                 break;
 
         }
@@ -192,7 +174,8 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
                 var result = Ext.decode(response.responseText);
 
                 Ext.MessageBox.alert('Failure', result.msg);
-                this.nextFile();
+
+                this.fireEvent('failure');
             },
             scope: this
         };
