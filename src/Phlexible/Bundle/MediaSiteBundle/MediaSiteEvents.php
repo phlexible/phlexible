@@ -64,6 +64,18 @@ class MediaSiteEvents
     const CREATE_FILE = 'phlexible_media_site.create_file';
 
     /**
+     * Before Replace File Event
+     * Called before a file is replaced
+     */
+    const BEFORE_REPLACE_FILE = 'phlexible_media_site.before_replace_file';
+
+    /**
+     * Replace File Event
+     * Called after a file has been replaced
+     */
+    const REPLACE_FILE = 'phlexible_media_site.replace_file';
+
+    /**
      * Before Delete File Event
      * Called before a file is deleted from a folder
      */
@@ -168,18 +180,6 @@ class MediaSiteEvents
      * Set File Attributes Event
      */
     const SET_FOLDER_ATTRIBUTES = 'phlexible_media_site.set_folder_attributes';
-
-    /**
-     * Before Replace File Event
-     * Called before a file is replaced
-     */
-    const BEFORE_REPLACE_FILE = 'phlexible_media_site.before_replace_file';
-
-    /**
-     * Replace Folder Event
-     * Called after a folder has been moved
-     */
-    const REPLACE_FILE = 'phlexible_media_site.replace_file';
 
     /**
      * Before Rename File Event

@@ -85,7 +85,7 @@ class TempHandler
 
             case self::ACTION_REPLACE:
                 $file = $site->findFile($tempFile->getFileId());
-                $site->replaceFile($folder, $file, $tempFile, $tempFile->getUserId());
+                $site->replaceFile($file, $tempFile, $tempFile->getUserId());
                 break;
 
             case self::ACTION_KEEP_BOtH:

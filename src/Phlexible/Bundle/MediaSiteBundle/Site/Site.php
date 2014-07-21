@@ -19,6 +19,7 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFolderAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
+use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ReplaceFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\DriverInterface;
@@ -31,6 +32,7 @@ use Phlexible\Bundle\MediaSiteBundle\Event\BeforeMoveFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeMoveFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeRenameFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeRenameFolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\BeforeReplaceFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\DeleteFileEvent;
@@ -39,6 +41,7 @@ use Phlexible\Bundle\MediaSiteBundle\Event\MoveFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\MoveFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\RenameFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\RenameFolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\File\File;
 use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
@@ -336,6 +339,45 @@ class Site implements SiteInterface, \IteratorAggregate
         $this->dispatcher->dispatch(MediaSiteEvents::CREATE_FOLDER, $event);
 
         return $folder;
+    }
+
+    /**
+     * @param FileInterface       $file
+     * @param FileSourceInterface $fileSource
+     * @param string              $userId
+     * @param array               $attributes
+     *
+     * @return ReplaceFileAction
+     */
+    public function replaceFile(
+        FileInterface $file,
+        FileSourceInterface $fileSource,
+        $userId,
+        array $attributes = array())
+    {
+        $hashCalculator = new MessageDigestHashCalculator();
+        $hash = $hashCalculator->fromFileSource($fileSource);
+        $path = $this->getRootDir() . $hash;
+
+        $file
+            ->setName($fileSource->getName())
+            ->setPhysicalPath($path)
+            ->setSize($fileSource->getSize())
+            ->setHash($hash)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserid($userId);
+
+        $action = new ReplaceFileAction($file, $fileSource, $hashCalculator);
+
+        $event = new BeforeReplaceFileEvent($action);
+        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_REPLACE_FILE, $event);
+
+        $file = $this->driver->execute($action);
+
+        $event = new ReplaceFileEvent($action);
+        $this->dispatcher->dispatch(MediaSiteEvents::REPLACE_FILE, $event);
+
+        return $file;
     }
 
     /**

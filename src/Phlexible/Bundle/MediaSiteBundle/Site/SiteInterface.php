@@ -18,6 +18,7 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFolderAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
+use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ReplaceFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\DriverInterface;
@@ -137,6 +138,20 @@ interface SiteInterface extends FindInterface
      */
     public function createFile(
         FolderInterface $targetFolder,
+        FileSourceInterface $fileSource,
+        $userId,
+        array $attributes = array());
+
+    /**
+     * @param FileInterface       $file
+     * @param FileSourceInterface $fileSource
+     * @param string              $userId
+     * @param array               $attributes
+     *
+     * @return ReplaceFileAction
+     */
+    public function replaceFile(
+        FileInterface $file,
         FileSourceInterface $fileSource,
         $userId,
         array $attributes = array());

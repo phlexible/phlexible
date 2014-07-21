@@ -20,6 +20,7 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFolderAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
+use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ReplaceFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Exception;
@@ -505,6 +506,57 @@ class DoctrineDriver extends AbstractDriver
                     'created_at'     => $file->getCreatedAt()->format('Y-m-d H:i:s'),
                     'modify_user_id' => $file->getModifyUserId(),
                     'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
+                )
+            );
+        } catch (\Exception $e) {
+            $filesystem->remove($path);
+
+            throw new IOException("Create file {$file->getName()} failed.", 0, $e);
+        }
+
+        return $file;
+    }
+
+    private function executeReplaceFileAction(ReplaceFileAction $action)
+    {
+        $filesystem = new Filesystem();
+        $file = $action->getFile();
+
+        $fileSource = $action->getFileSource();
+        $path = $file->getPhysicalPath();
+
+        if (!file_exists($path)) {
+            if ($fileSource instanceof StreamSourceInterface) {
+                $stream = $fileSource->getStream();
+                rewind($stream);
+                $fd = fopen($path, 'w+');
+                stream_copy_to_stream($stream, $fd);
+                fclose($fd);
+                fclose($stream);
+                $file->setMimeType($fileSource->getMimeType());
+            } elseif ($fileSource instanceof PathSourceInterface) {
+                $filesystem->copy($fileSource->getPath(), $path);
+                $file->setMimeType($fileSource->getMimeType());
+            } else {
+                $filesystem->touch($path);
+                $file->setMimeType($fileSource->getMimeType());
+            }
+        }
+
+        try {
+            $this->connection->update(
+                $this->fileTable,
+                array(
+                    'name'           => $file->getName(),
+                    'mime_type'      => $file->getMimeType(),
+                    'size'           => $file->getSize(),
+                    'hash'           => $file->getHash(),
+                    'attributes'     => $file->getAttributes() ? json_encode($file->getAttributes()) : null,
+                    'modify_user_id' => $file->getModifyUserId(),
+                    'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
+                ),
+                array(
+                    'id' => $file->getId(),
                 )
             );
         } catch (\Exception $e) {
