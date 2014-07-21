@@ -36,20 +36,23 @@ class MessageManager implements MessageManagerInterface
     private $messageRepository;
 
     /**
-     * @var SecurityContextInterface
+     * @param EntityManager $entityManager
      */
-    private $securityContext;
-
-    /**
-     * @param EntityManager            $entityManager
-     * @param SecurityContextInterface $securityContext
-     */
-    public function __construct(EntityManager $entityManager, SecurityContextInterface $securityContext)
+    public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->securityContext = $securityContext;
+    }
 
-        $this->messageRepository = $entityManager->getRepository('PhlexibleMessageBundle:Message');
+    /**
+     * @return EntityRepository
+     */
+    private function getMessageRepository()
+    {
+        if (null === $this->messageRepository) {
+            $this->messageRepository = $this->entityManager->getRepository('PhlexibleMessageBundle:Message');
+        }
+
+        return $this->messageRepository;
     }
 
     /**
@@ -57,7 +60,7 @@ class MessageManager implements MessageManagerInterface
      */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->messageRepository->findBy($criteria, $orderBy, $limit, $offset);
+        return $this->getMessageRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -65,7 +68,7 @@ class MessageManager implements MessageManagerInterface
      */
     public function findOneBy(array $criteria, $orderBy = null)
     {
-        return $this->messageRepository->findOneBy($criteria, $orderBy);
+        return $this->getMessageRepository()->findOneBy($criteria, $orderBy);
     }
 
     /**
@@ -73,7 +76,7 @@ class MessageManager implements MessageManagerInterface
      */
     public function findByCriteria(Criteria $criteria, $order = null, $limit = null, $offset = null)
     {
-        return $this->messageRepository->findByCriteria($criteria, $order, $limit, $offset);
+        return $this->getMessageRepository()->findByCriteria($criteria, $order, $limit, $offset);
     }
 
     /**
@@ -81,7 +84,7 @@ class MessageManager implements MessageManagerInterface
      */
     public function countByCriteria(Criteria $criteria)
     {
-        return $this->messageRepository->countByCriteria($criteria);
+        return $this->getMessageRepository()->countByCriteria($criteria);
     }
 
     /**
@@ -89,7 +92,7 @@ class MessageManager implements MessageManagerInterface
      */
     public function getFacets()
     {
-        return $this->messageRepository->getFacets();
+        return $this->getMessageRepository()->getFacets();
     }
 
     /**
@@ -97,7 +100,7 @@ class MessageManager implements MessageManagerInterface
      */
     public function getFacetsByCriteria(Criteria $criteria)
     {
-        return $this->messageRepository->getFacetsByCriteria($criteria);
+        return $this->getMessageRepository()->getFacetsByCriteria($criteria);
     }
 
     /**
@@ -139,9 +142,7 @@ class MessageManager implements MessageManagerInterface
         }
 
         if (!$message->getUser()) {
-            if ($this->securityContext->getToken() && $this->securityContext->getToken()->getUser() instanceof UserInterface) {
-                $user = $this->securityContext->getToken()->getUser()->getDisplayName();
-            } elseif (PHP_SAPI === 'cli') {
+            if (PHP_SAPI === 'cli') {
                 $user = 'cli';
             } else {
                 $user = 'unknown';

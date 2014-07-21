@@ -40,12 +40,11 @@ services:
     phlexible_message.handler.debug:
         class: Phlexible\Bundle\MessageBundle\Handler\DebugHandler
         public: false
-        arguments: [@phlexible_message.message_manager]
 
     phlexible_message.handler.log:
         class: Phlexible\Bundle\MessageBundle\Handler\LogHandler
         public: false
-        arguments: [@logger, @phlexible_message.message_manager]
+        arguments: [@logger]
 
     phlexible_message.handler.message_manager:
         class: Phlexible\Bundle\MessageBundle\Handler\BufferHandler

@@ -9,10 +9,8 @@
 namespace Phlexible\Bundle\MessageBundle\EventListener;
 
 use Phlexible\Bundle\MessageBundle\Event\MessageEvent;
-use Phlexible\Bundle\MessageBundle\Handler\BufferHandler;
 use Phlexible\Bundle\MessageBundle\Handler\HandlerCollection;
 use Phlexible\Bundle\MessageBundle\MessageEvents;
-use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;

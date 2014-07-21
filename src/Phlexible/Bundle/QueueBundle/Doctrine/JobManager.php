@@ -36,8 +36,18 @@ class JobManager implements JobManagerInterface
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
 
-        $this->jobRepository = $entityManager->getRepository('PhlexibleQueueBundle:Job');
+    /**
+     * @return \Doctrine\ORM\EntityRepository|JobRepository
+     */
+    private function getJobRepository()
+    {
+        if (null === $this->jobRepository) {
+            $this->jobRepository = $this->entityManager->getRepository('PhlexibleQueueBundle:Job');
+        }
+
+        return $this->jobRepository;
     }
 
     /**
@@ -45,7 +55,7 @@ class JobManager implements JobManagerInterface
      */
     public function find($id)
     {
-        return $this->jobRepository->find($id);
+        return $this->getJobRepository()->find($id);
     }
 
     /**
@@ -53,7 +63,7 @@ class JobManager implements JobManagerInterface
      */
     public function findOneBy(array $criteria, array $orderBy = null)
     {
-        return $this->jobRepository->findOneBy($criteria, $orderBy);
+        return $this->getJobRepository()->findOneBy($criteria, $orderBy);
     }
 
     /**
@@ -61,7 +71,7 @@ class JobManager implements JobManagerInterface
      */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->jobRepository->findBy($criteria, $orderBy, $limit, $offset);
+        return $this->getJobRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -69,7 +79,7 @@ class JobManager implements JobManagerInterface
      */
     public function findAll()
     {
-        return $this->jobRepository->findAll();
+        return $this->getJobRepository()->findAll();
     }
 
     /**
@@ -77,7 +87,7 @@ class JobManager implements JobManagerInterface
      */
     public function findStartableJob()
     {
-        $qb = $this->jobRepository->createQueryBuilder('j');
+        $qb = $this->getJobRepository()->createQueryBuilder('j');
         $qb
             ->where($qb->expr()->eq('j.state', $qb->expr()->literal(Job::STATE_PENDING)))
             ->andWhere($qb->expr()->lte('j.executeAfter', $qb->expr()->literal(date('Y-m-d H:i:s'))))
@@ -98,7 +108,7 @@ class JobManager implements JobManagerInterface
      */
     public function countBy(array $criteria)
     {
-        $qb = $this->jobRepository->createQueryBuilder('j');
+        $qb = $this->getJobRepository()->createQueryBuilder('j');
         $qb->select('COUNT(j.id)');
         foreach ($criteria as $field => $value) {
             $qb->andWhere($qb->expr()->eq("j.$field", $qb->expr()->literal($value)));
@@ -120,7 +130,7 @@ class JobManager implements JobManagerInterface
      */
     public function addUniqueJob(Job $job)
     {
-        $queueItem = $this->jobRepository->findBy(
+        $queueItem = $this->getJobRepository()->findBy(
             array('command' => $job->getCommand(), 'arguments' => $job->getArguments())
         );
 
@@ -194,7 +204,7 @@ class JobManager implements JobManagerInterface
      */
     public function deleteByState($state)
     {
-        $qb = $this->jobRepository->createQueryBuilder('j');
+        $qb = $this->getJobRepository()->createQueryBuilder('j');
         $qb
             ->delete('PhlexibleQueueBundle:Job', 'j')
             ->where($qb->expr()->eq('j.state', $qb->expr()->literal($state)));

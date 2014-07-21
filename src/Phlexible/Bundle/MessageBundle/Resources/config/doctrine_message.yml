@@ -2,4 +2,4 @@ services:
     phlexible_message.doctrine.message_manager:
         class: Phlexible\Bundle\MessageBundle\Doctrine\MessageManager
         public: false
-        arguments: [@doctrine.orm.entity_manager, @security.context]
+        arguments: [@doctrine.orm.entity_manager]

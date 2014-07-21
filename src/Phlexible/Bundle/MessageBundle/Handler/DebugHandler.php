@@ -21,26 +21,7 @@ class DebugHandler implements HandlerInterface
     /**
      * @var array
      */
-    private $priorityNames;
-
-    /**
-     * @var array
-     */
-    private $typeNames;
-
-    /**
-     * @var array
-     */
     private $messages = array();
-
-    /**
-     * @param MessageManagerInterface $messageManager
-     */
-    public function __construct(MessageManagerInterface $messageManager)
-    {
-        $this->priorityNames = $messageManager->getPriorityNames();
-        $this->typeNames = $messageManager->getTypeNames();
-    }
 
     /**
      * {@inheritdoc}
@@ -51,9 +32,9 @@ class DebugHandler implements HandlerInterface
             'subject'      => $message->getSubject(),
             'body'         => $message->getBody(),
             'type'         => $message->getType(),
-            'typeName'     => $this->typeNames[$message->getType()],
+            'typeName'     => $message->getType(),
             'priority'     => $message->getPriority(),
-            'priorityName' => $this->priorityNames[$message->getPriority()],
+            'priorityName' => $message->getPriority(),
             'channel'      => $message->getChannel(),
             'resource'     => $message->getResource(),
             'user'         => $message->getUser(),

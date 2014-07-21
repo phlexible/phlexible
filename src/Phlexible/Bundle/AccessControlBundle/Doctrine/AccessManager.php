@@ -36,7 +36,7 @@ class AccessManager implements AccessManagerInterface
     /**
      * @var EntityRepository
      */
-    private $entityRepository;
+    private $accessControlEntryRepository;
 
     /**
      * @var AccessControlEntry[]
@@ -51,8 +51,18 @@ class AccessManager implements AccessManagerInterface
     {
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
+    }
 
-        $this->entityRepository = $entityManager->getRepository('PhlexibleAccessControlBundle:AccessControlEntry');
+    /**
+     * @return EntityRepository
+     */
+    private function getAccessControlEntryRepository()
+    {
+        if (null === $this->accessControlEntryRepository) {
+            $this->entityRepository = $this->entityManager->getRepository('PhlexibleAccessControlBundle:AccessControlEntry');
+        }
+
+        return $this->accessControlEntryRepository;
     }
 
     /**
@@ -241,7 +251,7 @@ class AccessManager implements AccessManagerInterface
             return;
         }
 
-        $qb = $this->entityRepository->createQueryBuilder('a');
+        $qb = $this->getAccessControlEntryRepository()->createQueryBuilder('a');
         $this->entries = $qb->getQuery()->getResult();
     }
 }

@@ -85,7 +85,18 @@ class UserManager implements UserManagerInterface, UserProviderInterface
         $this->everyoneGroupId = $everyoneGroupId;
 
         $this->userClass = $userClass;
-        $this->userRepository = $entityManager->getRepository($this->userClass);
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    private function getUserRepository()
+    {
+        if ($this->userRepository === null) {
+            $this->userRepository = $this->entityManager->getRepository($this->userClass);
+        }
+
+        return $this->userRepository;
     }
 
     /**
@@ -111,7 +122,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
      */
     public function find($userId)
     {
-        return $this->userRepository->find($userId);
+        return $this->getUserRepository()->find($userId);
     }
 
     /**
@@ -119,7 +130,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
      */
     public function findAll()
     {
-        return $this->userRepository->findAll();
+        return $this->getUserRepository()->findAll();
     }
 
     /**
@@ -135,7 +146,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
      */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->userRepository->findBy($criteria, $orderBy, $limit, $offset);
+        return $this->getUserRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -143,7 +154,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
      */
     public function findOneBy(array $criteria, $order = array())
     {
-        return $this->userRepository->findOneBy($criteria, $order);
+        return $this->getUserRepository()->findOneBy($criteria, $order);
     }
 
     /**
@@ -159,7 +170,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
      */
     public function search($term)
     {
-        $qb = $this->userRepository->createQueryBuilder('u');
+        $qb = $this->getUserRepository()->createQueryBuilder('u');
         $qb
             ->where($qb->expr()->like('u.username', $qb->expr()->literal("%$term%")))
             ->orWhere($qb->expr()->like('u.email', $qb->expr()->literal("%$term%")))
@@ -198,7 +209,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
      */
     public function findLoggedInUsers()
     {
-        $qb = $this->userRepository->createQueryBuilder('u');
+        $qb = $this->getUserRepository()->createQueryBuilder('u');
         $qb->where($qb->expr()->gte('u.modifiedAt', $qb->expr()->literal(date('Y-m-d H:i:s'))));
 
         return $qb->getQuery()->getResult();

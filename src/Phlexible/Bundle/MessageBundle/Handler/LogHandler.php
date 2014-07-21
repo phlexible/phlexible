@@ -30,13 +30,11 @@ class LogHandler implements HandlerInterface
     private $messageManager;
 
     /**
-     * @param LoggerInterface         $logger
-     * @param MessageManagerInterface $messageManager
+     * @param LoggerInterface $logger
      */
-    public function __construct(LoggerInterface $logger, MessageManagerInterface $messageManager)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
-        $this->messageManager = $messageManager;
     }
 
     /**
@@ -44,8 +42,7 @@ class LogHandler implements HandlerInterface
      */
     public function handle(Message $message)
     {
-        $priorities = $this->messageManager->getPriorityNames();
-        $priority = $priorities[$message->getPriority()];
+        $priority = $message->getPriority();
 
         $channel   = $message->getChannel();
         $resource  = $message->getResource();
