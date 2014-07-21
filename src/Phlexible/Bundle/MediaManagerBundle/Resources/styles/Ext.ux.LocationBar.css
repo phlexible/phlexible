@@ -56,5 +56,5 @@
 .x-locationbar .x-btn-click .x-btn-center,
 .x-locationbar .x-btn-pressed .x-btn-center,
 .x-locationbar .x-btn-menu-active .x-btn-center {
-    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/tb-btn-sprite.gif) repeat-x scroll 0pt -105px;
+    background: transparent url(/COMPONENTSPATH/phlexiblegui/images/tb-btn-sprite.gif) repeat-x scroll 0pt -105px;
 }
