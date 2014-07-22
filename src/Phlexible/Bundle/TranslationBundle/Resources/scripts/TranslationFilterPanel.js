@@ -53,6 +53,7 @@ Phlexible.translations.TranslationFilterPanel = Ext.extend(Ext.form.FormPanel, {
                 frame: true,
                 collapsible: true,
                 labelAlign: 'top',
+                style: 'margin-top: 10px;',
                 items: [
                     {
                         xtype: 'textfield',
