@@ -60,16 +60,16 @@ class ListController extends Controller
                 $deValue = $value;
                 $enValue = !empty($enData[$domain][$key]) ? $enData[$domain][$key] : '';
 
-                if ($keySearch && strpos($key, $keySearch) === false) {
+                if ($keySearch && mb_stripos($key, $keySearch) === false) {
                     continue;
                 }
-                if ($deSearch && strpos($deValue, $deSearch) === false) {
+                if ($deSearch && mb_stripos($deValue, $deSearch) === false) {
                     continue;
                 }
                 if ($deEmpty && $deValue) {
                     continue;
                 }
-                if ($enSearch && strpos($enValue, $enSearch) === false) {
+                if ($enSearch && mb_stripos($enValue, $enSearch) === false) {
                     continue;
                 }
                 if ($enEmpty && $enValue) {
