@@ -14,14 +14,9 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFolderAction;
  * Before move folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method MoveFolderAction getAction()
  */
 class BeforeMoveFolderEvent extends AbstractActionEvent
 {
-    /**
-     * @return MoveFolderAction
-     */
-    public function getAction()
-    {
-        return parent::getAction();
-    }
 }

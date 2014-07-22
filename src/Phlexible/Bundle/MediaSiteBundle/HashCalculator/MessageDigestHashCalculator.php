@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\HashCalculator;
 
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
  * Message digest hash calculator

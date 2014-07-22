@@ -35,7 +35,7 @@ class FileMetaController extends Controller
         $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
-        $file = $this->get('phlexible_media_site.manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
+        $file = $this->get('phlexible_media_site.site_manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
@@ -96,7 +96,7 @@ class FileMetaController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
 
-        $site = $this->get('phlexible_media_site.manager')->getByFileId($fileId);
+        $site = $this->get('phlexible_media_site.site_manager')->getByFileId($fileId);
         $file = $site->findFile($fileId, $fileVersion);
 
         /*
@@ -163,7 +163,7 @@ class FileMetaController extends Controller
         $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
         $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
 
         $folder = $siteManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
@@ -197,13 +197,13 @@ class FileMetaController extends Controller
             $ids = array();
         }
 
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId, $fileVersion);
 
         $attributes = $file->getAttributes();
-        $attributes['metasets'] = $ids;
+        $attributes->set('metasets', $ids);
         $site->setFileAttributes($file, $attributes);
 
         return new ResultResponse(true, 'Set added.');

@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Usage;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
  * File usage manager

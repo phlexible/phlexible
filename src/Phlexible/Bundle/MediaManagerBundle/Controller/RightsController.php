@@ -37,7 +37,7 @@ class RightsController extends Controller
         $contentType = $request->get('content_type', null);
         $contentId = $request->get('content_id', null);
 
-        $site = $this->get('phlexible_media_site.manager')->getByFolderId($contentId);
+        $site = $this->get('phlexible_media_site.site_manager')->getByFolderId($contentId);
         $folder = $site->findFolder($contentId);
         $path = array($folder->getId());
         $pathFolder = $folder;
@@ -100,7 +100,7 @@ class RightsController extends Controller
         $objectType = $request->get('object_type', null);
         $objectId = $request->get('object_id', null);
 
-        $site = $this->get('phlexible_media_site.manager')->getByFolderId($contentId);
+        $site = $this->get('phlexible_media_site.site_manager')->getByFolderId($contentId);
         $folder = $site->findFolder($contentId);
         $path = array($folder->getId());
         $pathFolder = $folder;

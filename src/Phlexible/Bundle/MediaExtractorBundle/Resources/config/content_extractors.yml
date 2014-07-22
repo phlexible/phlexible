@@ -1,0 +1,46 @@
+services:
+    phlexible_media_extractor.extractor.content.pdftotext:
+        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\PdfToTextExtractor
+        public: false
+        arguments: [@phlexible_media_tool.pdftotext]
+        tags:
+            - {name: phlexible_media_asset.content_extractor}
+
+    phlexible_media_extractor.extractor.content.rawtext:
+        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\RawTextExtractor
+        public: false
+        tags:
+            - {name: phlexible_media_extractor.content_extractor}
+
+    phlexible_media_extractor.extractor.content.zendlucenedocx:
+        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\ZendLuceneDocxExtractor
+        public: false
+        tags:
+            - {name: phlexible_media_extractor.content_extractor}
+
+    phlexible_media_extractor.extractor.content.zendlucenepptx:
+        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\ZendLucenePptxExtractor
+        public: false
+        tags:
+            - {name: phlexible_media_extractor.content_extractor}
+
+    phlexible_media_extractor.extractor.content.zendlucenexlsx:
+        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\ZendLuceneXlsxExtractor
+        public: false
+        tags:
+            - {name: phlexible_media_extractor.content_extractor}
+
+    phlexible_media_extractor.extractor.content.resolver:
+        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\ContentExtractorResolver
+        public: false
+        arguments:
+            -
+                - @phlexible_media_extractor.extractor.content.pdftotext
+                - @phlexible_media_extractor.extractor.content.rawtext
+                - @phlexible_media_extractor.extractor.content.zendlucenedocx
+                - @phlexible_media_extractor.extractor.content.zendlucenepptx
+                - @phlexible_media_extractor.extractor.content.zendlucenexlsx
+
+    phlexible_media_extractor.extractor.content:
+        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\DelegatingContentExtractor
+        arguments: [@phlexible_media_extractor.extractor.content.resolver]

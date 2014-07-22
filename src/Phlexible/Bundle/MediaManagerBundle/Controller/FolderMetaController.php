@@ -35,7 +35,7 @@ class FolderMetaController extends Controller
     {
         $folderId = $request->get('folder_id');
 
-        $folder = $this->get('phlexible_media_site.manager')->getByFolderId($folderId)->findFolder($folderId);
+        $folder = $this->get('phlexible_media_site.site_manager')->getByFolderId($folderId)->findFolder($folderId);
 
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
@@ -97,7 +97,7 @@ class FolderMetaController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
 
-        $site = $this->get('phlexible_media_site.manager')->getByFolderId($folderId);
+        $site = $this->get('phlexible_media_site.site_manager')->getByFolderId($folderId);
         $folder = $site->findFolder($folderId);
 
         /*
@@ -163,7 +163,7 @@ class FolderMetaController extends Controller
     {
         $folderId = $request->get('folder_id');
 
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
         $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
 
         $folder = $siteManager->getByFolderId($folderId)->findFolder($folderId);
@@ -196,13 +196,13 @@ class FolderMetaController extends Controller
             $ids = array();
         }
 
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         $site = $siteManager->getByFolderId($folderId);
         $folder = $site->findFolder($folderId);
 
         $attributes = $folder->getAttributes();
-        $attributes['metasets'] = $ids;
+        $attributes->set('metasets', $ids);
         $site->setFolderAttributes($folder, $attributes);
 
         return new ResultResponse(true, 'Set added.');

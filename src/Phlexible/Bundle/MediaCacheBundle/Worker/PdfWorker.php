@@ -13,7 +13,7 @@ use Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\PdfTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;

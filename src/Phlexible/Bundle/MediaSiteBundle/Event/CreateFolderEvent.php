@@ -8,11 +8,15 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
+use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFolderAction;
+
 /**
  * Create folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method CreateFolderAction getAction()
  */
-class CreateFolderEvent extends BeforeCreateFolderEvent
+class CreateFolderEvent extends AbstractActionFolderEvent
 {
 }

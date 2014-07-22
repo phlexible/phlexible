@@ -47,8 +47,10 @@ class TestCommand extends ContainerAwareCommand
 
         $metaSetManager = $this->getContainer()->get('phlexible_meta_set.meta_set_manager');
         $fileMetaManager = $this->getContainer()->get('phlexible_media_manager.file_meta_data_manager');
-        $siteManager = $this->getContainer()->get('phlexible_media_site.manager');
-        $file = $siteManager->getByFileId($fileId)->findFile($fileId);
+        $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
+        $site = current($siteManager->getAll());
+        $folder = $site->findRootFolder();
+        ldd($folder);
 
         $metaSetIds = $file->getAttribute('metasets');
         foreach ($metaSetIds as $metaSetId) {

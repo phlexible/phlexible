@@ -9,14 +9,13 @@
 namespace Phlexible\Bundle\MessageBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
+use Phlexible\Bundle\MessageBundle\Entity\Repository\MessageRepository;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Doctrine message manager
@@ -31,7 +30,7 @@ class MessageManager implements MessageManagerInterface
     private $entityManager;
 
     /**
-     * @var EntityRepository
+     * @var MessageRepository
      */
     private $messageRepository;
 
@@ -44,7 +43,7 @@ class MessageManager implements MessageManagerInterface
     }
 
     /**
-     * @return EntityRepository
+     * @return MessageRepository
      */
     private function getMessageRepository()
     {

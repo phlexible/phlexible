@@ -14,14 +14,9 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\DeleteFolderAction;
  * Before delete folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method DeleteFolderAction getAction()
  */
 class BeforeDeleteFolderEvent extends AbstractActionEvent
 {
-    /**
-     * @return DeleteFolderAction
-     */
-    public function getAction()
-    {
-        return parent::getAction();
-    }
 }

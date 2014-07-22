@@ -33,15 +33,15 @@ class MediaController extends Controller
     {
         $templateKey = str_replace('.jpg', '', $template);
 
-        $file = $this->get('phlexible_media_site.manager')->getByFileId($fileId)->findFile($fileId);
-        $template = $this->get('mediaTemplatesRepository')->find($templateKey);
+        $file = $this->get('phlexible_media_site.site_manager')->getByFileId($fileId)->findFile($fileId);
+        $template = $this->get('phlexible_media_template.template_manager')->find($templateKey);
 
         $outfile = $this->container->getParameter('app.web_dir') . '/media/' . $fileId . '/' . $templateKey . '.jpg';
         if (!file_exists($outfile)) {
             if (!file_exists(dirname($outfile))) {
                 mkdir(dirname($outfile), 0777, true);
             }
-            $this->get('mediatemplates.applier.image')->apply($template, $file, $file->getPhysicalPath(), $outfile);
+            $this->get('phlexible_media_template.applier.image')->apply($template, $file, $file->getPhysicalPath(), $outfile);
         }
 
         return $this->get('igorw_file_serve.response_factory')

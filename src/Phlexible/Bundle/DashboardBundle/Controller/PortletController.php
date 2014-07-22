@@ -67,7 +67,7 @@ class PortletController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $portlets = $request->request->get('phlexible_dashboard.portlets');
+        $portlets = $request->request->get('portlets');
         $portlets = json_decode($portlets, true);
 
         if (!is_array($portlets)) {

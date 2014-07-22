@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Usage;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Folder usage manager

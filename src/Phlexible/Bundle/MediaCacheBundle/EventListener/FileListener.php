@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\EventListener;
 
+use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
+use Phlexible\Bundle\MediaCacheBundle\Model\QueueManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Batch;
-use Phlexible\Bundle\MediaCacheBundle\Queue\BatchQueuer;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
-use Phlexible\Bundle\MediaCacheBundle\Queue\Queue;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Worker;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\DeleteFileEvent;
@@ -32,11 +32,6 @@ class FileListener implements EventSubscriberInterface
     private $templateManager;
 
     /**
-     * @var Queue
-     */
-    private $queue;
-
-    /**
      * @var Worker
      */
     private $queueWorker;
@@ -47,6 +42,16 @@ class FileListener implements EventSubscriberInterface
     private $batchResolver;
 
     /**
+     * @var CacheManagerInterface
+     */
+    private $cacheManager;
+
+    /**
+     * @var QueueManagerInterface
+     */
+    private $queueManager;
+
+    /**
      * @var bool
      */
     private $immediatelyCacheSystemTemplates;
@@ -55,16 +60,22 @@ class FileListener implements EventSubscriberInterface
      * @param TemplateManagerInterface $templateManager
      * @param Worker                   $queueWorker
      * @param BatchResolver            $batchResolver
+     * @param CacheManagerInterface    $cacheManager
+     * @param QueueManagerInterface    $queueManager
      * @param bool                     $immediatelyCacheSystemTemplates
      */
     public function __construct(TemplateManagerInterface $templateManager,
                                 Worker $queueWorker,
                                 BatchResolver $batchResolver,
+                                CacheManagerInterface $cacheManager,
+                                QueueManagerInterface $queueManager,
                                 $immediatelyCacheSystemTemplates)
     {
         $this->templateManager = $templateManager;
         $this->queueWorker = $queueWorker;
         $this->batchResolver = $batchResolver;
+        $this->cacheManager = $cacheManager;
+        $this->queueManager = $queueManager;
         $this->immediatelyCacheSystemTemplates = $immediatelyCacheSystemTemplates;
     }
 
@@ -84,7 +95,7 @@ class FileListener implements EventSubscriberInterface
      */
     public function onAddFile(CreateFileEvent $event)
     {
-        $file = $event->getAction()->getFile();
+        $file = $event->getFile();
 
         $systemTemplates = $this->templateManager->findBy(array('system' => true, 'cache' => true));
         $otherTemplates = $this->templateManager->findBy(array('system' => false, 'cache' => true));
@@ -115,10 +126,9 @@ class FileListener implements EventSubscriberInterface
 
         $queue = $this->batchResolver->resolve($batch);
 
-        // TODO: queue items
-        return;
-
-        $this->batchProcessor->add($batch);
+        foreach ($queue->all() as $queueItem) {
+            $this->queueManager->updateQueueItem($queueItem);
+        }
     }
 
     /**
@@ -126,11 +136,14 @@ class FileListener implements EventSubscriberInterface
      */
     public function onDeleteFile(DeleteFileEvent $event)
     {
-        $fileId        = $event->getFile()->getID();
-        $fileName      = $event->getFile()->getName();
-        $site          = $event->getSite();
-        $storageDriver = $site->getStorageDriver();
+        $fileId = $event->getFile()->getId();
 
-        $storageDriver->deleteByFileId($fileId, $fileName);
+        foreach ($this->cacheManager->findBy(array('fileId' => $fileId)) as $cacheItem) {
+            $this->cacheManager->deleteCacheItem($cacheItem);
+        }
+
+        foreach ($this->queueManager->findBy(array('fileId' => $fileId)) as $queueItem) {
+            $this->queueManager->deleteQueueItem($queueItem);
+        }
     }
 }

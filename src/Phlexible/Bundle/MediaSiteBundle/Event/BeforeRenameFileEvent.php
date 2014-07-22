@@ -14,14 +14,9 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFileAction;
  * Before rename file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method RenameFileAction getAction()
  */
 class BeforeRenameFileEvent extends AbstractActionEvent
 {
-    /**
-     * @return RenameFileAction
-     */
-    public function getAction()
-    {
-        return parent::getAction();
-    }
 }

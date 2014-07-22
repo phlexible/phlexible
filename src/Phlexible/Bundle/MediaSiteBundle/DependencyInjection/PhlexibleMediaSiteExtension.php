@@ -50,6 +50,6 @@ class PhlexibleMediaSiteExtension extends Extension
             $ids[] = new Reference($id);
         }
 
-        $container->getDefinition('phlexible_media_site.manager')->replaceArgument(0, $ids);
+        $container->getDefinition('phlexible_media_site.site_manager')->replaceArgument(0, $ids);
     }
 }

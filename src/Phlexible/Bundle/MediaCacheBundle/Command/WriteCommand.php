@@ -40,7 +40,7 @@ class WriteCommand extends ContainerAwareCommand
     {
         $breakOnError = $input->getOption('break-on-error');
 
-        $worker = $this->getContainer()->get('mediacache.queue.worker');
+        $worker = $this->getContainer()->get('phlexible_media_cache.queue.worker');
 
         $worker->processAll(
             function ($status, $worker, $queueItem, $cacheItem) use ($output, $breakOnError) {

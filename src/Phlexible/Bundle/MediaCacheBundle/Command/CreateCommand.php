@@ -76,7 +76,7 @@ class CreateCommand extends ContainerAwareCommand
             $batch = $batchBuilder->createWithAllTemplatesAndFiles();
         } else {
             $templateManager = $this->getContainer()->get('phlexible_media_template.template_manager');
-            $siteManager = $this->getContainer()->get('phlexible_media_site.manager');
+            $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
 
             $template = $input->getOption('template');
             if ($template) {
@@ -115,7 +115,7 @@ class CreateCommand extends ContainerAwareCommand
 
         if ($input->getOption('show')) {
             // only show
-            $siteManager = $this->getContainer()->get('phlexible_media_site.manager');
+            $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
             $table = new Table($output);
             $table->setHeaders(array('Idx', 'Template', 'Path', 'File ID'));
             foreach ($queue->all() as $idx => $queueItem) {

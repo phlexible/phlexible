@@ -12,7 +12,8 @@ use Alchemy\Zippy\Zippy;
 use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Exception\NotFoundException;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -36,7 +37,7 @@ class FileController extends Controller
      */
     private function getSiteByFolderId($folderId)
     {
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         return $siteManager->getByFolderId($folderId);
     }
@@ -71,6 +72,11 @@ class FileController extends Controller
         $folder = $site->findFolder($folderId);
 
         if ($securityContext->isGranted('FILE_READ', $folder)) {
+            if ($sort === 'create_date') {
+                $sort = 'createdAt';
+            } elseif ($sort === 'documenttype') {
+                $sort = 'mimeType';
+            }
             $files = $site->findFilesByFolder($folder, array($sort => $dir), $limit, $start, $showHidden);
             $total = $site->countFilesByFolder($folder, $showHidden);
             $data = $this->filesToArray($site, $files);
@@ -226,12 +232,17 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         foreach ($fileIds as $fileId) {
-            $site = $siteManager->getByFileId($fileId);
-            $file = $site->findFile($fileId);
-            $site->delete($file, $this->getUser()->getId());
+            try {
+                $site = $siteManager->getByFileId($fileId);
+                $file = $site->findFile($fileId);
+                if ($file) {
+                    $site->deleteFile($file, $this->getUser()->getId());
+                }
+            } catch (NotFoundException $e) {
+            }
         }
 
         return new ResultResponse(true, count($fileIds) . ' file(s) deleted.');
@@ -250,7 +261,7 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         foreach ($fileIds as $fileId) {
             $site = $siteManager->getByFileId($fileId);
@@ -274,7 +285,7 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         foreach ($fileIds as $fileId) {
             $site = $siteManager->getByFileId($fileId);
@@ -298,7 +309,7 @@ class FileController extends Controller
         $fileId = $request->get('id');
         $fileVersion = $request->get('version', 1);
 
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId, $fileVersion);
@@ -385,7 +396,7 @@ class FileController extends Controller
     {
         $id = $request->get('id');
 
-        $site = $this->get('phlexible_media_site.manager')->getByFileId($id);
+        $site = $this->get('phlexible_media_site.site_manager')->getByFileId($id);
 
         $detail = array();
         foreach ($site->findFileVersions($id) as $file) {
@@ -476,7 +487,7 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $name = $request->get('file_name');
 
-        $site = $this->get('phlexible_media_site.manager')->getByFileId($fileId);
+        $site = $this->get('phlexible_media_site.site_manager')->getByFileId($fileId);
 
         $file = $site->findFile($fileId);
         $site->renameFile($file, $name, $this->getUser()->getId());
@@ -495,7 +506,7 @@ class FileController extends Controller
         $fileIds = $request->get('data');
         $fileIds = json_decode($fileIds);
 
-        $site = $this->get('phlexible_media_site.manager')->getByFileId(current($fileIds));
+        $site = $this->get('phlexible_media_site.site_manager')->getByFileId(current($fileIds));
         $filename = $this->container->getParameter('media.manager.temp_dir') . 'files_' . date('YmdHis') . '.zip';
 
         $zippy = Zippy::load();

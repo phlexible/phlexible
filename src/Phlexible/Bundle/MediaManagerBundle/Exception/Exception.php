@@ -8,14 +8,12 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Exception;
 
-use Exception as BaseException;
-
 /**
  * Media manager exception
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  */
-class Exception extends BaseException
+class Exception extends \RuntimeException
 {
 
 }

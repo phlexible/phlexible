@@ -25,6 +25,16 @@ interface CacheManagerInterface
     public function find($id);
 
     /**
+     * @param array    $criteria
+     * @param int|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return mixed
+     */
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
+
+    /**
      * @param int      $fileId
      * @param int|null $fileVersion
      *
@@ -45,4 +55,9 @@ interface CacheManagerInterface
      * @param CacheItem $cacheItem
      */
     public function updateCacheItem(CacheItem $cacheItem);
+
+    /**
+     * @param CacheItem $cacheItem
+     */
+    public function deleteCacheItem(CacheItem $cacheItem);
 }

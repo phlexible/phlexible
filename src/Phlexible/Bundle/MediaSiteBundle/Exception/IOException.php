@@ -8,14 +8,12 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Exception;
 
-use RuntimeException as BaseException;
-
 /**
  * IO Exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class IOException extends BaseException
+class IOException extends \RuntimeException
 {
 
 }

@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Site;
 
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFolderAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFileAction;
@@ -24,6 +23,8 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\DriverInterface;
 use Phlexible\Bundle\MediaSiteBundle\Event\AbstractActionEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCopyFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCopyFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeDeleteFileEvent;
@@ -33,6 +34,8 @@ use Phlexible\Bundle\MediaSiteBundle\Event\BeforeMoveFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeRenameFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeRenameFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeReplaceFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\CopyFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\CopyFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\DeleteFileEvent;
@@ -42,14 +45,13 @@ use Phlexible\Bundle\MediaSiteBundle\Event\MoveFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\RenameFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\RenameFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\File\File;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Folder\Folder;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIterator;
 use Phlexible\Bundle\MediaSiteBundle\HashCalculator\MessageDigestHashCalculator;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -271,38 +273,19 @@ class Site implements SiteInterface, \IteratorAggregate
     public function createFile(
         FolderInterface $targetFolder,
         FileSourceInterface $fileSource,
-        $userId,
-        array $attributes = array())
+        AttributeBag $attributes,
+        $userId)
     {
         $hashCalculator = new MessageDigestHashCalculator();
-        $hash = $hashCalculator->fromFileSource($fileSource);
-        $path = $this->getRootDir() . $hash;
 
-        // prepare folder's name and id
-        $file = new File();
-        $file
-            ->setSite($this)
-            ->setId(Uuid::generate())
-            ->setFolderId($targetFolder->getId())
-            ->setPhysicalPath($path)
-            ->setName($fileSource->getName())
-            ->setCreatedAt(new \DateTime())
-            ->setCreateUserid($userId)
-            ->setModifiedAt(new \DateTime())
-            ->setModifyUserid($userId)
-            ->setMimeType($fileSource->getMimeType())
-            ->setSize($fileSource->getSize())
-            ->setHash($hash)
-            ->setAttributes($attributes);
-
-        $action = new CreateFileAction($file, $fileSource, $targetFolder, $hashCalculator);
+        $action = new CreateFileAction($fileSource, $targetFolder, $hashCalculator, $attributes, new \DateTime(), $userId);
 
         $event = new BeforeCreateFileEvent($action);
         $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_CREATE_FILE, $event);
 
         $file = $this->driver->execute($action);
 
-        $event = new CreateFileEvent($action);
+        $event = new CreateFileEvent($action, $file);
         $this->dispatcher->dispatch(MediaSiteEvents::CREATE_FILE, $event);
 
         return $file;
@@ -311,70 +294,22 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function createFolder(FolderInterface $targetFolder, $name, $userId)
-    {
-        $folderPath = trim($targetFolder->getPath() . '/' . $name, '/');
-
-        // prepare folder's name and id
-        $folder = new Folder();
-        $folder
-            ->setSite($this)
-            ->setId(Uuid::generate())
-            ->setName($name)
-            ->setParentId($targetFolder->getId())
-            ->setPath($folderPath)
-            ->setCreatedAt(new \DateTime())
-            ->setCreateUserid($userId)
-            ->setModifiedAt(new \DateTime())
-            ->setModifyUserid($userId);
-
-        $action = new CreateFolderAction($folder, $targetFolder);
-
-        $event = new BeforeCreateFolderEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_CREATE_FOLDER, $event);
-
-        $folder = $this->driver->execute($action);
-
-        $event = new CreateFolderEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::CREATE_FOLDER, $event);
-
-        return $folder;
-    }
-
-    /**
-     * @param FileInterface       $file
-     * @param FileSourceInterface $fileSource
-     * @param string              $userId
-     * @param array               $attributes
-     *
-     * @return ReplaceFileAction
-     */
     public function replaceFile(
         FileInterface $file,
         FileSourceInterface $fileSource,
-        $userId,
-        array $attributes = array())
+        AttributeBag $attributes,
+        $userId)
     {
         $hashCalculator = new MessageDigestHashCalculator();
-        $hash = $hashCalculator->fromFileSource($fileSource);
-        $path = $this->getRootDir() . $hash;
 
-        $file
-            ->setName($fileSource->getName())
-            ->setPhysicalPath($path)
-            ->setSize($fileSource->getSize())
-            ->setHash($hash)
-            ->setModifiedAt(new \DateTime())
-            ->setModifyUserid($userId);
-
-        $action = new ReplaceFileAction($file, $fileSource, $hashCalculator);
+        $action = new ReplaceFileAction($fileSource, $file, $hashCalculator, $attributes, new \DateTime(), $userId);
 
         $event = new BeforeReplaceFileEvent($action);
         $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_REPLACE_FILE, $event);
 
         $file = $this->driver->execute($action);
 
-        $event = new ReplaceFileEvent($action);
+        $event = new ReplaceFileEvent($action, $file);
         $this->dispatcher->dispatch(MediaSiteEvents::REPLACE_FILE, $event);
 
         return $file;
@@ -392,28 +327,10 @@ class Site implements SiteInterface, \IteratorAggregate
 
         $file = $this->driver->execute($action);
 
-        $event = new RenameFileEvent($action);
+        $event = new RenameFileEvent($action, $file);
         $this->dispatcher->dispatch(MediaSiteEvents::RENAME_FILE, $event);
 
         return $file;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function renameFolder(FolderInterface $folder, $name, $userId)
-    {
-        $action = new RenameFolderAction($folder, $name, new \DateTime(), $userId);
-
-        $event = new BeforeRenameFolderEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_RENAME_FOLDER, $event);
-
-        $folder = $this->driver->execute($action);
-
-        $event = new RenameFolderEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::RENAME_FOLDER, $event);
-
-        return $folder;
     }
 
     /**
@@ -428,28 +345,10 @@ class Site implements SiteInterface, \IteratorAggregate
 
         $file = $this->driver->execute($action);
 
-        $event = new MoveFileEvent($action);
+        $event = new MoveFileEvent($action, $file);
         $this->dispatcher->dispatch(MediaSiteEvents::MOVE_FILE, $event);
 
         return $file;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
-    {
-        $action = new MoveFolderAction($folder, $targetFolder, new \DateTime(), $userId);
-
-        $event = new BeforeMoveFolderEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_MOVE_FOLDER, $event);
-
-        $folder = $this->driver->execute($action);
-
-        $event = new MoveFolderEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::MOVE_FOLDER, $event);
-
-        return $folder;
     }
 
     /**
@@ -464,10 +363,100 @@ class Site implements SiteInterface, \IteratorAggregate
 
         $file = $this->driver->execute($action);
 
-        $event = new CopyFileEvent($action);
+        $event = new CopyFileEvent($action, $file);
         $this->dispatcher->dispatch(MediaSiteEvents::COPY_FILE, $event);
 
         return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteFile(FileInterface $file, $userId)
+    {
+        $action = new DeleteFileAction($file, new \DateTime(), $userId);
+
+        $event = new BeforeDeleteFileEvent($action);
+        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_DELETE_FILE, $event);
+
+        $file = $this->driver->execute($action);
+
+        $event = new DeleteFileEvent($action, $file);
+        $this->dispatcher->dispatch(MediaSiteEvents::DELETE_FILE, $event);
+
+        return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFileAttributes(FileInterface $file, AttributeBag $attributes, $userId)
+    {
+        $action = new SetFileAttributesAction($file, $attributes, new \DateTime(), $userId);
+
+        $event = new AbstractActionEvent($action);
+        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_SET_FILE_ATTRIBUTES, $event);
+
+        $file = $this->driver->execute($action);
+
+        $event = new AbstractActionEvent($action, $file);
+        $this->dispatcher->dispatch(MediaSiteEvents::SET_FILE_ATTRIBUTES, $event);
+
+        return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createFolder(FolderInterface $targetFolder, $name, AttributeBag $attributes, $userId)
+    {
+        $action = new CreateFolderAction($name, $targetFolder, $attributes, new \DateTime(), $userId);
+
+        $event = new BeforeCreateFolderEvent($action);
+        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_CREATE_FOLDER, $event);
+
+        $folder = $this->driver->execute($action);
+
+        $event = new CreateFolderEvent($action, $folder);
+        $this->dispatcher->dispatch(MediaSiteEvents::CREATE_FOLDER, $event);
+
+        return $folder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function renameFolder(FolderInterface $folder, $name, $userId)
+    {
+        $action = new RenameFolderAction($folder, $name, new \DateTime(), $userId);
+
+        $event = new BeforeRenameFolderEvent($action);
+        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_RENAME_FOLDER, $event);
+
+        $folder = $this->driver->execute($action);
+
+        $event = new RenameFolderEvent($action, $folder);
+        $this->dispatcher->dispatch(MediaSiteEvents::RENAME_FOLDER, $event);
+
+        return $folder;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
+    {
+        $action = new MoveFolderAction($folder, $targetFolder, new \DateTime(), $userId);
+
+        $event = new BeforeMoveFolderEvent($action);
+        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_MOVE_FOLDER, $event);
+
+        $folder = $this->driver->execute($action);
+
+        $event = new MoveFolderEvent($action, $folder);
+        $this->dispatcher->dispatch(MediaSiteEvents::MOVE_FOLDER, $event);
+
+        return $folder;
     }
 
     /**
@@ -482,26 +471,8 @@ class Site implements SiteInterface, \IteratorAggregate
 
         $file = $this->driver->execute($action);
 
-        $event = new CopyFolderEvent($action);
+        $event = new CopyFolderEvent($action, $folder);
         $this->dispatcher->dispatch(MediaSiteEvents::COPY_FOLDER, $event);
-
-        return $file;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteFile(FileInterface $file, $userId)
-    {
-        $action = new DeleteFileAction($file, $userId);
-
-        $event = new BeforeDeleteFileEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_DELETE_FILE, $event);
-
-        $file = $this->driver->execute($action);
-
-        $event = new DeleteFileEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::DELETE_FILE, $event);
 
         return $file;
     }
@@ -511,14 +482,14 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function deleteFolder(FolderInterface $folder, $userId)
     {
-        $action = new DeleteFolderAction($folder, $userId);
+        $action = new DeleteFolderAction($folder, new \DateTime(), $userId);
 
         $event = new BeforeDeleteFolderEvent($action);
         $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_DELETE_FOLDER, $event);
 
         $folder = $this->driver->execute($action);
 
-        $event = new DeleteFolderEvent($action);
+        $event = new DeleteFolderEvent($action, $folder);
         $this->dispatcher->dispatch(MediaSiteEvents::DELETE_FOLDER, $event);
 
         return $folder;
@@ -527,36 +498,18 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function setFolderAttributes(FolderInterface $folder, array $attributes)
+    public function setFolderAttributes(FolderInterface $folder, AttributeBag $attributes, $userId)
     {
-        $action = new SetFolderAttributesAction($folder, $attributes);
+        $action = new SetFolderAttributesAction($folder, $attributes, new \DateTime, $userId);
 
         $event = new AbstractActionEvent($action);
         $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_SET_FOLDER_ATTRIBUTES, $event);
 
         $folder = $this->driver->execute($action);
 
-        $event = new AbstractActionEvent($action);
+        $event = new AbstractActionEvent($action, $folder);
         $this->dispatcher->dispatch(MediaSiteEvents::SET_FOLDER_ATTRIBUTES, $event);
 
         return $folder;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFileAttributes(FileInterface $file, array $attributes)
-    {
-        $action = new SetFileAttributesAction($file, $attributes);
-
-        $event = new AbstractActionEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_SET_FILE_ATTRIBUTES, $event);
-
-        $file = $this->driver->execute($action);
-
-        $event = new AbstractActionEvent($action);
-        $this->dispatcher->dispatch(MediaSiteEvents::SET_FILE_ATTRIBUTES, $event);
-
-        return $file;
     }
 }

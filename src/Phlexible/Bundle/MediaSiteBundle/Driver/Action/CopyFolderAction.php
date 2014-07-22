@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
 
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Copy folder action
@@ -23,21 +23,16 @@ class CopyFolderAction extends FolderAction
     private $targetFolder;
 
     /**
-     * @var string
-     */
-    private $userId;
-
-    /**
      * @param FolderInterface $folder
      * @param FolderInterface $targetFolder
+     * @param \DateTime       $date
      * @param string          $userId
      */
-    public function __construct(FolderInterface $folder, FolderInterface $targetFolder, $userId)
+    public function __construct(FolderInterface $folder, FolderInterface $targetFolder, \DateTime $date, $userId)
     {
-        parent::__construct($folder);
+        parent::__construct($folder, $date, $userId);
 
         $this->targetFolder = $targetFolder;
-        $this->userId = $userId;
     }
 
     /**
@@ -46,13 +41,5 @@ class CopyFolderAction extends FolderAction
     public function getTargetFolder()
     {
         return $this->targetFolder;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserId()
-    {
-        return $this->userId;
     }
 }

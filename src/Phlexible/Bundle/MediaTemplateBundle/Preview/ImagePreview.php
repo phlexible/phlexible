@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaTemplateBundle\Preview;
 
 use Monolog\Handler\TestHandler;
-use Phlexible\Bundle\MediaSiteBundle\File\File;
+use Phlexible\Bundle\MediaSiteBundle\Model\File;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Symfony\Component\Filesystem\Filesystem;

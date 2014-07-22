@@ -307,6 +307,18 @@ class AclController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $role = $roleRepository->findOneByRole($roleId);
+        if (!$role) {
+            $role = new Role();
+            $role
+                ->setRole($roleId)
+                ->setCreatedAt(new \DateTime())
+                ->setCreateUserId($this->getUser()->getId())
+                ->setModifiedAt($role->getCreatedAt())
+                ->setModifyUserId($role->getCreateUserId());
+
+            $em->persist($role);
+        }
+
         $oldResources = array();
         foreach ($role->getResources() as $resource) {
             $oldResources[] = $resource->getResource();

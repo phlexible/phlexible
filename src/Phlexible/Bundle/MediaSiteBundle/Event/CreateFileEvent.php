@@ -8,11 +8,15 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
+use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFileAction;
+
 /**
  * Create file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method CreateFileAction getAction()
  */
-class CreateFileEvent extends BeforeCreateFileEvent
+class CreateFileEvent extends AbstractActionFileEvent
 {
 }

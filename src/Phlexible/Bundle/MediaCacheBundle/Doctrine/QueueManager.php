@@ -51,6 +51,14 @@ class QueueManager implements QueueManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->queueRepository->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findByFile($fileId, $fileVersion = null)
     {
         $criteria = array('fileId' => $fileId);
@@ -84,5 +92,15 @@ class QueueManager implements QueueManagerInterface
     {
         $this->entityManager->persist($queueItem);
         $this->entityManager->flush($queueItem);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteQueueItem(QueueItem $queueItem)
+    {
+        // TODO: remove files
+        $this->entityManager->remove($queueItem);
+        $this->entityManager->flush();
     }
 }

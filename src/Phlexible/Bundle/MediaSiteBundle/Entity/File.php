@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaSiteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\MediaSiteBundle\File\FileIdentifier;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 
 /**
@@ -21,7 +21,7 @@ use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
  * @ORM\Entity
  * @ORM\Table(name="media_site_file")
  */
-class File implements FileInterface
+class File
 {
     /**
      * @var string
@@ -63,7 +63,7 @@ class File implements FileInterface
 
     /**
      * @var array
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="object", nullable=true)
      */
     private $attributes;
 

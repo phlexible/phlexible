@@ -14,14 +14,9 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ReplaceFileAction;
  * Before replace file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method ReplaceFileAction getAction()
  */
 class BeforeReplaceFileEvent extends AbstractActionEvent
 {
-    /**
-     * @return ReplaceFileAction
-     */
-    public function getAction()
-    {
-        return parent::getAction();
-    }
 }

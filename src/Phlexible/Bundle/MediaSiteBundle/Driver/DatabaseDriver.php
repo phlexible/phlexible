@@ -26,11 +26,11 @@ use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotFoundException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotWritableException;
-use Phlexible\Bundle\MediaSiteBundle\File\File;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\StreamSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Folder\Folder;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\File;
+use Phlexible\Bundle\MediaSiteBundle\Model\Folder;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Zend_Db_Adapter_Abstract as Connection;
 

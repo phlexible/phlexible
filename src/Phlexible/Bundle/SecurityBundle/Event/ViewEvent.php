@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\SecurityBundle\Event;
 
+use Phlexible\Bundle\GuiBundle\View\AbstractView;
 use Phlexible\Bundle\SecurityBundle\View\LoginView;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,17 +31,17 @@ class ViewEvent extends Event
     private $request;
 
     /**
-     * @param Request   $request
-     * @param LoginView $view
+     * @param Request      $request
+     * @param AbstractView $view
      */
-    public function __construct(Request $request, LoginView $view)
+    public function __construct(Request $request, AbstractView $view)
     {
         $this->request = $request;
         $this->view = $view;
     }
 
     /**
-     * @return LoginView
+     * @return AbstractView
      */
     public function getView()
     {

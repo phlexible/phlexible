@@ -150,7 +150,7 @@ class FiltersController extends Controller
 
         $criteria = new Criteria();
         $criteria->setMode(Criteria::MODE_OR);
-        foreach ($rawCriteria as $groupId => $group) {
+        foreach ($rawCriteria as $group) {
             $criteriaGroup = new Criteria();
             $criteriaGroup->setMode(Criteria::MODE_AND);
             foreach ($group as $row) {
@@ -161,7 +161,9 @@ class FiltersController extends Controller
                 $criterium = new Criterium($row['key'], $row['value']);
                 $criteriaGroup->add($criterium);
             }
-            $criteria->addCriteria($criteriaGroup);
+            if ($criteriaGroup->count()) {
+                $criteria->addCriteria($criteriaGroup);
+            }
         }
         $filter->setCriteria($criteria);
 
@@ -197,20 +199,25 @@ class FiltersController extends Controller
      */
     public function previewAction(Request $request)
     {
-        $filters = json_decode($request->get('filters'), true);
+        $rawCriteria = json_decode($request->get('filters'), true);
 
         $messageManager = $this->get('phlexible_message.message_manager');
 
-        $criteria = new Criteria(array(), Criteria::MODE_OR);
-        foreach ($filters as $crits) {
-            $group = new Criteria();
-            foreach ($crits as $crit) {
-                if (strlen($crit['value'])) {
-                    $group->addRaw($crit['key'], $crit['value']);
+        $criteria = new Criteria();
+        $criteria->setMode(Criteria::MODE_OR);
+        foreach ($rawCriteria as $group) {
+            $criteriaGroup = new Criteria();
+            $criteriaGroup->setMode(Criteria::MODE_AND);
+            foreach ($group as $row) {
+                if (!strlen($row['value'])) {
+                    continue;
                 }
+
+                $criterium = new Criterium($row['key'], $row['value']);
+                $criteriaGroup->add($criterium);
             }
-            if ($group->count()) {
-                $criteria->addCriteria($group);
+            if ($criteriaGroup->count()) {
+                $criteria->addCriteria($criteriaGroup);
             }
         }
 

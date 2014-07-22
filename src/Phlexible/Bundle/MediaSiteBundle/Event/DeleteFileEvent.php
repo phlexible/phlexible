@@ -8,11 +8,15 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
+use Phlexible\Bundle\MediaSiteBundle\Driver\Action\DeleteFileAction;
+
 /**
  * Delete file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method DeleteFileAction getAction()
  */
-class DeleteFileEvent extends BeforeDeleteFileEvent
+class DeleteFileEvent extends AbstractActionFileEvent
 {
 }

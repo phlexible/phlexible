@@ -37,17 +37,17 @@ class FileListener
      */
     public function onBeforeCreateFile(BeforeCreateFileEvent $event)
     {
-        $file = $event->getAction()->getFile();
+        $fileSource = $event->getAction()->getFileSource();
 
         try {
-            $documenttype = $this->documenttypeManager->findByMimetype($file->getMimeType());
+            $documenttype = $this->documenttypeManager->findByMimetype($fileSource->getMimeType());
         } catch (\Exception $e) {
             $documenttype = $this->documenttypeManager->find('binary');
         }
 
-        $file
-            ->setAttribute('documenttype', $documenttype->getKey())
-            ->setAttribute('assettype', $documenttype->getType());
+        $attributes = $event->getAction()->getAttributes();
+        $attributes->set('documenttype', $documenttype->getKey());
+        $attributes->set('assettype', $documenttype->getType());
     }
 
     /**
@@ -60,7 +60,7 @@ class FileListener
         return;
         try {
             $attributes = $folder->getAttributes();
-            $attributes['metasets'][] = 'x';
+            $attributes->set('metasets')[] = 'x';
             $site->setFolderAttributes($folder, $attributes);
         } catch (\Exception $e) {
         }

@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\SecurityBundle\View;
 
 use Phlexible\Bundle\GuiBundle\View\AbstractView;
+use Phlexible\Bundle\SecurityBundle\Event\ViewEvent;
 use Phlexible\Bundle\SecurityBundle\SecurityEvents;
-use Phlexible\Bundle\UserBundle\Event\ViewEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;

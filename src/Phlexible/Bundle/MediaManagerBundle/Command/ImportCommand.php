@@ -50,10 +50,12 @@ class ImportCommand extends ContainerAwareCommand
         $delete = $input->getArgument('delete');
 
         $site = $input->getOption('targetSite');
+        $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
+
         if ($site) {
-            $site = $this->getContainer()->get('phlexible_media_site.manager')->get($site);
+            $site = $siteManager->get($site);
         } else {
-            $site = $this->getContainer()->get('phlexible_media_site.manager')->get('mediamanager');
+            $site = $siteManager->get('mediamanager');
         }
 
         $targetDir = $input->getArgument('targetDir');

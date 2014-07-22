@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaSiteBundle\Driver;
 
 use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ActionInterface;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFolderAction;
@@ -23,16 +24,16 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ReplaceFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
-use Phlexible\Bundle\MediaSiteBundle\Exception;
 use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotFoundException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotWritableException;
-use Phlexible\Bundle\MediaSiteBundle\File\File;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\StreamSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Folder\Folder;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\File;
+use Phlexible\Bundle\MediaSiteBundle\Model\Folder;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -465,13 +466,44 @@ class DoctrineDriver extends AbstractDriver
         return $this->$execute($action);
     }
 
+    /**
+     * @param CreateFileAction $action
+     *
+     * @return File
+     * @throws IOException
+     */
     private function executeCreateFileAction(CreateFileAction $action)
     {
-        $filesystem = new Filesystem();
-        $file = $action->getFile();
+        $hashCalculator = $action->getHashCalulator();
+        $fileSource = $action->getFileSource();
+        $targetFolder = $action->getTargetFolder();
+        $userId = $action->getUserId();
+        $attributes = $action->getAttributes();
+
+        $hash = $hashCalculator->fromFileSource($fileSource);
+        $path = $this->getSite()->getRootDir() . $hash;
+
+        // prepare folder's name and id
+        $file = new File();
+        $file
+            ->setSite($this->getSite())
+            ->setId(Uuid::generate())
+            ->setFolderId($targetFolder->getId())
+            ->setPhysicalPath($path)
+            ->setName($fileSource->getName())
+            ->setCreatedAt($action->getDate())
+            ->setCreateUserid($action->getUserId())
+            ->setModifiedAt($file->getCreatedAt())
+            ->setModifyUserid($file->getCreateUserId())
+            ->setMimeType($fileSource->getMimeType())
+            ->setSize($fileSource->getSize())
+            ->setHash($hash)
+            ->setAttributes($attributes);
 
         $fileSource = $action->getFileSource();
         $path = $file->getPhysicalPath();
+
+        $filesystem = new Filesystem();
 
         if (!file_exists($path)) {
             if ($fileSource instanceof StreamSourceInterface) {
@@ -501,7 +533,7 @@ class DoctrineDriver extends AbstractDriver
                     'mime_type'      => $file->getMimeType(),
                     'size'           => $file->getSize(),
                     'hash'           => $file->getHash(),
-                    'attributes'     => $file->getAttributes() ? json_encode($file->getAttributes()) : null,
+                    'attributes'     => count($file->getAttributes()) ? serialize($file->getAttributes()) : null,
                     'create_user_id' => $file->getCreateUserId(),
                     'created_at'     => $file->getCreatedAt()->format('Y-m-d H:i:s'),
                     'modify_user_id' => $file->getModifyUserId(),
@@ -517,10 +549,32 @@ class DoctrineDriver extends AbstractDriver
         return $file;
     }
 
+    /**
+     * @param ReplaceFileAction $action
+     *
+     * @return File
+     * @throws IOException
+     */
     private function executeReplaceFileAction(ReplaceFileAction $action)
     {
-        $filesystem = new Filesystem();
         $file = $action->getFile();
+        $hashCalculator = $action->getHashCalulator();
+        $fileSource = $action->getFileSource();
+        $attributes = $action->getAttributes();
+
+        $hash = $hashCalculator->fromFileSource($fileSource);
+        $path = $this->getSite()->getRootDir() . $hash;
+
+        $file
+            ->setName($fileSource->getName())
+            ->setPhysicalPath($path)
+            ->setSize($fileSource->getSize())
+            ->setHash($hash)
+            ->setAttributes($attributes)
+            ->setModifiedAt($action->getDate())
+            ->setModifyUserid($action->getUserId());
+
+        $filesystem = new Filesystem();
 
         $fileSource = $action->getFileSource();
         $path = $file->getPhysicalPath();
@@ -551,7 +605,7 @@ class DoctrineDriver extends AbstractDriver
                     'mime_type'      => $file->getMimeType(),
                     'size'           => $file->getSize(),
                     'hash'           => $file->getHash(),
-                    'attributes'     => $file->getAttributes() ? json_encode($file->getAttributes()) : null,
+                    'attributes'     => count($file->getAttributes()) ? serialize($file->getAttributes()) : null,
                     'modify_user_id' => $file->getModifyUserId(),
                     'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
                 ),
@@ -568,6 +622,12 @@ class DoctrineDriver extends AbstractDriver
         return $file;
     }
 
+    /**
+     * @param RenameFileAction $action
+     *
+     * @return File
+     * @throws IOException
+     */
     private function executeRenameFileAction(RenameFileAction $action)
     {
         $file = $action->getFile();
@@ -601,6 +661,12 @@ class DoctrineDriver extends AbstractDriver
         return $file;
     }
 
+    /**
+     * @param MoveFileAction $action
+     *
+     * @return File
+     * @throws IOException
+     */
     private function executeMoveFileAction(MoveFileAction $action)
     {
         $file = $action->getFile();
@@ -633,23 +699,134 @@ class DoctrineDriver extends AbstractDriver
         return $file;
     }
 
+    /**
+     * @param CopyFileAction $action
+     *
+     * @return File
+     * @throws IOException
+     */
     private function executeCopyFileAction(CopyFileAction $action)
     {
-        $file = $action->getFile();
+        $originalFile = $action->getFile();
+        $targetFolder = $action->getTargetFolder();
+
+        $file = clone $originalFile;
+        $file
+            ->setId(Uuid::generate())
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserId($action->getUserId())
+            ->setModifiedAt($file->getCreatedAt())
+            ->setModifyUserId($file->getCreateUserId())
+            ->setFolderId($targetFolder->getId());
+
+        try {
+            $this->connection->insert(
+                $this->fileTable,
+                array(
+                    'id'             => $file->getId(),
+                    'folder_id'      => $file->getFolderId(),
+                    'name'           => $file->getName(),
+                    'mime_type'      => $file->getMimeType(),
+                    'size'           => $file->getSize(),
+                    'hash'           => $file->getHash(),
+                    'attributes'     => count($file->getAttributes()) ? serialize($file->getAttributes()) : null,
+                    'create_user_id' => $file->getCreateUserId(),
+                    'created_at'     => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'modify_user_id' => $file->getModifyUserId(),
+                    'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
+                )
+            );
+        } catch (\Exception $e) {
+            throw new IOException("Copy file failed.", 0, $e);
+        }
 
         return $file;
     }
 
+    /**
+     * @param DeleteFileAction $action
+     *
+     * @return File
+     * @throws IOException
+     */
     private function executeDeleteFileAction(DeleteFileAction $action)
     {
         $file = $action->getFile();
 
+        try {
+            $this->connection->delete(
+                $this->fileTable,
+                array(
+                    'id' => $file->getId(),
+                )
+            );
+        } catch (\Exception $e) {
+            throw new IOException("Copy file failed.", 0, $e);
+        }
+
         return $file;
     }
 
+    /**
+     * @param SetFileAttributesAction $action
+     *
+     * @return File
+     * @throws IOException
+     */
+    private function executeSetFileAttributesAction(SetFileAttributesAction $action)
+    {
+        $file = $action->getFile();
+
+        $file
+            ->setModifiedAt($action->getDate())
+            ->setModifyUserId($action->getUserId())
+            ->setAttributes($action->getAttributes());
+
+        try {
+            $this->connection->update(
+                $this->fileTable,
+                array(
+                    'attributes'     => count($file->getAttributes()) ? serialize($file->getAttributes()) : null,
+                    'modify_user_id' => $file->getModifyUserId(),
+                    'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
+                ),
+                array(
+                    'id' => $file->getId(),
+                )
+            );
+        } catch (\Exception $e) {
+            throw new IOException("Set file attributes failed.", 0, $e);
+        }
+
+        return $action->getFile();
+    }
+
+    /**
+     * @param CreateFolderAction $action
+     *
+     * @return FolderInterface
+     * @throws IOException
+     */
     private function executeCreateFolderAction(CreateFolderAction $action)
     {
-        $folder = $action->getFolder();
+        $targetFolder = $action->getTargetFolder();
+        $name = $action->getName();
+        $userId = $action->getUserId();
+
+        $folderPath = trim($targetFolder->getPath() . '/' . $name, '/');
+
+        // prepare folder's name and id
+        $folder = new Folder();
+        $folder
+            ->setSite($this->getSite())
+            ->setId(Uuid::generate())
+            ->setName($name)
+            ->setParentId($targetFolder->getId())
+            ->setPath($folderPath)
+            ->setCreatedAt($action->getDate())
+            ->setCreateUserid($action->getUserId())
+            ->setModifiedAt($folder->getCreatedAt())
+            ->setModifyUserid($folder->getCreateUserId());
 
         try {
             $this->connection->insert(
@@ -660,6 +837,7 @@ class DoctrineDriver extends AbstractDriver
                     'site_id'        => $folder->getSite()->getId(),
                     'name'           => $folder->getName(),
                     'path'           => $folder->getPath(),
+                    'attributes'     => count($folder->getAttributes()) ? serialize($folder->getAttributes()) : null,
                     'create_user_id' => $folder->getCreateUserId(),
                     'created_at'     => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
                     'modify_user_id' => $folder->getModifyUserId(),
@@ -673,6 +851,12 @@ class DoctrineDriver extends AbstractDriver
         return $folder;
     }
 
+    /**
+     * @param RenameFolderAction $action
+     *
+     * @return Folder
+     * @throws IOException
+     */
     private function executeRenameFolderAction(RenameFolderAction $action)
     {
         $folder = $action->getFolder();
@@ -733,6 +917,12 @@ class DoctrineDriver extends AbstractDriver
         return $folder;
     }
 
+    /**
+     * @param MoveFolderAction $action
+     *
+     * @return Folder
+     * @throws IOException
+     */
     private function executeMoveFolderAction(MoveFolderAction $action)
     {
         $folder = $action->getFolder();
@@ -797,6 +987,11 @@ class DoctrineDriver extends AbstractDriver
         return $folder;
     }
 
+    /**
+     * @param CopyFolderAction $action
+     *
+     * @return FolderInterface
+     */
     private function executeCopyFolderAction(CopyFolderAction $action)
     {
         $folder = $action->getFolder();
@@ -804,42 +999,55 @@ class DoctrineDriver extends AbstractDriver
         return $folder;
     }
 
+    /**
+     * @param DeleteFolderAction $action
+     *
+     * @return Folder
+     * @throws IOException
+     */
     private function executeDeleteFolderAction(DeleteFolderAction $action)
     {
         $folder = $action->getFolder();
 
-        return $folder;
-    }
-
-    private function executeSetFileAttributesAction(SetFileAttributesAction $action)
-    {
         try {
-            $this->connection->update(
-                $this->fileTable,
+            $this->connection->delete(
+                $this->folderTable,
                 array(
-                    'attributes' => $action->getAttributes() ? json_encode($action->getAttributes()) : null,
-                ),
-                array(
-                    'id' => $action->getFile()->getId(),
+                    'id' => $folder->getId(),
                 )
             );
         } catch (\Exception $e) {
-            throw new IOException("Set file attributes failed.", 0, $e);
+            throw new IOException("Delete folder failed.", 0, $e);
         }
 
-        return $action->getFile();
+        return $folder;
     }
 
+    /**
+     * @param SetFolderAttributesAction $action
+     *
+     * @return Folder
+     * @throws IOException
+     */
     private function executeSetFolderAttributesAction(SetFolderAttributesAction $action)
     {
+        $folder = $action->getFolder();
+
+        $folder
+            ->setModifiedAt($action->getDate())
+            ->setModifyUserId($action->getUserId())
+            ->setAttributes($action->getAttributes());
+
         try {
             $this->connection->update(
                 $this->folderTable,
                 array(
-                    'attributes' => $action->getAttributes() ? json_encode($action->getAttributes()) : null,
+                    'attributes'     => count($folder->getAttributes()) ? serialize($folder->getAttributes()) : null,
+                    'modify_user_id' => $folder->getModifyUserId(),
+                    'modified_at'    => $folder->getModifiedAt()->format('Y-m-d H:i:s'),
                 ),
                 array(
-                    'id' => $action->getFolder()->getId(),
+                    'id' => $folder->getId(),
                 )
             );
         } catch (\Exception $e) {
@@ -899,7 +1107,8 @@ class DoctrineDriver extends AbstractDriver
     private function mapFolderRow(array $row)
     {
         $physicalPath = $this->getSite()->getRootDir() . '/' . $row['path'];
-        $attributes = !empty($row['attributes']) ? json_decode($row['attributes'], true) : array();
+
+        $attributes = !empty($row['attributes']) ? unserialize($row['attributes']) : new AttributeBag();
 
         $folder = new Folder();
         $folder
@@ -943,7 +1152,7 @@ class DoctrineDriver extends AbstractDriver
         $rootDir = rtrim($this->getSite()->getRootDir(), '/');
         $physicalPath = $rootDir . '/' . $row['hash'];
 
-        $attributes = !empty($row['attributes']) ? json_decode($row['attributes'], true) : array();
+        $attributes = !empty($row['attributes']) ? unserialize($row['attributes']) : new AttributeBag();
 
         $file = new File();
         $file

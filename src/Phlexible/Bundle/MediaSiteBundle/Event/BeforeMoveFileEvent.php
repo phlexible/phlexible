@@ -14,14 +14,9 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFileAction;
  * Before move file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method MoveFileAction getAction()
  */
 class BeforeMoveFileEvent extends AbstractActionEvent
 {
-    /**
-     * @return MoveFileAction
-     */
-    public function getAction()
-    {
-        return parent::getAction();
-    }
 }

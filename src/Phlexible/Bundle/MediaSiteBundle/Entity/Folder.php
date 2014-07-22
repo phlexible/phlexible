@@ -11,8 +11,8 @@ namespace Phlexible\Bundle\MediaSiteBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIdentifier;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIterator;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 
 /**
@@ -23,7 +23,7 @@ use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
  * @ORM\Entity
  * @ORM\Table(name="media_site_folder")
  */
-class Folder implements FolderInterface
+class Folder
 {
     /**
      * @var string
@@ -58,14 +58,8 @@ class Folder implements FolderInterface
     private $path;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=32, options={"fixed"=true})
-     */
-    private $hash;
-
-    /**
      * @var array
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="object", nullable=true)
      */
     private $attributes;
 

@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\HashCalculator;
 
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
  * Hash calculator interface

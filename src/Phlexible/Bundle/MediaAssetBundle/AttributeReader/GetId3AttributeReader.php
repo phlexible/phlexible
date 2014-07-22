@@ -9,9 +9,8 @@
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use GetId3\GetId3Core;
-use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 
 /**
  * GetId3 attribute reader
@@ -31,16 +30,15 @@ class GetId3AttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file, PathSourceInterface $fileSource)
+    public function supports(PathSourceInterface $fileSource, $documenttype, $assettype)
     {
-        return strtolower($file->getAttribute('assettype')) === 'video'
-            || strtolower($file->getAttribute('assettype')) === 'audio';
+        return $assettype === 'video' || $assettype === 'audio';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, PathSourceInterface $fileSource, AttributesBag $attributes)
+    public function read(PathSourceInterface $fileSource, $documenttype, $assettype, AttributeBag $attributes)
     {
         $filename = $fileSource->getPath();
 

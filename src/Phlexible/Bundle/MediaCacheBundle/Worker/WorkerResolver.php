@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 
 /**

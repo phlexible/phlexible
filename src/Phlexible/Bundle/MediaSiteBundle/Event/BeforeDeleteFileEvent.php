@@ -14,14 +14,9 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\DeleteFileAction;
  * Before delete file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method DeleteFileAction getAction()
  */
 class BeforeDeleteFileEvent extends AbstractActionEvent
 {
-    /**
-     * @return DeleteFileAction
-     */
-    public function getAction()
-    {
-        return parent::getAction();
-    }
 }

@@ -65,7 +65,7 @@ class CacheItem
 
     /**
      * @var string
-     * @ORM\Column(type="string", options={"length"=20})
+     * @ORM\Column(type="string", length=20)
      */
     private $status;
 

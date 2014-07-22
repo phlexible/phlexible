@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
 
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Move folder action
@@ -20,17 +20,7 @@ class MoveFolderAction extends FolderAction
     /**
      * @var FolderInterface
      */
-    private $folder;
-
-    /**
-     * @var \DateTime
-     */
-    private $date;
-
-    /**
-     * @var string
-     */
-    private $userId;
+    private $targetFolder;
 
     /**
      * @param FolderInterface $folder
@@ -40,11 +30,9 @@ class MoveFolderAction extends FolderAction
      */
     public function __construct(FolderInterface $folder, FolderInterface $targetFolder, \DateTime $date, $userId)
     {
-        parent::__construct($folder);
+        parent::__construct($folder, $date, $userId);
 
         $this->targetFolder = $targetFolder;
-        $this->date = $date;
-        $this->userId = $userId;
     }
 
     /**
@@ -52,19 +40,6 @@ class MoveFolderAction extends FolderAction
      */
     public function getTargetFolder()
     {
-        return $this->folder;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    public function getUserId()
-    {
-        return $this->userId;
+        return $this->targetFolder;
     }
 }

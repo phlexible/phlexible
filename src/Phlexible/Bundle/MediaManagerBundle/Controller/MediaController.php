@@ -43,7 +43,7 @@ class MediaController extends Controller
         $templateManager = $this->get('phlexible_media_template.template_manager');
         $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
         $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         try {
             $cacheItem = $cacheManager->findByTemplateAndFile($templateKey, $fileId, $fileVersion);

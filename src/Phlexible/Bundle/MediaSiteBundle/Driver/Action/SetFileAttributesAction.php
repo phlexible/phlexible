@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
 
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
  * Set file attributes action
@@ -24,17 +25,19 @@ class SetFileAttributesAction extends FileAction
 
     /**
      * @param FileInterface $file
-     * @param array         $attributes
+     * @param AttributeBag  $attributes
+     * @param \DateTime     $date
+     * @param string        $userId
      */
-    public function __construct(FileInterface $file, array $attributes)
+    public function __construct(FileInterface $file, AttributeBag $attributes, \DateTime $date, $userId)
     {
-        parent::__construct($file);
+        parent::__construct($file, $date, $userId);
 
         $this->attributes = $attributes;
     }
 
     /**
-     * @return array
+     * @return AttributeBag
      */
     public function getAttributes()
     {

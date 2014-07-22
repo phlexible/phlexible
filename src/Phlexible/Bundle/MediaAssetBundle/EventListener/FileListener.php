@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\MediaAssetBundle\EventListener;
 
 use Phlexible\Bundle\MediaAssetBundle\AttributeReader\AttributeReaderInterface;
-use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 
 /**
  * File listener
@@ -37,14 +37,18 @@ class FileListener
      */
     public function onBeforeCreateFile(BeforeCreateFileEvent $event)
     {
-        $file = $event->getAction()->getFile();
         $fileSource = $event->getAction()->getFileSource();
+        $fileAttributes = $event->getAction()->getAttributes();
 
-        $attributes = new AttributesBag();
+        $attributes = new AttributeBag();
 
-        $this->attributeReader->read($file, $fileSource, $attributes);
+        $documenttype = $fileAttributes->get('documenttype', '');
+        $assettype = $fileAttributes->get('assettype', '');
 
-        $file
-            ->setAttribute('attributes', $attributes->all());
+        if ($this->attributeReader->supports($fileSource, $documenttype, $assettype)) {
+            $this->attributeReader->read($fileSource, $documenttype, $assettype, $attributes);
+        }
+
+        $fileAttributes->set('attributes', $attributes->all());
     }
 }

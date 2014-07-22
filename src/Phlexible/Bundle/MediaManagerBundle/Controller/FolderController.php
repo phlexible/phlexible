@@ -14,8 +14,8 @@ use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
 use Phlexible\Bundle\MediaManagerBundle\Slot\SiteSlot;
 use Phlexible\Bundle\MediaManagerBundle\Slot\Slots;
 use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Folder\SizeCalculator;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -40,7 +40,7 @@ class FolderController extends Controller
      */
     private function getSite($siteId = null)
     {
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         if ($siteId) {
             return $siteManager->getSiteById($siteId);
@@ -120,7 +120,7 @@ class FolderController extends Controller
         $data = array();
 
         $slots = new Slots();
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
         $dispatcher = $this->get('event_dispatcher');
         $securityContext = $this->get('security.context');
         $permissions = $this->get('phlexible_access_control.permissions');
@@ -267,7 +267,7 @@ class FolderController extends Controller
         $parentId = $request->get('parent_id');
         $name = $request->get('folder_name');
 
-        $site = $this->get('phlexible_media_site.manager')->getByFolderId($parentId);
+        $site = $this->get('phlexible_media_site.site_manager')->getByFolderId($parentId);
         $parentFolder = $site->findFolder($parentId);
 
         try {
@@ -369,7 +369,7 @@ class FolderController extends Controller
     public function propertiesAction(Request $request)
     {
         $folderId = $request->get('folder_id');
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
         $site = $siteManager->getByFolderId($folderId);
 
         try {

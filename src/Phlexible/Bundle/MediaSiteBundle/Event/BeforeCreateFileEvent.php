@@ -14,14 +14,9 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFileAction;
  * Before create file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method CreateFileAction getAction()
  */
 class BeforeCreateFileEvent extends AbstractActionEvent
 {
-    /**
-     * @return CreateFileAction
-     */
-    public function getAction()
-    {
-        return parent::getAction();
-    }
 }

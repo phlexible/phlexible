@@ -29,10 +29,5 @@ class PhlexibleMediaAssetExtension extends Extension
 
         $loader->load('services.yml');
         $loader->load('attribute_readers.yml');
-        $loader->load('image_extractors.yml');
-        $loader->load('video_extractors.yml');
-        $loader->load('audio_extractors.yml');
-        $loader->load('flash_extractors.yml');
-        $loader->load('content_extractors.yml');
     }
 }

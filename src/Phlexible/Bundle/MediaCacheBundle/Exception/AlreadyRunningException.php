@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\MediaCacheBundle\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class AlreadyRunningException extends Exception
+class AlreadyRunningException extends \RuntimeException
 {
 
 }

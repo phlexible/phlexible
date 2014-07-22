@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
 
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\HashCalculator\HashCalculatorInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
  * Replace file action
@@ -31,19 +31,31 @@ class ReplaceFileAction extends FileAction
     private $hashCalculator;
 
     /**
-     * @param FileInterface           $file
+     * @var AttributeBag
+     */
+    private $attributes;
+
+    /**
      * @param FileSourceInterface     $fileSource
+     * @param FileInterface           $file
      * @param HashCalculatorInterface $hashCalculator
+     * @param AttributeBag            $attributes
+     * @param \DateTime               $date
+     * @param string                  $userId
      */
     public function __construct(
-        FileInterface $file,
         FileSourceInterface $fileSource,
-        HashCalculatorInterface $hashCalculator)
+        FileInterface $file,
+        HashCalculatorInterface $hashCalculator,
+        AttributeBag $attributes,
+        \DateTime $date,
+        $userId)
     {
-        parent::__construct($file);
+        parent::__construct($file, $date, $userId);
 
         $this->fileSource = $fileSource;
         $this->hashCalculator = $hashCalculator;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -60,5 +72,13 @@ class ReplaceFileAction extends FileAction
     public function getHashCalulator()
     {
         return $this->hashCalculator;
+    }
+
+    /**
+     * @return AttributeBag
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }

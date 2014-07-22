@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy;
 
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 
 /**
  * Default cache id strategy

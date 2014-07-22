@@ -58,7 +58,7 @@ class ExportCommand extends ContainerAwareCommand
         }
         $target = rtrim($target, '/') . '/';
 
-        $siteManager = $this->getContainer()->get('phlexible_media_site.manager');
+        $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
         $site = $siteManager->getSiteById($site);
 
         $filesystem = new Filesystem();

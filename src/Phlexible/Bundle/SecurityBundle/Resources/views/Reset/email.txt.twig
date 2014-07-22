@@ -1,6 +1,6 @@
 Ihre Zugangsdaten
-Hallo {{ user.getFirstname }} {{ user.getLastname }},
+Hallo {{ user.firstname }} {{ user.lastname }},
 
 Bitte klicken Sie auf den folgenden Link um ein neues Passwort zu erhalten:
 
-{{ url }}
+{{ path("security_reset_set_view", {token: user.passwordToken}) }}

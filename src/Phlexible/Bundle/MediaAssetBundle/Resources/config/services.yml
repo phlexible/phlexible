@@ -2,14 +2,6 @@ parameters:
     phlexible_media_asset.asset_temp_dir: %kernel.cache_dir%/mediaasset/temp/
 
 services:
-    phlexible_media_asset.transmutor:
-        class: Phlexible\Bundle\MediaAssetBundle\Transmutor
-        arguments:
-            - [@phlexible_media_asset.extractor.image.video_converter, @phlexible_media_asset.extractor.image.getid3, @phlexible_media_asset.extractor.image.raw]
-            - [@phlexible_media_asset.extractor.video.raw]
-            - [@phlexible_media_asset.extractor.audio.raw]
-            - [@phlexible_media_asset.extractor.flash.raw]
-
     # event listeners
     phlexible_media_asset.listener.file:
         class: Phlexible\Bundle\MediaAssetBundle\EventListener\FileListener

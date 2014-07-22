@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\MediaTemplateBundle\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class NotFoundException extends Exception
+class NotFoundException extends \RuntimeException
 {
 
 }

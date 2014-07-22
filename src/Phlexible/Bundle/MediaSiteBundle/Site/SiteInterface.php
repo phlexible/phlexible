@@ -23,9 +23,10 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\DriverInterface;
 use Phlexible\Bundle\MediaSiteBundle\Driver\FindInterface;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Media site interface
@@ -79,11 +80,12 @@ interface SiteInterface extends FindInterface
     /**
      * @param FolderInterface $targetFolder
      * @param string          $name
+     * @param AttributeBag    $attributes
      * @param string          $userId
      *
      * @return CreateFolderAction
      */
-    public function createFolder(FolderInterface $targetFolder, $name, $userId);
+    public function createFolder(FolderInterface $targetFolder, $name, AttributeBag $attributes, $userId);
 
     /**
      * @param FolderInterface $folder
@@ -122,39 +124,40 @@ interface SiteInterface extends FindInterface
 
     /**
      * @param FolderInterface $folder
-     * @param array           $attributes
+     * @param AttributeBag    $attributes
+     * @param string          $userId
      *
      * @return SetFolderAttributesAction
      */
-    public function setFolderAttributes(FolderInterface $folder, array $attributes);
+    public function setFolderAttributes(FolderInterface $folder, AttributeBag $attributes, $userId);
 
     /**
      * @param FolderInterface     $targetFolder
      * @param FileSourceInterface $fileSource
+     * @param AttributeBag        $attributes
      * @param string              $userId
-     * @param array               $attributes
      *
      * @return CreateFileAction
      */
     public function createFile(
         FolderInterface $targetFolder,
         FileSourceInterface $fileSource,
-        $userId,
-        array $attributes = array());
+        AttributeBag $attributes,
+        $userId);
 
     /**
      * @param FileInterface       $file
      * @param FileSourceInterface $fileSource
+     * @param AttributeBag        $attributes
      * @param string              $userId
-     * @param array               $attributes
      *
      * @return ReplaceFileAction
      */
     public function replaceFile(
         FileInterface $file,
         FileSourceInterface $fileSource,
-        $userId,
-        array $attributes = array());
+        AttributeBag $attributes,
+        $userId);
 
     /**
      * @param FileInterface $file
@@ -193,9 +196,10 @@ interface SiteInterface extends FindInterface
 
     /**
      * @param FileInterface $file
-     * @param array         $attributes
+     * @param AttributeBag  $attributes
+     * @param string        $userId
      *
      * @return SetFileAttributesAction
      */
-    public function setFileAttributes(FileInterface $file, array $attributes);
+    public function setFileAttributes(FileInterface $file, AttributeBag $attributes, $userId);
 }

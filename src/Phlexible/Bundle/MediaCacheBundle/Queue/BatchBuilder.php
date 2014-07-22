@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Queue;
 
 use Phlexible\Bundle\MediaSiteBundle\File;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;

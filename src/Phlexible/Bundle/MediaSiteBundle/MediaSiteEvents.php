@@ -118,10 +118,22 @@ class MediaSiteEvents
     const BEFORE_MOVE_FILE = 'phlexible_media_site.before_move_file';
 
     /**
-     * Add Move Event
+     * Move File Event
      * Called after a file has been moved
      */
     const MOVE_FILE = 'phlexible_media_site.move_file';
+
+    /**
+     * Before Copy File Event
+     * Called before a file is moved
+     */
+    const BEFORE_COPY_FILE = 'phlexible_media_site.before_copy_file';
+
+    /**
+     * Copy File Event
+     * Called after a file has been moved
+     */
+    const COPY_FILE = 'phlexible_media_site.copy_file';
 
     /**
      * Before Create Folder Event
@@ -158,6 +170,18 @@ class MediaSiteEvents
      * Called after a folder has been moved
      */
     const MOVE_FOLDER = 'phlexible_media_site.move_folder';
+
+    /**
+     * Before Copy Folder Event
+     * Called before a folder is copied
+     */
+    const BEFORE_COPY_FOLDER = 'phlexible_media_site.before_copy_folder';
+
+    /**
+     * Copy Folder Event
+     * Called after a folder has been copied
+     */
+    const COPY_FOLDER = 'phlexible_media_site.copy_folder';
 
     /**
      * Rename Folder Event

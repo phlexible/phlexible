@@ -8,11 +8,15 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
+use Phlexible\Bundle\MediaSiteBundle\Driver\Action\DeleteFolderAction;
+
 /**
  * Delete folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method DeleteFolderAction getAction()
  */
-class DeleteFolderEvent extends BeforeDeleteFolderEvent
+class DeleteFolderEvent extends AbstractActionFolderEvent
 {
 }

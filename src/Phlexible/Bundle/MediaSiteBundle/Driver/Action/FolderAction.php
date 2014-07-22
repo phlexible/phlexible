@@ -8,14 +8,14 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
 
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Folder action
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-abstract class FolderAction implements ActionInterface
+abstract class FolderAction extends Action
 {
     /**
      * @var FolderInterface
@@ -24,9 +24,13 @@ abstract class FolderAction implements ActionInterface
 
     /**
      * @param FolderInterface $folder
+     * @param \DateTime       $date
+     * @param string          $userId
      */
-    public function __construct(FolderInterface $folder)
+    public function __construct(FolderInterface $folder, \DateTime $date, $userId)
     {
+        parent::__construct($date, $userId);
+
         $this->folder = $folder;
     }
 

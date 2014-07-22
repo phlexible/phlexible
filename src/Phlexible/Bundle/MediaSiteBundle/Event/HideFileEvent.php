@@ -12,7 +12,9 @@ namespace Phlexible\Bundle\MediaSiteBundle\Event;
  * Hide file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method HideFileAction getAction()
  */
-class HideFileEvent extends BeforeHideFileEvent
+class HideFileEvent extends AbstractActionFileEvent
 {
 }

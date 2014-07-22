@@ -11,8 +11,8 @@ namespace Phlexible\Bundle\MediaSiteBundle\Driver;
 use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotWritableException;
 use Phlexible\Bundle\MediaSiteBundle\Exception;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 
 /**

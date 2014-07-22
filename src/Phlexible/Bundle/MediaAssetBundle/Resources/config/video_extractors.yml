@@ -1,6 +1,0 @@
-services:
-    phlexible_media_asset.extractor.video.raw:
-        class: Phlexible\Bundle\MediaAssetBundle\VideoExtractor\RawVideoExtractor
-        public: false
-        tags:
-            - {name: phlexible_media_asset.video_extractor}

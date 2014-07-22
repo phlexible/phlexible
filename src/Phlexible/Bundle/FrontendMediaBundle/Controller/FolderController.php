@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Controller;
 
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -34,7 +34,7 @@ class FolderController extends Controller
 
         $securityContext = $this->get('security.context');
 
-        foreach ($this->get('phlexible_media_site.manager')->getAll() as $site) {
+        foreach ($this->get('phlexible_media_site.site_manager')->getAll() as $site) {
             $rootFolder = $site->findRootFolder();
 
 

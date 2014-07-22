@@ -45,18 +45,18 @@ class ReadCommand extends ContainerAwareCommand
     {
         $folderId = $input->getArgument('folderId');
 
-        $mimeDetector = $this->getContainer()->get('mediatools.mime.detector');
-        $documenttypeRepository = $this->getContainer()->get('documenttypes.repository');
+        $mimeDetector = $this->getContainer()->get('phlexible_media_tool.mime.detector');
+        $documenttypeManager = $this->getContainer()->get('phlexible_documenttype.documenttype_manager');
 
         if ($folderId) {
-            $site = $this->getContainer()->get('phlexible_media_site.manager')->getByFolderId($folderId);
+            $site = $this->getContainer()->get('phlexible_media_site.site_manager')->getByFolderId($folderId);
             $folder = $site->getFolderPeer()->getById($folderId);
 
             $cnt = $folder->reRead();
 
             $output->writeln($cnt . ' files read.');
         } else {
-            $sites = $this->getContainer()->get('phlexible_media_site.manager')->getAll();
+            $sites = $this->getContainer()->get('phlexible_media_site.site_manager')->getAll();
 
             foreach ($sites as $site) {
                 /* @var $site SiteInterface */
@@ -82,7 +82,7 @@ class ReadCommand extends ContainerAwareCommand
                             continue;
                         }
 
-                        $documenttype = $documenttypeRepository->findByMimetype($mimetype);
+                        $documenttype = $documenttypeManager->findByMimetype($mimetype);
 
                         $attributes = $file->getAttributes();
                         if (!empty($attributes['documentType'])) {

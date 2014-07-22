@@ -12,6 +12,7 @@ use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\SecurityBundle\SecurityMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/security/reset")
+ * @Security("is_anonymous()")
  */
 class ResetController extends Controller
 {
@@ -36,12 +38,10 @@ class ResetController extends Controller
      */
     public function validateviewAction(Request $request)
     {
-        $twig = $this->get('twig');
-        $translator = $this->get('translator');
-        $viewValidate = $this->get('security.view.validate');
+        $validateView = $this->get('phlexible_security.view.validate');
 
-        $loginSession = new \Zend_Session_Namespace('login');
-        $csrfToken = $loginSession->csrfToken = Uuid::generate();
+        $csrfProvider = $this->get('form.csrf_provider');
+        $csrfToken = $csrfProvider->generateCsrfToken('authenticate');
 
         return array(
             'baseUrl'        => $request->getBaseUrl(),
@@ -53,19 +53,17 @@ class ResetController extends Controller
             'appTitle'       => $this->container->getParameter('app.app_title'),
             'appVersion'     => $this->container->getParameter('app.app_version'),
             'appUrl'         => $this->container->getParameter('app.app_url'),
-            'projectTitle'   => $this->container->getParameter(':app.project_title'),
-            'scripts'        => $viewValidate->get($request, $this->get('security.context')),
+            'projectTitle'   => $this->container->getParameter('app.project_title'),
+            'scripts'        => $validateView->get($request, $this->get('security.context')),
             'csrfToken'      => $csrfToken,
             'validateUrl'    => $this->generateUrl('security_reset_validate'),
             'loginUrl'       => $this->generateUrl('security_login'),
-            'noScript'       => $viewValidate->getNoScript(
+            'noScript'       => $validateView->getNoScript(
                 $request->getBaseUrl(),
                 $this->container->getParameter('app.app_title'),
                 $this->container->getParameter('app.project_title')
             ),
         );
-
-        return new Response($content);
     }
 
     /**
@@ -78,19 +76,19 @@ class ResetController extends Controller
      */
     public function validateAction(Request $request)
     {
-        $email = $request->query->get('email');
+        $email = $request->request->get('email');
 
-        $userRepository = $this->get('users.repository');
-        $user  = $userRepository->findOneBy(array('email' => $email));
+        $userManager = $this->get('phlexible_user.user_manager');
+        $user = $userManager->findOneBy(array('email' => $email));
 
         if ($user) {
             $token = Uuid::generate();
             $user->setPasswordToken($token);
-            $userRepository->save($user);
+            $userManager->updateUser($user);
 
             $validateUrl = $this->generateUrl('security_reset_set', array('token' => $token));
 
-            $mailer = $this->get('security.mailer');
+            $mailer = $this->get('phlexible_security.mailer');
             $mailer->sendValidateEmailMessage($user, $validateUrl);
 
             return new ResultResponse(true);
@@ -106,21 +104,21 @@ class ResetController extends Controller
      *
      * @return Response
      * @Route("/set/view", name="security_reset_set_view")
+     * @Template
      */
     public function setviewAction(Request $request)
     {
         $token = $request->query->get('token');
 
-        $user = $this->get('users.repository')->findOneBy(array('password_token' => $token));
+        $user = $this->get('phlexible_user.user_manager')->findOneBy(array('passwordToken' => $token));
         if (!$user) {
             return new Response('Token not found.', 403);
         }
 
-        $twig = $this->get('twig');
-        $viewReset = $this->get('security.view.reset');
+        $resetView = $this->get('phlexible_security.view.reset');
 
-        $csrfToken = Uuid::generate();
-        $request->getSession()->set('login.csrf', $csrfToken);
+        $csrfProvider = $this->get('form.csrf_provider');
+        $csrfToken = $csrfProvider->generateCsrfToken('authenticate');
 
         return array(
             'baseUrl'        => $request->getBaseUrl(),
@@ -132,21 +130,19 @@ class ResetController extends Controller
             'appTitle'       => $this->container->getParameter('app.app_title'),
             'appVersion'     => $this->container->getParameter('app.app_version'),
             'appUrl'         => $this->container->getParameter('app.app_url'),
-            'projectTitle'   => $this->container->getParameter(':app.project_title'),
-            'scripts'        => $viewReset->get($request, $this->get('ecurity_context')),
+            'projectTitle'   => $this->container->getParameter('app.project_title'),
+            'scripts'        => $resetView->get($request, $this->get('security.context')),
             'csrfToken'      => $csrfToken,
             'token'          => $token,
             'loginUrl'       => $this->generateUrl('security_login'),
             'setUrl'         => $this->generateUrl('security_reset_set'),
-            'minLength'      => $this->container->getParameter('users.password.min_length'),
-            'noScript'       => $viewReset->getNoScript(
+            'minLength'      => $this->container->getParameter('phlexible_user.password.min_length'),
+            'noScript'       => $resetView->getNoScript(
                 $request->getBaseUrl(),
                 $this->container->getParameter('app.app_title'),
                 $this->container->getParameter('app.project_title')
             ),
         );
-
-        return new Response($content);
     }
 
     /**
@@ -159,17 +155,17 @@ class ResetController extends Controller
      */
     public function setAction(Request $request)
     {
-        $token           = $request->query->get('token');
-        $newPassword     = $request->query->get('new_password');
-        $newPasswordRep  = $request->query->get('new_password_repeat');
+        $token           = $request->request->get('token');
+        $newPassword     = $request->request->get('new_password');
+        $newPasswordRep  = $request->request->get('new_password_repeat');
 
-        $userRepository = $this->get('users.repository');
-        $user = $userRepository->findOneBy(array('password_token' => $token));
+        $userManager = $this->get('phlexible_user.user_manager');
+        $user = $userManager->findOneBy(array('passwordToken' => $token));
         if (!$user) {
             return new Response('Token not found.', 403);
         }
 
-        $passwordCheck = $this->get('users.password.checker');
+        $passwordCheck = $this->get('phlexible_user.password_checker');
         $translator  = $this->get('translator');
 
         if ($newPassword != $newPasswordRep) {
@@ -191,7 +187,7 @@ class ResetController extends Controller
         $user
             ->setPlainPassword($newPassword)
             ->setPasswordToken(null);
-        $userRepository->save($user);
+        $userManager->updateUser($user);
 
         $this->get('logger')->notice('User "'.$user->getUsername().'" set new password.');
 

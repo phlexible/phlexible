@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,7 +33,7 @@ class ArchiveController extends Controller
      */
     public function zipAction(Request $request)
     {
-        $mediaSiteManager = $this->get('phlexible_media_site.manager');
+        $mediaSiteManager = $this->get('phlexible_media_site.site_manager');
 
         $folderID = $request->get('folder_id');
         $site = $mediaSiteManager->getByFolderId($folderID);

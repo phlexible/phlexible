@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -80,17 +81,17 @@ class TempHandler
 
         switch ($action) {
             case self::ACTION_SAVE:
-                $site->createFile($folder, $tempFile, $tempFile->getUserId());
+                $site->createFile($folder, $tempFile, new AttributeBag(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_REPLACE:
                 $file = $site->findFile($tempFile->getFileId());
-                $site->replaceFile($file, $tempFile, $tempFile->getUserId());
+                $site->replaceFile($file, $tempFile, new AttributeBag(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_KEEP_BOtH:
                 $tempFile->setAlternativeName($this->createAlternateFilename($tempFile));
-                $site->createFile($folder, $tempFile, $tempFile->getUserId());
+                $site->createFile($folder, $tempFile, new AttributeBag(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_VERSION:

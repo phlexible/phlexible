@@ -15,14 +15,14 @@ services:
         class: Phlexible\Bundle\MediaCacheBundle\Queue\Worker
         arguments:
             - @phlexible_media_cache.worker.resolver
-            - @phlexible_media_site.manager
+            - @phlexible_media_site.site_manager
             - @phlexible_media_template.template_manager
             - @properties
             - %app.lock_dir%
 
     phlexible_media_cache.queue.batch_builder:
         class: Phlexible\Bundle\MediaCacheBundle\Queue\BatchBuilder
-        arguments: [@phlexible_media_site.manager, @phlexible_media_template.template_manager]
+        arguments: [@phlexible_media_site.site_manager, @phlexible_media_template.template_manager]
 
     phlexible_media_cache.queue.batch_resolver:
         class: Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver
@@ -68,6 +68,8 @@ services:
             - @phlexible_media_template.template_manager
             - @phlexible_media_cache.queue.worker
             - @phlexible_media_cache.queue.batch_resolver
+            - @phlexible_media_cache.cache_manager
+            - @phlexible_media_cache.queue_manager
             - %phlexible_media_cache.immediately_cache_system_templates%
         tags:
             - {name: kernel.event_subscriber}

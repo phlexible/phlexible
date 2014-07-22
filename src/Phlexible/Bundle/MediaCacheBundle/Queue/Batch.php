@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaCacheBundle\Queue;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\MediaSiteBundle\File;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 
 /**

@@ -34,7 +34,6 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request)
     {
-        $twig = $this->get('twig');
         $loginView = $this->get('phlexible_security.view.login');
 
         $securityContext = $this->get('security.context');

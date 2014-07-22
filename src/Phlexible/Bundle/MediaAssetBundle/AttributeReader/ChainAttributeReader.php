@@ -8,9 +8,8 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 
 /**
  * Chain attribute reader
@@ -43,10 +42,10 @@ class ChainAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file, PathSourceInterface $fileSource)
+    public function supports(PathSourceInterface $fileSource, $documenttype, $assettype)
     {
         foreach ($this->readers as $reader) {
-            if ($reader->isAvailable() && $reader->supports($file, $fileSource)) {
+            if ($reader->isAvailable() && $reader->supports($fileSource, $documenttype, $assettype)) {
                 return true;
             }
         }
@@ -55,11 +54,11 @@ class ChainAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, PathSourceInterface $fileSource, AttributesBag $attributes)
+    public function read(PathSourceInterface $fileSource, $documenttype, $assettype, AttributeBag $attributes)
     {
         foreach ($this->readers as $reader) {
-            if ($reader->isAvailable() && $reader->supports($file, $fileSource)) {
-                $reader->read($file, $fileSource, $attributes);
+            if ($reader->isAvailable() && $reader->supports($fileSource, $documenttype, $assettype)) {
+                $reader->read($fileSource, $documenttype, $assettype, $attributes);
             }
         }
     }

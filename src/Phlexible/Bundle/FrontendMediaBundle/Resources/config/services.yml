@@ -31,13 +31,6 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_element.save, method: onSaveElement}
 
-    phlexible_frontend_media.listener.media:
-        class: Phlexible\Bundle\FrontendMediaBundle\EventListener\MediaListener
-        tags:
-            - {name: kernel.event_listener, event: phlexible_media_site.save_upload, method: onUploadFile}
-            - {name: kernel.event_listener, event: phlexible_media_site.save_meta, method: onChangeFile}
-            - {name: kernel.event_listener, event: phlexible_media_site.delete_file, method: onDeleteFile}
-
     # fields
     phlexible_frontend_media.field.folder:
         class: Phlexible\Bundle\FrontendMediaBundle\Field\FolderField

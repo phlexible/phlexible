@@ -12,7 +12,9 @@ namespace Phlexible\Bundle\MediaSiteBundle\Event;
  * Show file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method ShowFileAction getAction()
  */
-class ShowFileEvent extends BeforeShowFileEvent
+class ShowFileEvent extends AbstractActionFileEvent
 {
 }

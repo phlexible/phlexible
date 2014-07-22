@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\MediaTemplateBundle\Applier;
 use Brainbits\ImageConverter\Driver\DriverInterface;
 use Brainbits\ImageConverter\Image\Point;
 use Brainbits\ImageConverter\ImageConverter;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Psr\Log\LoggerInterface;
 

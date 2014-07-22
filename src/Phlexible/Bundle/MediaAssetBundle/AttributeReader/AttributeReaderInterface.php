@@ -8,9 +8,8 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 
 /**
  * Attribute reader interface
@@ -29,20 +28,22 @@ interface AttributeReaderInterface
     /**
      * Check if reader supports the given asset
      *
-     * @param FileInterface       $file
      * @param PathSourceInterface $fileSource
+     * @param string              $documenttype
+     * @param string              $assettype
      *
      * @return bool
      */
-    public function supports(FileInterface $file, PathSourceInterface $fileSource);
+    public function supports(PathSourceInterface $fileSource, $documenttype, $assettype);
 
     /**
      * Read attributes
      *
-     * @param FileInterface       $file
      * @param PathSourceInterface $fileSource
-     * @param AttributesBag       $attributes
+     * @param string              $documenttype
+     * @param string              $assettype
+     * @param AttributeBag        $attributes
      */
-    public function read(FileInterface $file, PathSourceInterface $fileSource, AttributesBag $attributes);
+    public function read(PathSourceInterface $fileSource, $documenttype, $assettype, AttributeBag $attributes);
 
 }

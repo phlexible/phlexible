@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
 
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Set folder attributes action
@@ -24,17 +25,19 @@ class SetFolderAttributesAction extends FolderAction
 
     /**
      * @param FolderInterface $folder
-     * @param array           $attributes
+     * @param AttributeBag    $attributes
+     * @param \DateTime       $date
+     * @param string          $userId
      */
-    public function __construct(FolderInterface $folder, array $attributes)
+    public function __construct(FolderInterface $folder, AttributeBag $attributes, \DateTime $date, $userId)
     {
-        parent::__construct($folder);
+        parent::__construct($folder, $date, $userId);
 
         $this->attributes = $attributes;
     }
 
     /**
-     * @return array
+     * @return AttributeBag
      */
     public function getAttributes()
     {

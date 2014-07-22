@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver;
 
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Find interface

@@ -8,11 +8,15 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
+use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
+
 /**
  * Rename folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method RenameFolderAction getAction()
  */
-class RenameFolderEvent extends BeforeRenameFolderEvent
+class RenameFolderEvent extends AbstractActionFolderEvent
 {
 }

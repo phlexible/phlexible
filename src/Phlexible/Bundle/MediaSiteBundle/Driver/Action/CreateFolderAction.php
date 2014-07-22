@@ -7,29 +7,52 @@
  */
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Create folder action
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CreateFolderAction extends FolderAction
+class CreateFolderAction extends Action
 {
+    /**
+     * @var string
+     */
+    private $name;
+
     /**
      * @var FolderInterface
      */
     private $targetFolder;
 
     /**
-     * @param FolderInterface $folder
-     * @param FolderInterface $targetFolder
+     * @var AttributeBag
      */
-    public function __construct(FolderInterface $folder, FolderInterface $targetFolder)
-    {
-        parent::__construct($folder);
+    private $attributes;
 
+    /**
+     * @param string          $name
+     * @param FolderInterface $targetFolder
+     * @param AttributeBag    $attributes
+     * @param \DateTime       $date
+     * @param string          $userId
+     */
+    public function __construct($name, FolderInterface $targetFolder, AttributeBag $attributes, \DateTime $date, $userId)
+    {
+        parent::__construct($date, $userId);
+
+        $this->name = $name;
         $this->targetFolder = $targetFolder;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -38,5 +61,13 @@ class CreateFolderAction extends FolderAction
     public function getTargetFolder()
     {
         return $this->targetFolder;
+    }
+
+    /**
+     * @return AttributeBag
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }

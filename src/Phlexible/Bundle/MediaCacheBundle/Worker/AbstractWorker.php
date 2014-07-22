@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 use Psr\Log\LoggerInterface;
 

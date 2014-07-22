@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
 
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Rename folder action
@@ -23,16 +23,6 @@ class RenameFolderAction extends FolderAction
     private $name;
 
     /**
-     * @var \DateTime
-     */
-    private $date;
-
-    /**
-     * @var string
-     */
-    private $userId;
-
-    /**
      * @param FolderInterface $file
      * @param string          $name
      * @param \DateTime       $date
@@ -40,11 +30,9 @@ class RenameFolderAction extends FolderAction
      */
     public function __construct(FolderInterface $file, $name, \DateTime $date, $userId)
     {
-        parent::__construct($file);
+        parent::__construct($file, $date, $userId);
 
         $this->name = $name;
-        $this->date = $date;
-        $this->userId = $userId;
     }
 
     /**
@@ -53,18 +41,5 @@ class RenameFolderAction extends FolderAction
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    public function getUserId()
-    {
-        return $this->userId;
     }
 }

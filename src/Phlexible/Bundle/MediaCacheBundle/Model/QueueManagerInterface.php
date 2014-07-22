@@ -25,6 +25,16 @@ interface QueueManagerInterface
     public function find($id);
 
     /**
+     * @param array    $criteria
+     * @param int|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return mixed
+     */
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
+
+    /**
      * @param int      $fileId
      * @param int|null $fileVersion
      *
@@ -50,4 +60,9 @@ interface QueueManagerInterface
      * @param QueueItem $queueItem
      */
     public function updateQueueItem(QueueItem $queueItem);
+
+    /**
+     * @param QueueItem $queueItem
+     */
+    public function deleteQueueItem(QueueItem $queueItem);
 }

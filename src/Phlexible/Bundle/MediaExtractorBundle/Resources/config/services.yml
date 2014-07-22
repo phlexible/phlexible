@@ -1,0 +1,11 @@
+parameters:
+    phlexible_media_extractor.asset_temp_dir: %kernel.cache_dir%/extractor
+
+services:
+    phlexible_media_extractor.transmutor:
+        class: Phlexible\Bundle\MediaExtractorBundle\Transmutor
+        arguments:
+            - [@phlexible_media_extractor.extractor.image.video_converter, @phlexible_media_extractor.extractor.image.getid3, @phlexible_media_extractor.extractor.image.raw]
+            - [@phlexible_media_extractor.extractor.video.raw]
+            - [@phlexible_media_extractor.extractor.audio.raw]
+            - [@phlexible_media_extractor.extractor.flash.raw]

@@ -51,6 +51,14 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->cacheRepository->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findByFile($fileId, $fileVersion = null)
     {
         $criteria = array('fileId' => $fileId);
@@ -76,5 +84,15 @@ class CacheManager implements CacheManagerInterface
     {
         $this->entityManager->persist($cacheItem);
         $this->entityManager->flush($cacheItem);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteCacheItem(CacheItem $cacheItem)
+    {
+        // TODO: remove files
+        $this->entityManager->remove($cacheItem);
+        $this->entityManager->flush();
     }
 }

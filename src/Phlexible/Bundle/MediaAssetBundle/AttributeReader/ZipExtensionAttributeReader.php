@@ -8,9 +8,8 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaAssetBundle\AttributesBag;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 
 /**
  * Zip extension attribute reader
@@ -30,15 +29,15 @@ class ZipExtensionAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file, PathSourceInterface $fileSource)
+    public function supports(PathSourceInterface $fileSource, $documenttype, $assettype)
     {
-        return strtolower($file->getAttribute('documenttype')) === 'zip';
+        return $documenttype === 'zip';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function read(FileInterface $file, PathSourceInterface $fileSource, AttributesBag $attributes)
+    public function read(PathSourceInterface $fileSource, $documenttype, $assettype, AttributeBag $attributes)
     {
         $filename = $fileSource->getPath();
 

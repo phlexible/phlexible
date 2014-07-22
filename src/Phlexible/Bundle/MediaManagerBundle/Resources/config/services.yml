@@ -19,12 +19,12 @@ services:
 
     phlexible_media_manager.upload.temp_handler:
         class: Phlexible\Bundle\MediaManagerBundle\Upload\TempHandler
-        arguments: [@phlexible_media_manager.upload.temp_storage, @phlexible_media_site.manager]
+        arguments: [@phlexible_media_manager.upload.temp_storage, @phlexible_media_site.site_manager]
 
     phlexible_media_manager.upload.handler:
         class: Phlexible\Bundle\MediaManagerBundle\Upload\UploadHandler
         arguments:
-            - @phlexible_media_site.manager
+            - @phlexible_media_site.site_manager
             - @phlexible_media_manager.upload.temp_storage
             - @phlexible_media_tool.mime.detector
 
@@ -90,7 +90,7 @@ services:
         public: false
         arguments:
             - @translator
-            - @phlexible_media_site.manager
+            - @phlexible_media_site.site_manager
             - @phlexible_media_cache.cache_manager
             - @security.context
             - %phlexible_media_manager.portlet.style%
@@ -102,13 +102,13 @@ services:
     phlexible_media_manager.search.file:
         class: Phlexible\Bundle\MediaManagerBundle\Search\FileSearch
         public: false
-        arguments: [@connection_manager, @phlexible_media_site.manager]
+        arguments: [@connection_manager, @phlexible_media_site.site_manager]
         tags:
             - {name: phlexible_search.handler}
 
     phlexible_media_manager.search.meta:
         class: Phlexible\Bundle\MediaManagerBundle\Search\MetaSearch
         public: false
-        arguments: [@connection_manager, @phlexible_media_site.manager]
+        arguments: [@connection_manager, @phlexible_media_site.site_manager]
         tags:
             - {name: phlexible_search.handler}

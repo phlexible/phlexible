@@ -8,14 +8,14 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
 
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
  * File action
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-abstract class FileAction implements ActionInterface
+abstract class FileAction extends Action
 {
     /**
      * @var FileInterface
@@ -24,9 +24,13 @@ abstract class FileAction implements ActionInterface
 
     /**
      * @param FileInterface $file
+     * @param \DateTime     $date
+     * @param string        $userId
      */
-    public function __construct(FileInterface $file)
+    public function __construct(FileInterface $file, \DateTime $date, $userId)
     {
+        parent::__construct($date, $userId);
+
         $this->file = $file;
     }
 

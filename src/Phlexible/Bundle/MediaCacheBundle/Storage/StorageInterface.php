@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Storage;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
  * Storage interface

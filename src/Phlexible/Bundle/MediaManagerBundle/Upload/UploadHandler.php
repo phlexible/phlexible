@@ -9,8 +9,9 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
 use Brainbits\Mime\MimeDetector;
-use Phlexible\Bundle\MediaSiteBundle\File\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\UploadedFileSource;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -91,7 +92,7 @@ class UploadHandler
             );
         }
 
-        $file = $site->createFile($folder, $uploadFileSource, $userId);
+        $file = $site->createFile($folder, $uploadFileSource, new AttributeBag(), $userId);
 
         return $file;
     }

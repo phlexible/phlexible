@@ -14,14 +14,9 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFolderAction;
  * Before create folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method CreateFolderAction getAction()
  */
 class BeforeCreateFolderEvent extends AbstractActionEvent
 {
-    /**
-     * @return CreateFolderAction
-     */
-    public function getAction()
-    {
-        return parent::getAction();
-    }
 }

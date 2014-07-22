@@ -8,11 +8,15 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
+use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFolderAction;
+
 /**
  * Move folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @method MoveFolderAction getAction()
  */
-class MoveFolderEvent extends BeforeMoveFolderEvent
+class MoveFolderEvent extends AbstractActionFolderEvent
 {
 }

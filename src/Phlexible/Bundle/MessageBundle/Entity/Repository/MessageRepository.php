@@ -156,13 +156,7 @@ class MessageRepository extends EntityRepository
         $qb = $this->createQueryBuilder($prefix);
 
         if ($criteria->count()) {
-            if ($criteria->getMode() === Criteria::MODE_OR) {
-                $composite = $qb->expr()->orX();
-            } else {
-                $composite = $qb->expr()->andX();
-            }
-
-            $this->applyCriteriaToQueryBuilder($criteria, $qb, $composite, $prefix);
+            $composite = $this->applyCriteriaToQueryBuilder($criteria, $qb, $prefix);
 
             if ($composite->count()) {
                 $qb->where($composite);
@@ -177,25 +171,27 @@ class MessageRepository extends EntityRepository
      *
      * @param Criteria     $criteria
      * @param QueryBuilder $qb
-     * @param Composite    $composite
      * @param string       $prefix
+     *
+     * @return Composite
      */
-    private function applyCriteriaToQueryBuilder(Criteria $criteria, QueryBuilder $qb, Composite $composite, $prefix)
+    private function applyCriteriaToQueryBuilder(Criteria $criteria, QueryBuilder $qb, $prefix)
     {
+        if ($criteria->getMode() === Criteria::MODE_OR) {
+            $expr = $qb->expr()->orX();
+        } else {
+            $expr = $qb->expr()->andX();
+        }
         foreach ($criteria as $criterium) {
-            if ($criteria->getMode() === Criteria::MODE_OR) {
-                $expr = $qb->expr()->orX();
-            } else {
-                $expr = $qb->expr()->andX();
-            }
             if ($criterium instanceof Criteria) {
-                $this->applyCriteriaToQueryBuilder($criterium, $qb, $expr, $prefix);
+                $expr->add(
+                    $this->applyCriteriaToQueryBuilder($criterium, $qb, $prefix)
+                );
             } else {
                 $this->applyCriteriumToQueryBuilder($criterium, $qb, $expr, $prefix);
             }
-
-            $composite->add($expr);
         }
+        return $expr;
     }
 
     /**
@@ -215,19 +211,19 @@ class MessageRepository extends EntityRepository
 
         switch ($type) {
             case Criteria::CRITERIUM_SUBJECT_LIKE:
-                $composite->add($qb->expr()->like("$prefix.subject", $qb->expr()->literal("%value%")));
+                $composite->add($qb->expr()->like("$prefix.subject", $qb->expr()->literal("%$value%")));
                 break;
 
             case Criteria::CRITERIUM_SUBJECT_NOT_LIKE:
-                $composite->add($qb->expr()->notLike("$prefix.subject", $qb->expr()->literal("%value%")));
+                $composite->add($qb->expr()->notLike("$prefix.subject", $qb->expr()->literal("%$value%")));
                 break;
 
             case Criteria::CRITERIUM_BODY_LIKE:
-                $composite->add($qb->expr()->like("$prefix.body", $qb->expr()->literal("%value%")));
+                $composite->add($qb->expr()->like("$prefix.body", $qb->expr()->literal("%$value%")));
                 break;
 
             case Criteria::CRITERIUM_BODY_NOT_LIKE:
-                $composite->add($qb->expr()->notLike("$prefix.body", $qb->expr()->literal("%value%")));
+                $composite->add($qb->expr()->notLike("$prefix.body", $qb->expr()->literal("%$value%")));
                 break;
 
             case Criteria::CRITERIUM_PRIORITY_IS:
@@ -255,7 +251,7 @@ class MessageRepository extends EntityRepository
                 break;
 
             case Criteria::CRITERIUM_CHANNEL_LIKE:
-                $composite->add($qb->expr()->like("$prefix.channel", $qb->expr()->literal("%value%")));
+                $composite->add($qb->expr()->like("$prefix.channel", $qb->expr()->literal("%$value%")));
                 break;
 
             case Criteria::CRITERIUM_CHANNEL_IN:

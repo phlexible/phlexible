@@ -10,7 +10,7 @@ services:
         public: false
         arguments:
             - @phlexible_media_cache.storage_manager
-            - @phlexible_media_asset.transmutor
+            - @phlexible_media_extractor.transmutor
             - @phlexible_media_cache.cache_manager
             - @phlexible_documenttype.documenttype_manager
             - @phlexible_media_cache.id_strategy.default
@@ -26,7 +26,7 @@ services:
         public: false
         arguments:
             - @phlexible_media_cache.storage_manager
-            - @phlexible_media_asset.transmutor
+            - @phlexible_media_extractor.transmutor
             - @phlexible_media_cache.cache_manager
             - @phlexible_documenttype.documenttype_manager
             - @phlexible_media_cache.id_strategy.default
@@ -57,7 +57,7 @@ services:
         public: false
         arguments:
             - @phlexible_media_cache.storage_manager
-            - @phlexible_media_asset.transmutor
+            - @phlexible_media_extractor.transmutor
             - @phlexible_media_cache.cache_manager
             - @phlexible_documenttype.documenttype_manager
             - @phlexible_media_cache.id_strategy.default

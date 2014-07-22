@@ -27,24 +27,31 @@ class DownloadController extends Controller
      * @param Request $request
      *
      * @return Response
+     * @Route("", name="mediamanager_download")
      */
     public function fileAction(Request $request)
     {
         $fileId = $request->get('id');
         $fileVersion = $request->get('version', null);
 
-        $site = $this->get('phlexible_media_site.manager')->getByFileId($fileId);
-        if ($fileVersion !== null) {
-            $file = $site->getFilePeer()->getById($fileId, $fileVersion);
+        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $site = $siteManager->getByFileId($fileId);
+
+        if ($fileVersion) {
+            $file = $site->findFile($fileId, $fileVersion);
         } else {
-            $file = $site->getFilePeer()->getById($fileId);
+            $file = $site->findFile($fileId);
         }
-        $filepath = $file->getFilePath();
+
+        $filepath = $file->getPhysicalPath();
         $filename = $file->getName();
-        $filesize = $file->getSize();
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($filepath, $file->getMimeType(), array('absolute_path' => true));
+            ->create($filepath, $file->getMimeType(), array(
+                'serve_filename' => $filename,
+                'absolute_path'  => true,
+                'inline'         => false,
+            ));
     }
 
     /**

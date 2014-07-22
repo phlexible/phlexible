@@ -35,7 +35,7 @@ class DebugController extends Controller
     {
         $fileId = $request->get('file_id');
 
-        $siteManager = $this->get('phlexible_media_site.manager');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
 
         $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId);
@@ -63,17 +63,17 @@ class DebugController extends Controller
     {
         $fileId = $request->get('file_id');
 
-        $siteManager = $this->get('phlexible_media_site.manager');
-        $cacheRepository = $this->get('mediacache.repository');
-        $templateRepository = $this->get('mediatemplates.repository');
+        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $cacheManager = $this->get('phlexible_media_cache.cache_manager');
+        $templateManager = $this->get('phlexible_media_template.template_manager');
 
         $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId);
-        $cacheItems = $cacheRepository->findBy(array('file_id' => $fileId));
+        $cacheItems = $cacheManager->findBy(array('file_id' => $fileId));
 
         $cache = array();
         foreach ($cacheItems as $cacheItem) {
-            $template = $templateRepository->find($cacheItem->getTemplateKey());
+            $template = $templateManager->find($cacheItem->getTemplateKey());
             $storageKey = $template->getStorage();
             $storage = $this->get('mediacache.storage.' . strtolower($storageKey));
 
