@@ -3,4 +3,4 @@ Hallo {{ user.firstname }} {{ user.lastname }},
 
 Bitte klicken Sie auf den folgenden Link um ein neues Passwort zu erhalten:
 
-{{ path("security_reset_set_view", {token: user.passwordToken}) }}
+{{ url("security_reset_set_view", {token: user.passwordToken}) }}

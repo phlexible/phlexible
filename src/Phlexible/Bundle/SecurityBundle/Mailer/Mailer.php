@@ -51,9 +51,8 @@ class Mailer
      * Send an email to a user showing the new password
      *
      * @param UserInterface $user
-     * @param string        $baseUrl
      */
-    public function sendValidateEmailMessage(UserInterface $user, $baseUrl)
+    public function sendValidateEmailMessage(UserInterface $user)
     {
         $template = $this->parameters['validate']['template'];
         $from = $this->parameters['validate']['from'];
@@ -62,7 +61,6 @@ class Mailer
             $template,
             array(
                 'user' => $user,
-                'url'  => $baseUrl
             )
         );
         $this->sendEmailMessage($content, $from, $user->getEmail());
