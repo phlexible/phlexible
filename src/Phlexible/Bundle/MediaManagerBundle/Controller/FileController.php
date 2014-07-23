@@ -72,10 +72,10 @@ class FileController extends Controller
         $folder = $site->findFolder($folderId);
 
         if ($securityContext->isGranted('FILE_READ', $folder)) {
-            if ($sort === 'create_date') {
-                $sort = 'createdAt';
-            } elseif ($sort === 'documenttype') {
-                $sort = 'mimeType';
+            if ($sort === 'create_time') {
+                $sort = 'created_at';
+            } elseif ($sort === 'document_type_key') {
+                $sort = 'mime_type';
             }
             $files = $site->findFilesByFolder($folder, array($sort => $dir), $limit, $start, $showHidden);
             $total = $site->countFilesByFolder($folder, $showHidden);
