@@ -15,6 +15,7 @@ use Phlexible\Bundle\MediaManagerBundle\Slot\SiteSlot;
 use Phlexible\Bundle\MediaManagerBundle\Slot\Slots;
 use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\Folder\SizeCalculator;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
@@ -271,7 +272,7 @@ class FolderController extends Controller
         $parentFolder = $site->findFolder($parentId);
 
         try {
-            $folder = $site->createFolder($parentFolder, $name, $this->getUser()->getId());
+            $folder = $site->createFolder($parentFolder, $name, new AttributeBag(), $this->getUser()->getId());
 
             return new ResultResponse(true, 'Folder created.', array(
                 'folder_id'   => $folder->getId(),
@@ -332,7 +333,7 @@ class FolderController extends Controller
 
         $site->deleteFolder($folder, $this->getUser()->getId());
 
-        return new ResultResponse(true);
+        return new ResultResponse(true, 'Folder deleted', array('parent_id' => $folder->getParentId()));
     }
 
     /**

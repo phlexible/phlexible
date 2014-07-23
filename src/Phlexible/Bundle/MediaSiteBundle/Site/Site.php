@@ -378,6 +378,9 @@ class Site implements SiteInterface, \IteratorAggregate
 
         $event = new BeforeDeleteFileEvent($action);
         $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_DELETE_FILE, $event);
+        if ($event->isPropagationStopped()) {
+            throw new \Exception('Delete cancelled');
+        }
 
         $file = $this->driver->execute($action);
 
@@ -482,10 +485,21 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function deleteFolder(FolderInterface $folder, $userId)
     {
+        foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
+            $this->deleteFolder($subFolder, $userId);
+        }
+
+        foreach ($this->findFilesByFolder($folder) as $file) {
+            $this->deleteFile($file, $userId);
+        }
+
         $action = new DeleteFolderAction($folder, new \DateTime(), $userId);
 
         $event = new BeforeDeleteFolderEvent($action);
         $this->dispatcher->dispatch(MediaSiteEvents::BEFORE_DELETE_FOLDER, $event);
+        if ($event->isPropagationStopped()) {
+            throw new \Exception('Delete cancelled');
+        }
 
         $folder = $this->driver->execute($action);
 

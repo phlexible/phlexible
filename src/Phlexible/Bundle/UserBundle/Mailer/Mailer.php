@@ -54,10 +54,8 @@ class Mailer
      * Send an email to a user showing the new password
      *
      * @param UserInterface $user
-     * @param string        $password
-     * @param string        $url
      */
-    public function sendNewAccountEmailMessage(UserInterface $user, $password, $url)
+    public function sendNewAccountEmailMessage(UserInterface $user)
     {
         $template = $this->parameters['new_account']['template'];
         $from = $this->parameters['new_account']['from'];
@@ -65,9 +63,7 @@ class Mailer
         $content = $this->templating->render(
             $template,
             array(
-                'user'     => $user,
-                'password' => $password,
-                'url'      => $url
+                'user' => $user,
             )
         );
         $this->sendEmailMessage($content, $from, $user->getEmail());
@@ -77,10 +73,8 @@ class Mailer
      * Send an email to a user showing the new password
      *
      * @param UserInterface $user
-     * @param string        $password
-     * @param string        $url
      */
-    public function sendNewPasswordEmailMessage(UserInterface $user, $password, $url)
+    public function sendNewPasswordEmailMessage(UserInterface $user)
     {
         $template = $this->parameters['new_password']['template'];
         $from = $this->parameters['new_password']['from'];
@@ -88,9 +82,7 @@ class Mailer
         $content = $this->templating->render(
             $template,
             array(
-                'user'     => $user,
-                'password' => $password,
-                'url'      => $url
+                'user' => $user,
             )
         );
         $this->sendEmailMessage($content, $from, $user->getEmail());

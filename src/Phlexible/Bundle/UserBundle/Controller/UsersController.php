@@ -223,14 +223,12 @@ class UsersController extends Controller
             ->setCreatedAt(new \DateTime())
             ->setModifiedAt(new \DateTime());
 
-        $userManager->updateUser($user);
-
         if ($notify && $request->request->get('password')) {
-            $url = $this->generateUrl('gui_index', array(), UrlGeneratorInterface::ABSOLUTE_URL);
-
             $mailer = $this->get('phlexible_user.mailer');
-            $mailer->sendNewAccountEmailMessage($user, $request->request->get('password'), $url);
+            $mailer->sendNewAccountEmailMessage($user, $request->request->get('password'));
         }
+
+        $userManager->updateUser($user);
 
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" created.'));
@@ -286,14 +284,12 @@ class UsersController extends Controller
         $user
             ->setModifiedAt(new \DateTime());
 
-        $userManager->updateUser($user);
-
         if ($request->get('password_notify') && $request->request->get('password')) {
-            $url = $this->generateUrl('gui_index', array(), UrlGeneratorInterface::ABSOLUTE_URL);
-
             $mailer = $this->get('phlexible_user.mailer');
-            $mailer->sendNewPasswordEmailMessage($user, $request->request->get('password'), $url);
+            $mailer->sendNewPasswordEmailMessage($user, $request->request->get('password'));
         }
+
+        $userManager->updateUser($user);
 
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" updated.'));

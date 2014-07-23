@@ -75,14 +75,12 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
             },
             preloadChildren: true,
             listeners: {
-                load: {
-                    fn: function (loader, node) {
-                        if (this.start_folder_path) {
-                            this.selectPath(this.start_folder_path);
-                        }
-                    },
-                    scope: this
-                }
+                load: function (loader, node) {
+                    if (this.start_folder_path) {
+                        this.selectPath(this.start_folder_path);
+                    }
+                },
+                scope: this
             }
         });
 
@@ -96,15 +94,13 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
 
         this.selModel = new Ext.tree.DefaultSelectionModel({
             listeners: {
-                selectionchange: {
-                    fn: function (sm, node) {
-                        if (!node) {
-                            return;
-                        }
-                        this.onClick(node);
-                    },
-                    scope: this
-                }
+                selectionchange: function (sm, node) {
+                    if (!node) {
+                        return;
+                    }
+                    this.onClick(node);
+                },
+                scope: this
             }
         });
 
@@ -131,45 +127,34 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
         });
 
         this.addListener({
-            load: {
-                fn: this.onLoad,
-                scope: this
-            },
-            contextmenu: {
-                fn: this.onContextMenu,
-                scope: this
-            },
-            movenode: {
-                fn: this.onMove,
-                scope: this
-            },
-            nodedragover: {
-                fn: function (e) {
-                    // target node is no site
-                    if (!e.target.attributes.site_id) {
-                        Phlexible.console.warn("target has no site_id");
+            load: this.onLoad,
+            contextmenu: this.onContextMenu,
+            movenode: this.onMove,
+            nodedragover: function (e) {
+                // target node is no site
+                if (!e.target.attributes.site_id) {
+                    Phlexible.console.warn("target has no site_id");
+                    return false;
+                }
+
+                // from grid
+                if (e.data.selections) {
+                    if (e.data.selections[0].data.site_id != e.target.attributes.site_id) {
+                        Phlexible.console.warn("wrong site_id");
                         return false;
                     }
-
-                    // from grid
-                    if (e.data.selections) {
-                        if (e.data.selections[0].data.site_id != e.target.attributes.site_id) {
-                            Phlexible.console.warn("wrong site_id");
-                            return false;
-                        }
+                }
+                // from tree
+                else if (e.dropNode) {
+                    if (!e.dropNode.attributes.site_id || e.dropNode.attributes.site_id != e.target.attributes.site_id) {
+                        Phlexible.console.warn("wrong site_id");
+                        return false;
                     }
-                    // from tree
-                    else if (e.dropNode) {
-                        if (!e.dropNode.attributes.site_id || e.dropNode.attributes.site_id != e.target.attributes.site_id) {
-                            Phlexible.console.warn("wrong site_id");
-                            return false;
-                        }
-                    }
+                }
 
-                    return true;
-                },
-                scope: this
-            }
+                return true;
+            },
+            scope: this
         });
 
         Phlexible.mediamanager.FolderTree.superclass.initComponent.call(this);
@@ -422,10 +407,8 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
                 parent_id: selFolder.id
             },
             listeners: {
-                success: {
-                    fn: this.onCreateFolder,
-                    scope: this
-                }
+                success: this.onCreateFolder,
+                scope: this
             }
         });
 
@@ -446,10 +429,8 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
                 folder_id: selFolder.id
             },
             listeners: {
-                success: {
-                    fn: this.onRename,
-                    scope: this
-                }
+                success: this.onRename,
+                scope: this
             }
         });
 
@@ -466,16 +447,14 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
             folder_id: selFolder.id,
             folder_title: selFolder.text,
             listeners: {
-                updateRights: {
-                    fn: function () {
-                        return;
-                        node = selFolder.parentNode;
-                        node.reload(function () {
-                            this.fireEvent('folderChange', node.id, node.text, node);
-                        }.createDelegate(this));
-                    },
-                    scope: this
-                }
+                updateRights: function () {
+                    return;
+                    node = selFolder.parentNode;
+                    node.reload(function () {
+                        this.fireEvent('folderChange', node.id, node.text, node);
+                    }.createDelegate(this));
+                },
+                scope: this
             }
         });
 
@@ -504,8 +483,8 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
             success: function (response) {
                 var data = Ext.decode(response.responseText);
                 if (data.success) {
-                    var parent_id = data.id;
-                    var node;
+                    var parent_id = data.data.parent_id,
+                        node;
                     this.root.cascade(function (n) {
                         if (n.id === parent_id) {
                             node = n;

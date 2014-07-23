@@ -325,124 +325,106 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
-    public function validateCreateFolder(CreateFolderAction $action)
+    public function validateCreateFolderAction(CreateFolderAction $action)
     {
-        $folderPath = trim($action->getFolder()->getPath() . '/' . $action->getFolder()->getName(), '/');
-
-        $siteId = $this->getSite()->getId();
+        $folderPath = trim($action->getTargetFolder()->getPath() . '/' . $action->getName(), '/');
 
         if ($this->findFolderByPath($folderPath)) {
-            throw new AlreadyExistsException("Create folder {$action->getFolder()->getName()} failed.");
+            throw new AlreadyExistsException("Create folder {$action->getName()} failed.");
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateRenameFolder(RenameFolderAction $action)
+    public function validateRenameFolderAction(RenameFolderAction $action)
     {
-    }
+        $parentFolder = $this->findFolder($action->getFolder()->getParentId());
+        $folderPath = trim($parentFolder->getPath() . '/' . $action->getName(), '/');
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateCopyFolder(CopyFolderAction $action)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateMoveFolder(MoveFolderAction $action)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateDeleteFolder(DeleteFolderAction $action)
-    {
-        return;
-
-        $this->deletePhysicalFolder($folder, $userId);
-
-        try {
-            $this->connection->delete(
-                $this->folderTable,
-                array(
-                    'site_id' => $this->site->getId(),
-                    'path LIKE ?' => $folder->getPath() . '%'
-                )
-            );
-        } catch (\Exception $e) {
-            throw new IOException("Delete folder failed.", 0, $e);
-        }
-
-        return $folder;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateCreateFile(CreateFileAction $action)
-    {
-        if ($this->findFileByPath($action->getTargetFolder()->getPath . '/' . $action->getFile()->getName())) {
-            throw new AlreadyExistsException("Create file {$action->getFile()->getName(
-            )} failed, already exists in database.");
+        if ($this->findFolderByPath($folderPath)) {
+            throw new AlreadyExistsException("Rename folder to {$action->getName()} failed.");
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateRenameFile(RenameFileAction $action)
+    public function validateCopyFolderAction(CopyFolderAction $action)
     {
-    }
+        $folderPath = trim($action->getTargetFolder()->getPath() . '/' . $action->getFolder()->getName(), '/');
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateMoveFile(MoveFileAction $action)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateCopyFile(CopyFileAction $action)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateDeleteFile(DeleteFileAction $action)
-    {
-        return;
-
-        $folder = $this->findFolderByFileId($file->getId());
-        $physicalPath = $this->site->getRootDir() . $folder->getPath() . '/' . $file->getName();
-
-        if ($filesystem->exists($physicalPath)) {
-            if (!is_file($physicalPath)) {
-                throw new IOException('Delete file failed, not a file.');
-            }
-
-            if (!is_writable(dirname($physicalPath))) {
-                throw new NotWritableException("Delete file failed.");
-            }
+        if ($this->findFolderByPath($folderPath)) {
+            throw new AlreadyExistsException("Copy folder {$action->getFolder()->getName()} failed.");
         }
+    }
 
-        $this->connection->delete(
-            $this->fileTable,
-            array(
-                'id' => $file->getId()
-            )
-        );
+    /**
+     * {@inheritdoc}
+     */
+    public function validateMoveFolderAction(MoveFolderAction $action)
+    {
+        $folderPath = trim($action->getTargetFolder()->getPath() . '/' . $action->getFolder()->getName(), '/');
 
-        if ($filesystem->exists($physicalPath)) {
-            $filesystem->remove($physicalPath);
+        if ($this->findFolderByPath($folderPath)) {
+            throw new AlreadyExistsException("Move folder {$action->getFolder()->getName()} failed.");
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateDeleteFolderAction(DeleteFolderAction $action)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateCreateFileAction(CreateFileAction $action)
+    {
+        if ($this->findFileByPath($action->getTargetFolder()->getPath() . '/' . $action->getFileSource()->getName())) {
+            throw new AlreadyExistsException("Create file {$action->getFileSource()->getName()} failed, already exists in database.");
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateRenameFileAction(RenameFileAction $action)
+    {
+        $folder = $this->findFolder($action->getFile()->getFolderId());
+        if ($this->findFileByPath($folder->getPath() . '/' . $action->getName())) {
+            throw new AlreadyExistsException("Rename file to {$action->getName()} failed, already exists in database.");
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateMoveFileAction(MoveFileAction $action)
+    {
+        if ($this->findFileByPath($action->getTargetFolder()->getPath() . '/' . $action->getFile()->getName())) {
+            throw new AlreadyExistsException("Move file {$action->getFile()->getName()} failed, already exists in database.");
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateCopyFileAction(CopyFileAction $action)
+    {
+        $folder = $this->findFolder($action->getFile()->getFolderId());
+        if ($this->findFileByPath($folder->getPath() . '/' . $action->getFile()->getName())) {
+            throw new AlreadyExistsException("Copy file {$action->getFile()->getName()} failed, already exists in database.");
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateDeleteFileAction(DeleteFileAction $action)
+    {
     }
 
     /**
@@ -823,6 +805,7 @@ class DoctrineDriver extends AbstractDriver
             ->setName($name)
             ->setParentId($targetFolder->getId())
             ->setPath($folderPath)
+            ->setAttributes($action->getAttributes())
             ->setCreatedAt($action->getDate())
             ->setCreateUserid($action->getUserId())
             ->setModifiedAt($folder->getCreatedAt())

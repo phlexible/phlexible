@@ -45,6 +45,7 @@ class CreateFolderAction extends Action
 
         $this->name = $name;
         $this->targetFolder = $targetFolder;
+        $this->attributes = $attributes;
     }
 
     /**

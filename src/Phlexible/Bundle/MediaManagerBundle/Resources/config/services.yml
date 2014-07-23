@@ -54,12 +54,11 @@ services:
             - {name: phlexible_gui.asset.provider, priority: 300}
 
     # event listeners
-    phlexible_media_manager.listener.file:
-        class: Phlexible\Bundle\MediaManagerBundle\EventListener\FileListener
-        arguments: [@phlexible_documenttype.documenttype_manager]
+    phlexible_media_manager.listener.media_site:
+        class: Phlexible\Bundle\MediaManagerBundle\EventListener\MediaSiteListener
+        arguments: [@phlexible_documenttype.documenttype_manager, @phlexible_meta_set.meta_set_manager]
         tags:
-            - {name: kernel.event_listener, event: phlexible_media_site.before_create_file, method: onBeforeCreateFile, priority: 500}
-            - {name: kernel.event_listener, event: phlexible_media_site.before_create_folder, method: onBeforeCreateFolder, priority: 500}
+            - {name: kernel.event_subscriber}
 
     phlexible_media_manager.listener.data_source:
         class: Phlexible\Bundle\MediaManagerBundle\EventListener\DataSourceListener
