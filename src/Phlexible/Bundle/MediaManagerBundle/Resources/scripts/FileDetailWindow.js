@@ -130,7 +130,7 @@ Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
                 listeners: {
                     versionSelect: this.onVersionSelect,
                     versionDownload: function (file_id, file_version) {
-                        var href = Phlexible.Router.generate('mediamanager_download', {id: file_id})
+                        var href = Phlexible.Router.generate('mediamanager_download_file', {id: file_id})
 
                         if (file_version) {
                             href += '/' + file_version;

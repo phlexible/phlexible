@@ -51,9 +51,25 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findAll()
+    {
+        return $this->cacheRepository->findAll();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
     {
         return $this->cacheRepository->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneBy(array $criteria, $orderBy = null)
+    {
+        return $this->cacheRepository->findOneBy($criteria, $orderBy);
     }
 
     /**

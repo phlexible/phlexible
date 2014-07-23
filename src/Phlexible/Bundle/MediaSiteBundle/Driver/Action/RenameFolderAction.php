@@ -23,14 +23,14 @@ class RenameFolderAction extends FolderAction
     private $name;
 
     /**
-     * @param FolderInterface $file
+     * @param FolderInterface $folder
      * @param string          $name
      * @param \DateTime       $date
      * @param string          $userId
      */
-    public function __construct(FolderInterface $file, $name, \DateTime $date, $userId)
+    public function __construct(FolderInterface $folder, $name, \DateTime $date, $userId)
     {
-        parent::__construct($file, $date, $userId);
+        parent::__construct($folder, $date, $userId);
 
         $this->name = $name;
     }

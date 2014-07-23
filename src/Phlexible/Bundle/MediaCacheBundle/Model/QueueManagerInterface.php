@@ -25,6 +25,11 @@ interface QueueManagerInterface
     public function find($id);
 
     /**
+     * @return QueueItem[]
+     */
+    public function findAll();
+
+    /**
      * @param array    $criteria
      * @param int|null $orderBy
      * @param int|null $limit

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
+use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Phlexible\Component\Util\FileLock;
@@ -15,6 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Clean command
@@ -50,35 +54,43 @@ class CleanCommand extends ContainerAwareCommand
             throw new AlreadyRunningException('Another media cache process is running.');
         }
 
+        $cacheManager = $container->get('phlexible_media_cache.cache_manager');
+        $storageManager = $this->getContainer()->get('phlexible_media_cache.storage_manager');
+        $templateManager = $this->getContainer()->get('phlexible_media_template.template_manager');
+
         $files = array();
-        $sites = $container->get('phlexible_media_site.site_manager')->getAll();
-        foreach ($sites as $site) {
-            $files = array_merge($files, $this->_getFiles($site));
+        foreach ($storageManager->all() as $storage) {
+            $finder = Finder::create()
+                ->in(rtrim($storage->getStorageDir(), '/'))
+                ->files();
+            foreach ($finder as $file) {
+                /* @var $file SplFileInfo */
+                $files[$file->getPathname()] = 1;
+            }
         }
 
-        $cacheItems = $container->get('phlexible_media_cache.cache_manager')->findAll();
-
-        foreach ($cacheItems as $cacheItem) {
-            unset($files[$cacheItem->getFileId()]);
+        foreach ($cacheManager->findAll() as $cacheItem) {
+            /* @var $cacheItem CacheItem */
+            $template = $templateManager->find($cacheItem->getTemplateKey());
+            $storage = $storageManager->get($template->getStorage());
+            $path = $storage->getLocalPath($cacheItem);
+            if (isset($files[$path])) {
+                unset($files[$path]);
+            }
         }
 
         $pretend = $input->getOption('pretend');
 
         if (count($files)) {
-            foreach ($files as $file) {
+            $filesystem = new Filesystem();
+
+            foreach (array_keys($files) as $file) {
                 if ($pretend || $output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET) {
                     $output->writeln('delete: ' . $file);
                 }
 
                 if (!$pretend) {
-                    if (!is_writable(dirname($file))) {
-                        $output->writeln('Skipping, missing write permission on: ' . dirname($file));
-                        continue;
-                    }
-
-                    if (!unlink($file)) {
-                        $output->writeln('Delete failed: ' . $file);
-                    }
+                    $filesystem->remove($file);
                 }
             }
 
@@ -93,20 +105,4 @@ class CleanCommand extends ContainerAwareCommand
 
         return 0;
     }
-
-    protected function _getFiles(SiteInterface $site)
-    {
-        $filePaths = glob($site->getFrameDir() . '*/*/*');
-        $files = array();
-        foreach ($filePaths as $key => $file) {
-            $dummy = explode('/', $file);
-            $dummy = array_pop($dummy);
-            $dummy = explode('.', $dummy);
-            $dummy = array_shift($dummy);
-            $files[$dummy] = $file;
-        }
-
-        return $files;
-    }
-
 }

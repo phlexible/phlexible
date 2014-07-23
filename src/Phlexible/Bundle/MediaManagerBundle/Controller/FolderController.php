@@ -302,9 +302,9 @@ class FolderController extends Controller
         $folderName = $request->get('folder_name');
 
         $site = $this->getSite($siteId);
-        $folder = $site->getFolderById($folderId);
+        $folder = $site->findFolder($folderId);
 
-        $site->rename($folder, $folderName, $this->getUser()->getId());
+        $site->renameFolder($folder, $folderName, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Folder renamed.', array(
             'folder_name' => $folderName
@@ -377,15 +377,15 @@ class FolderController extends Controller
             $folder = $site->findFolder($folderId);
 
             $calculator = new SizeCalculator();
-            list($size, $files, $folders) = $calculator->calculate($site, $folder);
+            $calculatedSize = $calculator->calculate($site, $folder);
 
             $data = array(
                 'title'       => $folder->getName(),
                 'type'        => 'folder',
                 'path'        => '/' . $folder->getPath(),
-                'size'        => $size,
-                'files'       => $files,
-                'folders'     => $folders,
+                'size'        => $calculatedSize->getSize(),
+                'files'       => $calculatedSize->getNumFiles(),
+                'folders'     => $calculatedSize->getNumFolders(),
                 'create_time' => $folder->getCreatedAt()->format('U') * 1000,
                 'create_user' => $folder->getCreateUserId(),
                 'modify_time' => $folder->getModifiedAt()->format('U') * 1000,

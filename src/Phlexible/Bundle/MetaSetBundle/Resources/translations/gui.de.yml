@@ -10,6 +10,11 @@ metasets:
     fill_required_fields: 'Bitte füllen Sie alle Pflichtfelder aus.'
 
     add: Hinzufügen
+    add_set: Meta Set hinzufügen
+    add_set_desc: Bitte geben Sie den Titel ein.
+    rename: Umbenennen
+    rename_set: Meta Set umbenennen
+    rename_set_desc: Bitte geben Sie einen neuen Titel ein.
     remove: Entfernen
     id: ID
     no_fields: Keine Felder

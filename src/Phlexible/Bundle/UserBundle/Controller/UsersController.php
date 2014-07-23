@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
+use Doctrine\ORM\PersistentCollection;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
@@ -130,7 +131,8 @@ class UsersController extends Controller
 
                     if (substr($key, 0, 6) == 'group_') {
                         $groupId = substr($key, 6);
-                        if (!array_key_exists($groupId, $user->getGroups())) {
+                        $group = $this->get('phlexible_user.group_manager')->find($groupId);
+                        if (!$user->getGroups()->contains($group)) {
                             continue 2;
                         }
                     }

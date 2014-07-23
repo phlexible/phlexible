@@ -15,7 +15,9 @@ use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Worker;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\DeleteFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -86,6 +88,7 @@ class FileListener implements EventSubscriberInterface
     {
         return array(
             MediaSiteEvents::CREATE_FILE => 'onAddFile',
+            MediaSiteEvents::REPLACE_FILE => 'onReplaceFile',
             MediaSiteEvents::DELETE_FILE => 'onDeleteFile',
         );
     }
@@ -95,8 +98,38 @@ class FileListener implements EventSubscriberInterface
      */
     public function onAddFile(CreateFileEvent $event)
     {
-        $file = $event->getFile();
+        $this->processFile($event->getFile());
+    }
 
+    /**
+     * @param ReplaceFileEvent $event
+     */
+    public function onReplaceFile(ReplaceFileEvent $event)
+    {
+        $this->processFile($event->getFile());
+    }
+
+    /**
+     * @param DeleteFileEvent $event
+     */
+    public function onDeleteFile(DeleteFileEvent $event)
+    {
+        $fileId = $event->getFile()->getId();
+
+        foreach ($this->cacheManager->findBy(array('fileId' => $fileId)) as $cacheItem) {
+            $this->cacheManager->deleteCacheItem($cacheItem);
+        }
+
+        foreach ($this->queueManager->findBy(array('fileId' => $fileId)) as $queueItem) {
+            $this->queueManager->deleteQueueItem($queueItem);
+        }
+    }
+
+    /**
+     * @param FileInterface $file
+     */
+    private function processFile(FileInterface $file)
+    {
         $systemTemplates = $this->templateManager->findBy(array('system' => true, 'cache' => true));
         $otherTemplates = $this->templateManager->findBy(array('system' => false, 'cache' => true));
         foreach ($systemTemplates as $index => $systemTemplate) {
@@ -128,22 +161,6 @@ class FileListener implements EventSubscriberInterface
 
         foreach ($queue->all() as $queueItem) {
             $this->queueManager->updateQueueItem($queueItem);
-        }
-    }
-
-    /**
-     * @param DeleteFileEvent $event
-     */
-    public function onDeleteFile(DeleteFileEvent $event)
-    {
-        $fileId = $event->getFile()->getId();
-
-        foreach ($this->cacheManager->findBy(array('fileId' => $fileId)) as $cacheItem) {
-            $this->cacheManager->deleteCacheItem($cacheItem);
-        }
-
-        foreach ($this->queueManager->findBy(array('fileId' => $fileId)) as $queueItem) {
-            $this->queueManager->deleteQueueItem($queueItem);
         }
     }
 }

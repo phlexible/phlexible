@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
+use Phlexible\Bundle\MediaSiteBundle\Folder\SizeCalculator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,10 +36,16 @@ class StatusController extends Controller
         $out = '<pre>';
 
         foreach ($sites as $siteKey => $site) {
+            $sizeCalculator = new SizeCalculator();
+            $calculatedSize = $sizeCalculator->calculate($site, $site->findRootFolder());
+
             $out .= 'Site: ' . $siteKey . PHP_EOL;
             //            $out .= '  Driver:   ' . $site->getDriver() . PHP_EOL;
             $out .= '  ID:       ' . $site->getId() . PHP_EOL;
             $out .= '  Quota:    ' . $site->getQuota() . PHP_EOL;
+            $out .= '  Size:     ' . $calculatedSize->getSize() . PHP_EOL;
+            $out .= '  Folders:  ' . $calculatedSize->getNumFolders() . PHP_EOL;
+            $out .= '  Files:    ' . $calculatedSize->getNumFiles() . PHP_EOL;
             $out .= '  RootDir:  ' . $site->getRootDir() . PHP_EOL;
             $out .= '    exists:   ' . (file_exists($site->getRootDir()) ? 'OK' : 'Not OK') . PHP_EOL;
             $out .= '    readable: ' . (is_readable($site->getRootDir()) ? 'OK' : 'Not OK') . PHP_EOL;

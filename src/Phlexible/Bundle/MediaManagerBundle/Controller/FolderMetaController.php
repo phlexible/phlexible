@@ -203,7 +203,7 @@ class FolderMetaController extends Controller
 
         $attributes = $folder->getAttributes();
         $attributes->set('metasets', $ids);
-        $site->setFolderAttributes($folder, $attributes);
+        $site->setFolderAttributes($folder, $attributes, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Set added.');
     }

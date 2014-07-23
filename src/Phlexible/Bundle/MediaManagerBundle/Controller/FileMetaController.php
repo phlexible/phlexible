@@ -42,15 +42,13 @@ class FileMetaController extends Controller
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
         $meta = array();
+
         foreach ($file->getAttribute('metasets', array()) as $metaSetId) {
             $metaSet = $metaSetManager->find($metaSetId);
             $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
 
-            if (!$metaData) {
-                continue;
-            }
-
             $fieldDatas = array();
+
             foreach ($metaSet->getFields() as $field) {
                 $options = $optionResolver->resolve($field);
 
@@ -62,9 +60,13 @@ class FileMetaController extends Controller
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
                 );
-                foreach ($metaData->getLanguages() as $language) {
-                    $fieldData["value_$language"] = $metaData->get($field->getName(), $language);
+
+                if ($metaData) {
+                    foreach ($metaData->getLanguages() as $language) {
+                        $fieldData["value_$language"] = $metaData->get($field->getId(), $language);
+                    }
                 }
+
                 $fieldDatas[] = $fieldData;
             }
 
@@ -84,12 +86,12 @@ class FileMetaController extends Controller
      * @return ResultResponse
      * @Route("/save", name="mediamanager_file_meta_save")
      */
-    public function savemetaAction(Request $request)
+    public function saveAction(Request $request)
     {
         $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
         $data = $request->get('data');
-        $data = json_decode($data);
+        $data = json_decode($data, true);
 
         $metaLanguages = explode(',', $this->container->getParameter('phlexible_meta_set.languages.available'));
 
@@ -204,7 +206,7 @@ class FileMetaController extends Controller
 
         $attributes = $file->getAttributes();
         $attributes->set('metasets', $ids);
-        $site->setFileAttributes($file, $attributes);
+        $site->setFileAttributes($file, $attributes, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Set added.');
     }

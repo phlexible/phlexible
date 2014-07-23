@@ -61,4 +61,9 @@ interface MetaSetManagerInterface
      * @param MetaSet $metaSet
      */
     public function updateMetaSet(MetaSet $metaSet);
+
+    /**
+     * @param MetaSetField $metaSetField
+     */
+    public function deleteMetaSetField(MetaSetField $metaSetField);
 }

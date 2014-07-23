@@ -13,7 +13,10 @@ use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeDeleteFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeDeleteFolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\BeforeReplaceFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -53,6 +56,7 @@ class MediaSiteListener implements EventSubscriberInterface
         return array(
             MediaSiteEvents::BEFORE_CREATE_FILE   => array('onBeforeCreateFile', 500),
             MediaSiteEvents::BEFORE_CREATE_FOLDER => array('onBeforeCreateFolder', 500),
+            MediaSiteEvents::BEFORE_REPLACE_FILE   => array('onBeforeReplaceFile', 500),
             MediaSiteEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
             MediaSiteEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
         );
@@ -64,14 +68,29 @@ class MediaSiteListener implements EventSubscriberInterface
     public function onBeforeCreateFile(BeforeCreateFileEvent $event)
     {
         $fileSource = $event->getAction()->getFileSource();
+        $attributes = $event->getAction()->getAttributes();
 
+        $this->process($fileSource, $attributes);
+    }
+
+    /**
+     * @param BeforeReplaceFileEvent $event
+     */
+    public function onBeforeReplaceFile(BeforeReplaceFileEvent $event)
+    {
+        $fileSource = $event->getAction()->getFileSource();
+        $attributes = $event->getAction()->getAttributes();
+
+        $this->process($fileSource, $attributes);
+    }
+
+    private function process(PathSourceInterface $fileSource, AttributeBag $attributes)
+    {
         try {
             $documenttype = $this->documenttypeManager->findByMimetype($fileSource->getMimeType());
         } catch (\Exception $e) {
             $documenttype = $this->documenttypeManager->find('binary');
         }
-
-        $attributes = $event->getAction()->getAttributes();
 
         $attributes->set('documenttype', $documenttype->getKey());
         $attributes->set('assettype', $documenttype->getType());

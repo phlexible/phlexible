@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MetaSetBundle\Doctrine\MetaDataManager;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaData;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
 
 /**
@@ -20,6 +21,21 @@ use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
  */
 class FileMetaDataManager extends MetaDataManager
 {
+    /**
+     * @param MetaSet       $metaSet
+     * @param FileInterface $file
+     *
+     * @return MetaData|MetaDataInterface
+     */
+    public function createFileMetaData(MetaSet $metaSet, FileInterface $file)
+    {
+        $metaData = $this->createMetaData($metaSet);
+        $metaData
+            ->setIdentifiers($this->getIdentifiersFromFile($file));
+
+        return $metaData;
+    }
+
     /**
      * @param MetaSet       $metaSet
      * @param FileInterface $file

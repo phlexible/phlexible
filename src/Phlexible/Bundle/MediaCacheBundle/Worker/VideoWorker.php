@@ -207,7 +207,7 @@ class VideoWorker extends AbstractWorker
             }
 
             if ($cacheItem->getStatus() === CacheItem::STATUS_OK) {
-                $storage = $this->storageManager->getStorage($template->getStorage());
+                $storage = $this->storageManager->get($template->getStorage());
                 $storage->store($cacheItem, $tempFilename);
             }
         }

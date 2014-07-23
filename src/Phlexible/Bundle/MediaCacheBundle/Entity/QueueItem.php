@@ -52,12 +52,6 @@ class QueueItem
     private $templateKey;
 
     /**
-     * @var string
-     * @ORM\Column(name="writer_class", type="string", length=100)
-     */
-    private $writerClass;
-
-    /**
      * @var \DateTime
      * @ORM\Column(type="datetime")
      */
@@ -159,26 +153,6 @@ class QueueItem
     public function setTemplateKey($templateKey)
     {
         $this->templateKey = $templateKey;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWriterClass()
-    {
-        return $this->writerClass;
-    }
-
-    /**
-     * @param string $writerClass
-     *
-     * @return $this
-     */
-    public function setWriterClass($writerClass)
-    {
-        $this->writerClass = $writerClass;
 
         return $this;
     }

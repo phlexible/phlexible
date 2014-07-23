@@ -92,12 +92,20 @@ class LocalStorage extends AbstractStorage
     {
         return sprintf(
             '%s/%s/%s/%s.%s',
-            $this->storageDir,
-            substr($cacheItem->getId(), 0, 3) . '/',
-            substr($cacheItem->getId(), 3, 3) . '/',
+            rtrim($this->storageDir, '/'),
+            substr($cacheItem->getId(), 0, 3),
+            substr($cacheItem->getId(), 3, 3),
             $cacheItem->getId(),
             $cacheItem->getExtension()
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function getStorageDir()
+    {
+        return $this->storageDir;
     }
 
     /**

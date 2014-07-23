@@ -103,4 +103,14 @@ class MetaSetManager implements MetaSetManagerInterface
 
         $this->entityManager->flush();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteMetaSetField(MetaSetField $metaSetField)
+    {
+        $metaSetField->getMetaSet()->removeField($metaSetField);
+
+        $this->entityManager->remove($metaSetField);
+    }
 }

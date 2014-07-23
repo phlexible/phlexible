@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Alchemy\Zippy\Zippy;
 use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotFoundException;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
@@ -455,20 +455,20 @@ class FileController extends Controller
     public function moveAction(Request $request)
     {
         $folderId = $request->get('folderID');
-        $fileIDs = json_decode($request->get('fileIDs'));
+        $fileIds = json_decode($request->get('fileIDs'));
 
         $site = $this->getSiteByFolderId($folderId);
         $folder = $site->findFolder($folderId);
 
         $skippedFiles = array();
 
-        foreach ($fileIDs as $fileID) {
-            $file = $site->findFile($fileID);
-            if ($folder->hasFile($file->getName())) {
+        foreach ($fileIds as $fileId) {
+            $file = $site->findFile($fileId);
+            try {
+                $site->moveFile($file, $folder, $this->getUser()->getId());
+            } catch (AlreadyExistsException $e) {
                 $skippedFiles[] = $file->getName();
-                continue;
             }
-            $site->move($file, $folder, $this->getUser()->getId());
         }
 
         return new ResultResponse(true, 'File(s) moved.', $skippedFiles);
@@ -493,31 +493,5 @@ class FileController extends Controller
         $site->renameFile($file, $name, $this->getUser()->getId());
 
         return new ResultResponse(true, 'File(s) renamed.');
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/zip", name="mediamanager_file_zip")
-     */
-    public function zipAction(Request $request)
-    {
-        $fileIds = $request->get('data');
-        $fileIds = json_decode($fileIds);
-
-        $site = $this->get('phlexible_media_site.site_manager')->getByFileId(current($fileIds));
-        $filename = $this->container->getParameter('media.manager.temp_dir') . 'files_' . date('YmdHis') . '.zip';
-
-        $zippy = Zippy::load();
-        $archive = $zippy->create($filename);
-
-        foreach ($fileIds as $fileId) {
-            $file = $site->findFile($fileId);
-
-            $archive->addMembers(array($file->getName() => $file->getPhysicalPath()));
-        }
-
-        return new ResultResponse(true, 'Zip finished', array('filename' => basename($filename)));
     }
 }

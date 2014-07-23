@@ -28,7 +28,7 @@ class StorageManager
     public function __construct(array $storages = array())
     {
         foreach ($storages as $name => $storage) {
-            $this->addStorage($name, $storage);
+            $this->add($name, $storage);
         }
     }
 
@@ -38,7 +38,7 @@ class StorageManager
      *
      * @return $this
      */
-    public function addStorage($name, StorageInterface $storage)
+    public function add($name, StorageInterface $storage)
     {
         $this->storages[$name] = $storage;
 
@@ -51,12 +51,20 @@ class StorageManager
      * @return StorageInterface
      * @throws InvalidArgumentException
      */
-    public function getStorage($name)
+    public function get($name)
     {
         if (!isset($this->storages[$name])) {
             throw new InvalidArgumentException("Storage $name not found.");
         }
 
         return $this->storages[$name];
+    }
+
+    /**
+     * @return StorageInterface[]
+     */
+    public function all()
+    {
+        return $this->storages;
     }
 }

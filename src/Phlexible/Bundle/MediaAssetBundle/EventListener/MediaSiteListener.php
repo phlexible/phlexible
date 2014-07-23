@@ -10,14 +10,18 @@ namespace Phlexible\Bundle\MediaAssetBundle\EventListener;
 
 use Phlexible\Bundle\MediaAssetBundle\AttributeReader\AttributeReaderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\BeforeReplaceFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * File listener
+ * Media site listener
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class FileListener
+class MediaSiteListener implements EventSubscriberInterface
 {
     /**
      * @var AttributeReaderInterface
@@ -33,6 +37,17 @@ class FileListener
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            MediaSiteEvents::BEFORE_CREATE_FILE => 'onBeforeCreateFile',
+            MediaSiteEvents::BEFORE_REPLACE_FILE => 'onBeforeReplaceFile',
+        );
+    }
+
+    /**
      * @param BeforeCreateFileEvent $event
      */
     public function onBeforeCreateFile(BeforeCreateFileEvent $event)
@@ -40,6 +55,22 @@ class FileListener
         $fileSource = $event->getAction()->getFileSource();
         $fileAttributes = $event->getAction()->getAttributes();
 
+        $this->process($fileSource, $fileAttributes);
+    }
+
+    /**
+     * @param BeforeReplaceFileEvent $event
+     */
+    public function onBeforeReplaceFile(BeforeReplaceFileEvent $event)
+    {
+        $fileSource = $event->getAction()->getFileSource();
+        $fileAttributes = $event->getAction()->getAttributes();
+
+        $this->process($fileSource, $fileAttributes);
+    }
+
+    private function process(PathSourceInterface $fileSource, AttributeBag $fileAttributes)
+    {
         $attributes = new AttributeBag();
 
         $documenttype = $fileAttributes->get('documenttype', '');

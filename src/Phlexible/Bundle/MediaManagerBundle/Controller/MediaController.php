@@ -59,7 +59,7 @@ class MediaController extends Controller
         if ($cacheItem) {
             if ($cacheItem && $cacheItem->getStatus() === CacheItem::STATUS_OK) {
                 $storageKey = $template->getStorage();
-                $storage = $storageManager->getStorage($storageKey);
+                $storage = $storageManager->get($storageKey);
                 $filePath = $storage->getLocalPath($cacheItem);
             }
 

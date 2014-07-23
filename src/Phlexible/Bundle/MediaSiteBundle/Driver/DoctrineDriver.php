@@ -146,7 +146,8 @@ class DoctrineDriver extends AbstractDriver
         $qb
             ->select('fo.*')
             ->from($this->folderTable, 'fo')
-            ->where($qb->expr()->eq('fo.parent_id', $qb->expr()->literal($parentFolder->getId())));
+            ->where($qb->expr()->eq('fo.parent_id', $qb->expr()->literal($parentFolder->getId())))
+            ->orderBy('fo.name', 'ASC');
 
         $rows = $this->connection->fetchAll($qb->getSQL());
 
@@ -849,13 +850,6 @@ class DoctrineDriver extends AbstractDriver
             ->setModifiedAt($action->getDate())
             ->setModifyUserId($action->getUserId());
 
-        if (!$folder->isRoot()) {
-            $parentFolder = $this->findFolder($folder->getParentId());
-            $newPath = ltrim($parentFolder->getPath() . '/' . $action->getName(), '/');
-
-            $folder->setPath($newPath);
-        }
-
         try {
             $this->connection->update(
                 $this->folderTable,
@@ -872,28 +866,28 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Rename folder to {$folder->getName()} failed", 0, $e);
         }
 
-        $parentFolder = $this->findFolder($folder->getParentId());
-        $oldPath = $folder->getPath();
-        $newPath = ltrim($parentFolder->getPath() . '/' . $action->getName(), '/');
-        $oldPhysicalPath = $this->getSite()->getRootDir() . '/' . $oldPath;
-        $newPhysicalPath = $this->getSite()->getRootDir() . '/' . $newPath;
+        $newPath = null;
+        $oldPath = null;
+        if (!$folder->isRoot()) {
+            $oldPath = $folder->getPath();
+            $parentFolder = $this->findFolder($folder->getParentId());
+            $newPath = ltrim($parentFolder->getPath() . '/' . $action->getName(), '/');
+            $folder->setPath($newPath);
 
-        if (!empty($newPath) && !empty($oldPath)) {
             try {
-                $this->connection->update(
-                    $this->folderTable,
-                    array(
-                        'path' => $this->connection->fn->expr(
-                            'REPLACE(path, ' . $this->connection->quote($oldPath) . ', ' . $this->connection->quote($newPath) . ')'
-                        )
-                    ),
-                    array(
-                        'site_id' => $this->getSite()->getId(),
-                        'path LIKE ?' => $oldPath . '%',
-                    )
-                );
+                $qb = $this->connection->createQueryBuilder();
+                $qb
+                    ->update($this->folderTable, 'f')
+                    ->set('f.path', 'REPLACE(path, ' . $qb->expr()->literal($oldPath) . ', ' . $qb->expr()->literal($newPath) . ')')
+                    ->where($qb->expr()->eq('f.site_id', $qb->expr()->literal($this->getSite()->getId())))
+                    ->andWhere($qb->expr()->orX(
+                        $qb->expr()->eq('f.path', $qb->expr()->literal("$oldPath")),
+                        $qb->expr()->like('f.path', $qb->expr()->literal("$oldPath/%"))
+                    ));
+
+                $this->connection->exec($qb->getSQL());
             } catch (\Exception $e) {
-                throw new IOException("Can't rename folder from $oldPath to $newPath failed", 0, $e);
+                throw new IOException("Rename folder from $oldPath to $newPath failed.", 0, $e);
             }
         }
 

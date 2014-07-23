@@ -226,18 +226,6 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
                 iconCls: 'p-mediamanager-folder_properties-icon',
                 handler: this.showPropertiesWindow,
                 scope: this
-            },
-            '-',
-            {
-                text: this.strings.administration,
-                menu: [
-                    {
-                        text: this.strings.read_attributes,
-                        iconCls: 'p-mediamanager-read-admin-icon',
-                        handler: this.onRead,
-                        scope: this
-                    }
-                ]
             }
         ];
 
@@ -250,8 +238,7 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
             create: 7,
             'delete': 9,
             rights: 11,
-            properties: 12,
-            admin: 14
+            properties: 12
         };
         this.contextMenuItems = contextMenuItems;
     },
@@ -626,85 +613,7 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
             contextmenu.items.items[this.contextMenuIndex.rights].enable();
         }
 
-        // advanced
-        if ((!this.checkRights(Phlexible.mediamanager.Rights.FOLDER_MODIFY) || !this.checkRights(Phlexible.mediamanager.Rights.FILE_MODIFY)) &&
-            (!this.checkRights(Phlexible.mediamanager.Rights.FOLDER_CREATE) || !this.checkRights(Phlexible.mediamanager.Rights.FILE_CREATE))) {
-            contextmenu.items.items[this.contextMenuIndex.admin].disable();
-        }
-        else {
-            contextmenu.items.items[this.contextMenuIndex.admin].enable();
-
-            if (this.checkRights(Phlexible.mediamanager.Rights.FOLDER_MODIFY) && this.checkRights(Phlexible.mediamanager.Rights.FILE_MODIFY)) {
-                contextmenu.items.items[this.contextMenuIndex.admin].menu.items.items[0].enable();
-            } else {
-                contextmenu.items.items[this.contextMenuIndex.admin].menu.items.items[0].disable();
-            }
-        }
-
         contextmenu.showAt([coords[0], coords[1]]);
-    },
-
-    onScan: function () {
-        var selFolder = this.getSelectionModel().getSelectedNode();
-
-        if (!selFolder) return;
-
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_folder_scan'),
-            params: {
-                site_id: selFolder.attributes.site_id,
-                folder_id: selFolder.id
-            },
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                var text = '';
-                if (!data.files && !data.folders) {
-                    text = this.strings.scan_no_result;
-                } else {
-                    if (data.files) {
-                        text += data.files + ' ' + this.strings.scan_files_added;
-                    }
-                    if (data.files && data.folders) {
-                        text += '<br />';
-                    }
-                    if (data.folders) {
-                        text += data.folders + ' ' + this.strings.scan_folders_added;
-                    }
-
-                    this.fireEvent('reload');
-                }
-
-                Phlexible.msg(this.strings.scan_results, text);
-            },
-            scope: this
-        });
-    },
-
-    onRead: function () {
-        var selFolder = this.getSelectionModel().getSelectedNode();
-
-        if (!selFolder) return;
-
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_folder_read'),
-            params: {
-                site_id: selFolder.attributes.site_id,
-                folder_id: selFolder.id
-            },
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                if (data.success) {
-                    Phlexible.success(String.format(this.strings.read_files_read, data.data.cnt));
-                } else {
-                    Ext.MessageBox.alert('Failure', data.msg);
-                }
-
-                this.fireEvent('reload');
-            },
-            scope: this
-        });
     }
 });
 

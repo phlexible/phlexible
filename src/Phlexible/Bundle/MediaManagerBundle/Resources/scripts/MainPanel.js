@@ -114,13 +114,13 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                         menu: [
                             {
                                 text: this.strings.download_folder,
-                                xiconCls: 'p-mediamanager-download_folder-icon',
+                                iconCls: 'p-mediamanager-download_folder-icon',
                                 handler: this.onDownloadFolder,
                                 scope: this
                             },
                             {
                                 text: this.strings.download_files,
-                                xiconCls: 'p-mediamanager-download_files-icon',
+                                iconCls: 'p-mediamanager-download_files-icon',
                                 handler: this.onDownloadFiles,
                                 scope: this
                             }
@@ -591,7 +591,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         //}
         var sessionID = Phlexible.Cookie.get('phlexible');
         if (!sessionID) {
-            Phlexible.console.error("No session ID, upload via flash _will_ fail!");
+            Phlexible.console.warn("No session ID, upload via flash _will_ fail!");
         }
 
         var addBtn = this.getMainPanel().getTopToolbar().items.items[this.tbarIndex.upload];
@@ -899,7 +899,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         var selFolder = this.getFolderTree().getSelectionModel().getSelectedNode();
         var folder_id = selFolder.id;
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_folder_zip'),
+            url: Phlexible.Router.generate('mediamanager_download_folder_zip'),
             params: {
                 folder_id: folder_id
             },
@@ -923,7 +923,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             file_ids.push(selections[i].data.id);
         }
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_file_zip'),
+            url: Phlexible.Router.generate('mediamanager_download_file_zip'),
             params: {
                 data: Ext.encode(file_ids)
             },
@@ -945,7 +945,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             file_id = this.getFilesGrid().getSelectionModel().getSelected().data.id;
         }
 
-        var href = Phlexible.Router.generate('mediamanager_download', {id: file_id});
+        var href = Phlexible.Router.generate('mediamanager_download_file', {id: file_id});
 
         if (file_version) {
             href += '/' + file_version;

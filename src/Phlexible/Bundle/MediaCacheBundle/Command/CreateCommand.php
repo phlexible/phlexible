@@ -137,7 +137,11 @@ class CreateCommand extends ContainerAwareCommand
         } elseif ($input->getOption('queue')) {
             // via queue
 
-            // TODO: add to queue
+            $queueManager = $this->getContainer()->get('phlexible_media_cache.queue_manager');
+
+            foreach ($queue->all() as $queueItem) {
+                $queueManager->updateQueueItem($queueItem);
+            }
 
             $output->writeln(count($queue) . ' items queued.');
         } else {
@@ -155,7 +159,6 @@ class CreateCommand extends ContainerAwareCommand
             $output->writeln('');
             $output->writeln(count($queue) . ' items processed.');
         }
-
 
         return 0;
     }

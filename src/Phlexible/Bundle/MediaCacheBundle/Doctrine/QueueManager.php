@@ -51,6 +51,14 @@ class QueueManager implements QueueManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findAll()
+    {
+        return $this->queueRepository->findAll();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
     {
         return $this->queueRepository->findBy($criteria, $orderBy, $limit, $offset);

@@ -66,6 +66,7 @@ class SetsController extends Controller
         $data = array();
         foreach ($fields as $field) {
             $data[] = array(
+                'id'           => $field->getId(),
                 'key'          => $field->getName(),
                 'type'         => $field->getType(),
                 'required'     => $field->isRequired(),
@@ -88,7 +89,13 @@ class SetsController extends Controller
      */
     public function createAction(Request $request)
     {
-        $name = $request->get('title', 'new_set');
+        $name = $request->get('name', 'new_set');
+
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+
+        if ($metaSetManager->findOneByName($name)) {
+            return new ResultResponse(false, 'Name already in use.');
+        }
 
         $metaSet = new MetaSet();
         $metaSet
@@ -98,10 +105,37 @@ class SetsController extends Controller
             ->setModifiedAt(new \DateTime())
             ->setName($name);
 
-        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSetManager->updateMetaSet($metaSet);
 
         return new ResultResponse(true, "Meta Set {$metaSet->getName()} created.");
+    }
+
+    /**
+     * Rename set
+     *
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/rename", name="metasets_sets_rename")
+     */
+    public function renameAction(Request $request)
+    {
+        $id = $request->get('id');
+        $name = $request->get('name');
+
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+
+        if ($metaSetManager->findOneByName($name)) {
+            return new ResultResponse(false, 'Name already in use.');
+        }
+
+        $metaSet = $metaSetManager->find($id);
+        $oldName = $metaSet->getName();
+
+        $metaSet->setName($name);
+        $metaSetManager->updateMetaSet($metaSet);
+
+        return new ResultResponse(true, "Meta Set $oldName renamed to $name.");
     }
 
     /**
@@ -121,6 +155,11 @@ class SetsController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSet = $metaSetManager->find($id);
 
+        $fields = array();
+        foreach ($metaSet->getFields() as $field) {
+            $fields[$field->getId()] = $field;
+        }
+
         foreach ($data as $item) {
             if (!empty($item['options'])) {
                 $options = array();
@@ -130,8 +169,9 @@ class SetsController extends Controller
                 $item['options'] = implode(',', $options);
             }
 
-            if ($metaSet->hasField($item['key'])) {
-                $field = $metaSet->getField($item['key']);
+            if (isset($fields[$item['id']])) {
+                $field = $fields[$item['id']];
+                unset($fields[$item['id']]);
             } else {
                 $field = $metaSetManager->createMetaSetField();
             }
@@ -146,6 +186,10 @@ class SetsController extends Controller
                 ->setOptions(!empty($item['options']) ? $item['options'] : null);
 
             $metaSet->addField($field);
+        }
+
+        foreach ($fields as $field) {
+            $metaSetManager->deleteMetaSetField($field);
         }
 
         $metaSet

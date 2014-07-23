@@ -147,13 +147,13 @@ class ImageWorker extends AbstractWorker
 
         $pathinfo = pathinfo($file->getPhysicalPath());
 
-        $cacheItem = $this->cacheManager->find($cacheId);
+        $cacheItem = $this->cacheManager->findOneBy(array('templateKey' => $template->getKey(), 'fileId' => $fileId, 'fileVersion' => $fileVersion));
         if (!$cacheItem) {
             $cacheItem = new CacheItem();
-            $cacheItem->setId($cacheId);
         }
 
         $cacheItem
+            ->setId($cacheId)
             ->setSiteId($site->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
@@ -226,7 +226,7 @@ class ImageWorker extends AbstractWorker
             }
 
             if ($cacheItem->getStatus() === CacheItem::STATUS_OK) {
-                $storage = $this->storageManager->getStorage($template->getStorage());
+                $storage = $this->storageManager->get($template->getStorage());
                 $storage->store($cacheItem, $tempFilename);
             }
         }

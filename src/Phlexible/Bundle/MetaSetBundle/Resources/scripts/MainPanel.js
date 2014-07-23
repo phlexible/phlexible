@@ -7,8 +7,20 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
     initComponent: function () {
         var metaFields = new Phlexible.metasets.Fields();
 
-        // Create RowActions Plugin
-        var actions = new Ext.ux.grid.RowActions({
+        var setActions = new Ext.ux.grid.RowActions({
+            header: this.strings.actions,
+            width: 20,
+            actions: [
+                {
+                    iconCls: 'p-metaset-edit-icon',
+                    tooltip: this.strings.rename,
+                    callback: this.renameSet.createDelegate(this),
+                    scope: this
+                }
+            ]
+        });
+
+        var fieldActions = new Ext.ux.grid.RowActions({
             header: this.strings.actions,
             width: 40,
             actions: [
@@ -34,9 +46,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 region: 'west',
                 width: 200,
                 loadMask: true,
-                viewConfig: {
-                    forceFit: true
-                },
+                autoExpandColumn: 1,
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('metasets_sets_list'),
                     root: 'sets',
@@ -56,29 +66,18 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                     {
                         header: this.strings.name,
                         dataIndex: 'name'
-                    }
+                    },
+                    setActions
                 ],
+                sm: new Ext.grid.RowSelectionModel({
+                    singleSelect: true
+                }),
+                plugins: [setActions],
                 tbar: [
                     {
                         text: this.strings.add,
                         iconCls: 'p-metaset-add-icon',
-                        handler: function () {
-                            Ext.Ajax.request({
-                                url: Phlexible.Router.generate('metasets_sets_create'),
-                                success: function (response) {
-                                    var data = Ext.decode(response.responseText);
-
-                                    if (data.success) {
-                                        Phlexible.success(data.msg);
-
-                                        this.getComponent(0).store.reload();
-                                    } else {
-                                        Ext.MessageBox.alert('Failure', data.msg);
-                                    }
-                                },
-                                scope: this
-                            });
-                        },
+                        handler: this.createSet,
                         scope: this
                     }
                 ],
@@ -113,10 +112,15 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                         id: ''
                     },
                     root: 'values',
-                    fields: ['key', 'type', 'required', 'synchronized', 'readonly', 'options']
+                    fields: ['id', 'key', 'type', 'required', 'synchronized', 'readonly', 'options']
                 }),
-                sm: new Ext.grid.RowSelectionModel(),
                 columns: [
+                    {
+                        header: this.strings.id,
+                        dataIndex: 'id',
+                        width: 100,
+                        hidden: true
+                    },
                     {
                         header: this.strings.name,
                         dataIndex: 'key',
@@ -185,10 +189,13 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                         width: 200,
                         hidden: true
                     },
-                    actions
+                    fieldActions
                 ],
+                sm: new Ext.grid.RowSelectionModel({
+                    singleSelect: true
+                }),
                 plugins: [
-                    actions
+                    fieldActions
                 ],
                 tbar: [
                     {
@@ -231,8 +238,67 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
         Phlexible.metasets.MainPanel.superclass.initComponent.call(this);
     },
 
+    createSet: function() {
+        Ext.MessageBox.prompt(this.strings.add_set, this.strings.add_set_desc, function(btn, name) {
+            if (btn !== 'ok') {
+                return;
+            }
+            Ext.Ajax.request({
+                url: Phlexible.Router.generate('metasets_sets_create'),
+                params: {
+                    name: name
+                },
+                success: function (response) {
+                    var data = Ext.decode(response.responseText);
+
+                    if (data.success) {
+                        Phlexible.success(data.msg);
+
+                        this.getComponent(0).store.reload();
+                    } else {
+                        Ext.MessageBox.alert('Failure', data.msg);
+                    }
+                },
+                scope: this
+            });
+        }, this);
+    },
+
+    renameSet: function(grid, record) {
+        Ext.MessageBox.prompt(this.strings.rename_set, this.strings.rename_set_desc, function(btn, name) {
+            if (btn !== 'ok') {
+                return;
+            }
+            Ext.Ajax.request({
+                url: Phlexible.Router.generate('metasets_sets_rename'),
+                params: {
+                    name: name,
+                    id: record.get('id')
+                },
+                success: function(response) {
+                    var result = Ext.decode(response.responseText);
+                    if (result.success) {
+                        this.getComponent(0).getStore().reload();
+                        Phlexible.success(result.msg);
+                    } else {
+                        Phlexible.failure(result.msg);
+                    }
+                },
+                scope: this
+            })
+        }, this, false, record.get('name'));
+    },
+
     addField: function() {
-        var r = new Ext.data.Record({key: '', type: 'textfield'});
+        var r = new Ext.data.Record({
+            id: '',
+            key: '',
+            type: 'textfield',
+            required: false,
+            synchronized: false,
+            readonly: false,
+            options: ''
+        });
         r.set('key', 'field-' + r.id);
         this.getComponent(1).store.add(r);
     },
@@ -284,6 +350,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
             }
 
             params.push({
+                id: r.data.id,
                 key: r.data.key,
                 type: r.data.type,
                 required: r.data.required,

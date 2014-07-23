@@ -23,29 +23,29 @@ class SizeCalculator
      * @param SiteInterface   $site
      * @param FolderInterface $folder
      *
-     * @return array
+     * @return CalculatedSize
      */
-    public function calculate(SiteInterface $site, FolderInterface $folder)
+    public function calculate(SiteInterface $site, FolderInterface $folder = null)
     {
-        $totalSize = 0;
-        $totalFiles = 0;
-        $totalFolders = 0;
+        if (null === $folder) {
+            $folder = $site->findRootFolder();
+        }
+
+        $size = 0;
+        $numFiles = 0;
 
         foreach ($site->findFilesByFolder($folder) as $file) {
-            $totalSize += $file->getSize();
-            $totalFiles++;
+            $size += $file->getSize();
+            $numFiles++;
         }
+
+        $calculatedsize = new CalculatedSize($size, 1, $numFiles);
 
         foreach ($site->findFoldersByParentFolder($folder) as $subFolder) {
-            $totalFolders++;
-
-            list($size, $files, $folders) = $this->calculate($site, $subFolder);
-
-            $totalSize += $size;
-            $totalFiles += $files;
-            $totalFolders += $folders;
+            $subCalculatedSize = $this->calculate($site, $subFolder);
+            $calculatedsize->merge($subCalculatedSize);
         }
 
-        return array($totalSize, $totalFiles, $totalFolders);
+        return $calculatedsize;
     }
 }

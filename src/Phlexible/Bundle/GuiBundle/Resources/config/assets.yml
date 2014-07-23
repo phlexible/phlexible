@@ -24,4 +24,4 @@ services:
 
     phlexible_gui.asset.textimage.renderer:
         class: Phlexible\Bundle\GuiBundle\Asset\Textimage\TextimageRenderer
-        arguments: [%kernel.bundles%, @?mediatools.convert, %asset.cache_dir%]
+        arguments: [%kernel.bundles%, @phlexible_media_tool.convert, %asset.cache_dir%]
