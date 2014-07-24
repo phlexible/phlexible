@@ -31,8 +31,10 @@ class FolderIterator implements \Iterator, \RecursiveIterator
      */
     public function __construct($folder)
     {
-        if ($folder instanceof FolderInterface) {
-            $this->iterator = new \ArrayIterator($folder->getSite()->findFoldersByParentFolder($folder));
+        if (is_array($folder)) {
+            $this->iterator = new \ArrayIterator($folder);
+        } elseif ($folder instanceof FolderInterface) {
+            $this->iterator = new \ArrayIterator(array($folder));
         } elseif ($folder instanceof SiteInterface) {
             $this->iterator = new \ArrayIterator(array($folder->findRootFolder()));
         } else {
@@ -77,11 +79,11 @@ class FolderIterator implements \Iterator, \RecursiveIterator
     /**
      * Get Iterator for currents element children.
      *
-     * @return Folder
+     * @return FolderIterator
      */
     public function getChildren()
     {
-        return new FolderIterator($this->current());
+        return new FolderIterator($this->current()->getSite()->findFoldersByParentFolder($this->current()));
     }
 
     /**

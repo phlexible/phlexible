@@ -78,6 +78,18 @@ class DownloadController extends Controller
         $site = $siteManager->getByFolderId($folderId);
         $folder = $site->findFolder($folderId);
 
+        $prefix = $folder->getPath();
+        $prefixLength = 0;
+        if ($prefix && strpos($prefix, '/') !== false) {
+            $prefix = substr($prefix, 0, -strlen('/' . $folder->getName()));
+            $prefixLength = mb_strlen($prefix) + 1;
+            $prefix = '';
+        } elseif ($folder->isRoot()) {
+            $prefix = $folder->getName() . '/';
+        } else {
+            $prefix = '';
+        }
+
         $filename = 'folder_' . $folder->getName() . '_' . date('YmdHis');
         $filename = preg_replace('/[^a-zA-Z0-9-_]/', '_', $filename);
         $filename = $path . $filename . '.zip';
@@ -86,8 +98,11 @@ class DownloadController extends Controller
 
         $files = array();
         foreach ($rii as $folder) {
+            $folderPath = $folder->getPath() . '/';
             foreach ($site->findFilesByFolder($folder) as $file) {
-                $files[$folder->getPath() . '/' . $file->getName()] = $file->getPhysicalPath();
+                $displayName = $prefix . $folderPath . $file->getName();
+                $displayName = substr($displayName, $prefixLength);
+                $files[$displayName] = $file->getPhysicalPath();
             }
         }
 
