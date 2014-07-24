@@ -93,7 +93,7 @@ class ImageTemplateApplier
     {
         $image = $this->converter->load($filename, 0);
 
-        if ($focalpoint = $file->getAttribute('focalpoint')) {
+        if ($focalpoint = $file->getAttribute('focalpoint') && !empty($focalpoint['active'])) {
             $image->setCenter(new Point($focalpoint['x'], $focalpoint['y']));
         }
 

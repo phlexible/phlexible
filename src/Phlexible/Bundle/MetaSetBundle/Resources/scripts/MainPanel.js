@@ -220,13 +220,13 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                     },
                     celldblclick: function(grid, rowIndex, cellIndex) {
                         var r = grid.getStore().getAt(rowIndex);
-                        if (cellIndex === 2) {
+                        if (cellIndex === 3) {
                             r.set('required', !r.get('required'));
                         }
-                        if (cellIndex === 3) {
+                        if (cellIndex === 4) {
                             r.set('synchronized', !r.get('synchronized'));
                         }
-                        if (cellIndex === 4) {
+                        if (cellIndex === 5) {
                             r.set('readonly', !r.get('readonly'));
                         }
                     },
