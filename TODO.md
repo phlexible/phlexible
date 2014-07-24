@@ -33,6 +33,10 @@ TODO
 - [ ] check resources
 - [ ] full generic criteria (and / or)
 
+# MetaSetBundle
+
+- [ ] file based metasets
+
 # SiterootBundle
 
 - [ ] Denormalize to json

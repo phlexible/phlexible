@@ -63,13 +63,12 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
 
     /**
      * Called after successful load
-     * @param {Object} XMLHttpResponse object
+     * @param {Object} response
      */
     onLoadSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
         this.items = this.iterate(data);
-        ;
 
         this.loaded = true;
 
@@ -91,6 +90,20 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
             if (!handlerCls) {
                 console.error('Invalid handler classname', dataItem);
                 return;
+            }
+
+            if (dataItem.resources) {
+                var userResources = Phlexible.Config.get('user.resources'),
+                    allowed = false;
+                Ext.each(dataItem.resources, function(resource) {
+                    if (userResources.indexOf(resource) !== -1) {
+                        allowed = true;
+                        return false;
+                    }
+                });
+                if (!allowed) {
+                    return;
+                }
             }
 
             handler = new handlerCls();

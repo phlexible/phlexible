@@ -96,6 +96,10 @@ class MenuItemCollection implements \Countable
                 $itemData['parameters'] = $item->getParameters();
             }
 
+            if (count($item->getResources())) {
+                $itemData['resources'] = $item->getResources();
+            }
+
             $data[] = $itemData;
         }
 
