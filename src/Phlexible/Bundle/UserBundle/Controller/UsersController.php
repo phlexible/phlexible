@@ -63,7 +63,7 @@ class UsersController extends Controller
         }
 
         $userManager = $this->get('phlexible_user.user_manager');
-        $allUsers = $userManager->findBy(array(), array($sort => $dir), $limit, $start);
+        $allUsers = $userManager->findAll();//By(array(), array($sort => $dir), $limit, $start);
         $securityContext = $this->get('security.context');
         $systemUserUid = $userManager->getSystemUserId();
 
@@ -97,10 +97,10 @@ class UsersController extends Controller
                     }
 
                     if ($key == 'key' &&
-                        strpos($user->getUsername(), $value) === false &&
-                        strpos($user->getEmail(), $value) === false &&
-                        strpos($user->getFirstname(), $value) === false &&
-                        strpos($user->getLastname(), $value) === false
+                        stripos($user->getUsername(), $value) === false &&
+                        stripos($user->getEmail(), $value) === false &&
+                        stripos($user->getFirstname(), $value) === false &&
+                        stripos($user->getLastname(), $value) === false
                     ) {
                         continue 2;
                     }

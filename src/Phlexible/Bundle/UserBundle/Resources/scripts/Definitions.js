@@ -29,7 +29,10 @@ Phlexible.PluginRegistry.prepend('userOptionCards', {
     xtype: 'usersoptionspassword',
     title: Phlexible.users.Strings.password,
     description: Phlexible.users.Strings.password_description,
-    iconCls: 'p-user-user_password-icon'
+    iconCls: 'p-user-user_password-icon',
+    available: function() {
+        return !Phlexible.Config.get('user.property.noPasswordChange', false);
+    }
 });
 Phlexible.PluginRegistry.prepend('userOptionCards', {
     xtype: 'usersoptionsdetails',

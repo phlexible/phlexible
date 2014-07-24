@@ -37,6 +37,10 @@ Phlexible.users.OptionsWindow = Ext.extend(Ext.Window, {
         for (var i = 0; i < optionCards.length; i++) {
             var item = optionCards[i];
 
+            if (typeof(item.available) == 'function' && !item.available()) {
+                continue;
+            }
+
             lis += '<li>' +
                 '<img src="' + Ext.BLANK_IMAGE_URL + '" class="' + item.iconCls + '" />' +
                 '<a id="view_' + item.xtype + '" href="#">' + item.title + '</a><br />' +
