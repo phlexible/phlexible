@@ -48,6 +48,53 @@ class FileMetaDataManager extends MetaDataManager
     }
 
     /**
+     * @param $value
+     *
+     * @return MetaDataInterface[]
+     */
+    public function findByValue($value)
+    {
+        $connection = $this->getConnection();
+
+        $qb = $connection->createQueryBuilder();
+        $qb
+            ->select('m.*')
+            ->from($this->getTableName(), 'm')
+            ->where($qb->expr()->like('m.value', $qb->expr()->literal("%$value%")));
+
+        $rows = $connection->fetchAll($qb->getSQL());
+
+        $metaDatas = array();
+
+        foreach ($rows as $row) {
+            $identifiers = array(
+                'file_id' => $row['file_id'],
+                'file_version' => $row['file_version'],
+            );
+
+            $id = '';
+            foreach ($identifiers as $value) {
+                $id .= $value . '_';
+            }
+            $id .= $row['set_id'];
+
+            if (!isset($metaDatas[$id])) {
+                $metaData = new MetaData();
+                $metaData
+                    ->setIdentifiers($identifiers)
+                    ->setMetaSet(null);
+                $metaDatas[$id] = $metaData;
+            } else {
+                $metaData = $metaDatas[$id];
+            }
+
+            $metaData->set($row['field_id'], $row['value'], $row['language']);
+        }
+
+        return $metaDatas;
+    }
+
+    /**
      * @param FileInterface $file
      *
      * @return array

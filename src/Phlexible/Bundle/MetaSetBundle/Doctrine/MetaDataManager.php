@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Doctrine;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
@@ -48,6 +49,22 @@ class MetaDataManager implements MetaDataManagerInterface
         $this->entityManager = $entityManager;
         $this->dataSourceManager = $dataSourceManager;
         $this->tableName = $tableName;
+    }
+
+    /**
+     * @return Connection
+     */
+    protected function getConnection()
+    {
+        return $this->entityManager->getConnection();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTableName()
+    {
+        return $this->tableName;
     }
 
     /**
@@ -103,7 +120,7 @@ class MetaDataManager implements MetaDataManagerInterface
             $baseData[$field] = $value;
         }
 
-        $connection = $this->entityManager->getConnection();
+        $connection = $this->getConnection();
 
         foreach ($metaData->getLanguages() as $language) {
             foreach ($metaData->getMetaSet()->getFields() as $field) {
@@ -131,7 +148,7 @@ class MetaDataManager implements MetaDataManagerInterface
                 $insertData['value'] = $value;
                 $insertData['language'] = $language;
 
-                $connection->insert($this->tableName, $insertData);
+                $connection->insert($this->getTableName(), $insertData);
             }
         }
 
@@ -147,12 +164,12 @@ class MetaDataManager implements MetaDataManagerInterface
      */
     private function doFindByMetaSetAndIdentifiers(MetaSet $metaSet = null, array $identifiers = array())
     {
-        $connection = $this->entityManager->getConnection();
+        $connection = $this->getConnection();
 
         $qb = $connection->createQueryBuilder();
         $qb
             ->select('m.*')
-            ->from($this->tableName, 'm');
+            ->from($this->getTableName(), 'm');
 
         if ($metaSet) {
             $qb->where($qb->expr()->eq('m.set_id', $qb->expr()->literal($metaSet->getId())));

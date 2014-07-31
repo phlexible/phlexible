@@ -16,32 +16,12 @@ namespace Phlexible\Bundle\DataSourceBundle;
 class DataSourceEvents
 {
     /**
-     * Fired before values are marked inactive
+     * Fired before garbage collection is invoked
      */
-    const BEFORE_MARK_ACTIVE = 'phlexible_data_source.before_mark_active';
+    const BEFORE_GARBAGE_COLLECT = 'phlexible_data_source.before_garbage_collect';
 
     /**
-     * Fired after values are marked active
+     * Fired after garbage collection is invoked
      */
-    const MARK_ACTIVE = 'phlexible_data_source.mark_active';
-
-    /**
-     * Fired before values are marked inactive
-     */
-    const BEFORE_MARK_INACTIVE = 'phlexible_data_source.before_mark_inactive';
-
-    /**
-     * Fired after values are marked inactive
-     */
-    const MARK_INACTIVE = 'phlexible_data_source.mark_inactive';
-
-    /**
-     * Fired before values are deleted
-     */
-    const BEFORE_DELETE_VALUES = 'phlexible_data_source.before_delete_values';
-
-    /**
-     * Fired after values are deleted
-     */
-    const DELETE_VALUES = 'phlexible_data_source.delete_values';
+    const GARBAGE_COLLECT = 'phlexible_data_source.garbage_collect';
 }

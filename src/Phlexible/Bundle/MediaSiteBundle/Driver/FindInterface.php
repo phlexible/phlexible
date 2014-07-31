@@ -110,4 +110,11 @@ interface FindInterface
      * @return FileInterface[]
      */
     public function findLatestFiles($limit = 20);
+
+    /**
+     * @param string $query
+     *
+     * @return FileInterface[]
+     */
+    public function search($query);
 }

@@ -31,7 +31,7 @@ class UsageController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/elementtypes/usage")
+     * @Route("/elementtypes/usage", name="elementtypes_usage")
      */
     public function listAction(Request $request)
     {

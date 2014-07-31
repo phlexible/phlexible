@@ -139,8 +139,8 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             ->setSort($row['sort'])
             ->setSortMode($row['sort_mode'])
             ->setSortDir($row['sort_dir'])
-            ->setCreatedAt(new \DateTime($row['create_time']))
-            ->setCreateUserId($row['create_uid']);
+            ->setCreatedAt(new \DateTime($row['created_at']))
+            ->setCreateUserId($row['create_user_id']);
 
         $this->nodes[$node->getId()] = $node;
 

@@ -74,7 +74,13 @@ class RightsController extends Controller
         $contentType = $request->get('content_type');
 
         $permissions = $this->get('phlexible_access_control.permissions');
-        $contentRights = $permissions->getByType("$contentType-$rightType");
+        $contentRights = array();
+        foreach ($permissions->getByType("$contentType-$rightType") as $permission) {
+            $contentRights[] = array(
+                'name'    => $permission->getName(),
+                'iconCls' => $permission->getIconClass(),
+            );
+        }
 
         return new JsonResponse($contentRights);
     }

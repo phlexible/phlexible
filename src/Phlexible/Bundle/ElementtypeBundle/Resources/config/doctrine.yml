@@ -1,0 +1,20 @@
+services:
+    phlexible_elementtype.doctrine.viability_manager:
+        class: Phlexible\Bundle\ElementtypeBundle\Doctrine\ViabilityManager
+        arguments: [@doctrine.orm.entity_manager]
+        public: false
+
+    phlexible_elementtype.doctrine.elementtype_manager:
+        class: Phlexible\Bundle\ElementtypeBundle\Doctrine\ElementtypeManager
+        arguments: [@doctrine.orm.entity_manager, @event_dispatcher, @phlexible_message.message_poster]
+        public: false
+
+    phlexible_elementtype.doctrine.elementtype_version_manager:
+        class: Phlexible\Bundle\ElementtypeBundle\Doctrine\ElementtypeVersionManager
+        arguments: [@doctrine.orm.entity_manager, @event_dispatcher, @phlexible_message.message_poster]
+        public: false
+    phlexible_elementtype.doctrine.elementtype_structure_manager:
+        class: Phlexible\Bundle\ElementtypeBundle\Doctrine\ElementtypeStructureManager
+        arguments: [@doctrine.orm.entity_manager, @event_dispatcher, @phlexible_message.message_poster]
+        public: false
+

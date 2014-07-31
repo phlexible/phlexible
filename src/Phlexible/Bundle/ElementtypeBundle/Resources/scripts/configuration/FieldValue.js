@@ -112,7 +112,7 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
                 hideMode: 'display',
                 allowBlank: false,
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('elementtypes_functions_select'),
+                    url: Phlexible.Router.generate('elementtypes_data_select'),
                     root: 'functions',
                     fields: ['function', 'title']
                 }),

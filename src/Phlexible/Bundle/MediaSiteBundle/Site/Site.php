@@ -267,6 +267,14 @@ class Site implements SiteInterface, \IteratorAggregate
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function search($query)
+    {
+        return $this->driver->search($query);
+    }
+
+    /**
      * /**
      * {@inheritdoc}
      */

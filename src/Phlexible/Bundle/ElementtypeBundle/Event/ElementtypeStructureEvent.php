@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Event;
 
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

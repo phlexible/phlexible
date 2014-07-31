@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
-use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
+use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
 use Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil;
 use Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -56,78 +56,31 @@ class DatasourceListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            DataSourceEvents::BEFORE_MARK_ACTIVE   => 'onBeforeMarkActive',
-            DataSourceEvents::BEFORE_MARK_INACTIVE => 'onBeforeMarkInactive',
-            DataSourceEvents::BEFORE_DELETE_VALUES => 'onBeforeDeleteValues',
+            DataSourceEvents::GARBAGE_COLLECT => 'onGarbageCollect',
         );
     }
 
     /**
-     * @param CollectionEvent $event
+     * @param GarbageCollectEvent $event
      */
-    public function onBeforeDeleteValues(CollectionEvent $event)
+    public function onGarbageCollect(GarbageCollectEvent $event)
     {
         // get id of data source to process
-        $dataSource = $event->getDataSource();
-        $dataSourceId = $dataSource->getId();
-        $language = $dataSource->getLanguage();
-
-        // fetch all data source values used in any element version
-        $usedValues = $this->suggestFieldUtil->fetchUsedValues($dataSourceId, $language);
-
-        // remove used values from collection
-        $event->getCollection()->removeValuesByKey($usedValues);
-
-        // fetch all data source values used in any element version
-        $usedMetaValues = $this->suggestMetaFieldUtil->fetchUsedValues($dataSourceId, $language);
-
-        // remove used values from collection
-        $event->getCollection()->removeValuesByKey($usedMetaValues);
-    }
-
-    /**
-     * @param CollectionEvent $event
-     */
-    public function onBeforeMarkInactive(CollectionEvent $event)
-    {
-        // get id of data source to process
-        $dataSource = $event->getDataSource();
-        $dataSourceId = $dataSource->getId();
-        $language = $dataSource->getLanguage();
+        $values = $event->getDataSourceValueBag();
+        $datasource = $values->getDatasource();
+        $datasourceId = $datasource->getId();
+        $language = $values->getLanguage();
 
         // fetch all data source values used in element online versions
-        $onlineValues = $this->suggestFieldUtil->fetchOnlineValues($dataSourceId, $language);
-
-        // remove online values from collection
-        $event->getCollection()->removeValuesByKey($onlineValues);
-
-        // fetch all data source values used in element online versions
-        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchOnlineValues($dataSourceId, $language);
-
-        // remove online values from collection
-        $event->getCollection()->removeValuesByKey($onlineMetaValues);
-    }
-
-    /**
-     * @param CollectionEvent $event
-     */
-    public function onBeforeMarkActive(CollectionEvent $event)
-    {
-        // get id of data source to process
-        $dataSource = $event->getDataSource();
-        $dataSourceId = $dataSource->getId();
-        $language = $dataSource->getLanguage();
-
-        // fetch all data source values used in element online versions
-        $onlineValues = $this->suggestFieldUtil->fetchOnlineValues($dataSourceId, $language);
+        $onlineValues = $this->suggestFieldUtil->fetchOnlineValues($datasourceId, $language);
 
         // remove offline values from collection
-        $event->getCollection()->addValues($onlineValues);
+        $event->markActive($onlineValues);
 
         // fetch all data source values used in element online versions
-        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchOnlineValues($dataSourceId, $language);
+        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchOnlineValues($datasourceId, $language);
 
         // remove offline values from collection
-        $event->getCollection()->addValues($onlineMetaValues);
+        $event->markActive($onlineMetaValues);
     }
 }

@@ -21,12 +21,13 @@ class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
     public function testAddPermission()
     {
         $permissions = new PermissionCollection();
-        $permissions->add(new Permission('test', 'testPermission1', 1, 'test-icon'));
-        $permissions->add(new Permission('test', 'testPermission2', 2, 'test-icon'));
-        $permissions->add(new Permission('test', 'testPermission3', 4, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'testPermission1', 1, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'testPermission2', 2, 'test-icon'));
+        $permissions->add(new Permission('anotherContentClass', 'testPermission3', 4, 'test-icon'));
 
         $this->assertSame(3, count($permissions->getAll()));
-        $this->assertSame(3, count($permissions->getByType('test')));
+        $this->assertSame(2, count($permissions->getByContentClass('contentClass')));
+        $this->assertSame(1, count($permissions->getByContentClass('anotherContentClass')));
     }
 
     /**
@@ -35,8 +36,8 @@ class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
     public function testAddDuplicateBitInPermissionThrowsInvalidArgumentException()
     {
         $permissions = new PermissionCollection();
-        $permissions->add(new Permission('test', 'testPermission', 1, 'test-icon'));
-        $permissions->add(new Permission('test', 'anotherTestPermission', 1, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'testPermission', 1, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'anotherTestPermission', 1, 'test-icon'));
     }
 
     /**
@@ -45,22 +46,23 @@ class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
     public function testAddDuplicateNameInPermissionThrowsInvalidArgumentException()
     {
         $permissions = new PermissionCollection();
-        $permissions->add(new Permission('test', 'testPermission', 1, 'test-icon'));
-        $permissions->add(new Permission('test', 'testPermission', 2, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'testPermission', 1, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'testPermission', 2, 'test-icon'));
     }
 
     public function testAddCollection()
     {
         $addPermissions = new PermissionCollection();
-        $addPermissions->add(new Permission('test', 'testPermission1', 1, 'test-icon'));
-        $addPermissions->add(new Permission('test', 'testPermission2', 2, 'test-icon'));
-        $addPermissions->add(new Permission('test', 'testPermission3', 4, 'test-icon'));
+        $addPermissions->add(new Permission('contentClass', 'testPermission1', 1, 'test-icon'));
+        $addPermissions->add(new Permission('contentClass', 'testPermission2', 2, 'test-icon'));
+        $addPermissions->add(new Permission('anotherContentClass', 'testPermission3', 4, 'test-icon'));
 
         $permissions = new PermissionCollection();
         $permissions->addCollection($addPermissions);
 
         $this->assertSame(3, count($permissions->getAll()));
-        $this->assertSame(3, count($permissions->getByType('test')));
+        $this->assertSame(2, count($permissions->getByContentClass('contentClass')));
+        $this->assertSame(1, count($permissions->getByContentClass('anotherContentClass')));
     }
 
 }

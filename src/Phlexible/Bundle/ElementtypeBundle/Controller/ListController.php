@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -35,21 +35,19 @@ class ListController extends Controller
      */
     public function listAction(Request $request)
     {
-        $elementtypeService = $this->get('phlexible_elementtype.service');
-
         $type = $request->get('type', Elementtype::TYPE_FULL);
 
-        $elementtypes = $elementtypeService->findElementtypeByType($type);
+        $elementtypeService = $this->get('phlexible_elementtype.service');
 
-        $list = array();
-        foreach ($elementtypes as $elementtype) {
+        $elementtypes = array();
+        foreach ($elementtypeService->findElementtypeByType($type) as $elementtype) {
             //if ($type === null && !in_array($elementtype->getType(), $allowedTypes)) {
             //    continue;
             //}
 
             $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
 
-            $list[$elementtype->getTitle() . $elementtype->getId()] = array(
+            $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = array(
                 'id'      => $elementtype->getId(),
                 'title'   => $elementtype->getTitle(),
                 'icon'    => $elementtype->getIcon(),
@@ -58,12 +56,12 @@ class ListController extends Controller
             );
         }
 
-        ksort($list);
-        $elementTypes = array_values($list);
+        ksort($elementtypes);
+        $elementtypes = array_values($elementtypes);
 
         return new JsonResponse(array(
-            'elementtypes' => $elementTypes,
-            'total'        => count($elementTypes)
+            'elementtypes' => $elementtypes,
+            'total'        => count($elementtypes)
         ));
     }
 

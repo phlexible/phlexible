@@ -9,7 +9,7 @@ Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handl
         var config = this.createBasicConfig();
 
         if (data.menu && Ext.isArray(data.menu)) {
-            config.menu = [];
+            subMenu = [];
 
             Ext.each(data.menu, function (menuItem) {
                 var handlerCls = Phlexible.evalClassString(menuItem.xtype),
@@ -40,8 +40,15 @@ Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handl
                     handler.setParameters(menuItem.parameters);
                 }
 
-                config.menu.push(handler.createConfig(menuItem));
+                subMenu.push(handler.createConfig(menuItem));
             }, this);
+
+            if (subMenu.length) {
+                subMenu.sort(function(a,b) { return (a.text > b.text) - (b.text > a.text) } );
+                config.menu = subMenu;
+            } else {
+                config.hidden = true;
+            }
         }
 
         return config;

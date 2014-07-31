@@ -24,11 +24,12 @@ security:
 
     email: 'Email adress'
     enter_email: 'Please enter your email adress.'
-    enter_password: 'Please enter your current password, and choose a new password.'
+    enter_password: 'Please choose a new password.'
     enter_new_password: 'Please choose a new password.'
     current_password: 'Current Password'
     new_password: 'New Password'
     new_password_repeat: 'New Password (repeat)'
+    passwords_dont_match: 'Passwords don''t match'
     set: Set
     validate: Validate
     validation_ok: 'An email containing further instruction has been sent to you. Please check your inbox in a few moments.'

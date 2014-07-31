@@ -32,7 +32,7 @@ class AssetController extends Controller
         $content = '';
         $content .= file_get_contents(__DIR__ . '/../Resources/scripts/LoginWindow.js');
         $content .= file_get_contents(__DIR__ . '/../Resources/scripts/ValidateWindow.js');
-        $content .= file_get_contents(__DIR__ . '/../Resources/scripts/ChangePasswordWindow.js');
+        $content .= file_get_contents(__DIR__ . '/../Resources/scripts/ForcePasswordChangeWindow.js');
         $content .= file_get_contents(__DIR__ . '/../Resources/scripts/SetPasswordWindow.js');
 
         return new Response($content, 200, array('Content-type' => 'text/javascript'));

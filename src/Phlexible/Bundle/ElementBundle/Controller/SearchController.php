@@ -69,7 +69,7 @@ class SearchController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/media", name="elements_rights_media")
+     * @Route("/media", name="elements_search_media")
      */
     public function mediaAction(Request $request)
     {

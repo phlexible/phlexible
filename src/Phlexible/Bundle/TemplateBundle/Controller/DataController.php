@@ -32,7 +32,7 @@ class DataController extends Controller
      */
     public function listAction()
     {
-        $templateRepository = $this->get('templates.repository');
+        $templateRepository = $this->get('phlexible_template.repository');
         $allTemplates = $templateRepository->getAll();
 
         $templates = array();
@@ -67,7 +67,7 @@ class DataController extends Controller
     {
         $templateId = $request->get('id');
 
-        $templateRepository = $this->get('templates.repository');
+        $templateRepository = $this->get('phlexible_template.repository');
         $template = $templateRepository->find($templateId);
 
         $settings = array(

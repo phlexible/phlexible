@@ -630,6 +630,20 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function removeProperty($key)
+    {
+        if (isset($this->properties[$key])) {
+            unset($this->properties[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string $defaultLanguage
      *
      * @return string
@@ -708,7 +722,7 @@ class User implements AdvancedUserInterface
      */
     public function isCredentialsNonExpired()
     {
-        return !$this->getProperty(self::PROPERTY_FORCE_PASSWORD_CHANGE, false);
+        return true;
     }
 }
 

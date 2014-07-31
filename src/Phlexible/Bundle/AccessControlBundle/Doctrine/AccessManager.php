@@ -59,7 +59,7 @@ class AccessManager implements AccessManagerInterface
     private function getAccessControlEntryRepository()
     {
         if (null === $this->accessControlEntryRepository) {
-            $this->entityRepository = $this->entityManager->getRepository('PhlexibleAccessControlBundle:AccessControlEntry');
+            $this->accessControlEntryRepository = $this->entityManager->getRepository('PhlexibleAccessControlBundle:AccessControlEntry');
         }
 
         return $this->accessControlEntryRepository;

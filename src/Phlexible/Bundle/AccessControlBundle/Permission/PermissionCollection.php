@@ -25,12 +25,12 @@ class PermissionCollection
     /**
      * @var array
      */
-    private $typeMap = array();
+    private $classMaps = array();
 
     /**
      * @var array
      */
-    private $bitMap = array();
+    private $bitMaps = array();
 
     /**
      * @param array $permissions
@@ -61,7 +61,7 @@ class PermissionCollection
      */
     public function addCollection(PermissionCollection $permissions)
     {
-        foreach ($permissions->getAll() as $type => $permission) {
+        foreach ($permissions->getAll() as $permission) {
             $this->add($permission);
         }
 
@@ -76,25 +76,25 @@ class PermissionCollection
      */
     public function add(Permission $permission)
     {
-        $type = $permission->getType();
+        $contentClass = $permission->getContentClass();
         $name = $permission->getName();
         $bit = $permission->getBit();
 
-        if (isset($this->bitMap[$type]) && ($this->bitMap[$type] & $bit)) {
-            throw new InvalidArgumentException("Permission bit $bit is already set for $type.");
+        if (isset($this->bitMaps[$contentClass]) && ($this->bitMaps[$contentClass] & $bit)) {
+            throw new InvalidArgumentException("Permission bit $bit is already set for $contentClass.");
         }
 
-        if (isset($this->typeMap[$type][$name])) {
-            throw new InvalidArgumentException("Permission name $name is already set for $type.");
+        if (isset($this->classMaps[$contentClass][$name])) {
+            throw new InvalidArgumentException("Permission name $name is already set for $contentClass.");
         }
 
-        if (!isset($this->bitMap[$type])) {
-            $this->bitMap[$type] = 0;
+        if (!isset($this->bitMaps[$contentClass])) {
+            $this->bitMaps[$contentClass] = 0;
         }
 
-        $this->permissions[$name] = $permission;
-        $this->typeMap[$type][$name] = $permission;
-        $this->bitMap[$type] |= $bit;
+        $this->classMaps[$contentClass][$name] = $permission;
+        $this->bitMaps[$contentClass] |= $bit;
+        $this->permissions[] = $permission;
 
         return $this;
     }
@@ -110,30 +110,48 @@ class PermissionCollection
     }
 
     /**
-     * Return rights
+     * Return permissions for content class
      *
-     * @param string $type
+     * @param string $contentClass
      *
      * @throws InvalidArgumentException
      * @return Permission[]
      */
-    public function getByType($type)
+    public function getByContentClass($contentClass)
     {
-        if (!isset($this->typeMap[$type])) {
-            throw new InvalidArgumentException("No permissions for type $type found.");
+        if (!isset($this->classMaps[$contentClass])) {
+            throw new InvalidArgumentException("No permissions for type $contentClass found.");
         }
 
-        return $this->typeMap[$type];
+        return $this->classMaps[$contentClass];
     }
 
     /**
-     * @param string $type
-     * @param string $permission
+     * Return permissions
+     *
+     * @param string $contentClass
+     * @param string $name
+     *
+     * @throws InvalidArgumentException
+     * @return Permission[]
+     */
+    public function get($contentClass, $name)
+    {
+        if (!isset($this->classMaps[$contentClass][$name])) {
+            throw new InvalidArgumentException("Permissions $name for content class $contentClass not found.");
+        }
+
+        return $this->classMaps[$contentClass][$name];
+    }
+
+    /**
+     * @param string $contentClass
+     * @param string $name
      *
      * @return bool
      */
-    public function has($type, $permission)
+    public function has($contentClass, $name)
     {
-        return !empty($this->permissions[$type][$permission]);
+        return !empty($this->classMaps[$contentClass][$name]);
     }
 }

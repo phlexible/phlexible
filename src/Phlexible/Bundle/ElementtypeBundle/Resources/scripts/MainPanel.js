@@ -27,7 +27,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                 params: this.params,
                 listeners: {
                     beforeElementtypeChange: function (id, title, fn) {
-                        if (this.isDirty()) {
+                        if (this.dirty) {
                             Ext.MessageBox.show({
                                 title: 'Warning',
                                 msg: 'You have unsaved changes in your Element Type.<br />Would you like to publish your changes?',
@@ -59,6 +59,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                 items: [
                     {
                         title: this.strings.structure,
+                        iconCls: 'p-elementtype-tree-icon',
                         layout: 'border',
                         cls: 'p-elementtypes-2-panel',
                         margins: '0 0 0 0',
@@ -132,10 +133,10 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                                             publish: this.onElementtypePublish,
                                             beforereset: this.onElementtypeReset,
                                             dirty: function () {
-                                                this.setDirty();
+                                                this.dirty = true;
                                             },
                                             clean: function () {
-                                                this.setClean();
+                                                this.dirty = false;
                                             },
                                             elementtypeload: this.onElementtypeLoad,
                                             scope: this
@@ -186,7 +187,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                     {
                         cls: 'p-elements-data-panel',
                         title: this.strings.preview,
-                        iconCls: 'p-element-component-icon',
+                        iconCls: 'p-elementtype-preview-icon',
                         border: false,
                         layout: 'fit',
                         autoScroll: true,

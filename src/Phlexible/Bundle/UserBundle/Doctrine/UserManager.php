@@ -136,6 +136,18 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function countAll()
+    {
+        $qb = $this->getUserRepository()->createQueryBuilder('u');
+        $qb
+            ->select('COUNT(u.id)');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findByUsername($username)
     {
         return $this->findOneBy(array('username' => $username));
@@ -152,17 +164,25 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function findOneBy(array $criteria, $order = array())
+    public function countBy(array $criteria)
     {
-        return $this->getUserRepository()->findOneBy($criteria, $order);
+        $qb = $this->getUserRepository()->createQueryBuilder('u');
+        $qb
+            ->select('COUNT(u.id)');
+
+        foreach ($criteria as $key => $value) {
+            $qb->andWhere($qb->expr()->eq($key, $qb->expr()->literal($value)));
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function countBy(array $criteria)
+    public function findOneBy(array $criteria, $order = array())
     {
-        die(__METHOD__);
+        return $this->getUserRepository()->findOneBy($criteria, $order);
     }
 
     /**

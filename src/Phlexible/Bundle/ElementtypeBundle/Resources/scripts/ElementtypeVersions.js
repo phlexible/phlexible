@@ -1,6 +1,7 @@
 Phlexible.elementtypes.ElementtypeVersions = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.elementtypes.Strings.versions,
     strings: Phlexible.elementtypes.Strings,
+    iconCls: 'p-elementtype-tab_versions-icon',
     border: false,
     autoScroll: true,
     viewConfig: {

@@ -27,7 +27,7 @@ class DataController extends Controller
      * Return available functions
      *
      * @return JsonResponse
-     * @Route("/select")
+     * @Route("/select", name="elementtypes_data_select")
      */
     public function selectAction()
     {
@@ -79,7 +79,7 @@ class DataController extends Controller
      */
     public function imagesAction(Request $request)
     {
-        $prefix = $request->getBasePath() . '/bundles/elementtypes/elementtypes/';
+        $prefix = $request->getBasePath() . '/bundles/phlexibleelementtype/elementtypes/';
 
         $finder = new \Symfony\Component\Finder\Finder();
         $dirs = array(dirname(dirname(__FILE__)) . '/Resources/public/elementtypes');

@@ -169,8 +169,14 @@ Phlexible.success = function (text) {
  * @param {String} text
  */
 Phlexible.failure = function (text) {
-    Phlexible.msg(Phlexible.gui.Strings.error, text, {
-        iconCls: 'p-gui-msg_error-icon'
+    //Phlexible.msg(Phlexible.gui.Strings.error, text, {
+    //    iconCls: 'p-gui-msg_error-icon'
+    //});
+    Ext.MessageBox.show({
+        title: Phlexible.gui.Strings.error,
+        msg: text,
+        buttons: Ext.MessageBox.OK,
+        icon: Ext.MessageBox.ERROR
     });
 };
 

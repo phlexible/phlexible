@@ -31,7 +31,7 @@ class FrameController extends Controller
      *
      * @param Request $request
      *
-     * @return Response
+     * @return array
      * @Route("", name="gui_index")
      * @Method("GET")
      * @Template

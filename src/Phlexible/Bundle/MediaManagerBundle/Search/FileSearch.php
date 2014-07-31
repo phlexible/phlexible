@@ -8,9 +8,13 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Search;
 
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
+use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\Database\ConnectionManager;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * File search
@@ -20,23 +24,30 @@ use Phlexible\Component\Database\ConnectionManager;
 class FileSearch implements SearchProviderInterface
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
-     */
-    private $db;
-
-    /**
      * @var SiteManager
      */
     private $siteManager;
 
     /**
-     * @param ConnectionManager $connectionManager
-     * @param SiteManager       $siteManager
+     * @var UserManagerInterface
      */
-    public function __construct(ConnectionManager $connectionManager, SiteManager $siteManager)
+    private $userManager;
+
+    /**
+     * @var SecurityContextInterface
+     */
+    private $securityContext;
+
+    /**
+     * @param SiteManager              $siteManager
+     * @param UserManagerInterface     $userManager
+     * @param SecurityContextInterface $securityContext
+     */
+    public function __construct(SiteManager $siteManager, UserManagerInterface $userManager, SecurityContextInterface $securityContext)
     {
-        $this->db = $connectionManager->default;
         $this->siteManager = $siteManager;
+        $this->userManager = $userManager;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -60,53 +71,50 @@ class FileSearch implements SearchProviderInterface
      */
     public function search($query)
     {
-        $site = $this->siteManager->get('mediamanager');
-        $folderPeer = $site->getFolderPeer();
-
-        $select = $this->db
-            ->select()
-            ->from(
-                $this->db->prefix . 'mediamanager_files',
-                array('id', 'folder_id', 'name', 'create_user_id', 'create_time')
-            )
-            ->where('name LIKE ?', '%' . $query . '%')
-            ->order('name');
-
-        $files = $this->db->fetchAll($select);
+        $files = array();
+        foreach ($this->siteManager->getAll() as $site) {
+            $foundFiles = $site->search($query);
+            if ($foundFiles) {
+                $files += $foundFiles;
+            }
+        }
 
         $folders = array();
 
         $results = array();
-        foreach ($files as $fileRow) {
-            if (empty($folders[$fileRow['folder_id']])) {
-                $folders[$fileRow['folder_id']] = $folderPeer->getByID($fileRow['folder_id']);
+        foreach ($files as $file) {
+            /* @var $file FileInterface */
+
+            if (empty($folders[$file->getFolderId()])) {
+                $folders[$file->getFolderId()] = $file->getSite()->findFolder($file->getFolderId());
             }
 
-            if (!$folders[$fileRow['folder_id']]->checkRight(MWF_Env::getUser(), 'FILE_READ')) {
+            if (!$this->securityContext->isGranted($folders[$file->getFolderId()], 'FILE_READ')) {
                 continue;
             }
 
-            $folderPath = $folders[$fileRow['folder_id']]->getIdPath();
-
-            $menuItem = new MWF_Core_Menu_Item_Panel();
-            $menuItem->setPanel('Phlexible.mediamanager.MediamanagerPanel')
-                ->setParam('start_file_id', $fileRow['id'])
-                ->setParam('start_folder_path', $folderPath);
+            $folderPath = $folders[$file->getFolderId()]->getIdPath();
 
             try {
-                $createUser = MWF_Core_Users_User_Peer::getByUserID($fileRow['create_user_id']);
-            } catch (Exception $e) {
-                $createUser = MWF_Core_Users_User_Peer::getSystemUser();
+                $createUser = $this->userManager->find($file->getCreateUserId());
+            } catch (\Exception $e) {
+                $createUser = $this->userManager->getSystemUser();
             }
 
-            $results[] = new MWF_Core_Search_Result(
-                $fileRow['id'],
-                $fileRow['name'],
-                $createUser->getFirstname() . ' ' . $createUser->getLastname(),
-                strtotime($fileRow['create_time']),
-                CMS_URL . '/media/' . $fileRow['id'] . '/_mm_small',
+            $results[] = new SearchResult(
+                $file->getId(),
+                $file->getName(),
+                $createUser->getDisplayname(),
+                $file->getCreatedAt()->format('U'),
+                '/media/' . $file->getId() . '/_mm_small',
                 'Mediamanager File Search',
-                $menuItem
+                array(
+                    'xtype'      => 'Phlexible.mediamanager.menuhandle.MediaHandle',
+                    'parameters' => array(
+                        'start_file_id'     => $file->getId(),
+                        'start_folder_path' => $folderPath
+                    ),
+                )
             );
         }
 

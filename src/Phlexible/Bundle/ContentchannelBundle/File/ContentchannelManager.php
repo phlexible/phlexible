@@ -14,11 +14,11 @@ use Phlexible\Bundle\ContentchannelBundle\Model\ContentchannelCollection;
 use Phlexible\Bundle\ContentchannelBundle\Model\ContentchannelManagerInterface;
 
 /**
- * Content channel repository
+ * Content channel manager
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ContentchannelRepository implements ContentchannelManagerInterface
+class ContentchannelManager implements ContentchannelManagerInterface
 {
     /**
      * @var ContentchannelLoader

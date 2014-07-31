@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer;
 
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureNode;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 
 /**
  * Serializer interface

@@ -45,3 +45,6 @@ metasets:
     datasource: DataSource
     select_metaset: Meta Set auswählen...
     remove_metaset: Meta Set entfernen
+
+    create_datasource: Neue Datenquelle anlegen
+    create_datasource_text: Bitte geben Sie den Titel der neuen Datenquelle ein.

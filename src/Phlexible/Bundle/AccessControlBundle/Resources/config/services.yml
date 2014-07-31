@@ -3,6 +3,10 @@ services:
         class: Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection
         arguments: [[]]
 
+    phlexible_access_control.permission_resolver:
+        class: Phlexible\Bundle\AccessControlBundle\Permission\PermissionResolver
+        arguments: [@phlexible_access_control.permissions]
+
     phlexible_access_control.rights:
         class: Phlexible\Bundle\AccessControlBundle\Rights\Rights
         arguments: [@phlexible_access_control.access_manager, @phlexible_access_control.permissions]

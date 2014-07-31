@@ -403,8 +403,10 @@ class DataSource
         $valueBag = $this->findValueBagForLanguage($language);
 
         foreach ($values as $value) {
-            $valueBag->addInactiveValue($value);
-            $valueBag->removeActiveValue($value);
+            if ($valueBag->hasActiveValue($value)) {
+                $valueBag->addInactiveValue($value);
+                $valueBag->removeActiveValue($value);
+            }
         }
 
         return $this;

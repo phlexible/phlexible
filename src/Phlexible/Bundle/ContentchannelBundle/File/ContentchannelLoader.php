@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ContentchannelBundle\File;
 
 use Phlexible\Bundle\ContentchannelBundle\File\Loader\LoaderInterface;
+use Phlexible\Bundle\ContentchannelBundle\Model\ContentchannelCollection;
 
 /**
  * Content channel loader

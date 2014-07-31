@@ -199,7 +199,7 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
         }
 
         if (this.node.attributes.properties.root.icon !== properties.root.icon) {
-            this.node.getUI().getIconEl().src = '/bundles/elementtypes/elementtypes/' + properties.root.icon;
+            this.node.getUI().getIconEl().src = '/bundles/phlexibleelementtype/elementtypes/' + properties.root.icon;
         }
 
         this.node.attributes.properties = properties;

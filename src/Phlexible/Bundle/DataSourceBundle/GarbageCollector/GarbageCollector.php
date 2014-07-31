@@ -10,9 +10,8 @@ namespace Phlexible\Bundle\DataSourceBundle\GarbageCollector;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
+use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
-use Phlexible\Bundle\DataSourceBundle\Model\ValueCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -23,6 +22,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class GarbageCollector
 {
+    const MODE_REMOVE_UNUSED = 'remove_unused';
+    const MODE_REMOVE_UNUSED_AND_INACTIVE = 'remove_unused_inactive';
+    const MODE_MARK_UNUSED_INACTIVE = 'inactive';
+
     /**
      * @var DataSourceManagerInterface
      */
@@ -48,148 +51,106 @@ class GarbageCollector
     /**
      * Start garbage collection.
      *
+     * @param string  $mode
      * @param boolean $pretend
      *
      * @return array
      */
-    public function run($pretend = false)
+    public function run($mode = self::MODE_MARK_UNUSED_INACTIVE, $pretend = false)
     {
-        $numRemoved = 0;
-        $numActivated = 0;
-        $numDeactivated = 0;
+        $nums = array();
+
+        $limit = 10;
         $offset = 0;
-
-        foreach ($this->dataSourceManager->findBy(array(), null, 10, $offset) as $dataSource) {
+        foreach ($this->dataSourceManager->findBy(array(), null, $limit, $offset) as $dataSource) {
             foreach ($dataSource->getValueBags() as $values) {
-                $unused = $this->removeUnusedValues($values, $pretend);
-                $numRemoved += count($unused);
+                $num = $this->garbageCollect($values, $mode, $pretend);
 
-                $activated = $this->activateActiveValues($values, $pretend);
-                $numActivated += count($activated);
-
-                $deactivated = $this->deactivateInactiveValues($values, $pretend);
-                $numDeactivated += count($deactivated);
+                $nums[$dataSource->getTitle()][$values->getLanguage()] = $num;
             }
 
             if (!$pretend) {
                 $this->dataSourceManager->updateDataSource($dataSource);
             }
+
+            $offset += $limit;
         }
+
+        return $nums;
+    }
+
+    /**
+     * @param DataSourceValueBag $valueBag
+     * @param string             $mode
+     * @param bool               $pretend
+     *
+     * @return array
+     */
+    private function garbageCollect(DataSourceValueBag $valueBag, $mode, $pretend = false)
+    {
+        $event = new GarbageCollectEvent($valueBag);
+        if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_GARBAGE_COLLECT, $event)->isPropagationStopped()) {
+            return array();
+        }
+
+        $activeValues = $event->getActiveValues();
+        $inactiveValues = $event->getInactiveValues();
+
+        #ld('raw active', $activeValues);ld('raw inactive', $inactiveValues);
+
+        $values = $valueBag->getValues();
+        $removeValues = array_diff($values, $activeValues, $inactiveValues);
+        $inactiveValues = array_diff($inactiveValues, $activeValues);
+
+        #ld('remove', $removeValues);ld('active', $activeValues);ld('inactive', $inactiveValues);exit;
+
+        // for MODE_REMOVE_UNUSED is no change necessary
+        if ($mode === self::MODE_MARK_UNUSED_INACTIVE) {
+            $inactiveValues = array_merge($inactiveValues, $removeValues);
+            sort($inactiveValues);
+            $removeValues = array();
+        } elseif ($mode === self::MODE_REMOVE_UNUSED_AND_INACTIVE) {
+            $removeValues = array_merge($removeValues, $inactiveValues);
+            sort($removeValues);
+            $inactiveValues = array();
+        }
+
+        if (!$pretend) {
+            if (count($removeValues)) {
+                $removeValues = array_values(array_unique($removeValues));
+                // apply changes if there is changeable data
+                foreach ($removeValues as $value) {
+                    $valueBag->removeActiveValue($value);
+                    $valueBag->removeInactiveValue($value);
+                }
+            }
+
+            if (count($activeValues)) {
+                $activeValues = array_values(array_unique($activeValues));
+                // apply changes if there is changeable data
+                foreach ($activeValues as $value) {
+                    $valueBag->addActiveValue($value);
+                    $valueBag->removeInactiveValue($value);
+                }
+            }
+
+            if (count($inactiveValues)) {
+                // apply changes if there is changeable data
+                $inactiveValues = array_values(array_unique($inactiveValues));
+                foreach ($inactiveValues as $value) {
+                    $valueBag->addInactiveValue($value);
+                    $valueBag->removeActiveValue($value);
+                }
+            }
+        }
+
+        $event = new GarbageCollectEvent($valueBag);
+        $this->dispatcher->dispatch(DataSourceEvents::GARBAGE_COLLECT, $event);
 
         return array(
-            'removed'     => $numRemoved,
-            'activated'   => $numActivated,
-            'deactivated' => $numDeactivated,
+            'active'   => $activeValues,
+            'inactive' => $inactiveValues,
+            'remove'   => $removeValues,
         );
-    }
-
-    /**
-     * Remove unused values.
-     *
-     * @param DataSourceValueBag $valueBag
-     * @param boolean            $pretend
-     *
-     * @return ValueCollection
-     */
-    private function removeUnusedValues(DataSourceValueBag $valueBag, $pretend = false)
-    {
-        $values = new ValueCollection($valueBag->getValues());
-        $event = new CollectionEvent($valueBag, $values);
-        if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_DELETE_VALUES, $event)->isPropagationStopped()) {
-            return 0;
-        }
-
-        if ($pretend) {
-            return $values;
-        }
-
-        if (count($values)) {
-            // apply changes if there is changeable data
-            foreach ($values as $value) {
-                $valueBag->removeActiveValue($value);
-                $valueBag->removeInactiveValue($value);
-            }
-        }
-
-        $event = new CollectionEvent($valueBag, $values);
-        $this->dispatcher->dispatch(DataSourceEvents::DELETE_VALUES, $event);
-
-        return $values;
-    }
-
-    /**
-     * Active active values.
-     *
-     * @param DataSourceValueBag $valueBag
-     * @param boolean            $pretend
-     *
-     * @return ValueCollection
-     */
-    protected function activateActiveValues(DataSourceValueBag $valueBag, $pretend = false)
-    {
-        // dispatch pre event
-        $values = new ValueCollection();
-        $event = new CollectionEvent($valueBag, $values);
-        if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_MARK_ACTIVE, $event)->isPropagationStopped()) {
-            return 0;
-        }
-
-        if ($pretend) {
-            return $values;
-        }
-
-        // get deactivatable values
-        $intersectedValues = array_intersect($valueBag->getInactiveValues(), $values->toArray());
-
-        $count = count($intersectedValues);
-        if ($count) {
-            // apply changes if there is changeable data
-            foreach ($intersectedValues as $value) {
-                $valueBag->addActiveValue($value);
-                $valueBag->removeInactiveValue($value);
-            }
-        }
-
-        // dispatch post event
-        $event = new CollectionEvent($valueBag, $values);
-        $this->dispatcher->dispatch(DataSourceEvents::MARK_ACTIVE, $event);
-
-        return $values;
-    }
-
-    /**
-     * Deactivate inactive values.
-     *
-     * @param DataSourceValueBag $valueBag
-     * @param boolean            $pretend
-     *
-     * @return ValueCollection
-     */
-    protected function deactivateInactiveValues(DataSourceValueBag $valueBag, $pretend = false)
-    {
-        // dispatch pre event
-        $values = new ValueCollection($valueBag->getActiveValues());
-        $beforeEvent = new CollectionEvent($valueBag, $values);
-        if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_MARK_INACTIVE, $beforeEvent)->isPropagationStopped()) {
-            return 0;
-        }
-
-        if ($pretend) {
-            return $values;
-        }
-
-        if (count($values)) {
-            // apply changes if there is changeable data
-            foreach ($values as $value) {
-                $valueBag->addInactiveValue($value);
-                $valueBag->removeActiveValue($value);
-            }
-        }
-
-        // dispatch post event
-        $event = new CollectionEvent($valueBag, $values);
-        $this->dispatcher->dispatch(DataSourceEvents::MARK_INACTIVE, $event);
-
-        return $values;
     }
 }

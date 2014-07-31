@@ -18,5 +18,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class PhlexibleMediaManagerBundle extends Bundle
 {
     const RESOURCE_MEDIA = 'media';
-    const RESOURCE_MEDIA_ADMINISTRATION = 'media_administration';
 }

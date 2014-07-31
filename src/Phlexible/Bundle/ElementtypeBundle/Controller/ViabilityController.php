@@ -32,7 +32,7 @@ class ViabilityController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/fortype", name="elementtypes_viability_fortype")
+     * @Route("/fortype", name="elementtypes_viability_for_type")
      */
     public function fortypeAction(Request $request)
     {

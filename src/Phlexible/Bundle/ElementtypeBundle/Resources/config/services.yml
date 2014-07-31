@@ -2,45 +2,10 @@ services:
     phlexible_elementtype.service:
       class: Phlexible\Bundle\ElementtypeBundle\ElementtypeService
       arguments:
-        - @phlexible_elementtype.repository
-        - @phlexible_elementtype.version.repository
-        - @phlexible_elementtype.structure.repository
-        - @phlexible_elementtype.viability.manager
-
-    phlexible_elementtype.viability.manager:
-        class: Phlexible\Bundle\ElementtypeBundle\Viability\ViabilityManager
-        arguments: [@connection_manager]
-        public: false
-
-    phlexible_elementtype.loader:
-        class: Phlexible\Bundle\ElementtypeBundle\Elementtype\Loader\DatabaseLoader
-        arguments: [@connection_manager]
-        public: false
-
-    phlexible_elementtype.repository:
-        class: Phlexible\Bundle\ElementtypeBundle\Elementtype\ElementtypeRepository
-        arguments: [@event_dispatcher, @phlexible_elementtype.loader, @phlexible_message.message_poster]
-        public: false
-
-    phlexible_elementtype.version.loader:
-        class: Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\Loader\DatabaseLoader
-        arguments: [@connection_manager]
-        public: false
-
-    phlexible_elementtype.version.repository:
-        class: Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersionRepository
-        arguments: [@event_dispatcher, @phlexible_elementtype.version.loader, @phlexible_message.message_poster]
-        public: false
-
-    phlexible_elementtype.structure.loader:
-        class: Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Loader\DatabaseLoader
-        arguments: [@connection_manager]
-        public: false
-
-    phlexible_elementtype.structure.repository:
-        class: Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureRepository
-        arguments: [@event_dispatcher, @phlexible_elementtype.structure.loader, @phlexible_message.message_poster]
-        public: false
+        - @phlexible_elementtype.elementtype_manager
+        - @phlexible_elementtype.elementtype_version_manager
+        - @phlexible_elementtype.elementtype_structure_manager
+        - @phlexible_elementtype.viability_manager
 
     # acl providers
     phlexible_elementtype.acl_provider:

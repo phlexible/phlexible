@@ -97,16 +97,19 @@ class Siteroot
 
     /**
      * @var Navigation[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="Navigation", mappedBy="siteroot")
      */
     private $navigations;
 
     /**
      * @var ShortUrl[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="ShortUrl", mappedBy="siteroot")
      */
     private $shortUrls;
 
     /**
      * @var Url[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="Url", mappedBy="siteroot")
      */
     private $urls;
 
@@ -618,6 +621,10 @@ class Siteroot
      */
     public function getContentChannelIds()
     {
+        if (null === $this->contentChannels) {
+            return array();
+        }
+
         return array_keys($this->contentChannels);
     }
 
@@ -626,6 +633,10 @@ class Siteroot
      */
     public function getDefaultContentChannelId()
     {
+        if (null === $this->contentChannels) {
+            return null;
+        }
+
         foreach ($this->contentChannels as $contentChannelId => $default) {
             if ($default) {
                 return $contentChannelId;

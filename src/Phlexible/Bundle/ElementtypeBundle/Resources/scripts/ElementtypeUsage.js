@@ -40,7 +40,7 @@ Phlexible.elementtypes.ElementtypeUsage = Ext.extend(Ext.grid.GridPanel, {
                 dataIndex: 'title'
             },
             {
-                header: 'Latest version',
+                header: this.strings.latest_version,
                 sortable: true,
                 dataIndex: 'latest_version'
             }

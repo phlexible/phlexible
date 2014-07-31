@@ -31,17 +31,17 @@ class PermissionResolver
     }
 
     /**
-     * @param string $type
+     * @param string $contentClass
      * @param int    $mask
      *
      * @throws InvalidArgumentException
      * @return Permission[]
      */
-    public function resolve($type, $mask)
+    public function resolve($contentClass, $mask)
     {
         $permissions = array();
 
-        foreach ($this->permissions->getByType($type) as $permission) {
+        foreach ($this->permissions->getByContentClass($contentClass) as $permission) {
             if ($permission->getBit() & $mask) {
                 $permissions[] = $permission;
                 $mask = $mask ^ $permission->getBit();

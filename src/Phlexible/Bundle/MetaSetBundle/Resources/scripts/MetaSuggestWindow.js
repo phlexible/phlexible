@@ -106,8 +106,7 @@ Phlexible.metasets.MetaSuggestWindow = Ext.extend(Ext.Window, {
                         }
                     }
                 ]
-            }
-        ];
+            }];
 
         this.buttons = [
             {

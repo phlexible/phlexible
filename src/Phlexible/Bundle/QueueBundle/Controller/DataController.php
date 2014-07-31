@@ -33,7 +33,7 @@ class DataController extends Controller
         $jobManager = $this->get('phlexible_queue.job_manager');
 
         $data = array();
-        foreach ($jobManager->findAll() as $queueItem) {
+        foreach ($jobManager->findBy(array(), array('createdAt' => 'DESC')) as $queueItem) {
             $data[] = array(
                 'id'          => $queueItem->getId(),
                 'command'     => $queueItem->getCommand(),

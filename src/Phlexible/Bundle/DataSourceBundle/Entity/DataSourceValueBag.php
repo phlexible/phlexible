@@ -98,44 +98,56 @@ class DataSourceValueBag
      */
     public function getActiveValues()
     {
-        return $this->activeValues;
+        return array_values($this->activeValues);
     }
 
     /**
-     * @param array $activeValues
+     * @param array $values
      *
      * @return $this
      */
-    public function setActiveValues(array $activeValues)
+    public function setActiveValues(array $values)
     {
-        $this->activeValues = $activeValues;
+        $this->activeValues = $values;
 
         return $this;
     }
 
     /**
-     * @param string $activeValue
+     * @param string $value
      *
      * @return $this
      */
-    public function addActiveValue($activeValue)
+    public function addActiveValue($value)
     {
-        if (!in_array($activeValue, $this->activeValues)) {
-            $this->activeValues[] = $activeValue;
+        if (!$this->hasActiveValue($value)) {
+            $this->activeValues[] = $value;
+            sort($this->activeValues);
         }
 
         return $this;
     }
 
     /**
-     * @param string $activeValue
+     * @param string $value
+     *
+     * @return bool
+     */
+    public function hasActiveValue($value)
+    {
+        return in_array($value, $this->activeValues);
+    }
+
+    /**
+     * @param string $value
      *
      * @return $this
      */
-    public function removeActiveValue($activeValue)
+    public function removeActiveValue($value)
     {
-        if (in_array($activeValue, $this->activeValues)) {
-            unset($this->activeValues[array_search($activeValue, $this->activeValues)]);
+        if ($this->hasActiveValue($value)) {
+            unset($this->activeValues[array_search($value, $this->activeValues)]);
+            sort($this->activeValues);
         }
 
         return $this;
@@ -146,44 +158,56 @@ class DataSourceValueBag
      */
     public function getInactiveValues()
     {
-        return $this->inactiveValues;
+        return array_values($this->inactiveValues);
     }
 
     /**
-     * @param array $inactiveValues
+     * @param array $values
      *
      * @return $this
      */
-    public function setInactiveValues(array $inactiveValues)
+    public function setInactiveValues(array $values)
     {
-        $this->inactiveValues = $inactiveValues;
+        $this->inactiveValues = $values;
 
         return $this;
     }
 
     /**
-     * @param string $inactiveValue
+     * @param string $value
      *
      * @return $this
      */
-    public function addInactiveValue($inactiveValue)
+    public function addInactiveValue($value)
     {
-        if (!in_array($inactiveValue, $this->inactiveValues)) {
-            $this->inactiveValues[] = $inactiveValue;
+        if (!$this->hasInactiveValue($value)) {
+            $this->inactiveValues[] = $value;
+            sort($this->inactiveValues);
         }
 
         return $this;
     }
 
     /**
-     * @param string $inactiveValue
+     * @param string $value
+     *
+     * @return bool
+     */
+    public function hasInactiveValue($value)
+    {
+        return in_array($value, $this->inactiveValues);
+    }
+
+    /**
+     * @param string $value
      *
      * @return $this
      */
-    public function removeInactiveValue($inactiveValue)
+    public function removeInactiveValue($value)
     {
-        if (in_array($inactiveValue, $this->inactiveValues)) {
-            unset($this->activeValues[array_search($inactiveValue, $this->inactiveValues)]);
+        if ($this->hasInactiveValue($value)) {
+            unset($this->inactiveValues[array_search($value, $this->inactiveValues)]);
+            sort($this->inactiveValues);
         }
 
         return $this;
@@ -194,7 +218,7 @@ class DataSourceValueBag
      */
     public function getValues()
     {
-        return $this->getActiveValues() + $this->getInactiveValues();
+        return array_merge($this->getActiveValues(), $this->getInactiveValues());
     }
 
     /**

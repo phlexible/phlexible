@@ -59,6 +59,8 @@ class QueueAssetProvider implements AssetProviderInterface
 
             new FileAsset($this->locator->locate('@PhlexibleQueueBundle/Resources/scripts/QueueStatsWindow.js')),
 
+            new FileAsset($this->locator->locate('@PhlexibleQueueBundle/Resources/scripts/model/Job.js')),
+
             new FileAsset($this->locator->locate('@PhlexibleQueueBundle/Resources/scripts/menuhandle/QueueStatsHandle.js')),
         ));
 

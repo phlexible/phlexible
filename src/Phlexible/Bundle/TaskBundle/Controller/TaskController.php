@@ -93,24 +93,24 @@ class TaskController extends Controller
 
         switch ($type) {
             case 'tasks':
-                $tasks = $taskManager->findByCreatedByAndStatus($userId, $status, $sort, $dir, $limit, $start);
+                $tasks = $taskManager->findByCreatedByAndStatus($userId, $status, array($sort => $dir), $limit, $start);
                 $total = $taskManager->countByCreatedByAndStatus($userId, $status);
                 break;
 
             case 'todos':
-                $tasks = $taskManager->findByAssignedToAndStatus($userId, $status, $sort, $dir, $limit, $start);
+                $tasks = $taskManager->findByAssignedToAndStatus($userId, $status, array($sort => $dir), $limit, $start);
                 $total = $taskManager->countByAssignedToAndStatus($userId, $status);
                 break;
 
             case 'involved':
-                $tasks = $taskManager->findByInvolvementAndStatus($userId, $status, $sort, $dir, $limit, $start);
+                $tasks = $taskManager->findByInvolvementAndStatus($userId, $status, array($sort => $dir), $limit, $start);
                 $total = $taskManager->countByInvolvementAndStatus($userId, $status);
                 break;
 
             case 'all':
             default:
-                $tasks = $taskManager->findByStatus($userId, $status, $sort, $dir, $limit, $start);
-                $total = $taskManager->countByStatus($userId, $status);
+                $tasks = $taskManager->findByStatus($status, array($sort => $dir), $limit, $start);
+                $total = $taskManager->countByStatus($status);
                 break;
         }
 

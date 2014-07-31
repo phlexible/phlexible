@@ -165,7 +165,7 @@ class DoctrineDriver extends AbstractDriver
             ->from($this->folderTable, 'fo')
             ->where($qb->expr()->eq('fo.parent_id', $qb->expr()->literal($parentFolder->getId())));
 
-        return $this->connection->fetchColumn($qb->getSQL());
+        return (int) $this->connection->fetchColumn($qb->getSQL());
     }
 
     /**
@@ -303,7 +303,7 @@ class DoctrineDriver extends AbstractDriver
             ->from($this->fileTable, 'fi')
             ->where($qb->expr()->eq('fi.folder_id', $qb->expr()->literal($folder->getId())));
 
-        return $this->connection->fetchColumn($qb->getSQL());
+        return (int) $this->connection->fetchColumn($qb->getSQL());
     }
 
     /**
@@ -317,6 +317,22 @@ class DoctrineDriver extends AbstractDriver
             ->from($this->fileTable, 'fi')
             ->join('fi', $this->folderTable, 'fo', 'fo.id = fi.folder_id')
             ->orderBy('fi.created_at DESC');
+
+        $rows = $this->connection->fetchAll($qb->getSQL());
+
+        return $this->mapFileRows($rows);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function search($query)
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('fi.*')
+            ->from($this->fileTable, 'fi')
+            ->where($qb->expr()->like('fi.name', $qb->expr()->literal("%$query%")));
 
         $rows = $this->connection->fetchAll($qb->getSQL());
 
@@ -866,8 +882,6 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Rename folder to {$folder->getName()} failed", 0, $e);
         }
 
-        $newPath = null;
-        $oldPath = null;
         if (!$folder->isRoot()) {
             $oldPath = $folder->getPath();
             $parentFolder = $this->findFolder($folder->getParentId());
@@ -881,7 +895,7 @@ class DoctrineDriver extends AbstractDriver
                     ->set('f.path', 'REPLACE(path, ' . $qb->expr()->literal($oldPath) . ', ' . $qb->expr()->literal($newPath) . ')')
                     ->where($qb->expr()->eq('f.site_id', $qb->expr()->literal($this->getSite()->getId())))
                     ->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('f.path', $qb->expr()->literal("$oldPath")),
+                        $qb->expr()->eq('f.path', $qb->expr()->literal($oldPath)),
                         $qb->expr()->like('f.path', $qb->expr()->literal("$oldPath/%"))
                     ));
 
@@ -935,28 +949,24 @@ class DoctrineDriver extends AbstractDriver
                 )
             );
 
+            $qb = $this->connection->createQueryBuilder();
+
             if ($action->getTargetFolder()->isRoot()) {
-                $pathExpression = $this->connection->fn->expr(
-                    'CONCAT(' . $this->connection->quote($action->getTargetFolder()->getPath()) . ', path)'
-                );
+                $pathExpression = 'CONCAT(' . $qb->expr()->literal($action->getTargetFolder()->getPath()) . ', path)';
             } else {
-                $pathExpression = $this->connection->fn->expr(
-                    'REPLACE(path, ' . $this->connection->quote(
-                        $action->getTargetFolder()->getPath()
-                    ) . ', ' . $this->connection->quote($action->getTargetFolder()->getPath()) . ')'
-                );
+                $pathExpression = 'REPLACE(path, ' . $qb->expr()->literal($action->getTargetFolder()->getPath()) . ', ' . $qb->expr()->literal($action->getTargetFolder()->getPath()) . ')';
             }
 
-            $this->connection->update(
-                $this->folderTable,
-                array(
-                    'path' => $pathExpression
-                ),
-                array(
-                    'site_id' => $this->getSite()->getId(),
-                    'path LIKE ?' => $oldPath . '%',
-                )
-            );
+            $qb
+                ->update($this->folderTable, 'f')
+                ->set('f.path', $pathExpression)
+                ->where($qb->expr()->eq('f.site_id', $qb->expr()->literal($this->getSite()->getId())))
+                ->andWhere($qb->expr()->orX(
+                        $qb->expr()->eq('f.path', $qb->expr()->literal($oldPath)),
+                        $qb->expr()->like('f.path', $qb->expr()->literal("$oldPath/%"))
+                    ));
+
+            $this->connection->exec($qb->getSQL());
         } catch (\Exception $e) {
             throw new IOException("Move folder from $oldPath to $newPath failed.", 0, $e);
         }

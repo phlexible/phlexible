@@ -39,15 +39,14 @@ Phlexible.mediamanager.FolderTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
 });
 
 Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
+    strings: Phlexible.mediamanager.Strings,
+    cls: 'p-foldertree',
     enableDD: true,
     containerScroll: true,
     ddGroup: 'mediamanager',
     ddAppendOnly: true,
     ddScroll: true,
     rootVisible: false,
-    autoScroll: true,
-    cls: 'p-foldertree',
-    strings: Phlexible.mediamanager.Strings,
     autoScroll: true,
     useArrows: true,
     lines: false,
@@ -133,25 +132,23 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
             nodedragover: function (e) {
                 // target node is no site
                 if (!e.target.attributes.site_id) {
-                    Phlexible.console.warn("target has no site_id");
                     return false;
                 }
 
                 // from grid
                 if (e.data.selections) {
                     if (e.data.selections[0].data.site_id != e.target.attributes.site_id) {
-                        Phlexible.console.warn("wrong site_id");
                         return false;
                     }
                 }
                 // from tree
                 else if (e.dropNode) {
                     if (!e.dropNode.attributes.site_id || e.dropNode.attributes.site_id != e.target.attributes.site_id) {
-                        Phlexible.console.warn("wrong site_id");
                         return false;
                     }
                 }
 
+                console.log('nodedragover ok');
                 return true;
             },
             scope: this

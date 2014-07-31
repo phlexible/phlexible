@@ -8,12 +8,10 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypesMessage;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureNode;
-use Phlexible\Bundle\ElementtypeBundle\Event\BeforeVersionCreateEvent;
-use Phlexible\Bundle\ElementtypeBundle\Event\VersionCreateEvent;
+use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -46,6 +44,7 @@ class TreeController extends Controller
         $mode = $request->get('mode', 'edit');
 
         $elementtypeService = $this->get('phlexible_elementtype.service');
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
 
         $elementtype = $elementtypeService->findElementtype($id);
         $elementtypeVersion = $elementtypeService->findElementtypeVersion($elementtype, $version);
@@ -55,11 +54,11 @@ class TreeController extends Controller
         $type = $elementtype->getType(); // != 'reference' ? 'root' : 'referenceroot';
 
         $metaSetId = $elementtypeVersion->getMetaSetId();
-        $allMetaSets = $this->get('phlexible_metaset.repository')->findAll();
+        $allMetaSets = $metaSetManager->findAll();
 
         $metaSets = array();
         foreach ($allMetaSets as $metaSet) {
-            $metaSets[] = array($metaSet->getId(), $metaSet->getTitle());
+            $metaSets[] = array($metaSet->getId(), $metaSet->getName());
         }
 
         $children = array();
@@ -87,7 +86,7 @@ class TreeController extends Controller
                 'ds_id'                => $rootDsId,
                 'element_type_id'      => $elementtype->getId(),
                 'element_type_version' => $elementtypeVersion->getVersion(),
-                'icon'                 => '/bundles/elementtypes/elementtypes/' . $elementtype->getIcon(),
+                'icon'                 => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
                 'cls'                  => 'p-elementtypes-type-' . $type,
                 'leaf'                 => false,
                 'expanded'             => true,
@@ -160,7 +159,7 @@ class TreeController extends Controller
                 'leaf'       => true,
                 'expanded'   => false,
                 'type'       => $node->getType(),
-                'iconCls'    => $this->getContainer()->get('phlexible_elementtype.field.registry')->getField(
+                'iconCls'    => $this->get('phlexible_elementtype.field.registry')->getField(
                         $node->getType()
                     )->getIcon(),
                 'reference'  => $reference,
@@ -196,9 +195,9 @@ class TreeController extends Controller
             }
 
             if ($node->isReference()) {
-                $elementtypesService = $this->getContainer()->get('phlexible_elementtype.service');
+                $elementtypesService = $this->get('phlexible_elementtype.service');
 
-                $referenceId = $node->getReferenceId();
+                $referenceId = $node->getReferenceElementtype()->getId();
                 $referenceVersion = $node->getReferenceVersion();
                 $elementtype = $elementtypesService->findElementtype($referenceId);
                 $elementtypeVersion = $elementtypesService->findElementtypeVersion($elementtype, $referenceVersion);

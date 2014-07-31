@@ -24,11 +24,12 @@ security:
 
     email: 'Email-Adresse'
     enter_email: 'Bitte geben Sie Ihre Email-Adresse ein.'
-    enter_password: 'Bitte geben Sie Ihr aktuelles Passwort ein und wählen Sie ein neues.'
+    enter_password: 'Bitte wählen Sie ein neues Passwort.'
     enter_new_password: 'Please wählen Sie ein neues Passwort.'
     current_password: 'Aktuelles Passwort'
     new_password: 'Neues Passwort'
     new_password_repeat: 'Neues Passwort (wdhl.)'
+    passwords_dont_match: 'Passwörter stimmen nicht überein'
     set: Setzen
     validate: Bestätigen
     validation_ok: 'Eine Email mit weiteren Anweisungen wurde Ihnen soeben zugeschickt. Bitte überprüfen Sie Ihren Posteingang in einigen Augenblicken.'

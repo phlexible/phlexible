@@ -463,18 +463,24 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 reload: this.onReload,
                 folderChange: this.onFolderChange,
                 nodedragover: function (e) {
+                    console.log('nodedragover');
                     if (e.target.id == 'root') {
+                        // root node can not be dragged
                         return false;
                     }
                     if (e.data.node) {
+                        // tree -> tree move (folder -> folder)
                         if (e.target.id == 'trash') {
+                            console.warn('id is trash')
                             return false;
                         }
                         if (e.target.id == e.data.node.parentNode.id) {
+                            console.log(e.target.id == e.data.node.parentNode.id, e.target.id, e.data.node.parentNode.id, e.target, e.data.node.parentNode);
                             return false;
                         }
                     }
                     else {
+                        // list -> tree move (file -> folder)
                         var selections = e.data.selections;
 
                         for (var i = 0; i < selections.length; i++) {
@@ -483,7 +489,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                             }
                         }
                     }
-
+                    console.log('true');
                     return true;
                 },
                 beforenodedrop: this.onMove,

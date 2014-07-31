@@ -21,10 +21,16 @@ services:
 
     # listeners
     phlexible_security.listener.apply_successor:
-        class: Phlexible\Bundle\SecurityBundle\Listener\ApplySuccessorListener
+        class: Phlexible\Bundle\SecurityBundle\EventListener\ApplySuccessorListener
         arguments: [@doctrine.orm.entity_manager]
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    phlexible_security.listener.request:
+        class: Phlexible\Bundle\SecurityBundle\EventListener\RequestListener
+        arguments: [@security.context, @router]
+        tags:
+            - {name: kernel.event_listener, event: kernel.request, method: onRequest, priority: -700}
 
     # views
     phlexible_security.view.login:
@@ -35,16 +41,16 @@ services:
         class: Phlexible\Bundle\SecurityBundle\View\LogoutView
         arguments: [@event_dispatcher]
 
-    phlexible_security.view.validate:
-        class: Phlexible\Bundle\SecurityBundle\View\ValidateView
+    phlexible_security.view.validate_email:
+        class: Phlexible\Bundle\SecurityBundle\View\ValidateEmailView
         arguments: [@event_dispatcher]
 
-    phlexible_security.view.reset:
-        class: Phlexible\Bundle\SecurityBundle\View\ResetView
+    phlexible_security.view.reset_password:
+        class: Phlexible\Bundle\SecurityBundle\View\ResetPasswordView
         arguments: [@event_dispatcher]
 
-    phlexible_security.view.changepassword:
-        class: Phlexible\Bundle\SecurityBundle\View\ChangePasswordView
+    phlexible_security.view.force_password_change:
+        class: Phlexible\Bundle\SecurityBundle\View\ForcePasswordChangeView
         arguments: [@event_dispatcher]
 
     # voters

@@ -16,7 +16,7 @@ use Phlexible\Component\Identifier\IdentifiableInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Phlexible\Bundle\ElementtypeBundle\Entity\Repository\ElementtypeRepository")
  * @ORM\Table(name="elementtype")
  */
 class Elementtype implements IdentifiableInterface

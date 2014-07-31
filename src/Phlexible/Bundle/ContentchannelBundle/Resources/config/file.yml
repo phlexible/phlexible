@@ -23,6 +23,6 @@ services:
         public: false
 
     phlexible_contentchannel.file.contentchannel_manager:
-        class: Phlexible\Bundle\ContentchannelBundle\File\ContentchannelRepository
+        class: Phlexible\Bundle\ContentchannelBundle\File\ContentchannelManager
         arguments: [@phlexible_contentchannel.file.loader, @phlexible_contentchannel.file.dumper]
         public: false

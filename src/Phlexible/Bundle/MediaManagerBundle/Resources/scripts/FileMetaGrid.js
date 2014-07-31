@@ -8,6 +8,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     enableColumnMove: false,
     viewConfig: {
         emptyText: Phlexible.metasets.Strings.no_meta_values,
+        deferEmptyText: true,
         forceFit: false
     },
 

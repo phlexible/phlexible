@@ -22,15 +22,12 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetTitle()
     {
-        // SETUP
         $title = 'mytitle';
-        $dataSource = new DataSource();
 
-        // EXERCISE
+        $dataSource = new DataSource();
         $dataSource->setTitle($title);
 
-        // VERIFY
-        $this->assertEquals($title, $dataSource->getTitle(), 'title not set correctly');
+        $this->assertEquals($title, $dataSource->getTitle());
     }
 
     /**
@@ -38,19 +35,13 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetActiveKeys()
     {
-        // SETUP
-        $keys = array(
-            'id-1' => 'key-1',
-            'id-2' => 'key-2',
-        );
+        $keys = array('key-1', 'key-2');
 
         $dataSource = new DataSource();
+        $dataSource->setValues('de', $keys);
 
-        // EXERCISE
-        $dataSource->setValues($keys);
-
-        // VERIFY
-        $this->assertEquals($keys, $dataSource->getActiveValuesForLanguage(), 'active keys not set correctly');
+        $this->assertEquals($keys, $dataSource->getActiveValuesForLanguage('de'));
+        $this->assertEquals(array(), $dataSource->getActiveValuesForLanguage('en'));
     }
 
     /**
@@ -58,19 +49,13 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testInactiveKeysAreSet()
     {
-        // SETUP
-        $dataSource     = $this->createDataSourceAlphabet();
         $deactivateKeys = $this->createKeysAlphabet('b', 'd');
 
-        // EXERCISE
-        $dataSource->deactivateValuesForLanguage($deactivateKeys);
+        $dataSource = $this->createDataSourceAlphabet();
+        $dataSource->deactivateValuesForLanguage('de', $deactivateKeys);
 
-        // VERIFY
-        $this->assertEquals(
-            $deactivateKeys,
-            $dataSource->getInactiveValuesForLanguage(),
-            'inactive keys not set correctly'
-        );
+        $this->assertEquals($deactivateKeys, $dataSource->getInactiveValuesForLanguage('de'));
+        $this->assertEquals(array(), $dataSource->getInactiveValuesForLanguage('en'));
     }
 
     /**
@@ -78,20 +63,14 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testInactiveKeysAreRemovedFromActiveKeys()
     {
-        // SETUP
-        $dataSource     = $this->createDataSourceAlphabet();
         $deactivateKeys = $this->createKeysAlphabet('c', 'z');
         $expected       = $this->createKeysAlphabet('a', 'b');
 
-        // EXERCISE
-        $dataSource->deactivateValuesForLanguage($deactivateKeys);
+        $dataSource = $this->createDataSourceAlphabet();
+        $dataSource->deactivateValuesForLanguage('de', $deactivateKeys);
 
-        // VERIFY
-        $this->assertEquals(
-            $expected,
-            $dataSource->getActiveValuesForLanguage(),
-            'inactive keys not removed from active keys'
-        );
+        $this->assertEquals($expected, $dataSource->getActiveValuesForLanguage('de'));
+        $this->assertEquals(array(), $dataSource->getActiveValuesForLanguage('en'));
     }
 
     /**
@@ -102,27 +81,15 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeactivateKeysUsingNumericArray()
     {
-        // SETUP
-        $dataSource       = $this->createDataSourceAlphabet();
         $deactivateKeys   = array('a', 'b');
         $expectedInactive = $this->createKeysAlphabet('a', 'b');
         $expectedActive   = $this->createKeysAlphabet('c', 'z');
 
-        // EXERCISE
-        $dataSource->deactivateValuesForLanguage($deactivateKeys);
+        $dataSource = $this->createDataSourceAlphabet();
+        $dataSource->deactivateValuesForLanguage('de', $deactivateKeys);
 
-        // VERIFY
-        $this->assertEquals(
-            $expectedActive,
-            $dataSource->getActiveValuesForLanguage(),
-            'active keys not set correctly after deactivation using numeric array'
-        );
-
-        $this->assertEquals(
-            $expectedInactive,
-            $dataSource->getInactiveValuesForLanguage(),
-            'inactive keys not set correctly after deactivation using numeric array'
-        );
+        $this->assertEquals($expectedActive, $dataSource->getActiveValuesForLanguage('de'));
+        $this->assertEquals($expectedInactive, $dataSource->getInactiveValuesForLanguage('de'));
     }
 
     /**
@@ -130,27 +97,15 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testActivateKeysUsingNumericArray()
     {
-        // SETUP
-        $dataSource       = $this->createDataSourceAlphabetWithDeactivatedKeys('a', 'z', 'a', 'e');
         $activateKeys     = array('c', 'd', 'e');
         $expectedInactive = $this->createKeysAlphabet('a', 'b');
         $expectedActive   = $this->createKeysAlphabet('c', 'z');
 
-        // EXERCISE
-        $dataSource->activateValuesForLanguage($activateKeys);
+        $dataSource = $this->createDataSourceAlphabetWithDeactivatedKeys('a', 'z', 'a', 'e');
+        $dataSource->activateValuesForLanguage('de', $activateKeys);
 
-        // VERIFY
-        $this->assertEquals(
-            $expectedActive,
-            $dataSource->getActiveValuesForLanguage(),
-            'active keys not set correctly after activation using numeric array'
-        );
-
-        $this->assertEquals(
-            $expectedInactive,
-            $dataSource->getInactiveValuesForLanguage(),
-            'inactive keys not set correctly after activation using numeric array'
-        );
+        $this->assertEquals($expectedActive, $dataSource->getActiveValuesForLanguage('de'));
+        $this->assertEquals($expectedInactive, $dataSource->getInactiveValuesForLanguage('de'));
     }
 
     /**
@@ -161,27 +116,15 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeactivateKeysDoesNotAddNewValues()
     {
-        // SETUP
-        $dataSource       = $this->createDataSourceAlphabet();
         $deactivateKeys   = array_merge($this->createKeysAlphabet('a', 'b'), array('neu' => 'neu'));
         $expectedInactive = $this->createKeysAlphabet('a', 'b');
         $expectedActive   = $this->createKeysAlphabet('c', 'z');
 
-        // EXERCISE
-        $dataSource->deactivateValuesForLanguage($deactivateKeys);
+        $dataSource = $this->createDataSourceAlphabet();
+        $dataSource->deactivateValuesForLanguage('de', $deactivateKeys);
 
-        // VERIFY
-        $this->assertEquals(
-            $expectedActive,
-            $dataSource->getActiveValuesForLanguage(),
-            'new values added in active values'
-        );
-
-        $this->assertEquals(
-            $expectedInactive,
-            $dataSource->getInactiveValuesForLanguage(),
-            'new values added in inactive values'
-        );
+        $this->assertEquals($expectedActive, $dataSource->getActiveValuesForLanguage('de'));
+        $this->assertEquals($expectedInactive, $dataSource->getInactiveValuesForLanguage('de'));
     }
 
     /**
@@ -189,20 +132,13 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveValuesFromActiveKeys()
     {
-        // SETUP
-        $dataSource = $this->createDataSourceAlphabet();
         $removeKeys = $this->createKeysAlphabet('a', 'f');
         $expected   = $this->createKeysAlphabet('g', 'z');
 
-        // EXERCISE
-        $dataSource->removeValuesForLanguage($removeKeys);
+        $dataSource = $this->createDataSourceAlphabet();
+        $dataSource->removeValuesForLanguage('de', $removeKeys);
 
-        // VERIFY
-        $this->assertEquals(
-            $expected,
-            $dataSource->getActiveValuesForLanguage(),
-            'keys are not removed from active keys'
-        );
+        $this->assertEquals( $expected, $dataSource->getActiveValuesForLanguage('de'));
     }
 
     /**
@@ -210,20 +146,13 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveValuesFromInactiveKeys()
     {
-        // SETUP
-        $dataSource = $this->createDataSourceAlphabetWithDeactivatedKeys();
         $removeKeys = $this->createKeysAlphabet('a', 'f');
         $expected   = $this->createKeysAlphabet('g', 'z');
 
-        // EXERCISE
-        $dataSource->removeValuesForLanguage($removeKeys);
+        $dataSource = $this->createDataSourceAlphabetWithDeactivatedKeys();
+        $dataSource->removeValuesForLanguage('de', $removeKeys);
 
-        // VERIFY
-        $this->assertEquals(
-            $expected,
-            $dataSource->getInactiveValuesForLanguage(),
-            'keys are not removed from inactive keys'
-        );
+        $this->assertEquals($expected, $dataSource->getInactiveValuesForLanguage('de'));
     }
 
     /**
@@ -234,27 +163,16 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveValuesFromKeysUsingNumericArray()
     {
-        // SETUP
-        $dataSource       = $this->createDataSourceAlphabetWithDeactivatedKeys('a', 'z', 'a', 'f');
+        $language         = 'de';
         $removeKeys       = array('e', 'f', 'g', 'h', 'i');
         $expectedActive   = $this->createKeysAlphabet('j', 'z');
         $expectedInactive = $this->createKeysAlphabet('a', 'd');
 
-        // EXERCISE
-        $dataSource->removeValuesForLanguage($removeKeys);
+        $dataSource = $this->createDataSourceAlphabetWithDeactivatedKeys('a', 'z', 'a', 'f', $language);
+        $dataSource->removeValuesForLanguage($language, $removeKeys);
 
-        // VERIFY
-        $this->assertEquals(
-            $expectedActive,
-            $dataSource->getActiveValuesForLanguage(),
-            'keys are not removed from active keys using numeric array'
-        );
-
-        $this->assertEquals(
-            $expectedInactive,
-            $dataSource->getInactiveValuesForLanguage(),
-            'keys are not removed from inactive keys using numeric array'
-        );
+        $this->assertEquals($expectedActive, $dataSource->getActiveValuesForLanguage($language));
+        $this->assertEquals($expectedInactive, $dataSource->getInactiveValuesForLanguage($language));
     }
 
     /**
@@ -262,13 +180,14 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $startChar [Optional] default = 'a'
      * @param string $endChar   [Optional] default = 'z'
+     * @param string $language  [Optional] default = 'de'
      *
      * @return DataSource
      */
-    public function createDataSourceAlphabet($startChar = 'a', $endChar = 'z')
+    public function createDataSourceAlphabet($startChar = 'a', $endChar = 'z', $language = 'de')
     {
         $dataSource = new DataSource();
-        $dataSource->setValues($this->createKeysAlphabet($startChar, $endChar));
+        $dataSource->setValues($language, $this->createKeysAlphabet($startChar, $endChar));
 
         return $dataSource;
     }
@@ -280,16 +199,18 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      * @param string $endActiveChr     [Optional] default = 'z'
      * @param string $startInactiveChr [Optional] default = 'a'
      * @param string $endInactiveChr   [Optional] default = 'z'
+     * @param string $language         [Optional] default = 'de'
      *
      * @return DataSource
      */
     public function createDataSourceAlphabetWithDeactivatedKeys($startActiveChr   = 'a',
                                                                 $endActiveChr     = 'z',
                                                                 $startInactiveChr = 'a',
-                                                                $endInactiveChr   = 'z')
+                                                                $endInactiveChr   = 'z',
+                                                                $language = 'de')
     {
-        $dataSource = $this->createDataSourceAlphabet($startActiveChr, $endActiveChr);
-        $dataSource->deactivateValuesForLanguage($this->createKeysAlphabet($startInactiveChr, $endInactiveChr));
+        $dataSource = $this->createDataSourceAlphabet($startActiveChr, $endActiveChr, $language);
+        $dataSource->deactivateValuesForLanguage($language, $this->createKeysAlphabet($startInactiveChr, $endInactiveChr));
 
         return $dataSource;
     }
@@ -310,7 +231,7 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
         $keys = array();
         for ($i = $startOrd; $i <= $endOrd; ++$i) {
             $c = chr($i);
-            $keys["id-$c"] = $c;
+            $keys[] = $c;
         }
 
         return $keys;

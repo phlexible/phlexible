@@ -24,7 +24,6 @@ class MediaManagerAclProvider extends AclProvider
     {
         return array(
             'media',
-            'media_administration',
         );
     }
 }

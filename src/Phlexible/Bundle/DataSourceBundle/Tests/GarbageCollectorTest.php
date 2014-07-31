@@ -10,11 +10,15 @@ namespace Phlexible\Bundle\DataSourceBundle\Tests;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
+use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
+use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
 use Phlexible\Bundle\DataSourceBundle\GarbageCollector\GarbageCollector;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -39,119 +43,363 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
      */
     private $dispatcherMock;
 
+    /**
+     * @var DataSource
+     */
+    private $datasource;
+
     public function setUp()
     {
-        $this->dispatcherMock = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
+
+        $this->dispatcherMock = new EventDispatcher();
         $this->managerMock = $this->getMockBuilder('Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface')->getMock();
         $this->garbageCollector = new GarbageCollector($this->managerMock, $this->dispatcherMock);
 
-        $this->dispatcherMock
-            ->expects($this->any())
-            ->method('dispatch')
-            ->will($this->returnValue(new Event()));
+        $this->datasource = new DataSource();
+        $this->datasource->setTitle('testDatasource');
+        $values = new DataSourceValueBag();
+        $values->setLanguage('de');
+        $this->datasource->addValueBag($values);
 
         $this->managerMock
             ->expects($this->any())
-            ->method('getAllDataSourceLanguages')
-            ->will($this->returnValue(array('de')));
-
-        $datasource = new DataSource();
-
-        $this->managerMock
-            ->expects($this->any())
-            ->method('find')
-            ->will($this->returnValue($datasource));
+            ->method('findBy')
+            ->will($this->returnValue(array($this->datasource)));
     }
 
     public function testEvents()
     {
-        $this->dispatcherMock
-            ->expects($this->at(0))
-            ->method('dispatch')
-            ->with(DataSourceEvents::BEFORE_DELETE_VALUES);
+        $fired = 0;
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function() use (&$fired) {
+                $fired++;
+            }
+        );
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::GARBAGE_COLLECT,
+            function() use (&$fired) {
+                $fired++;
+            }
+        );
 
-        $this->dispatcherMock
-            ->expects($this->at(1))
-            ->method('dispatch')
-            ->with(DataSourceEvents::DELETE_VALUES);
+        $this->garbageCollector->run();
 
-        $this->dispatcherMock
-            ->expects($this->at(2))
-            ->method('dispatch')
-            ->with(DataSourceEvents::BEFORE_MARK_ACTIVE);
-
-        $this->dispatcherMock
-            ->expects($this->at(3))
-            ->method('dispatch')
-            ->with(DataSourceEvents::MARK_ACTIVE);
-
-        $this->dispatcherMock
-            ->expects($this->at(4))
-            ->method('dispatch')
-            ->with(DataSourceEvents::BEFORE_MARK_INACTIVE);
-
-        $this->dispatcherMock
-            ->expects($this->at(5))
-            ->method('dispatch')
-            ->with(DataSourceEvents::MARK_INACTIVE);
-
-        $this->garbageCollector->run(Uuid::generate());
+        $this->assertSame(2, $fired);
     }
 
-    /**
-     * run() with single id should call internal run with array
-     */
-    public function testRunWithSingleIdShouldCallInternalRunWithArray()
+    public function testRunWithNoValues()
     {
-        $result = $this->garbageCollector->run(Uuid::generate());
-
-        $this->assertEquals(array('candidates' => 1, 'removed' => 0, 'activated' => 0, 'deactivated' => 0), $result);
-    }
-
-    /**
-     * run() with multiple ids should call internal run with array
-     */
-    public function testRunWithMultipleIdsShouldCallInternalRunWithArray()
-    {
-        $multipleIds = $this->createArrayWithDataSourceIds(5);
-
-        $result = $this->garbageCollector->run($multipleIds);
-
-        $this->assertEquals(array('candidates' => 5, 'removed' => 0, 'activated' => 0, 'deactivated' => 0), $result);
-    }
-
-    /**
-     * run() without arguments should fetch all ids from repository.
-     */
-    public function testRunWithWithoutArgumentsShouldFetchAllIdsFromRepository()
-    {
-        $dataSourceIds = $this->createArrayWithDataSourceIds(10);
-
-        $this->managerMock
-            ->expects($this->any())
-            ->method('getAllDataSourceIds')
-            ->will($this->returnValue($dataSourceIds));
-
         $result = $this->garbageCollector->run();
 
-        $this->assertEquals(array('candidates' => 10, 'removed' => 0, 'activated' => 0, 'deactivated' => 0), $result);
+        $this->assertCount(0, $result['testDatasource']['de']['remove']);
+        $this->assertCount(0, $result['testDatasource']['de']['active']);
+        $this->assertCount(0, $result['testDatasource']['de']['inactive']);
     }
 
-    /**
-     * Create an array with data source ids.
-     *
-     * @param int $size
-     *
-     * @return array
-     */
-    public function createArrayWithDataSourceIds($size = 2)
+    public function testRunRemovesUnusedValuesInModeRemoveUnused()
     {
-        $ids = array();
+        $this->datasource->addValueForLanguage('de', 'value1');
+        $this->datasource->addValueForLanguage('de', 'value2');
 
-        for ($i = 0; $i < $size; ++$i) {
-            $ids[] = Uuid::generate();
-        }
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
 
-        return $ids;
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array(),
+                'inactive' => array(),
+                'remove' => array('value1', 'value2'),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunRemovesUnusedValuesInModeUnusedAndInactive()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1');
+        $this->datasource->addValueForLanguage('de', 'value2');
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array(),
+                'inactive' => array(),
+                'remove' => array('value1', 'value2'),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunMarksUnusedValuesAsInactiveInModeUnusedAndInactive()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1');
+        $this->datasource->addValueForLanguage('de', 'value2');
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array(),
+                'inactive' => array('value1', 'value2'),
+                'remove' => array(),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunKeepsActiveValuesInModeRemoveUnused()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1', false);
+        $this->datasource->addValueForLanguage('de', 'value2', false);
+
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function(GarbageCollectEvent $event) {
+                $event->markActive(array('value1', 'value2'));
+            }
+        );
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array(),
+                'remove' => array(),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunKeepsActiveValuesInModeRemoveUnusedAndInactive()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1', false);
+        $this->datasource->addValueForLanguage('de', 'value2', false);
+
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function(GarbageCollectEvent $event) {
+                $event->markActive(array('value1', 'value2'));
+            }
+        );
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array(),
+                'remove' => array(),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunKeepsActiveValuesInModeMarkUnusedInactive()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1', false);
+        $this->datasource->addValueForLanguage('de', 'value2', false);
+
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function(GarbageCollectEvent $event) {
+                $event->markActive(array('value1', 'value2'));
+            }
+        );
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array(),
+                'remove' => array(),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunKeepsInactiveValuesInModeRemoveUnused()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1', false);
+        $this->datasource->addValueForLanguage('de', 'value2', false);
+
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function(GarbageCollectEvent $event) {
+                $event->markInactive(array('value1', 'value2'));
+            }
+        );
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array(),
+                'inactive' => array('value1', 'value2'),
+                'remove' => array(),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunRemovesInactiveValuesInModeRemoveUnused()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1', false);
+        $this->datasource->addValueForLanguage('de', 'value2', false);
+
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function(GarbageCollectEvent $event) {
+                $event->markInactive(array('value1', 'value2'));
+            }
+        );
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array(),
+                'inactive' => array(),
+                'remove' => array('value1', 'value2'),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunKeepsInactiveValuesInModeMarkUnusedInactive()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1', false);
+        $this->datasource->addValueForLanguage('de', 'value2', false);
+
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function(GarbageCollectEvent $event) {
+                $event->markInactive(array('value1', 'value2'));
+            }
+        );
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array(),
+                'inactive' => array('value1', 'value2'),
+                'remove' => array(),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunKeepsValuesAndRemovesUnusedInModeRemoveUnused()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1');
+        $this->datasource->addValueForLanguage('de', 'value2');
+        $this->datasource->addValueForLanguage('de', 'value3');
+        $this->datasource->addValueForLanguage('de', 'value4');
+        $this->datasource->addValueForLanguage('de', 'value5');
+        $this->datasource->addValueForLanguage('de', 'value6');
+
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function(GarbageCollectEvent $event) {
+                $event->markActive(array('value1', 'value2'));
+                $event->markInactive(array('value3', 'value4'));
+            }
+        );
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array('value3', 'value4'),
+                'remove' => array('value5', 'value6'),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunKeepsValuesAndRemovesUnusedInModeRemoveUnusedAndInactive()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1');
+        $this->datasource->addValueForLanguage('de', 'value2');
+        $this->datasource->addValueForLanguage('de', 'value3');
+        $this->datasource->addValueForLanguage('de', 'value4');
+        $this->datasource->addValueForLanguage('de', 'value5');
+        $this->datasource->addValueForLanguage('de', 'value6');
+
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function(GarbageCollectEvent $event) {
+                $event->markActive(array('value1', 'value2'));
+                $event->markInactive(array('value3', 'value4'));
+            }
+        );
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array(),
+                'remove' => array('value3', 'value4', 'value5', 'value6'),
+            ),
+            $result['testDatasource']['de']
+        );
+    }
+
+    public function testRunKeepsValuesAndRemovesUnusedInModeMarkUnusedInactive()
+    {
+        $this->datasource->addValueForLanguage('de', 'value1');
+        $this->datasource->addValueForLanguage('de', 'value2');
+        $this->datasource->addValueForLanguage('de', 'value3');
+        $this->datasource->addValueForLanguage('de', 'value4');
+        $this->datasource->addValueForLanguage('de', 'value5');
+        $this->datasource->addValueForLanguage('de', 'value6');
+
+        $this->dispatcherMock->addListener(
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            function(GarbageCollectEvent $event) {
+                $event->markActive(array('value1', 'value2'));
+                $event->markInactive(array('value3', 'value4'));
+            }
+        );
+
+        $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
+
+        $this->assertArrayHasKey('testDatasource', $result);
+        $this->assertArrayHasKey('de', $result['testDatasource']);
+        $this->assertSame(
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array('value3', 'value4', 'value5', 'value6'),
+                'remove' => array(),
+            ),
+            $result['testDatasource']['de']
+        );
     }
 }

@@ -128,9 +128,8 @@ class TreeController extends Controller
      */
     protected function _getNodeData(TreeNodeInterface $node, $language)
     {
-        $container = $this->getContainer();
-        $securityContext = $container->get('security.context');
-        $elementService = $container->get('phlexible_element.service');
+        $securityContext = $this->get('security.context');
+        $elementService = $this->get('phlexible_element.service');
 
         $userRights = array();
         if ($node instanceof ContentObjectInterface) {
@@ -143,7 +142,7 @@ class TreeController extends Controller
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = array_keys(
-                    $this->getContainer()->get('accesscontrol.right.registry')->getRights('internal', 'treenode')
+                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
                 );
             }
         }
@@ -705,7 +704,7 @@ class TreeController extends Controller
     /**
      * Return the Element data tree
      *
-     * @Route("/linkelement", name="tree_linkelement")
+     * @Route("/linkelement", name="tree_link_element")
      */
     public function linkelementAction()
     {

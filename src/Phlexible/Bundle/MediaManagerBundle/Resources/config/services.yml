@@ -60,8 +60,8 @@ services:
         tags:
             - {name: kernel.event_subscriber}
 
-    phlexible_media_manager.listener.data_source:
-        class: Phlexible\Bundle\MediaManagerBundle\EventListener\DataSourceListener
+    phlexible_media_manager.listener.datasource:
+        class: Phlexible\Bundle\MediaManagerBundle\EventListener\DatasourceListener
         arguments: [@phlexible_media_manager.util.suggest_field]
         tags:
             - {name: kernel.event_subscriber}
@@ -101,13 +101,13 @@ services:
     phlexible_media_manager.search.file:
         class: Phlexible\Bundle\MediaManagerBundle\Search\FileSearch
         public: false
-        arguments: [@connection_manager, @phlexible_media_site.site_manager]
+        arguments: [@phlexible_media_site.site_manager, @phlexible_user.user_manager, @security.context]
         tags:
-            - {name: phlexible_search.handler}
+            - {name: phlexible_search.provider}
 
     phlexible_media_manager.search.meta:
         class: Phlexible\Bundle\MediaManagerBundle\Search\MetaSearch
         public: false
-        arguments: [@connection_manager, @phlexible_media_site.site_manager]
+        arguments: [@phlexible_media_site.site_manager, @phlexible_media_manager.file_meta_data_manager, @phlexible_user.user_manager, @security.context]
         tags:
-            - {name: phlexible_search.handler}
+            - {name: phlexible_search.provider}

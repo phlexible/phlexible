@@ -33,10 +33,10 @@ class PermissionResolverTest extends \PHPUnit_Framework_TestCase
     {
         $this->permissions = new PermissionCollection(
             array(
-                new Permission('test', 'read', 1, 'read-icon'),
-                new Permission('test', 'create', 2, 'create-icon'),
-                new Permission('test', 'update', 4, 'update-icon'),
-                new Permission('test', 'delete', 8, 'delete-icon'),
+                new Permission('contentClass', 'read', 1, 'read-icon'),
+                new Permission('contentClass', 'create', 2, 'create-icon'),
+                new Permission('contentClass', 'update', 4, 'update-icon'),
+                new Permission('contentClass', 'delete', 8, 'delete-icon'),
             )
         );
         $this->resolver = new PermissionResolver($this->permissions);
@@ -44,20 +44,20 @@ class PermissionResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testResolve()
     {
-        $permissions = $this->resolver->resolve('test', 1);
+        $permissions = $this->resolver->resolve('contentClass', 1);
         $this->assertCount(1, $permissions);
         $this->assertSame(1, $permissions[0]->getBit());
 
-        $permissions = $this->resolver->resolve('test', 2);
+        $permissions = $this->resolver->resolve('contentClass', 2);
         $this->assertCount(1, $permissions);
         $this->assertSame(2, $permissions[0]->getBit());
 
-        $permissions = $this->resolver->resolve('test', 4 | 8);
+        $permissions = $this->resolver->resolve('contentClass', 4 | 8);
         $this->assertCount(2, $permissions);
         $this->assertSame(4, $permissions[0]->getBit());
         $this->assertSame(8, $permissions[1]->getBit());
 
-        $permissions = $this->resolver->resolve('test', 1 | 2 | 8);
+        $permissions = $this->resolver->resolve('contentClass', 1 | 2 | 8);
         $this->assertCount(3, $permissions);
         $this->assertSame(1, $permissions[0]->getBit());
         $this->assertSame(2, $permissions[1]->getBit());

@@ -13,7 +13,7 @@ Phlexible.elementtypes.TYPE_REFERENCE = 'reference';
 
 Phlexible.elementtypes.Format = {
     title: function (title, meta, record) {
-        return '<img src="' + Phlexible.component('/elementtypes/elementtypes/' + record.get('icon')) + '" width="18" height="18" border="0" alt="' + title + '" /> ' + title;
+        return '<img src="' + Phlexible.component('/phlexibleelementtype/elementtypes/' + record.get('icon')) + '" width="18" height="18" border="0" alt="' + title + '" /> ' + title;
     },
 
     status: function (status, meta, record) {

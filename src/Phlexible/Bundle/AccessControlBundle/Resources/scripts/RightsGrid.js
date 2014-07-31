@@ -84,7 +84,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                                 return Phlexible.inlineIcon('p-accesscontrol-all-icon') + ' ' + this.strings.all + suffix;
                             }
 
-                            Ext.each(Makeweb.Config.get('set.language.frontend'), function (item) {
+                            Ext.each(Phlexible.Config.get('set.language.frontend'), function (item) {
                                 if (item[0] === v) {
                                     v = Phlexible.inlineIcon(item[2]) + ' ' + item[1] + suffix;
                                     return false;
@@ -108,29 +108,27 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                             typeAhead: true,
                             triggerAction: 'all',
                             listeners: {
-                                beforeselect: {
-                                    fn: function (combo, comboRecord, index) {
-                                        var cancel = false;
-                                        var subjectRecord = this.selModel.getSelected();
-                                        this.store.each(function (record) {
-                                            if (subjectRecord.id !== record.id &&
-                                                subjectRecord.data.object_type == record.data.object_type &&
-                                                subjectRecord.data.object_id == record.data.object_id) {
-                                                if ((index < 1 && record.data.language != '_all_') ||
-                                                    (index >= 1 && (
-                                                        record.data.language == '_all_' ||
-                                                            record.data.language == comboRecord.data.key
-                                                        )
-                                                        )) {
-                                                    cancel = true;
-                                                    return false;
-                                                }
+                                beforeselect: function (combo, comboRecord, index) {
+                                    var cancel = false;
+                                    var subjectRecord = this.selModel.getSelected();
+                                    this.store.each(function (record) {
+                                        if (subjectRecord.id !== record.id &&
+                                            subjectRecord.data.object_type == record.data.object_type &&
+                                            subjectRecord.data.object_id == record.data.object_id) {
+                                            if ((index < 1 && record.data.language != '_all_') ||
+                                                (index >= 1 && (
+                                                    record.data.language == '_all_' ||
+                                                        record.data.language == comboRecord.data.key
+                                                    )
+                                                    )) {
+                                                cancel = true;
+                                                return false;
                                             }
-                                        });
-                                        if (cancel) return false;
-                                    },
-                                    scope: this
-                                }
+                                        }
+                                    });
+                                    if (cancel) return false;
+                                },
+                                scope: this
                             }
                         })
                     });
@@ -139,16 +137,16 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 var data = Ext.decode(response.responseText);
                 var plugins = [];
 
-                for (var key in data) {
-                    var item = data[key];
-                    var iconCls = item.iconCls || 'p-accesscontrol-right-icon';
+                Ext.each(data, function(permission) {
+                    var name = permission.name;
+                    var iconCls = permission.iconCls || 'p-accesscontrol-right-icon';
 
                     fields.push({
                         header: Phlexible.inlineIcon(iconCls, {
-                            qtip: key
+                            qtip: name
                         }),
                         dataIndex: 'rights',
-                        arrayIndex: key,
+                        arrayIndex: name,
                         width: 40,
                         renderer: function (v, md, r, rowIndex, colIndex, store, key) {
                             var s = '';
@@ -179,9 +177,9 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                                     break;
                             }
                             return s;
-                        }.createDelegate(this, [key], true)
+                        }.createDelegate(this, [permission.name], true)
                     });
-                }
+                });
 
                 fields.push(this.actions);
 
@@ -417,81 +415,76 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         ];
 
         this.on({
-            beforeedit: {
-                fn: function (e) {
-                    if (!e.record.data['new']) {
-                        return false;
-                    }
-                },
-                scope: this
+            beforeedit: function (e) {
+                if (!e.record.data['new']) {
+                    return false;
+                }
             },
-            cellclick: {
-                fn: function (grid, rowIndex, colIndex) {
-                    if (colIndex < (this.languageEnabled ? 3 : 2) || colIndex == grid.getColumnModel().getColumnCount() - 1) return;
+            cellclick: function (grid, rowIndex, colIndex) {
+                if (colIndex < (this.languageEnabled ? 3 : 2) || colIndex == grid.getColumnModel().getColumnCount() - 1) return;
 
-                    var record = grid.getStore().getAt(rowIndex);
-                    var cm = grid.getColumnModel();
-                    var col = cm.getColumnById(cm.getColumnId(colIndex));
-                    var right = col.arrayIndex;
-                    var rights = record.data.rights;
-                    var original = record.data.original;
-                    var above = record.data.above;
-                    var status = parseInt(rights[right]['status'], 10);
-                    var originalStatus = parseInt(original[right]['status'], 10);
-                    var aboveStatus = parseInt(above[right]['status'], 10);
+                var record = grid.getStore().getAt(rowIndex);
+                var cm = grid.getColumnModel();
+                var col = cm.getColumnById(cm.getColumnId(colIndex));
+                var right = col.arrayIndex;
+                var rights = record.data.rights;
+                var original = record.data.original;
+                var above = record.data.above;
+                var status = parseInt(rights[right]['status'], 10);
+                var originalStatus = parseInt(original[right]['status'], 10);
+                var aboveStatus = parseInt(above[right]['status'], 10);
 
-                    //Phlexible.console.log('right: ' + right);
-                    //Phlexible.console.log('status: ' + status);
-                    //Phlexible.console.log('originalStatus: ' + originalStatus);
-                    //Phlexible.console.log('aboveStatus: ' + aboveStatus);
+                //Phlexible.console.log('right: ' + right);
+                //Phlexible.console.log('status: ' + status);
+                //Phlexible.console.log('originalStatus: ' + originalStatus);
+                //Phlexible.console.log('aboveStatus: ' + aboveStatus);
 
-                    switch (status) {
-                        case 2:
-                        case 3:
-                            status = 1;
-                            break;
+                switch (status) {
+                    case 2:
+                    case 3:
+                        status = 1;
+                        break;
 
-                        case 1:
-                            if (aboveStatus === 2 || aboveStatus === 3) {
-                                status = 0;
-                            }
-                            else if (aboveStatus === 4) {
-                                status = 4;
-                            }
-                            else if (originalStatus === 4) {
-                                status = 4;
-                            }
-                            else {
-                                status = -1;
-                            }
-                            break;
+                    case 1:
+                        if (aboveStatus === 2 || aboveStatus === 3) {
+                            status = 0;
+                        }
+                        else if (aboveStatus === 4) {
+                            status = 4;
+                        }
+                        else if (originalStatus === 4) {
+                            status = 4;
+                        }
+                        else {
+                            status = -1;
+                        }
+                        break;
 
-                        default:
-                            if (aboveStatus === 2 || aboveStatus === 3) {
-                                status = aboveStatus;
-                            }
-                            else if (originalStatus === 2 || originalStatus === 3) {
-                                status = originalStatus;
-                            }
-                            else {
-                                status = 2;
-                            }
-                            break;
-                    }
+                    default:
+                        if (aboveStatus === 2 || aboveStatus === 3) {
+                            status = aboveStatus;
+                        }
+                        else if (originalStatus === 2 || originalStatus === 3) {
+                            status = originalStatus;
+                        }
+                        else {
+                            status = 2;
+                        }
+                        break;
+                }
 
-                    rights[right]['status'] = status;
+                rights[right]['status'] = status;
 
-                    record.beginEdit();
-                    //r.set('rights', rights);
-                    var dummy = record.data.label;
-                    record.set('label', 'xxx');
-                    record.set('label', dummy);
-                    record.set('restore', 1);
-                    record.set('inherited', !record.get('set_here'));
-                    record.endEdit();
-                },
-                scope: this
-            }
+                record.beginEdit();
+                //r.set('rights', rights);
+                var dummy = record.data.label;
+                record.set('label', 'xxx');
+                record.set('label', dummy);
+                record.set('restore', 1);
+                record.set('inherited', !record.get('set_here'));
+                record.endEdit();
+            },
+            scope: this
         });
 
         Phlexible.accesscontrol.RightsGrid.superclass.initComponent.call(this);

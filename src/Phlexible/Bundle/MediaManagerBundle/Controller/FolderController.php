@@ -63,6 +63,8 @@ class FolderController extends Controller
         $securityContext = $this->get('security.context');
         $permissions = $this->get('phlexible_access_control.permissions');
 
+        $user = $this->getUser();
+
         $children = array();
         foreach ($subFolders as $subFolder) {
             /* @var $subFolder FolderInterface */
@@ -79,7 +81,7 @@ class FolderController extends Controller
             }
             $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
             */
-            $userRights = array_keys($permissions->getByType('folder-internal'));
+            $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));
 
             $tmp = array(
                 'id'        => $subFolder->getId(),
@@ -89,6 +91,8 @@ class FolderController extends Controller
                 'draggable' => true,
                 'expanded'  => true,
                 'allowDrop' => true,
+                'allowChildren' => true,
+                'isTarget'  => true,
                 'rights'    => $userRights,
             );
 
@@ -126,6 +130,8 @@ class FolderController extends Controller
         $securityContext = $this->get('security.context');
         $permissions = $this->get('phlexible_access_control.permissions');
 
+        $user = $this->getUser();
+
         if (!$folderId || $folderId === 'root') {
             foreach ($siteManager->getAll() as $site) {
                 $rootFolder = $site->findRootFolder();
@@ -143,7 +149,7 @@ class FolderController extends Controller
                 }
                 $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
                 */
-                $userRights = array_keys($permissions->getByType('folder-internal'));
+                $userRights = array_keys($permissions->get(get_class($rootFolder), get_class($user)));
 
                 $slot = new SiteSlot();
                 $slot->setData(
@@ -212,7 +218,7 @@ class FolderController extends Controller
                     }
                     $userRights = array();
                     */
-                    $userRights = array_keys($permissions->getByType('folder-internal'));;
+                    $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));;
 
                     $folderUsageService = $this->get('phlexible_media_manager.folder_usage_manager');
                     $usage = $folderUsageService->getStatus($folder);
@@ -226,6 +232,8 @@ class FolderController extends Controller
                         'leaf'      => false,
                         'numChilds' => $site->countFilesByFolder($subFolder),
                         'allowDrop' => true,
+                        'allowChildren' => true,
+                        'isTarget' => true,
                         'versions'  => $site->hasFeature('versions'),
                         'rights'    => $userRights,
                         'used_in'   => $usedIn,
@@ -233,7 +241,7 @@ class FolderController extends Controller
                     );
 
                     if (!$site->countFoldersByParentFolder($subFolder)) {
-                        $tmp['leaf'] = true;
+                        //$tmp['leaf'] = true;
                         $tmp['expanded'] = true;
                         $tmp['children'] = array();
                     }
@@ -351,10 +359,10 @@ class FolderController extends Controller
         $sourceId = $request->get('source_id');
 
         $site = $this->getSite($siteId);
-        $folder = $site->getFolder($sourceId);
-        $targetFolder = $site->getFolder($targetId);
+        $folder = $site->findFolder($sourceId);
+        $targetFolder = $site->findFolder($targetId);
 
-        $site->move($folder, $targetFolder, $this->getUser()->getId());
+        $site->moveFolder($folder, $targetFolder, $this->getUser()->getId());
 
         return new ResultResponse(true);
     }

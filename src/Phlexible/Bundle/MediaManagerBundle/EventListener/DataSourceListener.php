@@ -9,10 +9,8 @@
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
-use Phlexible\Bundle\DataSourceBundle\Model\ValueCollection;
+use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
 use Phlexible\Bundle\MediaManagerBundle\Util\SuggestFieldUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -21,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class DataSourceListener implements EventSubscriberInterface
+class DatasourceListener implements EventSubscriberInterface
 {
     /**
      * @var SuggestFieldUtil
@@ -42,44 +40,22 @@ class DataSourceListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            DataSourceEvents::MARK_ACTIVE          => 'onMarkActive',
-            DataSourceEvents::BEFORE_MARK_INACTIVE => 'onBeforeMarkInactive',
-            DataSourceEvents::BEFORE_DELETE_VALUES => 'onBeforeDeleteValues',
+            DataSourceEvents::GARBAGE_COLLECT => 'onGarbageCollect',
         );
     }
 
     /**
      * Ensure used values are marked active.
      *
-     * @param CollectionEvent $event
+     * @param GarbageCollectEvent $event
      */
-    public function onMarkActive(CollectionEvent $event)
+    public function onGarbageCollect(GarbageCollectEvent $event)
     {
         $values = $this->fetchValues($event->getDataSourceValueBag());
 
-        $event->getCollection()->addValues($values);
+        $event->markActive($values);
     }
 
-    /**
-     * @param CollectionEvent $event
-     */
-    public function onBeforeMarkInactive(CollectionEvent $event)
-    {
-        $values = $this->fetchValues($event->getDataSourceValueBag());
-
-        $event->getCollection()->removeValues($values);
-    }
-
-    /**
-     * @param CollectionEvent $event
-     */
-    public function onBeforeDeleteValues(CollectionEvent $event)
-    {
-        $values = $this->fetchValues($event->getDataSourceValueBag());
-
-        $event->getCollection()->removeValues($values);
-
-    }
     /**
      * Ensure used values are not deleted from data source.
      *

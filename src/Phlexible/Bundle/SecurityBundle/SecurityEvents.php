@@ -21,17 +21,17 @@ class SecurityEvents
     const VIEW_LOGIN = 'phlexible_security.view_login';
 
     /**
-     * Change password view event
+     * Force password change view event
      */
-    const VIEW_CHANGE_PASSWORD = 'phlexible_security.view_change_password';
+    const VIEW_FORCE_PASSWORD_CHANGE = 'phlexible_security.force_password_change';
 
     /**
      * Validate view event
      */
-    const VIEW_VALIDATE = 'phlexible_security.view_validate';
+    const VIEW_VALIDATE_EMAIL = 'phlexible_security.view_validate_email';
 
     /**
      * Set password view event
      */
-    const VIEW_SET_PASSWORD = 'phlexible_security.view_set_password';
+    const VIEW_RESET_PASSWORD = 'phlexible_security.view_reset_password';
 }

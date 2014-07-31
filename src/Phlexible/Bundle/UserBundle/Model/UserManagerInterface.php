@@ -46,6 +46,11 @@ interface UserManagerInterface
     public function findAll();
 
     /**
+     * @return int
+     */
+    public function countAll();
+
+    /**
      * Find user by username
      *
      * @param string $username
@@ -66,18 +71,18 @@ interface UserManagerInterface
 
     /**
      * @param array $criteria
+     *
+     * @return int
+     */
+    public function countBy(array $criteria);
+
+    /**
+     * @param array $criteria
      * @param array $order
      *
      * @return User
      */
     public function findOneBy(array $criteria, $order = array());
-
-    /**
-     * @param array $criteria
-     *
-     * @return int
-     */
-    public function countBy(array $criteria);
 
     /**
      * @param string $term

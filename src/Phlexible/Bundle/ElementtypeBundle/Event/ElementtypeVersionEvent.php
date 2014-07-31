@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Event;
 
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
+use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

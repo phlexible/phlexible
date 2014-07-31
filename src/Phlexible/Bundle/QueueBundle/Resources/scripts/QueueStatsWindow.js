@@ -6,6 +6,8 @@ Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
     iconCls: 'p-queue-stats-icon',
     layout: 'fit',
     constrainHeader: true,
+    maximizable: true,
+    modal: true,
 
     initComponent: function () {
 
@@ -16,12 +18,14 @@ Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
             )
         });
 
-        this.items = new Ext.grid.GridPanel({
+        this.items = {
+            xtype: 'grid',
             border: false,
             autoExpandColumn: 2,
             store: new Ext.data.JsonStore({
                 url: Phlexible.Router.generate('queue_list'),
                 root: 'data',
+                id: 'id',
                 fields: Phlexible.queue.model.Job,
                 autoLoad: true
             }),
@@ -64,7 +68,7 @@ Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
             plugins: [
                 expander
             ]
-        });
+        };
 
         this.tbar = [
             {

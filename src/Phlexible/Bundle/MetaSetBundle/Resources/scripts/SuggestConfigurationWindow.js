@@ -41,7 +41,36 @@ Phlexible.metasets.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
             }],
             sm: new Ext.grid.RowSelectionModel({
                 singleSelect: true
-            })
+            }),
+            tbar: [{
+                text: this.strings.create_datasource,
+                iconCls: 'p-metaset-add-icon',
+                handler: function() {
+                    Ext.MessageBox.prompt(this.strings.create_datasource, this.strings.create_datasource_text, function(btn, title) {
+                        if (btn !== 'ok') {
+                            return;
+                        }
+                        Ext.Ajax.request({
+                            url: Phlexible.Router.generate('datasources_create'),
+                            params: {
+                                title: title
+                            },
+                            success: function(response) {
+                                var result = Ext.decode(response.responseText);
+
+                                if (result.success) {
+                                    this.getComponent(0).getStore().reload();
+                                } else {
+                                    Phlexible.failure(result.msg);
+                                }
+                            },
+                            scope: this
+                        })
+
+                    }, this);
+                },
+                scope: this
+            }]
         }];
 
         this.buttons = [{

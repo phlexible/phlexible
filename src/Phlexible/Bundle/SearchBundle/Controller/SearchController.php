@@ -48,7 +48,7 @@ class SearchController extends Controller
         $limit = $request->get('limit', 8);
         $start = $request->get('start', 0);
 
-        $search = $this->get('search.search');
+        $search = $this->get('phlexible_search.search');
         $results = $search->search($query);
 
         return new JsonResponse(array(

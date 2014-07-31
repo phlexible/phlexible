@@ -80,8 +80,8 @@ class DownloadController extends Controller
 
         $prefix = $folder->getPath();
         $prefixLength = 0;
-        if ($prefix && strpos($prefix, '/') !== false) {
-            $prefix = substr($prefix, 0, -strlen('/' . $folder->getName()));
+        if ($prefix && mb_strpos($prefix, '/') !== false) {
+            $prefix = mb_substr($prefix, 0, -mb_strlen('/' . $folder->getName()));
             $prefixLength = mb_strlen($prefix) + 1;
             $prefix = '';
         } elseif ($folder->isRoot()) {

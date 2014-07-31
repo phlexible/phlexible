@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\AccessControlBundle\Rights;
 
 use Phlexible\Bundle\AccessControlBundle\Model\AccessManagerInterface;
+use Phlexible\Bundle\AccessControlBundle\Permission\HierarchyMaskResolver;
 use Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -49,7 +50,7 @@ class Rights
 
     /**
      * @param array  $securityTypes
-     * @param string $type
+     * @param string $rightType
      * @param string $contentType
      * @param string $contentId
      * @param array  $contentIdPath
@@ -58,11 +59,16 @@ class Rights
      * @return array
      * @throws \Exception
      */
-    public function getRights(array $securityTypes, $type, $contentType, $contentId, array $contentIdPath, array $securityFetchers)
+    public function getRights(array $securityTypes, $rightType, $contentType, $contentId, array $contentIdPath, array $securityFetchers)
     {
         $baseContentId = current($contentIdPath);
 
-        $entries = $this->accessManager->findByContentIdPath($type, $contentType, $contentIdPath, $securityTypes);
+        $entries = $this->accessManager->findByContentIdPath($rightType, $contentType, $contentIdPath, $securityTypes);
+        ld($entries);
+
+        $resolver = new HierarchyMaskResolver();
+        $x = $resolver->resolve($entries);
+        ldd($x);
 
         $sort = array();
         foreach ($entries as $idx => $entry) {
@@ -101,12 +107,13 @@ class Rights
 
         $subjectsData = array_merge($userSubjects, $groupSubjects);
 
-        $contentRights = array_keys($this->permissions->getByType($type));
+        $type = "$rightType-$contentType";
+        $permissions = array_keys($this->permissions->getByType($type));
 
         return $this->_getRightsForSubjects(
             $contentId,
             $subjectsData,
-            $contentRights,
+            $permissions,
             $entries
         );
     }

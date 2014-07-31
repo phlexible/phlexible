@@ -8,13 +8,13 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle;
 
-use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Elementtype\ElementtypeRepository;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureRepository;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersionRepository;
-use Phlexible\Bundle\ElementtypeBundle\Viability\ViabilityManager;
+use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeVersionManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 
 /**
@@ -25,40 +25,40 @@ use Phlexible\Bundle\GuiBundle\Util\Uuid;
 class ElementtypeService
 {
     /**
-     * @var ElementtypeRepository
+     * @var ElementtypeManagerInterface
      */
-    private $elementtypeRepository;
+    private $elementtypeManager;
 
     /**
-     * @var ElementtypeVersionRepository
+     * @var ElementtypeVersionManagerInterface
      */
-    private $elementtypeVersionRepository;
+    private $elementtypeVersionManager;
 
     /**
-     * @var ElementtypeStructureRepository
+     * @var ElementtypeStructureManagerInterface
      */
     private $elementtypeStructureRepository;
 
     /**
-     * @var ViabilityManager
+     * @var ViabilityManagerInterface
      */
     private $viabilityManager;
 
     /**
-     * @param ElementtypeRepository          $elementtypeRepository
-     * @param ElementtypeVersionRepository   $elementtypeVersionRepository
-     * @param ElementtypeStructureRepository $elementtypeStructureRepository
-     * @param ViabilityManager               $viabilityManager
+     * @param ElementtypeManagerInterface          $elementtypeManager
+     * @param ElementtypeVersionManagerInterface   $elementtypeVersionManager
+     * @param ElementtypeStructureManagerInterface $elementtypeStructureManager
+     * @param ViabilityManagerInterface            $viabilityManager
      */
     public function __construct(
-        ElementtypeRepository $elementtypeRepository,
-        ElementtypeVersionRepository $elementtypeVersionRepository,
-        ElementtypeStructureRepository $elementtypeStructureRepository,
-        ViabilityManager $viabilityManager)
+        ElementtypeManagerInterface $elementtypeManager,
+        ElementtypeVersionManagerInterface $elementtypeVersionManager,
+        ElementtypeStructureManagerInterface $elementtypeStructureManager,
+        ViabilityManagerInterface $viabilityManager)
     {
-        $this->elementtypeRepository = $elementtypeRepository;
-        $this->elementtypeVersionRepository = $elementtypeVersionRepository;
-        $this->elementtypeStructureRepository = $elementtypeStructureRepository;
+        $this->elementtypeManager = $elementtypeManager;
+        $this->elementtypeVersionManager = $elementtypeVersionManager;
+        $this->elementtypeStructureRepository = $elementtypeStructureManager;
         $this->viabilityManager = $viabilityManager;
     }
 
@@ -71,7 +71,7 @@ class ElementtypeService
      */
     public function findElementtype($elementTypeId)
     {
-        return $this->elementtypeRepository->find($elementTypeId);
+        return $this->elementtypeManager->find($elementTypeId);
     }
 
     /**
@@ -83,7 +83,7 @@ class ElementtypeService
      */
     public function findElementtypeByUniqueID($uniqueID)
     {
-        return $this->elementtypeRepository->findByUniqueID($uniqueID);
+        return $this->elementtypeManager->findByUniqueID($uniqueID);
     }
 
     /**
@@ -95,7 +95,7 @@ class ElementtypeService
      */
     public function findElementtypeByType($type)
     {
-        return $this->elementtypeRepository->findByType($type);
+        return $this->elementtypeManager->findByType($type);
     }
 
     /**
@@ -105,7 +105,7 @@ class ElementtypeService
      */
     public function findAllElementtypes()
     {
-        return $this->elementtypeRepository->findAll();
+        return $this->elementtypeManager->findAll();
     }
 
     /**
@@ -131,7 +131,7 @@ class ElementtypeService
      */
     public function findElementtypeVersion(Elementtype $elementtype, $version)
     {
-        $elementtypeVersion = $this->elementtypeVersionRepository->find($elementtype, $version);
+        $elementtypeVersion = $this->elementtypeVersionManager->find($elementtype, $version);
 
         return $elementtypeVersion;
     }
@@ -143,7 +143,7 @@ class ElementtypeService
      */
     public function findLatestElementtypeVersion(Elementtype $elementtype)
     {
-        $elementtypeVersion = $this->elementtypeVersionRepository->find($elementtype, $elementtype->getLatestVersion());
+        $elementtypeVersion = $this->elementtypeVersionManager->find($elementtype, $elementtype->getLatestVersion());
 
         return $elementtypeVersion;
     }
@@ -155,7 +155,7 @@ class ElementtypeService
      */
     public function getVersions(Elementtype $elementtype)
     {
-        return $this->elementtypeVersionRepository->getVersions($elementtype);
+        return $this->elementtypeVersionManager->getVersions($elementtype);
     }
 
     /**
@@ -242,8 +242,8 @@ class ElementtypeService
             ->setCreateUserId($elementtype->getCreateUserId())
             ->setCreatedAt($elementtype->getCreatedAt());
 
-        $this->elementtypeRepository->save($elementtype);
-        $this->elementtypeVersionRepository->save($elementtypeVersion);
+        $this->elementtypeManager->save($elementtype);
+        $this->elementtypeVersionManager->save($elementtypeVersion);
 
         return $elementtype;
     }
@@ -275,8 +275,8 @@ class ElementtypeService
             ->setDefaultTab($defaultTab)
             ->setLatestVersion($elementtypeVersion->getVersion());
 
-        $this->elementtypeVersionRepository->save($elementtypeVersion);
-        $this->elementtypeRepository->save($elementtype);
+        $this->elementtypeVersionManager->save($elementtypeVersion);
+        $this->elementtypeManager->save($elementtype);
         $this->elementtypeStructureRepository->save($elementtypeStructure);
     }
 
@@ -288,7 +288,7 @@ class ElementtypeService
     public function delete($elementTypeId)
     {
         $elementtype = $this->find($elementTypeId);
-        $this->elementtypeRepository->delete($elementtype);
+        $this->elementtypeManager->delete($elementtype);
 
         return;
 
@@ -352,7 +352,7 @@ class ElementtypeService
             ->setId(null)
             ->setUniqueId($elementtype->getUniqueId() . '_' . Uuid::generate());
 
-        $this->elementtypeRepository->save($elementtype);
+        $this->elementtypeManager->save($elementtype);
 
         $sourceElementtypeVersion = $this->findLatestElementtypeVersion($sourceElementtype);
         $elementtypeVersion = $this->copyElementtypeVersion($sourceElementtypeVersion, $elementtype);
@@ -369,7 +369,7 @@ class ElementtypeService
             ->setElementtype($targetElementtype)
             ->setVersion(1);
 
-        $this->elementtypeVersionRepository->save($elementtypeVersion);
+        $this->elementtypeVersionManager->save($elementtypeVersion);
 
         $sourceElementtypeStructure = $this->findElementtypeStructure($sourceElementtypeVersion);
         $elementtypeStructure = clone $sourceElementtypeStructure;

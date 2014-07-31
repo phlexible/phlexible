@@ -20,7 +20,7 @@ class Permission
     /**
      * @var string
      */
-    private $type;
+    private $contentClass;
 
     /**
      * @var string
@@ -38,22 +38,22 @@ class Permission
     private $iconClass;
 
     /**
-     * @param string $type
+     * @param string $contentClass
      * @param string $name
      * @param int    $bit
      * @param string $iconClass
      *
      * @throws InvalidArgumentException
      */
-    public function __construct($type, $name, $bit, $iconClass)
+    public function __construct($contentClass, $name, $bit, $iconClass)
     {
         // check for single bit (power of 2), see: http://aggregate.org/MAGIC/#Is%20Power%20of%202
         if ($bit & ($bit - 1)) {
             $bin = decbin($bit);
-            throw new InvalidArgumentException("Only a single bit can be set, but got $bin in $type-$name");
+            throw new InvalidArgumentException("Only a single bit can be set, but got $bin in $contentClass-$securityClass-$name");
         }
 
-        $this->type = $type;
+        $this->contentClass = $contentClass;
         $this->name = $name;
         $this->bit = $bit;
         $this->iconClass = $iconClass;
@@ -62,9 +62,9 @@ class Permission
     /**
      * @return string
      */
-    public function getType()
+    public function getContentClass()
     {
-        return $this->type;
+        return $this->contentClass;
     }
 
     /**

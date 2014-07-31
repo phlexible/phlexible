@@ -45,7 +45,7 @@ class ElementtypeUsageListener
     public function onElementtypeUsage(ElementtypeUsageEvent $event)
     {
         $elementtypeId = $event->getElementtype()->getId();
-        $language = $this->securityContext->getUser()->getInterfaceLanguage();
+        $language = $this->securityContext->getToken()->getUser()->getInterfaceLanguage();
 
         $select = $this->db
             ->select()

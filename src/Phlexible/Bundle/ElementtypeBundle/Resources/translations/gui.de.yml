@@ -153,6 +153,7 @@ elementtypes:
     allow_unlink: 'Erlaube loslösen'
     version: Version
     versions: Versionen
+    latest_version: Letzte Version
     source: Quelle
     editable_list: 'Editierbare Liste'
     editable_value: 'Editierbarer Wert'
