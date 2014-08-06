@@ -56,6 +56,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                 region: 'center',
                 activeTab: 0,
                 deferredRender: false,
+                disabled: true,
                 items: [
                     {
                         title: this.strings.structure,
@@ -359,6 +360,8 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
         if (this.getMainTabPanel().getActiveTab() === this.getPreviewWrap()) {
             this.preview();
         }
+
+        this.getMainTabPanel().enable();
     },
 
     preview: function () {

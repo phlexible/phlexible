@@ -216,3 +216,4 @@ elementtypes:
     first_row_is_header: 'Erste Zeile ist Überschrift'
     first_column_is_header: 'Erste Spalte ist Überschrift'
     diff_new_field: 'NEUES FELD'
+    choose_field: Bitte wählen Sie das Feld aus, das Sie zuordnen möchten.

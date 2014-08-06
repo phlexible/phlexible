@@ -2,7 +2,6 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elementtypes.Strings,
     border: false,
     layout: 'border',
-    style: 'padding-top: 3px;',
 
     initComponent: function () {
         this.items = [
@@ -10,7 +9,6 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                 xtype: 'grid',
                 region: 'west',
                 width: 100,
-                style: 'padding: 3px;',
                 store: new Ext.data.SimpleStore({
                     fields: ['name'],
                     data: [
@@ -84,17 +82,18 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                 region: 'center',
                 layout: 'card',
                 activeItem: 0,
-                style: 'padding: 3px;',
+                bodyStyle: 'padding: 5px;',
                 border: false,
                 items: [
                     {
-                        html: '_choose',
+                        html: this.strings.choose_field,
                         border: false
                     },
                     {
                         xtype: 'form',
                         border: false,
                         labelAlign: 'top',
+                        autoScroll: true,
                         items: [
                             {
                                 xtype: 'elementtypes-root-mapped-title',

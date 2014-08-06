@@ -228,8 +228,6 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         }
 
         Phlexible.elementtypes.ElementtypeStructureTree.superclass.initComponent.call(this);
-
-        this.disable();
     },
 
     initEvents: function () {

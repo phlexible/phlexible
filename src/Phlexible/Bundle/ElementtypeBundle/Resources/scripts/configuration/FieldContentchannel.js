@@ -1,7 +1,7 @@
 Phlexible.elementtypes.configuration.FieldContentchannel = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.content_channels,
-    iconCls: 'p-contentchannels-component-icon',
+    iconCls: 'p-contentchannel-component-icon',
     border: false,
     autoScroll: true,
     bodyStyle: 'padding:3px',

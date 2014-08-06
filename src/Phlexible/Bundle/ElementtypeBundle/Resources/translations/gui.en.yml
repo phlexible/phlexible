@@ -216,3 +216,4 @@ elementtypes:
     first_row_is_header: 'First row is header'
     first_column_is_header: 'First column is header'
     diff_new_field: 'NEW FIELD'
+    choose_field: Please choose the field you want to map.
