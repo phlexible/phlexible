@@ -95,6 +95,7 @@ abstract class AbstractType implements TypeInterface
      */
     protected function _getTextKeys()
     {
+        /*
         $textKeys = parent::_getTextKeys();
 
         if (empty($this->_payload['tid'])) {
@@ -122,7 +123,8 @@ abstract class AbstractType implements TypeInterface
         } catch (Exception $e) {
             $textKeys['title'] = '(Title unknown)' . $e->getMessage();
         }
-
+        */
+        $textKeys = array();
         return $textKeys;
     }
 
@@ -133,6 +135,7 @@ abstract class AbstractType implements TypeInterface
      */
     protected function _getLink()
     {
+        /*
         if (empty($this->_payload['tid'])) {
             return null;
         }
@@ -156,7 +159,9 @@ abstract class AbstractType implements TypeInterface
             ->setParam('siteroot_id', $siteRoot->getId())
             ->setParam('title', $siteRoot->getTitle())
             ->setParam('start_tid_path', '/' . implode('/', $node->getPath()));
+        */
 
+        $menuItem = array();
         return $menuItem;
     }
 }
