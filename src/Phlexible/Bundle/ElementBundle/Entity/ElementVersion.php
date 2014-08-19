@@ -323,41 +323,6 @@ class ElementVersion
     }
 
     /**
-     * Return icon url of the current element
-     *
-     * @param array $additionalParams
-     *
-     * @return string
-     */
-    public function getIconUrl(array $additionalParams = array())
-    {
-        // TODO: repair!
-        return '/elements/asset/';
-        $icon = '/elements/asset/' . $this->getElementTypeVersionObj()->getIcon();
-
-        //        $uid = MWF_Env::getUid();
-        //        $service = $this->getContainer()->get('locks.service');
-        //        $lockIdentifier = new Makeweb_Elements_Element_Identifier($this->_eid);
-        //
-        //        if ($service->isLockedByUser($lockIdentifier, $uid))
-        //        {
-        //            $icon .= '/lock/me';
-        //        }
-        //        elseif ($service->isLocked($lockIdentifier))
-        //        {
-        //            $icon .= '/lock/other';
-        //        }
-
-        foreach ($additionalParams as $key => $value) {
-            if ($value) {
-                $icon .= '/' . $key . '/' . $value;
-            }
-        }
-
-        return $icon;
-    }
-
-    /**
      * Return data for this element
      *
      * @param string $language

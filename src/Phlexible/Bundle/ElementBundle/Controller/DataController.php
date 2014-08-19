@@ -531,11 +531,8 @@ class DataController extends Controller
                 $status = $node->isAsync($language) ? 'async' : 'online';
             }
 
-            $iconParams = array(
-                'icon' => $elementtype->getIcon(),
-            );
-            //$node->getIconParams($language);
-            $icon = $this->get('router')->generate('elements_asset', $iconParams);
+            $iconResolver = $this->get('phlexible_element.icon_resolver');
+            $icon = $iconResolver->resolveTreeNode($node, $language);
 
             $createUser = $this->get('phlexible_user.user_manager')->find($elementVersion->getCreateUserId());
 

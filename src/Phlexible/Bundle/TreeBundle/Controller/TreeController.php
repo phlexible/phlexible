@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -42,15 +43,15 @@ class TreeController extends Controller
      */
     public function treeAction(Request $request)
     {
+        $siterootId = $request->get('siteroot_id');
+        $tid = $request->get('node');
+        $language = $request->get('language');
+
         $treeManager = $this->get('phlexible_tree.manager');
         $elementService = $this->get('phlexible_element.service');
 
         // TODO: switch to master language of element
         $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
-
-        $siterootId = $request->get('siteroot_id');
-        $tid = $request->get('node');
-        $language = $request->get('language');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
         $rootNode = $tree->getRoot();
@@ -213,6 +214,7 @@ class TreeController extends Controller
         $eid = $request->get('eid');
 
         $elementService = $this->get('phlexible_element.service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $element = $elementService->findElement($eid);
         $elementVersion = $elementService->findLatestElementVersion($element);
@@ -235,7 +237,7 @@ class TreeController extends Controller
             $data[$elementtype->getTitle()] = array(
                 'id'    => $childId,
                 'title' => $elementtype->getTitle(),
-                'icon'  => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
+                'icon'  => $iconResolver->resolveElementtype($elementtype),
                 'type'  => $elementtypeType,
             );
         }
@@ -253,16 +255,21 @@ class TreeController extends Controller
      */
     public function childelementsAction(Request $request)
     {
+        $id = $request->get('id');
+        $language = $request->get('language');
+
         $treeManager = $this->get('phlexible_tree.manager');
         $elementService = $this->get('phlexible_element.service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
-        $id = $request->get('id');
         $tree = $treeManager->getByNodeID($id);
         $node = $tree->get($id);
         $eid = $node->getTypeId();
         $element = $elementService->findElement($eid);
 
-        $language = $request->get('language', $element->getMasterLanguage());
+        if (!$language) {
+            $language = $element->getMasterLanguage();
+        }
 
         $firstString = $this->get('translator')->trans('elements.first', array(), 'gui');
 
@@ -270,18 +277,17 @@ class TreeController extends Controller
         $data[] = array(
             'id'    => '0',
             'title' => $firstString,
-            'icon'  => '/bundles/phlexibleelementtype/elementtypes/_top.gif'
+            'icon'  => $iconResolver->resolveIcon('_top.gif'),
         );
 
         foreach ($tree->getChildren($node) as $childNode) {
             $childElement = $elementService->findElement($childNode->getTypeId());
             $childElementVersion = $elementService->findLatestElementVersion($childElement);
-            $childElementtype = $elementService->findElementtype($childElement);
 
             $data[] = array(
                 'id'    => $childNode->getId(),
                 'title' => $childElementVersion->getBackendTitle($language, $childElementVersion->getElement()->getMasterLanguage()),
-                'icon'  => '/bundles/phlexibleelementtype/elementtypes/' . $childElementtype->getIcon()
+                'icon'  => $iconResolver->resolveTreeNode($childNode, $language),
             );
         }
 
@@ -300,7 +306,7 @@ class TreeController extends Controller
     {
         $securityContext = $this->get('security.context');
         $elementService = $this->get('phlexible_element.service');
-        $router = $this->get('router');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $userRights = array();
         if ($node instanceof ContentObjectInterface) {
@@ -367,7 +373,7 @@ class TreeController extends Controller
             'id'                  => $node->getID(),
             'eid'                 => $element->getEid(),
             'text'                => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()),
-            'icon'                => $router->generate('elements_asset', array('icon' => $elementtype->getIcon())),
+            'icon'                => $iconResolver->resolveTreeNode($node, $language),
             'navigation'          => 1, //$node->inNavigation($elementVersion->getVersion()),
             'restricted'          => 0, //$node->isRestricted($elementVersion->getVersion()),
             'element_type'        => $elementtype->getTitle(),
@@ -435,9 +441,10 @@ class TreeController extends Controller
      */
     private function findLinkNodes($siteRootId, $language, array $elementtypeIds)
     {
-        $db = $container->dbPool->read;
-        $treeManager = $container->elementsTreeManager;
-        $elementManager = $container->elementsManager;
+        $treeManager = $this->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.service');
+
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $select = $db->select()
             ->distinct()
@@ -447,27 +454,25 @@ class TreeController extends Controller
             ->where('e.element_type_id IN (?)', $elementtypeIds)
             ->order('et.sort');
 
-        $tids = $db->fetchCol($select);
+        $treeIds = $db->fetchCol($select);
 
         $data = array();
 
-        $rootTid = null;
+        $rootTreeId = null;
 
-        foreach ($tids as $tid) {
-            $node = $treeManager->getNodeByNodeId($tid);
+        foreach ($treeIds as $treeId) {
+            $tree = $treeManager->getByNodeId($treeId);
+            $node = $tree->get($treeId);
 
-            $element = $elementManager->getByEID($node->getEid());
-            $elementVersion = $element->getVersion();
+            $element = $elementService->findelement($node->getTypeId());
+            $elementVersion = $elementService->findLatestElementVersion($element);
 
-            if (!isset($data[$tid])) {
+            if (!isset($data[$treeId])) {
                 $data[$node->getId()] = array(
                     'id'       => $node->getId(),
-                    'eid'      => $node->getEid(),
-                    'text'     => $elementVersion->getBackendTitle(
-                            $language,
-                            $element->getMasterLanguage()
-                        ) . ' [' . $tid . ']',
-                    'icon'     => $elementVersion->getIconUrl(),
+                    'eid'      => $node->getTypeId(),
+                    'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $node->getId() . ']',
+                    'icon'     => $iconResolver->resolveElement($element),
                     'children' => array(),
                     'leaf'     => true,
                     'expanded' => false,
@@ -476,25 +481,22 @@ class TreeController extends Controller
             }
 
             do {
-                $parentNode = $node->getParentNode();
+                $parentNode = $tree->getParent($node);
 
                 if (!$parentNode) {
-                    $rootTid = $node->getId();
+                    $rootTreeId = $node->getId();
                     break;
                 }
 
                 if (!isset($data[$parentNode->getId()])) {
-                    $element = $elementManager->getByEID($parentNode->getEid());
-                    $elementVersion = $element->getVersion();
+                    $element = $elementService->findElement($parentNode->getTypeId());
+                    $elementVersion = $elementService->findLatestElementVersion($element);
 
                     $data[$parentNode->getId()] = array(
                         'id'       => $parentNode->getId(),
-                        'eid'      => $parentNode->getEid(),
-                        'text'     => $elementVersion->getBackendTitle(
-                                $language,
-                                $element->getMasterLanguage()
-                            ) . ' [' . $parentNode->getId() . ']',
-                        'icon'     => $elementVersion->getIconUrl(),
+                        'eid'      => $parentNode->getTypeId(),
+                        'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $parentNode->getId() . ']',
+                        'icon'     => $iconResolver->resolveTreeNode($parentNode, $language),
                         'children' => array(),
                         'leaf'     => false,
                         'expanded' => false,
@@ -514,12 +516,12 @@ class TreeController extends Controller
             return array();
         }
 
-        $data = $this->_stripLinkNodeKeys($data[$rootTid], $db);
+        $data = $this->stripLinkNodeKeys($data[$rootTreeId], $db);
 
         return $data['children'];
     }
 
-    protected function _stripLinkNodeKeys($data, Zend_Db_Adapter_Abstract $db)
+    private function stripLinkNodeKeys($data, Zend_Db_Adapter_Abstract $db)
     {
         if (is_array($data['children']) && count($data['children'])) {
             $sortSelect = $db->select()
@@ -539,7 +541,7 @@ class TreeController extends Controller
             $data['children'] = array_values($data['children']);
 
             foreach ($data['children'] as $key => $item) {
-                $data['children'][$key] = $this->_stripLinkNodeKeys($item, $db);
+                $data['children'][$key] = $this->stripLinkNodeKeys($item, $db);
             }
         }
 
@@ -559,6 +561,7 @@ class TreeController extends Controller
     private function recurseLinkNodes(array $nodes, $language, $mode, TreeNodeInterface $targetNode = null)
     {
         $elementService = $this->get('phlexible_element.service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $data = array();
 
@@ -576,16 +579,13 @@ class TreeController extends Controller
             $dataNode = array(
                 'id'       => $node->getId(),
                 'eid'      => $node->getTypeId(),
-                'text'     => $elementVersion->getBackendTitle(
-                        $language,
-                        $element->getMasterLanguage()
-                    ) . ' [' . $tid . ']',
-                'icon'     => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
+                'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $tid . ']',
+                'icon'     => $iconResolver->resolveTreeNode($node, $language),
                 'children' => !$tree->hasChildren($node)
-                        ? array()
-                        : $mode == self::MODE_NOET_TARGET && $tree->isParentOf($node, $targetNode)
-                            ? $this->recurseLinkNodes($children, $language, $mode, $targetNode)
-                            : false,
+                    ? array()
+                    : $mode == self::MODE_NOET_TARGET && $tree->isParentOf($node, $targetNode)
+                        ? $this->recurseLinkNodes($children, $language, $mode, $targetNode)
+                        : false,
                 'leaf'     => !$tree->hasChildren($node),
                 'expanded' => false,
             );
@@ -629,6 +629,7 @@ class TreeController extends Controller
 
         $treeManager = $this->get('phlexible_tree.manager');
         $elementService = $this->get('phlexible_element.service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         if (null === $language) {
             if ($id != 'root') {
@@ -663,14 +664,12 @@ class TreeController extends Controller
                 $rootNode = $tree->getRoot();
 
                 $element = $elementService->findElement($rootNode->getTypeId());
-                $elementVersion = $elementService->findLatestElementVersion($element);
-                $elementtype = $elementService->findElementtype($element);
 
                 $data[] = array(
                     'id'       => $rootNode->getId(),
                     'eid'      => (int) $rootNode->getTypeId(),
                     'text'     => $siteroot->getTitle(),
-                    'icon'     => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
+                    'icon'     => $iconResolver->resolveTreeNode($rootNode, $language),
                     // 'cls'      => 'siteroot-node',
                     // 'children' => $startNode->hasChildren() ? $this->_recurseNodes($startNode->getChildren(), $language) : array(),
                     'leaf'     => !$tree->hasChildren($rootNode),
@@ -773,24 +772,26 @@ class TreeController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return JsonResponse
      * @Route("/linkintrasiteroot", name="tree_linkintrasiteroot")
      */
-    public function linkintrasiterootAction()
+    public function linkintrasiterootAction(Request $request)
     {
-        $container = $this->getContainer();
+        $siterootId = $request->get('siteroot_id');
+        $id = $request->get('node', 'root');
+        $recursive = (bool) $request->get('recursive', false);
+        $language = $request->get('language');
+        $elementtypeIds = $request->get('element_type_ids', array());
+        $targetTid = $request->get('value');
 
-        $treeManager = $container->get('phlexible_tree.manager');
-        $elementVersionManager = $container->elementsVersionManager;
+        $treeManager = $this->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         // TODO: switch to master language of element
-        $defaultLanguage = $container->getParam(':phlexible_cms.languages.default');
-
-        $siterootID = $this->_getParam('siteroot_id', null);
-        $id = $this->_getParam('node', 'root');
-        $recursive = (bool) $this->_getParam('recursive', false);
-        $language = $this->_getParam('language', null);
-        $elementtypeIds = $this->_getParam('element_type_ids', array());
-        $targetTid = $this->_getParam('value', null);
+        $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
 
         if (!$language) {
             $language = $defaultLanguage;
@@ -802,37 +803,40 @@ class TreeController extends Controller
             $elementtypeIds = array();
         }
 
+        $targetTree = null;
         $targetNode = null;
         if ($targetTid) {
-            $targetNode = $treeManager->getNodeByNodeID($targetTid);
+            $targetTree = $treeManager->getByNodeID($targetTid);
+            $targetNode = $targetTree->get($targetTid);
         }
 
         if ($id == 'root') {
-            $siteRootManager = Makeweb_Siteroots_Siteroot_Manager::getInstance();
-            $siteRoots = $siteRootManager->getAllSiteRoots();
+            $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
+            $siteroots = $siterootManager->findAll();
 
-            if ($siterootID !== null) {
-                unset($siteRoots[$siterootID]);
+            if ($siterootId !== null) {
+                unset($siteroots[$siterootId]);
             }
 
             $data = array();
-            foreach ($siteRoots as $siteRootID => $siteRoot) {
+            foreach ($siteroots as $siteRootID => $siteRoot) {
                 $tree = $treeManager->getBySiteRootID($siteRootID);
                 $rootNode = $tree->getRoot();
 
-                $elementVersion = $elementVersionManager->getLatest($rootNode->getEID());
+                $element = $elementService->findElement($rootNode->getTypeId());
+                $elementVersion = $elementService->findLatestElementVersion($element);
 
                 $children = false;
-                if ($targetNode && $siteRootID === $targetNode->getSiteRootId()) {
+                if ($targetTree && $siteRootID === $targetTree->getSiterootId()) {
                     if (!count($elementtypeIds)) {
                         $mode = !$targetTid ? self::MODE_NOET_NOTARGET : self::MODE_NOET_TARGET;
 
-                        $nodes = $rootNode->getChildren();
+                        $nodes = $tree->getChildren($rootNode);
                         $children = $this->recurseLinkNodes($nodes, $language, $mode, $targetNode);
                     } else {
                         $mode = !$targetTid ? self::MODE_ET_NOTARGET : self::MODE_ET_TARGET;
 
-                        $children = $this->findLinkNodes($rootNode->getSiteRootId(), $language, $elementtypeIds);
+                        $children = $this->findLinkNodes($tree->getSiterootId(), $language, $elementtypeIds);
 
                         if ($elementtypeIds) {
                             $children = $this->recursiveTreeStrip($children);
@@ -842,26 +846,27 @@ class TreeController extends Controller
 
                 $data[] = array(
                     'id'       => $rootNode->getID(),
-                    'eid'      => $rootNode->getEID(),
+                    'eid'      => $rootNode->getTypeId(),
                     'text'     => $siteRoot->getTitle(),
-                    'icon'     => $elementVersion->getIconUrl(),
+                    'icon'     => $iconResolver->resolveTreeNode($rootNode, $language),
                     'children' => $children,
                     'leaf'     => !$rootNode->hasChildren(),
                     'expanded' => false
                 );
             }
         } else {
-            $startNode = $treeManager->getNodeByNodeID($id);
+            $tree = $treeManager->getByNodeID($id);
+            $startNode = $tree->get($id);
 
             if (!count($elementtypeIds)) {
                 $mode = !$targetTid ? self::MODE_NOET_NOTARGET : self::MODE_NOET_TARGET;
 
-                $nodes = $startNode->getChildren();
+                $nodes = $tree->getChildren($startNode);
                 $data = $this->recurseLinkNodes($nodes, $language, $mode, $targetNode);
             } else {
                 $mode = !$targetTid ? self::MODE_ET_NOTARGET : self::MODE_ET_TARGET;
 
-                $data = $this->findLinkNodes($startNode->getSiteRootId(), $language, $elementtypeIds);
+                $data = $this->findLinkNodes($tree->getSiterootId(), $language, $elementtypeIds);
 
                 if ($elementtypeIds) {
                     $data = $this->recursiveTreeStrip($data);
@@ -872,320 +877,167 @@ class TreeController extends Controller
             //$data = $this->_recurseLinkNodes($nodes, $language, $mode);
         }
 
-        $this->getResponse()->setAjaxPayload($data);
+        return new JsonResponse($data);
     }
 
     /**
      * Create an Element
      *
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/create", name="tree_create")
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        $container = $this->getContainer();
+        $parentId = $request->get('id');
+        $siterootId = $request->get('siteroot_id');
+        $elementtypeId = $request->get('element_type_id');
+        $prevId = $request->get('prev_id');
+        $sortMode = $request->get('sort');
+        $navigation = $request->get('navigation') ? true : false;
+        $restricted = $request->get('restricted') ? true : false;
+        $masterLanguage = $request->get('masterlanguage');
 
-        try {
-            $db = $container->dbPool->default;
-            $db->beginTransaction();
+        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.manager');
+        $tree = $treeManager->getBySiteRootId($siterootId);
 
-            $filters = array(
-                '*' => array('StringTrim', 'StripTags'),
+        $newElement = $elementService->create($elementtypeId, true, $masterLanguage);
+        $newEid = $newElement->getEid();
+        $newElementVersion = $newElement->getLatestVersion();
+
+        // $siterootId, $parentId, $prevId, $navigation, $restricted
+
+        // place new element in element_tree
+        $newTreeId = $tree->add($parentId, $newEid, $prevId, 'element', $sortMode);
+
+        if ($navigation !== null || $restricted !== null) {
+            $tree->setPage(
+                $newTreeId,
+                $newElementVersion->getVersion(),
+                $navigation,
+                $restricted
             );
-
-            $validators = array(
-                'id'              => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-                'siteroot_id'     => array(
-                    'Uuid',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-                'element_type_id' => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-                'prev_id'         => array(
-                    'Int',
-                    Zend_Filter_Input::DEFAULT_VALUE => 0,
-                ),
-                'sort'            => array(
-                    'Alpha',
-                    Zend_Filter_Input::ALLOW_EMPTY   => true,
-                    Zend_Filter_Input::DEFAULT_VALUE => 'free',
-                ),
-                'navigation'      => array(
-                    'Alpha',
-                    Zend_Filter_Input::ALLOW_EMPTY   => true,
-                    Zend_Filter_Input::DEFAULT_VALUE => '',
-                ),
-                'restricted'      => array(
-                    'Alpha',
-                    Zend_Filter_Input::ALLOW_EMPTY   => true,
-                    Zend_Filter_Input::DEFAULT_VALUE => '',
-                ),
-                'masterlanguage'  => array(
-                    'Alpha',
-                    Zend_Filter_Input::PRESENCE      => Zend_Filter_Input::PRESENCE_REQUIRED,
-                    Zend_Filter_Input::DEFAULT_VALUE => $container->getParam(':frontend.languages.frontend')
-                )
-            );
-
-            $fi = new Brainbits_Filter_Input($filters, $validators, $this->_getAllParams());
-
-            if (!$fi->isValid()) {
-                throw new Brainbits_Filter_Exception('Error occured', 0, $fi);
-            }
-
-            $parentId = $fi->id;
-            $siterootId = $fi->siteroot_id;
-            $elementtypeId = $fi->element_type_id;
-            $prevId = $fi->prev_id;
-            $sortMode = $fi->sort;
-            $navigation = $fi->navigation ? true : false;
-            $restricted = $fi->restricted ? true : false;
-            $masterLanguage = $fi->masterlanguage;
-
-            $elementManager = Makeweb_Elements_Element_Manager::getInstance();
-            $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-            $tree = $treeManager->getBySiteRootId($siterootId);
-
-            $newElement = $elementManager->create($elementtypeId, true, $masterLanguage);
-            $newEid = $newElement->getEid();
-            $newElementVersion = $newElement->getLatestVersion();
-
-            // $siterootId, $parentId, $prevId, $navigation, $restricted
-
-            // place new element in element_tree
-            $newTreeId = $tree->add($parentId, $newEid, $prevId, 'element', $sortMode);
-
-            if ($navigation !== null || $restricted !== null) {
-                $tree->setPage(
-                    $newTreeId,
-                    $newElementVersion->getVersion(),
-                    $navigation,
-                    $restricted
-                );
-            }
-
-            $db->commit();
-
-            $result = MWF_Ext_Result::encode(
-                true,
-                $newEid,
-                'Element EID "' . $newEid . ' (' . $masterLanguage . ')" created.',
-                array(
-                    'eid'             => $newEid,
-                    'tid'             => $newTreeId,
-                    'master_language' => $masterLanguage,
-                    'navigation'      => $navigation,
-                    'restricted'      => $restricted
-                )
-            );
-        } catch (Exception $e) {
-            $result = MWF_Ext_Result::exception($e);
         }
 
-        $this->getResponse()->setAjaxPayload($result);
+        return new ResultResponse(
+            true,
+            'Element EID "' . $newEid . ' (' . $masterLanguage . ')" created.',
+            array(
+                'eid'             => $newEid,
+                'tid'             => $newTreeId,
+                'master_language' => $masterLanguage,
+                'navigation'      => $navigation,
+                'restricted'      => $restricted
+            )
+        );
     }
 
     /**
      * Create an Element
      *
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/createinstance", name="tree_createinstance")
      */
-    public function createinstanceAction()
+    public function createInstanceAction(Request $request)
     {
-        try {
-            $db = $this->getContainer()->dbPool->default;
-            $db->beginTransaction();
+        $parentId = $request->get('id');
+        $instanceId = $request->get('for_tree_id');
+        $prevId = $request->get('prev_id');
 
-            $filters = array(
-                '*' => array('StringTrim', 'StripTags'),
-            );
+        $treeManager = $this->get('phlexible_tree.manager');
 
-            $validators = array(
-                'id'          => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-                'for_tree_id' => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-                'prev_id'     => array(
-                    'Int',
-                    Zend_Filter_Input::DEFAULT_VALUE => 0,
-                ),
-            );
+        $tree = $treeManager->getByNodeId($parentId);
+        $targetNode = $tree->get($parentId);
 
-            $fi = new Brainbits_Filter_Input($filters, $validators, $this->_getAllParams());
+        $tree->createAlias($parentId, $instanceId, $prevId);
 
-            if (!$fi->isValid()) {
-                throw new Brainbits_Filter_Exception('Error occured', 0, $fi);
-            }
-
-            $parentId = $fi->id;
-            $instanceId = $fi->for_tree_id;
-            $prevId = $fi->prev_id;
-
-            $manager = Makeweb_Elements_Tree_Manager::getInstance();
-
-            $targetNode = $manager->getNodeByNodeId($parentId);
-            $tree = $targetNode->getTree();
-
-            $tree->createAlias($parentId, $instanceId, $prevId);
-
-            $db->commit();
-
-            $result = MWF_Ext_Result::encode(true, 0, 'Alias created.');
-        } catch (Exception $e) {
-            $db->rollBack();
-            $result = MWF_Ext_Result::exception($e);
-        }
-
-        $this->getResponse()->setAjaxPayload($result);
+        return new ResultResponse(true, 'Instance created.');
     }
 
     /**
      * Copy an Element
      *
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/copy", name="tree_copy")
      */
-    public function copyAction()
+    public function copyAction(Request $request)
     {
-        try {
-            $db = $this->getContainer()->dbPool->default;
-            $db->beginTransaction();
+        $parentId = $request->get('id');
+        $sourceId = $request->get('for_tree_id');
+        $prevId = $request->get('prev_id');
 
-            $filters = array(
-                '*' => array('StringTrim', 'StripTags'),
-            );
+        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.manager');
 
-            $validators = array(
-                'id'          => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-                'for_tree_id' => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-                'prev_id'     => array(
-                    'Int',
-                    Zend_Filter_Input::ALLOW_EMPTY   => true,
-                    Zend_Filter_Input::DEFAULT_VALUE => 0,
-                ),
-            );
+        $tree = $treeManager->getByNodeId($sourceId);
+        $sourceNode = $tree->get($sourceId);
+        $sourceEid = $sourceNode->getTypeId();
 
-            $fi = new Brainbits_Filter_Input($filters, $validators, $this->_getAllParams());
+        $select = $db->select()
+            ->from($db->prefix . 'element', array('element_type_id', 'masterlanguage'))
+            ->where('eid = ?', $sourceEid);
 
-            if (!$fi->isValid()) {
-                throw new Brainbits_Filter_Exception('Error occured', 0, $fi);
-            }
+        $sourceElementRow = $db->fetchRow($select);
 
-            $parentId = $fi->id;
-            $sourceId = $fi->for_tree_id;
-            $prevId = $fi->prev_id;
+        $targetElement = $elementManager->create(
+            $sourceElementRow['element_type_id'],
+            false,
+            $sourceElementRow['masterlanguage']
+        );
+        $targetEid = $targetElement->getEid();
 
-            $elementManager = Makeweb_Elements_Element_Manager::getInstance();
-            $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
+        // place new element in element_tree
+        $targetId = $tree->add($parentId, $targetEid, $prevId);
 
-            $sourceNode = $treeManager->getNodeByNodeId($sourceId);
-            $tree = $sourceNode->getTree();
-            $sourceEid = $sourceNode->getEid();
+        // copy element version data
+        $sourceElement = $elementManager->getByEid($sourceEid);
+        $sourceElementVersion = $sourceElement->getLatestVersion();
+        $targetElementVersion = $sourceElementVersion->copy($targetEid);
 
-            $select = $db->select()
-                ->from($db->prefix . 'element', array('element_type_id', 'masterlanguage'))
-                ->where('eid = ?', $sourceEid);
+        // copy tree node settings
+        $tree->copyPage(
+            $sourceId,
+            $targetElementVersion->getVersion(),
+            $sourceElementVersion->getVersion(),
+            $targetId
+        );
 
-            $sourceElementRow = $db->fetchRow($select);
-
-            $targetElement = $elementManager->create(
-                $sourceElementRow['element_type_id'],
-                false,
-                $sourceElementRow['masterlanguage']
-            );
-            $targetEid = $targetElement->getEid();
-
-            // place new element in element_tree
-            $targetId = $tree->add($parentId, $targetEid, $prevId);
-
-            // copy element version data
-            $sourceElement = $elementManager->getByEid($sourceEid);
-            $sourceElementVersion = $sourceElement->getLatestVersion();
-            $targetElementVersion = $sourceElementVersion->copy($targetEid);
-
-            // copy tree node settings
-            $tree->copyPage(
-                $sourceId,
-                $targetElementVersion->getVersion(),
-                $sourceElementVersion->getVersion(),
-                $targetId
-            );
-
-            $db->commit();
-
-            $result = MWF_Ext_Result::encode(true, $targetId, 'Element copied.');
-        } catch (Exception $e) {
-            $result = MWF_Ext_Result::exception($e);
-        }
-
-        $this->getResponse()->setAjaxPayload($result);
+        return new ResultResponse(true, 'Element copied.', array('id' => $targetId));
     }
 
     /**
      * Move an Element
      *
-     * @Route("/move", name="tree_move")
+     * @param Request $request
      *
+     * @return ResultResponse
+     * @Route("/move", name="tree_move")
      */
-    public function moveAction()
+    public function moveAction(Request $request)
     {
-        try {
-            $filters = array('StringTrim', 'StripTags');
+        $id = $request->get('id');
+        $targetId = $request->get('target');
 
-            $validators = array(
-                'id'     => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-                'target' => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                )
-            );
+        $treeManager = $this->get('phlexible_tree.manager');
+        $tree = $treeManager->getByNodeId($id);
+        $node = $tree->get($id);
 
-            $fi = new Brainbits_Filter_Input($filters, $validators, $this->_getAllParams());
+        $targetTree = $treeManager->getByNodeId($targetId);
+        $targetNode = $tree->get($targetId);
 
-            if (!$fi->isValid()) {
-                throw new Brainbits_Filter_Exception('Error occured', 0, $fi);
-            }
-
-            $id = $fi->id;
-            $targetId = $fi->target;
-
-            $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-            $node = $treeManager->getNodeByNodeId($id);
-            $tree = $node->getTree();
-
-            if ($id === $targetId) {
-                $result = MWF_Ext_Result::encode(false, null, 'source_id === target_id');
-            } else {
-                $tree->move($id, $targetId);
-
-                $result = MWF_Ext_Result::encode(
-                    true,
-                    $id,
-                    'Element moved.',
-                    array('id' => $id, 'parent_id' => $targetId)
-                );
-            }
-        } catch (Exception $e) {
-            $result = MWF_Ext_Result::exception($e);
+        if ($id === $targetId) {
+            return new ResultResponse(false, 'source_id === target_id');
         }
 
-        $this->getResponse()->setAjaxPayload($result);
+        $tree->move($node, $targetNode);
+
+        return new ResultResponse(true, 'Element moved.', array('id' => $id, 'parent_id' => $targetId));
     }
 
     /**

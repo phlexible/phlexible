@@ -21,10 +21,10 @@ use Doctrine\ORM\Mapping as ORM;
 class MetaSetField
 {
     /**
-     * @var string
+     * @var int
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(type="string", length=36, options={"fixed"=true})
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
     private $id;
 
@@ -72,7 +72,7 @@ class MetaSetField
     private $metaSet;
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -80,7 +80,7 @@ class MetaSetField
     }
 
     /**
-     * @param string $id
+     * @param int $id
      *
      * @return $this
      */

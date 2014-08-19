@@ -6,14 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle;
+namespace Phlexible\Bundle\ElementBundle\Icon;
 
 /**
- * Asset
+ * Icon builder
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Overlay
+class IconBuilder
 {
     /**
      * @var string
@@ -60,12 +60,12 @@ class Overlay
             $overlay['sort'] = $params['sort'];
         }
 
-        $fallback = dirname(__DIR__) . '/ElementtypeBundle/Resources/public/elementtypes/icon_notfound.gif';
+        $fallback = dirname(dirname(__DIR__)) . '/ElementtypeBundle/Resources/public/elementtypes/icon_notfound.gif';
 
         if ($icon === null) {
             $filename = $fallback;
         } else {
-            $path = dirname(__DIR__) . '/ElementtypeBundle/Resources/public/elementtypes/';
+            $path = dirname(dirname(__DIR__)) . '/ElementtypeBundle/Resources/public/elementtypes/';
             $filename = $path . $icon;
 
             if (!file_exists($filename)) {
@@ -84,10 +84,12 @@ class Overlay
             imagecopy($target, $iconSource, 0, 0, 0, 0, 18, 18);
             imagedestroy($iconSource);
 
+            $overlayDir = dirname(__DIR__);
+
             if (!empty($overlay['status'])) {
                 // apply status overlay
                 $overlayIcon = imagecreatefromgif(
-                    __DIR__ . '/Resources/public/overlays/status_' . $overlay['status'] . '.gif'
+                    $overlayDir . '/Resources/public/overlays/status_' . $overlay['status'] . '.gif'
                 );
                 imagecopy($target, $overlayIcon, 9, 9, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -95,7 +97,7 @@ class Overlay
 
             if (!empty($overlay['timer'])) {
                 // apply timer overlay
-                $overlayIcon = imagecreatefromgif(__DIR__ . '/Resources/public/overlays/timer.gif');
+                $overlayIcon = imagecreatefromgif($overlayDir . '/Resources/public/overlays/timer.gif');
                 imagecopy($target, $overlayIcon, 10, 0, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
             }
@@ -103,7 +105,7 @@ class Overlay
             if (!empty($overlay['sort'])) {
                 // apply timer overlay
                 $overlayIcon = imagecreatefromgif(
-                    __DIR__ . '/Resources/public/overlays/sort_' . $overlay['sort'] . '.gif'
+                    $overlayDir . '/Resources/public/overlays/sort_' . $overlay['sort'] . '.gif'
                 );
                 imagecopy($target, $overlayIcon, 10, 0, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -112,7 +114,7 @@ class Overlay
             if (!empty($overlay['instance'])) {
                 // apply alias overlay
                 $overlayIcon = imagecreatefromgif(
-                    __DIR__ . '/Resources/public/overlays/instance_' . $overlay['instance'] . '.gif'
+                    $overlayDir . '/Resources/public/overlays/instance_' . $overlay['instance'] . '.gif'
                 );
                 imagecopy($target, $overlayIcon, 0, 10, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -121,7 +123,7 @@ class Overlay
             if (!empty($overlay['lock'])) {
                 // apply lock overlay
                 $overlayIcon = imagecreatefromgif(
-                    __DIR__ . '/Resources/public/overlays/lock_' . $overlay['lock'] . '.gif'
+                    $overlayDir . '/Resources/public/overlays/lock_' . $overlay['lock'] . '.gif'
                 );
                 imagecopy($target, $overlayIcon, 0, 0, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);

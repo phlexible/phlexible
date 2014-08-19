@@ -56,6 +56,7 @@ class ListController extends Controller
         $treeManager = $this->get('phlexible_tree.manager');
         $elementService = $this->get('phlexible_element.service');
         $securityContext = $this->get('security.context');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $tree = $treeManager->getByNodeID($tid);
         $node = $tree->get($tid);
@@ -97,11 +98,10 @@ class ListController extends Controller
             'title'           => $elementVersion->getBackendTitle($language, $elementMasterLanguage),
             'element_type_id' => (int) $elementType->getId(),
             'element_type'    => $elementType->getTitle(),
-            'icon'            => $elementVersion->getIconUrl($node->getIconParams($language)),
+            'icon'            => $iconResolver->resolveTreeNode($node, $language),
             'author'          => 'author',
             'version'         => $elementVersion->getVersion(),
             'create_time'     => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
-            //            'change_time'     => '2007-01-01 01:01:01',
             'publish_time'    => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'), // $node->getPublishDate($language),
             'custom_date'     => $elementVersion->getCustomDate($language),
             'language'        => $language,
@@ -166,7 +166,7 @@ class ListController extends Controller
                 'element_type'    => $childElementType->getTitle(),
                 'navigation'      => 0, //$childNode->inNavigation($childElementVersion->getVersion()),
                 'restricted'      => 0, //$childNode->isRestricted($childElementVersion->getVersion()),
-                'icon'            => '/bundles/phlexibleelementtype/elementtypes/' . $childElementVersion->getIconUrl(),//$childNode->getIconParams($language)),
+                'icon'            => $iconResolver->resolveTreeNode($childNode, $language),
                 'author'          => 'author',
                 'version'         => $childElementVersion->getVersion(),
                 'create_time'     => $childNode->getCreatedAt()->format('Y-m-d H:i:s'),

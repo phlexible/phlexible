@@ -50,8 +50,7 @@ class FileMeta
 
     /**
      * @var MetaSetField
-     * @ORM\OneToOne(targetEntity="Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField")
-     * @ORM\JoinColumn(name="field_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField")
      */
     private $field;
 

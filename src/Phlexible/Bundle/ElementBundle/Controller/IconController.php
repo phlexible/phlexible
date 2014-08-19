@@ -8,40 +8,34 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Phlexible\Bundle\ElementBundle\Overlay;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Asset controller
+ * Icon controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/elements/asset")
+ * @Route("/elements/icon")
  */
-class AssetController extends Controller
+class IconController extends Controller
 {
     /**
-     * @var string
-     */
-    protected $_assetDir = 'Resources/public';
-
-    /**
-     * Delivers an icon asset
+     * Delivers an icon
      *
      * @param Request $request
+     * @param string $icon
      *
      * @return Response
-     * @Route("/elements/asset", name="elements_asset")
+     * @Route("/{icon}", name="elements_icon")
      */
-    public function iconAction(Request $request)
+    public function iconAction(Request $request, $icon)
     {
-        $icon = $request->get('icon', null);
         $params = $request->query->all();
 
-        $overlay = $this->get('phlexible_element.overlay');
-        $cacheFilename = $overlay->getAssetPath($icon, $params);
+        $iconBuilder = $this->get('phlexible_element.icon_builder');
+        $cacheFilename = $iconBuilder->getAssetPath($icon, $params);
 
         return $this->get('igorw_file_serve.response_factory')
             ->create(
