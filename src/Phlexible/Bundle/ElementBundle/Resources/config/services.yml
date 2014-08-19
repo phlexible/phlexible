@@ -109,13 +109,13 @@ services:
 
     phlexible_element.listener.apply_successor:
         class: Phlexible\Bundle\ElementBundle\EventListener\ApplySuccessorListener
-        arguments: [@connection_manager]
+        arguments: [@doctrine.dbal.default_connection]
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
     phlexible_element.listener.elementtype_usage:
         class: Phlexible\Bundle\ElementBundle\EventListener\ElementtypeUsageListener
-        arguments: [@connection_manager, @security.context]
+        arguments: [@doctrine.dbal.default_connection, @security.context]
         tags:
             - {name: kernel.event_listener, event: phlexible_elementtype.usage, method: onElementtypeUsage}
 

@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
-use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Apply successor listener
@@ -19,16 +19,16 @@ use Phlexible\Component\Database\ConnectionManager;
 class ApplySuccessorListener
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
-     * @param ConnectionManager $connectionManager
+     * @param Connection $connection
      */
-    public function __construct(ConnectionManager $connectionManager)
+    public function __construct(Connection $connection)
     {
-        $this->db = $connectionManager->default;
+        $this->connection = $connection;
     }
 
     /**
@@ -42,73 +42,73 @@ class ApplySuccessorListener
         $fromUid = $fromUser->getId();
         $toUid = $toUser->getId();
 
-        $this->db->update(
-            $this->db->prefix . 'mediamanager_files',
+        $this->connection->update(
+            'mediamanager_files',
             array(
                 'create_user_id' => $toUid,
             ),
             array(
-                'create_user_id = ?' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'mediamanager_files',
+        $this->connection->update(
+            'mediamanager_files',
             array(
                 'modify_user_id' => $toUid,
             ),
             array(
-                'modify_user_id = ?' => $fromUid
+                'modify_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'mediamanager_folders',
+        $this->connection->update(
+            'mediamanager_folders',
             array(
                 'create_user_id' => $toUid,
             ),
             array(
-                'create_user_id = ?' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'mediamanager_folders',
+        $this->connection->update(
+            'mediamanager_folders',
             array(
                 'modify_user_id' => $toUid,
             ),
             array(
-                'modify_user_id = ?' => $fromUid
+                'modify_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'mediamanager_folder_rights',
+        $this->connection->update(
+            'mediamanager_folder_rights',
             array(
                 'create_user_id' => $toUid,
             ),
             array(
-                'create_user_id = ?' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'mediamanager_folder_rights',
+        $this->connection->update(
+            'mediamanager_folder_rights',
             array(
                 'modify_user_id' => $toUid,
             ),
             array(
-                'modify_user_id = ?' => $fromUid
+                'modify_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'mediamanager_site',
+        $this->connection->update(
+            'mediamanager_site',
             array(
                 'create_uid' => $toUid,
             ),
             array(
-                'create_uid = ?' => $fromUid
+                'create_uid' => $fromUid
             )
         );
     }

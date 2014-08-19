@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\EventListener;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
-use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Elementtypes listeners
@@ -19,16 +19,16 @@ use Phlexible\Component\Database\ConnectionManager;
 class ApplySuccessorListener
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
-     * @param ConnectionManager $dbPool
+     * @param Connection $connection
      */
-    public function __construct(ConnectionManager $dbPool)
+    public function __construct(Connection $connection)
     {
-        $this->db = $dbPool->default;
+        $this->connection = $connection;
     }
 
     /**
@@ -42,33 +42,33 @@ class ApplySuccessorListener
         $fromUid = $fromUser->getId();
         $toUid = $toUser->getId();
 
-        $this->db->update(
-            $this->db->prefix . 'elementtype',
+        $this->connection->update(
+            'elementtype',
             array(
-                'create_uid' => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
-                'create_uid = ?' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'elementtype',
+        $this->connection->update(
+            'elementtype',
             array(
-                'modify_uid' => $toUid,
+                'modify_user_id' => $toUid,
             ),
             array(
-                'modify_uid = ?' => $fromUid
+                'modify_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'elementtype_version',
+        $this->connection->update(
+            'elementtype_version',
             array(
-                'modify_uid' => $toUid,
+                'modify_user_id' => $toUid,
             ),
             array(
-                'modify_uid = ?' => $fromUid
+                'modify_user_id' => $fromUid
             )
         );
     }

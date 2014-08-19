@@ -71,16 +71,25 @@ class HistoryController extends Controller
 
         $elementHistory = array();
         foreach ($entries as $entry) {
+            $type = '-';
+            if (stripos($entry->getAction(), 'element')) {
+                $type = 'element';
+            } elseif (stripos($entry->getAction(), 'node')) {
+                $type = 'treeNode';
+            } elseif (stripos($entry->getAction(), 'teaser')) {
+                $type = 'teaser';
+            }
+
             $elementHistory[] = array(
-                'eid' => $entry->getEid(),
-                'type' => 'element',
-                'id' => $entry->getId(),
-                'tid' => 0,
-                'version' => $entry->getVersion(),
-                'language' => $entry->getLanguage(),
-                'comment' => $entry->getComment(),
-                'action' => $entry->getAction(),
-                'username' => $entry->getCreateUserId(),
+                'eid'         => $entry->getEid(),
+                'type'        => $type,
+                'id'          => $entry->getId(),
+                'tid'         => $entry->getTreeId() ?: $entry->getTeaserId() ?: null,
+                'version'     => $entry->getVersion(),
+                'language'    => $entry->getLanguage(),
+                'comment'     => $entry->getComment(),
+                'action'      => $entry->getAction(),
+                'username'    => $entry->getCreateUserId(),
                 'create_time' => $entry->getCreatedAt()->format('Y-m-d H:i:s'),
             );
         }

@@ -79,7 +79,7 @@ services:
 
     phlexible_media_manager.listener.apply_successor:
         class: Phlexible\Bundle\MediaManagerBundle\EventListener\ApplySuccessorListener
-        arguments: [@connection_manager]
+        arguments: [@doctrine.dbal.default_connection]
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 

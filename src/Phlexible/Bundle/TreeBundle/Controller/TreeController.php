@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Controller;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
@@ -521,7 +522,7 @@ class TreeController extends Controller
         return $data['children'];
     }
 
-    private function stripLinkNodeKeys($data, Zend_Db_Adapter_Abstract $db)
+    private function stripLinkNodeKeys($data, Connection $connection)
     {
         if (is_array($data['children']) && count($data['children'])) {
             $sortSelect = $db->select()

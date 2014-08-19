@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
-use Phlexible\Component\Database\ConnectionManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -20,9 +20,9 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class ElementtypeUsageListener
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
      * @var SecurityContextInterface
@@ -30,12 +30,12 @@ class ElementtypeUsageListener
     private $securityContext;
 
     /**
-     * @param ConnectionManager        $connectionManager
+     * @param Connection               $connection
      * @param SecurityContextInterface $securityContext
      */
-    public function __construct(ConnectionManager $connectionManager, SecurityContextInterface $securityContext)
+    public function __construct(Connection $connection, SecurityContextInterface $securityContext)
     {
-        $this->db = $connectionManager->default;
+        $this->connection = $connection;
         $this->securityContext = $securityContext;
     }
 

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Component\Database\ConnectionManager;
 
 /**
@@ -18,22 +19,22 @@ use Phlexible\Component\Database\ConnectionManager;
 class TreeSorter
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    protected $_db = null;
+    private $connection;
 
     /**
      * @var string
      */
-    protected $_sortLang = null;
+    protected $_sortLang;
 
     /**
-     * @param ConnectionManager $dbPool
-     * @param string            $sortLang
+     * @param Connection $connection
+     * @param string     $sortLang
      */
-    public function __construct(ConnectionManager $dbPool, $sortLang)
+    public function __construct(Connection $connection, $sortLang)
     {
-        $this->_db = $dbPool->write;
+        $this->connection = $connection;
         $this->_sortLang = $sortLang;
     }
 

@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
-use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Apply successor listener
@@ -19,16 +19,16 @@ use Phlexible\Component\Database\ConnectionManager;
 class ApplySuccessorListener
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
-     * @param ConnectionManager $dbPool
+     * @param Connection $connection
      */
-    public function __construct(ConnectionManager $dbPool)
+    public function __construct(Connection $connection)
     {
-        $this->db = $dbPool->default;
+        $this->connection = $connection;
     }
 
     /**
@@ -42,93 +42,99 @@ class ApplySuccessorListener
         $fromUid = $fromUser->getId();
         $toUid = $toUser->getId();
 
-        $this->db->update(
-            $this->db->prefix . 'element',
+        $this->connection->update(
+            'element',
             array(
-                'create_uid' => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
-                'create_uid = ?' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'element_history',
+        $this->connection->update(
+            'element_history',
             array(
-                'create_uid' => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
-                'create_uid = ?' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'element_tree',
+        // TODO: TreeBundle
+        $this->connection->update(
+            'tree',
             array(
-                'modify_uid' => $toUid,
+                'modify_user_id' => $toUid,
             ),
             array(
-                'modify_uid = ?' => $fromUid
+                'modify_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'element_tree_history',
+        // TODO: TreeBundle
+        $this->connection->update(
+            'tree_history',
             array(
-                'create_uid' => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
-                'create_uid = ?' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'element_tree_online',
+        // TODO: TreeBundle
+        $this->connection->update(
+            'tree_online',
             array(
                 'publish_uid' => $toUid,
             ),
             array(
-                'publish_uid = ?' => $fromUid
+                'publish_uid' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'element_tree_teasers',
+        // TODO: TeaserBundle
+        $this->connection->update(
+            'teaser',
             array(
-                'modify_uid' => $toUid,
+                'modify_user_id' => $toUid,
             ),
             array(
-                'modify_uid = ?' => $fromUid
+                'modify_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'element_tree_teasers_history',
+        // TODO: TeaserBundle
+        $this->connection->update(
+            'teaser_history',
             array(
-                'create_uid' => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
-                'create_uid = ?' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'element_tree_teasers_online',
+        // TODO: TeaserBundle
+        $this->connection->update(
+            'teaser_online',
             array(
-                'publish_uid' => $toUid,
+                'publish_user_id' => $toUid,
             ),
             array(
-                'publish_uid = ?' => $fromUid
+                'publish_user_id' => $fromUid
             )
         );
 
-        $this->db->update(
-            $this->db->prefix . 'element_version',
+        $this->connection->update(
+            'element_version',
             array(
-                'create_uid' => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
-                'create_uid = ?' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
     }

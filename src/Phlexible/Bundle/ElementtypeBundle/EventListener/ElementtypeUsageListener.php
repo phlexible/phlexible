@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\EventListener;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
-use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Elementtype usage listeners
@@ -19,16 +19,16 @@ use Phlexible\Component\Database\ConnectionManager;
 class ElementtypeUsageListener
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
-     * @param ConnectionManager $connectionManager
+     * @param Connection $connection
      */
-    public function __construct(ConnectionManager $connectionManager)
+    public function __construct(Connection $connection)
     {
-        $this->db = $connectionManager->default;
+        $this->connection = $connection;
     }
 
     /**
@@ -38,25 +38,15 @@ class ElementtypeUsageListener
     {
         $elementtypeId = $event->getElementtype()->getId();
 
-        $select = $this->db
-            ->select()
-            ->distinct()
-            ->from(
-                array('es' => $this->db->prefix . 'elementtype_structure'),
-                array(
-                    'elementtype_id',
-                    $this->db->fn->expr('MAX(es.reference_version) AS latest_version')
-                )
-            )
-            ->join(
-                array('e' => $this->db->prefix . 'elementtype'),
-                'es.elementtype_id = e.id',
-                array('title', 'type')
-            )
-            ->where('es.reference_id = ?', $elementtypeId)
-            ->group('es.elementtype_id');
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select(array('es.elementtype_id', 'MAX(es.reference_version) AS latest_version', 'e.title', 'e.type'))
+            ->from('elementtype_structure', 'es')
+            ->join('es', 'elementtype', 'e', 'es.elementtype_id = e.id')
+            ->where($qb->expr()->eq('es.reference_id', $elementtypeId))
+            ->groupBy('es.elementtype_id');
 
-        $rows = $this->db->fetchAll($select);
+        $rows = $this->connection->fetchAll($qb->getSQL());
 
         foreach ($rows as $row) {
             $event->addUsage(
