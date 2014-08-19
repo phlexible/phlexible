@@ -8,15 +8,14 @@
 
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
-use Phlexible\Bundle\TreeBundle\Event\BeforeCreateNodeEvent;
-use Phlexible\Bundle\TreeBundle\Event\BeforeDeleteNodeEvent;
-use Phlexible\Bundle\TreeBundle\Event\BeforeMoveNodeEvent;
-use Phlexible\Bundle\TreeBundle\Event\CreateNodeEvent;
-use Phlexible\Bundle\TreeBundle\Event\DeleteNodeEvent;
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\TreeBundle\Event\MoveNodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\ReorderNodeEvent;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNode;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -30,7 +29,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
     /**
      * @var string
      */
-    private $siterootId = null;
+    private $siterootId;
 
     /**
      * @var array
@@ -43,9 +42,9 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
     private $childNodes = array();
 
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
      * @var EventDispatcherInterface
@@ -59,18 +58,18 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
 
     /**
      * @param string                    $siteRootId
-     * @param \Zend_Db_Adapter_Abstract $db
+     * @param Connection                $connection
      * @param EventDispatcherInterface  $dispatcher
      * @param TreeHistory               $history
      */
     public function __construct(
         $siteRootId,
-        \Zend_Db_Adapter_Abstract $db,
+        Connection $connection,
         EventDispatcherInterface $dispatcher,
         TreeHistory $history)
     {
         $this->siterootId = $siteRootId;
-        $this->db = $db;
+        $this->connection = $connection;
         $this->dispatcher = $dispatcher;
         $this->history = $history;
     }
@@ -156,12 +155,13 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             return $this->nodes[null];
         }
 
-        $select = $this->db
-            ->select()
-            ->from($this->db->prefix . 'tree')
-            ->where('parent_id IS NULL');
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('et.*')
+            ->from('tree', 'et')
+            ->where($qb->expr()->isNull('et.parent_id'));
 
-        $row = $this->db->fetchRow($select);
+        $row = $this->connection->fetchAssoc($qb->getSQL());
 
         return $this->mapNode($row);
     }
@@ -175,12 +175,13 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             return $this->nodes[$id];
         }
 
-        $select = $this->db
-            ->select()
-            ->from($this->db->prefix . 'tree')
-            ->where('id = ?', $id);
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('et.*')
+            ->from('tree', 'et')
+            ->where($qb->expr()->eq('et.id', $id));
 
-        $row = $this->db->fetchRow($select);
+        $row = $this->connection->fetchAssoc($qb->getSQL());
 
         if (!$row) {
             throw new \Exception("$id not found");
@@ -220,15 +221,16 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             return $this->childNodes[$id];
         }
 
-        $select = $this->db
-            ->select()
-            ->from($this->db->prefix . 'tree')
-            ->where('parent_id = ?', $id)
-            ->order('sort ASC');
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('et.*')
+            ->from('tree', 'et')
+            ->where($qb->expr()->eq('et.parent_id', $id))
+            ->orderBy('sort', 'ASC');
 
-        $row = $this->db->fetchAll($select);
+        $rows = $this->connection->fetchAll($qb->getSQL());
 
-        $childNodes = $this->mapNodes($row);
+        $childNodes = $this->mapNodes($rows);
         $this->childNodes[$id] = $childNodes;
 
         return $childNodes;
@@ -343,12 +345,18 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             $nodeId = $node;
         }
 
-        $select = $this->db
-            ->select()
-            ->from($this->db->prefix . 'tree_online', 'language')
-            ->where('tree_id = ?', $nodeId);
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('eto.language')
+            ->from('tree_online', 'eto')
+            ->where($qb->expr()->eq('eto.tree_id', $nodeId));
 
-        $languages = $this->db->fetchCol($select);
+        $statement = $this->connection->executeQuery($qb->getSQL());
+
+        $languages = array();
+        while ($language = $statement->fetchColumn()) {
+            $languages[] = $language;
+        }
 
         return $languages;
     }
@@ -366,12 +374,18 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             $nodeId = $node;
         }
 
-        $select = $this->db
-            ->select()
-            ->from($this->db->prefix . 'tree_online', array('language', 'version'))
-            ->where('tree_id = ?', $nodeId);
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select(array('eto.language', 'eto.version'))
+            ->from('tree_online', 'eto')
+            ->where($qb->expr()->eq('eto.tree_id', $nodeId));
 
-        $versions = $this->db->fetchPairs($select);
+        $statement = $this->connection->executeQuery($qb->getSQL());
+
+        $versions = array();
+        while ($row = $statement->fetch()) {
+            $versions[$row['language']] = (int) $row['version'];
+        }
 
         return $versions;
     }
@@ -430,8 +444,8 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             ->setCreateUserId($uid)
             ->setCreatedAt(new \DateTime);
 
-        $beforeEvent = new BeforeCreateNodeEvent($this, $node);
-        if (false === $this->dispatcher->dispatch($beforeEvent)) {
+        $beforeEvent = new NodeEvent($node);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_CREATE_NODE, $beforeEvent)->isPropagationStopped()) {
             return false;
         }
 
@@ -444,8 +458,8 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         // history
         $this->history->insertCreateNode($node, $uid, null);
 
-        $event = new CreateNodeEvent($node);
-        $this->dispatcher->dispatch($event);
+        $event = new NodeEvent($node);
+        $this->dispatcher->dispatch(TreeEvents::CREATE_NODE, $event);
 
         return $node;
     }
@@ -472,8 +486,8 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             return;
         }
 
-        $beforeEvent = new BeforeReorderNodeEvent($node, $targetNode, $before);
-        if (false === $this->dispatcher->dispatch($beforeEvent)) {
+        $event = new ReorderNodeEvent($node, $targetNode, $before);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_REORDER_NODE, $event)->isPropagationStopped()) {
             return;
         }
 
@@ -500,7 +514,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         }
 
         $event = new ReorderNodeEvent($node, $targetNode, $before);
-        $this->dispatcher->dispatch($event);
+        $this->dispatcher->dispatch(TreeEvents::REORDER_NODE, $event);
 
         return;
     }
@@ -524,8 +538,8 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
 
         $oldParentId = $node->getParentId();
 
-        $beforeEvent = new BeforeMoveNodeEvent($node, $toNode);
-        if (!$this->dispatcher->dispatch($beforeEvent)) {
+        $event = new MoveNodeEvent($node, $toNode);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_MOVE_NODE, $event)->isPropagationStopped()) {
             return;
         }
 
@@ -533,21 +547,21 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             ->setSort(0)
             ->setParentId($toNode->getId());
 
-        $this->db->update(
-            $this->db->prefix . 'element_tree',
+        $this->connection->update(
+            'tree',
             array(
                 'parent_id' => $toNode->getId(),
                 'sort'      => 0,
             ),
             array(
-                'id = ?' => $node->getId()
+                'id' => $node->getId()
             )
         );
 
         $this->sorter->sortNode($toNode);
 
         $event = new MoveNodeEvent($node, $toNode);
-        $this->dispatcher->dispatch($event);
+        $this->dispatcher->dispatch(TreeEvents::MOVE_NODE, $event);
 
         // history
         $this->history->insertMoveNode(
@@ -631,22 +645,22 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             $this->doDelete($childNode, $uid, $comment);
         }
 
-        $beforeEvent = new BeforeDeleteNodeEvent($node);
-        if ($this->dispatcher->dispatch($beforeEvent) === false) {
+        $event = new NodeEvent($node);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_DELETE_NODE, $event)->isPropagationStopped()) {
             return;
         }
 
         $id = $node->getId();
 
-        $this->db->delete(
-            $this->db->prefix . 'tree',
+        $this->connection->delete(
+            'tree',
             array(
-                'id = ?' => $id
+                'id' => $id
             )
         );
 
-        $event = new DeleteNodeEvent($node);
-        $this->dispatcher->dispatch($event);
+        $event = new NodeEvent($node);
+        $this->dispatcher->dispatch(TreeEvents::DELETE_NODE, $event);
 
         // history
         $this->history->insertDeleteNode($node, $uid, null, null, null, $comment);

@@ -1,5 +1,5 @@
 .p-users-main-panel .x-layout-collapsed-west {
-    background-image: url(/BASEURL/admin/gui/asset/textimage/?key=users.search&component=users&icon=filter);
+    background-image: url(/BASEURL/admin/gui/asset/textimage?key=users.search&icon=filter);
     background-repeat: no-repeat;
     background-position: center;
 }

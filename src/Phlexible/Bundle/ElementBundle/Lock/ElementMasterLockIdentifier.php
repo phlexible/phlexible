@@ -8,14 +8,14 @@
 
 namespace Phlexible\Bundle\ElementBundle\Lock;
 
-use Phlexible\Bundle\LockBundle\Lock\LockIdentifierInterface;
+use Phlexible\Bundle\LockBundle\Lock\LockIdentifier;
 
 /**
- * Element identifier
+ * Element master lock identifier
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ElementMasterLockIdentifier extends LockIdentifierInterface
+class ElementMasterLockIdentifier extends LockIdentifier
 {
     /**
      * @param int $eid

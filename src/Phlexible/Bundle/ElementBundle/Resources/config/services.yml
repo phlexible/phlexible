@@ -3,38 +3,16 @@ parameters:
     phlexible_element.content.cache_dir: %kernel.cache_dir%/elements/
 
 services:
-    phlexible_element.repository:
-        class: Phlexible\Bundle\ElementBundle\Element\ElementRepository
-        arguments: [@event_dispatcher, @connection_manager]
-
-    phlexible_element.version.repository:
-        class: Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersionRepository
-        arguments: [@event_dispatcher, @connection_manager]
-
-    phlexible_element.version.data.loader:
-        class: Phlexible\Bundle\ElementBundle\ElementVersionData\ElementVersionDataLoader
-        arguments: [@connection_manager, @phlexible_elementtype.field.registry, @phlexible_elementtype.service]
-
-    phlexible_element.structure.loader:
-        class: Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructureLoader
-        arguments: [@connection_manager, @phlexible_elementtype.field.registry, @phlexible_elementtype.service]
-
     phlexible_element.service:
         class: Phlexible\Bundle\ElementBundle\ElementService
         arguments:
-            - @phlexible_element.repository
-            - @phlexible_element.version.repository
-            - @phlexible_element.structure.loader
+            - @phlexible_element.element_manager
+            - @phlexible_element.element_version_manager
+            - @phlexible_element.element_structure_manager
             - @phlexible_elementtype.service
 
     phlexible_element.context.manager:
         class: Phlexible\Bundle\ElementBundle\Context\ContextManager
-
-    phlexible_element.file.usage:
-        class: Phlexible\Bundle\ElementBundle\Usage\FileUsage
-
-    phlexible_element.folder.usage:
-        class: Phlexible\Bundle\ElementBundle\Usage\FolderUsage
 
     phlexible_element.field.mapper:
         class: Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper
@@ -64,10 +42,6 @@ services:
     phlexible_element.overlay:
         class: Phlexible\Bundle\ElementBundle\Overlay
         arguments: [%phlexible_element.overlay.cache_dir%]
-
-    phlexible_element.lock.manager:
-        class: Phlexible\Bundle\ElementBundle\Lock\LockManager
-        arguments: [@doctrine.orm.entity_manager]
 
     phlexible_element.util.suggest_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
@@ -140,6 +114,13 @@ services:
         arguments: [@connection_manager, @security.context]
         tags:
             - {name: kernel.event_listener, event: phlexible_elementtype.usage, method: onElementtypeUsage}
+
+    phlexible_element.listener.unlock:
+        class: Phlexible\Bundle\ElementBundle\EventListener\UnlockListener
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.before_delete_user, method: onBeforeDeleteUser}
+            - {name: kernel.event_listener, event: security.logout, method: onLogout}
 
     # portlets
     #phlexible_element.portlet.latest:

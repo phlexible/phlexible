@@ -1,103 +1,73 @@
 <?php
 /**
- * MAKEweb
+ * phlexible
  *
- * PHP Version 5
- *
- * @category    MAKEweb
- * @package     Makeweb_Elements
- * @copyright   2007 brainbits GmbH (http://www.brainbits.net)
- * @version     SVN: $Id: Generator.php 2312 2007-01-25 18:46:27Z swentz $
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
 
+namespace Phlexible\Bundle\TreeBundle\Event;
+
+use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+
 /**
- * Before Publish Node Event
+ * Before publish node event
  *
- * @category    MAKEweb
- * @package     Makeweb_Elements
- * @author      Stephan Wentz <sw@brainbits.net>
- * @copyright   2007 brainbits GmbH (http://www.brainbits.net)
+ * @author Stephan Wentz <sw@brainbits.net>
  */
-class Makeweb_Elements_Event_BeforePublishNode extends Brainbits_Event_Notification_Abstract
+class BeforePublishNodeEvent extends NodeEvent
 {
     /**
      * @var string
      */
-    protected $_notificationName = Makeweb_Elements_Event::BEFORE_PUBLISH_NODE;
-
-    /**
-     * @var Makeweb_Elements_Tree_Node
-     */
-    protected $_node = null;
-
-    /**
-     * @var string
-     */
-    protected $_language = null;
+    private $language;
 
     /**
      * @var int
      */
-    protected $_version = null;
+    private $version;
 
     /**
      * @var bool
      */
-    protected $_isRecursive = false;
+    private $isRecursive = false;
 
     /**
-     * Constructor
-     *
-     * @param Makeweb_Elements_Tree_Node $node
-     * @param string                     $language
-     * @param int                        $version
-     * @param bool                       $isRecursive
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     * @param int               $version
+     * @param bool              $isRecursive
      */
-    public function __construct(Makeweb_Elements_Tree_Node $node, $language, $version, $isRecursive = false)
+    public function __construct(TreeNodeInterface $node, $language, $version, $isRecursive = false)
     {
-        $this->_node = $node;
-        $this->_language = $language;
-        $this->_version = $version;
-        $this->_isRecursive = (bool) $isRecursive;
+        parent::__construct($node);
+
+        $this->language = $language;
+        $this->version = $version;
+        $this->isRecursive = (bool) $isRecursive;
     }
 
     /**
-     * Return node
-     *
-     * @return Makeweb_Elements_Tree_Node
-     */
-    public function getNode()
-    {
-        return $this->_node;
-    }
-
-    /**
-     * Return language
-     *
      * @return string
      */
     public function getLanguage()
     {
-        return $this->_language;
+        return $this->language;
     }
 
     /**
-     * Return version
-     *
      * @return int
      */
     public function getVersion()
     {
-        return $this->_version;
+        return $this->version;
     }
 
     /**
-     * Is this a recusrive publish?
-     *
      * @return bool
      */
     public function isRecursive()
     {
-        return $this->_isRecursive;
+        return $this->isRecursive;
     }
 }

@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Phlexible\Bundle\ElementBundle\Entity\Repository\ElementVersionRepository")
  * @ORM\Table(name="element_version")
  */
 class ElementVersion
@@ -331,6 +331,7 @@ class ElementVersion
      */
     public function getIconUrl(array $additionalParams = array())
     {
+        // TODO: repair!
         return '/elements/asset/';
         $icon = '/elements/asset/' . $this->getElementTypeVersionObj()->getIcon();
 

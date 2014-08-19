@@ -1,69 +1,43 @@
 <?php
 /**
- * MAKEweb
+ * phlexible
  *
- * PHP Version 5
- *
- * @category    MAKEweb
- * @package     Makeweb_Elements
- * @copyright   2007 brainbits GmbH (http://www.brainbits.net)
- * @version     SVN: $Id: Generator.php 2312 2007-01-25 18:46:27Z swentz $
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
 
+namespace Phlexible\Bundle\TreeBundle\Event;
+
+use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+
 /**
- * Before Set Node Offline Event
+ * Before set node offline event
  *
- * @category    MAKEweb
- * @package     Makeweb_Elements
- * @author      Stephan Wentz <sw@brainbits.net>
- * @copyright   2007 brainbits GmbH (http://www.brainbits.net)
+ * @author Stephan Wentz <sw@brainbits.net>
  */
-class Makeweb_Elements_Event_BeforeSetNodeOffline extends Brainbits_Event_Notification_Abstract
+class BeforeSetNodeOfflineEvent extends NodeEvent
 {
     /**
      * @var string
      */
-    protected $_notificationName = Makeweb_Elements_Event::BEFORE_SET_NODE_OFFLINE;
+    private $language;
 
     /**
-     * @var Makeweb_Elements_Tree_Node
+     * @param TreeNodeInterface $node
+     * @param string            $language
      */
-    protected $_node = null;
-
-    /**
-     * @var string
-     */
-    protected $_language = null;
-
-    /**
-     * Constructor
-     *
-     * @param Makeweb_Elements_Tree_Node $node
-     * @param string                     $language
-     */
-    public function __construct(Makeweb_Elements_Tree_Node $node, $language)
+    public function __construct(TreeNodeInterface $node, $language)
     {
-        $this->_node = $node;
-        $this->_language = $language;
+        parent::__construct($node);
+
+        $this->language = $language;
     }
 
     /**
-     * Return node
-     *
-     * @return Makeweb_Elements_Tree_Node
-     */
-    public function getNode()
-    {
-        return $this->_node;
-    }
-
-    /**
-     * Return language
-     *
      * @return string
      */
     public function getLanguage()
     {
-        return $this->_language;
+        return $this->language;
     }
 }

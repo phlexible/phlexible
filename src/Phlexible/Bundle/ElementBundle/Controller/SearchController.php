@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,10 +36,8 @@ class SearchController extends Controller
         $language = $request->get('language');
         $query = $request->get('query');
 
-        $container = $this->getContainer();
-        $db = $container->dbPool->read;
-        $elementVersionManager = $container->elementsVersionManager;
-        $treeManager = $container->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.manager');
 
         $select = $db->select()
             ->distinct()
@@ -57,8 +56,9 @@ class SearchController extends Controller
 
         foreach ($result as $key => $row) {
             $node = $treeManager->getNodeByNodeId($row['tid']);
-            $elementVersion = $elementVersionManager->getLatest($node->getEid());
-            $icon = $elementVersion->getIconUrl($node->getIconParams($language));
+            $element = $elementService->findElement($row['eid']);
+            $elementVersion = $elementService->findLatestElementVersion($element);
+            $icon = '';//$elementVersion->getIconUrl($node->getIconParams($language));
             $result[$key]['icon'] = $icon;
         }
 
@@ -73,48 +73,40 @@ class SearchController extends Controller
      */
     public function mediaAction(Request $request)
     {
-        $siterootId = $request->get('siteroot_id');
         $query = $request->get('query');
 
-        $db = $this->getContainer()->dbPool->read;
+        // TODO: meta search
 
-        $select1 = $db->select()
-            ->from($db->prefix . 'mediamanager_files', array('id', 'version', 'name', 'folder_id'))
-            ->where('name LIKE ?', '%' . $query . '%');
+        $results = array();
+        foreach ($this->get('phlexible_media_site.site_manager')->getAll() as $site) {
+            $files = $site->search($query);
 
-        $select2 = $db->select()
-            ->from(array('f' => $db->prefix . 'mediamanager_files'), array('id', 'version', 'name', 'folder_id'))
-            ->join(
-                array('m' => $db->prefix . 'mediamanager_files_metasets_items'),
-                'm.file_id = f.id AND m.file_version = m.file_version',
-                array()
-            )
-            ->where('m.meta_value_de LIKE ?', '%' . $query . '%')
-            ->orWhere('m.meta_value_en LIKE ?', '%' . $query . '%');
-        //->order('m.meta_key');
+            foreach ($files as $file) {
+                /* @var $file FileInterface */
 
-        $select = $db->select()
-            ->distinct()
-            ->union(array($select1, $select2))
-            ->limit(10);
-
-        $result = $db->fetchAll($select);
-
-        return new JsonResponse(array('results' => $result));
+                $results[] = array(
+                    'id'        => $file->getId(),
+                    'version'   => $file->getVersion(),
+                    'name'      => $file->getName(),
+                    'folder_id' => $file->getFolderId(),
+                );
+            }
+        }
+        return new JsonResponse(array('results' => $results));
     }
 
     /**
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/medialink", name="elements_rights_medialink")
+     * @Route("/medialink", name="elements_search_medialink")
      */
     public function medialinkAction(Request $request)
     {
         $fileId = $request->get('file_id');
 
-        $site = Media_Site_Manager::getInstance()->getByFileId($fileId);
-        $file = $site->getFilePeer()->getByID($fileId);
+        $site = $this->get('phlexible_media_site.site_manager')->getByFileId($fileId);
+        $file = $site->findFile($fileId);
         $urls = $site->getStorageDriver()->getUrls($file);
 
         return new JsonResponse($urls);

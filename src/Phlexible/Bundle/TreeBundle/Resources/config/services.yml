@@ -9,7 +9,7 @@ services:
 
     phlexible_tree.database_tree_factory:
         class: Phlexible\Bundle\TreeBundle\Tree\DatabaseTreeFactory
-        arguments: [@connection_manager, @event_dispatcher, @phlexible_tree.history]
+        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_tree.history]
 
     phlexible_tree.content.manager:
         class: Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManager

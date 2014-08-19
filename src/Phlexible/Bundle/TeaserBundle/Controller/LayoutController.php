@@ -11,6 +11,8 @@ namespace Phlexible\Bundle\TeaserBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Layout controller
@@ -22,12 +24,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class LayoutController extends Controller
 {
     /**
+     * @param Request $request
+     *
+     * @return JsonResponse
      * @Route("/tree", name="teasers_layout_tree")
      */
-    public function treeAction()
+    public function treeAction(Request $request)
     {
-        $language = $this->getParam('language');
-        $treeId = $this->getParam('tid');
+        $language = $request->get('language');
+        $treeId = $request->get('tid');
 
         if (!$treeId || !$language) {
             $this->_response
@@ -36,13 +41,11 @@ class LayoutController extends Controller
             return;
         }
 
-        $container = $this->getContainer();
-
-        $translator = $container->get('translator');
-        $treeManager = $container->get('phlexible_tree.manager');
-        $teaserService = $container->get('phlexible_teaser.service');
-        $catchRepository = $container->get('phlexible_teaser.service');
-        $elementService = $container->get('phlexible_element.service');
+        $translator = $this->get('translator');
+        $treeManager = $this->get('phlexible_tree.manager');
+        $teaserService = $this->get('phlexible_teaser.service');
+        $catchRepository = $this->get('phlexible_teaser.service');
+        $elementService = $this->get('phlexible_element.service');
         $elementtypeService = $elementService->getElementtypeService();
 
         $tree = $treeManager->getByNodeId($treeId);
@@ -234,7 +237,7 @@ class LayoutController extends Controller
             $layouts[] = $areaRoot;
         }
 
-        $this->_response->setAjaxPayload($layouts);
+        return new JsonResponse($layouts);
     }
 
     /**

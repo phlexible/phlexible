@@ -2,6 +2,7 @@ Ext.namespace(
     'Phlexible.elements.menuhandle',
     'Phlexible.elements.accordion',
     'Phlexible.elements.portlet',
+    'Phlexible.locks',
     'Phlexible.tasks.Strings'
 );
 

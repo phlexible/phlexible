@@ -11,11 +11,11 @@ namespace Phlexible\Bundle\ElementBundle\Controller;
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Diff;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
+use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 use Phlexible\Bundle\ElementBundle\Lock\ElementMasterLockIdentifier;
 use Phlexible\Bundle\ElementBundle\Lock\ElementSlaveLockIdentifier;
-use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
-use Phlexible\Bundle\LockBundle\Entity\Lock;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -211,14 +211,14 @@ class DataController extends Controller
                 $children[] = array(
                     $allowedChildId,
                     $childElementtype->getTitle(),
-                    '/bundles/elementtypes/elementtypes/' . $childElementtype->getIcon(),
+                    '/bundles/phlexibleelementtype/elementtypes/' . $childElementtype->getIcon(),
                 );
             }
 
-            $diff = $this->getParam('diff');
-            $diffVersionFrom = $this->getParam('diff_version_from');
-            $diffVersionTo = $this->getParam('diff_version_to');
-            $diffLanguage = $this->getParam('diff_language');
+            $diff = $request->get('diff');
+            $diffVersionFrom = $request->get('diff_version_from');
+            $diffVersionTo = $request->get('diff_version_to');
+            $diffLanguage = $request->get('diff_language');
 
             if ($diff && $diffVersionTo) {
                 $fromElementVersion = $elementService->findElementVersion($element, $diffVersionFrom);
@@ -245,12 +245,13 @@ class DataController extends Controller
 
             // lock
 
-            $lockService = $this->getContainer()->get('phlexible_element.lock.service');
+            $lockManager = $this->get('phlexible_element.element_lock_manager');
 
             if ($unlockId !== null) {
-                if ($lockService->isLockedByUser($unlockId, $this->getUser()->getId())) {
+                $unlockElement = $elementService->findElement($unlockId);
+                if ($lockManager->isLockedByUser($unlockElement, $language, $this->getUser()->getId())) {
                     try {
-                        $lockService->unlock($unlockId, $this->getUser()->getId());
+                        $lockManager->unlock($unlockElement, $this->getUser()->getId());
                     } catch (\Exception $e) {
                         // unlock failed
                     }
@@ -266,58 +267,32 @@ class DataController extends Controller
                 }
             }
 
-            $lockIdentifierMaster = new ElementMasterLockIdentifier($element->getEid());
-            $lockIdentifierSlave = null;
-            if ($language !== $elementMasterLanguage) {
-                $lockIdentifierSlave = new ElementSlaveLockIdentifier($eid, $language);
-            }
-
             $lock = null;
             if ($doLock && !$diff) {
-                if (!$lockService->isLockedPart($lockIdentifierMaster, $lockIdentifierSlave)) {
-                    try {
-                        if ($lockIdentifierSlave) {
-                            $lock = $lockService->lock(
-                                $lockIdentifierSlave,
-                                $this->getUser()->getId(),
-                                Lock::TYPE_TEMPORARY,
-                                'element',
-                                $eid
-                            );
-                        } else {
-                            $lock = $lockService->lock(
-                                $lockIdentifierMaster,
-                                $this->getUser()->getId(),
-                                Lock::TYPE_TEMPORARY,
-                                'element',
-                                $eid
-                            );
-                        }
-                    } catch (\Exception $e) {
-                        // lock failed
-                    }
+                if (!$lockManager->isLockedByOtherUser($element, $language, $this->getUser()->getId())) {
+                    $lock = $lockManager->lock(
+                        $element,
+                        $this->getUser()->getId(),
+                        $language
+                    );
                 }
             }
 
             if (!$lock) {
-                $lock = $lockService->getLock($lockIdentifierMaster);
+                $lock = $lockManager->findMasterLock($element);
                 if (!$lock) {
-                    if ($lockIdentifierSlave) {
-                        $lock = $lockService->getLock($lockIdentifierSlave);
-                    } else {
-                        $lock = $lockService->getLockPart($lockIdentifierMaster);
-                    }
+                    $lock = $lockManager->findSlaveLock($element, $language);
                 }
             }
 
             $lockInfo = null;
 
             if ($lock && !$diff) {
-                $lockUser = $this->getContainer()->get('users.repository')->find($lock->getUserId());
+                $lockUser = $this->get('phlexible_user.user_manager')->find($lock->getUserId());
 
                 $lockInfo = array(
                     'status'   => 'locked',
-                    'id'       => $lock->getId(),
+                    'id'       => $lock->getEid(),
                     'username' => $lockUser->getDisplayName(),
                     'time'     => $lock->getLockedAt()->format('Y-m-d H:i:s'),
                     'age'      => time() - $lock->getLockedAt()->format('U'),
@@ -326,7 +301,7 @@ class DataController extends Controller
 
                 if ($lock->getUserId() === $this->getUser()->getId()) {
                     $lockInfo['status'] = 'edit';
-                } elseif ($lock->getType() == Lock::TYPE_PERMANENTLY) {
+                } elseif ($lock->getType() == ElementLock::TYPE_PERMANENTLY) {
                     $lockInfo['status'] = 'locked_permanently';
                 }
             } elseif ($diff) {
@@ -339,7 +314,7 @@ class DataController extends Controller
                     'username' => '',
                     'time'     => '',
                     'age'      => 0,
-                    'type'     => Lock::TYPE_TEMPORARY,
+                    'type'     => ElementLock::TYPE_TEMPORARY,
                 );
             }
 
@@ -432,8 +407,8 @@ class DataController extends Controller
             // TODO: auslagern
 
             $redirects = array();
-            if (!$teaserId && $this->getContainer()->has('redirectsManager')) {
-                $redirectsManager = $this->getContainer()->get('redirectsManager');
+            if (!$teaserId && $this->container->has('redirectsManager')) {
+                $redirectsManager = $this->get('redirectsManager');
                 $redirects = $redirectsManager->getForTidAndLanguage($treeId, $language);
             }
 
@@ -456,14 +431,14 @@ class DataController extends Controller
             )
             ) {
                 if ($type == Elementtype::TYPE_FULL) {
-                    $blaNode = $this->getContainer()->get('phlexible_tree.content.manager')->findByTreeId(
+                    $blaNode = $this->get('phlexible_tree.content.manager')->findByTreeId(
                         $node->getId()
                     )->get($node->getId());
-                    $urls['preview'] = $this->getContainer()->get('phlexible_tree.router')->generate($blaNode);
-                    $urls['debug'] = $this->getContainer()->get('phlexible_tree.router')->generate($blaNode);
+                    $urls['preview'] = $this->get('phlexible_tree.router')->generate($blaNode);
+                    $urls['debug'] = $this->get('phlexible_tree.router')->generate($blaNode);
 
                     if ($isPublished) {
-                        $urls['online'] = $this->getContainer()->get('phlexible_tree.router')->generate($blaNode);
+                        $urls['online'] = $this->get('phlexible_tree.router')->generate($blaNode);
                     }
                 }
 
@@ -492,7 +467,7 @@ class DataController extends Controller
 
             $context = array();
             if (0) {
-                $contextManager = $container->get('phlexible_element.context.manager');
+                $contextManager = $this->get('phlexible_element.context.manager');
 
                 if ($contextManager->useContext()) {
                     $contextCountries = $contextManager->getAllCountries();
@@ -546,7 +521,7 @@ class DataController extends Controller
                     $userRights = array_keys($userRights);
                 } else {
                     $userRights = array_keys(
-                        $this->getContainer()->get('accesscontrol.right.registry')->getRights('internal', 'treenode')
+                        $this->get('phlexible_access_control.permissions')->getByContentClass('Phlexible\Bundle\TreeBundle\Tree\Node\TreeNode')
                     );
                 }
             }
@@ -560,9 +535,9 @@ class DataController extends Controller
                 'icon' => $elementtype->getIcon(),
             );
             //$node->getIconParams($language);
-            $icon = $this->get('router')->assemble($iconParams, 'elements_asset');
+            $icon = $this->get('router')->generate('elements_asset', $iconParams);
 
-            $createUser = $this->get('users.repository')->find($elementVersion->getCreateUserId());
+            $createUser = $this->get('phlexible_user.user_manager')->find($elementVersion->getCreateUserId());
 
             // glue together
 
@@ -659,6 +634,12 @@ class DataController extends Controller
                 'msg'     => $e->getMessage(),
                 'trace'   => $e->getTraceAsString(),
             );
+            if ($e->getPrevious()) {
+                $data['previous'] = array(
+                    'msg'   => $e->getPrevious()->getMessage(),
+                    'trace' => $e->getPrevious()->getTraceAsString(),
+                );
+            }
         }
 
         return new JsonResponse($data);

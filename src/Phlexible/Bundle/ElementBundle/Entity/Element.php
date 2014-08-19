@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Phlexible\Bundle\ElementBundle\Entity\Repository\ElementRepository")
  * @ORM\Table(name="element")
  */
 class Element
@@ -107,23 +107,31 @@ class Element
     }
 
     /**
+     * @return Elementtype
+     */
+    public function getElementtype()
+    {
+        return $this->elementtype;
+    }
+
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return $this
+     */
+    public function setElementtype(Elementtype $elementtype)
+    {
+        $this->elementtype = $elementtype;
+
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getElementtypeId()
     {
-        return $this->elementtypeId;
-    }
-
-    /**
-     * @param int $elementtypeId
-     *
-     * @return $this
-     */
-    public function setElementtypeId($elementtypeId)
-    {
-        $this->elementtypeId = $elementtypeId;
-
-        return $this;
+        return $this->getElementtype()->getId();
     }
 
     /**

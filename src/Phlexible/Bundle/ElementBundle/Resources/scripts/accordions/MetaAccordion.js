@@ -2,7 +2,7 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.meta,
     cls: 'p-elements-meta-accordion',
-    iconCls: 'p-metasets-component-icon',
+    iconCls: 'p-metaset-component-icon',
     border: false,
     autoHeight: true,
     autoScroll: true,

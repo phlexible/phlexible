@@ -1,0 +1,6 @@
+services:
+    phlexible_element.file.usage:
+        class: Phlexible\Bundle\ElementBundle\Usage\FileUsage
+
+    phlexible_element.folder.usage:
+        class: Phlexible\Bundle\ElementBundle\Usage\FolderUsage

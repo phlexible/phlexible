@@ -1,5 +1,5 @@
 .x-tree-node div.siteroot-node {
-    background: #eee url(/COMPONENTSPATH/elements/images/cmp-bg.gif) repeat-x;
+    background: #eee url(/COMPONENTSPATH/phlexibleelement/images/cmp-bg.gif) repeat-x;
     margin-top: 1px;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ccc;
@@ -12,21 +12,21 @@
 }
 
 .p-elements-main-panel .x-layout-collapsed-west {
-    background-image: url(/BASEURL/admin/gui/asset/textimage/index/page/elements/key/elements);
+    background-image: url(/BASEURL/admin/gui/asset/textimage?key=elements.elements);
     background-repeat: no-repeat;
     background-position: center;
 }
 
 /*
 .p-elements-main-panel .x-layout-collapsed-east{
-    background-image:url(/BASEURL/admin/gui/asset/textimage/index/page/elements/key/properties/location/east);
+    background-image:url(/BASEURL/admin/gui/asset/textimage?key=elements.properties&location=east);
     background-repeat:no-repeat;
     background-position:center;
 }
 */
 
 .p-elements-main-panel .x-layout-collapsed-south {
-    background-image: url(/BASEURL/admin/gui/asset/textimage/?key=elements.layout&location=south);
+    background-image: url(/BASEURL/admin/gui/asset/textimage?key=elements.layout&location=south);
     background-position: center center;
     background-repeat: no-repeat;
 }
@@ -77,7 +77,7 @@
 }
 
 .p-elements-elements-list .p-parent-row {
-    background: #eee url(/COMPONENTSPATH/elements/images/cmp-bg.gif) repeat-x;
+    background: #eee url(/COMPONENTSPATH/phlexibleelement/images/cmp-bg.gif) repeat-x;
     margin-top: 1px;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ccc;

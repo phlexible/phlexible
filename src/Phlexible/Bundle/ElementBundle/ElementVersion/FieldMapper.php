@@ -9,7 +9,9 @@
 namespace Phlexible\Bundle\ElementBundle\ElementVersion;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
  * Field mapper
@@ -82,6 +84,12 @@ class FieldMapper
         return $titles;
     }
 
+    /**
+     * @param ElementStructure $elementStructure
+     * @param string           $dsId
+     *
+     * @return null|ElementStructureValue
+     */
     private function findValue(ElementStructure $elementStructure, $dsId)
     {
         if ($elementStructure->hasValueByDsId($dsId)) {

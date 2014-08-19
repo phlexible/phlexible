@@ -58,7 +58,7 @@ Phlexible.elements.NewElementInstanceWindow = Ext.extend(Phlexible.gui.util.Dial
                 hiddenName: 'prev_id',
                 hidden: this.sort_mode != 'free',
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('elements_tree_childelements'),
+                    url: Phlexible.Router.generate('tree_childelements'),
                     baseParams: this.submitParams,
                     root: 'elements',
                     fields: ['id', 'title', 'icon'],

@@ -33,7 +33,7 @@ class AssetController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/elements/asset")
+     * @Route("/elements/asset", name="elements_asset")
      */
     public function iconAction(Request $request)
     {
@@ -44,7 +44,14 @@ class AssetController extends Controller
         $cacheFilename = $overlay->getAssetPath($icon, $params);
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($cacheFilename, 'image/png');
+            ->create(
+                $cacheFilename,
+                'image/png',
+                array(
+                    'absolute_path' => true,
+                    'inline' => true,
+                )
+            );
     }
 
 }

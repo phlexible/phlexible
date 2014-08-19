@@ -1,4 +1,0 @@
-locks:
-    parent: admin
-    xtype: Phlexible.locks.menuhandle.LocksHandle
-    resources: [debug]

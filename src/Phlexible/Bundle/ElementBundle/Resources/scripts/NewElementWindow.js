@@ -27,20 +27,18 @@ Phlexible.elements.NewElementWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 fieldLabel: Phlexible.elements.Strings.elementtype,
                 hiddenName: 'element_type_id',
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('elements_tree_childelementtypes'),
+                    url: Phlexible.Router.generate('tree_childelementtypes'),
                     baseParams: this.submitParams,
                     root: 'elementtypes',
                     fields: ['id', 'title', 'icon', 'type'],
                     autoLoad: true,
                     listeners: {
-                        load: {
-                            fn: function (store) {
-                                if (this.element_type_id) {
-                                    this.getComponent(0).getComponent(1).setValue(this.element_type_id);
-                                }
-                            },
-                            scope: this
-                        }
+                        load: function (store) {
+                            if (this.element_type_id) {
+                                this.getComponent(0).getComponent(1).setValue(this.element_type_id);
+                            }
+                        },
+                        scope: this
                     }
                 }),
                 emptyText: Phlexible.elements.Strings.select_elementtype,
@@ -56,17 +54,15 @@ Phlexible.elements.NewElementWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 anchor: '-70',
                 allowBlank: false,
                 listeners: {
-                    select: {
-                        fn: function (cb, record) {
-                            if (record.get('type') == Phlexible.elementtypes.TYPE_FULL) {
-                                this.getComponent(0).getComponent(4).enable();
-                            } else {
-                                this.getComponent(0).getComponent(4).setValue(0);
-                                this.getComponent(0).getComponent(4).disable();
-                            }
-                        },
-                        scope: this
-                    }
+                    select: function (cb, record) {
+                        if (record.get('type') == Phlexible.elementtypes.TYPE_FULL) {
+                            this.getComponent(0).getComponent(4).enable();
+                        } else {
+                            this.getComponent(0).getComponent(4).setValue(0);
+                            this.getComponent(0).getComponent(4).disable();
+                        }
+                    },
+                    scope: this
                 }
             },
             {
@@ -75,18 +71,16 @@ Phlexible.elements.NewElementWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 hiddenName: 'prev_id',
                 hidden: this.sort_mode != 'free',
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('elements_tree_childelements'),
+                    url: Phlexible.Router.generate('tree_childelements'),
                     baseParams: this.submitParams,
                     root: 'elements',
                     fields: ['id', 'title', 'icon'],
                     autoLoad: true,
                     listeners: {
-                        load: {
-                            fn: function () {
-                                this.getComponent(0).getComponent(2).setValue('0');
-                            },
-                            scope: this
-                        }
+                        load: function () {
+                            this.getComponent(0).getComponent(2).setValue('0');
+                        },
+                        scope: this
                     }
                 }),
                 value: '0',

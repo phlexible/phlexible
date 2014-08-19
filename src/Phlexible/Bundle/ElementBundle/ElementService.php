@@ -8,15 +8,15 @@
 
 namespace Phlexible\Bundle\ElementBundle;
 
-use Phlexible\Bundle\ElementBundle\Element\Element;
-use Phlexible\Bundle\ElementBundle\Element\ElementRepository;
-use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructure;
-use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructureLoader;
-use Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersion;
-use Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersionRepository;
-use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
+use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
+use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
+use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 
 /**
  * Element service
@@ -26,19 +26,19 @@ use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
 class ElementService
 {
     /**
-     * @var ElementRepository
+     * @var ElementManagerInterface
      */
-    private $elementRepository;
+    private $elementManager;
 
     /**
-     * @var ElementVersionRepository
+     * @var ElementVersionManagerInterface
      */
-    private $elementVersionRepository;
+    private $elementVersionManager;
 
     /**
-     * @var ElementStructureLoader
+     * @var ElementStructureManagerInterface
      */
-    private $elementVersionDataLoader;
+    private $elementStructureManager;
 
     /**
      * @var ElementtypeService
@@ -46,20 +46,20 @@ class ElementService
     private $elementtypeService;
 
     /**
-     * @param ElementRepository        $elementRepository
-     * @param ElementVersionRepository $elementVersionRepository
-     * @param ElementStructureLoader   $elementStructureLoader
-     * @param ElementtypeService       $elementtypeService
+     * @param ElementManagerInterface          $elementManager
+     * @param ElementVersionManagerInterface   $elementVersionManager
+     * @param ElementStructureManagerInterface $elementStructureManager
+     * @param ElementtypeService               $elementtypeService
      */
     public function __construct(
-        ElementRepository $elementRepository,
-        ElementVersionRepository $elementVersionRepository,
-        ElementStructureLoader $elementStructureLoader,
+        ElementManagerInterface $elementManager,
+        ElementVersionManagerInterface $elementVersionManager,
+        ElementStructureManagerInterface $elementStructureManager,
         ElementtypeService $elementtypeService)
     {
-        $this->elementRepository = $elementRepository;
-        $this->elementVersionRepository = $elementVersionRepository;
-        $this->elementStructureLoader = $elementStructureLoader;
+        $this->elementManager = $elementManager;
+        $this->elementVersionManager = $elementVersionManager;
+        $this->elementStructureManager = $elementStructureManager;
         $this->elementtypeService = $elementtypeService;
     }
 
@@ -80,7 +80,7 @@ class ElementService
      */
     public function findElement($eid)
     {
-        return $this->elementRepository->find($eid);
+        return $this->elementManager->find($eid);
     }
 
     /**
@@ -92,7 +92,7 @@ class ElementService
      */
     public function findElementByUniqueID($uniqueID)
     {
-        return $this->elementRepository->findByUniqueID($uniqueID);
+        return $this->elementManager->findByUniqueID($uniqueID);
     }
 
     /**
@@ -103,7 +103,7 @@ class ElementService
      */
     public function findElementVersion(Element $element, $version)
     {
-        $elementVersion = $this->elementVersionRepository->find($element, $version);
+        $elementVersion = $this->elementVersionManager->find($element, $version);
 
         return $elementVersion;
     }
@@ -115,7 +115,7 @@ class ElementService
      */
     public function findLatestElementVersion(Element $element)
     {
-        $elementVersion = $this->elementVersionRepository->find($element, $element->getLatestVersion());
+        $elementVersion = $this->elementVersionManager->find($element, $element->getLatestVersion());
 
         return $elementVersion;
     }
@@ -151,7 +151,7 @@ class ElementService
      */
     public function getVersions(Element $element)
     {
-        return $this->elementVersionRepository->getVersions($element);
+        return $this->elementVersionManager->getVersions($element);
     }
 
     /**
@@ -162,7 +162,7 @@ class ElementService
      */
     public function findElementStructure(ElementVersion $elementVersion, $language)
     {
-        $elementVersionData = $this->elementStructureLoader->load($elementVersion, $language);
+        $elementVersionData = $this->elementStructureManager->find($elementVersion, $language);
 
         return $elementVersionData;
     }

@@ -219,13 +219,6 @@ class ElementEvents
     const REORDER_NODES = 'phlexible_element.reorder_nodes';
 
     /**
-     * List filter
-     *
-     * Fired when the list is fitlered
-     */
-    const LIST_FILTER = 'phlexible_element.list_filter';
-
-    /**
      * Fired before Element version Custom Titles are cached
      */
     const BEFORE_CACHE_ELEMENT_VERSION_CUSTOM_TITLES = 'phlexible_element.before_cache_element_version_custom_titles';

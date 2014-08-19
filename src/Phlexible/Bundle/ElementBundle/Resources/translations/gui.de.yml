@@ -1,3 +1,17 @@
+locks:
+    lock: Lock
+    locks: Locks
+    lock_type: 'Sperr Art'
+    my_locked_items: 'Meine gesperrten Objekte'
+    no_locked_items: 'Keine gesperrten Objekte'
+    remove_lock: 'Sperre entfernen'
+    remove_locks: 'Sperren entfernen'
+    remove_my_locks: 'Meine Sperren entfernen'
+    remove_all_locks: 'Alle Sperren entfernen'
+    object_type: Objekttyp
+    object_id: Objekt-ID
+    date: Datum
+
 elements:
     elements: Elemente
     element: Element

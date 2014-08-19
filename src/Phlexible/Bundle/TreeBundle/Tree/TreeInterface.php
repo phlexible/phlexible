@@ -62,7 +62,7 @@ interface TreeInterface
      *
      * @param TreeNodeInterface|int $node
      *
-     * @return array
+     * @return TreeNodeInterface[]
      */
     public function getChildren($node);
 
@@ -98,7 +98,7 @@ interface TreeInterface
      *
      * @param TreeNodeInterface|int $node
      *
-     * @return array
+     * @return TreeNodeInterface[]
      */
     public function getPath($node);
 

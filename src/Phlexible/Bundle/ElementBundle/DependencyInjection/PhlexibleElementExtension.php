@@ -28,6 +28,7 @@ class PhlexibleElementExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('tasks.yml');
+        $loader->load('usage.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
@@ -45,5 +46,11 @@ class PhlexibleElementExtension extends Extension
         $container->setParameter('phlexible_element.context.enabled', $config['context']['enabled']);
         $container->setParameter('phlexible_element.context.default_country', $config['context']['default_country']);
         $container->setParameter('phlexible_element.context.countries', $config['context']['countries']);
+
+        $loader->load('doctrine.yml');
+        $container->setAlias('phlexible_element.element_manager', 'phlexible_element.doctrine.element_manager');
+        $container->setAlias('phlexible_element.element_version_manager', 'phlexible_element.doctrine.element_version_manager');
+        $container->setAlias('phlexible_element.element_structure_manager', 'phlexible_element.doctrine.element_structure_manager');
+        $container->setAlias('phlexible_element.element_lock_manager', 'phlexible_element.doctrine.element_lock_manager');
     }
 }

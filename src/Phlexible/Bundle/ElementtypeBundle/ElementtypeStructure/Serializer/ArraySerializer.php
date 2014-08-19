@@ -42,8 +42,8 @@ class ArraySerializer implements SerializerInterface
                     'options'          => $node->getOptions(),
                     'parentDsId'       => $node->getParentDsId(),
                     'parentId'         => $node->getParentId(),
-                    'referenceId'      => $node->getReferenceId(),
-                    'referenceVersion' => $node->getReferenceVersion(),
+                    'referenceId'      => $node->getReferenceElementtype() ? $node->getReferenceElementtype()->getId() : null,
+                    'referenceVersion' => $node->getReferenceVersion() ?: null,
                     'type'             => $node->getType(),
                     'validation'       => $node->getValidation(),
                     'children'         => array()

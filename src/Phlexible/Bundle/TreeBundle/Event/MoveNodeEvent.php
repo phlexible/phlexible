@@ -8,17 +8,36 @@
 
 namespace Phlexible\Bundle\TreeBundle\Event;
 
-use Phlexible\Bundle\TreeBundle\Events;
+use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 
 /**
- * Move node event
+ * Before move node event
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MoveNodeEvent extends AbstractNodeEvent
+class MoveNodeEvent extends NodeEvent
 {
     /**
-     * @var string
+     * @var TreeNodeInterface
      */
-    protected $eventName = Events::MOVE_NODE;
+    private $parentNode;
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param TreeNodeInterface $parentNode
+     */
+    public function __construct(TreeNodeInterface $node, TreeNodeInterface $parentNode)
+    {
+        parent::__construct($node);
+
+        $this->parentNode = $parentNode;
+    }
+
+    /**
+     * @return TreeNodeInterface
+     */
+    public function getParentNode()
+    {
+        return $this->parentNode;
+    }
 }

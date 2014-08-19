@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
+use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,412 +33,6 @@ class TreeController extends Controller
     const MODE_ET_TARGET = 4;
 
     /**
-     * List all element types
-     *
-     * @Route("/childelementtypes", name="tree_childelementtypes")
-     */
-    public function childelementtypesAction()
-    {
-        $elementManager = $container->elementsManager;
-        $elementVersionManager = $container->elementsVersionManager; //Makeweb_Elements_Element_Version_Manager::getInstance();
-        $elementTypeVersionManager = Makeweb_Elementtypes_Elementtype_Version_Manager::getInstance();
-
-        $eid = $this->_getParam('eid');
-        $element = $elementManager->getByEID($eid);
-        $language = $this->_getParam('language', $element->getMasterLanguage());
-
-        $elementVersion = $elementVersionManager->getLatest($eid);
-
-        $childrenIds = $elementVersion->getElementTypeVersionObj()->getAllowedChildrenIds();
-
-        $data = array();
-        foreach ($childrenIds as $childId) {
-            /* @var $elementType Makeweb_Elementtypes_Elementtype */
-
-            $elementTypeVersion = $elementTypeVersionManager->getLatest($childId);
-
-            $elementTypeType = $elementTypeVersion->getElementType()->getType();
-
-            if ($elementTypeType != Makeweb_Elementtypes_Elementtype_Version::TYPE_FULL &&
-                $elementTypeType != Makeweb_Elementtypes_Elementtype_Version::TYPE_STRUCTURE
-            ) {
-                continue;
-            }
-
-            $data[$elementTypeVersion->getTitle()] = array(
-                'id'    => $childId,
-                'title' => $elementTypeVersion->getTitle(),
-                'icon'  => $elementTypeVersion->getIcon(),
-                'type'  => $elementTypeType,
-            );
-        }
-        ksort($data);
-        $data = array_values($data);
-
-        $this->getResponse()->setAjaxPayload(array('elementtypes' => $data));
-    }
-
-    /**
-     * @Route("/childelements", name="tree_childelements")
-     */
-    public function childelementsAction()
-    {
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementManager = $container->elementsManager;
-        $elementVersionManager = $container->elementsVersionManager;
-
-        $id = $this->_getParam('id');
-        $node = $treeManager->getNodeByNodeID($id);
-        $eid = $node->getEid();
-        $element = $elementManager->getByEID($eid);
-        $language = $this->_getParam('language', $element->getMasterLanguage());
-
-        $firstString = $container->get('translator')->trans('elements.first', array(), 'gui');
-
-        $data = array();
-        $data[] = array(
-            'id'    => '0',
-            'title' => $firstString,
-            'icon'  => $this->_request->getBaseUrl() . '/elements/asset/_top.gif'
-        );
-
-        foreach ($node->getChildren() as $childNode) {
-            $elementVersion = $elementVersionManager->getLatest($childNode->getEid(), $language);
-
-            $data[] = array(
-                'id'    => $childNode->getId(),
-                'title' => $elementVersion->getBackendTitle(
-                        $language,
-                        $elementVersion->getElement()->getMasterLanguage()
-                    ),
-                'icon'  => $this->_request->getBaseUrl(
-                    ) . '/elements/asset/' . $elementVersion->getElementTypeVersionObj()->getIcon()
-            );
-        }
-
-        $this->getResponse()->setAjaxPayload(array('elements' => $data));
-    }
-
-    /**
-     * Create the element data tree
-     *
-     * @param TreeNodeInterface $node
-     * @param string            $language
-     *
-     * @return array
-     */
-    protected function _getNodeData(TreeNodeInterface $node, $language)
-    {
-        $securityContext = $this->get('security.context');
-        $elementService = $this->get('phlexible_element.service');
-
-        $userRights = array();
-        if ($node instanceof ContentObjectInterface) {
-            if (!$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN)) {
-                if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
-                    return null;
-                }
-
-                $userRights = array(); //$contentRightsManager->getRights($language);
-                $userRights = array_keys($userRights);
-            } else {
-                $userRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
-                );
-            }
-        }
-
-        //$lockManager = MWF_Core_Locks_Manager::getInstance();
-
-        $eid = $node->getTypeId();
-        $element = $elementService->findElement($eid);
-        $elementVersion = $elementService->findLatestElementVersion($element);
-
-        //$identifier = new Makeweb_Elements_Element_Identifier($eid);
-        $lockQtip = '';
-        /*
-        #if ($lockInfo = $lockManager->getLockInformation($identifier))
-        #{
-        #    if ($lockInfo['lock_uid'] == MWF_Env::getUid())
-        #    {
-        #        $lockQtip = '<hr>Locked by me.';
-        #    }
-        #    else
-        #    {
-        #        try
-        #        {
-        #            $user = MWF_Core_Users_User_Peer::getByUserID($lockInfo['lock_uid']);
-        #        }
-        #        catch (Exception $e)
-        #        {
-        #            $user = MWF_Core_Users_User_Peer::getSystemUser();
-        #        }
-        #
-        #        $lockQtip = '<hr>Locked by '.$user->getUsername().'.';
-        #    }
-        #}
-        */
-
-        $elementtypeVersion = $elementService->findElementtypeVersion($elementVersion);
-        $elementtype = $elementtypeVersion->getElementtype();
-
-        $allowedElementTypeIds = $elementService->getElementtypeService()->findAllowedChildrenIds($elementtype);
-
-        $qtip = 'TID: ' . $node->getId() . '<br />' .
-            'EID: ' . $element->getEid() . '<br />' .
-            'Version: ' . $elementVersion->getVersion() . '<br />' .
-            '<hr>' .
-            'Element Type: ' . $elementtype->getTitle() . '<br />' .
-            'Element Type Version: ' . $elementtypeVersion->getVersion() . ' [' . $elementtypeVersion->getVersion(
-            ) . ']' .
-            $lockQtip;
-
-        $data = array(
-            'id'                  => $node->getID(),
-            'eid'                 => $element->getEid(),
-            'text'                => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()),
-            'icon'                => $this->get('router')->assemble(
-                    array('icon' => $elementtype->getIcon()),
-                    'elements_asset'
-                ),
-            'navigation'          => 1, //$node->inNavigation($elementVersion->getVersion()),
-            'restricted'          => 0, //$node->isRestricted($elementVersion->getVersion()),
-            'element_type'        => $elementtype->getTitle(),
-            'element_type_id'     => $elementtype->getId(),
-            'element_type_type'   => $elementtype->getType(),
-            'alias'               => 1, //$node->isInstance(),
-            'allow_drag'          => true,
-            'sort_mode'           => $node->getSortMode(),
-            'areas'               => array(355),
-            'allowed_et'          => $allowedElementTypeIds,
-            'is_published'        => 1, //$node->isPublished($language),
-            'rights'              => $userRights,
-            'qtip'                => $qtip,
-            'allow_children'      => $elementtype->getHideChildren() ? false : true,
-            'default_tab'         => $elementtype->getDefaultTab(),
-            'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
-            'masterlanguage'      => $element->getMasterLanguage()
-        );
-
-        if (count($node->getTree()->getChildren($node)) && !$elementtype->getHideChildren()) {
-            $data['leaf'] = false;
-            $data['expanded'] = false;
-        } else {
-            $data['leaf'] = true;
-            $data['expanded'] = false;
-        }
-
-        if ($node->isRoot()) {
-            $data['cls'] = 'siteroot-node';
-            $data['expanded'] = true;
-        }
-
-        return $data;
-    }
-
-    /**
-     * Create the subnodes of an element data tree
-     *
-     * @param array  $nodes
-     * @param string $language
-     *
-     * @return array
-     */
-    protected function _recurseNodes(array $nodes, $language)
-    {
-        $return = array();
-
-        foreach ($nodes as $node) {
-            $nodeData = $this->_getNodeData($node, $language);
-
-            if ($nodeData) {
-                $return[] = $nodeData;
-            }
-        }
-
-        return $return;
-    }
-
-    protected function _findLinkNodes($siteRootId, $language, array $elementTypeIds)
-    {
-        $container = $this->getContainer();
-        $db = $container->dbPool->read;
-        $treeManager = $container->elementsTreeManager;
-        $elementManager = $container->elementsManager;
-
-        $select = $db->select()
-            ->distinct()
-            ->from(array('et' => $db->prefix . 'element_tree'), array('id'))
-            ->join(array('e' => $db->prefix . 'element'), 'et.eid = e.eid', array())
-            ->where('et.siteroot_id = ?', $siteRootId)
-            ->where('e.element_type_id IN (?)', $elementTypeIds)
-            ->order('et.sort');
-
-        $tids = $db->fetchCol($select);
-
-        $data = array();
-
-        $rootTid = null;
-
-        foreach ($tids as $tid) {
-            $node = $treeManager->getNodeByNodeId($tid);
-
-            $element = $elementManager->getByEID($node->getEid());
-            $elementVersion = $element->getVersion();
-
-            if (!isset($data[$tid])) {
-                $data[$node->getId()] = array(
-                    'id'       => $node->getId(),
-                    'eid'      => $node->getEid(),
-                    'text'     => $elementVersion->getBackendTitle(
-                            $language,
-                            $element->getMasterLanguage()
-                        ) . ' [' . $tid . ']',
-                    'icon'     => $elementVersion->getIconUrl(),
-                    'children' => array(),
-                    'leaf'     => true,
-                    'expanded' => false,
-                    'disabled' => !in_array($elementVersion->getElementTypeID(), $elementTypeIds),
-                );
-            }
-
-            do {
-                $parentNode = $node->getParentNode();
-
-                if (!$parentNode) {
-                    $rootTid = $node->getId();
-                    break;
-                }
-
-                if (!isset($data[$parentNode->getId()])) {
-                    $element = $elementManager->getByEID($parentNode->getEid());
-                    $elementVersion = $element->getVersion();
-
-                    $data[$parentNode->getId()] = array(
-                        'id'       => $parentNode->getId(),
-                        'eid'      => $parentNode->getEid(),
-                        'text'     => $elementVersion->getBackendTitle(
-                                $language,
-                                $element->getMasterLanguage()
-                            ) . ' [' . $parentNode->getId() . ']',
-                        'icon'     => $elementVersion->getIconUrl(),
-                        'children' => array(),
-                        'leaf'     => false,
-                        'expanded' => false,
-                        'disabled' => !in_array($elementVersion->getElementTypeID(), $elementTypeIds),
-                    );
-                } else {
-                    $data[$parentNode->getId()]['leaf'] = false;
-                }
-
-                $data[$parentNode->getId()]['children'][$node->getId()] =& $data[$node->getId()];
-
-                $node = $parentNode;
-            } while ($parentNode);
-        }
-
-        if (!count($data)) {
-            return array();
-        }
-
-        $data = $this->_stripLinkNodeKeys($data[$rootTid], $db);
-
-        return $data['children'];
-    }
-
-    protected function _stripLinkNodeKeys($data, Zend_Db_Adapter_Abstract $db)
-    {
-        if (is_array($data['children']) && count($data['children'])) {
-            $sortSelect = $db->select()
-                ->from($db->prefix . 'element_tree', array('id', 'sort'))
-                ->where('parent_id = ?', $data['id'])
-                ->where('id IN (?)', array_keys($data['children']))
-                ->order('sort');
-
-            $sortTids = $db->fetchPairs($sortSelect);
-            $sortedTids = array();
-            foreach (array_keys($data['children']) as $tid) {
-                $sortedTids[$tid] = $sortTids[$tid];
-            }
-
-            array_multisort($sortedTids, $data['children']);
-
-            $data['children'] = array_values($data['children']);
-
-            foreach ($data['children'] as $key => $item) {
-                $data['children'][$key] = $this->_stripLinkNodeKeys($item, $db);
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Recurse over tree nodes
-     *
-     * @param array  $nodes
-     * @param string $language
-     * @param int    $mode
-     * @param array  $elementTypeIds
-     * @param string $targetTid
-     *
-     * @return array
-     */
-    protected function _recurseLinkNodes(array $nodes, $language, $mode, Makeweb_Elements_Tree_Node $targetNode = null)
-    {
-        $elementManager = $this->getContainer()->elementsManager;
-
-        $data = array();
-
-        foreach ($nodes as $node) {
-            /* @var $node Makeweb_Elements_Tree_Node */
-
-            $element = $elementManager->getByEID($node->getEid());
-            $elementVersion = $element->getVersion();
-
-            $tid = $node->getId();
-            $children = $node->getChildren();
-
-            $dataNode = array(
-                'id'       => $node->getId(),
-                'eid'      => $node->getEid(),
-                'text'     => $elementVersion->getBackendTitle(
-                        $language,
-                        $element->getMasterLanguage()
-                    ) . ' [' . $tid . ']',
-                'icon'     => $elementVersion->getIconUrl(),
-                'children' => !$node->hasChildren()
-                        ? array()
-                        : $mode == self::MODE_NOET_TARGET && $node->isParentOf($targetNode)
-                            ? $this->_recurseLinkNodes($children, $language, $mode, $targetNode)
-                            : false,
-                'leaf'     => !$node->hasChildren(),
-                'expanded' => false,
-            );
-
-            /*
-            $leafCount = 0;
-            if (is_array($dataNode['children']))
-            {
-                foreach($dataNode['children'] as $child)
-                {
-                    $leafCount += $child['leafCount'];
-                    if (!isset($child['disabled']) || !$child['disabled'])
-                    {
-                        ++$leafCount;
-                    }
-                }
-            }
-            $dataNode['leafCount'] = $leafCount;
-            */
-
-            $data[] = $dataNode;
-        }
-
-        return $data;
-    }
-
-    /**
      * Return the Element data tree
      *
      * @param Request $request
@@ -457,13 +52,13 @@ class TreeController extends Controller
         $tid = $request->get('node');
         $language = $request->get('language');
 
-        $tree = $treeManager->getBySiteRootID($siterootId);
+        $tree = $treeManager->getBySiteRootId($siterootId);
         $rootNode = $tree->getRoot();
 
         $data = array();
-        if (null !== $rootNode) {
+        if ($rootNode) {
             if ($tid === null || $tid < 1) {
-                $data = array($this->_getNodeData($rootNode, $language));
+                $data = array($this->getNodeData($rootNode, $language));
             } else {
                 $node = $tree->get($tid);
 
@@ -473,7 +68,7 @@ class TreeController extends Controller
 
                 $nodes = $tree->getChildren($node);
                 if (!empty($nodes) && !$elementtype->getHideChildren()) {
-                    $data = $this->_recurseNodes($nodes, $language);
+                    $data = $this->recurseNodes($nodes, $language);
                 }
             }
         }
@@ -484,65 +79,39 @@ class TreeController extends Controller
     /**
      * Return the Element data tree
      *
+     * @param Request $request
+     *
+     * @return JsonResponse
      * @Route("/teaserreference", name="tree_teaserreference")
      */
-    public function teaserreferenceAction()
+    public function teaserreferenceAction(Request $request)
     {
-        $container = $this->getContainer();
-
         // TODO: switch to master language of element
-        $defaultLanguage = $container->getParameter('phlexible_cms.languages.default');
+        $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
 
-        $filters = array(
-            '*' => array('StringTrim', 'StripTags'),
-        );
+        $siterootId = $request->get('siteroot_id');
+        $tid = $request->get('node');
+        $language = $request->get('language');
 
-        $validators = array(
-            'node'        => array(
-                'Int',
-                Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-            ),
-            'siteroot_id' => array(
-                'Uuid',
-                Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-            ),
-            'language'    => array(
-                array('StringLength', 2, 2),
-                array('InArray', $container->getParameter('frontend.languages.available')),
-                'default' => $defaultLanguage
-            ),
-        );
+        $treeManager = $this->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.service');
 
-        $fi = new Brainbits_Filter_Input($filters, $validators, $this->_getAllParams());
-
-        if (!$fi->isValid()) {
-            throw new Brainbits_Filter_Exception('Error occured', 0, $fi);
-        }
-
-        $siterootID = $fi->siteroot_id;
-        $tid = $fi->node;
-        $language = $fi->language;
-
-        $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-        $elementManager = Makeweb_Elements_Element_Manager::getInstance();
-
-        $tree = $treeManager->getBySiteRootID($siterootID);
+        $tree = $treeManager->getBySiteRootId($siterootId);
 
         $rootNode = $tree->getRoot();
 
         $data = array();
         if ($rootNode !== null) {
             if ($tid === null || $tid < 1) {
-                $data = array($this->_getNodeData($rootNode, $language));
-                $this->getResponse()->setAjaxPayload($data);
+                $data = array($this->getNodeData($rootNode, $language));
 
-                return;
+                return new JsonResponse($data);
             }
 
             $node = $tree->getNode($tid);
             $nodes = $tree->getChildren($tid);
 
-            $data = $this->_recurseNodes($nodes, $language);
+            $data = $this->recurseNodes($nodes, $language);
 
             foreach ($data as $key => $row) {
                 if ($row['leaf']) {
@@ -556,13 +125,10 @@ class TreeController extends Controller
 
         $currentTreeId = $tid;
 
-        $elementManager = Makeweb_Elements_Element_Manager::getInstance();
         $teaserManager = Makeweb_Teasers_Manager::getInstance();
-        $elementTypeManager = Makeweb_Elementtypes_Elementtype_Manager::getInstance();
-        $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
         $layoutAreaManager = Makeweb_Teasers_Layoutarea_Manager::getInstance();
 
-        $element = $elementManager->getByEID($node->getEid());
+        $element = $elementService->getByEID($node->getEid());
 
         $layoutAreas = $layoutAreaManager->getFor($element->getElementTypeID());
 
@@ -631,141 +197,563 @@ class TreeController extends Controller
 
         $data = array_values($data);
 
-        $this->getResponse()->setAjaxPayload($data);
+        return new JsonResponse($data);
+    }
+
+    /**
+     * List all element types
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @Route("/childelementtypes", name="tree_childelementtypes")
+     */
+    public function childelementtypesAction(Request $request)
+    {
+        $eid = $request->get('eid');
+
+        $elementService = $this->get('phlexible_element.service');
+
+        $element = $elementService->findElement($eid);
+        $elementVersion = $elementService->findLatestElementVersion($element);
+        $elementtype = $elementService->findElementtype($element);
+
+        $childrenIds = $elementService->getElementtypeService()->findAllowedChildrenIds($elementtype);
+
+        $data = array();
+        foreach ($childrenIds as $childId) {
+            $elementtypeVersion = $elementService->getElementtypeService()->findLatestElementtypeVersion($elementtype);
+
+            $elementtypeType = $elementtypeVersion->getElementType()->getType();
+
+            if ($elementtypeType != Elementtype::TYPE_FULL &&
+                $elementtypeType != Elementtype::TYPE_STRUCTURE
+            ) {
+                continue;
+            }
+
+            $data[$elementtype->getTitle()] = array(
+                'id'    => $childId,
+                'title' => $elementtype->getTitle(),
+                'icon'  => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
+                'type'  => $elementtypeType,
+            );
+        }
+        ksort($data);
+        $data = array_values($data);
+
+        return new JsonResponse(array('elementtypes' => $data));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @Route("/childelements", name="tree_childelements")
+     */
+    public function childelementsAction(Request $request)
+    {
+        $treeManager = $this->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.service');
+
+        $id = $request->get('id');
+        $tree = $treeManager->getByNodeID($id);
+        $node = $tree->get($id);
+        $eid = $node->getTypeId();
+        $element = $elementService->findElement($eid);
+
+        $language = $request->get('language', $element->getMasterLanguage());
+
+        $firstString = $this->get('translator')->trans('elements.first', array(), 'gui');
+
+        $data = array();
+        $data[] = array(
+            'id'    => '0',
+            'title' => $firstString,
+            'icon'  => '/bundles/phlexibleelementtype/elementtypes/_top.gif'
+        );
+
+        foreach ($tree->getChildren($node) as $childNode) {
+            $childElement = $elementService->findElement($childNode->getTypeId());
+            $childElementVersion = $elementService->findLatestElementVersion($childElement);
+            $childElementtype = $elementService->findElementtype($childElement);
+
+            $data[] = array(
+                'id'    => $childNode->getId(),
+                'title' => $childElementVersion->getBackendTitle($language, $childElementVersion->getElement()->getMasterLanguage()),
+                'icon'  => '/bundles/phlexibleelementtype/elementtypes/' . $childElementtype->getIcon()
+            );
+        }
+
+        return new JsonResponse(array('elements' => $data));
+    }
+
+    /**
+     * Create the element data tree
+     *
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return array
+     */
+    private function getNodeData(TreeNodeInterface $node, $language)
+    {
+        $securityContext = $this->get('security.context');
+        $elementService = $this->get('phlexible_element.service');
+        $router = $this->get('router');
+
+        $userRights = array();
+        if ($node instanceof ContentObjectInterface) {
+            if (!$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN)) {
+                if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
+                    return null;
+                }
+
+                $userRights = array(); //$contentRightsManager->getRights($language);
+                $userRights = array_keys($userRights);
+            } else {
+                $userRights = array_keys(
+                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
+                );
+            }
+        }
+
+        //$lockManager = MWF_Core_Locks_Manager::getInstance();
+
+        $eid = $node->getTypeId();
+        $element = $elementService->findElement($eid);
+        $elementVersion = $elementService->findLatestElementVersion($element);
+
+        //$identifier = new Makeweb_Elements_Element_Identifier($eid);
+        $lockQtip = '';
+        /*
+        #if ($lockInfo = $lockManager->getLockInformation($identifier))
+        #{
+        #    if ($lockInfo['lock_uid'] == MWF_Env::getUid())
+        #    {
+        #        $lockQtip = '<hr>Locked by me.';
+        #    }
+        #    else
+        #    {
+        #        try
+        #        {
+        #            $user = MWF_Core_Users_User_Peer::getByUserID($lockInfo['lock_uid']);
+        #        }
+        #        catch (Exception $e)
+        #        {
+        #            $user = MWF_Core_Users_User_Peer::getSystemUser();
+        #        }
+        #
+        #        $lockQtip = '<hr>Locked by '.$user->getUsername().'.';
+        #    }
+        #}
+        */
+
+        $elementtypeVersion = $elementService->findElementtypeVersion($elementVersion);
+        $elementtype = $elementtypeVersion->getElementtype();
+
+        $allowedElementTypeIds = $elementService->getElementtypeService()->findAllowedChildrenIds($elementtype);
+
+        $qtip = 'TID: ' . $node->getId() . '<br />' .
+            'EID: ' . $element->getEid() . '<br />' .
+            'Version: ' . $elementVersion->getVersion() . '<br />' .
+            '<hr>' .
+            'Element Type: ' . $elementtype->getTitle() . '<br />' .
+            'Element Type Version: ' . $elementtypeVersion->getVersion() . ' [' . $elementtypeVersion->getVersion(
+            ) . ']' .
+            $lockQtip;
+
+        $data = array(
+            'id'                  => $node->getID(),
+            'eid'                 => $element->getEid(),
+            'text'                => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()),
+            'icon'                => $router->generate('elements_asset', array('icon' => $elementtype->getIcon())),
+            'navigation'          => 1, //$node->inNavigation($elementVersion->getVersion()),
+            'restricted'          => 0, //$node->isRestricted($elementVersion->getVersion()),
+            'element_type'        => $elementtype->getTitle(),
+            'element_type_id'     => $elementtype->getId(),
+            'element_type_type'   => $elementtype->getType(),
+            'alias'               => 1, //$node->isInstance(),
+            'allow_drag'          => true,
+            'sort_mode'           => $node->getSortMode(),
+            'areas'               => array(355),
+            'allowed_et'          => $allowedElementTypeIds,
+            'is_published'        => 1, //$node->isPublished($language),
+            'rights'              => $userRights,
+            'qtip'                => $qtip,
+            'allow_children'      => $elementtype->getHideChildren() ? false : true,
+            'default_tab'         => $elementtype->getDefaultTab(),
+            'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
+            'masterlanguage'      => $element->getMasterLanguage()
+        );
+
+        if (count($node->getTree()->getChildren($node)) && !$elementtype->getHideChildren()) {
+            $data['leaf'] = false;
+            $data['expanded'] = false;
+        } else {
+            $data['leaf'] = true;
+            $data['expanded'] = false;
+        }
+
+        if ($node->isRoot()) {
+            $data['cls'] = 'siteroot-node';
+            $data['expanded'] = true;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Create the subnodes of an element data tree
+     *
+     * @param array  $nodes
+     * @param string $language
+     *
+     * @return array
+     */
+    private function recurseNodes(array $nodes, $language)
+    {
+        $return = array();
+
+        foreach ($nodes as $node) {
+            $nodeData = $this->getNodeData($node, $language);
+
+            if ($nodeData) {
+                $return[] = $nodeData;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param string $siteRootId
+     * @param string $language
+     * @param array  $elementtypeIds
+     *
+     * @return array
+     */
+    private function findLinkNodes($siteRootId, $language, array $elementtypeIds)
+    {
+        $db = $container->dbPool->read;
+        $treeManager = $container->elementsTreeManager;
+        $elementManager = $container->elementsManager;
+
+        $select = $db->select()
+            ->distinct()
+            ->from(array('et' => $db->prefix . 'element_tree'), array('id'))
+            ->join(array('e' => $db->prefix . 'element'), 'et.eid = e.eid', array())
+            ->where('et.siteroot_id = ?', $siteRootId)
+            ->where('e.element_type_id IN (?)', $elementtypeIds)
+            ->order('et.sort');
+
+        $tids = $db->fetchCol($select);
+
+        $data = array();
+
+        $rootTid = null;
+
+        foreach ($tids as $tid) {
+            $node = $treeManager->getNodeByNodeId($tid);
+
+            $element = $elementManager->getByEID($node->getEid());
+            $elementVersion = $element->getVersion();
+
+            if (!isset($data[$tid])) {
+                $data[$node->getId()] = array(
+                    'id'       => $node->getId(),
+                    'eid'      => $node->getEid(),
+                    'text'     => $elementVersion->getBackendTitle(
+                            $language,
+                            $element->getMasterLanguage()
+                        ) . ' [' . $tid . ']',
+                    'icon'     => $elementVersion->getIconUrl(),
+                    'children' => array(),
+                    'leaf'     => true,
+                    'expanded' => false,
+                    'disabled' => !in_array($elementVersion->getElementTypeID(), $elementtypeIds),
+                );
+            }
+
+            do {
+                $parentNode = $node->getParentNode();
+
+                if (!$parentNode) {
+                    $rootTid = $node->getId();
+                    break;
+                }
+
+                if (!isset($data[$parentNode->getId()])) {
+                    $element = $elementManager->getByEID($parentNode->getEid());
+                    $elementVersion = $element->getVersion();
+
+                    $data[$parentNode->getId()] = array(
+                        'id'       => $parentNode->getId(),
+                        'eid'      => $parentNode->getEid(),
+                        'text'     => $elementVersion->getBackendTitle(
+                                $language,
+                                $element->getMasterLanguage()
+                            ) . ' [' . $parentNode->getId() . ']',
+                        'icon'     => $elementVersion->getIconUrl(),
+                        'children' => array(),
+                        'leaf'     => false,
+                        'expanded' => false,
+                        'disabled' => !in_array($elementVersion->getElementTypeID(), $elementtypeIds),
+                    );
+                } else {
+                    $data[$parentNode->getId()]['leaf'] = false;
+                }
+
+                $data[$parentNode->getId()]['children'][$node->getId()] =& $data[$node->getId()];
+
+                $node = $parentNode;
+            } while ($parentNode);
+        }
+
+        if (!count($data)) {
+            return array();
+        }
+
+        $data = $this->_stripLinkNodeKeys($data[$rootTid], $db);
+
+        return $data['children'];
+    }
+
+    protected function _stripLinkNodeKeys($data, Zend_Db_Adapter_Abstract $db)
+    {
+        if (is_array($data['children']) && count($data['children'])) {
+            $sortSelect = $db->select()
+                ->from($db->prefix . 'element_tree', array('id', 'sort'))
+                ->where('parent_id = ?', $data['id'])
+                ->where('id IN (?)', array_keys($data['children']))
+                ->order('sort');
+
+            $sortTids = $db->fetchPairs($sortSelect);
+            $sortedTids = array();
+            foreach (array_keys($data['children']) as $tid) {
+                $sortedTids[$tid] = $sortTids[$tid];
+            }
+
+            array_multisort($sortedTids, $data['children']);
+
+            $data['children'] = array_values($data['children']);
+
+            foreach ($data['children'] as $key => $item) {
+                $data['children'][$key] = $this->_stripLinkNodeKeys($item, $db);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Recurse over tree nodes
+     *
+     * @param array             $nodes
+     * @param string            $language
+     * @param int               $mode
+     * @param TreeNodeInterface $targetNode
+     *
+     * @return array
+     */
+    private function recurseLinkNodes(array $nodes, $language, $mode, TreeNodeInterface $targetNode = null)
+    {
+        $elementService = $this->get('phlexible_element.service');
+
+        $data = array();
+
+        foreach ($nodes as $node) {
+            /* @var $node TreeNodeInterface */
+
+            $element = $elementService->findElement($node->getTypeId());
+            $elementVersion = $elementService->findLatestElementVersion($element);
+            $elementtype = $elementService->findElementtype($element);
+
+            $tid = $node->getId();
+            $tree = $node->getTree();
+            $children = $tree->getChildren($node);
+
+            $dataNode = array(
+                'id'       => $node->getId(),
+                'eid'      => $node->getTypeId(),
+                'text'     => $elementVersion->getBackendTitle(
+                        $language,
+                        $element->getMasterLanguage()
+                    ) . ' [' . $tid . ']',
+                'icon'     => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
+                'children' => !$tree->hasChildren($node)
+                        ? array()
+                        : $mode == self::MODE_NOET_TARGET && $tree->isParentOf($node, $targetNode)
+                            ? $this->recurseLinkNodes($children, $language, $mode, $targetNode)
+                            : false,
+                'leaf'     => !$tree->hasChildren($node),
+                'expanded' => false,
+            );
+
+            /*
+            $leafCount = 0;
+            if (is_array($dataNode['children']))
+            {
+                foreach($dataNode['children'] as $child)
+                {
+                    $leafCount += $child['leafCount'];
+                    if (!isset($child['disabled']) || !$child['disabled'])
+                    {
+                        ++$leafCount;
+                    }
+                }
+            }
+            $dataNode['leafCount'] = $leafCount;
+            */
+
+            $data[] = $dataNode;
+        }
+
+        return $data;
     }
 
     /**
      * Return the Element data tree
      *
+     * @param Request $request
+     *
+     * @return JsonResponse
      * @Route("/link", name="tree_link")
      */
-    public function linkAction()
+    public function linkAction(Request $request)
     {
-        $container = $this->getContainer();
+        $currentSiterootId = $request->get('siteroot_id');
+        $id = $request->get('node', 'root');
+        $language = $request->get('language');
+        $recursive = (bool) $request->get('recursive');
 
-        $treeManager = $container->get('phlexible_tree.manager');
-        $elementManager = $container->elementsManager;
-        $elementVersionManager = $container->elementsVersionManager;
-
-        $currentSiteRootID = $this->_getParam('siteroot_id', null);
-        $id = $this->_getParam('node', 'root');
-        $language = $this->_getParam('language', null);
-        $recursive = (bool) $this->_getParam('recursive', false);
+        $treeManager = $this->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.service');
 
         if (null === $language) {
             if ($id != 'root') {
-                $node = $treeManager->getNodeByNodeID($id);
+                $tree = $treeManager->getByNodeID($id);
+                $node = $tree->get($id);
             } else {
-                $rootId = $treeManager->getRootNodeId($currentSiteRootID);
-                $node = $treeManager->getNodeByNodeID($rootId);
+                $tree = $treeManager->getBySiteRootId($currentSiterootId);
+                $node = $tree->getRoot();
             }
-            $element = $elementManager->getByEID($node->getEid());
+            $element = $elementService->findElement($node->getTypeId());
             $language = $element->getMasterLanguage();
         }
 
-        if ($id == 'root') {
-            $siteRootManager = Makeweb_Siteroots_Siteroot_Manager::getInstance();
-            $siteRoots = $siteRootManager->getAllSiteRoots();
+        if ($id === 'root') {
+            $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
+            $siteroots = $siterootManager->findAll();
 
             // move current siteroot to the beginning
-            if ($currentSiteRootID !== null) {
-                array_unshift($siteRoots, $siteRoots[$currentSiteRootID]);
-                unset($siteRoots[$currentSiteRootID]);
+            if ($currentSiterootId !== null) {
+                foreach ($siteroots as $index => $siteroot) {
+                    if ($siteroot->getId() === $currentSiterootId) {
+                        array_unshift($siteroots, $siteroots[$index]);
+                        unset($siteroots[$index]);
+                    }
+                }
             }
 
             $data = array();
-            foreach ($siteRoots as $siteRoot) {
-                $siteRootID = $siteRoot->getId();
-                $tree = $treeManager->getBySiteRootID($siteRootID);
+            foreach ($siteroots as $siteroot) {
+                $siterootId = $siteroot->getId();
+                $tree = $treeManager->getBySiteRootID($siterootId);
                 $rootNode = $tree->getRoot();
 
-                $elementVersion = $elementVersionManager->getLatest($rootNode->getEID());
+                $element = $elementService->findElement($rootNode->getTypeId());
+                $elementVersion = $elementService->findLatestElementVersion($element);
+                $elementtype = $elementService->findElementtype($element);
 
                 $data[] = array(
-                    'id'       => $rootNode->getID(),
-                    'eid'      => $rootNode->getEID(),
-                    'text'     => $siteRoot->getTitle(),
-                    'icon'     => $elementVersion->getIconUrl(),
-                    //                'cls'      => 'siteroot-node',
-                    //                'children' => $startNode->hasChildren() ? $this->_recurseNodes($startNode->getChildren(), $language) : array(),
-                    'leaf'     => !$rootNode->hasChildren(),
-                    'expanded' => $siteRootID == $currentSiteRootID,
+                    'id'       => $rootNode->getId(),
+                    'eid'      => (int) $rootNode->getTypeId(),
+                    'text'     => $siteroot->getTitle(),
+                    'icon'     => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
+                    // 'cls'      => 'siteroot-node',
+                    // 'children' => $startNode->hasChildren() ? $this->_recurseNodes($startNode->getChildren(), $language) : array(),
+                    'leaf'     => !$tree->hasChildren($rootNode),
+                    'expanded' => $siterootId === $currentSiterootId,
                 );
             }
         } else {
-            $node = $treeManager->getNodeByNodeID($id);
-            $nodes = $node->getChildren();
-            $data = $this->_recurseLinkNodes($nodes, $language, $recursive);
+            $tree = $treeManager->getByNodeID($id);
+            $node = $tree->get($id);
+            $nodes = $tree->getChildren($node);
+            $data = $this->recurseLinkNodes($nodes, $language, $recursive);
         }
 
-        $this->getResponse()->setAjaxPayload($data);
+        return new JsonResponse($data);
     }
 
     /**
      * Return the Element data tree
      *
+     * @param Request $request
+     *
+     * @return JsonResponse
      * @Route("/linkelement", name="tree_link_element")
      */
-    public function linkelementAction()
+    public function linkelementAction(Request $request)
     {
-        $container = $this->getContainer();
+        $siterootId = $request->get('siteroot_id');
+        $id = $request->get('node', 'root');
+        $language = $request->get('language');
+        $targetTid = $request->get('value');
+        $elementtypeIds = $request->get('element_type_ids');
 
-        $treeManager = $container->get('phlexible_tree.manager');
-        $elementManager = $container->elementsManager;
+        if ($elementtypeIds) {
+            $elementtypeIds = explode(',', $elementtypeIds);
+        } else {
+            $elementtypeIds = array();
+        }
 
-        $siterootID = $this->_getParam('siteroot_id');
-        $id = $this->_getParam('node', 'root');
-        $language = $this->_getParam('language', null);
-        $targetTid = $this->_getParam('value', null);
+        $treeManager = $this->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.service');
 
         if (!$language) {
             if ($id != 'root') {
-                $node = $treeManager->getNodeByNodeID($id);
+                $tree = $treeManager->getByNodeId($id);
+                $node = $tree->get($id);
             } else {
-                $rootId = $treeManager->getRootNodeId($siterootID);
-                $node = $treeManager->getNodeByNodeID($rootId);
+                $tree = $treeManager->getBySiteRootId($siterootId);
+                $node = $tree->getRoot();
             }
 
-            $element = $elementManager->getByEID($node->getEid());
+            $element = $elementService->findElement($node->getTypeId());
             $language = $element->getMasterLanguage();
         }
 
-        $elementTypeIds = $this->_getParam('element_type_ids', array());
-
-        if ($elementTypeIds) {
-            $elementTypeIds = explode(',', $elementTypeIds);
+        $tree = $treeManager->getBySiteRootID($siterootId);
+        if ($id === 'root') {
+            $startNode = $tree->getRoot();
         } else {
-            $elementTypeIds = array();
-        }
-
-        $tree = $treeManager->getBySiteRootID($siterootID);
-        if ($id == 'root') {
-            $startNode = $tree->getRootNode();
-        } else {
-            $startNode = $treeManager->getNodeByNodeId($id);
+            $startNode = $tree->get($id);
         }
 
         $targetNode = null;
         if ($targetTid) {
-            $targetNode = $treeManager->getNodeByNodeId($targetTid);
+            $targetTree = $treeManager->getByNodeId($targetTid);
+            $targetNode = $targetTree->get($targetTid);
         }
 
-        if (!count($elementTypeIds)) {
+        if (!count($elementtypeIds)) {
             $mode = !$targetTid ? self::MODE_NOET_NOTARGET : self::MODE_NOET_TARGET;
 
-            $nodes = $startNode->getChildren();
-            $data = $this->_recurseLinkNodes($nodes, $language, $mode, $targetNode);
+            $nodes = $tree->getChildren($startNode);
+            $data = $this->recurseLinkNodes($nodes, $language, $mode, $targetNode);
         } else {
             $mode = !$targetTid ? self::MODE_ET_NOTARGET : self::MODE_ET_TARGET;
 
-            $data = $this->_findLinkNodes($startNode->getSiteRootId(), $language, $elementTypeIds);
+            $data = $this->findLinkNodes($startNode->getTree()->getSiterootId(), $language, $elementtypeIds);
 
-            if ($elementTypeIds) {
-                $data = $this->_recursiveTreeStrip($data);
+            if ($elementtypeIds) {
+                $data = $this->recursiveTreeStrip($data);
             }
         }
 
-        $this->getResponse()->setAjaxPayload($data);
+        return new JsonResponse($data);
     }
 
     /**
@@ -775,10 +763,10 @@ class TreeController extends Controller
      *
      * @return array
      */
-    protected function _recursiveTreeStrip(array $data)
+    private function recursiveTreeStrip(array $data)
     {
         if (count($data) === 1 && !empty($data[0]['children'])) {
-            return $this->_recursiveTreeStrip($data[0]['children']);
+            return $this->recursiveTreeStrip($data[0]['children']);
         }
 
         return $data;
@@ -801,17 +789,17 @@ class TreeController extends Controller
         $id = $this->_getParam('node', 'root');
         $recursive = (bool) $this->_getParam('recursive', false);
         $language = $this->_getParam('language', null);
-        $elementTypeIds = $this->_getParam('element_type_ids', array());
+        $elementtypeIds = $this->_getParam('element_type_ids', array());
         $targetTid = $this->_getParam('value', null);
 
         if (!$language) {
             $language = $defaultLanguage;
         }
 
-        if ($elementTypeIds) {
-            $elementTypeIds = explode(',', $elementTypeIds);
+        if ($elementtypeIds) {
+            $elementtypeIds = explode(',', $elementtypeIds);
         } else {
-            $elementTypeIds = array();
+            $elementtypeIds = array();
         }
 
         $targetNode = null;
@@ -836,18 +824,18 @@ class TreeController extends Controller
 
                 $children = false;
                 if ($targetNode && $siteRootID === $targetNode->getSiteRootId()) {
-                    if (!count($elementTypeIds)) {
+                    if (!count($elementtypeIds)) {
                         $mode = !$targetTid ? self::MODE_NOET_NOTARGET : self::MODE_NOET_TARGET;
 
                         $nodes = $rootNode->getChildren();
-                        $children = $this->_recurseLinkNodes($nodes, $language, $mode, $targetNode);
+                        $children = $this->recurseLinkNodes($nodes, $language, $mode, $targetNode);
                     } else {
                         $mode = !$targetTid ? self::MODE_ET_NOTARGET : self::MODE_ET_TARGET;
 
-                        $children = $this->_findLinkNodes($rootNode->getSiteRootId(), $language, $elementTypeIds);
+                        $children = $this->findLinkNodes($rootNode->getSiteRootId(), $language, $elementtypeIds);
 
-                        if ($elementTypeIds) {
-                            $children = $this->_recursiveTreeStrip($children);
+                        if ($elementtypeIds) {
+                            $children = $this->recursiveTreeStrip($children);
                         }
                     }
                 }
@@ -865,18 +853,18 @@ class TreeController extends Controller
         } else {
             $startNode = $treeManager->getNodeByNodeID($id);
 
-            if (!count($elementTypeIds)) {
+            if (!count($elementtypeIds)) {
                 $mode = !$targetTid ? self::MODE_NOET_NOTARGET : self::MODE_NOET_TARGET;
 
                 $nodes = $startNode->getChildren();
-                $data = $this->_recurseLinkNodes($nodes, $language, $mode, $targetNode);
+                $data = $this->recurseLinkNodes($nodes, $language, $mode, $targetNode);
             } else {
                 $mode = !$targetTid ? self::MODE_ET_NOTARGET : self::MODE_ET_TARGET;
 
-                $data = $this->_findLinkNodes($startNode->getSiteRootId(), $language, $elementTypeIds);
+                $data = $this->findLinkNodes($startNode->getSiteRootId(), $language, $elementtypeIds);
 
-                if ($elementTypeIds) {
-                    $data = $this->_recursiveTreeStrip($data);
+                if ($elementtypeIds) {
+                    $data = $this->recursiveTreeStrip($data);
                 }
             }
 
@@ -950,8 +938,8 @@ class TreeController extends Controller
             }
 
             $parentId = $fi->id;
-            $siterootID = $fi->siteroot_id;
-            $elementTypeID = $fi->element_type_id;
+            $siterootId = $fi->siteroot_id;
+            $elementtypeId = $fi->element_type_id;
             $prevId = $fi->prev_id;
             $sortMode = $fi->sort;
             $navigation = $fi->navigation ? true : false;
@@ -960,13 +948,13 @@ class TreeController extends Controller
 
             $elementManager = Makeweb_Elements_Element_Manager::getInstance();
             $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-            $tree = $treeManager->getBySiteRootId($siterootID);
+            $tree = $treeManager->getBySiteRootId($siterootId);
 
-            $newElement = $elementManager->create($elementTypeID, true, $masterLanguage);
+            $newElement = $elementManager->create($elementtypeId, true, $masterLanguage);
             $newEid = $newElement->getEid();
             $newElementVersion = $newElement->getLatestVersion();
 
-            // $siterootID, $parentId, $prevId, $navigation, $restricted
+            // $siterootId, $parentId, $prevId, $navigation, $restricted
 
             // place new element in element_tree
             $newTreeId = $tree->add($parentId, $newEid, $prevId, 'element', $sortMode);
@@ -1043,7 +1031,7 @@ class TreeController extends Controller
 
             $manager = Makeweb_Elements_Tree_Manager::getInstance();
 
-            $targetNode = $manager->getNodeByNodeID($parentId);
+            $targetNode = $manager->getNodeByNodeId($parentId);
             $tree = $targetNode->getTree();
 
             $tree->createAlias($parentId, $instanceId, $prevId);
@@ -1103,7 +1091,7 @@ class TreeController extends Controller
             $elementManager = Makeweb_Elements_Element_Manager::getInstance();
             $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
 
-            $sourceNode = $treeManager->getNodeByNodeID($sourceId);
+            $sourceNode = $treeManager->getNodeByNodeId($sourceId);
             $tree = $sourceNode->getTree();
             $sourceEid = $sourceNode->getEid();
 
@@ -1124,7 +1112,7 @@ class TreeController extends Controller
             $targetId = $tree->add($parentId, $targetEid, $prevId);
 
             // copy element version data
-            $sourceElement = $elementManager->getByEID($sourceEid);
+            $sourceElement = $elementManager->getByEid($sourceEid);
             $sourceElementVersion = $sourceElement->getLatestVersion();
             $targetElementVersion = $sourceElementVersion->copy($targetEid);
 
@@ -1178,7 +1166,7 @@ class TreeController extends Controller
             $targetId = $fi->target;
 
             $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-            $node = $treeManager->getNodeByNodeID($id);
+            $node = $treeManager->getNodeByNodeId($id);
             $tree = $node->getTree();
 
             if ($id === $targetId) {

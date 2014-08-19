@@ -61,7 +61,7 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
     },
 
     setPrototype: function (dsId, pt) {
-        this.prototypes[dsid] = pt;
+        this.prototypes[dsId] = pt;
     },
 
     addFieldPrototype: function (item) {
@@ -125,7 +125,7 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
 
         pt = {
             factory: item.type,
-            dsid: item.dsId,
+            dsId: item.dsId,
             parentDsId: item.parentDsId,
             fieldId: item.fieldId,
             name: item.name,
