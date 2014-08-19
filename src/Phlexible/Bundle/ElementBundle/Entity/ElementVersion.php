@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -96,10 +97,35 @@ class ElementVersion
     private $triggerLanguage;
 
     /**
-     * @var array
-     * @ORM\Column(type="json_array", nullable=true)
+     * @var ArrayCollection|ElementVersionMappedField[]
+     * @ORM\OneToMany(targetEntity="ElementVersionMappedField", mappedBy="elementVersion", indexBy="language")
      */
-    private $mappedFields = array();
+    private $mappedFields;
+
+    public function __construct()
+    {
+        $this->mappedFields = new ArrayCollection();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * @return Element
@@ -218,6 +244,26 @@ class ElementVersion
     }
 
     /**
+     * @return string
+     */
+    public function getTriggerLanguage()
+    {
+        return $this->triggerLanguage;
+    }
+
+    /**
+     * @param string $triggerLanguage
+     *
+     * @return $this
+     */
+    public function setTriggerLanguage($triggerLanguage)
+    {
+        $this->triggerLanguage = $triggerLanguage;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getMappedFields()
@@ -233,6 +279,21 @@ class ElementVersion
     public function setMappedFields(array $mappedFields = null)
     {
         $this->mappedFields = $mappedFields;
+
+        return $this;
+    }
+
+    /**
+     * @param ElementVersionMappedField $mappedField
+     *
+     * @return $this
+     */
+    public function addMappedField(ElementVersionMappedField $mappedField)
+    {
+        if (!$this->mappedFields->containsKey($mappedField->getLanguage())) {
+            $this->mappedFields->set($mappedField->getLanguage(), $mappedField);
+            $mappedField->setElementVersion($this);
+        }
 
         return $this;
     }
@@ -304,19 +365,40 @@ class ElementVersion
      */
     public function getMappedField($field, $language, $fallbackLanguage = null)
     {
-        if (in_array($field, array('page', 'navigation'))
-            && !isset($this->mappedFields[$language][$field])
-            && !isset($this->mappedFields[$fallbackLanguage][$field])
-        ) {
-            $field = 'backend';
+        if ($this->mappedFields->containsKey($language)) {
+            $mappedField = $this->mappedFields->get($language);
+        } elseif ($this->mappedFields->containsKey($fallbackLanguage)) {
+            $mappedField = $this->mappedFields->get($fallbackLanguage);
+        } else {
+            return null;
         }
 
-        if (isset($this->mappedFields[$language][$field])) {
-            return $this->mappedFields[$language][$field];
+        if ($field === 'page') {
+            if ($mappedField->getPage()) {
+                return $mappedField->getPage();
+            } else {
+                $field = 'backend';
+            }
         }
 
-        if (isset($this->mappedFields[$fallbackLanguage][$field])) {
-            return $this->mappedFields[$fallbackLanguage][$field];
+        if ($field === 'navigation') {
+            if ($mappedField->getNavigation()) {
+                return $mappedField->getNavigation();
+            } else {
+                $field = 'backend';
+            }
+        }
+
+        if ($field === 'backend') {
+            return $mappedField->getBackend();
+        }
+
+        if ($field === 'customDate' && $mappedField->getCustomDate()) {
+            return $mappedField->getCustomDate();
+        }
+
+        if ($field === 'forward' && $mappedField->getForward()) {
+            return $mappedField->getForward();
         }
 
         return null;

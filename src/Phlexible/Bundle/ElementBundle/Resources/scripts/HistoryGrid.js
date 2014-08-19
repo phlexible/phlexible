@@ -111,14 +111,14 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
         var icon = '';
 
         switch (v) {
-            case 'create':
-            case 'createVersion':
+            case 'createElement':
+            case 'createElementVersion':
             case 'createNode':
             case 'createTeaser':
                 icon = Phlexible.inlineIcon('p-element-add-icon') + ' ';
                 break;
 
-            case 'save':
+            case 'saveElement':
                 icon = Phlexible.inlineIcon('p-element-save-icon') + ' ';
                 break;
 
@@ -128,11 +128,13 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
                 break;
 
             case 'createInstance':
+            case 'createNodeInstance':
+            case 'createTeaserInstance':
                 icon = Phlexible.inlineIcon('p-element-alias_add-icon') + ' ';
                 break;
 
-            case 'saveMaster':
-            case 'saveLanguage':
+            case 'saveElementMaster':
+            case 'saveElementSlave':
                 icon = Phlexible.inlineIcon('p-element-save-icon') + ' ';
                 break;
 
@@ -140,11 +142,13 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
                 icon = Phlexible.inlineIcon('p-element-publish-icon') + ' ';
                 break;
 
-            case 'publish':
+            case 'publishNode':
+            case 'publishTeaser':
                 icon = Phlexible.inlineIcon('p-element-publish-icon') + ' ';
                 break;
 
-            case 'setOffline':
+            case 'setNodeOffline':
+            case 'setTeaserOffline':
                 icon = Phlexible.inlineIcon('p-element-set_offline-icon') + ' ';
                 break;
 

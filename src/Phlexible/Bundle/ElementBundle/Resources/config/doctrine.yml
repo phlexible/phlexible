@@ -21,3 +21,8 @@ services:
         class: Phlexible\Bundle\ElementBundle\Doctrine\ElementLockManager
         public: false
         arguments: [@doctrine.orm.entity_manager]
+
+    phlexible_element.doctrine.element_history_manager:
+        class: Phlexible\Bundle\ElementBundle\Doctrine\ElementHistoryManager
+        public: false
+        arguments: [@doctrine.orm.entity_manager]

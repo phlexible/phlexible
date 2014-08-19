@@ -14,7 +14,7 @@ services:
     phlexible_element.context.manager:
         class: Phlexible\Bundle\ElementBundle\Context\ContextManager
 
-    phlexible_element.field.mapper:
+    phlexible_element.field_mapper:
         class: Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper
         arguments: [@phlexible_element.service]
 

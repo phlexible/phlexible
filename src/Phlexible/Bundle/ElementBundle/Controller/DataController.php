@@ -425,15 +425,9 @@ class DataController extends Controller
             $onlineVersion = null;
             $latestVersion = null;
 
-            if (in_array(
-                $elementtype->getType(),
-                array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART)
-            )
-            ) {
+            if (in_array($elementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART))) {
                 if ($type == Elementtype::TYPE_FULL) {
-                    $blaNode = $this->get('phlexible_tree.content.manager')->findByTreeId(
-                        $node->getId()
-                    )->get($node->getId());
+                    $blaNode = $this->get('phlexible_tree.content.manager')->findByTreeId($node->getId())->get($node->getId());
                     $urls['preview'] = $this->get('phlexible_tree.router')->generate($blaNode);
                     $urls['debug'] = $this->get('phlexible_tree.router')->generate($blaNode);
 

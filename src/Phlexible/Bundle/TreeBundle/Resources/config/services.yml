@@ -3,13 +3,9 @@ services:
         class: Phlexible\Bundle\TreeBundle\TreeManager
         arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.database_tree_factory]
 
-    phlexible_tree.history:
-        class: Phlexible\Bundle\TreeBundle\Tree\TreeHistory
-        arguments: [@connection_manager]
-
     phlexible_tree.database_tree_factory:
         class: Phlexible\Bundle\TreeBundle\Tree\DatabaseTreeFactory
-        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_tree.history]
+        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_element.element_history_manager]
 
     phlexible_tree.content.manager:
         class: Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManager

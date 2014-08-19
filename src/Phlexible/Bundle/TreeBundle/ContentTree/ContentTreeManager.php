@@ -44,6 +44,8 @@ class ContentTreeManager
     public function findByTreeId($treeId)
     {
         $trees = $this->findAll();
+        if (!$trees) return null;
+
         foreach ($trees as $tree) {
             if ($tree->has($treeId)) {
                 return $tree;

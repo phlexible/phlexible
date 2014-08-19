@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
 use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -29,20 +30,20 @@ class DatabaseTreeFactory implements TreeFactoryInterface
     private $dispatcher;
 
     /**
-     * @var TreeHistory
+     * @var ElementHistoryManagerInterface
      */
-    private $history;
+    private $historyManager;
 
     /**
-     * @param Connection               $connection
-     * @param EventDispatcherInterface $dispatcher
-     * @param TreeHistory              $history
+     * @param Connection                     $connection
+     * @param EventDispatcherInterface       $dispatcher
+     * @param ElementHistoryManagerInterface $historyManager
      */
-    public function __construct(Connection $connection, EventDispatcherInterface $dispatcher, TreeHistory $history)
+    public function __construct(Connection $connection, EventDispatcherInterface $dispatcher, ElementHistoryManagerInterface $historyManager)
     {
         $this->connection = $connection;
         $this->dispatcher = $dispatcher;
-        $this->history = $history;
+        $this->historyManager = $historyManager;
     }
 
     /**
@@ -50,6 +51,6 @@ class DatabaseTreeFactory implements TreeFactoryInterface
      */
     public function factory($siterootId)
     {
-        return new DatabaseTree($siterootId, $this->connection, $this->dispatcher, $this->history);
+        return new DatabaseTree($siterootId, $this->connection, $this->dispatcher, $this->historyManager);
     }
 }

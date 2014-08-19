@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 
 /**
  * Elementtype structure node
@@ -164,6 +165,7 @@ class ElementtypeStructureNode
      */
     public function setElementtypeStructure(ElementtypeStructure $elementtypeStructure)
     {
+        die("glglgl");
         $this->elementtypeStructure = $elementtypeStructure;
 
         return $this;
@@ -546,7 +548,7 @@ class ElementtypeStructureNode
     }
 
     /**
-     * Is this field repeatable?
+     * Is this field a reference?
      *
      * @return bool
      */
@@ -556,7 +558,7 @@ class ElementtypeStructureNode
     }
 
     /**
-     * Is this field repeatable?
+     * Is this field a reference root?
      *
      * @return bool
      */

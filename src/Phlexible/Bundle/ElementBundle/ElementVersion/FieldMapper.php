@@ -41,7 +41,8 @@ class FieldMapper
      */
     public function map(ElementVersion $elementVersion, $language)
     {
-        $mappings = $this->elementService->findElementtypeVersion($elementVersion)->getMappings();
+        $elementtypeVersion = $this->elementService->findElementtypeVersion($elementVersion);
+        $mappings = $elementtypeVersion->getMappings();
         $elementStructure = $this->elementService->findElementStructure($elementVersion, $language);
 
         $titles = array();
@@ -79,6 +80,11 @@ class FieldMapper
             } else {
 
             }
+        }
+
+        if (empty($titles['backend'])) {
+            $elementtype = $elementtypeVersion->getElementtype();
+            $titles['backend'] = '[' . $elementtype->getTitle() . ' ' . $language . ']';
         }
 
         return $titles;

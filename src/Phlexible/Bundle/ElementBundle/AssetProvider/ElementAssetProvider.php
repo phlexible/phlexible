@@ -67,6 +67,8 @@ class ElementAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/Clipboard.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/Element.js')),
 
+            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/model/ElementHistory.js')),
+
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementsTreeDropZone.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementsTreeNodeUI.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementsTreeLoader.js')),

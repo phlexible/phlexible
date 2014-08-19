@@ -97,6 +97,7 @@ class ElementStructureLoader
                     $myParentNode = $elementtypeStructure->getNode($myParentNode->getParentDsId());
                 } while (in_array($myParentNode->getType(), array('reference', 'referenceroot')));
 
+
                 //echo 'add ' . $row['id']." " .$row['ds_id'].PHP_EOL;
                 $structure = new ElementStructure();
                 $structure
@@ -136,8 +137,7 @@ class ElementStructureLoader
             }
         }
 
-        $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(
-        ), \RecursiveIteratorIterator::SELF_FIRST);
+        $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $node) {
             /* @var $node ElementtypeStructureNode */
             if ($node->isRepeatable() || $node->isOptional()) {
@@ -164,8 +164,16 @@ class ElementStructureLoader
                             ->setName($row['name'])
                             ->setParentName($myParentNode->getName());
                         /* @var $parentStructure ElementStructure */
+
+                        if (!isset($dummy[$row['repeatable_id']])) {
+                            continue;
+                            ldd($structure);
+                            echo PHP_EOL.$node->getName()." ".$node->getDsId().PHP_EOL;
+                            die;
+                        }
                         $parentStructure = $dummy[$row['repeatable_id']];
                         $parentStructure->addStructure($structure);
+
                         $dummy[$row['id']] = $structure;
 
                         if (isset($dataRows[$row['id']])) {

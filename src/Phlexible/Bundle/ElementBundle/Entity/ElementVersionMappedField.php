@@ -29,17 +29,11 @@ class ElementVersionMappedField
     private $id;
 
     /**
-     * @var Element
-     * @ORM\ManyToOne(targetEntity="Element")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
+     * @var ElementVersion
+     * @ORM\ManyToOne(targetEntity="ElementVersion", inversedBy="mappedFields")
+     * @ORM\JoinColumn(name="element_version_id", referencedColumnName="id")
      */
-    private $element;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
-     */
-    private $version;
+    private $elementVersion;
 
     /**
      * @var string
@@ -106,5 +100,166 @@ class ElementVersionMappedField
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $custom5;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return ElementVersion
+     */
+    public function getElementVersion()
+    {
+        return $this->elementVersion;
+    }
+
+    /**
+     * @param ElementVersion $elementVersion
+     *
+     * @return $this
+     */
+    public function setElementVersion(ElementVersion $elementVersion)
+    {
+        $this->elementVersion = $elementVersion;
+        $elementVersion->addMappedField($this);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return $this
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackend()
+    {
+        return $this->backend;
+    }
+
+    /**
+     * @param string $backend
+     *
+     * @return $this
+     */
+    public function setBackend($backend)
+    {
+        $this->backend = $backend;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * @param string $page
+     *
+     * @return $this
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNavigation()
+    {
+        return $this->navigation;
+    }
+
+    /**
+     * @param string $navigation
+     *
+     * @return $this
+     */
+    public function setNavigation($navigation)
+    {
+        $this->navigation = $navigation;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     *
+     * @return $this
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getForward()
+    {
+        return $this->forward;
+    }
+
+    /**
+     * @param string $forward
+     *
+     * @return $this
+     */
+    public function setForward($forward)
+    {
+        $this->forward = $forward;
+
+        return $this;
+    }
 
 }

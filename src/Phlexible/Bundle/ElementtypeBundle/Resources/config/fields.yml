@@ -4,7 +4,6 @@ parameters:
 services:
     phlexible_elementtype.field.registry:
         class: Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry
-        public: false
         arguments: [[]]
 
     phlexible_elementtype.field.checkbox:

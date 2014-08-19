@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
 use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\TreeBundle\Event\MoveNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\ReorderNodeEvent;
@@ -52,26 +53,26 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
     private $dispatcher;
 
     /**
-     * @var TreeHistory
+     * @var ElementHistoryManagerInterface
      */
-    private $history;
+    private $historyManager;
 
     /**
-     * @param string                    $siteRootId
-     * @param Connection                $connection
-     * @param EventDispatcherInterface  $dispatcher
-     * @param TreeHistory               $history
+     * @param string                         $siteRootId
+     * @param Connection                     $connection
+     * @param EventDispatcherInterface       $dispatcher
+     * @param ElementHistoryManagerInterface $historyManager
      */
     public function __construct(
         $siteRootId,
         Connection $connection,
         EventDispatcherInterface $dispatcher,
-        TreeHistory $history)
+        ElementHistoryManagerInterface $historyManager)
     {
         $this->siterootId = $siteRootId;
         $this->connection = $connection;
         $this->dispatcher = $dispatcher;
-        $this->history = $history;
+        $this->historyManager = $historyManager;
     }
 
     /**
@@ -410,7 +411,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         $type,
         $typeId,
         array $attributes,
-        $uid,
+        $userId,
         $sortMode = 'free',
         $sortDir = 'asc')
     {
@@ -441,7 +442,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
             ->setSort($sort)
             ->setSortMode($sortMode)
             ->setSortDir($sortDir)
-            ->setCreateUserId($uid)
+            ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime);
 
         $beforeEvent = new NodeEvent($node);
@@ -456,7 +457,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         }
 
         // history
-        $this->history->insertCreateNode($node, $uid, null);
+        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_NODE, $typeId, $userId, $node->getId());
 
         $event = new NodeEvent($node);
         $this->dispatcher->dispatch(TreeEvents::CREATE_NODE, $event);
@@ -522,7 +523,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
     /**
      * {@inheritdoc}
      */
-    public function move($node, $toNode, $uid)
+    public function move($node, $toNode, $userId)
     {
         if (!$node instanceof TreeNodeInterface) {
             $node = $this->get($node);
@@ -564,20 +565,13 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         $this->dispatcher->dispatch(TreeEvents::MOVE_NODE, $event);
 
         // history
-        $this->history->insertMoveNode(
-            $node,
-            $uid,
-            null,
-            null,
-            null,
-            'Node moved from TID ' . $oldParentId . ' to TID ' . $toNode->getId()
-        );
+        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_MOVE_NODE, $node->getTypeId(), $userId, $node->getId(), null, null, null, 'Node moved from TID ' . $oldParentId . ' to TID ' . $toNode->getId());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function delete($node, $uid, $comment = null)
+    public function delete($node, $userId, $comment = null)
     {
         if (!$node instanceof TreeNodeInterface) {
             $node = $this->get($node);
@@ -595,7 +589,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         $this->_deleteCheck($node, $rightsIdentifiers);
         */
 
-        $this->doDelete($node, $uid, $comment);
+        $this->doDelete($node, $userId, $comment);
     }
 
     protected function _deleteCheck(Makeweb_Elements_Tree_Node $node, array $rightsIdentifiers)
@@ -636,10 +630,10 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
 
     /**
      * @param TreeNodeInterface $node
-     * @param string            $uid
+     * @param string            $userId
      * @param string            $comment
      */
-    private function doDelete(TreeNodeInterface $node, $uid, $comment = null)
+    private function doDelete(TreeNodeInterface $node, $userId, $comment = null)
     {
         foreach ($this->getChildren($node) as $childNode) {
             $this->doDelete($childNode, $uid, $comment);
@@ -663,7 +657,7 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         $this->dispatcher->dispatch(TreeEvents::DELETE_NODE, $event);
 
         // history
-        $this->history->insertDeleteNode($node, $uid, null, null, null, $comment);
+        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_MOVE_NODE, $node->getTypeId(), $userId, $node->getId(), null, null, null, $comment);
 
         // TODO: -> elements, listener
         /*

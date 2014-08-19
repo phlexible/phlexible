@@ -26,7 +26,7 @@ interface WritableTreeInterface
      * @param string                $type
      * @param string                $typeId
      * @param array                 $attributes
-     * @param string                $uid
+     * @param string                $userId
      * @param string                $sortMode
      * @param string                $sortDir
      *
@@ -38,7 +38,7 @@ interface WritableTreeInterface
         $type,
         $typeId,
         array $attributes,
-        $uid,
+        $userId,
         $sortMode = 'free',
         $sortDir = 'asc');
 
@@ -66,8 +66,8 @@ interface WritableTreeInterface
      * Delete node
      *
      * @param TreeNodeInterface|int $node
-     * @param string                $uid
+     * @param string                $userId
      * @param string                $comment
      */
-    public function delete($node, $uid, $comment = null);
+    public function delete($node, $userId, $comment = null);
 }

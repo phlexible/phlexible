@@ -69,11 +69,10 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
 
     /**
      * @param ElementtypeVersion $elementtypeVersion
-     * @param string             $refererDsId
      *
      * @return ElementtypeStructure
      */
-    public function find(ElementtypeVersion $elementtypeVersion, $refererDsId = null)
+    public function find(ElementtypeVersion $elementtypeVersion)
     {
         if (!isset($this->structureMap[$elementtypeVersion->getUniqueId()])) {
             $structure = new ElementtypeStructure();
@@ -83,8 +82,7 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
             $this->doLoad(
                 $structure,
                 $elementtypeVersion->getElementtype()->getId(),
-                $elementtypeVersion->getVersion(),
-                $refererDsId
+                $elementtypeVersion->getVersion()
             );
 
             $this->structureMap[$elementtypeVersion->getUniqueId()] = $structure;
@@ -148,7 +146,6 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
         $this->dispatcher->dispatch(ElementtypeEvents::STRUCTURE_CREATE, $event);
     }
 
-
     /**
      * @param ElementtypeStructure     $structure
      * @param int                      $id
@@ -165,6 +162,10 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
         );
 
         foreach ($nodes as $node) {
+            /* @var $node ElementtypeStructureNode */
+
+            $node = clone $node;
+
             if ($referenceParentNode) {
                 $node->setParentId($referenceParentNode->getId());
                 $node->setParentDsId($referenceParentNode->getDsId());
@@ -178,5 +179,4 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
             }
         }
     }
-
 }

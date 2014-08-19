@@ -33,31 +33,60 @@ class HistoryController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $data = array();
-
         $eid      = $request->get('filter_eid', null);
         $tid      = $request->get('filter_tid', null);
         $teaserId = $request->get('filter_teaser_id', null);
         $action   = $request->get('filter_action', null);
         $comment  = $request->get('filter_comment', null);
-        $sort     = $request->get('sort', 'create_time');
+        $sort     = $request->get('sort', 'createdAt');
         $dir      = $request->get('dir', 'DESC');
         $offset   = $request->get('start', 0);
         $limit    = $request->get('limit', 25);
 
-        $filter = array(
-            'eid'       => $eid,
-            'tid'       => $tid,
-            'teaser_id' => $teaserId,
-            'action'    => $action,
-            'comment'   => $comment,
-        );
+        $criteria = array();
 
-        $elementHistory = Makeweb_Elements_History::getRange($filter, $offset, $limit, $sort, $dir);
-        $elementTotal   = Makeweb_Elements_History::getCount($filter);
+        if ($eid) {
+            $criteria['eid'] = $eid;
+        }
+        if ($tid) {
+            $criteria['tid'] = $tid;
+        }
+        if ($teaserId) {
+            $criteria['teaserId'] = $teaserId;
+        }
+        if ($action) {
+            $criteria['action'] = $action;
+        }
+        if ($comment) {
+            $criteria['comment'] = $comment;
+        }
+
+        if ($sort === 'create_time') {
+            $sort = 'createdAt';
+        }
+
+        $historyManager = $this->get('phlexible_element.element_history_manager');
+        $entries = $historyManager->findBy($criteria, array($sort => $dir), $limit, $offset);
+        $count = $historyManager->countBy($criteria);
+
+        $elementHistory = array();
+        foreach ($entries as $entry) {
+            $elementHistory[] = array(
+                'eid' => $entry->getEid(),
+                'type' => 'element',
+                'id' => $entry->getId(),
+                'tid' => 0,
+                'version' => $entry->getVersion(),
+                'language' => $entry->getLanguage(),
+                'comment' => $entry->getComment(),
+                'action' => $entry->getAction(),
+                'username' => $entry->getCreateUserId(),
+                'create_time' => $entry->getCreatedAt()->format('Y-m-d H:i:s'),
+            );
+        }
 
         $data = array(
-            'total'   => $elementTotal,
+            'total'   => $count,
             'history' => $elementHistory,
         );
 

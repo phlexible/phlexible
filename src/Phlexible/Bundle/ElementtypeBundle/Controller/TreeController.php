@@ -147,6 +147,8 @@ class TreeController extends Controller
     {
         $return = array();
 
+        $fieldRegistry = $this->get('phlexible_elementtype.field.registry');
+
         foreach ($nodes as $node) {
             /* @var $node ElementtypeStructureNode */
 
@@ -159,9 +161,7 @@ class TreeController extends Controller
                 'leaf'       => true,
                 'expanded'   => false,
                 'type'       => $node->getType(),
-                'iconCls'    => $this->get('phlexible_elementtype.field.registry')->getField(
-                        $node->getType()
-                    )->getIcon(),
+                'iconCls'    => $fieldRegistry->getField($node->getType())->getIcon(),
                 'reference'  => $reference,
                 'allowDrag'  => $allowDrag,
                 'allowDrop'  => $mode == 'edit' && !$reference,
