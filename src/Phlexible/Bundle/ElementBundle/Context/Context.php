@@ -129,7 +129,7 @@ class Makeweb_Elements_Context
         if ($country == self::GLOBAL_COUNTRY) {
             $this->_country = $country;
         } elseif (!$country || ($country !== self::NO_COUNTRY && !array_key_exists($country, $this->_countries))) {
-            throw new Makeweb_Elements_Context_Exception('No country found for "' . $country . '".');
+            throw new Exception('No country found for "' . $country . '".');
         }
 
         $this->_country = $country;
@@ -375,7 +375,7 @@ class Makeweb_Elements_Context
             $reverseDefaults = $this->_getReverseDefaults();
 
             if (!array_key_exists($language, $reverseDefaults)) {
-                throw new Makeweb_Elements_Context_Exception(
+                throw new Exception(
                     'No country found for language "' . $language . '".'
                 );
             }

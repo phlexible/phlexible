@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TeaserBundle\ElementCatch\RotationStrategy;
 
 use Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatchResultPool;
-use Zend_Session_Namespace as Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Cache rotations strategy
@@ -38,7 +38,7 @@ class SessionRotationStrategy implements RotationStrategyInterface
     {
         $identifier = $pool->getIdentifier();
 
-        $position = $this->session->$identifier;
+        $position = $this->session->get($identifier);
 
         if (!isset($position) || !$position) {
             $this->session->$identifier = $position = 0;
@@ -54,7 +54,7 @@ class SessionRotationStrategy implements RotationStrategyInterface
     {
         $identifier = $pool->getIdentifier();
 
-        $this->session->$identifier = $position;
+        $this->session->set($identifier, $position);
 
         return $this;
     }
