@@ -10,6 +10,8 @@
  * @version    $Id: Generator.php 2312 2007-01-25 18:46:27Z swentz $
  */
 
+use Doctrine\DBAL\Connection;
+
 /**
  * Elements Context
  *
@@ -34,7 +36,7 @@ class Makeweb_Elements_Context
     protected $_isPreview = null;
 
     /**
-     * @var Zend_Db_Adapter_Abstract
+     * @var Connection
      */
     protected $_db = null;
 

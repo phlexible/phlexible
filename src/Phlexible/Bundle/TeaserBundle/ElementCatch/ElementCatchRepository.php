@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\TeaserBundle\ElementCatch;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\TeaserBundle\Event\ElementCatchEvent;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
 use Phlexible\Bundle\TeaserBundle\TeasersMessage;
-use Phlexible\Component\Database\ConnectionManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -24,9 +24,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ElementCatchRepository
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
      * @var EventDispatcherInterface
@@ -39,16 +39,16 @@ class ElementCatchRepository
     private $messageService;
 
     /**
-     * @param ConnectionManager        $connectionManager
+     * @param Connection               $connection
      * @param EventDispatcherInterface $dispatcher
      * @param MessagePoster            $messageService
      */
     public function __construct(
-        ConnectionManager $connectionManager,
+        Connection $connection,
         EventDispatcherInterface $dispatcher,
         MessagePoster $messageService)
     {
-        $this->db = $connectionManager->default;
+        $this->connection = $connection;
         $this->dispatcher = $dispatcher;
         $this->messageService = $messageService;
     }

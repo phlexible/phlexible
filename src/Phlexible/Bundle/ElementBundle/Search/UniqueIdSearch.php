@@ -28,17 +28,15 @@ class UniqueIdSearch extends AbstractSearch
      */
     public function search($query)
     {
-        $select = $this->db->select()
-            ->from(
-                array('et' => $this->db->prefix . 'element_tree'),
-                array('id')
-            )
-            ->join(
-                array('e' => $this->db->prefix . 'element'),
-                'e.eid = et.eid AND e.unique_id LIKE ' . $this->db->quote('%' . $query . '%'),
-                array()
-            );
+        $qb = $this->getConnection()->createQueryBuilder();
+        $qb
+            ->select('t.id')
+            ->from('tree', 't')
+            ->join('t', 'element', 'e', 'e.eid = et.eid')
+            ->where($qb->expr()->like('e.unique', $qb->expr()->literal("%$query%")));
 
-        return parent::_doSearch($select, 'Elements Unique ID Search');
+        $rows = $this->getConnection()->fetchAll($qb->getSQL());
+
+        return parent::doSearch($rows, 'Elements Unique ID Search');
     }
 }

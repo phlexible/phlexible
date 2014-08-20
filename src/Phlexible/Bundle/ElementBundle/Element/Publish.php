@@ -1,11 +1,13 @@
 <?php
 
+use Doctrine\DBAL\Connection;
+
 class Makeweb_Elements_Publish
 {
     /**
-     * @var Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    protected $_db = null;
+    private $connection;
 
     /**
      * @var Makeweb_Elements_Tree_Manager
@@ -55,20 +57,20 @@ class Makeweb_Elements_Publish
     /**
      * Constructor
      *
-     * @param Zend_Db_Adapter_Abstract                    $db
+     * @param Connection                                  $connection
      * @param Makeweb_Elements_Tree_Manager               $treeManager
      * @param Makeweb_Elements_Element_Version_Manager    $elementVersionManager
      * @param Phlexible\Bundle\AccessControlBundle\Rights $contentRightsManager
      * @param MWF_Core_Users_User                         $currentUser
      */
     public function __construct(
-        Zend_Db_Adapter_Abstract $db,
+        Connection $connection,
         Makeweb_Elements_Tree_Manager $treeManager,
         Makeweb_Elements_Element_Version_Manager $elementVersionManager,
         Phlexible\Bundle\AccessControlBundle\Rights $contentRightsManager,
         MWF_Core_Users_User $currentUser)
     {
-        $this->_db = $db;
+        $this->connection = $connection;
         $this->_elementVersionManager = $elementVersionManager;
         $this->_treeManager = $treeManager;
         $this->_contentRightsManager = $contentRightsManager;

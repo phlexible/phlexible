@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\TeaserBundle\ElementCatch;
 
+use Doctrine\DBAL\Connection;
+
 /**
  * Catch helper
  *
@@ -16,9 +18,9 @@ namespace Phlexible\Bundle\TeaserBundle\ElementCatch;
 class CatchHelper
 {
     /**
-     * @var Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    protected $_db = null;
+    private $connection;
 
     /**
      * @var Makeweb_Elements_Element_Manager
@@ -31,14 +33,16 @@ class CatchHelper
     protected $_elementVersionManager = null;
 
     /**
-     * @var MWF_Db_Pool
+     * @param Connection                               $connection
+     * @param Makeweb_Elements_Element_Manager         $elementManager
+     * @param Makeweb_Elements_Element_Version_Manager $elementVersionManager
      */
     public function __construct(
-        MWF_Db_Pool $dbPool,
+        Connection $connection,
         Makeweb_Elements_Element_Manager $elementManager,
         Makeweb_Elements_Element_Version_Manager $elementVersionManager)
     {
-        $this->_db = $dbPool->write;
+        $this->connection = $connection;
         $this->_elementManager = $elementManager;
         $this->_elementVersionManager = $elementVersionManager;
     }

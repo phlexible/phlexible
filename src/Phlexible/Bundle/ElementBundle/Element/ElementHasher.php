@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\Element;
 
+use Doctrine\DBAL\Connection;
+
 /**
  * Element hasher
  *
@@ -16,9 +18,9 @@ namespace Phlexible\Bundle\ElementBundle\Element;
 abstract class ElementHasher
 {
     /**
-     * @var Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    protected $_db = null;
+    private $connection;
 
     /**
      * @var array
@@ -26,13 +28,11 @@ abstract class ElementHasher
     protected $_hashes = array();
 
     /**
-     * Constructor
-     *
-     * @param MWF_Db_Pool $dbPool
+     * @param Connection $connection
      */
-    public function __construct(MWF_Db_Pool $dbPool)
+    public function __construct(Connection $connection)
     {
-        $this->_db = $dbPool->write;
+        $this->connection = $connection;
     }
 
     protected function _getHashValuesByEid($eid, $language, $version)

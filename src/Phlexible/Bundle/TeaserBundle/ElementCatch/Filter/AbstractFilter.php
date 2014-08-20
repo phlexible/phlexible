@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TeaserBundle\ElementCatch\Filter;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatchResultPool;
 
 /**
@@ -84,13 +85,13 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
     /**
      * Get a specific ds_id.
      *
-     * @param \Zend_Db_Adapter_Abstract $db
-     * @param array                     $elementtypeIds
-     * @param string                    $workingTitle
+     * @param Connection $db
+     * @param array      $elementtypeIds
+     * @param string     $workingTitle
      *
      * @return array
      */
-    protected function _getFieldDsIds(\Zend_Db_Adapter_Abstract $db, array $elementtypeIds, $workingTitle)
+    protected function _getFieldDsIds(Connection $db, array $elementtypeIds, $workingTitle)
     {
         if (!array_key_exists($workingTitle, self::$_dsIds)) {
             $select = $db

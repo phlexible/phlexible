@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\GuiBundle;
 
 use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddCompressorsPass;
 use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddAssetProvidersPass;
-use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddDatabaseConnectionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -30,7 +29,6 @@ class PhlexibleGuiBundle extends Bundle
     {
         $container
             ->addCompilerPass(new AddAssetProvidersPass())
-            ->addCompilerPass(new AddCompressorsPass())
-            ->addCompilerPass(new AddDatabaseConnectionsPass());
+            ->addCompilerPass(new AddCompressorsPass());
     }
 }

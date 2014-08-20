@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TeaserBundle\ElementCatch;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\Filter\ResultFilterInterface;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\Filter\SelectFilterInterface;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\Matcher\TreeNodeMatcher;
@@ -30,9 +31,9 @@ class ElementCatcher
     const FIELD_SORT = 'sort_field';
 
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
      * @var EventDispatcherInterface
@@ -53,18 +54,18 @@ class ElementCatcher
     private $tidSkipList = array();
 
     /**
-     * @param ConnectionManager        $connectionManager
+     * @param Connection               $connection
      * @param EventDispatcherInterface $dispatcher
      * @param TreeNodeMatcher          $treeNodeMatcher
      * @param bool                     $useElementLanguageAsFallback
      */
     public function __construct(
-        ConnectionManager $connectionManager,
+        Connection $connection,
         EventDispatcherInterface $dispatcher,
         TreeNodeMatcher $treeNodeMatcher,
         $useElementLanguageAsFallback)
     {
-        $this->db = $connectionManager->default;
+        $this->connection = $connection;
         $this->dispatcher = $dispatcher;
         $this->treeNodeMatcher = $treeNodeMatcher;
         $this->useElementLanguageAsFallback = (bool) $useElementLanguageAsFallback;
@@ -227,10 +228,10 @@ class ElementCatcher
         array $languages,
         $country = null)
     {
-        $select = $this->db
+        $select = $this->connection
             ->select()
             ->from(
-                array('ch' => $this->db->prefix . 'catch_lookup_element'),
+                array('ch' => $this->connection->prefix . 'catch_lookup_element'),
                 array(
                     'tree_id AS tid',
                     'eid',
@@ -255,7 +256,7 @@ class ElementCatcher
         );
         $resultPool->setMatchedTreeIds($matchedTreeIds);
         foreach ($matchedTreeIds as $language => $tids) {
-            $whereChunk[] = '(ch.tree_id IN (' . $this->db->quote($tids) . ') AND ch.language = ' . $this->db->quote(
+            $whereChunk[] = '(ch.tree_id IN (' . $this->connection->quote($tids) . ') AND ch.language = ' . $this->connection->quote(
                     $language
                 ) . ')';
         }
@@ -273,7 +274,7 @@ class ElementCatcher
                 $alias = 'evmi' . ++$metaI;
                 $select
                     ->join(
-                        array($alias => $this->db->prefix . 'catch_lookup_meta'),
+                        array($alias => $this->connection->prefix . 'catch_lookup_meta'),
                         $alias . '.eid = ch.eid AND ' . $alias . '.version = ch.version AND ' . $alias . '.language = ch.language',
                         array()
                     )
@@ -282,7 +283,7 @@ class ElementCatcher
                 $multiValueSelects = array();
                 foreach (explode(',', $value) as $singleValue) {
                     $singleValue = trim($singleValue);
-                    $multiValueSelects[] = $this->db->quoteInto(
+                    $multiValueSelects[] = $this->connection->quoteInto(
                         "$alias.value = ?",
                         mb_strtolower(html_entity_decode($singleValue, ENT_COMPAT, 'UTF-8'))
                     );
@@ -309,12 +310,12 @@ class ElementCatcher
         if ($country) {
             if ($country !== 'global') {
                 $select->where(
-                    '(ch.tree_id IN (SELECT DISTINCT tid FROM ' . $this->db->prefix . 'element_tree_context WHERE context = ? OR context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from ' . $this->db->prefix . 'element_tree_context))',
+                    '(ch.tree_id IN (SELECT DISTINCT tid FROM ' . $this->connection->prefix . 'element_tree_context WHERE context = ? OR context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from ' . $this->connection->prefix . 'element_tree_context))',
                     $country
                 );
             } else {
                 $select->where(
-                    '(ch.tree_id IN (SELECT DISTINCT tid FROM ' . $this->db->prefix . 'element_tree_context WHERE context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from ' . $this->db->prefix . 'element_tree_context))'
+                    '(ch.tree_id IN (SELECT DISTINCT tid FROM ' . $this->connection->prefix . 'element_tree_context WHERE context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from ' . $this->connection->prefix . 'element_tree_context))'
                 );
             }
         }

@@ -28,27 +28,18 @@ class TitleSearch extends AbstractSearch
      */
     public function search($query)
     {
-        $select = $this->db->select()
-            ->from(
-                array('evt' => $this->db->prefix . 'element_version_titles'),
-                array()
-            )
-            ->join(
-                array('e' => $this->db->prefix . 'element'),
-                'evt.eid = e.eid AND evt.version = e.latest_version AND evt.language = ' . $this->db->quote(
-                    $this->defaultLanguage
-                ),
-                array()
-            )
-            ->join(
-                array('et' => $this->db->prefix . 'element_tree'),
-                'evt.eid = et.eid',
-                array('id', 'siteroot_id')
-            )
-            ->where('evt.backend LIKE ?', '%' . $query . '%')
-            ->where('evt.language = ?', $this->defaultLanguage)
-            ->order('evt.backend ASC');
+        $qb = $this->getConnection()->createQueryBuilder();
+        $qb
+            ->select('t.id', 't.siteroot_id')
+            ->from('element_version_mapped_field', 'evmf')
+            ->join('evmf', 'element', 'e', 'evmf.eid = e.eid AND evmf.version = e.latest_version AND evmf.language = ' . $qb->expr()->literal($this->getDefaultLanguage()))
+            ->join('evmf', 'tree', 't', 'evmf.eid = t.eid')
+            ->where($qb->expr()->like('evmf.backend', $qb->expr()->literal("%query%")))
+            ->andWhere('evmf.language = ?', $this->getDefaultLanguage())
+            ->orderBy('evmf.backend ASC');
 
-        return parent::_doSearch($select, 'Elements Title Search');
+        $rows = $this->getConnection()->fetchAll($qb->getSQL());
+
+        return parent::doSearch($rows, 'Elements Title Search');
     }
 }

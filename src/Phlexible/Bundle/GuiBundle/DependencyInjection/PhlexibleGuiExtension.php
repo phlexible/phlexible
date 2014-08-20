@@ -34,7 +34,6 @@ class PhlexibleGuiExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $container->setParameter('database.connections', $config['database']['connections']);
         $container->setParameter('app.app_title', $config['app']['title']);
         $container->setParameter('app.app_version', $config['app']['version']);
         $container->setParameter('app.app_url', $config['app']['url']);
@@ -45,24 +44,5 @@ class PhlexibleGuiExtension extends Extension
         $container->setParameter('phlexible_gui.languages.available', $config['languages']['available']);
         $container->setParameter('phlexible_gui.mail.from_email', $config['mail']['from_email']);
         $container->setParameter('phlexible_gui.mail.from_name', $config['mail']['from_name']);
-
-        $this->registerDatabase($config['database'], $container);
-    }
-
-    private function registerDatabase(array $config, ContainerBuilder $container)
-    {
-        foreach ($config['connections'] as $connectionName => $connectionConfig) {
-            if (!empty($config['profiler'])) {
-                $connectionConfig['profiler'] = true;
-            }
-            $definition = new Definition('Zend_Db_Adapter_Abstract');
-            $definition
-                ->setFactoryClass('Phlexible\Component\Database\ConnectionFactory')
-                ->setFactoryMethod('createConnection')
-                ->setArguments(array('pdo_mysql', $connectionConfig))
-                ->addTag('database.connection');
-            $container->setDefinition('database.connection.' . strtolower($connectionName), $definition);
-        }
-        $container->setAlias('database.connection', 'database.connection.default');
     }
 }

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Portlet;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -19,7 +20,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class LatestElementsPortlet extends Portlet
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
     private $db;
 
@@ -42,14 +43,14 @@ class LatestElementsPortlet extends Portlet
      * @param TranslatorInterface                      $translator
      * @param Makeweb_Elements_Element_Version_Manager $versionManager
      * @param Makeweb_Elements_Tree_Manager            $treeManager
-     * @param MWF_Db_Pool                              $dbPool
+     * @param Connection                               $connection
      * @param int                                      $numItems
      */
     public function __construct(
         TranslatorInterface $translator,
         Makeweb_Elements_Element_Version_Manager $versionManager,
         Makeweb_Elements_Tree_Manager $treeManager,
-        MWF_Db_Pool $dbPool,
+        Connection $connection,
         $numItems)
     {
         $this
@@ -61,7 +62,7 @@ class LatestElementsPortlet extends Portlet
 
         $this->versionManager = $versionManager;
         $this->treeManager = $treeManager;
-        $this->db = $dbPool->default;
+        $this->connection = $connection;
         $this->numItems = $numItems;
     }
 

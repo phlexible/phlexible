@@ -28,18 +28,15 @@ class EidSearch extends AbstractSearch
      */
     public function search($query)
     {
-        $select = $this->db->select()
-            ->from(
-                array('e' => $this->db->prefix . 'element'),
-                array()
-            )
-            ->join(
-                array('et' => $this->db->prefix . 'element_tree'),
-                'e.eid = et.eid',
-                array('id')
-            )
-            ->where('e.eid = ?', $query);
+        $qb = $this->getConnection()->createQueryBuilder();
+        $qb
+            ->select('t.id')
+            ->from('element', 'e')
+            ->join('e', 'tree', 't', 'e.eid = t.type_id')
+            ->where($qb->expr()->eq('e.eid', $qb->expr()->literal($query)));
 
-        return parent::_doSearch($select, 'Elements EID Search');
+        $rows = $this->getConnection()->fetchAll($qb->getSQL());
+
+        return parent::doSearch($rows, 'Elements EID Search');
     }
 }

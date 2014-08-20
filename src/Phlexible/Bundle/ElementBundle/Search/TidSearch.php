@@ -28,11 +28,15 @@ class TidSearch extends AbstractSearch
      */
     public function search($query)
     {
-        $select = $this->db->select()
-            ->from(array('et' => $this->db->prefix . 'element_tree'), array('id'))
-            ->join(array('e' => $this->db->prefix . 'element'), 'e.eid = et.eid', array())
-            ->where('et.id = ?', $query);
+        $qb = $this->getConnection()->createQueryBuilder();
+        $qb
+            ->select('t.id')
+            ->from('tree', 't')
+            ->join('t', 'element', 'e', 'e.eid = t.eid')
+            ->where($qb->expr()->eq('t.id', $qb->expr()->literal($query)));
 
-        return parent::_doSearch($select, 'Elements TID Search');
+        $rows = $this->getConnection()->fetchAll($qb->getSQL());
+
+        return parent::doSearch($rows, 'Elements TID Search');
     }
 }

@@ -8,8 +8,9 @@
 
 namespace Phlexible\Bundle\ElementBundle\Search;
 
+use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
-use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Abstract element search
@@ -19,22 +20,29 @@ use Phlexible\Component\Database\ConnectionManager;
 abstract class AbstractSearch implements SearchProviderInterface
 {
     /**
-     * @var \Zend_Db_Adapter_Abstract
+     * @var Connection
      */
-    protected $db;
+    private $connection;
+
+    /**
+     * @var ElementService
+     */
+    private $elementService;
 
     /**
      * @var string
      */
-    protected $defaultLanguage;
+    private $defaultLanguage;
 
     /**
-     * @param ConnectionManager $dbPool
-     * @param string            $defaultLanguage
+     * @param Connection     $connection
+     * @param ElementService $elementService
+     * @param string         $defaultLanguage
      */
-    public function __construct(ConnectionManager $dbPool, $defaultLanguage)
+    public function __construct(Connection $connection, ElementService $elementService, $defaultLanguage)
     {
-        $this->db = $dbPool->default;
+        $this->connection = $connection;
+        $this->elementService = $elementService;
         $this->defaultLanguage = $defaultLanguage;
     }
 
@@ -47,21 +55,35 @@ abstract class AbstractSearch implements SearchProviderInterface
     }
 
     /**
+     * @return Connection
+     */
+    protected function getConnection()
+    {
+        return $this->connection;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getDefaultLanguage()
+    {
+        return $this->defaultLanguage;
+    }
+
+    /**
      * Perform search
      *
-     * @param \Zend_Db_Select $select
-     * @param string          $title
-     * @param string          $language
+     * @param array  $rows
+     * @param string $title
+     * @param string $language
      *
      * @return array
      */
-    protected function _doSearch(\Zend_Db_Select $select, $title, $language = null)
+    protected function doSearch(array $rows, $title, $language = null)
     {
         if ($language === null) {
             $language = $this->defaultLanguage;
         }
-
-        $rows = $this->db->fetchAll($select);
 
         $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
         $siteRootManager = Makeweb_Siteroots_Siteroot_Manager::getInstance();
