@@ -41,8 +41,9 @@ class RightsController extends Controller
         if ($contentType === 'teaser') {
             $path = array($contentId);
         } else {
-            $node = $container->elementsTreeManager->getNodeByNodeId($contentId);
-            $path = $node->getPath();
+            $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($contentId);
+            $node = $tree->get($contentId);
+            $path = $tree->getIdPath($node);
 
             if (count($path)) {
                 $abovePath = $path;
@@ -64,7 +65,7 @@ class RightsController extends Controller
         $subject = null;
 
         if ($objectType === 'uid') {
-            $userProvider = $container->contentRightsUserProvider;
+            $userProvider = $this->get('phlexible_access_control.provider.user');
             $name = $userProvider->getName($objectType, $objectId);
 
             $subject = array(
@@ -80,7 +81,7 @@ class RightsController extends Controller
                 'restore'     => 0,
             );
         } elseif ($objectType === 'gid') {
-            $groupProvider = $container->contentRightsGroupProvider;
+            $groupProvider = $this->get('phlexible_access_control.provider.group');
             $name = $groupProvider->getName($objectType, $objectId);
 
             $subject = array(
@@ -108,71 +109,54 @@ class RightsController extends Controller
      */
     public function subjectsAction(Request $request)
     {
-        $rightType = $request->get('right_type', null);
-        $contentType = $request->get('content_type', null);
+        $contentClass = $request->get('contentClass');
         $contentId = $request->get('content_id', null);
 
         $subjects = array();
 
-        if ($contentType === 'teaser') {
+        if ($contentClass === 'teaser') {
             $path = array($contentId);
         } else {
-            $node = $this->getContainer()->elementsTreeManager->getNodeByNodeId($contentId);
-            $path = $node->getPath();
+            $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($contentId);
+            $node = $tree->get($contentId);
+            $path = $tree->getIdPath($node);
         }
 
+        $userManager = $this->get('phlexible_user.user_manager');
         $contentRightsManager = $this->getContainer()->contentRightsManager;
+        $contentRightsHelper = $this->getContainer()->contentRightsHelper;
+
         $rightsData = $contentRightsManager->getRightsData(array('uid', 'gid'), $rightType, $contentType, $path);
 
-        $contentRightsHelper = $this->getContainer()->contentRightsHelper;
         $contentRights = array_keys($contentRightsHelper->getRights($rightType, $contentType));
 
+        $rightsData = array(1);
         if (count($rightsData)) {
-            $db = $this->getContainer()->dbPool->read;
-
             $userIds = array();
             $groupIds = array();
 
             foreach ($rightsData as $rightsRow) {
                 if ($rightsRow['object_type'] == 'uid' && !array_key_exists($rightsRow['object_id'], $userIds)) {
-                    $userIds[$rightsRow['object_id']] = $db->quote($rightsRow['object_id']);
+                    $userIds[] = $rightsRow['object_id'];
                 } elseif ($rightsRow['object_type'] == 'gid' && !array_key_exists($rightsRow['object_id'], $groupIds)) {
-                    $groupIds[$rightsRow['object_id']] = $db->quote($rightsRow['object_id']);
+                    $groupIds[] = $rightsRow['object_id'];
                 }
             }
 
-            $userRows = array();
+            $subjectsData = array();
             if (count($userIds)) {
-                $usersIdList = implode(',', $userIds);
-
-                $userSelect = $db->select()
-                    ->from(
-                        $db->prefix . 'user',
-                        array(
-                            new Zend_Db_Expr('CONCAT("uid__", uid)'),
-                            new Zend_Db_Expr('CONCAT(firstname, " ", lastname) AS name')
-                        )
-                    )
-                    ->where("uid IN (" . $usersIdList . ")");
-
-                $userRows = $db->fetchPairs($userSelect);
+                $users = $userManager->findBy(array('id' => $userIds));
+                foreach ($users as $user) {
+                    $subjectsData["uid__{$user->getId()}"] = $user->getDisplayName();
+                }
             }
 
-            $groupRows = array();
             if (count($groupIds)) {
-                $groupIdList = implode(',', $groupIds);
-
-                $groupsSelect = $db->select()
-                    ->from(
-                        $db->prefix . 'group',
-                        array(new Zend_Db_Expr('CONCAT("gid__", gid)'), 'name')
-                    )
-                    ->where("gid IN (" . $groupIdList . ")");
-
-                $groupRows = $db->fetchPairs($groupsSelect);
+                $groups = $userManager->findBy(array('id' => $userIds));
+                foreach ($groups as $group) {
+                    $subjectsData["gid__{$group->getId()}"] = $group->getName();
+                }
             }
-
-            $subjectsData = array_merge($userRows, $groupRows);
 
             $subjects = array_merge(
                 $subjects,
@@ -190,6 +174,16 @@ class RightsController extends Controller
         return new JsonResponse(array('subjects' => $subjects));
     }
 
+    /**
+     * @param string $contentType
+     * @param string $contentId
+     * @param array  $subjectsData
+     * @param array  $path
+     * @param array  $allRights
+     * @param array  $rightsData
+     *
+     * @return array
+     */
     protected function _getRightsForSubjects(
         $contentType,
         $contentId,

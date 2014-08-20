@@ -9,8 +9,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         emptyText: Phlexible.accesscontrol.Strings.no_subjects
     },
 
-    rightType: null,
-    contentType: null,
+    contentClass: null,
     languageEnabled: false,
     deletedSubjects: [],
 
@@ -36,15 +35,14 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             throw 'RightsGrid URL config incomplete.';
         }
 
-        if (!this.contentType || !this.rightType) {
-            throw 'RightsGrid type config incomplete.';
+        if (!this.contentClass) {
+            throw 'RightsGrid contentClass config incomplete.';
         }
 
         Ext.Ajax.request({
             url: this.urls.rights,
             params: {
-                right_type: this.rightType,
-                content_type: this.contentType
+                contentClass: this.contentClass
             },
             success: function (response) {
                 var fields = [
@@ -247,8 +245,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 'new'
             ],
             baseParams: {
-                right_type: this.rightType,
-                content_type: null,
+                contentClass: this.contentClass,
                 content_id: null
             }
         });
@@ -500,8 +497,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             //this.selModel.clearSelections();
 
             this.store.baseParams = {
-                right_type: this.rightType,
-                content_type: content_type,
+                contentClass: this.contentClass,
                 content_id: content_id
             };
             this.store.load();
@@ -597,8 +593,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         Ext.Ajax.request({
             url: this.urls.add,
             params: {
-                right_type: this.rightType,
-                content_type: this.content_type,
+                contentClass: this.contentClass,
                 content_id: this.content_id,
                 object_type: r.data.object_type,
                 object_id: r.data.object_id
@@ -663,7 +658,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         Ext.Ajax.request({
             url: this.urls.save,
             params: {
-                right_type: this.rightType,
+                contentClass: this.contentClass,
                 modified: Ext.encode(modified),
                 deleted: Ext.encode(deleted)
             },

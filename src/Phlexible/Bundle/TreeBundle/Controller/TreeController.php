@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\Controller;
 
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -98,22 +99,18 @@ class TreeController extends Controller
         $childrenIds = $elementService->getElementtypeService()->findAllowedChildrenIds($elementtype);
 
         $data = array();
-        foreach ($childrenIds as $childId) {
-            $elementtypeVersion = $elementService->getElementtypeService()->findLatestElementtypeVersion($elementtype);
+        foreach ($childrenIds as $childElementtypeId) {
+            $childElementtype = $elementService->getElementtypeService()->findElementtype($childElementtypeId);
 
-            $elementtypeType = $elementtypeVersion->getElementType()->getType();
-
-            if ($elementtypeType != Elementtype::TYPE_FULL &&
-                $elementtypeType != Elementtype::TYPE_STRUCTURE
-            ) {
+            if (!in_array($childElementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE))) {
                 continue;
             }
 
-            $data[$elementtype->getTitle()] = array(
-                'id'    => $childId,
-                'title' => $elementtype->getTitle(),
-                'icon'  => $iconResolver->resolveElementtype($elementtype),
-                'type'  => $elementtypeType,
+            $data[$childElementtype->getTitle().'_'.$childElementtype->getId()] = array(
+                'id'    => $childElementtype->getId(),
+                'title' => $childElementtype->getTitle(),
+                'icon'  => $iconResolver->resolveElementtype($childElementtype),
+                'type'  => $childElementtype->getType(),
             );
         }
         ksort($data);
@@ -161,7 +158,7 @@ class TreeController extends Controller
 
             $data[] = array(
                 'id'    => $childNode->getId(),
-                'title' => $childElementVersion->getBackendTitle($language, $childElementVersion->getElement()->getMasterLanguage()),
+                'title' => $childElementVersion->getBackendTitle($language, $childElementVersion->getElement()->getMasterLanguage()) . ' [' . $childNode->getId() . ']',
                 'icon'  => $iconResolver->resolveTreeNode($childNode, $language),
             );
         }
@@ -192,8 +189,10 @@ class TreeController extends Controller
         $elementService = $this->get('phlexible_element.element_service');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $fieldMapper = $this->get('phlexible_element.field_mapper');
+        $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
+        $userId = $this->getUser()->getId();
 
         $elementtype = $elementService->getElementtypeService()->findElementtype($elementtypeId);
         $elementtypeVersion = $elementService->getElementtypeService()->findLatestElementtypeVersion($elementtype);
@@ -203,7 +202,7 @@ class TreeController extends Controller
             ->setElementtype($elementtype)
             ->setMasterLanguage($masterLanguage)
             ->setLatestVersion(1)
-            ->setCreateUserId($this->getUser()->getId())
+            ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime());
 
         $elementVersion = new ElementVersion();
@@ -211,7 +210,7 @@ class TreeController extends Controller
             ->setVersion(1)
             ->setElement($element)
             ->setElementtypeVersion($elementtypeVersion->getVersion())
-            ->setCreateUserId($this->getUser()->getId())
+            ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime());
 
         //$fieldMapper->map($elementVersion, $masterLanguage);
@@ -224,6 +223,8 @@ class TreeController extends Controller
         // $siterootId, $parentId, $prevId, $navigation, $restricted
 
         $node = $tree->create($parentId, $afterId, 'element', $element->getEid(), array(), $this->getUser()->getId(), $sortMode, $sortDir);
+
+        $elementHistoryManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT, $element->getEid(), $userId, $node->getId(), null, 1, $masterLanguage);
 
         // TODO: ?
         /*

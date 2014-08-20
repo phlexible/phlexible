@@ -70,12 +70,11 @@ class RightsController extends Controller
      */
     public function rightsAction(Request $request)
     {
-        $rightType   = $request->get('right_type');
-        $contentType = $request->get('content_type');
+        $contentClass = $request->get('contentClass');
 
         $permissions = $this->get('phlexible_access_control.permissions');
         $contentRights = array();
-        foreach ($permissions->getByType("$contentType-$rightType") as $permission) {
+        foreach ($permissions->getByContentClass($contentClass) as $permission) {
             $contentRights[] = array(
                 'name'    => $permission->getName(),
                 'iconCls' => $permission->getIconClass(),

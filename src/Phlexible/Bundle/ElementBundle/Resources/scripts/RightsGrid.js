@@ -5,31 +5,18 @@ Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
 
     initComponent: function () {
         this.element.on({
-            load: {
-                fn: this.onLoadElement,
-                scope: this
-            },
-            getlock: {
-                fn: this.onGetLock,
-                scope: this
-            },
-            islocked: {
-                fn: this.onIsLocked,
-                scope: this
-            },
-            removelock: {
-                fn: this.onRemoveLock,
-                scope: this
-            }
+            load: this.onLoadElement,
+            getlock: this.onGetLock,
+            islocked: this.onIsLocked,
+            removelock: this.onRemoveLock,
+            scope: this
         });
 
         this.on({
-            show: {
-                fn: function () {
-                    this.lazyLoad(this.element.tid, this.element.data.properties.teaser_id);
-                },
-                scope: this
-            }
+            show: function () {
+                this.lazyLoad(this.element.tid, this.element.data.properties.teaser_id);
+            },
+            scope: this
         });
 
         Phlexible.elements.RightsGrid.superclass.initComponent.call(this);

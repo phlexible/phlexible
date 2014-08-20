@@ -17,11 +17,11 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementHistory;
  */
 interface ElementHistoryManagerInterface
 {
-    const ACTION_CREATE = 'createElement';
-    const ACTION_CREATE_VERSION = 'createElementVersion';
-    const ACTION_SAVE = 'saveElement';
-    const ACTION_SAVE_MASTER = 'saveElementMaster';
-    const ACTION_SAVE_LANGUAGE = 'saveElementSlave';
+    const ACTION_CREATE_ELEMENT         = 'createElement';
+    const ACTION_CREATE_ELEMENT_VERSION = 'createElementVersion';
+    const ACTION_SAVE_ELEMENT           = 'saveElement';
+    const ACTION_SAVE_ELEMENT_MASTER    = 'saveElementMaster';
+    const ACTION_SAVE_ELEMENT_SLAVE     = 'saveElementSlave';
 
     const ACTION_CREATE_NODE          = 'createNode';
     const ACTION_DELETE_NODE          = 'deleteNode';
@@ -30,11 +30,11 @@ interface ElementHistoryManagerInterface
     const ACTION_PUBLISH_NODE         = 'publishNode';
     const ACTION_SET_NODE_OFFLINE     = 'setNodeOffline';
 
-    const ACTION_CREATE_TEASER = 'createTeaser';
-    const ACTION_DELETE_TEASER = 'deleteTeaser';
+    const ACTION_CREATE_TEASER          = 'createTeaser';
+    const ACTION_DELETE_TEASER          = 'deleteTeaser';
     const ACTION_CREATE_TEASER_INSTANCE = 'createInstance';
-    const ACTION_PUBLISH_TEASER = 'publishTeaser';
-    const ACTION_SET_TEASER_OFFLINE = 'setTeaserOffline';
+    const ACTION_PUBLISH_TEASER         = 'publishTeaser';
+    const ACTION_SET_TEASER_OFFLINE     = 'setTeaserOffline';
 
     /**
      * @param array      $criteria
