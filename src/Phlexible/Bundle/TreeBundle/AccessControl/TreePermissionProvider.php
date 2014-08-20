@@ -27,7 +27,7 @@ class TreePermissionProvider implements PermissionProviderInterface
     /**
      * @param string $contentClass
      */
-    public function __construct($contentClass = 'Phlexible\Bundle\TreeBundle\Tree\Node\TreeNode')
+    public function __construct($contentClass = 'Phlexible\Bundle\TreeBundle\Model\TreeNode')
     {
         $this->contentClass = $contentClass;
     }

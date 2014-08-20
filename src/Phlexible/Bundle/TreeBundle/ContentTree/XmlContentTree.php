@@ -11,8 +11,8 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree;
 use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeIdentifier;
+use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -75,7 +75,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      *
-     * @return TreeIdentifier
+     * @return \Phlexible\Bundle\TreeBundle\Model\TreeIdentifier
      */
     public function getIdentifier()
     {
@@ -453,7 +453,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * @param \DOMElement $element
      *
-     * @return TreeNodeInterface
+     * @return \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
      */
     private function mapNode(\DOMElement $element)
     {

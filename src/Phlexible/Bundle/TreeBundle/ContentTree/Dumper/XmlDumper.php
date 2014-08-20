@@ -11,8 +11,8 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree\Dumper;
 use Cocur\Slugify\Slugify;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
  * XML dumper

@@ -61,6 +61,7 @@ class GetConfigListener
         $allLanguages = explode(',', $container->getParameter('phlexible_cms.languages.available'));
 
         $siterootLanguages = array();
+        $siterootConfig = array();
 
         foreach ($siteroots as $siteroot) {
             $siterootId = $siteroot->getId();
@@ -83,8 +84,17 @@ class GetConfigListener
                     $siterootLanguages[$siterootId][] = $language;
                 }
             }
+
+            if (count($siterootLanguages[$siterootId])) {
+                $siterootConfig[$siterootId] = array(
+                    'id' => $siteroot->getId(),
+                    'title' => $siteroot->getTitle(),
+                );
+            }
         }
 
         $config->set('user.siteroot.languages', $siterootLanguages);
+
+        $config->set('siteroot.config', $siterootConfig);
     }
 }

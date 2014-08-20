@@ -1,9 +1,0 @@
-cache:
-    cache_statistics: 'Cache Statistics'
-    reload: Reload
-    flush_all_servers: 'Flush all caches'
-    flush_server: 'Flush cache'
-    cache_usage: 'Cache Usage'
-    hits_and_misses: 'Hits and Misses'
-    warning_flush_all_servers: 'Do you really want to flush all servers? This might affect other projects using the servers, too.'
-    warning_flush_server: 'Do you really want to flush this server? This might affect other projects using this server, too.'

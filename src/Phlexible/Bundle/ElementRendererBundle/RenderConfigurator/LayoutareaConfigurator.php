@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\TeaserBundle\Teaser\TeaserService;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;

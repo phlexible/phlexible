@@ -12,7 +12,7 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManager;
 use Phlexible\Bundle\TreeBundle\ContentTree\XmlContentTree;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -308,7 +308,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * Generate hostname
      *
-     * @param TreeNodeInterface $node
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
      *
      * @return string
      */
@@ -323,7 +323,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * Generate path
      *
-     * @param TreeNodeInterface $node
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
      * @param string            $language
      *
      * @return string

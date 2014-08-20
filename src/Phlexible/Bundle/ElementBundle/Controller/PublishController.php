@@ -68,7 +68,7 @@ class PublishController extends Controller
 
             //$fileUsage->update($eid);
 
-            $response = new ResultResponse(true, 'Teaser ID "'.$teaserId.'" published.');
+            $response = new ResultResponse(true, "Teaser ID $teaserId published.");
         }
 
         $queueService = $this->getContainer()->get('queue.service');

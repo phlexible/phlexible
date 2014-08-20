@@ -60,18 +60,6 @@ class Teaser implements IdentifiableInterface
     private $layoutareaId;
 
     /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    private $instance;
-
-    /**
-     * @var bool
-     * @ORM\Column(name="instance_master", type="boolean")
-     */
-    private $instanceMaster;
-
-    /**
      * @var string
      * @ORM\Column(type="string", length=20)
      */
@@ -130,6 +118,14 @@ class Teaser implements IdentifiableInterface
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @return TeaserIdentifier
+     */
+    public function getIdentifier()
+    {
+        return new TeaserIdentifier($this->id);
+    }
 
     /**
      * @return int
@@ -272,47 +268,6 @@ class Teaser implements IdentifiableInterface
     }
 
     /**
-     * Is this node an instance?
-     *
-     * @return bool
-     */
-    public function isInstance()
-    {
-        $db = MWF_Registry::getContainer()->dbPool->read;
-
-        $select = $db->select()
-                     ->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('COUNT(id)'))
-                     ->where('teaser_eid = ?', $this->_eid)
-                     ->where('type = ?', 'teaser');
-
-        $result = $db->fetchOne($select);
-
-        return $result > 1;
-    }
-
-    /**
-     * Is this node an instance master?
-     *
-     * @return bool
-     */
-    public function isInstanceMaster()
-    {
-        return $this->instanceMaster;
-    }
-
-    /**
-     * @param bool $isInstanceMaster
-     *
-     * @return $this
-     */
-    public function setInstanceMaster($isInstanceMaster = true)
-    {
-        $this->instanceMaster = $isInstanceMaster;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isCacheDisabled()
@@ -413,56 +368,42 @@ class Teaser implements IdentifiableInterface
     }
 
     /**
-     * Is this node async?
-     *
-     * @param string $language
-     *
-     * @return bool
+     * @return boolean
      */
-    public function isAsync($language)
+    public function getStopInherit()
     {
-        if (!$this->isPublished($language)) {
-            return false;
-        }
-
-        $teasersHash = MWF_Registry::getContainer()->teasersHash;
-        $latestHash  = $teasersHash->getHashByTeaserId($this->_id, $language, $this->getLatestVersion());
-        $onlineHash  = $teasersHash->getHashByTeaserId($this->_id, $language, $this->getOnlineVersion($language));
-
-        return $latestHash !== $onlineHash;
+        return $this->stopInherit;
     }
 
     /**
-     * Return icon parameters
+     * @param boolean $stopInherit
      *
-     * @param string $language
-     *
-     * @return array
+     * @return $this
      */
-    public function getIconParams($language)
+    public function setStopInherit($stopInherit)
     {
-        if ($this->isRoot()) {
-            return array();
-        }
+        $this->stopInherit = $stopInherit;
 
-        $status = '';
-        if ($this->isPublished($language)) {
-            $status = $this->isAsync($language) ? 'async': 'online';
-        }
-
-        $iconParams = array(
-            'status'   => $status,
-            'instance' => ($this->isInstance() ? ($this->isInstanceMaster() ? 'master' : 'slave') : false),
-        );
-
-        return $iconParams;
+        return $this;
     }
 
     /**
-     * @return TeaserIdentifier
+     * @return boolean
      */
-    public function getIdentifier()
+    public function getNoDisplay()
     {
-        return new TeaserIdentifier($this->id);
+        return $this->noDisplay;
+    }
+
+    /**
+     * @param boolean $noDisplay
+     *
+     * @return $this
+     */
+    public function setNoDisplay($noDisplay)
+    {
+        $this->noDisplay = $noDisplay;
+
+        return $this;
     }
 }

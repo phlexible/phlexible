@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Event;
 
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
  * Before reorder node event
@@ -41,7 +41,7 @@ class ReorderNodeEvent extends NodeEvent
     }
 
     /**
-     * @return TreeNodeInterface
+     * @return \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
      */
     public function getParentNode()
     {

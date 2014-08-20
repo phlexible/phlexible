@@ -1,4 +1,0 @@
-templates:
-    parent: config
-    xtype: Phlexible.templates.menuhandle.TemplatesHandle
-    resources: [templates]

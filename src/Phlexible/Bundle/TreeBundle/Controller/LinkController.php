@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Controller;
 
 use Doctrine\DBAL\Connection;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -534,7 +534,7 @@ class LinkController extends Controller
      * @param array             $nodes
      * @param string            $language
      * @param int               $mode
-     * @param TreeNodeInterface $targetNode
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $targetNode
      *
      * @return array
      */
@@ -546,7 +546,7 @@ class LinkController extends Controller
         $data = array();
 
         foreach ($nodes as $node) {
-            /* @var $node TreeNodeInterface */
+            /* @var $node \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface */
 
             $element = $elementService->findElement($node->getTypeId());
             $elementVersion = $elementService->findLatestElementVersion($element);

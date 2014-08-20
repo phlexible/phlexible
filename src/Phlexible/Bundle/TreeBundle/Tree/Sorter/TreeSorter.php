@@ -9,6 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
 use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\TreeBundle\Doctrine\Tree;
+use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\Database\ConnectionManager;
 
 /**

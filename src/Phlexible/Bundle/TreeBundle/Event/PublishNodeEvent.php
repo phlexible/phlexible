@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Event;
 
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
  * Publish node event
@@ -33,7 +33,7 @@ class PublishNodeEvent extends NodeEvent
     private $isRecursive = false;
 
     /**
-     * @param TreeNodeInterface $node
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
      * @param string            $language
      * @param int               $version
      * @param bool              $isRecursive

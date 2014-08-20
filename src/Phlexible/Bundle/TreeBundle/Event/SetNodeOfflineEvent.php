@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Event;
 
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
  * Set node offline event
@@ -23,7 +23,7 @@ class SetNodeOfflineEvent extends NodeEvent
     private $language;
 
     /**
-     * @param TreeNodeInterface $node
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
      * @param string            $language
      */
     public function __construct(TreeNodeInterface $node, $language)

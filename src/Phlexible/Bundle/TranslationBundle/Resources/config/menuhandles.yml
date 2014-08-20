@@ -1,4 +1,0 @@
-translations:
-    parent: admin
-    xtype: Phlexible.translations.menuhandle.TranslationsHandle
-    resources: [translations]

@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Layout controller
@@ -35,18 +36,16 @@ class LayoutController extends Controller
         $treeId = $request->get('tid');
 
         if (!$treeId || !$language) {
-            $this->_response
-                ->setHttpResponseCode(500);
-
-            return;
+            return new Response('', 500);
         }
 
         $translator = $this->get('translator');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $teaserService = $this->get('phlexible_teaser.teaser_service');
-        $catchRepository = $this->get('phlexible_teaser.teaser_service');
+        $catchManager = $this->get('phlexible_teaser.catch_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $elementtypeService = $elementService->getElementtypeService();
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $tree = $treeManager->getByNodeId($treeId);
         $treeNode = $tree->get($treeId);
@@ -83,7 +82,7 @@ class LayoutController extends Controller
                 'parent_tid' => $treeId,
                 'parent_eid' => $element->getEid(),
                 'text'       => $layoutarea->getTitle(),
-                'icon'       => $layoutarea->getIcon(),
+                'icon'       => $iconResolver->resolveElementtype($layoutarea),
                 'type'       => $layoutarea->getType(),
                 'inherited'  => null, //true,
                 'cls'        => 'siteroot-node',
@@ -116,12 +115,12 @@ class LayoutController extends Controller
 
                 switch ($teaser->getType()) {
                     case 'catch':
-                        $catch = $catchRepository->find($teaser->getTypeId());
+                        $catch = $catchManager->findCatch($teaser->getTypeId());
 
                         $teaserData = array_merge(
                             $teaserData,
                             array(
-                                'icon'        => 'catch-icon',
+                                'iconCls'        => 'p-teaser-catch-icon',
                                 'text'        => $catch->getTitle(),
                                 'leaf'        => false,
                                 'expanded'    => true,
@@ -199,7 +198,8 @@ class LayoutController extends Controller
 
                     case 'inherited':
                     case 'teaser':
-                        $teaserElement = $elementService->find($teaser->getTypeId());
+                    case 'element':
+                        $teaserElement = $elementService->findElement($teaser->getTypeId());
                         $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
 
                         $cls = '';
@@ -212,7 +212,7 @@ class LayoutController extends Controller
 
                         $teaserData += array(
                             'text'         => $teaserElementVersion->getBackendTitle($language),
-                            'icon'         => $teaserElementVersion->getIconUrl(),
+                            'icon'         => $iconResolver->resolveTeaser($teaser, $language),
                             'eid'          => $teaserElement->getEid(),
                             'type'         => 'teaser',
                             'inherited'    => $teaser->getTreeId() !== $treeId,

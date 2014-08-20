@@ -1,4 +1,0 @@
-cachestats:
-    parent: config
-    xtype: Phlexible.cache.menuhandle.CacheStatsHandle
-    resources: [debug]

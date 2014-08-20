@@ -11,8 +11,8 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree;
 use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -60,14 +60,14 @@ interface ContentTreeInterface extends TreeInterface
     public function getLanguages($node);
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface|int $node
      *
      * @return array
      */
     public function getVersions($node);
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface|int $node
      * @param string                $language
      *
      * @throws \Exception

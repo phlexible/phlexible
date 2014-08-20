@@ -7,26 +7,19 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
 
     initComponent: function () {
         this.element.on({
-            load: {
-                fn: this.onLoadElement,
-                scope: this
-            }
+            load: this.onLoadElement,
+            scope: this
         });
 
         this.on({
-            activate: {
-                fn: function () {
-                    this.isActive = true;
-                    this.updateIframe();
-                },
-                scope: this
+            activate: function () {
+                this.isActive = true;
+                this.updateIframe();
             },
-            deactivate: {
-                fn: function () {
-                    this.isActive = false;
-                },
-                scope: this
-            }
+            deactivate: function () {
+                this.isActive = false;
+            },
+            scope: this
         });
 
         /*this.items = {
@@ -72,9 +65,8 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             language: 0,
             preview: 2,
             online: 3,
-            debug: 4,
-            horizontal: 6,
-            vertical: 7
+            horizontal: 5,
+            vertical: 6
         };
 
         this.tbar = [
@@ -84,32 +76,29 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                 showText: true,
                 items: langBtns,
                 listeners: {
-                    change: {
-                        fn: function (cycle, btn) {
-                            this.activeLanguage = btn.langKey;
+                    change: function (cycle, btn) {
+                        this.activeLanguage = btn.langKey;
 
-                            Ext.Ajax.request({
-                                url: Phlexible.Router.generate('frontend_preview_urls'),
-                                params: {
-                                    tid: this.activeTid,
-                                    language: this.activeLanguage
-                                },
-                                success: function (response) {
-                                    var data = Ext.decode(response.responseText);
+                        Ext.Ajax.request({
+                            url: Phlexible.Router.generate('frontend_preview_urls'),
+                            params: {
+                                tid: this.activeTid,
+                                language: this.activeLanguage
+                            },
+                            success: function (response) {
+                                var data = Ext.decode(response.responseText);
 
-                                    if (data.success) {
-                                        this.preview_url = data.data.preview;
-                                        this.online_url = data.data.online;
-                                        this.debug_url = data.data.debug;
+                                if (data.success) {
+                                    this.preview_url = data.data.preview;
+                                    this.online_url = data.data.online;
 
-                                        this.updateIframe();
-                                    }
-                                },
-                                scope: this
-                            });
-                        },
-                        scope: this
-                    }
+                                    this.updateIframe();
+                                }
+                            },
+                            scope: this
+                        });
+                    },
+                    scope: this
                 }
             },
             '-',
@@ -142,24 +131,9 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                 },
                 scope: this
             },
-            {
-                // 4
-                text: this.strings.preview_debug,
-                iconCls: 'p-frontend-preview_debug-icon',
-                enableToggle: true,
-                allowDepress: false,
-                toggleGroup: 'preview',
-                hidden: Phlexible.User.isGranted('debug'),
-                toggleHandler: function (btn, state) {
-                    if (state) {
-                        this.updateSrc('debug');
-                    }
-                },
-                scope: this
-            },
             '-',
             {
-                // 6
+                // 5
                 text: this.strings.preview_horizontal,
                 iconCls: 'p-frontend-preview_horizontal-icon',
                 enableToggle: true,
@@ -173,7 +147,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                 scope: this
             },
             {
-                // 7
+                // 6
                 text: this.strings.preview_vertical,
                 iconCls: 'p-frontend-preview_vertical-icon',
                 enableToggle: true,
@@ -198,7 +172,6 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             this.activeLanguage = this.element.language;
 
             this.preview_url = this.element.data.urls.preview;
-            this.debug_url = this.element.data.urls.debug;
             this.online_url = this.element.data.urls.online;
 
             var languageBtn = this.getTopToolbar().items.items[this.btnIndex.language];
@@ -256,9 +229,6 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
         else if (this.mode === 'online') {
             url = this.online_url;
         }
-        else if (this.mode === 'debug') {
-            url = this.debug_url;
-        }
         else {
             return;
         }
@@ -280,8 +250,8 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
     },
 
     updateSrc: function (newMode) {
-        if ((!newMode || newMode === 'preview' || newMode === 'online' || newMode === 'debug') &&
-            (this.mode === 'preview' || this.mode === 'online' || this.mode === 'debug')) {
+        if ((!newMode || newMode === 'preview' || newMode === 'online') &&
+            (this.mode === 'preview' || this.mode === 'online')) {
             if (newMode) {
                 this.mode = newMode;
             }
@@ -306,7 +276,6 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
         switch (this.mode) {
             case 'preview':
             case 'online':
-            case 'debug':
                 this.singleIframe = this.add({
                     xtype: 'iframepanel',
                     defaultSrc: this[this.mode + '_url'],

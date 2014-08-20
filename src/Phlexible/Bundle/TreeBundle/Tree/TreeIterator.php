@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
  * Tree iterator
@@ -27,7 +28,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
     /**
      * Create a new tree iterator for a tree or a specific node.
      *
-     * @param TreeInterface|TreeNodeInterface $tree TreeInterface: traverse tree from root node
+     * @param TreeInterface|\Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $tree TreeInterface: traverse tree from root node
      *                                              TreeNodeInterface: traverse a subtree
      *
      * @throws \Exception
@@ -39,7 +40,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
             $node = $tree->getRoot();
             $this->iterator = new \ArrayIterator(array($node));
         } elseif ($tree instanceof TreeNodeInterface) {
-            /* @var $tree TreeNodeInterface */
+            /* @var $tree \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface */
             $node = $tree;
             $tree = $tree->getTree();
             $this->iterator = new \ArrayIterator($tree->getChildren($node));
@@ -51,7 +52,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
     /**
      * Get current node.
      *
-     * @return TreeNodeInterface
+     * @return \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
      */
     public function current()
     {

@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeIdentifier;
-use Phlexible\Bundle\TreeBundle\Tree\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
+use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

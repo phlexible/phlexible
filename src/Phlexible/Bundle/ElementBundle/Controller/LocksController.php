@@ -34,7 +34,7 @@ class LocksController extends Controller
      */
     public function listAction()
     {
-        $lockManager = $this->get('phlexible_lock.lock_manager');
+        $lockManager = $this->get('phlexible_element.element_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
 
         $locks = $lockManager->findAll();
@@ -71,7 +71,7 @@ class LocksController extends Controller
      */
     public function deleteAction($id)
     {
-        $lockManager = $this->get('phlexible_lock.lock_manager');
+        $lockManager = $this->get('phlexible_element.element_lock_manager');
         $lock = $lockManager->find($id);
 
         $lockManager->deleteLock($lock);
@@ -89,7 +89,7 @@ class LocksController extends Controller
     {
         $uid = $this->getUser()->getId();
 
-        $lockManager = $this->get('phlexible_lock.lock_manager');
+        $lockManager = $this->get('phlexible_element.element_lock_manager');
         $myLocks = $lockManager->findBy(array('userId' => $uid));
 
         foreach ($myLocks as $lock) {
@@ -108,7 +108,7 @@ class LocksController extends Controller
      */
     public function flushAction()
     {
-        $lockManager = $this->get('phlexible_lock.lock_manager');
+        $lockManager = $this->get('phlexible_element.element_lock_manager');
         $locks = $lockManager->findAll();
 
         foreach ($locks as $lock) {
@@ -132,19 +132,17 @@ class LocksController extends Controller
         $eid = (int) $request->get('eid');
         $language = $request->get('language');
 
-        // get managers from container
         $elementService = $this->get('phlexible_element.element_service');
-        $lockService = $this->get('phlexible_element.lock.service');
+        $lockManager = $this->get('phlexible_element.element_lock_manager');
 
-        // get element object
         $element = $elementService->findElement($eid);
 
-        if ($lockService->isElementLocked($element, $language)) {
+        if ($lockManager->isLocked($element, $language)) {
             return new ResultResponse(false, 'Element already locked.');
         } else {
             try {
                 // try to lock the element
-                $lockService->lockElement($element, $language);
+                $lockManager->lock($element, $this->getUser()->getId(), $language);
 
                 return new ResultResponse(true, 'Lock aquired.');
             } catch (\Exception $e) {
@@ -163,17 +161,21 @@ class LocksController extends Controller
     {
         $unlockId = (int) $request->get('id');
         $force = $request->get('force', false);
+        $language = $request->get('language');
 
-        $lockService = $this->get('locks.service');
+        $elementService = $this->get('phlexible_element.element_service');
+        $lockManager = $this->get('phlexible_element.element_lock_manager');
+
+        $element = $elementService->findElement($unlockId);
         $userId = $this->getUser()->getId();
 
-        if (!$force && !$lockService->isLockedByUser($unlockId, $userId)) {
+        if (!$force && !$lockManager->isLockedByUser($element, $language, $userId)) {
             return new ResultResponse(false, 'Not locked by you.');
-        } elseif (!$lockService->isLocked($unlockId)) {
+        } elseif (!$lockManager->isLocked($element, $language)) {
             return new ResultResponse(false, 'Not locked.');
         } else {
             try {
-                $lockService->unlock($unlockId, $userId);
+                $lockManager->unlock($element, $language);
 
                 return new ResultResponse(true, 'Lock removed.');
             } catch (\Exception $e) {
@@ -198,8 +200,7 @@ class LocksController extends Controller
 
         // get helpers from container
         $elementService = $this->get('phlexible_element.element_service');
-        $lockRepository = $this->get('phlexible_lock.repository');
-        $lockService = $this->get('phlexible_element.lock.service');
+        $lockManager = $this->get('phlexible_element.element_lock_manager');
 
         // get element data object
         $element = $elementService->findElement($eid);
@@ -207,23 +208,13 @@ class LocksController extends Controller
         // get user information for deletion
         $userId = $this->getUser()->getId();
 
-        // get lock master/slave identifiers for current eid/language
-        $lockIdentifierMaster = new ElementMasterLockIdentifier($eid);
-
         if ($element->getMasterLanguage() === $language) {
             // if master language should be unlocked, all slave languages must be unlocked too
-            $lockIdentifiers = $lockRepository->findByIdentifierPart($lockIdentifierMaster);
+            $lockManager->unlock($element);
         } else {
             // if slave language should be unlocked, only master language must be unlocked too
-            $lockIdentifierSlave = new ElementSlaveLockIdentifier($eid, $language);
-            $lockIdentifiers = array($lockIdentifierMaster, $lockIdentifierSlave);
-        }
-
-        foreach ($lockIdentifiers as $lockIdentifier) {
-            try {
-                $lockService->unlock($lockIdentifier, $userId);
-            } catch (\Exception $e) {
-            }
+            $lockManager->unlock($element, $language);
+            $lockManager->unlock($element);
         }
 
         return new ResultResponse(true, 'Lock removed.');

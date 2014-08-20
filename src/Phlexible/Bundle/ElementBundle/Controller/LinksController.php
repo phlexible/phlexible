@@ -38,201 +38,33 @@ class LinksController extends Controller
 
         $displayLanguage = $language;
 
-        $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
-        $siteRootManager = Makeweb_Siteroots_Siteroot_Manager::getInstance();
-        $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $tree = $treeManager->getByNodeId($tid);
+        $node = $tree->get($tid);
 
-        $node = $treeManager->getNodeByNodeID($tid);
-
-        $elementVersion = $elementVersionManager->get($node->getEid(), $version);
-        $elementData = $elementVersion->getData($language);
-        $data = $elementData->getWrap();
+        $linkRepository = $this->getDoctrine()->getRepository('PhlexibleElementBundle:ElementLink');
 
         $result = array();
 
-        $rii = new RecursiveIteratorIterator($data, RecursiveIteratorIterator::SELF_FIRST);
-        $i = 0;
-        foreach ($rii as $node) {
-            if (empty($node) || empty($node['content'])) {
-                continue;
-            }
-
-            switch ($node['type']) {
-                case 'image':
-                case 'flash':
-                case 'download':
-                case 'video':
-                    if (empty($node['media'])) {
-                        continue;
-                    }
-
-                    $documentTypeRepository = MWF_Registry::getContainer()->get('documenttypes.repository');
-                    $documentType = $documentTypeRepository->find($node['media']['documenttype']);
-
-                    $imageUrl = $this->_request->getBaseUrl() . '/media/' . $node['media']['file_id'];
-                    $content = '<img src="' . $imageUrl . '/_mm_medium" width="48" height="48" style="margin-right: 5px; float: left; padding: 1px; border: 1px solid lightgrey; vertical-align: top" /> '
-                        . $node['media']['name'] . '<br />'
-                        . $documentType->getTitle('en') . '<br />'
-                        . $node['media']['readablesize'];
-
-                    $site = Media_Site_Manager::getInstance()->getByFolderId($node['media']['folder_id']);
-                    $folder = $site->getFolderPeer()->getById($node['media']['folder_id']);
-                    $folderPath = $folder->getIdPath();
-                    $menuItem = new MWF_Core_Menu_Item_Panel();
-                    $menuItem->setPanel('Phlexible.mediamanager.MediamanagerPanel')
-                        ->setParam('start_file_id', $node['media']['file_id'])
-                        ->setParam('start_folder_path', $folderPath);
-
-                    $result[] = array(
-                        'id'      => $i++,
-                        'iconCls' => 'm-frontendmediamanager-field_' . $node['type'] . '-icon',
-                        'type'    => $node['type'],
-                        'title'   => $node['name'][$displayLanguage] . ' (' . $node['working_title'] . ')',
-                        'content' => $content,
-                        'link'    => $menuItem->get(),
-                        'raw'     => $node['content']
-                    );
-
-                    break;
-
-                case 'folder':
-                    if (empty($node['media'])) {
-                        continue;
-                    }
-
-                    $content = '/' . $node['media']['folder_path'];
-                    $content = Brainbits_Util_String::deleteTrailing('/', $content, 1);
-
-                    $site = Media_Site_Manager::getInstance()->getByFolderId($node['media']['folder_id']);
-                    $folder = $site->getFolderPeer()->getById($node['media']['folder_id']);
-                    $folderPath = $folder->getIdPath();
-                    $menuItem = new MWF_Core_Menu_Item_Panel();
-                    $menuItem->setPanel('Phlexible.mediamanager.MediamanagerPanel')
-                        ->setParam('start_folder_path', $folderPath);
-
-                    $result[] = array(
-                        'id'      => $i++,
-                        'iconCls' => 'm-frontendmediamanager-field_folder-icon',
-                        'type'    => $node['type'],
-                        'title'   => $node['name'][$displayLanguage] . ' (' . $node['working_title'] . ')',
-                        'content' => $content,
-                        'link'    => $menuItem->get(),
-                        'raw'     => $node['content']
-                    );
-
-                    break;
-
-                case 'link':
-                    if ($node['link']['type'] === 'eid' || $node['link']['type'] === 'intrasiteroot') {
-                        $treeNode = $treeManager->getNodeByNodeId($node['link']['id']);
-                        $siteRoot = $siteRootManager->getByID($node['link']['siteroot_id']);
-                        $elementVersion = $elementVersionManager->getLatest($node['link']['eid']);
-
-                        $iconUrl = $elementVersion->getIconUrl($treeNode->getIconParams($language));
-                        $icon = '<img src="' . $iconUrl . '" width="18" height="18" style="vertical-align: middle;" />'
-                            . $node['displayContent'];
-
-                        $menuItem = new MWF_Core_Menu_Item_Panel();
-                        $menuItem->setPanel('Makeweb.elements.MainPanel')
-                            ->setIdentifier('Makeweb_elements_MainPanel_' . $siteRoot->getTitle($language))
-                            ->setParam('id', $node['link']['id'])
-                            ->setParam('siteroot_id', $node['link']['siteroot_id'])
-                            ->setParam('title', $siteRoot->getTitle())
-                            ->setParam('start_tid_path', '/' . implode('/', $treeNode->getPath()));
-
-                        $link = $menuItem->get();
-                    } else {
-                        $link = null;
-                        $content = $node['content'];
-                    }
-
-                    $result[] = array(
-                        'id'      => $i++,
-                        'iconCls' => 'm-fields-field_' . $node['type'] . '-icon',
-                        'type'    => $node['type'],
-                        'title'   => $node['name'][$displayLanguage] . ' (' . $node['working_title'] . ')',
-                        'link'    => $link,
-                        'content' => $content,
-                        'raw'     => $node['content']
-                    );
-
-                    break;
-            }
-        }
-
         if ($incoming) {
-            $db = $this->getContainer()->dbPool->read;
-
-            $select = $db->select()
-                ->distinct()
-                ->from(array('edl' => $db->prefix . 'element_data_language'), array('edl.content'))
-                ->join(
-                    array('ed' => $db->prefix . 'element_data'),
-                    'edl.eid = ed.eid AND edl.version = ed.version AND edl.data_id = ed.data_id',
-                    array('ed.eid')
-                )
-                ->joinLeft(
-                    array('et' => $db->prefix . 'element_tree'),
-                    'et.eid = ed.eid',
-                    array('id AS tid')
-                )
-                ->joinLeft(
-                    array('ett' => $db->prefix . 'element_tree_teasers'),
-                    'ett.teaser_eid = ed.eid',
-                    array('id AS teaser_id')
-                )
-                ->where('edl.content LIKE ?', 'id:' . $tid . '%')
-                ->orWhere('edl.content LIKE ?', 'sr:' . $tid . '%');
-
-            $data = $db->fetchAll($select);
-
-            foreach ($data as $row) {
-                $elementVersion = $elementVersionManager->getLatest($row['eid']);
-
-                if (!empty($row['tid'])) {
-                    $treeNode = $treeManager->getNodeByNodeId($row['tid']);
-                    $siteRoot = $siteRootManager->getByID($treeNode->getSiterootId());
-
-                    $icon = '<img src="' . $elementVersion->getIconUrl($treeNode->getIconParams($language))
-                        . '" width="18" height="18" style="vertical-align: middle;" />';
-
-                    $content = $icon . ' ' . $elementVersion->getBackendTitle($language) . ' [' . $row['tid'] . ']';
-                    $title = 'Incoming TreeNode link';
-
-                    $menuItem = new MWF_Core_Menu_Item_Panel();
-                    $menuItem->setPanel('Makeweb.elements.MainPanel')
-                        ->setIdentifier('Makeweb_elements_MainPanel_' . $siteRoot->getTitle($language))
-                        ->setParam('id', $treeNode->getId())
-                        ->setParam('siteroot_id', $treeNode->getSiterootId())
-                        ->setParam('title', $siteRoot->getTitle())
-                        ->setParam('start_tid_path', '/' . implode('/', $treeNode->getPath()));
-
-                    $link = $menuItem->get();
-                } else {
-                    $icon = '<img src="' . $elementVersion->getIconUrl() .
-                        '" width="18" height="18" style="vertical-align: middle;" />';
-
-                    $content = $icon . ' ' . $elementVersion->getBackendTitle($language)
-                        . ' [' . $row['teaser_id'] . ']';
-                    $title = 'Incoming Teaser Link';
-                    $link = null;
-                }
-
-                $result[] = array(
-                    'id'      => $i++,
-                    'iconCls' => 'm-fields-field_link-icon',
-                    'type'    => 'link',
-                    'title'   => $title,
-                    'content' => $content,
-                    'link'    => $link,
-                    'raw'     => $row['content']
-                );
-            }
+            $links = $linkRepository->findBy(array('type' => 'treeNode', 'target' => $node->getTypeId()));
+        } else {
+            $links = $linkRepository->findBy(array('eid' => $node->getTypeId()));
         }
 
-        $result = array('links' => $result);
+        foreach ($links as $link) {
+            $result[] = array(
+                'id'      => $link->getId(),
+                'iconCls' => 'p-element-component-icon',
+                'type'    => $link->getType(),
+                'title'   => $link->getType() . ' ' . $link->getTarget(),
+                'content' => 'content',
+                'link'    => array(),
+                'raw'     => 'raw'
+            );
+        }
 
-        return new JsonResponse($result);
+        return new JsonResponse(array('links' => $result));
     }
 
     /**

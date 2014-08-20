@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
  * Content tree context
@@ -18,7 +18,7 @@ use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 class ContentTreeContext
 {
     /**
-     * @var TreeNodeInterface
+     * @var \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
      */
     private $node;
 
@@ -38,8 +38,8 @@ class ContentTreeContext
     private $depth;
 
     /**
-     * @param TreeNodeInterface $node
-     * @param TreeNodeInterface $referenceNode
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $referenceNode
      * @param int               $maxDepth
      * @param int               $depth
      */

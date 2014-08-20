@@ -1,17 +1,14 @@
 services:
     phlexible_tree.tree_manager:
-        class: Phlexible\Bundle\TreeBundle\TreeManager
-        arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.database_tree_factory]
-
-    phlexible_tree.database_tree_factory:
-        class: Phlexible\Bundle\TreeBundle\Tree\DatabaseTreeFactory
-        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_element.element_history_manager]
+        class: Phlexible\Bundle\TreeBundle\Tree\TreeManager
+        arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.tree_factory]
 
     phlexible_tree.node_serializer:
         class: Phlexible\Bundle\TreeBundle\Tree\Serializer\NodeSerializer
         arguments:
             - @phlexible_element.element_service
             - @phlexible_element.icon_resolver
+            - @phlexible_tree.state_manager
             - @phlexible_access_control.permissions
             - @security.context
 

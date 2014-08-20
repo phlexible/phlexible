@@ -10,9 +10,8 @@ namespace Phlexible\Bundle\TeaserBundle\ElementCatch\Matcher;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManager;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
-use Phlexible\Bundle\TreeBundle\TreeManager;
+use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -23,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class TreeNodeMatcher
 {
     /**
-     * @var TreeManager
+     * @var \Phlexible\Bundle\TreeBundle\Tree\TreeManager
      */
     private $contentTreeManager;
 
@@ -85,7 +84,7 @@ class TreeNodeMatcher
 
         $catched = array();
         foreach ($rii as $childNode) {
-            /* @var $childNode TreeNodeInterface */
+            /* @var $childNode \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface */
 
             if ($isPreview) {
                 $onlineLanguages = Makeweb_Elements_History::getSavedLanguagesByEid(

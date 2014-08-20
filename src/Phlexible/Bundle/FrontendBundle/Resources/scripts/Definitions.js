@@ -44,16 +44,6 @@ Phlexible.elements.TopToolbar.prototype.populateExtendedMenu =
                     scope: this
                 },
                 {
-                    text: Phlexible.frontend.Strings.preview_debug,
-                    iconCls: 'p-frontend-preview_debug-icon',
-                    hidden: Phlexible.User.isGranted('debug'),
-                    handler: function () {
-                        var src = this.element.data.urls.debug;
-                        window.open(src, 'preview_debug'); //, 'width=1000,height=700,scrollbars=yes');
-                    },
-                    scope: this
-                },
-                {
                     text: Phlexible.frontend.Strings.preview_online,
                     iconCls: 'p-frontend-preview_online-icon',
                     disabled: true,
@@ -77,10 +67,10 @@ Phlexible.elements.TopToolbar.prototype.onLoadElement =
         if (element.properties.et_type == Phlexible.elementtypes.TYPE_FULL) {
             previewItem.enable();
             if (element.properties.is_published) {
-                previewItem.menu.items.items[2].enable();
+                previewItem.menu.items.items[1].enable();
             }
             else {
-                previewItem.menu.items.items[2].disable();
+                previewItem.menu.items.items[1].disable();
             }
         }
         else {

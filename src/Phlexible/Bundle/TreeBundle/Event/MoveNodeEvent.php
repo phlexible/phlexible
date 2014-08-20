@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Event;
 
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
  * Before move node event
@@ -24,7 +24,7 @@ class MoveNodeEvent extends NodeEvent
 
     /**
      * @param TreeNodeInterface $node
-     * @param TreeNodeInterface $parentNode
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $parentNode
      */
     public function __construct(TreeNodeInterface $node, TreeNodeInterface $parentNode)
     {
@@ -34,7 +34,7 @@ class MoveNodeEvent extends NodeEvent
     }
 
     /**
-     * @return TreeNodeInterface
+     * @return \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
      */
     public function getParentNode()
     {

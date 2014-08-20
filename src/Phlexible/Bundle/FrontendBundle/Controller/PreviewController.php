@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\FrontendBundle\Controller;
 
+use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,80 +102,35 @@ class PreviewController extends Controller
         }
     }
 
-    public function debugAction()
-    {
-        try {
-            ini_set('display_errors', 1);
-
-            // get dispatcher
-            $dispatcher = $this->getContainer()->get('event_dispatcher');
-
-            // get response
-            $response = $this->getResponse();
-
-            // define request
-            $requestHandler = Makeweb_Frontend_Request_Handler::getDebugHandler();
-            $request = new Makeweb_Frontend_Request($response, null, $requestHandler);
-            $request->setParam('debug', 1);
-
-            if (!$response->isRedirect()) {
-                //                $frontendUser = new Makeweb_Frontend_User();
-                //                $frontendUser->setInterfaceLanguage($request->getLanguage());
-                //                MWF_Env::setUser($frontendUser);
-
-                $rendererClassname = $request->getContentChannel()->getRendererClassname();
-                $renderer = new $rendererClassname();
-                $renderer->setRequest($request);
-                $renderer->setResponse($response);
-
-                $event = new Makeweb_Frontend_Event_InitRenderer($renderer);
-                $dispatcher->dispatch($event);
-
-                ob_start();
-                $renderer->render();
-                ob_end_clean();
-
-                if ($response->isRedirect()) {
-                    $this->_displayRedirect($response);
-                }
-            } else {
-                $this->_displayRedirect($response);
-            }
-        } catch (Exception $e) {
-            while (ob_get_status()) {
-                ob_end_clean();
-            }
-
-            Brainbits_Debug_Error::outputException($e);
-            die;
-        }
-    }
-
     /**
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/urls", name="frontend_preview_urls")
      */
-    public function urlsAction()
+    public function urlsAction(Request $request)
     {
-        $tid = $this->getParam('tid');
-        $language = $this->getParam('language');
+        $tid = $request->get('tid');
+        $language = $request->get('language');
 
-        $node = $this->getContainer()->get('phlexible_tree.tree_manager')->getByNodeId($tid)->get($tid);
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $router = $this->get('phlexible_tree.router');
+
+        $node = $treeManager->getByNodeId($tid)->get($tid);
 
         $urls = array(
             'preview' => '',
             'online'  => '',
-            'debug'   => '',
         );
 
         if ($node) {
-            $urls['preview'] = $this->getContainer()->get('phlexible_tree.router')->generate($node);
-            $urls['debug'] = str_replace('/preview/', '/debug/', $urls['preview']);
+            $urls['preview'] = $router->generate($node);
 
             if (1 || $node->isPublished($language)) {
-                $urls['online'] = $this->getContainer()->get('phlexible_tree.router')->generate($node);
+                $urls['online'] = $router->generate($node);
             }
         }
 
-        $this->_response->setResult(true, $tid, '', $urls);
+        return new ResultResponse(true, '', $urls);
     }
 }

@@ -27,6 +27,7 @@ class PhlexibleTeaserExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('doctrine.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
@@ -36,6 +37,8 @@ class PhlexibleTeaserExtension extends Extension
             $config['catch']['use_master_language_as_fallback']
         );
 
-        $container->setAlias('phlexible_teaser.catch.cache', 'phlexible_cache.managed_cache');
+        $container->setAlias('phlexible_teaser.teaser_manager', 'phlexible_teaser.doctrine.teaser_manager');
+        $container->setAlias('phlexible_teaser.teaser_service', 'phlexible_teaser.doctrine.teaser_manager');
+        $container->setAlias('phlexible_teaser.catch_manager', 'phlexible_teaser.doctrine.catch_manager');
     }
 }

@@ -45,7 +45,7 @@ services:
 
     phlexible_element.icon_resolver:
         class: Phlexible\Bundle\ElementBundle\Icon\IconResolver
-        arguments: [@router, @phlexible_element.element_service]
+        arguments: [@router, @phlexible_element.element_service, @phlexible_tree.state_manager]
 
     phlexible_element.util.suggest_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
@@ -137,13 +137,6 @@ services:
     # searches
     phlexible_element.search.eid:
         class: Phlexible\Bundle\ElementBundle\Search\EidSearch
-        public: false
-        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
-        tags:
-            - {name: phlexible_search.handler}
-
-    phlexible_element.search.elementtype:
-        class: Phlexible\Bundle\ElementBundle\Search\ElementtypeSearch
         public: false
         arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
         tags:

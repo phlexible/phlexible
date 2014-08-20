@@ -12,8 +12,6 @@ use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Diff;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
-use Phlexible\Bundle\ElementBundle\Lock\ElementMasterLockIdentifier;
-use Phlexible\Bundle\ElementBundle\Lock\ElementSlaveLockIdentifier;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
@@ -52,6 +50,8 @@ class DataController extends Controller
         $teaserService = $this->get('phlexible_teaser.teaser_service');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $stateManager = $this->get('phlexible_tree.state_manager');
 
         try {
             if ($teaserId) {
@@ -75,12 +75,10 @@ class DataController extends Controller
                 $language = $elementMasterLanguage;
             }
 
-            $isPublished = false;
-
             if ($teaserId) {
                 $isPublished = false; //$node->isPublished($language);
             } elseif ($treeId) {
-                $isPublished = false; //$node->isPublished($language);
+                $isPublished = $stateManager->isPublished($node, $language);
             } else {
                 throw new \Exception('Unknown data requested.');
             }
@@ -155,36 +153,28 @@ class DataController extends Controller
             // instances
 
             $instances = array();
-            /*
             if (!$teaserId) {
-                $sql = $db->select()
-                          ->from($db->prefix.'element_tree', array('id', 'instance_master', 'siteroot_id', 'modify_time'))
-                          ->where('eid = ?', $eid);
+                foreach ($tree->getInstances($node) as $instanceNode) {
+                    $instance = array(
+                        'id'          => $instanceNode->getId(),
+                        'instance_master' => false,
+                        'modify_time'     => $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
+                        'icon'        => $iconResolver->resolveTreeNode($instanceNode, $language),
+                        'type'        => 'treenode',
+                        'link'        => array(),
+                    );
 
-                foreach ($db->fetchAll($sql) as $instanceRow) {
-                    $instanceNode = $treeManager->getNodeByNodeId($instanceRow['id']);
-                    $instanceElementVersion = $elementVersionManager->getLatest($instanceNode->getEid());
-
-                    $instanceRow['icon'] = $instanceElementVersion->getIconUrl($instanceNode->getIconParams($language));
-                    $instanceRow['type'] = 'treenode';
-
-                    $instanceRow['link'] = array();
-                    if ($instanceRow['siteroot_id'] !== $node->getSiteRootId()) {
-                        $menuItem = new MWF_Core_Menu_Item_Panel();
-                        $menuItem->setPanel('Makeweb.elements.MainPanel')
-                            ->setIdentifier('Makeweb_elements_MainPanel_' . $instanceRow['siteroot_id'])
-                            ->setParam('id', $instanceRow['id'])
-                            ->setParam('siteroot_id', $instanceRow['siteroot_id'])
-                            ->setParam('title', $instanceNode->getTree()->getSiteRoot()->getTitle($language))
-                            ->setParam('start_tid_path', '/' . implode('/', $instanceNode->getPath()));
-
-                        $instanceRow['link'] = $menuItem->get();
+                    // TODO: repair
+                    if ($instanceNode->getTree()->getSiterootId() !== $tree->getSiterootId()) {
+                        $instance['link'] = array(
+                            'start_tid_path' => '/' . implode('/', $instanceNode->getPath()),
+                        );
                     }
-                    unset($instanceRow['siteroot_id']);
 
-                    $instances[] = $instanceRow;
+                    $instances[] = $instance;
                 }
             } else {
+                // TODO: repair
                 $sql = $db->select()
                           ->from($db->prefix . 'element_tree_teasers', array('id', 'teaser_eid', new Zend_Db_Expr("0 as instance_master"), 'modify_time'))
                           ->where('teaser_eid = ?', $eid)
@@ -200,7 +190,6 @@ class DataController extends Controller
                     $instances[] = $instanceRow;
                 }
             }
-            */
 
             // allowed child elements
 
@@ -417,7 +406,6 @@ class DataController extends Controller
             $urls = array(
                 'preview' => '',
                 'online'  => '',
-                'debug'   => '',
             );
 
             $publishDate = null;
@@ -429,7 +417,6 @@ class DataController extends Controller
                 if ($type == Elementtype::TYPE_FULL) {
                     $blaNode = $this->get('phlexible_tree.content.manager')->findByTreeId($node->getId())->get($node->getId());
                     $urls['preview'] = $this->get('phlexible_tree.router')->generate($blaNode);
-                    $urls['debug'] = $this->get('phlexible_tree.router')->generate($blaNode);
 
                     if ($isPublished) {
                         $urls['online'] = $this->get('phlexible_tree.router')->generate($blaNode);
@@ -437,10 +424,11 @@ class DataController extends Controller
                 }
 
                 if ($isPublished) {
-                    $publishDate = $node->getPublishedAt($language);
-                    $publishUid = $node->getPublishUserId($language);
-                    $publishUser = $this->getContainer()->get('users.repository')->find($publishUid);
-                    $onlineVersion = $node->getOnlineVersion($language);
+                    $publishInfo = $stateManager->getPublishInfo($node, $language);
+                    $publishDate = $publishInfo['published_at'];
+                    $publishUserId = $publishInfo['publish_user_id'];
+                    $publishUser = $this->get('phlexible_user.user_manager')->find($publishUserId);
+                    $onlineVersion = $publishInfo['version'];
                 }
 
                 $latestVersion = $element->getLatestVersion();
@@ -515,17 +503,16 @@ class DataController extends Controller
                     $userRights = array_keys($userRights);
                 } else {
                     $userRights = array_keys(
-                        $this->get('phlexible_access_control.permissions')->getByContentClass('Phlexible\Bundle\TreeBundle\Tree\Node\TreeNode')
+                        $this->get('phlexible_access_control.permissions')->getByContentClass('Phlexible\Bundle\TreeBundle\Model\TreeNode')
                     );
                 }
             }
 
             $status = '';
-            if (0 && $node->isPublished($language)) {
-                $status = $node->isAsync($language) ? 'async' : 'online';
+            if ($stateManager->isPublished($node, $language)) {
+                $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
             }
 
-            $iconResolver = $this->get('phlexible_element.icon_resolver');
             $icon = $iconResolver->resolveTreeNode($node, $language);
 
             $createUser = $this->get('phlexible_user.user_manager')->find($elementVersion->getCreateUserId());
@@ -642,15 +629,15 @@ class DataController extends Controller
      * @param Request $request
      *
      * @throws \Exception
-     * @return JsonResponse
+     * @return ResultResponse
      * @Route("/save", name="elements_data_save")
      */
     public function saveAction(Request $request)
     {
         $dispatcher = $this->get('event_dispatcher');
         $treeManager = $this->get('phlexible_tree.tree_manager');
-        $elementManager = $this->get('elementsManager');
-        $elementVersionManager = $this->get('elementsVersionManager');
+        $elementService = $this->get('phlexible_element.element_service');
+        $stateManager = $this->get('phlexible_tree.state_manager');
 
         $tid = $request->get('tid');
         $teaserId = $request->get('teaser_id', null);
@@ -677,527 +664,447 @@ class DataController extends Controller
             $data = json_decode($data, true);
         }
 
-        //        echo '<pre>EID: '.$eid."\nLanguage:".$language."\nData: ".print_r($allValues, true);exit;
+        $node = $treeManager->getNodeByNodeId($tid);
+        $element = $elementService->findElement($eid);
+        $oldElementVersion = $elementService->findLatestElementVersion($element);
+        $oldLatestVersion = $oldElementVersion->getVersion();
+        $isMaster = $element->getMasterLanguage() == $language;
 
-        $db = $container->dbPool->write; // MWF_Db::getWriteDb();
+        $event = new BeforeSaveElement($element, $language, $oldVersion);
+        $dispatcher->dispatch($event);
 
-        try {
-            $db->beginTransaction();
+        $comment = null;
+        if (!empty($data['comment'])) {
+            $comment = $data['comment'];
+        }
 
-            $node = $treeManager->getNodeByNodeId($tid);
-            $element = $elementManager->getByEID($eid);
-            $oldElementVersion = $element->getLatestVersion();
-            $oldLatestVersion = $oldElementVersion->getVersion();
-            $isMaster = $element->getMasterLanguage() == $language;
+        $publishSlaveLanguages = array();
+        $publishSlaves = array();
 
-            $beforeSaveElementEvent = new Makeweb_Elements_Event_BeforeSaveElement($element, $language, $oldVersion);
-            $dispatcher->dispatch($beforeSaveElementEvent);
+        if ($isPublish) {
+            if ($element->getMasterLanguage() == $language) {
+                foreach ($this->container->getParameter('phlexible_cms.languages.available') as $slaveLanguage) {
+                    if ($language == $slaveLanguage) {
+                        continue;
+                    }
 
-            $comment = null;
-            if (!empty($data['comment'])) {
-                $comment = $data['comment'];
-            }
+                    if ($teaserId) {
+                        $teaserNode = new Makeweb_Teasers_Node($teaserId);
 
-            $publishSlaveLanguages = array();
-            $publishSlaves = array();
-
-            if ($isPublish) {
-                if ($element->getMasterLanguage() == $language) {
-                    foreach ($container->getParameter('frontend.languages.available') as $slaveLanguage) {
-                        if ($language == $slaveLanguage) {
-                            continue;
-                        }
-
-                        if ($teaserId) {
-                            $teaserNode = new Makeweb_Teasers_Node($teaserId);
-
-                            if ($teaserNode->isPublished($slaveLanguage)) {
-                                if (!$teaserNode->isAsync($slaveLanguage)) {
-                                    $publishSlaveLanguages[] = $slaveLanguage;
-                                }
-                            } else {
-                                if ($container->getParameter(
-                                    'phlexible_element.publish.cross_language_publish_offline'
-                                )
-                                ) {
-                                    $publishSlaves[] = array($teaserNode->getId(), $slaveLanguage, 0, '', 0);
-                                }
+                        if ($teaserNode->isPublished($slaveLanguage)) {
+                            if (!$teaserNode->isAsync($slaveLanguage)) {
+                                $publishSlaveLanguages[] = $slaveLanguage;
                             }
                         } else {
-                            if ($node->isPublished($slaveLanguage)) {
-                                if (!$node->isAsync($slaveLanguage)) {
-                                    $publishSlaveLanguages[] = $slaveLanguage;
-                                } else {
-                                    $publishSlaves[] = array($node->getId(), $slaveLanguage, 0, 'async', 1);
-                                }
+                            if ($this->container->getParameter(
+                                'phlexible_element.publish.cross_language_publish_offline'
+                            )
+                            ) {
+                                $publishSlaves[] = array($teaserNode->getId(), $slaveLanguage, 0, '', 0);
+                            }
+                        }
+                    } else {
+                        if ($stateManager->isPublished($node, $slaveLanguage)) {
+                            if (!$stateManager->isAsync($node, $slaveLanguage)) {
+                                $publishSlaveLanguages[] = $slaveLanguage;
                             } else {
-                                if ($container->getParameter(
-                                    'phlexible_element.publish.cross_language_publish_offline'
-                                )
-                                ) {
-                                    $publishSlaves[] = array($node->getId(), $slaveLanguage, 0, '', 0);
-                                }
+                                $publishSlaves[] = array($node->getId(), $slaveLanguage, 0, 'async', 1);
+                            }
+                        } else {
+                            if ($this->container->getParameter('phlexible_element.publish.cross_language_publish_offline')) {
+                                $publishSlaves[] = array($node->getId(), $slaveLanguage, 0, '', 0);
                             }
                         }
                     }
                 }
             }
+        }
 
-            $minor = 0;
-            $elementVersion = $element->createVersion(null, $comment, $minor, $language);
-            $newVersion = $elementVersion->getVersion();
-            $elementTypeVersionObj = $elementVersion->getElementTypeVersionObj();
+        $minor = 0;
+        $elementVersion = $element->createVersion(null, $comment, $minor, $language);
+        $newVersion = $elementVersion->getVersion();
+        $elementTypeVersionObj = $elementVersion->getElementTypeVersionObj();
 
-            foreach ($publishSlaves as $publishSlaveKey => $publishSlaveRow) {
-                $publishSlaves[$publishSlaveKey][2] = $newVersion;
+        foreach ($publishSlaves as $publishSlaveKey => $publishSlaveRow) {
+            $publishSlaves[$publishSlaveKey][2] = $newVersion;
+        }
+
+        /*
+        Makeweb_Elements_Element_History::insert(Makeweb_Elements_Element_History::ACTION_CREATE_VERSION,
+                                                 $elementVersion->getEid(),
+                                                 $elementVersion->getVersion(),
+                                                 $language,
+                                                 $comment);
+        */
+
+        // Copy tree item page values from old version to new version in all instances
+
+        $select = $db->select()
+                     ->from($db->prefix . 'element_tree', 'id')
+                     ->where('eid = ?', $eid);
+
+        $treeIds = $db->fetchCol($select);
+
+        foreach ($treeIds as $treeId) {
+            $instanceNode = $treeManager->getNodeByNodeID($treeId);
+            $instanceNode->getTree()->copyPage($treeId, $newVersion, $oldElementVersion->getVersion());
+        }
+
+        // Copy meta values from old version to new version
+
+        $setId = $elementTypeVersionObj->getMetaSetId();
+        if ($setId) {
+            $select = $db->select()
+                         ->from($db->prefix . 'element_version_metaset_items')
+                         ->where('set_id = ?', $setId)
+                         ->where('eid = ?', $eid)
+                         ->where('version = ?', $oldLatestVersion);
+
+            foreach ($db->fetchAll($select) as $insertData) {
+                unset($insertData['id']);
+                $insertData['version'] = $newVersion;
+
+                $db->insert($db->prefix . 'element_version_metaset_items', $insertData);
             }
+        }
 
-            /*
-            Makeweb_Elements_Element_History::insert(Makeweb_Elements_Element_History::ACTION_CREATE_VERSION,
-                                                     $elementVersion->getEid(),
-                                                     $elementVersion->getVersion(),
-                                                     $language,
-                                                     $comment);
-            */
+        $elementData = $elementVersion->getData($language);
 
-            // Copy tree item page values from old version to new version in all instances
+        if ($isMaster) {
+            $elementData->saveData($elementVersion, $values, $oldLatestVersion);
+        } else {
+            $elementData->saveData($elementVersion, $values, $oldLatestVersion, $element->getMasterLanguage());
+        }
+
+        if (empty($teaserId)) {
+            $elementVersion->getBackendTitle($language);
 
             $select = $db->select()
-                         ->from($db->prefix . 'element_tree', 'id')
+                         ->distinct()
+                         ->from($db->prefix . 'element_tree', 'parent_id')
                          ->where('eid = ?', $eid);
 
-            $treeIds = $db->fetchCol($select);
+            $updateTids = $db->fetchCol($select);
 
-            foreach ($treeIds as $treeId) {
-                $instanceNode = $treeManager->getNodeByNodeID($treeId);
-                $instanceNode->getTree()->copyPage($treeId, $newVersion, $oldElementVersion->getVersion());
-            }
+            $parentNode = $node->getParentNode();
+            if ($parentNode && $parentNode->getSortMode() != Makeweb_Elements_Tree::SORT_MODE_FREE) {
+                foreach ($updateTids as $updateTid) {
+                    if (!$updateTid) {
+                        continue;
+                    }
 
-            // Copy meta values from old version to new version
-
-            $setId = $elementTypeVersionObj->getMetaSetId();
-            if ($setId) {
-                $select = $db->select()
-                             ->from($db->prefix . 'element_version_metaset_items')
-                             ->where('set_id = ?', $setId)
-                             ->where('eid = ?', $eid)
-                             ->where('version = ?', $oldLatestVersion);
-
-                foreach ($db->fetchAll($select) as $insertData) {
-                    unset($insertData['id']);
-                    $insertData['version'] = $newVersion;
-
-                    $db->insert($db->prefix . 'element_version_metaset_items', $insertData);
+                    $sorter = $container->get('elementsTreeSorter');
+                    $sorter->sortNode($parentNode);
                 }
             }
+        }
 
-            $elementData = $elementVersion->getData($language);
+        // accordion stuff
 
-            if ($isMaster) {
-                $elementData->saveData($elementVersion, $values, $oldLatestVersion);
-            } else {
-                $elementData->saveData($elementVersion, $values, $oldLatestVersion, $element->getMasterLanguage());
+        if (empty($teaserId)) {
+            $beforeUpdateNodeEvent = new Makeweb_Elements_Event_BeforeUpdateNode($node);
+            $dispatcher->dispatch($beforeUpdateNodeEvent);
+
+            // save page
+
+            if (!empty($data['page'])) {
+                $page = $node->getPage($oldVersion);
+
+                $page['navigation'] = !empty($data['page']['navigation']) ? 1 : 0;
+                $page['restricted'] = !empty($data['page']['restricted']) ? 1 : 0;
+                if (array_key_exists('code', $data['page'])) {
+                    $page['disable_cache'] = !empty($data['page']['disable_cache']) ? 1 : 0;
+                    $page['cache_lifetime'] = (int) Brainbits_Util_Array::get($data['page'], 'cache_lifetime', 0);
+                    $page['https'] = !empty($data['page']['https']) ? 1 : 0;
+                    $page['code'] = !empty($data['page']['code']) ? $data['page']['code'] : 200;
+                }
+
+                $tree = $node->getTree();
+
+                $tree->setPage(
+                    $node->getId(),
+                    $newVersion,
+                    !empty($page['navigation']) ? 1 : 0,
+                    !empty($page['restricted']) ? 1 : 0,
+                    !empty($page['disable_cache']) ? 1 : 0,
+                    !empty($page['code']) ? $page['code'] : 200,
+                    !empty($page['https']) ? 1 : 0,
+                    (int) Brainbits_Util_Array::get($page, 'cache_lifetime', 0)
+                );
+
+                //$tree->getNodeOnlineVersions($node->getId(), false);
+                //$identifier = new Makeweb_Elements_Tree_Identifier($node->getTree()->getSiteRootId());
+                //MWF_Core_Cache_Manager::remove($identifier);
+                //$treeManager->getBySiteRootId($node->getTree()->getSiteRootId(), true);
             }
 
-            if (empty($teaserId)) {
-                $elementVersion->getBackendTitle($language);
+            // save meta
 
-                $select = $db->select()
-                             ->distinct()
-                             ->from($db->prefix . 'element_tree', 'parent_id')
-                             ->where('eid = ?', $eid);
+            if (!empty($data['meta'])) {
+                $metaSetId = $elementVersion->getElementTypeVersionObj()->getMetaSetId();
+                /* @var $metaSet Media_MetaSets_Set */
+                $metaSet = $container->get('metasets.repository')->find($metaSetId);
 
-                $updateTids = $db->fetchCol($select);
+                $identifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $language);
+                /* @var $metaSetItem Media_MetaSets_Item */
+                $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $identifier);
+                $metaSetArray = $metaSetItem->toArray($language);
 
-                $parentNode = $node->getParentNode();
-                if ($parentNode && $parentNode->getSortMode() != Makeweb_Elements_Tree::SORT_MODE_FREE) {
-                    foreach ($updateTids as $updateTid) {
-                        if (!$updateTid) {
-                            continue;
+                foreach ($data['meta'] as $key => $value) {
+                    if (!$isMaster && $metaSetArray[$key]['synchronized']) {
+                        if ($metaSetItem->$key === null) {
+                            $metaSetItem->$key = '';
                         }
 
-                        $sorter = $container->get('elementsTreeSorter');
-                        $sorter->sortNode($parentNode);
-                    }
-                }
-            }
-
-            // accordion stuff
-
-            if (empty($teaserId)) {
-                $beforeUpdateNodeEvent = new Makeweb_Elements_Event_BeforeUpdateNode($node);
-                $dispatcher->dispatch($beforeUpdateNodeEvent);
-
-                // save page
-
-                if (!empty($data['page'])) {
-                    $page = $node->getPage($oldVersion);
-
-                    $page['navigation'] = !empty($data['page']['navigation']) ? 1 : 0;
-                    $page['restricted'] = !empty($data['page']['restricted']) ? 1 : 0;
-                    if (array_key_exists('code', $data['page'])) {
-                        $page['disable_cache'] = !empty($data['page']['disable_cache']) ? 1 : 0;
-                        $page['cache_lifetime'] = (int) Brainbits_Util_Array::get($data['page'], 'cache_lifetime', 0);
-                        $page['https'] = !empty($data['page']['https']) ? 1 : 0;
-                        $page['code'] = !empty($data['page']['code']) ? $data['page']['code'] : 200;
+                        continue;
                     }
 
-                    $tree = $node->getTree();
+                    if ('suggest' === $metaSetItem->getType($key)) {
+                        $dataSourceId = $metaSetItem->getOptions($key);
+                        $dataSourcesRepository = $container->get('datasources.repository');
+                        $dataSource = $dataSourcesRepository->getDataSourceById($dataSourceId, $language);
+                        $dataSourceKeys = $dataSource->getKeys();
+                        $dataSourceModified = false;
+                        foreach (explode(',', $value) as $singleValue) {
+                            if (!in_array($singleValue, $dataSourceKeys)) {
+                                $dataSource->addKey($singleValue, true);
+                                $dataSourceModified = true;
+                            }
+                        }
+                        if ($dataSourceModified) {
+                            $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
+                        }
+                    }
 
-                    $tree->setPage(
-                        $node->getId(),
-                        $newVersion,
-                        !empty($page['navigation']) ? 1 : 0,
-                        !empty($page['restricted']) ? 1 : 0,
-                        !empty($page['disable_cache']) ? 1 : 0,
-                        !empty($page['code']) ? $page['code'] : 200,
-                        !empty($page['https']) ? 1 : 0,
-                        (int) Brainbits_Util_Array::get($page, 'cache_lifetime', 0)
-                    );
-
-                    //$tree->getNodeOnlineVersions($node->getId(), false);
-                    //$identifier = new Makeweb_Elements_Tree_Identifier($node->getTree()->getSiteRootId());
-                    //MWF_Core_Cache_Manager::remove($identifier);
-                    //$treeManager->getBySiteRootId($node->getTree()->getSiteRootId(), true);
+                    $metaSetItem->$key = $value ? $value : '';
                 }
 
-                // save meta
+                $metaSetItem->save();
 
-                if (!empty($data['meta'])) {
-                    $metaSetId = $elementVersion->getElementTypeVersionObj()->getMetaSetId();
-                    /* @var $metaSet Media_MetaSets_Set */
-                    $metaSet = $container->get('metasets.repository')->find($metaSetId);
+                if ($isMaster) {
+                    $slaveLanguages = $container->getParameter('frontend.languages.available');
+                    unset($slaveLanguages[array_search($language, $slaveLanguages)]);
 
-                    $identifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $language);
-                    /* @var $metaSetItem Media_MetaSets_Item */
-                    $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $identifier);
-                    $metaSetArray = $metaSetItem->toArray($language);
+                    foreach ($slaveLanguages as $slaveLanguage) {
+                        $identifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $slaveLanguage);
+                        /* @var $metaSetItem Media_MetaSets_Item */
+                        $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $identifier);
 
-                    foreach ($data['meta'] as $key => $value) {
-                        if (!$isMaster && $metaSetArray[$key]['synchronized']) {
-                            if ($metaSetItem->$key === null) {
+                        foreach ($data['meta'] as $key => $value) {
+                            if (!$metaSetArray[$key]['synchronized'] && $metaSetItem->$key) {
+                                continue;
+                            } elseif (!$metaSetArray[$key]['synchronized'] && !$metaSetItem->$key) {
                                 $metaSetItem->$key = '';
-                            }
-
-                            continue;
-                        }
-
-                        if ('suggest' === $metaSetItem->getType($key)) {
-                            $dataSourceId = $metaSetItem->getOptions($key);
-                            $dataSourcesRepository = $container->get('datasources.repository');
-                            $dataSource = $dataSourcesRepository->getDataSourceById($dataSourceId, $language);
-                            $dataSourceKeys = $dataSource->getKeys();
-                            $dataSourceModified = false;
-                            foreach (explode(',', $value) as $singleValue) {
-                                if (!in_array($singleValue, $dataSourceKeys)) {
-                                    $dataSource->addKey($singleValue, true);
-                                    $dataSourceModified = true;
-                                }
-                            }
-                            if ($dataSourceModified) {
-                                $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
+                            } else {
+                                $metaSetItem->$key = $value ? $value : '';
                             }
                         }
 
-                        $metaSetItem->$key = $value ? $value : '';
-                    }
-
-                    $metaSetItem->save();
-
-                    if ($isMaster) {
-                        $slaveLanguages = $container->getParameter('frontend.languages.available');
-                        unset($slaveLanguages[array_search($language, $slaveLanguages)]);
-
-                        foreach ($slaveLanguages as $slaveLanguage) {
-                            $identifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $slaveLanguage);
-                            /* @var $metaSetItem Media_MetaSets_Item */
-                            $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $identifier);
-
-                            foreach ($data['meta'] as $key => $value) {
-                                if (!$metaSetArray[$key]['synchronized'] && $metaSetItem->$key) {
-                                    continue;
-                                } elseif (!$metaSetArray[$key]['synchronized'] && !$metaSetItem->$key) {
-                                    $metaSetItem->$key = '';
-                                } else {
-                                    $metaSetItem->$key = $value ? $value : '';
-                                }
-                            }
-
-                            $metaSetItem->save();
-                        }
+                        $metaSetItem->save();
                     }
                 }
-
-                // save context
-
-                if (isset($data['context'])) {
-                    $db->delete($db->prefix . 'element_tree_context', array('tid = ?' => $tid));
-
-                    $insertData = array(
-                        'tid' => $tid
-                    );
-
-                    foreach ($data['context'] as $country) {
-                        $insertData['context'] = $country;
-
-                        $db->insert($db->prefix . 'element_tree_context', $insertData);
-                    }
-                }
-
-                $event = new Makeweb_Elements_Event_SaveNodeData($node, $language, $data);
-                $dispatcher->dispatch($event);
-
-                $event = new Makeweb_Elements_Event_UpdateNode($node);
-                $dispatcher->dispatch($event);
-            } else {
-
-                $teaserNode = new Makeweb_Teasers_Node($teaserId);
-
-                $beforeUpdateTeaserEvent = new Makeweb_Teasers_Event_BeforeUpdateTeaser($teaserNode, $language, $data);
-                $dispatcher->dispatch($beforeUpdateTeaserEvent);
-
-                // save teaser
-
-                if (!empty($data['teaser'])) {
-                    $updateData = array(
-                        'disable_cache'  => empty($data['teaser']['disable_cache']) ? 0 : 1,
-                        'cache_lifetime' => (int) Brainbits_Util_Array::get($data['teaser'], 'cache_lifetime', 0),
-                    );
-
-                    if ($updateData['disable_cache']) {
-                        $updateData['cache_lifetime'] = 0;
-                    }
-
-                    $db->update($db->prefix . 'element_tree_teasers', $updateData, 'id = ' . $db->quote($teaserId));
-                }
-
-                // save context
-
-                if (isset($data['context'])) {
-                    $db->delete($db->prefix . 'element_tree_teasers_context', array('teaser_id = ?' => $teaserId));
-
-                    $insertData = array(
-                        'teaser_id' => $teaserId
-                    );
-
-                    foreach ($data['context'] as $country) {
-                        $insertData['context'] = $country;
-
-                        $db->insert($db->prefix . 'element_tree_teasers_context', $insertData);
-                    }
-                }
-
-                $event = new Makeweb_Teasers_Event_UpdateTeaser($teaserNode, $language, $data);
-                $dispatcher->dispatch($event);
             }
 
-            $element = $elementManager->getByEID($eid);
-            $elementVersion = $elementVersionManager->get($eid, $newVersion);
+            // save context
 
-            $node = $treeManager->getNodeByNodeId($tid);
+            if (isset($data['context'])) {
+                $db->delete($db->prefix . 'element_tree_context', array('tid = ?' => $tid));
 
-            $event = new Makeweb_Elements_Event_SaveElement($elementVersion, $language, $oldVersion);
+                $insertData = array(
+                    'tid' => $tid
+                );
+
+                foreach ($data['context'] as $country) {
+                    $insertData['context'] = $country;
+
+                    $db->insert($db->prefix . 'element_tree_context', $insertData);
+                }
+            }
+
+            $event = new Makeweb_Elements_Event_SaveNodeData($node, $language, $data);
             $dispatcher->dispatch($event);
 
-            $msg = 'Element "' . $eid . '" master language "' . $language . '" saved as new version ' . $newVersion;
+            $event = new Makeweb_Elements_Event_UpdateNode($node);
+            $dispatcher->dispatch($event);
+        } else {
 
-            $publishOther = array();
-            if ($isPublish) {
-                $msg .= ' and published.';
+            $teaserNode = new Makeweb_Teasers_Node($teaserId);
 
-                if ($teaserId === null) {
-                    $node = $treeManager->getNodeByNodeId($tid);
-                    $tree = $node->getTree();
+            $beforeUpdateTeaserEvent = new Makeweb_Teasers_Event_BeforeUpdateTeaser($teaserNode, $language, $data);
+            $dispatcher->dispatch($beforeUpdateTeaserEvent);
 
-                    // notification data
-                    $notificationManager = $container->get('elementsNotifications');
-                    $checkNotify = $notificationManager->getNotificationByTid($tid, $language);
+            // save teaser
 
-                    // check if there is a notification already
-                    if (count($checkNotify) && $notifications) {
-                        $notificationId = $checkNotify[0]['id'];
-                        $notificationManager->update($notificationId, $language);
-                    } else {
-                        if ($notifications) {
-                            $notificationManager->save($tid, $language);
-                        }
-                    }
+            if (!empty($data['teaser'])) {
+                $updateData = array(
+                    'disable_cache'  => empty($data['teaser']['disable_cache']) ? 0 : 1,
+                    'cache_lifetime' => (int) Brainbits_Util_Array::get($data['teaser'], 'cache_lifetime', 0),
+                );
 
-                    // publish node
-                    $tree->publishNode(
-                        $node,
-                        $language,
-                        $newVersion,
-                        false,
-                        $comment
-                    );
+                if ($updateData['disable_cache']) {
+                    $updateData['cache_lifetime'] = 0;
+                }
 
-                    if (count($publishSlaveLanguages)) {
-                        foreach ($publishSlaveLanguages as $slaveLanguage) {
-                            // publish slave node
-                            $tree->publishNode(
-                                $node,
-                                $slaveLanguage,
-                                $newVersion,
-                                false,
-                                $comment
-                            );
+                $db->update($db->prefix . 'element_tree_teasers', $updateData, 'id = ' . $db->quote($teaserId));
+            }
 
-                            // workaround to fix missing catch results for non master language elements
-                            Makeweb_Elements_Element_History::insert(
-                                Makeweb_Elements_Element_History::ACTION_SAVE,
-                                $eid,
-                                $newVersion,
-                                $slaveLanguage
-                            );
-                        }
-                    }
+            // save context
+
+            if (isset($data['context'])) {
+                $db->delete($db->prefix . 'element_tree_teasers_context', array('teaser_id = ?' => $teaserId));
+
+                $insertData = array(
+                    'teaser_id' => $teaserId
+                );
+
+                foreach ($data['context'] as $country) {
+                    $insertData['context'] = $country;
+
+                    $db->insert($db->prefix . 'element_tree_teasers_context', $insertData);
+                }
+            }
+
+            $event = new Makeweb_Teasers_Event_UpdateTeaser($teaserNode, $language, $data);
+            $dispatcher->dispatch($event);
+        }
+
+        $element = $elementManager->getByEID($eid);
+        $elementVersion = $elementVersionManager->get($eid, $newVersion);
+
+        $node = $treeManager->getNodeByNodeId($tid);
+
+        $event = new Makeweb_Elements_Event_SaveElement($elementVersion, $language, $oldVersion);
+        $dispatcher->dispatch($event);
+
+        $msg = 'Element "' . $eid . '" master language "' . $language . '" saved as new version ' . $newVersion;
+
+        $publishOther = array();
+        if ($isPublish) {
+            $msg .= ' and published.';
+
+            if ($teaserId === null) {
+                $node = $treeManager->getNodeByNodeId($tid);
+                $tree = $node->getTree();
+
+                // notification data
+                $notificationManager = $container->get('elementsNotifications');
+                $checkNotify = $notificationManager->getNotificationByTid($tid, $language);
+
+                // check if there is a notification already
+                if (count($checkNotify) && $notifications) {
+                    $notificationId = $checkNotify[0]['id'];
+                    $notificationManager->update($notificationId, $language);
                 } else {
-                    $teasersManager = Makeweb_Teasers_Manager::getInstance();
-                    $tree = $node->getTree();
+                    if ($notifications) {
+                        $notificationManager->save($tid, $language);
+                    }
+                }
 
-                    $eid = $teasersManager->publish(
-                        $teaserId,
-                        $newVersion,
-                        $language,
-                        $comment,
-                        $tid
-                    );
+                // publish node
+                $tree->publishNode(
+                    $node,
+                    $language,
+                    $newVersion,
+                    false,
+                    $comment
+                );
 
-                    if (count($publishSlaveLanguages)) {
-                        foreach ($publishSlaveLanguages as $slaveLanguage) {
-                            // publish slave node
-                            $teasersManager->publish(
-                                $teaserId,
-                                $newVersion,
-                                $slaveLanguage,
-                                $comment,
-                                $tid
-                            );
-                        }
+                if (count($publishSlaveLanguages)) {
+                    foreach ($publishSlaveLanguages as $slaveLanguage) {
+                        // publish slave node
+                        $tree->publishNode(
+                            $node,
+                            $slaveLanguage,
+                            $newVersion,
+                            false,
+                            $comment
+                        );
+
+                        // workaround to fix missing catch results for non master language elements
+                        Makeweb_Elements_Element_History::insert(
+                            Makeweb_Elements_Element_History::ACTION_SAVE,
+                            $eid,
+                            $newVersion,
+                            $slaveLanguage
+                        );
                     }
                 }
             } else {
-                $msg .= '.';
+                $teasersManager = Makeweb_Teasers_Manager::getInstance();
+                $tree = $node->getTree();
+
+                $eid = $teasersManager->publish(
+                    $teaserId,
+                    $newVersion,
+                    $language,
+                    $comment,
+                    $tid
+                );
+
+                if (count($publishSlaveLanguages)) {
+                    foreach ($publishSlaveLanguages as $slaveLanguage) {
+                        // publish slave node
+                        $teasersManager->publish(
+                            $teaserId,
+                            $newVersion,
+                            $slaveLanguage,
+                            $comment,
+                            $tid
+                        );
+                    }
+                }
             }
-
-            $lockService = $container->get('phlexible_element.lock.service');
-            $lockService->unlockElement($element, $language);
-
-            $db->commit();
-
-            $queueService = $container->get('queue.service');
-
-            $updateUsageJob = new Makeweb_Elements_Job_UpdateUsage();
-            $updateUsageJob->setEid($eid);
-            $queueService->addUniqueJob($updateUsageJob);
-
-
-            //            $updateCatchHelperJob = new Makeweb_Teasers_Job_UpdateCatchHelper();
-            //            $updateUsageJob->setEid($eid);
-            //            $queueManager->addJob($updateCatchHelperJob);
-
-            //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
-            //$fileUsage->update($eid);
-
-            $data = array();
-
-            if ($teaserId) {
-                // workaround since we have no teaser manager that handles instances
-                $node = new Makeweb_Teasers_Node($teaserId);
-            }
-
-            $status = '';
-            if ($node->isPublished($language)) {
-                $status = $node->isAsync($language) ? 'async' : 'online';
-            }
-
-            $elementVersion = $elementVersionManager->get($eid, $newVersion);
-            $data = array(
-                'title'         => $elementVersion->getBackendTitle($language),
-                'status'        => $status,
-                'navigation'    => $teaserId ? '' : $node->inNavigation($newVersion),
-                'restricted'    => $teaserId ? '' : $node->isRestricted($newVersion),
-                'publish_other' => $publishSlaves,
-            );
-
-            $result = MWF_Ext_Result::encode(true, $eid, $msg, $data);
-        } catch (Exception $e) {
-            $result = MWF_Ext_Result::encode(false, $eid, $e->getMessage() . PHP_EOL . $e->getTraceAsString());
-
-            $db->rollBack();
-
-            throw $e;
+        } else {
+            $msg .= '.';
         }
 
-        return new JsonResponse($result);
-    }
+        $lockService = $container->get('phlexible_element.lock.service');
+        $lockService->unlockElement($element, $language);
 
-    public function XXXfunctionAction()
-    {
-        $function = $this->_getParam('function');
+        $db->commit();
 
-        $functionClass = new $function();
-        $result = $functionClass->get();
+        $queueService = $container->get('queue.service');
+
+        $updateUsageJob = new Makeweb_Elements_Job_UpdateUsage();
+        $updateUsageJob->setEid($eid);
+        $queueService->addUniqueJob($updateUsageJob);
+
+
+        //            $updateCatchHelperJob = new Makeweb_Teasers_Job_UpdateCatchHelper();
+        //            $updateUsageJob->setEid($eid);
+        //            $queueManager->addJob($updateCatchHelperJob);
+
+        //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
+        //$fileUsage->update($eid);
 
         $data = array();
-        foreach ($result as $row) {
-            $data[] = array(
-                'key'   => array_shift($row),
-                'value' => array_shift($row)
-            );
+
+        if ($teaserId) {
+            // workaround since we have no teaser manager that handles instances
+            $node = new Makeweb_Teasers_Node($teaserId);
         }
 
-        $this->getResponse()->setAjaxPayload(array('data' => $data));
-    }
-
-    public function XXXlanguagesAction()
-    {
-        $container = $this->getContainer();
-
-        $languages = $container->getParameter('frontend.languages.available');
-
-        $data = array();
-        foreach ($languages as $language) {
-            $data[] = array(
-                'id' => $language,
-            );
+        $status = '';
+        if ($node->isPublished($language)) {
+            $status = $node->isAsync($language) ? 'async' : 'online';
         }
 
-        $this->getResponse()->setAjaxPayload(array('languages' => $data));
-    }
+        $elementVersion = $elementVersionManager->get($eid, $newVersion);
+        $data = array(
+            'title'         => $elementVersion->getBackendTitle($language),
+            'status'        => $status,
+            'navigation'    => $teaserId ? '' : $node->inNavigation($newVersion),
+            'restricted'    => $teaserId ? '' : $node->isRestricted($newVersion),
+            'publish_other' => $publishSlaves,
+        );
 
-    /**
-     * List all element types
-     */
-    public function XXXelementtypesAction()
-    {
-        $manager = Makeweb_Elementtypes_Elementtype_Manager::getInstance();
-        $elementTypes = $manager->getAll();
-
-        $titles = array();
-        foreach ($elementTypes as $elementTypeID => $elementType) {
-            /* @var $elementType Makeweb_Elementtypes_Elementtype */
-
-            $elementTypeVersion = $elementType->getLatest();
-
-            $titles[$elementTypeVersion->getTitle()] = array(
-                'id'    => $elementTypeID,
-                'title' => $elementTypeVersion->getTitle(),
-                'icon'  => $elementTypeVersion->getIcon(),
-            );
-        }
-
-        ksort($titles);
-        $titles = array_values($titles);
-
-        $this->getResponse()->setAjaxPayload(array('elementtypes' => $titles));
+        return new ResultResponse(true, $msg, $data);
     }
 
     /**
      * Remove data ids from field/group names.
      *
-     * @param array $values
+     * @param array $origValues
      *
      * @return array
      */

@@ -171,11 +171,11 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
             var src = this.getPlaceholder();
             if (this.value) {
                 if (this.value.indexOf(';') === -1) {
-                    src = Phlexible.Router.generate('mediamanager_media', {file_id: this.value, template_key: '/_mm_large'});
+                    src = Phlexible.Router.generate('mediamanager_media', {file_id: this.value, template_key: '_mm_large'});
                 }
                 else {
                     var split = this.value.split(';');
-                    src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '/_mm_large', file_version: split[1]});
+                    src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '_mm_large', file_version: split[1]});
                 }
             }
             this.fileBoxImage = this.fileBoxImageContainer.createChild({
@@ -332,10 +332,10 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
          this.emptyAddButton.hide();
          var src;
          if (v.indexOf(';') === -1) {
-         src = Phlexible.Router.generate('mediamanager_media', {file_id: id, template_key: '/_mm_large'});
+         src = Phlexible.Router.generate('mediamanager_media', {file_id: id, template_key: '_mm_large'});
          } else {
          var split = v.split(';');
-         src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '/_mm_large', file_version: split[1]});
+         src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '_mm_large', file_version: split[1]});
          }
          this.fileBoxImage.dom.src = src;
          } else {
@@ -360,10 +360,10 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
                 this.emptyAddButton.hide();
                 var src;
                 if (v.indexOf(';') === -1) {
-                    src = Phlexible.Router.generate('mediamanager_media', {file_id: v, template_key: '/_mm_large'});
+                    src = Phlexible.Router.generate('mediamanager_media', {file_id: v, template_key: '_mm_large'});
                 } else {
                     var split = v.split(';');
-                    src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '/_mm_large', file_version: split[1]});
+                    src = Phlexible.Router.generate('mediamanager_media', {file_id: split[0], template_key: '_mm_large', file_version: split[1]});
                 }
                 src += '?_dc=' + (new Date().getTime());
                 this.fileBoxImage.dom.src = src;

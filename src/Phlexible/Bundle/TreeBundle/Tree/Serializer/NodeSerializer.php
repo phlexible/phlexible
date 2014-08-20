@@ -13,7 +13,8 @@ use Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -34,6 +35,11 @@ class NodeSerializer
     private $iconResolver;
 
     /**
+     * @var StateManagerInterface
+     */
+    private $stateManager;
+
+    /**
      * @var PermissionCollection
      */
     private $permissions;
@@ -46,17 +52,20 @@ class NodeSerializer
     /**
      * @param ElementService           $elementService
      * @param IconResolver             $iconResolver
+     * @param StateManagerInterface    $stateManager
      * @param PermissionCollection     $permissions
      * @param SecurityContextInterface $securityContext
      */
     public function __construct(
         ElementService $elementService,
         IconResolver $iconResolver,
+        StateManagerInterface $stateManager,
         PermissionCollection $permissions,
         SecurityContextInterface $securityContext)
     {
         $this->elementService = $elementService;
         $this->iconResolver = $iconResolver;
+        $this->stateManager = $stateManager;
         $this->permissions = $permissions;
         $this->securityContext = $securityContext;
     }
@@ -168,7 +177,7 @@ class NodeSerializer
             'sort_mode'           => $node->getSortMode(),
             'areas'               => array(355),
             'allowed_et'          => $allowedElementTypeIds,
-            'is_published'        => 1, //$node->isPublished($language),
+            'is_published'        => $this->stateManager->isPublished($node, $language),
             'rights'              => $userRights,
             'qtip'                => $qtip,
             'allow_children'      => $elementtype->getHideChildren() ? false : true,

@@ -1,18 +1,10 @@
 services:
-    phlexible_teaser.teaser_service:
-        class: Phlexible\Bundle\TeaserBundle\Teaser\TeaserManager
-        arguments: [@doctrine.orm.entity_manager]
-
     phlexible_teaser.hasher:
         class: Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher
         arguments: [@doctrine.dbal.default_connection]
 
     phlexible_teaser.layoutarea.manager:
         class: Phlexible\Bundle\TeaserBundle\Layoutarea\LayoutareaManager
-
-    phlexible_teaser.catch.repository:
-        class: Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatchRepository
-        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_message.message_poster]
 
     phlexible_teaser.catch.matcher.treenode:
         class: Phlexible\Bundle\TeaserBundle\ElementCatch\Matcher\TreeNodeMatcher

@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Event;
 
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -19,12 +19,12 @@ use Symfony\Component\EventDispatcher\Event;
 class NodeEvent extends Event
 {
     /**
-     * @var TreeNodeInterface
+     * @var \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
      */
     private $node;
 
     /**
-     * @param TreeNodeInterface $node
+     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
      */
     public function __construct(TreeNodeInterface $node)
     {

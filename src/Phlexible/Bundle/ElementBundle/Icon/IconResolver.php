@@ -11,8 +11,10 @@ namespace Phlexible\Bundle\ElementBundle\Icon;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
-use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeInterface;
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -33,13 +35,23 @@ class IconResolver
     private $elementService;
 
     /**
-     * @param RouterInterface $router
-     * @param ElementService  $elementService
+     * @var StateManagerInterface
      */
-    public function __construct(RouterInterface $router, ElementService $elementService)
+    private $stateManager;
+
+    /**
+     * @param RouterInterface        $router
+     * @param ElementService         $elementService
+     * @param StateManagerInterface  $stateManager
+     */
+    public function __construct(
+        RouterInterface $router,
+        ElementService $elementService,
+        StateManagerInterface $stateManager)
     {
         $this->router = $router;
         $this->elementService = $elementService;
+        $this->stateManager = $stateManager;
     }
 
     /**
@@ -95,14 +107,14 @@ class IconResolver
         $parameters = array();
 
         if (!$treeNode->isRoot()) {
-            // TODO: repair
-            if (0 && $treeNode->isPublished($language)) {
-                $parameters['status'] = $treeNode->isAsync($language) ? 'async': 'online';
+            $tree = $treeNode->getTree();
+
+            if ($this->stateManager->isPublished($treeNode, $language)) {
+                $parameters['status'] = $this->stateManager->isAsync($treeNode, $language) ? 'async': 'online';
             }
 
-            // TODO: repair
-            if (0 && $treeNode->isInstance()) {
-                $parameters['instance'] = $treeNode->isInstanceMaster() ? 'master' : 'slave';
+            if ($tree->isInstance($treeNode)) {
+                $parameters['instance'] = $tree->isInstanceMaster($treeNode) ? 'master' : 'slave';
             }
 
             if ($treeNode->getSortMode() !== TreeInterface::SORT_MODE_FREE) {
@@ -111,6 +123,55 @@ class IconResolver
         }
 
         $element = $this->elementService->findElement($treeNode->getTypeId());
+
+        if (!count($parameters)) {
+            return $this->resolveElement($element);
+        }
+
+        $elementtype = $this->elementService->findElementtype($element);
+
+        $parameters['icon'] = $elementtype->getIcon();
+
+        return $this->router->generate('elements_icon', $parameters);
+
+        //        $uid = MWF_Env::getUid();
+        //        $service = $this->getContainer()->get('locks.service');
+        //        $lockIdentifier = new Makeweb_Elements_Element_Identifier($this->_eid);
+        //
+        //        if ($service->isLockedByUser($lockIdentifier, $uid))
+        //        {
+        //            $icon .= '/lock/me';
+        //        }
+        //        elseif ($service->isLocked($lockIdentifier))
+        //        {
+        //            $icon .= '/lock/other';
+        //        }
+    }
+
+    /**
+     * Resolve teaser to icon
+     *
+     * @param Teaser $teaser
+     * @param string $language
+     *
+     * @return string
+     */
+    public function resolveTeaser(Teaser $teaser, $language)
+    {
+        $parameters = array();
+
+        // TODO: repair
+        /*
+        if ($this->stateManager->isPublished($treeNode, $language)) {
+            $parameters['status'] = $this->stateManager->isAsync($treeNode, $language) ? 'async': 'online';
+        }
+
+        if ($teaser->isInstance()) {
+            $parameters['instance'] = $teaser->isInstanceMaster() ? 'master' : 'slave';
+        }
+        */
+
+        $element = $this->elementService->findElement($teaser->getTypeId());
 
         if (!count($parameters)) {
             return $this->resolveElement($element);

@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Controller;
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
-use Phlexible\Bundle\TreeBundle\Tree\TreeFilter;
+use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -86,7 +86,7 @@ class ListController extends Controller
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = $userAdminRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByContentClass('Phlexible\Bundle\TreeBundle\Tree\Node\TreeNode')
+                    $this->get('phlexible_access_control.permissions')->getByContentClass('Phlexible\Bundle\TreeBundle\Model\TreeNode')
                 );
             }
         }

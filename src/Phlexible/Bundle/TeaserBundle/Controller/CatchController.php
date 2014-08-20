@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Controller;
 
-use Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatch;
+use Phlexible\Bundle\TeaserBundle\Entity\ElementCatch;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,7 +32,7 @@ class CatchController extends Controller
         $query = $this->getParam('query');
         $elementtypeIds = explode(',', $query);
 
-        $elementtypeService = $this->getContainer()->get('phlexible_elementtype.elementtype_service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
         $dsIds = null;
         foreach ($elementtypeIds as $elementtypeId) {
@@ -88,7 +88,7 @@ class CatchController extends Controller
 
         array_multisort(array_column($result, 'title'), $result);
 
-        $translator = $this->getContainer()->get('translator');
+        $translator = $this->get('translator');
         array_unshift(
             $result,
             array(
@@ -133,7 +133,7 @@ class CatchController extends Controller
      */
     public function elementtypesAction()
     {
-        $elementtypeService = $this->getContainer()->get('phlexible_elementtype.elementtype_service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $elementtypes = $elementtypeService->findElementtypeByType('full');
 
         $data = array();
@@ -160,7 +160,7 @@ class CatchController extends Controller
         $metaSetManager = Makeweb_Elements_Element_Version_MetaSet_Manager::getInstance();
         $keys = $metaSetManager->getKeys();
 
-        $translator = $this->getContainer()->get('translator');
+        $translator = $this->get('translator');
 
         $result = array(
             array('key' => '', 'value' => $translator->get('teasers.no_filter', array(), 'gui')),
@@ -208,7 +208,7 @@ class CatchController extends Controller
     {
         $data = array();
 
-        $filters = $this->getContainer()->componentCallback->getCatchFilter();
+        $filters = $this->componentCallback->getCatchFilter();
 
         foreach ($filters as $name => $class) {
             $data[] = array(
@@ -225,7 +225,7 @@ class CatchController extends Controller
      */
     public function createAction()
     {
-        $teaserService = $this->getContainer()->get('phlexible_teaser.teaser_service');
+        $teaserService = $this->get('phlexible_teaser.teaser_service');
 
         $teaserService->createCatch(
             $this->getParam('tree_id'),
@@ -241,7 +241,7 @@ class CatchController extends Controller
      */
     public function saveAction()
     {
-        $catchRepository = $this->getContainer()->get('phlexible_teaser.teaser_service');
+        $catchRepository = $this->get('phlexible_teaser.teaser_service');
 
         $notEmpty = true;
         $i = 1;
