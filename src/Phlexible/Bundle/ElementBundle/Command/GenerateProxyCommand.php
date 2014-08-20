@@ -38,7 +38,7 @@ class GenerateProxyCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $elementtypeService = $this->getContainer()->get('phlexible_elementtype.service');
+        $elementtypeService = $this->getContainer()->get('phlexible_elementtype.elementtype_service');
         $fieldRegistry = $this->getContainer()->get('phlexible_elementtype.field.registry');
 
         $elementtype = $elementtypeService->findElementtype($input->getArgument('elementtypeId'));

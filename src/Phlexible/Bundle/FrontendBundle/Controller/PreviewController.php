@@ -158,7 +158,7 @@ class PreviewController extends Controller
         $tid = $this->getParam('tid');
         $language = $this->getParam('language');
 
-        $node = $this->getContainer()->get('phlexible_tree.manager')->getByNodeId($tid)->get($tid);
+        $node = $this->getContainer()->get('phlexible_tree.tree_manager')->getByNodeId($tid)->get($tid);
 
         $urls = array(
             'preview' => '',

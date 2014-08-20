@@ -8,7 +8,9 @@
 
 namespace Phlexible\Bundle\ElementBundle;
 
+use Phlexible\Bundle\ElementBundle\DependencyInjection\Compiler\AddFieldMappersPass;
 use Phlexible\Bundle\ProblemBundle\Problem;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -31,4 +33,13 @@ class PhlexibleElementBundle extends Bundle
     const RESOURCE_ELEMENTS_ACCORDION_COMMENT = 'elements_accordion_comment';
     const RESOURCE_ELEMENTS_ACCORDION_CONTEXT = 'elements_accordion_context';
     const RESOURCE_ELEMENTS_ACCORDION_META = 'elements_accordion_meta';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container
+            ->addCompilerPass(new AddFieldMappersPass());
+    }
 }

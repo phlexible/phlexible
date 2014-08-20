@@ -133,7 +133,7 @@ class LocksController extends Controller
         $language = $request->get('language');
 
         // get managers from container
-        $elementService = $this->get('phlexible_element.service');
+        $elementService = $this->get('phlexible_element.element_service');
         $lockService = $this->get('phlexible_element.lock.service');
 
         // get element object
@@ -197,7 +197,7 @@ class LocksController extends Controller
         $language = $request->get('language');
 
         // get helpers from container
-        $elementService = $this->get('phlexible_element.service');
+        $elementService = $this->get('phlexible_element.element_service');
         $lockRepository = $this->get('phlexible_lock.repository');
         $lockService = $this->get('phlexible_element.lock.service');
 

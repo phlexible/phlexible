@@ -46,7 +46,7 @@ class DistillCommand extends ContainerAwareCommand
 
         $container = $this->getContainer();
 
-        $elementtypeService = $container->get('phlexible_elementtype.service');
+        $elementtypeService = $container->get('phlexible_elementtype.elementtype_service');
         $elementtype = $elementtypeService->findElementtype($elementtypeId);
         $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
         $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);

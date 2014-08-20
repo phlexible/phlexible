@@ -40,13 +40,13 @@ class DumpCommand extends ContainerAwareCommand
     {
         $siterootId = $input->getArgument('siterootId');
 
-        $treeManager = $this->getContainer()->get('phlexible_tree.manager');
+        $treeManager = $this->getContainer()->get('phlexible_tree.tree_manager');
         $siterootRepository = $this->getContainer()->get('phlexible_siteroot.repository');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
         $siteroot = $siterootRepository->find($siterootId);
 
-        $dumper = new XmlDumper($this->getContainer()->get('phlexible_element.service'));
+        $dumper = new XmlDumper($this->getContainer()->get('phlexible_element.element_service'));
         $dumper->dump($tree, $siteroot, '/tmp/test.xml');
 
         $loadedTree = new XmlContentTree('/tmp/test.xml');

@@ -32,7 +32,7 @@ class CatchController extends Controller
         $query = $this->getParam('query');
         $elementtypeIds = explode(',', $query);
 
-        $elementtypeService = $this->getContainer()->get('phlexible_elementtype.service');
+        $elementtypeService = $this->getContainer()->get('phlexible_elementtype.elementtype_service');
 
         $dsIds = null;
         foreach ($elementtypeIds as $elementtypeId) {
@@ -133,7 +133,7 @@ class CatchController extends Controller
      */
     public function elementtypesAction()
     {
-        $elementtypeService = $this->getContainer()->get('phlexible_elementtype.service');
+        $elementtypeService = $this->getContainer()->get('phlexible_elementtype.elementtype_service');
         $elementtypes = $elementtypeService->findElementtypeByType('full');
 
         $data = array();
@@ -225,7 +225,7 @@ class CatchController extends Controller
      */
     public function createAction()
     {
-        $teaserService = $this->getContainer()->get('phlexible_teaser.service');
+        $teaserService = $this->getContainer()->get('phlexible_teaser.teaser_service');
 
         $teaserService->createCatch(
             $this->getParam('tree_id'),
@@ -241,7 +241,7 @@ class CatchController extends Controller
      */
     public function saveAction()
     {
-        $catchRepository = $this->getContainer()->get('phlexible_teaser.service');
+        $catchRepository = $this->getContainer()->get('phlexible_teaser.teaser_service');
 
         $notEmpty = true;
         $i = 1;

@@ -26,11 +26,30 @@ class FieldMapper
     private $elementService;
 
     /**
-     * @param ElementService $elementService
+     * @var FieldMapperInterface[]
      */
-    public function __construct(ElementService $elementService)
+    private $mappers = array();
+
+    /**
+     * @param ElementService         $elementService
+     * @param FieldMapperInterface[] $mappers
+     */
+    public function __construct(ElementService $elementService, array $mappers = array())
     {
         $this->elementService = $elementService;
+        $this->mappers = $mappers;
+    }
+
+    /**
+     * @param FieldMapperInterface $mapper
+     *
+     * @return $this
+     */
+    public function addMapper(FieldMapperInterface $mapper)
+    {
+        $this->mappers[] = $mapper;
+
+        return $this;
     }
 
     /**
@@ -42,70 +61,37 @@ class FieldMapper
     public function map(ElementVersion $elementVersion, $language)
     {
         $elementtypeVersion = $this->elementService->findElementtypeVersion($elementVersion);
-        $mappings = $elementtypeVersion->getMappings();
         $elementStructure = $this->elementService->findElementStructure($elementVersion, $language);
+        $mappings = $elementtypeVersion->getMappings();
 
         $titles = array();
         foreach ($mappings as $key => $mapping) {
-            if (in_array($key, array('backend', 'page', 'navigation'))) {
-                $pattern = $mapping['pattern'];
-                $replace = array();
-                foreach ($mapping['fields'] as $field) {
-                    $dsId = $field['ds_id'];
-                    $replace['$' . $field['index']] = $this->findValue($elementStructure, $dsId);
-                }
-                $title = str_replace(array_keys($replace), array_values($replace), $pattern);
+            if ($mapper = $this->findFieldMapper($key)) {
+                $title = $mapper->map($elementStructure, $mapping);
                 if ($title) {
                     $titles[$key] = $title;
                 }
-            } elseif ($key === 'customDate') {
-                $mappings = array();
-                foreach ($mapping['fields'] as $field) {
-                    $dsId = $field['ds_id'];
-                    $mappings[$field['type']] = $this->findValue($elementStructure, $dsId);
-                }
-                $replace = array();
-                if (isset($mappings['datetime'])) {
-                    $replace[] = $mappings['datetime'];
-                }
-                if (isset($mappings['date'])) {
-                    $replace[] = $mappings['date'];
-                }
-                if (isset($mappings['time'])) {
-                    $replace[] = $mappings['time'];
-                }
-                if (count($replace)) {
-                    $titles[$key] = implode(' ', $replace);
-                }
-            } else {
-
             }
         }
 
         if (empty($titles['backend'])) {
             $elementtype = $elementtypeVersion->getElementtype();
-            $titles['backend'] = '[' . $elementtype->getTitle() . ' ' . $language . ']';
+            $titles['backend'] = '[' . $elementtype->getTitle() . ', ' . $language . ']';
         }
 
         return $titles;
     }
 
     /**
-     * @param ElementStructure $elementStructure
-     * @param string           $dsId
+     * @param string $key
      *
-     * @return null|ElementStructureValue
+     * @return FieldMapperInterface|null
      */
-    private function findValue(ElementStructure $elementStructure, $dsId)
+    private function findFieldMapper($key)
     {
-        if ($elementStructure->hasValueByDsId($dsId)) {
-            return $elementStructure->getValueByDsId($dsId);
-        }
-
-        foreach ($elementStructure->getStructures() as $childStructure) {
-            $value = $this->findValue($childStructure, $dsId);
-            if ($value) {
-                return $value;
+        foreach ($this->mappers as $mapper) {
+            if ($mapper->accept($key)) {
+                return $mapper;
             }
         }
 

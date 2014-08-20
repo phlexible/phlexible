@@ -36,7 +36,7 @@ class ViabilityController extends Controller
      */
     public function fortypeAction(Request $request)
     {
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
         $for = $request->get('type', Elementtype::TYPE_FULL);
 
@@ -94,7 +94,7 @@ class ViabilityController extends Controller
     {
         $id = $request->get('id');
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $elementtype = $elementtypeService->findElementtype($id);
 
         $viability = array();
@@ -121,7 +121,7 @@ class ViabilityController extends Controller
         $id = $request->get('id');
         $ids = $request->get('ids');
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $elementtype = $elementtypeService->findElementtype($id);
 
         $elementtypeService->saveAllowedParentIds($elementtype, $ids);

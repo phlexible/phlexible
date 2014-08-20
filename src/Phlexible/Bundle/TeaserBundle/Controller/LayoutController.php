@@ -42,10 +42,10 @@ class LayoutController extends Controller
         }
 
         $translator = $this->get('translator');
-        $treeManager = $this->get('phlexible_tree.manager');
-        $teaserService = $this->get('phlexible_teaser.service');
-        $catchRepository = $this->get('phlexible_teaser.service');
-        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $teaserService = $this->get('phlexible_teaser.teaser_service');
+        $catchRepository = $this->get('phlexible_teaser.teaser_service');
+        $elementService = $this->get('phlexible_element.element_service');
         $elementtypeService = $elementService->getElementtypeService();
 
         $tree = $treeManager->getByNodeId($treeId);
@@ -249,7 +249,7 @@ class LayoutController extends Controller
     {
         $container = $this->getContainer();
 
-        $treeManager = $container->get('phlexible_tree.manager');
+        $treeManager = $container->get('phlexible_tree.tree_manager');
         $teaserManager = $container->get('teasersManager');
         $elementManager = $container->get('elementsManager');
         $elementVersionManager = $container->get('elementsVersionManager');
@@ -498,7 +498,7 @@ class LayoutController extends Controller
     {
         $container = $this->getContainer();
         $translator = $container->get('translator');
-        $treeManager = $container->get('phlexible_tree.manager');
+        $treeManager = $container->get('phlexible_tree.tree_manager');
         $teaserManager = $container->teasersManager;
         $elementTypeVersionManager = $container->elementtypesVersionManager;
 

@@ -32,7 +32,7 @@ class TeaserController extends Controller
     public function renderAction(Request $request)
     {
         $teaserId = $request->get('teaserId');
-        $teaser = $this->get('phlexible_teaser.service')->findTeaser($teaserId);
+        $teaser = $this->get('phlexible_teaser.teaser_service')->findTeaser($teaserId);
         $language = 'de';
 
         if ($teaser->getType() === 'element') {
@@ -49,7 +49,7 @@ class TeaserController extends Controller
             $renderer = $this->get('phlexible_dwoo_renderer.renderer');
             $content = $renderer->render($renderConfig);
         } elseif ($teaser->getType() === 'catch') {
-            $catchRepository = $this->get('phlexible_teaser.service');
+            $catchRepository = $this->get('phlexible_teaser.teaser_service');
             $catcher = $this->get('phlexible_teaser.catcher');
             $catch = $catchRepository->find($teaser->getTypeId());
 

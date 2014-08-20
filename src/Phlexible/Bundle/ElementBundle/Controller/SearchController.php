@@ -36,8 +36,8 @@ class SearchController extends Controller
         $language = $request->get('language');
         $query = $request->get('query');
 
-        $elementService = $this->get('phlexible_element.service');
-        $treeManager = $this->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.element_service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
 
         $select = $db->select()
             ->distinct()

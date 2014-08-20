@@ -1,5 +1,5 @@
 services:
-    phlexible_elementtype.service:
+    phlexible_elementtype.elementtype_service:
       class: Phlexible\Bundle\ElementtypeBundle\ElementtypeService
       arguments:
         - @phlexible_elementtype.elementtype_manager

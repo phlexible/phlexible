@@ -49,9 +49,9 @@ class DataController extends Controller
         $unlockId = $request->get('unlock');
         $doLock = (bool) $request->get('lock', false);
 
-        $teaserService = $this->get('phlexible_teaser.service');
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementService = $this->get('phlexible_element.service');
+        $teaserService = $this->get('phlexible_teaser.teaser_service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
 
         try {
             if ($teaserId) {
@@ -648,7 +648,7 @@ class DataController extends Controller
     public function saveAction(Request $request)
     {
         $dispatcher = $this->get('event_dispatcher');
-        $treeManager = $this->get('phlexible_tree.manager');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementManager = $this->get('elementsManager');
         $elementVersionManager = $this->get('elementsVersionManager');
 

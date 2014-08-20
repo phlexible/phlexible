@@ -86,7 +86,7 @@ class ElementtypeListener
         /* @var $container MWF_Container_ContainerInterface */
         $container = $params['container'];
         $siterootManager = $container->siterootManager;
-        $treeManager = $container->get('phlexible_tree.manager');
+        $treeManager = $container->get('phlexible_tree.tree_manager');
 
         $siteroots = $siterootManager->getAllSiteRoots();
 

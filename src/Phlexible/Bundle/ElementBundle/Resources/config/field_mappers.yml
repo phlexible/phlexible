@@ -1,0 +1,25 @@
+services:
+    phlexible_element.field_mapper:
+        class: Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper
+        arguments:
+            - @phlexible_element.element_service
+            - []
+
+    # field mappers
+    phlexible_element.title_field_mapper:
+        class: Phlexible\Bundle\ElementBundle\ElementVersion\TitleFieldMapper
+        arguments: [@phlexible_element.element_service]
+        tags:
+            - {name: phlexible_element.field_mapper}
+
+    phlexible_element.custom_date_field_mapper:
+        class: Phlexible\Bundle\ElementBundle\ElementVersion\CustomDateFieldMapper
+        arguments: [@phlexible_element.element_service]
+        tags:
+            - {name: phlexible_element.field_mapper}
+
+    phlexible_element.forward_field_mapper:
+        class: Phlexible\Bundle\ElementBundle\ElementVersion\ForwardFieldMapper
+        arguments: [@phlexible_element.element_service]
+        tags:
+            - {name: phlexible_element.field_mapper}

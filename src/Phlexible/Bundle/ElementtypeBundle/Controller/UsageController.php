@@ -37,7 +37,7 @@ class UsageController extends Controller
     {
         $id = $request->get('id');
 
-        $elementtype = $this->get('phlexible_elementtype.service')->findElementtype($id);
+        $elementtype = $this->get('phlexible_elementtype.elementtype_service')->findElementtype($id);
 
         $event = new ElementtypeUsageEvent($elementtype);
         $this->get('event_dispatcher')->dispatch(ElementtypeEvents::USAGE, $event);

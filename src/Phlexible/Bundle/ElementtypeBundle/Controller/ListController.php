@@ -37,7 +37,7 @@ class ListController extends Controller
     {
         $type = $request->get('type', Elementtype::TYPE_FULL);
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
         $elementtypes = array();
         foreach ($elementtypeService->findElementtypeByType($type) as $elementtype) {
@@ -75,7 +75,7 @@ class ListController extends Controller
      */
     public function fortypeAction(Request $request)
     {
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
         $for = $request->get('type', Elementtype::TYPE_FULL);
 
@@ -133,7 +133,7 @@ class ListController extends Controller
     {
         $id = $request->get('id');
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $userManager = $this->get('phlexible_user.user_manager');
 
         $elementtype = $elementtypeService->findElementtype($id);
@@ -179,7 +179,7 @@ class ListController extends Controller
             $uniqueId = preg_replace('[^a-z0-9_]', '_', $uniqueId);
         }
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $elementtypeService->create($type, $uniqueId, $title, null, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Element Type created.');
@@ -197,7 +197,7 @@ class ListController extends Controller
     {
         $id = $request->get('id');
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $elementtypeService->delete($id);
 
         return new ResultResponse(true, 'Element Type deleted.');
@@ -218,7 +218,7 @@ class ListController extends Controller
         $db = $this->get('connection_manager')->default;
         $db->beginTransaction();
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $sourceElementtype = $elementtypeService->findElementtype($id);
         $elementtype = $elementtypeService->duplicate($sourceElementtype);
 

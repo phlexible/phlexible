@@ -43,7 +43,7 @@ class TreeController extends Controller
         $version = $request->get('version', null);
         $mode = $request->get('mode', 'edit');
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
 
         $elementtype = $elementtypeService->findElementtype($id);
@@ -195,7 +195,7 @@ class TreeController extends Controller
             }
 
             if ($node->isReference()) {
-                $elementtypesService = $this->get('phlexible_elementtype.service');
+                $elementtypesService = $this->get('phlexible_elementtype.elementtype_service');
 
                 $referenceId = $node->getReferenceElementtype()->getId();
                 $referenceVersion = $node->getReferenceVersion();
@@ -257,7 +257,7 @@ class TreeController extends Controller
             return new ResultResponse(false, 'No unique ID.');
         }
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
         $elementtype = $elementtypeService->findElementtype($elementtypeId);
         $priorElementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
@@ -404,7 +404,7 @@ class TreeController extends Controller
 
         $title = $data[0]['properties']['labels']['fieldlabel']['de'];
 
-        $elementtypeService = $this->get('phlexible_elementtype.service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
         $referenceElementtype = $elementtypeService->create(
             Elementtype::TYPE_REFERENCE,

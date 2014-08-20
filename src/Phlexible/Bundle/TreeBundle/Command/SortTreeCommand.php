@@ -103,7 +103,7 @@ class SortTreeCommand extends ContainerAwareCommand
         $outputter = $this->getOutputter();
 
         $container = $this->getContainer();
-        $treeManager = $container->get('phlexible_tree.manager');
+        $treeManager = $container->get('phlexible_tree.tree_manager');
         $db = $container->dbPool->read;
         $sorter = $container->elementsTreeSorter;
 

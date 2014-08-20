@@ -54,7 +54,7 @@ class GetConfigListener
         );
 
         $siterootManager = $container->get('phlexible_siteroot.siteroot_manager');
-        $treeManager = $container->get('phlexible_tree.manager');
+        $treeManager = $container->get('phlexible_tree.tree_manager');
         $securityContext = $container->get('security.context');
 
         $siteroots = $siterootManager->findAll();

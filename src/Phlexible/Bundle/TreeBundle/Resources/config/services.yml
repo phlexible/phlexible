@@ -1,5 +1,5 @@
 services:
-    phlexible_tree.manager:
+    phlexible_tree.tree_manager:
         class: Phlexible\Bundle\TreeBundle\TreeManager
         arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.database_tree_factory]
 
@@ -15,7 +15,7 @@ services:
         arguments:
             - @logger
             - @phlexible_tree.content.manager
-            - @phlexible_element.service
+            - @phlexible_element.element_service
             - %phlexible_cms.languages.available%
             - %phlexible_cms.languages.default%
         tags:

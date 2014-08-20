@@ -53,8 +53,8 @@ class ListController extends Controller
         $data = array();
 
         $dispatcher = $this->get('event_dispatcher');
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
         $securityContext = $this->get('security.context');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
@@ -212,7 +212,7 @@ class ListController extends Controller
 
         $container = $this->getContainer();
 
-        $treeManager = $container->get('phlexible_tree.manager');
+        $treeManager = $container->get('phlexible_tree.tree_manager');
         $treeSorter = $container->elementsTreeSorter;
 
         $tree = $treeManager->getByNodeId($tid);

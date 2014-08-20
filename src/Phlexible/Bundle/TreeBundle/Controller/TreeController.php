@@ -48,8 +48,8 @@ class TreeController extends Controller
         $tid = $request->get('node');
         $language = $request->get('language');
 
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
 
         // TODO: switch to master language of element
         $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
@@ -95,8 +95,8 @@ class TreeController extends Controller
         $tid = $request->get('node');
         $language = $request->get('language');
 
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
 
@@ -214,7 +214,7 @@ class TreeController extends Controller
     {
         $eid = $request->get('eid');
 
-        $elementService = $this->get('phlexible_element.service');
+        $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $element = $elementService->findElement($eid);
@@ -259,8 +259,8 @@ class TreeController extends Controller
         $id = $request->get('id');
         $language = $request->get('language');
 
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $tree = $treeManager->getByNodeID($id);
@@ -306,7 +306,7 @@ class TreeController extends Controller
     private function getNodeData(TreeNodeInterface $node, $language)
     {
         $securityContext = $this->get('security.context');
-        $elementService = $this->get('phlexible_element.service');
+        $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $userRights = array();
@@ -442,8 +442,8 @@ class TreeController extends Controller
      */
     private function findLinkNodes($siteRootId, $language, array $elementtypeIds)
     {
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
 
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
@@ -561,7 +561,7 @@ class TreeController extends Controller
      */
     private function recurseLinkNodes(array $nodes, $language, $mode, TreeNodeInterface $targetNode = null)
     {
-        $elementService = $this->get('phlexible_element.service');
+        $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $data = array();
@@ -628,8 +628,8 @@ class TreeController extends Controller
         $language = $request->get('language');
         $recursive = (bool) $request->get('recursive');
 
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         if (null === $language) {
@@ -709,8 +709,8 @@ class TreeController extends Controller
             $elementtypeIds = array();
         }
 
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
 
         if (!$language) {
             if ($id != 'root') {
@@ -787,8 +787,8 @@ class TreeController extends Controller
         $elementtypeIds = $request->get('element_type_ids', array());
         $targetTid = $request->get('value');
 
-        $treeManager = $this->get('phlexible_tree.manager');
-        $elementService = $this->get('phlexible_element.service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         // TODO: switch to master language of element
@@ -900,8 +900,8 @@ class TreeController extends Controller
         $restricted = $request->get('restricted') ? true : false;
         $masterLanguage = $request->get('masterlanguage');
 
-        $elementService = $this->get('phlexible_element.service');
-        $treeManager = $this->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.element_service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
         $tree = $treeManager->getBySiteRootId($siterootId);
 
         $newElement = $elementService->create($elementtypeId, true, $masterLanguage);
@@ -949,7 +949,7 @@ class TreeController extends Controller
         $instanceId = $request->get('for_tree_id');
         $prevId = $request->get('prev_id');
 
-        $treeManager = $this->get('phlexible_tree.manager');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
 
         $tree = $treeManager->getByNodeId($parentId);
         $targetNode = $tree->get($parentId);
@@ -973,8 +973,8 @@ class TreeController extends Controller
         $sourceId = $request->get('for_tree_id');
         $prevId = $request->get('prev_id');
 
-        $elementService = $this->get('phlexible_element.service');
-        $treeManager = $this->get('phlexible_tree.manager');
+        $elementService = $this->get('phlexible_element.element_service');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
 
         $tree = $treeManager->getByNodeId($sourceId);
         $sourceNode = $tree->get($sourceId);
@@ -1025,7 +1025,7 @@ class TreeController extends Controller
         $id = $request->get('id');
         $targetId = $request->get('target');
 
-        $treeManager = $this->get('phlexible_tree.manager');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
         $tree = $treeManager->getByNodeId($id);
         $node = $tree->get($id);
 
@@ -1070,7 +1070,7 @@ class TreeController extends Controller
             $treeId = $fi->id;
 
             $container = $this->getContainer();
-            $treeManager = $container->get('phlexible_tree.manager');
+            $treeManager = $container->get('phlexible_tree.tree_manager');
             $db = $container->dbPool->read;
 
             $nodeId = $treeId[0];

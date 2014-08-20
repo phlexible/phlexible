@@ -3,20 +3,20 @@ parameters:
     phlexible_element.content.cache_dir: %kernel.cache_dir%/elements/
 
 services:
-    phlexible_element.service:
+    phlexible_element.element_service:
         class: Phlexible\Bundle\ElementBundle\ElementService
         arguments:
             - @phlexible_element.element_manager
             - @phlexible_element.element_version_manager
             - @phlexible_element.element_structure_manager
-            - @phlexible_elementtype.service
+            - @phlexible_elementtype.elementtype_service
 
     phlexible_element.context.manager:
         class: Phlexible\Bundle\ElementBundle\Context\ContextManager
 
     phlexible_element.field_mapper:
         class: Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper
-        arguments: [@phlexible_element.service]
+        arguments: [@phlexible_element.element_service]
 
     phlexible_element.content.loader:
         class: Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader
@@ -29,7 +29,7 @@ services:
 
     phlexible_element.content.builder:
         class: Phlexible\Bundle\ElementBundle\ContentElement\ContentElementBuilder
-        arguments: [@event_dispatcher, @logger, @phlexible_element.service]
+        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service]
 
     phlexible_element.content.dumper.xml:
         class: Phlexible\Bundle\ElementBundle\ContentElement\Dumper\XmlDumper
@@ -45,7 +45,7 @@ services:
 
     phlexible_element.icon_resolver:
         class: Phlexible\Bundle\ElementBundle\Icon\IconResolver
-        arguments: [@router, @phlexible_element.service]
+        arguments: [@router, @phlexible_element.element_service]
 
     phlexible_element.util.suggest_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
@@ -130,7 +130,7 @@ services:
     #phlexible_element.portlet.latest:
     #    class: Phlexible\Bundle\ElementBundle\Portlet\LatestElementsPortlet
     #    public: false
-    #    arguments: [@translator, @phlexible_element.version.repository, @phlexible_tree.manager, @connection_manager, %phlexible_element.portlet.num_items%]
+    #    arguments: [@translator, @phlexible_element.version.repository, @phlexible_tree.tree_manager, @connection_manager, %phlexible_element.portlet.num_items%]
     #    tags:
     #        - {name: phlexible_dashboard.portlet}
 

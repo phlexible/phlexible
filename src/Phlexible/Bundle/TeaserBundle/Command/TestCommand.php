@@ -38,7 +38,7 @@ class TestCommand extends ContainerAwareCommand
 
         ini_set('memory_limit', -1);
 
-        $catchRepository = $this->getContainer()->get('phlexible_teaser.service');
+        $catchRepository = $this->getContainer()->get('phlexible_teaser.teaser_service');
         $catcher = $this->getContainer()->get('phlexible_teaser.catcher');
 
         $catch = $catchRepository->find(50);

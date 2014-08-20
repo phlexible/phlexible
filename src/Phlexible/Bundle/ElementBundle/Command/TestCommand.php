@@ -35,7 +35,7 @@ class TestCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $elementRepository = $this->getContainer()->get('phlexible_element.repository');
-        $elementService = $this->getContainer()->get('phlexible_element.service');
+        $elementService = $this->getContainer()->get('phlexible_element.element_service');
         $fieldMapper = $this->getContainer()->get('phlexible_element.field.mapper');
         $connectionManager = $this->getContainer()->get('connection_manager');
         $db = $connectionManager->default;
