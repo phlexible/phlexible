@@ -1,7 +1,7 @@
 services:
     frontendmediamanagerChangeFolderDataMapper:
         class: Makeweb_Frontendmediamanager_Change_Folder_DataMapper_Database
-        arguments: [@connection_manager]
+        arguments: [@doctrine.dbal.default_connection]
 
     frontendmediamanagerChangeFolderRepository:
         class: Makeweb_Frontendmediamanager_Change_Folder_Repository

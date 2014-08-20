@@ -324,7 +324,7 @@ class TreeController extends Controller
             $elementtypeStructure->addNode($node);
         }
 
-        $db = $this->getContainer()->get('connection_manager')->default;
+        $db = $this->getContainer()->get('doctrine.dbal.default_connection')->default;
         $db->beginTransaction();
 
         $elementtypeService->createElementtypeVersion(

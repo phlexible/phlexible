@@ -215,7 +215,7 @@ class ListController extends Controller
     {
         $id = $request->get('id');
 
-        $db = $this->get('connection_manager')->default;
+        $db = $this->get('doctrine.dbal.default_connection');
         $db->beginTransaction();
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');

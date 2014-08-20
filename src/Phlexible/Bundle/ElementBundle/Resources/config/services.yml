@@ -49,11 +49,11 @@ services:
 
     phlexible_element.util.suggest_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
-        arguments: [@connection_manager, %phlexible_elementtype.field.suggest_seperator%]
+        arguments: [@doctrine.dbal.default_connection, %phlexible_elementtype.field.suggest_seperator%]
 
     phlexible_element.util.suggest_meta_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil
-        arguments: [@connection_manager, %phlexible_meta_set.suggest.seperator%]
+        arguments: [@doctrine.dbal.default_connection, %phlexible_meta_set.suggest.seperator%]
 
     # acl providers
     phlexible_element.acl_provider:
@@ -130,7 +130,7 @@ services:
     #phlexible_element.portlet.latest:
     #    class: Phlexible\Bundle\ElementBundle\Portlet\LatestElementsPortlet
     #    public: false
-    #    arguments: [@translator, @phlexible_element.version.repository, @phlexible_tree.tree_manager, @connection_manager, %phlexible_element.portlet.num_items%]
+    #    arguments: [@translator, @phlexible_element.version.repository, @phlexible_tree.tree_manager, @doctrine.dbal.default_connection, %phlexible_element.portlet.num_items%]
     #    tags:
     #        - {name: phlexible_dashboard.portlet}
 
@@ -138,34 +138,34 @@ services:
     phlexible_element.search.eid:
         class: Phlexible\Bundle\ElementBundle\Search\EidSearch
         public: false
-        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
         tags:
             - {name: phlexible_search.handler}
 
     phlexible_element.search.elementtype:
         class: Phlexible\Bundle\ElementBundle\Search\ElementtypeSearch
         public: false
-        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
         tags:
             - {name: phlexible_search.handler}
 
     phlexible_element.search.tid:
         class: Phlexible\Bundle\ElementBundle\Search\TidSearch
         public: false
-        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
         tags:
             - {name: phlexible_search.handler}
 
     phlexible_element.search.title:
         class: Phlexible\Bundle\ElementBundle\Search\TitleSearch
         public: false
-        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
         tags:
             - {name: phlexible_search.handler}
 
     phlexible_element.search.unique_id:
         class: Phlexible\Bundle\ElementBundle\Search\UniqueIdSearch
         public: false
-        arguments: [@connection_manager, %phlexible_cms.languages.default%]
+        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
         tags:
             - {name: phlexible_search.handler}

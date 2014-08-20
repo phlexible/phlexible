@@ -1,12 +1,8 @@
 parameters:
     app.lock_dir:             %kernel.cache_dir%/locks/
     app.web_dir:              %kernel.root_dir%/../web/
-    connection_manager.class: Phlexible\Component\Database\ConnectionManager
 
 services:
-    connection_manager:
-        class: %connection_manager.class%
-
     properties:
         class: Phlexible\Bundle\GuiBundle\Properties\Properties
         arguments: [@doctrine.orm.entity_manager]
