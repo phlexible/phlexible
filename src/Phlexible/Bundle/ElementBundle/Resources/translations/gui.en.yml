@@ -227,7 +227,7 @@ elements:
     catch_rotation: Rotation
     catch_pool_size: 'Rotation Pool'
     catch_max_depth: 'Maximium Search Depth'
-    catch_elements_per_page: 'Elements per Site'
+    catch_elements_per_page: 'Elements per page'
     add_alias: 'Add Instance'
     new_alias: 'New Instance'
     new_alias_header: 'Create Instance'

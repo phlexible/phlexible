@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Event;
 
-use Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatch;
+use Phlexible\Bundle\TeaserBundle\Entity\ElementCatch;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

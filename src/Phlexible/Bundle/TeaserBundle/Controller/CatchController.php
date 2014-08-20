@@ -293,8 +293,9 @@ class CatchController extends Controller
         $catch = $catchManager->findCatch($request->get('id'));
 
         $catch
+            ->setTitle($request->get('title'))
             ->setTreeId($request->get('for_tree_id_hidden'))
-            ->setElementtypeIds($request->get('catch_element_type_id'))
+            ->setElementtypeIds($request->get('catch_element_type_id') ? explode(',', $request->get('catch_element_type_id')) : array())
             ->setNavigation($request->get('catch_in_navigation') === 'on')
             ->setMaxDepth($request->get('catch_max_depth'))
             ->setSortField($request->get('catch_sort_field'))

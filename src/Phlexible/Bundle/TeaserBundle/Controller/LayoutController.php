@@ -126,21 +126,25 @@ class LayoutController extends Controller
                                 'expanded'    => true,
                                 'allowDrag'   => true,
                                 'catchConfig' => array(
-                                    'for_tree_id'            => $catch->getTreeId(),
-                                    'for_tree_id_hidden'     => $catch->getTreeId(),
-                                    'catch_element_type_id'  => implode(',', $catch->getElementtypeIds()),
-                                    'catch_in_navigation'    => $catch->inNavigation(),
-                                    'catch_max_depth'        => $catch->getMaxDepth() >= 0 ? $catch->getMaxDepth(
-                                            ) + 1 : '',
-                                    'catch_max_elements'     => $catch->getMaxResults(),
-                                    'catch_rotation'         => $catch->hasRotation(),
-                                    'catch_pool_size'        => $catch->getPoolSize(),
-                                    'catch_sort_field'       => $catch->getSortField(),
-                                    'catch_sort_order'       => $catch->getSortOrder(),
-                                    'catch_filter'           => $catch->getFilter(),
-                                    'catch_paginator'        => $catch->getResultsPerPage() !== PHP_INT_MAX,
-                                    'catch_results_per_page' => $catch->getResultsPerPage(
-                                        ) === PHP_INT_MAX ? '' : $catch->getResultsPerPage(),
+                                    'id'                      => $catch->getId(),
+                                    'title'                   => $catch->getTitle(),
+                                    'for_tree_id'             => $catch->getTreeId(),
+                                    'for_tree_id_hidden'      => $catch->getTreeId(),
+                                    'catch_element_type_id'   => implode(',', $catch->getElementtypeIds()),
+                                    'catch_in_navigation'     => $catch->inNavigation(),
+                                    'catch_max_depth'         => $catch->getMaxDepth() >= 0
+                                        ? $catch->getMaxDepth() + 1
+                                        : '',
+                                    'catch_max_elements'      => $catch->getMaxResults(),
+                                    'catch_rotation'          => $catch->hasRotation(),
+                                    'catch_pool_size'         => $catch->getPoolSize(),
+                                    'catch_sort_field'        => $catch->getSortField(),
+                                    'catch_sort_order'        => $catch->getSortOrder(),
+                                    'catch_filter'            => $catch->getFilter(),
+                                    'catch_paginator'         => $catch->getResultsPerPage() !== PHP_INT_MAX,
+                                    'catch_elements_per_page' => $catch->getResultsPerPage() === PHP_INT_MAX
+                                        ? ''
+                                        : $catch->getResultsPerPage(),
                                 ),
                             )
                         );
