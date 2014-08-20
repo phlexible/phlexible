@@ -23,24 +23,13 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
         );
 
         this.lockElement.on({
-            createElement: {
-                fn: function () {
-                    this.reloadLinkFieldStore = true;
-                },
-                scope: this
+            createElement: function () {
+                this.reloadLinkFieldStore = true;
             },
-            getlock: {
-                fn: this.onGetLock,
-                scope: this
-            },
-            islocked: {
-                fn: this.onIsLocked,
-                scope: this
-            },
-            removelock: {
-                fn: this.onRemoveLock,
-                scope: this
-            }
+            getlock: this.onGetLock,
+            islocked: this.onIsLocked,
+            removelock: this.onRemoveLock,
+            scope: this
         });
 
         this.items = [
@@ -53,7 +42,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                         xtype: 'fieldset',
                         title: Phlexible.elements.Strings.elements,
                         autoHeight: true,
-                        width: 500,
+                        anchor: '-15',
                         items: [
                             {
                                 xtype: 'hidden',
@@ -82,7 +71,8 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                             this.isLinkInitialized = true;
                                             this.enableAfterInitialisation();
                                         }
-                                    }.createDelegate(this)
+                                    },
+                                    scope: this
                                 }
                             }),
                             {
@@ -90,7 +80,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 fieldLabel: Phlexible.elements.Strings.elementtype,
                                 name: 'catch_element_type_id',
                                 store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('teasers_layout_catchelementtypes', {id: this.lockElement.siteroot_id}),
+                                    url: Phlexible.Router.generate('teasers_catch_elementtypes', {id: this.lockElement.siteroot_id}),
                                     root: 'elementtypes',
                                     fields: ['id', 'title', 'icon'],
                                     autoLoad: true,
@@ -113,13 +103,11 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 height: 165,
                                 allowBlank: false,
                                 listeners: {
-                                    'click': {
-                                        fn: function (field, event) {
-                                            var sortField = this.getForm().findField('catch_sort_field');
-                                            sortField.clearValue();
-                                        },
-                                        scope: this
-                                    }
+                                    click: function (field, event) {
+                                        var sortField = this.getForm().findField('catch_sort_field');
+                                        sortField.clearValue();
+                                    },
+                                    scope: this
                                 }
                             },
                             {
@@ -151,13 +139,11 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 boxLabel: Phlexible.elements.Strings.activate,
                                 name: 'catch_rotation',
                                 listeners: {
-                                    'check': {
-                                        fn: function (field, checked) {
-                                            var form = this.getForm();
-                                            form.findField('catch_pool_size').setDisabled(!checked);
-                                        },
-                                        scope: this
-                                    }
+                                    check: function (field, checked) {
+                                        var form = this.getForm();
+                                        form.findField('catch_pool_size').setDisabled(!checked);
+                                    },
+                                    scope: this
                                 }
                             },
                             {
@@ -174,7 +160,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                         xtype: 'fieldset',
                         title: Phlexible.elements.Strings.sort_mode,
                         autoHeight: true,
-                        width: 500,
+                        anchor: '-15',
                         items: [
                             {
                                 xtype: 'combo',
@@ -183,23 +169,18 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 fieldLabel: Phlexible.elements.Strings.sort_field,
                                 hiddenName: 'catch_sort_field',
                                 store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('teaser_layout_catchsortfields'),
+                                    url: Phlexible.Router.generate('teasers_catch_sortfields'),
                                     root: 'data',
                                     fields: ['ds_id', 'title', 'icon'],
                                     listeners: {
-                                        beforeload: {
-                                            fn: function () {
-                                                ++this.reSetComboCounter;
-                                                //Phlexible.console.log('+catch_sort_field');
-                                            },
-                                            scope: this
+                                        beforeload: function () {
+                                            ++this.reSetComboCounter;
+                                            //Phlexible.console.log('+catch_sort_field');
                                         },
-                                        load: {
-                                            fn: function () {
-                                                this.reSetComboValue('catch_sort_field');
-                                            },
-                                            scope: this
-                                        }
+                                        load: function () {
+                                            this.reSetComboValue('catch_sort_field');
+                                        },
+                                        scope: this
                                     }
                                 }),
                                 //tpl: '<tpl for="."><div class="x-combo-list-item {icon}">{title}</div></tpl>',
@@ -212,13 +193,11 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 triggerAction: 'all',
                                 selectOnFocus: true,
                                 listeners: {
-                                    'beforequery': {
-                                        fn: function (event) {
-                                            var elementTypesField = this.getForm().findField('catch_element_type_id');
-                                            event.query = elementTypesField.getValue();
-                                        },
-                                        scope: this
-                                    }
+                                    beforequery: function (event) {
+                                        var elementTypesField = this.getForm().findField('catch_element_type_id');
+                                        event.query = elementTypesField.getValue();
+                                    },
+                                    scope: this
                                 }
                             },
                             {
@@ -250,7 +229,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                         xtype: 'fieldset',
                         title: Phlexible.elements.Strings.filter,
                         autoHeight: true,
-                        width: 500,
+                        anchor: '-15',
                         items: [
                             {
                                 xtype: 'combo',
@@ -259,23 +238,18 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 fieldLabel: Phlexible.elements.Strings.filter,
                                 hiddenName: 'catch_filter',
                                 store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('teasers_layout_catchfilters'),
+                                    url: Phlexible.Router.generate('teasers_catch_filters'),
                                     root: 'filters',
                                     fields: ['name', 'class'],
                                     listeners: {
-                                        beforeload: {
-                                            fn: function () {
-                                                ++this.reSetComboCounter;
-                                                //Phlexible.console.log('+catch_filter');
-                                            },
-                                            scope: this
+                                        beforeload: function () {
+                                            ++this.reSetComboCounter;
+                                            //Phlexible.console.log('+catch_filter');
                                         },
-                                        load: {
-                                            fn: function () {
-                                                this.reSetComboValue('catch_filter');
-                                            },
-                                            scope: this
-                                        }
+                                        load: function () {
+                                            this.reSetComboValue('catch_filter');
+                                        },
+                                        scope: this
                                     }
                                 }),
                                 displayField: 'name',
@@ -294,33 +268,26 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 fieldLabel: Phlexible.elements.Strings.meta_filter,
                                 hiddenName: 'catch_meta_key_1',
                                 store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('teasers_layout_catchmetakey'),
+                                    url: Phlexible.Router.generate('teasers_catch_metakey'),
                                     root: 'metakeys',
                                     fields: ['key', 'value'],
                                     listeners: {
-                                        beforeload: {
-                                            fn: function () {
-                                                ++this.reSetComboCounter;
-                                                //Phlexible.console.log('+catch_meta_key_1');
-                                            },
-                                            scope: this
+                                        beforeload: function () {
+                                            ++this.reSetComboCounter;
+                                            //Phlexible.console.log('+catch_meta_key_1');
                                         },
-                                        load: {
-                                            fn: function () {
-                                                this.reSetComboValue('catch_meta_key_1');
-                                            },
-                                            scope: this
-                                        }
-                                    }
-                                }),
-                                listeners: {
-                                    'select': {
-                                        fn: function (combo, record, index) {
-                                            var sortField = this.getForm().findField('catch_meta_keywords_1');
-                                            sortField.store.load();
+                                        load: function () {
+                                            this.reSetComboValue('catch_meta_key_1');
                                         },
                                         scope: this
                                     }
+                                }),
+                                listeners: {
+                                    select: function (combo, record, index) {
+                                        var sortField = this.getForm().findField('catch_meta_keywords_1');
+                                        sortField.store.load();
+                                    },
+                                    scope: this
                                 },
                                 displayField: 'value',
                                 valueField: 'key',
@@ -336,41 +303,36 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 fieldLabel: Phlexible.elements.Strings.meta_keywords,
                                 name: 'catch_meta_keywords_1',
                                 store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('teasers_layout_catchmetakeywords', {id: this.lockElement.siteroot_id}),
+                                    url: Phlexible.Router.generate('teasers_catch_metakeywords', {id: this.lockElement.siteroot_id}),
                                     root: 'meta_keywords',
                                     fields: ['keyword'],
                                     listeners: {
-                                        beforeload: {
-                                            fn: function (store, options) {
-                                                ++this.reSetComboCounter;
-                                                //Phlexible.console.log('+catch_meta_keywords_1');
+                                        beforeload: function (store, options) {
+                                            ++this.reSetComboCounter;
+                                            //Phlexible.console.log('+catch_meta_keywords_1');
 
-                                                options['params'] = {
-                                                    language: 'de',
-                                                    key: ''
-                                                };
+                                            options['params'] = {
+                                                language: 'de',
+                                                key: ''
+                                            };
 
-                                                if (this.getForm()) {
-                                                    var keyField = this.getForm().findField('catch_meta_key_1');
-                                                    if (keyField && keyField.isFormField) {
-                                                        options['params']['key'] = keyField.getValue();
-                                                    }
+                                            if (this.getForm()) {
+                                                var keyField = this.getForm().findField('catch_meta_key_1');
+                                                if (keyField && keyField.isFormField) {
+                                                    options['params']['key'] = keyField.getValue();
                                                 }
-                                            },
-                                            scope: this
+                                            }
                                         },
-                                        load: {
-                                            fn: function () {
-                                                var onLoad = this.getForm().findField('catch_meta_keywords_1').setOnLoad;
-                                                if (onLoad) {
-                                                    this.getForm().findField('catch_meta_keywords_1').setValue(onLoad);
-                                                    this.getForm().findField('catch_meta_keywords_1').setOnLoad = false;
-                                                }
+                                        load: function () {
+                                            var onLoad = this.getForm().findField('catch_meta_keywords_1').setOnLoad;
+                                            if (onLoad) {
+                                                this.getForm().findField('catch_meta_keywords_1').setValue(onLoad);
+                                                this.getForm().findField('catch_meta_keywords_1').setOnLoad = false;
+                                            }
 
-                                                this.reSetComboValue('catch_template');
-                                            },
-                                            scope: this
-                                        }
+                                            this.reSetComboValue('catch_template');
+                                        },
+                                        scope: this
                                     }
                                 }),
                                 width: 300,
@@ -388,7 +350,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                         xtype: 'fieldset',
                         title: Phlexible.elements.Strings.paging,
                         autoHeight: true,
-                        width: 500,
+                        anchor: '-15',
                         items: [
                             {
                                 xtype: 'checkbox',
@@ -396,13 +358,11 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 boxLabel: Phlexible.elements.Strings.activate,
                                 name: 'catch_paginator',
                                 listeners: {
-                                    'check': {
-                                        fn: function (field, checked) {
-                                            var form = this.getForm();
-                                            form.findField('catch_elements_per_page').setDisabled(!checked);
-                                        },
-                                        scope: this
-                                    }
+                                    check: function (field, checked) {
+                                        var form = this.getForm();
+                                        form.findField('catch_elements_per_page').setDisabled(!checked);
+                                    },
+                                    scope: this
                                 }
                             },
                             {
@@ -419,7 +379,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                         xtype: 'fieldset',
                         title: Phlexible.elements.Strings.template,
                         autoHeight: true,
-                        width: 500,
+                        anchor: '-15',
                         items: [
                             {
                                 xtype: 'combo',
@@ -428,23 +388,18 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 fieldLabel: Phlexible.elements.Strings.template,
                                 hiddenName: 'catch_template',
                                 store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('teasers_layout_catchtemplates'),
+                                    url: '',//Phlexible.Router.generate('teasers_catch_templates'),
                                     root: 'templates',
                                     fields: ['id', 'template'],
                                     listeners: {
-                                        beforeload: {
-                                            fn: function () {
-                                                ++this.reSetComboCounter;
-                                                //Phlexible.console.log('+catch_template');
-                                            },
-                                            scope: this
+                                        beforeload: function () {
+                                            ++this.reSetComboCounter;
+                                            //Phlexible.console.log('+catch_template');
                                         },
-                                        load: {
-                                            fn: function () {
-                                                this.reSetComboValue('catch_template');
-                                            },
-                                            scope: this
-                                        }
+                                        load: function () {
+                                            this.reSetComboValue('catch_template');
+                                        },
+                                        scope: this
                                     }
                                 }),
                                 displayField: 'template',
@@ -456,12 +411,10 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                                 triggerAction: 'all',
                                 selectOnFocus: true,
                                 listeners: {
-                                    'beforequery': {
-                                        fn: function (event) {
-                                            event.query = this.catchId;
-                                        },
-                                        scope: this
-                                    }
+                                    beforequery: function (event) {
+                                        event.query = this.catchId;
+                                    },
+                                    scope: this
                                 }
                             }
                         ]
@@ -636,3 +589,5 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
         //Phlexible.console.log(this.isElementTypeInitialized + " - " + this.isLinkInitialized + " - " + !this.reSetComboCounter  + " - " + this.reSetComboCounter);
     }
 });
+
+Ext.reg('teasers-catch-panel', Phlexible.elements.CatchDataPanel);

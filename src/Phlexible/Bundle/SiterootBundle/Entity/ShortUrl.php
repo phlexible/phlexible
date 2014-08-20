@@ -54,7 +54,7 @@ class ShortUrl
 
     /**
      * @var Siteroot
-     * @ORM\ManyToOne(targetEntity="Siteroot", inversedBy="navigations")
+     * @ORM\ManyToOne(targetEntity="Siteroot", inversedBy="shortUrls")
      * @ORM\JoinColumn(name="siteroot_id", referencedColumnName="id")
      */
     private $siteroot;

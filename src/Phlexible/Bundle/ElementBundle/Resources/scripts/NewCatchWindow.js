@@ -54,7 +54,7 @@ Phlexible.elements.NewCatchWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 fieldLabel: Phlexible.elements.Strings.elementtype,
                 name: 'catch_element_type_id',
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('teasers_layout_catchelementtypes', {id: this.submitParams.siteroot_id}),
+                    url: Phlexible.Router.generate('teasers_catch_elementtypes', {id: this.submitParams.siteroot_id}),
                     root: 'elementtypes',
                     fields: ['id', 'title', 'icon'],
                     autoLoad: true
@@ -94,7 +94,7 @@ Phlexible.elements.NewCatchWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 fieldLabel: Phlexible.elements.Strings.sort_field,
                 hiddenName: 'catch_sort_field',
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('teasers_layout_catchsortfields'),
+                    url: Phlexible.Router.generate('teasers_catch_sortfields'),
                     root: 'data',
                     fields: ['ds_id', 'title', 'icon']
                 }),

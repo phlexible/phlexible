@@ -22,9 +22,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class TreeNodeMatcher
 {
     /**
-     * @var \Phlexible\Bundle\TreeBundle\Tree\TreeManager
+     * @var TreeManager
      */
-    private $contentTreeManager;
+    private $treeManager;
 
     /**
      * @var ElementService
@@ -37,16 +37,16 @@ class TreeNodeMatcher
     private $useElementLanguageAsFallback;
 
     /**
-     * @param ContentTreeManager $contentTreeManager
+     * @param TreeManager $treeManager
      * @param ElementService     $elementService
      * @param bool               $useElementLanguageAsFallback
      */
     public function __construct(
-        ContentTreeManager $contentTreeManager,
+        TreeManager $treeManager,
         ElementService $elementService,
         $useElementLanguageAsFallback)
     {
-        $this->contentTreeManager = $contentTreeManager;
+        $this->treeManager = $treeManager;
         $this->elementService = $elementService;
         $this->useElementLanguageAsFallback = $useElementLanguageAsFallback;
     }
@@ -65,7 +65,7 @@ class TreeNodeMatcher
     public function getMatchingTreeIdsByLanguage($treeId, $maxDepth, $isPreview, $languages)
     {
         try {
-            $tree = $this->contentTreeManager->findByTreeId($treeId);
+            $tree = $this->treeManager->getByNodeId($treeId);
         } catch (\Exception $e) {
             \MWF_Log::warn("Missing tree node ($treeId) of catch, maybe it is deleted");
 
@@ -86,13 +86,17 @@ class TreeNodeMatcher
         foreach ($rii as $childNode) {
             /* @var $childNode \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface */
 
+            // TODO: repair
+            /*
             if ($isPreview) {
                 $onlineLanguages = Makeweb_Elements_History::getSavedLanguagesByEid(
                     $childNode->getTypeId()
                 );
             } else {
-                $onlineLanguages = array('de'); //$childNode->getOnlineLanguages();
+                $onlineLanguages = $childNode->getOnlineLanguages();
             }
+            */
+            $onlineLanguages = array('de');
 
             $childTreeId = (int) $childNode->getId();
 

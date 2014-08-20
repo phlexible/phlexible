@@ -9,10 +9,11 @@
 namespace Phlexible\Bundle\TeaserBundle\ElementCatch;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\Filter\ResultFilterInterface;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\Filter\SelectFilterInterface;
 use Phlexible\Bundle\TeaserBundle\ElementCatch\Matcher\TreeNodeMatcher;
-use Phlexible\Component\Database\ConnectionManager;
+use Phlexible\Bundle\TeaserBundle\Entity\ElementCatch;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -111,7 +112,12 @@ class ElementCatcher
 
         #ld($elementCatch);
         #echo $select.PHP_EOL;
-        $items = $select->getAdapter()->fetchAssoc($select);
+        $items = $this->connection->fetchAll($select->getSQL());
+        $newItems = array();
+        foreach ($items as $item) {
+            $newItems[$item['tid']] = $item;
+        }
+        $items = $newItems;
 
         $resultPool->setItems($items);
 
@@ -178,7 +184,7 @@ class ElementCatcher
      * @param mixed                  $filter
      * @param string                 $country
      *
-     * @return \Zend_Db_Select
+     * @return QueryBuilder
      */
     private function createReducedSelect(
         ElementCatch $elementCatch,
@@ -203,7 +209,7 @@ class ElementCatcher
             $limit = $elementCatch->getMaxResults() ? : 0;
 
             if ($limit) {
-                $select->limit($limit);
+                $select->setMaxResults($limit);
             }
         }
 
@@ -219,7 +225,7 @@ class ElementCatcher
      * @param array                  $languages
      * @param string                 $country
      *
-     * @return \Zend_Db_Select
+     * @return QueryBuilder
      */
     private function createFullSelect(
         ElementCatch $elementCatch,
@@ -228,24 +234,24 @@ class ElementCatcher
         array $languages,
         $country = null)
     {
-        $select = $this->connection
-            ->select()
-            ->from(
-                array('ch' => $this->connection->prefix . 'catch_lookup_element'),
+        $select = $this->connection->createQueryBuilder();
+        $select
+            ->select(
                 array(
-                    'tree_id AS tid',
-                    'eid',
-                    'version',
-                    'is_preview AS preview',
-                    'elementtype_id',
-                    'in_navigation',
-                    'is_restricted AS restricted',
-                    'published_at AS publish_time',
-                    'custom_date',
-                    'language',
-                    //'online_version',
+                    'ch.tree_id AS tid',
+                    'ch.eid',
+                    'ch.version',
+                    'ch.is_preview AS preview',
+                    'ch.elementtype_id',
+                    'ch.in_navigation',
+                    'ch.is_restricted AS restricted',
+                    'ch.published_at AS publish_time',
+                    'ch.custom_date',
+                    'ch.language',
+                    //'ch.online_version',
                 )
-            );
+            )
+            ->from('catch_lookup_element', 'ch');
 
         $whereChunk = array();
         $matchedTreeIds = $this->treeNodeMatcher->getMatchingTreeIdsByLanguage(
@@ -256,16 +262,14 @@ class ElementCatcher
         );
         $resultPool->setMatchedTreeIds($matchedTreeIds);
         foreach ($matchedTreeIds as $language => $tids) {
-            $whereChunk[] = '(ch.tree_id IN (' . $this->connection->quote($tids) . ') AND ch.language = ' . $this->connection->quote(
-                    $language
-                ) . ')';
+            $whereChunk[] = '(ch.tree_id IN (' . implode(',', $tids) . ') AND ch.language = ' . $select->expr()->literal($language) . ')';
         }
         $select->where(implode(' OR ', $whereChunk));
 
         if ($isPreview) {
-            $select->where('ch.is_preview = ?', 1);
+            $select->andWhere('ch.is_preview = 1');
         } else {
-            $select->where('ch.is_preview = ?', 0);
+            $select->andWhere('ch.is_preview = 0');
         }
 
         if ($elementCatch->getMetaSearch()) {
@@ -273,54 +277,47 @@ class ElementCatcher
             foreach ($elementCatch->getMetaSearch() as $key => $value) {
                 $alias = 'evmi' . ++$metaI;
                 $select
-                    ->join(
-                        array($alias => $this->connection->prefix . 'catch_lookup_meta'),
-                        $alias . '.eid = ch.eid AND ' . $alias . '.version = ch.version AND ' . $alias . '.language = ch.language',
-                        array()
-                    )
-                    ->where($alias . '.key = ?', $key);
+                    ->join('ch', 'catch_lookup_meta', $alias, $alias . '.eid = ch.eid AND ' . $alias . '.version = ch.version AND ' . $alias . '.language = ch.language')
+                    ->andWhere($select->expr()->eq("$alias.key", $select->expr()->literal($key)));
 
                 $multiValueSelects = array();
                 foreach (explode(',', $value) as $singleValue) {
                     $singleValue = trim($singleValue);
-                    $multiValueSelects[] = $this->connection->quoteInto(
-                        "$alias.value = ?",
-                        mb_strtolower(html_entity_decode($singleValue, ENT_COMPAT, 'UTF-8'))
-                    );
+                    $multiValueSelects[] = $select->expr()->eq("$alias.value", $select->expr()->literal(mb_strtolower(html_entity_decode($singleValue, ENT_COMPAT, 'UTF-8'))));
                 }
 
                 if (count($multiValueSelects)) {
-                    $select->where(implode(' OR ', $multiValueSelects));
+                    $select->andWhere(implode(' OR ', $multiValueSelects));
                 }
             }
         }
 
-        $select->where('ch.elementtype_id IN (?)', $elementCatch->getElementtypeIds());
+        $select->andWhere($select->expr()->in('ch.elementtype_id', $elementCatch->getElementtypeIds()));
 
         if ($elementCatch->inNavigation()) {
-            $select->where('ch.in_navigation = ?', 1);
+            $select->andWhere('ch.in_navigation = 1');
         }
 
         if (count($this->tidSkipList)) {
             $tidSkipList = $this->tidSkipList;
 
-            $select->where('ch.tree_id NOT IN (?)', $tidSkipList);
+            $select->andWhere($select->expr()->notIn('ch.tree_id', $tidSkipList));
         }
 
         if ($country) {
             if ($country !== 'global') {
-                $select->where(
-                    '(ch.tree_id IN (SELECT DISTINCT tid FROM ' . $this->connection->prefix . 'element_tree_context WHERE context = ? OR context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from ' . $this->connection->prefix . 'element_tree_context))',
+                $select->andWhere(
+                    '(ch.tree_id IN (SELECT DISTINCT tid FROM element_tree_context WHERE context = ? OR context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from element_tree_context))',
                     $country
                 );
             } else {
-                $select->where(
-                    '(ch.tree_id IN (SELECT DISTINCT tid FROM ' . $this->connection->prefix . 'element_tree_context WHERE context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from ' . $this->connection->prefix . 'element_tree_context))'
+                $select->andWhere(
+                    '(ch.tree_id IN (SELECT DISTINCT tid FROM element_tree_context WHERE context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from element_tree_context))'
                 );
             }
         }
 
-        $select->group('ch.eid');
+        $select->groupBy('ch.eid');
 
         return $select;
     }
@@ -328,11 +325,11 @@ class ElementCatcher
     /**
      * Add a sort criteria to the select statement.
      *
-     * @param \Zend_Db_Select $select
-     * @param ElementCatch    $elementCatch
-     * @param bool            $isPreview
+     * @param QueryBuilder $select
+     * @param ElementCatch $elementCatch
+     * @param bool         $isPreview
      */
-    private function applySort(\Zend_Db_Select $select, ElementCatch $elementCatch, $isPreview)
+    private function applySort(QueryBuilder $select, ElementCatch $elementCatch, $isPreview)
     {
         $sortField = $elementCatch->getSortField();
         if ($sortField) {
@@ -347,7 +344,7 @@ class ElementCatcher
             } elseif (self::SORT_CUSTOM_DATE === $sortField) {
                 $this->applySortByCustomDate($select, $elementCatch);
             } else {
-                $this->applySortByField($select);
+                $this->applySortByField($select, $elementCatch);
             }
         }
     }
@@ -355,94 +352,83 @@ class ElementCatcher
     /**
      * Add field sorting to select statement.
      *
-     * @param \Zend_Db_Select $select
-     * @param ElementCatch    $elementCatch
+     * @param QueryBuilder $select
+     * @param ElementCatch $elementCatch
      */
-    private function applySortByField(\Zend_Db_Select $select)
+    private function applySortByField(QueryBuilder $select, ElementCatch $elementCatch)
     {
-        $db = $select->getAdapter();
-
         $select
-            ->join(
-                array('sort_d' => $db->prefix . 'element_data'),
-                'ch.eid = sort_d.eid AND ch.version = sort_d.version',
-                array()
-            )
-            ->join(
-                array('sort_dl' => $db->prefix . 'element_data_language'),
-                'sort_d.data_id = sort_dl.data_id AND sort_d.version = sort_dl.version AND sort_d.eid = sort_dl.eid AND sort_d.ds_id = ' . $db->quote(
-                    $elementCatch->getSortField()
-                ) . ' AND sort_dl.language = ch.language',
-                array(self::FIELD_SORT => 'content')
-            );
+            ->join('ch', 'element_data', 'sort_d', 'ch.eid = sort_d.eid AND ch.version = sort_d.version')
+            ->join('sort_d', 'element_data_language', 'sort_dl', 'sort_d.data_id = sort_dl.data_id AND sort_d.version = sort_dl.version AND sort_d.eid = sort_dl.eid AND sort_d.ds_id = ' . $select->expr()->literal($elementCatch->getSortField()) . ' AND sort_dl.language = ch.language')
+            ->addSelect(self::FIELD_SORT . '.content');
 
         if (!$this->isNatSort) {
-            $select->order(self::FIELD_SORT . ' ' . $elementCatch->getSortOrder());
+            $select->orderBy(self::FIELD_SORT, $elementCatch->getSortOrder());
         }
     }
 
     /**
      * Add title sorting to select statement.
      *
-     * @param \Zend_Db_Select $select
-     * @param string          $title
-     * @param ElementCatch    $elementCatch
+     * @param QueryBuilder $select
+     * @param string       $title
+     * @param ElementCatch $elementCatch
      */
-    private function applySortByTitle(\Zend_Db_Select $select, $title, ElementCatch $elementCatch)
+    private function applySortByTitle(QueryBuilder $select, $title, ElementCatch $elementCatch)
     {
         $select
-            ->joinLeft(
-                array('sort_t' => $select->getAdapter()->prefix . 'element_version_titles'),
+            ->leftJoin(
+                array('sort_t' => 'element_version_titles'),
                 'ch.eid = sort_t.eid AND ch.version = sort_t.version',
                 array('sort_field' => $title)
             )
             ->where('sort_t.language = ch.language');
 
         if (!$this->isNatSort) {
-            $select->order(self::FIELD_SORT . ' ' . $elementCatch->getSortOrder());
+            $select->orderBy(self::FIELD_SORT, $elementCatch->getSortOrder());
         }
     }
 
     /**
      * Add title sorting to select statement.
      *
-     * @param \Zend_Db_Select $select
-     * @param ElementCatch    $elementCatch
-     * @param bool            $isPreview
+     * @param QueryBuilder $select
+     * @param ElementCatch $elementCatch
+     * @param bool         $isPreview
      */
-    private function applySortByPublishDate(\Zend_Db_Select $select, ElementCatch $elementCatch, $isPreview)
+    private function applySortByPublishDate(QueryBuilder $select, ElementCatch $elementCatch, $isPreview)
     {
         if (!$isPreview) {
-            $select->order('ch.publish_time ' . $elementCatch->getSortOrder());
+            $select->orderBy('ch.publish_time', $elementCatch->getSortOrder());
         }
     }
 
     /**
      * Add title sorting to select statement.
      *
-     * @param \Zend_Db_Select $select
-     * @param ElementCatch    $elementCatch
+     * @param QueryBuilder $select
+     * @param ElementCatch $elementCatch
      */
-    private function applySortByCustomDate(\Zend_Db_Select $select, ElementCatch $elementCatch)
+    private function applySortByCustomDate(QueryBuilder $select, ElementCatch $elementCatch)
     {
-        $select->order('ch.custom_date ' . $elementCatch->getSortOrder());
+        $select->orderBy('ch.custom_date', $elementCatch->getSortOrder());
     }
 
     /**
      * Check if catch definition or query have an sort field specified.
      *
-     * @param \Zend_Db_Select $select
-     * @param ElementCatch    $elementCatch
+     * @param QueryBuilder $select
+     * @param ElementCatch $elementCatch
      *
      * @return bool
      */
-    private function hasSelectSort(\Zend_Db_Select $select, ElementCatch $elementCatch)
+    private function hasSelectSort(QueryBuilder $select, ElementCatch $elementCatch)
     {
         if ($elementCatch->getSortField()) {
             return true;
         }
 
-        $order = $select->getPart(\Zend_Db_Select::ORDER);
+        $order = $select->getQueryPart('orderBy');
 
         if (!is_array($order) || !count($order)) {
             return false;

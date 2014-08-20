@@ -150,8 +150,6 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
             }
         });
 
-        this.catchPanel = null;
-
         var dummyElement = new Phlexible.elements.Element({});
         dummyElement.properties = {
             et_type: 'area'
@@ -196,12 +194,9 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
                     // this.catchPanel.disable();
                     // this.getTopToolbar().disable();
 
-                    if (!this.catchPanel) {
-                        this.catchPanelIndex = this.createCatchPanel();
-                    }
-
-                    this.contentPanel.getLayout().setActiveItem(this.catchPanelIndex);
-                    this.catchPanel.setValues(catchId, catchConfig);
+                    var win = this.createCatchPanel();
+                    win.show();
+                    win.getComponent(0).setValues(catchId, catchConfig);
                 },
                 areaselect: function (area_id, node) {
                     // this.dataPanel.disable();
@@ -619,22 +614,27 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     createCatchPanel: function () {
-        this.catchPanel = new Phlexible.elements.CatchDataPanel({
-            lockElement: this.element,
-            disabled: true,
-            listeners: {
-                save: function () {
-                    this.layoutTree.root.reload();
-                },
-                scope: this
-            }
+        return new Ext.Window({
+            title: this.strings.catch,
+            iconCls: 'p-element-tab_data-icon',
+            width: 500,
+            height: 600,
+            layout: 'fit',
+            modal: true,
+            border: false,
+            items: [{
+                header: false,
+                xtype: 'teasers-catch-panel',
+                lockElement: this.element,
+                disabled: true,
+                listeners: {
+                    save: function () {
+                        this.layoutTree.root.reload();
+                    },
+                    scope: this
+                }
+            }]
         });
-
-        this.contentPanel.add(this.catchPanel);
-        this.contentPanel.doLayout();
-        this.contentPanel.getLayout().layout();
-
-        return this.contentPanel.items.length - 1;
     }
 
 });

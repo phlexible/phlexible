@@ -8,10 +8,13 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Controller;
 
+use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TeaserBundle\Entity\ElementCatch;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Catch controller
@@ -25,11 +28,14 @@ class CatchController extends Controller
     /**
      * List all sortable fields.
      *
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/sortfields", name="teasers_catch_sortfields")
      */
-    public function sortfieldsAction()
+    public function sortfieldsAction(Request $request)
     {
-        $query = $this->getParam('query');
+        $query = $request->get('query');
         $elementtypeIds = explode(',', $query);
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
@@ -98,42 +104,45 @@ class CatchController extends Controller
             ),
             array(
                 'ds_id' => ElementCatch::SORT_TITLE_BACKEND,
-                'title' => $translator->trans('elements.backendTitle', array(), 'gui'),
+                'title' => $translator->trans('elements.backend_title', array(), 'gui'),
                 'icon'  => '',
             ),
             array(
                 'ds_id' => ElementCatch::SORT_TITLE_PAGE,
-                'title' => $translator->trans('elements.pageTitle', array(), 'gui'),
+                'title' => $translator->trans('elements.page_title', array(), 'gui'),
                 'icon'  => '',
             ),
             array(
                 'ds_id' => ElementCatch::SORT_TITLE_NAVIGATION,
-                'title' => $translator->trans('elements.navigationTitle', array(), 'gui'),
+                'title' => $translator->trans('elements.navigation_title', array(), 'gui'),
                 'icon'  => '',
             ),
             array(
                 'ds_id' => ElementCatch::SORT_PUBLISH_DATE,
-                'title' => $translator->trans('elements.publishDate', array(), 'gui'),
+                'title' => $translator->trans('elements.publish_date', array(), 'gui'),
                 'icon'  => '',
             ),
             array(
                 'ds_id' => ElementCatch::SORT_CUSTOM_DATE,
-                'title' => $translator->trans('elements.customDate', array(), 'gui'),
+                'title' => $translator->trans('elements.custom_date', array(), 'gui'),
                 'icon'  => '',
             )
         );
 
-        $this->_response->setResult(true, $query, 'Matching fields.', $result);
+        return new ResultResponse(true, 'Matching fields.', $result);
     }
 
     /**
      * List all element types
      *
+     * @return JsonResponse
      * @Route("/elementtypes", name="teasers_catch_elementtypes")
      */
     public function elementtypesAction()
     {
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
+
         $elementtypes = $elementtypeService->findElementtypeByType('full');
 
         $data = array();
@@ -141,18 +150,19 @@ class CatchController extends Controller
             $data[$elementtype->getTitle() . $elementtype->getId()] = array(
                 'id'    => $elementtype->getId(),
                 'title' => $elementtype->getTitle(),
-                'icon'  => '/bundles/elementtypes/elementtypes/' . $elementtype->getIcon(),
+                'icon'  => $iconResolver->resolveElementtype($elementtype),
             );
         }
         ksort($data);
         $data = array_values($data);
 
-        $this->getResponse()->setAjaxPayload(array('elementtypes' => $data));
+        return new JsonResponse(array('elementtypes' => $data));
     }
 
     /**
      * @todo
      *
+     * @return JsonResponse
      * @Route("/metakey", name="teasers_catch_metakey")
      */
     public function metakeyAction()
@@ -173,7 +183,7 @@ class CatchController extends Controller
             );
         }
 
-        $this->getResponse()->setAjaxPayload(array('metakeys' => $result));
+        return new JsonResponse(array('metakeys' => $result));
     }
 
     /**
@@ -181,34 +191,42 @@ class CatchController extends Controller
      *
      * @todo
      *
+     * @param Request $request
+     *
+     * @return JsonResponse
      * @Route("/metakeywords", name="teasers_catch_metakeywords")
      */
-    public function metakeywordsAction()
+    public function metakeywordsAction(Request $request)
     {
-        $key = $this->getParam('key');
-        $language = $this->getParam('language');
+        $key = $request->get('key');
+        $language = $request->get('language');
 
-        $metaSetManager = Makeweb_Elements_Element_Version_MetaSet_Manager::getInstance();
+        // TODO: repair
+        //$metaSetManager = Makeweb_Elements_Element_Version_MetaSet_Manager::getInstance();
 
         $data = array();
+        /*
         $values = $metaSetManager->getMetaKeyValues($key, $language);
         foreach ($values as $value) {
             $data[]['keyword'] = $value;
         }
+        */
 
-        $this->getResponse()->setAjaxPayload(array('meta_keywords' => $data));
+        return new JsonResponse(array('meta_keywords' => $data));
     }
 
     /**
      * List all available filters
      *
+     * @return JsonResponse
      * @Route("/filters", name="teasers_catch_filters")
      */
     public function filtersAction()
     {
         $data = array();
 
-        $filters = $this->componentCallback->getCatchFilter();
+        // @TODO: repair
+        $filters = array();//$this->componentCallback->getCatchFilter();
 
         foreach ($filters as $name => $class) {
             $data[] = array(
@@ -217,31 +235,37 @@ class CatchController extends Controller
             );
         }
 
-        $this->getResponse()->setAjaxPayload(array('filters' => $data));
+        return new JsonResponse(array('filters' => $data));
     }
 
     /**
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/create", name="teasers_catch_create")
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
         $teaserService = $this->get('phlexible_teaser.teaser_service');
 
         $teaserService->createCatch(
-            $this->getParam('tree_id'),
-            $this->getParam('eid'),
-            $this->getParam('layoutarea_id')
+            $request->get('tree_id'),
+            $request->get('eid'),
+            $request->get('layoutarea_id')
         );
 
-        $this->_response->setResult(true, 0, 'Catch created.');
+        return new ResultResponse(true, 'Catch created.');
     }
 
     /**
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/save", name="teasers_catch_save")
      */
-    public function saveAction()
+    public function saveAction(Request $request)
     {
-        $catchRepository = $this->get('phlexible_teaser.teaser_service');
+        $catchManager = $this->get('phlexible_teaser.catch_manager');
 
         $notEmpty = true;
         $i = 1;
@@ -252,11 +276,11 @@ class CatchController extends Controller
 
         $catchMetaSearch = array();
         do {
-            if ($this->hasParam('catch_meta_key_' . $i) &&
-                $this->hasParam('catch_meta_keywords_' . $i)
+            if ($request->get('catch_meta_key_' . $i) &&
+                $request->get('catch_meta_keywords_' . $i)
             ) {
-                $catchMetaSearchKey = $metaFilter->filter($this->getParam('catch_meta_key_' . $i));
-                $catchMetaSearchKeyword = $metaFilter->filter($this->getParam('catch_meta_keywords_' . $i));
+                $catchMetaSearchKey = $metaFilter->filter($request->get('catch_meta_key_' . $i));
+                $catchMetaSearchKeyword = $metaFilter->filter($request->get('catch_meta_keywords_' . $i));
                 $i++;
                 if (strlen($catchMetaSearchKey) && strlen($catchMetaSearchKeyword)) {
                     $catchMetaSearch[$catchMetaSearchKey] = $catchMetaSearchKeyword;
@@ -266,22 +290,24 @@ class CatchController extends Controller
             }
         } while ($notEmpty);
 
-        $catch = $catchRepository->find($this->getParam('id'));
-        $catch
-            ->setTreeId($this->getParam('for_tree_id_hidden'))
-            ->setElementtypeIds($this->getParam('catch_element_type_id'))
-            ->setNavigation($this->getParam('catch_in_navigation') === 'on')
-            ->setMaxDepth($this->getParam('catch_max_depth'))
-            ->setSortField($this->getParam('catch_sort_field'))
-            ->setSortOrder($this->getParam('catch_sort_order'))
-            ->setFilter($this->getParam('catch_filter'))
-            ->setMaxResults($this->getParam('catch_max_elements'))
-            ->setRotation($this->getParam('catch_rotation') === 'on')
-            ->setPoolSize($this->getParam('catch_pool_size'))
-            ->setResultsPerPage($this->getParam('catch_elements_per_page'))
-            ->setMetaSearch($catchMetaSearch);
-        $catchRepository->save($catch);
+        $catch = $catchManager->findCatch($request->get('id'));
 
-        $this->_response->setResult(true, 0, 'Catch created.');
+        $catch
+            ->setTreeId($request->get('for_tree_id_hidden'))
+            ->setElementtypeIds($request->get('catch_element_type_id'))
+            ->setNavigation($request->get('catch_in_navigation') === 'on')
+            ->setMaxDepth($request->get('catch_max_depth'))
+            ->setSortField($request->get('catch_sort_field'))
+            ->setSortOrder($request->get('catch_sort_order'))
+            ->setFilter($request->get('catch_filter'))
+            ->setMaxResults($request->get('catch_max_elements'))
+            ->setRotation($request->get('catch_rotation') === 'on')
+            ->setPoolSize($request->get('catch_pool_size'))
+            ->setResultsPerPage($request->get('catch_elements_per_page'))
+            ->setMetaSearch($catchMetaSearch);
+
+        $catchManager->updateCatch($catch);
+
+        return new ResultResponse(true, 'Catch created.');
     }
 }

@@ -60,7 +60,7 @@ class Url
 
     /**
      * @var Siteroot
-     * @ORM\ManyToOne(targetEntity="Siteroot", inversedBy="navigations")
+     * @ORM\ManyToOne(targetEntity="Siteroot", inversedBy="urls")
      * @ORM\JoinColumn(name="siteroot_id", referencedColumnName="id")
      */
     private $siteroot;

@@ -154,34 +154,32 @@ class LayoutController extends Controller
                             }
                         }
 
-                        /*
-                        $catchPaginator = $catch->getPaginator();
-                        $catchItemCount = $catchPaginator->getTotalItemCount();
+                        $catcher = $this->get('phlexible_teaser.catcher');
+                        $catchResult = $catcher->catchElements($catch, $availableLanguages, true);
+
+                        $catchItemCount = count($catchResult->getItems());
                         $textPostfix = $catchItemCount;
                         $itemsPerPage = 5;
                         if ($catchItemCount > $itemsPerPage) {
-                            $textPostfix = $t9n->elements->catch_showing($itemsPerPage, $catchItemCount);
+                            $textPostfix = $translator->trans('teaser.catch_showing', array($itemsPerPage, $catchItemCount), 'gui');
                         } else {
                             $textPostfix = $catchItemCount;
                         }
-                        $dummyCatch['text'] .= ' (' . $textPostfix . ')';
-                        $catchPaginator->setItemCountPerPage($itemsPerPage);
-                        $catchItems = $catchPaginator->getCurrentItems();
+                        $teaserData['text'] .= ' (' . $textPostfix . ')';
 
-                        foreach ($catchItems as $catchItem) {
-                            $catchNode           = $treeManager->getNodeByNodeId($catchItem['tid']);
-                            $catchElement        = $elementManager->getByEID($catchItem['eid']);
-                            $catchElementVersion = $catchElement->getVersion($catchItem['version']);
+                        foreach (array_slice($catchResult->getItems(), 0, $itemsPerPage) as $catchItem) {
+                            $catchNode           = $treeManager->getByNodeId($catchItem['tid'])->get($catchItem['tid']);
+                            $catchElement        = $elementService->findElement($catchItem['eid']);
+                            $catchElementVersion = $elementService->findElementVersion($catchElement, $catchItem['version']);
 
-                            $dummyCatch['children'][] = array(
-                                'eid'           => $catchElement->getEID(),
-                                'layoutarea_id' => $layoutArea->getID(),
+                            $teaserData['children'][] = array(
+                                'eid'           => $catchElement->getEid(),
+                                'layoutarea_id' => $layoutarea->getId(),
                                 'parent_tid'    => $treeId,
                                 'parent_eid'    => $element->getEid(),
-                                'icon'          => $catchElementVersion->getIconUrl($catchNode->getIconParams($language)),
-                                'text'          => $catchElementVersion->getBackendTitle($language, $elementMasterLanguage),
+                                'icon'          => $iconResolver->resolveTreeNode($catchNode, $language),
+                                'text'          => $catchElementVersion->getBackendTitle($language, $elementMasterLanguage) . ' [' . $catchNode->getId() . ']',
                                 'version'       => $catchElementVersion->getVersion(),
-                                'eid'           => $catchElement->getEid(),
                                 'type'          => 'catched',
                                 'inherited'     => false,
                                 'inherit'       => false,
@@ -192,7 +190,6 @@ class LayoutController extends Controller
                                 'allowDrop'     => false,
                             );
                         }
-                        */
 
                         break;
 
