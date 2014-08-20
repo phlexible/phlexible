@@ -7,6 +7,14 @@ services:
         class: Phlexible\Bundle\TreeBundle\Tree\DatabaseTreeFactory
         arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_element.element_history_manager]
 
+    phlexible_tree.node_serializer:
+        class: Phlexible\Bundle\TreeBundle\Tree\Serializer\NodeSerializer
+        arguments:
+            - @phlexible_element.element_service
+            - @phlexible_element.icon_resolver
+            - @phlexible_access_control.permissions
+            - @security.context
+
     phlexible_tree.content.manager:
         class: Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManager
 

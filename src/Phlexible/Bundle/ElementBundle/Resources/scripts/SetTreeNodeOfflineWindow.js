@@ -18,7 +18,7 @@ Phlexible.elements.SetTreeNodeOfflineWindow = Ext.extend(Phlexible.gui.util.Dial
 
     labelAlign: 'top',
     noFocus: false,
-    //submitUrl: Phlexible.Router.generate('elements_tree_publish'),
+    //submitUrl: Phlexible.Router.generate('tree_publish'),
 
     comment_required: false,
 

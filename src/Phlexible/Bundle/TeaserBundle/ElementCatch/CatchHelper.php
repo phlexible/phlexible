@@ -9,6 +9,10 @@
 namespace Phlexible\Bundle\TeaserBundle\ElementCatch;
 
 use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Catch helper
@@ -23,95 +27,102 @@ class CatchHelper
     private $connection;
 
     /**
-     * @var Makeweb_Elements_Element_Manager
+     * @var ElementService
      */
-    protected $_elementManager = null;
+    private $elementService;
 
     /**
-     * @var Makeweb_Elements_Element_Version_Manager
+     * @var EventDispatcherInterface
      */
-    protected $_elementVersionManager = null;
+    private $dispatcher;
 
     /**
-     * @param Connection                               $connection
-     * @param Makeweb_Elements_Element_Manager         $elementManager
-     * @param Makeweb_Elements_Element_Version_Manager $elementVersionManager
+     * @param Connection               $connection
+     * @param ElementService           $elementService
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(
-        Connection $connection,
-        Makeweb_Elements_Element_Manager $elementManager,
-        Makeweb_Elements_Element_Version_Manager $elementVersionManager)
+    public function __construct(Connection $connection, ElementService $elementService, EventDispatcherInterface $dispatcher)
     {
         $this->connection = $connection;
-        $this->_elementManager = $elementManager;
-        $this->_elementVersionManager = $elementVersionManager;
+        $this->elementService = $elementService;
+        $this->dispatcher = $dispatcher;
     }
 
+    /**
+     * @param int $tid
+     */
     public function removeByTid($tid)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_helper',
+        $this->connection->delete(
+            'catch_lookup_meta',
             array(
-                'tid = ?' => $tid
+                'tid' => $tid
             )
         );
 
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_metaset_items',
+        $this->connection->delete(
+            'catch_lookup_meta',
             array(
-                'tid = ?' => $tid
+                'tid' => $tid
             )
         );
     }
 
+    /**
+     * @param int $eid
+     */
     public function removeByEid($eid)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_helper',
+        $this->connection->delete(
+            'catch_lookup_element',
             array(
-                'eid = ?' => $eid
+                'eid' => $eid
             )
         );
 
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_metaset_items',
+        $this->connection->delete(
+            'catch_lookup_meta',
             array(
-                'eid = ?' => $eid
+                'eid' => $eid
             )
         );
     }
 
+    /**
+     * @param int $tid
+     */
     public function removePreviewByTid($tid)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_helper',
+        $this->connection->delete(
+            'catch_lookup_element',
             array(
-                'tid = ?'     => $tid,
-                'preview = ?' => 1,
+                'tid'     => $tid,
+                'preview' => 1,
             )
         );
     }
 
+    /**
+     * @param int $eid
+     */
     public function removePreviewByEid($eid)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_helper',
+        $this->connection->delete(
+            'catch_lookup_element',
             array(
-                'eid = ?'     => $eid,
-                'preview = ?' => 1,
+                'eid'     => $eid,
+                'preview' => 1,
             )
         );
     }
 
+    /**
+     * @param int $tid
+     */
     public function removeOnlineByTid($tid)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_helper',
+        $this->connection->delete(
+            'catch_lookup_element',
             array(
                 'tid = ?'     => $tid,
                 'preview = ?' => 0,
@@ -119,108 +130,135 @@ class CatchHelper
         );
     }
 
+    /**
+     * @param int $eid
+     */
     public function removeOnlineByEid($eid)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_helper',
+        $this->connection->delete(
+            'catch_lookup_element',
             array(
-                'eid = ?'     => $eid,
-                'preview = ?' => 0,
+                'eid'     => $eid,
+                'preview' => 0,
             )
         );
     }
 
+    /**
+     * @param int    $tid
+     * @param string $language
+     */
     public function removeOnlineByTidAndLanguage($tid, $language)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_helper',
+        $this->connection->delete(
+            'catch_lookup_element',
             array(
-                'tid = ?'      => $tid,
-                'language = ?' => $language,
-                'preview = ?'  => 0,
+                'tid'      => $tid,
+                'language' => $language,
+                'preview'  => 0,
             )
         );
     }
 
+    /**
+     * @param int    $eid
+     * @param string $language
+     */
     public function removeOnlineByEidAndLanguage($eid, $language)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_helper',
+        $this->connection->delete(
+            'catch_lookup_element',
             array(
-                'eid = ?'      => $eid,
-                'language = ?' => $language,
-                'preview = ?'  => 0,
+                'eid?'      => $eid,
+                'language' => $language,
+                'preview'  => 0,
             )
         );
     }
 
+    /**
+     * @param int    $tid
+     * @param int    $version
+     * @param string $language
+     */
     public function removeMetaByTidAndVersionAndLanguage($tid, $version, $language)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_metaset_items',
+        $this->connection->delete(
+            'catch_lookup_meta',
             array(
-                'tid = ?'      => $tid,
-                'version = ?'  => $version,
-                'language = ?' => $language,
+                'tid'      => $tid,
+                'version'  => $version,
+                'language' => $language,
             )
         );
     }
 
+    /**
+     * @param int    $eid
+     * @param int    $version
+     * @param string $language
+     */
     public function removeMetaByEidAndVersionAndLanguage($eid, $version, $language)
     {
-        // Delete old entries
-        $this->_db->delete(
-            $this->_db->prefix . 'catchteaser_metaset_items',
+        $this->connection->delete(
+            'catch_lookup_meta',
             array(
-                'eid = ?'      => $eid,
-                'version = ?'  => $version,
-                'language = ?' => $language,
+                'eid'      => $eid,
+                'version'  => $version,
+                'language' => $language,
             )
         );
     }
 
+    /**
+     * @param int $eid
+     */
     public function update($eid)
     {
+        // TODO: repair
+        return;
         $this->updateOnline($eid);
         $this->updatePreview($eid);
     }
 
+    /**
+     * @param int $eid
+     *
+     * @return int|null
+     */
     public function updatePreview($eid)
     {
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        $beforeEvent = new Makeweb_Teasers_Event_BeforeUpdateCatchTeaserHelper($eid, true);
-        if (false === $dispatcher->dispatch($beforeEvent)) {
+        // TODO: repair
+        return;
+        $event = new BeforeUpdateCatchTeaserHelper($eid, true);
+        if ($this->dispatcher->dispatch($event)->isPropagationStopped()) {
             return null;
         }
 
         $this->removePreviewByEid($eid);
 
-        $element = $this->_elementManager->getByEID($eid);
+        $element = $this->elementService->findElement($eid);
 
         // Preview version
-        $select = $this->_db->select()
+        $select = $this->connection
+            ->select()
             ->distinct()
             ->from(
-                array('et' => $this->_db->prefix . 'element_tree'),
+                array('et' => 'element_tree'),
                 array('eid', 'id', 'modify_time')
             )
             ->join(
-                array('e' => $this->_db->prefix . 'element'),
+                array('e' => 'element'),
                 'et.eid = e.eid',
                 array('latest_version')
             )
             ->join(
-                array('ed' => $this->_db->prefix . 'element_data'),
+                array('ed' => 'element_data'),
                 'et.eid = ed.eid',
                 array()
             )
             ->join(
-                array('edl' => $this->_db->prefix . 'element_data_language'),
+                array('edl' => 'element_data_language'),
                 'ed.eid = edl.eid' .
                 ' AND ed.data_id = edl.data_id' .
                 ' AND ed.version = edl.version' .
@@ -228,7 +266,7 @@ class CatchHelper
                 array('language')
             )
             ->join(
-                array('etp' => $this->_db->prefix . 'element_tree_page'),
+                array('etp' => 'element_tree_page'),
                 'et.id = etp.tree_id AND ' .
                 'etp.version = edl.version',
                 array('navigation', 'restricted')
@@ -238,9 +276,9 @@ class CatchHelper
         $nodes = $this->_db->fetchAll($select);
 
         foreach ($nodes as $node) {
-            $elementVersion = $this->_elementVersionManager->get($eid, $node['latest_version']);
+            $elementVersion = $this->elementService->findElementVersion($element, $node['latest_version']);
 
-            $this->_updateVersion(
+            $this->updateVersion(
                 $element,
                 $elementVersion,
                 $node['id'],
@@ -253,45 +291,52 @@ class CatchHelper
             );
         }
 
-        $event = new Makeweb_Teasers_Event_UpdateCatchTeaserHelper($eid, true);
-        $dispatcher->dispatch($event);
+        $event = new UpdateCatchTeaserHelper($eid, true);
+        $this->dispatcher->dispatch($event);
 
         return count($nodes);
     }
 
+    /**
+     * @param int $eid
+     *
+     * @return int|null
+     */
     public function updateOnline($eid)
     {
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        $beforeEvent = new Makeweb_Teasers_Event_BeforeUpdateCatchTeaserHelper($eid);
-        if (false === $dispatcher->dispatch($beforeEvent)) {
+        // TODO: repair
+        #return;
+        $event = new BeforeUpdateCatchTeaserHelper($eid);
+        if ($this->dispatcher->dispatch($event)->isPropagationStopped()) {
             return null;
         }
 
         $this->removeOnlineByEid($eid);
 
-        $element = $this->_elementManager->getByEID($eid);
+        $element = $this->elementService->findElement($eid);
 
         // Live version
-        $select = $this->_db->select()
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('*')
             ->from(
-                array('eto' => $this->_db->prefix . 'element_tree_online'),
+                array('eto' => 'element_tree_online'),
                 array('tree_id', 'version', 'publish_time', 'language')
             )
             ->join(
-                array('etp' => $this->_db->prefix . 'element_tree_page'),
+                array('etp' => 'element_tree_page'),
                 'eto.tree_id = etp.tree_id AND ' .
                 'eto.version = etp.version',
                 array('restricted', 'navigation')
             )
             ->where('eto.eid = ?', $eid);
 
-        $nodes = $this->_db->fetchAll($select);
+        $nodes = $this->connection->fetchAll($qb->getSQL());
 
         foreach ($nodes as $node) {
-            $elementVersion = $this->_elementVersionManager->get($eid, $node['version']);
+            $elementVersion = $this->elementService->findElementVersion($element, $node['version']);
 
-            $this->_updateVersion(
+            $this->updateVersion(
                 $element,
                 $elementVersion,
                 $node['tree_id'],
@@ -304,15 +349,26 @@ class CatchHelper
             );
         }
 
-        $event = new Makeweb_Teasers_Event_UpdateCatchTeaserHelper($eid);
-        $dispatcher->dispatch($event);
+        $event = new UpdateCatchTeaserHelper($eid);
+        $this->dispatcher->dispatch($event);
 
         return count($nodes);
     }
 
-    protected function _updateVersion(
-        Makeweb_Elements_Element $element,
-        Makeweb_Elements_Element_Version $elementVersion,
+    /**
+     * @param Element        $element
+     * @param ElementVersion $elementVersion
+     * @param int            $tid
+     * @param int            $time
+     * @param bool           $preview
+     * @param string         $language
+     * @param bool           $navigation
+     * @param bool           $restricted
+     * @param int            $onlineVersion
+     */
+    protected function updateVersion(
+        Element $element,
+        ElementVersion $elementVersion,
         $tid,
         $time,
         $preview,
@@ -327,7 +383,7 @@ class CatchHelper
 
         // fill catchteaser_metaset_itmes
 
-        $this->_updateMeta($tid, $eid, $version, $language);
+        $this->updateMeta($tid, $eid, $version, $language);
 
         // fill catchteaser_helper
 
@@ -345,20 +401,28 @@ class CatchHelper
             'restricted'     => (int) $restricted,
         );
 
-        $this->_db->insert($this->_db->prefix . 'catchteaser_helper', $insertData);
+        $this->connection->insert('catch_lookup_element', $insertData);
     }
 
-    protected function _updateMeta($tid, $eid, $version, $language)
+    /**
+     * @param int    $tid
+     * @param int    $eid
+     * @param int    $version
+     * @param string $language
+     */
+    protected function updateMeta($tid, $eid, $version, $language)
     {
-        $selectMetasetItems = $this->_db->select()
-            ->from($this->_db->prefix . 'element_version_metaset_items')
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('*')
+            ->from('element_version_metaset_items', 'm')
             ->where('eid = ?', $eid)
-            ->where('version = ?', $version)
-            ->where('language = ?', $language)
-            ->where('value IS NOT NULL')
-            ->where('value != ""');
+            ->andWhere('version = ?', $version)
+            ->andWhere('language = ?', $language)
+            ->andWhere('value IS NOT NULL')
+            ->andWhere('value != ""');
 
-        $metasetItems = $this->_db->fetchAll($selectMetasetItems);
+        $metasetItems = $this->connection->fetchAll($qb->getSQL());
 
         $this->removeMetaByEidAndVersionAndLanguage($eid, $version, $language);
 
@@ -374,7 +438,7 @@ class CatchHelper
             foreach ($tmp as $item) {
                 $metaset['tid'] = $tid;
                 $metaset['value'] = mb_strtolower(trim($item));
-                $this->_db->insert($this->_db->prefix . 'catchteaser_metaset_items', $metaset);
+                $this->connection->insert('catch_lookup_meta', $metaset);
             }
         }
     }

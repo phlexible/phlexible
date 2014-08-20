@@ -405,9 +405,9 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
     /**
      * {@inheritdoc}
      */
-    public function add(
-        $parentId,
-        $afterId,
+    public function create(
+        $parentNode,
+        $afterNode = null,
         $type,
         $typeId,
         array $attributes,
@@ -415,13 +415,17 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         $sortMode = 'free',
         $sortDir = 'asc')
     {
-        $parentNode = $this->get($parentId);
+        if (!$parentNode instanceof TreeNodeInterface) {
+            $parentNode = $this->get($parentNode);
+        }
+        if ($afterNode && !$afterNode instanceof TreeNodeInterface) {
+            $afterNode = $this->get($afterNode);
+        }
 
         $sort = 0;
         $sortNodes = array();
         if ($parentNode->getSortMode() === 'free') {
-            if ($afterId !== null) {
-                $afterNode = $this->get($afterId);
+            if ($afterNode) {
                 $sort = $afterNode->getSort() + 1;
             }
 
@@ -435,7 +439,8 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
 
         $node = new TreeNode();
         $node
-            ->setParentId($parentId)
+            ->setTree($parentNode->getTree())
+            ->setParentId($parentNode->getId())
             ->setType($type)
             ->setTypeId($typeId)
             ->setAttributes($attributes)
@@ -463,6 +468,118 @@ class DatabaseTree implements TreeInterface, WritableTreeInterface, \IteratorAgg
         $this->dispatcher->dispatch(TreeEvents::CREATE_NODE, $event);
 
         return $node;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createInstance($parentNode, $afterNode = null, $sourceNode, $userId) {
+
+        if (!$parentNode instanceof TreeNodeInterface) {
+            $parentNode = $this->get($parentNode);
+        }
+        if ($afterNode && !$afterNode instanceof TreeNodeInterface) {
+            $afterNode = $this->get($afterNode);
+        }
+        if (!$sourceNode instanceof TreeNodeInterface) {
+            $sourceNode = $this->get($sourceNode);
+        }
+
+        $sort = 0;
+        $sortNodes = array();
+        if ($parentNode->getSortMode() === 'free') {
+            if ($afterNode) {
+                $sort = $afterNode->getSort() + 1;
+            }
+
+            foreach ($this->getChildren($parentNode) as $sortNode) {
+                if ($sortNode->getSort() >= $sort) {
+                    $sortNode->setSort($sortNode->getSort() + 1);
+                    $sortNodes[] = $sortNode;
+                }
+            }
+        }
+
+        $node = new TreeNode();
+        $node
+            ->setTree($parentNode->getTree())
+            ->setParentId($parentNode->getId())
+            ->setType($sourceNode->getType())
+            ->setTypeId($sourceNode->getTypeId())
+            ->setAttributes($sourceNode->getAttributes())
+            ->setSort($sort)
+            ->setSortMode($sourceNode->getSortMode())
+            ->setSortDir($sourceNode->getSortDir())
+            ->setCreateUserId($userId)
+            ->setCreatedAt(new \DateTime);
+
+        $event = new NodeEvent($node);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_CREATE_NODE_INSTANCE, $event)->isPropagationStopped()) {
+            return false;
+        }
+
+        $this->insertNode($node);
+
+        foreach ($sortNodes as $sortNode) {
+            $this->updateNode($sortNode);
+        }
+
+        // history
+        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_NODE_INSTANCE, $node->getTypeId(), $userId, $node->getId());
+
+        $event = new NodeEvent($node);
+        $this->dispatcher->dispatch(TreeEvents::CREATE_NODE_INSTANCE, $event);
+
+        return $node;
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     */
+    private function insertNode(TreeNodeInterface $node)
+    {
+        $this->connection->insert(
+            'tree',
+            array(
+                'siteroot_id'    => $node->getTree()->getSiterootId(),
+                'parent_id'      => $node->getParentId(),
+                'type'           => $node->getType(),
+                'type_id'        => $node->getTypeId(),
+                'sort'           => $node->getSort(),
+                'sort_mode'      => $node->getSortMode(),
+                'sort_dir'       => $node->getSortDir(),
+                'created_at'     => $node->getCreatedAt()->format('Y-m-d H:i:s'),
+                'create_user_id' => $node->getCreateUserId(),
+                'attributes'     => json_encode($node->getAttributes()),
+            )
+        );
+
+        $node->setId($this->connection->lastInsertId('tree'));
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     */
+    private function updateNode(TreeNodeInterface $node)
+    {
+        $this->connection->update(
+            'tree',
+            array(
+                'siteroot_id'    => $node->getTree()->getSiterootId(),
+                'parent_id'      => $node->getParentId(),
+                'type'           => $node->getType(),
+                'type_id'        => $node->getTypeId(),
+                'sort'           => $node->getSort(),
+                'sort_mode'      => $node->getSortMode(),
+                'sort_dir'       => $node->getSortDir(),
+                'created_at'     => $node->getCreatedAt()->format('Y-m-d H:i:s'),
+                'create_user_id' => $node->getCreateUserId(),
+                'attributes'     => json_encode($node->getAttributes()),
+            ),
+            array(
+                'id' => $node->getId(),
+            )
+        );
     }
 
     /**

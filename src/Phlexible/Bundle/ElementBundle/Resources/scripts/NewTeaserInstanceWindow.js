@@ -18,7 +18,7 @@ Phlexible.elements.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
             element: this.element,
             enableDD: false,
             noClickHandling: true,
-            dataUrl: Phlexible.Router.generate('elements_tree_teaserreference'),
+            dataUrl: Phlexible.Router.generate('tree_teaser_reference'),
             listeners: {
                 click: {
                     fn: function (node) {

@@ -237,10 +237,14 @@ class ElementVersion
 
     /**
      * @param string $createUserID
+     *
+     * @return $this
      */
     public function setCreateUserId($createUserID)
     {
         $this->createUserId = $createUserID;
+
+        return $this;
     }
 
     /**

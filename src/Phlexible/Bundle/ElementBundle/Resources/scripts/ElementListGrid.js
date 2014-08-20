@@ -847,7 +847,7 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
         var parent_tid = this.element.tid;
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('elements_tree_copy'),
+            url: Phlexible.Router.generate('tree_copy'),
             params: {
                 for_tree_id: tid,
                 id: parent_tid,
@@ -972,7 +972,7 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
                 /* check for instances if only one node selected */
                 if (i == 1) {
                     Ext.Ajax.request({
-                        url: Phlexible.Router.generate('elements_tree_predelete'),
+                        url: Phlexible.Router.generate('tree_predelete'),
                         params: params,
                         success: function (response) {
                             var result = Ext.decode(response.responseText);
@@ -980,7 +980,7 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
                             // no instances
                             if (!result.data.length) {
                                 Ext.Ajax.request({
-                                    url: Phlexible.Router.generate('elements_tree_delete'),
+                                    url: Phlexible.Router.generate('tree_delete'),
                                     params: params,
                                     success: function (response) {
                                         var data = Ext.decode(response.responseText);
@@ -1010,7 +1010,7 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
                     });
                 } else {
                     Ext.Ajax.request({
-                        url: Phlexible.Router.generate('elements_tree_delete'),
+                        url: Phlexible.Router.generate('tree_delete'),
                         params: params,
                         success: function (response) {
                             var data = Ext.decode(response.responseText);

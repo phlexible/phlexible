@@ -19,7 +19,7 @@ Phlexible.elements.NewElementInstanceWindow = Ext.extend(Phlexible.gui.util.Dial
     noFocus: false,
 
     getSubmitUrl: function () {
-        return Phlexible.Router.generate('elements_tree_createinstance');
+        return Phlexible.Router.generate('tree_create_instance');
     },
 
     labelWidth: 100,

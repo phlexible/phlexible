@@ -12,6 +12,7 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NodeNotFoundException;
 use Phlexible\Bundle\TreeBundle\Tree\TreeFactoryInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Tree\WritableTreeInterface;
 
 /**
  * Tree manager
@@ -50,7 +51,7 @@ class TreeManager
      *
      * @param string $siteRootId
      *
-     * @return TreeInterface
+     * @return TreeInterface|WritableTreeInterface
      */
     public function getBySiteRootId($siteRootId)
     {
@@ -67,7 +68,7 @@ class TreeManager
      *
      * @param int $nodeId
      *
-     * @return TreeInterface
+     * @return TreeInterface|WritableTreeInterface
      * @throws NodeNotFoundException
      */
     public function getByNodeId($nodeId)

@@ -94,7 +94,7 @@ Phlexible.elements.DeleteInstancesWindow = Ext.extend(Ext.Window, {
 
                     Ext.Ajax.request({
                         method: 'POST',
-                        url: Phlexible.Router.generate('elements_tree_delete'),
+                        url: Phlexible.Router.generate('tree_delete'),
                         params: targets,
                         success: function (response) {
                             var data = Ext.decode(response.responseText);

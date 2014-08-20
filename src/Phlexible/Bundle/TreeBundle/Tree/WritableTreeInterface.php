@@ -19,7 +19,7 @@ use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 interface WritableTreeInterface
 {
     /**
-     * Add a node
+     * Create a node
      *
      * @param TreeNodeInterface|int $parentNode
      * @param TreeNodeInterface|int $afterNode
@@ -32,15 +32,27 @@ interface WritableTreeInterface
      *
      * @return TreeNodeInterface
      */
-    public function add(
+    public function create(
         $parentNode,
-        $afterNode,
+        $afterNode = null,
         $type,
         $typeId,
         array $attributes,
         $userId,
         $sortMode = 'free',
-        $sortDir = 'asc');
+        $sortDir = 'asc'
+    );
+
+    /**
+     * @param TreeNodeInterface|int $parentNode
+     * @param TreeNodeInterface|int $afterNode
+     * @param TreeNodeInterface|int $sourceNode
+     * @param string                $userId
+     *
+     * @return TreeNodeInterface
+     */
+    public function createInstance($parentNode, $afterNode = null, $sourceNode, $userId
+    );
 
     /**
      * Reorder node

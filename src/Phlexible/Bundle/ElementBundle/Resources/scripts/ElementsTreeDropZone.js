@@ -18,7 +18,7 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('elements_tree_move'),
+            url: Phlexible.Router.generate('tree_move'),
             params: {
                 id: sourceId,
                 target: targetId

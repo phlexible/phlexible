@@ -11,11 +11,11 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 
 /**
- * Before set node offline event
+ * Set node offline event
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class BeforeSetNodeOfflineEvent extends NodeEvent
+class SetNodeOfflineEvent extends NodeEvent
 {
     /**
      * @var string

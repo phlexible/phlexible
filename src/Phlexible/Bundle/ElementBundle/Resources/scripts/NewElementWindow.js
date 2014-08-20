@@ -15,7 +15,7 @@ Phlexible.elements.NewElementWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     iconClsOk: 'p-element-save-icon',
 
     getSubmitUrl: function () {
-        return Phlexible.Router.generate('elements_tree_create');
+        return Phlexible.Router.generate('tree_create');
     },
 
     labelWidth: 100,

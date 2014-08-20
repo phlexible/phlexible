@@ -290,7 +290,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
          Phlexible.console.log('beforemovenode');
          this.dragStart = 2;
          Ext.Ajax.request({
-         url: Phlexible.Router.generate('elements_tree_move'),
+         url: Phlexible.Router.generate('tree_move'),
          params: {
          id: node.id,
          target: newParent.id
@@ -431,7 +431,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                             var node = menu.parentMenu.parentMenu.node;
 
                             Ext.Ajax.request({
-                                url: Phlexible.Router.generate('elements_tree_copy'),
+                                url: Phlexible.Router.generate('tree_copy'),
                                 params: {
                                     for_tree_id: forNode.id,
                                     id: node.id
@@ -463,7 +463,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                             var node = menu.parentMenu.parentMenu.node;
 
                             Ext.Ajax.request({
-                                url: Phlexible.Router.generate('elements_tree_createinstance'),
+                                url: Phlexible.Router.generate('tree_create_instance'),
                                 params: {
                                     for_tree_id: forNode.id,
                                     id: node.id
@@ -556,7 +556,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('elements_tree_predelete'),
+            url: Phlexible.Router.generate('tree_predelete'),
             params: params,
             success: function (response) {
                 var result = Ext.decode(response.responseText);
@@ -564,7 +564,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                 // no instances
                 if (!result.data.length) {
                     Ext.Ajax.request({
-                        url: Phlexible.Router.generate('elements_tree_delete'),
+                        url: Phlexible.Router.generate('tree_delete'),
                         params: params,
                         success: this.onDeleteElementSuccess.createDelegate(this, [node.parentNode, true], true),
                         scope: this
@@ -580,7 +580,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
         });
 
         /* Ext.Ajax.request({
-         url: Phlexible.Router.generate('elements_tree_delete'),
+         url: Phlexible.Router.generate('tree_delete'),
          params: params,
          success: this.onDeleteElementSuccess.createDelegate(this, [node.parentNode, true], true),
          scope: this

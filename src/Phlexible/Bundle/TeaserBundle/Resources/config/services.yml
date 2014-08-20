@@ -5,14 +5,14 @@ services:
 
     phlexible_teaser.hasher:
         class: Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher
-        arguments: [@connection_manager]
+        arguments: [@doctrine.dbal.default_connection]
 
     phlexible_teaser.layoutarea.manager:
         class: Phlexible\Bundle\TeaserBundle\Layoutarea\LayoutareaManager
 
     phlexible_teaser.catch.repository:
         class: Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatchRepository
-        arguments: [@connection_manager, @event_dispatcher, @phlexible_message.message_poster]
+        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_message.message_poster]
 
     phlexible_teaser.catch.matcher.treenode:
         class: Phlexible\Bundle\TeaserBundle\ElementCatch\Matcher\TreeNodeMatcher
@@ -20,11 +20,11 @@ services:
 
     phlexible_teaser.catcher:
         class: Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatcher
-        arguments: [@connection_manager, @event_dispatcher, @phlexible_teaser.catch.matcher.treenode, false]
+        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_teaser.catch.matcher.treenode, false]
 
     phlexible_teaser.catch.helper:
         class: Phlexible\Bundle\TeaserBundle\ElementCatch\CatchHelper
-        arguments: [@connection_manager, @phlexible_element.element_service]
+        arguments: [@doctrine.dbal.default_connection, @phlexible_element.element_service, @event_dispatcher]
 
     phlexible_teaser.rights.provider:
         class: Phlexible\Bundle\TeaserBundle\AccessControl\TeaserRightsProvider
@@ -34,5 +34,6 @@ services:
     # event listeners
     phlexible_teaser.listener.publish_node:
         class: Phlexible\Bundle\TeaserBundle\EventListener\NodeListener
+        arguments: [@phlexible_teaser.catch.helper]
         tags:
             - {name: kernel.event_subscriber}

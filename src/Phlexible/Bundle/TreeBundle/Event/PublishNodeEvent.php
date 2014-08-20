@@ -11,11 +11,11 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Tree\Node\TreeNodeInterface;
 
 /**
- * Before publish node event
+ * Publish node event
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class BeforePublishNodeEvent extends NodeEvent
+class PublishNodeEvent extends NodeEvent
 {
     /**
      * @var string
