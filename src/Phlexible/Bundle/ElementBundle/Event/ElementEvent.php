@@ -6,8 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\Entity;
+namespace Phlexible\Bundle\ElementBundle\Event;
 
+use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

@@ -248,6 +248,18 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
     /**
      * {@inheritdoc}
      */
+    public function removeAttribute($key)
+    {
+        if (isset($this->attributes[$key])) {
+            unset($this->attributes[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSort()
     {
         return $this->sort;

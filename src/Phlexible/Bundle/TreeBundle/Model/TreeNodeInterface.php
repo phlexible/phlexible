@@ -109,6 +109,13 @@ interface TreeNodeInterface
     public function setAttribute($key, $value);
 
     /**
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function removeAttribute($key);
+
+    /**
      * @return int
      */
     public function getSort();

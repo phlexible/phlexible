@@ -242,7 +242,7 @@ class ElementLockManager implements ElementLockManagerInterface
             }
         }
 
-        $lock = $this->getLockRepository()->findBy(array('eid' => $element->getEid(), 'language' => $language));
+        $lock = $this->getLockRepository()->findOneBy(array('eid' => $element->getEid(), 'language' => $language));
 
         $this->entityManager->remove($lock);
     }
