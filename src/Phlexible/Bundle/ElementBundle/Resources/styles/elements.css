@@ -32,24 +32,24 @@
 }
 
 .x-form-field-wrap .p-form-link-trigger {
-    background-image: url(/COMPONENTSPATH/elements/images/link-trigger.gif);
+    background-image: url(/COMPONENTSPATH/phlexibleelement/images/link-trigger.gif);
     cursor: pointer;
 }
 
 .p-elements-newelement .p-header-image {
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 .p-elements-newelementinstance .p-header-image {
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 .p-elements-newteaser .p-header-image {
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 .p-elements-newteaserinstance .p-header-image {
-    background: transparent url(/COMPONENTSPATH/mediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 /* Tree */

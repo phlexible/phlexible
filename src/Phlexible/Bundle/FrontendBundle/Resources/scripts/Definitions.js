@@ -59,8 +59,6 @@ Phlexible.elements.TopToolbar.prototype.populateExtendedMenu =
 
 Phlexible.elements.TopToolbar.prototype.onLoadElement =
     Phlexible.elements.TopToolbar.prototype.onLoadElement.createSequence(function (element) {
-        //var properties = element.properties;
-
         // enable preview button only for full elements
         var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
         var previewItem = extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('preview')];
@@ -75,39 +73,5 @@ Phlexible.elements.TopToolbar.prototype.onLoadElement =
         }
         else {
             previewItem.disable();
-        }
-    });
-
-Phlexible.elements.ElementAccordion.prototype.populateItems =
-    Phlexible.elements.ElementAccordion.prototype.populateItems.createSequence(function () {
-        var index = false;
-
-        for (var i = 0; i < this.items.length; i++) {
-            if (this.items[i].xtype == 'elements-dataaccordion') {
-                index = i;
-                break;
-            }
-        }
-        if (index === false) return;
-        index++;
-
-        if (Phlexible.User.isGranted('elements_accordion_teaser')) {
-            var teaserItem = {
-                xtype: 'frontend-teaseraccordion',
-                collapsed: true,
-                hidden: true
-            };
-
-            this.items.splice(index, 0, teaserItem);
-        }
-
-        if (Phlexible.User.isGranted('elements_accordion_page') ||
-            Phlexible.User.isGranted('elements_accordion_page_advanced')) {
-            var pageItem = {
-                xtype: 'frontend-pageaccordion',
-                collapsed: true
-            };
-
-            this.items.splice(index, 0, pageItem);
         }
     });

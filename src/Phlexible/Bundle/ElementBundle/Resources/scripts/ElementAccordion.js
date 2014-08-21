@@ -33,6 +33,14 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
             }
         ];
 
+        if (Phlexible.User.isGranted('elements_accordion_page') ||
+            Phlexible.User.isGranted('elements_accordion_page_advanced')) {
+            this.items.push({
+                xtype: 'elements-configurationaccordion',
+                collapsed: true
+            });
+        }
+
         if (Phlexible.User.isGranted('elements_accordion_meta')) {
             this.items.push({
                 xtype: 'elements-metaaccordion',
@@ -120,18 +128,6 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
         this.items.each(function (acc) {
             acc.load(element.data, element);
         });
-
-//        this.dataAcc.load(element.data);
-//        this.pageAcc.load(element.data);
-//        this.teaserAcc.load(element.data);
-//        this.metaAcc.load(element.data);
-//        if (this.redirectAcc) {
-//            this.redirectAcc.load(element.data);
-//        }
-//        this.allowedChildrenAcc.load(element.data);
-//        this.versionsAcc.load(element.data);
-//        this.instancesAcc.load(element.data);
-//        this.commentAcc.load(element.data);
     },
 
     getData: function () {

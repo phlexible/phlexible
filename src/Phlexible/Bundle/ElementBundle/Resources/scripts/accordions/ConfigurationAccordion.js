@@ -1,4 +1,4 @@
-Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
+Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.configuration,
     cls: 'p-elements-page-accordion',
@@ -9,7 +9,7 @@ Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
     bodyStyle: 'padding: 5px',
     labelAlign: 'top',
 
-    key: 'page',
+    key: 'configuration',
 
     initComponent: function () {
         this.items = [
@@ -77,11 +77,11 @@ Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
         if (Phlexible.User.isGranted('elements_accordion_page_advanced')) {
         }
 
-        Phlexible.frontend.accordion.Page.superclass.initComponent.call(this);
+        Phlexible.elements.accordion.Configuration.superclass.initComponent.call(this);
     },
 
     load: function (data) {
-        if (data.properties.et_type == 'structure' || data.properties.et_type == 'part') {
+        if (data.properties.et_type !== 'full') {
             this.hide();
             return;
         }
@@ -114,4 +114,4 @@ Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
 
 });
 
-Ext.reg('frontend-pageaccordion', Phlexible.frontend.accordion.Page);
+Ext.reg('elements-configurationaccordion', Phlexible.elements.accordion.Configuration);

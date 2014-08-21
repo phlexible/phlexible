@@ -76,6 +76,7 @@ class ElementAssetProvider implements AssetProviderInterface
 
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/AllowedChildrenAccordion.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/CommentAccordion.js')),
+            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/ConfigurationAccordion.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/ContextAccordion.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/DataAccordion.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/DiffAccordion.js')),

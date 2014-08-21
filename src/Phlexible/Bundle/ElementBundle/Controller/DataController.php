@@ -197,12 +197,18 @@ class DataController extends Controller
             foreach ($elementtypeService->findAllowedChildrenIds($elementtype) as $allowedChildId) {
                 $childElementtype = $elementtypeService->findElementtype($allowedChildId);
 
+                if ($childElementtype->getType() !== 'full') {
+                    continue;
+                }
+
                 $children[] = array(
                     $allowedChildId,
                     $childElementtype->getTitle(),
                     '/bundles/phlexibleelementtype/elementtypes/' . $childElementtype->getIcon(),
                 );
             }
+
+            // diff
 
             $diff = $request->get('diff');
             $diffVersionFrom = $request->get('diff_version_from');
