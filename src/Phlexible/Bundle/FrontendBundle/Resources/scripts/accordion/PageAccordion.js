@@ -1,6 +1,6 @@
 Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elements.Strings,
-    title: Phlexible.elements.Strings.page,
+    title: Phlexible.elements.Strings.configuration,
     cls: 'p-elements-page-accordion',
     iconCls: 'p-element-page-icon',
     border: false,
@@ -19,69 +19,62 @@ Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
                 name: 'navigation',
                 hideLabel: true,
                 boxLabel: this.strings.in_navigation
-            },
-            {
+            },{
                 // 1
+                xtype: 'textfield',
+                name: 'pattern',
+                fieldLabel: 'Routing pattern'
+            },{
+                xtype: 'textfield',
+                name: 'controller',
+                fieldLabel: 'Routing controller'
+            },{
                 xtype: 'checkbox',
                 name: 'restricted',
                 hideLabel: true,
-                boxLabel: this.strings.is_restricted
-            }
-        ];
-
-        if (Phlexible.User.isGranted('elements_accordion_page_advanced')) {
-            this.items.push({
-                // 3
-                xtype: 'checkbox',
-                name: 'disable_cache',
-                hideLabel: true,
-                boxLabel: this.strings.disable_caching,
-                listeners: {
-                    check: {
-                        fn: function (c, state) {
-                            this.getComponent(4).setDisabled(state);
-                        },
-                        scope: this
-                    }
-                }
-            });
-            this.items.push({
-                // 4
-                xtype: 'numberfield',
-                name: 'cache_lifetime',
-                fieldLabel: this.strings.cache_lifetime
-            });
-            this.items.push({
-                // 5
+                boxLabel: '_needs_authentication'
+            },{
                 xtype: 'checkbox',
                 name: 'https',
                 hideLabel: true,
                 boxLabel: this.strings.use_https
-            });
-            this.items.push({
-                // 6
-                xtype: 'combo',
-                hiddenName: 'code',
-                fieldLabel: this.strings.http_response_code,
-                store: new Ext.data.SimpleStore({
-                    fields: ['code', 'text'],
-                    data: [
-                        ['200', '200 OK'],
-                        ['403', '403 Forbidden'],
-                        ['404', '404 Not Found'],
-                        ['500', '500 Internal Server Error']
-                    ]
-                }),
-                width: 120,
-                listWidth: 137,
-                valueField: 'code',
-                displayField: 'text',
-                mode: 'local',
-                typeAhead: false,
-                editable: false,
-                triggerAction: 'all',
-                selectOnFocus: true
-            });
+            },
+            {
+                // 2
+                xtype: 'fieldset',
+                title: '_cache',
+                autoHeight: true,
+                hidden: true,
+                items: [{
+                    xtype: 'checkbox',
+                    name: 'disable_cache',
+                    hideLabel: true,
+                    boxLabel: this.strings.disable_caching
+                },{
+                    xtype: 'checkbox',
+                    name: 'disable_cache',
+                    hideLabel: true,
+                    boxLabel: this.strings.disable_caching
+                },{
+                    xtype: 'checkbox',
+                    name: 'disable_cache',
+                    hideLabel: true,
+                    boxLabel: this.strings.disable_caching
+                },{
+                    xtype: 'checkbox',
+                    name: 'disable_cache',
+                    hideLabel: true,
+                    boxLabel: this.strings.disable_caching
+                },{
+                    xtype: 'checkbox',
+                    name: 'disable_cache',
+                    hideLabel: true,
+                    boxLabel: this.strings.disable_caching
+                }]
+            }
+        ];
+
+        if (Phlexible.User.isGranted('elements_accordion_page_advanced')) {
         }
 
         Phlexible.frontend.accordion.Page.superclass.initComponent.call(this);
@@ -93,18 +86,21 @@ Phlexible.frontend.accordion.Page = Ext.extend(Ext.form.FormPanel, {
             return;
         }
 
-        var page = {
-            navigation: data.page.navigation || false,
-            restricted: data.page.restricted || false,
-            disable_cache: data.page.disable_cache || false,
-            cache_lifetime: data.page.cache_lifetime || '',
-            code: data.page.code || 200,
-            https: data.page.https || false
-        };
-        this.getForm().loadRecord(new Ext.data.Record(page));
+        var pattern = null;
+        if (data.attributes.routes && data.attributes.routes['de']) {
+            pattern = data.attributes.routes['de'];
+        }
+
+        this.getForm().setValues({
+            navigation: data.properties.navigation || false,
+            restricted: data.attributes.restricted || false,
+            pattern: pattern,
+            controller: data.attributes.controller || null,
+            https: data.attributes.https || false
+        });
 
         if (Phlexible.User.isGranted('elements_accordion_page_advanced')) {
-            this.getComponent(4).setDisabled(this.getComponent(3).getValue());
+            //this.getComponent(4).setDisabled(this.getComponent(3).getValue());
         }
 
         this.show();

@@ -44,11 +44,6 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
     private $typeId;
 
     /**
-     * @var array
-     */
-    private $attributes;
-
-    /**
      * @var int
      */
     private $sort;
@@ -62,6 +57,16 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
      * @var string
      */
     private $sortDir;
+
+    /**
+     * @var bool
+     */
+    private $inNavigation;
+
+    /**
+     * @var array
+     */
+    private $attributes;
 
     /**
      * @var string
@@ -221,9 +226,13 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
     /**
      * {@inheritdoc}
      */
-    public function getAttribute($key)
+    public function getAttribute($key, $default = null)
     {
-        return $this->attributes[$key];
+        if (isset($this->attributes[$key])) {
+            return $this->attributes[$key];
+        }
+
+        return $default;
     }
 
     /**
@@ -324,5 +333,93 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
         $this->createUid = $createUid;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInNavigation()
+    {
+        return $this->inNavigation;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setInNavigation($inNavigation)
+    {
+        $this->inNavigation = $inNavigation;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCache()
+    {
+        return $this->getAttribute('cache', array());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCache($cache)
+    {
+        return $this->setAttribute('cache', $cache);
+    }
+
+    /**
+     * @return string
+     */
+    public function getController()
+    {
+        return $this->getAttribute('controller');
+    }
+
+    /**
+     * @param string $controller
+     *
+     * @return $this
+     */
+    public function setController($controller)
+    {
+        return $this->setAttribute('controller', $controller);
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoutes()
+    {
+        return $this->getAttribute('routes', array());
+    }
+
+    /**
+     * @param array $routes
+     *
+     * @return $this
+     */
+    public function setRoutes(array $routes)
+    {
+        return $this->setAttribute('routes', $routes);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getNeedsAuthentication()
+    {
+        return $this->getAttribute('needs_authentication', false);
+    }
+
+    /**
+     * @param boolean $needsAuthentication
+     *
+     * @return $this
+     */
+    public function setNeedsAuthentication($needsAuthentication)
+    {
+        return $this->setAttribute('needs_authentication', !!$needsAuthentication);
     }
 }

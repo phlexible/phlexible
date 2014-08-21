@@ -94,10 +94,11 @@ interface TreeNodeInterface
 
     /**
      * @param string $key
+     * @param mixed  $default
      *
      * @return array
      */
-    public function getAttribute($key);
+    public function getAttribute($key, $default);
 
     /**
      * @param string $key
@@ -166,4 +167,64 @@ interface TreeNodeInterface
      * @return $this
      */
     public function setCreateUserId($createUid);
+
+    /**
+     * @return boolean
+     */
+    public function getInNavigation();
+
+    /**
+     * @param boolean $inNavigation
+     *
+     * @return $this
+     */
+    public function setInNavigation($inNavigation);
+
+    /**
+     * @return array
+     */
+    public function getCache();
+
+    /**
+     * @param array $cache
+     *
+     * @return $this
+     */
+    public function setCache($cache);
+
+    /**
+     * @return string
+     */
+    public function getController();
+
+    /**
+     * @param string $controller
+     *
+     * @return $this
+     */
+    public function setController($controller);
+
+    /**
+     * @return array
+     */
+    public function getRoutes();
+
+    /**
+     * @param array $routes
+     *
+     * @return $this
+     */
+    public function setRoutes(array $routes);
+
+    /**
+     * @return boolean
+     */
+    public function getNeedsAuthentication();
+
+    /**
+     * @param boolean $needsAuthentication
+     *
+     * @return $this
+     */
+    public function setNeedsAuthentication($needsAuthentication);
 }

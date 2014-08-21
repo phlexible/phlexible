@@ -7,34 +7,14 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
 
     initComponent: function () {
         this.element.on({
-            load: {
-                fn: this.onLoadElement,
-                scope: this
-            },
-            beforeload: {
-                fn: this.onBeforeLoadElement,
-                scope: this
-            },
-            getlock: {
-                fn: this.onGetLock,
-                scope: this
-            },
-            islocked: {
-                fn: this.onIsLocked,
-                scope: this
-            },
-            removelock: {
-                fn: this.onRemoveLock,
-                scope: this
-            },
-            enableSave: {
-                fn: this.onEnableSave,
-                scope: this
-            },
-            disableSave: {
-                fn: this.onDisableSave,
-                scope: this
-            }
+            load: this.onLoadElement,
+            beforeload: this.onBeforeLoadElement,
+            getlock: this.onGetLock,
+            islocked: this.onIsLocked,
+            removelock: this.onRemoveLock,
+            enableSave: this.onEnableSave,
+            disableSave: this.onDisableSave,
+            scope: this
         });
 
         this.populateTbar();
@@ -254,7 +234,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             iconCls: 'p-element-status_idle-icon',
             hidden: true,
             handler: function () {
-                if (Phlexible.User.isGranted('locks')) {
+                if (Phlexible.User.isGranted('element_locks')) {
                     return;
                 }
 
@@ -269,7 +249,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     return;
                 }
 
-                if (Phlexible.User.isGranted('locks')) {
+                if (Phlexible.User.isGranted('element_locks')) {
                     return;
                 }
 

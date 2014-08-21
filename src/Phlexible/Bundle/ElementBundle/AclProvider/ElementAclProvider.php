@@ -24,6 +24,7 @@ class ElementAclProvider extends AclProvider
     {
         return array(
             'elements',
+            'elements_locks',
             'elements_publish',
             'elements_create',
             'elements_delete',

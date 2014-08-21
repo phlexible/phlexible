@@ -434,15 +434,11 @@ class DataController extends Controller
                 $latestVersion = $element->getLatestVersion();
             }
 
-            // page
+            // attributes
 
-            $page = array();
-            if (0) {
-                $page = !$teaserId ? $node->getPage($version) : array();
-
-                if (isset($page['cache_lifetime']) && !$page['cache_lifetime']) {
-                    $page['cache_lifetime'] = '';
-                }
+            $attributes = array();
+            if (!$teaserId) {
+                $attributes = $node->getAttributes();
             }
 
             // context
@@ -561,6 +557,7 @@ class DataController extends Controller
                 'sort_mode'        => $node->getSortMode(),
                 'sort_dir'         => $node->getSortDir(),
                 'icon'             => $icon,
+                'navigation'       => $node->getInNavigation(),
             );
 
             $elementtypeSerializer = new ElementtypeArraySerializer();
@@ -572,15 +569,7 @@ class DataController extends Controller
             $data = array(
                 'success'             => true,
                 'properties'          => $properties,
-                'page'                => $page,
-                'teaser'              => $teaserId
-                        ? array(
-                            'disable_cache'  => $node->hasCacheDisabled($version) ? 1 : 0,
-                            'cache_lifetime' => $node->getCacheLifeTime($version)
-                                    ? $node->getCacheLifeTime($version)
-                                    : '',
-                        )
-                        : array(),
+                'attributes'          => $attributes,
                 'comment'             => $elementVersion->getComment(),
                 'meta'                => $metaSetArray,
                 'redirects'           => $redirects,

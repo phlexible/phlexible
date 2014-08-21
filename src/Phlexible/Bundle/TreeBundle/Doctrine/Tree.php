@@ -19,14 +19,6 @@ use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNode;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Model\WritableTreeInterface;
-use Phlexible\Bundle\TreeBundle\Tree\Makeweb_Elements_Element_Identifier;
-use Phlexible\Bundle\TreeBundle\Tree\Makeweb_Elements_Tree_Exception;
-use Phlexible\Bundle\TreeBundle\Tree\Makeweb_Elements_Tree_Exception_LockException;
-use Phlexible\Bundle\TreeBundle\Tree\Makeweb_Elements_Tree_Node;
-use Phlexible\Bundle\TreeBundle\Tree\MWF_Core_Acl_Acl;
-use Phlexible\Bundle\TreeBundle\Tree\MWF_Core_Users_User_Peer;
-use Phlexible\Bundle\TreeBundle\Tree\MWF_Env;
-use Phlexible\Bundle\TreeBundle\Tree\MWF_Registry;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Phlexible\Component\Identifier\IdentifiableInterface;
@@ -147,10 +139,11 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
             ->setParentId($row['parent_id'])
             ->setType($row['type'])
             ->setTypeId($row['type_id'])
-            ->setAttributes($attributes)
             ->setSort($row['sort'])
             ->setSortMode($row['sort_mode'])
             ->setSortDir($row['sort_dir'])
+            ->setInNavigation(!!$row['in_navigation'])
+            ->setAttributes($attributes)
             ->setCreatedAt(new \DateTime($row['created_at']))
             ->setCreateUserId($row['create_user_id']);
 
@@ -548,9 +541,10 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
                 'sort'           => $node->getSort(),
                 'sort_mode'      => $node->getSortMode(),
                 'sort_dir'       => $node->getSortDir(),
+                'in_navigation'  => $node->getInNavigation(),
+                'attributes'     => json_encode($node->getAttributes()),
                 'created_at'     => $node->getCreatedAt()->format('Y-m-d H:i:s'),
                 'create_user_id' => $node->getCreateUserId(),
-                'attributes'     => json_encode($node->getAttributes()),
             )
         );
 

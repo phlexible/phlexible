@@ -161,6 +161,7 @@ elements:
     descending: absteigend
     unsorted: unsortiert
     page: Seite
+    configuration: Konfiguration
     disable_caching: 'Caching deaktivieren'
     cache_lifetime: 'Cache-Lebensdauer (Sekunden)'
     http_response_code: 'HTTP Response Code'

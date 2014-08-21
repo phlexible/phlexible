@@ -53,12 +53,6 @@ class TreeNode
     private $typeId;
 
     /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $attributes;
-
-    /**
      * @var int
      * @ORM\Column(type="integer")
      */
@@ -75,6 +69,18 @@ class TreeNode
      * @ORM\Column(name="sort_dir", type="string", length=255)
      */
     private $sortDir;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $attributes;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="in_navigation", type="boolean", options={"default"=0})
+     */
+    private $inNavigation;
 
     /**
      * @var string
