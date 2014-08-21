@@ -34,9 +34,9 @@ class ShowCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $siterootRepository = $this->getContainer()->get('phlexible_siteroot.repository');
+        $siterootManager = $this->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
-        foreach ($siterootRepository->findAll() as $siteroot) {
+        foreach ($siterootManager->findAll() as $siteroot) {
             $output->write('<info>' . $siteroot->getTitle('en') . '</info>');
 
             if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {

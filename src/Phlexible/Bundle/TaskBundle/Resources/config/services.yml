@@ -42,6 +42,12 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
+    phlexible_task.listener.load_data:
+        class: Phlexible\Bundle\TaskBundle\EventListener\LoadDataListener
+        arguments: [@phlexible_task.task_manager, @phlexible_user.user_manager, @security.context]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_element.load_data, method: onLoadData}
+
     # portlets
     phlexible_task.portlet.my_tasks:
         class: Phlexible\Bundle\TaskBundle\Portlet\MyTasksPortlet

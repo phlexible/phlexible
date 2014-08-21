@@ -24,6 +24,12 @@ services:
             - {name: phlexible_access_control.rights}
 
     # event listeners
+    phlexible_teaser.listener.apply_successor:
+        class: Phlexible\Bundle\TeaserBundle\EventListener\ApplySuccessorListener
+        arguments: [@doctrine.dbal.default_connection]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
     phlexible_teaser.listener.publish_node:
         class: Phlexible\Bundle\TeaserBundle\EventListener\NodeListener
         arguments: [@phlexible_teaser.catch.helper]

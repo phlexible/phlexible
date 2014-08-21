@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\EventListener;
+namespace Phlexible\Bundle\TreeBundle\EventListener;
 
 use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
@@ -43,7 +43,17 @@ class ApplySuccessorListener
         $toUid = $toUser->getId();
 
         $this->connection->update(
-            'element',
+            'tree',
+            array(
+                'modify_user_id' => $toUid,
+            ),
+            array(
+                'modify_user_id' => $fromUid
+            )
+        );
+
+        $this->connection->update(
+            'tree_history',
             array(
                 'create_user_id' => $toUid,
             ),
@@ -53,22 +63,12 @@ class ApplySuccessorListener
         );
 
         $this->connection->update(
-            'element_history',
+            'tree_online',
             array(
-                'create_user_id' => $toUid,
+                'publish_uid' => $toUid,
             ),
             array(
-                'create_user_id' => $fromUid
-            )
-        );
-
-        $this->connection->update(
-            'element_version',
-            array(
-                'create_user_id' => $toUid,
-            ),
-            array(
-                'create_user_id' => $fromUid
+                'publish_uid' => $fromUid
             )
         );
     }

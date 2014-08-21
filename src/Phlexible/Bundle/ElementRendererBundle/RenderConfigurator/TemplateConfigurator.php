@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Dwoo\Template\File;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
-use Phlexible\Bundle\TemplateBundle\TemplateRepository as TemplateRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,24 +31,17 @@ class TemplateConfigurator implements ConfiguratorInterface
      */
     private $logger;
 
-    /**
-     * @var TemplateRepository
-     */
-    private $templateRepository;
 
     /**
      * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface          $logger
-     * @param TemplateRepository       $templateRepository
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
-        LoggerInterface $logger,
-        TemplateRepository $templateRepository)
+        LoggerInterface $logger)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
-        $this->templateRepository = $templateRepository;
     }
 
     /**

@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\ContentElement;
 
-use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 
 /**
  * Content element
@@ -55,7 +56,7 @@ class ContentElement
     /**
      * @var array
      */
-    private $mappedFields = array();
+    private $mappedField = array();
 
     /**
      * @var ElementStructure
@@ -63,15 +64,15 @@ class ContentElement
     private $structure;
 
     /**
-     * @param int              $eid
-     * @param string           $uniqueId
-     * @param int              $elementtypeId
-     * @param string           $elementtypeUniqueId
-     * @param string           $elementtypeType
-     * @param int              $version
-     * @param string           $language
-     * @param array            $mappedFields
-     * @param ElementStructure $structure
+     * @param int                       $eid
+     * @param string                    $uniqueId
+     * @param int                       $elementtypeId
+     * @param string                    $elementtypeUniqueId
+     * @param string                    $elementtypeType
+     * @param int                       $version
+     * @param string                    $language
+     * @param ElementVersionMappedField $mappedField
+     * @param ElementStructure          $structure
      */
     public function __construct(
         $eid,
@@ -81,7 +82,7 @@ class ContentElement
         $elementtypeType,
         $version,
         $language,
-        array $mappedFields,
+        ElementVersionMappedField $mappedField,
         ElementStructure $structure)
     {
         $this->eid = (int) $eid;
@@ -91,7 +92,7 @@ class ContentElement
         $this->elementtypeType = $elementtypeType;
         $this->version = (int) $version;
         $this->language = $language;
-        $this->mappedFields = $mappedFields;
+        $this->mappedField = $mappedField;
         $this->structure = $structure;
     }
 
@@ -154,9 +155,9 @@ class ContentElement
     /**
      * @return array
      */
-    public function getMappedFields()
+    public function getMappedField()
     {
-        return $this->mappedFields;
+        return $this->mappedField;
     }
 
     /**

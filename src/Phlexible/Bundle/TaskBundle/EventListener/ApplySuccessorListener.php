@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
 
 /**
- * Tasks callbacks
+ * Apply successor listener
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

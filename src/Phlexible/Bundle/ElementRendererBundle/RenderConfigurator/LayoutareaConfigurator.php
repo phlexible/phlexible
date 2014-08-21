@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
+use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TeaserBundle\Teaser\TeaserService;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -39,26 +40,26 @@ class LayoutareaConfigurator implements ConfiguratorInterface
     private $elementService;
 
     /**
-     * @var TeaserService
+     * @var TeaserManagerInterface
      */
-    private $teaserService;
+    private $teaserManager;
 
     /**
      * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface          $logger
      * @param ElementService           $elementService
-     * @param TeaserService            $teaserService
+     * @param TeaserManagerInterface   $teaserManager
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
         ElementService $elementService,
-        TeaserService $teaserService)
+        TeaserManagerInterface $teaserManager)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
         $this->elementService = $elementService;
-        $this->teaserService = $teaserService;
+        $this->teaserManager = $teaserManager;
     }
 
     /**
@@ -118,7 +119,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
             //$this->_debugTime('initTeasers - Layoutarea');
             //$this->_debugLine('Layoutarea: ' . $layoutElementTypeVersion->getTitle(), 'notice');
 
-            $teasers = $this->teaserService->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
+            $teasers = $this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
 
             $areas[$layoutarea->getUniqueId()] = array(
                 'title'     => $layoutarea->getTitle(),

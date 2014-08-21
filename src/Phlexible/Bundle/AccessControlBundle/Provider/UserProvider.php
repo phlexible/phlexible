@@ -56,7 +56,7 @@ class UserProvider implements ProviderInterface
      */
     public function getAll($query, $limit, $offset)
     {
-        // TODO: $query
+        // TODO: user query
         $users = $this->userManager->findBy(array(), array('lastname' => 'ASC'), $limit, $offset);
 
         $data = array();

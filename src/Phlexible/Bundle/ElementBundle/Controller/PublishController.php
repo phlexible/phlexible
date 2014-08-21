@@ -256,7 +256,7 @@ class PublishController extends Controller
             $response = new ResultResponse(true, 'Teaser ID "'.$teaserId.'" set offline.');
         }
 
-        // TODO refactor
+        // TODO: refactor
         Brainbits_Event_Dispatcher::getInstance()->post(
             (object) array(
                 'teaser_id' => $teaserId,

@@ -96,7 +96,7 @@ class ContextManager
         $activeCountries = $db->fetchCol($select);
 
         /*
-         * TODO can this be removed?
+         * TODO: can this be removed?
          *
         if (!count($activeContextCountries) && $language && isset($config->context->defaults))
         {
@@ -131,7 +131,7 @@ class ContextManager
         $activeCountries = $db->fetchCol($select);
 
         /*
-         * TODO can this be removed?
+         * TODO: can this be removed?
          *
         if (!count($activeContextCountries) && $language && isset($config->context->defaults))
         {

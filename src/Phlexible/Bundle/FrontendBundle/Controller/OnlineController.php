@@ -33,11 +33,11 @@ class OnlineController extends Controller
         // transform parameters if necessary
         //$parameters['version'] = 1;
 
-        $renderConfigurator = $this->get('elementrenderer.configurator');
+        $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
         $renderConfig = $renderConfigurator->configure($request);
 
-        $dataProvider = $this->get('dwoorenderer.dataprovider');
-        $templating = $this->get('templating.engine.dwoo');
+        $dataProvider = $this->get('phlexible_twig_renderer.data_provider');
+        $templating = $this->get('templating.engine.twig');
         $template = $renderConfig->get('template');
         $data = $dataProvider->provide($renderConfig);
 
@@ -47,7 +47,7 @@ class OnlineController extends Controller
     public function oldAction()
     {
         // get dispatcher
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
+        $dispatcher = $this->get('event_dispatcher');
 
         // get response
         $response = $this->getResponse();

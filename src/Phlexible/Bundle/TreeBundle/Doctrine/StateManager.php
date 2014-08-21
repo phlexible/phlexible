@@ -82,9 +82,9 @@ class StateManager implements StateManagerInterface
 
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select(array('eto.language', 'eto.version'))
-            ->from('tree_online', 'eto')
-            ->where($qb->expr()->eq('eto.tree_id', $nodeId));
+            ->select(array('t_o.language', 't_o.version'))
+            ->from('tree_online', 't_o')
+            ->where($qb->expr()->eq('t_o.tree_id', $nodeId));
 
         $statement = $this->connection->executeQuery($qb->getSQL());
 
@@ -122,19 +122,12 @@ class StateManager implements StateManagerInterface
 
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('to.*')
-            ->from('tree_online', 'to')
-            ->where($qb->expr()->eq('to.tree_id', $nodeId))
-            ->andWhere($qb->expr()->eq('to.language', $qb->expr()->literal($language)));
+            ->select('t_o.*')
+            ->from('tree_online', 't_o')
+            ->where($qb->expr()->eq('t_o.tree_id', $nodeId))
+            ->andWhere($qb->expr()->eq('t_o.language', $qb->expr()->literal($language)));
 
-        $statement = $this->connection->executeQuery($qb->getSQL());
-
-        $versions = array();
-        while ($row = $statement->fetch()) {
-            $versions[$row['language']] = (int) $row['version'];
-        }
-
-        return $versions;
+        return $this->connection->fetchAssoc($qb->getSQL());
     }
 
     /**

@@ -32,7 +32,7 @@ services:
             - @router.request_context
             - @phlexible_tree.router.handler.default
             - @phlexible_tree.router.handler.default
-            -
+            - ""
             - @event_dispatcher
         tags:
             - {name: monolog.logger, channel: router}
@@ -44,3 +44,10 @@ services:
         public: false
         tags:
             - {name: phlexible_access_control.permission}
+
+    # event listeners
+    phlexible_tree.listener.apply_successor:
+        class: Phlexible\Bundle\TreeBundle\EventListener\ApplySuccessorListener
+        arguments: [@doctrine.dbal.default_connection]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}

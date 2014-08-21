@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\ContentchannelBundle\Contentchannel\ContentchannelRepository;
+use Phlexible\Bundle\ContentchannelBundle\Model\ContentchannelManagerInterface;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -32,23 +33,23 @@ class ContentchannelConfigurator implements ConfiguratorInterface
     private $logger;
 
     /**
-     * @var ContentchannelRepository;
+     * @var ContentchannelManagerInterface
      */
-    private $contentchannelRepository;
+    private $contentchannelManager;
 
     /**
-     * @param EventDispatcherInterface $dispatcher
-     * @param LoggerInterface          $logger
-     * @param ContentchannelRepository $contentchannelRepository
+     * @param EventDispatcherInterface       $dispatcher
+     * @param LoggerInterface                $logger
+     * @param ContentchannelManagerInterface $contentchannelManager
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
-        ContentchannelRepository $contentchannelRepository)
+        ContentchannelManagerInterface $contentchannelManager)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
-        $this->contentchannelRepository = $contentchannelRepository;
+        $this->contentchannelManager = $contentchannelManager;
     }
 
     /**
@@ -69,7 +70,7 @@ class ContentchannelConfigurator implements ConfiguratorInterface
         }
         */
 
-        $contentchannel = $this->contentchannelRepository->find(
+        $contentchannel = $this->contentchannelManager->find(
             $request->attributes->get('siterootUrl')->getSiteroot()->getDefaultContentChannelId()
         );
         $renderConfiguration

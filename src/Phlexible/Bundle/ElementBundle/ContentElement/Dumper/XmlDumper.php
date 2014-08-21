@@ -54,7 +54,7 @@ class XmlDumper
 
         $mappedFieldsNode = $dom->createElement('mappedFields');
         $rootNode->appendChild($mappedFieldsNode);
-        foreach ($contentElement->getMappedFields() as $key => $value) {
+        foreach ($contentElement->getMappedField() as $key => $value) {
             $valueNode = $dom->createElement($key);
             $valueNode->appendChild($dom->createCDATASection($value));
             $mappedFieldsNode->appendChild($valueNode);

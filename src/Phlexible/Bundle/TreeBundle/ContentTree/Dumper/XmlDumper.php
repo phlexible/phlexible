@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree\Dumper;
 use Cocur\Slugify\Slugify;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
@@ -27,16 +28,24 @@ class XmlDumper
     private $elementService;
 
     /**
+     * @var StateManagerInterface
+     */
+    private $stateManager;
+
+    /**
      * @var Slugify
      */
     private $slugifier;
 
     /**
-     * @param ElementService $elementService
+     * @param ElementService        $elementService
+     * @param StateManagerInterface $stateManager
      */
-    public function __construct(ElementService $elementService)
+    public function __construct(ElementService $elementService, StateManagerInterface $stateManager)
     {
         $this->elementService = $elementService;
+        $this->stateManager = $stateManager;
+
         $this->slugifier = new Slugify();
     }
 
@@ -188,10 +197,10 @@ class XmlDumper
             $slugsNode = $dom->createElement('slugs');
             $nodeNode->appendChild($slugsNode);
 
-            $languages = $tree->getLanguages($node);
+            $languages = $this->stateManager->getPublishedLanguages($node);
 
             foreach ($languages as $language) {
-                $version = $tree->getVersion($node, $language);
+                $version = $this->stateManager->getPublishedVersion($node, $language);
 
                 $versionNode = $dom->createElement('version', $version);
                 $versionsNode->appendChild($versionNode);

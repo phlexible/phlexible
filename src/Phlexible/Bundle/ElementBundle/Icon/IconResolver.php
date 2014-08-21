@@ -133,19 +133,6 @@ class IconResolver
         $parameters['icon'] = $elementtype->getIcon();
 
         return $this->router->generate('elements_icon', $parameters);
-
-        //        $uid = MWF_Env::getUid();
-        //        $service = $this->getContainer()->get('locks.service');
-        //        $lockIdentifier = new Makeweb_Elements_Element_Identifier($this->_eid);
-        //
-        //        if ($service->isLockedByUser($lockIdentifier, $uid))
-        //        {
-        //            $icon .= '/lock/me';
-        //        }
-        //        elseif ($service->isLocked($lockIdentifier))
-        //        {
-        //            $icon .= '/lock/other';
-        //        }
     }
 
     /**
@@ -162,8 +149,8 @@ class IconResolver
 
         // TODO: repair
         /*
-        if ($this->stateManager->isPublished($treeNode, $language)) {
-            $parameters['status'] = $this->stateManager->isAsync($treeNode, $language) ? 'async': 'online';
+        if ($teaser->isPublished($language)) {
+            $parameters['status'] = $teaser->isAsync($language) ? 'async': 'online';
         }
 
         if ($teaser->isInstance()) {
@@ -182,18 +169,5 @@ class IconResolver
         $parameters['icon'] = $elementtype->getIcon();
 
         return $this->router->generate('elements_icon', $parameters);
-
-        //        $uid = MWF_Env::getUid();
-        //        $service = $this->getContainer()->get('locks.service');
-        //        $lockIdentifier = new Makeweb_Elements_Element_Identifier($this->_eid);
-        //
-        //        if ($service->isLockedByUser($lockIdentifier, $uid))
-        //        {
-        //            $icon .= '/lock/me';
-        //        }
-        //        elseif ($service->isLocked($lockIdentifier))
-        //        {
-        //            $icon .= '/lock/other';
-        //        }
     }
 }

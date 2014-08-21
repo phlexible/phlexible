@@ -103,7 +103,13 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
      */
     public function isDefaultSiteroot()
     {
-        return (bool) $this->xpath->query('/contentTree/siteroot')->item(0)->attributes->item(0)->value;
+        $attributes = $this->xpath->query('/contentTree/siteroot')->item(0)->attributes;
+        if (!$attributes->length) {
+            // TODO: false
+            return true;
+        }
+
+        return (bool) $attributes->item(0)->value;
     }
 
     /**
@@ -501,5 +507,35 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         }
 
         return $node;
+    }
+
+    /**
+     * @param TreeNodeInterface|int $node
+     *
+     * @return bool
+     */
+    public function isInstance($node)
+    {
+        return false;
+    }
+
+    /**
+     * @param TreeNodeInterface|int $node
+     *
+     * @return bool
+     */
+    public function isInstanceMaster($node)
+    {
+        return false;
+    }
+
+    /**
+     * @param TreeNodeInterface|int $node
+     *
+     * @return TreeNodeInterface[]
+     */
+    public function getInstances($node)
+    {
+        return array();
     }
 }

@@ -68,7 +68,7 @@ services:
     phlexible_element_renderer.configuration.layoutarea:
         class: Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\LayoutareaConfigurator
         public: false
-        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service, @phlexible_teaser.teaser_service]
+        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service, @phlexible_teaser.teaser_manager]
         tags:
             - {name: monolog.logger, channel: element_renderer}
 

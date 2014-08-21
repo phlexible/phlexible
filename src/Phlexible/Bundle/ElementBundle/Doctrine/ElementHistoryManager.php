@@ -44,7 +44,7 @@ class ElementHistoryManager implements ElementHistoryManagerInterface
 
         if ($orderBy) {
             foreach ($orderBy as $field => $dir) {
-                $qb->orderBy("h.$field", $dir);
+                $qb->addOrderBy("h.$field", $dir);
             }
         }
 
@@ -75,6 +75,8 @@ class ElementHistoryManager implements ElementHistoryManagerInterface
     /**
      * @param array        $criteria
      * @param QueryBuilder $qb
+     *
+     * @throws \Exception
      */
     private function applyCriteriaToQueryBuilder(array $criteria, QueryBuilder $qb)
     {
@@ -85,6 +87,8 @@ class ElementHistoryManager implements ElementHistoryManagerInterface
                 $qb->andWhere($qb->expr()->eq("h.$key", $qb->expr()->literal($value)));
             } elseif (in_array($key, array('comment'))) {
                 $qb->andWhere($qb->expr()->like("h.$key", $qb->expr()->literal("%$value%")));
+            } else {
+                throw new \Exception("Unkown field $key");
             }
         }
     }
