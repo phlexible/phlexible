@@ -37,9 +37,9 @@ class OnlineController extends Controller
         $renderConfig = $renderConfigurator->configure($request);
 
         $dataProvider = $this->get('phlexible_twig_renderer.data_provider');
-        $templating = $this->get('templating.engine.twig');
-        $template = $renderConfig->get('template');
+        $templating = $this->get('templating');
         $data = $dataProvider->provide($renderConfig);
+        $template = $renderConfig->get('template');
 
         return $templating->renderResponse($template, (array) $data);
     }

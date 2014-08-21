@@ -165,7 +165,6 @@ class ElementtypeStructureNode
      */
     public function setElementtypeStructure(ElementtypeStructure $elementtypeStructure)
     {
-        die("glglgl");
         $this->elementtypeStructure = $elementtypeStructure;
 
         return $this;
@@ -306,7 +305,7 @@ class ElementtypeStructureNode
      */
     public function setReferenceElementtype(Elementtype $referenceElementtype)
     {
-        $this->$referenceElementtype = $referenceElementtype;
+        $this->referenceElementtype = $referenceElementtype;
 
         return $this;
     }

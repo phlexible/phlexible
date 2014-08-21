@@ -116,6 +116,11 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
         foreach ($rii as $node) {
             /* @var $node ElementtypeStructureNode */
 
+            $xnode = clone $node;
+            //$xnode->setSort($sort++);
+            $this->entityManager->persist($xnode);
+            continue;
+
             $data = array(
                 'ds_id'               => $node->getDsId(),
                 'elementtype_id'      => $elementtypeStructure->getElementtypeVersion()->getElementtype()->getId(),
@@ -141,6 +146,8 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
 
             $sort++;
         }
+
+        $this->entityManager->flush();
 
         $event = new ElementtypeStructureEvent($elementtypeStructure);
         $this->dispatcher->dispatch(ElementtypeEvents::STRUCTURE_CREATE, $event);

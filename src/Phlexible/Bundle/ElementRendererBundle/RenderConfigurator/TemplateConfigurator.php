@@ -54,7 +54,7 @@ class TemplateConfigurator implements ConfiguratorInterface
         }
 
         $templateFile = $renderConfiguration->get('templateFile');
-        $template = new File('/Users/swentz/Sites/phlexible/brainbits/templates/html/' . $templateFile . '.html.dwoo');
+        $template = $templateFile;//new File('/Users/swentz/Sites/phlexible/brainbits/templates/html/' . $templateFile . '.html.dwoo');
 
         $renderConfiguration
             ->addFeature('template')

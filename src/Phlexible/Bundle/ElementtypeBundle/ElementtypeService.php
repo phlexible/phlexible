@@ -194,9 +194,9 @@ class ElementtypeService
      * @param Elementtype $elementtype
      * @param array       $parentIds
      */
-    public function saveAllowedParentIds(Elementtype $elementtype, array $parentIds)
+    public function updateViability(Elementtype $elementtype, array $parentIds)
     {
-        $this->viabilityManager->saveAllowedParentIds($elementtype, $parentIds);
+        $this->viabilityManager->updateViability($elementtype, $parentIds);
     }
 
     /**
@@ -210,7 +210,7 @@ class ElementtypeService
      *
      * @return Elementtype
      */
-    public function create($type, $uniqueId, $title, $icon, $uid)
+    public function createElementtype($type, $uniqueId, $title, $icon, $uid)
     {
         if (!$icon) {
             $icons = array(
@@ -275,19 +275,26 @@ class ElementtypeService
             ->setDefaultTab($defaultTab)
             ->setLatestVersion($elementtypeVersion->getVersion());
 
-        $this->elementtypeVersionManager->save($elementtypeVersion);
-        $this->elementtypeManager->save($elementtype);
-        $this->elementtypeStructureRepository->save($elementtypeStructure);
+        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion);
+        $this->elementtypeManager->updateElementtype($elementtype);
+        $this->elementtypeStructureRepository->updateElementtypeStructure($elementtypeStructure);
+    }
+
+    /**
+     * @param ElementtypeStructure $elementtypeStructure
+     */
+    public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure)
+    {
+        $this->elementtypeStructureRepository->updateElementtypeStructure($elementtypeStructure);
     }
 
     /**
      * Delete an Element Type
      *
-     * @param int $elementTypeId
+     * @param Elementtype $elementtype
      */
-    public function delete($elementTypeId)
+    public function deleteElementtype(Elementtype $elementtype)
     {
-        $elementtype = $this->find($elementTypeId);
         $this->elementtypeManager->delete($elementtype);
 
         return;
@@ -295,7 +302,7 @@ class ElementtypeService
         $dispatcher = Brainbits_Event_Dispatcher::getInstance();
         $db = MWF_Registry::getContainer()->dbPool->default;
 
-        $elementType = $this->getById($elementTypeId);
+        $elementType = $this->getById($elementtypeId);
         $elementTypeVersion = $elementType->getLatest();
 
         // post before event
@@ -315,7 +322,7 @@ class ElementtypeService
                     $db->prefix . 'elementtype_structure',
                     array('elementtype_id', $db->fn->expr('MAX(version) AS max_version'))
                 )
-                ->where('reference_id = ?', $elementTypeId)
+                ->where('reference_id = ?', $elementtypeId)
                 ->group('elementtype_id');
 
             $result = $db->fetchAll($select);

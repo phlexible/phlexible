@@ -47,31 +47,17 @@ class ElementtypeUsageListener
         $elementtypeId = $event->getElementtype()->getId();
         $language = $this->securityContext->getToken()->getUser()->getInterfaceLanguage();
 
-        $select = $this->db
-            ->select()
-            ->distinct()
-            ->from(
-                array('ev' => $this->db->prefix . 'element_version'),
-                array(
-                    'eid',
-                    $this->db->fn->expr('MAX(ev.elementtype_version) AS latest_version')
-                )
-            )
-            ->join(
-                array('e' => $this->db->prefix . 'element'),
-                'ev.eid = e.eid AND e.elementtype_id = ' . $this->db->quote($elementtypeId),
-                array()
-            )
-            ->join(
-                array('et' => $this->db->prefix . 'elementtype'),
-                'e.elementtype_id = et.id',
-                array('type')
-            )
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('ev.eid', 'MAX(ev.elementtype_version) AS latest_version', 'et.type')
+            ->from('element_version', 'ev')
+            ->join('ev', 'element', 'e', 'ev.eid = e.eid AND e.elementtype_id = ' . $qb->expr()->literal($elementtypeId))
+            ->join('e', 'elementtype', 'et', 'e.elementtype_id = et.id')
             //->from(array('ev' => $this->db->prefix.'element_version'), array('eid'))
             //->join(array('et' => $this->db->prefix.'element_tree'), 'ev.eid = et.eid', array())
-            ->group('ev.eid');
+            ->groupBy('ev.eid');
 
-        $rows = $this->db->fetchAll($select);
+        $rows = $this->connection->fetchAll($qb->getSQL());
 
         foreach ($rows as $row) {
             //$elementVersion = $manager->getLatest($eid);

@@ -145,7 +145,7 @@ class ListController extends Controller
 
             try {
                 $user = $userManager->find($versionElementtypeVersion->getCreateUserId());
-                $username = $user->getUsername();
+                $username = $user->getDisplayName();
             } catch (\Exception $e) {
                 $username = '(unknown)';
             }
@@ -180,7 +180,7 @@ class ListController extends Controller
         }
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $elementtypeService->create($type, $uniqueId, $title, null, $this->getUser()->getId());
+        $elementtypeService->createElementtype($type, $uniqueId, $title, null, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Element Type created.');
     }

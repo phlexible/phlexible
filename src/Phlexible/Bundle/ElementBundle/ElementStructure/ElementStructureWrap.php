@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\ElementStructure;
 
-use Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 
 /**
  * Element structure

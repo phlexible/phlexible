@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\ContentElement\Dumper;
 
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
-use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 
 /**
  * XML dumper

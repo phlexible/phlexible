@@ -432,7 +432,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
 
         $elements = $this->xpath->query("//node[@id=$id]/versions/version[@language=\"$language\"]");
         if (!$elements->length) {
-            throw new \Exception('language $language not found');
+            throw new \Exception("language $language not found");
         }
         $version = (int) $elements->item(0)->textContent;
 

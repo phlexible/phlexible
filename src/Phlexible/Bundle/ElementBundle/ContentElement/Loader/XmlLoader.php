@@ -9,8 +9,9 @@
 namespace Phlexible\Bundle\ElementBundle\ContentElement\Loader;
 
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
-use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructure;
-use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructureValue;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
  * XML loader
@@ -72,7 +73,7 @@ class XmlLoader
             $elementtypeType,
             $version,
             $language,
-            $mappedFields,
+            new ElementVersionMappedField(), //$mappedFields,
             $structure
         );
 

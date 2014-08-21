@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypesMessage;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
@@ -301,9 +301,10 @@ class TreeController extends Controller
                 ->setParentDsId($parentNode->getDsId());
 
             if ($row['type'] == 'reference') {
+                $referenceElementtype = $elementtypeService->findElementtype($row['reference']['refID']);
                 $node
                     ->setType('reference')
-                    ->setReferenceId($row['reference']['refID'])
+                    ->setReferenceElementtype($referenceElementtype)
                     ->setReferenceVersion($row['reference']['refVersion']);
             } else {
                 $properties = $row['properties'];
@@ -323,9 +324,6 @@ class TreeController extends Controller
 
             $elementtypeStructure->addNode($node);
         }
-
-        $db = $this->getContainer()->get('doctrine.dbal.default_connection')->default;
-        $db->beginTransaction();
 
         $elementtypeService->createElementtypeVersion(
             $elementtypeStructure,
@@ -374,8 +372,6 @@ class TreeController extends Controller
         }
         */
 
-        $db->commit();
-
         // post message
         $message = ElementtypesMessage::create(
             "Element Type {$elementtype->getTitle()} saved in version {$elementtypeVersion->getVersion()}"
@@ -406,7 +402,7 @@ class TreeController extends Controller
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
-        $referenceElementtype = $elementtypeService->create(
+        $referenceElementtype = $elementtypeService->createElementtype(
             Elementtype::TYPE_REFERENCE,
             $title,
             $title,
