@@ -55,7 +55,7 @@ class SiterootController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return ResultResponse
      * @Route("/create", name="siteroots_siteroot_create")
      */
     public function createAction(Request $request)
@@ -66,11 +66,14 @@ class SiterootController extends Controller
         $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
 
         $siteroot = new Siteroot();
-        foreach ($this->container->getParameter('phlexible_gui.languages.available') as $language) {
+        foreach (explode(',', $this->container->getParameter('phlexible_gui.languages.available')) as $language) {
             $siteroot->setTitle($language, $title);
         }
-        $siteroot->setCreateUserId($title, $this->getUser()->getId());
-        $siteroot->setCreatedAt(new \DateTime());
+        $siteroot
+            ->setCreateUserId($this->getUser()->getId())
+            ->setCreatedAt(new \DateTime())
+            ->setModifyUserId($siteroot->getCreateUserId())
+            ->setModifiedAt($siteroot->getCreatedAt());
 
         $em->persist($siteroot);
         $em->flush();
@@ -78,7 +81,7 @@ class SiterootController extends Controller
         $message = SiterootsMessage::create('New Siteroot created.', '', null, null, 'siteroot');
         $this->get('phlexible_message.message_poster')->post($message);
 
-        return new JsonResponse(true, 'New Siteroot created.');
+        return new ResultResponse(true, 'New Siteroot created.');
     }
 
     /**
