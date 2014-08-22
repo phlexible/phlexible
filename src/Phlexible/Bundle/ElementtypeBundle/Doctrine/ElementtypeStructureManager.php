@@ -68,16 +68,14 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
     private $structureMap = array();
 
     /**
-     * @param ElementtypeVersion $elementtypeVersion
-     *
-     * @return ElementtypeStructure
+     * {@inheritdoc}
      */
     public function find(ElementtypeVersion $elementtypeVersion)
     {
         if (!isset($this->structureMap[$elementtypeVersion->getUniqueId()])) {
             $structure = new ElementtypeStructure();
             $structure
-                ->setElementTypeVersion($elementtypeVersion);
+                ->setElementtypeVersion($elementtypeVersion);
 
             $this->doLoad(
                 $structure,
@@ -92,11 +90,9 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
     }
 
     /**
-     * @param ElementtypeStructure $elementtypeStructure
-     *
-     * @throws \Exception
+     * {@inheritdoc}
      */
-    public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure)
+    public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure, $flush = true)
     {
         $event = new ElementtypeStructureEvent($elementtypeStructure);
         if (!$this->dispatcher->dispatch(ElementtypeEvents::BEFORE_STRUCTURE_CREATE, $event)) {
@@ -112,42 +108,15 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
 
         $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
 
-        $sort = 1;
         foreach ($rii as $node) {
             /* @var $node ElementtypeStructureNode */
 
-            $xnode = clone $node;
-            //$xnode->setSort($sort++);
-            $this->entityManager->persist($xnode);
-            continue;
-
-            $data = array(
-                'ds_id'               => $node->getDsId(),
-                'elementtype_id'      => $elementtypeStructure->getElementtypeVersion()->getElementtype()->getId(),
-                'elementtype_version' => $elementtypeStructure->getElementtypeVersion()->getVersion(),
-                'parent_id'           => $node->getParentId(),
-                'parent_ds_id'        => $node->getParentDsId(),
-                'name'                => $node->getName() ? $node->getName() : '',
-                'type'                => $node->getType(),
-                'sort'                => $sort,
-                'reference_id'        => $node->getReferenceId(),
-                'reference_version'   => $node->getReferenceVersion(),
-                'comment'             => $node->getComment(),
-                'configuration'       => $node->getConfiguration() ? json_encode($node->getConfiguration()) : null,
-                'validation'          => $node->getValidation() ? json_encode($node->getValidation()) : null,
-                'labels'              => $node->getLabels() ? json_encode($node->getLabels()) : null,
-                'options'             => $node->getOptions() ? json_encode($node->getOptions()) : null,
-                'content_channels'    => $node->getContentChannels() ? json_encode($node->getContentChannels()) : null,
-            );
-
-            $this->db->insert($this->db->prefix . 'elementtype_structure', $data);
-
-            $node->setId($this->db->lastInsertId());
-
-            $sort++;
+            $this->entityManager->persist($node);
         }
 
-        $this->entityManager->flush();
+        if ($flush) {
+            $this->entityManager->flush();
+        }
 
         $event = new ElementtypeStructureEvent($elementtypeStructure);
         $this->dispatcher->dispatch(ElementtypeEvents::STRUCTURE_CREATE, $event);

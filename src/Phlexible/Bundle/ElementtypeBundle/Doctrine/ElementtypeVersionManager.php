@@ -107,10 +107,11 @@ class ElementtypeVersionManager implements ElementtypeVersionManagerInterface
 
     /**
      * @param ElementtypeVersion $elementtypeVersion
+     * @param bool               $flush
      *
      * @throws UpdateCancelledException
      */
-    public function updateElementtypeVersion(ElementtypeVersion $elementtypeVersion)
+    public function updateElementtypeVersion(ElementtypeVersion $elementtypeVersion, $flush = true)
     {
         $event = new ElementtypeVersionEvent($elementtypeVersion);
         if ($this->dispatcher->dispatch(ElementtypeEvents::BEFORE_VERSION_CREATE, $event)->isPropagationStopped()) {
@@ -118,7 +119,9 @@ class ElementtypeVersionManager implements ElementtypeVersionManagerInterface
         }
 
         $this->entityManager->persist($elementtypeVersion);
-        $this->entityManager->flush($elementtypeVersion);
+        if ($flush) {
+            $this->entityManager->flush($elementtypeVersion);
+        }
 
         $event = new ElementtypeVersionEvent($elementtypeVersion);
         $this->dispatcher->dispatch(ElementtypeEvents::VERSION_CREATE, $event);

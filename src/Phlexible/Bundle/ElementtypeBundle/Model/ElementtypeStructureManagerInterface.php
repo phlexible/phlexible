@@ -27,6 +27,7 @@ interface ElementtypeStructureManagerInterface
 
     /**
      * @param ElementtypeStructure $elementtypeStructure
+     * @param bool                 $flush
      */
-    public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure);
+    public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure, $flush = false);
 }

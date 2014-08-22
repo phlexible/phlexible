@@ -275,8 +275,8 @@ class ElementtypeService
             ->setDefaultTab($defaultTab)
             ->setLatestVersion($elementtypeVersion->getVersion());
 
-        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion);
-        $this->elementtypeManager->updateElementtype($elementtype);
+        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion, false);
+        $this->elementtypeManager->updateElementtype($elementtype, false);
         $this->elementtypeStructureRepository->updateElementtypeStructure($elementtypeStructure);
     }
 
@@ -380,7 +380,7 @@ class ElementtypeService
 
         $sourceElementtypeStructure = $this->findElementtypeStructure($sourceElementtypeVersion);
         $elementtypeStructure = clone $sourceElementtypeStructure;
-        $elementtypeStructure->setElementTypeVersion($elementtypeVersion);
+        $elementtypeStructure->setElementtypeVersion($elementtypeVersion);
 
         $dsIdMap = array();
         foreach ($elementtypeStructure->getIterator() as $node) {

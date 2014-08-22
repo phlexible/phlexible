@@ -10,8 +10,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\ElementtypeBundle\Elementtype\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
+use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -124,7 +123,7 @@ class ViabilityController extends Controller
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $elementtype = $elementtypeService->findElementtype($id);
 
-        $elementtypeService->saveAllowedParentIds($elementtype, $ids);
+        $elementtypeService->updateViability($elementtype, $ids);
 
         return new ResultResponse(true);
     }

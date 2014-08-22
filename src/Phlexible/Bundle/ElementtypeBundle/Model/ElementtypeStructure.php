@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
+use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
 
 /**
  * Elementtype structure
@@ -21,7 +22,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     /**
      * @var ElementtypeVersion
      */
-    private $elementTypeVersion;
+    private $elementtypeVersion;
 
     /**
      * @var string
@@ -46,9 +47,9 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     /**
      * @return ElementTypeVersion
      */
-    public function getElementTypeVersion()
+    public function getElementtypeVersion()
     {
-        return $this->elementTypeVersion;
+        return $this->elementtypeVersion;
     }
 
     /**
@@ -56,9 +57,9 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      *
      * @return $this
      */
-    public function setElementTypeVersion(ElementtypeVersion $elementTypeVersion)
+    public function setElementtypeVersion(ElementtypeVersion $elementTypeVersion)
     {
-        $this->elementTypeVersion = $elementTypeVersion;
+        $this->elementtypeVersion = $elementTypeVersion;
 
         return $this;
     }
@@ -66,7 +67,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     /**
      * @param ElementtypeStructureNode $node
      *
-     * @throws ElementtypeStructureException
+     * @throws InvalidArgumentException
      */
     public function addNode(ElementtypeStructureNode $node)
     {
@@ -75,7 +76,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
 
         if (array_key_exists($dsId, $this->dsIdMap)) {
             $msg = "Duplicate node in element structure tree: ds_id=$dsId";
-            throw new ElementtypeStructureException($msg);
+            throw new InvalidArgumentException($msg);
         }
 
         // add node by node id and ds id to node map
@@ -94,12 +95,12 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      * @param string $dsId
      *
      * @return string
-     * @throws ElementtypeStructureException
+     * @throws InvalidArgumentException
      */
     public function getParentDsId($dsId)
     {
         if (!array_key_exists($dsId, $this->parentMap)) {
-            throw new ElementtypeStructureException('Unknown ds_id ', $dsId);
+            throw new InvalidArgumentException('Unknown ds_id ', $dsId);
         }
 
         return $this->parentMap[$dsId];

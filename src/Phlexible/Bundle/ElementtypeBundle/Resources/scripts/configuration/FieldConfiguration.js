@@ -175,7 +175,7 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
         this.updateVisibility(fieldType, type);
 
         this.getForm().setValues([
-            {id: 'synchronized', value: fieldData['synchronized']},
+            {id: 'synchronized', value: fieldData['synchronized'] || 'no'},
             {id: 'width', value: fieldData.width},
             {id: 'height', value: fieldData.height},
             {id: 'sortable', value: fieldData.sortable},

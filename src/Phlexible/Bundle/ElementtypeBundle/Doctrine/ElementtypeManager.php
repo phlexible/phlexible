@@ -130,7 +130,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
      * @throws UpdateCancelledException
      * @return $this
      */
-    public function updateElementtype(Elementtype $elementtype)
+    public function updateElementtype(Elementtype $elementtype, $flush = true)
     {
         if (!$this->entityManager->contains($elementtype)) {
             $event = new ElementtypeEvent($elementtype);
@@ -139,7 +139,9 @@ class ElementtypeManager implements ElementtypeManagerInterface
             }
 
             $this->entityManager->persist($elementtype);
-            $this->entityManager->flush($elementtype);
+            if ($flush) {
+                $this->entityManager->flush($elementtype);
+            }
 
             $event = new ElementtypeEvent($elementtype);
             $this->dispatcher->dispatch(ElementtypeEvents::CREATE, $event);
@@ -154,7 +156,9 @@ class ElementtypeManager implements ElementtypeManagerInterface
             }
 
             $this->entityManager->persist($elementtype);
-            $this->entityManager->flush($elementtype);
+            if ($flush) {
+                $this->entityManager->flush($elementtype);
+            }
 
             $event = new ElementtypeEvent($elementtype);
             $this->dispatcher->dispatch(ElementtypeEvents::UPDATE, $event);

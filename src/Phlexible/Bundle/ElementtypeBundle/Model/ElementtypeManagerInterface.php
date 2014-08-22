@@ -55,10 +55,11 @@ interface ElementtypeManagerInterface
      * Save element type
      *
      * @param Elementtype $elementtype
+     * @param bool        $flush
      *
      * @return $this
      */
-    public function updateElementtype(Elementtype $elementtype);
+    public function updateElementtype(Elementtype $elementtype, $flush = true);
 
     /**
      * Delete an Element Type

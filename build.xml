@@ -11,7 +11,16 @@
     <!-- Target: help                                  -->
     <!-- ============================================  -->
     <target name="help">
-        <echo msg="Help" />
+        <echo msg="Available tasks:" />
+        <echo msg="" />
+        <echo msg="  lint" />
+        <echo msg="  phpcpd" />
+        <echo msg="  phploc" />
+        <echo msg="  phpcs" />
+        <echo msg="  phpmd" />
+        <echo msg="  pdepend" />
+        <echo msg="  phpdoc" />
+        <echo msg="  all (default)" />
     </target>
 
     <!-- ============================================  -->

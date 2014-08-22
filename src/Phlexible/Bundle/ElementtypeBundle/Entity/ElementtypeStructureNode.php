@@ -40,6 +40,11 @@ class ElementtypeStructureNode
     private $elementtype;
 
     /**
+     * @var ElementtypeStructure
+     */
+    private $elementtypeStructure;
+
+    /**
      * @var int
      * @ORM\Column(name="elementtype_version", type="integer")
      */
@@ -151,6 +156,46 @@ class ElementtypeStructureNode
     }
 
     /**
+     * @return Elementtype
+     */
+    public function getElementtype()
+    {
+        return $this->elementtype;
+    }
+
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return $this
+     */
+    public function setElementtype($elementtype)
+    {
+        $this->elementtype = $elementtype;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param int $version
+     *
+     * @return $this
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getElementtypeStructure()
@@ -226,6 +271,26 @@ class ElementtypeStructureNode
     public function setParentDsId($parentDsId)
     {
         $this->parentDsId = $parentDsId ? (string) $parentDsId : null;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
+    /**
+     * @param int $sort
+     *
+     * @return $this
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
 
         return $this;
     }
@@ -565,5 +630,4 @@ class ElementtypeStructureNode
     {
         return self::FIELD_TYPE_REFERENCE_ROOT === $this->getType();
     }
-
 }

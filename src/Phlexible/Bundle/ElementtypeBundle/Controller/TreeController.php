@@ -277,14 +277,20 @@ class TreeController extends Controller
 
         $elementtypeStructure = new ElementtypeStructure();
         $elementtypeStructure
-            ->setElementTypeVersion($elementtypeVersion);
+            ->setElementtypeVersion($elementtypeVersion);
+
+        $sort = 1;
 
         $rootNode = new ElementtypeStructureNode();
         $rootDsId = !empty($rootRow['ds_id']) ? $rootRow['ds_id'] : Uuid::generate();
         $rootNode
+            ->setElementtype($elementtype)
+            ->setVersion($elementtypeVersion->getVersion())
             ->setElementtypeStructure($elementtypeStructure)
             ->setDsId($rootDsId)
-            ->setType($rootType);
+            ->setType($rootType)
+            ->setName('root')
+            ->setSort($sort++);
 
         $elementtypeStructure->addNode($rootNode);
 
@@ -296,14 +302,19 @@ class TreeController extends Controller
             $parentNode = $elementtypeStructure->getNode($row['parent_ds_id']);
 
             $node
+                ->setElementtype($elementtype)
+                ->setVersion($elementtypeVersion->getVersion())
                 ->setElementtypeStructure($elementtypeStructure)
                 ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : Uuid::generate())
-                ->setParentDsId($parentNode->getDsId());
+                ->setParentDsId($parentNode->getDsId())
+                ->setParentId($parentNode->getId())
+                ->setSort($sort++);
 
             if ($row['type'] == 'reference') {
                 $referenceElementtype = $elementtypeService->findElementtype($row['reference']['refID']);
                 $node
                     ->setType('reference')
+                    ->setName('reference_' . $referenceElementtype->getId())
                     ->setReferenceElementtype($referenceElementtype)
                     ->setReferenceVersion($row['reference']['refVersion']);
             } else {
@@ -312,7 +323,7 @@ class TreeController extends Controller
                 $node
                     ->setType($properties['field']['type'])
                     ->setName(trim($properties['field']['working_title']))
-                    ->setComment(trim($properties['field']['comment']))
+                    ->setComment(trim($properties['field']['comment']) ?: null)
                     ->setConfiguration(!empty($properties['configuration']) ? $properties['configuration'] : null)
                     ->setValidation(!empty($properties['validation']) ? $properties['validation'] : null)
                     ->setLabels(!empty($properties['labels']) ? $properties['labels'] : null)
@@ -380,9 +391,7 @@ class TreeController extends Controller
 
         return new ResultResponse(
             true,
-            $elementtypeId,
-            'Element Type "' . $elementtype->getTitle() . '" saved as Version ' . $elementtypeVersion->getVersion(
-            ) . '.'
+            "Element Type {$elementtype->getTitle()} saved as version {$elementtypeVersion->getVersion()}."
         );
     }
 
@@ -442,7 +451,7 @@ class TreeController extends Controller
 
         $referenceStructure = new ElementtypeStructure();
         $referenceStructure
-            ->setElementTypeVersion($referenceElementtypeVersion)
+            ->setElementtypeVersion($referenceElementtypeVersion)
             ->addNode($referenceRootNode);
 
         foreach ($data as $row) {

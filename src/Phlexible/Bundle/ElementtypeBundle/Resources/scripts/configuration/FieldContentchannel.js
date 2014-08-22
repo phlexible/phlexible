@@ -75,7 +75,7 @@ Phlexible.elementtypes.configuration.FieldContentchannel = Ext.extend(Ext.form.F
     isValid: function () {
         if (this.getForm().isValid()) {
             //this.header.child('span').removeClass('error');
-            this.setIconClass('p-contentchannels-component-icon');
+            this.setIconClass('p-contentchannel-component-icon');
 
             return true;
         } else {

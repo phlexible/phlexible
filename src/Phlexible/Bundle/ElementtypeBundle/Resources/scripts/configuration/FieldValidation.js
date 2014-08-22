@@ -203,7 +203,7 @@ Phlexible.elementtypes.configuration.FieldValidation = Ext.extend(Ext.form.FormP
     },
 
     loadData: function (fieldData, fieldType) {
-        this.getComponent(0).setValue(fieldData.required);
+        this.getComponent(0).setValue(fieldData.required || 'no');
 
         this.updateVisibility(fieldType);
 
@@ -217,7 +217,7 @@ Phlexible.elementtypes.configuration.FieldValidation = Ext.extend(Ext.form.FormP
         text.getComponent(3).items.items[0].setValue(fieldData.global);
         text.getComponent(3).items.items[1].setValue(fieldData.ignore);
         text.getComponent(3).items.items[2].setValue(fieldData.multiline);
-        content.getComponent(0).setValue(fieldData.validator);
+        content.getComponent(0).setValue(fieldData.validator || '');
         number.getComponent(0).setValue(fieldData.allow_negative);
         number.getComponent(1).setValue(fieldData.allow_decimals);
         number.getComponent(2).setValue(fieldData.min_value);
