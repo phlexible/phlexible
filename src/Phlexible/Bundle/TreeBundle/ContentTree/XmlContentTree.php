@@ -137,11 +137,13 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     }
 
     /**
+     * @param string $language
+     *
      * @return array
      */
-    public function getSpecialTids()
+    public function getSpecialTids($language = null)
     {
-        return $this->getSiteroot()->getSpecialTids();
+        return $this->getSiteroot()->getSpecialTidsForLanguage($language);
     }
 
     /**
@@ -185,11 +187,11 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         $specialTids = array();
         foreach ($specialTidElements as $specialTidElement) {
             /* @var $specialTidElement \DOMElement */
-            $key = $specialTidElement->getAttribute('key');
+            $name = $specialTidElement->getAttribute('name');
             $language = $specialTidElement->getAttribute('language') ? : null;
-            $specialTids[$language][$key] = (int) $specialTidElement->textContent;
+            $specialTids[] = array('name' => $name, 'language' => $language, 'treeId' => (int) $specialTidElement->textContent);
         }
-        $siteroot->setAllSpecialTids($specialTids);
+        $siteroot->setSpecialTids($specialTids);
 
         return $siteroot;
     }

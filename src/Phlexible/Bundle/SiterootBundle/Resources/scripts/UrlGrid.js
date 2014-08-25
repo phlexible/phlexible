@@ -237,48 +237,56 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      * Get the data to be saved.
      */
     getSaveData: function () {
+        // check data
+        var valid = true;
+        Ext.each(this.store.getModifiedRecords() || [], function(r) {
+            if (r.data.hostname.length <= 0) {
+                Ext.Msg.alert(this.strings.failure, this.strings.err_url_empty);
+                valid = false;
+                return false;
+            }
+
+            if (r.data.target.length <= 0) {
+                Ext.Msg.alert(this.strings.failure, this.strings.err_target_empty);
+                valid = false;
+                return false;
+            }
+
+            if (r.data.language.length <= 0) {
+                Ext.Msg.alert(this.strings.failure, this.strings.err_language_empty);
+                valid = false;
+                return false;
+            }
+        });
+
+        if (!valid) {
+            return false;
+        }
 
         // fetch deleted records
-        var delRecords = [];
+        var deleted = [];
         Ext.each(this.deletedRecords || [], function (r) {
-            if (new String(r.data.id).length > 0) {
-                delRecords.push(r.data);
+            if (r.data.id.length > 0) {
+                deleted.push(r.data.id);
             }
         });
 
         // fetch modified records
-        var modRecords = [];
+        var created = [];
+        var modified = [];
         Ext.each(this.store.getModifiedRecords() || [], function (r) {
-            modRecords.push(r.data);
+            if (r.data.id) {
+                modified.push(r.data);
+            } else {
+                created.push(r.data);
+            }
         });
 
-        // check data
-        for (var i = 0; i < modRecords.length; ++i) {
-
-            // get current record
-            var r = modRecords[i];
-
-            if (r.hostname.length <= 0) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_url_empty);
-                return false;
-            }
-
-            if (r.target.length <= 0) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_target_empty);
-                return false;
-            }
-
-            if (r.language.length <= 0) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_language_empty);
-                return false;
-            }
-
-        }
-
         return {
-            'mappings': {
-                del_records: delRecords,
-                mod_records: modRecords
+            mappings: {
+                deleted: deleted,
+                modified: modified,
+                created: created
             }
         };
     }

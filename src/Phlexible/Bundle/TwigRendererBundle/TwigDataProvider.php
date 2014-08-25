@@ -93,14 +93,13 @@ class TwigDataProvider implements DataProviderInterface
 
     /**
      * @param RenderConfiguration $renderConfiguration
+     * @param string              $language
      *
      * @return array
      */
     protected function createSpecialTids(RenderConfiguration $renderConfiguration, $language)
     {
-        $specialTids = $renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids($language);
-        $specialTids += $renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids(null);
-        $specialTids += array(
+        $specialTids = array(
             'default_start_eid'       => -1,
             'default_pw_aendern'      => -1,
             'glossar_eid'             => -1,
@@ -109,6 +108,14 @@ class TwigDataProvider implements DataProviderInterface
             'default_quicksearch_eid' => -1,
             'sitemap_eid'             => -1,
         );
+
+        foreach ($renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids(null) as $specialTid) {
+            $specialTids[$specialTid['name']] = $specialTid['treeId'];
+        }
+
+        foreach ($renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids($language) as $specialTid) {
+            $specialTids[$specialTid['name']] = $specialTid['treeId'];
+        }
 
         return $specialTids;
     }

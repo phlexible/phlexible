@@ -24,11 +24,6 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 class XmlDumper
 {
     /**
-     * @var ElementService
-     */
-    private $elementService;
-
-    /**
      * @var StateManagerInterface
      */
     private $stateManager;
@@ -44,13 +39,11 @@ class XmlDumper
     private $mediator;
 
     /**
-     * @param ElementService        $elementService
      * @param StateManagerInterface $stateManager
      * @param MediatorInterface     $mediator
      */
-    public function __construct(ElementService $elementService, StateManagerInterface $stateManager, MediatorInterface $mediator)
+    public function __construct(StateManagerInterface $stateManager, MediatorInterface $mediator)
     {
-        $this->elementService = $elementService;
         $this->stateManager = $stateManager;
         $this->mediator = $mediator;
 
@@ -106,17 +99,17 @@ class XmlDumper
         $specialTidsNode = $dom->createElement('specialTids');
         $siterootNode->appendChild($specialTidsNode);
 
-        foreach ($siteroot->getAllSpecialTids() as $language => $specialTids) {
-            foreach ($specialTids as $key => $specialTid) {
-                $specialTidNode = $dom->createElement('specialTid', $specialTid);
-                $specialTidsNode->appendChild($specialTidNode);
+        foreach ($siteroot->getSpecialTids() as $specialTid) {
+            $specialTidNode = $dom->createElement('specialTid', $specialTid['treeId']);
+            $specialTidsNode->appendChild($specialTidNode);
 
-                $keyAttr = $dom->createAttribute('key');
-                $keyAttr->value = $key;
-                $specialTidNode->appendChild($keyAttr);
+            $keyAttr = $dom->createAttribute('name');
+            $keyAttr->value = $specialTid['name'];
+            $specialTidNode->appendChild($keyAttr);
 
+            if ($specialTid['language']) {
                 $languageAttr = $dom->createAttribute('language');
-                $languageAttr->value = $language;
+                $languageAttr->value = $specialTid['language'];
                 $specialTidNode->appendChild($languageAttr);
             }
         }
@@ -218,9 +211,6 @@ class XmlDumper
                 $versionNode->appendChild($languageAttr);
 
                 $title = $this->mediator->getTitle($node, 'navigation', $language);
-                //$element = $this->elementService->findElement($node->getTypeId());
-                //$elementVersion = $this->elementService->findElementVersion($element, $version);
-                //$title = $elementVersion->getNavigationTitle($language);
 
                 $slugNode = $dom->createElement('slug', $this->slugifier->slugify($title));
                 $slugsNode->appendChild($slugNode);

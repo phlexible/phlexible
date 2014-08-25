@@ -401,7 +401,7 @@ class Siteroot
      *
      * @return array
      */
-    public function getAllSpecialTids()
+    public function getSpecialTids()
     {
         return $this->specialTids;
     }
@@ -411,7 +411,7 @@ class Siteroot
      *
      * @return $this
      */
-    public function setAllSpecialTids(array $specialTids)
+    public function setSpecialTids(array $specialTids)
     {
         $this->specialTids = $specialTids;
 
@@ -425,7 +425,7 @@ class Siteroot
      *
      * @return array
      */
-    public function getSpecialTids($language)
+    public function getSpecialTidsForLanguage($language = null)
     {
         $specialTids = array();
 
@@ -433,15 +433,6 @@ class Siteroot
             if ($specialTid['language'] === $language || $specialTid['language'] === null) {
                 $specialTids[$specialTid['name']] = $specialTid['treeId'];
             }
-        }
-
-        return $specialTids;
-        if ((null !== $language) && !empty($this->specialTids[$language])) {
-            $specialTids += $this->specialTids[$language];
-        }
-
-        if (!empty($this->specialTids[null])) {
-            $specialTids += $this->specialTids[null];
         }
 
         return $specialTids;

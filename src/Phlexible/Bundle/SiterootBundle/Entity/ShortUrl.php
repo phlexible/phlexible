@@ -30,7 +30,7 @@ class ShortUrl
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $hostname;
 
@@ -92,7 +92,7 @@ class ShortUrl
      *
      * @return $this
      */
-    public function setSiteroot(Siteroot $siteroot)
+    public function setSiteroot(Siteroot $siteroot = null)
     {
         $this->siteroot = $siteroot;
 

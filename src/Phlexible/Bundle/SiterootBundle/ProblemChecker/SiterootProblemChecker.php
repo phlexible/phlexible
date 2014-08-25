@@ -67,7 +67,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                 $problems[] = $problem;
             }
 
-            $specialTids = $siteRoot->getAllSpecialTids();
+            $specialTids = $siteRoot->getSpecialTids();
             if (!$specialTids) {
                 $problem = new Problem();
                 $problem

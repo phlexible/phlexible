@@ -98,7 +98,7 @@ class Url
      *
      * @return $this
      */
-    public function setSiteroot(Siteroot $siteroot)
+    public function setSiteroot(Siteroot $siteroot = null)
     {
         $this->siteroot = $siteroot;
 

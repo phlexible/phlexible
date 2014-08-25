@@ -48,9 +48,11 @@ interface ContentTreeInterface extends TreeInterface
     public function getNavigations();
 
     /**
+     * @param string $language
+     *
      * @return array
      */
-    public function getSpecialTids();
+    public function getSpecialTids($language = null);
 
     /**
      * @param TreeNodeInterface $treeNode

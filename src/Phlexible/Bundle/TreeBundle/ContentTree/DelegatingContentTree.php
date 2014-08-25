@@ -122,9 +122,9 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getSpecialTids()
+    public function getSpecialTids($language = null)
     {
-        return $this->getSiteroot()->getSpecialTids();
+        return $this->getSiteroot()->getSpecialTidsForLanguage($language);
     }
 
     /**

@@ -36,7 +36,7 @@ class Navigation
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $handler;
 
@@ -104,7 +104,7 @@ class Navigation
      *
      * @return $this
      */
-    public function setSiteroot(Siteroot $siteroot)
+    public function setSiteroot(Siteroot $siteroot = null)
     {
         $this->siteroot = $siteroot;
 

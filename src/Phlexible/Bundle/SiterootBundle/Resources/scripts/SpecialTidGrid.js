@@ -45,7 +45,12 @@ Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         });
 
         this.store = new Ext.data.JsonStore({
-            fields: Phlexible.siteroots.SpecialTidRecord
+            fields: Phlexible.siteroots.SpecialTidRecord,
+            sortInfo: {
+                field: 'key',
+                dir: 'asc'
+            },
+            remoteSort: false
         });
 
         this.columns = [
@@ -197,28 +202,13 @@ Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     getSaveData: function () {
 
-        // fetch deleted records
-        var delRecords = [];
-        Ext.each(this.deletedRecords || [], function (r) {
-            if (new String(r.data.id).length > 0) {
-                delRecords.push(r.data);
-            }
-        });
-
-        // fetch modified records
-        var modRecords = [];
-        Ext.each(this.store.getModifiedRecords() || [], function (r) {
-            modRecords.push(r.data);
-        });
-
         // check data
-        for (var i = 0; i < modRecords.length; ++i) {
+        var valid = true;
+        Ext.each(this.store.getModifiedRecords() || [], function (r) {
 
-            // get current record
-            var r = modRecords[i];
-
-            if (r.key.length <= 0) {
+            if (r.data.key.length <= 0) {
                 Ext.Msg.alert(this.strings.failure, this.strings.err_key_empty);
+                valid = false;
                 return false;
             }
 
@@ -226,13 +216,20 @@ Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 //                Ext.Msg.alert(this.strings.failure, this.strings.err_language_empty);
 //                return false;
 //            }
+        });
+
+        if (!valid) {
+            return false;
         }
 
+        // fetch modified records
+        var records = [];
+        Ext.each(this.store.getRange() || [], function (r) {
+            records.push(r.data);
+        });
+
         return {
-            'specialtids': {
-                del_records: delRecords,
-                mod_records: modRecords
-            }
+            specialtids: records
         };
     }
 

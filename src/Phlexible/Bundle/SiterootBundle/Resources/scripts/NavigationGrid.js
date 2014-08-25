@@ -91,28 +91,8 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             {
                 header: this.strings.handler,
                 dataIndex: 'handler',
-                editor: new Ext.form.ComboBox({
-                    store: new Ext.data.JsonStore({
-                        url: Phlexible.Router.generate('siteroots_data_handlers'),
-                        root: 'handler',
-                        fields: ['title', 'supports']
-                    }),
-                    displayField: 'title',
-                    mode: 'remote',
-                    triggerAction: 'all',
-                    selectOnFocus: true,
-                    editable: false,
-                    typeAhead: false,
-                    listeners: {
-                        select: {
-                            fn: function (combo, r) {
-                                this.getSelectionModel().getSelected().set('supports', r.get('supports'));
-                            },
-                            scope: this
-                        }
-                    }
-                }),
-                width: 150
+                width: 150,
+                hidden: true
             },
             {
                 header: this.strings.start_tid,
@@ -223,41 +203,51 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     getSaveData: function () {
 
+        // check data
+        var valid = true;
+        Ext.each(this.store.getModifiedRecords() || [], function (r) {
+            if (r.data.title.length <= 0) {
+                Ext.Msg.alert(this.strings.failure, this.strings.err_title_empty);
+                valid = false;
+                return false;
+            }
+
+            /*
+            if (!r.handler) {
+                Ext.Msg.alert(this.strings.failure, this.strings.err_handler_empty);
+                valid = false;
+                return false;
+            }
+             */
+        });
+
+        if (!valid) {
+            return false;
+        }
+
         // fetch deleted records
-        var delRecords = [];
+        var deleted = [];
         Ext.each(this.deletedRecords || [], function (r) {
-            if (new String(r.data.id).length > 0) {
-                delRecords.push(r.data);
+            if (r.data.id) {
+                deleted.push(r.data.id);
             }
         });
 
         // fetch modified records
-        var modRecords = [];
+        var modified = [], created = [];
         Ext.each(this.store.getModifiedRecords() || [], function (r) {
-            modRecords.push(r.data);
+            if (r.data.id) {
+                modified.push(r.data);
+            } else {
+                created.push(r.data);
+            }
         });
 
-        // check data
-        for (var i = 0; i < modRecords.length; ++i) {
-
-            // get current record
-            var r = modRecords[i];
-
-            if (r.title.length <= 0) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_title_empty);
-                return false;
-            }
-
-            if (!r.handler) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_handler_empty);
-                return false;
-            }
-        }
-
         return {
-            'navigations': {
-                del_records: delRecords,
-                mod_records: modRecords
+            navigations: {
+                deleted: deleted,
+                modified: modified,
+                created: created
             }
         };
     }

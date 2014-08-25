@@ -91,7 +91,7 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
         this.getComponent(0).enable();
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('siteroots_data', {id: id}),
+            url: Phlexible.Router.generate('siteroots_siteroot_load', {id: id}),
             success: function (response) {
                 var data = Ext.decode(response.responseText);
 

@@ -8,7 +8,10 @@
 
 namespace Phlexible\Bundle\SiterootBundle\Controller\Siteroot;
 
+use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
+use Phlexible\Bundle\SiterootBundle\Entity\ShortUrl;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -50,6 +53,7 @@ class SiterootSaver
             ->applyContentchannels($siteroot, $data)
             ->applyProperties($siteroot, $data)
             ->applyCustomTitles($siteroot, $data)
+            ->applyNamedTids($siteroot, $data)
             ->applyNavigations($siteroot, $data)
             ->applyShortUrls($siteroot, $data)
             ->applyUrls($siteroot, $data);
@@ -98,6 +102,28 @@ class SiterootSaver
      *
      * @return $this
      */
+    private function applyProperties(Siteroot $siteroot, array $data)
+    {
+        if (!array_key_exists('properties', $data)) {
+            // noting to save
+            return $this;
+        }
+
+        $propertiesData = $data['properties'];
+
+        $siteroot->setProperties($propertiesData);
+
+        return $this;
+    }
+
+    /**
+     * Apply custom titles
+     *
+     * @param Siteroot $siteroot
+     * @param array    $data
+     *
+     * @return $this
+     */
     private function applyCustomTitles(Siteroot $siteroot, array $data)
     {
         if (!array_key_exists('customtitles', $data)) {
@@ -113,24 +139,206 @@ class SiterootSaver
         return $this;
     }
 
+
     /**
-     * Apply custom titles
+     * Apply named tids
      *
      * @param Siteroot $siteroot
      * @param array    $data
      *
      * @return $this
      */
-    private function applyProperties(Siteroot $siteroot, array $data)
+    private function applyNamedTids(Siteroot $siteroot, array $data)
     {
-        if (!array_key_exists('properties', $data)) {
+        if (!array_key_exists('specialtids', $data)) {
             // noting to save
             return $this;
         }
 
-        $propertiesData = $data['properties'];
+        $specialTidsData = $data['specialtids'];
 
-        $siteroot->setProperties($propertiesData);
+        $specialTids = array();
+        foreach ($specialTidsData as $row) {
+            $specialTids[] = array(
+                'name'     => $row['key'],
+                'language' => !empty($row['language']) ? $row['language'] : null,
+                'treeId'   => $row['tid'],
+            );
+        }
+        $siteroot->setSpecialTids($specialTids);
+
+        return $this;
+    }
+
+    /**
+     * Apply navigations
+     *
+     * @param Siteroot $siteroot
+     * @param array    $data
+     *
+     * @return $this
+     */
+    private function applyNavigations(Siteroot $siteroot, array $data)
+    {
+        if (!array_key_exists('navigations', $data)) {
+            // noting to save
+            return $this;
+        }
+
+        $navigationData = $data['navigations'];
+
+        foreach ($navigationData['created'] as $row) {
+            $navigation = new Navigation();
+            $navigation
+                ->setSiteroot($siteroot)
+                ->setAdditional(!empty($row['additional']) ? $row['additional'] : null)
+                ->setFlags($row['flags'])
+                ->setStartTreeId($row['start_tid'])
+                ->setTitle($row['title'])
+                ->setMaxDepth($row['max_depth']);
+
+            $siteroot->addNavigation($navigation);
+        }
+
+        foreach ($navigationData['modified'] as $row) {
+            foreach ($siteroot->getNavigations() as $navigation) {
+                if ($navigation->getId() === $row['id']) {
+                    $navigation
+                        ->setSiteroot($siteroot)
+                        ->setAdditional(!empty($row['additional']) ? $row['additional'] : null)
+                        ->setFlags($row['flags'])
+                        ->setStartTreeId($row['start_tid'])
+                        ->setTitle($row['title'])
+                        ->setMaxDepth($row['max_depth']);
+
+                    break;
+                }
+            }
+        }
+
+        foreach ($navigationData['deleted'] as $id) {
+            foreach ($siteroot->getNavigations() as $navigation) {
+                if ($navigation->getId() === $id) {
+                    $siteroot->removeNavigation($navigation);
+                    $this->siterootManager->deleteSiterootNavigation($navigation);
+                    break;
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Apply short urls
+     *
+     * @param Siteroot $siteroot
+     * @param array    $data
+     *
+     * @return $this
+     */
+    private function applyShortUrls(Siteroot $siteroot, array $data)
+    {
+        if (!array_key_exists('shorturls', $data)) {
+            // noting to save
+            return $this;
+        }
+
+        $shortUrlsData = $data['shorturls'];
+
+        foreach ($shortUrlsData['created'] as $row) {
+            $shortUrl = new ShortUrl();
+            $shortUrl
+                ->setSiteroot($siteroot)
+                ->setHostname(!empty($row['hostname']) ? $row['hostname'] : null)
+                ->setPath($row['path'])
+                ->setLanguage($row['language'])
+                ->setTarget($row['target']);
+
+            $siteroot->addShortUrl($shortUrl);
+        }
+
+        foreach ($shortUrlsData['modified'] as $row) {
+            foreach ($siteroot->getShortUrls() as $shortUrl) {
+                if ($shortUrl->getId() === $row['id']) {
+                    $shortUrl
+                        ->setSiteroot($siteroot)
+                        ->setHostname(!empty($row['hostname']) ? $row['hostname'] : null)
+                        ->setPath($row['path'])
+                        ->setLanguage($row['language'])
+                        ->setTarget($row['target']);
+
+                    break;
+                }
+            }
+        }
+
+        foreach ($shortUrlsData['deleted'] as $id) {
+            foreach ($siteroot->getShortUrls() as $shortUrl) {
+                if ($shortUrl->getId() === $id) {
+                    $siteroot->removeShortUrl($shortUrl);
+                    break;
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Apply urls
+     *
+     * @param Siteroot $siteroot
+     * @param array    $data
+     *
+     * @return $this
+     */
+    private function applyUrls(Siteroot $siteroot, array $data)
+    {
+        if (!array_key_exists('mappings', $data)) {
+            // noting to save
+            return $this;
+        }
+
+        $urlsData = $data['mappings'];
+
+        foreach ($urlsData['created'] as $row) {
+            $url = new Url();
+            $url
+                ->setSiteroot($siteroot)
+                ->setDefault(false)
+                ->setGlobalDefault(false)
+                ->setHostname($row['hostname'])
+                ->setLanguage($row['language'])
+                ->setTarget($row['target']);
+
+            $siteroot->addUrl($url);
+        }
+
+        foreach ($urlsData['modified'] as $row) {
+            foreach ($siteroot->getUrls() as $url) {
+                if ($url->getId() === $row['id']) {
+                    $url
+                        ->setSiteroot($siteroot)
+                        ->setDefault(false)
+                        ->setGlobalDefault(false)
+                        ->setHostname($row['hostname'])
+                        ->setLanguage($row['language'])
+                        ->setTarget($row['target']);
+
+                    break;
+                }
+            }
+        }
+
+        foreach ($urlsData['deleted'] as $id) {
+            foreach ($siteroot->getUrls() as $url) {
+                if ($url->getId() === $id) {
+                    $siteroot->removeUrl($url);
+                    break;
+                }
+            }
+        }
 
         return $this;
     }

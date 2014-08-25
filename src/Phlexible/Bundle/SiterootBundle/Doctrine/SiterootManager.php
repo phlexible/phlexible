@@ -96,7 +96,16 @@ class SiterootManager implements SiterootManagerInterface
                 return;
             }
 
-            $this->entityManager->flush($siteroot);
+            foreach ($siteroot->getNavigations() as $navigation) {
+                $this->entityManager->persist($navigation);
+            }
+            foreach ($siteroot->getUrls() as $url) {
+                $this->entityManager->persist($url);
+            }
+            foreach ($siteroot->getShortUrls() as $shortUrl) {
+                $this->entityManager->persist($shortUrl);
+            }
+            $this->entityManager->flush();
 
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::UPDATE_SITEROOT, $event);
@@ -109,8 +118,17 @@ class SiterootManager implements SiterootManagerInterface
                 return;
             }
 
+            foreach ($siteroot->getNavigations() as $navigation) {
+                $this->entityManager->persist($navigation);
+            }
+            foreach ($siteroot->getUrls() as $url) {
+                $this->entityManager->persist($url);
+            }
+            foreach ($siteroot->getShortUrls() as $shortUrl) {
+                $this->entityManager->persist($shortUrl);
+            }
             $this->entityManager->persist($siteroot);
-            $this->entityManager->flush($siteroot);
+            $this->entityManager->flush();
 
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::CREATE_SITEROOT, $event);
