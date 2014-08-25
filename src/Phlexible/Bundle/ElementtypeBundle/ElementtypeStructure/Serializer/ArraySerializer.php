@@ -41,7 +41,7 @@ class ArraySerializer implements SerializerInterface
                     'contentchannels'  => $node->getContentChannels(),
                     'dsId'             => $node->getDsId(),
                     'id'               => $node->getId(),
-                    'labels'           => $node->getLabels(),
+                    'labels'           => $this->normalizeLabels($node),
                     'name'             => $node->getName(),
                     'options'          => $node->getOptions(),
                     'parentDsId'       => $node->getParentDsId(),
@@ -66,5 +66,24 @@ class ArraySerializer implements SerializerInterface
         }
 
         return array((array) $rootNode);
+    }
+
+    /**
+     * @param ElementtypeStructureNode $node
+     *
+     * @return array
+     */
+    private function normalizeLabels(ElementtypeStructureNode $node)
+    {
+        $labels = $node->getLabels();
+
+        $labels += array(
+            'fieldlabel' => array(),
+            'context_help' => array(),
+            'prefix' => array(),
+            'suffix' => array()
+        );
+
+        return $labels;
     }
 }

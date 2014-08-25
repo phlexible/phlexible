@@ -247,6 +247,10 @@ class ElementtypeStructureNode
      */
     public function getParentId()
     {
+        if (!$this->parentNode) {
+            return null;
+        }
+
         return $this->getParentNode()->getId();
     }
 
