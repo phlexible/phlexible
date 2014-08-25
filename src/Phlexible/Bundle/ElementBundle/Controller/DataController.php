@@ -624,7 +624,7 @@ class DataController extends Controller
 
         if ($isPublish) {
             if ($element->getMasterLanguage() == $language) {
-                foreach ($this->container->getParameter('phlexible_cms.languages.available') as $slaveLanguage) {
+                foreach (explode(',', $this->container->getParameter('phlexible_cms.languages.available')) as $slaveLanguage) {
                     if ($language == $slaveLanguage) {
                         continue;
                     }

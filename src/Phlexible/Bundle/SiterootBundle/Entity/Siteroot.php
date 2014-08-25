@@ -33,7 +33,7 @@ class Siteroot
      * @var bool
      * @ORM\Column(name="is_default", type="boolean")
      */
-    private $default;
+    private $default = false;
 
     /**
      * @var string
