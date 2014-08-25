@@ -64,13 +64,13 @@ class Elementtype implements IdentifiableInterface
      * @var int
      * @ORM\Column(name="default_tab", type="integer", nullable=true)
      */
-    private $defaultTab;
+    private $defaultTab = 0;
 
     /**
      * @var bool
      * @ORM\Column(name="hide_children", type="boolean")
      */
-    private $hideChildren;
+    private $hideChildren = false;
 
     /**
      * @var bool

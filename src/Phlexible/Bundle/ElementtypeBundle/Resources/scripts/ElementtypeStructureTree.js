@@ -18,7 +18,6 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
     ddGroup: 'elementtypesDD',
     ddScroll: true,
     containerScroll: true,
-    collapseFirst: false,
 
     mode: 'edit',
     dirty: false,
@@ -497,97 +496,54 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
     },
 
     transform: function (node) {
-        if (this.fireEvent('beforetransform', this) === false) {
+        if (this.fireEvent('beforetransform', this, node) === false) {
             return;
         }
 
-        /*
-         var refNode = new Ext.tree.TreeNode({
-         text: 'test',
-         type: 'reference',
-         reference: {
-         refID:      123,
-         refVersion: 1
-         }
-         });
-
-         node.parentNode.appendChild(refNode);
-         refNode.appendChild(node);
-
-         refNode.cascade(function(x) {
-         Phlexible.console.log(x.text);
-         });
-         return;
-         */
-
-
-        this.saveNodes = [];
-        this.saveNode = node;
-
-        this.pushSaveNode(node, 0);
-        this.processSaveNodes(node);
-
-        var data = Ext.encode(this.saveNodes);
-
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('elementtypes_tree_transform'),
-            params: {
-                data: data
-            },
-            success: this.onTransformSuccess,
-            scope: this
-        });
-    },
-
-    onTransformSuccess: function (response) {
-        var data = Ext.decode(response.responseText);
-//        this.setClean();
-
-        if (data.success) {
-            Phlexible.success('Node "' + this.saveNode.attributes.text + '" transformed to Reference Element Type "' + data.data.title + '" created.');
-
-            var refNode = new Ext.tree.TreeNode({
-                text: data.data.title,
-                type: 'reference',
-                reference: {
-                    refID: data.data.element_type_id,
-                    refVersion: data.data.element_type_version
+        var parentNode = node.parentNode;
+        var dsId = new Ext.ux.GUID().toString();
+        var reference = new Ext.tree.TreeNode({
+            text: 'Reference ' + node.attributes.text + ' [v1]',
+            ds_id: dsId,
+            cls: 'p-elementtypes-node p-elementtypes-type-reference',
+            leaf: false,
+            expanded: true,
+            type: 'reference',
+            iconCls: 'p-elementtype-container_reference-icon',
+            reference: {new: true},
+            allowDrag: true,
+            allowDrop: false,
+            editable: false,
+            properties: {
+                field: {
+                    title: '',
+                    type: 'reference',
+                    working_title: '',
+                    comment: '',
+                    image: ''
                 },
-                expanded: true,
-                leaf: false
-            });
-            this.saveNode.parentNode.insertBefore(refNode, this.saveNode);
-            refNode.appendChild(this.saveNode);
+                configuration: {},
+                labels: {},
+                options: {},
+                validation: {},
+                content_channels: {}
+            }
+        });
 
-//            this.saveNode.setText(data.data.title);
-//            this.saveNode.type = 'reference';
-//            this.saveNode.attributes.reference = {
-//                refID:      data.id,
-//                refVersion: 1
-//            };
-            refNode.getUI().addClass('p-elementtypes-type-reference');
-            Ext.get(refNode.getUI().getIconEl()).addClass('p-elementtype-field_reference-icon');
+        parentNode.appendChild(reference);
+        reference.appendChild(node);
+        reference.attributes.editable = false;
+        reference.attributes.allowDrop = false;
+        node.attributes.parent_ds_id = dsId;
+        node.cascade(function(node) {
+            node.getUI().addClass('p-elementtypes-reference');
+            node.attributes.editable = false;
+            node.attributes.allowDrag = false;
+            node.attributes.allowDrop = false;
+            node.draggable = false;
+        });
 
-            refNode.firstChild.cascade(function (node) {
-                if (node.id != refNode.id) {
-                    node.attributes.reference = true;
-                    node.attributes.cls += ' p-elementtypes-reference';
-                    node.getUI().addClass('p-elementtypes-reference');
-                }
-            });
-//            this.saveNode.cascade();
-//            var rootNode = this.getRootNode();
-//            this.cleanNodes(rootNode);
-
-            Phlexible.success(data.msg);
-
-            this.fireEvent('transform', this);
-        } else {
-            Ext.Msg.alert('Failure', data.msg);
-        }
-
-        delete this.saveNodes;
-        delete this.saveNode;
+        this.fireEvent('transform', this, node)
     },
 
     publish: function () {
@@ -596,11 +552,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         }
 
         var rootNode = this.getRootNode();
-        this.saveNodes = [];
-
-        this.processSaveNodes(rootNode);
-
-        var data = Ext.encode(this.saveNodes);
+        var data = Ext.encode(this.processSaveNodes(rootNode));
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elementtypes_tree_save'),
@@ -629,9 +581,6 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         } else {
             Ext.Msg.alert('Failure', data.msg);
         }
-
-        delete this.saveNodes;
-        delete this.saveNode;
     },
 
     /*
@@ -639,26 +588,30 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
      sweeps the tree in all levels
      */
     processSaveNodes: function (node) {
-        var child = node.childNodes;
+        var childNodes = node.childNodes,
+            saveNodes = [];
 
-        for (var i = 0; i < child.length; i++) {
-            this.pushSaveNode(child[i], node.id, node.attributes.ds_id);
-            if (child[i].attributes.type != 'reference') {
-                this.processSaveNodes(child[i]);
+        for (var i = 0; i < childNodes.length; i++) {
+            var childNode = childNodes[i],
+                nodeData = {
+                    id: childNode.id,
+                    ds_id: childNode.attributes.ds_id || 0,
+                    parent_id: node.id,
+                    parent_ds_id: node.attributes.ds_id,
+                    type: childNode.attributes.type,
+                    reference: childNode.attributes.reference,
+                    properties: childNode.attributes.properties
+                };
+            if (childNode.attributes.type !== 'reference' || childNode.attributes.reference.new) {
+                var children = this.processSaveNodes(childNode);
+                if (children.length) {
+                    nodeData.children = children;
+                }
             }
+            saveNodes.push(nodeData);
         }
-    },
 
-    pushSaveNode: function (saveNode, parent_id, parent_ds_id) {
-        this.saveNodes.push({
-            id: saveNode.id,
-            parent_id: parent_id,
-            ds_id: saveNode.attributes.ds_id || 0,
-            parent_ds_id: parent_ds_id,
-            type: saveNode.attributes.type,
-            reference: saveNode.attributes.reference,
-            properties: saveNode.attributes.properties
-        });
+        return saveNodes
     },
 
     nodeChange: function (node) {

@@ -26,6 +26,11 @@ interface ElementtypeVersionManagerInterface
      */
     public function find(Elementtype $elementtype, $version = null);
 
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return array
+     */
     public function getVersions(Elementtype $elementtype);
 
     /**

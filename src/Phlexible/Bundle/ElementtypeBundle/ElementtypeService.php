@@ -37,7 +37,7 @@ class ElementtypeService
     /**
      * @var ElementtypeStructureManagerInterface
      */
-    private $elementtypeStructureRepository;
+    private $elementtypeStructureManager;
 
     /**
      * @var ViabilityManagerInterface
@@ -58,7 +58,7 @@ class ElementtypeService
     {
         $this->elementtypeManager = $elementtypeManager;
         $this->elementtypeVersionManager = $elementtypeVersionManager;
-        $this->elementtypeStructureRepository = $elementtypeStructureManager;
+        $this->elementtypeStructureManager = $elementtypeStructureManager;
         $this->viabilityManager = $viabilityManager;
     }
 
@@ -165,7 +165,7 @@ class ElementtypeService
      */
     public function findElementtypeStructure(ElementtypeVersion $elementtypeVersion)
     {
-        $elementtypeStructure = $this->elementtypeStructureRepository->find($elementtypeVersion);
+        $elementtypeStructure = $this->elementtypeStructureManager->find($elementtypeVersion);
 
         return $elementtypeStructure;
     }
@@ -200,17 +200,18 @@ class ElementtypeService
     }
 
     /**
-     * Create a new Element Type
+     * Create a new empty Element Type
      *
      * @param string $type
      * @param string $uniqueId
      * @param string $title
      * @param string $icon
      * @param string $uid
+     * @param bool   $flush
      *
-     * @return Elementtype
+     * @return ElementtypeVersion
      */
-    public function createElementtype($type, $uniqueId, $title, $icon, $uid)
+    public function createElementtype($type, $uniqueId, $title, $icon, $uid, $flush = true)
     {
         if (!$icon) {
             $icons = array(
@@ -238,46 +239,30 @@ class ElementtypeService
         $elementtypeVersion = new ElementtypeVersion();
         $elementtypeVersion
             ->setElementtype($elementtype)
-            ->setVersion(0)
+            ->setVersion(1)
             ->setCreateUserId($elementtype->getCreateUserId())
             ->setCreatedAt($elementtype->getCreatedAt());
 
-        $this->elementtypeManager->save($elementtype);
-        $this->elementtypeVersionManager->save($elementtypeVersion);
+        $this->elementtypeManager->updateElementtype($elementtype, $flush);
+        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion, $flush);
 
-        return $elementtype;
+        return $elementtypeVersion;
     }
 
     /**
-     * @param ElementtypeStructure $elementtypeStructure
-     * @param string               $uniqueId
-     * @param string               $title
-     * @param string               $icon
-     * @param bool                 $hideChildren
-     * @param int                  $defaultTab
+     * @param Elementtype $elementtype
      */
-    public function createElementtypeVersion(
-        ElementtypeStructure $elementtypeStructure,
-        $uniqueId,
-        $title,
-        $icon,
-        $hideChildren,
-        $defaultTab)
+    public function updateElementtype(Elementtype $elementtype)
     {
-        $elementtypeVersion = $elementtypeStructure->getElementtypeVersion();
-        $elementtype = $elementtypeVersion->getElementtype();
+        $this->elementtypeManager->updateElementtype($elementtype);
+    }
 
-        $elementtype
-            ->setUniqueId($uniqueId)
-            ->setTitle($title)
-            ->setIcon($icon)
-            ->setHideChildren($hideChildren)
-            ->setDefaultTab($defaultTab)
-            ->setLatestVersion($elementtypeVersion->getVersion());
-
-        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion, false);
-        $this->elementtypeManager->updateElementtype($elementtype, false);
-        $this->elementtypeStructureRepository->updateElementtypeStructure($elementtypeStructure);
+    /**
+     * @param ElementtypeVersion $elementtypeVersion
+     */
+    public function updateElementtypeVersion(ElementtypeVersion $elementtypeVersion)
+    {
+        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion);
     }
 
     /**
@@ -285,7 +270,7 @@ class ElementtypeService
      */
     public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure)
     {
-        $this->elementtypeStructureRepository->updateElementtypeStructure($elementtypeStructure);
+        $this->elementtypeStructureManager->updateElementtypeStructure($elementtypeStructure);
     }
 
     /**

@@ -8,12 +8,10 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Phlexible\Bundle\ElementtypeBundle\ElementtypesMessage;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,15 +37,21 @@ class TreeController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $id = $request->get('id', null);
-        $version = $request->get('version', null);
+        $id = $request->get('id');
+        $version = $request->get('version');
         $mode = $request->get('mode', 'edit');
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
 
         $elementtype = $elementtypeService->findElementtype($id);
-        $elementtypeVersion = $elementtypeService->findElementtypeVersion($elementtype, $version);
+
+        if ($version) {
+            $elementtypeVersion = $elementtypeService->findElementtypeVersion($elementtype, $version);
+        } else {
+            $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
+        }
+
         $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
 
         $rootNode = $elementtypeStructure->getRootNode();
@@ -95,7 +99,7 @@ class TreeController extends Controller
                 'allowDrop'            => $mode == 'edit',
                 'editable'             => $mode == 'edit',
                 'properties'           => array(
-                    'root'     => array(
+                    'root' => array(
                         'title'               => $elementtype->getTitle(),
                         'reference_title'     => $elementtype->getTitle() .
                             ' [v' . $elementtypeVersion->getVersion() . ']',
@@ -111,7 +115,7 @@ class TreeController extends Controller
                     'mappings' => $elementtypeVersion->getMappings(),
                     'metasets' => $metaSets,
                 ),
-                'children'             => $this->recurseTree(
+                'children' => $this->recurseTree(
                     $elementtypeStructure,
                     $children,
                     $language,
@@ -237,268 +241,15 @@ class TreeController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $elementtypeId = $request->get('element_type_id', false);
-        $data = json_decode($request->get('data'), true);
+        $treeSaver = $this->get('phlexible_elementtype.tree_saver');
 
-        if (!$elementtypeId) {
-            return new ResultResponse(false, 'No elementtype ID.');
-        }
+        $elementtypeVersion = $treeSaver->save($request, $this->getUser());
 
-        $rootRow = array_shift($data);
-        $rootType = $rootRow['type'];
-
-        if ($rootType != 'root' && $rootType != 'referenceroot') {
-            return new ResultResponse(false, 'Invalid root node.');
-        }
-
-        $rootProperties = $rootRow['properties'];
-
-        if (!isset($rootProperties['root']['unique_id']) || !trim($rootProperties['root']['unique_id'])) {
-            return new ResultResponse(false, 'No unique ID.');
-        }
-
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-
-        $elementtype = $elementtypeService->findElementtype($elementtypeId);
-        $priorElementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
-
-        $elementtypeVersion = clone $priorElementtypeVersion;
-        $elementtypeVersion
-            ->setVersion($elementtypeVersion->getVersion() + 1)
-            ->setDefaultContentTab(
-                strlen(
-                    $rootProperties['root']['default_content_tab']
-                ) ? $rootProperties['root']['default_content_tab'] : null
-            )
-            ->setMappings(!empty($rootProperties['mappings']) ? $rootProperties['mappings'] : null)
-            ->setComment(trim($rootProperties['root']['comment']))
-            ->setCreateUserId($this->getUser()->getId())
-            ->setCreatedAt(new \DateTime());
-
-        $elementtypeStructure = new ElementtypeStructure();
-        $elementtypeStructure
-            ->setElementtypeVersion($elementtypeVersion);
-
-        $sort = 1;
-
-        $rootNode = new ElementtypeStructureNode();
-        $rootDsId = !empty($rootRow['ds_id']) ? $rootRow['ds_id'] : Uuid::generate();
-        $rootNode
-            ->setElementtype($elementtype)
-            ->setVersion($elementtypeVersion->getVersion())
-            ->setElementtypeStructure($elementtypeStructure)
-            ->setDsId($rootDsId)
-            ->setType($rootType)
-            ->setName('root')
-            ->setSort($sort++);
-
-        $elementtypeStructure->addNode($rootNode);
-
-        foreach ($data as $row) {
-            if (!$row['parent_ds_id']) {
-                $row['parent_ds_id'] = $rootDsId;
-            }
-            $node = new ElementtypeStructureNode();
-            $parentNode = $elementtypeStructure->getNode($row['parent_ds_id']);
-
-            $node
-                ->setElementtype($elementtype)
-                ->setVersion($elementtypeVersion->getVersion())
-                ->setElementtypeStructure($elementtypeStructure)
-                ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : Uuid::generate())
-                ->setParentDsId($parentNode->getDsId())
-                ->setParentId($parentNode->getId())
-                ->setSort($sort++);
-
-            if ($row['type'] == 'reference') {
-                $referenceElementtype = $elementtypeService->findElementtype($row['reference']['refID']);
-                $node
-                    ->setType('reference')
-                    ->setName('reference_' . $referenceElementtype->getId())
-                    ->setReferenceElementtype($referenceElementtype)
-                    ->setReferenceVersion($row['reference']['refVersion']);
-            } else {
-                $properties = $row['properties'];
-
-                $node
-                    ->setType($properties['field']['type'])
-                    ->setName(trim($properties['field']['working_title']))
-                    ->setComment(trim($properties['field']['comment']) ?: null)
-                    ->setConfiguration(!empty($properties['configuration']) ? $properties['configuration'] : null)
-                    ->setValidation(!empty($properties['validation']) ? $properties['validation'] : null)
-                    ->setLabels(!empty($properties['labels']) ? $properties['labels'] : null)
-                    ->setOptions(!empty($properties['options']) ? $properties['options'] : null)
-                    ->setContentChannels(
-                        !empty($properties['content_channels']) ? $properties['content_channels'] : null
-                    );
-            }
-
-            $elementtypeStructure->addNode($node);
-        }
-
-        $elementtypeService->createElementtypeVersion(
-            $elementtypeStructure,
-            trim($rootProperties['root']['unique_id']),
-            trim($rootProperties['root']['title']),
-            trim($rootProperties['root']['icon']),
-            !empty($rootProperties['root']['hide_children']),
-            strlen($rootProperties['root']['default_tab']) ? $rootProperties['root']['default_tab'] : null
-        );
-
-        /*
-        // update elementtypes that use this elementtype as reference
-
-        $updateData = array(
-            'reference_version' => $version,
-        );
-        $db->update($db->prefix.'elementtype_structure', $updateData, 'reference_id = '.$db->quote($elementtypeId));
-
-        $select = $db->select()
-                     ->distinct()
-                     ->from($db->prefix . 'elementtype_structure', array('id', 'element_type_id', 'version'))
-                     ->where('reference_id = ?', $elementtypeId);
-
-        $candidates = $db->fetchAll($select);
-
-        $select = $db->select()
-                     ->from($db->prefix . 'elementtype_version', new Zend_Db_Expr('MAX(version)'))
-                     ->where('element_type_id = ?');
-
-        foreach ($candidates as $row)
-        {
-            $maxVersion = $db->fetchOne($select, $row['element_type_id']);
-
-            if ($row['version'] != $maxVersion)
-            {
-                continue;
-            }
-
-            $newElementVersion = $manager->copyVersion($row['element_type_id'], $row['version'], null, null, true);
-
-            $db->update($db->prefix . 'elementtype_structure', array(
-                'reference_version' => $version,
-            ), 'reference_id = '.$db->quote($elementtypeId).' AND
-                element_type_id = '.$db->quote($row['element_type_id']).' AND
-                version = '.$db->quote($newElementVersion));
-        }
-        */
-
-        // post message
-        $message = ElementtypesMessage::create(
-            "Element Type {$elementtype->getTitle()} saved in version {$elementtypeVersion->getVersion()}"
-        );
-        $this->get('phlexible_message.message_poster')->post($message);
+        $this->getDoctrine()->getManager()->flush();
 
         return new ResultResponse(
             true,
-            "Element Type {$elementtype->getTitle()} saved as version {$elementtypeVersion->getVersion()}."
-        );
-    }
-
-    /**
-     * Transform an Element Type node into a reference
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/transform", name="elementtypes_tree_transform")
-     */
-    public function transformAction(Request $request)
-    {
-        $data = json_decode($request->get('data'), true);
-
-        $title = $data[0]['properties']['labels']['fieldlabel']['de'];
-
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-
-        $referenceElementtype = $elementtypeService->createElementtype(
-            Elementtype::TYPE_REFERENCE,
-            $title,
-            $title,
-            null,
-            $this->getUser()->getId()
-        );
-
-        $referenceElementtypeVersion = $elementtypeService->findLatestElementtypeVersion($referenceElementtype);
-
-        /*
-        $newElementType = new Makeweb_Elementtypes_Elementtype();
-        $newElementType->setType('reference');
-        $elementTypeID = $newElementType->save();
-
-        $newElementType->createInitialVersion($title);
-
-        $insertData = array(
-            'element_type_id' => $elementTypeID,
-            'version'         => $version,
-            'title'           => trim($title),
-            'type'            => 'reference',
-            'icon'            => '',
-            'comment'         => 'Created by blabla',
-            'modify_uid'      => MWF_Env::getUid(),
-            'modify_time'     => $db->fn->now()
-        );
-
-        $db->insert($db->prefix.'elementtype_version', $insertData);
-        */
-
-        $referenceRootNode = new ElementtypeStructureNode();
-        $referenceRootNode
-            ->setElementtypeStructure($referenceElementtypeVersion)
-            ->setComment('Transformed to reference.')
-            ->setDsId(Uuid::generate())
-            ->setType('referenceroot');
-
-        $referenceStructure = new ElementtypeStructure();
-        $referenceStructure
-            ->setElementtypeVersion($referenceElementtypeVersion)
-            ->addNode($referenceRootNode);
-
-        foreach ($data as $row) {
-            $node = new ElementtypeStructureNode();
-            $parentNode = $referenceStructure->getNode($row['parent_ds_id']);
-
-            $node
-                ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : Uuid::generate())
-                ->setParentDsId($parentNode->getDsId())
-                ->setElementtypeStructure($referenceElementtypeVersion->getVersion());
-
-            if ($row['type'] == 'reference') {
-                $node
-                    ->setType('reference')
-                    ->setReferenceId($row['reference']['refID'])
-                    ->setReferenceVersion($row['reference']['refVersion']);
-            } else {
-                $properties = $row['properties'];
-
-                $node
-                    ->setType($properties['field']['type'])
-                    ->setName(trim($properties['field']['working_title']))
-                    ->setComment(trim($properties['field']['comment']))
-                    ->setConfiguration(!empty($properties['configuration']) ? $properties['configuration'] : array())
-                    ->setValidation(!empty($properties['validation']) ? $properties['validation'] : array())
-                    ->setLabels(!empty($properties['labels']) ? $properties['labels'] : array())
-                    ->setOptions(!empty($properties['options']) ? $properties['options'] : array())
-                    ->setContentChannels(
-                        !empty($properties['content_channels']) ? $properties['content_channels'] : array()
-                    );
-            }
-
-            $referenceStructure->addNode($node);
-        }
-
-        print_r($referenceStructure);
-        die;
-
-        return new JsoNResponse(
-            true,
-            $referenceElementtypeVersion->getVersion(),
-            'Reference Element Type "' . $title . '" created.',
-            array(
-                'title'                => $title . ' [v' . $referenceElementtypeVersion->getVersion() . ']',
-                'element_type_id'      => $referenceElementtype->getId(),
-                'element_type_version' => $referenceElementtypeVersion->getVersion(),
-            )
+            "Element Type {$elementtypeVersion->getElementtype()->getTitle()} saved as version {$elementtypeVersion->getVersion()}."
         );
     }
 }

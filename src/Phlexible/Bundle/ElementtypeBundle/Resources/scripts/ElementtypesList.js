@@ -163,13 +163,6 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
                         scope: this
                     },
                     {
-                        text: this.strings.layoutcontainer,
-                        iconCls: 'p-elementtype-type_layoutcontainer-icon',
-                        checked: this.params.type == Phlexible.elementtypes.TYPE_LAYOUTCONTAINER,
-                        source: Phlexible.elementtypes.TYPE_LAYOUTCONTAINER,
-                        scope: this
-                    },
-                    {
                         text: this.strings.part,
                         iconCls: 'p-elementtype-type_part-icon',
                         checked: this.params.type == Phlexible.elementtypes.TYPE_PART,
@@ -315,7 +308,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
                 return;
             }
 
-            this.elementtypeSelect(index, r, version);
+            this.elementtypeSelect(index, r, null);
         }
     },
 

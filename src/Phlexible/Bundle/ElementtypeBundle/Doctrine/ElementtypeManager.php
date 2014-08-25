@@ -76,11 +76,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
     }
 
     /**
-     * Find element type by ID
-     *
-     * @param int $elementtypeId
-     *
-     * @return Elementtype
+     * {@inheritdoc}
      */
     public function find($elementtypeId)
     {
@@ -88,11 +84,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
     }
 
     /**
-     * Find element type by unique Id
-     *
-     * @param string $uniqueId
-     *
-     * @return Elementtype
+     * {@inheritdoc}
      */
     public function findOneByUniqueId($uniqueId)
     {
@@ -100,11 +92,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
     }
 
     /**
-     * Find element types by type
-     *
-     * @param string $type
-     *
-     * @return Elementtype[]
+     * {@inheritdoc}
      */
     public function findByType($type)
     {
@@ -112,9 +100,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
     }
 
     /**
-     * Find all element types
-     *
-     * @return Elementtype[]
+     * {@inheritdoc}
      */
     public function findAll()
     {
@@ -122,13 +108,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
     }
 
     /**
-     * Save element type
-     *
-     * @param Elementtype $elementtype
-     *
-     * @throws CreateCancelledException
-     * @throws UpdateCancelledException
-     * @return $this
+     * {@inheritdoc}
      */
     public function updateElementtype(Elementtype $elementtype, $flush = true)
     {
@@ -172,12 +152,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
     }
 
     /**
-     * Delete an Element Type
-     *
-     * @param Elementtype $elementtype
-     *
-     * @throws DeleteCancelledException
-     * @return $this
+     * {@inheritdoc}
      */
     public function deleteElementtype(Elementtype $elementtype)
     {

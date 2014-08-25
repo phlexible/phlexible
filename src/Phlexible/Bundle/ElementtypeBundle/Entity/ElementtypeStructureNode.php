@@ -27,7 +27,7 @@ class ElementtypeStructureNode
     /**
      * @var int
      * @ORM\Id
-     * @ORM\GeneratedValue("AUTO")
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -43,6 +43,13 @@ class ElementtypeStructureNode
      * @var ElementtypeStructure
      */
     private $elementtypeStructure;
+
+    /**
+     * @var ElementtypeStructureNode
+     * @ORM\ManyToOne(targetEntity="ElementtypeStructureNode")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     */
+    private $parentNode;
 
     /**
      * @var int
@@ -216,23 +223,31 @@ class ElementtypeStructureNode
     }
 
     /**
+     * @return ElementtypeStructureNode
+     */
+    public function getParentNode()
+    {
+        return $this->parentNode;
+    }
+
+    /**
+     * @param ElementtypeStructureNode $parentNode
+     *
+     * @return $this
+     */
+    public function setParentNode($parentNode)
+    {
+        $this->parentNode = $parentNode;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getParentId()
     {
-        return $this->parentId;
-    }
-
-    /**
-     * @param string $parentId
-     *
-     * @return $this
-     */
-    public function setParentId($parentId)
-    {
-        $this->parentId = $parentId ? (int) $parentId : null;
-
-        return $this;
+        return $this->getParentNode()->getId();
     }
 
     /**

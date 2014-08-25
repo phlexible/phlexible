@@ -45,7 +45,6 @@ Phlexible.elementtypes.NewElementtypeWindow = Ext.extend(Phlexible.gui.util.Dial
                         [Phlexible.elementtypes.TYPE_FULL, Phlexible.elementtypes.Strings.full_element, 'p-elementtype-type_full-icon'],
                         [Phlexible.elementtypes.TYPE_STRUCTURE, Phlexible.elementtypes.Strings.structure_element, 'p-elementtype-type_structure-icon'],
                         [Phlexible.elementtypes.TYPE_LAYOUTAREA, Phlexible.elementtypes.Strings.layout_element, 'p-elementtype-type_layoutarea-icon'],
-                        [Phlexible.elementtypes.TYPE_LAYOUTCONTAINER, Phlexible.elementtypes.Strings.layoutcontainer_element, 'p-elementtype-type_layoutcontainer-icon'],
                         [Phlexible.elementtypes.TYPE_PART, Phlexible.elementtypes.Strings.part_element, 'p-elementtype-type_part-icon']
                     ]
                 }),

@@ -143,7 +143,7 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
             $node = clone $node;
 
             if ($referenceParentNode) {
-                $node->setParentId($referenceParentNode->getId());
+                $node->setParentNode($referenceParentNode);
                 $node->setParentDsId($referenceParentNode->getDsId());
                 $referenceParentNode = null;
             }

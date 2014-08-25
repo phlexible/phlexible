@@ -75,10 +75,7 @@ class ElementtypeVersionManager implements ElementtypeVersionManagerInterface
     }
 
     /**
-     * @param Elementtype $elementtype
-     * @param int         $version
-     *
-     * @return ElementtypeVersion
+     * {@inheritdoc}
      */
     public function find(Elementtype $elementtype, $version = null)
     {
@@ -90,9 +87,7 @@ class ElementtypeVersionManager implements ElementtypeVersionManagerInterface
     }
 
     /**
-     * @param Elementtype $elementtype
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getVersions(Elementtype $elementtype)
     {
@@ -106,10 +101,7 @@ class ElementtypeVersionManager implements ElementtypeVersionManagerInterface
     }
 
     /**
-     * @param ElementtypeVersion $elementtypeVersion
-     * @param bool               $flush
-     *
-     * @throws UpdateCancelledException
+     * {@inheritdoc}
      */
     public function updateElementtypeVersion(ElementtypeVersion $elementtypeVersion, $flush = true)
     {

@@ -7,6 +7,10 @@ services:
         - @phlexible_elementtype.elementtype_structure_manager
         - @phlexible_elementtype.viability_manager
 
+    phlexible_elementtype.tree_saver:
+        class: Phlexible\Bundle\ElementtypeBundle\Controller\Tree\TreeSaver
+        arguments: [@phlexible_elementtype.elementtype_service]
+
     # acl providers
     phlexible_elementtype.acl_provider:
         class: Phlexible\Bundle\ElementtypeBundle\AclProvider\ElementtypeAclProvider
