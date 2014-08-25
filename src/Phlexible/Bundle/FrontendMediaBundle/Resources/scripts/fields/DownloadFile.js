@@ -42,14 +42,10 @@ Phlexible.frontendmedia.DownloadFileField = Ext.extend(Ext.form.DownloadFileFiel
 });
 Ext.reg('frontendmedia-field-downloadfilefield', Phlexible.frontendmedia.DownloadFileField);
 
-Phlexible.fields.Registry.addFactory('download', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-    if (element.master) {
-        element.prototypes.addFieldPrototype(item);
-    }
+Phlexible.fields.Registry.addFactory('download', function (parentConfig, item, valueStructure, element, repeatableId) {
+    element.prototypes.incCount(item.dsId);
 
-    element.prototypes.incCount(item.ds_id);
-
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
 
     // TODO: wie?
     item.media = item.media || {};
@@ -67,6 +63,12 @@ Phlexible.fields.Registry.addFactory('download', function (parentConfig, item, v
         supportsSuffix: true,
         supportsDiff: true,
         supportsRepeatable: true
+    });
+
+    Ext.each(valueStructure.values, function (value) {
+        if (value.dsId === item.dsId) {
+            config.value = value.content;
+        }
     });
 
     delete config.width;

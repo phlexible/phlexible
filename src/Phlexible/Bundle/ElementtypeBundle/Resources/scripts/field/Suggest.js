@@ -7,13 +7,10 @@ Phlexible.fields.Suggest = Ext.extend(Ext.ux.form.SuperBoxSelect, {
 });
 Ext.reg('elementtypes-field-suggest', Phlexible.fields.Suggest);
 
-Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-    if (element.master) {
-        element.prototypes.addFieldPrototype(item);
-    }
+Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
+    element.prototypes.incCount(item.dsId);
 
-    var store;
-    var storeMode = 'local';
+    var store, storeMode = 'local';
     if (item.options) {
         /*
          store = new Ext.data.SimpleStore({
@@ -41,14 +38,11 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
         });
     }
 
-    element.prototypes.incCount(item.dsId);
-
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'elementtypes-field-suggest',
         name: config.name + '[]',
-        value: item.rawContent || '',
         width: (parseInt(item.configuration.width, 10) || 200),
 
         allowAddNewData: true,
@@ -78,6 +72,12 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
                 bs.addNewItem(newObj);
             },
             scope: this
+        }
+    });
+
+    Ext.each(valueStructure.values, function (value) {
+        if (value.dsId === item.dsId) {
+            config.value = value.content;
         }
     });
 

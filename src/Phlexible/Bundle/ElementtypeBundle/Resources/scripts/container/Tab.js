@@ -1,4 +1,4 @@
-Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueStructure, pos, element) {
+Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'panel',
         title: item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],

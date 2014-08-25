@@ -84,7 +84,11 @@ class PreviewController extends Controller
             $urls['preview'] = $this->generateUrl('frontend_preview', array('id' => $tid, 'language' => $language));
 
             if ($stateManager->isPublished($node, $language)) {
-                $urls['online'] = $this->generateUrl($node);
+                try {
+                    //$urls['online'] = $this->generateUrl($node);
+                } catch (\Exception $e) {
+
+                }
             }
         }
 

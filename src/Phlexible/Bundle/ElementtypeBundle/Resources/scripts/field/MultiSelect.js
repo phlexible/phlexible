@@ -1,8 +1,4 @@
-Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-    if (element.master) {
-        element.prototypes.addFieldPrototype(item);
-    }
-
+Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
     var store;
@@ -49,7 +45,7 @@ Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item
         }
     }
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'lovcombo',
@@ -73,6 +69,12 @@ Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item
         supportsInlineDiff: true,
         supportsUnlink: true,
         supportsRepeatable: true
+    });
+
+    Ext.each(valueStructure.values, function (value) {
+        if (value.dsId === item.dsId) {
+            config.value = value.content;
+        }
     });
 
     delete config.name;

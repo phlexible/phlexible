@@ -1,8 +1,4 @@
-Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-    if (element.master) {
-        element.prototypes.addFieldPrototype(item);
-    }
-
+Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valueStructure, element) {
     element.prototypes.incCount(item.dsId);
 
     var config = {
@@ -12,6 +8,12 @@ Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valu
         border: false,
         cls: 'p-fields-label'
     };
+
+    Ext.each(valueStructure.values, function (value) {
+        if (value.dsId === item.dsId) {
+            config.value = value.content;
+        }
+    });
 
     return config;
 });

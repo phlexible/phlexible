@@ -9,16 +9,18 @@
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
+use Phlexible\Bundle\ElementBundle\Controller\Data\DataSaver;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Diff;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\ElementBundle\Event\BeforeSaveElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
@@ -579,12 +581,8 @@ class DataController extends Controller
         $notifications = $request->get('notifications');
         $values = $request->request->all();
 
-        unset($values['eid'],
-        $values['language'],
-        $values['version'],
-        $values['data'],
-        $values['comment'],
-        $values['publish']);
+        $saver = new DataSaver($this->get('phlexible_element.element_service'));
+        $elementStructure = $saver->save($request);
 
         if ($data) {
             $data = json_decode($data, true);

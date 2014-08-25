@@ -8,18 +8,9 @@ Phlexible.elements.ElementDataTab = Ext.extend(Ext.Panel, {
     //defaults: {width: 400},
     autoHeight: true,
     autoWidth: true,
+    autoScroll: true,
     hideMode: 'offsets',
-    layout: 'form',
-
-    xinitComponent: function () {
-        this.items = Phlexible.elements.ElementDataTabHelper.loadItems(this.structure, this.valueStructure, this, this.element);
-
-        Phlexible.elements.ElementDataTab.superclass.initComponent.call(this);
-    },
-
-    xloadData: function (structure) {
-        Phlexible.elements.ElementDataTabHelper.loadItems(structure, this, this.element);
-    }
+    layout: 'form'
 });
 
 Ext.reg('elements-elementdatatab', Phlexible.elements.ElementDataTab);

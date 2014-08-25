@@ -117,7 +117,7 @@ Phlexible.fields.Accordion = Ext.extend(Ext.Panel, {
 });
 Ext.reg('elementtypes-field-accordion', Phlexible.fields.Accordion);
 
-Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, valueStructure, pos, element) {
+Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, valueStructure, element) {
 //        var groupId = 'group_' + item.dsId + '_';
 //        if (item.data_id) {
 //            groupId += 'id-' + item.data_id;
@@ -135,6 +135,8 @@ Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, 
         titleCollapse: true,
         animCollapse: false,
 
+        workingTitle: item.workingTitle,
+        dsId: item.dsId,
         isMaster: element.master,
         isDiff: !!element.data.diff,
         isSortable: (item.configuration.sortable ? true : false),

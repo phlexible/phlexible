@@ -3,14 +3,10 @@ Ext.Editor.prototype.beforeDestroy = function () {
     this.field = null;
 };
 
-Phlexible.fields.Registry.addFactory('table', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-    if (element.master) {
-        element.prototypes.addFieldPrototype(item);
-    }
-
+Phlexible.fields.Registry.addFactory('table', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'tablefield',

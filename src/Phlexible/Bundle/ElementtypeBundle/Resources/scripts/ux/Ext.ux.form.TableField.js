@@ -467,14 +467,14 @@ Ext.ux.form.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
         this.hiddenField.dom.value = Ext.encode(data);
     },
 
-    createConfig: function (parentConfig, item, pos, element, repeatablePostfix, forceAdd) {
+    createConfig: function (parentConfig, item, pos, element, repeatableId, forceAdd) {
         if (element.master) {
             element.prototypes.addFieldPrototype(item);
         }
 
         element.prototypes.incCount(item.ds_id);
 
-        var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+        var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId, forceAdd);
 
         Ext.apply(config, {
             xtype: 'elementtypes-field-table',

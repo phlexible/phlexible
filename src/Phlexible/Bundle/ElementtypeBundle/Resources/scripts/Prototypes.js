@@ -129,7 +129,7 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
             parentDsId: item.parentDsId,
             fieldId: item.fieldId,
             name: item.name,
-            id: item.id,
+            //id: item.id,
             parentId: item.parentId,
             type: item.type,
             configuration: item.configuration,

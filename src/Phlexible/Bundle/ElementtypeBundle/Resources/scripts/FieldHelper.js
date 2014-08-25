@@ -1,5 +1,5 @@
 Phlexible.fields.FieldHelper = {
-    defaults: function (parentConfig, item, element, repeatablePostfix, forceAdd) {
+    defaults: function (parentConfig, item, element, repeatableId) {
         // labels
         var hideLabel,
             label,
@@ -23,16 +23,19 @@ Phlexible.fields.FieldHelper = {
         }
 
         // prefix
-        var field_prefix = 'field_' + item.ds_id + '_';
-        if (item.data_id) {
-            field_prefix += 'id-' + item.data_id;
+        var name = 'field-' + item.dsId + '-';
+        if (item.id) {
+            name += 'id-' + item.id;
         } else {
-            field_prefix += Ext.id(null, 'new');
+            name += Ext.id(null, 'new-');
+        }
+        if (repeatableId) {
+            name += '__' + repeatableId;
         }
 
         var config = {
-            name: field_prefix + (repeatablePostfix ? '#' + repeatablePostfix : ''),
-            ds_id: item.ds_id,
+            name: name,
+            dsId: item.dsId,
 
             fieldLabel: label,
             helpText: (item.labels.context_help[language] || ''),

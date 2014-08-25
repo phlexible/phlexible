@@ -78,7 +78,7 @@ class SiterootSaver
         }
 
         $siteroot->setTitles($data['titles']);
-        
+
         return $this;
     }
 

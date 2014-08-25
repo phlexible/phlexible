@@ -45,7 +45,7 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
             this.el.insertFirst({
                 tag: 'input',
                 type: 'hidden',
-                name: this.groupId + (this.repeatablePostfix ? '#' + this.repeatablePostfix : ''),
+                name: this.groupId + (this.repeatableId ? '__' + this.repeatableId : ''),
                 value: 'repeatable-' + this.workingTitle + '-' + this.title
             });
         }
@@ -158,25 +158,25 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                 var helper3a = document.createElement('div');
                 helper3a.className = 'x-tool x-tool-minus p-repeat-minus p-repeat-minus-' + this.ownerCt.id + '_' + this.dsId;
                 var helper3b = headerEl.dom.appendChild(helper3a);
-                this.button_remove = Ext.get(helper3b);
+                this.buttonRemove = Ext.get(helper3b);
             }
             else {
-                this.button_remove = headerEl.insertFirst({
+                this.buttonRemove = headerEl.insertFirst({
                     tag: 'div',
                     cls: 'x-tool x-tool-minus p-repeat-minus p-repeat-minus-' + this.ownerCt.id + '_' + this.dsId
                 });
             }
-            this.button_remove.setVisibilityMode(Ext.Element.DISPLAY);
+            this.buttonRemove.setVisibilityMode(Ext.Element.DISPLAY);
 
             var cnt = this.element.prototypes.getCount(this.dsId, this.ownerCt.id);
             if (this.minRepeat == cnt) {
-                this.button_remove.hide();
+                this.buttonRemove.hide();
             }
             if (!this.maxRepeat || this.maxRepeat == cnt) {
                 this.buttonAdd.hide();
             }
 
-            this.button_remove.on('click', function () {
+            this.buttonRemove.on('click', function () {
 //                var remove = false;
 
                 var cnt = this.element.prototypes.getCount(this.dsId, this.ownerCt.id);
@@ -195,7 +195,10 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                 if (!this.maxRepeat || cnt < this.maxRepeat) {
                     var pt = this.element.prototypes.getPrototype(this.dsId);
                     var pos = this.ownerCt.items.items.indexOf(this);
-                    this.addGroup(this.ownerCt, pt, pos + 1, this.element, this.repeatablePostfix, true, true);
+
+                    var factory = Phlexible.fields.Registry.getFactory('group');
+                    var config = factory({}, pt, {values: []}, this.element, this.repeatableId, true, true);
+                    this.ownerCt.insert(pos + 1, config);
 
                     this.ownerCt.doLayout();
                 }
@@ -256,11 +259,11 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                         menuConfig.items[2].menu.push({
                             text: item.title[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
                             disabled: disabled,
-                            handler: function (dsId) {
+                            handler: function () {
                                 var pt = this.element.prototypes.getPrototype(dsId);
-                                this.addGroup(this, pt, 0, this.element, this.repeatablePostfix, true, true);
+                                this.addGroup(this, pt, 0, this.element, this.repeatableId, true, true);
                                 this.doLayout();
-                            }.createDelegate(this, [dsId], false)
+                            }.createDelegate(this)
                         });
                     }
                 }
@@ -281,7 +284,7 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                             handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
                                 var pos = this.ownerCt.items.items.indexOf(this);
-                                this.addGroup(this.ownerCt, pt, pos, this.element, this.repeatablePostfix, true, true);
+                                this.addGroup(this.ownerCt, pt, pos, this.element, this.repeatableId, true, true);
                                 this.ownerCt.doLayout();
                             }.createDelegate(this, [dsId], false)
                         });
@@ -291,7 +294,7 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                             handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
                                 var pos = this.ownerCt.items.items.indexOf(this);
-                                this.addGroup(this.ownerCt, pt, pos + 1, this.element, this.repeatablePostfix, true, true);
+                                this.addGroup(this.ownerCt, pt, pos + 1, this.element, this.repeatableId, true, true);
                                 this.ownerCt.doLayout();
                             }.createDelegate(this, [dsId], false)
                         });
@@ -342,12 +345,7 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
 });
 Ext.reg('elementtypes-field-group', Phlexible.fields.Group);
 
-Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd, newGroup) {
-    if (element.master) {
-        // create prototype
-        element.prototypes.addGroupPrototype(item);
-    }
-
+Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valueStructure, element, repeatableId) {
     var minRepeat = parseInt(item.configuration.repeat_min, 10) || 0;
     var maxRepeat = parseInt(item.configuration.repeat_max, 10) || 0;
     var isRepeatable = minRepeat != maxRepeat || maxRepeat > 1;
@@ -355,12 +353,6 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
     var defaultRepeat = parseInt(item.configuration.repeat_default, 10) || 0;
     if (element.version > 1 && minRepeat === 0) {
         defaultRepeat = 0;
-    }
-
-    if (item.empty && !item.data_cnt && isRepeatable && !defaultRepeat && !newGroup) {
-        // Phlexible.console.log('skip: ' + item.name[Phlexible.Config.get('user.property.interfaceLanguage', 'en')]);
-        // this.ids[item.dsId] = 0;
-        return null;
     }
 
     element.prototypes.incCount(item.dsId, parentConfig.id);
@@ -374,12 +366,12 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
 
     var groupId = null;
     if (isRepeatable || parentConfig.isSortable) {
-        groupId = 'group_' + item.dsId + '_';
-        if (item.data_id) {
-            groupId += 'id-' + item.data_id;
+        groupId = 'group-' + item.dsId + '-';
+        if (item.id) {
+            groupId += 'id-' + item.id;
         }
         else {
-            groupId += Ext.id(null, 'new');
+            groupId += Ext.id(null, 'new-');
         }
     }
 
@@ -388,10 +380,10 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
         title: item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
         cls: (item.configuration.group_single_line ? 'p-form-group-singleline' : 'p-form-group-multiline') + ' ' + (item.configuration.group_show_border ? 'p-fields-group-border' : 'p-fields-group-noborder'),
 
-        workingTitle: item.workingTitle,
+        workingTitle: item.name,
         dsId: item.dsId,
         groupId: groupId,
-        repeatablePostfix: repeatablePostfix,
+        repeatableId: repeatableId,
         helpText: item.labels.context_help[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
         isMaster: element.master,
         isDiff: !!element.data.diff,
@@ -407,7 +399,7 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
     };
 
     if (item.children) {
-        config.items = Phlexible.elements.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element, groupId && isRepeatable ? groupId : repeatablePostfix, true);
+        config.items = Phlexible.elements.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element, groupId && isRepeatable ? groupId : repeatableId, true);
     }
 
     return config;

@@ -1,8 +1,4 @@
-Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix) {
-    if (element.master) {
-        element.prototypes.addFieldPrototype(item);
-    }
-
+Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
     // labels
@@ -34,8 +30,8 @@ Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, ite
 
     var config = {
         xtype: 'displayfield',
-        name: field_prefix + (repeatablePostfix ? '#' + repeatablePostfix : ''),
-        ds_id: item.dsId,
+        name: field_prefix + (repeatableId ? '#' + repeatableId : ''),
+        dsId: item.dsId,
 
         fieldLabel: label,
         helpText: (item.labels.context_help[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
@@ -50,6 +46,12 @@ Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, ite
         supportsPrefix: true,
         supportsSuffix: true
     };
+
+    Ext.each(valueStructure.values, function (value) {
+        if (value.dsId === item.dsId) {
+            config.value = value.content;
+        }
+    });
 
     return config;
 });

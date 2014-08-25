@@ -5,7 +5,7 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
     plain: false,
     autoHeight: false,
     border: false,
-    autoScroll: false,
+    autoScroll: true,
     autoWidth: false,
     deferredRender: false,
     hideMode: 'offsets',
@@ -53,7 +53,7 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
 
     lateRender: function () {
         if (this.structure) {
-            var structure = this.structure,
+            var structureNodes = this.structure,
                 valueStructure = this.valueStructure,
                 targetPanel = this,
                 lazy = false,
@@ -61,11 +61,11 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
 
 //            this.disable();
 
-            if (structure[0].type === 'root') {
-                structure = structure[0].children;
-            }
+            structureNodes = Phlexible.elements.ElementDataTabHelper.fixStructure(structureNodes, valueStructure, null);
 
-            if (structure[0].type === 'tab' && structure.length > 1) {
+            Phlexible.elements.ElementDataTabHelper.importPrototypes(structureNodes, this.element);
+
+            if (structureNodes[0].type === 'tab' && structureNodes.length > 1) {
                 targetPanel = {
                     xtype: 'elements-elementcontenttabpanel',
                     items: []
@@ -74,7 +74,7 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
                 noTitle = false;
             }
 
-            items = Phlexible.elements.ElementDataTabHelper.loadItems(structure, valueStructure, this, this.element);
+            items = Phlexible.elements.ElementDataTabHelper.loadItems(structureNodes, valueStructure, this, this.element);
 
             /*
              Ext.each(structure, function(item) {

@@ -6,7 +6,7 @@ Phlexible.elements.ElementContentTabPanel = Ext.extend(Ext.TabPanel, {
     layoutOnTabChange: true,
     autoHeight: false,
     border: false,
-    autoScroll: false,
+    autoScroll: true,
     autoWidth: false,
     tabPosition: 'top',
     deferredRender: false,

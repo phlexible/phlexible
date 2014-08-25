@@ -1,11 +1,7 @@
-Phlexible.fields.Registry.addFactory('numberfield', function (parentConfig, item, valueStructure, pos, element, repeatablePostfix, forceAdd) {
-    if (element.master) {
-        element.prototypes.addFieldPrototype(item);
-    }
-
+Phlexible.fields.Registry.addFactory('numberfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatablePostfix, forceAdd);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'numberfield',
@@ -23,6 +19,12 @@ Phlexible.fields.Registry.addFactory('numberfield', function (parentConfig, item
         supportsInlineDiff: true,
         supportsUnlink: true,
         supportsRepeatable: true
+    });
+
+    Ext.each(valueStructure.values, function (value) {
+        if (value.dsId === item.dsId) {
+            config.value = value.content;
+        }
     });
 
     return config;
