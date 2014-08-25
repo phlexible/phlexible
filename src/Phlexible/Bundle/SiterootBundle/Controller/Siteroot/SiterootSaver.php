@@ -50,6 +50,7 @@ class SiterootSaver
         $siteroot = $this->siterootManager->find($siterootId);
 
         $this
+            ->applyTitles($siteroot, $data)
             ->applyContentchannels($siteroot, $data)
             ->applyProperties($siteroot, $data)
             ->applyCustomTitles($siteroot, $data)
@@ -64,8 +65,24 @@ class SiterootSaver
     }
 
     /**
-     * Apply content channels
+     * @param Siteroot $siteroot
+     * @param array    $data
      *
+     * @return $this
+     */
+    private function applyTitles(Siteroot $siteroot, array $data)
+    {
+        if (!array_key_exists('titles', $data)) {
+            // noting to save
+            return $this;
+        }
+
+        $siteroot->setTitles($data['titles']);
+        
+        return $this;
+    }
+
+    /**
      * @param Siteroot $siteroot
      * @param array    $data
      *
@@ -95,8 +112,6 @@ class SiterootSaver
     }
 
     /**
-     * Apply custom titles
-     *
      * @param Siteroot $siteroot
      * @param array    $data
      *
@@ -117,8 +132,6 @@ class SiterootSaver
     }
 
     /**
-     * Apply custom titles
-     *
      * @param Siteroot $siteroot
      * @param array    $data
      *
@@ -141,8 +154,6 @@ class SiterootSaver
 
 
     /**
-     * Apply named tids
-     *
      * @param Siteroot $siteroot
      * @param array    $data
      *
@@ -171,8 +182,6 @@ class SiterootSaver
     }
 
     /**
-     * Apply navigations
-     *
      * @param Siteroot $siteroot
      * @param array    $data
      *
@@ -230,8 +239,6 @@ class SiterootSaver
     }
 
     /**
-     * Apply short urls
-     *
      * @param Siteroot $siteroot
      * @param array    $data
      *
@@ -286,8 +293,6 @@ class SiterootSaver
     }
 
     /**
-     * Apply urls
-     *
      * @param Siteroot $siteroot
      * @param array    $data
      *
