@@ -1,0 +1,8 @@
+services:
+    phlexible_tree.mediator.element:
+        class: Phlexible\Bundle\TreeBundle\Mediator\ElementMediator
+        arguments: [@phlexible_element.element_service]
+
+    phlexible_tree.mediator:
+        class: Phlexible\Bundle\TreeBundle\Mediator\Mediator
+        arguments: [[@phlexible_tree.mediator.element]]

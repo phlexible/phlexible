@@ -8,10 +8,13 @@
 
 namespace Phlexible\Bundle\FrontendBundle\Controller;
 
+use Phlexible\Bundle\ContentchannelBundle\Entity\Contentchannel;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Preview controller
@@ -21,85 +24,39 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PreviewController extends Controller
 {
-    public function previewAction()
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     * @Route("", name="frontend_preview")
+     */
+    public function previewAction(Request $request)
     {
-        $request = Request::createFromGlobals();
+        $language = $request->get('language');
+        $tid = $request->get('id');
 
-        $router = $this->getContainer()->get('elementRendererRequestRouter');
-        $router->getRequestContext()->setBaseUrl($request->getBaseUrl());
+        $contentTreeManager = $this->get('phlexible_tree.content_tree_manager.delegating');
+        $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $renderRequest = $router->match($request);
+        $node = $contentTreeManager->findByTreeId($tid)->get($tid);
 
-        $renderConfigurator = $this->getContainer()->get('elementrenderer.configurator');
-        $renderConfig = $renderConfigurator->configure($renderRequest);
+        $siteroot = $siterootManager->find($node->getTree()->getSiterootId());
+        $siteroot->setContentChannels(array(1 => 1));
+        $siterootUrl = $siteroot->getDefaultUrl();
 
-        $renderer = $this->getContainer()->get('twigrenderer.renderer');
-        $content = $renderer->render($renderConfig);
-        $this->_response->setBody($content);
+        $request->attributes->set('language', $language);
+        $request->attributes->set('contentDocument', $node);
+        $request->attributes->set('siterootUrl', $siterootUrl);
 
-        return;
+        $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
+        $renderConfig = $renderConfigurator->configure($request);
 
-        ini_set('display_errors', 1);
+        $dataProvider = $this->get('phlexible_twig_renderer.data_provider');
+        $templating = $this->get('templating');
+        $data = $dataProvider->provide($renderConfig);
+        $template = $renderConfig->get('template');
 
-        // get dispatcher
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
-
-        // get response
-        $response = $this->getResponse();
-
-        try {
-            // create request
-            $requestHandler = Makeweb_Frontend_Request_Handler::getPreviewHandler();
-            $requestHandler->setPathPrefix($this->getRequest()->getBaseUrl() . '/preview');
-            $request = new Makeweb_Frontend_Request($response, null, $requestHandler);
-        } catch (Makeweb_Frontend_Request_Exception $e) {
-            if ($this->getContainer()->get('application')->getDebug()) {
-                echo 'Whoops';
-                exit(1);
-            }
-
-            MWF_Log::exception($e);
-
-            $response
-                ->setHttpResponseCode(404)
-                ->setBody('Page not found.');
-
-            return;
-        } catch (Exception $e) {
-            if ($this->getContainer()->get('application')->getDebug()) {
-                echo 'Whoops';
-                exit(1);
-            }
-
-            MWF_Log::exception($e);
-
-            $response
-                ->setHttpResponseCode(500)
-                ->setBody('Error occured.');
-
-            return;
-        }
-
-        try {
-            if (!$response->isRedirect()) {
-                $renderer = $this->getContainer()->get('renderersHtml');
-
-                $event = new Makeweb_Frontend_Event_InitRenderer($renderer);
-                $dispatcher->dispatch($event);
-
-                $renderer->render($request, $response);
-            }
-        } catch (Exception $e) {
-            MWF_Log::exception($e);
-            FirePHP::getInstance(true)->error($e);
-
-            $params = array(
-                'exception' => $e,
-                'request'   => $request,
-            );
-
-            $this->_forward('index', 'error', null, $params);
-        }
+        return $templating->renderResponse($template, (array) $data);
     }
 
     /**
@@ -114,7 +71,7 @@ class PreviewController extends Controller
         $language = $request->get('language');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
-        $router = $this->get('phlexible_tree.router');
+        $stateManager = $this->get('phlexible_tree.state_manager');
 
         $node = $treeManager->getByNodeId($tid)->get($tid);
 
@@ -124,10 +81,10 @@ class PreviewController extends Controller
         );
 
         if ($node) {
-            $urls['preview'] = $router->generate($node);
+            $urls['preview'] = $this->generateUrl('frontend_preview', array('id' => $tid, 'language' => $language));
 
-            if (1 || $node->isPublished($language)) {
-                $urls['online'] = $router->generate($node);
+            if ($stateManager->isPublished($node, $language)) {
+                $urls['online'] = $this->generateUrl($node);
             }
         }
 

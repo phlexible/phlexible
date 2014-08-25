@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManager;
+use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\XmlContentTree;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -33,7 +33,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $logger;
 
     /**
-     * @var ContentTreeManager
+     * @var ContentTreeManagerInterface
      */
     private $contentTreeManager;
 
@@ -58,17 +58,18 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $elementService;
 
     /**
-     * @param LoggerInterface    $logger
-     * @param ContentTreeManager $treeManager
-     * @param ElementService     $elementService
-     * @param string             $languages
-     * @param string             $defaultLanguage
+     * @param LoggerInterface             $logger
+     * @param ContentTreeManagerInterface $treeManager
+     * @param ElementService              $elementService
+     * @param string                      $languages
+     * @param string                      $defaultLanguage
      */
-    public function __construct(LoggerInterface $logger,
-                                ContentTreeManager $treeManager,
-                                ElementService $elementService,
-                                $languages,
-                                $defaultLanguage)
+    public function __construct(
+        LoggerInterface $logger,
+        ContentTreeManagerInterface $treeManager,
+        ElementService $elementService,
+        $languages,
+        $defaultLanguage)
     {
         $this->logger = $logger;
         $this->contentTreeManager = $treeManager;

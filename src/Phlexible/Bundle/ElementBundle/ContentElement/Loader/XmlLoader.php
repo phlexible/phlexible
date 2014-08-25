@@ -34,13 +34,11 @@ class XmlLoader
     }
 
     /**
-     * @param string $filename
-     *
-     * @return ContentElement
+     * {@inheritdoc}
      */
-    public function load($filename)
+    public function load($eid, $version, $language)
     {
-        $pathname = $this->xmlDir . '/' . $filename;
+        $pathname = $this->xmlDir . '/' . $eid . '_' . $language . '.xml';
 
         if (!file_exists($pathname)) {
             return null;
@@ -62,6 +60,7 @@ class XmlLoader
             $value = (string) $mappedFieldNode;
             $mappedFields[$name] = $value;
         }
+        $mappedFields = new ElementVersionMappedField($mappedFields);
 
         $structure = $this->loadStructure($xml->structure);
 
@@ -73,7 +72,7 @@ class XmlLoader
             $elementtypeType,
             $version,
             $language,
-            new ElementVersionMappedField(), //$mappedFields,
+            $mappedFields,
             $structure
         );
 
@@ -85,7 +84,7 @@ class XmlLoader
      *
      * @return ElementStructure
      */
-    public function loadStructure(\SimpleXMLElement $structureNode)
+    private function loadStructure(\SimpleXMLElement $structureNode)
     {
         $structure = new ElementStructure();
 

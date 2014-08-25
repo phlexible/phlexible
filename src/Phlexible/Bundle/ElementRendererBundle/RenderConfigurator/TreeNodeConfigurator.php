@@ -96,10 +96,11 @@ class TreeNodeConfigurator implements ConfiguratorInterface
 
             }
         }
+
         /* Context */
 
         /* @var $parameters TreeNodeInterface */
-        $treeNode = $origTreeNode = $request->attributes->get('contentDocument');
+        $treeNode = $originalTreeNode = $request->attributes->get('contentDocument');
         $tree = $treeNode->getTree();
 
         $eid = $treeNode->getTypeId();
@@ -207,7 +208,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
         }
         */
 
-        if ($treeNode !== $origTreeNode) {
+        if ($treeNode !== $originalTreeNode) {
             $this->logger->debug('Switching to TID ' . $treeNode->getId());
 
             $renderRequest->setTreeNode($treeNode);
@@ -219,25 +220,13 @@ class TreeNodeConfigurator implements ConfiguratorInterface
             $delegateTreeNode = $tree->getNode($request->attributes->get('delegateTreeId'));
         }
 
-        /*
-        if ($treeNode->isRestricted($version) ||
-            $treeNode->hasCacheDisabled($version))
-        {
-            $renderRequest->setCachable(false);
-        }
-        else
-        {
-            $renderRequest->setCacheLifetime($treeNode->getCacheLifeTime($version));
-        }
-        */
-
         $renderConfiguration
             ->addFeature('treeNode')
             ->set('treeNode', $treeNode)
             ->set('treeContext', new ContentTreeContext($treeNode))
             ->addFeature('eid')
             ->set('eid', $treeNode->getTypeId())
-            ->set('version', $tree->getVersion($treeNode, 'de'))
+            ->set('version', 1)//$tree->getPublishedVersion($treeNode, 'de'))
             ->set('language', 'de');
 
         // Init Element Event

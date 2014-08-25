@@ -53,6 +53,13 @@ interface ContentTreeInterface extends TreeInterface
     public function getSpecialTids();
 
     /**
+     * @param TreeNodeInterface $treeNode
+     *
+     * @return ContentTreeNode
+     */
+    public function createContentTreeNodeFromTreeNode(TreeNodeInterface $treeNode);
+
+    /**
      * @param TreeNodeInterface|int $node
      *
      * @return array

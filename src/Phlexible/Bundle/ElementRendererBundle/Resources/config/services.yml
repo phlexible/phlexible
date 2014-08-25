@@ -33,7 +33,7 @@ services:
     phlexible_element_renderer.configurator.element:
         class: Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ElementConfigurator
         public: false
-        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service, @phlexible_element.content.loader, @security.context]
+        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service, @phlexible_element.content_loader, @security.context]
         tags:
             - {name: monolog.logger, channel: element_renderer}
 

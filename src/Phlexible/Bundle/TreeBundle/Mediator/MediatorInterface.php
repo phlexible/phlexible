@@ -8,22 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Mediator;
 
-interface Versioned
-{
-    public function getOnlineVersion();
-
-    public function getLatestVersion();
-
-    public function getAttributesForVersion();
-}
-
-interface Languaged
-{
-    /**
-     * @return array
-     */
-    public function getContentForLanguage($language);
-}
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
  * Mediator interface
@@ -33,27 +18,25 @@ interface Languaged
 interface MediatorInterface
 {
     /**
-     * @return string
+     * @param TreeNodeInterface $node
+     *
+     * @return bool
      */
-    public function getTitle();
+    public function accept(TreeNodeInterface $node);
 
     /**
+     * @param TreeNodeInterface $node
+     * @param string            $field
+     * @param string            $language
+     *
      * @return string
      */
-    public function getBackendTitle();
+    public function getTitle(TreeNodeInterface $node, $field, $language);
 
     /**
-     * @return string
-     */
-    public function getNavigationTitle();
-
-    /**
-     * @return string
-     */
-    public function getPageTitle();
-
-    /**
+     * @param TreeNodeInterface $node
+     *
      * @return mixed
      */
-    public function getAttributes();
+    public function getObject(TreeNodeInterface $node);
 }

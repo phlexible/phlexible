@@ -18,27 +18,6 @@ services:
         class: Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper
         arguments: [@phlexible_element.element_service]
 
-    phlexible_element.content.loader:
-        class: Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader
-        arguments:
-            - @event_dispatcher
-            - @logger
-            - @phlexible_element.content.builder
-            - @phlexible_element.content.loader.xml
-            - @phlexible_element.content.dumper.xml
-
-    phlexible_element.content.builder:
-        class: Phlexible\Bundle\ElementBundle\ContentElement\ContentElementBuilder
-        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service]
-
-    phlexible_element.content.dumper.xml:
-        class: Phlexible\Bundle\ElementBundle\ContentElement\Dumper\XmlDumper
-        arguments: [%phlexible_element.content.cache_dir%]
-
-    phlexible_element.content.loader.xml:
-        class: Phlexible\Bundle\ElementBundle\ContentElement\Loader\XmlLoader
-        arguments: [%phlexible_element.content.cache_dir%]
-
     phlexible_element.icon_builder:
         class: Phlexible\Bundle\ElementBundle\Icon\IconBuilder
         arguments: [%phlexible_element.overlay.cache_dir%]

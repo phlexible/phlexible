@@ -9,16 +9,16 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 /**
- * Content tree manager
+ * XML content tree manager
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ContentTreeManager
+class XmlContentTreeManager implements ContentTreeManagerInterface
 {
     /**
      * @var XmlContentTree[]
      */
-    private $trees = null;
+    private $trees;
 
     /**
      * @return XmlContentTree[]
@@ -44,7 +44,9 @@ class ContentTreeManager
     public function findByTreeId($treeId)
     {
         $trees = $this->findAll();
-        if (!$trees) return null;
+        if (!$trees) {
+            return null;
+        }
 
         foreach ($trees as $tree) {
             if ($tree->has($treeId)) {

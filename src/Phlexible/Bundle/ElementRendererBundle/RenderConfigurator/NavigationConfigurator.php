@@ -62,11 +62,10 @@ class NavigationConfigurator implements ConfiguratorInterface
 
         /** @var Url $siterootUrl */
         $siterootUrl = $request->attributes->get('siterootUrl');
-        $siterootNavigations = $siterootUrl->getSiteroot()->getNavigations();
 
         $navigations = array();
 
-        foreach ($siterootNavigations as $siterootNavigation) {
+        foreach ($siterootUrl->getSiteroot()->getNavigations() as $siterootNavigation) {
             $startTid = $siterootNavigation->getStartTreeId();
             $currentTreeNode = $treeNode = $renderConfiguration->get('treeNode');
             if ($startTid) {

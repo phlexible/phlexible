@@ -359,11 +359,11 @@ class DataController extends Controller
 
             if (in_array($elementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART))) {
                 if ($type == Elementtype::TYPE_FULL) {
-                    $contentNode = $this->get('phlexible_tree.content.manager')->findByTreeId($node->getId())->get($node->getId());
-                    $urls['preview'] = $this->get('phlexible_tree.router')->generate($contentNode);
+                    $urls['preview'] = $this->generateUrl('frontend_preview', array('id' => $node->getId(), 'language' => $language));
 
                     if ($isPublished) {
-                        $urls['online'] = $this->get('phlexible_tree.router')->generate($contentNode);
+                        $contentNode = $this->get('phlexible_tree.content_tree_manager.delegating')->findByTreeId($node->getId())->get($node->getId());
+                        $urls['online'] = $this->generateUrl($contentNode);
                     }
                 }
 

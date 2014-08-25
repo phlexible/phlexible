@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
@@ -17,11 +18,11 @@ use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * XML content tree
+ * Delegating content tree
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class XmlContentTree implements TreeInterface, \IteratorAggregate, IdentifiableInterface
+class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate, IdentifiableInterface
 {
     /**
      * @var TreeInterface
@@ -34,13 +35,20 @@ class XmlContentTree implements TreeInterface, \IteratorAggregate, IdentifiableI
     private $siteroot;
 
     /**
-     * @param TreeInterface $tree
-     * @param Siteroot      $siteroot
+     * @var MediatorInterface
      */
-    public function __construct(TreeInterface $tree, Siteroot $siteroot)
+    private $mediator;
+
+    /**
+     * @param TreeInterface     $tree
+     * @param Siteroot          $siteroot
+     * @param MediatorInterface $mediator
+     */
+    public function __construct(TreeInterface $tree, Siteroot $siteroot, MediatorInterface $mediator)
     {
         $this->tree = $tree;
         $this->siteroot = $siteroot;
+        $this->mediator = $mediator;
     }
 
     /**
@@ -122,6 +130,32 @@ class XmlContentTree implements TreeInterface, \IteratorAggregate, IdentifiableI
     /**
      * {@inheritdoc}
      */
+    public function createContentTreeNodeFromTreeNode(TreeNodeInterface $treeNode)
+    {
+        $contentNode = new ContentTreeNode();
+        $contentNode
+            ->setId($treeNode->getId())
+            ->setTypeId($treeNode->getTypeId())
+            ->setType($treeNode->getType())
+            ->setTree($this)
+            ->setParentId($treeNode->getParentId())
+            ->setInNavigation($treeNode->getInNavigation())
+            ->setSort($treeNode->getSort())
+            ->setSortMode($treeNode->getSortMode())
+            ->setSortDir($treeNode->getSortDir());
+
+        $titles = array();
+        foreach (array('de', 'en') as $language) {
+            $titles[$language] = $this->mediator->getTitle($treeNode, 'navigation', $language);
+        }
+        $contentNode->setTitles($titles);
+
+        return $contentNode;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRoot()
     {
         return $this->tree->getRoot();
@@ -132,7 +166,10 @@ class XmlContentTree implements TreeInterface, \IteratorAggregate, IdentifiableI
      */
     public function get($id)
     {
-        return $this->tree->get($id);
+        $treeNode = $this->tree->get($id);
+        $contentNode = $this->createContentTreeNodeFromTreeNode($treeNode);
+
+        return $contentNode;
     }
 
     /**
@@ -148,7 +185,12 @@ class XmlContentTree implements TreeInterface, \IteratorAggregate, IdentifiableI
      */
     public function getChildren($node)
     {
-        return $this->tree->hasChildren($node);
+        $children = array();
+        foreach ($this->tree->getChildren($node) as $childNode) {
+            $children[] = $this->get($childNode->getId());
+        }
+
+        return $children;
     }
 
     /**
@@ -164,7 +206,7 @@ class XmlContentTree implements TreeInterface, \IteratorAggregate, IdentifiableI
      */
     public function getParent($node)
     {
-        return $this->tree->getParent($node);
+        return $this->get($node->getParentId());
     }
 
     /**
@@ -180,7 +222,12 @@ class XmlContentTree implements TreeInterface, \IteratorAggregate, IdentifiableI
      */
     public function getPath($node)
     {
-        return $this->tree->getPath($node);
+        $path = array();
+        foreach ($this->tree->getPath($node) as $pathNode) {
+            $path[] = $this->get($pathNode->getId());
+        }
+
+        return $path;
     }
 
     /**
@@ -253,5 +300,35 @@ class XmlContentTree implements TreeInterface, \IteratorAggregate, IdentifiableI
         $version = 0;
 
         return $version;
+    }
+
+    /**
+     * @param TreeNodeInterface|int $node
+     *
+     * @return bool
+     */
+    public function isInstance($node)
+    {
+        return false;
+    }
+
+    /**
+     * @param TreeNodeInterface|int $node
+     *
+     * @return bool
+     */
+    public function isInstanceMaster($node)
+    {
+        return false;
+    }
+
+    /**
+     * @param TreeNodeInterface|int $node
+     *
+     * @return TreeNodeInterface[]
+     */
+    public function getInstances($node)
+    {
+        return array();
     }
 }

@@ -42,7 +42,7 @@ class TeaserController extends Controller
             $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
             $renderConfig = $renderConfigurator->configure($request, $teaser);
 
-            if ($request->has('template')) {
+            if ($request->get('template')) {
                 $renderConfig->set('template', $request->get('template', 'teaser'));
             }
 

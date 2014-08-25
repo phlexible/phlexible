@@ -62,18 +62,18 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     private $historyManager;
 
     /**
-     * @param string                         $siteRootId
+     * @param string                         $siterootId
      * @param Connection                     $connection
      * @param EventDispatcherInterface       $dispatcher
      * @param ElementHistoryManagerInterface $historyManager
      */
     public function __construct(
-        $siteRootId,
+        $siterootId,
         Connection $connection,
         EventDispatcherInterface $dispatcher,
         ElementHistoryManagerInterface $historyManager)
     {
-        $this->siterootId = $siteRootId;
+        $this->siterootId = $siterootId;
         $this->connection = $connection;
         $this->dispatcher = $dispatcher;
         $this->historyManager = $historyManager;
@@ -190,7 +190,8 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         $qb
             ->select('et.*')
             ->from('tree', 'et')
-            ->where($qb->expr()->eq('et.id', $id));
+            ->where($qb->expr()->eq('et.id', $id))
+            ->andWhere($qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($this->siterootId)));
 
         $row = $this->connection->fetchAssoc($qb->getSQL());
 
@@ -207,14 +208,25 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     public function has($id)
     {
         if (isset($this->nodes[$id])) {
-            return true;
+            return $this->nodes[$id];
         }
 
-        if ($id instanceof TreeNodeInterface) {
-            $id = $id->getId();
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('et.*')
+            ->from('tree', 'et')
+            ->where($qb->expr()->eq('et.id', $id))
+            ->andWhere($qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($this->siterootId)));
+
+        $row = $this->connection->fetchAssoc($qb->getSQL());
+
+        if (!$row) {
+            return false;
         }
 
-        return $this->get($id) !== null;
+        $this->mapNode($row);
+
+        return true;
     }
 
     /**
@@ -237,6 +249,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
             ->select('et.*')
             ->from('tree', 'et')
             ->where($qb->expr()->eq('et.parent_id', $id))
+            ->andWhere($qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($this->siterootId)))
             ->orderBy('sort', 'ASC');
 
         $rows = $this->connection->fetchAll($qb->getSQL());

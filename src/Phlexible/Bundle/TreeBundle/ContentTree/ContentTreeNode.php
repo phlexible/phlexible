@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 use Phlexible\Bundle\TreeBundle\Model\TreeNode;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

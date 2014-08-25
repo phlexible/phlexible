@@ -58,7 +58,6 @@ class ContentElementBuilder
         $elementVersion     = $this->elementService->findElementVersion($element, $version);
         $elementStructure   = $this->elementService->findElementStructure($elementVersion, $language);
         $elementtype        = $this->elementService->findElementtype($element);
-        //$elementtypeVersion = $this->elementService->findElementtypeVersion($elementVersion);
 
         $mappedFields = $elementVersion->getMappedFields();
         if (isset($mappedFields[$language])) {

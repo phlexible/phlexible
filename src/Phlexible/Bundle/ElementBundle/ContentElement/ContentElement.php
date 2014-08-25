@@ -82,7 +82,7 @@ class ContentElement
         $elementtypeType,
         $version,
         $language,
-        ElementVersionMappedField $mappedField,
+        ElementVersionMappedField $mappedField = null,
         ElementStructure $structure)
     {
         $this->eid = (int) $eid;

@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class XmlDumper
+class XmlDumper implements DumperInterface
 {
     /**
      * @var string
@@ -33,10 +33,11 @@ class XmlDumper
 
     /**
      * @param ContentElement $contentElement
-     * @param string         $filename
      */
-    public function dump(ContentElement $contentElement, $filename)
+    public function dump(ContentElement $contentElement)
     {
+        $filename = $contentElement->getEid() . '_' . $contentElement->getLanguage() . '.xml';
+
         $dom = new \DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;

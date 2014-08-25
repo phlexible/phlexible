@@ -425,10 +425,17 @@ class Siteroot
      *
      * @return array
      */
-    public function getSpecialTids($language = null)
+    public function getSpecialTids($language)
     {
         $specialTids = array();
 
+        foreach ($this->specialTids as $specialTid) {
+            if ($specialTid['language'] === $language || $specialTid['language'] === null) {
+                $specialTids[$specialTid['name']] = $specialTid['treeId'];
+            }
+        }
+
+        return $specialTids;
         if ((null !== $language) && !empty($this->specialTids[$language])) {
             $specialTids += $this->specialTids[$language];
         }

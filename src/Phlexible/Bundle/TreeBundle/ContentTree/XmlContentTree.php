@@ -75,7 +75,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      *
-     * @return \Phlexible\Bundle\TreeBundle\Model\TreeIdentifier
+     * @return TreeIdentifier
      */
     public function getIdentifier()
     {
@@ -192,6 +192,26 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         $siteroot->setAllSpecialTids($specialTids);
 
         return $siteroot;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createContentTreeNodeFromTreeNode(TreeNodeInterface $treeNode)
+    {
+        $contentNode = new ContentTreeNode();
+        $contentNode
+            ->setTypeId($treeNode->getTypeId())
+            ->setType($treeNode->getType())
+            ->setTree($this)
+            ->setParentId($treeNode->getParentId())
+            ->setInNavigation($treeNode->getInNavigation())
+            ->setSort($treeNode->getSort())
+            ->setSortMode($treeNode->getSortMode())
+            ->setSortDir($treeNode->getSortDir())
+            ->setTitles(array('de' => 'bla', 'en' => 'blubb'));
+
+        return $contentNode;
     }
 
     /**

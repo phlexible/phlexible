@@ -45,7 +45,7 @@ class TwigDataProvider implements DataProviderInterface
 
         if ($request->attributes->has('siterootUrl')) {
             $data->siterootId  = $request->attributes->get('siterootUrl')->getSiteroot()->getId();
-            $data->specialTids = $this->createSpecialTids($renderConfiguration, $data);
+            $data->specialTids = $this->createSpecialTids($renderConfiguration, $renderConfiguration->get('language'));
         }
 
         if ($renderConfiguration->hasFeature('template')) {
@@ -96,9 +96,10 @@ class TwigDataProvider implements DataProviderInterface
      *
      * @return array
      */
-    protected function createSpecialTids(RenderConfiguration $renderConfiguration)
+    protected function createSpecialTids(RenderConfiguration $renderConfiguration, $language)
     {
-        $specialTids = $renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids('de');
+        $specialTids = $renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids($language);
+        $specialTids += $renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids(null);
         $specialTids += array(
             'default_start_eid'       => -1,
             'default_pw_aendern'      => -1,

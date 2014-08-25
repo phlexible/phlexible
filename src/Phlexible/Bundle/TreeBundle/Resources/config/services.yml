@@ -12,14 +12,18 @@ services:
             - @phlexible_access_control.permissions
             - @security.context
 
-    phlexible_tree.content.manager:
-        class: Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManager
+    phlexible_tree.content_tree_manager.delegating:
+        class: Phlexible\Bundle\TreeBundle\ContentTree\DelegatingContentTreeManager
+        arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.tree_manager, @phlexible_tree.mediator]
+
+    phlexible_tree.content_tree_manager.xml:
+        class: Phlexible\Bundle\TreeBundle\ContentTree\XmlContentTreeManager
 
     phlexible_tree.router.handler.default:
         class: Phlexible\Bundle\TreeBundle\Router\Handler\DefaultHandler
         arguments:
             - @logger
-            - @phlexible_tree.content.manager
+            - @phlexible_tree.content_tree_manager.delegating
             - @phlexible_element.element_service
             - %phlexible_cms.languages.available%
             - %phlexible_cms.languages.default%

@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree\Dumper;
 use Cocur\Slugify\Slugify;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
@@ -38,13 +39,20 @@ class XmlDumper
     private $slugifier;
 
     /**
+     * @var MediatorInterface
+     */
+    private $mediator;
+
+    /**
      * @param ElementService        $elementService
      * @param StateManagerInterface $stateManager
+     * @param MediatorInterface     $mediator
      */
-    public function __construct(ElementService $elementService, StateManagerInterface $stateManager)
+    public function __construct(ElementService $elementService, StateManagerInterface $stateManager, MediatorInterface $mediator)
     {
         $this->elementService = $elementService;
         $this->stateManager = $stateManager;
+        $this->mediator = $mediator;
 
         $this->slugifier = new Slugify();
     }
@@ -209,9 +217,10 @@ class XmlDumper
                 $languageAttr->value = $language;
                 $versionNode->appendChild($languageAttr);
 
-                $element = $this->elementService->findElement($node->getTypeId());
-                $elementVersion = $this->elementService->findElementVersion($element, $version);
-                $title = $elementVersion->getNavigationTitle($language);
+                $title = $this->mediator->getTitle($node, 'navigation', $language);
+                //$element = $this->elementService->findElement($node->getTypeId());
+                //$elementVersion = $this->elementService->findElementVersion($element, $version);
+                //$title = $elementVersion->getNavigationTitle($language);
 
                 $slugNode = $dom->createElement('slug', $this->slugifier->slugify($title));
                 $slugsNode->appendChild($slugNode);

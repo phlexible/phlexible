@@ -38,14 +38,14 @@ class ContentTreeContext
     private $depth;
 
     /**
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $referenceNode
-     * @param int               $maxDepth
-     * @param int               $depth
+     * @param ContentTreeNode $node
+     * @param ContentTreeNode $referenceNode
+     * @param int             $maxDepth
+     * @param int             $depth
      */
     public function __construct(
-        TreeNodeInterface $node,
-        TreeNodeInterface $referenceNode = null,
+        ContentTreeNode $node,
+        ContentTreeNode $referenceNode = null,
         $maxDepth = null,
         $depth = 0)
     {
@@ -195,6 +195,7 @@ class ContentTreeContext
      */
     public function online($language)
     {
-        return $this->node->hasVersion($language);
+        // TODO: fix
+        return true;//$this->node->hasVersion($language);
     }
 }

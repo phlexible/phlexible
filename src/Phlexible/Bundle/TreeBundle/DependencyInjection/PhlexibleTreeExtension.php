@@ -28,6 +28,7 @@ class PhlexibleTreeExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('doctrine.yml');
+        $loader->load('mediators.yml');
 
         $container->setAlias('phlexible_tree.tree_factory', 'phlexible_tree.doctrine.tree_factory');
         $container->setAlias('phlexible_tree.state_manager', 'phlexible_tree.doctrine.state_manager');
