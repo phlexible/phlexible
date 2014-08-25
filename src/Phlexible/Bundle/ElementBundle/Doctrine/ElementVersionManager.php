@@ -11,10 +11,10 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementsMessage;
-use Phlexible\Bundle\ElementBundle\ElementVersion\ElementVersionRepository;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\ElementBundle\Entity\ElementVersionEvent;
+use Phlexible\Bundle\ElementBundle\Entity\Repository\ElementVersionRepository;
+use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -94,22 +94,25 @@ class ElementVersionManager implements ElementVersionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateElementVersion(ElementVersion $elementVersion)
+    public function updateElementVersion(ElementVersion $elementVersion, $flush = true)
     {
         $event = new ElementVersionEvent($elementVersion);
-        $this->dispatcher->dispatch(ElementEvents::BEFORE_UPDATE_ELEMENT_VERSION, $event);
+        $this->dispatcher->dispatch(ElementEvents::BEFORE_CREATE_ELEMENT_VERSION, $event);
         if ($event->isPropagationStopped()) {
             throw new \Exception('Canceled by listener.');
         }
 
         $this->entityManager->persist($elementVersion);
-        $this->entityManager->flush($elementVersion);
+
+        if ($flush) {
+            $this->entityManager->flush($elementVersion);
+        }
 
         $event = new ElementVersionEvent($elementVersion);
-        $this->dispatcher->dispatch(ElementEvents::UPDATE_ELEMENT_VERSION, $event);
+        $this->dispatcher->dispatch(ElementEvents::CREATE_ELEMENT_VERSION, $event);
 
         // post message
-        $message = ElementsMessage::create('Element version "' . $elementVersion->getEid() . ' updated.');
+        $message = ElementsMessage::create('Element version "' . $elementVersion->getElement()->getEid() . ' updated.');
         $this->messagePoster->post($message);
     }
 }

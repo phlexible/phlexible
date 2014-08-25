@@ -12,8 +12,8 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementsMessage;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
-use Phlexible\Bundle\ElementBundle\Entity\ElementEvent;
 use Phlexible\Bundle\ElementBundle\Entity\Repository\ElementRepository;
+use Phlexible\Bundle\ElementBundle\Event\ElementEvent;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -88,21 +88,23 @@ class ElementManager implements ElementManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateElement(Element $element)
+    public function updateElement(Element $element, $flush = true)
     {
         if (!$element->getEid()) {
             $event = new ElementEvent($element);
-            $this->dispatcher->dispatch(ElementEvents::BEFORE_CREATE_ELEMENT, $event);
-            if ($event->isPropagationStopped()) {
+            if ($this->dispatcher->dispatch(ElementEvents::BEFORE_CREATE_ELEMENT, $event)->isPropagationStopped()) {
                 throw new \Exception('Create canceled by listener.');
             }
 
             $this->entityManager->persist($element);
-            $this->entityManager->flush($element);
+
+            if ($flush) {
+                $this->entityManager->flush($element);
+            }
 
             // post event
-            $event = new ElementEvent(ElementEvents::CREATE_ELEMENT, $element);
-            $this->dispatcher->dispatch($event);
+            $event = new ElementEvent($element);
+            $this->dispatcher->dispatch(ElementEvents::CREATE_ELEMENT, $event);
 
             // post message
             $message = ElementsMessage::create('Element "' . $element->getEid() . ' created.');
@@ -126,8 +128,7 @@ class ElementManager implements ElementManagerInterface
     {
         // post before event
         $event = new ElementEvent($element);
-        $this->dispatcher->dispatch(ElementEvents::BEFORE_DELETE_ELEMENT, $event);
-        if ($event->isPropagationStopped()) {
+        if ($this->dispatcher->dispatch(ElementEvents::BEFORE_DELETE_ELEMENT, $event)->isPropagationStopped()) {
             throw new \Exception('Delete canceled by listener.');
         }
 

@@ -251,26 +251,29 @@ class ElementtypeService
 
     /**
      * @param Elementtype $elementtype
+     * @param bool        $flush
      */
-    public function updateElementtype(Elementtype $elementtype)
+    public function updateElementtype(Elementtype $elementtype, $flush = true)
     {
-        $this->elementtypeManager->updateElementtype($elementtype);
+        $this->elementtypeManager->updateElementtype($elementtype, $flush);
     }
 
     /**
      * @param ElementtypeVersion $elementtypeVersion
+     * @param bool               $flush
      */
-    public function updateElementtypeVersion(ElementtypeVersion $elementtypeVersion)
+    public function updateElementtypeVersion(ElementtypeVersion $elementtypeVersion, $flush = true)
     {
-        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion);
+        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion, $flush);
     }
 
     /**
      * @param ElementtypeStructure $elementtypeStructure
+     * @param bool                 $flush
      */
-    public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure)
+    public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure, $flush = true)
     {
-        $this->elementtypeStructureManager->updateElementtypeStructure($elementtypeStructure);
+        $this->elementtypeStructureManager->updateElementtypeStructure($elementtypeStructure, $flush);
     }
 
     /**

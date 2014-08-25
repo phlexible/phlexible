@@ -10,8 +10,13 @@ namespace Phlexible\Bundle\SiterootBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use Phlexible\Bundle\SiterootBundle\SiterootEvents;
+use Phlexible\Bundle\SiterootBundle\SiterootsMessage;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Siteroot identifier
@@ -21,17 +26,47 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 class SiterootManager implements SiterootManagerInterface
 {
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * @var EntityRepository
      */
     private $siterootRepository;
 
     /**
-     * @param EntityManager $entityManager
+     * @var MessagePoster
      */
-    public function __construct(EntityManager $entityManager)
+    private $messagePoster;
+
+    /**
+     * @param EntityManager            $entityManager
+     * @param EventDispatcherInterface $dispatcher
+     * @param MessagePoster            $messagePoster
+     */
+    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher, MessagePoster $messagePoster)
     {
-        $this->entityMAnager = $entityManager;
-        $this->siterootRepository = $entityManager->getRepository('PhlexibleSiterootBundle:Siteroot');
+        $this->entityManager = $entityManager;
+        $this->dispatcher = $dispatcher;
+        $this->messagePoster = $messagePoster;
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    private function getSiterootRepository()
+    {
+        if (null === $this->siterootRepository) {
+            $this->siterootRepository = $this->entityManager->getRepository('PhlexibleSiterootBundle:Siteroot');
+        }
+
+        return $this->siterootRepository;
     }
 
     /**
@@ -39,7 +74,7 @@ class SiterootManager implements SiterootManagerInterface
      */
     public function find($id)
     {
-        return $this->siterootRepository->find($id);
+        return $this->getSiterootRepository()->find($id);
     }
 
     /**
@@ -47,7 +82,7 @@ class SiterootManager implements SiterootManagerInterface
      */
     public function findAll()
     {
-        return $this->siterootRepository->findAll();
+        return $this->getSiterootRepository()->findAll();
     }
 
     /**
@@ -55,6 +90,53 @@ class SiterootManager implements SiterootManagerInterface
      */
     public function updateSiteroot(Siteroot $siteroot)
     {
-        $this->entityMAnager->flush($siteroot);
+        if ($siteroot->getId()) {
+            $event = new SiterootEvent($siteroot);
+            if ($this->dispatcher->dispatch(SiterootEvents::BEFORE_UPDATE_SITEROOT, $event)->isPropagationStopped()) {
+                return;
+            }
+
+            $this->entityManager->flush($siteroot);
+
+            $event = new SiterootEvent($siteroot);
+            $this->dispatcher->dispatch(SiterootEvents::UPDATE_SITEROOT, $event);
+
+            $message = SiterootsMessage::create('Siteroot created.', '', null, null, 'siteroot');
+            $this->messagePoster->post($message);
+        } else {
+            $event = new SiterootEvent($siteroot);
+            if ($this->dispatcher->dispatch(SiterootEvents::BEFORE_CREATE_SITEROOT, $event)->isPropagationStopped()) {
+                return;
+            }
+
+            $this->entityManager->persist($siteroot);
+            $this->entityManager->flush($siteroot);
+
+            $event = new SiterootEvent($siteroot);
+            $this->dispatcher->dispatch(SiterootEvents::CREATE_SITEROOT, $event);
+
+            $message = SiterootsMessage::create('Siteroot updated.', '', null, null, 'siteroot');
+            $this->messagePoster->post($message);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteSiteroot(Siteroot $siteroot)
+    {
+        $event = new SiterootEvent($siteroot);
+        if ($this->dispatcher->dispatch(SiterootEvents::BEFORE_DELETE_SITEROOT, $event)->isPropagationStopped()) {
+            return;
+        }
+
+        $this->entityManager->remove($siteroot);
+        $this->entityManager->flush();
+
+        $event = new SiterootEvent($siteroot);
+        $this->dispatcher->dispatch(SiterootEvents::DELETE_SITEROOT, $event);
+
+        $message = SiterootsMessage::create('Siteroot deleted.', '', null, null, 'siteroot');
+        $this->messagePoster->post($message);
     }
 }

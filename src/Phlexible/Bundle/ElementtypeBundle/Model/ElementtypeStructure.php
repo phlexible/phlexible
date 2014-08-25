@@ -68,6 +68,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      * @param ElementtypeStructureNode $node
      *
      * @throws InvalidArgumentException
+     * @return $this
      */
     public function addNode(ElementtypeStructureNode $node)
     {
@@ -87,6 +88,8 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
         if (!$this->rootDsId && $node->isRoot()) {
             $this->rootDsId = $dsId;
         }
+
+        return $this;
     }
 
     /**

@@ -34,10 +34,10 @@ class SiterootController extends Controller
      */
     public function listAction()
     {
-        $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
+        $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
         $siteroots = array();
-        foreach ($siterootRepository->findAll() as $siteroot) {
+        foreach ($siterootManager->findAll() as $siteroot) {
             $siteroots[] = array(
                 'id'    => $siteroot->getId(),
                 'title' => $siteroot->getTitle(),
@@ -62,8 +62,7 @@ class SiterootController extends Controller
     {
         $title = $request->get('title', null);
 
-        $em = $this->getDoctrine()->getManager();
-        $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
+        $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
         $siteroot = new Siteroot();
         foreach (explode(',', $this->container->getParameter('phlexible_gui.languages.available')) as $language) {
@@ -75,11 +74,7 @@ class SiterootController extends Controller
             ->setModifyUserId($siteroot->getCreateUserId())
             ->setModifiedAt($siteroot->getCreatedAt());
 
-        $em->persist($siteroot);
-        $em->flush();
-
-        $message = SiterootsMessage::create('New Siteroot created.', '', null, null, 'siteroot');
-        $this->get('phlexible_message.message_poster')->post($message);
+        $siterootManager->updateSiteroot($siteroot);
 
         return new ResultResponse(true, 'New Siteroot created.');
     }
@@ -96,13 +91,10 @@ class SiterootController extends Controller
     {
         $siterootId = $request->get('id');
 
-        $em = $this->getDoctrine()->getManager();
-        $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
+        $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $siteroot = $siterootRepository->find($siterootId);
-
-        $em->remove($siteroot);
-        $em->flush();
+        $siteroot = $siterootManager->find($siterootId);
+        $siterootManager->deleteSiteroot($siteroot);
 
         return new ResultResponse(true, 'Siteroot deleted.');
     }
@@ -117,87 +109,8 @@ class SiterootController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $siterootId = $request->get('id');
-        $data = json_decode($request->get('data'), true);
-
-        $em = $this->getDoctrine()->getManager();
-        $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
-
-        $siteroot = $siterootRepository->find($siterootId);
-
-        $this->applyContentchannels($siteroot, $data);
-        $this->applyCustomTitles($siteroot, $data);
-        $this->applyNavigations($siteroot, $data);
-        $this->applyProperties($siteroot, $data);
-        $this->applyShortUrls($siteroot, $data);
-        $this->applyUrls($siteroot, $data);
-
-        $em->flush();
+        $siterootSaver = $this->get('phlexible_siteroot.siteroot_saver');
 
         return new ResultResponse(true, 'Siteroot data saved');
-    }
-
-    /**
-     * Apply content channels
-     *
-     * @param Siteroot $siteroot
-     * @param array    $data
-     */
-    private function applyContentchannels(Siteroot $siteroot, array $data)
-    {
-        if (!array_key_exists('contentchannels', $data)) {
-            // noting to save
-            return;
-        }
-
-        $contentchannelsData = $data['contentchannels'];
-
-        $contentchannels = array();
-        foreach ($contentchannelsData as $row) {
-            if (!$row['used']) {
-                continue;
-            }
-
-            $contentchannels[$row['contentchannel_id']] = $row['default'] ? true : false;
-        }
-
-        $siteroot->setContentChannels($contentchannels);
-    }
-
-    /**
-     * Apply custom titles
-     *
-     * @param Siteroot $siteroot
-     * @param array    $data
-     */
-    private function applyCustomTitles(Siteroot $siteroot, array $data)
-    {
-        if (!array_key_exists('customtitles', $data)) {
-            // noting to save
-            return;
-        }
-
-        $customTitlesData = $data['customtitles'];
-
-        $siteroot->setHeadTitle($customTitlesData['head_title']);
-        $siteroot->setStartHeadTitle($customTitlesData['start_head_title']);
-    }
-
-    /**
-     * Apply custom titles
-     *
-     * @param Siteroot $siteroot
-     * @param array    $data
-     */
-    private function applyProperties(Siteroot $siteroot, array $data)
-    {
-        if (!array_key_exists('properties', $data)) {
-            // noting to save
-            return;
-        }
-
-        $propertiesData = $data['properties'];
-
-        $siteroot->setProperties($propertiesData);
     }
 }

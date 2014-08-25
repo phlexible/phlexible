@@ -8,17 +8,35 @@
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
+use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
+use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeEvent;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeVersionEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Elementtype listener
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ElementtypeListener
+class ElementtypeListener implements EventSubscriberInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            ElementtypeEvents::VERSION_CREATE => 'onElementtypeVersionCreate',
+            ElementtypeEvents::DELETE => 'onElementtypeDelete',
+        );
+    }
+
+    /**
+     * @param ElementtypeVersionEvent $event
+     */
     public function onElementtypeVersionCreate(ElementtypeVersionEvent $event)
     {
+        // TODO: repair
         return;
         $container = $params['container'];
 
@@ -80,8 +98,12 @@ class ElementtypeListener
         }
     }
 
-    public function onElementtypeDelete(Makeweb_Elementtypes_Event_Delete $event)
+    /**
+     * @param ElementtypeEvent $event
+     */
+    public function onElementtypeDelete(ElementtypeEvent $event)
     {
+        // TODO: repair
         return;
         /* @var $container MWF_Container_ContainerInterface */
         $container = $params['container'];

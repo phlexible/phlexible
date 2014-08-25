@@ -35,6 +35,7 @@ interface ElementVersionManagerInterface
 
     /**
      * @param ElementVersion $elementVersion
+     * @param bool           $flush
      */
-    public function updateElementVersion(ElementVersion $elementVersion);
+    public function updateElementVersion(ElementVersion $elementVersion, $flush = true);
 }

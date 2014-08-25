@@ -46,22 +46,22 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
     /**
      * @var int
      */
-    private $sort;
+    private $sort = 0;
 
     /**
      * @var string
      */
-    private $sortMode;
+    private $sortMode = 'free';
 
     /**
      * @var string
      */
-    private $sortDir;
+    private $sortDir = 'asc';
 
     /**
      * @var bool
      */
-    private $inNavigation;
+    private $inNavigation = false;
 
     /**
      * @var array

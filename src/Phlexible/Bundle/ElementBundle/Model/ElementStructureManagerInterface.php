@@ -28,6 +28,7 @@ interface ElementStructureManagerInterface
 
     /**
      * @param ElementStructure $elementStructure
+     * @param bool             $flush
      */
-    public function updateElementStructure(ElementStructure $elementStructure);
+    public function updateElementStructure(ElementStructure $elementStructure, $flush = true);
 }

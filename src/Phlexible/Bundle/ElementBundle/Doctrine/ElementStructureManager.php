@@ -75,7 +75,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateElementStructure(ElementStructure $elementStructure)
+    public function updateElementStructure(ElementStructure $elementStructure, $flush = true)
     {
     }
 }

@@ -85,6 +85,10 @@ class ElementStructureLoader
             null => $rootStructure = new ElementStructure()
         );
 
+        if (!$structureRows && !$dataRows) {
+            return $rootStructure;
+        }
+
         if (isset($structureRows[null])) {
             foreach ($structureRows[null] as $row) {
                 $myNode = $elementtypeStructure->getNode($row['ds_id']);

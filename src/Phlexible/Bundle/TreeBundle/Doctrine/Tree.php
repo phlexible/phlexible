@@ -165,9 +165,14 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         $qb
             ->select('et.*')
             ->from('tree', 'et')
-            ->where($qb->expr()->isNull('et.parent_id'));
+            ->where($qb->expr()->isNull('et.parent_id'))
+            ->andWhere($qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($this->siterootId)));
 
         $row = $this->connection->fetchAssoc($qb->getSQL());
+
+        if (!$row) {
+            throw new \Exception("Root node for tree {$this->siterootId} not found.");
+        }
 
         return $this->mapNode($row);
     }
@@ -395,9 +400,39 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         return $this->mapNodes($rows);
     }
 
-/**
- * {@inheritdoc}
- */
+    /**
+     * {@inheritdoc}
+     */
+    public function init($type, $typeId, $userId)
+    {
+        $node = new TreeNode();
+        $node
+            ->setTree($this)
+            ->setParentId(null)
+            ->setType($type)
+            ->setTypeId($typeId)
+            ->setCreateUserId($userId)
+            ->setCreatedAt(new \DateTime);
+
+        $event = new NodeEvent($node);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_CREATE_NODE, $event)->isPropagationStopped()) {
+            return false;
+        }
+
+        $this->insertNode($node);
+
+        // history
+        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_NODE, $typeId, $userId, $node->getId());
+
+        $event = new NodeEvent($node);
+        $this->dispatcher->dispatch(TreeEvents::CREATE_NODE, $event);
+
+        return $node;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function create(
         $parentNode,
         $afterNode = null,
@@ -443,8 +478,8 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime);
 
-        $beforeEvent = new NodeEvent($node);
-        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_CREATE_NODE, $beforeEvent)->isPropagationStopped()) {
+        $event = new NodeEvent($node);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_CREATE_NODE, $event)->isPropagationStopped()) {
             return false;
         }
 

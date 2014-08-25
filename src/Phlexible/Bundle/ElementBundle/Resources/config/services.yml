@@ -71,23 +71,21 @@ services:
             - {name: phlexible_gui.asset.provider, priority: 100}
 
     # event listeners
-    phlexible_element.listener.elementtypes:
+    phlexible_element.listener.elementtype:
         class: Phlexible\Bundle\ElementBundle\EventListener\ElementtypeListener
         tags:
-            - {name: kernel.event_listener, event: phlexible_elementtype.version_create, method: onElementTypeVersionCreate}
-            - {name: kernel.event_listener, event: phlexible_elementtype.delete, method: onElementTypeDelete}
+            - {name: kernel.event_subscriber}
 
-    phlexible_element.listener.node:
+    phlexible_element.listener.tree_node:
         class: Phlexible\Bundle\ElementBundle\EventListener\TreeNodeListener
         tags:
-            - {name: kernel.event_listener, event: phlexible_element.publish_node, method: onPublishNode}
-            - {name: kernel.event_listener, event: phlexible_element.set_node_offline, method: onSetNodeOffline}
-            - {name: kernel.event_listener, event: phlexible_element.delete_node, method: onDeleteNode}
+            - {name: kernel.event_subscriber}
 
-    phlexible_element.listener.siteroots:
+    phlexible_element.listener.siteroot:
         class: Phlexible\Bundle\ElementBundle\EventListener\SiterootListener
+        arguments: [@phlexible_element.element_service, @phlexible_tree.tree_manager, @security.context, %phlexible_cms.languages.default%]
         tags:
-            - {name: kernel.event_listener, event: phlexible_siteroot.create, method: onCreateSiteroot}
+            - {name: kernel.event_listener, event: phlexible_siteroot.create_siteroot, method: onCreateSiteroot}
 
     phlexible_element.listener.datasource:
         class: Phlexible\Bundle\ElementBundle\EventListener\DatasourceListener

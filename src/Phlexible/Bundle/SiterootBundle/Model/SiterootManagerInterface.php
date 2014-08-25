@@ -33,4 +33,9 @@ interface SiterootManagerInterface
      * @param Siteroot $siteroot
      */
     public function updateSiteroot(Siteroot $siteroot);
+
+    /**
+     * @param Siteroot $siteroot
+     */
+    public function deleteSiteroot(Siteroot $siteroot);
 }

@@ -33,10 +33,11 @@ interface ElementManagerInterface
      * Update element
      *
      * @param Element $element
+     * @param bool    $flush
      *
      * @return $this
      */
-    public function updateElement(Element $element);
+    public function updateElement(Element $element, $flush);
 
     /**
      * Delete element

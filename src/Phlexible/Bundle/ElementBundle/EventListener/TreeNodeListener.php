@@ -8,15 +8,39 @@
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
+use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
+use Phlexible\Bundle\TreeBundle\TreeEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 /**
  * Tree node listener
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class TreeNodeListener
+class TreeNodeListener implements EventSubscriberInterface
 {
-    public function onPublishNode(Makeweb_Elements_Event_PublishNode $event)
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
     {
+        return array(
+            TreeEvents::PUBLISH_NODE => 'onPublishNode',
+            TreeEvents::SET_NODE_OFFLINE => 'onSetNodeOffline',
+            TreeEvents::DELETE_NODE => 'onDeleteNode',
+        );
+    }
+
+    /**
+     * @param PublishNodeEvent $event
+     */
+    public function onPublishNode(PublishNodeEvent $event)
+    {
+        // TODO: repair
+        return;
+
         $node = $event->getNode();
         $language = $event->getLanguage();
 
@@ -25,8 +49,14 @@ class TreeNodeListener
         self::_queueDataSourceCleanup();
     }
 
-    public function onSetNodeOffline(Makeweb_Elements_Event_SetNodeOffline $event)
+    /**
+     * @param SetNodeOfflineEvent $event
+     */
+    public function onSetNodeOffline(SetNodeOfflineEvent $event)
     {
+        // TODO: repair
+        return;
+
         $node = $event->getNode();
         $language = $event->getLanguage();
 
@@ -35,8 +65,14 @@ class TreeNodeListener
         self::_queueDataSourceCleanup();
     }
 
-    public function onDeleteNode(Makeweb_Elements_Event_DeleteNode $event)
+    /**
+     * @param NodeEvent $event
+     */
+    public function onDeleteNode(NodeEvent $event)
     {
+        // TODO: repair
+        return;
+
         $node = $event->getNode();
         $language = null;
 

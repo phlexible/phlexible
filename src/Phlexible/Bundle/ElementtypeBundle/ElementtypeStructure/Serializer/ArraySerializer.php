@@ -23,6 +23,10 @@ class ArraySerializer implements SerializerInterface
      */
     public function serialize(ElementtypeStructure $elementtypeStructure)
     {
+        if (!$elementtypeStructure->getRootNode()) {
+            return null;
+        }
+
         $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
 
         $nodaDatas[] = array();

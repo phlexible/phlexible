@@ -1,4 +1,8 @@
 services:
+    phlexible_siteroot.siteroot_saver:
+        class: Phlexible\Bundle\SiterootBundle\Controller\Siteroot\SiterootSaver
+        arguments: [@phlexible_siteroot.siteroot_manager]
+
     phlexible_siteroot.matcher.url:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\UrlMatcher
         arguments: [@phlexible_siteroot.siteroot_manager]

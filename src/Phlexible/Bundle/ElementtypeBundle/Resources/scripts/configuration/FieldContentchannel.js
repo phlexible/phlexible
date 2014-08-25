@@ -44,7 +44,8 @@ Phlexible.elementtypes.configuration.FieldContentchannel = Ext.extend(Ext.form.F
     },
 
     loadData: function (fieldData, fieldType) {
-        fieldData = fieldData || {list: []};
+        fieldData = fieldData || {};
+        fieldData = Ext.apply(fieldData, {list: []});
 
         this.getForm().setValues([
             {id: 'allow_deactivation', value: fieldData.allow_deactivation},

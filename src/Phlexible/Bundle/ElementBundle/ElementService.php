@@ -189,4 +189,22 @@ class ElementService
             $elementVersion->getElementtypeVersion()
         );
     }
+
+    /**
+     * @param Element $element
+     * @param bool    $flush
+     */
+    public function updateElement(Element $element, $flush = true)
+    {
+        $this->elementManager->updateElement($element, $flush);
+    }
+
+    /**
+     * @param ElementVersion $elementVersion
+     * @param bool           $flush
+     */
+    public function updateElementVersion(ElementVersion $elementVersion, $flush = true)
+    {
+        $this->elementVersionManager->updateElementVersion($elementVersion, $flush);
+    }
 }
