@@ -59,7 +59,7 @@ class ElementStructureValue
      * @param string $value
      * @param array  $options
      */
-    public function __construct($id, $dsId, $language, $type, $name, $value, array $options = array())
+    public function __construct($id, $dsId, $language, $type, $name, $value, array $options = null)
     {
         $this->id = $id;
         $this->dsId = $dsId;

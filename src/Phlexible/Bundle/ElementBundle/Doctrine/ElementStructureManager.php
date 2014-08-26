@@ -115,7 +115,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
                     'repeatable_id'    => $elementStructure->getId(),
                     'repeatable_ds_id' => $elementStructure->getDsId(),
                     'content'          => $elementStructureValue->getValue(),
-                    'options'          => $elementStructureValue->getOptions(),
+                    'options'          => !empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null,
                 )
             );
         }

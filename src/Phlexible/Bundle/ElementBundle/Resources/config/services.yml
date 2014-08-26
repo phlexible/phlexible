@@ -26,6 +26,14 @@ services:
         class: Phlexible\Bundle\ElementBundle\Icon\IconResolver
         arguments: [@router, @phlexible_element.element_service, @phlexible_tree.state_manager]
 
+    phlexible_element.element_meta_set_resolver:
+        class: Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver
+        arguments: [@phlexible_meta_set.meta_set_manager, @phlexible_element.element_service]
+
+    phlexible_element.element_meta_data_manager:
+        class: Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager
+        arguments: [@doctrine.orm.entity_manager, @phlexible_data_source.data_source_manager, "element_meta"]
+
     phlexible_element.util.suggest_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
         arguments: [@doctrine.dbal.default_connection, %phlexible_elementtype.field.suggest_seperator%]

@@ -314,28 +314,48 @@ class DataController extends Controller
             }
 
             // meta
-            // TODO: repair element meta
 
-            $metaSetArray = array();
-            if (0) {
-                $metaSetIdentifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $language);
-                $metaSetId = $elementtypeVersion->getMetaSetId();
+            $meta = array();
+            $elementMetaSetResolver = $this->get('phlexible_element.element_meta_set_resolver');
+            $elementMetaDataManager = $this->get('phlexible_element.element_meta_data_manager');
+            $optionResolver = $this->get('phlexible_meta_set.option_resolver');
+            $metaSetId = $elementtypeVersion->getMetaSetId();
 
-                if ($metaSetId) {
-                    $metaSet = $this->getContainer()->get('metasets.repository')->find($metaSetId);
-                    $metaSetKeys = $metaSet->getKeys();
-                    $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $metaSetIdentifier);
-                    $metaSetArray = array_values($metaSetItem->toArray($language));
+            if ($metaSetId) {
+                $metaSet = $elementMetaSetResolver->resolve($elementVersion);
+                $metaData = $elementMetaDataManager->findByMetaSetAndElementVersion($metaSet, $elementVersion);
 
-                    foreach ($metaSetArray as $metaKey => $metaRow) {
-                        if ($metaRow['type'] == 'select') {
-                            $metaSetArray[$metaKey]['options'] = Brainbits_Util_Array::keyToValue($metaRow['options']);
+                $fieldDatas = array();
+
+                foreach ($metaSet->getFields() as $field) {
+                    $options = $optionResolver->resolve($field);
+
+                    $fieldData = array(
+                        'key'          => $field->getName(),
+                        'type'         => $field->getType(),
+                        'options'      => $options,
+                        'readonly'     => $field->isReadonly(),
+                        'required'     => $field->isRequired(),
+                        'synchronized' => $field->isSynchronized(),
+                    );
+
+                    if ($metaData) {
+                        foreach ($metaData->getLanguages() as $metaLanguage) {
+                            if ($language === $metaLanguage) {
+                                $fieldData['value'] = $metaData->get($field->getId(), $language);
+                                break;
+                            }
                         }
-
-                        $metaSetArray[$metaKey]['value_' . $language] = $metaSetArray[$metaKey]['value'];
-                        unset($metaSetArray[$metaKey]['value']);
                     }
+
+                    $fieldDatas[] = $fieldData;
                 }
+
+                $meta = array(
+                    'set_id' => $metaSetId,
+                    'title'  => $metaSet->getName(),
+                    'fields' => $fieldDatas
+                );
             }
 
             // redirects
@@ -521,7 +541,7 @@ class DataController extends Controller
                 'properties'          => $properties,
                 'attributes'          => $attributes,
                 'comment'             => $elementVersion->getComment(),
-                'meta'                => $metaSetArray,
+                'meta'                => $meta,
                 'redirects'           => $redirects,
                 'default_tab'         => $elementtype->getDefaultTab(),
                 'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
@@ -588,6 +608,7 @@ class DataController extends Controller
             $this->get('event_dispatcher')
         );
         $elementStructure = $saver->save($request, $this->getUser());
+die;
 
         if ($data) {
             $data = json_decode($data, true);

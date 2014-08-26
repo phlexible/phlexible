@@ -43,15 +43,13 @@ class ElementMetaSetResolver
     /**
      * @param ElementVersion $elementVersion
      *
-     * @return MetaSet[]
+     * @return MetaSet
      */
     public function resolve(ElementVersion $elementVersion)
     {
         $elementtypeVersion = $this->elementService->findElementtypeVersion($elementVersion);
 
-        $metaSets = array(
-            $this->metaSetManager->find($elementtypeVersion->getMetaSetId())
-        );
+        $metaSets = $this->metaSetManager->find($elementtypeVersion->getMetaSetId());
 
         return $metaSets;
     }

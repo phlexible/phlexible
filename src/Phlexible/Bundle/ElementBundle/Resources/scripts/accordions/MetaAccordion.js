@@ -14,16 +14,13 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
     key: 'meta',
 
     initComponent: function () {
-        this.store = new Ext.data.SimpleStore({
-            //fields: ['key', 'type', 'value']
-            fields: ['key', 'tkey', 'type', 'options', 'value', 'required', 'synchronized'],
+        this.store = new Ext.data.JsonStore({
+            fields: ['key', 'type', 'options', 'value', 'readonly', 'required', 'synchronized'],
             listeners: {
-                load: {
-                    fn: function () {
-                        this.validateMeta();
-                    },
-                    scope: this
-                }
+                load: function () {
+                    this.validateMeta();
+                },
+                scope: this
             }
         });
 
@@ -69,32 +66,27 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
         });
 
         this.on({
-            beforeedit: {
-                fn: function (e) {
-                    var field = e.field;
-                    var record = e.record;
-                    var isSynchronized = (1 == record.get('synchronized'));
+            beforeedit: function (e) {
+                var field = e.field;
+                var record = e.record;
+                var isSynchronized = (1 == record.get('synchronized'));
 
-                    // skip editing english values if language is synchronized
-                    if (!this.master && isSynchronized) {
-                        return false;
-                    }
-                },
-                scope: this
+                // skip editing english values if language is synchronized
+                if (!this.master && isSynchronized) {
+                    return false;
+                }
             },
-            afteredit: {
-                fn: function (e) {
-                    this.validateMeta();
-                },
-                scope: this
-            }
+            afteredit: function (e) {
+                this.validateMeta();
+            },
+            scope: this
         });
 
         Phlexible.elements.accordion.Meta.superclass.initComponent.call(this);
     },
 
     load: function (data) {
-        if (data.properties.et_type != 'full' || !data.meta.length) {
+        if (data.properties.et_type != 'full' || !data.meta || !data.meta.fields) {
             this.hide();
             return;
         }
@@ -102,23 +94,10 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
         this.language = data.properties.language;
         this.master = data.properties.master || 0;
 
-        this.setTitle(this.strings.meta + ' [' + data.meta.length + ']');
-
-        var tData = [];
-        for (var i = 0; i < data.meta.length; i++) {
-            tData.push([
-                data.meta[i].key,
-                data.meta[i].tkey,
-                data.meta[i].type,
-                data.meta[i].options,
-                data.meta[i]['value_' + this.language],
-                data.meta[i].required,
-                data.meta[i]['synchronized']
-            ]);
-        }
+        this.setTitle(this.strings.meta + ' [' + data.meta.fields.length + ']');
 
         this.store.removeAll();
-        this.store.loadData(tData);
+        this.store.loadData(data.meta.fields);
 
         this.show();
     },
