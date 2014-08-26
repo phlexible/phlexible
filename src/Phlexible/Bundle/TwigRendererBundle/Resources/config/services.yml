@@ -29,13 +29,6 @@ services:
         arguments: [@phlexible_twig_renderer.twig.renderer, @event_dispatcher]
 
     # twig extensions
-    phlexible_twig_renderer.twig.extension.asset:
-        class: Phlexible\Bundle\TwigRendererBundle\Extension\AssetExtension
-        public: false
-        arguments: [@phlexible_frontend_asset.collector]
-        tags:
-            - {name: twig.extension}
-
     phlexible_twig_renderer.twig.extension.image:
         class: Phlexible\Bundle\TwigRendererBundle\Extension\ImageExtension
         public: false

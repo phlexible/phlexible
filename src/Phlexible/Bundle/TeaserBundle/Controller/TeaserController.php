@@ -25,29 +25,33 @@ class TeaserController extends Controller
      * Render action
      *
      * @param Request $request
+     * @param int     $teaserId
      *
      * @return Response
-     * @Route("/render/{id}", name="teasers_teaser_render")
+     * @Route("/render/{teaserId}", name="teasers_teaser_render")
      */
-    public function renderAction(Request $request)
+    public function renderAction(Request $request, $teaserId)
     {
-        $teaserId = $request->get('teaserId');
         $teaser = $this->get('phlexible_teaser.teaser_service')->findTeaser($teaserId);
-        $language = 'de';
+        $language = $request->get('language', 'de');
 
         if ($teaser->getType() === 'element') {
-            $request = Request::createFromGlobals();
             $request->attributes->set('language', $language);
+            $request->attributes->set('contentDocument', $teaser);
 
             $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
-            $renderConfig = $renderConfigurator->configure($request, $teaser);
+            $renderConfig = $renderConfigurator->configure($request);
 
             if ($request->get('template')) {
                 $renderConfig->set('template', $request->get('template', 'teaser'));
             }
 
-            $renderer = $this->get('phlexible_dwoo_renderer.renderer');
-            $content = $renderer->render($renderConfig);
+            $dataProvider = $this->get('phlexible_twig_renderer.data_provider');
+            $templating = $this->get('templating');
+            $data = $dataProvider->provide($renderConfig);
+            $template = $renderConfig->get('template');
+
+            return $templating->renderResponse($template, (array) $data);
         } elseif ($teaser->getType() === 'catch') {
             $catchRepository = $this->get('phlexible_teaser.teaser_service');
             $catcher = $this->get('phlexible_teaser.catcher');

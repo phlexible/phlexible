@@ -68,7 +68,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
      */
     public function configure(Request $request, RenderConfiguration $renderConfiguration)
     {
-        if (!$request->attributes->has('contentDocument')) {
+        if (!$request->attributes->has('contentDocument') || !$request->attributes->get('contentDocument') instanceof TreeNodeInterface) {
             return;
         }
 

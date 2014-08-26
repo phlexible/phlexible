@@ -27,31 +27,57 @@ class ImageExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $path
+     * @param string $image
      *
      * @return string
      */
-    public function image($path)
+    public function image($image)
     {
-        if (is_object($path)) {
-            return get_class($path);
+        if (!$image) {
+            return '';
         }
 
-        return $path;
+        $parts = explode(';', $image);
+        $fileId = $parts[0];
+        $fileVersion = 1;
+        if (isset($parts[1])) {
+            $fileVersion = $parts[1];
+        }
+
+        // deliver original file
+        $src = /*$request->getBaseUrl() . */'/media/' . $fileId . '.jpg';
+
+        return $src;
     }
 
     /**
-     * @param string $path
+     * @param string $image
+     * @param string $template
      *
      * @return string
      */
-    public function thumbnail($path)
+    public function thumbnail($image, $template = null)
     {
-        if (is_object($path)) {
-            return get_class($path);
+        if (!$image && !$template) {
+            return '';
         }
 
-        return $path;
+        $parts = explode(';', $image);
+        $fileId = $parts[0];
+        $fileVersion = 1;
+        if (isset($parts[1])) {
+            $fileVersion = $parts[1];
+        }
+
+        if ($template === null) {
+            // deliver original file
+            $src = /*$request->getBaseUrl() . */'/media/' . $fileId . '/' . $template . '.jpg';
+        } else {
+            // deliver thumbnail
+            $src = /*$request->getBaseUrl() . */'/media/' . $fileId . '/' . $template . '.jpg';
+        }
+
+        return $src;
     }
 
     /**

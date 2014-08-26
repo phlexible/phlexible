@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
-use Phlexible\Bundle\TeaserBundle\Teaser\Teaser;
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,8 +67,7 @@ class TeaserConfigurator implements ConfiguratorInterface
      */
     public function configure(Request $request, RenderConfiguration $renderConfiguration)
     {
-        return;
-        if (!($parameters instanceof Teaser)) {
+        if (!$request->attributes->has('contentDocument') || !$request->attributes->get('contentDocument') instanceof Teaser) {
             return;
         }
 
@@ -81,8 +80,7 @@ class TeaserConfigurator implements ConfiguratorInterface
         }
         */
 
-        /* @var $parameters Teaser */
-        $teaser = $parameters;
+        $teaser = $request->attributes->get('contentDocument');
 
         $element = $this->elementService->findElement($teaser->getTypeId());
         $version = $this->elementService->findLatestElementVersion($element)->getVersion();
