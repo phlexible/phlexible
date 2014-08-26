@@ -581,8 +581,13 @@ class DataController extends Controller
         $notifications = $request->get('notifications');
         $values = $request->request->all();
 
-        $saver = new DataSaver($this->get('phlexible_element.element_service'));
-        $elementStructure = $saver->save($request);
+        $saver = new DataSaver(
+            $this->get('phlexible_element.element_service'),
+            $this->get('phlexible_tree.tree_manager'),
+            $this->get('phlexible_teaser.teaser_manager'),
+            $this->get('event_dispatcher')
+        );
+        $elementStructure = $saver->save($request, $this->getUser());
 
         if ($data) {
             $data = json_decode($data, true);
@@ -603,19 +608,6 @@ class DataController extends Controller
         $elementtypeVersion = $elementService->findElementtypeVersion($oldElementVersion);
         $oldLatestVersion = $oldElementVersion->getVersion();
         $isMaster = $element->getMasterLanguage() == $language;
-
-        $teaser = null;
-        if ($teaserId) {
-            $teaser = $teaserManager->findTeaser($teaserId);
-        }
-
-        $event = new SaveElementEvent($element, $language, $oldVersion);
-        $dispatcher->dispatch(ElementEvents::BEFORE_SAVE_ELEMENT, $event);
-
-        $comment = null;
-        if (!empty($data['comment'])) {
-            $comment = $data['comment'];
-        }
 
         $publishSlaveLanguages = array();
         $publishSlaves = array();
@@ -656,22 +648,6 @@ class DataController extends Controller
                 }
             }
         }
-
-        $elementVersion = clone $oldElementVersion;
-        $elementVersion
-            ->setVersion($elementVersion->getVersion() + 1)
-            ->setCreateUserId($this->getUser()->getId())
-            ->setCreatedAt(new \DateTime())
-            ->setComment($comment)
-            ->setTriggerLanguage($language);
-
-        $this->getDoctrine()->getManager()->persist($elementVersion);
-
-        $element->setLatestVersion($elementVersion->getVersion());
-
-        $this->getDoctrine()->getManager()->flush();
-
-        $newVersion = $elementVersion->getVersion();
 
         foreach ($publishSlaves as $publishSlaveKey => $publishSlaveRow) {
             $publishSlaves[$publishSlaveKey][2] = $newVersion;
@@ -729,7 +705,7 @@ class DataController extends Controller
         }
 
         // update sort
-        // TODO: repair? still needed?
+        // TODO: repair
 
         if (0 && !$teaser) {
             $elementVersion->getBackendTitle($language);
@@ -754,172 +730,6 @@ class DataController extends Controller
                 }
             }
         }
-
-        // accordion stuff
-
-        if (empty($teaser)) {
-            $event = new SaveNodeDataEvent($node, $language, $data);
-            $dispatcher->dispatch(ElementEvents::BEFORE_SAVE_NODE_DATA, $event);
-
-            // save config
-
-            if (!empty($data['config'])) {
-                if (!empty($data['config']['navigation'])) {
-                    $node->setAttribute('navigation', true);
-                } else {
-                    $node->removeAttribute('navigation');
-                }
-                if (!empty($data['config']['needs_authentication'])) {
-                    $node->setAttribute('needs_authentication', true);
-                } else {
-                    $node->removeAttribute('needs_authentication');
-                }
-                if (!empty($data['config']['route'])) {
-                    $node->setAttribute('route', true);
-                } else {
-                    $node->removeAttribute('route');
-                }
-                if (!empty($data['config']['controller'])) {
-                    $node->setAttribute('controller', true);
-                } else {
-                    $node->removeAttribute('controller');
-                }
-                if (!empty($data['config']['https'])) {
-                    $node->setAttribute('https', true);
-                } else {
-                    $node->removeAttribute('https');
-                }
-
-                $tree->updateNode($node);
-            }
-
-            // save meta
-            // TODO: repair save meta
-
-            if (!empty($data['meta'])) {
-                $metaSetId = $elementVersion->getElementTypeVersionObj()->getMetaSetId();
-                /* @var $metaSet Media_MetaSets_Set */
-                $metaSet = $container->get('metasets.repository')->find($metaSetId);
-
-                $identifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $language);
-                /* @var $metaSetItem Media_MetaSets_Item */
-                $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $identifier);
-                $metaSetArray = $metaSetItem->toArray($language);
-
-                foreach ($data['meta'] as $key => $value) {
-                    if (!$isMaster && $metaSetArray[$key]['synchronized']) {
-                        if ($metaSetItem->$key === null) {
-                            $metaSetItem->$key = '';
-                        }
-
-                        continue;
-                    }
-
-                    if ('suggest' === $metaSetItem->getType($key)) {
-                        $dataSourceId = $metaSetItem->getOptions($key);
-                        $dataSourcesRepository = $container->get('datasources.repository');
-                        $dataSource = $dataSourcesRepository->getDataSourceById($dataSourceId, $language);
-                        $dataSourceKeys = $dataSource->getKeys();
-                        $dataSourceModified = false;
-                        foreach (explode(',', $value) as $singleValue) {
-                            if (!in_array($singleValue, $dataSourceKeys)) {
-                                $dataSource->addKey($singleValue, true);
-                                $dataSourceModified = true;
-                            }
-                        }
-                        if ($dataSourceModified) {
-                            $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
-                        }
-                    }
-
-                    $metaSetItem->$key = $value ? $value : '';
-                }
-
-                $metaSetItem->save();
-
-                if ($isMaster) {
-                    $slaveLanguages = $container->getParameter('frontend.languages.available');
-                    unset($slaveLanguages[array_search($language, $slaveLanguages)]);
-
-                    foreach ($slaveLanguages as $slaveLanguage) {
-                        $identifier = new Makeweb_Elements_Element_Version_MetaSet_Identifier($elementVersion, $slaveLanguage);
-                        /* @var $metaSetItem Media_MetaSets_Item */
-                        $metaSetItem = Media_MetaSets_Item_Peer::get($metaSetId, $identifier);
-
-                        foreach ($data['meta'] as $key => $value) {
-                            if (!$metaSetArray[$key]['synchronized'] && $metaSetItem->$key) {
-                                continue;
-                            } elseif (!$metaSetArray[$key]['synchronized'] && !$metaSetItem->$key) {
-                                $metaSetItem->$key = '';
-                            } else {
-                                $metaSetItem->$key = $value ? $value : '';
-                            }
-                        }
-
-                        $metaSetItem->save();
-                    }
-                }
-            }
-
-            // save context
-
-            if (isset($data['context'])) {
-                $db->delete($db->prefix . 'element_tree_context', array('tid = ?' => $tid));
-
-                $insertData = array(
-                    'tid' => $tid
-                );
-
-                foreach ($data['context'] as $country) {
-                    $insertData['context'] = $country;
-
-                    $db->insert($db->prefix . 'element_tree_context', $insertData);
-                }
-            }
-
-            $event = new SaveNodeDataEvent($node, $language, $data);
-            $dispatcher->dispatch(ElementEvents::SAVE_NODE_DATA, $event);
-        } else {
-            $beforeUpdateTeaserEvent = new BeforeUpdateTeaser($teaser, $language, $data);
-            $dispatcher->dispatch($beforeUpdateTeaserEvent);
-
-            // save teaser
-
-            if (!empty($data['teaser'])) {
-                $updateData = array(
-                    'disable_cache'  => empty($data['teaser']['disable_cache']) ? 0 : 1,
-                    'cache_lifetime' => (int) Brainbits_Util_Array::get($data['teaser'], 'cache_lifetime', 0),
-                );
-
-                if ($updateData['disable_cache']) {
-                    $updateData['cache_lifetime'] = 0;
-                }
-
-                $db->update($db->prefix . 'element_tree_teasers', $updateData, 'id = ' . $db->quote($teaserId));
-            }
-
-            // save context
-
-            if (isset($data['context'])) {
-                $db->delete($db->prefix . 'element_tree_teasers_context', array('teaser_id = ?' => $teaserId));
-
-                $insertData = array(
-                    'teaser_id' => $teaserId
-                );
-
-                foreach ($data['context'] as $country) {
-                    $insertData['context'] = $country;
-
-                    $db->insert($db->prefix . 'element_tree_teasers_context', $insertData);
-                }
-            }
-
-            $event = new UpdateTeaser($teaser, $language, $data);
-            $dispatcher->dispatch($event);
-        }
-
-        $event = new SaveElementEvent($element, $language, $oldVersion);
-        $dispatcher->dispatch(ElementEvents::SAVE_ELEMENT, $event);
 
         $msg = 'Element "' . $eid . '" master language "' . $language . '" saved as new version ' . $newVersion;
 

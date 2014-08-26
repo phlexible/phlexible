@@ -102,7 +102,6 @@ class ElementManager implements ElementManagerInterface
                 $this->entityManager->flush($element);
             }
 
-            // post event
             $event = new ElementEvent($element);
             $this->dispatcher->dispatch(ElementEvents::CREATE_ELEMENT, $event);
 
@@ -110,8 +109,16 @@ class ElementManager implements ElementManagerInterface
             $message = ElementsMessage::create('Element "' . $element->getEid() . ' created.');
             $this->messagePoster->post($message);
         } else {
+            $event = new ElementEvent($element);
+            if ($this->dispatcher->dispatch(ElementEvents::BEFORE_UPDATE_ELEMENT, $event)->isPropagationStopped()) {
+                throw new \Exception('Create canceled by listener.');
+            }
+
             $this->entityManager->persist($element);
             $this->entityManager->flush($element);
+
+            $event = new ElementEvent($element);
+            $this->dispatcher->dispatch(ElementEvents::UPDATE_ELEMENT, $event);
 
             // post message
             $message = ElementsMessage::create('Element "' . $element->getEid() . ' updated.');

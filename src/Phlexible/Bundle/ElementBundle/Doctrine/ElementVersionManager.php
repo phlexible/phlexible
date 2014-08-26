@@ -96,23 +96,40 @@ class ElementVersionManager implements ElementVersionManagerInterface
      */
     public function updateElementVersion(ElementVersion $elementVersion, $flush = true)
     {
-        $event = new ElementVersionEvent($elementVersion);
-        $this->dispatcher->dispatch(ElementEvents::BEFORE_CREATE_ELEMENT_VERSION, $event);
-        if ($event->isPropagationStopped()) {
-            throw new \Exception('Canceled by listener.');
+        if (!$elementVersion->getId()) {
+            $event = new ElementVersionEvent($elementVersion);
+            if ($this->dispatcher->dispatch(ElementEvents::BEFORE_CREATE_ELEMENT_VERSION, $event)->isPropagationStopped()) {
+                throw new \Exception('Canceled by listener.');
+            }
+
+            $this->entityManager->persist($elementVersion);
+
+            if ($flush) {
+                $this->entityManager->flush($elementVersion);
+            }
+
+            $event = new ElementVersionEvent($elementVersion);
+            $this->dispatcher->dispatch(ElementEvents::CREATE_ELEMENT_VERSION, $event);
+
+            // post message
+            $message = ElementsMessage::create('Element version "' . $elementVersion->getElement()->getEid() . ' updated.');
+            $this->messagePoster->post($message);
+        } else {
+            $event = new ElementVersionEvent($elementVersion);
+            if ($this->dispatcher->dispatch(ElementEvents::BEFORE_UPDATE_ELEMENT_VERSION, $event)->isPropagationStopped()) {
+                throw new \Exception('Canceled by listener.');
+            }
+
+            if ($flush) {
+                $this->entityManager->flush($elementVersion);
+            }
+
+            $event = new ElementVersionEvent($elementVersion);
+            $this->dispatcher->dispatch(ElementEvents::UPDATE_ELEMENT_VERSION, $event);
+
+            // post message
+            $message = ElementsMessage::create('Element version "' . $elementVersion->getElement()->getEid() . ' updated.');
+            $this->messagePoster->post($message);
         }
-
-        $this->entityManager->persist($elementVersion);
-
-        if ($flush) {
-            $this->entityManager->flush($elementVersion);
-        }
-
-        $event = new ElementVersionEvent($elementVersion);
-        $this->dispatcher->dispatch(ElementEvents::CREATE_ELEMENT_VERSION, $event);
-
-        // post message
-        $message = ElementsMessage::create('Element version "' . $elementVersion->getElement()->getEid() . ' updated.');
-        $this->messagePoster->post($message);
     }
 }

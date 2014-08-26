@@ -16,9 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="element_structure_data")
+ * @ORM\Table(name="element_structure_value")
  */
-class ElementStructureData
+class ElementStructureValue
 {
     /**
      * @var int
@@ -87,7 +87,7 @@ class ElementStructureData
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="json_array", length=255, nullable=true)
      */
     private $options;
 }

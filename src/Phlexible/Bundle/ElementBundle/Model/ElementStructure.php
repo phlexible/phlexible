@@ -28,6 +28,11 @@ class ElementStructure implements \IteratorAggregate
     private $id;
 
     /**
+     * @var int
+     */
+    private $parentId;
+
+    /**
      * @var string
      */
     private $dsId;
@@ -53,7 +58,7 @@ class ElementStructure implements \IteratorAggregate
     private $structures = array();
 
     /**
-     * @var ElementStructureValue
+     * @var ElementStructureValue[]
      */
     private $values = array();
 
@@ -98,6 +103,26 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
+     * @return int
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * @param int $parentId
+     *
+     * @return $this
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = (int) $parentId;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDsId()
@@ -112,7 +137,7 @@ class ElementStructure implements \IteratorAggregate
      */
     public function setDsId($dsId)
     {
-        $this->dsId = (string) $dsId;
+        $this->dsId = $dsId;
 
         return $this;
     }
@@ -132,7 +157,7 @@ class ElementStructure implements \IteratorAggregate
      */
     public function setParentDsId($parentDsId)
     {
-        $this->parentDsId = (string) $parentDsId;
+        $this->parentDsId = $parentDsId;
 
         return $this;
     }
@@ -152,7 +177,7 @@ class ElementStructure implements \IteratorAggregate
      */
     public function setName($name)
     {
-        $this->name = (string) $name;
+        $this->name = $name;
 
         return $this;
     }
@@ -172,7 +197,7 @@ class ElementStructure implements \IteratorAggregate
      */
     public function setParentName($parentName)
     {
-        $this->parentName = (string) $parentName;
+        $this->parentName = $parentName;
 
         return $this;
     }

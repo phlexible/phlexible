@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementBundle;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
-use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Entity\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
@@ -206,5 +206,14 @@ class ElementService
     public function updateElementVersion(ElementVersion $elementVersion, $flush = true)
     {
         $this->elementVersionManager->updateElementVersion($elementVersion, $flush);
+    }
+
+    /**
+     * @param ElementStructure $elementStructure
+     * @param bool             $flush
+     */
+    public function updateElementStructure(ElementStructure $elementStructure, $flush = true)
+    {
+        $this->elementStructureManager->updateElementStructure($elementStructure, $flush);
     }
 }

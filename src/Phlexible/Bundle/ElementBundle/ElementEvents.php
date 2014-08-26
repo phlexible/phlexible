@@ -26,6 +26,16 @@ class ElementEvents
     const CREATE_ELEMENT = 'phlexible_element.create_element';
 
     /**
+     * Fired before an element is updated.
+     */
+    const BEFORE_UPDATE_ELEMENT = 'phlexible_element.before_update_element';
+
+    /**
+     * Fired after an element is updated.
+     */
+    const UPDATE_ELEMENT = 'phlexible_element.update_element';
+
+    /**
      * Fired before an element version is created.
      */
     const BEFORE_CREATE_ELEMENT_VERSION = 'phlexible_element.before_create_element_version';
@@ -34,6 +44,16 @@ class ElementEvents
      * Fired after an element version is created.
      */
     const CREATE_ELEMENT_VERSION = 'phlexible_element.create_element_version';
+
+    /**
+     * Fired before an element version is updated.
+     */
+    const BEFORE_UPDATE_ELEMENT_VERSION = 'phlexible_element.before_update_element_version';
+
+    /**
+     * Fired after an element version is updated.
+     */
+    const UPDATE_ELEMENT_VERSION = 'phlexible_element.update_element_version';
 
     /**
      * Fired before element is saved.
@@ -64,6 +84,16 @@ class ElementEvents
      * Fired after a tree node has been saved.
      */
     const SAVE_NODE_DATA = 'phlexible_element.save_node_data';
+
+    /**
+     * Fired before a tree node is updated.
+     */
+    const BEFORE_SAVE_TEASER_DATA = 'phlexible_element.before_save_teaser_data';
+
+    /**
+     * Fired after a tree node has been saved.
+     */
+    const SAVE_TEASER_DATA = 'phlexible_element.save_teaser_data';
 
     /**
      * Fired after a tree node has been loaded.

@@ -78,8 +78,8 @@ class ElementStructureLoader
         );
         $elementtypeStructure = $this->elementtypeService->findElementtypeStructure($elementtypeVersion);
 
-        $structureRows = $this->queryStructure($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
-        $dataRows = $this->queryData($elementVersion->getElement()->getEid(), $elementVersion->getVersion(), $language);
+        $structureRows = $this->queryStructures($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
+        $dataRows = $this->queryValues($elementVersion->getElement()->getEid(), $elementVersion->getVersion(), $language);
 
         $dummy = array(
             null => $rootStructure = new ElementStructure()
@@ -107,6 +107,7 @@ class ElementStructureLoader
                 $structure
                     ->setId($row['id'])
                     ->setDsId($row['ds_id'])
+                    ->setParentId($myNode->getParentId())
                     ->setParentDsId($myNode->getParentDsId())
                     ->setName($row['name'])
                     ->setParentName($myParentNode->getName());
@@ -117,10 +118,13 @@ class ElementStructureLoader
                     foreach ($dataRows[$row['id']] as $dataRow) {
                         $structure->setValue(
                             new ElementStructureValue(
+                                $dataRow['id'],
                                 $dataRow['ds_id'],
+                                $dataRow['language'],
                                 $dataRow['name'],
                                 $dataRow['type'],
-                                $dataRow['content']
+                                $dataRow['value'],
+                                $dataRow['options']
                             )
                         );
                     }
@@ -132,10 +136,13 @@ class ElementStructureLoader
             foreach ($dataRows[null] as $dataRow) {
                 $rootStructure->setValue(
                     new ElementStructureValue(
+                        $dataRow['id'],
                         $dataRow['ds_id'],
+                        $dataRow['language'],
                         $dataRow['name'],
                         $dataRow['type'],
-                        $dataRow['content']
+                        $dataRow['value'],
+                        $dataRow['options']
                     )
                 );
             }
@@ -184,10 +191,13 @@ class ElementStructureLoader
                             foreach ($dataRows[$row['id']] as $dataRow) {
                                 $structure->setValue(
                                     new ElementStructureValue(
+                                        $dataRow['id'],
                                         $dataRow['ds_id'],
+                                        $dataRow['language'],
                                         $dataRow['name'],
                                         $dataRow['type'],
-                                        $dataRow['content']
+                                        $dataRow['value'],
+                                        $dataRow['options']
                                     )
                                 );
                             }
@@ -208,7 +218,7 @@ class ElementStructureLoader
      *
      * @return array
      */
-    private function queryStructure($eid, $version)
+    private function queryStructures($eid, $version)
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
@@ -246,24 +256,27 @@ class ElementStructureLoader
      *
      * @return array
      */
-    private function queryData($eid, $version, $language)
+    private function queryValues($eid, $version, $language)
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select(
                 array(
-                    'esd.ds_id',
-                    'esd.repeatable_id',
-                    'esd.repeatable_ds_id',
-                    'esd.name',
-                    'esd.type',
-                    'esd.content',
+                    'esv.data_id AS id',
+                    'esv.ds_id',
+                    'esv.language',
+                    'esv.repeatable_id',
+                    'esv.repeatable_ds_id',
+                    'esv.name',
+                    'esv.type',
+                    'esv.content AS value',
+                    'esv.options',
                 )
             )
-            ->from('element_structure_data', 'esd')
-            ->where($qb->expr()->eq('esd.eid', $eid))
-            ->andWhere($qb->expr()->eq('esd.version', $version))
-            ->andWhere($qb->expr()->eq('esd.language', $qb->expr()->literal($language)));
+            ->from('element_structure_value', 'esv')
+            ->where($qb->expr()->eq('esv.eid', $eid))
+            ->andWhere($qb->expr()->eq('esv.version', $version))
+            ->andWhere($qb->expr()->eq('esv.language', $qb->expr()->literal($language)));
 
         $result = $this->connection->fetchAll($qb->getSQL());
 

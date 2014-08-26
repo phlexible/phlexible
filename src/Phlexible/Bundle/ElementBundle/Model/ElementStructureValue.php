@@ -16,6 +16,11 @@ namespace Phlexible\Bundle\ElementBundle\Model;
 class ElementStructureValue
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var string
      */
     private $dsId;
@@ -23,7 +28,7 @@ class ElementStructureValue
     /**
      * @var string
      */
-    private $name;
+    private $language;
 
     /**
      * @var string
@@ -33,20 +38,36 @@ class ElementStructureValue
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $value;
 
     /**
-     * @param string $dsId
-     * @param string $name
-     * @param string $type
-     * @param string $value
+     * @var array
      */
-    public function __construct($dsId, $name, $type, $value)
+    private $options;
+
+    /**
+     * @param int    $id
+     * @param string $dsId
+     * @param string $language
+     * @param string $type
+     * @param string $name
+     * @param string $value
+     * @param array  $options
+     */
+    public function __construct($id, $dsId, $language, $type, $name, $value, array $options = array())
     {
+        $this->id = $id;
         $this->dsId = $dsId;
+        $this->language = $language;
         $this->name = $name;
         $this->type = $type;
         $this->value = $value;
+        $this->options = $options;
     }
 
     /**
@@ -55,6 +76,26 @@ class ElementStructureValue
     public function __toString()
     {
         return $this->value;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -73,6 +114,26 @@ class ElementStructureValue
     public function setDsId($dsId)
     {
         $this->dsId = (string) $dsId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return $this
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
 
         return $this;
     }
@@ -133,6 +194,26 @@ class ElementStructureValue
     public function setValue($value)
     {
         $this->value = (string) $value;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return $this
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
 
         return $this;
     }
