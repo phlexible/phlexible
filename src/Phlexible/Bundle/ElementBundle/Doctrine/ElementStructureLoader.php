@@ -14,7 +14,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureNode;
+use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 
 /**
@@ -121,8 +121,8 @@ class ElementStructureLoader
                                 $dataRow['id'],
                                 $dataRow['ds_id'],
                                 $dataRow['language'],
-                                $dataRow['name'],
                                 $dataRow['type'],
+                                $dataRow['name'],
                                 $dataRow['value'],
                                 $dataRow['options']
                             )
@@ -139,8 +139,8 @@ class ElementStructureLoader
                         $dataRow['id'],
                         $dataRow['ds_id'],
                         $dataRow['language'],
-                        $dataRow['name'],
                         $dataRow['type'],
+                        $dataRow['name'],
                         $dataRow['value'],
                         $dataRow['options']
                     )
@@ -194,8 +194,8 @@ class ElementStructureLoader
                                         $dataRow['id'],
                                         $dataRow['ds_id'],
                                         $dataRow['language'],
-                                        $dataRow['name'],
                                         $dataRow['type'],
+                                        $dataRow['name'],
                                         $dataRow['value'],
                                         $dataRow['options']
                                     )

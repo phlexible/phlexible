@@ -75,31 +75,38 @@ class ElementStructureManager implements ElementStructureManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateElementStructure(ElementStructure $elementStructure, $flush = true)
+    public function updateElementStructure(ElementStructure $elementStructure)
     {
         $conn = $this->entityManager->getConnection();
 
-        $this->insertStructure($elementStructure, $conn);
+        $this->insertStructure($elementStructure, $conn, true);
     }
 
-    private function insertStructure(ElementStructure $elementStructure, Connection $conn)
+    /**
+     * @param ElementStructure $elementStructure
+     * @param Connection       $conn
+     * @param bool             $isRoot
+     */
+    private function insertStructure(ElementStructure $elementStructure, Connection $conn, $isRoot = false)
     {
-        $conn->insert(
-            'element_structure',
-            array(
-                'data_id'          => $elementStructure->getId(),
-                'eid'              => $elementStructure->getElementVersion()->getElement()->getEid(),
-                'version'          => $elementStructure->getElementVersion()->getVersion(),
-                'ds_id'            => $elementStructure->getDsId(),
-                'type'             => 'group',//$elementStructure->getType(),
-                'name'             => $elementStructure->getName(),
-                'cnt'              => 0,
-                'repeatable_node'  => 1,
-                'repeatable_id'    => $elementStructure->getParentId(),
-                'repeatable_ds_id' => $elementStructure->getParentDsId(),
-                'sort'             => 0,
-            )
-        );
+        if (!$isRoot) {
+            $conn->insert(
+                'element_structure',
+                array(
+                    'data_id'          => $elementStructure->getId(),
+                    'eid'              => $elementStructure->getElementVersion()->getElement()->getEid(),
+                    'version'          => $elementStructure->getElementVersion()->getVersion(),
+                    'ds_id'            => $elementStructure->getDsId(),
+                    'type'             => 'group',//$elementStructure->getType(),
+                    'name'             => $elementStructure->getName(),
+                    'cnt'              => 0,
+                    'repeatable_node'  => 1,
+                    'repeatable_id'    => $elementStructure->getParentId(),
+                    'repeatable_ds_id' => $elementStructure->getParentDsId(),
+                    'sort'             => 0,
+                )
+            );
+        }
 
         foreach ($elementStructure->getValues() as $elementStructureValue) {
             $conn->insert(

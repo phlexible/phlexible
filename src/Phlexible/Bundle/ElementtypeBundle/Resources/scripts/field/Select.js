@@ -43,7 +43,7 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
         }
     }
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'twincombobox',
@@ -67,12 +67,6 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
         supportsInlineDiff: true,
         supportsUnlink: true,
         supportsRepeatable: true
-    });
-
-    Ext.each(valueStructure.values, function (value) {
-        if (value.dsId === item.dsId) {
-            config.value = value.content;
-        }
     });
 
     delete config.name;

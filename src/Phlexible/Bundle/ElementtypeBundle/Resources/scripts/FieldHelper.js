@@ -1,5 +1,14 @@
 Phlexible.fields.FieldHelper = {
-    defaults: function (parentConfig, item, element, repeatableId) {
+    /**
+     *
+     * @param {Object} parentConfig
+     * @param {Object} item
+     * @param {Array} valueStructure
+     * @param {Phlexible.elements.Element} element
+     * @param {Number} repeatableId
+     * @returns {Object}
+     */
+    defaults: function (parentConfig, item, valueStructure, element, repeatableId) {
         // labels
         var hideLabel,
             label,
@@ -22,10 +31,17 @@ Phlexible.fields.FieldHelper = {
             label = item.labels.fieldlabel[language];
         }
 
-        // prefix
+        var itemValue = null;
+        Ext.each(valueStructure.values, function (value) {
+            if (value.dsId === item.dsId) {
+                itemValue = value;
+            }
+        });
+
+        // name
         var name = 'field-' + item.dsId + '-';
-        if (item.id) {
-            name += 'id-' + item.id;
+        if (itemValue) {
+            name += 'id-' + itemValue.id;
         } else {
             name += Ext.id(null, 'new-');
         }
@@ -44,7 +60,7 @@ Phlexible.fields.FieldHelper = {
             labelSeparator: labelSeparator,
             hideLabel: hideLabel,
 
-            value: '',//item.rawContent ? item.rawContent : (forceAdd && item.default_content ? item.default_content : ''),
+            value: itemValue ? itemValue.content : '',//item.rawContent ? item.rawContent : (forceAdd && item.default_content ? item.default_content : ''),
             masterValue: '',//(item.data_options && typeof item.data_options.master_value != 'undefined') ? item.data_options.master_value : item.rawContent,
 
             isMaster: element.master,

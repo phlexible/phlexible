@@ -6,7 +6,7 @@ Ext.Editor.prototype.beforeDestroy = function () {
 Phlexible.fields.Registry.addFactory('table', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'tablefield',

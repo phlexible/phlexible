@@ -68,14 +68,14 @@ class ElementStructureValue
     private $name;
 
     /**
-     * @var string
-     * @ORM\Column(name="repeatable_id", type="string", length=255)
+     * @var int
+     * @ORM\Column(name="repeatable_id", type="integer", length=255, nullable=true)
      */
     private $repeatableId;
 
     /**
      * @var string
-     * @ORM\Column(name="repeatable_ds_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="repeatable_ds_id", type="string", length=36, nullable=true, options={"fixed"=true})
      */
     private $repeatableDsId;
 

@@ -1,12 +1,12 @@
 Phlexible.fields.Registry.addFactory('checkbox', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'xcheckbox',
         boxLabel: (item.labels.boxlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
-        //checked: item.rawContent,
+        checked: config.value,
 
         submitOffValue: '',
         submitOnValue: 'on',
@@ -16,12 +16,6 @@ Phlexible.fields.Registry.addFactory('checkbox', function (parentConfig, item, v
         supportsDiff: true,
         supportsUnlink: {styleEl: 'imageEl'},
         supportsRepeatable: true
-    });
-
-    Ext.each(valueStructure.values, function (value) {
-        if (value.dsId === item.dsId) {
-            config.checked = value.content ? true : false;
-        }
     });
 
     delete config.value;

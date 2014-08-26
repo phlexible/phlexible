@@ -1,7 +1,7 @@
 Phlexible.fields.Registry.addFactory('textfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'textfield',
@@ -16,12 +16,6 @@ Phlexible.fields.Registry.addFactory('textfield', function (parentConfig, item, 
         supportsInlineDiff: true,
         supportsUnlink: true,
         supportsRepeatable: true
-    });
-
-    Ext.each(valueStructure.values, function (value) {
-        if (value.dsId === item.dsId) {
-            config.value = value.content;
-        }
     });
 
     return config;

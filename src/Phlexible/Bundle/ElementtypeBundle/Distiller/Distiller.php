@@ -9,9 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Distiller;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructureNode;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 
 /**

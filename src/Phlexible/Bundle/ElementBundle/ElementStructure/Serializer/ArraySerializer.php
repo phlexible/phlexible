@@ -30,10 +30,11 @@ class ArraySerializer implements SerializerInterface
         $valueDatas = array();
         foreach ($elementStructure->getValues() as $value) {
             $valueDatas[] = array(
-                'content' => $value->getValue(),
+                'id'      => $value->getId(),
                 'dsId'    => $value->getDsId(),
                 'name'    => $value->getName(),
                 'type'    => $value->getType(),
+                'content' => $value->getValue(),
             );
         }
 

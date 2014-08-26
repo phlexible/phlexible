@@ -61,7 +61,7 @@ class ElementStructureValue
      */
     public function __construct($id, $dsId, $language, $type, $name, $value, array $options = null)
     {
-        $this->id = $id;
+        $this->id = (int) $id;
         $this->dsId = $dsId;
         $this->language = $language;
         $this->name = $name;
@@ -93,7 +93,7 @@ class ElementStructureValue
      */
     public function setId($id)
     {
-        $this->id = $id;
+        $this->id = (int) $id;
 
         return $this;
     }
@@ -153,7 +153,7 @@ class ElementStructureValue
      */
     public function setName($name)
     {
-        $this->name = (string) $name;
+        $this->name = $name;
 
         return $this;
     }
@@ -173,7 +173,7 @@ class ElementStructureValue
      */
     public function setType($type)
     {
-        $this->$type = (string) $type;
+        $this->$type = $type;
 
         return $this;
     }
@@ -193,7 +193,7 @@ class ElementStructureValue
      */
     public function setValue($value)
     {
-        $this->value = (string) $value;
+        $this->value = $value;
 
         return $this;
     }

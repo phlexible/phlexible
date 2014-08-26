@@ -38,7 +38,7 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
         });
     }
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'elementtypes-field-suggest',
@@ -72,12 +72,6 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
                 bs.addNewItem(newObj);
             },
             scope: this
-        }
-    });
-
-    Ext.each(valueStructure.values, function (value) {
-        if (value.dsId === item.dsId) {
-            config.value = value.content;
         }
     });
 

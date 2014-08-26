@@ -1,14 +1,14 @@
 Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
         xtype: 'linkfield',
         hiddenName: config.name,
 
         value: item.displayContent,
-        hiddenValue: item.rawContent ? item.rawContent : (forceAdd && item.default_content ? item.default_content : ''),
+        hiddenValue: item.rawContent ? item.rawContent : (item.default_content ? item.default_content : ''),
         width: (parseInt(item.configuration.width, 10) || 200),
 
         allowed: {
@@ -26,12 +26,6 @@ Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, value
         supportsInlineDiff: true,
         supportsUnlink: {unlinkEl: 'trigger'},
         supportsRepeatable: true
-    });
-
-    Ext.each(valueStructure.values, function (value) {
-        if (value.dsId === item.dsId) {
-            config.value = value.content;
-        }
     });
 
     delete config.name;

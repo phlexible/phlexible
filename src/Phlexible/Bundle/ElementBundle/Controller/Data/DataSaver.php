@@ -118,6 +118,8 @@ class DataSaver
 
         $elementVersion = clone $oldElementVersion;
         $elementVersion
+            ->setId(null)
+            ->setElement($element)
             ->setVersion($elementVersion->getVersion() + 1)
             ->setCreateUserId($user->getId())
             ->setCreatedAt(new \DateTime())
@@ -128,14 +130,15 @@ class DataSaver
 
         $newVersion = $elementVersion->getVersion();
 
-        $elementStructure = $this->createStructure($elementVersion, $elementtypeStructure, $values);
+        $elementStructure = $this->createStructure($elementVersion, $elementtypeStructure, $values, $language);
+#print_r($elementStructure);die;
 
         $event = new SaveElementEvent($element, $language, $oldVersion);
         $this->dispatcher->dispatch(ElementEvents::BEFORE_SAVE_ELEMENT, $event);
 
         $this->elementService->updateElement($element, false);
-        $this->elementService->updateElementVersion($elementVersion, false);
-        $this->elementService->updateElementStructure($elementStructure, false);
+        $this->elementService->updateElementVersion($elementVersion);
+        $this->elementService->updateElementStructure($elementStructure);
 
         if ($teaser) {
             $this->saveTeaserData($teaser, $language, $data);
@@ -239,8 +242,8 @@ class DataSaver
         // save meta
         // TODO: repair save meta
 
-        if (!empty($data['meta'])) {
-            $metaSetId = $elementVersion->getElementTypeVersionObj()->getMetaSetId();
+        if (0 && !empty($data['meta'])) {
+            $metaSetId = $elementtypeVersion->getElementTypeVersionObj()->getMetaSetId();
             /* @var $metaSet Media_MetaSets_Set */
             $metaSet = $container->get('metasets.repository')->find($metaSetId);
 
@@ -328,12 +331,16 @@ class DataSaver
      * @param ElementVersion       $elementVersion
      * @param ElementtypeStructure $elementtypeStructure
      * @param array                $values
+     * @param string               $language
      *
      * @return ElementStructure
      */
-    private function createStructure($elementVersion, $elementtypeStructure, array $values)
+    private function createStructure($elementVersion, $elementtypeStructure, array $values, $language)
     {
-        $this->structures[null] = $rootElementStructure = new ElementStructure();
+        $rootElementStructure = new ElementStructure();
+        $rootElementStructure->setElementVersion($elementVersion);
+
+        $this->structures[null] = $rootElementStructure;
 
         foreach ($values as $key => $value) {
             $parts = explode('__', $key);
@@ -348,7 +355,8 @@ class DataSaver
                 $dsId = $match[1];
                 $id = $match[2];
                 $node = $elementtypeStructure->getNode($dsId);
-                $elementStructureValue = new ElementStructureValue($dsId, $node->getName(), $node->getType(), $value);
+                $options = null;
+                $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
                 $elementStructure = $this->findGroup($repeatableGroup);
                 $elementStructure->setValue($elementStructureValue);
             } elseif (preg_match('/^field-([-a-f0-9]{36})-new-([0-9]+)$/', $fixed, $match)) {
@@ -356,7 +364,8 @@ class DataSaver
                 $dsId = $match[1];
                 $id = $match[2];
                 $node = $elementtypeStructure->getNode($dsId);
-                $elementStructureValue = new ElementStructureValue($dsId, $node->getName(), $node->getType(), $value);
+                $options = null;
+                $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
                 $elementStructure = $this->findGroup($repeatableGroup);
                 $elementStructure->setValue($elementStructureValue);
             } elseif (preg_match('/^group-([-a-f0-9]{36})-id-([0-9]+)$/', $fixed, $match)) {
@@ -368,8 +377,9 @@ class DataSaver
                 $this->structures[$id] = $elementStructure = new ElementStructure();
                 $elementStructure
                     ->setElementVersion($elementVersion)
-                    ->setDsId($dsId)
                     ->setId($id)
+                    ->setDsId($dsId)
+                    ->setParentId($parent->getId())
                     ->setParentDsId($parent->getDsId())
                     ->setParentName($parent->getName())
                     ->setName($node->getName());
@@ -379,14 +389,16 @@ class DataSaver
                 $parent = $this->findGroup($repeatableGroup);
                 $dsId = $match[1];
                 $id = $match[2];
+                $node = $elementtypeStructure->getNode($dsId);
                 $this->structures[$id] = $elementStructure = new ElementStructure();
                 $elementStructure
                     ->setElementVersion($elementVersion)
-                    ->setDsId($dsId)
                     ->setId($id)
+                    ->setDsId($dsId)
+                    ->setParentId($parent->getId())
                     ->setParentDsId($parent->getDsId())
                     ->setParentName($parent->getName())
-                    ->setName('xxx');
+                    ->setName($node->getName());
                 $parent->addStructure($elementStructure);
             }
         }

@@ -34,8 +34,10 @@ Phlexible.elements.ElementDataTabHelper = {
         if (needFix) {
             var fromDsId, toDsId;
             for (fromDsId in fixDsIds) {
-                toDsId = fixDsIds[fromDsId];
-                Phlexible.elements.ElementDataTabHelper.fixValueStructure(valueStructure, fromDsId, toDsId);
+                if (fixDsIds.hasOwnProperty(fromDsId)) {
+                    toDsId = fixDsIds[fromDsId];
+                    Phlexible.elements.ElementDataTabHelper.fixValueStructure(valueStructure, fromDsId, toDsId);
+                }
             }
         }
 
@@ -73,7 +75,7 @@ Phlexible.elements.ElementDataTabHelper = {
         });
     },
 
-    loadItems: function (structureNodes, valueStructure, parentConfig, element, groupPrefix, forceAdd, newGroup) {
+    loadItems: function (structureNodes, valueStructure, parentConfig, element, groupPrefix) {
         if (!groupPrefix) groupPrefix = null;
 
         if (Ext.isEmpty(structureNodes) || !Ext.isArray(structureNodes)) {
@@ -202,7 +204,7 @@ Phlexible.elements.ElementDataTabHelper = {
 
 //                Phlexible.console.info('factory: [' + structureNode.type + '] ' + structureNode.name);
             var configFactory = Phlexible.fields.Registry.getFactory(structureNode.type),
-                config = configFactory({}, structureNode, structureNode.valueStructure, element, groupPrefix, forceAdd, newGroup);
+                config = configFactory({}, structureNode, structureNode.valueStructure, element, groupPrefix);
 
             // count subItems
             if (structureNode.configuration.repeat_max != structureNode.configuration.repeat_min) {

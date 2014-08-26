@@ -88,7 +88,7 @@ Ext.reg('frontendmedia-field-imagefilefield', Phlexible.frontendmedia.ImageFileF
 Phlexible.fields.Registry.addFactory('image', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
-    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, element, repeatableId);
+    var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     // TODO: wie?
     item.media = item.media || {};
@@ -109,12 +109,6 @@ Phlexible.fields.Registry.addFactory('image', function (parentConfig, item, valu
         supportsSuffix: true,
         supportsDiff: true,
         supportsRepeatable: true
-    });
-
-    Ext.each(valueStructure.values, function (value) {
-        if (value.dsId === item.dsId) {
-            config.value = value.content;
-        }
     });
 
     delete config.width;

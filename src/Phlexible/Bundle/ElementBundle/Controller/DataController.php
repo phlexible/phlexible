@@ -601,14 +601,26 @@ class DataController extends Controller
         $notifications = $request->get('notifications');
         $values = $request->request->all();
 
+        $stateManager = $this->get('phlexible_tree.state_manager');
+
         $saver = new DataSaver(
             $this->get('phlexible_element.element_service'),
             $this->get('phlexible_tree.tree_manager'),
             $this->get('phlexible_teaser.teaser_manager'),
             $this->get('event_dispatcher')
         );
-        $elementStructure = $saver->save($request, $this->getUser());
-die;
+        $elementVersion = $saver->save($request, $this->getUser());
+
+        $msg = 'saved';
+        $data = array(
+            'title'         => $elementVersion->getBackendTitle($language),
+            'status'        => 'async',//$status,
+            'navigation'    => '',//$teaserId ? '' : $node->getInNavigation($newVersion),
+            'restricted'    => '',//$teaserId ? '' : $node->getAttribute('restrictire'),
+            'publish_other' => array(),//$publishSlaves,
+        );
+
+        return new ResultResponse(true, $msg, $data);
 
         if ($data) {
             $data = json_decode($data, true);
