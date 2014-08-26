@@ -106,13 +106,25 @@ class ElementVersionMappedField
      */
     public function __construct(array $fields = array())
     {
+        $this->setMapping($fields);
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return $this
+     */
+    public function setMapping(array $fields = array())
+    {
         $allowedFields = array('backend', 'page', 'navigation', 'customDate', 'forward', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5');
         foreach ($fields as $field => $value) {
-            if (!$value || in_array($field, $allowedFields)) {
+            if (!$value || !in_array($field, $allowedFields)) {
                 continue;
             }
             $this->$field = $value;
         }
+
+        return $this;
     }
 
     /**

@@ -23,8 +23,10 @@ Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueS
 
         listeners: {
             activate: function (c) {
-                c.currentETID = c.element.data.properties.et_id;
-                c.currentActive = c.items.indexOf(this.layout.activeItem);
+                if (c.items && c.element && c.element.data && c.element.data.properties) {
+                    c.currentETID = c.element.data.properties.et_id;
+                    c.currentActive = c.items.indexOf(this.layout.activeItem);
+                }
             }
         }
     };

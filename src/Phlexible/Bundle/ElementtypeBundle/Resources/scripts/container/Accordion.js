@@ -43,14 +43,16 @@ Phlexible.fields.Accordion = Ext.extend(Ext.Panel, {
                                     var pt = this.element.prototypes.getPrototype(dsId);
                                     var pos = 0;
                                     var factory = Phlexible.fields.Registry.getFactory(pt.factory);
-                                    factory(this, pt, pos, this.element, null, true, true);
+                                    this.insert(pos, factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId));
                                     this.doLayout();
                                 }.createDelegate(this, [dsId], false)
                             });
                         }
 
-                        var menu = new Ext.menu.Menu(menuConfig);
-                        menu.showAt([coords[0], coords[1]]);
+                        if (menuConfig.length) {
+                            var menu = new Ext.menu.Menu(menuConfig);
+                            menu.showAt([coords[0], coords[1]]);
+                        }
                     },
                     scope: this
                 }
@@ -146,6 +148,25 @@ Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, 
 
     if (item.children) {
         config.items = Phlexible.elements.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element);
+
+        var allowedItems = {}, has = false;
+        Ext.each (item.children, function(child) {
+            if (child.type === "group") {
+                var minRepeat = parseInt(child.configuration.repeat_min, 10) || 0;
+                var maxRepeat = parseInt(child.configuration.repeat_max, 10) || 0;
+                var isRepeatable = minRepeat != maxRepeat || maxRepeat > 1;
+                var isOptional = minRepeat == 0 && maxRepeat;
+                if (isRepeatable || isOptional) {
+                    allowedItems[child.dsId] = {
+                        max: maxRepeat,
+                        title: child.labels.fieldlabel
+                    };
+                    has = true;
+                }
+            }
+        });
+        console.log(allowedItems);
+        config.allowedItems = has ? allowedItems : null;
     }
 
     return config;

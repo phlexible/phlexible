@@ -10,8 +10,8 @@ namespace Phlexible\Bundle\ElementBundle\ElementVersion;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
-use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
  * Field mapper
@@ -53,15 +53,15 @@ class FieldMapper
     }
 
     /**
-     * @param ElementVersion $elementVersion
-     * @param string         $language
+     * @param ElementVersion   $elementVersion
+     * @param ElementStructure $elementStructure
+     * @param string           $language
      *
      * @return array
      */
-    public function map(ElementVersion $elementVersion, $language)
+    public function extract(ElementVersion $elementVersion, ElementStructure $elementStructure, $language)
     {
         $elementtypeVersion = $this->elementService->findElementtypeVersion($elementVersion);
-        $elementStructure = $this->elementService->findElementStructure($elementVersion, $language);
         $mappings = $elementtypeVersion->getMappings();
 
         $titles = array();
@@ -80,6 +80,30 @@ class FieldMapper
         }
 
         return $titles;
+    }
+
+    /**
+     * @param ElementVersion   $elementVersion
+     * @param ElementStructure $elementStructure
+     * @param string           $language
+     */
+    public function apply(ElementVersion $elementVersion, ElementStructure $elementStructure, $language)
+    {
+        $mapping = $this->extract($elementVersion, $elementStructure, $language);
+
+        $mappedFields = $elementVersion->getMappedFields();
+        if (!$mappedFields->contains($language)) {
+            $mappedField = new ElementVersionMappedField();
+            $mappedField
+                ->setLanguage($language)
+                ->setElementVersion($elementVersion);
+            $mappedFields->set($language, $mappedField);
+        }
+
+        $mappedField = $mappedFields->get($language);
+        $mappedField->setMapping($mapping);
+
+        $elementVersion->setMappedFields($mappedFields);
     }
 
     /**

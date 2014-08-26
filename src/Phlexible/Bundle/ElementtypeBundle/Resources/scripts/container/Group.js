@@ -197,7 +197,7 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                     var pos = this.ownerCt.items.items.indexOf(this);
 
                     var factory = Phlexible.fields.Registry.getFactory('group');
-                    var config = factory({}, pt, {values: []}, this.element, this.repeatableId, true, true);
+                    var config = factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId);
                     this.ownerCt.insert(pos + 1, config);
 
                     this.ownerCt.doLayout();
@@ -225,19 +225,19 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                     menuConfig = {
                         items: [
                             {
-                                text: Phlexible.fields.Strings.add_above,
+                                text: Phlexible.elementtypes.Strings.add_above,
                                 iconCls: 'p-elementtypes-drop-over',
                                 hidden: true,
                                 menu: []
                             },
                             {
-                                text: Phlexible.fields.Strings.add_below,
+                                text: Phlexible.elementtypes.Strings.add_below,
                                 iconCls: 'p-elementtypes-drop-under',
                                 hidden: true,
                                 menu: []
                             },
                             {
-                                text: Phlexible.fields.Strings.add_child,
+                                text: Phlexible.elementtypes.Strings.add_child,
                                 iconCls: 'p-elementtypes-drop-child',
                                 hidden: true,
                                 menu: []
@@ -261,7 +261,10 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                             disabled: disabled,
                             handler: function () {
                                 var pt = this.element.prototypes.getPrototype(dsId);
-                                this.addGroup(this, pt, 0, this.element, this.repeatableId, true, true);
+                                var pos = 0;
+                                var factory = Phlexible.fields.Registry.getFactory(pt.factory);
+                                this.insert(pos, factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId));
+
                                 this.doLayout();
                             }.createDelegate(this)
                         });
@@ -284,7 +287,8 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                             handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
                                 var pos = this.ownerCt.items.items.indexOf(this);
-                                this.addGroup(this.ownerCt, pt, pos, this.element, this.repeatableId, true, true);
+                                var factory = Phlexible.fields.Registry.getFactory(pt.factory);
+                                this.ownerCt.insert(pos, factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId));
                                 this.ownerCt.doLayout();
                             }.createDelegate(this, [dsId], false)
                         });
@@ -293,8 +297,9 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                             disabled: disabled,
                             handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
-                                var pos = this.ownerCt.items.items.indexOf(this);
-                                this.addGroup(this.ownerCt, pt, pos + 1, this.element, this.repeatableId, true, true);
+                                var pos = this.ownerCt.items.items.indexOf(this) + 1;
+                                var factory = Phlexible.fields.Registry.getFactory(pt.factory);
+                                this.ownerCt.insert(pos, factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId));
                                 this.ownerCt.doLayout();
                             }.createDelegate(this, [dsId], false)
                         });
@@ -400,6 +405,25 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
 
     if (item.children) {
         config.items = Phlexible.elements.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element, groupId && isRepeatable ? groupId : repeatableId, true);
+
+        var allowedItems = {}, has = false;
+        Ext.each (item.children, function(child) {
+            if (child.type === "group") {
+                var minRepeat = parseInt(child.configuration.repeat_min, 10) || 0;
+                var maxRepeat = parseInt(child.configuration.repeat_max, 10) || 0;
+                var isRepeatable = minRepeat != maxRepeat || maxRepeat > 1;
+                var isOptional = minRepeat == 0 && maxRepeat;
+                if (isRepeatable || isOptional) {
+                    allowedItems[child.dsId] = {
+                        max: maxRepeat,
+                        title: child.labels.fieldlabel
+                    };
+                    has = true;
+                }
+            }
+        });
+        console.log(allowedItems);
+        config.allowedItems = has ? allowedItems : null;
     }
 
     return config;

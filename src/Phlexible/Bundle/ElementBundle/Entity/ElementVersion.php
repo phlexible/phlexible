@@ -268,7 +268,7 @@ class ElementVersion
     }
 
     /**
-     * @return array
+     * @return ElementVersionMappedField|ArrayCollection
      */
     public function getMappedFields()
     {
@@ -280,7 +280,7 @@ class ElementVersion
      *
      * @return $this
      */
-    public function setMappedFields(array $mappedFields = null)
+    public function setMappedFields($mappedFields = null)
     {
         $this->mappedFields = $mappedFields;
 

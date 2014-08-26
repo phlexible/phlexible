@@ -369,14 +369,13 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
             return;
         }
 
-        console.log('preview');
-
         var rootNode = this.getEditTreePanel().getRootNode(),
             previewPanel = this.getPreviewPanel();
 
         previewPanel.element.data = {};
-        previewPanel.structure = this.processPreviewNodes(rootNode);
-        previewPanel.valueStructure = {children: [], values: {}};
+        previewPanel.element.master = true;
+        previewPanel.structure = Phlexible.elements.ElementDataTabHelper.fixStructure(this.processPreviewNodes(rootNode));
+        previewPanel.valueStructure = {structures: [], values: {}};
         previewPanel.removeAll();
         previewPanel.lateRender();
 

@@ -181,7 +181,7 @@ Phlexible.fields.FieldHelper = {
                     html = this.diff.content_diff;
                 }
                 else {
-                    html = Phlexible.fields.Strings.diff_new_field;
+                    html = Phlexible.elementtypes.Strings.diff_new_field;
                     height = 14;
                 }
 

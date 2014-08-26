@@ -9,70 +9,53 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
 
     initComponent: function () {
         this.element.on({
-            load: {
-                fn: this.onLoadElement,
-                scope: this
+            load: this.onLoadElement,
+            setLanguage: this.onSetLanguage,
+            publishAdvanced: function (element) {
+                if (element.properties.teaser_id) {
+                    element.teaserNode = null;
+                    this.getRootNode().reload();
+                }
             },
-            setLanguage: {
-                fn: this.onSetLanguage,
-                scope: this
-            },
-            publishAdvanced: {
-                fn: function (element) {
-                    if (element.properties.teaser_id) {
-                        element.teaserNode = null;
-                        this.getRootNode().reload();
+            setOffline: function (element) {
+                if (element.properties.teaser_id) {
+                    if (element.teaserNode && 'function' == typeof element.teaserNode.setText) {
+                        var iconEl = element.teaserNode.getUI().getIconEl();
+                        if (iconEl.src.match(/\/status\/[a-z]+/)) {
+                            iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '');
+                        }
                     }
-                },
-                scope: this
+                }
             },
-            setOffline: {
-                fn: function (element) {
-                    if (element.properties.teaser_id) {
-                        if (element.teaserNode && 'function' == typeof element.teaserNode.setText) {
-                            var iconEl = element.teaserNode.getUI().getIconEl();
+            setOfflineAdvanced: function (element) {
+                if (element.properties.teaser_id) {
+                    element.teaserNode = null;
+                    this.getRootNode().reload();
+                }
+            },
+            save: function (element, result) {
+                if (element.properties.teaser_id) {
+                    if (element.teaserNode && 'function' == typeof element.teaserNode.setText) {
+                        var data = result.data;
+                        element.teaserNode.setText(data.title);
+                        var iconEl = element.teaserNode.getUI().getIconEl();
+                        if (data.status) {
+                            if (iconEl.src.match(/\/status\/[a-z]+/)) {
+                                iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '/status/' + data.status);
+                            } else {
+                                iconEl.src += '?status=' + data.status;
+                            }
+                        } else {
                             if (iconEl.src.match(/\/status\/[a-z]+/)) {
                                 iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '');
                             }
                         }
+                    } else {
+                        Phlexible.console.log('element.teaserNode is undefined');
                     }
-                },
-                scope: this
+                }
             },
-            setOfflineAdvanced: {
-                fn: function (element) {
-                    if (element.properties.teaser_id) {
-                        element.teaserNode = null;
-                        this.getRootNode().reload();
-                    }
-                },
-                scope: this
-            },
-            save: {
-                fn: function (element, result) {
-                    if (element.properties.teaser_id) {
-                        if (element.teaserNode && 'function' == typeof element.teaserNode.setText) {
-                            var data = result.data;
-                            element.teaserNode.setText(data.title);
-                            var iconEl = element.teaserNode.getUI().getIconEl();
-                            if (data.status) {
-                                if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                                    iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '/status/' + data.status);
-                                } else {
-                                    iconEl.src += '/status/' + data.status;
-                                }
-                            } else {
-                                if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                                    iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '');
-                                }
-                            }
-                        } else {
-                            Phlexible.console.log('element.teaserNode is undefined');
-                        }
-                    }
-                },
-                scope: this
-            }
+            scope: this
         });
 
         this.loader = new Phlexible.elements.ElementsTreeLoader({
@@ -82,26 +65,24 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
             },
             preloadChildren: true,
             listeners: {
-                load: {
-                    fn: function (loader, rootNode) {
-                        if (this.selectId) {
-                            Phlexible.console.info('loader.load()');
-                            var targetNode = null;
-                            rootNode.cascade(function (currentNode) {
-                                if (currentNode.id == this.selectId) {
-                                    Phlexible.console.info('loader.select()');
-                                    currentNode.select();
-                                    targetNode = currentNode;
-                                    return false;
-                                }
-                            }, this);
-                            this.fireEvent('teaserselect', this.selectId, targetNode, this.selectLanguage);
-                            this.selectId = null;
-                            this.selectLanguage = null;
-                        }
-                    },
-                    scope: this
-                }
+                load: function (loader, rootNode) {
+                    if (this.selectId) {
+                        Phlexible.console.info('loader.load()');
+                        var targetNode = null;
+                        rootNode.cascade(function (currentNode) {
+                            if (currentNode.id == this.selectId) {
+                                Phlexible.console.info('loader.select()');
+                                currentNode.select();
+                                targetNode = currentNode;
+                                return false;
+                            }
+                        }, this);
+                        this.fireEvent('teaserselect', this.selectId, targetNode, this.selectLanguage);
+                        this.selectId = null;
+                        this.selectLanguage = null;
+                    }
+                },
+                scope: this
             }
         });
 
@@ -152,18 +133,16 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                                 layoutarea_id: node.attributes.area_id
                             },
                             listeners: {
-                                success: {
-                                    fn: function (window, result) {
-                                        this.element.setLanguage(result.data.language, true);
+                                success: function (window, result) {
+                                    this.element.setLanguage(result.data.language, true);
 
-                                        this.selectId = result.id;
-                                        this.selectLanguage = result.data.language;
+                                    this.selectId = result.id;
+                                    this.selectLanguage = result.data.language;
 
-                                        this.loader.baseParams.language = this.selectLanguage;
-                                        this.root.reload();
-                                    },
-                                    scope: this
-                                }
+                                    this.loader.baseParams.language = this.selectLanguage;
+                                    this.root.reload();
+                                },
+                                scope: this
                             }
                         });
                         w.show();
@@ -179,31 +158,29 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         var w = new Phlexible.elements.NewTeaserInstanceWindow({
                             element: this.element,
                             listeners: {
-                                teaserSelect: {
-                                    fn: function (forTeaserId, layoutAreaId, tid) {
-                                        Ext.Ajax.request({
-                                            url: Phlexible.Router.generate('teasers_layout_createinstance'),
-                                            params: {
-                                                for_teaser_id: forTeaserId,
-                                                id: layoutAreaId,
-                                                tid: tid
-                                            },
-                                            success: function (response) {
-                                                var data = Ext.decode(response.responseText);
+                                teaserSelect: function (forTeaserId, layoutAreaId, tid) {
+                                    Ext.Ajax.request({
+                                        url: Phlexible.Router.generate('teasers_layout_createinstance'),
+                                        params: {
+                                            for_teaser_id: forTeaserId,
+                                            id: layoutAreaId,
+                                            tid: tid
+                                        },
+                                        success: function (response) {
+                                            var data = Ext.decode(response.responseText);
 
-                                                if (data.success) {
-                                                    this.getRootNode().reload();
+                                            if (data.success) {
+                                                this.getRootNode().reload();
 
-                                                    Phlexible.success(data.msg);
-                                                } else {
-                                                    Ext.MessageBox.alert('Failure', data.msg);
-                                                }
-                                            },
-                                            scope: this
-                                        });
-                                    },
-                                    scope: this
-                                }
+                                                Phlexible.success(data.msg);
+                                            } else {
+                                                Ext.MessageBox.alert('Failure', data.msg);
+                                            }
+                                        },
+                                        scope: this
+                                    });
+                                },
+                                scope: this
                             }
                         });
                         w.show();
@@ -486,152 +463,147 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
             beforeclick: function () {
                 return false;
             },
-            dblclick: {
-                fn: function (node, e) {
-                    if (node.attributes.type == 'area') {
-                        this.fireEvent('areaselect', node.attributes.area_id, node);
-                        return false;
-                    }
+            dblclick: function (node, e) {
+                if (node.attributes.type == 'area') {
+                    this.fireEvent('areaselect', node.attributes.area_id, node);
+                    return false;
+                }
 
-                    node.select();
-                    if (node.attributes.type == 'teaser' && !node.attributes.inherited) {
-                        this.fireEvent('teaserselect', node.attributes.id, node);
-                    }
-                    else if (node.attributes.type == 'catch') {
-                        this.fireEvent('catchselect', node.attributes.id, node.attributes.catchConfig, node);
-                        return false;
-                    }
+                node.select();
+                if (node.attributes.type == 'teaser' && !node.attributes.inherited) {
+                    this.fireEvent('teaserselect', node.attributes.id, node);
+                }
+                else if (node.attributes.type == 'catch') {
+                    this.fireEvent('catchselect', node.attributes.id, node.attributes.catchConfig, node);
+                    return false;
+                }
 
-                    e.stopEvent();
+                e.stopEvent();
 
-                    return true;
-                },
-                scope: this
+                return true;
             },
-            contextmenu: {
-                fn: function (node, event) {
-                    event.stopEvent();
-                    var coords = event.getXY();
+            contextmenu: function (node, event) {
+                event.stopEvent();
+                var coords = event.getXY();
 
-                    this.node = node;
+                this.node = node;
 
-                    var type = node.attributes.type;
+                var type = node.attributes.type;
 
-                    if (type == 'area') {
-                        this.items.items[0].setText('[Layoutarea]');
-                        this.items.items[0].setIconClass('p-teasers-layoutarea-icon');
+                if (type == 'area') {
+                    this.items.items[0].setText('[Layoutarea]');
+                    this.items.items[0].setIconClass('p-teasers-layoutarea-icon');
 
-                        this.items.items[2].show();
-                        this.items.items[3].show();
-                        this.items.items[4].show();
+                    this.items.items[2].show();
+                    this.items.items[3].show();
+                    this.items.items[4].show();
 
-                        this.items.items[5].hide();
-                        this.items.items[6].hide();
-                        this.items.items[7].hide();
-                        this.items.items[8].show();
-                        this.items.items[9].hide();
-                        this.items.items[10].show();
-                        this.items.items[11].hide();
-                        this.items.items[12].hide();
+                    this.items.items[5].hide();
+                    this.items.items[6].hide();
+                    this.items.items[7].hide();
+                    this.items.items[8].show();
+                    this.items.items[9].hide();
+                    this.items.items[10].show();
+                    this.items.items[11].hide();
+                    this.items.items[12].hide();
 
-                        if (!Phlexible.Clipboard.isInactive() && Phlexible.Clipboard.getType() === 'teaser') {
-                            this.items.items[10].menu.items.items[0].setText(String.format(Phlexible.elements.Strings.paste_as, Phlexible.Clipboard.getText()));
-                            this.items.items[10].enable();
-                        } else {
-                            this.items.items[10].disable();
-                        }
+                    if (!Phlexible.Clipboard.isInactive() && Phlexible.Clipboard.getType() === 'teaser') {
+                        this.items.items[10].menu.items.items[0].setText(String.format(Phlexible.elements.Strings.paste_as, Phlexible.Clipboard.getText()));
+                        this.items.items[10].enable();
+                    } else {
+                        this.items.items[10].disable();
                     }
-                    else if (type == 'teaser') {
-                        this.items.items[0].setText('[Teaser]');
-                        this.items.items[0].setIconClass('p-teasers-teaser-icon');
+                }
+                else if (type == 'teaser') {
+                    this.items.items[0].setText('[Teaser]');
+                    this.items.items[0].setIconClass('p-teasers-teaser-icon');
 
-                        this.items.items[2].hide();
-                        this.items.items[3].hide();
-                        this.items.items[4].hide();
+                    this.items.items[2].hide();
+                    this.items.items[3].hide();
+                    this.items.items[4].hide();
 
-                        this.items.items[5].hide();
-                        this.items.items[7].show();
+                    this.items.items[5].hide();
+                    this.items.items[7].show();
 
-                        if (node.attributes.no_display) {
-                            this.items.items[7].setChecked(true);
-                        }
-                        else {
-                            this.items.items[7].setChecked(false);
-                        }
-
-                        if (node.attributes.inherited) {
-                            this.items.items[6].setChecked(node.attributes.stop_inherit);
-                            this.items.items[6].setText(Phlexible.elements.Strings.stopped_inherited_teaser);
-
-                            this.items.items[8].hide();
-                            this.items.items[9].hide();
-                            this.items.items[10].hide();
-                            this.items.items[11].hide();
-                            this.items.items[12].hide();
-                        }
-                        else {
-                            this.items.items[6].setChecked(node.attributes.inherit);
-                            this.items.items[6].setText(Phlexible.elements.Strings.inherited_teaser);
-
-                            this.items.items[8].show();
-                            this.items.items[9].show();
-                            this.items.items[10].hide();
-                            this.items.items[11].show();
-                            this.items.items[12].setText(Phlexible.elements.Strings.delete_teaser);
-                            this.items.items[12].setIconClass('p-teasers-teaser_delete-icon');
-                            this.items.items[12].show();
-                        }
-
-                        this.items.items[6].show();
+                    if (node.attributes.no_display) {
+                        this.items.items[7].setChecked(true);
                     }
-                    else if (type == 'catch') {
-                        this.items.items[0].setText('[Catch]');
-                        this.items.items[0].setIconClass('p-teasers-catch-icon');
+                    else {
+                        this.items.items[7].setChecked(false);
+                    }
 
-                        this.items.items[2].hide();
-                        this.items.items[3].hide();
-                        this.items.items[4].hide();
+                    if (node.attributes.inherited) {
+                        this.items.items[6].setChecked(node.attributes.stop_inherit);
+                        this.items.items[6].setText(Phlexible.elements.Strings.stopped_inherited_teaser);
 
-                        this.items.items[5].hide();
-                        this.items.items[6].hide();
-
-                        this.items.items[7].hide();
                         this.items.items[8].hide();
                         this.items.items[9].hide();
                         this.items.items[10].hide();
-
                         this.items.items[11].hide();
-                        this.items.items[12].setText(Phlexible.elements.Strings.delete_catch);
-                        this.items.items[12].setIconClass('p-teasers-catch_delete-icon');
+                        this.items.items[12].hide();
+                    }
+                    else {
+                        this.items.items[6].setChecked(node.attributes.inherit);
+                        this.items.items[6].setText(Phlexible.elements.Strings.inherited_teaser);
+
+                        this.items.items[8].show();
+                        this.items.items[9].show();
+                        this.items.items[10].hide();
+                        this.items.items[11].show();
+                        this.items.items[12].setText(Phlexible.elements.Strings.delete_teaser);
+                        this.items.items[12].setIconClass('p-teasers-teaser_delete-icon');
                         this.items.items[12].show();
                     }
-                    else {
-                        return;
-                    }
 
-                    if (this.element.isAllowed('CREATE')) {
-                        this.items.items[2].enable();
-                        this.items.items[3].enable();
-                        this.items.items[4].enable();
-                    }
-                    else {
-                        this.items.items[2].disable();
-                        this.items.items[3].disable();
-                        this.items.items[4].disable();
-                        this.items.items[10].disable();
-                    }
+                    this.items.items[6].show();
+                }
+                else if (type == 'catch') {
+                    this.items.items[0].setText('[Catch]');
+                    this.items.items[0].setIconClass('p-teasers-catch-icon');
 
-                    if (this.element.isAllowed('DELETE')) {
-                        this.items.items[12].enable();
-                    }
-                    else {
-                        this.items.items[12].disable();
-                    }
+                    this.items.items[2].hide();
+                    this.items.items[3].hide();
+                    this.items.items[4].hide();
 
-                    this.showAt([coords[0], coords[1]]);
-                },
-                scope: this.contextMenu
-            }
+                    this.items.items[5].hide();
+                    this.items.items[6].hide();
+
+                    this.items.items[7].hide();
+                    this.items.items[8].hide();
+                    this.items.items[9].hide();
+                    this.items.items[10].hide();
+
+                    this.items.items[11].hide();
+                    this.items.items[12].setText(Phlexible.elements.Strings.delete_catch);
+                    this.items.items[12].setIconClass('p-teasers-catch_delete-icon');
+                    this.items.items[12].show();
+                }
+                else {
+                    return;
+                }
+
+                if (this.element.isAllowed('CREATE')) {
+                    this.items.items[2].enable();
+                    this.items.items[3].enable();
+                    this.items.items[4].enable();
+                }
+                else {
+                    this.items.items[2].disable();
+                    this.items.items[3].disable();
+                    this.items.items[4].disable();
+                    this.items.items[10].disable();
+                }
+
+                if (this.element.isAllowed('DELETE')) {
+                    this.items.items[12].enable();
+                }
+                else {
+                    this.items.items[12].disable();
+                }
+
+                this.showAt([coords[0], coords[1]]);
+            },
+            scope: this.contextMenu
         });
 
         Phlexible.elements.ElementLayoutTree.superclass.initComponent.call(this);
@@ -671,10 +643,8 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
             type: 'root',
             expanded: true,
             listeners: {
-                load: {
-                    fn: this.enable,
-                    scope: this
-                }
+                load: this.enable,
+                scope: this
             }
         });
 

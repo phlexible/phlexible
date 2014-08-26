@@ -605,6 +605,7 @@ class DataController extends Controller
 
         $saver = new DataSaver(
             $this->get('phlexible_element.element_service'),
+            $this->get('phlexible_element.field_mapper'),
             $this->get('phlexible_tree.tree_manager'),
             $this->get('phlexible_teaser.teaser_manager'),
             $this->get('event_dispatcher')

@@ -10,14 +10,16 @@ namespace Phlexible\Bundle\ElementBundle\Controller\Data;
 
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
+use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapperInterface;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
 use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveTeaserDataEvent;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
-use Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
@@ -37,6 +39,11 @@ class DataSaver
      * @var ElementService
      */
     private $elementService;
+
+    /**
+     * @var FieldMapper
+     */
+    private $fieldMapper;
 
     /**
      * @var TreeManager
@@ -60,16 +67,23 @@ class DataSaver
 
     /**
      * @param ElementService           $elementService
+     * @param FieldMapper              $fieldMapper
      * @param TreeManager              $treeManager
      * @param TeaserManagerInterface   $teaserManager
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(ElementService $elementService, TreeManager $treeManager, TeaserManagerInterface $teaserManager, EventDispatcherInterface $dispatcher)
+    public function __construct(
+        ElementService $elementService,
+        FieldMapper $fieldMapper,
+        TreeManager $treeManager,
+        TeaserManagerInterface $teaserManager,
+        EventDispatcherInterface $dispatcher)
     {
         $this->elementService = $elementService;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
         $this->dispatcher = $dispatcher;
+        $this->fieldMapper = $fieldMapper;
     }
 
     /**
@@ -131,7 +145,8 @@ class DataSaver
         $newVersion = $elementVersion->getVersion();
 
         $elementStructure = $this->createStructure($elementVersion, $elementtypeStructure, $values, $language);
-#print_r($elementStructure);die;
+
+        $this->fieldMapper->apply($elementVersion, $elementStructure, $language);
 
         $event = new SaveElementEvent($element, $language, $oldVersion);
         $this->dispatcher->dispatch(ElementEvents::BEFORE_SAVE_ELEMENT, $event);
