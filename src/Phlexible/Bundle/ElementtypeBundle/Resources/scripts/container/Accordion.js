@@ -22,28 +22,30 @@ Phlexible.fields.Accordion = Ext.extend(Ext.Panel, {
             this.tools = [
                 {
                     id: 'right',
-                    hidden: this.allowedItems ? false : true,
+                    hidden: !this.allowedItems,
                     handler: function (event, tool, panel) {
                         var coords = event.getXY();
-
                         var menuConfig = [];
 
-                        //                Phlexible.console.log(this.ownerCt.allowedItems);
                         for (var dsId in this.allowedItems) {
+                            if (!this.allowedItems.hasOwnProperty(dsId)) {
+                                continue;
+                            }
                             var item = this.allowedItems[dsId];
                             disabled = false;
                             if (this.element.prototypes.getCount(dsId, this.id) >= item.max) {
                                 disabled = true;
                             }
                             menuConfig.push({
-                                text: item.title[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+                                text: item.title,
+                                iconCls: 'p-elementtype-container_group-icon',
                                 disabled: disabled,
                                 handler: function (dsId) {
                                     this.expand();
                                     var pt = this.element.prototypes.getPrototype(dsId);
                                     var pos = 0;
                                     var factory = Phlexible.fields.Registry.getFactory(pt.factory);
-                                    this.insert(pos, factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId));
+                                    this.insert(pos, factory(this, pt, {structures: [], values: []}, this.element, this.repeatableId));
                                     this.doLayout();
                                 }.createDelegate(this, [dsId], false)
                             });
@@ -159,14 +161,15 @@ Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, 
                 if (isRepeatable || isOptional) {
                     allowedItems[child.dsId] = {
                         max: maxRepeat,
-                        title: child.labels.fieldlabel
+                        title: child.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')]
                     };
                     has = true;
                 }
             }
         });
-        console.log(allowedItems);
-        config.allowedItems = has ? allowedItems : null;
+        if (has) {
+            config.allowedItems = allowedItems;
+        }
     }
 
     return config;

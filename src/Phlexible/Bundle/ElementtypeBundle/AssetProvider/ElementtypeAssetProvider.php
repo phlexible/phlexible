@@ -170,9 +170,6 @@ class ElementtypeAssetProvider implements AssetProviderInterface
                 '@PhlexibleElementtypeBundle/Resources/scripts/container/ReferenceRoot.js'
             )),
             new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/Checkbox.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/field/CheckboxGroup.js'
-            )),
             new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/DateField.js')),
             new FileAsset($this->locator->locate(
                 '@PhlexibleElementtypeBundle/Resources/scripts/field/DisplayField.js'

@@ -1,6 +1,4 @@
 Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, valueStructure, element, repeatableId) {
-    element.prototypes.incCount(item.dsId);
-
     var store, storeMode;
     if (item.component_function) {
         store = new Ext.data.JsonStore({

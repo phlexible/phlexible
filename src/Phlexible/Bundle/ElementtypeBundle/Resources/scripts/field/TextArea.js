@@ -13,8 +13,6 @@
  */
 
 Phlexible.fields.Registry.addFactory('textarea', function (parentConfig, item, valueStructure, element, repeatableId) {
-    element.prototypes.incCount(item.dsId);
-
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {

@@ -23,6 +23,8 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
 
         this.ids[dsId]++;
 
+        console.log('incCount', dsId, this.ids[dsId]);
+
         return this.ids[dsId];
     },
 

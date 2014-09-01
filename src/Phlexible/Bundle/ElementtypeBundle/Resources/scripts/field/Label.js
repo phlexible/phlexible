@@ -1,6 +1,4 @@
 Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valueStructure, element) {
-    element.prototypes.incCount(item.dsId);
-
     var config = {
         xtype: 'panel',
         html: item.content || item.labels.context_help[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],

@@ -1,6 +1,4 @@
 Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
-    element.prototypes.incCount(item.dsId);
-
     // labels
     var hideLabel;
     var label;

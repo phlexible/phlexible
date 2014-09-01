@@ -1,6 +1,4 @@
 Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item, valueStructure, element, repeatableId) {
-    element.prototypes.incCount(item.dsId);
-
     var store;
     var storeMode;
 

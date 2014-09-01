@@ -204,9 +204,10 @@ Phlexible.elements.ElementDataTabHelper = {
 
 //                Phlexible.console.info('factory: [' + structureNode.type + '] ' + structureNode.name);
             var configFactory = Phlexible.fields.Registry.getFactory(structureNode.type),
-                config = configFactory({}, structureNode, structureNode.valueStructure, element, groupPrefix);
+                config = configFactory(parentConfig, structureNode, structureNode.valueStructure, element, groupPrefix);
 
             // count subItems
+            /*
             if (structureNode.configuration.repeat_max != structureNode.configuration.repeat_min) {
                 if (!config.allowedItems) {
                     config.allowedItems = {};
@@ -223,6 +224,7 @@ Phlexible.elements.ElementDataTabHelper = {
                     //if (formItem.tools && formItem.tools.right) formItem.tools.right.show();
                 }
             }
+            */
 
             configs.push(config);
         }

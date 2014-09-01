@@ -8,8 +8,6 @@ Phlexible.fields.Suggest = Ext.extend(Ext.ux.form.SuperBoxSelect, {
 Ext.reg('elementtypes-field-suggest', Phlexible.fields.Suggest);
 
 Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
-    element.prototypes.incCount(item.dsId);
-
     var store, storeMode = 'local';
     if (item.options) {
         /*

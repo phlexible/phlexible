@@ -95,9 +95,6 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                 }
 
                 if (newPos !== false) {
-//                    Phlexible.console.log('oldPos: ' + oldPos);
-//                    Phlexible.console.log('newPos: ' + newPos);
-
                     parentCmp.items.remove(cmp);
                     parentCmp.items.insert(newPos, cmp);
                 }
@@ -110,9 +107,7 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
             });
         }
 
-// this.isRepeatable &&
         if (this.isMaster && this.ownerCt.isSortable && !this.isDiff) {
-//            Phlexible.console.log('grp parent: isSortable');
             this.el.addClass('p-fields-group-sortable p-sortable-' + this.ownerCt.body.id);
 
             if (Ext.isIE) {
@@ -172,7 +167,7 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
             if (this.minRepeat == cnt) {
                 this.buttonRemove.hide();
             }
-            if (!this.maxRepeat || this.maxRepeat == cnt) {
+            if (!this.maxRepeat || this.maxRepeat >= cnt) {
                 this.buttonAdd.hide();
             }
 
@@ -197,7 +192,7 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                     var pos = this.ownerCt.items.items.indexOf(this);
 
                     var factory = Phlexible.fields.Registry.getFactory('group');
-                    var config = factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId);
+                    var config = factory(this.ownerCt, pt, {structures: [], values: []}, this.element, this.repeatableId);
                     this.ownerCt.insert(pos + 1, config);
 
                     this.ownerCt.doLayout();
@@ -226,19 +221,19 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                         items: [
                             {
                                 text: Phlexible.elementtypes.Strings.add_above,
-                                iconCls: 'p-elementtypes-drop-over',
+                                iconCls: 'p-elementtype-drop_over-icon',
                                 hidden: true,
                                 menu: []
                             },
                             {
                                 text: Phlexible.elementtypes.Strings.add_below,
-                                iconCls: 'p-elementtypes-drop-under',
+                                iconCls: 'p-elementtype-drop_under-icon',
                                 hidden: true,
                                 menu: []
                             },
                             {
                                 text: Phlexible.elementtypes.Strings.add_child,
-                                iconCls: 'p-elementtypes-drop-child',
+                                iconCls: 'p-elementtype-drop_add-icon',
                                 hidden: true,
                                 menu: []
                             }
@@ -251,22 +246,27 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                     menuConfig.items[2].hidden = false;
 
                     for (dsId in this.allowedItems) {
+                        if (!this.allowedItems.hasOwnProperty(dsId)) {
+                            continue;
+                        }
+
                         var item = this.allowedItems[dsId];
                         disabled = false;
                         if (this.element.prototypes.getCount(dsId, this.id) >= item.max) {
                             disabled = true;
                         }
                         menuConfig.items[2].menu.push({
-                            text: item.title[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+                            text: item.title,
+                            iconCls: 'p-elementtype-container_group-icon',
                             disabled: disabled,
-                            handler: function () {
+                            handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
                                 var pos = 0;
                                 var factory = Phlexible.fields.Registry.getFactory(pt.factory);
-                                this.insert(pos, factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId));
+                                this.insert(pos, factory(this, pt, {structures: [], values: []}, this.element, this.repeatableId));
 
                                 this.doLayout();
-                            }.createDelegate(this)
+                            }.createDelegate(this, [dsId], false)
                         });
                     }
                 }
@@ -276,30 +276,36 @@ Phlexible.fields.Group = Ext.extend(Ext.Panel, {
                     menuConfig.items[1].hidden = false;
 
                     for (dsId in this.ownerCt.allowedItems) {
+                        if (!this.ownerCt.allowedItems.hasOwnProperty(dsId)) {
+                            continue;
+                        }
+
                         var item = this.ownerCt.allowedItems[dsId];
                         disabled = false;
                         if (this.element.prototypes.getCount(dsId, this.ownerCt.id) >= item.max) {
                             disabled = true;
                         }
                         menuConfig.items[0].menu.push({
-                            text: item.title[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+                            text: item.title,
+                            iconCls: 'p-elementtype-container_group-icon',
                             disabled: disabled,
                             handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
                                 var pos = this.ownerCt.items.items.indexOf(this);
                                 var factory = Phlexible.fields.Registry.getFactory(pt.factory);
-                                this.ownerCt.insert(pos, factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId));
+                                this.ownerCt.insert(pos, factory(this.ownerCt, pt, {structures: [], values: []}, this.element, this.repeatableId));
                                 this.ownerCt.doLayout();
                             }.createDelegate(this, [dsId], false)
                         });
                         menuConfig.items[1].menu.push({
-                            text: item.title[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+                            text: item.title,
+                            iconCls: 'p-elementtype-container_group-icon',
                             disabled: disabled,
                             handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
                                 var pos = this.ownerCt.items.items.indexOf(this) + 1;
                                 var factory = Phlexible.fields.Registry.getFactory(pt.factory);
-                                this.ownerCt.insert(pos, factory({}, pt, {structures: [], values: []}, this.element, this.repeatableId));
+                                this.ownerCt.insert(pos, factory(this.ownerCt, pt, {structures: [], values: []}, this.element, this.repeatableId));
                                 this.ownerCt.doLayout();
                             }.createDelegate(this, [dsId], false)
                         });
@@ -392,6 +398,7 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
         helpText: item.labels.context_help[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
         isMaster: element.master,
         isDiff: !!element.data.diff,
+        isOptional: isOptional,
         isRepeatable: isRepeatable,
         minRepeat: minRepeat,
         maxRepeat: maxRepeat,
@@ -416,14 +423,15 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
                 if (isRepeatable || isOptional) {
                     allowedItems[child.dsId] = {
                         max: maxRepeat,
-                        title: child.labels.fieldlabel
+                        title: child.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')]
                     };
                     has = true;
                 }
             }
         });
-        console.log(allowedItems);
-        config.allowedItems = has ? allowedItems : null;
+        if (has) {
+            config.allowedItems = allowedItems;
+        }
     }
 
     return config;
