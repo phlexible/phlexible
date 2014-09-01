@@ -68,11 +68,27 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
             if (structureNodes[0].type === 'tab' && structureNodes.length > 1) {
                 targetPanel = {
                     xtype: 'elements-elementcontenttabpanel',
-                    items: []
+                    items: [],
+                    activeTab: 0,
+                    listeners: {
+                        tabchange: function(tabs, tab) {
+                            this.currentTab = tabs.items.indexOf(tab);
+                        },
+                        scope: this
+                    }
                 };
                 lazy = true;
                 noTitle = false;
+                if (this.lastTab && this.lastEtId === this.element.data.properties.et_id) {
+                    targetPanel.activeTab = this.lastTab;
+                }
+                else if (this.element.data.default_content_tab !== undefined) {
+                    targetPanel.activeTab = this.element.data.default_content_tab;
+                    this.lastTab = targetPanel.activeTab;
+                }
             }
+
+            this.lastEtId = this.element.data.properties.et_id;
 
             items = Phlexible.elements.ElementDataTabHelper.loadItems(structureNodes, valueStructure, this, this.element);
 

@@ -372,7 +372,12 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
         var rootNode = this.getEditTreePanel().getRootNode(),
             previewPanel = this.getPreviewPanel();
 
-        previewPanel.element.data = {};
+        previewPanel.element.data = {
+            default_content_tab: rootNode.firstChild.attributes.properties.root.default_content_tab,
+            properties: {
+                et_id: rootNode.firstChild.attributes.element_type_id
+            }
+        };
         previewPanel.element.master = true;
         previewPanel.structure = Phlexible.elements.ElementDataTabHelper.fixStructure(this.processPreviewNodes(rootNode));
         previewPanel.valueStructure = {structures: [], values: {}};

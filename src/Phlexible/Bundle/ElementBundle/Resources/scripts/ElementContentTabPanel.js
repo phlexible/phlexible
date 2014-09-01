@@ -30,19 +30,6 @@ Phlexible.elements.ElementContentTabPanel = Ext.extend(Ext.TabPanel, {
         Phlexible.elements.ElementContentTabPanel.superclass.initComponent.call(this);
     },
 
-    bla: function (element) {
-
-        if (this.currentETID !== null && this.currentActive !== null && element.data.properties.etId == this.currentETID) {
-            this.setActiveTab(this.currentActive);
-        }
-        else if (element.data.default_content_tab) {
-            this.setActiveTab(parseInt(element.data.default_content_tab, 10));
-        }
-        else {
-            this.setActiveTab(0);
-        }
-    },
-
 //    fetchDisabled: function(c) {
 //        if(!c.items) return;
 //

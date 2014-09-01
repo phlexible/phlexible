@@ -530,7 +530,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
             }
         });
 
-        parentNode.appendChild(reference);
+        parentNode.insertBefore(reference, node);
         reference.appendChild(node);
         reference.attributes.editable = false;
         reference.attributes.allowDrop = false;
@@ -542,6 +542,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
             node.attributes.allowDrop = false;
             node.draggable = false;
         });
+        reference.expand();
 
         this.fireEvent('transform', this, node)
     },
