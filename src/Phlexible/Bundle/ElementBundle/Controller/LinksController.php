@@ -78,114 +78,90 @@ class LinksController extends Controller
         // TODO: switch to master language of element
         $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
 
-        $db = $this->dbPool->default;
-
         $language = $request->get('language', $defaultLanguage);
         $query = $request->get('query');
         $siterootId = $request->get('siteroot_id');
         $allowTid = $request->get('allow_tid');
         $allowIntrasiteroot = $request->get('allow_intrasiteroot');
         $elementTypeIds = $request->get('element_type_ids', '');
+
+        $conn = $this->get('doctrine.dbal.default_connection');
+
+        $qb = $conn->createQueryBuilder();
+
         if ($elementTypeIds) {
             $elementTypeIds = explode(',', $elementTypeIds);
             foreach ($elementTypeIds as $key => $elementTypeId) {
-                $elementTypeIds[$key] = $db->quote($elementTypeId);
+                $elementTypeIds[$key] = $qb->expr()->literal($elementTypeId);
             }
             $elementTypeIds = implode(',', $elementTypeIds);
         }
 
-        $where = false;
+        $or = null;
         if (!$allowTid || !$allowIntrasiteroot) {
-            $where = array();
-
             if ($allowTid) {
-                $where[] = 'et.siteroot_id = ' . $db->quote($siterootId);
+                $where[] = $qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($siterootId));
             }
 
             if ($allowIntrasiteroot) {
-                $where[] = 'et.siteroot_id != ' . $db->quote($siterootId);
+                $where[] = $qb->expr()->neq('et.siteroot_id', $qb->expr()->literal($siterootId));
             }
-            $where = implode(' OR ', $where);
+
+            $or = $qb->expr()->orX($where);
         }
 
-        $select = $db->select()
-            ->distinct()
-            ->from(
-                array('et' => $db->prefix . 'element_tree'),
-                array('id', 'eid', 'siteroot_id')
-            )
-            ->join(
-                array('evt' => $db->prefix . 'element_version_titles'),
-                'evt.eid = et.eid AND language = ' . $db->quote($language),
-                array('backend AS title')
-            )
-            ->join(
-                array('e' => $db->prefix . 'element'),
-                'evt.eid = e.eid AND evt.version = e.latest_version',
-                array()
-            )
-            ->where('et.id = ?', $query)
-            ->order('title ASC');
+        $qb
+            ->select('t.id', 't.type_id AS eid', 't.siteroot_id', 'evmf.backend AS title')
+            ->from('tree', 't')
+            ->join('t', 'element', 'e', 't.type_id = e.eid')
+            ->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
+            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = ' . $qb->expr()->literal($language))
+            ->where($qb->expr()->eq('t.id', $qb->expr()->literal($query)))
+            ->orderBy('title', 'ASC');
 
-        if ($where) {
-            $select->where($where);
+        if ($or) {
+            $qb->andWhere($or);
         }
 
         if ($elementTypeIds) {
-            $select->join(
-                array('ev' => $db->prefix . 'element_version'),
-                'et.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')',
-                array()
-            );
+            $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')');
         }
 
-        $results1 = $db->fetchAssoc($select);
+        $results1 = $conn->fetchAll($qb->getSQL());
 
-        $select = $db->select()
-            ->distinct()
-            ->from(
-                array('et' => $db->prefix . 'element_tree'),
-                array('id', 'eid', 'siteroot_id')
-            )
-            ->join(
-                array('evt' => $db->prefix . 'element_version_titles'),
-                'evt.eid = et.eid AND language = ' . $db->quote($language),
-                array('backend AS title')
-            )
-            ->join(
-                array('e' => $db->prefix . 'element'),
-                'evt.eid = e.eid AND evt.version = e.latest_version',
-                array()
-            )
-            ->where('evt.backend LIKE ?', '%' . $query . '%')
-            ->order('title ASC');
+        $qb = $conn->createQueryBuilder();
+        $qb
+            ->select('t.id', 't.type_id AS eid', 't.siteroot_id', 'evmf.backend AS title')
+            ->from('tree', 't')
+            ->join('t', 'element', 'e', 't.type_id = e.eid')
+            ->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
+            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = ' . $qb->expr()->literal($language))
+            ->where($qb->expr()->like('evmf.backend', $qb->expr()->literal("%$query%")))
+            ->orderBy('title', 'ASC');
 
-        if ($where) {
-            $select->where($where);
+        if ($or) {
+            $qb->andWhere($or);
         }
 
         if ($elementTypeIds) {
-            $select->join(
-                array('ev' => $db->prefix . 'element_version'),
-                'et.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')',
-                array()
-            );
+            $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')');
         }
 
-        $results2 = $db->fetchAssoc($select);
+        $results2 = $conn->fetchAll($qb->getSQL());
 
         $results = array_merge($results1, $results2);
 
-        $siterootManager = $container->siterootManager;
-        $siteroots = $siterootManager->getAllSiteRoots();
+        $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
         $data = array();
         foreach ($results as $row) {
+            $siteroot = $siterootManager->find($row['siteroot_id']);
             $data[] = array(
-                'id'    => ($siterootId == $row['siteroot_id'] ? 'id' : 'sr') . ':' . $row['id'],
+                'id'    => $row['id'],
+                'type'  => ($siterootId === $row['siteroot_id'] ? 'internal' : 'intrasiteroot'),
                 'tid'   => $row['id'],
                 'eid'   => $row['eid'],
-                'title' => $siteroots[$row['siteroot_id']]->getTitle($language)
+                'title' => $siteroot->getTitle($language)
                     . ' :: ' . $row['title'] . ' [' . $row['id'] . ']',
             );
         }

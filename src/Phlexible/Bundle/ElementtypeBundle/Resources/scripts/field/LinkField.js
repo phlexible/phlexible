@@ -7,8 +7,8 @@ Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, value
         xtype: 'linkfield',
         hiddenName: config.name,
 
-        value: item.displayContent,
-        hiddenValue: item.rawContent ? item.rawContent : (item.default_content ? item.default_content : ''),
+        //value: item.displayContent,
+        hiddenValue: config.value,
         width: (parseInt(item.configuration.width, 10) || 200),
 
         allowed: {
@@ -27,6 +27,18 @@ Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, value
         supportsUnlink: {unlinkEl: 'trigger'},
         supportsRepeatable: true
     });
+
+    if (config.value) {
+        var value = Ext.decode(config.value);
+        config.hiddenValue = value;
+        if (value.type === 'external') {
+            config.value = value.url;
+        } else if (value.type === 'mailto') {
+            config.value = value.recipient;
+        } else {
+            config.value = value.tid;
+        }
+    }
 
     delete config.name;
 

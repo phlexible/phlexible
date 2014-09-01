@@ -38,106 +38,67 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
             this.allowed.tid = this.allowed.eid;
 
         }
-        var result,
-            selected = 'no',
+        var selected = 'no',
             tidValue = null,
             eidValue = null,
             intrasiterootValue = null,
             urlValue = null,
             mailtoValue = null,
             newWindowValue = null,
-            targetLanguageValue = null,
-            legacy = true;
+            targetLanguageValue = null;
 
         if (this.value) {
-            if (result = this.value.match(/^id\:(\d+)(,\d+)?(;newWindow)?$/)) {
-                selected = 'tid';
-                tidValue = result[1];
-                if (result[2]) {
-                    eidValue = result[2].substr(1);
+            if (this.value.type === 'internal') {
+                selected = 'internal';
+                tidValue = this.value.tid;
+                if (this.value.eid) {
+                    eidValue = this.value.eid;
                 }
-                if (result[3]) {
+                if (this.value.language) {
+                    targetLanguageValue = this.value.language;
+                }
+                if (this.value.newWindow) {
                     newWindowValue = true;
                 }
-                legacy = false;
                 Phlexible.console.info('tid: ' + tidValue);
                 Phlexible.console.info('eid: ' + eidValue);
+                Phlexible.console.info('language: ' + targetLanguageValue);
                 Phlexible.console.info('newWindow: ' + newWindowValue);
             }
-            else if (result = this.value.match(/^sr:(\d+)(,\d+)?(;newWindow)?$/)) {
+            else if (this.value.type === 'intrasiteroot') {
                 selected = 'intrasiteroot';
-                intrasiterootValue = result[1];
-                if (result[2]) {
-                    eidValue = result[2].substr(1);
+                intrasiterootValue = this.value.tid;
+                if (this.value.eid) {
+                    eidValue = this.value.eid;
                 }
-                if (result[3]) {
+                if (this.value.language) {
+                    targetLanguageValue = this.value.language;
+                }
+                if (this.value.newWindow) {
                     newWindowValue = true;
                 }
-                legacy = false;
                 Phlexible.console.info('intrasiteroot: ' + intrasiterootValue);
                 Phlexible.console.info('eid: ' + eidValue);
+                Phlexible.console.info('language: ' + targetLanguageValue);
                 Phlexible.console.info('newWindow: ' + newWindowValue);
             }
-            else if (result = this.value.match(/^(newWindow;)?([a-z][a-z];)?(http[s]{0,1}:\/\/.*?)$/)) {
-                selected = 'url';
-                urlValue = result[3];
-                if (result[1]) {
+            else if (this.value.type === 'external') {
+                selected = 'external';
+                urlValue = this.value.url;
+                if (this.value.newWindow) {
                     newWindowValue = true;
                 }
-                if (result[2]) {
-                    targetLanguageValue = result[2].substr(0, 2);
+                if (this.value.language) {
+                    targetLanguageValue = this.value.language;
                 }
-                legacy = false;
                 Phlexible.console.info('url: ' + urlValue);
+                Phlexible.console.info('language: ' + targetLanguageValue);
                 Phlexible.console.info('newWindow: ' + newWindowValue);
-                Phlexible.console.info('target: ' + targetLanguageValue);
             }
-            else if (result = this.value.match(/^mailto:(.*)$/)) {
+            else if (this.value.type === 'mailto') {
                 selected = 'mailto';
-                mailtoValue = result[1];
-                Phlexible.console.info(mailtoValue);
-            }
-
-            if (legacy) {
-                // legacy
-                if (result = this.value.match(/^id\:(\d+)(;1)?$/)) {
-                    selected = 'tid';
-                    tidValue = result[1];
-                    if (result[2]) {
-                        newWindowValue = true;
-                    }
-                    Phlexible.console.info('[LEGACY] tid: ' + tidValue);
-                    Phlexible.console.info('[LEGACY] eid: ' + eidValue);
-                    Phlexible.console.info('[LEGACY] newWindow: ' + newWindowValue);
-                }
-                else if (result = this.value.match(/^sr:(\d+)(;1)?$/)) {
-                    selected = 'intrasiteroot';
-                    intrasiterootValue = result[1];
-                    if (result[2]) {
-                        newWindowValue = true;
-                    }
-                    Phlexible.console.info('[LEGACY] intrasiteroot: ' + intrasiterootValue);
-                    Phlexible.console.info('[LEGACY] eid: ' + eidValue);
-                    Phlexible.console.info('[LEGACY] newWindow: ' + newWindowValue);
-                }
-                else if (result = this.value.match(/^(http[s]{0,1}:\/\/.*?)(;1)?(;[a-z][a-z])?$/)) {
-                    selected = 'url';
-                    urlValue = result[1];
-                    if (result[2]) {
-                        newWindowValue = true;
-                    }
-                    if (result[3]) {
-                        targetLanguageValue = result[3].substr(1, 2);
-                    }
-                    Phlexible.console.info('[LEGACY] url: ' + urlValue);
-                    Phlexible.console.info('[LEGACY] newWindow: ' + newWindowValue);
-                    Phlexible.console.info('[LEGACY] target: ' + targetLanguageValue);
-                }
-                else if (result = this.value.match(/^mailto:(.*)$/)) {
-                    selected = 'mailto';
-                    mailtoValue = result[1];
-                    Phlexible.console.info('[LEGACY] ' + mailtoValue);
-                }
+                mailtoValue = this.value.recipient;
+                Phlexible.console.info('recipient', mailtoValue);
             }
         }
 
@@ -147,13 +108,13 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
             typeValues.push(['no', this.strings.link_no_link]);
         }
         if (this.allowed.tid) {
-            typeValues.push(['tid', this.strings.link_eid]);
+            typeValues.push(['internal', this.strings.link_tid]);
         }
         if (this.allowed.intrasiteroot) {
             typeValues.push(['intrasiteroot', this.strings.link_intrasiteroot]);
         }
         if (this.allowed.url) {
-            typeValues.push(['url', this.strings.link_url]);
+            typeValues.push(['external', this.strings.link_url]);
         }
         if (this.allowed.mailto) {
             typeValues.push(['mailto', this.strings.link_mailto]);
@@ -167,6 +128,8 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                 selected = typeValues[1][0];
             }
         }
+
+        var languages = Phlexible.Config.get('set.language.frontend');
 
         this.items = [
             {
@@ -193,60 +156,58 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         triggerAction: 'all',
                         selectOnFocus: true,
                         listeners: {
-                            select: {
-                                fn: function (c, r, rowIndex) {
-                                    // update visibility
-                                    var formPanel = this.getComponent(0);
+                            select: function (c, r, rowIndex) {
+                                // update visibility
+                                var formPanel = this.getComponent(0);
 
-                                    switch (r.data.key) {
-                                        case 'no':
-                                            formPanel.getComponent(1).hide();
-                                            formPanel.getComponent(2).hide();
-                                            formPanel.getComponent(3).hide();
-                                            formPanel.getComponent(4).hide();
-                                            formPanel.getComponent(5).hide();
-                                            formPanel.getComponent(6).hide();
-                                            break;
+                                switch (r.data.key) {
+                                    case 'no':
+                                        formPanel.getComponent(1).hide();
+                                        formPanel.getComponent(2).hide();
+                                        formPanel.getComponent(3).hide();
+                                        formPanel.getComponent(4).hide();
+                                        formPanel.getComponent(5).hide();
+                                        formPanel.getComponent(6).hide();
+                                        break;
 
-                                        case 'tid':
-                                            formPanel.getComponent(1).show();
-                                            formPanel.getComponent(2).hide();
-                                            formPanel.getComponent(3).hide();
-                                            if (!this.hideNewWindow) formPanel.getComponent(4).show();
-                                            formPanel.getComponent(5).hide();
-                                            formPanel.getComponent(6).hide();
-                                            break;
+                                    case 'internal':
+                                        formPanel.getComponent(1).show();
+                                        formPanel.getComponent(2).hide();
+                                        formPanel.getComponent(3).hide();
+                                        formPanel.getComponent(4).setVisible(!this.hideNewWindow);
+                                        formPanel.getComponent(5).show();
+                                        formPanel.getComponent(6).hide();
+                                        break;
 
-                                        case 'intrasiteroot':
-                                            formPanel.getComponent(1).hide();
-                                            formPanel.getComponent(2).show();
-                                            formPanel.getComponent(3).hide();
-                                            if (!this.hideNewWindow) formPanel.getComponent(4).show();
-                                            formPanel.getComponent(5).hide();
-                                            formPanel.getComponent(6).hide();
-                                            break;
+                                    case 'intrasiteroot':
+                                        formPanel.getComponent(1).hide();
+                                        formPanel.getComponent(2).show();
+                                        formPanel.getComponent(3).hide();
+                                        formPanel.getComponent(4).setVisible(!this.hideNewWindow);
+                                        formPanel.getComponent(5).show();
+                                        formPanel.getComponent(6).hide();
+                                        break;
 
-                                        case 'url':
-                                            formPanel.getComponent(1).hide();
-                                            formPanel.getComponent(2).hide();
-                                            formPanel.getComponent(3).show();
-                                            if (!this.hideNewWindow) formPanel.getComponent(4).show();
-                                            if (!this.hideLanguage) formPanel.getComponent(5).show();
-                                            formPanel.getComponent(6).hide();
-                                            break;
+                                    case 'external':
+                                        formPanel.getComponent(1).hide();
+                                        formPanel.getComponent(2).hide();
+                                        formPanel.getComponent(3).show();
+                                        formPanel.getComponent(4).setVisible(!this.hideNewWindow);
+                                        formPanel.getComponent(5).setVisible(!this.hideLanguage);
+                                        formPanel.getComponent(6).hide();
+                                        break;
 
-                                        case 'mailto':
-                                            formPanel.getComponent(1).hide();
-                                            formPanel.getComponent(2).hide();
-                                            formPanel.getComponent(3).hide();
-                                            formPanel.getComponent(4).hide();
-                                            formPanel.getComponent(5).hide();
-                                            formPanel.getComponent(6).show();
-                                            break;
-                                    }
-                                },
-                                scope: this
-                            }
+                                    case 'mailto':
+                                        formPanel.getComponent(1).hide();
+                                        formPanel.getComponent(2).hide();
+                                        formPanel.getComponent(3).hide();
+                                        formPanel.getComponent(4).hide();
+                                        formPanel.getComponent(5).hide();
+                                        formPanel.getComponent(6).show();
+                                        break;
+                                }
+                            },
+                            scope: this
                         }
                     },
                     {
@@ -254,7 +215,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         name: 'tid',
                         fieldLabel: this.strings.tid,
                         siteroot_id: this.siteroot_id,
-                        hidden: selected !== 'tid',
+                        hidden: selected !== 'internal',
                         width: 300,
                         listWidth: 283,
                         treeWidth: 283,
@@ -282,7 +243,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         fieldLabel: this.strings.url,
                         helpText: this.strings.link_url_help,
                         vtype: 'url',
-                        hidden: selected !== 'url',
+                        hidden: selected !== 'external',
                         width: 300,
                         value: urlValue
                     },
@@ -293,22 +254,20 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         labelSeparator: '',
                         boxLabel: this.strings.link_new_window,
                         vtype: 'url',
-                        hidden: selected !== 'tid' && selected !== 'intrasiteroot' && selected !== 'url',
                         width: 300,
                         checked: newWindowValue,
-                        hidden: this.hideNewWindow
+                        hidden: this.hideNewWindow || selected === 'mailto'
                     },
                     {
                         xtype: 'iconcombo',
                         hiddenName: 'target_language',
                         fieldLabel: this.strings.language,
                         helpText: this.strings.link_language_help,
-                        emptyText: this.strings.linkl_language_empty,
-                        hidden: selected !== 'url',
+                        emptyText: this.strings.link_language_empty,
                         width: 300,
                         store: new Ext.data.SimpleStore({
                             fields: ['key', 'title', 'icon'],
-                            data: Phlexible.Config.get('set.language.frontend')
+                            data: languages
                         }),
                         valueField: 'key',
                         displayField: 'title',
@@ -318,7 +277,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         triggerAction: 'all',
                         selectOnFocus: true,
                         value: targetLanguageValue,
-                        hidden: this.hideLanguage
+                        hidden: this.hideLanguage || selected === 'mailto'
                     },
                     {
                         xtype: 'textfield',
@@ -337,75 +296,85 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
         this.buttons = [
             {
                 text: this.strings.cancel,
-                handler: function () {
-                    this.close();
-                },
+                handler: this.close,
                 scope: this
             },
             {
                 text: this.strings.set,
                 handler: function () {
-                    var formPanel = this.getComponent(0);
-                    var values = formPanel.getForm().getValues();
-                    var display = '', value = '';
+                    var formPanel = this.getComponent(0),
+                        values = formPanel.getForm().getValues(),
+                        display = '',
+                        value = {},
+                        field, node;
 
                     if (values.type === 'no') {
                         display = '';
                         value = '';
-                    } else if (values.type === 'tid') {
-                        var field = formPanel.getComponent(1);
+                    } else if (values.type === 'internal') {
+                        field = formPanel.getComponent(1);
                         if (!field.isValid()) {
                             return;
                         }
                         display = field.getRawValue();
-                        value = 'id:' + field.getValue();
-                        var n = field.tree.getNodeById(field.getValue());
-                        if (n) {
-                            value += ',' + n.attributes.eid;
-                        }
-                        if (formPanel.getComponent(4).getValue()) {
-                            value += ';newWindow';
-                        }
-                    } else if (values.type === 'intrasiteroot') {
-                        var field = formPanel.getComponent(2);
-                        if (!field.isValid()) {
-                            return;
-                        }
-                        display = field.getRawValue();
-                        value = 'sr:' + field.getValue();
-                        var n = field.tree.getNodeById(field.getValue());
-                        if (n) {
-                            value += ',' + n.attributes.eid;
-                        }
-                        if (formPanel.getComponent(4).getValue()) {
-                            value += ';newWindow';
-                        }
-                    } else if (values.type === 'url') {
-                        var field = formPanel.getComponent(3);
-                        if (!field.isValid()) {
-                            return;
-                        }
-                        display = value = field.getValue();
-                        value = '';
-                        if (formPanel.getComponent(4).getValue()) {
-                            value += 'newWindow;';
+                        value.type = 'internal';
+                        value.tid = field.getValue();
+                        node = field.tree.getNodeById(field.getValue());
+                        if (node) {
+                            value.eid = node.attributes.eid;
                         }
                         if (formPanel.getComponent(5).getValue()) {
-                            value += formPanel.getComponent(5).getValue() + ';';
+                            value.language = formPanel.getComponent(5).getValue() + ';';
                         }
-                        value += field.getValue();
-                    } else if (values.type === 'mailto') {
-                        var field = formPanel.getComponent(6);
+                        if (formPanel.getComponent(4).getValue()) {
+                            value.newWindow = true;
+                        }
+                    } else if (values.type === 'intrasiteroot') {
+                        field = formPanel.getComponent(2);
                         if (!field.isValid()) {
                             return;
                         }
-                        display = value = 'mailto:' + field.getValue();
+                        display = field.getRawValue();
+                        value.type = 'intrasiteroot';
+                        value.tid = field.getValue();
+                        node = field.tree.getNodeById(field.getValue());
+                        if (node) {
+                            value.eid = node.attributes.eid;
+                        }
+                        if (formPanel.getComponent(5).getValue()) {
+                            value.language = formPanel.getComponent(5).getValue() + ';';
+                        }
+                        if (formPanel.getComponent(4).getValue()) {
+                            value.newWindow = true;
+                        }
+                    } else if (values.type === 'external') {
+                        field = formPanel.getComponent(3);
+                        if (!field.isValid()) {
+                            return;
+                        }
+                        display = field.getValue();
+                        value.type = 'external';
+                        value.url = display;
+                        if (formPanel.getComponent(5).getValue()) {
+                            value.language = formPanel.getComponent(5).getValue() + ';';
+                        }
+                        if (formPanel.getComponent(4).getValue()) {
+                            value.newWindow = true;
+                        }
+                    } else if (values.type === 'mailto') {
+                        field = formPanel.getComponent(6);
+                        if (!field.isValid()) {
+                            return;
+                        }
+                        display = 'mailto:' + field.getValue();
+                        value.type = 'mailto';
+                        value.recipient = field.getValue();
                     } else {
                         return;
                     }
 
-                    Phlexible.console.info(display);
-                    Phlexible.console.info(value);
+                    Phlexible.console.info('display', display);
+                    Phlexible.console.info('value', value);
                     this.fireEvent('set', value, display);
                     this.close();
                 },
@@ -417,33 +386,23 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
 
         if (selected === 'tid') {
             this.getComponent(0).getComponent(1).tree.loader.addListener({
-                load: {
-                    fn: function (loader, node) {
-                        this.enable();
-                    },
-                    scope: this
+                load: function (loader, node) {
+                    this.enable();
                 },
-                loadexception: {
-                    fn: function (loader, node) {
-                        this.enable();
-                    },
-                    scope: this
-                }
+                loadexception: function (loader, node) {
+                    this.enable();
+                },
+                scope: this
             });
         } else if (selected === 'intrasiteroot') {
             this.getComponent(0).getComponent(2).tree.loader.addListener({
-                load: {
-                    fn: function (loader, node) {
-                        this.enable();
-                    },
-                    scope: this
+                load: function (loader, node) {
+                    this.enable();
                 },
-                loadexception: {
-                    fn: function (loader, node) {
-                        this.enable();
-                    },
-                    scope: this
-                }
+                loadexception: function (loader, node) {
+                    this.enable();
+                },
+                scope: this
             });
         } else {
             this.enable();

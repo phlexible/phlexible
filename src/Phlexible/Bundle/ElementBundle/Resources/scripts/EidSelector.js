@@ -63,7 +63,7 @@ Phlexible.elements.EidSelector = Ext.extend(Ext.ux.TreeSelector, {
             var url = Phlexible.Router.generate('tree_link');
             var rootText = 'Siteroots';
         } else {
-            var url = Phlexible.Router.generate('tree_link_element');
+            var url = Phlexible.Router.generate('tree_link_internal');
             var rootText = 'This Siteroot';
         }
 

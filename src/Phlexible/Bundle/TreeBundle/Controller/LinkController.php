@@ -234,9 +234,9 @@ class LinkController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/element", name="tree_link_element")
+     * @Route("/internal", name="tree_link_internal")
      */
-    public function linkelementAction(Request $request)
+    public function linkInternalAction(Request $request)
     {
         $siterootId = $request->get('siteroot_id');
         $id = $request->get('node', 'root');
@@ -301,9 +301,9 @@ class LinkController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/intrasiteroot", name="tree_linkintrasiteroot")
+     * @Route("/intrasiteroot", name="tree_link_intrasiteroot")
      */
-    public function linkintrasiterootAction(Request $request)
+    public function linkIntrasiterootAction(Request $request)
     {
         $siterootId = $request->get('siteroot_id');
         $id = $request->get('node', 'root');
@@ -340,20 +340,25 @@ class LinkController extends Controller
             $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
             $siteroots = $siterootManager->findAll();
 
-            if ($siterootId !== null) {
-                unset($siteroots[$siterootId]);
+            if ($siterootId) {
+                foreach ($siteroots as $index => $siteroot) {
+                    if ($siteroot->getId() === $siterootId) {
+                        unset($siteroots[$index]);
+                        break;
+                    }
+                }
             }
 
             $data = array();
-            foreach ($siteroots as $siteRootID => $siteRoot) {
-                $tree = $treeManager->getBySiteRootID($siteRootID);
+            foreach ($siteroots as $siteroot) {
+                $tree = $treeManager->getBySiteRootID($siteroot->getId());
                 $rootNode = $tree->getRoot();
 
                 $element = $elementService->findElement($rootNode->getTypeId());
                 $elementVersion = $elementService->findLatestElementVersion($element);
 
                 $children = false;
-                if ($targetTree && $siteRootID === $targetTree->getSiterootId()) {
+                if ($targetTree && $siteroot->getId() === $targetTree->getSiterootId()) {
                     if (!count($elementtypeIds)) {
                         $mode = !$targetTid ? self::MODE_NOET_NOTARGET : self::MODE_NOET_TARGET;
 
@@ -373,7 +378,7 @@ class LinkController extends Controller
                 $data[] = array(
                     'id'       => $rootNode->getID(),
                     'eid'      => $rootNode->getTypeId(),
-                    'text'     => $siteRoot->getTitle(),
+                    'text'     => $siteroot->getTitle(),
                     'icon'     => $iconResolver->resolveTreeNode($rootNode, $language),
                     'children' => $children,
                     'leaf'     => !$rootNode->hasChildren(),

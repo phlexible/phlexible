@@ -40,7 +40,7 @@ Ext.ux.form.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
             root: 'results',
             totalProperty: 'totalCount',
             id: 'id',
-            fields: ['id', 'eid', 'tid', 'title']
+            fields: ['id', 'type', 'eid', 'tid', 'title']
         });
 
         this.addListener({
@@ -72,6 +72,42 @@ Ext.ux.form.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
         this.store.baseParams.element_type_ids = elementTypeIds;
     },
 
+    initValue: function() {
+        Ext.ux.form.LinkField.superclass.initValue.call(this);
+
+        this.setHiddenFieldValue(this.hiddenValue);
+    },
+
+    setHiddenValue: function(value) {
+        this.hiddenValue = value;
+        this.setHiddenFieldValue(value);
+    },
+
+    setHiddenFieldValue: function(value) {
+        if (this.hiddenField) {
+            if (value) {
+                this.hiddenField.value = Ext.encode(value);
+            } else {
+                this.hiddenField.value = '';
+            }
+        }
+    },
+
+    setValue: function(value) {
+        Ext.ux.form.LinkField.superclass.setValue.call(this, value);
+
+        this.setHiddenFieldValue(this.hiddenValue);
+    },
+
+    getValue: function() {
+        var value = Ext.ux.form.LinkField.superclass.getValue.call(this);
+        return value;
+        if (value) {
+            value = Ext.decode(value);
+        }
+        return value;
+    },
+
     validateValue: function (value) {
         var hiddenValue = this.hiddenValue;
 
@@ -98,20 +134,17 @@ Ext.ux.form.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
             }
         }
 
-        var dummy;
-        if (hiddenValue.match(/^id:\d+(,\d+)?(;newWindow)?$/)) {
+        if (hiddenValue.type === 'internal') {
             return this.allowed.tid;
         }
-        if (hiddenValue.match(/^sr:\d+(,\d+)?(;newWindow)?$/)) {
+        else if (hiddenValue.type === 'intrasiteroot') {
             return this.allowed.intrasiteroot;
         }
-        dummy = hiddenValue.match(/^(newWindow;)?([a-z][a-z];)?(http[s]{0,1}:\/\/.*)$/);
-        if (dummy) {
-            return Ext.form.VTypes.url(dummy[3]) && this.allowed.url;
+        else if (hiddenValue.type === 'external') {
+            return Ext.form.VTypes.url(hiddenValue.url) && this.allowed.url;
         }
-        dummy = hiddenValue.match(/^mailto:(.*)$/);
-        if (dummy) {
-            return Ext.form.VTypes.email(dummy[1]) && this.allowed.mailto;
+        else if (hiddenValue.type === 'mailto') {
+            return Ext.form.VTypes.email(hiddenValue.recipient) && this.allowed.mailto;
         }
 
         return false;
@@ -120,7 +153,11 @@ Ext.ux.form.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
     onSelect: function (record, index) {
         Ext.ux.form.LinkField.superclass.onSelect.call(this, record, index);
 
-        this.hiddenValue = this.getValue();
+        this.setHiddenValue({
+            type: record.data.type,
+            tid: record.data.tid,
+            eid: record.data.eid
+        });
     },
 
     onClear: function () {
@@ -150,9 +187,9 @@ Ext.ux.form.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
                         return;
                     }
 
-                    this.hiddenValue = value;
                     this.setValue(value);
                     this.setRawValue(display);
+                    this.setHiddenValue(value);
 
                     this.fireEvent('set', value, display);
                 },
