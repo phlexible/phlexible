@@ -18,7 +18,7 @@ Phlexible.elementtypes.ElementtypeUsage = Ext.extend(Ext.grid.GridPanel, {
                 field: 'title',
                 direction: 'ASC'
             },
-            fields: ['type', 'id', 'title', 'latest_version']
+            fields: ['type', 'as', 'id', 'title', 'latest_version']
         });
 
         this.columns = [
@@ -27,6 +27,12 @@ Phlexible.elementtypes.ElementtypeUsage = Ext.extend(Ext.grid.GridPanel, {
                 width: 100,
                 sortable: true,
                 dataIndex: 'type'
+            },
+            {
+                header: '_as',
+                width: 100,
+                sortable: true,
+                dataIndex: 'as'
             },
             {
                 header: 'ID',

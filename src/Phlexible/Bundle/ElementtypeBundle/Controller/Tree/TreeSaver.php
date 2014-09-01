@@ -100,12 +100,18 @@ class TreeSaver
             ->setDefaultTab($defaultTab)
             ->setLatestVersion($elementtypeVersion->getVersion());
 
-        $fieldData = $rootData['children'];
-        $elementtypeStructure = $this->buildElementtypeStructure($elementtypeVersion, $rootType, $rootDsId, $user, $fieldData);
+        $elementtypeStructure = null;
+        if (isset($rootData['children'])) {
+            $fieldData = $rootData['children'];
+            $elementtypeStructure = $this->buildElementtypeStructure($elementtypeVersion, $rootType, $rootDsId, $user, $fieldData);
+        }
 
         $this->elementtypeService->updateElementtype($elementtype, false);
         $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, false);
-        $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, false);
+
+        if ($elementtypeStructure) {
+            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, false);
+        }
 
         /*
         // update elementtypes that use this elementtype as reference

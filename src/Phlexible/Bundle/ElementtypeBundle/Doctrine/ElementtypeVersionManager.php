@@ -119,7 +119,19 @@ class ElementtypeVersionManager implements ElementtypeVersionManagerInterface
         $this->dispatcher->dispatch(ElementtypeEvents::VERSION_CREATE, $event);
 
         // post message
-        $message = ElementtypesMessage::create('Element Type Version ' . $elementtypeVersion->getVersion() . ' updated.');
+        $message = ElementtypesMessage::create('Element type ' . $elementtypeVersion->getElementtype()->getId() . ' version ' . $elementtypeVersion->getVersion() . ' updated.');
         $this->messageService->post($message);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteElementtypeVersion(ElementtypeVersion $elementtypeVersion, $flush = true)
+    {
+        $this->entityManager->remove($elementtypeVersion);
+
+        if ($flush) {
+            $this->entityManager->flush();
+        }
     }
 }

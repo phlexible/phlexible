@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Event;
 
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 
 /**
  * Elementtype event
@@ -17,6 +18,9 @@ use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
  */
 class ElementtypeUsageEvent extends ElementtypeEvent
 {
+    /**
+     * @var Usage[]
+     */
     private $usage = array();
 
     /**
@@ -28,18 +32,15 @@ class ElementtypeUsageEvent extends ElementtypeEvent
     }
 
     /**
-     * @param string $type
-     * @param string $id
-     * @param string $title
-     * @param int    $latestVersion
+     * @param Usage $usage
      */
-    public function addUsage($type, $id, $title, $latestVersion = null)
+    public function addUsage(Usage $usage)
     {
-        $this->usage[] = array('type' => $type, 'id' => $id, 'title' => $title, 'latest_version' => $latestVersion);
+        $this->usage[$usage->getId()] = $usage;
     }
 
     /**
-     * @return array
+     * @return Usage[]
      */
     public function getUsage()
     {

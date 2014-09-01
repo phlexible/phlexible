@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
+use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Repository\ElementtypeStructureNodeRepository;
@@ -90,6 +91,40 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
     }
 
     /**
+     * @param Elementtype $referenceElementtype
+     *
+     * @return ElementtypeStructureNode[]
+     */
+    public function findNodesByReferenceElementtype(Elementtype $referenceElementtype)
+    {
+        $nodes = $this->getStructureNodeRepository()->findBy(
+            array(
+                'referenceElementtype' => $referenceElementtype,
+                'referenceVersion'     => $referenceElementtype->getLatestVersion()
+            )
+        );
+
+        return $nodes;
+    }
+
+    /**
+     * @param ElementtypeVersion $referenceElementtypeVersion
+     *
+     * @return ElementtypeStructureNode[]
+     */
+    public function findNodesByReferenceElementtypeVersion(ElementtypeVersion $referenceElementtypeVersion)
+    {
+        $nodes = $this->getStructureNodeRepository()->findBy(
+            array(
+                'referenceElementtype' => $referenceElementtypeVersion->getElementtype(),
+                'referenceVersion'     => $referenceElementtypeVersion->getVersion()
+            )
+        );
+
+        return $nodes;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure, $flush = true)
@@ -120,6 +155,28 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
 
         $event = new ElementtypeStructureEvent($elementtypeStructure);
         $this->dispatcher->dispatch(ElementtypeEvents::STRUCTURE_CREATE, $event);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteElementtypeStructure(ElementtypeStructure $elementtypeStructure, $flush = true)
+    {
+        if (!$elementtypeStructure->getRootNode()) {
+            return;
+        }
+
+        $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+
+        foreach ($rii as $node) {
+            /* @var $node ElementtypeStructureNode */
+
+            $this->entityManager->remove($node);
+        }
+
+        if ($flush) {
+            $this->entityManager->flush();
+        }
     }
 
     /**

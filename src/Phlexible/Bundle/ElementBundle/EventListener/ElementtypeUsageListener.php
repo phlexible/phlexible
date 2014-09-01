@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
+use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -45,28 +46,31 @@ class ElementtypeUsageListener
     public function onElementtypeUsage(ElementtypeUsageEvent $event)
     {
         $elementtypeId = $event->getElementtype()->getId();
-        $language = $this->securityContext->getToken()->getUser()->getInterfaceLanguage();
+        $language = $this->securityContext->getToken()->getUser()->getInterfaceLanguage('de');
 
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('ev.eid', 'MAX(ev.elementtype_version) AS latest_version', 'et.type')
-            ->from('element_version', 'ev')
-            ->join('ev', 'element', 'e', 'ev.eid = e.eid AND e.elementtype_id = ' . $qb->expr()->literal($elementtypeId))
+            ->select('ev.eid', 'MAX(ev.elementtype_version) AS latest_version', 'et.type', 'evmf.backend AS title1', 'et.title AS title2', 'ev.id')
+            ->from('element', 'e')
+            ->join('e', 'element_version', 'ev', 'ev.eid = e.eid AND ev.version = e.latest_version')
+            ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = ' . $qb->expr()->literal($language))
             ->join('e', 'elementtype', 'et', 'e.elementtype_id = et.id')
             //->from(array('ev' => $this->db->prefix.'element_version'), array('eid'))
             //->join(array('et' => $this->db->prefix.'element_tree'), 'ev.eid = et.eid', array())
+            ->where($qb->expr()->eq('e.elementtype_id', $elementtypeId))
             ->groupBy('ev.eid');
 
         $rows = $this->connection->fetchAll($qb->getSQL());
 
         foreach ($rows as $row) {
-            //$elementVersion = $manager->getLatest($eid);
-
             $event->addUsage(
-                $row['type'] . ' element',
-                $row['eid'],
-                $row['eid'], //$elementVersion->getBackendTitle($defaultLanguage),
-                $row['latest_version']
+                new Usage(
+                    $row['type'] . ' element',
+                    'element',
+                    $row['eid'],
+                    $row['title1'] ?: '[' . $row['title2'] . ']',
+                    $row['latest_version']
+                )
             );
         }
     }

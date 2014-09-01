@@ -198,9 +198,11 @@ class ListController extends Controller
         $id = $request->get('id');
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $elementtypeService->delete($id);
+        $elementtype = $elementtypeService->findElementtype($id);
 
-        return new ResultResponse(true, 'Element Type deleted.');
+        $result = $elementtypeService->deleteElementtype($elementtype);
+
+        return new ResultResponse(true, "Element type $id {$result}d.");
     }
 
     /**
@@ -209,7 +211,7 @@ class ListController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/delete", name="elementtypes_list_delete")
+     * @Route("/duplicate", name="elementtypes_list_duplicate")
      */
     public function duplicateAction(Request $request)
     {

@@ -127,7 +127,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
             $this->dispatcher->dispatch(ElementtypeEvents::CREATE, $event);
 
             // post message
-            $message = ElementtypesMessage::create('Element Type "' . $elementtype->getId() . ' created.');
+            $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . ' created.');
             $this->messageService->post($message);
         } else {
             $event = new ElementtypeEvent($elementtype);
@@ -144,7 +144,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
             $this->dispatcher->dispatch(ElementtypeEvents::UPDATE, $event);
 
             // post message
-            $message = ElementtypesMessage::create('Element Type "' . $elementtype->getId() . ' updated.');
+            $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . ' updated.');
             $this->messageService->post($message);
         }
 
@@ -154,7 +154,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteElementtype(Elementtype $elementtype)
+    public function deleteElementtype(Elementtype $elementtype, $flush = true)
     {
         // post before event
         $event = new ElementtypeEvent($elementtype);
@@ -162,55 +162,43 @@ class ElementtypeManager implements ElementtypeManagerInterface
             throw new DeleteCancelledException('Delete canceled by listener.');
         }
 
-        $delete = true;
+        $this->entityManager->remove($elementtype);
 
-        if ($elementtype->getType() == ElementtypeVersion::TYPE_REFERENCE) {
-            $db = MWF_Registry::getContainer()->dbPool->default;
-            $select = $db->select()
-                ->distinct()
-                ->from(
-                    $db->prefix . 'elementtype_structure',
-                    array('elementtype_id', new Zend_Db_Expr('MAX(version) AS max_version'))
-                )
-                ->where('reference_id = ?', $elementtype->getId())
-                ->group('elementtype_id');
-
-            $result = $db->fetchAll($select);
-
-            if (count($result)) {
-                $delete = false;
-
-                $select = $db->select()
-                    ->from($db->prefix . 'elementtype', 'latest_version')
-                    ->where('elementtype_id = ?');
-
-                foreach ($result as $row) {
-                    $latestElementTypeVersion = $db->fetchOne($select, $row['elementtype_id']);
-
-                    if ($latestElementTypeVersion == $row['max_version']) {
-                        throw new ElementtypeException('Reference in use, can\'t delete.');
-                    }
-                }
-            }
-        }
-
-        if ($delete) {
-            $this->loader->delete($elementtype);
-
-            // send message
-            $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" deleted.');
-            $this->messageService->post($message);
-        } else {
-            $this->loader->softDelete($elementtype);
-
-            // send message
-            $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" soft deleted.');
-            $this->messageService->post($message);
-        }
+        // send message
+        $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" deleted.');
+        $this->messageService->post($message);
 
         // post event
         $event = new ElementtypeEvent($elementtype);
         $this->dispatcher->dispatch(ElementtypeEvents::DELETE, $event);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function softDeleteElementtype(Elementtype $elementtype, $flush = true)
+    {
+        // post before event
+        $event = new ElementtypeEvent($elementtype);
+        if ($this->dispatcher->dispatch(ElementtypeEvents::BEFORE_SOFT_DELETE, $event)->isPropagationStopped()) {
+            throw new DeleteCancelledException('Delete canceled by listener.');
+        }
+
+        $elementtype->setDeleted(true);
+
+        if ($flush) {
+            $this->entityManager->flush($elementtype);
+        }
+
+        // send message
+        $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" soft deleted.');
+        $this->messageService->post($message);
+
+        // post event
+        $event = new ElementtypeEvent($elementtype);
+        $this->dispatcher->dispatch(ElementtypeEvents::SOFT_DELETE, $event);
 
         return $this;
     }

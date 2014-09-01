@@ -15,6 +15,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeVersionManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Usage\UsageManager;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 
 /**
@@ -45,21 +46,29 @@ class ElementtypeService
     private $viabilityManager;
 
     /**
+     * @var UsageManager
+     */
+    private $usageManager;
+
+    /**
      * @param ElementtypeManagerInterface          $elementtypeManager
      * @param ElementtypeVersionManagerInterface   $elementtypeVersionManager
      * @param ElementtypeStructureManagerInterface $elementtypeStructureManager
      * @param ViabilityManagerInterface            $viabilityManager
+     * @param UsageManager                         $usageManager
      */
     public function __construct(
         ElementtypeManagerInterface $elementtypeManager,
         ElementtypeVersionManagerInterface $elementtypeVersionManager,
         ElementtypeStructureManagerInterface $elementtypeStructureManager,
-        ViabilityManagerInterface $viabilityManager)
+        ViabilityManagerInterface $viabilityManager,
+        UsageManager $usageManager)
     {
         $this->elementtypeManager = $elementtypeManager;
         $this->elementtypeVersionManager = $elementtypeVersionManager;
         $this->elementtypeStructureManager = $elementtypeStructureManager;
         $this->viabilityManager = $viabilityManager;
+        $this->usageManager = $usageManager;
     }
 
     /**
@@ -280,57 +289,29 @@ class ElementtypeService
      * Delete an Element Type
      *
      * @param Elementtype $elementtype
+     *
+     * @return string
      */
     public function deleteElementtype(Elementtype $elementtype)
     {
-        $this->elementtypeManager->delete($elementtype);
+        $usage = $this->usageManager->getUsage($elementtype);
 
-        return;
+        if ($usage) {
+            $this->elementtypeManager->softDeleteElementtype($elementtype);
 
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-        $db = MWF_Registry::getContainer()->dbPool->default;
-
-        $elementType = $this->getById($elementtypeId);
-        $elementTypeVersion = $elementType->getLatest();
-
-        // post before event
-        $event = new BeforeDeleteEvent($elementType);
-        if (!$dispatcher->dispatch(ElementtypeEvents::BEFORE_DELETE, $event)) {
-            throw new ElementtypeException(
-                'Delete canceled by callback.'
-            );
+            return 'softdelete';
         }
 
-        $delete = true;
+        foreach ($this->getVersions($elementtype) as $version) {
+            $elementtypeVersion = $this->findElementtypeVersion($elementtype, $version);
+            $elementtypeStructure = $this->findElementtypeStructure($elementtypeVersion);
 
-        if ($elementType->getType() == Elementtype::TYPE_REFERENCE) {
-            $select = $db->select()
-                ->distinct()
-                ->from(
-                    $db->prefix . 'elementtype_structure',
-                    array('elementtype_id', $db->fn->expr('MAX(version) AS max_version'))
-                )
-                ->where('reference_id = ?', $elementtypeId)
-                ->group('elementtype_id');
-
-            $result = $db->fetchAll($select);
-
-            if (count($result)) {
-                $delete = false;
-
-                $select = $db->select()
-                    ->from($db->prefix . 'elementtype', 'latest_version')
-                    ->where('elementtype_id = ?');
-
-                foreach ($result as $row) {
-                    $latestElementTypeVersion = $db->fetchOne($select, $row['elementtype_id']);
-
-                    if ($latestElementTypeVersion == $row['max_version']) {
-                        throw new ElementtypeException('Reference in use, can\'t delete.');
-                    }
-                }
-            }
+            $this->elementtypeStructureManager->deleteElementtypeStructure($elementtypeStructure, false);
+            $this->elementtypeVersionManager->deleteElementtypeVersion($elementtypeVersion, false);
         }
+        $this->elementtypeManager->deleteElementtype($elementtype);
+
+        return 'delete';
     }
 
     /**

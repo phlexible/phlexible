@@ -65,8 +65,18 @@ interface ElementtypeManagerInterface
      * Delete an Element Type
      *
      * @param Elementtype $elementtype
+     * @param bool        $flush
      *
      * @return $this
      */
-    public function deleteElementtype(Elementtype $elementtype);
+    public function deleteElementtype(Elementtype $elementtype, $flush = true);
+    /**
+     * Soft delete an elementtype
+     *
+     * @param Elementtype $elementtype
+     * @param bool        $flush
+     *
+     * @return $this
+     */
+    public function softDeleteElementtype(Elementtype $elementtype, $flush = true);
 }

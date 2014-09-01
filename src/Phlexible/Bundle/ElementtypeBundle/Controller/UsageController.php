@@ -9,8 +9,6 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
-use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,13 +35,22 @@ class UsageController extends Controller
     {
         $id = $request->get('id');
 
-        $elementtype = $this->get('phlexible_elementtype.elementtype_service')->findElementtype($id);
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
+        $usageManager = $this->get('phlexible_elementtype.usage_manager');
 
-        $event = new ElementtypeUsageEvent($elementtype);
-        $this->get('event_dispatcher')->dispatch(ElementtypeEvents::USAGE, $event);
+        $elementtype = $elementtypeService->findElementtype($id);
 
-        $data = $event->getUsage();
+        $usages = array();
+        foreach ($usageManager->getUsage($elementtype) as $usage) {
+            $usages[] = array(
+                'type'           => $usage->getType(),
+                'as'             => $usage->getAs(),
+                'id'             => $usage->getId(),
+                'title'          => $usage->getTitle(),
+                'latest_version' => $usage->getLatestVersion(),
+            );
+        }
 
-        return new JsonResponse(array('list' => $data, 'total' => count($data)));
+        return new JsonResponse(array('list' => $usages, 'total' => count($usages)));
     }
 }

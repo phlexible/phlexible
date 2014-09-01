@@ -8,8 +8,11 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\EventListener;
 
-use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 
 /**
  * Elementtype usage listeners
@@ -19,16 +22,23 @@ use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
 class ElementtypeUsageListener
 {
     /**
-     * @var Connection
+     * @var ElementtypeStructureManagerInterface
      */
-    private $connection;
+    private $elementtypeStructureManager;
 
     /**
-     * @param Connection $connection
+     * @var ElementtypeService
      */
-    public function __construct(Connection $connection)
+    private $elementtypeService;
+
+    /**
+     * @param ElementtypeStructureManagerInterface $elementtypeStructureManager
+     * @param ElementtypeService                   $elementtypeService
+     */
+    public function __construct(ElementtypeStructureManagerInterface $elementtypeStructureManager, ElementtypeService $elementtypeService)
     {
-        $this->connection = $connection;
+        $this->elementtypeStructureManager = $elementtypeStructureManager;
+        $this->elementtypeService = $elementtypeService;
     }
 
     /**
@@ -36,25 +46,34 @@ class ElementtypeUsageListener
      */
     public function onElementtypeUsage(ElementtypeUsageEvent $event)
     {
-        $elementtypeId = $event->getElementtype()->getId();
+        $elementtype = $event->getElementtype();
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select(array('es.elementtype_id', 'MAX(es.reference_version) AS latest_version', 'e.title', 'e.type'))
-            ->from('elementtype_structure', 'es')
-            ->join('es', 'elementtype', 'e', 'es.elementtype_id = e.id')
-            ->where($qb->expr()->eq('es.reference_id', $elementtypeId))
-            ->groupBy('es.elementtype_id');
-
-        $rows = $this->connection->fetchAll($qb->getSQL());
-
-        foreach ($rows as $row) {
+        $nodes = $this->elementtypeStructureManager->findNodesByReferenceElementtype($elementtype);
+        foreach ($nodes as $node) {
             $event->addUsage(
-                $row['type'] . ' elementtype',
-                $row['elementtype_id'],
-                $row['title'],
-                $row['latest_version']
+                new Usage(
+                    $node->getElementtype()->getType() . ' elementtype',
+                    'reference',
+                    $node->getElementtype()->getId(),
+                    $node->getElementtype()->getTitle(),
+                    $node->getElementtype()->getLatestVersion()
+                )
             );
+        }
+
+        if ($elementtype->getType() === 'layout') {
+            foreach ($this->elementtypeService->findAllowedParentIds($elementtype) as $viabilityId) {
+                $viabilityElementtype = $this->elementtypeService->findElementtype($viabilityId);
+                $event->addUsage(
+                    new Usage(
+                        $viabilityElementtype->getType() . ' elementtype',
+                        'layout area',
+                        $viabilityElementtype->getId(),
+                        $viabilityElementtype->getTitle(),
+                        $viabilityElementtype->getLatestVersion()
+                    )
+                );
+            }
         }
     }
 }

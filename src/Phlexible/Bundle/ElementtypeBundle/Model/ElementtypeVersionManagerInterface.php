@@ -38,4 +38,11 @@ interface ElementtypeVersionManagerInterface
      * @param bool               $flush
      */
     public function updateElementtypeVersion(ElementtypeVersion $elementtypeVersion, $flush = true);
+
+
+    /**
+     * @param ElementtypeVersion $elementtypeVersion
+     * @param bool               $flush
+     */
+    public function deleteElementtypeVersion(ElementtypeVersion $elementtypeVersion, $flush = true);
 }

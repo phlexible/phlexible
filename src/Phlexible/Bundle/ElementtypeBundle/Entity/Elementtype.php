@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeIdentifier;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**
@@ -310,5 +311,25 @@ class Elementtype implements IdentifiableInterface
     public function getIdentifier()
     {
         return new ElementtypeIdentifier($this->getId());
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param boolean $deleted
+     *
+     * @return $this
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
     }
 }
