@@ -201,12 +201,13 @@ class ElementtypeService
     }
 
     /**
-     * @param Elementtype $elementtype
-     * @param array       $parentIds
+     * @param Elementtype $referenceElementtype
+     *
+     * @return ElementtypeStructureNode[]
      */
-    public function updateViability(Elementtype $elementtype, array $parentIds)
+    public function findNodesByReferenceElementtype(Elementtype $referenceElementtype)
     {
-        $this->viabilityManager->updateViability($elementtype, $parentIds);
+        return $this->elementtypeStructureManager->findNodesByReferenceElementtype($referenceElementtype);
     }
 
     /**
@@ -284,6 +285,15 @@ class ElementtypeService
     public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure, $flush = true)
     {
         $this->elementtypeStructureManager->updateElementtypeStructure($elementtypeStructure, $flush);
+    }
+
+    /**
+     * @param Elementtype $elementtype
+     * @param array       $parentIds
+     */
+    public function updateViability(Elementtype $elementtype, array $parentIds)
+    {
+        $this->viabilityManager->updateViability($elementtype, $parentIds);
     }
 
     /**

@@ -490,6 +490,7 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
 
                 var type = node.attributes.type;
 
+                debugger;
                 if (type == 'area') {
                     this.items.items[0].setText('[Layoutarea]');
                     this.items.items[0].setIconClass('p-teasers-layoutarea-icon');

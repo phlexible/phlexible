@@ -9,14 +9,10 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Controller\Tree;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -113,43 +109,20 @@ class TreeSaver
             $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, false);
         }
 
-        /*
         // update elementtypes that use this elementtype as reference
 
-        $updateData = array(
-            'reference_version' => $version,
-        );
-        $db->update($db->prefix.'elementtype_structure', $updateData, 'reference_id = '.$db->quote($elementtypeId));
-
-        $select = $db->select()
-                     ->distinct()
-                     ->from($db->prefix . 'elementtype_structure', array('id', 'element_type_id', 'version'))
-                     ->where('reference_id = ?', $elementtypeId);
-
-        $candidates = $db->fetchAll($select);
-
-        $select = $db->select()
-                     ->from($db->prefix . 'elementtype_version', new Zend_Db_Expr('MAX(version)'))
-                     ->where('element_type_id = ?');
-
-        foreach ($candidates as $row)
-        {
-            $maxVersion = $db->fetchOne($select, $row['element_type_id']);
-
-            if ($row['version'] != $maxVersion)
-            {
-                continue;
+        if ($elementtype->getType() === 'reference') {
+            $nodes = $this->elementtypeService->findNodesByReferenceElementtype($elementtype);
+            foreach ($nodes as $node) {
+                $referencingElementtype = $node->getElementtype();
+                $referencingElementtypeVersion = $this->elementtypeService->findLatestElementtypeVersion($referencingElementtype);
+                $referencingElementtypeStructure = $this->elementtypeService->findElementtypeStructure($referencingElementtypeVersion);
+                // TODO: clone, raise reference version
+                $referencingElementtypeVersion->setVersion($referencingElementtypeVersion->getVersion() + 1);
+                $referencingElementtypeVersion->setCreatedAt(new \Datetime());
+                $referencingElementtype->setLatestVersion($referencingElementtypeVersion->getVersion());
             }
-
-            $newElementVersion = $manager->copyVersion($row['element_type_id'], $row['version'], null, null, true);
-
-            $db->update($db->prefix . 'elementtype_structure', array(
-                'reference_version' => $version,
-            ), 'reference_id = '.$db->quote($elementtypeId).' AND
-                element_type_id = '.$db->quote($row['element_type_id']).' AND
-                version = '.$db->quote($newElementVersion));
         }
-        */
 
         return $elementtypeVersion;
     }
