@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeVersionIdentifier;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**
@@ -77,6 +78,26 @@ class ElementtypeVersion implements IdentifiableInterface
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * @return Elementtype

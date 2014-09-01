@@ -217,15 +217,11 @@ class ListController extends Controller
     {
         $id = $request->get('id');
 
-        $db = $this->get('doctrine.dbal.default_connection');
-        $db->beginTransaction();
-
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $sourceElementtype = $elementtypeService->findElementtype($id);
-        $elementtype = $elementtypeService->duplicate($sourceElementtype);
 
-        $db->commit();
+        $elementtype = $elementtypeService->duplicateElementtype($sourceElementtype, $this->getUser()->getId());
 
-        return new ResultResponse(true, 'Element duplicated.');
+        return new ResultResponse(true, 'Element type duplicated.');
     }
 }

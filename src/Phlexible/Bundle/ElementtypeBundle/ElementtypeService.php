@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle;
 
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
@@ -215,12 +216,12 @@ class ElementtypeService
      * @param string $uniqueId
      * @param string $title
      * @param string $icon
-     * @param string $uid
+     * @param string $userId
      * @param bool   $flush
      *
      * @return ElementtypeVersion
      */
-    public function createElementtype($type, $uniqueId, $title, $icon, $uid, $flush = true)
+    public function createElementtype($type, $uniqueId, $title, $icon, $userId, $flush = true)
     {
         if (!$icon) {
             $icons = array(
@@ -242,7 +243,7 @@ class ElementtypeService
             ->setTitle($title)
             ->setIcon($icon)
             ->setLatestVersion(1)
-            ->setCreateUserId($uid)
+            ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime());
 
         $elementtypeVersion = new ElementtypeVersion();
@@ -318,53 +319,71 @@ class ElementtypeService
      * Duplicate an elementtype
      *
      * @param Elementtype $sourceElementtype
+     * @param string      $userId
      *
      * @return ElementtypeVersion
      */
-    public function duplicateElementtype(Elementtype $sourceElementtype)
+    public function duplicateElementtype(Elementtype $sourceElementtype, $userId)
     {
+        $sourceElementtypeVersion = $this->findLatestElementtypeVersion($sourceElementtype);
+        $sourceElementtypeStructure = $this->findElementtypeStructure($sourceElementtypeVersion);
+
+        $uniqId = uniqid();
+
         $elementtype = clone $sourceElementtype;
+        $elementtypeVersion = clone $sourceElementtypeVersion;
+
         $elementtype
             ->setId(null)
-            ->setUniqueId($elementtype->getUniqueId() . '_' . Uuid::generate());
+            ->setTitle($elementtype->getTitle() . ' - copy - ' . $uniqId)
+            ->setUniqueId($elementtype->getUniqueId() . '_copy_' . $uniqId)
+            ->setLatestVersion(1)
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserId($userId);
 
-        $this->elementtypeManager->save($elementtype);
-
-        $sourceElementtypeVersion = $this->findLatestElementtypeVersion($sourceElementtype);
-        $elementtypeVersion = $this->copyElementtypeVersion($sourceElementtypeVersion, $elementtype);
-
-        return $elementtypeVersion;
-    }
-
-    public function copyElementtypeVersion(
-        ElementtypeVersion $sourceElementtypeVersion,
-        Elementtype $targetElementtype)
-    {
-        $elementtypeVersion = clone $sourceElementtypeVersion;
         $elementtypeVersion
-            ->setElementtype($targetElementtype)
-            ->setVersion(1);
+            ->setId(null)
+            ->setElementtype($elementtype)
+            ->setVersion(1)
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserId($userId);
 
-        $this->elementtypeVersionManager->save($elementtypeVersion);
+        $elementtypeStructure = new ElementtypeStructure();
+        $elementtypeStructure
+            ->setElementtypeVersion($elementtypeVersion);
 
-        $sourceElementtypeStructure = $this->findElementtypeStructure($sourceElementtypeVersion);
-        $elementtypeStructure = clone $sourceElementtypeStructure;
-        $elementtypeStructure->setElementtypeVersion($elementtypeVersion);
-
+        $rii = new \RecursiveIteratorIterator($sourceElementtypeStructure, \RecursiveIteratorIterator::SELF_FIRST);
+        $idMap = array();
         $dsIdMap = array();
-        foreach ($elementtypeStructure->getIterator() as $node) {
-            $dsIdMap[$node->getDsId()] = $newDsId = Uuid::generate();
+        foreach ($rii as $sourceNode) {
+            /* @var $sourceNode ElementtypeStructureNode */
+            $node = clone $sourceNode;
+
+            $idMap[$sourceNode->getId()] = $node;
+            $dsIdMap[$sourceNode->getDsId()] = $dsId = Uuid::generate();
+
+            $parentNode = null;
+            $parentDsId = null;
+            if (!$sourceNode->isRoot()) {
+                $parentNode = $idMap[$sourceNode->getParentNode()->getId()];
+                $parentDsId = $dsIdMap[$sourceNode->getParentNode()->getDsId()];
+            }
+
             $node
-                ->setDsId($newDsId)
-                ->setParentDsId($dsIdMap[$node->getParentDsId()])
-                ->setModifyUid($uid)
-                ->setModifyTime(new \DateTime());
+                ->setId(null)
+                ->setDsId($dsId)
+                ->setParentNode($parentNode)
+                ->setParentDsId($parentDsId)
+                ->setElementtype($elementtype)
+                ->setVersion($elementtypeVersion->getVersion())
+                ->setElementtypeStructure($elementtypeStructure);
+
+            $elementtypeStructure->addNode($node);
         }
 
-        $navigation = $elementtypeVersion->getNavigation();
-
-        // TODO: fix ds_id in navigation
-        // TODO: copy viability
+        $this->updateElementtype($elementtype, false);
+        $this->updateElementtypeVersion($elementtypeVersion, false);
+        $this->updateElementtypeStructure($elementtypeStructure, true);
 
         return $elementtypeVersion;
     }
