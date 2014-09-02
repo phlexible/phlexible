@@ -148,7 +148,7 @@ class TreeSaver
                 if ($latestNode->isReferenced()) {
                     continue;
                 }
-                
+
                 /* @var $node ElementtypeStructureNode */
                 $node = clone $latestNode;
                 $node

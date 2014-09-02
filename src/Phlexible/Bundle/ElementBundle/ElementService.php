@@ -121,6 +121,16 @@ class ElementService
     }
 
     /**
+     * @param Elementtype $elementtype
+     *
+     * @return Element[]
+     */
+    public function findElementsByElementtype(Elementtype $elementtype)
+    {
+        return $this->elementManager->findBy(array('elementtype' => $elementtype));
+    }
+
+    /**
      * @param Element $element
      * @param array   $languages
      *
