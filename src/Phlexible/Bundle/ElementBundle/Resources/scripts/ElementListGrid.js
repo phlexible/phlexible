@@ -972,7 +972,7 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
                 /* check for instances if only one node selected */
                 if (i == 1) {
                     Ext.Ajax.request({
-                        url: Phlexible.Router.generate('tree_predelete'),
+                        url: Phlexible.Router.generate('tree_delete_check'),
                         params: params,
                         success: function (response) {
                             var result = Ext.decode(response.responseText);

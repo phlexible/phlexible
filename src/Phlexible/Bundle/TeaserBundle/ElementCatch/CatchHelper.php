@@ -49,21 +49,21 @@ class CatchHelper
     }
 
     /**
-     * @param int $tid
+     * @param int $treeId
      */
-    public function removeByTid($tid)
+    public function removeByTid($treeId)
     {
         $this->connection->delete(
             'catch_lookup_meta',
             array(
-                'tid' => $tid
+                'tree_id' => $treeId
             )
         );
 
         $this->connection->delete(
             'catch_lookup_meta',
             array(
-                'tid' => $tid
+                'tree_id' => $treeId
             )
         );
     }
@@ -89,14 +89,14 @@ class CatchHelper
     }
 
     /**
-     * @param int $tid
+     * @param int $treeId
      */
-    public function removePreviewByTid($tid)
+    public function removePreviewByTid($treeId)
     {
         $this->connection->delete(
             'catch_lookup_element',
             array(
-                'tid'     => $tid,
+                'tree_id' => $treeId,
                 'preview' => 1,
             )
         );
@@ -117,15 +117,15 @@ class CatchHelper
     }
 
     /**
-     * @param int $tid
+     * @param int $treeId
      */
-    public function removeOnlineByTid($tid)
+    public function removeOnlineByTid($treeId)
     {
         $this->connection->delete(
             'catch_lookup_element',
             array(
-                'tid = ?'     => $tid,
-                'preview = ?' => 0,
+                'tree_id' => $treeId,
+                'preview' => 0,
             )
         );
     }
@@ -145,15 +145,15 @@ class CatchHelper
     }
 
     /**
-     * @param int    $tid
+     * @param int    $treeId
      * @param string $language
      */
-    public function removeOnlineByTidAndLanguage($tid, $language)
+    public function removeOnlineByTidAndLanguage($treeId, $language)
     {
         $this->connection->delete(
             'catch_lookup_element',
             array(
-                'tid'      => $tid,
+                'tree_id'  => $treeId,
                 'language' => $language,
                 'preview'  => 0,
             )
@@ -169,7 +169,7 @@ class CatchHelper
         $this->connection->delete(
             'catch_lookup_element',
             array(
-                'eid?'      => $eid,
+                'eid'      => $eid,
                 'language' => $language,
                 'preview'  => 0,
             )
@@ -177,16 +177,16 @@ class CatchHelper
     }
 
     /**
-     * @param int    $tid
+     * @param int    $treeId
      * @param int    $version
      * @param string $language
      */
-    public function removeMetaByTidAndVersionAndLanguage($tid, $version, $language)
+    public function removeMetaByTidAndVersionAndLanguage($treeId, $version, $language)
     {
         $this->connection->delete(
             'catch_lookup_meta',
             array(
-                'tid'      => $tid,
+                'tree_id'  => $treeId,
                 'version'  => $version,
                 'language' => $language,
             )

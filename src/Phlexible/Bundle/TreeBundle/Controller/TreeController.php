@@ -360,132 +360,71 @@ class TreeController extends Controller
      * predelete action
      * check if element has instances
      *
-     * @throws Brainbits_Filter_Exception
+     * @param Request $request
      *
-     * @Route("/predelete", name="tree_predelete")
+     * @return ResultResponse
+     * @Route("/predelete", name="tree_delete_check")
      */
-    public function predeleteAction()
+    public function checkDeleteAction(Request $request)
     {
-        try {
-            $filters = array('StringTrim', 'StripTags');
+        $treeId = $request->get('id');
+        $language = $request->get('language', 'de');
 
-            $validators = array(
-                'id' => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-            );
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $treeMeditator = $this->get('phlexible_tree.mediator');
+        $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-            $fi = new Brainbits_Filter_Input($filters, $validators, $this->_getAllParams());
+        $nodeId = $treeId[0];
+        $tree = $treeManager->getByNodeId($nodeId);
+        $node = $tree->get($nodeId);
 
-            if (!$fi->isValid()) {
-                throw new Brainbits_Filter_Exception('Error occured', 0, $fi);
+        $instances = $tree->getInstances($node);
+
+        if (count($instances) > 1) {
+            $instancesArray = array();
+            foreach ($instances as $instanceNode) {
+                $siteroot = $siterootManager->find($instanceNode->getTree()->getSiterootId());
+                $instanceTitle = $treeMeditator->getTitle($instanceNode, 'backend', $language);
+
+                $instancesArray[] = array(
+                    $instanceNode->getId(),
+                    $siteroot->getTitle(),
+                    $instanceTitle,
+                    $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
+                    (bool) $instanceNode->getTree()->isInstanceMaster($instanceNode),
+                    (bool) ($instanceNode->getId() === $nodeId)
+                );
             }
 
-            $treeId = $fi->id;
-
-            $container = $this->getContainer();
-            $treeManager = $container->get('phlexible_tree.tree_manager');
-            $db = $container->dbPool->read;
-
-            $nodeId = $treeId[0];
-            $node = $treeManager->getNodeByNodeId($nodeId);
-
-            $sql = $db->select()
-                ->from(
-                    $db->prefix . 'element_tree',
-                    array('id', 'siteroot_id', 'modify_time', 'instance_master')
-                )
-                ->where('eid = ?', $node->getEid());
-            $instances = $db->fetchAll($sql);
-
-            if (count($instances) > 1) {
-                $siterootManager = $container->siterootManager;
-                $treeHelper = $container->elementsTreeTreeHelper;
-
-                $instancesArray = array();
-                foreach ($instances as $instance) {
-                    $siteroot = $siterootManager->getById($instance['siteroot_id']);
-                    $instanceNode = $treeManager->getNodeByNodeId($instance['id']);
-                    $instanceTitle = $treeHelper->getOnlineTitleByTid($instanceNode->getParentId(), 'de');
-
-                    $instancesArray[] = array(
-                        $instance['id'],
-                        $siteroot->getTitle(),
-                        $instanceTitle,
-                        $instance['modify_time'],
-                        (bool) $instance['instance_master'],
-                        (bool) ($instance['id'] == $nodeId)
-                    );
-                }
-
-                $result = MWF_Ext_Result::encode(true, $nodeId, '', $instancesArray);
-            } else {
-                $result = MWF_Ext_Result::encode(true, $nodeId, '', array());
-            }
-
-        } catch (Makeweb_Elements_Tree_Exception_LockException $e) {
-            $result = MWF_Ext_Result::encode(false, $treeId, $e->getMessage());
-        } catch (Exception $e) {
-            $result = MWF_Ext_Result::exception($e);
+            return new ResultResponse(true, '', $instancesArray);
         }
 
-        $this->getResponse()->setAjaxPayload($result);
+        return new ResultResponse(true, '', array());
     }
 
     /**
      * Delete an Element
      *
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/delete", name="tree_delete")
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
-        try {
-            $filters = array('StringTrim', 'StripTags');
-
-            $validators = array(
-                'id' => array(
-                    'Int',
-                    Zend_Filter_Input::PRESENCE => Zend_Filter_Input::PRESENCE_REQUIRED,
-                ),
-            );
-
-            $fi = new Brainbits_Filter_Input($filters, $validators, $this->_getAllParams());
-
-            if (!$fi->isValid()) {
-                throw new Brainbits_Filter_Exception('Error occured', 0, $fi);
-            }
-
-            $treeIds = $fi->id;
-            if (!is_array($treeIds)) {
-                $treeIds = array($treeIds);
-            }
-
-            $container = $this->getContainer();
-            $db = $container->dbPool->write;
-            $treeManager = $container->elementsTreeManager;
-
-            $db->beginTransaction();
-
-            foreach ($treeIds as $treeId) {
-                $tree = $treeManager->getByNodeId($treeId);
-                $tree->delete($treeId);
-            }
-
-            //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
-            //$fileUsage->update($eid);
-
-            $db->commit();
-
-            $result = MWF_Ext_Result::encode(true, $treeId, 'Item(s) deleted.');
-        } catch (Makeweb_Elements_Tree_Exception_LockException $e) {
-            $db->rollBack();
-            $result = MWF_Ext_Result::encode(false, $treeId, $e->getMessage());
-        } catch (Exception $e) {
-            $db->rollBack();
-            $result = MWF_Ext_Result::exception($e);
+        $treeIds = $request->get('id');
+        if (!is_array($treeIds)) {
+            $treeIds = array($treeIds);
         }
 
-        $this->getResponse()->setAjaxPayload($result);
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+
+        foreach ($treeIds as $treeId) {
+            $tree = $treeManager->getByNodeId($treeId);
+            $node = $tree->get($treeId);
+            $tree->delete($node, $this->getUser()->getId());
+        }
+
+        return new ResultResponse(true, 'Item(s) deleted');
     }
 }

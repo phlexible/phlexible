@@ -556,7 +556,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('tree_predelete'),
+            url: Phlexible.Router.generate('tree_delete_check'),
             params: params,
             success: function (response) {
                 var result = Ext.decode(response.responseText);
