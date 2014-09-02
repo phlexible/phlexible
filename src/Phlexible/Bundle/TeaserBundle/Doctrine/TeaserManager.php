@@ -9,10 +9,15 @@
 namespace Phlexible\Bundle\TeaserBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
+use Phlexible\Bundle\TeaserBundle\Entity\ElementCatch;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
+use Phlexible\Bundle\TeaserBundle\TeaserEvents;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Teaser manager
@@ -33,11 +38,35 @@ class TeaserManager implements TeaserManagerInterface
     private $entityManager;
 
     /**
-     * @param EntityManager $entityManager
+     * @var EventDispatcherInterface
      */
-    public function __construct(EntityManager $entityManager)
+    private $dispatcher;
+
+    /**
+     * @var EntityRepository
+     */
+    private $teaserRepository;
+
+    /**
+     * @param EntityManager            $entityManager
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
+        $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    private function getTeaserRepository()
+    {
+        if (null === $this->teaserRepository) {
+            $this->teaserRepository = $this->entityManager->getRepository('PhlexibleTeaserBundle:Teaser');
+        }
+
+        return $this->teaserRepository;
     }
 
     /**
@@ -78,7 +107,7 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function findForLayoutAreaAndTreeNode($layoutarea, TreeNodeInterface $treeNode)
     {
-        $teasers = $this->entityManager->getRepository('PhlexibleTeaserBundle:Teaser')->findBy(
+        $teasers = $this->getTeaserRepository()->findBy(
             array(
                 'layoutareaId' => $layoutarea->getId(),
                 'treeId'       => $treeNode->getId()
@@ -86,6 +115,147 @@ class TeaserManager implements TeaserManagerInterface
         );
 
         return $teasers;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createTeaser(
+        $treeId,
+        $eid,
+        $layoutareaId,
+        $type,
+        $typeId,
+        $prevId = 0,
+        $inherit = true,
+        $noDisplay = false,
+        $masterLanguage = 'en',
+        $userId
+    )
+    {
+        $teaser = new Teaser();
+        $teaser
+            ->setTreeId($treeId)
+            ->setEid($eid)
+            ->setLayoutareaId($layoutareaId)
+            ->setType($type)
+            ->setTypeId($typeId)
+            ->setNoDisplay($noDisplay)
+            ->setStopInherit(!$inherit)
+            ->setSort(0)
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserId($userId);
+
+        $event = new TeaserEvent($teaser);
+        if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_CREATE_TEASER, $event)->isPropagationStopped()) {
+            return null;
+        }
+
+        $this->entityManager->persist($teaser);
+        $this->entityManager->flush($teaser);
+
+        // @TODO: sort
+        /*
+            $sort = 0;
+            if ($prevId) {
+                $select = $db->select()
+                    ->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('sort + 1'))
+                    ->where('id = ?', $prevId);
+
+                $sort = $db->fetchOne($select);
+            }
+
+            $db->update(
+                $db->prefix . 'element_tree_teasers',
+                array('sort' => new Zend_Db_Expr('sort + 1')),
+                array('tree_id = ?' => $treeId, 'sort >= ?' => $sort)
+            );
+        */
+
+        $event = new TeaserEvent($teaser);
+        $this->dispatcher->dispatch(TeaserEvents::CREATE_TEASER, $event);
+
+        return $teaser;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createTeaserInstance($treeId, $teaserId, $layoutAreaId)
+    {
+        $teaser = new Teaser();
+
+        $event = new TeaserEvent($teaser);
+        if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_CREATE_TEASER_INSTANCE, $event)->isPropagationStopped()) {
+            return null;
+        }
+
+        $select = $db->select()
+            ->from($db->prefix . 'element_tree_teasers')
+            ->where('id = ?', $teaserId)
+            ->limit(1);
+
+        $row = $db->fetchRow($select);
+
+        $row['id'] = null;
+        $row['tree_id'] = $treeId;
+        $row['layoutarea_id'] = $layoutAreaId;
+        $row['modify_uid'] = MWF_Env::getUid();
+        $row['modify_time'] = $db->fn->now();
+
+        $db->insert($db->prefix . 'element_tree_teasers', $row);
+        $newTeaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
+
+        Makeweb_Teasers_History::insert(
+            Makeweb_Teasers_History::ACTION_CREATE_INSTANCE,
+            $teaserId,
+            $row['teaser_eid']
+        );
+
+        $event = new TeaserEvent($teaser);
+        $this->dispatcher->dispatch(TeaserEvents::CREATE_TEASER_INSTANCE, $event);
+
+        return $teaser;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteTeaser($teaserId)
+    {
+        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
+
+        $node = new Makeweb_Teasers_Node($teaserId);
+
+        $beforeEvent = new Makeweb_Teasers_Event_BeforeDeleteTeaser($node);
+        if (false === $dispatcher->dispatch($beforeEvent)) {
+            return;
+        }
+
+        $db = MWF_Registry::getContainer()->dbPool->default;
+
+        $select = $db->select()
+            ->from($db->prefix . 'element_tree_teasers', 'teaser_eid')
+            ->where('id = ?', $teaserId)
+            ->limit(1);
+
+        $eid = $db->fetchOne($select);
+
+        $db->delete(
+            $db->prefix . 'element_tree_teasers',
+            array(
+                'id = ?' => $teaserId
+            )
+        );
+
+        Makeweb_Teasers_History::insert(
+            Makeweb_Teasers_History::ACTION_DELETE_TEASER,
+            $teaserId,
+            $eid
+        );
+
+        $event = new Makeweb_Teasers_Event_DeleteTeaser($node);
+        $dispatcher->dispatch($event);
     }
 
     /**
@@ -637,326 +807,6 @@ class TeaserManager implements TeaserManagerInterface
         } else {
             return $manager->getLatest($eid);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createTeaser(
-        $treeId,
-        $eid,
-        $layoutAreaId,
-        $newElementTypeID,
-        $prevId = 0,
-        $inherit = true,
-        $noDisplay = false,
-        $masterLanguage = 'en'
-    )
-    {
-        $db = MWF_Registry::getContainer()->dbPool->default;
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        try {
-            $beforeEvent = new Makeweb_Teasers_Event_BeforeCreateTeaser($treeId, $eid, $layoutAreaId, $newElementTypeID);
-            if (false === $dispatcher->dispatch($beforeEvent)) {
-                return null;
-            }
-
-            $db->beginTransaction();
-
-            $elementManager = Makeweb_Elements_Element_Manager::getInstance();
-            $newElement = $elementManager->create($newElementTypeID, true, $masterLanguage);
-
-            // fetch new eid
-            $newEid = $newElement->getEid();
-
-            $sort = 0;
-            if ($prevId) {
-                $select = $db->select()
-                    ->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('sort + 1'))
-                    ->where('id = ?', $prevId);
-
-                $sort = $db->fetchOne($select);
-            }
-
-            $now = date('Y-m-d H:i:s');
-            $uid = MWF_Env::getUid();
-
-            $db->update(
-                $db->prefix . 'element_tree_teasers',
-                array('sort' => new Zend_Db_Expr('sort + 1')),
-                array('tree_id = ?' => $treeId, 'sort >= ?' => $sort)
-            );
-
-            // place new teaser in element_tree_teasers
-            $insertData = array(
-                'tree_id'       => $treeId,
-                'eid'           => $eid,
-                'teaser_eid'    => $newEid,
-                'layoutarea_id' => $layoutAreaId,
-                'type'          => self::TYPE_TEASER,
-                'sort'          => $sort,
-                'stop_inherit'  => !$inherit ? 1 : 0,
-                'no_display'    => $noDisplay ? 1 : 0,
-                'modify_time'   => $now,
-                'modify_uid'    => $uid,
-            );
-
-            $db->insert($db->prefix . 'element_tree_teasers', $insertData);
-
-            $newTeaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
-
-            $db->commit();
-
-            $node = new Makeweb_Teasers_Node($newTeaserId);
-
-            $event = new Makeweb_Teasers_Event_CreateTeaser($node);
-            $dispatcher->dispatch($event);
-        } catch (Exception $e) {
-            $db->rollBack();
-
-            throw new Makeweb_Elements_Element_Manager_Exception($e->getMessage());
-        }
-
-        return $node;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createTeaserInstance($treeId, $teaserId, $layoutAreaId)
-    {
-        $db = MWF_Registry::getContainer()->dbPool->default;
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        try {
-            $beforeEvent = new Makeweb_Teasers_Event_BeforeCreateTeaserInstance($treeId, $teaserId, $layoutAreaId);
-            if (false === $dispatcher->dispatch($beforeEvent)) {
-                return null;
-            }
-
-            $select = $db->select()
-                ->from($db->prefix . 'element_tree_teasers')
-                ->where('id = ?', $teaserId)
-                ->limit(1);
-
-            $row = $db->fetchRow($select);
-
-            $row['id'] = null;
-            $row['tree_id'] = $treeId;
-            $row['layoutarea_id'] = $layoutAreaId;
-            $row['modify_uid'] = MWF_Env::getUid();
-            $row['modify_time'] = $db->fn->now();
-
-            $db->insert($db->prefix . 'element_tree_teasers', $row);
-            $newTeaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
-
-            Makeweb_Teasers_History::insert(
-                Makeweb_Teasers_History::ACTION_CREATE_INSTANCE,
-                $teaserId,
-                $row['teaser_eid']
-            );
-
-            $node = new Makeweb_Teasers_Node($newTeaserId);
-
-            $event = new Makeweb_Teasers_Event_CreateTeaserInstance($node);
-            $dispatcher->dispatch($event);
-        } catch (Exception $e) {
-            $db->rollBack();
-
-            throw new Makeweb_Elements_Element_Manager_Exception($e->getMessage());
-        }
-
-        return $node;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createCatch(
-        $treeId,
-        $eid,
-        $layoutAreaId
-    )
-    {
-        // get writable db connection
-        $db = MWF_Registry::getContainer()->dbPool->default;
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        try {
-            $beforeEvent = new Makeweb_Teasers_Event_BeforeCreateCatch($treeId, $eid, $layoutAreaId);
-            if (false === $dispatcher->dispatch($beforeEvent)) {
-                return null;
-            }
-            #
-            $now = date('Y-m-d H:i:s');
-            $uid = MWF_Env::getUid();
-
-            // place new teaser in element_tree_teasers
-            $insertData = array(
-                'tree_id'       => $treeId,
-                'eid'           => $eid,
-                'layoutarea_id' => $layoutAreaId,
-                'type'          => self::TYPE_CATCH,
-                'configuration' => serialize(
-                    array(
-                        'forTreeId' => $treeId,
-                    )
-                ),
-                'modify_time'   => $now,
-                'modify_uid'    => $uid,
-            );
-
-            $db->insert($db->prefix . 'element_tree_teasers', $insertData);
-
-            $teaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
-
-            $event = new Makeweb_Teasers_Event_CreateCatch($treeId, $eid, $layoutAreaId, $teaserId);
-            $dispatcher->dispatch($event);
-        } catch (Exception $e) {
-            throw new Makeweb_Elements_Element_Manager_Exception($e->getMessage());
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function saveCatch(
-        $teaserId,
-        $forTreeId,
-        array $catchElementTypeId,
-        $catchInNavigation,
-        $catchMaxDepth,
-        $catchSortField,
-        $catchSortOrder,
-        $catchFilter,
-        $catchPaginator,
-        $catchMaxElements,
-        $catchRotation,
-        $catchPoolSize,
-        $catchElementsPerPage,
-        $catchTemplate,
-        array $catchMetaSearch
-    )
-    {
-        // get writable db connection
-        $db = MWF_Registry::getContainer()->dbPool->default;
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        // ignore pool size if catchMaxElements == catchPoolSize
-        // to avoid unwanted data administration errors
-        if (!$catchRotation || !$catchMaxElements || ($catchPoolSize && $catchMaxElements >= $catchPoolSize)) {
-            $catchPoolSize = '';
-            $catchRotation = false;
-        }
-
-        try {
-            $beforeEvent = new Makeweb_Teasers_Event_BeforeUpdateCatch($teaserId);
-            if (false === $dispatcher->dispatch($beforeEvent)) {
-                return null;
-            }
-
-            $now = date('Y-m-d H:i:s');
-            $uid = MWF_Env::getUid();
-
-            // place new teaser in element_tree_teasers
-            $updateData = array(
-                'configuration' => serialize(
-                    array(
-                        'forTreeId'            => $forTreeId,
-                        'catchElementTypeId'   => $catchElementTypeId,
-                        'catchInNavigation'    => $catchInNavigation,
-                        'catchMaxDepth'        => $catchMaxDepth,
-                        'catchSortField'       => $catchSortField,
-                        'catchSortOrder'       => $catchSortOrder,
-                        'catchFilter'          => $catchFilter,
-                        'catchRotation'        => $catchRotation,
-                        'catchPaginator'       => $catchPaginator,
-                        'catchMaxElements'     => $catchMaxElements,
-                        'catchPoolSize'        => $catchPoolSize,
-                        'catchElementsPerPage' => $catchElementsPerPage,
-                        'catchTemplate'        => $catchTemplate,
-                        'catchMetaSearch'      => $catchMetaSearch,
-                    )
-                ),
-                'modify_time'   => $now,
-                'modify_uid'    => $uid,
-            );
-
-            $where = array('id = ?' => $teaserId);
-
-            $db->update($db->prefix . 'element_tree_teasers', $updateData, $where);
-
-            $event = new Makeweb_Teasers_Event_UpdateCatch($teaserId);
-            $dispatcher->dispatch($event);
-        } catch (Exception $e) {
-            throw new Makeweb_Elements_Element_Manager_Exception($e->getMessage());
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteTeaser($teaserId)
-    {
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        $node = new Makeweb_Teasers_Node($teaserId);
-
-        $beforeEvent = new Makeweb_Teasers_Event_BeforeDeleteTeaser($node);
-        if (false === $dispatcher->dispatch($beforeEvent)) {
-            return;
-        }
-
-        $db = MWF_Registry::getContainer()->dbPool->default;
-
-        $select = $db->select()
-            ->from($db->prefix . 'element_tree_teasers', 'teaser_eid')
-            ->where('id = ?', $teaserId)
-            ->limit(1);
-
-        $eid = $db->fetchOne($select);
-
-        $db->delete(
-            $db->prefix . 'element_tree_teasers',
-            array(
-                'id = ?' => $teaserId
-            )
-        );
-
-        Makeweb_Teasers_History::insert(
-            Makeweb_Teasers_History::ACTION_DELETE_TEASER,
-            $teaserId,
-            $eid
-        );
-
-        $event = new Makeweb_Teasers_Event_DeleteTeaser($node);
-        $dispatcher->dispatch($event);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteCatch($catchId)
-    {
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        $beforeEvent = new Makeweb_Teasers_Event_BeforeDeleteCatch($catchId);
-        if (false === $dispatcher->dispatch($beforeEvent)) {
-            return;
-        }
-
-        $db = MWF_Registry::getContainer()->dbPool->default;
-
-        $db->delete(
-            $db->prefix . 'element_tree_teasers',
-            array(
-                'id = ?' => $catchId
-            )
-        );
-
-        $event = new Makeweb_Teasers_Event_DeleteCatch($catchId);
-        $dispatcher->dispatch($event);
     }
 
     /**

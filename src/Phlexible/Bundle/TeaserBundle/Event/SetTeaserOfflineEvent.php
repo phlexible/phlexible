@@ -12,30 +12,33 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Teaser event
+ * Set teaser offline event
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class TeaserEvent extends Event
+class SetTeaserOfflineEvent extends TeaserEvent
 {
     /**
-     * @var Teaser
+     * @var string
      */
-    private $teaser;
+    private $language;
 
     /**
      * @param Teaser $teaser
+     * @param string $language
      */
-    public function __construct(Teaser $teaser)
+    public function __construct(Teaser $teaser, $language)
     {
-        $this->teaser = $teaser;
+        parent::__construct($teaser);
+
+        $this->language = $language;
     }
 
     /**
-     * @return Teaser
+     * @return string
      */
-    public function getTeaser()
+    public function getLanguage()
     {
-        return $this->teaser;
+        return $this->language;
     }
 }

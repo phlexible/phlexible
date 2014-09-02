@@ -215,10 +215,8 @@ class TreeController extends Controller
 
         //$fieldMapper->map($elementVersion, $masterLanguage);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($element);
-        $em->persist($elementVersion);
-        $em->flush();
+        $elementService->updateElement($element, false);
+        $elementService->updateElementVersion($elementVersion);
 
         // $siterootId, $parentId, $prevId, $navigation, $restricted
 

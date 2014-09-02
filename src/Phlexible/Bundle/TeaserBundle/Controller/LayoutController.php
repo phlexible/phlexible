@@ -8,6 +8,10 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Controller;
 
+use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
+use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -456,155 +460,161 @@ class LayoutController extends Controller
     /**
      * List all element child elementtypes
      *
+     * @param Request $request
+     *
+     * @return JsonResponse
      * @Route("/childelementtypes", name="teasers_layout_childelementtypes")
      */
-    public function childelementtypesAction()
+    public function childElementtypesAction(Request $request)
     {
-        $container = $this->getContainer();
+        $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
 
-        $defaultLanguage = $container->getParameter('phlexible_cms.languages.default');
+        $id = $request->get('id');
 
-        $elementTypeVersionManager = Makeweb_Elementtypes_Elementtype_Version_Manager::getInstance();
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
-        // TODO use Brainbits_Filter_Input
-        $id = $this->_getParam('id');
-        $language = $this->_getParam('language', $defaultLanguage);
-
-        //        $elementTypeVersionManager = Makeweb_Elementtypes_Elementtype_Version_Manager::getInstance();
-        $elementTypeVersion = $elementTypeVersionManager->getLatest($id, $language);
-        $children = $elementTypeVersion->getAllowedChildren();
+        $elementtype = $elementtypeService->findElementtype($id);
+        $children = $elementtypeService->findAllowedChildrenIds($elementtype);
 
         $data = array();
-        foreach ($children as $childId => $child) {
-            /* @var $child Makeweb_Elementtypes_Elementtype */
+        foreach ($children as $childElementtypeId) {
+            $childElementtype = $elementtypeService->findElementtype($childElementtypeId);
 
-            $data[$child->getTitle() . $childId] = array(
-                'id'    => $childId,
-                'title' => $child->getTitle(),
-                'icon'  => $this->_request->getBaseUrl() . '/elements/asset/' . $child->getIcon(),
+            $data[$childElementtype->getTitle() . $childElementtypeId] = array(
+                'id'    => $childElementtype->getId(),
+                'title' => $childElementtype->getTitle(),
+                'icon'  => $iconResolver->resolveElementtype($childElementtype),
             );
         }
         ksort($data);
         $data = array_values($data);
 
-        $this->getResponse()->setAjaxPayload(array('elementtypes' => $data));
+        return new JsonResponse(array('elementtypes' => $data));
     }
 
     /**
      * List all child element types
      *
+     * @param Request $request
+     *
+     * @return JsonResponse
      * @Route("/childelements", name="teasers_layout_childelements")
      */
-    public function childelementsAction()
+    public function childElementsAction(Request $request)
     {
-        $container = $this->getContainer();
-        $translator = $container->get('translator');
-        $treeManager = $container->get('phlexible_tree.tree_manager');
-        $teaserManager = $container->teasersManager;
-        $elementTypeVersionManager = $container->elementtypesVersionManager;
+        $tid = $request->get('tree_id');
+        $layoutareaId = $request->get('layoutarea_id');
+        $language = $request->get('language', 'de');
 
-        $tid = $this->_getParam('tree_id');
-        $layoutAreaId = $this->_getParam('layoutarea_id');
-        $language = 'de';
+        $translator = $this->get('translator');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $data = array();
         $data[] = array(
             'id'    => '0',
             'title' => $translator->trans('elements.first', array(), 'gui'),
-            'icon'  => $this->_request->getBaseUrl() . '/elements/asset/_top.gif'
+            'icon'  => $iconResolver->resolveIcon('_top.gif'),
         );
 
-        $node = $treeManager->getNodeByNodeId($tid);
-        $treePath = $node->getTree()->getNodePath($tid);
+        $tree = $treeManager->getByNodeId($tid);
+        $node = $tree->get($tid);
+        $treePath = $tree->getPath($node);
 
-        $layoutArea = $elementTypeVersionManager->getLatest($layoutAreaId);
-        $teaserData = (object) $teaserManager->getAllByTIDPath($treePath, $layoutArea, $language, array(), true);
+        $elementtype = $elementtypeService->findElementtype($layoutareaId);
+        $layoutArea = $elementtypeService->findLatestElementtypeVersion($elementtype);
+        $teaserData = array();//(object) $teaserManager->getAllByTIDPath($treePath, $layoutArea, $language, array(), true);
 
-        foreach ($teaserData->children as $pos => $teaserItem) {
-            $teaserItem = (object) $teaserItem;
-
+        foreach ($teaserData as $teaser) {
             $data[] = array(
-                'id'    => $teaserItem->id,
-                'title' => $teaserItem->text,
-                'icon'  => $teaserItem->icon,
+                'id'    => $teaser->getId(),
+                'title' => $teaser->getTitle(),
+                'icon'  => $iconResolver->resolveTeaser($teaser, $language),
             );
         }
 
-        $this->getResponse()->setAjaxPayload(array('elements' => $data));
+        return new JsonResponse(array('elements' => $data));
     }
 
     /**
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/createteaser", name="teasers_layout_createteaser")
      */
-    public function createteaserAction()
+    public function createTeaserAction(Request $request)
     {
-        // TODO use Brainbits_Filter_Input
-        $siterootId = $this->_getParam('siteroot_id');
-        $treeId = $this->_getParam('tree_id');
-        $eid = $this->_getParam('eid');
-        $layoutareaId = $this->_getParam('layoutarea_id');
-        $newElementTypeID = $this->_getParam('element_type_id');
-        $prevId = $this->_getParam('prev_id', 0);
-        $inherit = $this->_getParam('inherit') == 'on' ? true : false;
-        $noDisplay = $this->_getParam('no_display') == 'on' ? true : false;
-        $masterLanguage = $this->_getParam('masterlanguage', null);
+        $siterootId = $request->get('siteroot_id');
+        $treeId = $request->get('tree_id');
+        $eid = $request->get('eid');
+        $layoutareaId = $request->get('layoutarea_id');
+        $elementtypeId = $request->get('element_type_id');
+        $prevId = $request->get('prev_id', 0);
+        $inherit = $request->get('inherit') == 'on' ? true : false;
+        $noDisplay = $request->get('no_display') == 'on' ? true : false;
+        $masterLanguage = $request->get('masterlanguage', null);
 
         if (!$masterLanguage) {
-            $container = $this->getContainer();
-            $masterLanguage = $container->getParameter('frontend.languages.frontend');
+            $masterLanguage = $this->container->getParameter('phlexible_cms.languages.default');
         }
 
-        try {
-            $manager = Makeweb_Teasers_Manager::getInstance();
-            $node = $manager->createTeaser(
-                $treeId,
-                $eid,
-                $layoutareaId,
-                $newElementTypeID,
-                $prevId,
-                $inherit,
-                $noDisplay,
-                $masterLanguage
-            );
+        $elementService = $this->get('phlexible_element.element_service');
+        $fieldMapper = $this->get('phlexible_element.field_mapper');
+        $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
+        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
 
-            Makeweb_Teasers_History::insert(
-                Makeweb_Teasers_History::ACTION_CREATE_TEASER,
-                $node->getId(),
-                $node->getEid()
-            );
+        $elementtype = $elementService->getElementtypeService()->findElementtype($elementtypeId);
+        $elementtypeVersion = $elementService->getElementtypeService()->findLatestElementtypeVersion($elementtype);
 
-            $result = MWF_Ext_Result::encode(
-                true,
-                $node->getId(),
-                'Teaser with ID "' . $node->getId() . '" created.',
-                array('language' => $masterLanguage)
-            );
-        } catch (Exception $e) {
-            $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
-        }
+        $userId = $this->getUser()->getId();
 
-        $this->getResponse()->setAjaxPayload($result);
+        $element = new Element();
+        $element
+            ->setElementtype($elementtype)
+            ->setMasterLanguage($masterLanguage)
+            ->setLatestVersion(1)
+            ->setCreateUserId($userId)
+            ->setCreatedAt(new \DateTime());
+
+        $elementVersion = new ElementVersion();
+        $elementVersion
+            ->setVersion(1)
+            ->setElement($element)
+            ->setElementtypeVersion($elementtypeVersion->getVersion())
+            ->setCreateUserId($userId)
+            ->setCreatedAt(new \DateTime());
+
+        //$fieldMapper->map($elementVersion, $masterLanguage);
+
+        $elementService->updateElement($element, false);
+        $elementService->updateElementVersion($elementVersion);
+
+        $teaser = $teaserManager->createTeaser($treeId, $eid, $layoutareaId, 'element', $element->getEid(), $prevId, $inherit, $noDisplay, $masterLanguage, $userId);
+
+        $elementHistoryManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT, $element->getEid(), $userId, null, $teaser->getId(), 1, $masterLanguage);
+
+        return new ResultResponse(true, 'Teaser with ID "' . $teaser->getId() . '" created.', array('language' => $masterLanguage));
     }
 
     /**
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/createinstance", name="teasers_layout_createinstance")
      */
-    public function createinstanceAction()
+    public function createTeaserInstanceAction(Request $request)
     {
-        try {
-            $treeId = $this->_getParam('tid');
-            $layoutAreaId = $this->_getParam('id');
-            $teaserId = $this->_getParam('for_teaser_id');
+        $treeId = $request->get('tid');
+        $layoutAreaId = $request->get('id');
+        $teaserId = $request->get('for_teaser_id');
 
-            $manager = Makeweb_Teasers_Manager::getInstance();
-            $manager->createTeaserInstance($treeId, $teaserId, $layoutAreaId);
+        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+        $teaserManager->createTeaserInstance($treeId, $teaserId, $layoutAreaId);
 
-            $result = MWF_Ext_Result::encode(true, null, 'Instance created.');
-        } catch (Exception $e) {
-            $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
-        }
-
-        $this->getResponse()->setAjaxPayload($result);
+        return new ResultResponse(true, 'Instance created.');
     }
 
     /**
@@ -715,7 +725,7 @@ class LayoutController extends Controller
     /**
      * @Route("/inheritinherited", name="teasers_layout_inheritinherited")
      */
-    public function inheritinheritedAction()
+    public function inheritInheritedAction()
     {
         // TODO use Brainbits_Filter_Input
         $layoutAreaId = $this->_getParam('layoutarea_id');

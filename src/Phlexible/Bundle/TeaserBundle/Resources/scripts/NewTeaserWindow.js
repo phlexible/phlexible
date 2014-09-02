@@ -8,8 +8,8 @@ Phlexible.teasers.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
 
     textHeader: Phlexible.teasers.Strings.new_teaser_header,
     textDescription: Phlexible.teasers.Strings.new_teaser_description,
-    textOk: Phlexible.teasers.Strings.save,
-    textCancel: Phlexible.teasers.Strings.cancel,
+    textOk: Phlexible.elements.Strings.save,
+    textCancel: Phlexible.elements.Strings.cancel,
 
     extraCls: 'p-elements-newteaser',
     iconClsOk: 'p-element-save-icon',

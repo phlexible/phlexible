@@ -103,7 +103,7 @@ class Teaser implements IdentifiableInterface
 
     /**
      * @var int
-     * @ORM\Column(name="cache_lifetime", type="integer")
+     * @ORM\Column(name="cache_lifetime", type="integer", nullable=true)
      */
     private $cacheLifeTime;
 

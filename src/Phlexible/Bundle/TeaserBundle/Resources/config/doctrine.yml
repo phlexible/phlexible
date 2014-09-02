@@ -1,7 +1,7 @@
 services:
     phlexible_teaser.doctrine.teaser_manager:
         class: Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager
-        arguments: [@doctrine.orm.entity_manager]
+        arguments: [@doctrine.orm.entity_manager, @event_dispatcher]
 
     phlexible_teaser.doctrine.catch_manager:
         class: Phlexible\Bundle\TeaserBundle\Doctrine\CatchManager
