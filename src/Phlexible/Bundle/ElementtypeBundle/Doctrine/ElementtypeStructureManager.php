@@ -158,7 +158,9 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
         foreach ($rii as $node) {
             /* @var $node ElementtypeStructureNode */
 
-            $this->entityManager->remove($node);
+            if (!$node->isReferenced()) {
+                $this->entityManager->remove($node);
+            }
         }
 
         if ($flush) {
@@ -185,8 +187,6 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
         foreach ($nodes as $node) {
             /* @var $node ElementtypeStructureNode */
 
-            $node = clone $node;
-
             if ($referenceParentNode) {
                 $node->setParentNode($referenceParentNode);
                 $node->setParentDsId($referenceParentNode->getDsId());
@@ -194,6 +194,7 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
             }
 
             if ($isReferenced) {
+                $node = clone $node;
                 $node->setReferenced(true);
             }
 

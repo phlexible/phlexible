@@ -298,6 +298,10 @@
 
 /*.x-tree-node-icon*/
 
+.p-elements-data-panel .x-panel-body {
+    background: transparent none;
+}
+
 /**
  * Field Groups
  *

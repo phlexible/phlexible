@@ -215,7 +215,7 @@ class ElementtypeStructureNode
      *
      * @return $this
      */
-    public function setElementtypeStructure(ElementtypeStructure $elementtypeStructure)
+    public function setElementtypeStructure(ElementtypeStructure $elementtypeStructure = null)
     {
         $this->elementtypeStructure = $elementtypeStructure;
 
@@ -387,7 +387,7 @@ class ElementtypeStructureNode
      *
      * @return $this
      */
-    public function setReferenceElementtype(Elementtype $referenceElementtype)
+    public function setReferenceElementtype(Elementtype $referenceElementtype = null)
     {
         $this->referenceElementtype = $referenceElementtype;
 

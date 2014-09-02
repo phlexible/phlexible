@@ -1,6 +1,7 @@
 Phlexible.elementtypes.ElementtypeUsage = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.usage,
+    iconCls: 'p-element-component-icon',
     autoExpandColumn: 3,
 
     viewConfig: {
