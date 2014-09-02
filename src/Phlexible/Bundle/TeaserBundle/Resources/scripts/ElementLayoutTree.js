@@ -482,128 +482,131 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
 
                 return true;
             },
-            contextmenu: function (node, event) {
-                event.stopEvent();
-                var coords = event.getXY();
+            scope: this,
+            contextmenu: {
+                fn: function (node, event) {
+                    event.stopEvent();
+                    var coords = event.getXY();
 
-                this.node = node;
+                    this.node = node;
 
-                var type = node.attributes.type;
+                    var type = node.attributes.type;
 
-                if (type === 'area' || type === 'layout') {
-                    this.items.items[0].setText('[Layoutarea]');
-                    this.items.items[0].setIconClass('p-teasers-layoutarea-icon');
+                    if (type === 'area' || type === 'layout') {
+                        this.items.items[0].setText('[Layoutarea]');
+                        this.items.items[0].setIconClass('p-teasers-layoutarea-icon');
 
-                    this.items.items[2].show();
-                    this.items.items[3].show();
-                    this.items.items[4].show();
+                        this.items.items[2].show();
+                        this.items.items[3].show();
+                        this.items.items[4].show();
 
-                    this.items.items[5].hide();
-                    this.items.items[6].hide();
-                    this.items.items[7].hide();
-                    this.items.items[8].show();
-                    this.items.items[9].hide();
-                    this.items.items[10].show();
-                    this.items.items[11].hide();
-                    this.items.items[12].hide();
+                        this.items.items[5].hide();
+                        this.items.items[6].hide();
+                        this.items.items[7].hide();
+                        this.items.items[8].show();
+                        this.items.items[9].hide();
+                        this.items.items[10].show();
+                        this.items.items[11].hide();
+                        this.items.items[12].hide();
 
-                    if (!Phlexible.Clipboard.isInactive() && Phlexible.Clipboard.getType() === 'teaser') {
-                        this.items.items[10].menu.items.items[0].setText(String.format(Phlexible.elements.Strings.paste_as, Phlexible.Clipboard.getText()));
-                        this.items.items[10].enable();
-                    } else {
-                        this.items.items[10].disable();
+                        if (!Phlexible.Clipboard.isInactive() && Phlexible.Clipboard.getType() === 'teaser') {
+                            this.items.items[10].menu.items.items[0].setText(String.format(Phlexible.elements.Strings.paste_as, Phlexible.Clipboard.getText()));
+                            this.items.items[10].enable();
+                        } else {
+                            this.items.items[10].disable();
+                        }
                     }
-                }
-                else if (type === 'teaser' || type === 'element') {
-                    this.items.items[0].setText('[Teaser]');
-                    this.items.items[0].setIconClass('p-teasers-teaser-icon');
+                    else if (type === 'teaser' || type === 'element') {
+                        this.items.items[0].setText('[Teaser]');
+                        this.items.items[0].setIconClass('p-teasers-teaser-icon');
 
-                    this.items.items[2].hide();
-                    this.items.items[3].hide();
-                    this.items.items[4].hide();
+                        this.items.items[2].hide();
+                        this.items.items[3].hide();
+                        this.items.items[4].hide();
 
-                    this.items.items[5].hide();
-                    this.items.items[7].show();
+                        this.items.items[5].hide();
+                        this.items.items[7].show();
 
-                    if (node.attributes.no_display) {
-                        this.items.items[7].setChecked(true);
+                        if (node.attributes.no_display) {
+                            this.items.items[7].setChecked(true);
+                        }
+                        else {
+                            this.items.items[7].setChecked(false);
+                        }
+
+                        if (node.attributes.inherited) {
+                            this.items.items[6].setChecked(node.attributes.stop_inherit);
+                            this.items.items[6].setText(Phlexible.teasers.Strings.stopped_inherited_teaser);
+
+                            this.items.items[8].hide();
+                            this.items.items[9].hide();
+                            this.items.items[10].hide();
+                            this.items.items[11].hide();
+                            this.items.items[12].hide();
+                        }
+                        else {
+                            this.items.items[6].setChecked(node.attributes.inherit);
+                            this.items.items[6].setText(Phlexible.teasers.Strings.inherited_teaser);
+
+                            this.items.items[8].show();
+                            this.items.items[9].show();
+                            this.items.items[10].hide();
+                            this.items.items[11].show();
+                            this.items.items[12].setText(Phlexible.teasers.Strings.delete_teaser);
+                            this.items.items[12].setIconClass('p-teasers-teaser_delete-icon');
+                            this.items.items[12].show();
+                        }
+
+                        this.items.items[6].show();
                     }
-                    else {
-                        this.items.items[7].setChecked(false);
-                    }
+                    else if (type == 'catch') {
+                        this.items.items[0].setText('[Catch]');
+                        this.items.items[0].setIconClass('p-teasers-catch-icon');
 
-                    if (node.attributes.inherited) {
-                        this.items.items[6].setChecked(node.attributes.stop_inherit);
-                        this.items.items[6].setText(Phlexible.teasers.Strings.stopped_inherited_teaser);
+                        this.items.items[2].hide();
+                        this.items.items[3].hide();
+                        this.items.items[4].hide();
 
+                        this.items.items[5].hide();
+                        this.items.items[6].hide();
+
+                        this.items.items[7].hide();
                         this.items.items[8].hide();
                         this.items.items[9].hide();
                         this.items.items[10].hide();
-                        this.items.items[11].hide();
-                        this.items.items[12].hide();
-                    }
-                    else {
-                        this.items.items[6].setChecked(node.attributes.inherit);
-                        this.items.items[6].setText(Phlexible.teasers.Strings.inherited_teaser);
 
-                        this.items.items[8].show();
-                        this.items.items[9].show();
-                        this.items.items[10].hide();
-                        this.items.items[11].show();
-                        this.items.items[12].setText(Phlexible.teasers.Strings.delete_teaser);
-                        this.items.items[12].setIconClass('p-teasers-teaser_delete-icon');
+                        this.items.items[11].hide();
+                        this.items.items[12].setText(Phlexible.teasers.Strings.delete_catch);
+                        this.items.items[12].setIconClass('p-teasers-catch_delete-icon');
                         this.items.items[12].show();
                     }
+                    else {
+                        return;
+                    }
 
-                    this.items.items[6].show();
-                }
-                else if (type == 'catch') {
-                    this.items.items[0].setText('[Catch]');
-                    this.items.items[0].setIconClass('p-teasers-catch-icon');
+                    if (this.element.isAllowed('CREATE')) {
+                        this.items.items[2].enable();
+                        this.items.items[3].enable();
+                        this.items.items[4].enable();
+                    }
+                    else {
+                        this.items.items[2].disable();
+                        this.items.items[3].disable();
+                        this.items.items[4].disable();
+                        this.items.items[10].disable();
+                    }
 
-                    this.items.items[2].hide();
-                    this.items.items[3].hide();
-                    this.items.items[4].hide();
+                    if (this.element.isAllowed('DELETE')) {
+                        this.items.items[12].enable();
+                    }
+                    else {
+                        this.items.items[12].disable();
+                    }
 
-                    this.items.items[5].hide();
-                    this.items.items[6].hide();
-
-                    this.items.items[7].hide();
-                    this.items.items[8].hide();
-                    this.items.items[9].hide();
-                    this.items.items[10].hide();
-
-                    this.items.items[11].hide();
-                    this.items.items[12].setText(Phlexible.teasers.Strings.delete_catch);
-                    this.items.items[12].setIconClass('p-teasers-catch_delete-icon');
-                    this.items.items[12].show();
-                }
-                else {
-                    return;
-                }
-
-                if (this.element.isAllowed('CREATE')) {
-                    this.items.items[2].enable();
-                    this.items.items[3].enable();
-                    this.items.items[4].enable();
-                }
-                else {
-                    this.items.items[2].disable();
-                    this.items.items[3].disable();
-                    this.items.items[4].disable();
-                    this.items.items[10].disable();
-                }
-
-                if (this.element.isAllowed('DELETE')) {
-                    this.items.items[12].enable();
-                }
-                else {
-                    this.items.items[12].disable();
-                }
-
-                this.showAt([coords[0], coords[1]]);
-            },
-            scope: this.contextMenu
+                    this.showAt([coords[0], coords[1]]);
+                },
+                scope: this.contextMenu
+            }
         });
 
         Phlexible.teasers.ElementLayoutTree.superclass.initComponent.call(this);
