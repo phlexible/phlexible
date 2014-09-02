@@ -374,7 +374,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 },
                 {
                     // 10
-                    text: Makeweb.elements.Strings.paste,
+                    text: Phlexible.elements.Strings.paste,
                     iconCls: 'p-element-paste-icon',
                     menu: [
                         {
@@ -464,13 +464,13 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 return false;
             },
             dblclick: function (node, e) {
-                if (node.attributes.type == 'area') {
+                if (node.attributes.type == 'area' || node.attributes.type == 'layout') {
                     this.fireEvent('areaselect', node.attributes.area_id, node);
                     return false;
                 }
 
                 node.select();
-                if (node.attributes.type == 'teaser' && !node.attributes.inherited) {
+                if (node.attributes.type == 'element' && !node.attributes.inherited) {
                     this.fireEvent('teaserselect', node.attributes.id, node);
                 }
                 else if (node.attributes.type == 'catch') {
