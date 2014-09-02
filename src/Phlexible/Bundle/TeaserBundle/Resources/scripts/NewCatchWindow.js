@@ -1,5 +1,5 @@
-Phlexible.elements.NewCatchWindow = Ext.extend(Phlexible.gui.util.Dialog, {
-    title: Phlexible.elements.Strings.new_catch,
+Phlexible.teasers.NewCatchWindow = Ext.extend(Phlexible.gui.util.Dialog, {
+    title: Phlexible.teasers.Strings.new_catch,
     width: 530,
     minWidth: 530,
     maxWidth: 530,
@@ -8,8 +8,8 @@ Phlexible.elements.NewCatchWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     maxHeight: 590,
     iconCls: 'p-element-add-icon',
 
-    textHeader: Phlexible.elements.Strings.new_catch_header,
-    textDescription: Phlexible.elements.Strings.new_catch_description,
+    textHeader: Phlexible.teasers.Strings.new_catch_header,
+    textDescription: Phlexible.teasers.Strings.new_catch_description,
     textOk: Phlexible.elements.Strings.save,
     textCancel: Phlexible.elements.Strings.cancel,
 
@@ -85,13 +85,13 @@ Phlexible.elements.NewCatchWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 hidden: true
             }, {
                 xtype: 'numberfield',
-                fieldLabel: Phlexible.elements.Strings.catch_max_depth,
+                fieldLabel: Phlexible.teasers.Strings.catch_max_depth,
                 name: 'catch_max_depth',
                 width: 30,
                 allowBlank: true
             }, {
                 xtype: 'combo',
-                fieldLabel: Phlexible.elements.Strings.sort_field,
+                fieldLabel: Phlexible.teasers.Strings.sort_field,
                 hiddenName: 'catch_sort_field',
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('teasers_catch_sortfields'),
@@ -145,11 +145,11 @@ Phlexible.elements.NewCatchWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                     fields: ['title', 'value'],
                     data: [
                         [Phlexible.elements.Strings.no_filter, ''],
-                        [Phlexible.elements.Strings.catch_filter_date, 'Phlexible_Teasers_Catch_Filter_Date'],
-                        [Phlexible.elements.Strings.catch_filter_new_product, 'Phlexible_Teasers_Catch_Filter_NewProduct'],
-                        [Phlexible.elements.Strings.catch_filter_next_events, 'Phlexible_Teasers_Catch_Filter_NextEvents'],
-                        [Phlexible.elements.Strings.catch_filter_title_article_number, 'Phlexible_Teasers_Catch_Filter_TitleArticleNumberSort'],
-                        [Phlexible.elements.Strings.catch_filter_color_duration, 'Phlexible_Teasers_Catch_Filter_ColorDuration']
+                        [Phlexible.teasers.Strings.catch_filter_date, 'Phlexible_Teasers_Catch_Filter_Date'],
+                        [Phlexible.teasers.Strings.catch_filter_new_product, 'Phlexible_Teasers_Catch_Filter_NewProduct'],
+                        [Phlexible.teasers.Strings.catch_filter_next_events, 'Phlexible_Teasers_Catch_Filter_NextEvents'],
+                        [Phlexible.teasers.Strings.catch_filter_title_article_number, 'Phlexible_Teasers_Catch_Filter_TitleArticleNumberSort'],
+                        [Phlexible.teasers.Strings.catch_filter_color_duration, 'Phlexible_Teasers_Catch_Filter_ColorDuration']
                     ]
                 }),
                 displayField: 'title',
@@ -179,12 +179,12 @@ Phlexible.elements.NewCatchWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 }
             }, {
                 xtype: 'checkbox',
-                fieldLabel: Phlexible.elements.Strings.catch_only_first_page,
+                fieldLabel: Phlexible.teasers.Strings.catch_only_first_page,
                 name: 'catch_only_first_page',
                 disabled: true
             }, {
                 xtype: 'numberfield',
-                fieldLabel: Phlexible.elements.Strings.catch_elements_per_page,
+                fieldLabel: Phlexible.teasers.Strings.catch_elements_per_page,
                 name: 'catch_elements_per_page',
                 width: 30,
                 allowBlank: false,

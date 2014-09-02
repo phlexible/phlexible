@@ -1,6 +1,6 @@
-Phlexible.elements.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.elements.Strings.add_teaser_reference,
-    strings: Phlexible.elements.Strings,
+Phlexible.teasers.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
+    title: Phlexible.teasers.Strings.add_teaser_reference,
+    strings: Phlexible.teasers.Strings,
     iconCls: 'p-teasers-teaser_reference-icon',
     cls: 'p-dialog p-elements-newteaserinstance',
     width: 500,
@@ -88,6 +88,6 @@ Phlexible.elements.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
             }
         });
 
-        Phlexible.elements.NewTeaserInstanceWindow.superclass.initComponent.call(this);
+        Phlexible.teasers.NewTeaserInstanceWindow.superclass.initComponent.call(this);
     }
 });

@@ -2,3 +2,37 @@ teasers:
     no_filter: 'Kein Filter'
     inherited_teasers: 'Geerbte Teaser'
     catched: Catched
+    teaser_node: Teasernode
+    teaser_id: 'Teaser ID'
+    catch: Catch
+    publish_teaser: Veröffentlichen
+    publish_teaser_header: Veröffentlichen
+    publish_teaser_description: 'Veröffentliche ausgewählten Teaser'
+    set_teaser_offline: 'Offline setzen'
+    set_teaser_offline_header: 'Offline setzen'
+    set_teaser_offline_description: 'Setze ausgewählten Teaser offline'
+    teaser: Teaser
+    teasers: Teaser
+    add_teaser: 'Teaser anlegen'
+    add_teaser_reference: 'Teaserinstanz anlegen'
+    add_teaser_reference_header: 'Teaserinstanz anlegen'
+    add_teaser_reference_description: 'Bitte wählen Sie jenes Teilelement aus, für das Sie an dieser Stelle eine Instanz anlegen möchten.'
+    new_teaser: 'Neuer Teaser'
+    new_teaser_header: 'Neuen Teaser anlegen'
+    new_teaser_description: 'Bitte geben Sie die benötigten Daten für den neuen Teaser ein.'
+    add_catch: 'Catch anlegen'
+    new_catch: 'Neuer Catch'
+    new_catch_header: 'Neuen Teaser anlegen'
+    new_catch_description: 'Bitte geben Sie die benötigten Daten für den neuen Teaser ein.'
+    delete_teaser: 'Teaser löschen'
+    delete_catch: 'Catch löschen'
+    inherited_teaser: Vererbt
+    stopped_inherited_teaser: 'Vererbung gestoppt'
+    not_shown_teaser: 'Hier nicht anzeigen'
+    inherited: Vererbt
+    catch_showing: 'zeige {0} von {1}'
+    catch_max_elements: 'Maximale Teaseranzahl'
+    catch_rotation: Rotation
+    catch_pool_size: Rotationspool
+    catch_max_depth: 'Maximale Suchtiefe'
+    catch_elements_per_page: 'Elemente pro Seite'

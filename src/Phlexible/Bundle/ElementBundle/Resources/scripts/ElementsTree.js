@@ -602,3 +602,5 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
         }
     }
 });
+
+Ext.reg('elements-tree', Phlexible.elements.ElementsTree);

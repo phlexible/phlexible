@@ -1,6 +1,6 @@
-Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
-    strings: Phlexible.elements.Strings,
-    title: Phlexible.elements.Strings['catch'],
+Phlexible.teasers.CatchDataPanel = Ext.extend(Ext.Panel, {
+    strings: Phlexible.teasers.Strings,
+    title: Phlexible.teasers.Strings['catch'],
     iconCls: 'p-element-tab_data-icon',
     cls: 'p-elements-catch-panel',
     autoScroll: true,
@@ -39,7 +39,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                 border: false,
                 items: [{
                     xtype: 'fieldset',
-                    title: Phlexible.elements.Strings.catch,
+                    title: this.strings.catch,
                     autoHeight: true,
                     anchor: '-15',
                     items: [{
@@ -130,21 +130,21 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                     },
                     {
                         xtype: 'numberfield',
-                        fieldLabel: Phlexible.elements.Strings.catch_max_depth,
+                        fieldLabel: this.strings.catch_max_depth,
                         name: 'catch_max_depth',
                         width: 30,
                         allowBlank: true
                     },
                     {
                         xtype: 'numberfield',
-                        fieldLabel: Phlexible.elements.Strings.catch_max_elements,
+                        fieldLabel: this.strings.Strings.catch_max_elements,
                         name: 'catch_max_elements',
                         width: 30,
                         allowBlank: true
                     },
                     {
                         xtype: 'checkbox',
-                        fieldLabel: Phlexible.elements.Strings.catch_rotation,
+                        fieldLabel: this.strings.Strings.catch_rotation,
                         boxLabel: Phlexible.elements.Strings.activate,
                         name: 'catch_rotation',
                         listeners: {
@@ -157,7 +157,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                     },
                     {
                         xtype: 'numberfield',
-                        fieldLabel: Phlexible.elements.Strings.catch_pool_size,
+                        fieldLabel: this.strings.Strings.catch_pool_size,
                         name: 'catch_pool_size',
                         width: 30,
                         allowBlank: true,
@@ -370,7 +370,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
                     },
                     {
                         xtype: 'numberfield',
-                        fieldLabel: Phlexible.elements.Strings.catch_elements_per_page,
+                        fieldLabel: this.strings.catch_elements_per_page,
                         name: 'catch_elements_per_page',
                         width: 30,
                         allowBlank: false,
@@ -449,7 +449,7 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        Phlexible.elements.ElementDataPanel.superclass.initComponent.call(this);
+        Phlexible.teasers.ElementDataPanel.superclass.initComponent.call(this);
     },
 
     getForm: function () {
@@ -589,4 +589,4 @@ Phlexible.elements.CatchDataPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('teasers-catch-panel', Phlexible.elements.CatchDataPanel);
+Ext.reg('teasers-catch-panel', Phlexible.teasers.CatchDataPanel);

@@ -19,9 +19,6 @@ elements:
     latest_version: 'Letzte Version'
     online_version: 'Online Version'
     tree_node: Treenode
-    teaser_node: Teasernode
-    teaser_id: 'Teaser ID'
-    catch: Catch
     content: Content
     field: Feld
     sites: Seiten
@@ -91,9 +88,6 @@ elements:
     publish_treenode_header: Veröffentlichen
     publish_treenode_description: 'Veröffentliche ausgewählte Elemente'
     publish_treenode_recursive: 'Veröffentlichen mit allen Untertreenodes'
-    publish_teaser: Veröffentlichen
-    publish_teaser_header: Veröffentlichen
-    publish_teaser_description: 'Veröffentliche ausgewählten Teaser'
     release_element: Freigeben
     set_element_offline: 'Offline setzen'
     set_element_offline_recursive: 'Offline setzen mit allen Unterelementen'
@@ -102,9 +96,6 @@ elements:
     set_treenode_offline_header: 'Offline setzen'
     set_treenode_offline_description: 'Setze ausgewählten Treenode offline'
     set_treenode_offline_recursive: 'Setze mit allen Untertreenodes offline'
-    set_teaser_offline: 'Offline setzen'
-    set_teaser_offline_header: 'Offline setzen'
-    set_teaser_offline_description: 'Setze ausgewählten Teaser offline'
     publish: Veröffentlichen
     set_offline: 'Offline setzten'
     options: Optionen
@@ -192,31 +183,12 @@ elements:
     new_element_description: 'Bitte geben Sie die benötigten Daten für das neue Element ein.'
     select_elementtype: 'Bitte wählen Sie einen Elementtypen.'
     empty_tab: 'Reiter "{0}" ist leer. Bitte fügen Sie einige Felder hinzu, oder löschen Sie den Reiter, damit die Datenmaske für dieses Element komplett deaktiviert wird.'
-    teaser: Teaser
-    teasers: Teaser
     backend_title: Backendtitel
     page_title: Seitentitel
     navigation_title: Navigationstitel
     backend_page_title: 'Backend- / Seitentitel'
     backend_navigation_title: 'Backend- / Navigationstitel'
     backend_page_navigation_title: 'Backend- / Page- / Navigationstitel'
-    add_teaser: 'Teaser anlegen'
-    add_teaser_reference: 'Teaserinstanz anlegen'
-    add_teaser_reference_header: 'Teaserinstanz anlegen'
-    add_teaser_reference_description: 'Bitte wählen Sie jenes Teilelement aus, für das Sie an dieser Stelle eine Instanz anlegen möchten.'
-    new_teaser: 'Neuer Teaser'
-    new_teaser_header: 'Neuen Teaser anlegen'
-    new_teaser_description: 'Bitte geben Sie die benötigten Daten für den neuen Teaser ein.'
-    add_catch: 'Catch anlegen'
-    new_catch: 'Neuer Catch'
-    new_catch_header: 'Neuen Teaser anlegen'
-    new_catch_description: 'Bitte geben Sie die benötigten Daten für den neuen Teaser ein.'
-    delete_teaser: 'Teaser löschen'
-    delete_catch: 'Catch löschen'
-    inherited_teaser: Vererbt
-    stopped_inherited_teaser: 'Vererbung gestoppt'
-    not_shown_teaser: 'Hier nicht anzeigen'
-    inherited: Vererbt
     confirm_delete_element: 'Möchten Sie dieses Element wirklich löschen?'
     confirm_delete_elements: 'Möchten Sie diese Elemente wirklich löschen?'
     error: Fehler
@@ -224,12 +196,6 @@ elements:
     filter: Filter
     paging: Paging
     activate: aktivieren
-    catch_showing: 'zeige {0} von {1}'
-    catch_max_elements: 'Maximale Teaseranzahl'
-    catch_rotation: Rotation
-    catch_pool_size: Rotationspool
-    catch_max_depth: 'Maximale Suchtiefe'
-    catch_elements_per_page: 'Elemente pro Seite'
     add_alias: 'Instanz anlegen'
     new_alias: 'Neue Instanz'
     new_alias_header: 'Instanz anlegen'

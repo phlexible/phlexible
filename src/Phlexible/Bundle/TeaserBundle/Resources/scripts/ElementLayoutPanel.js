@@ -1,6 +1,6 @@
-Phlexible.elements.ElementLayoutPanel = Ext.extend(Ext.Panel, {
-    title: Phlexible.elements.Strings.layout,
-    strings: Phlexible.elements.Strings,
+Phlexible.teasers.ElementLayoutPanel = Ext.extend(Ext.Panel, {
+    title: Phlexible.teasers.Strings.layout,
+    strings: Phlexible.teasers.Strings,
     iconCls: 'p-element-tab_layout-icon',
     layout: 'border',
     border: false,
@@ -8,22 +8,11 @@ Phlexible.elements.ElementLayoutPanel = Ext.extend(Ext.Panel, {
     initComponent: function () {
 
         this.element.on({
-            load: {
-                fn: this.onLoadElement,
-                scope: this
-            },
-            getlock: {
-                fn: this.onGetLock,
-                scope: this
-            },
-            islocked: {
-                fn: this.onRemoveLock,
-                scope: this
-            },
-            removelock: {
-                fn: this.onRemoveLock,
-                scope: this
-            }
+            load: this.onLoadElement,
+            getlock: this.onGetLock,
+            islocked: this.onRemoveLock,
+            removelock: this.onRemoveLock,
+            scope: this
         });
 
         this.teaserElement = new Phlexible.elements.Teaser({
@@ -32,28 +21,24 @@ Phlexible.elements.ElementLayoutPanel = Ext.extend(Ext.Panel, {
         });
 
         this.teaserElement.on({
-            load: {
-                fn: this.onLoadTeaser,
-                scope: this
-            }
+            load: this.onLoadTeaser,
+            scope: this
         });
 
         this.items = [
-            this.tree = new Phlexible.elements.ElementLayoutTree({
+            this.tree = new Phlexible.teasers.ElementLayoutTree({
                 region: 'west',
                 width: 200,
                 split: true,
                 element: this.element,
                 listeners: {
-                    teaserselect: {
-                        fn: function (eid) {
-//                            this.dataPanel.disable();
-                            this.getTopToolbar().show();
-                            this.getComponent(1).getLayout().setActiveItem(0);
-                            this.teaserElement.load(eid);
-                        },
-                        scope: this
-                    }
+                    teaserselect: function (eid) {
+//                        this.dataPanel.disable();
+                        this.getTopToolbar().show();
+                        this.getComponent(1).getLayout().setActiveItem(0);
+                        this.teaserElement.load(eid);
+                    },
+                    scope: this
                 }
             }),
             {
@@ -99,7 +84,7 @@ Phlexible.elements.ElementLayoutPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        Phlexible.elements.ElementLayoutPanel.superclass.initComponent.call(this);
+        Phlexible.teasers.ElementLayoutPanel.superclass.initComponent.call(this);
     },
 
     onLoadElement: function () {
@@ -144,3 +129,5 @@ Phlexible.elements.ElementLayoutPanel = Ext.extend(Ext.Panel, {
         this.getTopToolbar().disable();
     }
 });
+
+Ext.reg('teasers-layout-panel', Phlexible.teasers.ElementLayoutPanel);

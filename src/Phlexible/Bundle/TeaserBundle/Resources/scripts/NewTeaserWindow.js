@@ -1,15 +1,15 @@
-Phlexible.elements.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
-    title: Phlexible.elements.Strings.new_teaser,
+Phlexible.teasers.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
+    title: Phlexible.teasers.Strings.new_teaser,
     width: 450,
     minWidth: 450,
     height: 320,
     minHeight: 320,
     iconCls: 'p-element-add-icon',
 
-    textHeader: Phlexible.elements.Strings.new_teaser_header,
-    textDescription: Phlexible.elements.Strings.new_teaser_description,
-    textOk: Phlexible.elements.Strings.save,
-    textCancel: Phlexible.elements.Strings.cancel,
+    textHeader: Phlexible.teasers.Strings.new_teaser_header,
+    textDescription: Phlexible.teasers.Strings.new_teaser_description,
+    textOk: Phlexible.teasers.Strings.save,
+    textCancel: Phlexible.teasers.Strings.cancel,
 
     extraCls: 'p-elements-newteaser',
     iconClsOk: 'p-element-save-icon',
@@ -86,7 +86,7 @@ Phlexible.elements.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 name: 'inherit',
                 fieldLabel: '',
                 labelSeparator: '',
-                boxLabel: Phlexible.elements.Strings.inherited_teaser,
+                boxLabel: Phlexible.teasers.Strings.inherited_teaser,
                 checked: true
             },
             {
@@ -94,7 +94,7 @@ Phlexible.elements.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 name: 'no_display',
                 fieldLabel: '',
                 labelSeparator: '',
-                boxLabel: Phlexible.elements.Strings.not_shown_teaser
+                boxLabel: Phlexible.teasers.Strings.not_shown_teaser
             }
         ];
 

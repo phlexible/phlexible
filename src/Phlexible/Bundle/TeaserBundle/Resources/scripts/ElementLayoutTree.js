@@ -1,6 +1,6 @@
-Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
-    title: Phlexible.elements.Strings.layout,
-    strings: Phlexible.elements.Strings,
+Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
+    title: Phlexible.teasers.Strings.layout,
+    strings: Phlexible.teasers.Strings,
     rootVisible: false,
     disabled: true,
     autoScroll: true,
@@ -125,7 +125,7 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                     iconCls: 'p-teasers-teaser_add-icon',
                     handler: function (item) {
                         var node = item.parentMenu.node;
-                        var w = new Phlexible.elements.NewTeaserWindow({
+                        var w = new Phlexible.teasers.NewTeaserWindow({
                             submitParams: {
                                 siteroot_id: this.element.siteroot_id,
                                 tree_id: node.attributes.parent_tid, //this.element.tid,
@@ -155,7 +155,7 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                     iconCls: 'p-teasers-teaser_reference-icon',
                     handler: function (item) {
                         var node = item.parentMenu.node;
-                        var w = new Phlexible.elements.NewTeaserInstanceWindow({
+                        var w = new Phlexible.teasers.NewTeaserInstanceWindow({
                             element: this.element,
                             listeners: {
                                 teaserSelect: function (forTeaserId, layoutAreaId, tid) {
@@ -535,7 +535,7 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
 
                     if (node.attributes.inherited) {
                         this.items.items[6].setChecked(node.attributes.stop_inherit);
-                        this.items.items[6].setText(Phlexible.elements.Strings.stopped_inherited_teaser);
+                        this.items.items[6].setText(Phlexible.teasers.Strings.stopped_inherited_teaser);
 
                         this.items.items[8].hide();
                         this.items.items[9].hide();
@@ -545,13 +545,13 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                     }
                     else {
                         this.items.items[6].setChecked(node.attributes.inherit);
-                        this.items.items[6].setText(Phlexible.elements.Strings.inherited_teaser);
+                        this.items.items[6].setText(Phlexible.teasers.Strings.inherited_teaser);
 
                         this.items.items[8].show();
                         this.items.items[9].show();
                         this.items.items[10].hide();
                         this.items.items[11].show();
-                        this.items.items[12].setText(Phlexible.elements.Strings.delete_teaser);
+                        this.items.items[12].setText(Phlexible.teasers.Strings.delete_teaser);
                         this.items.items[12].setIconClass('p-teasers-teaser_delete-icon');
                         this.items.items[12].show();
                     }
@@ -575,7 +575,7 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                     this.items.items[10].hide();
 
                     this.items.items[11].hide();
-                    this.items.items[12].setText(Phlexible.elements.Strings.delete_catch);
+                    this.items.items[12].setText(Phlexible.teasers.Strings.delete_catch);
                     this.items.items[12].setIconClass('p-teasers-catch_delete-icon');
                     this.items.items[12].show();
                 }
@@ -607,7 +607,7 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
             scope: this.contextMenu
         });
 
-        Phlexible.elements.ElementLayoutTree.superclass.initComponent.call(this);
+        Phlexible.teasers.ElementLayoutTree.superclass.initComponent.call(this);
     },
 
     onSetLanguage: function (element, language) {
@@ -659,5 +659,6 @@ Phlexible.elements.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
             }
         }.createDelegate(this));
     }
-
 });
+
+Ext.reg('teasers-layout-tree', Phlexible.teasers.ElementLayoutTree);

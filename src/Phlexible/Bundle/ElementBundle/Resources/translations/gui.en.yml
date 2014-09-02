@@ -19,8 +19,6 @@ elements:
     latest_version: 'Latest Version'
     online_version: 'Online Version'
     tree_node: Treenode
-    teaser_node: Teasernode
-    teaser_id: 'Teaser ID'
     catch: Catch
     content: Content
     field: Field
@@ -91,9 +89,6 @@ elements:
     publish_treenode_header: Publish
     publish_treenode_description: 'Publish the selected elements'
     publish_treenode_recursive: 'Publish with all child nodes'
-    publish_teaser: Publish
-    publish_teaser_header: Publish
-    publish_teaser_description: 'Publish selected teaser'
     release_element: Release
     set_element_offline: 'Set offline'
     set_element_offline_recursive: 'Set offline with all child elements'
@@ -102,9 +97,6 @@ elements:
     set_treenode_offline_header: 'Set offline'
     set_treenode_offline_description: 'Set selected treenode offline'
     set_treenode_offline_recursive: 'Set offline with all subtreenodes'
-    set_teaser_offline: 'Set offline'
-    set_teaser_offline_header: 'Set offline'
-    set_teaser_offline_description: 'Set selected teaser offline'
     publish: Publish
     set_offline: 'Set offline'
     options: Optionen
@@ -191,31 +183,12 @@ elements:
     new_element_description: 'Please enter the required information for the new Element.'
     select_elementtype: 'Please select an Element Type.'
     empty_tab: 'Tab "{0}" is empty. Please add some fields, or remove the tab for completely deactivate the data mask for this element.'
-    teaser: Teaser
-    teasers: Teasers
     backend_title: 'Backend title'
     page_title: 'Page title'
     navigation_title: 'Navigation title'
     backend_page_title: 'Backend / Page title'
     backend_navigation_title: 'Backend / Navigation title'
     backend_page_navigation_title: 'Backend / Page / Navigation title'
-    add_teaser: 'Add Teaser'
-    add_teaser_reference: 'Add Teaser instance'
-    add_teaser_reference_header: 'Add Teaser instance'
-    add_teaser_reference_description: 'Please select a part element you want to add an instance for at this place.'
-    new_teaser: 'New Teaser'
-    new_teaser_header: 'Create new Teaser'
-    new_teaser_description: 'Please enter the required information for the new Teaser.'
-    add_catch: 'Add Catch'
-    new_catch: 'New Catch'
-    new_catch_header: 'Create Catch'
-    new_catch_description: 'Please enter the required information for the new Catch.'
-    delete_teaser: 'Delete Teaser'
-    delete_catch: 'Delete Catch'
-    inherited_teaser: Inherited
-    stopped_inherited_teaser: 'Stopped inheritation'
-    not_shown_teaser: 'Not shown here'
-    inherited: Inherited
     confirm_delete_element: 'Do you really want to delete this element?'
     confirm_delete_elements: 'Do you really want to delete these elements?'
     error: Error
@@ -223,12 +196,6 @@ elements:
     filter: Filter
     paging: Paging
     activate: activate
-    catch_showing: 'showing {0} of {1}'
-    catch_max_elements: 'Maximum Number of Teasers'
-    catch_rotation: Rotation
-    catch_pool_size: 'Rotation Pool'
-    catch_max_depth: 'Maximum Search Depth'
-    catch_elements_per_page: 'Elements per page'
     add_alias: 'Add Instance'
     new_alias: 'New Instance'
     new_alias_header: 'Create Instance'

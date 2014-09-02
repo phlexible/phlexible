@@ -1,5 +1,5 @@
-Phlexible.elements.SetTeaserOfflineWindow = Ext.extend(Phlexible.gui.util.Dialog, {
-    title: Phlexible.elements.Strings.set_teaser_offline,
+Phlexible.teasers.SetTeaserOfflineWindow = Ext.extend(Phlexible.gui.util.Dialog, {
+    title: Phlexible.teasers.Strings.set_teaser_offline,
     width: 530,
     minWidth: 530,
     maxWidth: 530,
@@ -8,10 +8,10 @@ Phlexible.elements.SetTeaserOfflineWindow = Ext.extend(Phlexible.gui.util.Dialog
     maxHeight: 440,
     iconCls: 'p-element-set_offline-icon',
 
-    textHeader: Phlexible.elements.Strings.set_teaser_offline_header,
-    textDescription: Phlexible.elements.Strings.set_teaser_offline_description,
-    textOk: Phlexible.elements.Strings.set_offline,
-    textCancel: Phlexible.elements.Strings.cancel,
+    textHeader: Phlexible.teasers.Strings.set_teaser_offline_header,
+    textDescription: Phlexible.teasers.Strings.set_teaser_offline_description,
+    textOk: Phlexible.teasers.Strings.set_offline,
+    textCancel: Phlexible.teasers.Strings.cancel,
 
     extraCls: 'p-elements-publish',
     iconClsOk: 'p-element-save-icon',
