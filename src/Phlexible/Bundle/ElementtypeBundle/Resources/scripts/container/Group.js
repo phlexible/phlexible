@@ -391,6 +391,7 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
         title: item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
         cls: (item.configuration.group_single_line ? 'p-form-group-singleline' : 'p-form-group-multiline') + ' ' + (item.configuration.group_show_border ? 'p-fields-group-border' : 'p-fields-group-noborder'),
 
+        id: Ext.id(),
         workingTitle: item.name,
         dsId: item.dsId,
         groupId: groupId,

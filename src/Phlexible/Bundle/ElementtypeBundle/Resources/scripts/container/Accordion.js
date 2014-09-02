@@ -139,6 +139,7 @@ Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, 
         titleCollapse: true,
         animCollapse: false,
 
+        id: Ext.id(),
         workingTitle: item.workingTitle,
         dsId: item.dsId,
         isMaster: element.master,
