@@ -22,22 +22,15 @@ use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 class ElementtypeUsageListener
 {
     /**
-     * @var ElementtypeStructureManagerInterface
-     */
-    private $elementtypeStructureManager;
-
-    /**
      * @var ElementtypeService
      */
     private $elementtypeService;
 
     /**
-     * @param ElementtypeStructureManagerInterface $elementtypeStructureManager
-     * @param ElementtypeService                   $elementtypeService
+     * @param ElementtypeService $elementtypeService
      */
-    public function __construct(ElementtypeStructureManagerInterface $elementtypeStructureManager, ElementtypeService $elementtypeService)
+    public function __construct(ElementtypeService $elementtypeService)
     {
-        $this->elementtypeStructureManager = $elementtypeStructureManager;
         $this->elementtypeService = $elementtypeService;
     }
 
@@ -48,15 +41,15 @@ class ElementtypeUsageListener
     {
         $elementtype = $event->getElementtype();
 
-        $nodes = $this->elementtypeStructureManager->findNodesByReferenceElementtype($elementtype);
-        foreach ($nodes as $node) {
+        $elementtypes = $this->elementtypeService->findElementtypesUsingReferenceElementtype($elementtype);
+        foreach ($elementtypes as $elementtype) {
             $event->addUsage(
                 new Usage(
-                    $node->getElementtype()->getType() . ' elementtype',
+                    $elementtype->getType() . ' elementtype',
                     'reference',
-                    $node->getElementtype()->getId(),
-                    $node->getElementtype()->getTitle(),
-                    $node->getElementtype()->getLatestVersion()
+                    $elementtype->getId(),
+                    $elementtype->getTitle(),
+                    $elementtype->getLatestVersion()
                 )
             );
         }

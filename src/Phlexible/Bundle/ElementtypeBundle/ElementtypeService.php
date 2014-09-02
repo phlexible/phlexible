@@ -203,11 +203,11 @@ class ElementtypeService
     /**
      * @param Elementtype $referenceElementtype
      *
-     * @return ElementtypeStructureNode[]
+     * @return Elementtype[]
      */
-    public function findNodesByReferenceElementtype(Elementtype $referenceElementtype)
+    public function findElementtypesUsingReferenceElementtype(Elementtype $referenceElementtype)
     {
-        return $this->elementtypeStructureManager->findNodesByReferenceElementtype($referenceElementtype);
+        return $this->elementtypeStructureManager->findElementtypesUsingReferenceElementtype($referenceElementtype);
     }
 
     /**

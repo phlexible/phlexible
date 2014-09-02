@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Controller\Tree;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
+use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
@@ -77,6 +78,7 @@ class TreeSaver
         $comment = trim($rootConfig['comment']) ?: null;
 
         $elementtype = $this->elementtypeService->findElementtype($elementtypeId);
+
         $priorElementtypeVersion = $this->elementtypeService->findLatestElementtypeVersion($elementtype);
 
         $elementtypeVersion = clone $priorElementtypeVersion;
@@ -112,19 +114,61 @@ class TreeSaver
         // update elementtypes that use this elementtype as reference
 
         if ($elementtype->getType() === 'reference') {
-            $nodes = $this->elementtypeService->findNodesByReferenceElementtype($elementtype);
-            foreach ($nodes as $node) {
-                $referencingElementtype = $node->getElementtype();
-                $referencingElementtypeVersion = $this->elementtypeService->findLatestElementtypeVersion($referencingElementtype);
-                $referencingElementtypeStructure = $this->elementtypeService->findElementtypeStructure($referencingElementtypeVersion);
-                // TODO: clone, raise reference version
-                $referencingElementtypeVersion->setVersion($referencingElementtypeVersion->getVersion() + 1);
-                $referencingElementtypeVersion->setCreatedAt(new \Datetime());
-                $referencingElementtype->setLatestVersion($referencingElementtypeVersion->getVersion());
-            }
+            $this->updateElementtypesUsingReference($elementtype, $user->getId());
         }
 
         return $elementtypeVersion;
+    }
+
+    /**
+     * @param Elementtype $referenceElementtype
+     * @param string      $userId
+     */
+    private function updateElementtypesUsingReference(Elementtype $referenceElementtype, $userId)
+    {
+        $elementtypes = $this->elementtypeService->findElementtypesUsingReferenceElementtype($referenceElementtype);
+        foreach ($elementtypes as $elementtype) {
+            $elementtypeVersion = clone $this->elementtypeService->findLatestElementtypeVersion($elementtype);
+            $latestElementtypeStructure = $this->elementtypeService->findElementtypeStructure($elementtypeVersion);
+
+            $elementtypeVersion
+                ->setId(null)
+                ->setVersion($elementtypeVersion->getVersion() + 1)
+                ->setElementtype($elementtype)
+                ->setCreatedAt(new \Datetime())
+                ->setCreateUserId($userId);
+
+            $elementtype
+                ->setLatestVersion($elementtypeVersion->getVersion());
+
+            $elementtypeStructure = new ElementtypeStructure();
+
+            $rii = new \RecursiveIteratorIterator($latestElementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+            foreach ($rii as $latestNode) {
+                if ($latestNode->isReferenced()) {
+                    continue;
+                }
+                
+                /* @var $node ElementtypeStructureNode */
+                $node = clone $latestNode;
+                $node
+                    ->setId(null)
+                    ->setElementtype($elementtype)
+                    ->setVersion($elementtypeVersion->getVersion())
+                    ->setElementtypeStructure($elementtypeStructure)
+                    ->setParentNode($elementtypeStructure->getNode($node->getParentDsId()));
+
+                if ($node->isReference() && $node->getReferenceElementtype()->getId() === $referenceElementtype->getId()) {
+                    $node->setReferenceVersion($referenceElementtype->getLatestVersion());
+                }
+
+                $elementtypeStructure->addNode($node);
+            }
+
+            $this->elementtypeService->updateElementtype($elementtype, false);
+            $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, false);
+            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure);
+        }
     }
 
     /**

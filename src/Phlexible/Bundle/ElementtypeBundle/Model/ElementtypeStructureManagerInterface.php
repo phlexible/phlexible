@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -30,16 +29,9 @@ interface ElementtypeStructureManagerInterface
     /**
      * @param Elementtype $referenceElementtype
      *
-     * @return ElementtypeStructureNode[]
+     * @return Elementtype[]
      */
-    public function findNodesByReferenceElementtype(Elementtype $referenceElementtype);
-
-    /**
-     * @param ElementtypeVersion $referenceElementtypeVersion
-     *
-     * @return ElementtypeStructureNode[]
-     */
-    public function findNodesByReferenceElementtypeVersion(ElementtypeVersion $referenceElementtypeVersion);
+    public function findElementtypesUsingReferenceElementtype(Elementtype $referenceElementtype);
 
     /**
      * @param ElementtypeStructure $elementtypeStructure

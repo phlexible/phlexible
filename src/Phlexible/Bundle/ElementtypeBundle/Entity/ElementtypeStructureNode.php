@@ -649,4 +649,29 @@ class ElementtypeStructureNode
     {
         return self::FIELD_TYPE_REFERENCE_ROOT === $this->getType();
     }
+
+    /**
+     * @var bool
+     */
+    private $referenced = false;
+
+    /**
+     * @param bool $referenced
+     *
+     * @return $this
+     */
+    public function setReferenced($referenced = true)
+    {
+        $this->referenced = $referenced;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReferenced()
+    {
+        return $this->referenced;
+    }
 }

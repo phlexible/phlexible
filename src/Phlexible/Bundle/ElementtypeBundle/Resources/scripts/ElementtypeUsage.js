@@ -1,7 +1,7 @@
 Phlexible.elementtypes.ElementtypeUsage = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.usage,
-    autoExpandColumn: 2,
+    autoExpandColumn: 3,
 
     viewConfig: {
         emptyText: Phlexible.elementtypes.Strings.no_usage

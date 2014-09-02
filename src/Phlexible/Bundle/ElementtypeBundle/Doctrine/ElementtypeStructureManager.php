@@ -95,33 +95,20 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
      *
      * @return ElementtypeStructureNode[]
      */
-    public function findNodesByReferenceElementtype(Elementtype $referenceElementtype)
+    public function findElementtypesUsingReferenceElementtype(Elementtype $referenceElementtype)
     {
-        $nodes = $this->getStructureNodeRepository()->findBy(
-            array(
-                'referenceElementtype' => $referenceElementtype,
-                'referenceVersion'     => $referenceElementtype->getLatestVersion()
-            )
-        );
+        $conn = $this->entityManager->getConnection();
+        $qb = $conn->createQueryBuilder();
+        $qb
+            ->select('ets.elementtype_id')
+            ->from('elementtype_structure', 'ets')
+            ->join('ets', 'elementtype', 'e', 'ets.elementtype_version = e.latest_version')
+            ->where($qb->expr()->eq('ets.reference_id', $referenceElementtype->getId()));
 
-        return $nodes;
-    }
+        $ids = $conn->fetchAll($qb->getSQL());
+        $ids = array_column($ids, 'elementtype_id');
 
-    /**
-     * @param ElementtypeVersion $referenceElementtypeVersion
-     *
-     * @return ElementtypeStructureNode[]
-     */
-    public function findNodesByReferenceElementtypeVersion(ElementtypeVersion $referenceElementtypeVersion)
-    {
-        $nodes = $this->getStructureNodeRepository()->findBy(
-            array(
-                'referenceElementtype' => $referenceElementtypeVersion->getElementtype(),
-                'referenceVersion'     => $referenceElementtypeVersion->getVersion()
-            )
-        );
-
-        return $nodes;
+        return $this->entityManager->getRepository('PhlexibleElementtypeBundle:Elementtype')->findBy(array('id' => $ids));
     }
 
     /**
@@ -184,8 +171,9 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
      * @param int                      $id
      * @param int                      $version
      * @param ElementtypeStructureNode $referenceParentNode
+     * @param bool                     $isReferenced
      */
-    private function doLoad(ElementtypeStructure $structure, $id, $version, $referenceParentNode = null)
+    private function doLoad(ElementtypeStructure $structure, $id, $version, $referenceParentNode = null, $isReferenced = false)
     {
         $nodes = $this->getStructureNodeRepository()->findBy(
             array(
@@ -205,10 +193,14 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
                 $referenceParentNode = null;
             }
 
+            if ($isReferenced) {
+                $node->setReferenced(true);
+            }
+
             $structure->addNode($node);
 
             if ($node->isReference()) {
-                $this->doLoad($structure, $node->getReferenceElementtype()->getId(), $node->getReferenceVersion(), $node);
+                $this->doLoad($structure, $node->getReferenceElementtype()->getId(), $node->getReferenceVersion(), $node, true);
             }
         }
     }
