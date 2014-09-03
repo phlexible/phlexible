@@ -59,6 +59,8 @@ class TeaserAssetProvider implements AssetProviderInterface
 
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/CatchDataPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTree.js')),
+            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTreeLoader.js')),
+            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTreeNodeUI.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/NewTeaserWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/NewTeaserInstanceWindow.js')),

@@ -32,7 +32,7 @@ class TeaserController extends Controller
      */
     public function renderAction(Request $request, $teaserId)
     {
-        $teaser = $this->get('phlexible_teaser.teaser_service')->findTeaser($teaserId);
+        $teaser = $this->get('phlexible_teaser.teaser_service')->find($teaserId);
         $language = $request->get('language', 'de');
 
         if ($teaser->getType() === 'element') {

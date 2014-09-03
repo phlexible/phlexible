@@ -40,5 +40,6 @@ class PhlexibleTeaserExtension extends Extension
         $container->setAlias('phlexible_teaser.teaser_manager', 'phlexible_teaser.doctrine.teaser_manager');
         $container->setAlias('phlexible_teaser.teaser_service', 'phlexible_teaser.doctrine.teaser_manager');
         $container->setAlias('phlexible_teaser.catch_manager', 'phlexible_teaser.doctrine.catch_manager');
+        $container->setAlias('phlexible_teaser.state_manager', 'phlexible_teaser.doctrine.state_manager');
     }
 }

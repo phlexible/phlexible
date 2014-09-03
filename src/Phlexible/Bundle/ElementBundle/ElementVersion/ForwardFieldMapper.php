@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\ElementVersion;
 
-use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
@@ -19,19 +18,6 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
  */
 class ForwardFieldMapper implements FieldMapperInterface
 {
-    /**
-     * @var ElementService
-     */
-    private $elementService;
-
-    /**
-     * @param ElementService $elementService
-     */
-    public function __construct(ElementService $elementService)
-    {
-        $this->elementService = $elementService;
-    }
-
     /**
      * {@inheritdoc}
      */

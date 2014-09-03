@@ -23,7 +23,24 @@ interface TeaserManagerInterface
      *
      * @return Teaser
      */
-    public function findTeaser($id);
+    public function find($id);
+
+    /**
+     * @param array      $criteria
+     * @param array|null $orderBy
+     * @param int|null   $limit
+     * @param int|null   $offset
+     *
+     * @return Teaser[]
+     */
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
+
+    /**
+     * @param array $criteria
+     *
+     * @return Teaser
+     */
+    public function findOneBy(array $criteria);
 
     /**
      * @param mixed             $layoutarea
@@ -37,9 +54,60 @@ interface TeaserManagerInterface
      * @param mixed               $layoutarea
      * @param TreeNodeInterface[] $treeNodePath
      *
-     * @return array
+     * @return Teaser[]
      */
     public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath);
+
+    /**
+     * @param Teaser $teaser
+     *
+     * @return bool
+     */
+    public function isInstance(Teaser $teaser);
+
+    /**
+     * @param Teaser $teaser
+     *
+     * @return bool
+     */
+    public function isInstanceMaster(Teaser $teaser);
+
+    /**
+     * @param Teaser $teaser
+     *
+     * @return Teaser[]
+     */
+    public function getInstances(Teaser $teaser);
+
+    /**
+     * @param Teaser $teaser
+     * @param string $language
+     *
+     * @return bool
+     */
+    public function isPublished(Teaser $teaser, $language);
+
+    /**
+     * @param Teaser $teaser
+     *
+     * @return array
+     */
+    public function getPublishedLanguages(Teaser $teaser);
+
+    /**
+     * @param Teaser $teaser
+     * @param string $language
+     *
+     * @return int
+     */
+    public function getPublishedVersion(Teaser $teaser, $language);
+
+    /**
+     * @param Teaser $teaser
+     *
+     * @return array
+     */
+    public function getPublishedVersions(Teaser $teaser);
 
     /**
      * Create teaser
@@ -72,18 +140,24 @@ interface TeaserManagerInterface
     /**
      * Create teaser instance
      *
-     * @param int $treeId
-     * @param int $teaserId
-     * @param int $layoutAreaId
+     * @param TreeNodeInterface $treeNode
+     * @param Teaser            $teaser
+     * @param int               $layoutAreaId
+     * @param string            $userId
      *
      * @return Teaser
      */
-    public function createTeaserInstance($treeId, $teaserId, $layoutAreaId);
+    public function createTeaserInstance(TreeNodeInterface $treeNode, Teaser $teaser, $layoutAreaId, $userId);
 
     /**
-     * Delete teaser
-     *
-     * @param int $teaserId
+     * @param Teaser $teaser
+     * @param bool   $flush
      */
-    public function deleteTeaser($teaserId);
+    public function updateTeaser(Teaser $teaser, $flush = true);
+
+    /**
+     * @param Teaser $teaser
+     * @param string $userId
+     */
+    public function deleteTeaser(Teaser $teaser, $userId);
 }

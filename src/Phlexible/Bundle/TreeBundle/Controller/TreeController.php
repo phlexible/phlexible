@@ -188,8 +188,6 @@ class TreeController extends Controller
 
         $elementService = $this->get('phlexible_element.element_service');
         $treeManager = $this->get('phlexible_tree.tree_manager');
-        $fieldMapper = $this->get('phlexible_element.field_mapper');
-        $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
         $userId = $this->getUser()->getId();
@@ -197,44 +195,20 @@ class TreeController extends Controller
         $elementtype = $elementService->getElementtypeService()->findElementtype($elementtypeId);
         $elementtypeVersion = $elementService->getElementtypeService()->findLatestElementtypeVersion($elementtype);
 
-        $element = new Element();
-        $element
-            ->setElementtype($elementtype)
-            ->setMasterLanguage($masterLanguage)
-            ->setLatestVersion(1)
-            ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime());
+        $element = $elementService->createElement($elementtypeVersion, $masterLanguage, $userId);
 
-        $elementVersion = new ElementVersion();
-        $elementVersion
-            ->setVersion(1)
-            ->setElement($element)
-            ->setElementtypeVersion($elementtypeVersion->getVersion())
-            ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime());
-
-        //$fieldMapper->map($elementVersion, $masterLanguage);
-
-        $elementService->updateElement($element, false);
-        $elementService->updateElementVersion($elementVersion);
-
-        // $siterootId, $parentId, $prevId, $navigation, $restricted
-
-        $node = $tree->create($parentId, $afterId, 'element', $element->getEid(), array(), $this->getUser()->getId(), $sortMode, $sortDir);
-
-        $elementHistoryManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT, $element->getEid(), $userId, $node->getId(), null, 1, $masterLanguage);
-
-        // TODO: ?
-        /*
-        if ($navigation !== null || $restricted !== null) {
-            $tree->setPage(
-                $newTreeId,
-                $newElementVersion->getVersion(),
-                $navigation,
-                $restricted
-            );
-        }
-        */
+        $node = $tree->create(
+            $parentId,
+            $afterId,
+            'element',
+            $element->getEid(),
+            array(),
+            $this->getUser()->getId(),
+            $sortMode,
+            $sortDir,
+            $navigation,
+            $restricted
+        );
 
         return new ResultResponse(
             true,
@@ -376,7 +350,7 @@ class TreeController extends Controller
         $tree = $treeManager->getByNodeId($nodeId);
         $node = $tree->get($nodeId);
 
-        $instances = $tree->getInstances($node);
+        $instances = $treeManager->getInstanceNodes($node);
 
         if (count($instances) > 1) {
             $instancesArray = array();

@@ -378,7 +378,13 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
      */
     public function setCache($cache)
     {
-        return $this->setAttribute('cache', $cache);
+        if ($cache) {
+            $this->setAttribute('cache', $cache);
+        } else {
+            $this->removeAttribute('cache');
+        }
+
+        return $this;
     }
 
     /**
@@ -396,7 +402,35 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
      */
     public function setController($controller)
     {
-        return $this->setAttribute('controller', $controller);
+        if ($controller) {
+            $this->setAttribute('controller', $controller);
+        } else {
+            $this->removeAttribute('controller');
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTemplate()
+    {
+        return $this->getAttribute('template');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTemplate($template)
+    {
+        if ($template) {
+            $this->setAttribute('template', $template);
+        } else {
+            $this->removeAttribute('template');
+        }
+
+        return $this;
     }
 
     /**
@@ -412,17 +446,23 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
      *
      * @return $this
      */
-    public function setRoutes(array $routes)
+    public function setRoutes(array $routes = null)
     {
-        return $this->setAttribute('routes', $routes);
+        if ($routes) {
+            $this->setAttribute('routes', $routes);
+        } else {
+            $this->removeAttribute('routes');
+        }
+
+        return $this;
     }
 
     /**
      * @return boolean
      */
-    public function getNeedsAuthentication()
+    public function getNeedAuthentication()
     {
-        return $this->getAttribute('needs_authentication', false);
+        return $this->getAttribute('needAuthentication', false);
     }
 
     /**
@@ -430,8 +470,14 @@ class TreeNode implements TreeNodeInterface, \IteratorAggregate, ContentObjectIn
      *
      * @return $this
      */
-    public function setNeedsAuthentication($needsAuthentication)
+    public function setNeedAuthentication($needsAuthentication)
     {
-        return $this->setAttribute('needs_authentication', !!$needsAuthentication);
+        if ($needsAuthentication) {
+            $this->setAttribute('needAuthentication', true);
+        } else {
+            $this->removeAttribute('needAuthentication');
+        }
+
+        return $this;
     }
 }

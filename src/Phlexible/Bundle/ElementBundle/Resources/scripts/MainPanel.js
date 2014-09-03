@@ -80,21 +80,19 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
             scope: this
         });
 
-        this.element.on('beforeload', this.disable, this);
-        this.element.on('beforeSave', this.disable, this);
-        this.element.on('beforeSetOffline', this.disable, this);
-        this.element.on('beforeSetOfflineAdvanced', this.disable, this);
+        this.element.on({
+            beforeload: this.disable,
+            beforeSave: this.disable,
+            beforeSetOffline: this.disable,
+            beforeSetOfflineAdvanced: this.disable,
 
-        this.element.on('load', this.enable, this);
-        this.element.on('saveFailure', this.enable, this);
-        this.element.on('publishFailure', this.enable, this);
-        this.element.on('publishAdvancedFailure', this.enable, this);
-        this.element.on('setOfflineFailure', this.enable, this);
-        this.element.on('setOfflineAdvancedFailure', this.enable, this);
-
-        //        this.layoutPanel = new Phlexible.elements.ElementLayoutPanel({
-        //            element: this.element
-        //        });
+            load: this.enable,
+            saveFailure: this.enable,
+            publishFailure: this.enable,
+            publishAdvancedFailure: this.enable,
+            setOfflineFailure: this.enable,
+            setOfflineAdvancedFailure: this.enable
+        })
 
         var dummyElement = new Phlexible.elements.Element({});
         dummyElement.properties = {
@@ -261,9 +259,6 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
                                 }
                             ],
                             listeners: {
-                                render: function (c) {
-                                    Phlexible.console.log('search.onRender');
-                                },
                                 rowdblclick: function (c, itemIndex) {
                                     var r = c.getStore().getAt(itemIndex);
                                     if (!r) return;
@@ -433,9 +428,6 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
                                 }
                             ],
                             listeners: {
-                                render: function (c) {
-                                    Phlexible.console.log('history.onRender');
-                                },
                                 rowdblclick: function (c, itemIndex) {
                                     var r = c.getStore().getAt(itemIndex);
                                     if (!r) return;
@@ -565,16 +557,28 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
         return this.getLeftTabPanelWrap().getComponent(0);
     },
 
-    getElementTab: function() {
+    getTreeTab: function() {
         return this.getLeftTabPanel().getComponent(0);
     },
 
+    getMediaTab: function() {
+        return this.getLeftTabPanel().getComponent(1);
+    },
+
+    getElementSearchTab: function() {
+        return this.getLeftTabPanel().getComponent(2);
+    },
+
+    getElementHistoryTab: function() {
+        return this.getLeftTabPanel().getComponent(3);
+    },
+
     getElementsTree: function() {
-        return this.getElementTab().getComponent(0);
+        return this.getTreeTab().getComponent(0);
     },
 
     getLayoutTree: function() {
-        return this.getElementTab().getComponent(1);
+        return this.getTreeTab().getComponent(1);
     },
 
     getContentPanel: function() {

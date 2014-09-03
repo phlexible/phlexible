@@ -143,9 +143,41 @@ interface TreeInterface
     public function isInstanceMaster($node);
 
     /**
+     * Return instance nodes for the given nodes from THIS tree.
+     *
      * @param TreeNodeInterface|int $node
      *
      * @return TreeNodeInterface[]
      */
     public function getInstances($node);
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return bool
+     */
+    public function isPublished(TreeNodeInterface $node, $language);
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return array
+     */
+    public function getPublishedLanguages(TreeNodeInterface $node);
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return int
+     */
+    public function getPublishedVersion(TreeNodeInterface $node, $language);
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return array
+     */
+    public function getPublishedVersions(TreeNodeInterface $node);
 }

@@ -10,13 +10,11 @@ services:
             - @phlexible_element.element_version_manager
             - @phlexible_element.element_structure_manager
             - @phlexible_elementtype.elementtype_service
+            - @phlexible_element.element_history_manager
+            - @phlexible_element.field_mapper
 
     phlexible_element.context.manager:
         class: Phlexible\Bundle\ElementBundle\Context\ContextManager
-
-    phlexible_element.field_mapper:
-        class: Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper
-        arguments: [@phlexible_element.element_service]
 
     phlexible_element.icon_builder:
         class: Phlexible\Bundle\ElementBundle\Icon\IconBuilder

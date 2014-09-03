@@ -12,6 +12,7 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NodeNotFoundException;
 use Phlexible\Bundle\TreeBundle\Model\TreeFactoryInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Model\WritableTreeInterface;
 
 /**
@@ -22,7 +23,7 @@ use Phlexible\Bundle\TreeBundle\Model\WritableTreeInterface;
 class TreeManager
 {
     /**
-     * @var \Phlexible\Bundle\TreeBundle\Model\TreeInterface[]
+     * @var TreeInterface[]
      */
     private $trees = array();
 
@@ -32,7 +33,7 @@ class TreeManager
     private $siterootManager;
 
     /**
-     * @var \Phlexible\Bundle\TreeBundle\Model\TreeFactoryInterface
+     * @var TreeFactoryInterface
      */
     private $treeFactory;
 
@@ -82,5 +83,32 @@ class TreeManager
         }
 
         throw new NodeNotFoundException("Tree for node $nodeId not found.");
+    }
+
+    /**
+     * @return TreeInterface[]
+     */
+    public function getAll()
+    {
+        foreach ($this->siterootManager->findAll() as $siteroot) {
+            $this->getBySiteRootId($siteroot->getId());
+        }
+
+        return $this->trees;
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return TreeNodeInterface[]
+     */
+    public function getInstanceNodes(TreeNodeInterface $node)
+    {
+        $instanceNodes = array();
+        foreach ($this->getAll() as $tree) {
+            $instanceNodes += $tree->getInstances($node);
+        }
+
+        return $instanceNodes;
     }
 }

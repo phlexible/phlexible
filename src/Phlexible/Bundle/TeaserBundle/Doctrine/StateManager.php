@@ -6,12 +6,12 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TreeBundle\Doctrine;
+namespace Phlexible\Bundle\TeaserBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Model\StateManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -54,9 +54,9 @@ class StateManager implements StateManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isPublished(TreeNodeInterface $node, $language)
+    public function isPublished(Teaser $teaser, $language)
     {
-        $publishedVersions = $this->getPublishedVersions($node);
+        $publishedVersions = $this->getPublishedVersions($teaser);
 
         return isset($publishedVersions[$language]);
     }
@@ -64,21 +64,21 @@ class StateManager implements StateManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getPublishedLanguages(TreeNodeInterface $node)
+    public function getPublishedLanguages(Teaser $teaser)
     {
-        return array_keys($this->getPublishedVersions($node));
+        return array_keys($this->getPublishedVersions($teaser));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPublishedVersions(TreeNodeInterface $node)
+    public function getPublishedVersions(Teaser $teaser)
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select(array('t_o.language', 't_o.version'))
             ->from('tree_online', 't_o')
-            ->where($qb->expr()->eq('t_o.tree_id', $node->getId()));
+            ->where($qb->expr()->eq('t_o.tree_id', $teaser->getId()));
 
         $statement = $this->connection->executeQuery($qb->getSQL());
 
@@ -93,9 +93,9 @@ class StateManager implements StateManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getPublishedVersion(TreeNodeInterface $node, $language)
+    public function getPublishedVersion(Teaser $teaser, $language)
     {
-        $publishedVersions = $this->getPublishedVersions($node);
+        $publishedVersions = $this->getPublishedVersions($teaser);
         if (!isset($publishedVersions[$language])) {
             return null;
         }
@@ -106,13 +106,13 @@ class StateManager implements StateManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getPublishInfo(TreeNodeInterface $node, $language)
+    public function getPublishInfo(Teaser $teaser, $language)
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('t_o.*')
             ->from('tree_online', 't_o')
-            ->where($qb->expr()->eq('t_o.tree_id', $node->getId()))
+            ->where($qb->expr()->eq('t_o.tree_id', $teaser->getId()))
             ->andWhere($qb->expr()->eq('t_o.language', $qb->expr()->literal($language)));
 
         return $this->connection->fetchAssoc($qb->getSQL());
@@ -121,7 +121,7 @@ class StateManager implements StateManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isAsync(TreeNodeInterface $node, $language)
+    public function isAsync(Teaser $teaser, $language)
     {
         // TODO: implement
 

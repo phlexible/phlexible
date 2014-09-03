@@ -79,33 +79,9 @@ class Teaser implements IdentifiableInterface
 
     /**
      * @var string
-     * @ORM\Column(name="template_id", type="string", length=36, nullable=true, options={"fixed"=true})
+     * @ORM\Column(type="json_array", nullable=true)
      */
-    private $templateId;
-
-    /**
-     * @var bool
-     * @ORM\Column(name="stop_inherit", type="boolean")
-     */
-    private $stopInherit = false;
-
-    /**
-     * @var bool
-     * @ORM\Column(name="no_display", type="boolean")
-     */
-    private $noDisplay = false;
-
-    /**
-     * @var bool
-     * @ORM\Column(name="disable_cache", type="boolean")
-     */
-    private $disableCache = false;
-
-    /**
-     * @var int
-     * @ORM\Column(name="cache_lifetime", type="integer", nullable=true)
-     */
-    private $cacheLifeTime;
+    private $attributes;
 
     /**
      * @var string
@@ -268,61 +244,53 @@ class Teaser implements IdentifiableInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isCacheDisabled()
+    public function getAttributes()
     {
-        return $this->disableCache;
+        return $this->attributes;
     }
 
     /**
-     * @param bool $cacheDisabled
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setCacheDisabled($cacheDisabled = true)
+    public function setAttributes(array $attributes)
     {
-        $this->disableCache = $cacheDisabled;
+        $this->attributes = $attributes;
 
         return $this;
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getCacheLifeTime()
+    public function getAttribute($key, $default = null)
     {
-        return $this->cacheLifeTime;
+        if (isset($this->attributes[$key])) {
+            return $this->attributes[$key];
+        }
+
+        return $default;
     }
 
     /**
-     * @param int $cacheLifeTime
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setCacheLifeTime($cacheLifeTime)
+    public function setAttribute($key, $value)
     {
-        $this->cacheLifeTime = $cacheLifeTime;
+        $this->attributes[$key] = $value;
 
         return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getTemplateId()
+    public function removeAttribute($key)
     {
-        return $this->templateId;
-    }
-
-    /**
-     * @param string $templateId
-     *
-     * @return $this
-     */
-    public function setTemplateId($templateId)
-    {
-        $this->templateId = $templateId;
+        if (isset($this->attributes[$key])) {
+            unset($this->attributes[$key]);
+        }
 
         return $this;
     }
@@ -372,7 +340,7 @@ class Teaser implements IdentifiableInterface
      */
     public function getStopInherit()
     {
-        return $this->stopInherit;
+        return $this->getAttribute('stopInherit', false);
     }
 
     /**
@@ -382,9 +350,7 @@ class Teaser implements IdentifiableInterface
      */
     public function setStopInherit($stopInherit)
     {
-        $this->stopInherit = $stopInherit;
-
-        return $this;
+        return $this->setAttribute('stopInherit', $stopInherit);
     }
 
     /**
@@ -392,7 +358,7 @@ class Teaser implements IdentifiableInterface
      */
     public function getNoDisplay()
     {
-        return $this->noDisplay;
+        return $this->getAttribute('noDisplay', false);
     }
 
     /**
@@ -402,8 +368,58 @@ class Teaser implements IdentifiableInterface
      */
     public function setNoDisplay($noDisplay)
     {
-        $this->noDisplay = $noDisplay;
+        return $this->setAttribute('noDisplay', $noDisplay);
+    }
 
-        return $this;
+    /**
+     * {@inheritdoc}
+     */
+    public function getCache()
+    {
+        return $this->getAttribute('cache', array());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCache($cache)
+    {
+        return $this->setAttribute('cache', $cache);
+    }
+
+    /**
+     * @return string
+     */
+    public function getController()
+    {
+        return $this->getAttribute('controller');
+    }
+
+    /**
+     * @param string $controller
+     *
+     * @return $this
+     */
+    public function setController($controller)
+    {
+        return $this->setAttribute('controller', $controller);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->getAttribute('template');
+    }
+
+    /**
+     * @param string $template
+     *
+     * @return $this
+     */
+    public function setTemplate($template)
+    {
+        return $this->setAttribute('template', $template);
     }
 }

@@ -16,48 +16,48 @@ namespace Phlexible\Bundle\TreeBundle\Model;
 interface StateManagerInterface
 {
     /**
-     * @param TreeNodeInterface|int $node
-     * @param string                $language
+     * @param TreeNodeInterface $node
+     * @param string            $language
      *
      * @return bool
      */
-    public function isPublished($node, $language);
+    public function isPublished(TreeNodeInterface$node, $language);
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return array
      */
-    public function getPublishedLanguages($node);
+    public function getPublishedLanguages(TreeNodeInterface $node);
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return array
      */
-    public function getPublishedVersions($node);
+    public function getPublishedVersions(TreeNodeInterface $node);
 
     /**
-     * @param TreeNodeInterface|int $node
-     * @param string                $language
+     * @param TreeNodeInterface $node
+     * @param string            $language
      *
      * @return int
      */
-    public function getPublishedVersion($node, $language);
+    public function getPublishedVersion(TreeNodeInterface $node, $language);
 
     /**
-     * @param TreeNodeInterface|int $node
-     * @param string                $language
+     * @param TreeNodeInterface $node
+     * @param string            $language
      *
      * @return array
      */
-    public function getPublishInfo($node, $language);
+    public function getPublishInfo(TreeNodeInterface $node, $language);
 
     /**
-     * @param TreeNodeInterface|int $node
-     * @param string                $language
+     * @param TreeNodeInterface $node
+     * @param string            $language
      *
      * @return bool
      */
-    public function isAsync($node, $language);
+    public function isAsync(TreeNodeInterface $node, $language);
 }

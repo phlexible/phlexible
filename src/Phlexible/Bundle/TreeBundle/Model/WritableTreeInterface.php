@@ -28,6 +28,8 @@ interface WritableTreeInterface
      * @param string                $userId
      * @param string                $sortMode
      * @param string                $sortDir
+     * @param bool                  $navigation
+     * @param bool                  $needAuthentication
      *
      * @return TreeNodeInterface
      */
@@ -39,7 +41,9 @@ interface WritableTreeInterface
         array $attributes,
         $userId,
         $sortMode = 'free',
-        $sortDir = 'asc'
+        $sortDir = 'asc',
+        $navigation = false,
+        $needAuthentication = false
     );
 
     /**

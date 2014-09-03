@@ -111,12 +111,10 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             showText: true,
             items: langBtns,
             listeners: {
-                change: {
-                    fn: function (cycle, btn) {
-                        this.element.setLanguage(btn.langKey);
-                    },
-                    scope: this
-                }
+                change: function (cycle, btn) {
+                    this.element.setLanguage(btn.langKey);
+                },
+                scope: this
             }
         });
 
@@ -364,14 +362,12 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                         payload: payload,
                         component_filter: 'elements',
                         listeners: {
-                            create: {
-                                fn: function () {
-                                    this.element.reload({
-                                        unlock: this.element.eid
-                                    });
-                                },
-                                scope: this
-                            }
+                            create: function () {
+                                this.element.reload({
+                                    unlock: this.element.eid
+                                });
+                            },
+                            scope: this
                         }
                     });
 
@@ -656,45 +652,43 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             language: this.element.language,
             version: this.element.version,
             listeners: {
-                submit: {
-                    fn: function (values) {
-                        var comment = values.comment || false;
-                        if (values.include_sub_elements) {
-                            this.onPublishRecursive(comment);
-                        } else {
-                            this.onPublish(comment);
-                        }
+                submit: function (values) {
+                    var comment = values.comment || false;
+                    if (values.include_sub_elements) {
+                        this.onPublishRecursive(comment);
+                    } else {
+                        this.onPublish(comment);
+                    }
 
-                        this.element.reload();
-                    },
-                    scope: this
+                    this.element.reload();
                 },
-                success: {
-                    fn: function () {
-                        if (this.element.treeNode) {
-                            var iconEl = this.element.treeNode.getUI().getIconEl();
-                            if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                                iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '/status/online');
-                            } else {
-                                iconEl.src = iconEl.src + '/status/online';
-                            }
-
-                            if (this.element.treeNode.hasChildNodes()) {
-                                this.element.treeNode.attributes.children = false;
-                                this.element.treeNode.reload(function (node) {
-                                    var tree = this.element.treeNode.getOwnerTree();
-                                    var n = tree.getNodeById(this.element.tid);
-                                    if (n) {
-                                        tree.getSelectionModel().select(n);
-                                    }
-                                }.createDelegate(this));
-                            }
+                success: function () {
+                    if (this.element.treeNode) {
+                        var iconEl = this.element.treeNode.getUI().getIconEl();
+                        // TODO: repair
+                        /*
+                        if (iconEl.src.match(/\/status\/[a-z]+/)) {
+                            iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '/status/online');
+                        } else {
+                            iconEl.src = iconEl.src + '/status/online';
                         }
+                        */
 
-                        this.element.reload();
-                    },
-                    scope: this
-                }
+                        if (this.element.treeNode.hasChildNodes()) {
+                            this.element.treeNode.attributes.children = false;
+                            this.element.treeNode.reload(function (node) {
+                                var tree = this.element.treeNode.getOwnerTree();
+                                var n = tree.getNodeById(this.element.tid);
+                                if (n) {
+                                    tree.getSelectionModel().select(n);
+                                }
+                            }.createDelegate(this));
+                        }
+                    }
+
+                    this.element.reload();
+                },
+                scope: this
             }
         });
         w.show();
@@ -815,17 +809,15 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         var w = new windowClass({
             comment_required: Phlexible.Config.get('elements.publish.comment_required'),
             listeners: {
-                submit: {
-                    fn: function (values) {
-                        var comment = values.comment || false;
-                        if (values.include_sub_elements) {
-                            this.onSetOfflineRecursive(comment);
-                        } else {
-                            this.onSetOffline(comment);
-                        }
-                    },
-                    scope: this
-                }
+                submit: function (values) {
+                    var comment = values.comment || false;
+                    if (values.include_sub_elements) {
+                        this.onSetOfflineRecursive(comment);
+                    } else {
+                        this.onSetOffline(comment);
+                    }
+                },
+                scope: this
             }
         });
         w.show();

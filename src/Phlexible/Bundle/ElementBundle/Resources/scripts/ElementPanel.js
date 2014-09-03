@@ -34,29 +34,24 @@ Phlexible.elements.ElementPanel = Ext.extend(Ext.Panel, {
                 activeTab: 1,
                 accordionCollapsed: this.accordionCollapsed,
                 listeners: {
-                    listLoadTeaser: {
-                        fn: function (teaser_id) {
-                            this.fireEvent('listLoadTeaser', teaser_id);
-                        },
-                        scope: this
+                    listLoadTeaser: function (teaser_id) {
+                        this.fireEvent('listLoadTeaser', teaser_id);
                     },
-                    listLoadNode: {
-                        fn: function (tid) {
-                            this.fireEvent('listLoadNode', tid);
-                        },
-                        scope: this
+                    listLoadNode: function (tid) {
+                        this.fireEvent('listLoadNode', tid);
                     },
-                    listReloadNode: {
-                        fn: function (tid) {
-                            this.fireEvent('listReloadNode', tid);
-                        },
-                        scope: this
-                    }
+                    listReloadNode: function (tid) {
+                        this.fireEvent('listReloadNode', tid);
+                    },
+                    scope: this
                 }
             }
         ];
 
-        this.element.on('load', this.enable, this);
+        this.element.on({
+            load: this.enable,
+            scope: this
+        });
 
         Phlexible.elements.ElementPanel.superclass.initComponent.call(this);
     }

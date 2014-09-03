@@ -374,7 +374,23 @@ class ElementVersion
         } elseif ($this->mappedFields->containsKey($fallbackLanguage)) {
             $mappedField = $this->mappedFields->get($fallbackLanguage);
         } else {
-            return null;
+            foreach ($this->mappedFields as $testMappedField) {
+                if ($testMappedField->getLanguage() === $language) {
+                    $mappedField = $testMappedField;
+                    break;
+                }
+            }
+            if (!isset($mappedField)) {
+                foreach ($this->mappedFields as $testMappedField) {
+                    if ($testMappedField->getLanguage() === $fallbackLanguage) {
+                        $mappedField = $testMappedField;
+                        break;
+                    }
+                }
+            }
+            if (!isset($mappedField)) {
+                return null;
+            }
         }
 
         if ($field === 'page') {

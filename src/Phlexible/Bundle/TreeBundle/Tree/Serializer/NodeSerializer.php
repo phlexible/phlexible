@@ -168,7 +168,7 @@ class NodeSerializer
             'text'                => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()),
             'icon'                => $this->iconResolver->resolveTreeNode($node, $language),
             'navigation'          => $node->getInNavigation(),
-            'restricted'          => $node->getNeedsAuthentication(),
+            'restricted'          => $node->getNeedAuthentication(),
             'element_type'        => $elementtype->getTitle(),
             'element_type_id'     => $elementtype->getId(),
             'element_type_type'   => $elementtype->getType(),

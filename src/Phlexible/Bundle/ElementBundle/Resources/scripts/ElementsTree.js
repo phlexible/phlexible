@@ -122,16 +122,8 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                         element.treeNode.attributes.restricted = data.restricted;
                         element.treeNode.setText(data.title);
                         var iconEl = element.treeNode.getUI().getIconEl();
-                        if (data.status) {
-                            if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                                iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '/status/' + data.status);
-                            } else {
-                                iconEl.src += '/status/' + data.status;
-                            }
-                        } else {
-                            if (iconEl.src.match(/\/status\/[a-z]+/)) {
-                                iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '');
-                            }
+                        if (data.icon) {
+                            iconEl.src = data.icon;
                         }
                     }
                 }

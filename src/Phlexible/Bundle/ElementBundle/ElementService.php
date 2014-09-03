@@ -8,8 +8,10 @@
 
 namespace Phlexible\Bundle\ElementBundle;
 
+use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
@@ -46,21 +48,37 @@ class ElementService
     private $elementtypeService;
 
     /**
+     * @var ElementHistoryManagerInterface
+     */
+    private $elementHistoryManager;
+
+    /**
+     * @var FieldMapper
+     */
+    private $fieldMapper;
+
+    /**
      * @param ElementManagerInterface          $elementManager
      * @param ElementVersionManagerInterface   $elementVersionManager
      * @param ElementStructureManagerInterface $elementStructureManager
      * @param ElementtypeService               $elementtypeService
+     * @param ElementHistoryManagerInterface   $elementHistoryManager
+     * @param FieldMapper                      $fieldMapper
      */
     public function __construct(
         ElementManagerInterface $elementManager,
         ElementVersionManagerInterface $elementVersionManager,
         ElementStructureManagerInterface $elementStructureManager,
-        ElementtypeService $elementtypeService)
+        ElementtypeService $elementtypeService,
+        ElementHistoryManagerInterface $elementHistoryManager,
+        FieldMapper $fieldMapper)
     {
         $this->elementManager = $elementManager;
         $this->elementVersionManager = $elementVersionManager;
         $this->elementStructureManager = $elementStructureManager;
         $this->elementtypeService = $elementtypeService;
+        $this->elementHistoryManager = $elementHistoryManager;
+        $this->fieldMapper = $fieldMapper;
     }
 
     /**
@@ -198,6 +216,49 @@ class ElementService
             $this->findElementtype($elementVersion->getElement()),
             $elementVersion->getElementtypeVersion()
         );
+    }
+
+    /**
+     * @param ElementtypeVersion $elementtypeVersion
+     * @param string             $masterLanguage
+     * @param string             $userId
+     *
+     * @return Element
+     */
+    public function createElement(ElementtypeVersion $elementtypeVersion, $masterLanguage, $userId)
+    {
+        $element = new Element();
+        $element
+            ->setElementtype($elementtypeVersion->getElementtype())
+            ->setMasterLanguage($masterLanguage)
+            ->setLatestVersion(1)
+            ->setCreateUserId($userId)
+            ->setCreatedAt(new \DateTime());
+
+        $elementVersion = new ElementVersion();
+        $elementVersion
+            ->setVersion(1)
+            ->setElement($element)
+            ->setElementtypeVersion($elementtypeVersion->getVersion())
+            ->setCreateUserId($userId)
+            ->setCreatedAt(new \DateTime());
+
+        $this->fieldMapper->apply($elementVersion);
+
+        $this->updateElement($element, false);
+        $this->updateElementVersion($elementVersion);
+
+        $this->elementHistoryManager->insert(
+            ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT,
+            $element->getEid(),
+            $userId,
+            null,
+            null,
+            1,
+            $masterLanguage
+        );
+
+        return $element;
     }
 
     /**

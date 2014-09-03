@@ -1,7 +1,7 @@
 services:
     phlexible_tree.doctrine.tree_factory:
         class: Phlexible\Bundle\TreeBundle\Doctrine\TreeFactory
-        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_element.element_history_manager]
+        arguments: [@doctrine.dbal.default_connection, @phlexible_element.element_history_manager, @phlexible_tree.state_manager, @event_dispatcher]
 
     phlexible_tree.doctrine.state_manager:
         class: Phlexible\Bundle\TreeBundle\Doctrine\StateManager

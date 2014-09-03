@@ -212,6 +212,18 @@ interface TreeNodeInterface
     public function setController($controller);
 
     /**
+     * @return string
+     */
+    public function getTemplate();
+
+    /**
+     * @param string $template
+     *
+     * @return $this
+     */
+    public function setTemplate($template);
+
+    /**
      * @return array
      */
     public function getRoutes();
@@ -226,12 +238,12 @@ interface TreeNodeInterface
     /**
      * @return boolean
      */
-    public function getNeedsAuthentication();
+    public function getNeedAuthentication();
 
     /**
      * @param boolean $needsAuthentication
      *
      * @return $this
      */
-    public function setNeedsAuthentication($needsAuthentication);
+    public function setNeedAuthentication($needsAuthentication);
 }

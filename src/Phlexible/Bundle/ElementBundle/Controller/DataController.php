@@ -14,19 +14,13 @@ use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Diff;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
-use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
-use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
-use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
-use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
-use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
-use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -69,512 +63,497 @@ class DataController extends Controller
         $userManager = $this->get('phlexible_user.user_manager');
         $securityContext = $this->get('security.context');
 
-        try {
-            $teaser = null;
-            if ($teaserId) {
-                $teaser = $teaserManager->findTeaser($teaserId);
-                $eid = $teaser->getTypeId();
-                $treeId = $teaser->getTreeId();
-                $tree = $treeManager->getByNodeId($treeId);
-                $node = $tree->get($treeId);
-            } elseif ($treeId) {
-                $tree = $treeManager->getByNodeId($treeId);
-                $node = $tree->get($treeId);
-                $eid = $node->getTypeId();
-            } else {
-                throw new \Exception('Unknown data requested.');
-            }
+        $teaser = null;
+        if ($teaserId) {
+            $teaser = $teaserManager->find($teaserId);
+            $eid = $teaser->getTypeId();
+            $treeId = $teaser->getTreeId();
+            $tree = $treeManager->getByNodeId($treeId);
+            $node = $tree->get($treeId);
+        } elseif ($treeId) {
+            $tree = $treeManager->getByNodeId($treeId);
+            $node = $tree->get($treeId);
+            $eid = $node->getTypeId();
+        } else {
+            throw new \Exception('Unknown data requested.');
+        }
 
-            $element = $elementService->findElement($node->getTypeId());
-            $elementMasterLanguage = $element->getMasterLanguage();
+        $element = $elementService->findElement($eid);
+        $elementMasterLanguage = $element->getMasterLanguage();
 
-            if (!$language) {
-                $language = $elementMasterLanguage;
-            }
+        if (!$language) {
+            $language = $elementMasterLanguage;
+        }
 
-            if ($teaser) {
-                $isPublished = $teaser->isPublished($language);
-                $onlineVersion = null;
-            } elseif ($treeId) {
-                $isPublished = $stateManager->isPublished($node, $language);
-                $onlineVersion = $stateManager->getPublishedVersion($node, $language);
-            } else {
-                throw new \Exception('Unknown data requested.');
-            }
+        if ($teaser) {
+            $isPublished = $teaserManager->isPublished($teaser, $language);
+            $onlineVersion = $teaserManager->getPublishedVersion($teaser, $language);
+        } elseif ($treeId) {
+            $isPublished = $tree->isPublished($node, $language);
+            $onlineVersion = $tree->getPublishedVersion($node, $language);
+        } else {
+            throw new \Exception('Unknown data requested.');
+        }
 
-            if ($version) {
-                $elementVersion = $elementService->findElementVersion($element, $version);
-            } else {
-                $elementVersion = $elementService->findLatestElementVersion($element);
-                $version = $elementVersion->getVersion();
-            }
+        if ($version) {
+            $elementVersion = $elementService->findElementVersion($element, $version);
+        } else {
+            $elementVersion = $elementService->findLatestElementVersion($element);
+        }
 
-            $elementtypeService = $elementService->getElementtypeService();
+        $elementtypeService = $elementService->getElementtypeService();
 
-            $elementtype = $elementService->findElementtype($element);
-            $elementtypeVersion = $elementService->findElementtypeVersion($elementVersion);
-            $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
-            $type = $elementtype->getType();
+        $elementtype = $elementService->findElementtype($element);
+        $elementtypeVersion = $elementService->findElementtypeVersion($elementVersion);
+        $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
+        $type = $elementtype->getType();
 
-            // versions
+        // versions
 
-            if ($teaser) {
-                $publishedVersions = $elementHistoryManager->findBy(
-                    array(
-                        'teaserId' => $teaser->getId(),
-                        'action'   => 'publishTeaser'
-                    )
-                );
-            } else {
-                $publishedVersions = $elementHistoryManager->findBy(
-                    array(
-                        'treeId' => $node->getId(),
-                        'action' => 'publishNode'
-                    )
-                );
-            }
-
-            $versions = array();
-            foreach (array_reverse($elementService->getVersions($element)) as $version) {
-                $versions[$version] = array(
-                    'version'       => $version,
-                    'format'        => 2,
-                    'create_date'   => date('Y-m-d H:i:s'),
-                    'is_published'  => false,
-                    'was_published' => false,
-                );
-            }
-
-            foreach ($publishedVersions as $publishedVersion) {
-                $versions[$publishedVersion->getVersion()]['online'] = true;
-                if ($publishedVersion->getVersion() === $onlineVersion) {
-                    $versions[$publishedVersion->getVersion()]['is_published'] = true;
-                } else {
-                    $versions[$publishedVersion->getVersion()]['was_published'] = true;
-                }
-            }
-
-            $versions = array_values($versions);
-
-            // instances
-
-            $instances = array();
-            if ($teaser) {
-                // TODO: implement $teaserManager->getInstances()
-                foreach ($teaserManager->getInstances($teaser) as $instanceTeaser) {
-                    $instance = array(
-                        'id'              => $instanceTeaser->getId(),
-                        'instance_master' => false,
-                        'modify_time'     => $instanceTeaser->getCreatedAt()->format('Y-m-d H:i:s'),
-                        'icon'            => $iconResolver->resolveTeaser($instanceTeaser, $language),
-                        'type'            => 'teaser',
-                        'link'            => array(),
-                    );
-
-                    $instances[] = $instance;
-                }
-            } else {
-                foreach ($tree->getInstances($node) as $instanceNode) {
-                    $instance = array(
-                        'id'              => $instanceNode->getId(),
-                        'instance_master' => false,
-                        'modify_time'     => $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
-                        'icon'            => $iconResolver->resolveTreeNode($instanceNode, $language),
-                        'type'            => 'treenode',
-                        'link'            => array(),
-                    );
-
-                    if ($instanceNode->getTree()->getSiterootId() !== $tree->getSiterootId()) {
-                        $instance['link'] = array(
-                            'start_tid_path' => '/' . implode('/', $instanceNode->getTree()->getIdPath($instanceNode)),
-                        );
-                    }
-
-                    $instances[] = $instance;
-                }
-            }
-
-            // allowed child elements
-
-            $allowedChildren = array();
-            if (!$teaser) {
-                foreach ($elementtypeService->findAllowedChildrenIds($elementtype) as $allowedChildId) {
-                    $childElementtype = $elementtypeService->findElementtype($allowedChildId);
-
-                    if ($childElementtype->getType() !== 'full') {
-                        continue;
-                    }
-
-                    $allowedChildren[] = array(
-                        $allowedChildId,
-                        $childElementtype->getTitle(),
-                        $iconResolver->resolveElementtype($childElementtype),
-                    );
-                }
-            }
-
-            // diff
-
-            $diff = $request->get('diff');
-            $diffVersionFrom = $request->get('diff_version_from');
-            $diffVersionTo = $request->get('diff_version_to');
-            $diffLanguage = $request->get('diff_language');
-
-            if ($diff && $diffVersionTo) {
-                $fromElementVersion = $elementService->findElementVersion($element, $diffVersionFrom);
-                $fromElementStructure = $elementService->findElementStructure($fromElementVersion, $diffLanguage);
-                $toElementVersion = $elementService->findElementVersion($element, $diffVersionTo);
-                $toElementStructure = $elementService->findElementStructure($toElementVersion, $diffLanguage);
-                $differ = new Diff();
-                $elementStructure = $differ->diff($fromElementStructure, $toElementStructure);
-            } else {
-                $elementStructure = $elementService->findElementStructure($elementVersion, $language);
-            }
-
-            $diffInfo = null;
-            if ($diff) {
-                $diffInfo = array(
-                    'enabled'      => $diff,
-                    'version_from' => $diffVersionFrom,
-                    'version_to'   => $diffVersionTo,
-                    'language'     => $diffLanguage,
-                );
-            }
-
-            // lock
-
-            if ($unlockId !== null) {
-                $unlockElement = $elementService->findElement($unlockId);
-                if ($lockManager->isLockedByUser($unlockElement, $language, $this->getUser()->getId())) {
-                    try {
-                        $lockManager->unlock($unlockElement, $this->getUser()->getId());
-                    } catch (\Exception $e) {
-                        // unlock failed
-                    }
-                }
-            }
-
-            if ($node instanceof ContentObjectInterface) {
-                if (!$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) &&
-                    !$securityContext->isGranted(array('right' => 'EDIT', 'language' => $language), $node)
-                ) {
-                    $doLock = false;
-                }
-            }
-
-            $lock = null;
-            if ($doLock && !$diff) {
-                if (!$lockManager->isLockedByOtherUser($element, $language, $this->getUser()->getId())) {
-                    $lock = $lockManager->lock(
-                        $element,
-                        $this->getUser()->getId(),
-                        $language
-                    );
-                }
-            }
-
-            if (!$lock) {
-                $lock = $lockManager->findMasterLock($element);
-                if (!$lock) {
-                    $lock = $lockManager->findSlaveLock($element, $language);
-                }
-            }
-
-            $lockInfo = null;
-
-            if ($lock && !$diff) {
-                $lockUser = $userManager->find($lock->getUserId());
-
-                $lockInfo = array(
-                    'status'   => 'locked',
-                    'id'       => $lock->getEid(),
-                    'username' => $lockUser->getDisplayName(),
-                    'time'     => $lock->getLockedAt()->format('Y-m-d H:i:s'),
-                    'age'      => time() - $lock->getLockedAt()->format('U'),
-                    'type'     => $lock->getType(),
-                );
-
-                if ($lock->getUserId() === $this->getUser()->getId()) {
-                    $lockInfo['status'] = 'edit';
-                } elseif ($lock->getType() == ElementLock::TYPE_PERMANENTLY) {
-                    $lockInfo['status'] = 'locked_permanently';
-                }
-            } elseif ($diff) {
-                // Workaround for loading diffs without locking and view-mask
-                // TODO: introduce new diff lock mode
-
-                $lockInfo = array(
-                    'status'   => 'edit',
-                    'id'       => '',
-                    'username' => '',
-                    'time'     => '',
-                    'age'      => 0,
-                    'type'     => ElementLock::TYPE_TEMPORARY,
-                );
-            }
-
-            // meta
-
-            $meta = array();
-            $elementMetaSetResolver = $this->get('phlexible_element.element_meta_set_resolver');
-            $elementMetaDataManager = $this->get('phlexible_element.element_meta_data_manager');
-            $optionResolver = $this->get('phlexible_meta_set.option_resolver');
-            $metaSetId = $elementtypeVersion->getMetaSetId();
-
-            if ($metaSetId) {
-                $metaSet = $elementMetaSetResolver->resolve($elementVersion);
-                $metaData = $elementMetaDataManager->findByMetaSetAndElementVersion($metaSet, $elementVersion);
-
-                $fieldDatas = array();
-
-                foreach ($metaSet->getFields() as $field) {
-                    $options = $optionResolver->resolve($field);
-
-                    $fieldData = array(
-                        'key'          => $field->getName(),
-                        'type'         => $field->getType(),
-                        'options'      => $options,
-                        'readonly'     => $field->isReadonly(),
-                        'required'     => $field->isRequired(),
-                        'synchronized' => $field->isSynchronized(),
-                    );
-
-                    if ($metaData) {
-                        foreach ($metaData->getLanguages() as $metaLanguage) {
-                            if ($language === $metaLanguage) {
-                                $fieldData['value'] = $metaData->get($field->getId(), $language);
-                                break;
-                            }
-                        }
-                    }
-
-                    $fieldDatas[] = $fieldData;
-                }
-
-                $meta = array(
-                    'set_id' => $metaSetId,
-                    'title'  => $metaSet->getName(),
-                    'fields' => $fieldDatas
-                );
-            }
-
-            // redirects
-            // TODO: auslagern
-
-            $redirects = array();
-            if (!$teaser && $this->container->has('redirectsManager')) {
-                $redirectsManager = $this->get('redirectsManager');
-                $redirects = $redirectsManager->getForTidAndLanguage($treeId, $language);
-            }
-
-            // preview / online url
-
-            $urls = array(
-                'preview' => '',
-                'online'  => '',
+        if ($teaser) {
+            $publishedVersions = $elementHistoryManager->findBy(
+                array(
+                    'teaserId' => $teaser->getId(),
+                    'action'   => 'publishTeaser'
+                )
             );
+        } else {
+            $publishedVersions = $elementHistoryManager->findBy(
+                array(
+                    'treeId' => $node->getId(),
+                    'action' => 'publishNode'
+                )
+            );
+        }
 
-            $publishDate = null;
-            $publishUser = null;
-            $onlineVersion = null;
-            $latestVersion = null;
+        $versions = array();
+        foreach (array_reverse($elementService->getVersions($element)) as $version) {
+            $versions[$version] = array(
+                'version'       => $version,
+                'format'        => 2,
+                'create_date'   => date('Y-m-d H:i:s'),
+                'is_published'  => false,
+                'was_published' => false,
+            );
+        }
 
-            if (in_array($elementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART))) {
-                if ($type == Elementtype::TYPE_FULL) {
-                    $urls['preview'] = $this->generateUrl('frontend_preview', array('id' => $node->getId(), 'language' => $language));
-
-                    if ($isPublished) {
-                        $contentNode = $this->get('phlexible_tree.content_tree_manager.delegating')->findByTreeId($node->getId())->get($node->getId());
-                        $urls['online'] = $this->generateUrl($contentNode);
-                    }
-                }
-
-                if ($isPublished) {
-                    $publishInfo = $stateManager->getPublishInfo($node, $language);
-                    $publishDate = $publishInfo['published_at'];
-                    $publishUserId = $publishInfo['publish_user_id'];
-                    $publishUser = $userManager->find($publishUserId);
-                    $onlineVersion = $publishInfo['version'];
-                }
-
-                $latestVersion = $element->getLatestVersion();
-            }
-
-            // attributes
-            // TODO: implement $teaser->getAttributes()
-
-            if ($teaser) {
-                $attributes = $teaser->getAttributes();
+        foreach ($publishedVersions as $publishedVersion) {
+            $versions[$publishedVersion->getVersion()]['online'] = true;
+            if ($publishedVersion->getVersion() === $onlineVersion) {
+                $versions[$publishedVersion->getVersion()]['is_published'] = true;
             } else {
-                $attributes = $node->getAttributes();
+                $versions[$publishedVersion->getVersion()]['was_published'] = true;
             }
+        }
 
-            // context
-            // TODO: repair element context
+        $versions = array_values($versions);
 
-            $context = array();
-            if (0) {
-                $contextManager = $this->get('phlexible_element.context.manager');
+        // instances
 
-                if ($contextManager->useContext()) {
-                    $contextCountries = $contextManager->getAllCountries();
+        $instances = array();
+        if ($teaser) {
+            // TODO: implement $teaserManager->getInstances()
+            foreach ($teaserManager->getInstances($teaser) as $instanceTeaser) {
+                $instance = array(
+                    'id'              => $instanceTeaser->getId(),
+                    'instance_master' => false,
+                    'modify_time'     => $instanceTeaser->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'icon'            => $iconResolver->resolveTeaser($instanceTeaser, $language),
+                    'type'            => 'teaser',
+                    'link'            => array(),
+                );
 
-                    $activeContextCountries = $teaserId
-                        ? $contextManager->getActiveCountriesByTeaserId($teaserId)
-                        : $contextManager->getActiveCountriesByTid($node->getId());
-
-                    foreach ($contextCountries as $contextKey => $contextValue) {
-                        $context[] = array(
-                            'id'      => $contextKey,
-                            'country' => $contextValue,
-                            'active'  => in_array($contextKey, $activeContextCountries) ? 1 : 0
-                        );
-                    }
-                }
+                $instances[] = $instance;
             }
+        } else {
+            foreach ($treeManager->getInstanceNodes($node) as $instanceNode) {
+                $instance = array(
+                    'id'              => $instanceNode->getId(),
+                    'instance_master' => false,
+                    'modify_time'     => $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'icon'            => $iconResolver->resolveTreeNode($instanceNode, $language),
+                    'type'            => 'treenode',
+                    'link'            => array(),
+                );
 
-            // pager
-
-            $pager = array();
-            if (!$teaser) {
-                $parentNode = $tree->getParent($node);
-                if ($parentNode) {
-                    $parentElement = $elementService->findElement($parentNode->getTypeId());
-                    $parentElementtype = $elementService->findElementtype($parentElement);
-                    if ($parentElementtype->getHideChildren()) {
-                        $filter = new TreeFilter(
-                            $this->get('doctrine.dbal.default_connection'),
-                            $request->getSession(),
-                            $this->get('event_dispatcher'),
-                            $parentNode->getId(),
-                            $language
-                        );
-                        $pager = $filter->getPager($node->getId());
-                    }
-                }
-            }
-
-            // rights
-
-            $userRights = array();
-            if ($node instanceof ContentObjectInterface) {
-                if (!$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN)) {
-                    //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
-
-                    if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
-                        return null;
-                    }
-
-                    $userRights = array(); //$contentRightsManager->getRights($language);
-                    $userRights = array_keys($userRights);
-                } else {
-                    $userRights = array_keys(
-                        $this->get('phlexible_access_control.permissions')->getByContentClass('Phlexible\Bundle\TreeBundle\Model\TreeNode')
+                if ($instanceNode->getTree()->getSiterootId() !== $tree->getSiterootId()) {
+                    $instance['link'] = array(
+                        'start_tid_path' => '/' . implode('/', $instanceNode->getTree()->getIdPath($instanceNode)),
                     );
                 }
+
+                $instances[] = $instance;
             }
+        }
 
-            $status = '';
-            if ($stateManager->isPublished($node, $language)) {
-                $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
-            }
+        // allowed child elements
 
-            $icon = $iconResolver->resolveTreeNode($node, $language);
+        $allowedChildren = array();
+        if (!$teaser) {
+            foreach ($elementtypeService->findAllowedChildrenIds($elementtype) as $allowedChildId) {
+                $childElementtype = $elementtypeService->findElementtype($allowedChildId);
 
-            $createUser = $userManager->find($elementVersion->getCreateUserId());
+                if ($childElementtype->getType() !== 'full') {
+                    continue;
+                }
 
-            // glue together
-
-            $properties = array(
-                'tid'              => $treeId,
-                'eid'              => $eid,
-                'siteroot_id'      => empty($teaserId) ? $node->getTree()->getSiterootId() : null,
-                'teaser_id'        => $teaserId,
-                'language'         => $language,
-                'version'          => $elementVersion->getVersion(),
-                'is_published'     => $isPublished,
-                'master'           => $language == $element->getMasterLanguage() ? true : false,
-                'status'           => $status,
-                'backend_title'    => substr(
-                    strip_tags($elementVersion->getBackendTitle($language, $elementMasterLanguage)),
-                    0,
-                    30
-                ),
-                'page_title'       => substr(
-                    strip_tags($elementVersion->getPageTitle($language, $elementMasterLanguage)),
-                    0,
-                    30
-                ),
-                'navigation_title' => substr(
-                    strip_tags($elementVersion->getNavigationTitle($language, $elementMasterLanguage)),
-                    0,
-                    30
-                ),
-                'unique_id'        => $element->getUniqueID(),
-                'et_id'            => $elementtype->getId(),
-                'et_title'         => $elementtype->getTitle(),
-                'et_version'       => $elementVersion->getElementTypeVersion()
-                    . ' [' . $elementtypeService->findLatestElementtypeVersion($elementtype)->getVersion() . ']',
-                'et_unique_id'     => $elementtype->getUniqueId(),
-                'et_type'          => $elementtype->getType(),
-                'author'           => $createUser->getDisplayName(),
-                'create_date'      => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
-                'publish_date'     => $publishDate,
-                'publisher'        => $publishUser ? $publishUser->getDisplayName() : null,
-                'latest_version'   => (int) $latestVersion,
-                'online_version'   => (int) $onlineVersion,
-                'masterlanguage'   => $elementMasterLanguage,
-                'sort_mode'        => $node->getSortMode(),
-                'sort_dir'         => $node->getSortDir(),
-                'icon'             => $icon,
-                'navigation'       => $node->getInNavigation(),
-            );
-
-            $elementtypeSerializer = new ElementtypeArraySerializer();
-            $serializedStructure = $elementtypeSerializer->serialize($elementtypeStructure);
-
-            $elementSerializer = new ElementArraySerializer();
-            $serializedValues = $elementSerializer->serialize($elementStructure);
-
-            $data = array(
-                'success'             => true,
-                'properties'          => $properties,
-                'attributes'          => $attributes,
-                'comment'             => $elementVersion->getComment(),
-                'meta'                => $meta,
-                'redirects'           => $redirects,
-                'default_tab'         => $elementtype->getDefaultTab(),
-                'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
-                'lockinfo'            => $lockInfo,
-                'diff'                => $diffInfo,
-                'urls'                => $urls,
-                'context'             => $context,
-                'pager'               => $pager,
-                'rights'              => $userRights,
-                'instances'           => $instances,
-                'children'            => $allowedChildren,
-                'versions'            => $versions,
-                'valueStructure'      => $serializedValues,
-                'structure'           => $serializedStructure,
-            );
-
-            $data = (object) $data;
-            $event = new LoadDataEvent($node, $teaser, $language, $data);
-            $this->get('event_dispatcher')->dispatch(ElementEvents::LOAD_DATA, $event);
-            $data = (array) $data;
-        } catch (\Exception $e) {
-            $data = array(
-                'success' => false,
-                'msg'     => $e->getMessage(),
-                'trace'   => $e->getTraceAsString(),
-            );
-            if ($e->getPrevious()) {
-                $data['previous'] = array(
-                    'msg'   => $e->getPrevious()->getMessage(),
-                    'trace' => $e->getPrevious()->getTraceAsString(),
+                $allowedChildren[] = array(
+                    $allowedChildId,
+                    $childElementtype->getTitle(),
+                    $iconResolver->resolveElementtype($childElementtype),
                 );
             }
         }
+
+        // diff
+
+        $diff = $request->get('diff');
+        $diffVersionFrom = $request->get('diff_version_from');
+        $diffVersionTo = $request->get('diff_version_to');
+        $diffLanguage = $request->get('diff_language');
+
+        if ($diff && $diffVersionTo) {
+            $fromElementVersion = $elementService->findElementVersion($element, $diffVersionFrom);
+            $fromElementStructure = $elementService->findElementStructure($fromElementVersion, $diffLanguage);
+            $toElementVersion = $elementService->findElementVersion($element, $diffVersionTo);
+            $toElementStructure = $elementService->findElementStructure($toElementVersion, $diffLanguage);
+            $differ = new Diff();
+            $elementStructure = $differ->diff($fromElementStructure, $toElementStructure);
+        } else {
+            $elementStructure = $elementService->findElementStructure($elementVersion, $language);
+        }
+
+        $diffInfo = null;
+        if ($diff) {
+            $diffInfo = array(
+                'enabled'      => $diff,
+                'version_from' => $diffVersionFrom,
+                'version_to'   => $diffVersionTo,
+                'language'     => $diffLanguage,
+            );
+        }
+
+        // lock
+
+        if ($unlockId !== null) {
+            $unlockElement = $elementService->findElement($unlockId);
+            if ($lockManager->isLockedByUser($unlockElement, $language, $this->getUser()->getId())) {
+                try {
+                    $lockManager->unlock($unlockElement, $this->getUser()->getId());
+                } catch (\Exception $e) {
+                    // unlock failed
+                }
+            }
+        }
+
+        if ($node instanceof ContentObjectInterface) {
+            if (!$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) &&
+                !$securityContext->isGranted(array('right' => 'EDIT', 'language' => $language), $node)
+            ) {
+                $doLock = false;
+            }
+        }
+
+        $lock = null;
+        if ($doLock && !$diff) {
+            if (!$lockManager->isLockedByOtherUser($element, $language, $this->getUser()->getId())) {
+                $lock = $lockManager->lock(
+                    $element,
+                    $this->getUser()->getId(),
+                    $language
+                );
+            }
+        }
+
+        if (!$lock) {
+            $lock = $lockManager->findMasterLock($element);
+            if (!$lock) {
+                $lock = $lockManager->findSlaveLock($element, $language);
+            }
+        }
+
+        $lockInfo = null;
+
+        if ($lock && !$diff) {
+            $lockUser = $userManager->find($lock->getUserId());
+
+            $lockInfo = array(
+                'status'   => 'locked',
+                'id'       => $lock->getEid(),
+                'username' => $lockUser->getDisplayName(),
+                'time'     => $lock->getLockedAt()->format('Y-m-d H:i:s'),
+                'age'      => time() - $lock->getLockedAt()->format('U'),
+                'type'     => $lock->getType(),
+            );
+
+            if ($lock->getUserId() === $this->getUser()->getId()) {
+                $lockInfo['status'] = 'edit';
+            } elseif ($lock->getType() == ElementLock::TYPE_PERMANENTLY) {
+                $lockInfo['status'] = 'locked_permanently';
+            }
+        } elseif ($diff) {
+            // Workaround for loading diffs without locking and view-mask
+            // TODO: introduce new diff lock mode
+
+            $lockInfo = array(
+                'status'   => 'edit',
+                'id'       => '',
+                'username' => '',
+                'time'     => '',
+                'age'      => 0,
+                'type'     => ElementLock::TYPE_TEMPORARY,
+            );
+        }
+
+        // meta
+
+        $meta = array();
+        $elementMetaSetResolver = $this->get('phlexible_element.element_meta_set_resolver');
+        $elementMetaDataManager = $this->get('phlexible_element.element_meta_data_manager');
+        $optionResolver = $this->get('phlexible_meta_set.option_resolver');
+        $metaSetId = $elementtypeVersion->getMetaSetId();
+
+        if ($metaSetId) {
+            $metaSet = $elementMetaSetResolver->resolve($elementVersion);
+            $metaData = $elementMetaDataManager->findByMetaSetAndElementVersion($metaSet, $elementVersion);
+
+            $fieldDatas = array();
+
+            foreach ($metaSet->getFields() as $field) {
+                $options = $optionResolver->resolve($field);
+
+                $fieldData = array(
+                    'key'          => $field->getName(),
+                    'type'         => $field->getType(),
+                    'options'      => $options,
+                    'readonly'     => $field->isReadonly(),
+                    'required'     => $field->isRequired(),
+                    'synchronized' => $field->isSynchronized(),
+                );
+
+                if ($metaData) {
+                    foreach ($metaData->getLanguages() as $metaLanguage) {
+                        if ($language === $metaLanguage) {
+                            $fieldData['value'] = $metaData->get($field->getId(), $language);
+                            break;
+                        }
+                    }
+                }
+
+                $fieldDatas[] = $fieldData;
+            }
+
+            $meta = array(
+                'set_id' => $metaSetId,
+                'title'  => $metaSet->getName(),
+                'fields' => $fieldDatas
+            );
+        }
+
+        // redirects
+        // TODO: auslagern
+
+        $redirects = array();
+        if (!$teaser && $this->container->has('redirectsManager')) {
+            $redirectsManager = $this->get('redirectsManager');
+            $redirects = $redirectsManager->getForTidAndLanguage($treeId, $language);
+        }
+
+        // preview / online url
+
+        $urls = array(
+            'preview' => '',
+            'online'  => '',
+        );
+
+        $publishDate = null;
+        $publishUser = null;
+        $onlineVersion = null;
+        $latestVersion = null;
+
+        if (in_array($elementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART))) {
+            if ($type == Elementtype::TYPE_FULL) {
+                $urls['preview'] = $this->generateUrl('frontend_preview', array('id' => $node->getId(), 'language' => $language));
+
+                if ($isPublished) {
+                    $contentNode = $this->get('phlexible_tree.content_tree_manager.delegating')->findByTreeId($node->getId())->get($node->getId());
+                    $urls['online'] = $this->generateUrl($contentNode);
+                }
+            }
+
+            if ($isPublished) {
+                $publishInfo = $stateManager->getPublishInfo($node, $language);
+                $publishDate = $publishInfo['published_at'];
+                $publishUserId = $publishInfo['publish_user_id'];
+                $publishUser = $userManager->find($publishUserId);
+                $onlineVersion = $publishInfo['version'];
+            }
+
+            $latestVersion = $element->getLatestVersion();
+        }
+
+        // configuration
+
+        if ($teaser) {
+            $configuration = $teaser->getAttributes();
+        } else {
+            $configuration = $node->getAttributes();
+            $configuration['navigation'] = $node->getInNavigation() ? true : false;
+        }
+
+        // context
+        // TODO: repair element context
+
+        $context = array();
+        if (0) {
+            $contextManager = $this->get('phlexible_element.context.manager');
+
+            if ($contextManager->useContext()) {
+                $contextCountries = $contextManager->getAllCountries();
+
+                $activeContextCountries = $teaserId
+                    ? $contextManager->getActiveCountriesByTeaserId($teaserId)
+                    : $contextManager->getActiveCountriesByTid($node->getId());
+
+                foreach ($contextCountries as $contextKey => $contextValue) {
+                    $context[] = array(
+                        'id'      => $contextKey,
+                        'country' => $contextValue,
+                        'active'  => in_array($contextKey, $activeContextCountries) ? 1 : 0
+                    );
+                }
+            }
+        }
+
+        // pager
+
+        $pager = array();
+        if (!$teaser) {
+            $parentNode = $tree->getParent($node);
+            if ($parentNode) {
+                $parentElement = $elementService->findElement($parentNode->getTypeId());
+                $parentElementtype = $elementService->findElementtype($parentElement);
+                if ($parentElementtype->getHideChildren()) {
+                    $filter = new TreeFilter(
+                        $this->get('doctrine.dbal.default_connection'),
+                        $request->getSession(),
+                        $this->get('event_dispatcher'),
+                        $parentNode->getId(),
+                        $language
+                    );
+                    $pager = $filter->getPager($node->getId());
+                }
+            }
+        }
+
+        // rights
+
+        $userRights = array();
+        if ($node instanceof ContentObjectInterface) {
+            if (!$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN)) {
+                //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
+
+                if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
+                    return null;
+                }
+
+                $userRights = array(); //$contentRightsManager->getRights($language);
+                $userRights = array_keys($userRights);
+            } else {
+                $userRights = array_keys(
+                    $this->get('phlexible_access_control.permissions')->getByContentClass('Phlexible\Bundle\TreeBundle\Model\TreeNode')
+                );
+            }
+        }
+
+        $status = '';
+        if ($stateManager->isPublished($node, $language)) {
+            $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
+        }
+
+        $icon = $iconResolver->resolveTreeNode($node, $language);
+
+        $createUser = $userManager->find($elementVersion->getCreateUserId());
+
+        // glue together
+
+        $properties = array(
+            'tid'              => $treeId,
+            'eid'              => $eid,
+            'siteroot_id'      => empty($teaserId) ? $node->getTree()->getSiterootId() : null,
+            'teaser_id'        => $teaserId,
+            'language'         => $language,
+            'version'          => $elementVersion->getVersion(),
+            'is_published'     => $isPublished,
+            'master'           => $language == $element->getMasterLanguage() ? true : false,
+            'status'           => $status,
+            'backend_title'    => substr(
+                strip_tags($elementVersion->getBackendTitle($language, $elementMasterLanguage)),
+                0,
+                30
+            ),
+            'page_title'       => substr(
+                strip_tags($elementVersion->getPageTitle($language, $elementMasterLanguage)),
+                0,
+                30
+            ),
+            'navigation_title' => substr(
+                strip_tags($elementVersion->getNavigationTitle($language, $elementMasterLanguage)),
+                0,
+                30
+            ),
+            'unique_id'        => $element->getUniqueID(),
+            'et_id'            => $elementtype->getId(),
+            'et_title'         => $elementtype->getTitle(),
+            'et_version'       => $elementVersion->getElementTypeVersion()
+                . ' [' . $elementtypeService->findLatestElementtypeVersion($elementtype)->getVersion() . ']',
+            'et_unique_id'     => $elementtype->getUniqueId(),
+            'et_type'          => $elementtype->getType(),
+            'author'           => $createUser->getDisplayName(),
+            'create_date'      => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
+            'publish_date'     => $publishDate,
+            'publisher'        => $publishUser ? $publishUser->getDisplayName() : null,
+            'latest_version'   => (int) $latestVersion,
+            'online_version'   => (int) $onlineVersion,
+            'masterlanguage'   => $elementMasterLanguage,
+            'sort_mode'        => $node->getSortMode(),
+            'sort_dir'         => $node->getSortDir(),
+            'icon'             => $icon,
+            'navigation'       => $node->getInNavigation(),
+        );
+
+        $elementtypeSerializer = new ElementtypeArraySerializer();
+        $serializedStructure = $elementtypeSerializer->serialize($elementtypeStructure);
+
+        $elementSerializer = new ElementArraySerializer();
+        $serializedValues = $elementSerializer->serialize($elementStructure);
+
+        $data = array(
+            'success'             => true,
+            'properties'          => $properties,
+            'configuration'       => $configuration,
+            'comment'             => $elementVersion->getComment(),
+            'meta'                => $meta,
+            'redirects'           => $redirects,
+            'default_tab'         => $elementtype->getDefaultTab(),
+            'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
+            'lockinfo'            => $lockInfo,
+            'diff'                => $diffInfo,
+            'urls'                => $urls,
+            'context'             => $context,
+            'pager'               => $pager,
+            'rights'              => $userRights,
+            'instances'           => $instances,
+            'children'            => $allowedChildren,
+            'versions'            => $versions,
+            'valueStructure'      => $serializedValues,
+            'structure'           => $serializedStructure,
+        );
+
+        $data = (object) $data;
+        $event = new LoadDataEvent($node, $teaser, $language, $data);
+        $this->get('event_dispatcher')->dispatch(ElementEvents::LOAD_DATA, $event);
+        $data = (array) $data;
 
         return new JsonResponse($data);
     }
@@ -601,7 +580,7 @@ class DataController extends Controller
         $notifications = $request->get('notifications');
         $values = $request->request->all();
 
-        $stateManager = $this->get('phlexible_tree.state_manager');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $saver = new DataSaver(
             $this->get('phlexible_element.element_service'),
@@ -610,14 +589,19 @@ class DataController extends Controller
             $this->get('phlexible_teaser.teaser_manager'),
             $this->get('event_dispatcher')
         );
-        $elementVersion = $saver->save($request, $this->getUser());
+        list($elementVersion, $treeNode, $teaser) = $saver->save($request, $this->getUser());
+        if ($teaser) {
+            $icon = $iconResolver->resolveTeaser($teaser, $language);
+        } else {
+            $icon = $iconResolver->resolveTreeNode($treeNode, $language);
+        }
 
         $msg = 'saved';
         $data = array(
             'title'         => $elementVersion->getBackendTitle($language),
-            'status'        => 'async',//$status,
-            'navigation'    => '',//$teaserId ? '' : $node->getInNavigation($newVersion),
-            'restricted'    => '',//$teaserId ? '' : $node->getAttribute('restrictire'),
+            'icon'          => $icon,
+            'navigation'    => $teaserId ? '' : $treeNode->getInNavigation(),
+            'restricted'    => $teaserId ? '' : $treeNode->getAttribute('restrictire'),
             'publish_other' => array(),//$publishSlaves,
         );
 

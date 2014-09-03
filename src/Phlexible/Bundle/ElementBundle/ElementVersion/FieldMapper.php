@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\ElementBundle\ElementVersion;
 
-use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
+use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 
 /**
  * Field mapper
@@ -21,9 +21,14 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 class FieldMapper
 {
     /**
-     * @var ElementService
+     * @var ElementtypeService
      */
-    private $elementService;
+    private $elementtypeService;
+
+    /**
+     * @var array
+     */
+    private $availableLanguages;
 
     /**
      * @var FieldMapperInterface[]
@@ -31,12 +36,14 @@ class FieldMapper
     private $mappers = array();
 
     /**
-     * @param ElementService         $elementService
+     * @param ElementtypeService     $elementtypeService
+     * @param string                 $availableLanguages
      * @param FieldMapperInterface[] $mappers
      */
-    public function __construct(ElementService $elementService, array $mappers = array())
+    public function __construct(ElementtypeService $elementtypeService, $availableLanguages, array $mappers = array())
     {
-        $this->elementService = $elementService;
+        $this->elementtypeService = $elementtypeService;
+        $this->availableLanguages = explode(',', $availableLanguages);
         $this->mappers = $mappers;
     }
 
@@ -53,29 +60,44 @@ class FieldMapper
     }
 
     /**
+     * @return array
+     */
+    public function getAvailableLanguages()
+    {
+        return $this->availableLanguages;
+    }
+
+    /**
      * @param ElementVersion   $elementVersion
      * @param ElementStructure $elementStructure
      * @param string           $language
      *
      * @return array
      */
-    public function extract(ElementVersion $elementVersion, ElementStructure $elementStructure, $language)
+    public function extract(ElementVersion $elementVersion, ElementStructure $elementStructure = null, $language)
     {
-        $elementtypeVersion = $this->elementService->findElementtypeVersion($elementVersion);
-        $mappings = $elementtypeVersion->getMappings();
+        $elementtype = $elementVersion->getElement()->getElementtype();
+        $elementtypeVersion = $this->elementtypeService->findElementtypeVersion(
+            $elementtype,
+            $elementVersion->getElementtypeVersion()
+        );
 
         $titles = array();
-        foreach ($mappings as $key => $mapping) {
-            if ($mapper = $this->findFieldMapper($key)) {
-                $title = $mapper->map($elementStructure, $mapping);
-                if ($title) {
-                    $titles[$key] = $title;
+
+        if ($elementStructure) {
+            $mappings = $elementtypeVersion->getMappings();
+
+            foreach ($mappings as $key => $mapping) {
+                if ($mapper = $this->findFieldMapper($key)) {
+                    $title = $mapper->map($elementStructure, $mapping);
+                    if ($title) {
+                        $titles[$key] = $title;
+                    }
                 }
             }
         }
 
         if (empty($titles['backend'])) {
-            $elementtype = $elementtypeVersion->getElementtype();
             $titles['backend'] = '[' . $elementtype->getTitle() . ', ' . $language . ']';
         }
 
@@ -85,25 +107,26 @@ class FieldMapper
     /**
      * @param ElementVersion   $elementVersion
      * @param ElementStructure $elementStructure
-     * @param string           $language
      */
-    public function apply(ElementVersion $elementVersion, ElementStructure $elementStructure, $language)
+    public function apply(ElementVersion $elementVersion, ElementStructure $elementStructure = null)
     {
-        $mapping = $this->extract($elementVersion, $elementStructure, $language);
+        foreach ($this->availableLanguages as $language) {
+            $mapping = $this->extract($elementVersion, $elementStructure, $language);
 
-        $mappedFields = $elementVersion->getMappedFields();
-        if (!$mappedFields->contains($language)) {
-            $mappedField = new ElementVersionMappedField();
-            $mappedField
-                ->setLanguage($language)
-                ->setElementVersion($elementVersion);
-            $mappedFields->set($language, $mappedField);
+            $mappedFields = $elementVersion->getMappedFields();
+            if (!$mappedFields->contains($language)) {
+                $mappedField = new ElementVersionMappedField();
+                $mappedField
+                    ->setLanguage($language)
+                    ->setElementVersion($elementVersion);
+                $mappedFields->set($language, $mappedField);
+            }
+
+            $mappedField = $mappedFields->get($language);
+            $mappedField->setMapping($mapping);
+
+            $elementVersion->setMappedFields($mappedFields);
         }
-
-        $mappedField = $mappedFields->get($language);
-        $mappedField->setMapping($mapping);
-
-        $elementVersion->setMappedFields($mappedFields);
     }
 
     /**

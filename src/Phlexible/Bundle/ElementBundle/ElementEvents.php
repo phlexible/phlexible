@@ -76,27 +76,17 @@ class ElementEvents
     const SAVE_ELEMENT_DATA = 'phlexible_element.save_element_data';
 
     /**
-     * Fired before a tree node is updated.
-     */
-    const BEFORE_SAVE_NODE_DATA = 'phlexible_element.before_save_node_data';
-
-    /**
-     * Fired after a tree node has been saved.
+     * Fired on node data save.
      */
     const SAVE_NODE_DATA = 'phlexible_element.save_node_data';
 
     /**
-     * Fired before a tree node is updated.
-     */
-    const BEFORE_SAVE_TEASER_DATA = 'phlexible_element.before_save_teaser_data';
-
-    /**
-     * Fired after a tree node has been saved.
+     * Fired on teaser data save.
      */
     const SAVE_TEASER_DATA = 'phlexible_element.save_teaser_data';
 
     /**
-     * Fired after a tree node has been loaded.
+     * Fired on element load.
      */
     const LOAD_DATA = 'phlexible_element.load_data';
 

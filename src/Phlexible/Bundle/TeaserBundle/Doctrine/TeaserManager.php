@@ -10,10 +10,12 @@ namespace Phlexible\Bundle\TeaserBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\TeaserBundle\Entity\ElementCatch;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
+use Phlexible\Bundle\TeaserBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
@@ -38,6 +40,16 @@ class TeaserManager implements TeaserManagerInterface
     private $entityManager;
 
     /**
+     * @var StateManagerInterface
+     */
+    private $stateManager;
+
+    /**
+     * @var ElementHistoryManagerInterface
+     */
+    private $elementHistoryManager;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -48,12 +60,20 @@ class TeaserManager implements TeaserManagerInterface
     private $teaserRepository;
 
     /**
-     * @param EntityManager            $entityManager
-     * @param EventDispatcherInterface $dispatcher
+     * @param EntityManager                  $entityManager
+     * @param StateManagerInterface          $stateManager
+     * @param ElementHistoryManagerInterface $elementHistoryManager
+     * @param EventDispatcherInterface       $dispatcher
      */
-    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher)
+    public function __construct(
+        EntityManager $entityManager,
+        StateManagerInterface $stateManager,
+        ElementHistoryManagerInterface $elementHistoryManager,
+        EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
+        $this->stateManager = $stateManager;
+        $this->elementHistoryManager = $elementHistoryManager;
         $this->dispatcher = $dispatcher;
     }
 
@@ -72,9 +92,25 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findTeaser($id)
+    public function find($id)
     {
-        return $this->entityManager->getRepository('PhlexibleTeaserBundle:Teaser')->find($id);
+        return $this->getTeaserRepository()->find($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->getTeaserRepository()->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneBy(array $criteria)
+    {
+        return $this->getTeaserRepository()->findOneBy($criteria);
     }
 
     /**
@@ -92,6 +128,8 @@ class TeaserManager implements TeaserManagerInterface
                 if ($localTeaser->getType() === 'stop') {
                     unset($localTeasers[$index]);
                 } elseif ($localTeaser->getType() === 'hide' && $treeNode->getId() === $forTreeId) {
+                    unset($localTeasers[$index]);
+                } elseif ($localTeaser->getStopInherit() && $treeNode->getId() !== $forTreeId) {
                     unset($localTeasers[$index]);
                 }
             }
@@ -115,6 +153,73 @@ class TeaserManager implements TeaserManagerInterface
         );
 
         return $teasers;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isInstance(Teaser $teaser)
+    {
+        $qb = $this->getTeaserRepository()->createQueryBuilder('t');
+        $qb
+            ->select('COUNT(t.id)')
+            ->where($qb->expr()->eq('t.type', $teaser->getType()))
+            ->andWhere($qb->expr()->eq('t.typeId', $teaser->getTypeId()));
+
+        return $qb->getQuery()->getSingleScalarResult() > 1;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isInstanceMaster(Teaser $teaser)
+    {
+        return $teaser->getAttribute('instanceMaster', false);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInstances(Teaser $teaser)
+    {
+        return $this->getTeaserRepository()->findBy(
+            array(
+                'type'   => $teaser->getType(),
+                'typeId' => $teaser->getTypeId(),
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isPublished(Teaser $teaser, $language)
+    {
+        return $this->stateManager->isPublished($teaser, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedLanguages(Teaser $teaser)
+    {
+        return $this->stateManager->getPublishedLanguages($teaser);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedVersion(Teaser $teaser, $language)
+    {
+        return $this->stateManager->getPublishedVersion($teaser, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedVersions(Teaser $teaser)
+    {
+        return $this->stateManager->getPublishedVersions($teaser);
     }
 
     /**
@@ -172,6 +277,16 @@ class TeaserManager implements TeaserManagerInterface
             );
         */
 
+        if ($type === 'element') {
+            $this->elementHistoryManager->insert(
+                ElementHistoryManagerInterface::ACTION_CREATE_TEASER,
+                $teaser->getTypeId(),
+                $userId,
+                null,
+                $teaser->getId()
+            );
+        }
+
         $event = new TeaserEvent($teaser);
         $this->dispatcher->dispatch(TeaserEvents::CREATE_TEASER, $event);
 
@@ -181,36 +296,33 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function createTeaserInstance($treeId, $teaserId, $layoutAreaId)
+    public function createTeaserInstance(TreeNodeInterface $treeNode, Teaser $teaser, $layoutAreaId, $userId)
     {
-        $teaser = new Teaser();
+        $teaser = clone $teaser;
+        $teaser
+            ->setId(null)
+            ->setTreeId($treeNode->getId())
+            ->setLayoutareaId($layoutAreaId)
+            ->setCreateUserId($userId)
+            ->setCreatedAt(new \DateTime);
 
         $event = new TeaserEvent($teaser);
         if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_CREATE_TEASER_INSTANCE, $event)->isPropagationStopped()) {
             return null;
         }
 
-        $select = $db->select()
-            ->from($db->prefix . 'element_tree_teasers')
-            ->where('id = ?', $teaserId)
-            ->limit(1);
+        $this->entityManager->persist($teaser);
+        $this->entityManager->flush($teaser);
 
-        $row = $db->fetchRow($select);
-
-        $row['id'] = null;
-        $row['tree_id'] = $treeId;
-        $row['layoutarea_id'] = $layoutAreaId;
-        $row['modify_uid'] = MWF_Env::getUid();
-        $row['modify_time'] = $db->fn->now();
-
-        $db->insert($db->prefix . 'element_tree_teasers', $row);
-        $newTeaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
-
-        Makeweb_Teasers_History::insert(
-            Makeweb_Teasers_History::ACTION_CREATE_INSTANCE,
-            $teaserId,
-            $row['teaser_eid']
-        );
+        if ($teaser->getType() === 'element') {
+            $this->elementHistoryManager->insert(
+                ElementHistoryManagerInterface::ACTION_CREATE_TEASER_INSTANCE,
+                $teaser->getTypeId(),
+                $userId,
+                null,
+                $teaser->getId()
+            );
+        }
 
         $event = new TeaserEvent($teaser);
         $this->dispatcher->dispatch(TeaserEvents::CREATE_TEASER_INSTANCE, $event);
@@ -221,41 +333,39 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteTeaser($teaserId)
+    public function updateTeaser(Teaser $teaser, $flush = true)
     {
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
+        $this->entityManager->persist($teaser);
+        if ($flush) {
+            $this->entityManager->flush($teaser);
+        }
+    }
 
-        $node = new Makeweb_Teasers_Node($teaserId);
-
-        $beforeEvent = new Makeweb_Teasers_Event_BeforeDeleteTeaser($node);
-        if (false === $dispatcher->dispatch($beforeEvent)) {
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteTeaser(Teaser $teaser, $userId)
+    {
+        $event = new TeaserEvent($teaser);
+        if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_DELETE_TEASER, $event)->isPropagationStopped()) {
             return;
         }
 
-        $db = MWF_Registry::getContainer()->dbPool->default;
+        $this->entityManager->remove($teaser);
+        $this->entityManager->flush();
 
-        $select = $db->select()
-            ->from($db->prefix . 'element_tree_teasers', 'teaser_eid')
-            ->where('id = ?', $teaserId)
-            ->limit(1);
+        if ($teaser->getType() === 'element') {
+            $this->elementHistoryManager->insert(
+                ElementHistoryManagerInterface::ACTION_DELETE_TEASER,
+                $teaser->getTypeId(),
+                $userId,
+                null,
+                $teaser->getId()
+            );
+        }
 
-        $eid = $db->fetchOne($select);
-
-        $db->delete(
-            $db->prefix . 'element_tree_teasers',
-            array(
-                'id = ?' => $teaserId
-            )
-        );
-
-        Makeweb_Teasers_History::insert(
-            Makeweb_Teasers_History::ACTION_DELETE_TEASER,
-            $teaserId,
-            $eid
-        );
-
-        $event = new Makeweb_Teasers_Event_DeleteTeaser($node);
-        $dispatcher->dispatch($event);
+        $event = new TeaserEvent($teaser);
+        $this-> dispatcher->dispatch(TeaserEvents::DELETE_TEASER, $event);
     }
 
     /**
@@ -938,30 +1048,6 @@ class TeaserManager implements TeaserManagerInterface
         $dispatcher->dispatch($event);
 
         return $node->getEid();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isPublished($eid, $language)
-    {
-        try {
-            $db = MWF_Registry::getContainer()->dbPool->default;
-
-            $select = $db->select()
-                ->from($db->prefix . 'element_tree_teasers_online', new Zend_Db_Expr('1'))
-                ->where('eid = ?', $eid)
-                ->where('language = ?', $language)
-                ->limit(1);
-
-            $result = $db->fetchOne($select);
-
-            return (bool) $result;
-        } catch (Exception $e) {
-            MWF_Log::exception($e);
-        }
-
-        return false;
     }
 
     /**

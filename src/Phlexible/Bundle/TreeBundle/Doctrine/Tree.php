@@ -14,6 +14,7 @@ use Phlexible\Bundle\TreeBundle\Event\MoveNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\ReorderNodeEvent;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
+use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNode;
@@ -52,31 +53,39 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     private $connection;
 
     /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
      * @var ElementHistoryManagerInterface
      */
     private $historyManager;
 
     /**
+     * @var StateManagerInterface
+     */
+    private $stateManager;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * @param string                         $siterootId
      * @param Connection                     $connection
-     * @param EventDispatcherInterface       $dispatcher
      * @param ElementHistoryManagerInterface $historyManager
+     * @param StateManagerInterface          $stateManager
+     * @param EventDispatcherInterface       $dispatcher
      */
     public function __construct(
         $siterootId,
         Connection $connection,
-        EventDispatcherInterface $dispatcher,
-        ElementHistoryManagerInterface $historyManager)
+        ElementHistoryManagerInterface $historyManager,
+        StateManagerInterface $stateManager,
+        EventDispatcherInterface $dispatcher)
     {
         $this->siterootId = $siterootId;
         $this->connection = $connection;
         $this->dispatcher = $dispatcher;
         $this->historyManager = $historyManager;
+        $this->stateManager = $stateManager;
     }
 
     /**
@@ -369,7 +378,8 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         $qb
             ->select('COUNT(t.id)')
             ->from('tree', 't')
-            ->where($qb->expr()->eq('t.type_id', $node->getTypeId()));
+            ->where($qb->expr()->eq('t.type', $qb->expr()->literal($node->getType())))
+            ->andWhere($qb->expr()->eq('t.type_id', $node->getTypeId()));
 
         return $this->connection->fetchColumn($qb->getSQL()) > 1;
     }
@@ -379,18 +389,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
      */
     public function isInstanceMaster($node)
     {
-        return false;
-        if (!$node instanceof TreeNodeInterface) {
-            $node = $this->get($node);
-        }
-
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('COUNT(t.id)')
-            ->from('tree', 't')
-            ->where($qb->expr()->eq('t.type_id', $node->getTypeId()));
-
-        return $this->connection->fetchColumn($qb->getSQL()) > 1;
+        return $node->getAttribute('instanceMaster', false);
     }
 
     /**
@@ -406,11 +405,44 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         $qb
             ->select('t.*')
             ->from('tree', 't')
-            ->where($qb->expr()->eq('t.type_id', $node->getTypeId()));
+            ->where($qb->expr()->eq('t.type_id', $node->getTypeId()))
+            ->andWhere($qb->expr()->eq('t.siteroot_id', $qb->expr()->literal($this->getSiterootId())));
 
         $rows = $this->connection->fetchAll($qb->getSQL());
 
         return $this->mapNodes($rows);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isPublished(TreeNodeInterface $node, $language)
+    {
+        return $this->stateManager->isPublished($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedLanguages(TreeNodeInterface $node)
+    {
+        return $this->stateManager->getPublishedLanguages($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedVersion(TreeNodeInterface $node, $language)
+    {
+        return $this->stateManager->getPublishedVersion($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedVersions(TreeNodeInterface $node)
+    {
+        return $this->stateManager->getPublishedVersions($node);
     }
 
     /**
@@ -454,7 +486,9 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         array $attributes,
         $userId,
         $sortMode = 'free',
-        $sortDir = 'asc')
+        $sortDir = 'asc',
+        $navigation = false,
+        $needAuthentication = false)
     {
         if (!$parentNode instanceof TreeNodeInterface) {
             $parentNode = $this->get($parentNode);
@@ -488,6 +522,8 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
             ->setSort($sort)
             ->setSortMode($sortMode)
             ->setSortDir($sortDir)
+            ->setInNavigation($navigation)
+            ->setNeedAuthentication($needAuthentication)
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime);
 
@@ -602,7 +638,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     /**
      * @param TreeNodeInterface $node
      */
-    private function updateNode(TreeNodeInterface $node)
+    public function updateNode(TreeNodeInterface $node)
     {
         $this->connection->update(
             'tree',
@@ -614,9 +650,10 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
                 'sort'           => $node->getSort(),
                 'sort_mode'      => $node->getSortMode(),
                 'sort_dir'       => $node->getSortDir(),
+                'in_navigation'  => $node->getInNavigation(),
+                'attributes'     => json_encode($node->getAttributes()),
                 'created_at'     => $node->getCreatedAt()->format('Y-m-d H:i:s'),
                 'create_user_id' => $node->getCreateUserId(),
-                'attributes'     => json_encode($node->getAttributes()),
             ),
             array(
                 'id' => $node->getId(),

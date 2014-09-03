@@ -58,7 +58,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
             scope: this
         });
 
-        this.loader = new Phlexible.elements.ElementsTreeLoader({
+        this.loader = new Phlexible.teasers.ElementLayoutTreeLoader({
             dataUrl: Phlexible.Router.generate('teasers_layout_tree'),
             baseParams: {
                 language: this.element.language
@@ -67,7 +67,6 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
             listeners: {
                 load: function (loader, rootNode) {
                     if (this.selectId) {
-                        Phlexible.console.info('loader.load()');
                         var targetNode = null;
                         rootNode.cascade(function (currentNode) {
                             if (currentNode.id == this.selectId) {
@@ -365,7 +364,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 '-',
                 {
                     // 9
-                    text: this.strings.copy,
+                    text: Phlexible.elements.Strings.copy,
                     iconCls: 'p-element-copy-icon',
                     handler: function (menu) {
                         var node = menu.parentMenu.node;
@@ -384,7 +383,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         },
                         '-',
                         {
-                            text: this.strings.paste_alias,
+                            text: Phlexible.elements.Strings.paste_alias,
                             iconCls: 'p-teasers-teaser_reference-icon',
                             handler: function (menu) {
                                 if (Phlexible.Clipboard.isInactive() || Phlexible.Clipboard.getType() != 'teaser') {

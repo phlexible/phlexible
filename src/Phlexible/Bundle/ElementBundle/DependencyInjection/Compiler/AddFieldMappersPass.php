@@ -29,6 +29,6 @@ class AddFieldMappersPass implements CompilerPassInterface
             $mappers[] = new Reference($id);
         }
         $mapper = $container->findDefinition('phlexible_element.field_mapper');
-        $mapper->replaceArgument(1, $mappers);
+        $mapper->replaceArgument(2, $mappers);
     }
 }
