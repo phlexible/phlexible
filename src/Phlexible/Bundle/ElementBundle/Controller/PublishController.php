@@ -212,64 +212,49 @@ class PublishController extends Controller
      * @return ResultResponse
      * @Route("/setoffline", name="elements_publish_setoffline")
      */
-    public function setofflineAction(Request $request)
+    public function setOfflineAction(Request $request)
     {
         $tid      = $request->get('tid');
         $teaserId = $request->get('teaser_id', null);
         $language = $request->get('language');
-        $comment  = $request->get('comment', '');
+        $comment  = $request->get('comment', null);
 
         //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
 
-        if ($teaserId === null) {
-            $manager = Makeweb_Elements_Tree_Manager::getInstance();
-            $node = $manager->getNodeByNodeId($tid);
-            $tree = $node->getTree();
+        if (!$teaserId) {
+            $treeManager = $this->get('phlexible_tree.tree_manager');
+            $tree = $treeManager->getByNodeId($tid);
+            $node = $tree->get($tid);
 
-            $tree->setNodeOffline($node, $language, false, $comment);
+            $tree->setOffline($node, $language, $this->getUser()->getId(), $comment);
 
-            $eid = $node->getEid();
+            //$eid = $node->getEid();
             //$fileUsage->update($node->getEid());
 
-            $response = new ResultResponse(true, 'TID "'.$tid.'" set offline.');
+            $response = new ResultResponse(true, "TID $tid set offline.");
         } else {
-            $db = $this->getContainer()->dbPool->default;
+            $teaserManager = $this->get('phlexible_teaser.teaser_manager');
 
-            $select = $db->select()
-                ->from($db->prefix . 'element_tree_teasers', 'teaser_eid')
-                ->where('id = ?', $teaserId)
-                ->limit(1);
-
-            $eid = $db->fetchOne($select);
-
-            $db->delete(
-                $db->prefix . 'element_tree_teasers_online',
-                'teaser_id = '.$db->quote($teaserId) . ' AND language = '.$db->quote($language)
-            );
+            $teaser = $teaserManager->find($teaserId);
+            $teaserManager->setTeaserOffline($teaser, $language, $this->getUser()->getId(), $comment);
 
             //$fileUsage->update($eid);
 
+            /*
             Makeweb_Teasers_History::insert(
                 Makeweb_Teasers_History::ACTION_SET_OFFLINE, $teaserId, $eid, null, $language, $comment
             );
+            */
 
-            $response = new ResultResponse(true, 'Teaser ID "'.$teaserId.'" set offline.');
+            $response = new ResultResponse(true, "Teaser ID $teaserId set offline.");
         }
 
-        // TODO: refactor
-        Brainbits_Event_Dispatcher::getInstance()->post(
-            (object) array(
-                'teaser_id' => $teaserId,
-                'language'  => $language,
-                'tid'       => $tid,
-            ),
-            'teaser_setoffline'
-        );
-
+        /*
         $queueManager = MWF_Core_Queue_Manager::getInstance();
         $job = new Makeweb_Elements_Job_UpdateUsage();
         $job->setEid($eid);
         $queueManager->addUniqueJob($job);
+        */
 
         return $response;
     }

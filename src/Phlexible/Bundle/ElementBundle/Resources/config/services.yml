@@ -22,7 +22,7 @@ services:
 
     phlexible_element.icon_resolver:
         class: Phlexible\Bundle\ElementBundle\Icon\IconResolver
-        arguments: [@router, @phlexible_element.element_service, @phlexible_tree.state_manager]
+        arguments: [@router, @phlexible_element.element_service, @phlexible_teaser.teaser_manager]
 
     phlexible_element.element_meta_set_resolver:
         class: Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver
@@ -39,6 +39,16 @@ services:
     phlexible_element.util.suggest_meta_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil
         arguments: [@doctrine.dbal.default_connection, %phlexible_meta_set.suggest.seperator%]
+
+    phlexible_element.request.data_saver:
+        class: Phlexible\Bundle\ElementBundle\Controller\Data\DataSaver
+        arguments:
+            - @phlexible_element.element_service
+            - @phlexible_element.field_mapper
+            - @phlexible_tree.tree_manager
+            - @phlexible_teaser.teaser_manager
+            - @event_dispatcher
+            - %phlexible_cms.languages.available%
 
     # acl providers
     phlexible_element.acl_provider:

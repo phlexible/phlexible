@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TeaserBundle\Model;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Entity\TeaserOnline;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
@@ -110,6 +111,29 @@ interface TeaserManagerInterface
     public function getPublishedVersions(Teaser $teaser);
 
     /**
+     * @param Teaser $teaser
+     * @param string $language
+     *
+     * @return bool
+     */
+    public function isAsync(Teaser $teaser, $language);
+
+    /**
+     * @param Teaser $teaser
+     *
+     * @return TeaserOnline
+     */
+    public function findOnlineByTeaser(Teaser $teaser);
+
+    /**
+     * @param Teaser $teaser
+     * @param string $language
+     *
+     * @return TeaserOnline[]
+     */
+    public function findOneOnlineByTeaserAndLanguage(Teaser $teaser, $language);
+
+    /**
      * Create teaser
      *
      * @param int    $treeId
@@ -160,4 +184,21 @@ interface TeaserManagerInterface
      * @param string $userId
      */
     public function deleteTeaser(Teaser $teaser, $userId);
+
+    /**
+     * @param Teaser      $teaser
+     * @param int         $version
+     * @param string      $language
+     * @param string      $userId
+     * @param string|null $comment
+     */
+    public function publishTeaser(Teaser $teaser, $version, $language, $userId, $comment = null);
+
+    /**
+     * @param Teaser      $teaser
+     * @param string      $language
+     * @param string      $userId
+     * @param string|null $comment
+     */
+    public function setTeaserOffline(Teaser $teaser, $language, $userId, $comment = null);
 }

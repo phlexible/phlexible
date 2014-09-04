@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TeaserBundle\Model;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Entity\TeaserOnline;
 
 /**
  * State manager interface
@@ -49,11 +50,18 @@ interface StateManagerInterface
 
     /**
      * @param Teaser $teaser
+     *
+     * @return TeaserOnline[]
+     */
+    public function findByTeaser(Teaser $teaser);
+
+    /**
+     * @param Teaser $teaser
      * @param string $language
      *
-     * @return array
+     * @return TeaserOnline
      */
-    public function getPublishInfo(Teaser $teaser, $language);
+    public function findOneByTeaserAndLanguage(Teaser $teaser, $language);
 
     /**
      * @param Teaser $teaser
@@ -62,4 +70,21 @@ interface StateManagerInterface
      * @return bool
      */
     public function isAsync(Teaser $teaser, $language);
+
+    /**
+     * @param Teaser      $teaser
+     * @param int         $version
+     * @param string      $language
+     * @param string      $userId
+     * @param string|null $comment
+     *
+     * @return TeaserOnline
+     */
+    public function publish(Teaser $teaser, $version, $language, $userId, $comment = null);
+
+    /**
+     * @param Teaser $teaser
+     * @param string $language
+     */
+    public function setOffline(Teaser $teaser, $language);
 }

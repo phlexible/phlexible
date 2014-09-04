@@ -85,4 +85,21 @@ interface WritableTreeInterface
      * @param string                $comment
      */
     public function delete($node, $userId, $comment = null);
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param int               $version
+     * @param string            $language
+     * @param string            $userId
+     * @param string|null       $comment
+     */
+    public function publish(TreeNodeInterface $node, $version, $language, $userId, $comment = null);
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     * @param string            $userId
+     * @param string|null       $comment
+     */
+    public function setOffline(TreeNodeInterface $node, $language, $userId, $comment = null);
 }

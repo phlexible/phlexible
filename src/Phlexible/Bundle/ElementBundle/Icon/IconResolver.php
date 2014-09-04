@@ -12,6 +12,7 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
@@ -35,23 +36,23 @@ class IconResolver
     private $elementService;
 
     /**
-     * @var StateManagerInterface
+     * @var TeaserManagerInterface
      */
-    private $stateManager;
+    private $teaserManager;
 
     /**
      * @param RouterInterface        $router
      * @param ElementService         $elementService
-     * @param StateManagerInterface  $stateManager
+     * @param TeaserManagerInterface $teaserManager
      */
     public function __construct(
         RouterInterface $router,
         ElementService $elementService,
-        StateManagerInterface $stateManager)
+        TeaserManagerInterface $teaserManager)
     {
         $this->router = $router;
         $this->elementService = $elementService;
-        $this->stateManager = $stateManager;
+        $this->teaserManager = $teaserManager;
     }
 
     /**
@@ -109,8 +110,8 @@ class IconResolver
         if (!$treeNode->isRoot()) {
             $tree = $treeNode->getTree();
 
-            if ($this->stateManager->isPublished($treeNode, $language)) {
-                $parameters['status'] = $this->stateManager->isAsync($treeNode, $language) ? 'async': 'online';
+            if ($tree->isPublished($treeNode, $language)) {
+                $parameters['status'] = $tree->isAsync($treeNode, $language) ? 'async': 'online';
             }
 
             if ($tree->isInstance($treeNode)) {
@@ -147,16 +148,13 @@ class IconResolver
     {
         $parameters = array();
 
-        // TODO: repair
-        /*
-        if ($teaser->isPublished($language)) {
-            $parameters['status'] = $teaser->isAsync($language) ? 'async': 'online';
+        if ($this->teaserManager->isPublished($teaser, $language)) {
+            $parameters['status'] = $this->teaserManager->isAsync($teaser, $language) ? 'async': 'online';
         }
 
-        if ($teaser->isInstance()) {
-            $parameters['instance'] = $teaser->isInstanceMaster() ? 'master' : 'slave';
+        if ($this->teaserManager->isInstance($teaser)) {
+            $parameters['instance'] = $this->teaserManager->isInstanceMaster($teaser) ? 'master' : 'slave';
         }
-        */
 
         $element = $this->elementService->findElement($teaser->getTypeId());
 

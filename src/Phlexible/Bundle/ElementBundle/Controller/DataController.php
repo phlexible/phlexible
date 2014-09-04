@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
-use Phlexible\Bundle\ElementBundle\Controller\Data\DataSaver;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Diff;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
@@ -382,11 +381,17 @@ class DataController extends Controller
             }
 
             if ($isPublished) {
-                $publishInfo = $stateManager->getPublishInfo($node, $language);
-                $publishDate = $publishInfo['published_at'];
-                $publishUserId = $publishInfo['publish_user_id'];
-                $publishUser = $userManager->find($publishUserId);
-                $onlineVersion = $publishInfo['version'];
+                if ($teaser) {
+                    $teaserOnline = $teaserManager->findOneOnlineByTeaserAndLanguage($teaser, $language);
+                    $publishDate = $teaserOnline->getPublishedAt()->format('Y-m-d H:i:s');
+                    $publishUser = $userManager->find($teaserOnline->getPublishUserId());
+                    $onlineVersion = $teaserOnline->getVersion();
+                } else {
+                    $treeNodeOnline = $tree->findOneOnlineByTreeNodeAndLanguage($node, $language);
+                    $publishDate = $treeNodeOnline->getPublishedAt()->format('Y-m-d H:i:s');
+                    $publishUser = $userManager->find($treeNodeOnline->getPublishUserId());
+                    $onlineVersion = $treeNodeOnline->getVersion();
+                }
             }
 
             $latestVersion = $element->getLatestVersion();
@@ -569,43 +574,40 @@ class DataController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $tid = $request->get('tid');
         $teaserId = $request->get('teaser_id');
-        $eid = $request->get('eid');
         $language = $request->get('language');
-        $data = $request->get('data');
-        $oldVersion = $request->get('version');
-        $comment = $request->get('comment');
-        $isPublish = $request->get('publish');
-        $notifications = $request->get('notifications');
-        $values = $request->request->all();
 
         $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $dataSaver = $this->get('phlexible_element.request.data_saver');
 
-        $saver = new DataSaver(
-            $this->get('phlexible_element.element_service'),
-            $this->get('phlexible_element.field_mapper'),
-            $this->get('phlexible_tree.tree_manager'),
-            $this->get('phlexible_teaser.teaser_manager'),
-            $this->get('event_dispatcher')
-        );
-        list($elementVersion, $treeNode, $teaser) = $saver->save($request, $this->getUser());
+        list($elementVersion, $treeNode, $teaser, $publishSlaves) = $dataSaver->save($request, $this->getUser());
+
         if ($teaser) {
             $icon = $iconResolver->resolveTeaser($teaser, $language);
         } else {
             $icon = $iconResolver->resolveTreeNode($treeNode, $language);
         }
 
-        $msg = 'saved';
+        $msg = "Element {$elementVersion->getElement()->getEid()} master language {$elementVersion->getElement()->getMasterLanguage()} saved as new version {$elementVersion->getVersion()}";
+
         $data = array(
             'title'         => $elementVersion->getBackendTitle($language),
             'icon'          => $icon,
-            'navigation'    => $teaserId ? '' : $treeNode->getInNavigation(),
-            'restricted'    => $teaserId ? '' : $treeNode->getAttribute('restrictire'),
-            'publish_other' => array(),//$publishSlaves,
+            'navigation'    => $teaser ? '' : $treeNode->getInNavigation(),
+            'restricted'    => $teaser ? '' : $treeNode->getAttribute('needAuthentication'),
+            'publish_other' => $publishSlaves,
         );
 
         return new ResultResponse(true, $msg, $data);
+
+        $tid = $request->get('tid');
+        $eid = $request->get('eid');
+        $data = $request->get('data');
+        $oldVersion = $request->get('version');
+        $comment = $request->get('comment');
+        $isPublish = $request->get('publish');
+        $notifications = $request->get('notifications');
+        $values = $request->request->all();
 
         if ($data) {
             $data = json_decode($data, true);
@@ -626,50 +628,6 @@ class DataController extends Controller
         $elementtypeVersion = $elementService->findElementtypeVersion($oldElementVersion);
         $oldLatestVersion = $oldElementVersion->getVersion();
         $isMaster = $element->getMasterLanguage() == $language;
-
-        $publishSlaveLanguages = array();
-        $publishSlaves = array();
-
-        if ($isPublish) {
-            if ($element->getMasterLanguage() == $language) {
-                foreach (explode(',', $this->container->getParameter('phlexible_cms.languages.available')) as $slaveLanguage) {
-                    if ($language == $slaveLanguage) {
-                        continue;
-                    }
-
-                    if ($teaser) {
-                        if ($teaser->isPublished($slaveLanguage)) {
-                            if (!$teaser->isAsync($slaveLanguage)) {
-                                $publishSlaveLanguages[] = $slaveLanguage;
-                            }
-                        } else {
-                            if ($this->container->getParameter(
-                                'phlexible_element.publish.cross_language_publish_offline'
-                            )
-                            ) {
-                                $publishSlaves[] = array($teaser->getId(), $slaveLanguage, 0, '', 0);
-                            }
-                        }
-                    } else {
-                        if ($stateManager->isPublished($node, $slaveLanguage)) {
-                            if (!$stateManager->isAsync($node, $slaveLanguage)) {
-                                $publishSlaveLanguages[] = $slaveLanguage;
-                            } else {
-                                $publishSlaves[] = array($node->getId(), $slaveLanguage, 0, 'async', 1);
-                            }
-                        } else {
-                            if ($this->container->getParameter('phlexible_element.publish.cross_language_publish_offline')) {
-                                $publishSlaves[] = array($node->getId(), $slaveLanguage, 0, '', 0);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        foreach ($publishSlaves as $publishSlaveKey => $publishSlaveRow) {
-            $publishSlaves[$publishSlaveKey][2] = $newVersion;
-        }
 
         if ($teaser) {
             $elementHistoryManager->insert(

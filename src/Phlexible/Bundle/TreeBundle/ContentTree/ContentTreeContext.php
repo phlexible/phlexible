@@ -148,9 +148,12 @@ class ContentTreeContext
      */
     public function parent()
     {
-        return new self($this->node->getTree()->getParent(
-            $this->node
-        ), $this->referenceNode, $this->maxDepth, $this->depth - 1);
+        return new self(
+            $this->node->getTree()->getParent($this->node),
+            $this->referenceNode,
+            $this->maxDepth,
+            $this->depth - 1
+        );
     }
 
     /**

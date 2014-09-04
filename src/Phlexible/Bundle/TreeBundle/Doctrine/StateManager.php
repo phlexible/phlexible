@@ -9,7 +9,10 @@
 namespace Phlexible\Bundle\TreeBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
+use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -22,14 +25,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class StateManager implements StateManagerInterface
 {
     /**
-     * @var Connection
+     * @var EntityManager
      */
-    private $connection;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
+    private $entityManager;
 
     /**
      * @var ElementHistoryManagerInterface
@@ -37,54 +35,87 @@ class StateManager implements StateManagerInterface
     private $historyManager;
 
     /**
-     * @param Connection                     $connection
-     * @param EventDispatcherInterface       $dispatcher
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
+     * @var EntityRepository
+     */
+    private $treeNodeOnlineRepository;
+
+    /**
+     * @param EntityManager                  $entityManager
      * @param ElementHistoryManagerInterface $historyManager
+     * @param EventDispatcherInterface       $dispatcher
      */
     public function __construct(
-        Connection $connection,
-        EventDispatcherInterface $dispatcher,
-        ElementHistoryManagerInterface $historyManager)
+        EntityManager $entityManager,
+        ElementHistoryManagerInterface $historyManager,
+        EventDispatcherInterface $dispatcher)
     {
-        $this->connection = $connection;
-        $this->dispatcher = $dispatcher;
+        $this->entityManager = $entityManager;
         $this->historyManager = $historyManager;
+        $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    private function getTeaserOnlineRepository()
+    {
+        if (null === $this->treeNodeOnlineRepository) {
+            $this->treeNodeOnlineRepository = $this->entityManager->getRepository('PhlexibleTreeBundle:TreeNodeOnline');
+        }
+
+        return $this->treeNodeOnlineRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isPublished(TreeNodeInterface $node, $language)
+    public function findByTreeNode(TreeNodeInterface $treeNode)
     {
-        $publishedVersions = $this->getPublishedVersions($node);
-
-        return isset($publishedVersions[$language]);
+        return $this->getTeaserOnlineRepository()->findBy(array('treeNode' => $treeNode->getId()));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPublishedLanguages(TreeNodeInterface $node)
+    public function findOneByTreeNodeAndLanguage(TreeNodeInterface $treeNode, $language)
     {
-        return array_keys($this->getPublishedVersions($node));
+        return $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode->getId(), 'language' => $language));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPublishedVersions(TreeNodeInterface $node)
+    public function isPublished(TreeNodeInterface $treeNode, $language)
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select(array('t_o.language', 't_o.version'))
-            ->from('tree_online', 't_o')
-            ->where($qb->expr()->eq('t_o.tree_id', $node->getId()));
+        return $this->findOneByTreeNodeAndLanguage($treeNode, $language) ? true : false;
+    }
 
-        $statement = $this->connection->executeQuery($qb->getSQL());
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedLanguages(TreeNodeInterface $treeNode)
+    {
+        $language = array();
+        foreach ($this->findByTreeNode($treeNode) as $treeNodeOnline) {
+            $language[] = $treeNodeOnline->getLanguage();
+        }
 
+        return $language;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedVersions(TreeNodeInterface $treeNode)
+    {
         $versions = array();
-        while ($row = $statement->fetch()) {
-            $versions[$row['language']] = (int) $row['version'];
+        foreach ($this->findByTreeNode($treeNode) as $treeNodeOnline) {
+            $versions[$treeNodeOnline->getLanguage()] = $treeNodeOnline->getVersion();
         }
 
         return $versions;
@@ -93,29 +124,14 @@ class StateManager implements StateManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getPublishedVersion(TreeNodeInterface $node, $language)
+    public function getPublishedVersion(TreeNodeInterface $treeNode, $language)
     {
-        $publishedVersions = $this->getPublishedVersions($node);
-        if (!isset($publishedVersions[$language])) {
+        $treeNodeOnline = $this->findOneByTreeNodeAndLanguage($treeNode, $language);
+        if (!$treeNodeOnline) {
             return null;
         }
 
-        return $publishedVersions[$language];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPublishInfo(TreeNodeInterface $node, $language)
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('t_o.*')
-            ->from('tree_online', 't_o')
-            ->where($qb->expr()->eq('t_o.tree_id', $node->getId()))
-            ->andWhere($qb->expr()->eq('t_o.language', $qb->expr()->literal($language)));
-
-        return $this->connection->fetchAssoc($qb->getSQL());
+        return $treeNodeOnline->getLanguage();
     }
 
     /**
@@ -126,5 +142,42 @@ class StateManager implements StateManagerInterface
         // TODO: implement
 
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function publish(TreeNodeInterface $treeNode, $version, $language, $userId, $comment = null)
+    {
+        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode, 'language' => $language));
+        if (!$treeNodeOnline) {
+            $treeNodeOnline = new TreeNodeOnline();
+            $treeNodeOnline
+                ->setTreeNode($treeNode);
+        }
+
+        $treeNodeOnline
+            ->setLanguage($language)
+            ->setVersion($version)
+            ->setPublishedAt(new \DateTime())
+            ->setPublishUserId($userId);
+
+        $this->entityManager->persist($treeNodeOnline);
+        $this->entityManager->flush($treeNodeOnline);
+
+        return $treeNodeOnline;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOffline(TreeNodeInterface $treeNode, $language)
+    {
+        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode, 'language' => $language));
+
+        if ($treeNodeOnline) {
+            $this->entityManager->remove($treeNodeOnline);
+            $this->entityManager->flush();
+        }
     }
 }

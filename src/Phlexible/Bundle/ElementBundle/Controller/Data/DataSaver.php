@@ -11,9 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Controller\Data;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
-use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapperInterface;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
 use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveTeaserDataEvent;
@@ -21,7 +19,6 @@ use Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager;
 use Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
@@ -76,6 +73,11 @@ class DataSaver
     /**
      * @var array
      */
+    private $availableLanguages;
+
+    /**
+     * @var array
+     */
     private $structures = array();
 
     /**
@@ -84,19 +86,22 @@ class DataSaver
      * @param TreeManager              $treeManager
      * @param TeaserManagerInterface   $teaserManager
      * @param EventDispatcherInterface $dispatcher
+     * @param string                   $availableLanguages
      */
     public function __construct(
         ElementService $elementService,
         FieldMapper $fieldMapper,
         TreeManager $treeManager,
         TeaserManagerInterface $teaserManager,
-        EventDispatcherInterface $dispatcher)
+        EventDispatcherInterface $dispatcher,
+        $availableLanguages)
     {
         $this->elementService = $elementService;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
         $this->dispatcher = $dispatcher;
         $this->fieldMapper = $fieldMapper;
+        $this->availableLanguages = explode(',', $availableLanguages);
     }
 
     /**
@@ -113,6 +118,7 @@ class DataSaver
         $language = $request->get('language');
         $tid = $request->get('tid');
         $teaserId = $request->get('teaser_id');
+        $isPublish = $request->get('publish');
         $data = $request->get('data');
 
         $values = $request->request->all();
@@ -180,7 +186,17 @@ class DataSaver
         $event = new SaveElementEvent($element, $language, $oldVersion);
         $this->dispatcher->dispatch(ElementEvents::SAVE_ELEMENT, $event);
 
-        return array($elementVersion, $node, $teaser);
+        $publishSlaves = array();
+        if ($isPublish) {
+            $publishSlaves = $this->checkPublishSlaves($elementVersion, $node, $teaser, $language);
+            if ($teaser) {
+                $this->publishTeaser($elementVersion, $teaser, $language, $user->getId(), $elementComment, $publishSlaves);
+            } else {
+                $this->publishTreeNode($elementVersion, $node, $language, $user->getId(), $elementComment, $publishSlaves);
+            }
+        }
+
+        return array($elementVersion, $node, $teaser, $publishSlaves);
     }
 
     /**
@@ -517,6 +533,144 @@ class DataSaver
             return $this->structures[$id];
         } else {
             return $this->structures[null];
+        }
+    }
+
+    /**
+     * @param ElementVersion    $elementVersion
+     * @param TreeNodeInterface $node
+     * @param Teaser            $teaser
+     * @param string            $language
+     *
+     * @return array
+     */
+    private function checkPublishSlaves(ElementVersion $elementVersion, TreeNodeInterface $node, Teaser $teaser = null, $language)
+    {
+        $publishSlaves = array('elements' => array(), 'languages' => array());
+
+        if ($elementVersion->getElement()->getMasterLanguage() !== $language) {
+            return $publishSlaves;
+        }
+
+        foreach ($this->availableLanguages as $slaveLanguage) {
+            if ($language === $slaveLanguage) {
+                continue;
+            }
+
+            if ($teaser) {
+                if ($this->teaserManager->isPublished($teaser, $slaveLanguage)) {
+                    if (!$this->teaserManager->isAsync($teaser, $slaveLanguage)) {
+                        $publishSlaves['languages'][] = $slaveLanguage;
+                    } else {
+                        $publishSlaves['elements'][] = array($teaser->getId(), $slaveLanguage, $elementVersion->getVersion(), 'async', 1);
+                    }
+                }
+                // TODO: needed?
+                /*
+                } else {
+                    if ($this->container->getParameter(
+                        'phlexible_element.publish.cross_language_publish_offline'
+                    )
+                    ) {
+                        $publishSlaves[] = array($teaser->getId(), $slaveLanguage, 0, '', 0);
+                    }
+                */
+            } else {
+                if ($node->getTree()->isPublished($node, $slaveLanguage)) {
+                    if (!$node->getTree()->isAsync($node, $slaveLanguage)) {
+                        $publishSlaves['languages'][] = $slaveLanguage;
+                    } else {
+                        $publishSlaves['elements'][] = array($node->getId(), $slaveLanguage, 0, 'async', 1);
+                    }
+                }
+                // TODO: needed?
+                /*
+                } else {
+                    if ($this->container->getParameter('phlexible_element.publish.cross_language_publish_offline')) {
+                        $publishSlaves[] = array($node->getId(), $slaveLanguage, $newVersion, '', 0);
+                    }
+                */
+            }
+        }
+
+        return $publishSlaves;
+    }
+
+    /**
+     * @param ElementVersion $elementVersion
+     * @param Teaser         $teaser
+     * @param string         $language
+     * @param string         $userId
+     * @param string|null    $comment
+     * @param array          $publishSlaves
+     */
+    private function publishTeaser(ElementVersion $elementVersion, Teaser $teaser = null, $language, $userId, $comment = null, array $publishSlaves = array())
+    {
+        $this->teaserManager->publishTeaser(
+            $teaser,
+            $elementVersion->getVersion(),
+            $language,
+            $userId,
+            $comment
+        );
+
+        if (count($publishSlaves['languages'])) {
+            foreach ($publishSlaves['languages'] as $slaveLanguage) {
+                // publish slave node
+                $this->teaserManager->publishTeaser(
+                    $teaser,
+                    $elementVersion->getVersion(),
+                    $slaveLanguage,
+                    $userId,
+                    $comment
+                );
+            }
+        }
+    }
+
+    /**
+     * @param ElementVersion    $elementVersion
+     * @param TreeNodeInterface $treeNode
+     * @param string            $language
+     * @param string            $userId
+     * @param string|null       $comment
+     * @param array             $publishSlaves
+     */
+    private function publishTreeNode(ElementVersion $elementVersion, TreeNodeInterface $treeNode, $language, $userId, $comment = null, array $publishSlaves = array())
+    {
+        $tree = $treeNode->getTree();
+
+        // publish node
+        $tree->publish(
+            $treeNode,
+            $language,
+            $elementVersion->getVersion(),
+            $userId,
+            $comment
+        );
+
+        if (!empty($publishSlaves['languages'])) {
+            foreach ($publishSlaves['languages'] as $slaveLanguage) {
+                // publish slave node
+                $tree->publish(
+                    $treeNode,
+                    $slaveLanguage,
+                    $elementVersion->getVersion(),
+                    $userId,
+                    $comment
+                );
+
+                // TODO: gnarf
+                // workaround to fix missing catch results for non master language elements
+                /*
+                Makeweb_Elements_Element_History::insert(
+                    Makeweb_Elements_Element_History::ACTION_SAVE,
+                    $eid,
+                    $newVersion,
+                    $slaveLanguage
+                );
+                */
+            }
         }
     }
 }

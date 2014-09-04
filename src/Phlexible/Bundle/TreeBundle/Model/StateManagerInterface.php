@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Model;
 
+use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
+
 /**
  * State manager interface
  *
@@ -16,48 +18,72 @@ namespace Phlexible\Bundle\TreeBundle\Model;
 interface StateManagerInterface
 {
     /**
-     * @param TreeNodeInterface $node
+     * @param TreeNodeInterface $treeNode
+     *
+     * @return TreeNodeOnline[]
+     */
+    public function findByTreeNode(TreeNodeInterface $treeNode);
+
+    /**
+     * @param TreeNodeInterface $treeNode
+     * @param string            $language
+     *
+     * @return TreeNodeOnline
+     */
+    public function findOneByTreeNodeAndLanguage(TreeNodeInterface $treeNode, $language);
+
+    /**
+     * @param TreeNodeInterface $treeNode
      * @param string            $language
      *
      * @return bool
      */
-    public function isPublished(TreeNodeInterface$node, $language);
+    public function isPublished(TreeNodeInterface $treeNode, $language);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param TreeNodeInterface $treeNode
      *
      * @return array
      */
-    public function getPublishedLanguages(TreeNodeInterface $node);
+    public function getPublishedLanguages(TreeNodeInterface $treeNode);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param TreeNodeInterface $treeNode
      *
      * @return array
      */
-    public function getPublishedVersions(TreeNodeInterface $node);
+    public function getPublishedVersions(TreeNodeInterface $treeNode);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param TreeNodeInterface $treeNode
      * @param string            $language
      *
      * @return int
      */
-    public function getPublishedVersion(TreeNodeInterface $node, $language);
+    public function getPublishedVersion(TreeNodeInterface $treeNode, $language);
 
     /**
-     * @param TreeNodeInterface $node
-     * @param string            $language
-     *
-     * @return array
-     */
-    public function getPublishInfo(TreeNodeInterface $node, $language);
-
-    /**
-     * @param TreeNodeInterface $node
+     * @param TreeNodeInterface $treeNode
      * @param string            $language
      *
      * @return bool
      */
-    public function isAsync(TreeNodeInterface $node, $language);
+    public function isAsync(TreeNodeInterface $treeNode, $language);
+
+    /**
+     * @param TreeNodeInterface $treeNode
+     * @param int               $version
+     * @param string            $language
+     * @param string            $userId
+     * @param string|null       $comment
+     *
+     * @return
+     */
+    public function publish(TreeNodeInterface $treeNode, $version, $language, $userId, $comment = null);
+
+    /**
+     * @param TreeNodeInterface $treeNode
+     * @param string            $language
+     */
+    public function setOffline(TreeNodeInterface $treeNode, $language);
 }

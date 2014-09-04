@@ -11,14 +11,14 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Tree online
+ * Tree node hash
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="tree_online")
+ * @ORM\Table(name="tree_hash")
  */
-class TreeOnline
+class TreeNodeHash
 {
     /**
      * @var int
@@ -29,10 +29,11 @@ class TreeOnline
     private $id;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=2, options={"fixed"=true})
+     * @var TreeNode
+     * @ORM\ManyToOne(targetEntity="TreeNode")
+     * @ORM\JoinColumn(name="tree_id", referencedColumnName="id")
      */
-    private $language;
+    private $node;
 
     /**
      * @var int
@@ -42,20 +43,19 @@ class TreeOnline
 
     /**
      * @var string
-     * @ORM\Column(name="publish_user_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(type="string", length=2, options={"fixed"=true})
      */
-    private $publishUserId;
+    private $language;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(name="published_at", type="datetime")
+     * @var string
+     * @ORM\Column(type="string", length=32, options={"fixed"=true})
      */
-    private $publishedAt;
+    private $hash = false;
 
     /**
-     * @var TreeNode
-     * @ORM\ManyToOne(targetEntity="TreeNode")
-     * @ORM\JoinColumn(name="tree_id", referencedColumnName="id")
+     * @var string
+     * @ORM\Column(type="text")
      */
-    private $node;
+    private $debug;
 }

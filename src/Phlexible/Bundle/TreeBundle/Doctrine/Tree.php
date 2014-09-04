@@ -10,9 +10,12 @@ namespace Phlexible\Bundle\TreeBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
+use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
 use Phlexible\Bundle\TreeBundle\Event\MoveNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\ReorderNodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
@@ -448,6 +451,30 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     /**
      * {@inheritdoc}
      */
+    public function isAsync(TreeNodeInterface $node, $language)
+    {
+        return $this->stateManager->isAsync($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOnlineByTreeNode(TreeNodeInterface $node)
+    {
+        return $this->stateManager->findByTreeNode($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneOnlineByTreeNodeAndLanguage(TreeNodeInterface $node, $language)
+    {
+        return $this->stateManager->findOneByTreeNodeAndLanguage($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function init($type, $typeId, $userId)
     {
         $node = new TreeNode();
@@ -786,6 +813,40 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         */
 
         $this->doDelete($node, $userId, $comment);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function publish(TreeNodeInterface $node, $version, $language, $userId, $comment = null)
+    {
+        $event = new PublishNodeEvent($node, $language, $version, false);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_PUBLISH_NODE, $event)->isPropagationStopped()) {
+            return null;
+        }
+
+        $treeNodeOnline = $this->stateManager->publish($node, $version, $language, $comment);
+
+        $event = new PublishNodeEvent($node, $language, $version, false);
+        $this->dispatcher->dispatch(TreeEvents::PUBLISH_NODE, $event);
+
+        return $treeNodeOnline;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOffline(TreeNodeInterface $node, $language, $userId, $comment = null)
+    {
+        $event = new SetNodeOfflineEvent($node, $language);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_SET_NODE_OFFLINE, $event)->isPropagationStopped()) {
+            return null;
+        }
+
+        $this->stateManager->setOffline($node, $language, $userId, $comment);
+
+        $event = new SetNodeOfflineEvent($node, $language);
+        $this->dispatcher->dispatch(TreeEvents::SET_NODE_OFFLINE, $event);
     }
 
     protected function _deleteCheck(Makeweb_Elements_Tree_Node $node, array $rightsIdentifiers)

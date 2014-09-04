@@ -6,19 +6,19 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TeaserBundle\Entity;
+namespace Phlexible\Bundle\TreeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Teaser online
+ * Tree node online
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="teaser_online")
+ * @ORM\Table(name="tree_online")
  */
-class TeaserOnline
+class TreeNodeOnline
 {
     /**
      * @var int
@@ -27,13 +27,6 @@ class TeaserOnline
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @var Teaser
-     * @ORM\ManyToOne(targetEntity="Teaser")
-     * @ORM\JoinColumn(name="teaser_id", referencedColumnName="id")
-     */
-    private $teaser;
 
     /**
      * @var string
@@ -60,6 +53,13 @@ class TeaserOnline
     private $publishedAt;
 
     /**
+     * @var TreeNode
+     * @ORM\ManyToOne(targetEntity="TreeNode")
+     * @ORM\JoinColumn(name="tree_id", referencedColumnName="id")
+     */
+    private $treeNode;
+
+    /**
      * @return int
      */
     public function getId()
@@ -75,26 +75,6 @@ class TeaserOnline
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return Teaser
-     */
-    public function getTeaser()
-    {
-        return $this->teaser;
-    }
-
-    /**
-     * @param Teaser $teaser
-     *
-     * @return $this
-     */
-    public function setTeaser($teaser)
-    {
-        $this->teaser = $teaser;
 
         return $this;
     }
@@ -175,6 +155,26 @@ class TeaserOnline
     public function setPublishedAt($publishedAt)
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return TreeNode
+     */
+    public function getTreeNode()
+    {
+        return $this->treeNode;
+    }
+
+    /**
+     * @param TreeNode $treeNode
+     *
+     * @return $this
+     */
+    public function setTreeNode($treeNode)
+    {
+        $this->treeNode = $treeNode;
 
         return $this;
     }

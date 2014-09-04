@@ -9,8 +9,11 @@
 namespace Phlexible\Bundle\TeaserBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Entity\TeaserOnline;
 use Phlexible\Bundle\TeaserBundle\Model\StateManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -22,9 +25,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class StateManager implements StateManagerInterface
 {
     /**
-     * @var Connection
+     * @var EntityManager
      */
-    private $connection;
+    private $entityManager;
 
     /**
      * @var EventDispatcherInterface
@@ -37,18 +40,51 @@ class StateManager implements StateManagerInterface
     private $historyManager;
 
     /**
-     * @param Connection                     $connection
-     * @param EventDispatcherInterface       $dispatcher
+     * @var EntityRepository
+     */
+    private $teaserOnlineRepository;
+
+    /**
+     * @param EntityManager                  $entityManager
      * @param ElementHistoryManagerInterface $historyManager
+     * @param EventDispatcherInterface       $dispatcher
      */
     public function __construct(
-        Connection $connection,
-        EventDispatcherInterface $dispatcher,
-        ElementHistoryManagerInterface $historyManager)
+        EntityManager $entityManager,
+        ElementHistoryManagerInterface $historyManager,
+        EventDispatcherInterface $dispatcher)
     {
-        $this->connection = $connection;
+        $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
         $this->historyManager = $historyManager;
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    private function getTeaserOnlineRepository()
+    {
+        if (null === $this->teaserOnlineRepository) {
+            $this->teaserOnlineRepository = $this->entityManager->getRepository('PhlexibleTeaserBundle:TeaserOnline');
+        }
+
+        return $this->teaserOnlineRepository;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByTeaser(Teaser $teaser)
+    {
+        return $this->getTeaserOnlineRepository()->findBy(array('teaser' => $teaser));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneByTeaserAndLanguage(Teaser $teaser, $language)
+    {
+        return $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
     }
 
     /**
@@ -56,9 +92,7 @@ class StateManager implements StateManagerInterface
      */
     public function isPublished(Teaser $teaser, $language)
     {
-        $publishedVersions = $this->getPublishedVersions($teaser);
-
-        return isset($publishedVersions[$language]);
+        return $this->findOneByTeaserAndLanguage($teaser, $language) ? true : false;
     }
 
     /**
@@ -66,7 +100,12 @@ class StateManager implements StateManagerInterface
      */
     public function getPublishedLanguages(Teaser $teaser)
     {
-        return array_keys($this->getPublishedVersions($teaser));
+        $language = array();
+        foreach ($this->findByTeaser($teaser) as $teaserOnline) {
+            $language[] = $teaserOnline->getLanguage();
+        }
+
+        return $language;
     }
 
     /**
@@ -74,17 +113,9 @@ class StateManager implements StateManagerInterface
      */
     public function getPublishedVersions(Teaser $teaser)
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select(array('t_o.language', 't_o.version'))
-            ->from('tree_online', 't_o')
-            ->where($qb->expr()->eq('t_o.tree_id', $teaser->getId()));
-
-        $statement = $this->connection->executeQuery($qb->getSQL());
-
         $versions = array();
-        while ($row = $statement->fetch()) {
-            $versions[$row['language']] = (int) $row['version'];
+        foreach ($this->findByTeaser($teaser) as $teaserOnline) {
+            $versions[$teaserOnline->getLanguage()] = $teaserOnline->getVersion();
         }
 
         return $versions;
@@ -95,27 +126,12 @@ class StateManager implements StateManagerInterface
      */
     public function getPublishedVersion(Teaser $teaser, $language)
     {
-        $publishedVersions = $this->getPublishedVersions($teaser);
-        if (!isset($publishedVersions[$language])) {
+        $teaserOnline = $this->findOneByTeaserAndLanguage($teaser, $language);
+        if (!$teaserOnline) {
             return null;
         }
 
-        return $publishedVersions[$language];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPublishInfo(Teaser $teaser, $language)
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('t_o.*')
-            ->from('tree_online', 't_o')
-            ->where($qb->expr()->eq('t_o.tree_id', $teaser->getId()))
-            ->andWhere($qb->expr()->eq('t_o.language', $qb->expr()->literal($language)));
-
-        return $this->connection->fetchAssoc($qb->getSQL());
+        return $teaserOnline->getLanguage();
     }
 
     /**
@@ -126,5 +142,42 @@ class StateManager implements StateManagerInterface
         // TODO: implement
 
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function publish(Teaser $teaser, $version, $language, $userId, $comment = null)
+    {
+        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
+        if (!$teaserOnline) {
+            $teaserOnline = new TeaserOnline();
+            $teaserOnline
+                ->setTeaser($teaser);
+        }
+
+        $teaserOnline
+            ->setLanguage($language)
+            ->setVersion($version)
+            ->setPublishedAt(new \DateTime())
+            ->setPublishUserId($userId);
+
+        $this->entityManager->persist($teaserOnline);
+        $this->entityManager->flush($teaserOnline);
+
+        return $teaserOnline;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOffline(Teaser $teaser, $language)
+    {
+        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
+
+        if ($teaserOnline) {
+            $this->entityManager->remove($teaserOnline);
+            $this->entityManager->flush();
+        }
     }
 }

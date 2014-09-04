@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Model;
 
+use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
+
 /**
  * Tree interface
  *
@@ -180,4 +182,27 @@ interface TreeInterface
      * @return array
      */
     public function getPublishedVersions(TreeNodeInterface $node);
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return bool
+     */
+    public function isAsync(TreeNodeInterface $node, $language);
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return TreeNodeOnline[]
+     */
+    public function findOnlineByTreeNode(TreeNodeInterface $node);
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return TreeNodeOnline
+     */
+    public function findOneOnlineByTreeNodeAndLanguage(TreeNodeInterface $node, $language);
+
 }

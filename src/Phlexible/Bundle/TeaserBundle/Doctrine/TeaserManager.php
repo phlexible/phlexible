@@ -14,6 +14,9 @@ use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\TeaserBundle\Entity\ElementCatch;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Entity\TeaserOnline;
+use Phlexible\Bundle\TeaserBundle\Event\PublishTeaserEvent;
+use Phlexible\Bundle\TeaserBundle\Event\SetTeaserOfflineEvent;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
@@ -169,7 +172,7 @@ class TeaserManager implements TeaserManagerInterface
         $qb = $this->getTeaserRepository()->createQueryBuilder('t');
         $qb
             ->select('COUNT(t.id)')
-            ->where($qb->expr()->eq('t.type', $teaser->getType()))
+            ->where($qb->expr()->eq('t.type', $qb->expr()->literal($teaser->getType())))
             ->andWhere($qb->expr()->eq('t.typeId', $teaser->getTypeId()));
 
         return $qb->getQuery()->getSingleScalarResult() > 1;
@@ -226,6 +229,30 @@ class TeaserManager implements TeaserManagerInterface
     public function getPublishedVersions(Teaser $teaser)
     {
         return $this->stateManager->getPublishedVersions($teaser);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isAsync(Teaser $teaser, $language)
+    {
+        return $this->stateManager->isAsync($teaser, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOnlineByTeaser(Teaser $teaser)
+    {
+        return $this->stateManager->findByTeaser($teaser);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneOnlineByTeaserAndLanguage(Teaser $teaser, $language)
+    {
+        return $this->stateManager->findOneByTeaserAndLanguage($teaser, $language);
     }
 
     /**
@@ -372,6 +399,62 @@ class TeaserManager implements TeaserManagerInterface
 
         $event = new TeaserEvent($teaser);
         $this-> dispatcher->dispatch(TeaserEvents::DELETE_TEASER, $event);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function publishTeaser(Teaser $teaser, $version, $language, $userId, $comment = null)
+    {
+        $event = new PublishTeaserEvent($teaser, $language, $version);
+        if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_PUBLISH_TEASER, $event)->isPropagationStopped()) {
+            return null;
+        }
+
+        $teaserOnline = $this->stateManager->publish($teaser, $version, $language, $userId);
+
+        $this->elementHistoryManager->insert(
+            ElementHistoryManagerInterface::ACTION_PUBLISH_TEASER,
+            $teaser->getTypeId(),
+            $userId,
+            null,
+            $teaser->getId(),
+            $version,
+            $language,
+            $comment
+        );
+
+        $event = new PublishTeaserEvent($teaser, $language, $version);
+        $this->dispatcher->dispatch(TeaserEvents::PUBLISH_TEASER, $event);
+
+        return $teaserOnline;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTeaserOffline(Teaser $teaser, $language, $userId, $comment = null)
+    {
+        $event = new SetTeaserOfflineEvent($teaser, $language);
+        if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_SET_TEASER_OFFLINE, $event)->isPropagationStopped()) {
+            return null;
+        }
+
+        $this->stateManager->setOffline($teaser, $language);
+
+        $this->elementHistoryManager->insert(
+            ElementHistoryManagerInterface::ACTION_PUBLISH_TEASER,
+            $teaser->getTypeId(),
+            $userId,
+            null,
+            $teaser->getId(),
+            null,
+            $language,
+            $comment
+        );
+
+        $event = new SetTeaserOfflineEvent($teaser, $language);
+        $this->dispatcher->dispatch(TeaserEvents::SET_TEASER_OFFLINE, $event);
     }
 
     /**
@@ -957,103 +1040,6 @@ class TeaserManager implements TeaserManagerInterface
         $result = (int) $db->fetchOne($select, array(':id' => $id));
 
         return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function publish($teaserId, $version, $language, $comment, $tid)
-    {
-        $db = MWF_Registry::getContainer()->dbPool->default;
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        $node = new Makeweb_Teasers_Node($teaserId);
-
-        $beforeEvent = new Makeweb_Teasers_Event_BeforePublishTeaser($node, $language, $version);
-        if (!$dispatcher->dispatch($beforeEvent)) {
-            return null;
-        }
-
-        $eid = $node->getEid();
-
-        if ($version === null) {
-            $version = $node->getLatestVersion();
-        }
-
-        $db->delete(
-            $db->prefix . 'element_tree_teasers_online',
-            array(
-                'teaser_id = ?' => $teaserId,
-                'language = ?'  => $language,
-            )
-        );
-
-        $insertData = array(
-            'teaser_id'    => $teaserId,
-            'eid'          => $eid,
-            'language'     => $language,
-            'version'      => $version,
-            'publish_uid'  => MWF_Env::getUid(),
-            'publish_time' => $db->fn->now(),
-        );
-
-        $db->insert($db->prefix . 'element_tree_teasers_online', $insertData);
-
-        Makeweb_Teasers_History::insert(
-            Makeweb_Teasers_History::ACTION_PUBLISH,
-            $teaserId,
-            $eid,
-            $version,
-            $language,
-            $comment
-        );
-
-        $node = new Makeweb_Teasers_Node($teaserId);
-
-        $event = new Makeweb_Teasers_Event_PublishTeaser($node, $language, $version);
-        $dispatcher->dispatch($event);
-
-        return $eid;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setOffline($teaserId, $language)
-    {
-        $db = MWF_Registry::getContainer()->dbPool->default;
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        $node = new Makeweb_Teasers_Node($teaserId);
-
-        $beforeEvent = new Makeweb_Teasers_Event_BeforeSetTeaserOffline($node, $language);
-        if (!$dispatcher->dispatch($beforeEvent)) {
-            return null;
-        }
-
-        $db->delete(
-            $db->prefix . 'element_tree_teasers_online',
-            array(
-                'teaser_id = ?' => $teaserId,
-                'language = ?'  => $language,
-            )
-        );
-
-
-        Makeweb_Teasers_History::insert(
-            Makeweb_Teasers_History::ACTION_PUBLISH,
-            $teaserId,
-            $node->getEid(),
-            null,
-            $language
-        );
-
-        $node = new Makeweb_Teasers_Node($teaserId);
-
-        $event = new Makeweb_Teasers_Event_SetTeaserOffline($node, $language);
-        $dispatcher->dispatch($event);
-
-        return $node->getEid();
     }
 
     /**
