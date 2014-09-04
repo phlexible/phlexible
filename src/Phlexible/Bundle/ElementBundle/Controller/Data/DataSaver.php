@@ -165,7 +165,7 @@ class DataSaver
 
         $elementStructure = $this->createStructure($elementVersion, $elementtypeStructure, $values, $language);
 
-        $this->fieldMapper->apply($elementVersion, $elementStructure, $language);
+        $this->fieldMapper->apply($elementVersion, $elementStructure, array($language));
 
         $event = new SaveElementEvent($element, $language, $oldVersion);
         $this->dispatcher->dispatch(ElementEvents::BEFORE_SAVE_ELEMENT, $event);
