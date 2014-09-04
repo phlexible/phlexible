@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
 use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
@@ -362,5 +363,29 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     public function getPublishedVersions(TreeNodeInterface $node)
     {
         return $this->tree->getPublishedVersions($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isAsync(TreeNodeInterface $node, $language)
+    {
+        return $this->tree->isAsync($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOnlineByTreeNode(TreeNodeInterface $node)
+    {
+        return $this->tree->findOnlineByTreeNode($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneOnlineByTreeNodeAndLanguage(TreeNodeInterface $node, $language)
+    {
+        return $this->tree->findOneOnlineByTreeNodeAndLanguage($node, $language);
     }
 }
