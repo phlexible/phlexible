@@ -173,9 +173,8 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
      * @param int                      $id
      * @param int                      $version
      * @param ElementtypeStructureNode $referenceParentNode
-     * @param bool                     $isReferenced
      */
-    private function doLoad(ElementtypeStructure $structure, $id, $version, $referenceParentNode = null, $isReferenced = false)
+    private function doLoad(ElementtypeStructure $structure, $id, $version, $referenceParentNode = null)
     {
         $nodes = $this->getStructureNodeRepository()->findBy(
             array(
@@ -184,24 +183,30 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
             )
         );
 
+        $isReferenced = false;
+        if ($referenceParentNode) {
+            $isReferenced = true;
+        }
+
         foreach ($nodes as $node) {
             /* @var $node ElementtypeStructureNode */
 
-            if ($referenceParentNode) {
-                $node->setParentNode($referenceParentNode);
-                $node->setParentDsId($referenceParentNode->getDsId());
-                $referenceParentNode = null;
-            }
-
             if ($isReferenced) {
                 $node = clone $node;
+
+                if ($referenceParentNode) {
+                    $node->setParentNode($referenceParentNode);
+                    $node->setParentDsId($referenceParentNode->getDsId());
+                    $referenceParentNode = null;
+                }
+
                 $node->setReferenced(true);
             }
 
             $structure->addNode($node);
 
             if ($node->isReference()) {
-                $this->doLoad($structure, $node->getReferenceElementtype()->getId(), $node->getReferenceVersion(), $node, true);
+                $this->doLoad($structure, $node->getReferenceElementtype()->getId(), $node->getReferenceVersion(), $node);
             }
         }
     }
