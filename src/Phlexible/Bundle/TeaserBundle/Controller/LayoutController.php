@@ -502,6 +502,7 @@ class LayoutController extends Controller
         $translator = $this->get('translator');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+        $elementService = $this->get('phlexible_element.element_service');
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
@@ -513,17 +514,18 @@ class LayoutController extends Controller
         );
 
         $tree = $treeManager->getByNodeId($tid);
-        $node = $tree->get($tid);
-        $treePath = $tree->getPath($node);
+        $treeNode = $tree->get($tid);
+        $treeNodePath = $tree->getPath($treeNode);
 
-        $elementtype = $elementtypeService->findElementtype($layoutareaId);
-        $layoutArea = $elementtypeService->findLatestElementtypeVersion($elementtype);
-        $teaserData = array();//(object) $teaserManager->getAllByTIDPath($treePath, $layoutArea, $language, array(), true);
+        $layoutarea = $elementtypeService->findElementtype($layoutareaId);
+        $teasers = $teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
 
-        foreach ($teaserData as $teaser) {
+        foreach ($teasers as $teaser) {
+            $teaserElement = $elementService->findElement($teaser->getTypeId());
+            $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
             $data[] = array(
                 'id'    => $teaser->getId(),
-                'title' => $teaser->getTitle(),
+                'title' => $teaserElementVersion->getBackendTitle($language),
                 'icon'  => $iconResolver->resolveTeaser($teaser, $language),
             );
         }

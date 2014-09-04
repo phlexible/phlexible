@@ -195,7 +195,6 @@ class ContentTreeContext
      */
     public function online($language)
     {
-        // TODO: fix
-        return true;//$this->node->hasVersion($language);
+        return $this->node->getTree()->isPublished($this->node, $language);
     }
 }
