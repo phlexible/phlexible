@@ -9,74 +9,89 @@
 namespace Phlexible\Bundle\TeaserBundle\Teaser;
 
 use Phlexible\Bundle\ElementBundle\Element\ElementHasher;
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
  * Teaserh hasher
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class TeaserHasher extends ElementHasher
+class TeaserHasher
 {
-    public function getHashByTeaserId($teaserId, $language, $version)
+    /**
+     * @var ElementHasher
+     */
+    private $elementHasher;
+
+    /**
+     * @var string
+     */
+    private $algo;
+
+    /**
+     * @var array
+     */
+    private $hashes = array();
+
+    /**
+     * @param ElementHasher $elementHasher
+     * @param string        $algo
+     */
+    public function __construct(ElementHasher $elementHasher, $algo = 'md5')
     {
-        $identifier = $teaserId . '__' . $language . '__' . $version;
+        $this->elementHasher = $elementHasher;
+        $this->algo = $algo;
+    }
 
-        if (!empty($this->_hashes[$identifier])) {
-            return $this->_hashes[$identifier];
+    /**
+     * @param Teaser $teaser
+     * @param int    $version
+     * @param string $language
+     *
+     * @return string
+     */
+    public function hashTeaser(Teaser $teaser, $version, $language)
+    {
+        $identifier = "{$teaser->getId()}__{$version}__{$language}";
+
+        if (isset($this->hashes[$identifier])) {
+            return $this->hashes[$identifier];
         }
 
-        $select = $this->_db->select()
-            ->from($this->_db->prefix . 'element_tree_teasers_hash', 'hash')
-            ->where('teaser_id = ?', $teaserId)
-            ->where('language = ?', $language)
-            ->where('version = ?', $version)
-            ->limit(1);
+        $values = $this->createHashValuesByTeaser($teaser, $version, $language);
+        $hash = $this->hashValues($values);
 
-        $hash = $this->_db->fetchOne($select);
-
-        if (!$hash) {
-            $values = $this->_getHashValuesByTeaserId($teaserId, $language, $version);
-            $hash = $this->_createHashFromValues($values);
-
-            $insertData = array(
-                'teaser_id' => $teaserId,
-                'language'  => $language,
-                'version'   => $version,
-                'hash'      => $hash,
-                'debug'     => print_r($values, 1),
-            );
-
-            $this->_db->insert($this->_db->prefix . 'element_tree_teasers_hash', $insertData);
-        }
-
-        $this->_hashes[$identifier] = $hash;
+        $this->hashes[$identifier] = $hash;
 
         return $hash;
     }
 
-    public function getHashValuesByTeaserId($teaserId, $language, $version)
+    /**
+     * @param Teaser $teaser
+     * @param int    $version
+     * @param string $language
+     *
+     * @return array
+     */
+    private function createHashValuesByTeaser(Teaser $teaser, $version, $language)
     {
-        $values = $this->_getHashValuesByTid($teaserId, $language, $version);
-        $hash = $this->_createHashFromValues($values);
+        $eid = $teaser->getTypeId();
 
-        return array('values' => $values, 'hash' => $hash);
-    }
+        $attributes = $teaser->getAttributes();
 
-    protected function _getHashValuesByTeaserId($teaserId, $language, $version)
-    {
-        $selectTeaser = $this->_db->select()
-            ->from($this->_db->prefix . 'element_tree_teasers', array('teaser_eid', 'template_id'))
-            ->where('id = ?', $teaserId)
-            ->limit(1);
-        #echo $selectPage.PHP_EOL;
-
-        $teaserRow = $this->_db->fetchRow($selectTeaser);
-        $eid = $teaserRow['teaser_eid'];
-        $templateId = $teaserRow['template_id'];
-
-        $values = $this->_getHashValuesByEid($eid, $language, $version);
-        $values['template_id'] = $templateId;
+        $values = $this->elementHasher->createHashValuesByEid($eid, $version, $language);
+        $values['attributes'] = $attributes;
 
         return $values;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return string
+     */
+    private function hashValues(array $values)
+    {
+        return hash($this->algo, serialize($values));
     }
 }

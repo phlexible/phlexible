@@ -46,6 +46,10 @@ services:
             - {name: monolog.logger, channel: router}
             - {name: router, priority: 100}
 
+    phlexible_tree.node_hasher:
+        class: Phlexible\Bundle\TreeBundle\Tree\NodeHasher
+        arguments: [@phlexible_element.element_hasher]
+
     # access control permission providers
     phlexible_tree.permission_provider:
         class: Phlexible\Bundle\TreeBundle\AccessControl\TreePermissionProvider

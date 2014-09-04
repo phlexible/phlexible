@@ -13,22 +13,11 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
     initComponent: function () {
 
         this.element.on({
-            load: {
-                fn: this.onLoadElement,
-                scope: this
-            },
-            getlock: {
-                fn: this.onGetLock,
-                scope: this
-            },
-            islocked: {
-                fn: this.onRemoveLock,
-                scope: this
-            },
-            removelock: {
-                fn: this.onRemoveLock,
-                scope: this
-            }
+            load: this.onLoadElement,
+            getlock: this.onGetLock,
+            islocked: this.onRemoveLock,
+            removelock: this.onRemoveLock,
+            scope: this
         });
 
         var url = Phlexible.Router.generate('elements_list');
@@ -49,56 +38,54 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
                 limit: 25
             },
             listeners: {
-                load: {
-                    fn: function (store) {
-                        var data = store.reader.jsonData.parent;
-                        var cols = this.getComponent(1).getView().mainHd.select('.x-grid3-cell-inner', true);
-                        if (data.teaser_id) {
-                            cols.elements[0].update(data.teaser_id);
-                        }
-                        else {
-                            cols.elements[0].update(data.tid);
-                        }
-                        cols.elements[1].update(data.element_type);
-                        cols.elements[2].set({'ext:qtip': data.qtip});
-                        cols.elements[2].update('<img src="' + data.icon + '" width="18" height="18" style="vertical-align: middle;" /> ' + data.title);
-                        cols.elements[3].update(Phlexible.Format.date(Date.parseDate(data.create_time, 'Y-m-d H:i:s')));
-                        cols.elements[4].update(Phlexible.Format.date(Date.parseDate(data.publish_time, 'Y-m-d H:i:s')));
-                        cols.elements[5].update(this.dateRenderer(Date.parseDate(data.custom_date, 'Y-m-d')));
+                load: function (store) {
+                    var data = store.reader.jsonData.parent;
+                    var cols = this.getComponent(1).getView().mainHd.select('.x-grid3-cell-inner', true);
+                    if (data.teaser_id) {
+                        cols.elements[0].update(data.teaser_id);
+                    }
+                    else {
+                        cols.elements[0].update(data.tid);
+                    }
+                    cols.elements[1].update(data.element_type);
+                    cols.elements[2].set({'ext:qtip': data.qtip});
+                    cols.elements[2].update('<img src="' + data.icon + '" width="18" height="18" style="vertical-align: middle;" /> ' + data.title);
+                    cols.elements[3].update(Phlexible.Format.date(Date.parseDate(data.create_time, 'Y-m-d H:i:s')));
+                    cols.elements[4].update(Phlexible.Format.date(Date.parseDate(data.publish_time, 'Y-m-d H:i:s')));
+                    cols.elements[5].update(this.dateRenderer(Date.parseDate(data.custom_date, 'Y-m-d')));
 
-                        var sortIcon;
-                        if (data.sort_mode == 'title') {
-                            if (data.sort_dir == 'desc') {
-                                sortIcon = 'p-element-sort_alpha_up-icon';
-                            } else {
-                                sortIcon = 'p-element-sort_alpha_down-icon';
-                            }
+                    var sortIcon;
+                    if (data.sort_mode == 'title') {
+                        if (data.sort_dir == 'desc') {
+                            sortIcon = 'p-element-sort_alpha_up-icon';
+                        } else {
+                            sortIcon = 'p-element-sort_alpha_down-icon';
                         }
-                        else if (data.sort_mode == 'createdate' || data.sort_mode == 'publishdate' || data.sort_mode == 'customdate') {
-                            if (data.sort_dir == 'desc') {
-                                sortIcon = 'p-element-sort_date_up-icon';
-                            } else {
-                                sortIcon = 'p-element-sort_date_down-icon';
-                            }
+                    }
+                    else if (data.sort_mode == 'createdate' || data.sort_mode == 'publishdate' || data.sort_mode == 'customdate') {
+                        if (data.sort_dir == 'desc') {
+                            sortIcon = 'p-element-sort_date_up-icon';
+                        } else {
+                            sortIcon = 'p-element-sort_date_down-icon';
                         }
-                        else {
-                            sortIcon = 'p-element-sort_free-icon';
-                        }
-                        cols.elements[6].update(Phlexible.inlineIcon(sortIcon));
-                        //cols.elements[7].update(data.version_latest);
-                        //cols.elements[8].update(data.version_online);
+                    }
+                    else {
+                        sortIcon = 'p-element-sort_free-icon';
+                    }
+                    cols.elements[6].update(Phlexible.inlineIcon(sortIcon));
+                    //cols.elements[7].update(data.version_latest);
+                    //cols.elements[8].update(data.version_online);
 
-                        // hide / show "show all" checkbox
-                        var pager = this.getComponent(1).getBottomToolbar();
-                        if (pager.getPageData().pages > 1) {
-                            pager.items.items[12].enable();
-                        }
-                        else {
-                            pager.items.items[12].disable();
-                        }
-                    },
-                    scope: this
-                }
+                    // hide / show "show all" checkbox
+                    var pager = this.getComponent(1).getBottomToolbar();
+                    if (pager.getPageData().pages > 1) {
+                        pager.items.items[12].enable();
+                    }
+                    else {
+                        pager.items.items[12].disable();
+                    }
+                },
+                scope: this
             }
         });
 
@@ -113,25 +100,17 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
                 element: this.element,
                 mode: this.mode,
                 listeners: {
-                    filter: {
-                        fn: function (values) {
-                            this.store.baseParams.filter = Ext.encode(values);
-                            this.store.reload();
-                        },
-                        scope: this
+                    filter: function (values) {
+                        this.store.baseParams.filter = Ext.encode(values);
+                        this.store.reload();
                     },
-                    collapse: {
-                        fn: function (panel) {
-                            this.getTopToolbar().items.items[6].toggle(false, true);
-                        },
-                        scope: this
+                    collapse: function (panel) {
+                        this.getTopToolbar().items.items[6].toggle(false, true);
                     },
-                    expand: {
-                        fn: function (panel) {
-                            this.getTopToolbar().items.items[6].toggle(true, true);
-                        },
-                        scope: this
-                    }
+                    expand: function (panel) {
+                        this.getTopToolbar().items.items[6].toggle(true, true);
+                    },
+                    scope: this
                 }
             },
             {
@@ -260,68 +239,66 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
                 selModel: new Ext.grid.RowSelectionModel({
                     multiSelect: true,
                     listeners: {
-                        selectionchange: {
-                            fn: function (sm) {
-                                var records = sm.getSelections();
+                        selectionchange: function (sm) {
+                            var records = sm.getSelections();
 
-                                var tb = this.getTopToolbar();
-                                if (records.length && this.element.data) {
-                                    var allowDuplicate = this.element.data.rights.indexOf('CREATE') !== -1,
-                                        allowPublish = true,
-                                        allowDelete = true;
+                            var tb = this.getTopToolbar();
+                            if (records.length && this.element.data) {
+                                var allowDuplicate = this.element.data.rights.indexOf('CREATE') !== -1,
+                                    allowPublish = true,
+                                    allowDelete = true;
 
-                                    if (this.mode == 'node') {
-                                        Ext.each(records, function (r) {
-                                            if (r.data.rights.indexOf('PUBLISH') === -1) {
-                                                allowPublish = false;
-                                            }
-                                            if (r.data.rights.indexOf('DELETE') === -1) {
-                                                allowDelete = false;
-                                            }
-                                        });
-                                    }
-                                    else {
-                                        allowPublish = this.element.data.rights.indexOf('PUBLISH') !== -1;
-                                        allowDelete = this.element.data.rights.indexOf('DELETE') !== -1;
-                                    }
+                                if (this.mode == 'node') {
+                                    Ext.each(records, function (r) {
+                                        if (r.data.rights.indexOf('PUBLISH') === -1) {
+                                            allowPublish = false;
+                                        }
+                                        if (r.data.rights.indexOf('DELETE') === -1) {
+                                            allowDelete = false;
+                                        }
+                                    });
+                                }
+                                else {
+                                    allowPublish = this.element.data.rights.indexOf('PUBLISH') !== -1;
+                                    allowDelete = this.element.data.rights.indexOf('DELETE') !== -1;
+                                }
 
-                                    if (allowDuplicate && records.length === 1) {
-                                        tb.items.items[4].menu.items.items[0].enable();
-                                    }
-                                    else {
-                                        tb.items.items[4].menu.items.items[0].disable();
-                                    }
-
-                                    if (allowPublish) {
-                                        tb.items.items[4].menu.items.items[2].enable();
-                                    }
-                                    else {
-                                        tb.items.items[4].menu.items.items[2].disable();
-                                    }
-
-                                    if (allowPublish && records.length === 1) {
-                                        tb.items.items[4].menu.items.items[3].enable();
-                                    }
-                                    else {
-                                        tb.items.items[4].menu.items.items[3].disable();
-                                    }
-
-                                    if (allowDelete) {
-                                        tb.items.items[4].menu.items.items[5].enable();
-                                    }
-                                    else {
-                                        tb.items.items[4].menu.items.items[5].disable();
-                                    }
+                                if (allowDuplicate && records.length === 1) {
+                                    tb.items.items[4].menu.items.items[0].enable();
                                 }
                                 else {
                                     tb.items.items[4].menu.items.items[0].disable();
+                                }
+
+                                if (allowPublish) {
+                                    tb.items.items[4].menu.items.items[2].enable();
+                                }
+                                else {
                                     tb.items.items[4].menu.items.items[2].disable();
+                                }
+
+                                if (allowPublish && records.length === 1) {
+                                    tb.items.items[4].menu.items.items[3].enable();
+                                }
+                                else {
                                     tb.items.items[4].menu.items.items[3].disable();
+                                }
+
+                                if (allowDelete) {
+                                    tb.items.items[4].menu.items.items[5].enable();
+                                }
+                                else {
                                     tb.items.items[4].menu.items.items[5].disable();
                                 }
-                            },
-                            scope: this
-                        }
+                            }
+                            else {
+                                tb.items.items[4].menu.items.items[0].disable();
+                                tb.items.items[4].menu.items.items[2].disable();
+                                tb.items.items[4].menu.items.items[3].disable();
+                                tb.items.items[4].menu.items.items[5].disable();
+                            }
+                        },
+                        scope: this
                     }
                 }),
                 bbar: new Ext.PagingToolbar({
@@ -359,63 +336,58 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
                         }]
                 }),
                 listeners: {
-                    rowdblclick: {
-                        fn: function (grid, index) {
-                            var r = grid.store.getAt(index);
+                    rowdblclick: function (grid, index) {
+                        var r = grid.store.getAt(index);
 
-                            if (!r) {
-                                return;
-                            }
+                        if (!r) {
+                            return;
+                        }
 
-                            if (r.data.teaser_id) {
-                                this.fireEvent('listLoadTeaser', r.data.teaser_id);
-                            }
-                            else {
-                                this.fireEvent('listLoadNode', r.data.tid);
-                            }
-                        },
-                        scope: this
+                        if (r.data.teaser_id) {
+                            this.fireEvent('listLoadTeaser', r.data.teaser_id);
+                        }
+                        else {
+                            this.fireEvent('listLoadNode', r.data.tid);
+                        }
                     },
-                    render: {
-                        fn: function (grid) {
-                            this.ddrow = new Ext.ux.dd.GridReorderDropTarget(grid, {
-                                copy: false,
-                                locked: true,
-                                listeners: {
-                                    afterrowmove: {
-                                        fn: function (objThis, oldIndex, newIndex, records) {
-                                            if (this.sortMode !== 'free') {
-                                                this.changeSort('free', 'asc', true);
-                                            }
-                                        },
-                                        scope: this
-                                    }
+                    render: function (grid) {
+                        this.ddrow = new Ext.ux.dd.GridReorderDropTarget(grid, {
+                            copy: false,
+                            locked: true,
+                            listeners: {
+                                afterrowmove: {
+                                    fn: function (objThis, oldIndex, newIndex, records) {
+                                        if (this.sortMode !== 'free') {
+                                            this.changeSort('free', 'asc', true);
+                                        }
+                                    },
+                                    scope: this
                                 }
-                            });
-                            // if you need scrolling, register the grid view's scroller with the scroll manager
-                            //            Ext.dd.ScrollManager.register(grid.getView().getEditorParent());
+                            }
+                        });
+                        // if you need scrolling, register the grid view's scroller with the scroll manager
+                        //            Ext.dd.ScrollManager.register(grid.getView().getEditorParent());
 
-                            grid.getView().dragZone.onValidDrop = function (target, e, id) {
-                                this.hideProxy();
-                                if (this.afterValidDrop) {
-                                    /**
-                                     * An empty function by default, but provided so that you can perform a custom action
-                                     * after a valid drop has occurred by providing an implementation.
-                                     * @param {Object} target The target DD
-                                     * @param {Event} e The event object
-                                     * @param {String} id The id of the dropped element
-                                     * @method afterInvalidDrop
-                                     */
-                                    this.afterValidDrop(target, e, id);
-                                }
-                            };
-                        },
-                        scope: this
+                        grid.getView().dragZone.onValidDrop = function (target, e, id) {
+                            this.hideProxy();
+                            if (this.afterValidDrop) {
+                                /**
+                                 * An empty function by default, but provided so that you can perform a custom action
+                                 * after a valid drop has occurred by providing an implementation.
+                                 * @param {Object} target The target DD
+                                 * @param {Event} e The event object
+                                 * @param {String} id The id of the dropped element
+                                 * @method afterInvalidDrop
+                                 */
+                                this.afterValidDrop(target, e, id);
+                            }
+                        };
                     },
                     xbeforedestroy: function (grid) {
                         // if you previously registered with the scroll manager, unregister it (if you don't it will lead to problems in IE)
                         //Ext.dd.ScrollManager.unregister(g.getView().getEditorParent());
-                    }
+                    },
+                    scope: this
                 }
             }
         ];
@@ -599,15 +571,13 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
         ];
 
         this.on({
-            show: {
-                fn: function () {
-                    if (this.store.baseParams.tid != this.element.tid) {
-                        // lazy load
-                        this.doLoad(this.element);
-                    }
-                },
-                scope: this
-            }
+            show: function () {
+                if (this.store.baseParams.tid != this.element.tid) {
+                    // lazy load
+                    this.doLoad(this.element);
+                }
+            },
+            scope: this
         });
 
         Phlexible.elements.ElementListGrid.superclass.initComponent.call(this);

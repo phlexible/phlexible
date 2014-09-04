@@ -49,6 +49,12 @@ class TeaserOnline
 
     /**
      * @var string
+     * @ORM\Column(type="string")
+     */
+    private $hash;
+
+    /**
+     * @var string
      * @ORM\Column(name="publish_user_id", type="string", length=36, options={"fixed"=true})
      */
     private $publishUserId;
@@ -135,6 +141,26 @@ class TeaserOnline
     public function setVersion($version)
     {
         $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHash()
+    {
+        return $this->hash;
+    }
+
+    /**
+     * @param string $hash
+     *
+     * @return $this
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
 
         return $this;
     }

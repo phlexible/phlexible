@@ -1,7 +1,7 @@
 services:
-    phlexible_teaser.hasher:
+    phlexible_teaser.teaser_hasher:
         class: Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher
-        arguments: [@doctrine.dbal.default_connection]
+        arguments: [@phlexible_element.element_hasher]
 
     phlexible_teaser.layoutarea.manager:
         class: Phlexible\Bundle\TeaserBundle\Layoutarea\LayoutareaManager

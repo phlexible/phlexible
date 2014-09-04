@@ -106,7 +106,7 @@ class TreeManager
     {
         $instanceNodes = array();
         foreach ($this->getAll() as $tree) {
-            $instanceNodes += $tree->getInstances($node);
+            $instanceNodes = array_merge($instanceNodes, $tree->getInstances($node));
         }
 
         return $instanceNodes;

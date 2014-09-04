@@ -217,6 +217,9 @@ class LayoutController extends Controller
                         if ($teaser->getNoDisplay()) {
                             $cls .= 'dont-show ';
                         }
+                        if ($teaser->getTreeId() !== $treeId) {
+                            $cls .= 'inherited ';
+                        }
 
                         $teaserData = array_merge(
                             $teaserData,
@@ -313,7 +316,7 @@ class LayoutController extends Controller
             /* @var $teaser Teaser */
 
             if ('element' == $teaser->getType()) {
-                $teaserElement = $elementService->findElement($teaser->getType());
+                $teaserElement = $elementService->findElement($teaser->getTypeId());
                 $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
 
                 if (!empty($filter['status'])) {
@@ -333,6 +336,8 @@ class LayoutController extends Controller
                     }
                 }
 
+                $teaserOnline = $teaserManager->findOneOnlineByTeaserAndLanguage($teaser, $language);
+
                 if (!empty($filter['date'])) {
                     $date = $filter['date'];
                     $dateFrom = !empty($filter['date_from']) ? strtotime($filter['date_from']) : '';
@@ -340,19 +345,22 @@ class LayoutController extends Controller
 
                     $show = false;
                     if ($date === 'create') {
-                        $createdAt = strtotime($teaserElementVersion->getCreatedAt());
+                        $createdAt = $teaserElementVersion->getCreatedAt();
 
                         if ((!$dateFrom || $createdAt > $dateFrom) && (!$dateTo || $createdAt < $dateTo)) {
                             $show = true;
                         }
                     } elseif ($date === 'publish') {
-                        $publishedAt = strtotime($teaserManager->getPublishedAt($teaser, $language));
+                        $publishedAt = null;
+                        if ($teaserOnline) {
+                            $publishedAt = $teaserOnline->getPublishedAt();
+                        }
 
                         if ((!$dateFrom || $publishedAt > $dateFrom) && (!$dateTo || $publishedAt < $dateTo)) {
                             $show = true;
                         }
                     } elseif ($date === 'custom') {
-                        $customDate = strtotime($teaserElementVersion->getCustomDate($language));
+                        $customDate = $teaserElementVersion->getCustomDate($language);
 
                         if ((!$dateFrom || $customDate > $dateFrom) && (!$dateTo || $customDate < $dateTo)) {
                             $show = true;
@@ -378,7 +386,7 @@ class LayoutController extends Controller
                     'version'         => $teaserElementVersion->getVersion(),
                     'create_time'     => $teaserElementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
                     //                'change_time'     => $child['modify_time'],
-                    'publish_time'    => $teaserManager->getPublishedAt($teaser, $language),
+                    'publish_time'    => $teaserOnline ? $teaserOnline->getPublishedAt() : '',
                     'custom_date'     => $teaserElementVersion->getCustomDate($language),
                     'language'        => $language,
                     'sort'            => (int) $teaser->getSort(),
@@ -441,7 +449,7 @@ class LayoutController extends Controller
 
         //$data['totalChilds'] = $element->getChildCount();
 
-        return new ResultResponse(
+        return new JsonResponse(
             array(
                 'parent' => $parent,
                 'list'   => $data

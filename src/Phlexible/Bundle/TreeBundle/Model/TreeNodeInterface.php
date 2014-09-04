@@ -40,16 +40,16 @@ interface TreeNodeInterface
     public function setId($id);
 
     /**
-     * @return int
+     * @return TreeNodeInterface
      */
-    public function getParentId();
+    public function getParentNode();
 
     /**
-     * @param int $parentId
+     * @param TreeNodeInterface $parentNode
      *
      * @return $this
      */
-    public function setParentId($parentId);
+    public function setParentNode($parentNode);
 
     /**
      * @return bool

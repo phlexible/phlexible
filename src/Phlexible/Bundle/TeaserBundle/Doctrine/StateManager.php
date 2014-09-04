@@ -8,13 +8,14 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Doctrine;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Entity\TeaserOnline;
+use Phlexible\Bundle\TeaserBundle\Mediator\Mediator;
 use Phlexible\Bundle\TeaserBundle\Model\StateManagerInterface;
+use Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -40,6 +41,16 @@ class StateManager implements StateManagerInterface
     private $historyManager;
 
     /**
+     * @var Mediator
+     */
+    private $mediator;
+
+    /**
+     * @var TeaserHasher
+     */
+    private $teaserHasher;
+
+    /**
      * @var EntityRepository
      */
     private $teaserOnlineRepository;
@@ -47,16 +58,22 @@ class StateManager implements StateManagerInterface
     /**
      * @param EntityManager                  $entityManager
      * @param ElementHistoryManagerInterface $historyManager
+     * @param Mediator                       $mediator
+     * @param TeaserHasher                   $teaserHasher
      * @param EventDispatcherInterface       $dispatcher
      */
     public function __construct(
         EntityManager $entityManager,
         ElementHistoryManagerInterface $historyManager,
+        Mediator $mediator,
+        TeaserHasher $teaserHasher,
         EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
-        $this->dispatcher = $dispatcher;
         $this->historyManager = $historyManager;
+        $this->mediator = $mediator;
+        $this->teaserHasher = $teaserHasher;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -139,9 +156,21 @@ class StateManager implements StateManagerInterface
      */
     public function isAsync(Teaser $teaser, $language)
     {
-        // TODO: implement
+        $teaserOnline = $this->findOneByTeaserAndLanguage($teaser, $language);
+        if (!$teaserOnline) {
+            return false;
+        }
 
-        return true;
+        $version = $this->mediator->getVersionedObject($teaser)->getVersion();
+
+        if ($version === $teaserOnline->getVersion()) {
+            return false;
+        }
+
+        $publishedHash = $teaserOnline->getHash();
+        $currentHash = $this->teaserHasher->hashTeaser($teaser, $version, $language);
+
+        return $publishedHash === $currentHash;
     }
 
     /**
@@ -159,6 +188,7 @@ class StateManager implements StateManagerInterface
         $teaserOnline
             ->setLanguage($language)
             ->setVersion($version)
+            ->setHash($this->teaserHasher->hashTeaser($teaser, $version, $language))
             ->setPublishedAt(new \DateTime())
             ->setPublishUserId($userId);
 

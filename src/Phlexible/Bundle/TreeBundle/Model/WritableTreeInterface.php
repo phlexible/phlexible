@@ -20,22 +20,22 @@ interface WritableTreeInterface
     /**
      * Create a node
      *
-     * @param TreeNodeInterface|int $parentNode
-     * @param TreeNodeInterface|int $afterNode
-     * @param string                $type
-     * @param string                $typeId
-     * @param array                 $attributes
-     * @param string                $userId
-     * @param string                $sortMode
-     * @param string                $sortDir
-     * @param bool                  $navigation
-     * @param bool                  $needAuthentication
+     * @param TreeNodeInterface $parentNode
+     * @param TreeNodeInterface $afterNode
+     * @param string            $type
+     * @param string            $typeId
+     * @param array             $attributes
+     * @param string            $userId
+     * @param string            $sortMode
+     * @param string            $sortDir
+     * @param bool              $navigation
+     * @param bool              $needAuthentication
      *
      * @return TreeNodeInterface
      */
     public function create(
-        $parentNode,
-        $afterNode = null,
+        TreeNodeInterface $parentNode,
+        TreeNodeInterface $afterNode = null,
         $type,
         $typeId,
         array $attributes,
@@ -47,44 +47,44 @@ interface WritableTreeInterface
     );
 
     /**
-     * @param TreeNodeInterface|int $parentNode
-     * @param TreeNodeInterface|int $afterNode
-     * @param TreeNodeInterface|int $sourceNode
-     * @param string                $userId
+     * @param TreeNodeInterface $parentNode
+     * @param TreeNodeInterface $afterNode
+     * @param TreeNodeInterface $sourceNode
+     * @param string            $userId
      *
      * @return TreeNodeInterface
      */
-    public function createInstance($parentNode, $afterNode = null, $sourceNode, $userId
+    public function createInstance(TreeNodeInterface $parentNode, TreeNodeInterface $afterNode = null, TreeNodeInterface $sourceNode, $userId
     );
 
     /**
      * Reorder node
      *
-     * @param TreeNodeInterface|int $node
-     * @param TreeNodeInterface|int $targetNode
+     * @param TreeNodeInterface $node
+     * @param TreeNodeInterface $targetNode
      * @param bool                  $before
      *
      * @throws InvalidNodeMoveException
      */
-    public function reorder($node, $targetNode, $before = false);
+    public function reorder(TreeNodeInterface $node, TreeNodeInterface $targetNode, $before = false);
 
     /**
      * Move node
      *
-     * @param TreeNodeInterface|int $node
-     * @param TreeNodeInterface|int $toNode
-     * @param string                $uid
+     * @param TreeNodeInterface $node
+     * @param TreeNodeInterface $toNode
+     * @param string            $uid
      */
-    public function move($node, $toNode, $uid);
+    public function move(TreeNodeInterface $node, TreeNodeInterface $toNode, $uid);
 
     /**
      * Delete node
      *
-     * @param TreeNodeInterface|int $node
-     * @param string                $userId
-     * @param string                $comment
+     * @param TreeNodeInterface $node
+     * @param string            $userId
+     * @param string            $comment
      */
-    public function delete($node, $userId, $comment = null);
+    public function delete(TreeNodeInterface $node, $userId, $comment = null);
 
     /**
      * @param TreeNodeInterface $node

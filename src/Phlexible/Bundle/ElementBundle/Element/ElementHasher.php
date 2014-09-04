@@ -8,95 +8,103 @@
 
 namespace Phlexible\Bundle\ElementBundle\Element;
 
-use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 
 /**
  * Element hasher
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-abstract class ElementHasher
+class ElementHasher
 {
     /**
-     * @var Connection
+     * @var ElementService
      */
-    private $connection;
+    private $elementService;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $_hashes = array();
+    private $algo;
 
     /**
-     * @param Connection $connection
+     * @param ElementService $elementService
+     * @param string         $algo
      */
-    public function __construct(Connection $connection)
+    public function __construct(ElementService $elementService, $algo = 'md5')
     {
-        $this->connection = $connection;
+        $this->elementService = $elementService;
+        $this->algo = $algo;
     }
 
-    protected function _getHashValuesByEid($eid, $language, $version)
+    /**
+     * @return string
+     */
+    public function getAlgo()
     {
-        $selectElementType = $this->_db->select()
-            ->from($this->_db->prefix . 'element_version', array('element_type_id', 'element_type_version'))
-            ->where('eid = ?', $eid)
-            ->where('version = ?', $version)
-            ->limit(1);
-        //echo $selectEid.PHP_EOL;
+        return $this->algo;
+    }
 
-        $elementType = $this->_db->fetchOne($selectElementType);
+    /**
+     * @param int    $eid
+     * @param int    $version
+     * @param string $language
+     *
+     * @return array
+     */
+    public function createHashValuesByEid($eid, $version, $language)
+    {
+        $element = $this->elementService->findElement($eid);
+        $elementVersion = $this->elementService->findElementVersion($element, $version);
 
-        $selectMeta = $this->_db->select()
-            ->from($this->_db->prefix . 'element_version_metaset_items', array('value'))
-            ->where('eid = ?', $eid)
-            ->where('language = ?', $language)
-            ->where('version = ?', $version)
-            ->where('value IS NOT NULL')
-            ->where('value != ""');
-        //echo $selectMeta.PHP_EOL;
+        return $this->createHashValuesByElementVersion($elementVersion, $language);
+    }
 
-        $meta = $this->_db->fetchCol($selectMeta);
+    /**
+     * @param ElementVersion $elementVersion
+     * @param string         $language
+     *
+     * @return array
+     */
+    public function createHashValuesByElementVersion(ElementVersion $elementVersion, $language)
+    {
+        $elementStructure = $this->elementService->findElementStructure($elementVersion, $language);
+
+        $eid = $elementVersion->getElement()->getEid();
+        $elementtypeId = $elementVersion->getElement()->getElementtypeId();
+        $elementtypeVersion = $elementVersion->getElementtypeVersion();
+
+        // TODO: meta resolver
+        $meta = array();//$this->_db->fetchCol($selectMeta);
         sort($meta);
 
-        $selectContext = $this->_db->select()
-            ->from($this->_db->prefix . 'element_version_metaset_items', array('value'))
-            ->where('eid = ?', $eid)
-            ->where('language = ?', $language)
-            ->where('version = ?', $version)
-            ->where('value IS NOT NULL')
-            ->where('value != ""');
-        //echo $selectMeta.PHP_EOL;
-
-        $context = $this->_db->fetchCol($selectContext);
-        sort($context);
-
-        $selectContent = $this->_db->select()
-            ->from($this->_db->prefix . 'element_data_language', array('content'))
-            ->where('eid = ?', $eid)
-            ->where('language = ?', $language)
-            ->where('version = ?', $version)
-            ->where('content IS NOT NULL')
-            ->where('content != ""');
-        //echo $selectContent.PHP_EOL;
-
-        $content = $this->_db->fetchCol($selectContent);
-        sort($content);
+        $rii = new \RecursiveIteratorIterator($elementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+        $content = array();
+        foreach ($rii as $structure) {
+            foreach ($structure->getValues() as $value) {
+                $content[$structure->getId() . '__' . $value->getId()] = $value->getValue();
+            }
+        }
 
         $values = array(
-            'eid'         => $eid,
-            'elementType' => $elementType,
-            'meta'        => $meta,
-            'context'     => $context,
-            'content'     => $content,
+            'eid'                => $eid,
+            'elementtypeId'      => $elementtypeId,
+            'elementtypeVersion' => $elementtypeVersion,
+            'meta'               => $meta,
+            'content'            => $content,
         );
 
         return $values;
     }
 
-    protected function _createHashFromValues(array $values)
+    /**
+     * @param array $values
+     *
+     * @return string
+     */
+    private function hashValues(array $values)
     {
-        $hash = md5(serialize($values));
-
-        return $hash;
+        return hash($this->algo, serialize($values));
     }
 }

@@ -643,8 +643,8 @@ class DataSaver
         // publish node
         $tree->publish(
             $treeNode,
-            $language,
             $elementVersion->getVersion(),
+            $language,
             $userId,
             $comment
         );
@@ -654,8 +654,8 @@ class DataSaver
                 // publish slave node
                 $tree->publish(
                     $treeNode,
-                    $slaveLanguage,
                     $elementVersion->getVersion(),
+                    $slaveLanguage,
                     $userId,
                     $comment
                 );

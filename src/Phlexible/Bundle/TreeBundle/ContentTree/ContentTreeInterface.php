@@ -62,25 +62,24 @@ interface ContentTreeInterface extends TreeInterface
     public function createContentTreeNodeFromTreeNode(TreeNodeInterface $treeNode);
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return array
      */
-    public function getLanguages($node);
+    public function getLanguages(TreeNodeInterface $node);
 
     /**
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return array
      */
-    public function getVersions($node);
+    public function getVersions(TreeNodeInterface $node);
 
     /**
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface|int $node
-     * @param string                $language
+     * @param TreeNodeInterface $node
+     * @param string            $language
      *
-     * @throws \Exception
      * @return int
      */
-    public function getVersion($node, $language);
+    public function getVersion(TreeNodeInterface $node, $language);
 }

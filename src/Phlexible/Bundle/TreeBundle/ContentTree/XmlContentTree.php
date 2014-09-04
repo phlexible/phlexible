@@ -206,7 +206,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             ->setTypeId($treeNode->getTypeId())
             ->setType($treeNode->getType())
             ->setTree($this)
-            ->setParentId($treeNode->getParentId())
+            ->setParentNode($treeNode->getParentNode())
             ->setInNavigation($treeNode->getInNavigation())
             ->setSort($treeNode->getSort())
             ->setSortMode($treeNode->getSortMode())
@@ -316,13 +316,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             $node = $this->get($node);
         }
 
-        $parentId = $node->getParentId();
-
-        if ($parentId === null) {
-            return null;
-        }
-
-        return $this->get($parentId);
+        return $node->getParentNode();
     }
 
     /**
@@ -509,7 +503,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         $node
             ->setTree($this)
             ->setId((int) $element->getAttribute('id'))
-            ->setParentId($element->getAttribute('parentId') ? (int) $element->getAttribute('parentId') : null)
+            ->setParentNode($element->getAttribute('parentId') ? (int) $element->getAttribute('parentId') : null)
             ->setType((string) $element->getAttribute('type'))
             ->setTypeId((int) $element->getAttribute('typeId'))
             ->setAttributes($attributes)
@@ -524,7 +518,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
 
         $this->nodes[$node->getId()] = $node;
 
-        if ($node->getParentId() === null) {
+        if ($node->getParentNode() === null) {
             $this->rootId = $node->getId();
         }
 

@@ -305,7 +305,7 @@ class CatchHelper
     public function updateOnline($eid)
     {
         // TODO: repair
-        #return;
+        return;
         $event = new BeforeUpdateCatchTeaserHelper($eid);
         if ($this->dispatcher->dispatch($event)->isPropagationStopped()) {
             return null;

@@ -190,6 +190,9 @@ class TreeController extends Controller
         $treeManager = $this->get('phlexible_tree.tree_manager');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
+        $parentNode = $tree->get($parentId);
+        $afterNode = $tree->get($afterId);
+
         $userId = $this->getUser()->getId();
 
         $elementtype = $elementService->getElementtypeService()->findElementtype($elementtypeId);
@@ -198,8 +201,8 @@ class TreeController extends Controller
         $element = $elementService->createElement($elementtypeVersion, $masterLanguage, $userId);
 
         $node = $tree->create(
-            $parentId,
-            $afterId,
+            $parentNode,
+            $afterNode,
             'element',
             $element->getEid(),
             array(),

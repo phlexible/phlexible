@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\TreeBundle\Doctrine;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
-use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
 use Phlexible\Bundle\TreeBundle\Event\MoveNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
@@ -20,7 +20,7 @@ use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNode;
+use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Model\WritableTreeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
@@ -33,7 +33,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, IdentifiableInterface
+class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterface
 {
     /**
      * @var string
@@ -41,19 +41,9 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     private $siterootId;
 
     /**
-     * @var array
+     * @var EntityManager
      */
-    private $nodes = array();
-
-    /**
-     * @var array
-     */
-    private $childNodes = array();
-
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private $entityManager;
 
     /**
      * @var ElementHistoryManagerInterface
@@ -72,20 +62,20 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
 
     /**
      * @param string                         $siterootId
-     * @param Connection                     $connection
+     * @param EntityManager                  $entityManager
      * @param ElementHistoryManagerInterface $historyManager
      * @param StateManagerInterface          $stateManager
      * @param EventDispatcherInterface       $dispatcher
      */
     public function __construct(
         $siterootId,
-        Connection $connection,
+        EntityManager $entityManager,
         ElementHistoryManagerInterface $historyManager,
         StateManagerInterface $stateManager,
         EventDispatcherInterface $dispatcher)
     {
         $this->siterootId = $siterootId;
-        $this->connection = $connection;
+        $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
         $this->historyManager = $historyManager;
         $this->stateManager = $stateManager;
@@ -120,48 +110,11 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     }
 
     /**
-     * @param array $rows
-     *
-     * @return TreeNodeInterface[]
+     * @return EntityRepository
      */
-    private function mapNodes(array $rows)
+    private function getTreeNodeRepository()
     {
-        $nodes = array();
-        foreach ($rows as $row) {
-            $node = $this->mapNode($row);
-            $nodes[$node->getId()] = $node;
-        }
-
-        return $nodes;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return TreeNodeInterface
-     */
-    private function mapNode(array $row)
-    {
-        $attributes = json_decode($row['attributes'], true) ? : array();
-
-        $node = new TreeNode();
-        $node
-            ->setTree($this)
-            ->setId($row['id'])
-            ->setParentId($row['parent_id'])
-            ->setType($row['type'])
-            ->setTypeId($row['type_id'])
-            ->setSort($row['sort'])
-            ->setSortMode($row['sort_mode'])
-            ->setSortDir($row['sort_dir'])
-            ->setInNavigation(!!$row['in_navigation'])
-            ->setAttributes($attributes)
-            ->setCreatedAt(new \DateTime($row['created_at']))
-            ->setCreateUserId($row['create_user_id']);
-
-        $this->nodes[$node->getId()] = $node;
-
-        return $node;
+        return $this->entityManager->getRepository('PhlexibleTreeBundle:TreeNode');
     }
 
     /**
@@ -169,24 +122,10 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
      */
     public function getRoot()
     {
-        if (isset($this->nodes[null])) {
-            return $this->nodes[null];
-        }
+        $node = $this->getTreeNodeRepository()->findOneBy(array('siterootId' => $this->siterootId, 'parentNode' => null));
+        $node->setTree($this);
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('et.*')
-            ->from('tree', 'et')
-            ->where($qb->expr()->isNull('et.parent_id'))
-            ->andWhere($qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($this->siterootId)));
-
-        $row = $this->connection->fetchAssoc($qb->getSQL());
-
-        if (!$row) {
-            throw new \Exception("Root node for tree {$this->siterootId} not found.");
-        }
-
-        return $this->mapNode($row);
+        return $node;
     }
 
     /**
@@ -194,24 +133,12 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
      */
     public function get($id)
     {
-        if (isset($this->nodes[$id])) {
-            return $this->nodes[$id];
+        $node = $this->getTreeNodeRepository()->findOneBy(array('siterootId' => $this->siterootId, 'id' => $id));
+        if ($node) {
+            $node->setTree($this);
         }
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('et.*')
-            ->from('tree', 'et')
-            ->where($qb->expr()->eq('et.id', $id))
-            ->andWhere($qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($this->siterootId)));
-
-        $row = $this->connection->fetchAssoc($qb->getSQL());
-
-        if (!$row) {
-            throw new \Exception("$id not found");
-        }
-
-        return $this->mapNode($row);
+        return $node;
     }
 
     /**
@@ -219,63 +146,26 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
      */
     public function has($id)
     {
-        if (isset($this->nodes[$id])) {
-            return $this->nodes[$id];
-        }
-
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('et.*')
-            ->from('tree', 'et')
-            ->where($qb->expr()->eq('et.id', $id))
-            ->andWhere($qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($this->siterootId)));
-
-        $row = $this->connection->fetchAssoc($qb->getSQL());
-
-        if (!$row) {
-            return false;
-        }
-
-        $this->mapNode($row);
-
-        return true;
+        return $this->get($id) ? true : false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getChildren($node)
+    public function getChildren(TreeNodeInterface $node)
     {
-        if ($node instanceof TreeNodeInterface) {
-            $id = $node->getId();
-        } else {
-            $id = $node;
+        $nodes = $this->getTreeNodeRepository()->findBy(array('siterootId' => $this->siterootId, 'parentNode' => $node->getId()), array('sort' => 'ASC'));
+        foreach ($nodes as $node) {
+            $node->setTree($this);
         }
 
-        if (isset($this->childNodes[$id])) {
-            return $this->childNodes[$id];
-        }
-
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('et.*')
-            ->from('tree', 'et')
-            ->where($qb->expr()->eq('et.parent_id', $id))
-            ->andWhere($qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($this->siterootId)))
-            ->orderBy('sort', 'ASC');
-
-        $rows = $this->connection->fetchAll($qb->getSQL());
-
-        $childNodes = $this->mapNodes($rows);
-        $this->childNodes[$id] = $childNodes;
-
-        return $childNodes;
+        return $nodes;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function hasChildren($node)
+    public function hasChildren(TreeNodeInterface  $node)
     {
         return count($this->getChildren($node)) > 0;
     }
@@ -283,38 +173,34 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     /**
      * {@inheritdoc}
      */
-    public function getParent($node)
+    public function getParent(TreeNodeInterface $node)
     {
-        if (!$node instanceof TreeNodeInterface) {
-            $node = $this->get($node);
+        $parentNode = $node->getParentNode();
+        if ($parentNode) {
+            $parentNode->setTree($this);
         }
 
-        $parentId = $node->getParentId();
-
-        if ($parentId === null) {
-            return null;
-        }
-
-        return $this->get($parentId);
+        return $parentNode;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getIdPath($node)
+    public function getIdPath(TreeNodeInterface $node)
     {
-        return array_keys($this->getPath($node));
+        $ids = array();
+        foreach ($this->getPath($node) as $pathNode) {
+            $ids[] = $pathNode->getId();
+        }
+
+        return $ids;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPath($node)
+    public function getPath(TreeNodeInterface $node)
     {
-        if (!$node instanceof TreeNodeInterface) {
-            $node = $this->get($node);
-        }
-
         $path = array();
 
         do {
@@ -329,30 +215,20 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     /**
      * {@inheritdoc}
      */
-    public function isRoot($node)
+    public function isRoot(TreeNodeInterface $node)
     {
-        if ($node instanceof TreeNodeInterface) {
-            $id = $node->getId();
-        } else {
-            $id = $node;
-        }
-
-        return $this->getRoot()->getId() === $id;
+        return $this->getRoot() === $node;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isChildOf($childId, $parentId)
+    public function isChildOf(TreeNodeInterface $childNode, TreeNodeInterface $parentNode)
     {
-        if ($parentId instanceof TreeNodeInterface) {
-            $parentId = $parentId->getId();
-        }
-
-        $path = $this->getIdPath($childId);
+        $path = $this->getIdPath($childNode);
 
         foreach ($path as $id) {
-            if ($parentId === $id) {
+            if ($parentNode->getId() === $id) {
                 return true;
             }
         }
@@ -363,34 +239,23 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     /**
      * {@inheritdoc}
      */
-    public function isParentOf($parentId, $childId)
+    public function isParentOf(TreeNodeInterface $parentNode, TreeNodeInterface $childNode)
     {
-        return $this->isChildOf($childId, $parentId);
+        return $this->isChildOf($childNode, $parentNode);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isInstance($node)
+    public function isInstance(TreeNodeInterface $node)
     {
-        if (!$node instanceof TreeNodeInterface) {
-            $node = $this->get($node);
-        }
-
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('COUNT(t.id)')
-            ->from('tree', 't')
-            ->where($qb->expr()->eq('t.type', $qb->expr()->literal($node->getType())))
-            ->andWhere($qb->expr()->eq('t.type_id', $node->getTypeId()));
-
-        return $this->connection->fetchColumn($qb->getSQL()) > 1;
+        return count($this->getInstances($node)) > 1;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isInstanceMaster($node)
+    public function isInstanceMaster(TreeNodeInterface $node)
     {
         return $node->getAttribute('instanceMaster', false);
     }
@@ -398,22 +263,14 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     /**
      * {@inheritdoc}
      */
-    public function getInstances($node)
+    public function getInstances(TreeNodeInterface $node)
     {
-        if (!$node instanceof TreeNodeInterface) {
-            $node = $this->get($node);
+        $nodes = $this->getTreeNodeRepository()->findBy(array('siterootId' => $this->siterootId, 'type' => $node->getType(), 'typeId' => $node->getTypeId()));
+        foreach ($nodes as $node) {
+            $node->setTree($this);
         }
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('t.*')
-            ->from('tree', 't')
-            ->where($qb->expr()->eq('t.type_id', $node->getTypeId()))
-            ->andWhere($qb->expr()->eq('t.siteroot_id', $qb->expr()->literal($this->getSiterootId())));
-
-        $rows = $this->connection->fetchAll($qb->getSQL());
-
-        return $this->mapNodes($rows);
+        return $nodes;
     }
 
     /**
@@ -473,6 +330,24 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     }
 
     /**
+     * @param TreeNodeInterface $node
+     * @param bool              $flush
+     *
+     * @return $this
+     */
+    public function updateNode(TreeNodeInterface $node, $flush = true)
+    {
+        $node->setSiterootId($this->siterootId);
+
+        $this->entityManager->persist($node);
+        if ($flush) {
+            $this->entityManager->flush($node);
+        }
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function init($type, $typeId, $userId)
@@ -480,7 +355,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         $node = new TreeNode();
         $node
             ->setTree($this)
-            ->setParentId(null)
+            ->setParentNode(null)
             ->setType($type)
             ->setTypeId($typeId)
             ->setCreateUserId($userId)
@@ -491,7 +366,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
             return false;
         }
 
-        $this->insertNode($node);
+        $this->updateNode($node);
 
         // history
         $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_NODE, $typeId, $userId, $node->getId());
@@ -506,8 +381,8 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
      * {@inheritdoc}
      */
     public function create(
-        $parentNode,
-        $afterNode = null,
+        TreeNodeInterface $parentNode,
+        TreeNodeInterface $afterNode = null,
         $type,
         $typeId,
         array $attributes,
@@ -542,7 +417,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         $node = new TreeNode();
         $node
             ->setTree($parentNode->getTree())
-            ->setParentId($parentNode->getId())
+            ->setParentNode($parentNode)
             ->setType($type)
             ->setTypeId($typeId)
             ->setAttributes($attributes)
@@ -559,11 +434,13 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
             return false;
         }
 
-        $this->insertNode($node);
+        $this->updateNode($node, false);
 
         foreach ($sortNodes as $sortNode) {
-            $this->updateNode($sortNode);
+            $this->updateNode($sortNode, false);
         }
+
+        $this->entityManager->flush();
 
         // history
         $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_NODE, $typeId, $userId, $node->getId());
@@ -577,17 +454,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     /**
      * {@inheritdoc}
      */
-    public function createInstance($parentNode, $afterNode = null, $sourceNode, $userId) {
-
-        if (!$parentNode instanceof TreeNodeInterface) {
-            $parentNode = $this->get($parentNode);
-        }
-        if ($afterNode && !$afterNode instanceof TreeNodeInterface) {
-            $afterNode = $this->get($afterNode);
-        }
-        if (!$sourceNode instanceof TreeNodeInterface) {
-            $sourceNode = $this->get($sourceNode);
-        }
+    public function createInstance(TreeNodeInterface $parentNode, TreeNodeInterface $afterNode = null, TreeNodeInterface $sourceNode, $userId) {
 
         $sort = 0;
         $sortNodes = array();
@@ -607,7 +474,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
         $node = new TreeNode();
         $node
             ->setTree($parentNode->getTree())
-            ->setParentId($parentNode->getId())
+            ->setParentNode($parentNode)
             ->setType($sourceNode->getType())
             ->setTypeId($sourceNode->getTypeId())
             ->setAttributes($sourceNode->getAttributes())
@@ -622,11 +489,13 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
             return false;
         }
 
-        $this->insertNode($node);
+        $this->updateNode($node, false);
 
         foreach ($sortNodes as $sortNode) {
-            $this->updateNode($sortNode);
+            $this->updateNode($sortNode, false);
         }
+
+        $this->entityManager->flush();
 
         // history
         $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_NODE_INSTANCE, $node->getTypeId(), $userId, $node->getId());
@@ -638,75 +507,15 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     }
 
     /**
-     * @param TreeNodeInterface $node
-     */
-    private function insertNode(TreeNodeInterface $node)
-    {
-        $this->connection->insert(
-            'tree',
-            array(
-                'siteroot_id'    => $node->getTree()->getSiterootId(),
-                'parent_id'      => $node->getParentId(),
-                'type'           => $node->getType(),
-                'type_id'        => $node->getTypeId(),
-                'sort'           => $node->getSort(),
-                'sort_mode'      => $node->getSortMode(),
-                'sort_dir'       => $node->getSortDir(),
-                'in_navigation'  => $node->getInNavigation(),
-                'attributes'     => json_encode($node->getAttributes()),
-                'created_at'     => $node->getCreatedAt()->format('Y-m-d H:i:s'),
-                'create_user_id' => $node->getCreateUserId(),
-            )
-        );
-
-        $node->setId($this->connection->lastInsertId('tree'));
-    }
-
-    /**
-     * @param TreeNodeInterface $node
-     */
-    public function updateNode(TreeNodeInterface $node)
-    {
-        $this->connection->update(
-            'tree',
-            array(
-                'siteroot_id'    => $node->getTree()->getSiterootId(),
-                'parent_id'      => $node->getParentId(),
-                'type'           => $node->getType(),
-                'type_id'        => $node->getTypeId(),
-                'sort'           => $node->getSort(),
-                'sort_mode'      => $node->getSortMode(),
-                'sort_dir'       => $node->getSortDir(),
-                'in_navigation'  => $node->getInNavigation(),
-                'attributes'     => json_encode($node->getAttributes()),
-                'created_at'     => $node->getCreatedAt()->format('Y-m-d H:i:s'),
-                'create_user_id' => $node->getCreateUserId(),
-            ),
-            array(
-                'id' => $node->getId(),
-            )
-        );
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function reorder($node, $targetNode, $before = false)
+    public function reorder(TreeNodeInterface $node, TreeNodeInterface $targetNode, $before = false)
     {
-        if (!$node instanceof TreeNodeInterface) {
-            $node = $this->get($node);
-        }
-
-        if (!$targetNode instanceof TreeNodeInterface) {
-            $targetNode = $this->get($targetNode);
-        }
-
-        $parentNode = $this->getParent($node);
-        if ($targetNode->getParentId() !== $parentNode->getId()) {
+        if ($targetNode->getParentNode()->getId() !== $node->getParentNode()->getId()) {
             throw new InvalidNodeMoveException('Node and targetNode need to have the same parent.');
         }
 
-        if ($parentNode->getSortMode() !== 'free') {
+        if ($node->getParentNode()->getSortMode() !== 'free') {
             return;
         }
 
@@ -723,7 +532,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
 
         $updatesNodes = array();
 
-        foreach ($this->getChildren($parentNode) as $childNode) {
+        foreach ($this->getChildren($node->getParentNode()) as $childNode) {
             if ($childNode->getSort() <= $sort) {
                 $childNode->setSort($childNode->getSort() + 1);
                 $updatesNodes[] = $childNode;
@@ -746,21 +555,13 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     /**
      * {@inheritdoc}
      */
-    public function move($node, $toNode, $userId)
+    public function move(TreeNodeInterface $node, TreeNodeInterface $toNode, $userId)
     {
-        if (!$node instanceof TreeNodeInterface) {
-            $node = $this->get($node);
-        }
-
-        if (!$toNode instanceof TreeNodeInterface) {
-            $toNode = $this->get($toNode);
-        }
-
         if ($this->isChildOf($toNode, $node)) {
             throw new InvalidNodeMoveException('Invalid move.');
         }
 
-        $oldParentId = $node->getParentId();
+        $oldParentId = $node->getParentNode()->getId();
 
         $event = new MoveNodeEvent($node, $toNode);
         if ($this->dispatcher->dispatch(TreeEvents::BEFORE_MOVE_NODE, $event)->isPropagationStopped()) {
@@ -769,18 +570,9 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
 
         $node
             ->setSort(0)
-            ->setParentId($toNode->getId());
+            ->setParentNode($toNode);
 
-        $this->connection->update(
-            'tree',
-            array(
-                'parent_id' => $toNode->getId(),
-                'sort'      => 0,
-            ),
-            array(
-                'id' => $node->getId()
-            )
-        );
+        $this->updateNode($node);
 
         $this->sorter->sortNode($toNode);
 
@@ -794,12 +586,8 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     /**
      * {@inheritdoc}
      */
-    public function delete($node, $userId, $comment = null)
+    public function delete(TreeNodeInterface $node, $userId, $comment = null)
     {
-        if (!$node instanceof TreeNodeInterface) {
-            $node = $this->get($node);
-        }
-
         // TODO: listener
         /*
         $rightsIdentifiers = array(
@@ -825,7 +613,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
             return null;
         }
 
-        $treeNodeOnline = $this->stateManager->publish($node, $version, $language, $comment);
+        $treeNodeOnline = $this->stateManager->publish($node, $version, $language, $userId, $comment);
 
         $event = new PublishNodeEvent($node, $language, $version, false);
         $this->dispatcher->dispatch(TreeEvents::PUBLISH_NODE, $event);
@@ -893,7 +681,7 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
     private function doDelete(TreeNodeInterface $node, $userId, $comment = null)
     {
         foreach ($this->getChildren($node) as $childNode) {
-            $this->doDelete($childNode, $uid, $comment);
+            $this->doDelete($childNode, $userId, $comment);
         }
 
         $event = new NodeEvent($node);
@@ -901,14 +689,8 @@ class Tree implements TreeInterface, WritableTreeInterface, \IteratorAggregate, 
             return;
         }
 
-        $id = $node->getId();
-
-        $this->connection->delete(
-            'tree',
-            array(
-                'id' => $id
-            )
-        );
+        $this->entityManager->remove($node);
+        $this->entityManager->flush();
 
         $event = new NodeEvent($node);
         $this->dispatcher->dispatch(TreeEvents::DELETE_NODE, $event);

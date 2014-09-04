@@ -142,14 +142,14 @@ class XmlDumper
             /* @var $node TreeNodeInterface */
 
             $nodes[$node->getId()] = $nodeNode = $dom->createElement('node');
-            $nodes[$node->getParentId()]->appendChild($nodeNode);
+            $nodes[$node->getParentNode()->getId()]->appendChild($nodeNode);
 
             $idAttr = $dom->createAttribute('id');
             $idAttr->value = $node->getId();
             $nodeNode->appendChild($idAttr);
 
             $parentIdAttr = $dom->createAttribute('parentId');
-            $parentIdAttr->value = $node->getParentId();
+            $parentIdAttr->value = $node->getParentNode()->getId();
             $nodeNode->appendChild($parentIdAttr);
 
             $typeAttr = $dom->createAttribute('type');

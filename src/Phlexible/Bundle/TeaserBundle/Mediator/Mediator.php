@@ -6,15 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TreeBundle\Mediator;
+namespace Phlexible\Bundle\TeaserBundle\Mediator;
 
-use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 
 /**
- * Element mediator
+ * Teaser mediator
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -49,18 +48,30 @@ class Mediator implements MediatorInterface
     /**
      * {@inheritdoc}
      */
-    public function accept(TreeNodeInterface $node)
+    public function accept(Teaser $teaser)
     {
-        return $this->findMediator($node) !== null;
+        return $this->findMediator($teaser) !== null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getTitle(TreeNodeInterface $node, $field, $language)
+    public function getTitle(Teaser $teaser, $field, $language)
     {
-        if ($mediator = $this->findMediator($node)) {
-            return $mediator->getTitle($node, $field, $language);
+        if ($mediator = $this->findMediator($teaser)) {
+            return $mediator->getTitle($teaser, $field, $language);
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUniqueId(Teaser $teaser)
+    {
+        if ($mediator = $this->findMediator($teaser)) {
+            return $mediator->getUniqueId($teaser);
         }
 
         return null;
@@ -71,10 +82,10 @@ class Mediator implements MediatorInterface
      *
      * @return Element
      */
-    public function getObject(TreeNodeInterface $node)
+    public function getObject(Teaser $teaser)
     {
-        if ($mediator = $this->findMediator($node)) {
-            return $mediator->getObject($node);
+        if ($mediator = $this->findMediator($teaser)) {
+            return $mediator->getObject($teaser);
         }
 
         return null;
@@ -85,24 +96,24 @@ class Mediator implements MediatorInterface
      *
      * @return ElementVersion
      */
-    public function getVersionedObject(TreeNodeInterface $node)
+    public function getVersionedObject(Teaser $teaser)
     {
-        if ($mediator = $this->findMediator($node)) {
-            return $mediator->getVersionedObject($node);
+        if ($mediator = $this->findMediator($teaser)) {
+            return $mediator->getVersionedObject($teaser);
         }
 
         return null;
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param Teaser $teaser
      *
      * @return MediatorInterface|null
      */
-    private function findMediator(TreeNodeInterface $node)
+    private function findMediator(Teaser $teaser)
     {
         foreach ($this->mediators as $mediator) {
-            if ($mediator->accept($node)) {
+            if ($mediator->accept($teaser)) {
                 return $mediator;
             }
         }

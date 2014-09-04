@@ -60,7 +60,7 @@ class ListController extends Controller
 
         $tree = $treeManager->getByNodeID($tid);
         $node = $tree->get($tid);
-        $eid = $node->getAttribute('eid');
+        $eid = $node->getTypeId();
         $element = $elementService->findElement($eid);
         $elementMasterLanguage = $element->getMasterLanguage();
         $elementVersion = $elementService->findLatestElementVersion($element);
@@ -86,7 +86,7 @@ class ListController extends Controller
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = $userAdminRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByContentClass('Phlexible\Bundle\TreeBundle\Model\TreeNode')
+                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
                 );
             }
         }

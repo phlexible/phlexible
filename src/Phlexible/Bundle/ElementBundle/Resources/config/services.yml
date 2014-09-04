@@ -50,6 +50,10 @@ services:
             - @event_dispatcher
             - %phlexible_cms.languages.available%
 
+    phlexible_element.element_hasher:
+        class: Phlexible\Bundle\ElementBundle\Element\ElementHasher
+        arguments: [@phlexible_element.element_service]
+
     # acl providers
     phlexible_element.acl_provider:
         class: Phlexible\Bundle\ElementBundle\AclProvider\ElementAclProvider

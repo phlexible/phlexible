@@ -29,6 +29,13 @@ class TreeNodeOnline
     private $id;
 
     /**
+     * @var TreeNode
+     * @ORM\ManyToOne(targetEntity="TreeNode")
+     * @ORM\JoinColumn(name="tree_id", referencedColumnName="id")
+     */
+    private $treeNode;
+
+    /**
      * @var string
      * @ORM\Column(type="string", length=2, options={"fixed"=true})
      */
@@ -42,6 +49,12 @@ class TreeNodeOnline
 
     /**
      * @var string
+     * @ORM\Column(type="string")
+     */
+    private $hash;
+
+    /**
+     * @var string
      * @ORM\Column(name="publish_user_id", type="string", length=36, options={"fixed"=true})
      */
     private $publishUserId;
@@ -51,13 +64,6 @@ class TreeNodeOnline
      * @ORM\Column(name="published_at", type="datetime")
      */
     private $publishedAt;
-
-    /**
-     * @var TreeNode
-     * @ORM\ManyToOne(targetEntity="TreeNode")
-     * @ORM\JoinColumn(name="tree_id", referencedColumnName="id")
-     */
-    private $treeNode;
 
     /**
      * @return int
@@ -75,6 +81,26 @@ class TreeNodeOnline
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return TreeNode
+     */
+    public function getTreeNode()
+    {
+        return $this->treeNode;
+    }
+
+    /**
+     * @param TreeNode $treeNode
+     *
+     * @return $this
+     */
+    public function setTreeNode($treeNode)
+    {
+        $this->treeNode = $treeNode;
 
         return $this;
     }
@@ -122,6 +148,26 @@ class TreeNodeOnline
     /**
      * @return string
      */
+    public function getHash()
+    {
+        return $this->hash;
+    }
+
+    /**
+     * @param string $hash
+     *
+     * @return $this
+     */
+    public function setHash($hash)
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getPublishUserId()
     {
         return $this->publishUserId;
@@ -155,26 +201,6 @@ class TreeNodeOnline
     public function setPublishedAt($publishedAt)
     {
         $this->publishedAt = $publishedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return TreeNode
-     */
-    public function getTreeNode()
-    {
-        return $this->treeNode;
-    }
-
-    /**
-     * @param TreeNode $treeNode
-     *
-     * @return $this
-     */
-    public function setTreeNode($treeNode)
-    {
-        $this->treeNode = $treeNode;
 
         return $this;
     }

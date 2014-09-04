@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeFactoryInterface;
@@ -22,9 +23,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class TreeFactory implements TreeFactoryInterface
 {
     /**
-     * @var Connection
+     * @var EntityManager
      */
-    private $connection;
+    private $entityManager;
 
     /**
      * @var ElementHistoryManagerInterface
@@ -42,14 +43,18 @@ class TreeFactory implements TreeFactoryInterface
     private $dispatcher;
 
     /**
-     * @param Connection                     $connection
+     * @param EntityManager                  $entityManager
      * @param ElementHistoryManagerInterface $historyManager
      * @param StateManagerInterface          $stateManager
      * @param EventDispatcherInterface       $dispatcher
      */
-    public function __construct(Connection $connection, ElementHistoryManagerInterface $historyManager, StateManagerInterface $stateManager, EventDispatcherInterface $dispatcher)
+    public function __construct(
+        EntityManager $entityManager,
+        ElementHistoryManagerInterface $historyManager,
+        StateManagerInterface $stateManager,
+        EventDispatcherInterface $dispatcher)
     {
-        $this->connection = $connection;
+        $this->entityManager = $entityManager;
         $this->historyManager = $historyManager;
         $this->stateManager = $stateManager;
         $this->dispatcher = $dispatcher;
@@ -60,6 +65,6 @@ class TreeFactory implements TreeFactoryInterface
      */
     public function factory($siterootId)
     {
-        return new Tree($siterootId, $this->connection, $this->historyManager, $this->stateManager, $this->dispatcher);
+        return new Tree($siterootId, $this->entityManager, $this->historyManager, $this->stateManager, $this->dispatcher);
     }
 }

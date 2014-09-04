@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\ContentElement;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
-use Phlexible\Bundle\ElementBundle\ContentElement\Dumper\XmlDumper;
 use Phlexible\Bundle\ElementBundle\ContentElement\Loader\LoaderInterface;
 use Phlexible\Bundle\ElementBundle\ContentElement\Loader\XmlLoader;
 use Psr\Log\LoggerInterface;

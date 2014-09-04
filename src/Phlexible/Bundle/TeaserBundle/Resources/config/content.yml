@@ -1,0 +1,4 @@
+services:
+    phlexible_teaser.content_teaser_manager.delegating:
+        class: Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager
+        arguments: [@phlexible_teaser.teaser_manager, @phlexible_teaser.teaser_mediator]

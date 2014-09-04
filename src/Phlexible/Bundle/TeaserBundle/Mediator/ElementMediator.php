@@ -6,11 +6,12 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TreeBundle\Mediator;
+namespace Phlexible\Bundle\TeaserBundle\Mediator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
@@ -36,19 +37,27 @@ class ElementMediator implements MediatorInterface
     /**
      * {@inheritdoc}
      */
-    public function accept(TreeNodeInterface $node)
+    public function accept(Teaser $teaser)
     {
-        return $node->getType() === 'element';
+        return $teaser->getType() === 'element';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getTitle(TreeNodeInterface $node, $field, $language)
+    public function getTitle(Teaser $teaser, $field, $language)
     {
-        $elementVersion = $this->getVersionedObject($node);
+        $elementVersion = $this->getVersionedObject($teaser);
 
         return $elementVersion->getMappedField($field, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUniqueId(Teaser $teaser)
+    {
+       return $this->getObject($teaser)->getElementtype()->getUniqueId();
     }
 
     /**
@@ -56,9 +65,9 @@ class ElementMediator implements MediatorInterface
      *
      * @return Element
      */
-    public function getObject(TreeNodeInterface $node)
+    public function getObject(Teaser $teaser)
     {
-        return $this->elementService->findElement($node->getTypeId());
+        return $this->elementService->findElement($teaser->getTypeId());
     }
 
     /**
@@ -66,8 +75,8 @@ class ElementMediator implements MediatorInterface
      *
      * @return ElementVersion
      */
-    public function getVersionedObject(TreeNodeInterface $node)
+    public function getVersionedObject(Teaser $teaser)
     {
-        return $this->elementService->findLatestElementVersion($this->getObject($node));
+        return $this->elementService->findLatestElementVersion($this->getObject($teaser));
     }
 }

@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
+use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TeaserBundle\Teaser\TeaserService;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
@@ -40,21 +41,21 @@ class LayoutareaConfigurator implements ConfiguratorInterface
     private $elementService;
 
     /**
-     * @var TeaserManagerInterface
+     * @var DelegatingContentTeaserManager
      */
     private $teaserManager;
 
     /**
-     * @param EventDispatcherInterface $dispatcher
-     * @param LoggerInterface          $logger
-     * @param ElementService           $elementService
-     * @param TeaserManagerInterface   $teaserManager
+     * @param EventDispatcherInterface       $dispatcher
+     * @param LoggerInterface                $logger
+     * @param ElementService                 $elementService
+     * @param DelegatingContentTeaserManager $teaserManager
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
         ElementService $elementService,
-        TeaserManagerInterface $teaserManager)
+        DelegatingContentTeaserManager $teaserManager)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
@@ -122,10 +123,9 @@ class LayoutareaConfigurator implements ConfiguratorInterface
             $teasers = $this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
 
             $areas[$layoutarea->getUniqueId()] = array(
-                'title'     => $layoutarea->getTitle(),
-                'template'  => $layoutarea->getUniqueId(),
-                'unique_id' => $layoutarea->getUniqueId(),
-                'children'  => $teasers
+                'title'    => $layoutarea->getTitle(),
+                'uniqueId' => $layoutarea->getUniqueId(),
+                'children' => $teasers
             );
 
             //$areaEvent = new Brainbits_Event_Notification(new stdClass(), 'area');

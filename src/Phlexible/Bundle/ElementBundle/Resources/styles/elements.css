@@ -192,6 +192,10 @@
     font-weight: bold;
 }
 
+.p-elements-layout-tree .inherited span {
+    font-style: italic;
+}
+
 .p-elements-layout-tree .stop-inherit span {
     color: gray;
 }

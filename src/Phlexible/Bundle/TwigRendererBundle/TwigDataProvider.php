@@ -37,7 +37,7 @@ class TwigDataProvider implements DataProviderInterface
             $data->treeNode     = $treeNode;
             $data->treeContext  = $renderConfiguration->get('treeContext');
             $data->tid          = $treeNode->getId();
-            $data->parentTid    = $treeNode->getParentId();
+            $data->parentTid    = $treeNode->getParentNode()->getId();
             $data->isPublished  = false;//(bool) $treeNode->isPublished($renderConfiguration->get('elementLanguage'));
             $data->isRestricted = false;//(bool) $treeNode->isRestricted($version);
             $data->inNavigation = false;//(bool) $treeNode->inNavigation($version);

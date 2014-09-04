@@ -59,99 +59,99 @@ interface TreeInterface
     /**
      * Return child nodes
      *
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return TreeNodeInterface[]
      */
-    public function getChildren($node);
+    public function getChildren(TreeNodeInterface $node);
 
     /**
      * Are child nodes present?
      *
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return bool
      */
-    public function hasChildren($node);
+    public function hasChildren(TreeNodeInterface $node);
 
     /**
      * Return parent node
      *
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return TreeNodeInterface
      */
-    public function getParent($node);
+    public function getParent(TreeNodeInterface $node);
 
     /**
      * Return ID path array
      *
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return array
      */
-    public function getIdPath($node);
+    public function getIdPath(TreeNodeInterface $node);
 
     /**
      * Return node path array
      *
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return TreeNodeInterface[]
      */
-    public function getPath($node);
+    public function getPath(TreeNodeInterface $node);
 
     /**
      * Is the given node the root node?
      *
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return bool
      */
-    public function isRoot($node);
+    public function isRoot(TreeNodeInterface $node);
 
     /**
      * Is childId a child of parentId?
      *
-     * @param TreeNodeInterface|int $childNode
-     * @param TreeNodeInterface|int $parentNode
+     * @param TreeNodeInterface $childNode
+     * @param TreeNodeInterface $parentNode
      *
      * @return bool
      */
-    public function isChildOf($childNode, $parentNode);
+    public function isChildOf(TreeNodeInterface $childNode, TreeNodeInterface $parentNode);
 
     /**
      * Is parentId a parent of childId?
      *
-     * @param TreeNodeInterface|int $parentNode
-     * @param TreeNodeInterface|int $childNode
+     * @param TreeNodeInterface $parentNode
+     * @param TreeNodeInterface $childNode
      *
      * @return bool
      */
-    public function isParentOf($parentNode, $childNode);
+    public function isParentOf(TreeNodeInterface $parentNode, TreeNodeInterface $childNode);
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return bool
      */
-    public function isInstance($node);
+    public function isInstance(TreeNodeInterface $node);
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return bool
      */
-    public function isInstanceMaster($node);
+    public function isInstanceMaster(TreeNodeInterface $node);
 
     /**
      * Return instance nodes for the given nodes from THIS tree.
      *
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return TreeNodeInterface[]
      */
-    public function getInstances($node);
+    public function getInstances(TreeNodeInterface $node);
 
     /**
      * @param TreeNodeInterface $node
@@ -185,6 +185,7 @@ interface TreeInterface
 
     /**
      * @param TreeNodeInterface $node
+     * @param string            $language
      *
      * @return bool
      */

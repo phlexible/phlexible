@@ -8,13 +8,14 @@
 
 namespace Phlexible\Bundle\TreeBundle\Doctrine;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
+use Phlexible\Bundle\TreeBundle\Mediator\Mediator;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Tree\NodeHasher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -35,6 +36,16 @@ class StateManager implements StateManagerInterface
     private $historyManager;
 
     /**
+     * @var Mediator
+     */
+    private $mediator;
+
+    /**
+     * @var NodeHasher
+     */
+    private $nodeHasher;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -47,15 +58,21 @@ class StateManager implements StateManagerInterface
     /**
      * @param EntityManager                  $entityManager
      * @param ElementHistoryManagerInterface $historyManager
+     * @param Mediator                       $mediator
+     * @param NodeHasher                     $nodeHasher
      * @param EventDispatcherInterface       $dispatcher
      */
     public function __construct(
         EntityManager $entityManager,
         ElementHistoryManagerInterface $historyManager,
+        Mediator $mediator,
+        NodeHasher $nodeHasher,
         EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
         $this->historyManager = $historyManager;
+        $this->mediator = $mediator;
+        $this->nodeHasher = $nodeHasher;
         $this->dispatcher = $dispatcher;
     }
 
@@ -137,11 +154,23 @@ class StateManager implements StateManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isAsync(TreeNodeInterface $node, $language)
+    public function isAsync(TreeNodeInterface $treeNode, $language)
     {
-        // TODO: implement
+        $treeOnline = $this->findOneByTreeNodeAndLanguage($treeNode, $language);
+        if (!$treeOnline) {
+            return false;
+        }
 
-        return true;
+        $version = $this->mediator->getVersionedObject($treeNode)->getVersion();
+
+        if ($version === $treeOnline->getVersion()) {
+            return false;
+        }
+
+        $publishedHash = $treeOnline->getHash();
+        $currentHash = $this->nodeHasher->hashNode($treeNode, $version, $language);
+
+        return $publishedHash === $currentHash;
     }
 
     /**
@@ -149,7 +178,7 @@ class StateManager implements StateManagerInterface
      */
     public function publish(TreeNodeInterface $treeNode, $version, $language, $userId, $comment = null)
     {
-        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode, 'language' => $language));
+        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode->getId(), 'language' => $language));
         if (!$treeNodeOnline) {
             $treeNodeOnline = new TreeNodeOnline();
             $treeNodeOnline
@@ -157,8 +186,9 @@ class StateManager implements StateManagerInterface
         }
 
         $treeNodeOnline
-            ->setLanguage($language)
             ->setVersion($version)
+            ->setLanguage($language)
+            ->setHash($this->nodeHasher->hashNode($treeNode, $version, $language))
             ->setPublishedAt(new \DateTime())
             ->setPublishUserId($userId);
 
@@ -173,7 +203,7 @@ class StateManager implements StateManagerInterface
      */
     public function setOffline(TreeNodeInterface $treeNode, $language)
     {
-        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode, 'language' => $language));
+        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode->getId(), 'language' => $language));
 
         if ($treeNodeOnline) {
             $this->entityManager->remove($treeNodeOnline);

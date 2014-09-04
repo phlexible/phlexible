@@ -88,7 +88,7 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
                 element: this.element,
                 title: Phlexible.elements.Strings.access,
                 right: 'ACCESS',
-                contentClass: 'Phlexible\\Bundle\\TreeBundle\\Model\\TreeNode',
+                contentClass: 'Phlexible\\Bundle\\TreeBundle\\Entity\\TreeNode',
                 strings: {
                     users: Phlexible.elements.Strings.users,
                     user: Phlexible.elements.Strings.user,

@@ -12,6 +12,7 @@ Phlexible.teasers.ElementLayoutTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
     },
 
     applyNodeConfigToText: function (n, text) {
+        /*
         var prefix = '';
         if (n.attributes.inherited) {
             prefix += '<img qtip="Is inherited" src="' + Phlexible.component('/phlexibleteaser/icons/inherited.png') + '" width="16" height="16" style="vertical-align: middle;" />';
@@ -22,6 +23,7 @@ Phlexible.teasers.ElementLayoutTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
         if (prefix) {
             text += ' ' + prefix;
         }
+        */
         return text;
     }
 });
