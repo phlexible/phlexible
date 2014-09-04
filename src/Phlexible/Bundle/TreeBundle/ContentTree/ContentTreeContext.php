@@ -161,7 +161,7 @@ class ContentTreeContext
      */
     public function children()
     {
-        if ($this->maxDepth !== -1 && $this->depth >= $this->maxDepth) {
+        if ($this->maxDepth !== 0 && $this->depth >= $this->maxDepth) {
             return array();
         }
 
