@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
@@ -29,17 +30,24 @@ class ElementtypeListener implements EventSubscriberInterface
     private $elementService;
 
     /**
+     * @var FieldMapper
+     */
+    private $fieldMapper;
+
+    /**
      * @var array
      */
     private $languages;
 
     /**
      * @param ElementService $elementService
+     * @param FieldMapper    $fieldMapper
      * @param string         $languages
      */
-    public function __construct(ElementService $elementService, $languages)
+    public function __construct(ElementService $elementService, FieldMapper $fieldMapper, $languages)
     {
         $this->elementService = $elementService;
+        $this->fieldMapper = $fieldMapper;
         $this->languages = explode(',', $languages);
     }
 
@@ -80,7 +88,9 @@ class ElementtypeListener implements EventSubscriberInterface
             foreach ($this->languages as $language) {
                 $latestElementStructure = $this->elementService->findElementStructure($latestElementVersion, $language);
 
-                $elementStructures[$language] = $this->iterateStructure($latestElementStructure, $elementVersion);
+                $elementStructures[$language] = $elementStructure = $this->iterateStructure($latestElementStructure, $elementVersion);
+
+                $this->fieldMapper->apply($elementVersion, $elementStructure, array($language));
             }
 
             $this->elementService->updateElement($element, false);

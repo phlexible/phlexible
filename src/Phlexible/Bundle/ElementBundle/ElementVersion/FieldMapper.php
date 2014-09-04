@@ -107,10 +107,15 @@ class FieldMapper
     /**
      * @param ElementVersion   $elementVersion
      * @param ElementStructure $elementStructure
+     * @param array|null       $languages
      */
-    public function apply(ElementVersion $elementVersion, ElementStructure $elementStructure = null)
+    public function apply(ElementVersion $elementVersion, ElementStructure $elementStructure = null, array $languages = null)
     {
-        foreach ($this->availableLanguages as $language) {
+        if (null === $languages) {
+            $languages = $this->availableLanguages;
+        }
+
+        foreach ($languages as $language) {
             $mapping = $this->extract($elementVersion, $elementStructure, $language);
 
             $mappedFields = $elementVersion->getMappedFields();
