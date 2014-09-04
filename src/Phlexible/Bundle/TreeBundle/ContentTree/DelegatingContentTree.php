@@ -309,7 +309,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function isInstance($node)
     {
-        return false;
+        return $this->tree->isInstance($node);
     }
 
     /**
@@ -319,7 +319,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function isInstanceMaster($node)
     {
-        return false;
+        return $this->tree->isInstanceMaster($node);
     }
 
     /**
@@ -329,6 +329,38 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function getInstances($node)
     {
-        return array();
+        return $this->tree->getInstances($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isPublished(TreeNodeInterface $node, $language)
+    {
+        return $this->tree->isPublished($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedLanguages(TreeNodeInterface $node)
+    {
+        return $this->tree->getPublishedLanguages($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedVersion(TreeNodeInterface $node, $language)
+    {
+        return $this->tree->getPublishedVersion($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedVersions(TreeNodeInterface $node)
+    {
+        return $this->tree->getPublishedVersions($node);
     }
 }

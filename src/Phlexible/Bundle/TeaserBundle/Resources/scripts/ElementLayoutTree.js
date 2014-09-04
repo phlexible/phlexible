@@ -224,6 +224,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                                     tree_id: node.attributes.parent_tid, //this.element.tid,
                                     eid: node.attributes.parent_eid, //this.element.eid,
                                     teaser_eid: node.attributes.eid,
+                                    teaser_id: node.id,
                                     type: node.attributes.type
                                 },
                                 success: function (response, options, node) {
@@ -276,7 +277,8 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                                         layoutarea_id: node.attributes.layoutarea_id,
                                         tree_id: node.attributes.parent_tid,
                                         eid: node.attributes.parent_eid,
-                                        teaser_eid: node.attributes.eid
+                                        teaser_eid: node.attributes.eid,
+                                        teaser_id: node.id
                                     },
                                     success: function (response, options, node) {
                                         var data = Ext.decode(response.responseText);
@@ -321,7 +323,8 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                                         layoutarea_id: node.attributes.layoutarea_id,
                                         tree_id: node.attributes.parent_tid,
                                         eid: node.attributes.parent_eid,
-                                        teaser_eid: node.attributes.eid
+                                        teaser_eid: node.attributes.eid,
+                                        teaser_id: node.id
                                     },
                                     success: function (response, options, node) {
                                         var data = Ext.decode(response.responseText);

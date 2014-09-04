@@ -118,23 +118,29 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath)
     {
+        /* @var $teasers Teaser[] */
         $teasers = array();
         $forTreeId = end($treeNodePath)->getId();
 
         foreach ($treeNodePath as $treeNode) {
             $localTeasers = $this->findForLayoutAreaAndTreeNode($layoutarea, $treeNode);
 
-            foreach ($localTeasers as $index => $localTeaser) {
-                if ($localTeaser->getType() === 'stop') {
-                    unset($localTeasers[$index]);
+            foreach ($localTeasers as $localTeaser) {
+                if ($localTeaser->getType() === 'stop' && $treeNode->getId() === $forTreeId) {
+                    $teasers[$localTeaser->getTypeId()]->setStopInherit(true);
+                    continue;
+                } elseif ($localTeaser->getType() === 'stop') {
+                    unset($teasers[$localTeaser->getTypeId()]);
+                    continue;
                 } elseif ($localTeaser->getType() === 'hide' && $treeNode->getId() === $forTreeId) {
-                    unset($localTeasers[$index]);
+                    $teasers[$localTeaser->getTypeId()]->setNoDisplay(true);
+                    continue;
                 } elseif ($localTeaser->getStopInherit() && $treeNode->getId() !== $forTreeId) {
-                    unset($localTeasers[$index]);
+                    continue;
                 }
-            }
 
-            $teasers = array_merge($teasers, $localTeasers);
+                $teasers[$localTeaser->getId()] = $localTeaser;
+            }
         }
 
         return $teasers;
