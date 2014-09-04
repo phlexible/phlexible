@@ -73,7 +73,9 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
      */
     public function find(ElementtypeVersion $elementtypeVersion)
     {
-        if (!isset($this->structureMap[$elementtypeVersion->getUniqueId()])) {
+        $identifier = $elementtypeVersion->getElementtype()->getId().'_'.$elementtypeVersion->getVersion();
+
+        if (!isset($this->structureMap[$identifier])) {
             $structure = new ElementtypeStructure();
             $structure
                 ->setElementtypeVersion($elementtypeVersion);
@@ -84,10 +86,10 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
                 $elementtypeVersion->getVersion()
             );
 
-            $this->structureMap[$elementtypeVersion->getUniqueId()] = $structure;
+            $this->structureMap[$identifier] = $structure;
         }
 
-        return $this->structureMap[$elementtypeVersion->getUniqueId()];
+        return $this->structureMap[$identifier];
     }
 
     /**

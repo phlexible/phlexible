@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\ElementStructure\Diff;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
  * Diff
@@ -17,63 +18,71 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
  */
 class Diff
 {
+    private $added = array();
+    private $modified = array();
+    private $removed = array();
+
     /**
-     * @param ElementStructure $from
-     * @param ElementStructure $to
+     * @param ElementStructure      $structure
+     * @param ElementStructureValue $newValue
      *
-     * @return ElementStructure
+     * @return $this
      */
-    public function diff(ElementStructure $from, ElementStructure $to)
+    public function addAdded(ElementStructure $structure, ElementStructureValue $newValue)
     {
-        $diff = array(
-            'values' => array(
-                'add' => array(),
-                'mod' => array(),
-                'del' => array(),
-            )
-        );
+        $this->added[] = array('structure' => $structure, 'newValue' => $newValue);
 
-        foreach ($from->getValues() as $fromElementStructureValue) {
-            $name = $fromElementStructureValue->getName();
-            $fromValue = $fromElementStructureValue->getValue();
-            if ($to->hasValue($name)) {
-                $toElementStructureValue = $to->getValue($name);
-                $toValue = $toElementStructureValue->getValue();
+        return $this;
+    }
 
-                if ($fromValue !== $toValue) {
-                    $diff['values']['mod'][] = array('from' => $fromElementStructureValue, 'to' => $toElementStructureValue);
-                }
-            } else {
-                $diff['values']['del'][] = array('from' => $fromElementStructureValue);
-            }
-        }
+    /**
+     * @return array
+     */
+    public function getAdded()
+    {
+        return $this->added;
+    }
 
-        foreach ($to->getValues() as $toElementStructureValue) {
-            if (!$from->hasValue($toElementStructureValue->getName())) {
-                $diff['values']['add'][] = array('to' => $toElementStructureValue);
-            }
-        }
+    /**
+     * @param ElementStructure      $structure
+     * @param ElementStructureValue $oldValue
+     * @param ElementStructureValue $newValue
+     *
+     * @return $this
+     */
+    public function addModified(ElementStructure $structure, ElementStructureValue $oldValue, ElementStructureValue $newValue)
+    {
+        $this->modified[] = array('structure' => $structure, 'newValue' => $newValue, 'oldValue' => $oldValue);
 
-        foreach ($from->getStructures() as $fromStructure) {
-            foreach ($to->getStructures() as $toStructure) {
-                if ($fromStructure->getId() === $toStructure->getId()) {
-                    $diff['structures']['mod'][] = $this->diff($fromStructure, $toStructure);
-                    break 2;
-                }
-            }
-            $diff['structures']['del'][] = $fromStructure;
-        }
+        return $this;
+    }
 
-        foreach ($to->getStructures() as $toStructure) {
-            foreach ($from->getStructures() as $fromStructure) {
-                if ($fromStructure->getId() === $toStructure->getId()) {
-                    $diff['structures']['mod'][] = $this->diff($fromStructure, $toStructure);
-                    break 2;
-                }
-            }
-            $diff['structures']['add'][] = $toStructure;
-        }
+    /**
+     * @return array
+     */
+    public function getModified()
+    {
+        return $this->modified;
+    }
 
-        return $diff;
+    /**
+     * @param ElementStructure      $structure
+     * @param ElementStructureValue $oldValue
+     *
+     * @return $this
+     */
+    public function addRemoved(ElementStructure $structure, ElementStructureValue $oldValue)
+    {
+        $this->removed[] = array('structure' => $structure, 'oldValue' => $oldValue);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRemoved()
+    {
+        return $this->removed;
     }
 }

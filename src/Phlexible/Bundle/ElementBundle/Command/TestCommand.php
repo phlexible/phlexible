@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
+use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -34,8 +35,30 @@ class TestCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $elementRepository = $this->getContainer()->get('phlexible_element.repository');
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
+        $element = $elementService->findElement(1115);
+        $fromElementVersion = $elementService->findElementVersion($element, 68);
+        $toElementVersion = $elementService->findElementVersion($element, 72);
+        $fromElementStructure = $elementService->findElementStructure($fromElementVersion, 'de');
+        $toElementStructure = $elementService->findElementStructure($toElementVersion, 'de');
+
+        $differ = new Differ();
+        $diff = $differ->diff($fromElementStructure, $toElementStructure);
+
+        $output->writeln('Added');
+        foreach ($diff->getAdded() as $added) {
+            echo '  '.$added['structure']->getName()." ".$added['structure']->getId().": ".$added['newValue']->getValue().PHP_EOL;
+        }
+        $output->writeln('Modified');
+        foreach ($diff->getModified() as $modified) {
+            echo '  '.($modified['structure']->getName() ?: 'root')." ".$modified['structure']->getId().": ".$modified['oldValue']->getValue()." -> ".$modified['newValue']->getValue().PHP_EOL;
+        }
+        $output->writeln('Removed');
+        foreach ($diff->getRemoved() as $removed) {
+            echo '  '.$removed['structure']->getName()." ".$removed['structure']->getId().": ".$removed['oldValue']->getValue().PHP_EOL;
+        }
+        die;
+
         $fieldMapper = $this->getContainer()->get('phlexible_element.field.mapper');
         $connectionManager = $this->getContainer()->get('connection_manager');
         $db = $connectionManager->default;

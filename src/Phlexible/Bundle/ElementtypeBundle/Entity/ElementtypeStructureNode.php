@@ -631,6 +631,23 @@ class ElementtypeStructureNode
     }
 
     /**
+     * @return array
+     */
+    public function getRepeatableDsIdPath()
+    {
+        $path = array();
+
+        $node = $this;
+        do {
+            if ($node->isRepeatable() || $node->isOptional()) {
+                $path[] = $node->getDsId();
+            }
+        } while ($node = $node->getParentNode());
+
+        return $path;
+    }
+
+    /**
      * Is this field a reference?
      *
      * @return bool

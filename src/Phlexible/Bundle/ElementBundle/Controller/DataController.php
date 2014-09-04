@@ -151,7 +151,6 @@ class DataController extends Controller
 
         $instances = array();
         if ($teaser) {
-            // TODO: implement $teaserManager->getInstances()
             foreach ($teaserManager->getInstances($teaser) as $instanceTeaser) {
                 $instance = array(
                     'id'              => $instanceTeaser->getId(),
