@@ -306,5 +306,17 @@ class ElementStructure implements \IteratorAggregate
     {
         return new ElementStructureIterator($this->getStructures());
     }
+
+    public function dump($indent = 0)
+    {
+        $dump = str_repeat(' ', $indent) . 'S '.$this->getId().' '.$this->getDsId().' '.$this->getName().' '.$this->getParentName();
+        foreach ($this->structures as $structure) {
+            $dump .= $structure->dump($indent + 1);
+        }
+        foreach ($this->values as $value) {
+            $dump .= str_repeat(' ', $indent+1).'V '.$value->getId().' '.$value->getDsId().' '.$value->getName().' '.$value->getValue().PHP_EOL;
+        }
+        return $dump;
+    }
 }
 

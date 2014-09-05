@@ -31,7 +31,8 @@ Ext.ux.form.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
 
         this.border = !this.isSynchronized;
 
-        this.value = this.value || {};
+        this.value = this.value ? Ext.decode(this.value) : {};
+        console.log(this.value);
 
         this.tableHasRowHeader = this.value.hasRowHeader ? true : false;
         this.tableHasColHeader = this.value.hasColHeader ? true : false;

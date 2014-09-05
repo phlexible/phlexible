@@ -10,7 +10,6 @@ Phlexible.fields.Registry.addFactory('table', function (parentConfig, item, valu
         xtype: 'tablefield',
         width: (parseInt(item.configuration.width, 10) || 400),
         height: (parseInt(item.configuration.height, 10) || 200),
-        value: item.content,
         tableDefaultCols: 2,
 
         addRowAboveText: Phlexible.elementtypes.Strings.add_row_above,
