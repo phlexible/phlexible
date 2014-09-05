@@ -31,7 +31,7 @@ class TreeNodeOnline
     /**
      * @var TreeNode
      * @ORM\ManyToOne(targetEntity="TreeNode")
-     * @ORM\JoinColumn(name="tree_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tree_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $treeNode;
 

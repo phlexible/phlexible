@@ -99,7 +99,7 @@ class ElementManager implements ElementManagerInterface
             $this->entityManager->persist($element);
 
             if ($flush) {
-                $this->entityManager->flush($element);
+                $this->entityManager->flush();
             }
 
             $event = new ElementEvent($element);
@@ -115,7 +115,9 @@ class ElementManager implements ElementManagerInterface
             }
 
             $this->entityManager->persist($element);
-            $this->entityManager->flush($element);
+            if ($flush) {
+                $this->entityManager->flush();
+            }
 
             $event = new ElementEvent($element);
             $this->dispatcher->dispatch(ElementEvents::UPDATE_ELEMENT, $event);

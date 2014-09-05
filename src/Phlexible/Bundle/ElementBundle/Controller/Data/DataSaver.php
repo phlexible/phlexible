@@ -487,8 +487,8 @@ class DataSaver
                     ->setElementVersion($elementVersion)
                     ->setId($id)
                     ->setDsId($dsId)
-                    ->setParentId($parent->getId())
-                    ->setParentDsId($parent->getDsId())
+                    ->setRepeatableId($parent->getId())
+                    ->setRepeatableDsId($parent->getDsId())
                     ->setParentName($parent->getName())
                     ->setName($node->getName());
                 $parent->addStructure($elementStructure);
@@ -503,8 +503,8 @@ class DataSaver
                     ->setElementVersion($elementVersion)
                     ->setId($id)
                     ->setDsId($dsId)
-                    ->setParentId($parent->getId())
-                    ->setParentDsId($parent->getDsId())
+                    ->setRepeatableId($parent->getId())
+                    ->setRepeatableDsId($parent->getDsId())
                     ->setParentName($parent->getName())
                     ->setName($node->getName());
                 $parent->addStructure($elementStructure);

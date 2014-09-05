@@ -10,10 +10,10 @@ Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, value
         width: (parseInt(item.configuration.width, 10) || 200),
 
         allowed: {
-            tid: item.configuration.link_allow_internal == "on",
-            intrasiteroot: item.configuration.link_allow_intra == "on",
-            url: item.configuration.link_allow_external == "on",
-            mailto: item.configuration.link_allow_email == "on"
+            tid: item.configuration.link_allow_internal,
+            intrasiteroot: item.configuration.link_allow_intra,
+            url: item.configuration.link_allow_external,
+            mailto: item.configuration.link_allow_email
         },
         siteroot_id: element.siteroot_id,
         elementTypeIds: item.configuration.link_element_types || '',

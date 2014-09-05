@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\Model;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 
 /**
  * Element structure manager interface
@@ -28,6 +27,7 @@ interface ElementStructureManagerInterface
 
     /**
      * @param ElementStructure $elementStructure
+     * @param bool             $onlyValues
      */
-    public function updateElementStructure(ElementStructure $elementStructure);
+    public function updateElementStructure(ElementStructure $elementStructure, $onlyValues);
 }

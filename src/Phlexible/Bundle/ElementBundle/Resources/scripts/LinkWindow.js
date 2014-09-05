@@ -121,7 +121,8 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
         }
 
         if (typeValues.length < 2) {
-            Ext.MessageBox.alert('Error', 'You have no permission');
+            Ext.MessageBox.alert('Error', 'No link types available.');
+            this.close();
         }
         else if (typeValues.length === 2) {
             if (selected === 'no') {

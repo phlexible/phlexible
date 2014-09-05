@@ -55,6 +55,9 @@ class ElementStructureLoader
         $this->elementtypeService = $elementtypeService;
     }
 
+    /**
+     * @var ElementStructure[]
+     */
     private $map = array();
 
     /**
@@ -67,8 +70,10 @@ class ElementStructureLoader
      */
     public function load(ElementVersion $elementVersion, $language)
     {
-        if (isset($this->map[$elementVersion->getElement()->getEid() . '_' . $elementVersion->getVersion()])) {
-            return $this->map[$elementVersion->getElement()->getEid() . '_' . $elementVersion->getVersion()];
+        $identifier = $elementVersion->getElement()->getEid() . '_' . $elementVersion->getVersion() . '_' . $language;
+
+        if (isset($this->map[$identifier])) {
+            return $this->map[$identifier];
         }
 
         $elementtype = $this->elementtypeService->findElementtype($elementVersion->getElement()->getElementtypeId());
@@ -107,8 +112,8 @@ class ElementStructureLoader
                 $structure
                     ->setId($row['id'])
                     ->setDsId($row['ds_id'])
-                    ->setParentId($myNode->getParentId())
-                    ->setParentDsId($myNode->getParentDsId())
+                    //->setParentId(null)//$myNode->getParentId())
+                    //->setParentDsId(null)//$myNode->getParentDsId())
                     ->setName($row['name'])
                     ->setParentName($myParentNode->getName());
                 $rootStructure->addStructure($structure);
@@ -171,7 +176,8 @@ class ElementStructureLoader
                         $structure
                             ->setId($row['id'])
                             ->setDsId($row['ds_id'])
-                            ->setParentDsId($myNode->getParentDsId())
+                            //->setParentId($myNode->getParentId())
+                            //->setParentDsId($myNode->getParentDsId())
                             ->setName($row['name'])
                             ->setParentName($myParentNode->getName());
                         /* @var $parentStructure ElementStructure */
@@ -207,7 +213,7 @@ class ElementStructureLoader
             }
         }
 
-        $this->map[$elementVersion->getElement()->getEid() . '_' . $elementVersion->getVersion()] = $rootStructure;
+        $this->map[$identifier] = $rootStructure;
 
         return $rootStructure;
     }

@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Controller;
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Diff;
+use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
@@ -215,8 +216,9 @@ class DataController extends Controller
             $fromElementStructure = $elementService->findElementStructure($fromElementVersion, $diffLanguage);
             $toElementVersion = $elementService->findElementVersion($element, $diffVersionTo);
             $toElementStructure = $elementService->findElementStructure($toElementVersion, $diffLanguage);
-            $differ = new Diff();
-            $elementStructure = $differ->diff($fromElementStructure, $toElementStructure);
+            $differ = new Differ();
+            $diff = $differ->diff($fromElementStructure, $toElementStructure);
+            $elementStructure = $elementService->findElementStructure($elementVersion, $language);
         } else {
             $elementStructure = $elementService->findElementStructure($elementVersion, $language);
         }

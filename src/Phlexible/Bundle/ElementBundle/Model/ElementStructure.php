@@ -30,7 +30,7 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @var int
      */
-    private $parentId;
+    private $repeatableId;
 
     /**
      * @var string
@@ -40,7 +40,7 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @var string
      */
-    private $parentDsId;
+    private $repeatableDsId;
 
     /**
      * @var string
@@ -105,9 +105,9 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @return int
      */
-    public function getParentId()
+    public function getRepeatableId()
     {
-        return $this->parentId;
+        return $this->repeatableId;
     }
 
     /**
@@ -115,9 +115,9 @@ class ElementStructure implements \IteratorAggregate
      *
      * @return $this
      */
-    public function setParentId($parentId)
+    public function setRepeatableId($parentId)
     {
-        $this->parentId = (int) $parentId;
+        $this->repeatableId = $parentId !== null ? (int) $parentId : null;
 
         return $this;
     }
@@ -145,9 +145,9 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @return string
      */
-    public function getParentDsId()
+    public function getRepeatableDsId()
     {
-        return $this->parentDsId;
+        return $this->repeatableDsId;
     }
 
     /**
@@ -155,9 +155,9 @@ class ElementStructure implements \IteratorAggregate
      *
      * @return $this
      */
-    public function setParentDsId($parentDsId)
+    public function setRepeatableDsId($parentDsId)
     {
-        $this->parentDsId = $parentDsId;
+        $this->repeatableDsId = $parentDsId;
 
         return $this;
     }
@@ -209,6 +209,10 @@ class ElementStructure implements \IteratorAggregate
      */
     public function addStructure(ElementStructure $elementStructure)
     {
+        $elementStructure
+            ->setRepeatableId($this->getId())
+            ->setRepeatableDsId($this->getDsId());
+
         $this->structures[] = $elementStructure;
 
         return $this;

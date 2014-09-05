@@ -94,9 +94,13 @@ class ElementtypeListener implements EventSubscriberInterface
             }
 
             $this->elementService->updateElement($element, false);
-            $this->elementService->updateElementVersion($elementVersion, false);
-            foreach ($elementStructures as $elementStructure) {
-                $this->elementService->updateElementStructure($elementStructure);
+            $this->elementService->updateElementVersion($elementVersion);
+            $this->elementService->updateElementStructure($elementStructures[$element->getMasterLanguage()]);
+            foreach ($elementStructures as $language => $elementStructure) {
+                if ($language === $element->getMasterLanguage()) {
+                    continue;
+                }
+                $this->elementService->updateElementStructure($elementStructure, true);
             }
         }
 
@@ -113,7 +117,14 @@ class ElementtypeListener implements EventSubscriberInterface
     {
         $elementStructure = new ElementStructure();
         $elementStructure
-            ->setElementVersion($elementVersion);
+            ->setId($structure->getId())
+            ->setDsId($structure->getDsId())
+            ->setName($structure->getName())
+            //->setParentId($structure->getParentId())
+            //->setParentDsId($structure->getParentDsId())
+            ->setParentName($structure->getParentName())
+            ->setElementVersion($elementVersion)
+        ;
 
         foreach ($structure->getValues() as $value) {
             $elementStructure->setValue($value);

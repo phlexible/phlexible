@@ -67,12 +67,6 @@ class ElementStructure
     private $count;
 
     /**
-     * @var bool
-     * @ORM\Column(name="repeatable_node", type="boolean", nullable=true)
-     */
-    private $repeatableNode = false;
-
-    /**
      * @var string
      * @ORM\Column(name="repeatable_id", type="string", length=255, nullable=true)
      */

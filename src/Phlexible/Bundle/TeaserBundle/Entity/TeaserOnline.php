@@ -31,7 +31,7 @@ class TeaserOnline
     /**
      * @var Teaser
      * @ORM\ManyToOne(targetEntity="Teaser")
-     * @ORM\JoinColumn(name="teaser_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="teaser_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $teaser;
 

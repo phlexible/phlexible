@@ -1,10 +1,10 @@
 Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, valueStructure, element, repeatableId) {
-    var store, storeMode;
-    if (item.component_function) {
+    var store, storeMode = 'remote';
+    if (item.options.source === 'component_function') {
         store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('elementtypes_selectfield_list'),
             baseParams: {
-                provider: item.component_function
+                provider: item.options.component_function
             },
             fields: ['key', 'value'],
             sortInfo: {
@@ -14,31 +14,25 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
             autoLoad: true,
             listeners: {
                 load: function () {
-                    newItem.setValue(item.rawContent);
+                    newItem.setValue(item.options.default_value);
                 },
                 scope: this
             }
         });
-    } else {
-        if (item.options) {
-            var options = [];
-            for (var i = 0; i < item.options.length; i++) {
-                options.push([item.options[i].key, item.options[i][Phlexible.Config.get('user.property.interfaceLanguage', 'en')]]);
+    } else if (item.options.source === 'list') {
+        var storeData = [];
+        if (item.options.source_list.length) {
+            for (var i = 0; i < item.options.source_list.length; i++) {
+                storeData.push([item.options.source_list[i].key, item.options.source_list[i][Phlexible.Config.get('user.property.interfaceLanguage', 'en')]]);
             }
-            store = new Ext.data.SimpleStore({
-                fields: ['key', 'value'],
-                data: options
-            });
-            storeMode = 'local';
         } else {
-            store = new Ext.data.SimpleStore({
-                fields: ['key', 'value'],
-                data: [
-                    ['no_valid_data', 'no_valid_data']
-                ]
-            });
-            storeMode = 'local';
+            storeData.push(['no_valid_data', 'no_valid_data']);
         }
+        store = new Ext.data.SimpleStore({
+            fields: ['key', 'value'],
+            data: storeData
+        });
+        storeMode = 'local';
     }
 
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);

@@ -112,7 +112,7 @@ class ElementtypeVersionManager implements ElementtypeVersionManagerInterface
 
         $this->entityManager->persist($elementtypeVersion);
         if ($flush) {
-            $this->entityManager->flush($elementtypeVersion);
+            $this->entityManager->flush();
         }
 
         $event = new ElementtypeVersionEvent($elementtypeVersion);

@@ -40,7 +40,13 @@ class ElementtypeAssetProvider implements AssetProviderInterface
     {
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate(
+                '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.Accordion.js'
+            )),
+            new FileAsset($this->locator->locate(
                 '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.DisplayField.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.Group.js'
             )),
             new FileAsset($this->locator->locate(
                 '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.LinkField.js'

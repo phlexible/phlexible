@@ -139,17 +139,30 @@ Phlexible.elements.ElementDataTabHelper = {
         });
 
         if (repeatableDsIds.length) {
-            Ext.each(valueStructure.structures, function(valueStructureNode) {
+            if (valueStructure.structures.length) {
+                Ext.each(valueStructure.structures, function(valueStructureNode) {
+                    Ext.each(repeatableDsIds, function(dsId) {
+                        if (valueStructureNode.dsId === dsId) {
+                            var pt = element.prototypes.getPrototype(valueStructureNode.dsId);
+                            var clonedStructureNode = Phlexible.clone(pt);
+                            clonedStructureNode.id = valueStructureNode.id;
+                            clonedStructureNode.valueStructure = valueStructureNode;
+                            currentStructureNodes.push(clonedStructureNode);
+                        }
+                    });
+                });
+            } else {
                 Ext.each(repeatableDsIds, function(dsId) {
-                    if (valueStructureNode.dsId === dsId) {
-                        var pt = element.prototypes.getPrototype(valueStructureNode.dsId);
-                        var clonedStructureNode = Phlexible.clone(pt);
-                        clonedStructureNode.id = valueStructureNode.id;
-                        clonedStructureNode.valueStructure = valueStructureNode;
-                        currentStructureNodes.push(clonedStructureNode);
+                    var pt = element.prototypes.getPrototype(dsId);
+                    var defaultRepeat = parseInt(pt.configuration.repeat_default, 10) || 0;
+                    if (defaultRepeat > 0) {
+                        for (var i=0; i<defaultRepeat; i++) {
+                            var clonedStructureNode = Phlexible.clone(pt);
+                            currentStructureNodes.push(clonedStructureNode);
+                        }
                     }
                 });
-            });
+            }
         }
 
         /*

@@ -281,9 +281,10 @@ class ElementService
 
     /**
      * @param ElementStructure $elementStructure
+     * @param bool             $onlyValues
      */
-    public function updateElementStructure(ElementStructure $elementStructure)
+    public function updateElementStructure(ElementStructure $elementStructure, $onlyValues = false)
     {
-        $this->elementStructureManager->updateElementStructure($elementStructure);
+        $this->elementStructureManager->updateElementStructure($elementStructure, $onlyValues);
     }
 }

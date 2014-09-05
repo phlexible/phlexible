@@ -105,10 +105,10 @@ class TreeSaver
         }
 
         $this->elementtypeService->updateElementtype($elementtype, false);
-        $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, false);
+        $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, true);
 
         if ($elementtypeStructure) {
-            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, false);
+            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, true);
         }
 
         // update elementtypes that use this elementtype as reference
@@ -165,9 +165,9 @@ class TreeSaver
                 $elementtypeStructure->addNode($node);
             }
 
-            $this->elementtypeService->updateElementtype($elementtype, false);
-            $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, false);
-            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure);
+            $this->elementtypeService->updateElementtype($elementtype, true);
+            $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, true);
+            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, true);
         }
     }
 
@@ -207,7 +207,23 @@ class TreeSaver
         return $elementtypeStructure;
     }
 
-    private function iterateData(ElementtypeVersion $elementtypeVersion, ElementtypeStructure $elementtypeStructure, ElementtypeStructureNode $rootNode, UserInterface $user, $sort, array $data)
+    /**
+     * @param ElementtypeVersion       $elementtypeVersion
+     * @param ElementtypeStructure     $elementtypeStructure
+     * @param ElementtypeStructureNode $rootNode
+     * @param UserInterface            $user
+     * @param int                      $sort
+     * @param array                    $data
+     *
+     * @return mixed
+     */
+    private function iterateData(
+        ElementtypeVersion $elementtypeVersion,
+        ElementtypeStructure $elementtypeStructure,
+        ElementtypeStructureNode $rootNode,
+        UserInterface $user,
+        $sort,
+        array $data)
     {
         foreach ($data as $row) {
             if (!$row['parent_ds_id']) {

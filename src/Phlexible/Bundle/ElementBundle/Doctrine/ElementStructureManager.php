@@ -75,21 +75,22 @@ class ElementStructureManager implements ElementStructureManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateElementStructure(ElementStructure $elementStructure)
+    public function updateElementStructure(ElementStructure $elementStructure, $onlyValues = false)
     {
         $conn = $this->entityManager->getConnection();
 
-        $this->insertStructure($elementStructure, $conn, true);
+        $this->insertStructure($elementStructure, $conn, $onlyValues, true);
     }
 
     /**
      * @param ElementStructure $elementStructure
      * @param Connection       $conn
+     * @param bool             $onlyValues
      * @param bool             $isRoot
      */
-    private function insertStructure(ElementStructure $elementStructure, Connection $conn, $isRoot = false)
+    private function insertStructure(ElementStructure $elementStructure, Connection $conn, $onlyValues, $isRoot = false)
     {
-        if (!$isRoot) {
+        if (!$isRoot && !$onlyValues) {
             $conn->insert(
                 'element_structure',
                 array(
@@ -100,35 +101,35 @@ class ElementStructureManager implements ElementStructureManagerInterface
                     'type'             => 'group',//$elementStructure->getType(),
                     'name'             => $elementStructure->getName(),
                     'cnt'              => 0,
-                    'repeatable_node'  => 1,
-                    'repeatable_id'    => $elementStructure->getParentId(),
-                    'repeatable_ds_id' => $elementStructure->getParentDsId(),
+                    'repeatable_id'    => $elementStructure->getRepeatableId() ?: null,
+                    'repeatable_ds_id' => $elementStructure->getRepeatableDsId() ?: null,
                     'sort'             => 0,
                 )
             );
         }
 
         foreach ($elementStructure->getValues() as $elementStructureValue) {
-            $conn->insert(
-                'element_structure_value',
-                array(
-                    'data_id'          => $elementStructureValue->getId(),
-                    'eid'              => $elementStructure->getElementVersion()->getElement()->getEid(),
-                    'version'          => $elementStructure->getElementVersion()->getVersion(),
-                    'language'         => $elementStructureValue->getLanguage(),
-                    'ds_id'            => $elementStructureValue->getDsId(),
-                    'type'             => $elementStructureValue->getType(),
-                    'name'             => $elementStructureValue->getName(),
-                    'repeatable_id'    => $elementStructure->getId(),
-                    'repeatable_ds_id' => $elementStructure->getDsId(),
-                    'content'          => $elementStructureValue->getValue(),
-                    'options'          => !empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null,
-                )
-            );
+            if (strlen(trim($elementStructureValue->getValue()))) {
+                $conn->insert(
+                    'element_structure_value',
+                    array(
+                        'data_id'          => $elementStructureValue->getId(),
+                        'eid'              => $elementStructure->getElementVersion()->getElement()->getEid(),
+                        'version'          => $elementStructure->getElementVersion()->getVersion(),
+                        'language'         => $elementStructureValue->getLanguage(),
+                        'ds_id'            => $elementStructureValue->getDsId(),
+                        'type'             => $elementStructureValue->getType(),
+                        'name'             => $elementStructureValue->getName(),
+                        'repeatable_id'    => $elementStructure->getId() ?: null,
+                        'repeatable_ds_id' => $elementStructure->getDsId() ?: null,
+                        'content'          => trim($elementStructureValue->getValue()),
+                        'options'          => !empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null,
+                    )
+                );}
         }
 
         foreach ($elementStructure->getStructures() as $childStructure) {
-            $this->insertStructure($childStructure, $conn);
+            $this->insertStructure($childStructure, $conn, $onlyValues);
         }
     }
 }

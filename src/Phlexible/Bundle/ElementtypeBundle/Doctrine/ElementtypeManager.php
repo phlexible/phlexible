@@ -120,7 +120,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
 
             $this->entityManager->persist($elementtype);
             if ($flush) {
-                $this->entityManager->flush($elementtype);
+                $this->entityManager->flush();
             }
 
             $event = new ElementtypeEvent($elementtype);
@@ -137,7 +137,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
 
             $this->entityManager->persist($elementtype);
             if ($flush) {
-                $this->entityManager->flush($elementtype);
+                $this->entityManager->flush();
             }
 
             $event = new ElementtypeEvent($elementtype);
@@ -163,6 +163,10 @@ class ElementtypeManager implements ElementtypeManagerInterface
         }
 
         $this->entityManager->remove($elementtype);
+
+        if ($flush) {
+            $this->entityManager->flush();
+        }
 
         // send message
         $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" deleted.');

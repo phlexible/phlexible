@@ -108,7 +108,7 @@ class ElementVersionManager implements ElementVersionManagerInterface
             }
 
             if ($flush) {
-                $this->entityManager->flush($elementVersion);
+                $this->entityManager->flush();
             }
 
             $event = new ElementVersionEvent($elementVersion);
@@ -128,7 +128,7 @@ class ElementVersionManager implements ElementVersionManagerInterface
             }
 
             if ($flush) {
-                $this->entityManager->flush($elementVersion);
+                $this->entityManager->flush();
             }
 
             $event = new ElementVersionEvent($elementVersion);

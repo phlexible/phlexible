@@ -48,6 +48,7 @@ Phlexible.fields.FieldHelper = {
         if (repeatableId) {
             name += '__' + repeatableId;
         }
+        console.info(name);
 
         var config = {
             name: name,
