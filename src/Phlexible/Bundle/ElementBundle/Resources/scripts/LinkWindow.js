@@ -325,7 +325,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                             value.eid = node.attributes.eid;
                         }
                         if (formPanel.getComponent(5).getValue()) {
-                            value.language = formPanel.getComponent(5).getValue() + ';';
+                            value.language = formPanel.getComponent(5).getValue();
                         }
                         if (formPanel.getComponent(4).getValue()) {
                             value.newWindow = true;
@@ -343,7 +343,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                             value.eid = node.attributes.eid;
                         }
                         if (formPanel.getComponent(5).getValue()) {
-                            value.language = formPanel.getComponent(5).getValue() + ';';
+                            value.language = formPanel.getComponent(5).getValue();
                         }
                         if (formPanel.getComponent(4).getValue()) {
                             value.newWindow = true;
@@ -357,7 +357,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         value.type = 'external';
                         value.url = display;
                         if (formPanel.getComponent(5).getValue()) {
-                            value.language = formPanel.getComponent(5).getValue() + ';';
+                            value.language = formPanel.getComponent(5).getValue();
                         }
                         if (formPanel.getComponent(4).getValue()) {
                             value.newWindow = true;

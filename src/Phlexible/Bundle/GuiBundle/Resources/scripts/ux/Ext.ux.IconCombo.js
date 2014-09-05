@@ -40,7 +40,10 @@ Ext.ux.IconCombo = Ext.extend(Ext.form.ComboBox, {
         var rec = this.store.getAt(index);
 //        var rec = this.store.query(this.valueField, this.getValue()).itemAt(0);
 
-        this.iconClsValue = 'x-icon-combo-icon ' + rec.get(this.iconClsField);
+        this.iconClsValue = 'x-icon-combo-icon';
+        if (rec) {
+            this.iconClsValue += ' ' + rec.get(this.iconClsField);
+        }
 
         if (rec && this.icon) {
             this.icon.className = this.iconClsValue;
