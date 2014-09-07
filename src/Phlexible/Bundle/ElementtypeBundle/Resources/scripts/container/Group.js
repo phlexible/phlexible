@@ -10,13 +10,6 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
 
     element.prototypes.incCount(item.dsId, parentConfig.id);
 
-    // Phlexible.console.log(item.dsId + ' ' + item.name + ' ' + this.ids[item.dsId]);
-
-    // var test = new Ext.form.Textfield({
-    //     inputType: 'hidden',
-    //     name: 'group_' + item.dsId + '_' + this.ids[item.dsId]
-    // });
-
     var groupId = null;
     var name = null;
     if (isOptional || isRepeatable) {
@@ -33,8 +26,6 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
         }
         repeatableId = groupId;
     }
-
-    console.info(name);
 
     var config = {
         xtype: 'group',

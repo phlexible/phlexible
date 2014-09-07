@@ -11,7 +11,7 @@ Ext.ux.form.Group = Ext.extend(Ext.Panel, {
         Ext.ux.form.Group.superclass.initComponent.call(this);
 
         this.on({
-            add: function (me, comp) {
+            xadd: function (me, comp) {
                 if (this.isMaster && this.isSortable && !this.isDiff) {
                     comp.on('render', function (comp) {
                         this.xsortable.enableElement(comp.id);
@@ -55,12 +55,16 @@ Ext.ux.form.Group = Ext.extend(Ext.Panel, {
             this.body.createChild({ tag: 'div', cls: 'x-form-helptext', html: this.helpText });
         }
 
+        if (this.ownerCt.isMaster && this.ownerCt.isSortable && !this.ownerCt.isDiff) {
+            this.ownerCt.xsortable.enableElement(this.id);
+        }
+
         // sortable handler
         if (this.isMaster && this.isSortable && !this.isDiff) {
             this.xsortable = new Ext.ux.Sortable({
                 container: this.body.id,
                 handles: true,
-                autoEnable: false,
+                autoEnable: true,
                 tagName: 'div',
                 className: 'p-fields-group-sortable p-sortable-' + this.body.id,
                 dragGroups: [
@@ -192,7 +196,7 @@ Ext.ux.form.Group = Ext.extend(Ext.Panel, {
                     var pos = this.ownerCt.items.items.indexOf(this);
 
                     var factory = Phlexible.fields.Registry.getFactory('group');
-                    var config = factory(this.ownerCt, pt, {structures: [], values: []}, this.element, this.repeatableId);
+                    var config = factory(this.ownerCt, pt, {structures: [], values: []}, this.element, this.ownerCt.repeatableId);
                     this.ownerCt.insert(pos + 1, config);
 
                     this.ownerCt.doLayout();
