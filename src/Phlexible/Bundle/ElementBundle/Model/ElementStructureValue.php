@@ -217,5 +217,13 @@ class ElementStructureValue
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function decode()
+    {
+        return json_decode($this->getValue());
+    }
 }
 

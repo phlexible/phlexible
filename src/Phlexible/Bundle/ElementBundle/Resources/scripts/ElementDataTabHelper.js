@@ -6,7 +6,7 @@ Phlexible.elements.ElementDataTabHelper = {
      * @returns {Array}
      */
     fixStructure: function(structureNodes, valueStructure) {
-        if (structureNodes[0].type === 'root') {
+        if (structureNodes[0].type === 'root' || structureNodes[0].type === 'referenceroot') {
             structureNodes = structureNodes[0].children;
         }
 
