@@ -120,7 +120,7 @@ Ext.ux.form.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
             return false;
         }
 
-        if (hiddenValue.length < 1 || hiddenValue === this.emptyText) { // if it's blank
+        if (hiddenValue === undefined || hiddenValue === null || hiddenValue.length < 1 || hiddenValue === this.emptyText) { // if it's blank
             if (this.allowBlank) {
                 this.clearInvalid();
                 return true;

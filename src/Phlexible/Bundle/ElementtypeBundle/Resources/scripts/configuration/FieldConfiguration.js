@@ -108,10 +108,12 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
                 xtype: 'elementtypes-configuration-field-configuration-link',
                 additional: true
             },
+            /*
             {
                 xtype: 'elementtypes-configuration-field-configuration-select',
                 additional: true
             },
+            */
             {
                 xtype: 'elementtypes-configuration-field-configuration-suggest',
                 additional: true

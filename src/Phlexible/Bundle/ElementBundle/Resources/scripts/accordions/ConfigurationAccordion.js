@@ -39,79 +39,91 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
                 boxLabel: this.strings.use_https
             },{
                 // 3
-                xtype: 'textfield',
-                name: 'route',
-                fieldLabel: this.strings.route
+                xtype: 'label',
+                text: this.strings.route
             },{
                 // 4
                 xtype: 'textfield',
-                name: 'controller',
-                fieldLabel: this.strings.controller
+                name: 'route',
+                hideLabel: true
             },{
                 // 5
+                xtype: 'label',
+                text: this.strings.controller
+            },{
+                // 6
+                xtype: 'textfield',
+                name: 'controller',
+                hideLabel: true
+            },{
+                // 7
+                xtype: 'label',
+                text: this.strings.template
+            },{
+                // 8
                 xtype: 'textfield',
                 name: 'template',
-                fieldLabel: this.strings.template
+                hideLabel: true
             },
             {
-                // 6
+                // 9
                 xtype: 'label',
                 text: this.strings.robots,
                 style: 'font-weight: bold;'
             },
             {
-                // 7
+                // 10
                 xtype: 'checkbox',
                 name: 'robotsNoIndex',
                 hideLabel: true,
                 boxLabel: this.strings.robots_no_index
             },
             {
-                // 8
+                // 11
                 xtype: 'checkbox',
                 name: 'robotsNoFollow',
                 hideLabel: true,
                 boxLabel: this.strings.robots_no_follow
             },
             {
-                // 9
+                // 12
                 xtype: 'label',
                 text: this.strings.internal_search,
                 style: 'font-weight: bold;'
             },
             {
-                // 10
+                // 13
                 xtype: 'checkbox',
                 name: 'searchNoIndex',
                 hideLabel: true,
                 boxLabel: this.strings.search_no_index
             },
             {
-                // 11
+                // 14
                 xtype: 'label',
                 text: this.strings.caching,
                 style: 'font-weight: bold;'
             },
             {
-                // 12
+                // 15
                 xtype: 'checkbox',
                 name: 'noCache',
                 hideLabel: true,
                 boxLabel: this.strings.no_cache
             },{
-                // 13
+                // 16
                 xtype: 'checkbox',
                 name: 'cachePrivate',
                 hideLabel: true,
                 boxLabel: this.strings.private
             },{
-                // 14
+                // 17
                 xtype: 'numberfield',
                 name: 'cacheMaxAge',
                 fieldLabel: this.strings.max_age,
                 width: 60
             },{
-                // 15
+                // 18
                 xtype: 'numberfield',
                 name: 'cacheSharedMaxAge',
                 fieldLabel: this.strings.shared_max_age,
@@ -143,20 +155,26 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
             this.getComponent(0).hide();
             this.getComponent(2).hide();
             this.getComponent(3).hide();
+            this.getComponent(4).hide();
+            this.getComponent(5).hide();
             this.getComponent(6).hide();
-            this.getComponent(7).hide();
-            this.getComponent(8).hide();
             this.getComponent(9).hide();
             this.getComponent(10).hide();
+            this.getComponent(11).hide();
+            this.getComponent(12).hide();
+            this.getComponent(13).hide();
         } else {
             this.getComponent(0).show();
             this.getComponent(2).show();
             this.getComponent(3).show();
+            this.getComponent(4).show();
+            this.getComponent(5).show();
             this.getComponent(6).show();
-            this.getComponent(7).show();
-            this.getComponent(8).show();
             this.getComponent(9).show();
             this.getComponent(10).show();
+            this.getComponent(11).show();
+            this.getComponent(12).show();
+            this.getComponent(13).show();
         }
 
         this.show();

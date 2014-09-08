@@ -35,7 +35,7 @@ Phlexible.elementtypes.configuration.FieldConfigurationSuggest = Ext.extend(Ext.
     },
 
     updateVisibility: function (type) {
-        console.warn(type);
+        this.getComponent(0).setDisabled(type !== 'suggest');
         this.setVisible(type === 'suggest');
     },
 
