@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
+use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
@@ -96,6 +97,8 @@ class ElementStructureManager implements ElementStructureManagerInterface
         $conn = $this->entityManager->getConnection();
 
         $this->insertStructure($elementStructure, $conn, $onlyValues, true);
+
+        $this->insertLinks($elementStructure);
     }
 
     /**
@@ -162,6 +165,38 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
         foreach ($elementStructure->getStructures() as $childStructure) {
             $this->insertStructure($childStructure, $conn, $onlyValues);
+        }
+    }
+
+    /**
+     * @param ElementStructure $elementStructure
+     */
+    private function insertLinks(ElementStructure $elementStructure)
+    {
+        foreach ($elementStructure->getValues() as $elementStructureValue) {
+            if (strlen(trim($elementStructureValue->getValue()))) {
+                if ($elementStructureValue->getType() === 'link') {
+                    $link = new ElementLink();
+                    $link
+                        ->setElementVersion($elementStructure->getElementVersion())
+                        ->setLanguage($elementStructureValue->getLanguage())
+                        ->setType('link')
+                        ->setField($elementStructureValue->getName())
+                        ->setTarget($elementStructureValue->getValue());
+                } elseif ($elementStructureValue->getType() === 'image') {
+                    $link = new ElementLink();
+                    $link
+                        ->setElementVersion($elementStructure->getElementVersion())
+                        ->setLanguage($elementStructureValue->getLanguage())
+                        ->setType('file')
+                        ->setField($elementStructureValue->getName())
+                        ->setTarget($elementStructureValue->getValue());
+                }
+            }
+        }
+
+        foreach ($elementStructure->getStructures() as $childStructure) {
+            $this->insertLinks($childStructure);
         }
     }
 }

@@ -15,9 +15,13 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Field;
  */
 class VideoField extends AbstractField
 {
-    const TYPE = 'video';
-    public $options = false;
-    public $icon = 'p-frontendmedia-field_video-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-frontendmedia-field_video-icon';
+    }
 
     /**
      * Transform item values

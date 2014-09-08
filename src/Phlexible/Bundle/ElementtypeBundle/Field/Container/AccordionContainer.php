@@ -15,6 +15,11 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field\Container;
  */
 class AccordionContainer extends AbstractContainer
 {
-    protected $type = 'accordion';
-    protected $icon = 'p-elementtype-container_accordion-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-container_accordion-icon';
+    }
 }

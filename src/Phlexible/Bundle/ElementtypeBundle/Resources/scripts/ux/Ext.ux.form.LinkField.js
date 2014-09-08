@@ -102,10 +102,6 @@ Ext.ux.form.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
     getValue: function() {
         var value = Ext.ux.form.LinkField.superclass.getValue.call(this);
         return value;
-        if (value) {
-            value = Ext.decode(value);
-        }
-        return value;
     },
 
     validateValue: function (value) {

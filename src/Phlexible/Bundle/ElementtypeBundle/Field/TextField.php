@@ -15,27 +15,11 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  */
 class TextField extends AbstractField
 {
-    protected $icon = 'p-elementtype-field_text-icon';
-
     /**
-     * Transform item values
-     *
-     * @param array $item
-     * @param array $media
-     * @param array $options
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    protected function _transform(array $item, array $media, array $options)
+    public function getIcon()
     {
-        if (strlen($options['default_value'])) {
-            $item['default_content'] = $options['default_value'];
-
-            if ($item['data_content'] === null) {
-                $item['data_content'] = $options['default_value'];
-            }
-        }
-
-        return $item;
+        return 'p-elementtype-field_text-icon';
     }
 }

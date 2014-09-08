@@ -27,14 +27,13 @@ Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, value
     });
 
     if (config.value) {
-        var value = Ext.decode(config.value);
-        config.hiddenValue = value;
-        if (value.type === 'external') {
-            config.value = value.url;
-        } else if (value.type === 'mailto') {
-            config.value = value.recipient;
+        config.hiddenValue = config.value;
+        if (config.value.type === 'external') {
+            config.value = config.value.url;
+        } else if (config.value.type === 'mailto') {
+            config.value = config.value.recipient;
         } else {
-            config.value = value.tid;
+            config.value = config.value.tid;
         }
     }
 

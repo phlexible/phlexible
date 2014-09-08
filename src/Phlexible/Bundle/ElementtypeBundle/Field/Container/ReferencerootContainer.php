@@ -15,6 +15,11 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field\Container;
  */
 class ReferencerootContainer extends AbstractContainer
 {
-    protected $type = 'referenceroot';
-    protected $icon = 'p-elementtype-container_referenceroot-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-container_referenceroot-icon';
+    }
 }

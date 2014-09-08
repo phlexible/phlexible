@@ -15,5 +15,11 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  */
 class TimecodeField extends TextField
 {
-    protected $icon = 'p-elementtype-field_timecodefield-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-field_timecodefield-icon';
+    }
 }

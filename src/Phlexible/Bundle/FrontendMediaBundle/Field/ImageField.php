@@ -15,9 +15,13 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Field;
  */
 class ImageField extends AbstractField
 {
-    const TYPE = 'image';
-    public $options = false;
-    public $icon = 'p-frontendmedia-field_image-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-frontendmedia-field_image-icon';
+    }
 
     /**
      * Transform item values

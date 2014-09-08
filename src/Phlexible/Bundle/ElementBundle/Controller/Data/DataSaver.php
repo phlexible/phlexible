@@ -19,6 +19,7 @@ use Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager;
 use Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
+use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
@@ -76,7 +77,7 @@ class DataSaver
     private $availableLanguages;
 
     /**
-     * @var array
+     * @var ElementStructure[]
      */
     private $structures = array();
 
@@ -97,10 +98,10 @@ class DataSaver
         $availableLanguages)
     {
         $this->elementService = $elementService;
+        $this->fieldMapper = $fieldMapper;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
         $this->dispatcher = $dispatcher;
-        $this->fieldMapper = $fieldMapper;
         $this->availableLanguages = explode(',', $availableLanguages);
     }
 
@@ -463,7 +464,7 @@ class DataSaver
                 $node = $elementtypeStructure->getNode($dsId);
                 $options = null;
                 $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
-                $elementStructure = $this->findGroup($repeatableIdentifier);
+                $elementStructure = $this->structures[$repeatableIdentifier];
                 $elementStructure->setValue($elementStructureValue);
             } elseif (preg_match('/^field-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match)) {
                 // new root value
@@ -473,11 +474,11 @@ class DataSaver
                 $node = $elementtypeStructure->getNode($dsId);
                 $options = null;
                 $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
-                $elementStructure = $this->findGroup($repeatableIdentifier);
+                $elementStructure = $this->structures[$repeatableIdentifier];
                 $elementStructure->setValue($elementStructureValue);
             } elseif (preg_match('/^group-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
                 // existing repeatable group
-                $parent = $this->findGroup($repeatableIdentifier);
+                $parent = $this->structures[$repeatableIdentifier];
                 $dsId = $match[1];
                 $id = $match[2];
                 $node = $elementtypeStructure->getNode($dsId);
@@ -493,7 +494,7 @@ class DataSaver
                 $parent->addStructure($elementStructure);
             } elseif (preg_match('/^group-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match)) {
                 // new repeatable group
-                $parent = $this->findGroup($repeatableIdentifier);
+                $parent = $this->structures[$repeatableIdentifier];
                 $dsId = $match[1];
                 $foundId = $match[2];
                 $id = $this->elementService->getElementStructureManager()->getNextStructureId();
@@ -522,19 +523,6 @@ class DataSaver
     private function findGroup($identifier)
     {
         return $this->structures[$identifier];
-        if (preg_match('/^group-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
-            // existing repeatable group
-            $dsId = $match[1];
-            $id = $match[2];
-            return $this->structures[$id];
-        } elseif (preg_match('/^group-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match)) {
-            // new repeatable group
-            $dsId = $match[1];
-            $id = $match[2];
-            return $this->structures[$id];
-        } else {
-            return $this->structures[null];
-        }
     }
 
     /**

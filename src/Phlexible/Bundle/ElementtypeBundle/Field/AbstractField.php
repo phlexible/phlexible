@@ -15,35 +15,63 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  */
 abstract class AbstractField extends Field
 {
-    protected $isField = true;
-    protected $isContainer = true;
-    protected $hasContent = true;
-    protected $hasOptions = false;
+    /**
+     * {@inheritdoc}
+     */
+    public function isContainer()
+    {
+        return false;
+    }
 
     /**
-     * @var string
+     * {@inheritdoc}
      */
-    protected $dataType = 'string';
+    public function isField()
+    {
+        return true;
+    }
 
     /**
      * @return string
      */
     public function getDataType()
     {
-        return $this->dataType;
+        return 'string';
     }
 
     /**
-     * Transform item values
+     * @param string $value
      *
-     * @param array $item
-     * @param array $media
-     * @param array $options
-     *
-     * @return array
+     * @return mixed
      */
-    protected function _transform(array $item, array $media, array $options)
+    public function fromRaw($value)
     {
-        return $item;
+        $type = $this->getDataType();
+
+        if ($type === 'array') {
+            $value = json_decode($value, true);
+        } elseif ($type === 'boolean') {
+            $value = (bool) $value;
+        } elseif ($type === 'integer') {
+            $value = (int) $value;
+        } elseif ($type === 'float') {
+            $value = (float) $value;
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return string
+     */
+    public function toRaw($value)
+    {
+        if ($this->getDataType() === 'array') {
+            return json_encode($value);
+        }
+
+        return $value;
     }
 }

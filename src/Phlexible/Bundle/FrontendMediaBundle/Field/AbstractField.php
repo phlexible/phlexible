@@ -18,9 +18,13 @@ use Phlexible\Component\Formatter\FilesizeFormatter;
  */
 class AbstractField extends BaseAbstractField
 {
-    const TYPE = 'image';
-    public $options = false;
-    public $icon = 'm-frontendmediamanager-field_image-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getDataType()
+    {
+        return 'string';
+    }
 
     /**
      * Transform item values

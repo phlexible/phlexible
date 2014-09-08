@@ -15,5 +15,11 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  */
 class TimeField extends AbstractField
 {
-    protected $icon = 'p-elementtype-field_time-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-field_time-icon';
+    }
 }

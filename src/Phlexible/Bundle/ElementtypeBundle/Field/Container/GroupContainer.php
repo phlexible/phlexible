@@ -15,6 +15,11 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field\Container;
  */
 class GroupContainer extends AbstractContainer
 {
-    protected $type = 'group';
-    protected $icon = 'p-elementtype-container_group-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-container_group-icon';
+    }
 }

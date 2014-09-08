@@ -15,6 +15,11 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field\Container;
  */
 class TabContainer extends AbstractContainer
 {
-    protected $type = 'tab';
-    protected $icon = 'p-elementtype-container_tab-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-container_tab-icon';
+    }
 }

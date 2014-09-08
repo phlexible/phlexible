@@ -15,5 +15,20 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  */
 class NumberField extends AbstractField
 {
-    protected $icon = 'p-elementtype-field_number-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-field_number-icon';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDataType()
+    {
+        return 'float';
+    }
+
 }

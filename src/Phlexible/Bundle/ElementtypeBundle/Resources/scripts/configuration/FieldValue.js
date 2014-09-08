@@ -321,9 +321,6 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
                 item.reset();
             }
         });
-        //if (fieldType.config.values.default_checkbox) {
-        //    this.getComponent(5).setValue(fieldData.default_value);
-        //}
 
         if (fieldType.config.values.source_single) {
             this.getValueGrid().loadData('single', fieldData.source_list, fieldData.default_value);

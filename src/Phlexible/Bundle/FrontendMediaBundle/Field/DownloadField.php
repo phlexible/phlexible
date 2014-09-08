@@ -15,8 +15,13 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Field;
  */
 class DownloadField extends AbstractField
 {
-    const TYPE = 'download';
-    public $icon = 'p-frontendmedia-field_download-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-frontendmedia-field_download-icon';
+    }
 
     /**
      * Transform item values

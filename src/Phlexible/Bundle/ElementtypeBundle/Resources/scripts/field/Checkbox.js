@@ -7,7 +7,7 @@ Phlexible.fields.Registry.addFactory('checkbox', function (parentConfig, item, v
         checked: config.value,
 
         submitOffValue: '',
-        submitOnValue: 'on',
+        submitOnValue: '1',
 
         supportsPrefix: true,
         supportsSuffix: true,
@@ -61,7 +61,7 @@ Phlexible.fields.FieldTypes.addField('checkbox', {
             default_checkbox: 1,
             default_table: 0,
             source: 0,
-            source_single: 1,
+            source_single: 0,
             source_values: 1,
             source_function: 0,
             source_datasource: 0,

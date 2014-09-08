@@ -15,5 +15,11 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  */
 class PasswordField extends TextField
 {
-    protected $icon = 'p-elementtype-field_password-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-field_password-icon';
+    }
 }

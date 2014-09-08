@@ -15,26 +15,11 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  */
 class DisplayField extends AbstractField
 {
-    protected $icon = 'p-elementtype-field_display-icon';
-
     /**
-     * Transform item values
-     *
-     * @param array $item
-     * @param array $media
-     * @param array $options
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    protected function _transform(array $item, array $media, array $options)
+    public function getIcon()
     {
-        $interfaceLang = MWF_Env::getUser()->getInterfaceLanguage();
-
-        if (!$item['data_content'] && !empty($options['text_' . $interfaceLang])) {
-            $item['data_content'] = $options['text_' . $interfaceLang];
-        }
-
-        return $item;
+        return 'p-elementtype-field_display-icon';
     }
-
 }

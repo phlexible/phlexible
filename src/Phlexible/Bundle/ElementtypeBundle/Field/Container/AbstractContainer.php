@@ -17,21 +17,19 @@ use Phlexible\Bundle\ElementtypeBundle\Field\Field;
  */
 abstract class AbstractContainer extends Field
 {
-    protected $isContainer = true;
-    protected $isField = false;
-    protected $hasContent = false;
+    /**
+     * {@inheritdoc}
+     */
+    public function isContainer()
+    {
+        return true;
+    }
 
     /**
-     * Transform item values
-     *
-     * @param array $item
-     * @param array $media
-     * @param array $options
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    protected function _transform(array $item, array $media, array $options)
+    public function isField()
     {
-        return $item;
+        return false;
     }
 }

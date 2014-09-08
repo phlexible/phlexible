@@ -13,7 +13,13 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class TextareaField extends AbstractField
+class TextareaField extends TextField
 {
-    protected $icon = 'p-elementtype-field_textarea-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-field_textarea-icon';
+    }
 }

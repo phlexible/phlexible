@@ -121,17 +121,7 @@ class ElementStructureLoader
 
                 if (isset($dataRows[$row['id']])) {
                     foreach ($dataRows[$row['id']] as $dataRow) {
-                        $structure->setValue(
-                            new ElementStructureValue(
-                                $dataRow['id'],
-                                $dataRow['ds_id'],
-                                $dataRow['language'],
-                                $dataRow['type'],
-                                $dataRow['name'],
-                                $dataRow['value'],
-                                $dataRow['options']
-                            )
-                        );
+                        $structure->setValue($this->createValue($dataRow));
                     }
                 }
             }
@@ -139,17 +129,7 @@ class ElementStructureLoader
 
         if (isset($dataRows[null])) {
             foreach ($dataRows[null] as $dataRow) {
-                $rootStructure->setValue(
-                    new ElementStructureValue(
-                        $dataRow['id'],
-                        $dataRow['ds_id'],
-                        $dataRow['language'],
-                        $dataRow['type'],
-                        $dataRow['name'],
-                        $dataRow['value'],
-                        $dataRow['options']
-                    )
-                );
+                $rootStructure->setValue($this->createValue($dataRow));
             }
         }
 
@@ -195,17 +175,7 @@ class ElementStructureLoader
 
                         if (isset($dataRows[$row['id']])) {
                             foreach ($dataRows[$row['id']] as $dataRow) {
-                                $structure->setValue(
-                                    new ElementStructureValue(
-                                        $dataRow['id'],
-                                        $dataRow['ds_id'],
-                                        $dataRow['language'],
-                                        $dataRow['type'],
-                                        $dataRow['name'],
-                                        $dataRow['value'],
-                                        $dataRow['options']
-                                    )
-                                );
+                                $structure->setValue($this->createValue($dataRow));
                             }
                         }
                     }
@@ -216,6 +186,28 @@ class ElementStructureLoader
         $this->map[$identifier] = $rootStructure;
 
         return $rootStructure;
+    }
+
+    /**
+     * @param array $dataRow
+     *
+     * @return ElementStructureValue
+     */
+    private function createValue(array $dataRow)
+    {
+        $field = $this->fieldRegistry->getField($dataRow['type']);
+
+        $value = $field->fromRaw($dataRow['value']);
+
+        return new ElementStructureValue(
+            $dataRow['id'],
+            $dataRow['ds_id'],
+            $dataRow['language'],
+            $dataRow['type'],
+            $dataRow['name'],
+            $value,
+            $dataRow['options']
+        );
     }
 
     /**

@@ -13,7 +13,13 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class EditorField extends AbstractField
+class EditorField extends TextField
 {
-    protected $icon = 'p-elementtype-field_editor-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-field_editor-icon';
+    }
 }

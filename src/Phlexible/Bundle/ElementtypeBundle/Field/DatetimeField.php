@@ -15,5 +15,20 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
  */
 class DatetimeField extends AbstractField
 {
-    public $icon = 'p-elementtype-field_datetime-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-elementtype-field_datetime-icon';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDataType()
+    {
+        return 'datetime';
+    }
+
 }

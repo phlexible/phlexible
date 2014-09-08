@@ -15,9 +15,13 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Field;
  */
 class FolderField extends AbstractField
 {
-    const TYPE = 'image';
-    public $options = false;
-    public $icon = 'p-frontendmedia-field_folder-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-frontendmedia-fieldfield_folder_flash-icon';
+    }
 
     /**
      * Transform item values

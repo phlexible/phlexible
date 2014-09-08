@@ -5,7 +5,7 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
     plain: false,
     autoHeight: false,
     border: false,
-    autoScroll: true,
+    autoScroll: false,
     autoWidth: false,
     deferredRender: false,
     hideMode: 'offsets',

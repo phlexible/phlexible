@@ -15,8 +15,13 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Field;
  */
 class FlashField extends AbstractField
 {
-    const TYPE = 'flash';
-    public $icon = 'p-frontendmedia-field_flash-icon';
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return 'p-frontendmedia-field_flash-icon';
+    }
 
     /**
      * Transform item values
