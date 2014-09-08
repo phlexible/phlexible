@@ -1,0 +1,25 @@
+services:
+    phlexible_element.link_extractor:
+        class: Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor
+        arguments:
+            - @phlexible_elementtype.field.registry
+            -
+                - @phlexible_element.link_extractor.link_field
+                - @phlexible_element.link_extractor.media
+                - @phlexible_element.link_extractor.text
+
+    # link extractor
+    phlexible_element.link_extractor.link_field:
+        class: Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkFieldLinkExtractor
+        tags:
+            - {name: phlexible_element.link_extractor}
+
+    phlexible_element.link_extractor.media:
+            class: Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\MediaLinkExtractor
+            tags:
+                - {name: phlexible_element.link_extractor}
+
+    phlexible_element.link_extractor.text:
+            class: Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\TextLinkExtractor
+            tags:
+                - {name: phlexible_element.link_extractor}

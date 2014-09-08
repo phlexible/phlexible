@@ -39,17 +39,21 @@ class LinksController extends Controller
         $displayLanguage = $language;
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
+        $linkRepository = $this->getDoctrine()->getRepository('PhlexibleElementBundle:ElementLink');
+
         $tree = $treeManager->getByNodeId($tid);
         $node = $tree->get($tid);
 
-        $linkRepository = $this->getDoctrine()->getRepository('PhlexibleElementBundle:ElementLink');
+        $element = $elementService->findElement($node->getTypeId());
+        $elementVersion = $elementService->findElementVersion($element, $version);
 
         $result = array();
 
         if ($incoming) {
-            $links = $linkRepository->findBy(array('type' => 'treeNode', 'target' => $node->getTypeId()));
+            $links = $linkRepository->findBy(array('type' => 'link-internal', 'target' => $node->getId()));
         } else {
-            $links = $linkRepository->findBy(array('eid' => $node->getTypeId()));
+            $links = $linkRepository->findBy(array('elementVersion' => $elementVersion));
         }
 
         foreach ($links as $link) {
@@ -57,8 +61,8 @@ class LinksController extends Controller
                 'id'      => $link->getId(),
                 'iconCls' => 'p-element-component-icon',
                 'type'    => $link->getType(),
-                'title'   => $link->getType() . ' ' . $link->getTarget(),
-                'content' => 'content',
+                'title'   => $link->getField(),
+                'content' => $link->getTarget(),
                 'link'    => array(),
                 'raw'     => 'raw'
             );

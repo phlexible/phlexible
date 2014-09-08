@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
+use Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
@@ -45,6 +46,11 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private $elementStructureValueSequence;
 
     /**
+     * @var LinkExtractor
+     */
+    private $linkExtractor;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -59,6 +65,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
      * @param ElementStructureLoader        $elementStructureLoader
      * @param ElementStructureSequence      $elementStructureSequence
      * @param ElementStructureValueSequence $elementStructureValueSequence
+     * @param LinkExtractor                 $linkExtractor
      * @param EventDispatcherInterface      $dispatcher
      * @param MessagePoster                 $messagePoster
      */
@@ -67,6 +74,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
         ElementStructureLoader $elementStructureLoader,
         ElementStructureSequence $elementStructureSequence,
         ElementStructureValueSequence $elementStructureValueSequence,
+        LinkExtractor $linkExtractor,
         EventDispatcherInterface $dispatcher,
         MessagePoster $messagePoster)
     {
@@ -74,6 +82,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
         $this->elementStructureLoader = $elementStructureLoader;
         $this->elementStructureSequence = $elementStructureSequence;
         $this->elementStructureValueSequence = $elementStructureValueSequence;
+        $this->linkExtractor = $linkExtractor;
         $this->dispatcher = $dispatcher;
         $this->messagePoster = $messagePoster;
     }
@@ -173,30 +182,34 @@ class ElementStructureManager implements ElementStructureManagerInterface
      */
     private function insertLinks(ElementStructure $elementStructure)
     {
+        $links = $this->extractLinks($elementStructure);
+
+        foreach ($links as $link) {
+            $link->setElementVersion($elementStructure->getElementVersion());
+
+            $this->entityManager->persist($link);
+        }
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param ElementStructure $elementStructure
+     *
+     * @return ElementLink[]
+     */
+    private function extractLinks(ElementStructure $elementStructure)
+    {
+        $links = array();
+
         foreach ($elementStructure->getValues() as $elementStructureValue) {
-            if (strlen(trim($elementStructureValue->getValue()))) {
-                if ($elementStructureValue->getType() === 'link') {
-                    $link = new ElementLink();
-                    $link
-                        ->setElementVersion($elementStructure->getElementVersion())
-                        ->setLanguage($elementStructureValue->getLanguage())
-                        ->setType('link')
-                        ->setField($elementStructureValue->getName())
-                        ->setTarget($elementStructureValue->getValue());
-                } elseif ($elementStructureValue->getType() === 'image') {
-                    $link = new ElementLink();
-                    $link
-                        ->setElementVersion($elementStructure->getElementVersion())
-                        ->setLanguage($elementStructureValue->getLanguage())
-                        ->setType('file')
-                        ->setField($elementStructureValue->getName())
-                        ->setTarget($elementStructureValue->getValue());
-                }
-            }
+            $links = array_merge($links, $this->linkExtractor->extract($elementStructureValue));
         }
 
         foreach ($elementStructure->getStructures() as $childStructure) {
-            $this->insertLinks($childStructure);
+            $links = array_merge($links, $this->extractLinks($childStructure));
         }
+
+        return $links;
     }
 }
