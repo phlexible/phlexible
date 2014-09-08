@@ -30,7 +30,7 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
                 xtype: 'checkbox',
                 name: 'needAuthentication',
                 hideLabel: true,
-                boxLabel: '_need_authentication'
+                boxLabel: this.strings.need_authentication
             },{
                 // 2
                 xtype: 'checkbox',
@@ -41,22 +41,22 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
                 // 3
                 xtype: 'textfield',
                 name: 'route',
-                fieldLabel: '_route'
+                fieldLabel: this.strings.route
             },{
                 // 4
                 xtype: 'textfield',
                 name: 'controller',
-                fieldLabel: '_controller'
+                fieldLabel: this.strings.controller
             },{
                 // 5
                 xtype: 'textfield',
                 name: 'template',
-                fieldLabel: '_template'
+                fieldLabel: this.strings.template
             },
             {
                 // 6
                 xtype: 'label',
-                text: '_robots',
+                text: this.strings.robots,
                 style: 'font-weight: bold;'
             },
             {
@@ -64,32 +64,32 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
                 xtype: 'checkbox',
                 name: 'robotsNoIndex',
                 hideLabel: true,
-                boxLabel: '_no_index'
+                boxLabel: this.strings.robots_no_index
             },
             {
                 // 8
                 xtype: 'checkbox',
                 name: 'robotsNoFollow',
                 hideLabel: true,
-                boxLabel: '_no_follow'
+                boxLabel: this.strings.robots_no_follow
             },
             {
                 // 9
                 xtype: 'label',
-                text: '_internal_search',
+                text: this.strings.internal_search,
                 style: 'font-weight: bold;'
             },
             {
                 // 10
                 xtype: 'checkbox',
-                name: 'searchNoIndex',
+                name: this.strings.search_no_index,
                 hideLabel: true,
                 boxLabel: '_no_index'
             },
             {
                 // 11
                 xtype: 'label',
-                text: '_caching',
+                text: this.strings.caching,
                 style: 'font-weight: bold;'
             },
             {
@@ -97,24 +97,24 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
                 xtype: 'checkbox',
                 name: 'noCache',
                 hideLabel: true,
-                boxLabel: '_no_cache'
+                boxLabel: this.strings.no_cache
             },{
                 // 13
                 xtype: 'checkbox',
                 name: 'cachePrivate',
                 hideLabel: true,
-                boxLabel: '_private'
+                boxLabel: this.strings.private
             },{
                 // 14
                 xtype: 'numberfield',
                 name: 'cacheMaxAge',
-                fieldLabel: '_max_age',
+                fieldLabel: this.strings.max_age,
                 width: 60
             },{
                 // 15
                 xtype: 'numberfield',
                 name: 'cacheSharedMaxAge',
-                fieldLabel: '_shared_max_age',
+                fieldLabel: this.strings.shared_max_age,
                 width: 60
             }
         ];

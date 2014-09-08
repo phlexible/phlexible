@@ -291,3 +291,17 @@ elements:
     clipboard: Zwischenablage
     copy_text_type: 'Objekt "{0}" vom Typ "{1}" in die Zwischenablge kopiert.'
     copy_text: 'Objekt "{0}" in die Zwischenablage kopiert.'
+    need_authentication: Benötigt Authentifizierung
+    route: Route
+    controller: Controller
+    template: Template
+    robots: Robots
+    robots_no_follow: No Follow
+    robots_no_index: No Index
+    internal_search: Interne Suche
+    search_no_index: Nicht indizieren
+    caching: Caching
+    no_caching: Nicht cachen
+    private: Private
+    max_age: Max Age
+    shared_max_age: Shared Max Age

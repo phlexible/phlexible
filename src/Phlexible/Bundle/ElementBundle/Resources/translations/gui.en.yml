@@ -291,3 +291,17 @@ elements:
     clipboard: Clipboard
     copy_text_type: 'Object "{0}" of type "{1}" copied to clipboard.'
     copy_text: 'Object "{0}" copied to clipboard.'
+    need_authentication: Need Authentication
+    route: Route
+    controller: Controller
+    template: Template
+    robots: Robots
+    robots_no_follow: No Follow
+    robots_no_index: No Index
+    internal_search: Internal Search
+    search_no_index: Don't index
+    caching: Caching
+    no_caching: Don't cache
+    private: Private
+    max_age: Max Age
+    shared_max_age: Shared Max Age

@@ -142,7 +142,8 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
             ->setInNavigation($treeNode->getInNavigation())
             ->setSort($treeNode->getSort())
             ->setSortMode($treeNode->getSortMode())
-            ->setSortDir($treeNode->getSortDir());
+            ->setSortDir($treeNode->getSortDir())
+            ->setAttributes($treeNode->getAttributes());
 
         $titles = array();
         foreach (array('de', 'en') as $language) {
