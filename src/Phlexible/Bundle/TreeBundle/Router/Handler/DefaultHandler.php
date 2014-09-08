@@ -101,6 +101,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
+        /* @var $treeNode TreeNodeInterface */
         $treeNode = $name;
         $language = 'de';//$parameters['language'];
         $encode = false;
@@ -116,8 +117,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         if ($referenceType === self::ABSOLUTE_URL) {
             $scheme = $this->requestContext->getScheme();
             if (!$scheme || $scheme === 'http') {
-                $scheme = $treeNode->getPage($this->versionStrategy->getVersion($treeNode,
-                    $language))['https'] ? 'https' : 'http';
+                $scheme = $treeNode->getAttribute('https', 'http');
             }
 
             $hostname = $this->generateHostname($treeNode, $language);
@@ -331,6 +331,10 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     protected function generatePath(TreeNodeInterface $node, $language)
     {
+        if ($this->requestContext->getParameter('preview')) {
+            return $this->generatePreviewPath($node, $language);
+        }
+
         $tree = $node->getTree();
 
         // we reverse the order to determine if this leaf is no full element
@@ -393,6 +397,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         $path .= '.' . $node->getId() . '.html';
 
         return $path;
+    }
+
+    protected function generatePreviewPath(TreeNodeInterface $node, $language)
+    {
+        return '/admin/frontend/preview?id='.$node->getId().'&language='.$language;
     }
 
     /**

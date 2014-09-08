@@ -29,10 +29,14 @@ services:
         arguments: [@phlexible_twig_renderer.twig.renderer, @event_dispatcher]
 
     # twig extensions
-    phlexible_twig_renderer.twig.extension.image:
-        class: Phlexible\Bundle\TwigRendererBundle\Extension\ImageExtension
+    phlexible_twig_renderer.twig.extension.media:
+        class: Phlexible\Bundle\TwigRendererBundle\Extension\MediaExtension
         public: false
-        arguments: [@router]
+        arguments:
+            - @router
+            - @phlexible_media_site.site_manager
+            - @phlexible_media_manager.file_meta_set_resolver
+            - @phlexible_media_manager.doctrine.file_meta_data_manager
         tags:
             - {name: twig.extension}
 
@@ -45,6 +49,6 @@ services:
     phlexible_twig_renderer.twig.extension.url:
         class: Phlexible\Bundle\TwigRendererBundle\Extension\UrlExtension
         public: false
-        arguments: [@router]
+        arguments: [@router, @phlexible_tree.content_tree_manager.delegating]
         tags:
             - {name: twig.extension}

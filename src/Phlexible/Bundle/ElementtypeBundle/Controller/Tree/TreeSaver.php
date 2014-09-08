@@ -105,11 +105,12 @@ class TreeSaver
         }
 
         $this->elementtypeService->updateElementtype($elementtype, false);
-        $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, true);
 
         if ($elementtypeStructure) {
-            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, true);
+            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, false);
         }
+
+        $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, true);
 
         // update elementtypes that use this elementtype as reference
 
