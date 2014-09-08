@@ -66,11 +66,6 @@ class ElementEvents
     const SAVE_ELEMENT = 'phlexible_element.save_element';
 
     /**
-     * Fired before element data is saved.
-     */
-    const BEFORE_SAVE_ELEMENT_DATA = 'phlexible_element.before_save_element_data';
-
-    /**
      * Fired after element data is saved.
      */
     const SAVE_ELEMENT_DATA = 'phlexible_element.save_element_data';

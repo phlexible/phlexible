@@ -9,7 +9,8 @@ Ext.reg('elementtypes-field-suggest', Phlexible.fields.Suggest);
 
 Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeMode = 'local';
-    if (item.options) {
+    console.warn(item);
+    if (item.configuration.suggest_source) {
         /*
          store = new Ext.data.SimpleStore({
          fields: ['key', 'value'],
@@ -20,6 +21,7 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
         store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('elementtypes_selectfield_suggest'),
             baseParams: {
+                id: item.configuration.suggest_source,
                 ds_id: item.dsId,
                 language: element.language
             },
@@ -109,22 +111,6 @@ Phlexible.fields.FieldTypes.addField('suggest', {
             readonly: 1,
             hide_label: 1,
             sortable: 0
-        },
-        values: {
-            default_text: 0,
-            default_number: 0,
-            default_textarea: 0,
-            default_date: 0,
-            default_time: 0,
-            default_select: 0,
-            default_link: 0,
-            default_checkbox: 0,
-            default_table: 0,
-            source: 0,
-            source_values: 0,
-            source_function: 0,
-            source_datasource: 1,
-            text: 0
         },
         validation: {
             required: 1,

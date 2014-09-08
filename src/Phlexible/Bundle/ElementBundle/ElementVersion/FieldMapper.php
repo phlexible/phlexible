@@ -76,7 +76,7 @@ class FieldMapper
      */
     public function extract(ElementVersion $elementVersion, ElementStructure $elementStructure = null, $language)
     {
-        $elementtype = $elementVersion->getElement()->getElementtype();
+        $elementtype = $this->elementtypeService->findElementtype($elementVersion->getElement()->getElementtypeId());
         $elementtypeVersion = $this->elementtypeService->findElementtypeVersion(
             $elementtype,
             $elementVersion->getElementtypeVersion()

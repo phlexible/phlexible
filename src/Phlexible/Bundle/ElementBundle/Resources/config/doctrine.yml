@@ -15,6 +15,7 @@ services:
             - @phlexible_element.doctrine.element_structure_loader
             - @phlexible_element.doctrine.element_structure_sequence
             - @phlexible_element.doctrine.element_structure_value_sequence
+            - @phlexible_elementtype.field.registry
             - @phlexible_element.link_extractor
             - @event_dispatcher
             - @phlexible_message.message_poster

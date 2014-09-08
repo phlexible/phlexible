@@ -47,6 +47,11 @@ class DataSaver
     private $fieldMapper;
 
     /**
+     * @var FieldRegistry
+     */
+    private $fieldRegistry;
+
+    /**
      * @var TreeManager
      */
     private $treeManager;
@@ -84,6 +89,7 @@ class DataSaver
     /**
      * @param ElementService           $elementService
      * @param FieldMapper              $fieldMapper
+     * @param FieldRegistry            $fieldRegistry
      * @param TreeManager              $treeManager
      * @param TeaserManagerInterface   $teaserManager
      * @param EventDispatcherInterface $dispatcher
@@ -92,6 +98,7 @@ class DataSaver
     public function __construct(
         ElementService $elementService,
         FieldMapper $fieldMapper,
+        FieldRegistry $fieldRegistry,
         TreeManager $treeManager,
         TeaserManagerInterface $teaserManager,
         EventDispatcherInterface $dispatcher,
@@ -99,6 +106,7 @@ class DataSaver
     {
         $this->elementService = $elementService;
         $this->fieldMapper = $fieldMapper;
+        $this->fieldRegistry = $fieldRegistry;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
         $this->dispatcher = $dispatcher;
@@ -150,28 +158,8 @@ class DataSaver
             $elementComment = $data['comment'];
         }
 
-        $elementVersion = clone $oldElementVersion;
-        $elementVersion
-            ->setId(null)
-            ->setElement($element)
-            ->setVersion($elementVersion->getVersion() + 1)
-            ->setCreateUserId($user->getId())
-            ->setCreatedAt(new \DateTime())
-            ->setComment($elementComment)
-            ->setTriggerLanguage($language);
-
-        $element->setLatestVersion($elementVersion->getVersion());
-
-        $elementStructure = $this->createStructure($elementVersion, $elementtypeStructure, $values, $language);
-
-        $this->fieldMapper->apply($elementVersion, $elementStructure, array($language));
-
-        $event = new SaveElementEvent($element, $language, $oldVersion);
-        $this->dispatcher->dispatch(ElementEvents::BEFORE_SAVE_ELEMENT, $event);
-
-        $this->elementService->updateElement($element, false);
-        $this->elementService->updateElementVersion($elementVersion);
-        $this->elementService->updateElementStructure($elementStructure);
+        $elementStructure = $this->createStructure($elementtypeStructure, $values, $language);
+        $elementVersion = $this->elementService->createElementVersion($element, array($language => $elementStructure), $language, $user->getId(), $elementComment);
 
         if ($teaser) {
             $this->saveTeaserData($teaser, $language, $data);
@@ -435,17 +423,15 @@ class DataSaver
     }
 
     /**
-     * @param ElementVersion       $elementVersion
      * @param ElementtypeStructure $elementtypeStructure
      * @param array                $values
      * @param string               $language
      *
      * @return ElementStructure
      */
-    private function createStructure($elementVersion, $elementtypeStructure, array $values, $language)
+    private function createStructure($elementtypeStructure, array $values, $language)
     {
         $rootElementStructure = new ElementStructure();
-        $rootElementStructure->setElementVersion($elementVersion);
 
         $this->structures[null] = $rootElementStructure;
 
@@ -463,6 +449,8 @@ class DataSaver
                 $id = $match[2];
                 $node = $elementtypeStructure->getNode($dsId);
                 $options = null;
+                $field = $this->fieldRegistry->getField($node->getType());
+                $value = $field->fromRaw($value);
                 $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
                 $elementStructure = $this->structures[$repeatableIdentifier];
                 $elementStructure->setValue($elementStructureValue);
@@ -472,6 +460,8 @@ class DataSaver
                 $foundId = $match[2];
                 $id = $this->elementService->getElementStructureManager()->getNextStructureValueId();
                 $node = $elementtypeStructure->getNode($dsId);
+                $field = $this->fieldRegistry->getField($node->getType());
+                $value = $field->fromRaw($value);
                 $options = null;
                 $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
                 $elementStructure = $this->structures[$repeatableIdentifier];
@@ -484,7 +474,6 @@ class DataSaver
                 $node = $elementtypeStructure->getNode($dsId);
                 $this->structures[$identifier] = $elementStructure = new ElementStructure();
                 $elementStructure
-                    ->setElementVersion($elementVersion)
                     ->setId($id)
                     ->setDsId($dsId)
                     #->setRepeatableId($parent->getId())
@@ -501,7 +490,6 @@ class DataSaver
                 $node = $elementtypeStructure->getNode($dsId);
                 $this->structures[$identifier] = $elementStructure = new ElementStructure();
                 $elementStructure
-                    ->setElementVersion($elementVersion)
                     ->setId($id)
                     ->setDsId($dsId)
                     #->setRepeatableId($parent->getId())
@@ -513,16 +501,6 @@ class DataSaver
         }
 
         return $rootElementStructure;
-    }
-
-    /**
-     * @param string $identifier
-     *
-     * @return ElementStructure
-     */
-    private function findGroup($identifier)
-    {
-        return $this->structures[$identifier];
     }
 
     /**

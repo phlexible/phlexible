@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Command;
 
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,12 +31,72 @@ class TestCommand extends ContainerAwareCommand
             ->setDescription('test.');
     }
 
+
+    /**
+     * @param ElementStructure $structure
+     *
+     * @return ElementStructure
+     */
+    private function iterateStructure(ElementStructure $structure)
+    {
+        $elementStructure = new ElementStructure();
+        $elementStructure
+            ->setId($structure->getId())
+            ->setDsId($structure->getDsId())
+            ->setName($structure->getName())
+            //->setParentId($structure->getParentId())
+            //->setParentDsId($structure->getParentDsId())
+            ->setParentName($structure->getParentName());
+        ;
+
+        foreach ($structure->getValues() as $value) {
+            $elementStructure->setValue($value);
+        }
+
+        foreach ($structure->getStructures() as $childStructure) {
+            $elementStructure->addStructure($this->iterateStructure($childStructure));
+        }
+
+        return $elementStructure;
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
+
+        $elementtype = $elementService->getElementtypeService()->findElementtype(3);
+        $elementtypeVersion = $elementService->getElementtypeService()->findElementtypeVersion($elementtype, 58);
+
+        $elements = $elementService->findElementsByElementtype($elementtypeVersion->getElementtype());
+
+        $languages = array('de', 'en');
+        foreach ($elements as $element) {
+            if ($element->getEid() !== 9) {
+                #continue;
+            }
+            $latestElementVersion = $elementService->findLatestElementVersion($element);
+            $output->writeln($element->getEid()." ".$latestElementVersion->getVersion());
+
+            $elementStructures = array();
+            foreach ($languages as $language) {
+                $latestElementStructure = $elementService->findElementStructure($latestElementVersion, $language);
+
+                $elementStructures[$language] = $elementStructure = $this->iterateStructure($latestElementStructure);
+            }
+
+            $elementVersion = $elementService->createElementVersion(
+                $element,
+                $elementStructures,
+                null,
+                $elementtypeVersion->getCreateUserId()
+            );
+        }
+
+        die;
+
         $element = $elementService->findElement(1115);
         $fromElementVersion = $elementService->findElementVersion($element, 68);
         $toElementVersion = $elementService->findElementVersion($element, 72);

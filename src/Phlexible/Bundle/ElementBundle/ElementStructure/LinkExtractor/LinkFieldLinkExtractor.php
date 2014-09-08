@@ -41,12 +41,12 @@ class LinkFieldLinkExtractor implements LinkExtractorInterface
             ->setLanguage($value->getLanguage())
             ->setField($value->getName());
 
-        $rawValue = $field->fromRaw($value->getValue());
+        $rawValue = $value->getValue();
         $type = $rawValue['type'];
-        if (in_array($type, array('internal', 'intrasiteroot')) && !empty($rawValue['treeId'])) {
+        if (in_array($type, array('internal', 'intrasiteroot')) && !empty($rawValue['tid'])) {
             $link
                 ->setType('link-internal')
-                ->setTarget($rawValue['treeId']);
+                ->setTarget($rawValue['tid']);
         } elseif ($type === 'external' && !empty($rawValue['url'])) {
             $link
                 ->setType('link-external')
@@ -55,6 +55,8 @@ class LinkFieldLinkExtractor implements LinkExtractorInterface
             $link
                 ->setType('link-mailto')
                 ->setTarget($rawValue['recipient']);
+        } else {
+            return array();
         }
 
         return array($link);

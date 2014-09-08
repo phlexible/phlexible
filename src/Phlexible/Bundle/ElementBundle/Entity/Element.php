@@ -37,10 +37,9 @@ class Element
 
     /**
      * @var Elementtype
-     * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype")
-     * @ORM\JoinColumn(name="elementtype_id", referencedColumnName="id")
+     * @ORM\Column(name="elementtype_id", type="integer")
      */
-    private $elementtype;
+    private $elementtypeId;
 
     /**
      * @var string
@@ -107,31 +106,23 @@ class Element
     }
 
     /**
-     * @return Elementtype
-     */
-    public function getElementtype()
-    {
-        return $this->elementtype;
-    }
-
-    /**
-     * @param Elementtype $elementtype
-     *
-     * @return $this
-     */
-    public function setElementtype(Elementtype $elementtype)
-    {
-        $this->elementtype = $elementtype;
-
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getElementtypeId()
     {
-        return $this->getElementtype()->getId();
+        return $this->elementtypeId;
+    }
+
+    /**
+     * @param int $elementtypeId
+     *
+     * @return $this
+     */
+    public function setElementtypeId($elementtypeId)
+    {
+        $this->elementtypeId = $elementtypeId;
+
+        return $this;
     }
 
     /**
@@ -212,110 +203,5 @@ class Element
         $this->createUserId = $createUserId;
 
         return $this;
-    }
-
-    /**
-     * Create a new Element Version
-     *
-     * @param string $elementTypeVersion (Optional) Element Type Version
-     * @param string $comment            (Optional) Comment
-     * @param bool   $minor              (Optional) Is this a minor update?
-     * @param bool   $triggerLanguage    (Optional) Language that triggered the new version
-     *
-     * @return ElementVersion
-     */
-    public function xcreateVersion($elementTypeVersion = null, $comment = null, $minor = false, $triggerLanguage = null)
-    {
-        $db = MWF_Registry::getContainer()->dbPool->default;
-        $dispatcher = Brainbits_Event_Dispatcher::getInstance();
-
-        $eid = $this->getEID();
-
-        // fetch new version
-        $select = $db->select()
-            ->from(
-                $db->prefix . 'element_version',
-                array(
-                    'version',
-                    new Zend_Db_Expr('version + 1 AS new_version'),
-                    'element_type_version'
-                )
-            )
-            ->where('eid = ?', $eid)
-            ->order('version DESC')
-            ->limit(1);
-
-        $row = $db->fetchRow($select);
-
-        if (!$row) // First version
-        {
-            $oldVersion = null;
-            $newVersion = 1;
-
-            if ($elementTypeVersion === null) {
-                $elementTypeVersion = $this->getElementType()->getLatest()->getVersion();
-            }
-        } else // Increase version
-        {
-            $oldVersion = $row['version'];
-            $newVersion = $row['new_version'];
-            $elementTypeVersion = $row['element_type_version'];
-        }
-
-        // before version create event
-        $event = new Makeweb_Elements_Event_BeforeCreateElementVersion($eid, $oldVersion, $newVersion);
-        $dispatcher->dispatch($event);
-
-        $elementTypeId = $this->elementTypeId;
-
-        // insert new element version
-
-        $insertData = array(
-            'eid'                  => $eid,
-            'version'              => $newVersion,
-            'element_type_id'      => $elementTypeId,
-            'element_type_version' => $elementTypeVersion,
-            'format'               => Makeweb_Elements_Element_Version::CURRENT_FORMAT,
-            'create_time'          => $db->fn->now(),
-            'create_uid'           => MWF_Env::getUid(),
-            'minor'                => $minor ? 1 : 0,
-            'trigger_language'     => $triggerLanguage,
-            'comment'              => $comment,
-        );
-
-        $db->insert($db->prefix . 'element_version', $insertData);
-
-        // update latest_version column in element-table
-        $updateData = array(
-            'latest_version' => $newVersion
-        );
-
-        $db->update($db->prefix . 'element', $updateData, 'eid = ' . $eid);
-
-        /* @var $latestElementVersions Makeweb_Elements_LatestElementVersions */
-        $latestElementVersions = MWF_Registry::getContainer()->elementsLatestElementVersions;
-        $latestElementVersions->setLatestElementVersion($eid, $newVersion);
-
-        // retrieve new element version
-
-        $elementVersion = $this->getVersion($newVersion);
-
-        Makeweb_Elements_Element_History::insert(
-            Makeweb_Elements_Element_History::ACTION_CREATE_VERSION,
-            $eid,
-            $elementVersion->getVersion(),
-            null,
-            $comment
-        );
-
-        // post message
-        $message = new Makeweb_Elements_Message('Version ' . $newVersion . ' created for Element EID "' . $eid . '"');
-        $message->post();
-
-        // post event
-        $event = new Makeweb_Elements_Event_CreateElementVersion($elementVersion, $oldVersion);
-        $dispatcher->dispatch($event);
-
-        return $elementVersion;
     }
 }

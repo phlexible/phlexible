@@ -61,12 +61,6 @@ class ElementStructure
     private $name;
 
     /**
-     * @var int
-     * @ORM\Column(name="cnt", type="integer", nullable=true)
-     */
-    private $count;
-
-    /**
      * @var string
      * @ORM\Column(name="repeatable_id", type="string", length=255, nullable=true)
      */
@@ -83,4 +77,204 @@ class ElementStructure
      * @ORM\Column(type="integer", nullable=true)
      */
     private $sort;
+
+    /**
+     * @return int
+     */
+    public function getDataId()
+    {
+        return $this->dataId;
+    }
+
+    /**
+     * @param int $dataId
+     *
+     * @return $this
+     */
+    public function setDataId($dataId)
+    {
+        $this->dataId = $dataId;
+
+        return $this;
+    }
+
+    /**
+     * @return \Phlexible\Bundle\ElementBundle\Entity\Element
+     */
+    public function getElement()
+    {
+        return $this->element;
+    }
+
+    /**
+     * @param \Phlexible\Bundle\ElementBundle\Entity\Element $element
+     *
+     * @return $this
+     */
+    public function setElement($element)
+    {
+        $this->element = $element;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param int $version
+     *
+     * @return $this
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDsId()
+    {
+        return $this->dsId;
+    }
+
+    /**
+     * @param string $dsId
+     *
+     * @return $this
+     */
+    public function setDsId($dsId)
+    {
+        $this->dsId = $dsId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return $this
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    /**
+     * @param int $count
+     *
+     * @return $this
+     */
+    public function setCount($count)
+    {
+        $this->count = $count;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRepeatableId()
+    {
+        return $this->repeatableId;
+    }
+
+    /**
+     * @param string $repeatableId
+     *
+     * @return $this
+     */
+    public function setRepeatableId($repeatableId)
+    {
+        $this->repeatableId = $repeatableId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRepeatableDsId()
+    {
+        return $this->repeatableDsId;
+    }
+
+    /**
+     * @param string $repeatableDsId
+     *
+     * @return $this
+     */
+    public function setRepeatableDsId($repeatableDsId)
+    {
+        $this->repeatableDsId = $repeatableDsId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
+    /**
+     * @param int $sort
+     *
+     * @return $this
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
 }

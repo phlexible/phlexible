@@ -309,7 +309,7 @@ class ElementStructure implements \IteratorAggregate
 
     public function dump($indent = 0)
     {
-        $dump = str_repeat(' ', $indent) . 'S '.$this->getId().' '.$this->getDsId().' '.$this->getName().' '.$this->getParentName();
+        $dump = str_repeat(' ', $indent) . 'S '.$this->getId().' '.$this->getDsId().' '.$this->getName().' '.$this->getParentName().' '.($this->getElementVersion() ? 'EV' : 'noEV').PHP_EOL;
         foreach ($this->structures as $structure) {
             $dump .= $structure->dump($indent + 1);
         }

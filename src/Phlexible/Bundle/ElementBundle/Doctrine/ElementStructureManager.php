@@ -12,9 +12,12 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
+use Phlexible\Bundle\ElementBundle\Entity\ElementStructure as StructureEntity;
+use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ValueEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -46,6 +49,11 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private $elementStructureValueSequence;
 
     /**
+     * @var FieldRegistry
+     */
+    private $fieldRegistry;
+
+    /**
      * @var LinkExtractor
      */
     private $linkExtractor;
@@ -65,6 +73,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
      * @param ElementStructureLoader        $elementStructureLoader
      * @param ElementStructureSequence      $elementStructureSequence
      * @param ElementStructureValueSequence $elementStructureValueSequence
+     * @param FieldRegistry                 $fieldRegistry
      * @param LinkExtractor                 $linkExtractor
      * @param EventDispatcherInterface      $dispatcher
      * @param MessagePoster                 $messagePoster
@@ -74,6 +83,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
         ElementStructureLoader $elementStructureLoader,
         ElementStructureSequence $elementStructureSequence,
         ElementStructureValueSequence $elementStructureValueSequence,
+        FieldRegistry $fieldRegistry,
         LinkExtractor $linkExtractor,
         EventDispatcherInterface $dispatcher,
         MessagePoster $messagePoster)
@@ -82,6 +92,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
         $this->elementStructureLoader = $elementStructureLoader;
         $this->elementStructureSequence = $elementStructureSequence;
         $this->elementStructureValueSequence = $elementStructureValueSequence;
+        $this->fieldRegistry = $fieldRegistry;
         $this->linkExtractor = $linkExtractor;
         $this->dispatcher = $dispatcher;
         $this->messagePoster = $messagePoster;
@@ -101,13 +112,17 @@ class ElementStructureManager implements ElementStructureManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateElementStructure(ElementStructure $elementStructure, $onlyValues = false)
+    public function updateElementStructure(ElementStructure $elementStructure, $onlyValues = false, $flush = true)
     {
         $conn = $this->entityManager->getConnection();
 
         $this->insertStructure($elementStructure, $conn, $onlyValues, true);
 
         $this->insertLinks($elementStructure);
+
+        if ($flush) {
+            $this->entityManager->flush();
+        }
     }
 
     /**
@@ -135,6 +150,20 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private function insertStructure(ElementStructure $elementStructure, Connection $conn, $onlyValues, $isRoot = false)
     {
         if (!$isRoot && !$onlyValues) {
+            $structureEntity = new StructureEntity();
+            $structureEntity
+                ->setDataId($elementStructure->getId())
+                ->setElement($elementStructure->getElementVersion()->getElement())
+                ->setVersion($elementStructure->getElementVersion()->getVersion())
+                ->setDsId($elementStructure->getDsId())
+                ->setType('group')
+                ->setName($elementStructure->getName())
+                ->setRepeatableId($elementStructure->getRepeatableId() ?: null)
+                ->setRepeatableDsId($elementStructure->getRepeatableDsId() ?: null)
+                ->setSort(0);
+
+            $this->entityManager->persist($structureEntity);
+            /*
             $conn->insert(
                 'element_structure',
                 array(
@@ -150,10 +179,31 @@ class ElementStructureManager implements ElementStructureManagerInterface
                     'sort'             => 0,
                 )
             );
+            */
         }
 
         foreach ($elementStructure->getValues() as $elementStructureValue) {
-            if (strlen(trim($elementStructureValue->getValue()))) {
+            if ($elementStructureValue->getValue()) {
+                $value = $elementStructureValue->getValue();
+                $field = $this->fieldRegistry->getField($elementStructureValue->getType());
+                $value = trim($field->toRaw($value));
+
+                $valueEntity = new ValueEntity();
+                $valueEntity
+                    ->setDataId($elementStructureValue->getId())
+                    ->setElement($elementStructure->getElementVersion()->getElement())
+                    ->setVersion($elementStructure->getElementVersion()->getVersion())
+                    ->setLanguage($elementStructureValue->getLanguage())
+                    ->setDsId($elementStructureValue->getDsId())
+                    ->setType($elementStructureValue->getType())
+                    ->setName($elementStructureValue->getName())
+                    ->setRepeatableId($elementStructure->getId() ?: null)
+                    ->setRepeatableDsId($elementStructure->getDsId() ?: null)
+                    ->setContent($value)
+                    ->setOptions(!empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null);
+
+                $this->entityManager->persist($valueEntity);
+                /*
                 $conn->insert(
                     'element_structure_value',
                     array(
@@ -166,10 +216,12 @@ class ElementStructureManager implements ElementStructureManagerInterface
                         'name'             => $elementStructureValue->getName(),
                         'repeatable_id'    => $elementStructure->getId() ?: null,
                         'repeatable_ds_id' => $elementStructure->getDsId() ?: null,
-                        'content'          => trim($elementStructureValue->getValue()),
+                        'content'          => $value,
                         'options'          => !empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null,
                     )
-                );}
+                );
+                */
+            }
         }
 
         foreach ($elementStructure->getStructures() as $childStructure) {
@@ -189,8 +241,6 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
             $this->entityManager->persist($link);
         }
-
-        $this->entityManager->flush();
     }
 
     /**

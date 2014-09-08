@@ -109,13 +109,21 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
                 additional: true
             },
             {
+                xtype: 'elementtypes-configuration-field-configuration-select',
+                additional: true
+            },
+            {
+                xtype: 'elementtypes-configuration-field-configuration-suggest',
+                additional: true
+            },
+            {
                 xtype: 'elementtypes-configuration-field-configuration-table',
                 additional: true
             }
         ];
     },
 
-    updateVisibility: function (fieldType, type) {
+    updateVisibility: function (fieldType, type, fieldData) {
         // language sync
         if (fieldType.config.configuration.sync) {
             this.getComponent(0).show();
@@ -166,13 +174,13 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
 
         this.items.each(function (panel) {
             if (panel.additional) {
-                panel.updateVisibility(type);
+                panel.updateVisibility(type, fieldType, fieldData);
             }
         });
     },
 
     loadData: function (fieldData, fieldType, type) {
-        this.updateVisibility(fieldType, type);
+        this.updateVisibility(fieldType, type, fieldData);
 
         this.getForm().setValues([
             {id: 'synchronized', value: fieldData['synchronized'] || 'no'},
@@ -209,7 +217,7 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
 
         if (valid) {
             this.items.each(function (panel) {
-                if (panel.additional) {
+                if (panel.additional && panel.isVisible()) {
                     valid = valid && panel.isValid();
                 }
             });

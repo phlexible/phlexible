@@ -27,9 +27,9 @@ class MediaController extends Controller
      * @param string $template
      *
      * @return Response
-     * @Route("/{fileId}/{template}", name="frontendmedia_media")
+     * @Route("/{fileId}/{template}", name="frontendmedia_thumbnail")
      */
-    public function mediaAction($fileId, $template)
+    public function thumbnailAction($fileId, $template)
     {
         $templateKey = str_replace('.jpg', '', $template);
 

@@ -32,6 +32,7 @@ services:
     phlexible_twig_renderer.twig.extension.image:
         class: Phlexible\Bundle\TwigRendererBundle\Extension\ImageExtension
         public: false
+        arguments: [@router]
         tags:
             - {name: twig.extension}
 
@@ -44,5 +45,6 @@ services:
     phlexible_twig_renderer.twig.extension.url:
         class: Phlexible\Bundle\TwigRendererBundle\Extension\UrlExtension
         public: false
+        arguments: [@router]
         tags:
             - {name: twig.extension}

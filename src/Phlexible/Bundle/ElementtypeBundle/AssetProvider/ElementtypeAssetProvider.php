@@ -153,6 +153,12 @@ class ElementtypeAssetProvider implements AssetProviderInterface
                 '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationLink.js'
             )),
             new FileAsset($this->locator->locate(
+                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationSelect.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationSuggest.js'
+            )),
+            new FileAsset($this->locator->locate(
                 '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationTable.js'
             )),
             new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeRoot.js')),

@@ -44,6 +44,12 @@ Phlexible.elementtypes.configuration.FieldConfigurationGroup = Ext.extend(Ext.fo
                 labelSeparator: '',
                 boxLabel: this.strings.group_single_row,
                 name: 'group_single_line'
+            },
+            {
+                xtype: 'numberfield',
+                fieldLabel: this.strings.label_width,
+                name: 'label_width',
+                width: 200
             }
         ];
 

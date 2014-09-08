@@ -61,7 +61,6 @@ Phlexible.fields.FieldTypes.addField('checkbox', {
             default_checkbox: 1,
             default_table: 0,
             source: 0,
-            source_single: 0,
             source_values: 1,
             source_function: 0,
             source_datasource: 0,

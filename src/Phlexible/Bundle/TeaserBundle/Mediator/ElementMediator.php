@@ -57,7 +57,7 @@ class ElementMediator implements MediatorInterface
      */
     public function getUniqueId(Teaser $teaser)
     {
-       return $this->getObject($teaser)->getElementtype()->getUniqueId();
+       return $this->elementService->findElementtype($this->getObject($teaser))->getUniqueId();
     }
 
     /**

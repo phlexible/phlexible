@@ -73,35 +73,19 @@ class ElementtypeListener implements EventSubscriberInterface
         foreach ($elements as $element) {
             $latestElementVersion = $this->elementService->findLatestElementVersion($element);
 
-            $elementVersion = clone $latestElementVersion;
-            $elementVersion
-                ->setId(null)
-                ->setElementtypeVersion($elementtypeVersion->getVersion())
-                ->setVersion($elementVersion->getVersion() + 1)
-                ->setCreatedAt(new \DateTime())
-                ->setCreateUserId($elementtypeVersion->getCreateUserId());
-
-            $element
-                ->setLatestVersion($elementVersion->getVersion());
-
             $elementStructures = array();
             foreach ($this->languages as $language) {
                 $latestElementStructure = $this->elementService->findElementStructure($latestElementVersion, $language);
 
-                $elementStructures[$language] = $elementStructure = $this->iterateStructure($latestElementStructure, $elementVersion);
-
-                $this->fieldMapper->apply($elementVersion, $elementStructure, array($language));
+                $elementStructures[$language] = $elementStructure = $this->iterateStructure($latestElementStructure);
             }
 
-            $this->elementService->updateElement($element, false);
-            $this->elementService->updateElementVersion($elementVersion);
-            $this->elementService->updateElementStructure($elementStructures[$element->getMasterLanguage()]);
-            foreach ($elementStructures as $language => $elementStructure) {
-                if ($language === $element->getMasterLanguage()) {
-                    continue;
-                }
-                $this->elementService->updateElementStructure($elementStructure, true);
-            }
+            $elementVersion = $this->elementService->createElementVersion(
+                $element,
+                $elementStructures,
+                null,
+                $elementtypeVersion->getCreateUserId()
+            );
         }
 
         // TODO: meta, titles
@@ -109,11 +93,10 @@ class ElementtypeListener implements EventSubscriberInterface
 
     /**
      * @param ElementStructure $structure
-     * @param ElementVersion   $elementVersion
      *
      * @return ElementStructure
      */
-    private function iterateStructure(ElementStructure $structure, ElementVersion $elementVersion)
+    private function iterateStructure(ElementStructure $structure)
     {
         $elementStructure = new ElementStructure();
         $elementStructure
@@ -122,8 +105,7 @@ class ElementtypeListener implements EventSubscriberInterface
             ->setName($structure->getName())
             //->setParentId($structure->getParentId())
             //->setParentDsId($structure->getParentDsId())
-            ->setParentName($structure->getParentName())
-            ->setElementVersion($elementVersion)
+            ->setParentName($structure->getParentName());
         ;
 
         foreach ($structure->getValues() as $value) {
@@ -131,7 +113,7 @@ class ElementtypeListener implements EventSubscriberInterface
         }
 
         foreach ($structure->getStructures() as $childStructure) {
-            $elementStructure->addStructure($this->iterateStructure($childStructure, $elementVersion));
+            $elementStructure->addStructure($this->iterateStructure($childStructure));
         }
 
         return $elementStructure;

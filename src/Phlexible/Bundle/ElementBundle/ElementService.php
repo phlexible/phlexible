@@ -153,7 +153,7 @@ class ElementService
      */
     public function findElementsByElementtype(Elementtype $elementtype)
     {
-        return $this->elementManager->findBy(array('elementtype' => $elementtype));
+        return $this->elementManager->findBy(array('elementtypeId' => $elementtype->getId()));
     }
 
     /**
@@ -237,7 +237,7 @@ class ElementService
     {
         $element = new Element();
         $element
-            ->setElementtype($elementtypeVersion->getElementtype())
+            ->setElementtypeId($elementtypeVersion->getElementtype()->getId())
             ->setMasterLanguage($masterLanguage)
             ->setLatestVersion(1)
             ->setCreateUserId($userId)
@@ -253,8 +253,8 @@ class ElementService
 
         $this->fieldMapper->apply($elementVersion);
 
-        $this->updateElement($element, false);
-        $this->updateElementVersion($elementVersion);
+        $this->elementManager->updateElement($element, false);
+        $this->elementVersionManager->updateElementVersion($elementVersion);
 
         $this->elementHistoryManager->insert(
             ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT,
@@ -270,29 +270,75 @@ class ElementService
     }
 
     /**
-     * @param Element $element
-     * @param bool    $flush
+     * @param Element                 $element
+     * @param ElementStructure[]|null $elementStructures
+     * @param string                  $triggerLanguage
+     * @param string                  $userId
+     * @param string                  $comment
+     *
+     * @return ElementVersion
      */
-    public function updateElement(Element $element, $flush = true)
+    public function createElementVersion(Element $element, array $elementStructures = null, $triggerLanguage, $userId, $comment = null)
     {
-        $this->elementManager->updateElement($element, $flush);
-    }
+        $oldElementVersion = $this->findLatestElementVersion($element);
 
-    /**
-     * @param ElementVersion $elementVersion
-     * @param bool           $flush
-     */
-    public function updateElementVersion(ElementVersion $elementVersion, $flush = true)
-    {
-        $this->elementVersionManager->updateElementVersion($elementVersion, $flush);
+        $elementtype = $this->findElementtype($element);
+        $elementtypeVersion = $this->getElementtypeService()->findLatestElementtypeVersion($elementtype);
+
+        $elementVersion = clone $oldElementVersion;
+        $elementVersion
+            ->setId(null)
+            ->setElement($element)
+            ->setElementtypeVersion($elementtypeVersion->getVersion())
+            ->setVersion($oldElementVersion->getVersion() + 1)
+            ->setCreateUserId($userId)
+            ->setCreatedAt(new \DateTime())
+            ->setComment($comment)
+            ->setTriggerLanguage($triggerLanguage);
+
+        $elementVersion
+            ->getMappedFields()->clear();
+
+        $element->setLatestVersion($elementVersion->getVersion());
+
+        $this->elementManager->updateElement($element, false);
+
+        if ($elementStructures) {
+            $masterElementStructure = $elementStructures[$element->getMasterLanguage()];
+            unset($elementStructures[$element->getMasterLanguage()]);
+
+            $this->fixElementVersion($masterElementStructure, $elementVersion);
+            $this->elementStructureManager->updateElementStructure($masterElementStructure, false, false);
+
+            foreach ($elementStructures as $elementStructure) {
+                $this->fixElementVersion($elementStructure, $elementVersion);
+                $this->elementStructureManager->updateElementStructure($elementStructure, true, false);
+            }
+
+            $this->fieldMapper->apply($elementVersion, $masterElementStructure, array($element->getMasterLanguage()));
+
+            foreach ($elementStructures as $language => $elementStructure) {
+                $this->fieldMapper->apply($elementVersion, $elementStructure, array($language));
+            }
+        }
+
+        $this->elementVersionManager->updateElementVersion($elementVersion, true);
+
+        return $elementVersion;
     }
 
     /**
      * @param ElementStructure $elementStructure
-     * @param bool             $onlyValues
+     * @param ElementVersion   $elementVersion
      */
-    public function updateElementStructure(ElementStructure $elementStructure, $onlyValues = false)
+    private function fixElementVersion(ElementStructure $elementStructure, ElementVersion $elementVersion)
     {
-        $this->elementStructureManager->updateElementStructure($elementStructure, $onlyValues);
+        $elementStructure->setElementVersion($elementVersion);
+
+        $rii = new \RecursiveIteratorIterator($elementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($rii as $structure) {
+            /* @var $structure ElementStructure */
+            $structure->setElementVersion($elementVersion);
+        }
     }
 }

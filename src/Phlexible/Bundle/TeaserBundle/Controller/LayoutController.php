@@ -317,6 +317,7 @@ class LayoutController extends Controller
 
             if ('element' == $teaser->getType()) {
                 $teaserElement = $elementService->findElement($teaser->getTypeId());
+                $teaserElementtype = $elementService->findElementtype($teaserElement);
                 $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
 
                 if (!empty($filter['status'])) {
@@ -378,7 +379,7 @@ class LayoutController extends Controller
                     'eid'             => $teaser->getTypeId(),
                     'title'           => $teaserElementVersion->getBackendTitle($language),
                     'element_type_id' => (int) $teaserElement->getElementtypeId(),
-                    'element_type'    => $teaserElement->getElementtype()->getTitle(),
+                    'element_type'    => $teaserElementtype->getTitle(),
                     'navigation'      => 0,
                     'restricted'      => 0,
                     'icon'            => $iconResolver->resolveTeaser($teaser, $language),

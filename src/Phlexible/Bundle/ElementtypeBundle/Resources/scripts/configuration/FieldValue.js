@@ -126,29 +126,6 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
                 width: 182
             },
             {
-                xtype: 'combo',
-                hidden: true,
-                editable: false,
-                hiddenName: 'source_source',
-                name: 'source_source',
-                fieldLabel: 'Source',
-                hideMode: 'display',
-                allowBlank: false,
-                store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('datasources_list'),
-                    root: 'sources',
-                    fields: ['id', 'title']
-                }),
-                displayField: 'title',
-                valueField: 'id',
-                mode: 'remote',
-                typeAhead: false,
-                triggerAction: 'all',
-                selectOnFocus: true,
-                listWidth: 200,
-                width: 182
-            },
-            {
                 xtype: 'fieldset',
                 title: this.strings.text,
                 autoHeight: true,
@@ -253,31 +230,16 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
             this.getComponent(6).hide();
             this.getComponent(7).hide();
             this.getComponent(8).hide();
-
-            if (fieldType.config.values.source_single) {
-                this.getValueGrid().enable();
-                this.getValueGrid().show();
-            }
         }
 
-        // source_datasource
-        if (fieldType.config.values.source_datasource) {
+        // source
+        if (fieldType.config.values.text) {
             this.getComponent(9).enable();
             this.getComponent(9).show();
         }
         else {
             this.getComponent(9).disable();
             this.getComponent(9).hide();
-        }
-
-        // source
-        if (fieldType.config.values.text) {
-            this.getComponent(10).enable();
-            this.getComponent(10).show();
-        }
-        else {
-            this.getComponent(10).disable();
-            this.getComponent(10).hide();
         }
     },
 
@@ -322,10 +284,7 @@ Phlexible.elementtypes.configuration.FieldValue = Ext.extend(Ext.form.FormPanel,
             }
         });
 
-        if (fieldType.config.values.source_single) {
-            this.getValueGrid().loadData('single', fieldData.source_list, fieldData.default_value);
-        }
-        else if (fieldType.config.values.source_multi) {
+        if (fieldType.config.values.source_multi) {
             this.getValueGrid().loadData('multi', fieldData.source_list, fieldData.default_value);
         }
 

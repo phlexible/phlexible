@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\TwigRendererBundle\Extension;
 
+use Symfony\Component\Routing\RouterInterface;
+
 /**
  * Twig image extension
  *
@@ -16,13 +18,28 @@ namespace Phlexible\Bundle\TwigRendererBundle\Extension;
 class ImageExtension extends \Twig_Extension
 {
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @param RouterInterface $router
+     */
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
+    /**
      * @return array
      */
     public function getFunctions()
     {
         return array(
             new \Twig_SimpleFunction('image', array($this, 'image')),
+            new \Twig_SimpleFunction('icon', array($this, 'icon')),
             new \Twig_SimpleFunction('thumbnail', array($this, 'thumbnail')),
+            new \Twig_SimpleFunction('download', array($this, 'download')),
         );
     }
 
@@ -45,7 +62,30 @@ class ImageExtension extends \Twig_Extension
         }
 
         // deliver original file
-        $src = /*$request->getBaseUrl() . */'/media/' . $fileId . '.jpg';
+        $src = $this->router->generate('frontendmedia_thumbnail', array('id' => $fileId));
+
+        return $src;
+    }
+
+    /**
+     * @param string $image
+     *
+     * @return string
+     */
+    public function icon($image)
+    {
+        if (!$image) {
+            return '';
+        }
+
+        $parts = explode(';', $image);
+        $fileId = $parts[0];
+        $fileVersion = 1;
+        if (isset($parts[1])) {
+            $fileVersion = $parts[1];
+        }
+
+        $src = $this->router->generate('frontendmedia_icon', array('id' => $fileId));
 
         return $src;
     }
@@ -71,11 +111,34 @@ class ImageExtension extends \Twig_Extension
 
         if ($template === null) {
             // deliver original file
-            $src = /*$request->getBaseUrl() . */'/media/' . $fileId . '/' . $template . '.jpg';
+            $src = $this->router->generate('frontendmedia_inline', array('id' => $fileId));
         } else {
             // deliver thumbnail
-            $src = /*$request->getBaseUrl() . */'/media/' . $fileId . '/' . $template . '.jpg';
+            $src = $this->router->generate('frontendmedia_thumbnail', array('id' => $fileId, 'template' => $template));
         }
+
+        return $src;
+    }
+
+    /**
+     * @param string $file
+     *
+     * @return string
+     */
+    public function download($file)
+    {
+        if (!$file) {
+            return '';
+        }
+
+        $parts = explode(';', $file);
+        $fileId = $parts[0];
+        $fileVersion = 1;
+        if (isset($parts[1])) {
+            $fileVersion = $parts[1];
+        }
+
+        $src = $this->router->generate('frontendmedia_download', array('id' => $fileId));
 
         return $src;
     }

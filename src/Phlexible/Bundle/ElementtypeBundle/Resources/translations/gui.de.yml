@@ -81,6 +81,7 @@ elementtypes:
     navigation: Navigation
     width: Breite
     height: Höhe
+    label_width: 'Labelbreite'
     repeat_min: 'Min Vorkommen'
     repeat_max: 'Max Vorkommen'
     repeat_default: 'Standard Vorkommen'
@@ -126,6 +127,7 @@ elementtypes:
     values_key: Schlüssel
     values_german: Deutsch
     values_english: Englisch
+    suggest: Suggest
     link: Link
     allow: erlauben
     link_types: Linktypen

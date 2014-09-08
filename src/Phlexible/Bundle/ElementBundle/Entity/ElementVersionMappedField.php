@@ -31,7 +31,7 @@ class ElementVersionMappedField
     /**
      * @var ElementVersion
      * @ORM\ManyToOne(targetEntity="ElementVersion", inversedBy="mappedFields")
-     * @ORM\JoinColumn(name="element_version_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="element_version_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $elementVersion;
 

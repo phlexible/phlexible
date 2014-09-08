@@ -81,6 +81,7 @@ elementtypes:
     navigation: Navigation
     width: Width
     height: Height
+    label_width: 'Label width'
     repeat_min: 'Min occurances'
     repeat_max: 'Max occurances'
     repeat_default: 'Default occurances'
@@ -126,6 +127,7 @@ elementtypes:
     values_key: Key
     values_german: German
     values_english: English
+    suggest: Suggest
     link: Link
     allow: erlauben
     link_types: 'Link types'

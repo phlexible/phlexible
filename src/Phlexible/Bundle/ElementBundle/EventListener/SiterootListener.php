@@ -136,29 +136,18 @@ class SiterootListener
 
         $this->elementService->getElementtypeService()->updateElementtypeStructure($elementtypeStructure, false);
 
-        $elementtypeVersion->setMappings(array('backend' => array('fields' => array(array('ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1)), 'pattern' => '$1')));
+        $elementtypeVersion->setMappings(
+            array(
+                'backend' => array(
+                    'fields' => array(
+                        array('ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1)
+                    ),
+                    'pattern' => '$1'
+                )
+            )
+        );
 
-        $element = new Element();
-        $element
-            ->setElementtype($elementtypeVersion->getElementtype())
-            ->setLatestVersion(1)
-            ->setMasterLanguage($this->masterLanguage)
-            ->setCreatedAt(new \DateTime())
-            ->setCreateUserId($siteroot->getModifyUserId())
-            ->setUniqueId('site_root_' . $siteroot->getId());
-
-        $elementVersion = new ElementVersion();
-        $elementVersion
-            ->setElement($element)
-            ->setElementtypeVersion($elementtypeVersion->getVersion())
-            ->setVersion(1)
-            ->setTriggerLanguage($this->masterLanguage)
-            ->setComment('Created by siteroot creation.')
-            ->setCreatedAt(new \DateTime())
-            ->setCreateUserId($siteroot->getModifyUserId());
-
-        $this->elementService->updateElement($element, false);
-        $this->elementService->updateElementVersion($elementVersion);
+        $element = $this->elementService->createElement($elementtypeVersion, $this->masterLanguage, $siteroot->getModifyUserId());
 
         $tree = $this->treeManager->getBySiteRootId($siteroot->getId());
         $tree->init('element', $element->getEid(), $element->getCreateUserId());

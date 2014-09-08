@@ -60,6 +60,7 @@ class SelectfieldController extends Controller
      */
     public function suggestAction(Request $request)
     {
+        $id = $request->get('id');
         $dsId = $request->get('ds_id');
         $language = $request->get('language');
         $query = $request->get('query', null);
@@ -67,39 +68,25 @@ class SelectfieldController extends Controller
 
         $data = array();
 
-        $dataSourceRepository = $this->get('datasources.repository');
-        $dbPool = $container->dbPool;
-        $db = $dbPool->read;
+        $datasourceManager = $this->get('phlexible_data_source.data_source_manager');
 
-        $select = $db->select()
-            ->from($db->prefix . 'elementtype_structure', 'options')
-            ->where('ds_id = ?', $dsId)
-            ->order('version DESC')
-            ->limit(1);
+        $source = $datasourceManager->find($id);
 
-        $options = $db->fetchOne($select);
-        if ($options) {
-            $options = unserialize($options);
+        $filter = null;
+        if ($query && $valuesQuery) {
+            $filter = explode('|', $query);
+        }
 
-            $sourceId = $options['source_source'];
-            $item['source_id'] = $sourceId;
-            $source = $dataSourceRepository->getDataSourceById($sourceId, $language);
-
-            if ($query && $valuesQuery) {
-                $queryArray = explode('|', $query);
-            }
-
-            foreach ($source->getKeys() as $key) {
-                if (!empty($query)) {
-                    if ($valuesQuery && !in_array($key, $queryArray)) {
-                        continue;
-                    } elseif (!$valuesQuery && mb_stripos($key, $query) === false) {
-                        continue;
-                    }
+        foreach ($source->getActiveValuesForLanguage($language) as $key => $value) {
+            if (!empty($query)) {
+                if ($filter && !in_array($key, $filter)) {
+                    continue;
+                } elseif (!$filter && mb_stripos($key, $query) === false) {
+                    continue;
                 }
-
-                $data[] = array('key' => $key, 'value' => $key);
             }
+
+            $data[] = array('key' => $key, 'value' => $key);
         }
 
         return new JsonResponse(array('data' => $data));

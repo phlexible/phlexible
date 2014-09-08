@@ -192,6 +192,7 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
         var chk = function (item) {
             if (item.isFormField) {
                 if (!item.isValid()) {
+                    console.warn(item);
                     valid = false;
                     return false;
                 }

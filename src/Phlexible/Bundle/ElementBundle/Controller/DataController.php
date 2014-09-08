@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\ElementBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
-use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Diff;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
