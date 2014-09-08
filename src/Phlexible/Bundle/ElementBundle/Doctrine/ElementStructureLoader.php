@@ -231,7 +231,6 @@ class ElementStructureLoader
             ->select(
                 array(
                     'es.data_id AS id',
-                    'es.repeatable_node',
                     'es.repeatable_id',
                     'es.repeatable_ds_id',
                     'es.sort',
