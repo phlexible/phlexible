@@ -301,7 +301,7 @@ elements:
     internal_search: Internal Search
     search_no_index: Don't index
     caching: Caching
-    no_caching: Don't cache
+    no_cache: Don't cache
     private: Private
     max_age: Max Age
     shared_max_age: Shared Max Age

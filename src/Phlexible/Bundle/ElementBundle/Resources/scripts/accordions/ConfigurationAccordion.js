@@ -82,9 +82,9 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
             {
                 // 10
                 xtype: 'checkbox',
-                name: this.strings.search_no_index,
+                name: 'searchNoIndex',
                 hideLabel: true,
-                boxLabel: '_no_index'
+                boxLabel: this.strings.search_no_index
             },
             {
                 // 11

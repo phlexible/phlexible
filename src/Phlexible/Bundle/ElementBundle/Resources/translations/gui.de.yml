@@ -301,7 +301,7 @@ elements:
     internal_search: Interne Suche
     search_no_index: Nicht indizieren
     caching: Caching
-    no_caching: Nicht cachen
+    no_cache: Nicht cachen
     private: Private
     max_age: Max Age
     shared_max_age: Shared Max Age
