@@ -297,7 +297,7 @@ Ext.ux.form.Group = Ext.extend(Ext.Panel, {
                                 var pt = this.element.prototypes.getPrototype(dsId);
                                 var pos = this.ownerCt.items.items.indexOf(this);
                                 var factory = Phlexible.fields.Registry.getFactory(pt.factory);
-                                this.ownerCt.insert(pos, factory(this.ownerCt, pt, {structures: [], values: []}, this.element, this.repeatableId));
+                                this.ownerCt.insert(pos, factory(this.ownerCt, pt, {structures: [], values: []}, this.element, this.ownerCt.repeatableId));
                                 this.ownerCt.doLayout();
                             }.createDelegate(this, [dsId], false)
                         });
@@ -309,7 +309,7 @@ Ext.ux.form.Group = Ext.extend(Ext.Panel, {
                                 var pt = this.element.prototypes.getPrototype(dsId);
                                 var pos = this.ownerCt.items.items.indexOf(this) + 1;
                                 var factory = Phlexible.fields.Registry.getFactory(pt.factory);
-                                this.ownerCt.insert(pos, factory(this.ownerCt, pt, {structures: [], values: []}, this.element, this.repeatableId));
+                                this.ownerCt.insert(pos, factory(this.ownerCt, pt, {structures: [], values: []}, this.element, this.ownerCt.repeatableId));
                                 this.ownerCt.doLayout();
                             }.createDelegate(this, [dsId], false)
                         });

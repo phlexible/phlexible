@@ -450,22 +450,22 @@ class DataSaver
 
         foreach ($values as $key => $value) {
             $parts = explode('__', $key);
-            $fixed = $parts[0];
-            $repeatableGroup = null;
+            $identifier = $parts[0];
+            $repeatableIdentifier = null;
             if (isset($parts[1])) {
-                $repeatableGroup = $parts[1];
+                $repeatableIdentifier = $parts[1];
             }
 
-            if (preg_match('/^field-([-a-f0-9]{36})-id-([0-9]+)$/', $fixed, $match)) {
+            if (preg_match('/^field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
                 // existing root value
                 $dsId = $match[1];
                 $id = $match[2];
                 $node = $elementtypeStructure->getNode($dsId);
                 $options = null;
                 $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
-                $elementStructure = $this->findGroup($repeatableGroup);
+                $elementStructure = $this->findGroup($repeatableIdentifier);
                 $elementStructure->setValue($elementStructureValue);
-            } elseif (preg_match('/^field-([-a-f0-9]{36})-new-([0-9]+)$/', $fixed, $match)) {
+            } elseif (preg_match('/^field-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match)) {
                 // new root value
                 $dsId = $match[1];
                 $foundId = $match[2];
@@ -473,38 +473,38 @@ class DataSaver
                 $node = $elementtypeStructure->getNode($dsId);
                 $options = null;
                 $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
-                $elementStructure = $this->findGroup($repeatableGroup);
+                $elementStructure = $this->findGroup($repeatableIdentifier);
                 $elementStructure->setValue($elementStructureValue);
-            } elseif (preg_match('/^group-([-a-f0-9]{36})-id-([0-9]+)$/', $fixed, $match)) {
+            } elseif (preg_match('/^group-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
                 // existing repeatable group
-                $parent = $this->findGroup($repeatableGroup);
+                $parent = $this->findGroup($repeatableIdentifier);
                 $dsId = $match[1];
                 $id = $match[2];
                 $node = $elementtypeStructure->getNode($dsId);
-                $this->structures[$id] = $elementStructure = new ElementStructure();
+                $this->structures[$identifier] = $elementStructure = new ElementStructure();
                 $elementStructure
                     ->setElementVersion($elementVersion)
                     ->setId($id)
                     ->setDsId($dsId)
-                    ->setRepeatableId($parent->getId())
-                    ->setRepeatableDsId($parent->getDsId())
+                    #->setRepeatableId($parent->getId())
+                    #->setRepeatableDsId($parent->getDsId())
                     ->setParentName($parent->getName())
                     ->setName($node->getName());
                 $parent->addStructure($elementStructure);
-            } elseif (preg_match('/^group-([-a-f0-9]{36})-new-([0-9]+)$/', $fixed, $match)) {
+            } elseif (preg_match('/^group-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match)) {
                 // new repeatable group
-                $parent = $this->findGroup($repeatableGroup);
+                $parent = $this->findGroup($repeatableIdentifier);
                 $dsId = $match[1];
                 $foundId = $match[2];
                 $id = $this->elementService->getElementStructureManager()->getNextStructureId();
                 $node = $elementtypeStructure->getNode($dsId);
-                $this->structures[$foundId] = $elementStructure = new ElementStructure();
+                $this->structures[$identifier] = $elementStructure = new ElementStructure();
                 $elementStructure
                     ->setElementVersion($elementVersion)
                     ->setId($id)
                     ->setDsId($dsId)
-                    ->setRepeatableId($parent->getId())
-                    ->setRepeatableDsId($parent->getDsId())
+                    #->setRepeatableId($parent->getId())
+                    #->setRepeatableDsId($parent->getDsId())
                     ->setParentName($parent->getName())
                     ->setName($node->getName());
                 $parent->addStructure($elementStructure);
@@ -521,6 +521,7 @@ class DataSaver
      */
     private function findGroup($identifier)
     {
+        return $this->structures[$identifier];
         if (preg_match('/^group-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
             // existing repeatable group
             $dsId = $match[1];
