@@ -34,6 +34,16 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private $elementStructureLoader;
 
     /**
+     * @var ElementStructureSequence
+     */
+    private $elementStructureSequence;
+
+    /**
+     * @var ElementStructureValueSequence
+     */
+    private $elementStructureValueSequence;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -44,19 +54,25 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private $messagePoster;
 
     /**
-     * @param EntityManager            $entityManager
-     * @param ElementStructureLoader   $elementStructureLoader
-     * @param EventDispatcherInterface $dispatcher
-     * @param MessagePoster            $messagePoster
+     * @param EntityManager                 $entityManager
+     * @param ElementStructureLoader        $elementStructureLoader
+     * @param ElementStructureSequence      $elementStructureSequence
+     * @param ElementStructureValueSequence $elementStructureValueSequence
+     * @param EventDispatcherInterface      $dispatcher
+     * @param MessagePoster                 $messagePoster
      */
     public function __construct(
         EntityManager $entityManager,
         ElementStructureLoader $elementStructureLoader,
+        ElementStructureSequence $elementStructureSequence,
+        ElementStructureValueSequence $elementStructureValueSequence,
         EventDispatcherInterface $dispatcher,
         MessagePoster $messagePoster)
     {
         $this->entityManager = $entityManager;
         $this->elementStructureLoader = $elementStructureLoader;
+        $this->elementStructureSequence = $elementStructureSequence;
+        $this->elementStructureValueSequence = $elementStructureValueSequence;
         $this->dispatcher = $dispatcher;
         $this->messagePoster = $messagePoster;
     }
@@ -80,6 +96,22 @@ class ElementStructureManager implements ElementStructureManagerInterface
         $conn = $this->entityManager->getConnection();
 
         $this->insertStructure($elementStructure, $conn, $onlyValues, true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNextStructureId()
+    {
+        return $this->elementStructureSequence->next();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNextStructureValueId()
+    {
+        return $this->elementStructureValueSequence->next();
     }
 
     /**

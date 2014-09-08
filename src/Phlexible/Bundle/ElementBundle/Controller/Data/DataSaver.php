@@ -161,8 +161,6 @@ class DataSaver
 
         $element->setLatestVersion($elementVersion->getVersion());
 
-        $newVersion = $elementVersion->getVersion();
-
         $elementStructure = $this->createStructure($elementVersion, $elementtypeStructure, $values, $language);
 
         $this->fieldMapper->apply($elementVersion, $elementStructure, array($language));
@@ -470,7 +468,8 @@ class DataSaver
             } elseif (preg_match('/^field-([-a-f0-9]{36})-new-([0-9]+)$/', $fixed, $match)) {
                 // new root value
                 $dsId = $match[1];
-                $id = $match[2];
+                $foundId = $match[2];
+                $id = $this->elementService->getElementStructureManager()->getNextStructureValueId();
                 $node = $elementtypeStructure->getNode($dsId);
                 $options = null;
                 $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
@@ -496,9 +495,10 @@ class DataSaver
                 // new repeatable group
                 $parent = $this->findGroup($repeatableGroup);
                 $dsId = $match[1];
-                $id = $match[2];
+                $foundId = $match[2];
+                $id = $this->elementService->getElementStructureManager()->getNextStructureId();
                 $node = $elementtypeStructure->getNode($dsId);
-                $this->structures[$id] = $elementStructure = new ElementStructure();
+                $this->structures[$foundId] = $elementStructure = new ElementStructure();
                 $elementStructure
                     ->setElementVersion($elementVersion)
                     ->setId($id)

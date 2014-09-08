@@ -90,6 +90,14 @@ class ElementService
     }
 
     /**
+     * @return ElementStructureManagerInterface
+     */
+    public function getElementStructureManager()
+    {
+        return $this->elementStructureManager;
+    }
+
+    /**
      * Find element by ID
      *
      * @param int $eid

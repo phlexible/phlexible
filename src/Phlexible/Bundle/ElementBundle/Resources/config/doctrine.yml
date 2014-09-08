@@ -10,12 +10,28 @@ services:
     phlexible_element.doctrine.element_structure_manager:
         class: Phlexible\Bundle\ElementBundle\Doctrine\ElementStructureManager
         public: false
-        arguments: [@doctrine.orm.entity_manager, @phlexible_element.doctrine.element_structure_loader, @event_dispatcher, @phlexible_message.message_poster]
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @phlexible_element.doctrine.element_structure_loader
+            - @phlexible_element.doctrine.element_structure_sequence
+            - @phlexible_element.doctrine.element_structure_value_sequence
+            - @event_dispatcher
+            - @phlexible_message.message_poster
 
     phlexible_element.doctrine.element_structure_loader:
         class: Phlexible\Bundle\ElementBundle\Doctrine\ElementStructureLoader
         public: false
         arguments: [@doctrine.orm.entity_manager, @phlexible_elementtype.field.registry, @phlexible_elementtype.elementtype_service]
+
+    phlexible_element.doctrine.element_structure_sequence:
+        class: Phlexible\Bundle\ElementBundle\Doctrine\ElementStructureSequence
+        public: false
+        arguments: [@doctrine.orm.entity_manager]
+
+    phlexible_element.doctrine.element_structure_value_sequence:
+        class: Phlexible\Bundle\ElementBundle\Doctrine\ElementStructureValueSequence
+        public: false
+        arguments: [@doctrine.orm.entity_manager]
 
     phlexible_element.doctrine.element_lock_manager:
         class: Phlexible\Bundle\ElementBundle\Doctrine\ElementLockManager
