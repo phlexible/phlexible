@@ -95,7 +95,7 @@ class MediaExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function icon($image)
+    public function icon($image, $size = 16)
     {
         if (!$image) {
             return '';
@@ -108,7 +108,7 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_icon', array('fileId' => $fileId));
+        $src = $this->router->generate('frontendmedia_icon', array('fileId' => $fileId, 'size' => $size));
 
         return $src;
     }
