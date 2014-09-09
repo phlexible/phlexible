@@ -187,7 +187,7 @@ class MediaExtension extends \Twig_Extension
         $site = $this->siteManager->getByFileId($fileId, $fileVersion);
         $file = $site->findFile($fileId, $fileVersion);
 
-        $data = array(
+        $info = array(
             'mimetype'     => $file->getMimeType(),
             'assettype'    => $file->getAttribute('assettype'),
             'documenttype' => $file->getAttribute('documenttype'),
@@ -200,11 +200,15 @@ class MediaExtension extends \Twig_Extension
         foreach ($metasets as $metaset) {
             $metadata = $this->metaDataManager->findByMetaSetAndFile($metaset, $file);
             if ($metadata) {
-                $data['meta'][$metaset->getName()] = $metadata->getValues();
+                $data = array();
+                foreach ($metaset->getFields() as $field) {
+                    $data[$field->getName()] = $metadata->get($field->getName(), 'de');
+                }
+                $info['meta'][$metaset->getName()] = $data;
             }
         }
 
-        return $data;
+        return $info;
     }
 
     /**
