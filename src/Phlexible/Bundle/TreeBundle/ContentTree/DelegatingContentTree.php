@@ -143,6 +143,8 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
             ->setSort($treeNode->getSort())
             ->setSortMode($treeNode->getSortMode())
             ->setSortDir($treeNode->getSortDir())
+            ->setCreatedAt($treeNode->getCreatedAt())
+            ->setCreateUserId($treeNode->getCreateUserId())
             ->setAttributes($treeNode->getAttributes());
 
         $titles = array();
@@ -349,6 +351,14 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     public function getPublishedVersion(TreeNodeInterface $node, $language)
     {
         return $this->tree->getPublishedVersion($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedAt(TreeNodeInterface $node, $language)
+    {
+        return $this->tree->getPublishedAt($node, $language);
     }
 
     /**

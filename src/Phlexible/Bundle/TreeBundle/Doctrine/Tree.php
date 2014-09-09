@@ -308,6 +308,14 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
     /**
      * {@inheritdoc}
      */
+    public function getPublishedAt(TreeNodeInterface $node, $language)
+    {
+        return $this->stateManager->getPublishedAt($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isAsync(TreeNodeInterface $node, $language)
     {
         return $this->stateManager->isAsync($node, $language);

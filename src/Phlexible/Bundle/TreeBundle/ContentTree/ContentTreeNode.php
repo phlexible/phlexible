@@ -194,4 +194,14 @@ class ContentTreeNode extends TreeNode
     {
         return isset($this->versions[$language]);
     }
+
+    /**
+     * @param string $language
+     *
+     * @return \DateTime
+     */
+    public function getPublishedAt($language)
+    {
+        return $this->getTree()->getPublishedAt($this, $language);
+    }
 }

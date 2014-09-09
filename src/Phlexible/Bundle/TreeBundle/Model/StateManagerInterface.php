@@ -66,6 +66,14 @@ interface StateManagerInterface
      * @param TreeNodeInterface $treeNode
      * @param string            $language
      *
+     * @return \DateTime|null
+     */
+    public function getPublishedAt(TreeNodeInterface $treeNode, $language);
+
+    /**
+     * @param TreeNodeInterface $treeNode
+     * @param string            $language
+     *
      * @return bool
      */
     public function isAsync(TreeNodeInterface $treeNode, $language);

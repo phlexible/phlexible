@@ -172,9 +172,17 @@ interface TreeInterface
      * @param TreeNodeInterface $node
      * @param string            $language
      *
-     * @return int
+     * @return int|null
      */
     public function getPublishedVersion(TreeNodeInterface $node, $language);
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return \DateTime|null
+     */
+    public function getPublishedAt(TreeNodeInterface $node, $language);
 
     /**
      * @param TreeNodeInterface $node

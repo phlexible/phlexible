@@ -154,6 +154,19 @@ class StateManager implements StateManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getPublishedAt(TreeNodeInterface $treeNode, $language)
+    {
+        $treeNodeOnline = $this->findOneByTreeNodeAndLanguage($treeNode, $language);
+        if (!$treeNodeOnline) {
+            return null;
+        }
+
+        return $treeNodeOnline->getPublishedAt();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isAsync(TreeNodeInterface $treeNode, $language)
     {
         $treeOnline = $this->findOneByTreeNodeAndLanguage($treeNode, $language);
