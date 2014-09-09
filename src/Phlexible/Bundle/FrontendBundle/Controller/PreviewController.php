@@ -38,7 +38,9 @@ class PreviewController extends Controller
         $contentTreeManager = $this->get('phlexible_tree.content_tree_manager.delegating');
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $node = $contentTreeManager->findByTreeId($tid)->get($tid);
+        $tree = $contentTreeManager->findByTreeId($tid);
+        $tree->setLanguage($language);
+        $node = $tree->get($tid);
 
         $siteroot = $siterootManager->find($node->getTree()->getSiterootId());
         $siteroot->setContentChannels(array(1 => 1));

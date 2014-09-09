@@ -39,6 +39,23 @@ class ContentTreeNode extends TreeNode
     private $versions;
 
     /**
+     * @var string
+     */
+    private $language;
+
+    /**
+     * @param string $language
+     *
+     * @return $this
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getTitles()
@@ -63,8 +80,9 @@ class ContentTreeNode extends TreeNode
      *
      * @return string
      */
-    public function getTitle($language)
+    public function getTitle($language = null)
     {
+        $language = $language ?: $this->language;
         if (!isset($this->titles[$language])) {
             return "no-title-{$this->getId()}-$language-" . print_r($this->titles, 1);
         }
@@ -99,6 +117,7 @@ class ContentTreeNode extends TreeNode
      */
     public function getSlug($language)
     {
+        $language = $language ?: $this->language;
         if (!isset($this->slugs[$language])) {
             return "no-slug-{$this->getId()}-$language";
         }
@@ -107,100 +126,11 @@ class ContentTreeNode extends TreeNode
     }
 
     /**
-     * @return array
-     */
-    public function getLanguages()
-    {
-        return $this->languages;
-    }
-
-    /**
-     * @param array $languages
-     *
-     * @return $this
-     */
-    public function setLanguages($languages)
-    {
-        $this->languages = $languages;
-
-        return $this;
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return bool
-     */
-    public function hasLanguage($language)
-    {
-        return in_array($language, $this->languages);
-    }
-
-    /**
-     * @return array
-     */
-    public function getVersions()
-    {
-        return $this->versions;
-    }
-
-    /**
-     * @param array $versions
-     *
-     * @return $this
-     */
-    public function setVersions(array $versions)
-    {
-        foreach ($versions as $language => $version) {
-            $this->setVersion($language, $version);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return int
-     */
-    public function getVersion($language)
-    {
-        if (!$this->hasVersion($language)) {
-            return null;
-        }
-
-        return $this->versions[$language];
-    }
-
-    /**
-     * @param string $language
-     * @param int    $version
-     *
-     * @return $this
-     */
-    public function setVersion($language, $version)
-    {
-        $this->versions[$language] = (int) $version;
-
-        return $this;
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return bool
-     */
-    public function hasVersion($language)
-    {
-        return isset($this->versions[$language]);
-    }
-
-    /**
      * @param string $language
      *
      * @return \DateTime
      */
-    public function getPublishedAt($language)
+    public function getPublishedAt($language = null)
     {
         return $this->getTree()->getPublishedAt($this, $language);
     }

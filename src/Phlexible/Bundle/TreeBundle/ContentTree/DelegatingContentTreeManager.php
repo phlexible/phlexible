@@ -52,7 +52,7 @@ class DelegatingContentTreeManager implements ContentTreeManagerInterface
     }
 
     /**
-     * @return XmlContentTree[]
+     * @return DelegatingContentTree[]
      */
     public function findAll()
     {
@@ -70,7 +70,7 @@ class DelegatingContentTreeManager implements ContentTreeManagerInterface
     /**
      * @param int $treeId
      *
-     * @return null|XmlContentTree
+     * @return null|DelegatingContentTree
      */
     public function findByTreeId($treeId)
     {
