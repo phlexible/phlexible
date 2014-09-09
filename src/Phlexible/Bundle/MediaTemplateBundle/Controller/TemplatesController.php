@@ -70,15 +70,19 @@ class TemplatesController extends Controller
         switch ($type) {
             case 'image':
                 $template = new \Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate();
+                $template->setCache(false);
                 break;
             case 'video':
                 $template = new \Phlexible\Bundle\MediaTemplateBundle\Model\VideoTemplate();
+                $template->setCache(true);
                 break;
             case 'audio':
                 $template = new \Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate();
+                $template->setCache(true);
                 break;
             case 'pdf':
                 $template = new \Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate();
+                $template->setCache(true);
                 break;
             default:
                 throw new \InvalidArgumentException("Unknown template type $type");

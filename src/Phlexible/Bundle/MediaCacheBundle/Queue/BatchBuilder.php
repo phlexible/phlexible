@@ -61,9 +61,13 @@ class BatchBuilder
      */
     public function createForTemplateAndFile(TemplateInterface $template, FileInterface $file)
     {
-        return $this->create()
-            ->addFile($file)
-            ->addTemplate($template);
+        $batch = $this->create();
+
+        if ($template->getCache()) {
+            $batch
+                ->addFile($file)
+                ->addTemplate($template);
+        }
     }
 
     /**
@@ -118,7 +122,10 @@ class BatchBuilder
     private function addAllTemplates(Batch $batch)
     {
         foreach ($this->templateManager->findAll() as $template) {
-            $batch->addTemplate($template);
+            if ($template->getCache()) {
+                echo $template->getKey().PHP_EOL;
+                $batch->addTemplate($template);
+            }
         }
 
         return $this;

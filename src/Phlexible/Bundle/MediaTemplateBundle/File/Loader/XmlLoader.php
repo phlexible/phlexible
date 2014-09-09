@@ -37,8 +37,8 @@ class XmlLoader implements LoaderInterface
         $key = (string) $xmlAttributes['key'];
         $type = (string) $xmlAttributes['type'];
         $class = (string) $xmlAttributes['class'];
-        $cache = (bool) $xmlAttributes['cache'];
-        $system = (bool) $xmlAttributes['system'];
+        $cache = (bool) (string) $xmlAttributes['cache'];
+        $system = (bool) (string) $xmlAttributes['system'];
         $revision = (int) $xmlAttributes['revision'];
 
         if (!class_exists($class)) {
