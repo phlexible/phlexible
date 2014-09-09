@@ -29,10 +29,12 @@ class MediaExtension extends \Twig_Extension
      * @var SiteManager
      */
     private $siteManager;
+
     /**
      * @var FileMetaSetResolver
      */
     private $metaSetResolver;
+
     /**
      * @var FileMetaDataManager
      */
@@ -92,6 +94,7 @@ class MediaExtension extends \Twig_Extension
 
     /**
      * @param string $image
+     * @param int    $size
      *
      * @return string
      */
@@ -216,6 +219,6 @@ class MediaExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'image';
+        return 'media';
     }
 }

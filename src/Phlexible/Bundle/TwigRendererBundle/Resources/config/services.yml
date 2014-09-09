@@ -40,6 +40,14 @@ services:
         tags:
             - {name: twig.extension}
 
+    phlexible_twig_renderer.twig.extension.media_template:
+        class: Phlexible\Bundle\TwigRendererBundle\Extension\MediaTemplateExtension
+        public: false
+        arguments:
+            - @phlexible_media_template.template_manager
+        tags:
+            - {name: twig.extension}
+
     phlexible_twig_renderer.twig.extension.misc:
         class: Phlexible\Bundle\TwigRendererBundle\Extension\MiscExtension
         public: false
