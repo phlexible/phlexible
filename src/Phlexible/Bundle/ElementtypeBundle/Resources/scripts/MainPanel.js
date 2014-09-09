@@ -199,6 +199,15 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                                 element: element
                             }
                         ],
+                        tbar: [{
+                            text: 'master',
+                            enableToggle: true,
+                            pressed: true,
+                            handler: function() {
+                                this.preview(true);
+                            },
+                            scope: this
+                        }],
                         listeners: {
                             show: this.preview,
                             scope: this
@@ -364,8 +373,8 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
         this.getMainTabPanel().enable();
     },
 
-    preview: function () {
-        if (!this.needPreviewRefresh) {
+    preview: function (needPreviewRefresh) {
+        if (!needPreviewRefresh && !this.needPreviewRefresh) {
             return;
         }
 
@@ -378,9 +387,12 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                 et_id: rootNode.firstChild.attributes.element_type_id
             }
         };
-        previewPanel.element.master = true;
+        previewPanel.element.master = this.getPreviewWrap().getTopToolbar().items.items[0].pressed;
         previewPanel.structure = Phlexible.elements.ElementDataTabHelper.fixStructure(this.processPreviewNodes(rootNode));
-        previewPanel.valueStructure = {structures: [], values: {}};
+        previewPanel.valueStructure = {
+            structures: [],
+            values: {}
+        };
         previewPanel.removeAll();
         previewPanel.lateRender();
 

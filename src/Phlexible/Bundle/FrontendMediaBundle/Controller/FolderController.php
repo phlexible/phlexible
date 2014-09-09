@@ -26,7 +26,7 @@ class FolderController extends Controller
      * Deliver a media asset
      *
      * @return JsonResponse
-     * @Route("/tree", name="frontendmedia_folder_tree")
+     * @Route("/tree", name="frontendmedia_folder")
      */
     public function treeAction()
     {
@@ -36,7 +36,6 @@ class FolderController extends Controller
 
         foreach ($this->get('phlexible_media_site.site_manager')->getAll() as $site) {
             $rootFolder = $site->findRootFolder();
-
 
             if (!$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
                 #continue;
@@ -57,6 +56,12 @@ class FolderController extends Controller
         return new JsonResponse($data);
     }
 
+    /**
+     * @param SiteInterface   $site
+     * @param FolderInterface $folder
+     *
+     * @return array
+     */
     private function recurseFolders(SiteInterface $site, FolderInterface $folder)
     {
         $data = array();

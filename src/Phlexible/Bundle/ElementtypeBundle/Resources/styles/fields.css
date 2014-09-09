@@ -14,7 +14,7 @@
 */
 
 .x-dd-drag-proxy .p-elementtypes-type-referenceroot .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/elementtypes/icons/field_reference.png) !important;
+    background-image: url(/COMPONENTSPATH/phlexibleelementtype/icons/field_reference.png) !important;
 }
 
 .p-field-table {
@@ -77,14 +77,14 @@ img.p-fields-unlink {
     cursor: pointer;
     margin-left: 3px;
     vertical-align: top;
-    background-image: url(/COMPONENTSPATH/elementtypes/icons/unlink.png) !important;
+    background-image: url(/COMPONENTSPATH/phlexibleelementtype/icons/unlink.png) !important;
 }
 
 img.p-fields-link {
     cursor: pointer;
     margin-left: 3px;
     vertical-align: top;
-    background-image: url(/COMPONENTSPATH/elementtypes/icons/link.png) !important;
+    background-image: url(/COMPONENTSPATH/phlexibleelementtype/icons/link.png) !important;
 }
 
 /**

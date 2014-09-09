@@ -20,7 +20,7 @@ class FolderField extends AbstractField
      */
     public function getIcon()
     {
-        return 'p-frontendmedia-fieldfield_folder_flash-icon';
+        return 'p-frontendmedia-field_folder-icon';
     }
 
     /**

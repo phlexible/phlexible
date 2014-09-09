@@ -9,7 +9,7 @@ Ext.reg('elementtypes-field-suggest', Phlexible.fields.Suggest);
 
 Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeMode = 'local';
-    console.warn(item);
+
     if (item.configuration.suggest_source) {
         /*
          store = new Ext.data.SimpleStore({
