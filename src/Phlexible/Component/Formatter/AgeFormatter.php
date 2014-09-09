@@ -27,9 +27,20 @@ class AgeFormatter
      */
     public static function formatDate($firstDate, $secondDate = null, $returnAsArray = false)
     {
-        $firstTimestamp = strtotime($firstDate);
+        if ($firstDate instanceof \DateTime) {
+            $firstTimestamp = $firstDate->format('U');
+        } elseif (is_int($firstDate)) {
+            $firstTimestamp = strtotime($firstDate);
+        } else {
+            $firstTimestamp = strtotime($firstDate);
+        }
+
         $secondTimestamp = null;
-        if ($secondDate !== null) {
+        if ($secondDate instanceof \DateTime) {
+            $secondTimestamp = $secondDate->format('U');
+        } elseif (is_int($secondDate)) {
+            $secondTimestamp = strtotime($secondDate);
+        } else {
             $secondTimestamp = strtotime($secondDate);
         }
 

@@ -192,6 +192,7 @@ class MediaExtension extends \Twig_Extension
             'assettype'    => $file->getAttribute('assettype'),
             'documenttype' => $file->getAttribute('documenttype'),
             'size'         => $file->getSize(),
+            'attributes'   => $file->getAttribute('attributes'),
             'meta'         => array(),
         );
 
