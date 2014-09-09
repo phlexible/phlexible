@@ -69,6 +69,10 @@ class MediaSiteListener implements EventSubscriberInterface
         $this->process($fileSource, $fileAttributes);
     }
 
+    /**
+     * @param PathSourceInterface $fileSource
+     * @param AttributeBag        $fileAttributes
+     */
     private function process(PathSourceInterface $fileSource, AttributeBag $fileAttributes)
     {
         $attributes = new AttributeBag();
