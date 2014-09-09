@@ -200,7 +200,8 @@ class MetaDataManager implements MetaDataManagerInterface
                 $metaData = $metaDatas[$id];
             }
 
-            $metaData->set($row['field_id'], $row['value'], $row['language']);
+            $field = $metaSet->getFieldById($row['field_id']);
+            $metaData->set($field->getName(), $row['value'], $row['language']);
         }
 
         return $metaDatas;
