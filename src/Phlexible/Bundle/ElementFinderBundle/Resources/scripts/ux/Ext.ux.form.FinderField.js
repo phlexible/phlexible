@@ -1,6 +1,7 @@
 Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
     trigger1Class: 'x-form-clear-trigger',
     trigger2Class: 'p-elementfinder-catch-icon',
+    triggerClass: 'p-elementfinder-catch-icon',
     hiddenValue: '',
     hideTrigger1: true,
 
@@ -19,6 +20,20 @@ Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
 
         Ext.ux.form.FinderField.superclass.initComponent.call(this);
     },
+
+    /**
+     * Clears any text/value currently set in the field
+     */
+    clearValue : function(){
+        if(this.hiddenField){
+            this.hiddenField.value = '';
+        }
+        this.setRawValue('');
+        this.lastSelectionText = '';
+        this.applyEmptyText();
+        this.value = '';
+    },
+
     reset: Ext.form.Field.prototype.reset.createSequence(function () {
         this.triggers[0].hide();
     }),
@@ -91,6 +106,8 @@ Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
     onClear: function () {
         Ext.ux.form.LinkField.superclass.onClear.call(this);
 
+        this.setValue(null);
+        this.setRawValue('');
         this.hiddenValue = this.getValue();
     },
 
@@ -107,7 +124,8 @@ Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
             filter: this.filter,
             listeners: {
                 set: function(w, values) {
-                    this.setValue('configured');
+                    this.setValue(Ext.encode(values));
+                    this.setRawValue('configured');
                     this.hiddenValue = values;
                 },
                 scope: this
