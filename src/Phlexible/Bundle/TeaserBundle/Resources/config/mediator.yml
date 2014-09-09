@@ -3,10 +3,6 @@ services:
         class: Phlexible\Bundle\TeaserBundle\Mediator\ElementMediator
         arguments: [@phlexible_element.element_service]
 
-    phlexible_teaser.teaser_mediator.catch:
-        class: Phlexible\Bundle\TeaserBundle\Mediator\CatchMediator
-        arguments: [@phlexible_teaser.catch_manager]
-
     phlexible_teaser.teaser_mediator:
         class: Phlexible\Bundle\TeaserBundle\Mediator\Mediator
-        arguments: [[@phlexible_teaser.teaser_mediator.element, @phlexible_teaser.teaser_mediator.catch]]
+        arguments: [[@phlexible_teaser.teaser_mediator.element]]

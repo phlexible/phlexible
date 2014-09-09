@@ -6,18 +6,6 @@ services:
     phlexible_teaser.layoutarea.manager:
         class: Phlexible\Bundle\TeaserBundle\Layoutarea\LayoutareaManager
 
-    phlexible_teaser.catch.matcher.treenode:
-        class: Phlexible\Bundle\TeaserBundle\ElementCatch\Matcher\TreeNodeMatcher
-        arguments: [@phlexible_tree.tree_manager, @phlexible_element.element_service, false]
-
-    phlexible_teaser.catcher:
-        class: Phlexible\Bundle\TeaserBundle\ElementCatch\ElementCatcher
-        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_teaser.catch.matcher.treenode, false]
-
-    phlexible_teaser.catch.helper:
-        class: Phlexible\Bundle\TeaserBundle\ElementCatch\CatchHelper
-        arguments: [@doctrine.dbal.default_connection, @phlexible_element.element_service, @event_dispatcher]
-
     phlexible_teaser.rights.provider:
         class: Phlexible\Bundle\TeaserBundle\AccessControl\TeaserRightsProvider
         tags:
@@ -37,9 +25,3 @@ services:
         arguments: [@doctrine.dbal.default_connection]
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
-
-    phlexible_teaser.listener.publish_node:
-        class: Phlexible\Bundle\TeaserBundle\EventListener\NodeListener
-        arguments: [@phlexible_teaser.catch.helper]
-        tags:
-            - {name: kernel.event_subscriber}

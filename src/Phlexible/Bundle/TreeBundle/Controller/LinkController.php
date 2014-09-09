@@ -258,6 +258,9 @@ class LinkController extends Controller
                 $tree = $treeManager->getByNodeId($id);
                 $node = $tree->get($id);
             } else {
+                if (!$siterootId) {
+                    return new JsonResponse();
+                }
                 $tree = $treeManager->getBySiteRootId($siterootId);
                 $node = $tree->getRoot();
             }

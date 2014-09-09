@@ -1,0 +1,8 @@
+elementfinder:
+    finder: Finder
+    max_depth: Max. Suchtiefe
+    filter: Filter
+    no_filter: Kein Filter
+    template: Template
+    store: Übernehmen
+    cancel: Abbrechen

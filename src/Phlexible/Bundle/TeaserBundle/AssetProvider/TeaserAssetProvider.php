@@ -57,14 +57,12 @@ class TeaserAssetProvider implements AssetProviderInterface
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/Definitions.js')),
 
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/CatchDataPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTree.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTreeLoader.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTreeNodeUI.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/NewTeaserWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/NewTeaserInstanceWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/NewCatchWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/PublishTeaserWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/SetTeaserOfflineWindow.js')),
         ));

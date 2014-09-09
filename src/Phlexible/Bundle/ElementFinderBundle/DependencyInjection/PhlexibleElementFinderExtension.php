@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TeaserBundle\DependencyInjection;
+namespace Phlexible\Bundle\ElementFinderBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -14,11 +14,11 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Teaser extension
+ * Element finder extension
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class PhlexibleTeaserExtension extends Extension
+class PhlexibleElementFinderExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -28,11 +28,15 @@ class PhlexibleTeaserExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('doctrine.yml');
-        $loader->load('mediator.yml');
-        $loader->load('content.yml');
 
-        $container->setAlias('phlexible_teaser.teaser_manager', 'phlexible_teaser.doctrine.teaser_manager');
-        $container->setAlias('phlexible_teaser.teaser_service', 'phlexible_teaser.doctrine.teaser_manager');
-        $container->setAlias('phlexible_teaser.state_manager', 'phlexible_teaser.doctrine.state_manager');
+        $configuration = $this->getConfiguration($config, $container);
+        $config = $this->processConfiguration($configuration, $config);
+
+        $container->setParameter(
+            'phlexible_element_finder.use_master_language_as_fallback',
+            $config['use_master_language_as_fallback']
+        );
+
+        $container->setAlias('phlexible_element_finder.element_finder_manager', 'phlexible_teaser.doctrine.element_finder_manager');
     }
 }

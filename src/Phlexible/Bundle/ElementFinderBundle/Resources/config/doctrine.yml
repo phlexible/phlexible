@@ -1,0 +1,4 @@
+services:
+    phlexible_teaser.doctrine.element_finder_manager:
+        class: Phlexible\Bundle\ElementFinderBundle\Doctrine\ElementFinderManager
+        arguments: [@doctrine.orm.entity_manager, @event_dispatcher, @phlexible_message.message_poster]

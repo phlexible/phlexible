@@ -1,0 +1,34 @@
+services:
+    phlexible_element_finder.treenode_matcher:
+        class: Phlexible\Bundle\ElementFinderBundle\ElementFinder\Matcher\TreeNodeMatcher
+        arguments: [@phlexible_tree.tree_manager, @phlexible_element.element_service, false]
+
+    phlexible_element_finder.finder:
+        class: Phlexible\Bundle\ElementFinderBundle\ElementFinder\ElementFinder
+        arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_element_finder.treenode_matcher, false]
+
+    phlexible_element_finder.catch.helper:
+        class: Phlexible\Bundle\ElementFinderBundle\ElementFinder\CatchHelper
+        arguments: [@doctrine.dbal.default_connection, @phlexible_element.element_service, @event_dispatcher]
+
+    # asset providers
+    phlexible_element_finder.asset_provider:
+        class: Phlexible\Bundle\ElementFinderBundle\AssetProvider\ElementFinderAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider, priority: 100}
+
+    # event listeners
+    phlexible_element_finder.listener.publish_node:
+        class: Phlexible\Bundle\ElementFinderBundle\EventListener\NodeListener
+        arguments: [@phlexible_element_finder.catch.helper]
+        tags:
+            - {name: kernel.event_subscriber}
+
+    # fields
+    phlexible_element_finder.field.finder:
+        class: Phlexible\Bundle\ElementFinderBundle\Field\FinderField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: finder}

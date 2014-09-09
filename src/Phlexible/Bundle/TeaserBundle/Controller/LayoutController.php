@@ -48,7 +48,7 @@ class LayoutController extends Controller
         $translator = $this->get('translator');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $teaserService = $this->get('phlexible_teaser.teaser_service');
-        $catchManager = $this->get('phlexible_teaser.catch_manager');
+        $catchManager = $this->get('phlexible_element_finder.element_finder_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $elementtypeService = $elementService->getElementtypeService();
         $iconResolver = $this->get('phlexible_element.icon_resolver');
@@ -398,7 +398,7 @@ class LayoutController extends Controller
                         'Version ' . $teaserElementVersion->getVersion() . '<br>',
                 );
             } elseif ('catch' === $teaser->getType()) {
-                $catch = $this->get('phlexible_teaser.catch_manager')->findCatch($teaser->getTypeId());
+                $catch = $this->get('phlexible_teaser.element_finder_manager')->findCatch($teaser->getTypeId());
 
                 $data[] = array(
                     'teaser_id'       => (int) $teaser->getId(),
@@ -413,7 +413,6 @@ class LayoutController extends Controller
                     'author'          => 'author',
                     'version'         => 0,
                     'create_time'     => '',
-                    //                'change_time'     => $child['modify_time'],
                     'publish_time'    => null,
                     'language'        => $language,
                     'sort'            => $teaser->getSort(),
