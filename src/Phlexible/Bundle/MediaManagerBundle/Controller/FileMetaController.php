@@ -63,7 +63,7 @@ class FileMetaController extends Controller
 
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $language) {
-                        $fieldData["value_$language"] = $metaData->get($field->getId(), $language);
+                        $fieldData["value_$language"] = $metaData->get($field->getName(), $language);
                     }
                 }
 
