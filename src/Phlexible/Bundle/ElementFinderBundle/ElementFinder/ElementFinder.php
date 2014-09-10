@@ -115,7 +115,7 @@ class ElementFinder
         $items = $this->connection->fetchAll($select->getSQL());
         $newItems = array();
         foreach ($items as $item) {
-            $newItems[$item['tid']] = $item;
+            $newItems[$item['tree_id']] = $item;
         }
         $items = $newItems;
 
@@ -238,14 +238,14 @@ class ElementFinder
         $select
             ->select(
                 array(
-                    'ch.tree_id AS tid',
+                    'ch.tree_id',
                     'ch.eid',
                     'ch.version',
-                    'ch.is_preview AS preview',
+                    'ch.is_preview',
                     'ch.elementtype_id',
                     'ch.in_navigation',
-                    'ch.is_restricted AS restricted',
-                    'ch.published_at AS publish_time',
+                    'ch.is_restricted',
+                    'ch.published_at',
                     'ch.custom_date',
                     'ch.language',
                     //'ch.online_version',

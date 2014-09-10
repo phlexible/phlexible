@@ -8,8 +8,9 @@
 
 namespace Phlexible\Bundle\ElementFinderBundle\EventListener;
 
-use Phlexible\Bundle\ElementFinderBundle\ElementFinder\CatchHelper;
+use Phlexible\Bundle\ElementFinderBundle\ElementFinder\LookupBuilder;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -21,9 +22,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class NodeListener implements EventSubscriberInterface
 {
     /**
-     * @var CatchHelper
+     * @var LookupBuilder
      */
-    private $catchHelper;
+    private $lookupBuilder;
 
     /**
      * {@inheritdoc}
@@ -40,11 +41,11 @@ class NodeListener implements EventSubscriberInterface
     }
 
     /**
-     * @param CatchHelper $catchHelper
+     * @param LookupBuilder $lookupBuilder
      */
-    public function __construct(CatchHelper $catchHelper)
+    public function __construct(LookupBuilder $lookupBuilder)
     {
-        $this->catchHelper = $catchHelper;
+        $this->lookupBuilder = $lookupBuilder;
     }
 
     /**
@@ -53,21 +54,19 @@ class NodeListener implements EventSubscriberInterface
     public function onPublishNode(NodeEvent $event)
     {
         $node = $event->getNode();
-        $eid = $node->getTypeId();
 
-        $this->catchHelper->updateOnline($eid);
+        $this->lookupBuilder->updateOnline($node);
     }
 
     /**
-     * @param NodeEvent $event
+     * @param SetNodeOfflineEvent $event
      */
-    public function onSetNodeOffline(NodeEvent $event)
+    public function onSetNodeOffline(SetNodeOfflineEvent $event)
     {
         $node = $event->getNode();
-        $tid = $node->getId();
         $language = $event->getLanguage();
 
-        $this->catchHelper->removeOnlineByTidAndLanguage($tid, $language);
+        $this->lookupBuilder->removeOnlineByTreeNodeAndLanguage($node, $language);
     }
 
     /**
@@ -76,9 +75,8 @@ class NodeListener implements EventSubscriberInterface
     public function onDeleteNode(NodeEvent $event)
     {
         $node = $event->getNode();
-        $tid = $node->getId();
 
-        $this->catchHelper->removeByTid($tid);
+        $this->lookupBuilder->remove($node);
     }
 
     /**
@@ -87,9 +85,8 @@ class NodeListener implements EventSubscriberInterface
     public function onUpdateNode(NodeEvent $event)
     {
         $node = $event->getNode();
-        $eid = $node->getTypeId();
 
-        $this->catchHelper->updatePreview($eid);
+        $this->lookupBuilder->updatePreview($node);
     }
 
     /**
@@ -98,8 +95,7 @@ class NodeListener implements EventSubscriberInterface
     public function onCreateNodeInstance(NodeEvent $event)
     {
         $node = $event->getNode();
-        $eid = $node->getTypeId();
 
-        $this->catchHelper->updatePreview($eid);
+        $this->lookupBuilder->updatePreview($node);
     }
 }

@@ -16,72 +16,52 @@ namespace Phlexible\Bundle\ElementFinderBundle;
 class ElementFinderEvents
 {
     /**
-     * Before Catch Get Result Pool
-     *
      * Fired before catch queries the database.
      */
-    const BEFORE_CATCH_GET_RESULT_POOL = 'phlexible_teaser.before_catch_get_result_pool';
+    const BEFORE_CATCH_GET_RESULT_POOL = 'phlexible_element_finder.before_catch_get_result_pool';
 
     /**
-     * Before Catch Get Result Pool
-     *
      * Fired before catch queries the database.
      */
-    const CATCH_GET_RESULT_POOL = 'phlexible_teaser.catch_get_result_pool';
+    const CATCH_GET_RESULT_POOL = 'phlexible_element_finder.catch_get_result_pool';
 
     /**
-     * Before Delete Catch Event
-     *
      * Fired before a catch is created.
      */
-    const BEFORE_CREATE_CATCH = 'phlexible_teaser.before_create_catch';
+    const BEFORE_CREATE_CATCH = 'phlexible_element_finder.before_create_catch';
 
     /**
-     * Delete Catch Event
-     *
      * Fired after a catch has been created.
      */
-    const CREATE_CATCH = 'phlexible_teaser.create_catch';
+    const CREATE_CATCH = 'phlexible_element_finder.create_catch';
 
     /**
-     * Before Update Catch Event
-     *
      * Fired before a catch is updated.
      */
-    const BEFORE_UPDATE_CATCH = 'phlexible_teaser.before_update_catch';
+    const BEFORE_UPDATE_CATCH = 'phlexible_element_finder.before_update_catch';
 
     /**
-     * Delete Update Event
-     *
      * Fired after a catch has been updated.
      */
-    const UPDATE_CATCH = 'phlexible_teaser.update_catch';
+    const UPDATE_CATCH = 'phlexible_element_finder.update_catch';
 
     /**
-     * Before Delete Catch Event
-     *
      * Fired before a teaser is deleted.
      */
-    const BEFORE_DELETE_CATCH = 'phlexible_teaser.before_delete_catch';
+    const BEFORE_DELETE_CATCH = 'phlexible_element_finder.before_delete_catch';
 
     /**
-     * Delete Catch Event
-     *
      * Fired after a catch has been deleted.
      */
-    const DELETE_CATCH = 'phlexible_teaser.delete_catch';
+    const DELETE_CATCH = 'phlexible_element_finder.delete_catch';
 
     /**
-     * Update Catch Teaser Helper Event
-     *
      * Fired before a catch teaser helper is updates.
      */
-    const BEFORE_UPDATE_CATCH_TEASER_HELPER = 'phlexible_teaser.before_update_catch_teaser_helper';
+    const BEFORE_UPDATE_LOOKUP_ELEMENT = 'phlexible_element_finder.before_update_lookup_element';
 
     /**
-     * Update Catch Teaser Helper Event
-     *
      * Fired after a catch teaser helper is updates.
      */
-    const UPDATE_CATCH_TEASER_HELPER = 'phlexible_teaser.update_catch_teaser_helper';
+    const UPDATE_LOOKUP_ELEMENT = 'phlexible_element_finder.update_lookup_element';
 }

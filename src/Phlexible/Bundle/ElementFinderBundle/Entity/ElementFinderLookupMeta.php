@@ -69,4 +69,165 @@ class ElementFinderLookupMeta
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
+
+    /**
+     * @param int $eid
+     *
+     * @return $this
+     */
+    public function setEid($eid)
+    {
+        $this->eid = $eid;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEid()
+    {
+        return $this->eid;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return $this
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return $this
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $setId
+     *
+     * @return $this
+     */
+    public function setSetId($setId)
+    {
+        $this->setId = $setId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSetId()
+    {
+        return $this->setId;
+    }
+
+    /**
+     * @param int $treeId
+     *
+     * @return $this
+     */
+    public function setTreeId($treeId)
+    {
+        $this->treeId = $treeId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTreeId()
+    {
+        return $this->treeId;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param int $version
+     *
+     * @return $this
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
 }

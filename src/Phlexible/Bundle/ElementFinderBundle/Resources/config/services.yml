@@ -7,9 +7,14 @@ services:
         class: Phlexible\Bundle\ElementFinderBundle\ElementFinder\ElementFinder
         arguments: [@doctrine.dbal.default_connection, @event_dispatcher, @phlexible_element_finder.treenode_matcher, false]
 
-    phlexible_element_finder.catch.helper:
-        class: Phlexible\Bundle\ElementFinderBundle\ElementFinder\CatchHelper
-        arguments: [@doctrine.dbal.default_connection, @phlexible_element.element_service, @event_dispatcher]
+    phlexible_element_finder.lookup_builder:
+        class: Phlexible\Bundle\ElementFinderBundle\ElementFinder\LookupBuilder
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @phlexible_element.element_service
+            - @phlexible_element.element_meta_set_resolver
+            - @phlexible_element.element_meta_data_manager
+            - @event_dispatcher
 
     # asset providers
     phlexible_element_finder.asset_provider:
@@ -22,7 +27,7 @@ services:
     # event listeners
     phlexible_element_finder.listener.publish_node:
         class: Phlexible\Bundle\ElementFinderBundle\EventListener\NodeListener
-        arguments: [@phlexible_element_finder.catch.helper]
+        arguments: [@phlexible_element_finder.lookup_builder]
         tags:
             - {name: kernel.event_subscriber}
 

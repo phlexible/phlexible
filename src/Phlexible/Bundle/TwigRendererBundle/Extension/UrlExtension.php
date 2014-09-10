@@ -89,9 +89,10 @@ class UrlExtension extends \Twig_Extension
      */
     public function treeNode($treeId)
     {
-        $node = $this->contentTreeManager->findByTreeId($treeId);
+        $tree = $this->contentTreeManager->findByTreeId($treeId);
+        $treeNode = $tree->get($treeId);
 
-        return new ContentTreeContext($node);
+        return new ContentTreeContext($treeNode);
     }
 
     /**

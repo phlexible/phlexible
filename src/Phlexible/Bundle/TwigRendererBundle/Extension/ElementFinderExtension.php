@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\TwigRendererBundle\Extension;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementFinderBundle\ElementFinder\ElementFinder;
+use Phlexible\Bundle\ElementFinderBundle\ElementFinder\ElementFinderResultPool;
 use Phlexible\Bundle\ElementFinderBundle\Entity\ElementFinderConfig;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
 
@@ -46,7 +47,7 @@ class ElementFinderExtension extends \Twig_Extension
     /**
      * @param ElementStructureValue|array $field
      *
-     * @return array
+     * @return ElementFinderResultPool
      */
     public function finder($field)
     {
@@ -68,9 +69,9 @@ class ElementFinderExtension extends \Twig_Extension
             ->setSortOrder($values['sortDir'])
             ->setTreeId($values['startTreeId']);
 
-        $this->elementFinder->find($elementFinderConfig, array('de'), false);
+        $resultPool = $this->elementFinder->find($elementFinderConfig, array('de'), true);
 
-        return print_r($values, 1);
+        return $resultPool;
     }
 
     /**

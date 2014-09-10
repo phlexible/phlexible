@@ -63,7 +63,7 @@ class ElementFinderResultPool
     /**
      * @return array
      */
-    public function getItems()
+    public function all()
     {
         return $this->items;
     }
