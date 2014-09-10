@@ -175,8 +175,7 @@ class ListController extends Controller
         $uniqueId = $request->get('unique_id');
 
         if (!$uniqueId) {
-            $uniqueId = strtolower($title);
-            $uniqueId = preg_replace('[^a-z0-9_]', '_', $uniqueId);
+            $uniqueId = preg_replace('/[^a-z0-9_]/', '_', strtolower($title));
         }
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');

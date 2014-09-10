@@ -91,7 +91,7 @@ class ElementFinder
      *
      * @return ElementFinderResultPool
      */
-    public function catchElements(
+    public function find(
         ElementFinderConfig $elementCatch,
         array $languages,
         $isPreview,
@@ -357,10 +357,21 @@ class ElementFinder
      */
     private function applySortByField(QueryBuilder $select, ElementFinderConfig $elementCatch)
     {
+        return;
         $select
-            ->join('ch', 'element_data', 'sort_d', 'ch.eid = sort_d.eid AND ch.version = sort_d.version')
-            ->join('sort_d', 'element_data_language', 'sort_dl', 'sort_d.data_id = sort_dl.data_id AND sort_d.version = sort_dl.version AND sort_d.eid = sort_dl.eid AND sort_d.ds_id = ' . $select->expr()->literal($elementCatch->getSortField()) . ' AND sort_dl.language = ch.language')
-            ->addSelect(self::FIELD_SORT . '.content');
+            ->addSelect(self::FIELD_SORT . '.content')
+            ->join(
+                'ch',
+                'element_structure',
+                'sort_d',
+                'ch.eid = sort_d.eid AND ch.version = sort_d.version'
+            )
+            ->join(
+                'sort_d',
+                'element_structure_value',
+                'sort_dl',
+                'sort_d.data_id = sort_dl.data_id AND sort_d.version = sort_dl.version AND sort_d.eid = sort_dl.eid AND sort_d.ds_id = ' . $select->expr()->literal($elementCatch->getSortField()) . ' AND sort_dl.language = ch.language'
+            );
 
         if (!$this->isNatSort) {
             $select->orderBy(self::FIELD_SORT, $elementCatch->getSortOrder());
@@ -377,12 +388,13 @@ class ElementFinder
     private function applySortByTitle(QueryBuilder $select, $title, ElementFinderConfig $elementCatch)
     {
         $select
+            ->addSelect("sort_field.$title")
             ->leftJoin(
-                array('sort_t' => 'element_version_titles'),
-                'ch.eid = sort_t.eid AND ch.version = sort_t.version',
-                array('sort_field' => $title)
-            )
-            ->where('sort_t.language = ch.language');
+                'ch',
+                'element_version_mapped_fields',
+                'sort_t',
+                'ch.eid = sort_t.eid AND ch.version = sort_t.version AND ch.language = sort_t.language'
+            );
 
         if (!$this->isNatSort) {
             $select->orderBy(self::FIELD_SORT, $elementCatch->getSortOrder());
