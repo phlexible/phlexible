@@ -14,10 +14,8 @@ Phlexible.elementfinder.ElementFinderConfigWindow = Ext.extend(Ext.Window, {
             xtype: 'elementfinder-finder-config-panel',
             header: false,
             siterootId: this.siterootId,
-            elementtypeIds: this.elementtypeIds,
-            inNavigation: this.inNavigation,
-            maxDepth: this.maxDepth,
-            filter: this.filter
+            values: this.values,
+            baseValues: this.baseValues
         }];
 
         this.buttons = [{

@@ -1,5 +1,3 @@
-Ext.reg('twintrigger', Ext.form.TwinTriggerField);
-
 Phlexible.fields.Registry.addFactory('finder', function(parentConfig, item, valueStructure, element, repeatableId) {
 	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
@@ -10,10 +8,6 @@ Phlexible.fields.Registry.addFactory('finder', function(parentConfig, item, valu
 		width: (parseInt(item.configuration.width, 10) || 200),
 
         siterootId: element.siteroot_id,
-        elementtypeIds: item.configuration.element_type_ids,
-        inNavigation: item.configuration.in_navigation,
-        maxDepth: item.configuration.max_depth,
-        filter: item.configuration.filter,
 
 		supportsPrefix: true,
 		supportsSuffix: true,
@@ -22,6 +16,20 @@ Phlexible.fields.Registry.addFactory('finder', function(parentConfig, item, valu
 		supportsUnlink: {unlinkEl: 'trigger'},
 		supportsRepeatable: true
 	});
+
+    config.baseValues = {
+        elementtypeIds: item.configuration.element_type_ids,
+        inNavigation: item.configuration.in_navigation,
+        maxDepth: item.configuration.max_depth,
+        sortField: item.configuration.sort_field,
+        sortDir: item.configuration.sort_dir,
+        filter: item.configuration.filter,
+        template: item.configuration.template
+    };
+    if (config.value) {
+        config.hiddenValue = config.value;
+        config.value = 'configured';
+    }
 
 	delete config.name;
 

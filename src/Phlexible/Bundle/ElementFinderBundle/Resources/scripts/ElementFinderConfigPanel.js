@@ -13,14 +13,32 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
     isLinkInitialized: false,
     isElementTypeInitialized: false,
 
-    siteroot_id: '',
-
     //disabled: true,
 
     initComponent: function () {
         this.addEvents(
             'save'
         );
+
+        if (!this.values) {
+            this.values = {};
+        }
+        if (this.values.inNavigation === undefined) {
+            this.values.inNavigation = this.baseValues.inNavigation;
+        }
+        if (this.values.maxDepth === undefined) {
+            this.values.maxDepth = this.baseValues.maxDepth;
+        }
+        if (this.values.sortField === undefined) {
+            this.values.sortField = this.baseValues.sortField;
+        }
+        if (this.values.sortDir === undefined) {
+            this.values.sortDir = this.baseValues.sortDir;
+        }
+
+        if (!this.siterootId) {
+            this.siterootId = '';
+        }
 
         this.items = [
             {
@@ -29,81 +47,93 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                 border: false,
                 items: [{
                     xtype: 'fieldset',
-                    title: Phlexible.elements.Strings.elements,
+                    title: this.strings.elements,
                     autoHeight: true,
                     anchor: '-15',
                     items: [{
                         xtype: 'hidden',
-                        name: 'for_tree_id_hidden'
+                        name: 'startTreeId',
+                        value: this.values.startTreeId
                     },{
                         xtype: 'tidselector',
                         name: 'for_tree_id',
-                        fieldLabel: Phlexible.elements.Strings.tid,
+                        fieldLabel: this.strings.start_node,
                         labelSeparator: '',
                         element: {
-                            siteroot_id: this.siteroot_id
+                            siteroot_id: this.siterootId
                         },
                         recursive: true,
                         width: 300,
                         listWidth: 300,
                         treeWidth: 292,
+                        value: this.values.startTreeId,
                         listeners: {
                             change: function (field) {
-                                field.getForm().setValues({
-                                    for_tree_id_hidden: field.getValue()
-                                });
+                                this.getComponent(0).getComponent(0).getComponent(0).setValue(
+                                    this.getComponent(0).getComponent(0).getComponent(1).getValue()
+                                );
                             },
                             load: function () {
-                                if (this.catchConfig) {
-                                    this.getForm().setValues({'for_tree_id': this.catchConfig.for_tree_id});
-                                }
+                                this.getComponent(0).getComponent(0).getComponent(1).setValue(
+                                    this.getComponent(0).getComponent(0).getComponent(1).getValue()
+                                );
                             },
                             scope: this
                         }
                     },{
                         xtype: 'checkbox',
-                        fieldLabel: Phlexible.elements.Strings.elements,
-                        boxLabel: Phlexible.elements.Strings.in_navigation,
-                        name: 'in_navigation',
-                        checked: this.inNavigation
+                        fieldLabel: this.strings.elements,
+                        boxLabel: this.strings.in_navigation,
+                        name: 'inNavigation',
+                        checked: this.values.inNavigation
                     },
                     {
                         xtype: 'numberfield',
                         fieldLabel: this.strings.max_depth,
-                        name: 'max_depth',
+                        name: 'maxDepth',
                         width: 30,
-                        value: this.maxDepth,
+                        value: this.values.maxDepth,
                         allowBlank: true
                     }]
                 },
                     {
                         xtype: 'fieldset',
-                        title: Phlexible.elements.Strings.sort_mode,
+                        title: this.strings.sort,
                         autoHeight: true,
                         anchor: '-15',
                         items: [{
-                            xtype: 'combo',
+                            xtype: 'twincombobox',
                             width: 300,
                             listWidth: 300,
-                            fieldLabel: Phlexible.elements.Strings.sort_field,
-                            hiddenName: 'sort_field',
+                            fieldLabel: this.strings.sort_field,
+                            hiddenName: 'sortField',
+                            value: this.values.sortField,
                             store: new Ext.data.JsonStore({
-                                url: Phlexible.Router.generate('elementfinder_catch_sortfields'),
+                                url: Phlexible.Router.generate('elementfinder_catch_sortfields', {query: this.baseValues.elementtypeIds}),
                                 root: 'data',
-                                fields: ['ds_id', 'title', 'icon']
+                                fields: ['ds_id', 'title', 'icon'],
+                                autoLoad: true,
+                                listeners: {
+                                    load: function() {
+                                        this.getComponent(0).getComponent(1).getComponent(0).setValue(
+                                            this.getComponent(0).getComponent(1).getComponent(0).getValue()
+                                        );
+                                    },
+                                    scope: this
+                                }
                             }),
                             //tpl: '<tpl for="."><div class="x-combo-list-item {icon}">{title}</div></tpl>',
                             displayField: 'title',
                             valueField: 'ds_id',
                             mode: 'remote',
-                            emptyText: Phlexible.elements.Strings.unsorted,
+                            emptyText: this.strings.unsorted,
                             listClass: 'x-combo-list-big',
                             editable: false,
                             triggerAction: 'all',
                             selectOnFocus: true,
                             listeners: {
                                 beforequery: function (event) {
-                                    event.query = this.elementtypeIds;
+                                    event.query = this.baseValues.elementtypeIds;
                                 },
                                 scope: this
                             }
@@ -112,16 +142,16 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                                 xtype: 'combo',
                                 width: 300,
                                 listWidth: 300,
-                                fieldLabel: Phlexible.elements.Strings.sort_order,
-                                hiddenName: 'sort_order',
+                                fieldLabel: this.strings.sort_dir,
+                                hiddenName: 'sortDir',
+                                value: this.values.sortDir || 'ASC',
                                 store: new Ext.data.SimpleStore({
                                     fields: ['title', 'value'],
                                     data: [
-                                        [Phlexible.elements.Strings.ascending, 'ASC'],
-                                        [Phlexible.elements.Strings.descending, 'DESC']
+                                        [this.strings.sort_ascending, 'ASC'],
+                                        [this.strings.sort_descending, 'DESC']
                                     ]
                                 }),
-                                value: 'ASC',
                                 displayField: 'title',
                                 valueField: 'value',
                                 mode: 'local',
@@ -134,31 +164,41 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                     },
                     {
                         xtype: 'fieldset',
-                        title: Phlexible.elements.Strings.filter,
+                        title: this.strings.filter,
                         autoHeight: true,
                         anchor: '-15',
                         items: [{
                             xtype: 'combo',
                             width: 300,
                             listWidth: 300,
-                            fieldLabel: Phlexible.elements.Strings.meta_filter,
-                            hiddenName: 'meta_key_1',
+                            fieldLabel: this.strings.meta_filter,
+                            hiddenName: 'metaKey',
+                            value: this.values.metaKey,
                             store: new Ext.data.JsonStore({
-                                url: Phlexible.Router.generate('elementfinder_catch_metakey'),
+                                url: Phlexible.Router.generate('elementfinder_catch_metakeys'),
                                 root: 'metakeys',
-                                fields: ['key', 'value']
+                                fields: ['id', 'name'],
+                                autoLoad: true,
+                                listeners: {
+                                    load: function() {
+                                        this.getComponent(0).getComponent(2).getComponent(0).setValue(
+                                            this.getComponent(0).getComponent(2).getComponent(0).getValue()
+                                        );
+                                    },
+                                    scope: this
+                                }
                             }),
                             listeners: {
                                 select: function (combo, record, index) {
-                                    var sortField = this.getForm().findField('catch_meta_keywords_1');
+                                    var sortField = this.getForm().findField('metaKeywords');
                                     sortField.store.load();
                                 },
                                 scope: this
                             },
-                            displayField: 'value',
-                            valueField: 'key',
+                            displayField: 'name',
+                            valueField: 'id',
                             mode: 'remote',
-                            emptyText: Phlexible.teasers.Strings.no_filter,
+                            emptyText: this.strings.no_filter,
                             listClass: 'x-combo-list-big',
                             editable: false,
                             triggerAction: 'all',
@@ -166,38 +206,39 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                         },
                         {
                             xtype: 'multiselect',
-                            fieldLabel: Phlexible.elements.Strings.meta_keywords,
-                            name: 'meta_keywords_1',
+                            fieldLabel: this.strings.meta_keywords,
+                            name: 'metaKeywords',
+                            value: this.values.metaKeywords,
                             store: new Ext.data.JsonStore({
-                                url: Phlexible.Router.generate('elementfinder_catch_metakeywords', {id: this.siteroot_id}),
+                                url: Phlexible.Router.generate('elementfinder_catch_metakeywords', {siteroot_id: this.siteroot_id}),
                                 root: 'meta_keywords',
                                 fields: ['keyword'],
                                 listeners: {
                                     beforeload: function (store, options) {
                                         options['params'] = {
                                             language: 'de',
-                                            key: ''
+                                            id: ''
                                         };
 
                                         if (this.getForm()) {
-                                            var keyField = this.getForm().findField('meta_key_1');
+                                            var keyField = this.getForm().findField('metaKey');
                                             if (keyField && keyField.isFormField) {
-                                                options['params']['key'] = keyField.getValue();
+                                                options['params']['id'] = keyField.getValue();
                                             }
                                         }
                                     },
                                     load: function () {
-                                        var onLoad = this.getForm().findField('meta_keywords_1').setOnLoad;
+                                        var onLoad = this.getForm().findField('metaKeywords').setOnLoad;
                                         if (onLoad) {
-                                            this.getForm().findField('meta_keywords_1').setValue(onLoad);
-                                            this.getForm().findField('meta_keywords_1').setOnLoad = false;
+                                            this.getForm().findField('metaKeywords').setValue(onLoad);
+                                            this.getForm().findField('metaKeywords').setOnLoad = false;
                                         }
                                     },
                                     scope: this
                                 }
                             }),
                             width: 300,
-                            emptyText: Phlexible.elements.Strings.select_elementtype,
+                            emptyText: this.strings.select_meta_keywords,
                             valueField: 'keyword',
                             displayField: 'keyword',
                             tpl: '<tpl for="."><div class="ux-mselect-item' + ((Ext.isIE || Ext.isIE7) ? '" unselectable=on' : ' x-unselectable"') + '>{keyword}</div></tpl>',
@@ -216,53 +257,6 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
         return this.getComponent(0).getForm();
     },
 
-    setValues: function (catchId, catchConfig) {
-        this.catchId = catchConfig.id;
-        this.catchConfig = catchConfig;
-
-        this.disable();
-
-        // reset form values
-        this.getForm().reset();
-
-        // reset Meta Keywords options
-        this.getForm().findField('meta_keywords_1').store.removeAll();
-
-        if (this.reloadLinkFieldStore) {
-            var field = this.getForm().findField('for_tree_id');
-            field.tree.getLoader().load(
-                field.tree.getRootNode(),
-                this.internalSetValues.createDelegate(this)
-            );
-        }
-        else {
-            this.internalSetValues();
-        }
-
-    },
-
-    internalSetValues: function () {
-        // set new values
-        this.getForm().setValues(this.catchConfig);
-
-        // reset all combobox values
-        var combos = this.getComponent(0).findByType('combo');
-        Ext.each(combos, function (combo, index, allItems) {
-            if ('remote' == combo.mode) {
-                var value = combo.getValue();
-                var rawValue = combo.getRawValue();
-
-                if (value && value == rawValue) {
-                    combo.doQuery(this.catchConfig[combo.hiddenField.id], true);
-                }
-            }
-
-        }, this);
-
-        this.getForm().findField('meta_keywords_1').setOnLoad = this.catchConfig.meta_keywords_1;
-        this.getForm().findField('meta_keywords_1').store.load();
-    },
-
     isValid: function() {
         var form = this.getForm();
 
@@ -277,8 +271,9 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
         var form = this.getForm(),
             values = form.getValues();
 
-        values.element_type_ids = this.elementtypeIds;
-        values.filter = this.filter;
+        values.elementtypeIds = this.baseValues.elementtypeIds;
+        values.filter = this.baseValues.filter;
+        values.template = this.baseValues.template;
 
         return values;
     }

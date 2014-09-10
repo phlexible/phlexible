@@ -166,29 +166,23 @@ class CatchController extends Controller
 
     /**
      * @return JsonResponse
-     * @Route("/metakey", name="elementfinder_catch_metakey")
+     * @Route("/metakeys", name="elementfinder_catch_metakeys")
      */
-    public function metakeyAction()
+    public function metaKeysAction()
     {
         $metasetManager = $this->get('phlexible_meta_set.meta_set_manager');
 
-        $metasets = $metasetManager->findAll();
-
-        $keys = array();
-        foreach ($metasets as $metaset) {
-            $keys[] = $metaset->getName();
+        $metakeys = array();
+        foreach ($metasetManager->findAll() as $metaset) {
+            foreach ($metaset->getFields() as $field) {
+                $metakeys[] = array(
+                    'id'   => $field->getId(),
+                    'name' => $metaset->getName() . '/' . $field->getName()
+                );
+            }
         }
 
-        $result = array();
-
-        foreach ($keys as $key) {
-            $result[] = array(
-                'key'   => $key,
-                'value' => $key,
-            );
-        }
-
-        return new JsonResponse(array('metakeys' => $result));
+        return new JsonResponse(array('metakeys' => $metakeys));
     }
 
     /**
@@ -197,22 +191,26 @@ class CatchController extends Controller
      * @return JsonResponse
      * @Route("/metakeywords", name="elementfinder_catch_metakeywords")
      */
-    public function metakeywordsAction(Request $request)
+    public function metaKeywordsAction(Request $request)
     {
-        $name = $request->get('key');
+        $id = $request->get('key');
         $language = $request->get('language');
 
-        $metasetManager = $this->get('phlexible_meta_set.meta_set_manager');
-        $metaset = $metasetManager->findOneByName($name);
+        $conn = $this->get('doctrine.dbal.default_connection');
+        $qb = $conn->createQueryBuilder();
+        $qb
+            ->select('em.value')
+            ->from('element_meta', 'em')
+            ->where($qb->expr()->eq('em.field_id', $qb->expr()->literal($id)))
+            ->andWhere($qb->expr()->eq('em.language', $qb->expr()->literal($language)));
 
-        $data = array();
         // TODO: repair
-        $values = array();//$metaset->getMetaKeyValues($key, $language);
-        foreach ($values as $value) {
-            $data[]['keyword'] = $value;
+        $keywords = array();
+        foreach ($conn->fetchAll($qb->getSQL()) as $value) {
+            $keywords[]['keyword'] = $value;
         }
 
-        return new JsonResponse(array('meta_keywords' => $data));
+        return new JsonResponse(array('meta_keywords' => $keywords));
     }
 
     /**

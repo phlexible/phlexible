@@ -3,15 +3,20 @@ elementfinder:
     elements: Elements
     elementtype: Elementtype
     select_elementtype: Select elementtype
+    start_node: Start node
     in_navigation: In navigation
     max_depth: Max. search depth
     sort_field: Sort field
     unsorted: Not sorted
+    sort: Sort
     sort_dir: Sort direction
     sort_ascending: Ascending
     sort_descending: Descending
     filter: Filter
+    meta_filter: Meta filter
     no_filter: No filter
+    meta_keywords: Meta keywords
+    select_meta_keywords: Select meta keywords
     template: Template
     store: Store
     cancel: Cancel

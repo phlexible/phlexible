@@ -30,6 +30,6 @@ class FinderField extends AbstractField
      */
     public function getDataType()
     {
-        return 'string';
+        return 'array';
     }
 }

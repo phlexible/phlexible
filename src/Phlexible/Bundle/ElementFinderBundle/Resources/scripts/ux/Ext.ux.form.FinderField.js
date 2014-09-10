@@ -20,12 +20,23 @@ Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
         Ext.ux.form.FinderField.superclass.initComponent.call(this);
     },
 
+    onRender: function(ct, position) {
+        Ext.ux.form.FinderField.superclass.onRender.call(this, ct, position);
+
+        this.hiddenField = Ext.DomHelper.insertAfter(this.el, {
+            tag: 'input',
+            name: this.hiddenName,
+            type: 'hidden',
+            value: Ext.encode(this.hiddenValue)
+        }, true);
+    },
+
     /**
      * Clears any text/value currently set in the field
      */
     clearValue : function(){
-        if(this.hiddenField){
-            this.hiddenField.value = '';
+        if (this.hiddenField){
+            this.setHiddenValue(null);
         }
         this.setRawValue('');
         this.lastSelectionText = '';
@@ -69,9 +80,9 @@ Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
     setHiddenFieldValue: function(value) {
         if (this.hiddenField) {
             if (value) {
-                this.hiddenField.value = Ext.encode(value);
+                this.hiddenField.dom.value = Ext.encode(value);
             } else {
-                this.hiddenField.value = '';
+                this.hiddenField.dom.value = '';
             }
         }
     },
@@ -85,6 +96,8 @@ Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
             }
         }
 
+        Ext.ux.form.FinderField.superclass.setValue.call(this, v);
+
         this.setHiddenFieldValue(this.hiddenValue);
     },
 
@@ -93,7 +106,7 @@ Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
     },
 
     onSelect: function (record, index) {
-        Ext.ux.form.LinkField.superclass.onSelect.call(this, record, index);
+        Ext.ux.form.FinderField.superclass.onSelect.call(this, record, index);
 
         this.setHiddenValue({
             type: record.data.type,
@@ -103,7 +116,7 @@ Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
     },
 
     onClear: function () {
-        Ext.ux.form.LinkField.superclass.onClear.call(this);
+        Ext.ux.form.setValue.superclass.onClear.call(this);
 
         this.setValue(null);
         this.setRawValue('');
@@ -117,15 +130,13 @@ Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
 
         var w = new Phlexible.elementfinder.ElementFinderConfigWindow({
             siterootId: this.siterootId,
-            elementtypeIds: this.elementtypeIds,
-            inNavigation: this.inNavigation,
-            maxDepth: this.maxDepth,
-            filter: this.filter,
+            values: this.hiddenValue,
+            baseValues: this.baseValues,
             listeners: {
                 set: function(w, values) {
                     this.setValue(Ext.encode(values));
                     this.setRawValue('configured');
-                    this.hiddenValue = values;
+                    this.setHiddenValue(values);
                 },
                 scope: this
             }
