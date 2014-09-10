@@ -48,7 +48,9 @@ class ElementFinderAssetProvider implements AssetProviderInterface
      */
     public function getUxCssCollection()
     {
-        return null;
+        return new AssetCollection(array(
+            new FileAsset($this->locator->locate('@PhlexibleElementFinderBundle/Resources/styles/finder.css')),
+        ));
     }
 
     /**

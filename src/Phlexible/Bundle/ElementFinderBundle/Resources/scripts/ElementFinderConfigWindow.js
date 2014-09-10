@@ -7,10 +7,12 @@ Phlexible.elementfinder.ElementFinderConfigWindow = Ext.extend(Ext.Window, {
     layout: 'fit',
     modal: true,
     resizable: false,
+    border: false,
 
     initComponent: function () {
         this.items = [{
             xtype: 'elementfinder-finder-config-panel',
+            header: false,
             siterootId: this.siterootId,
             elementtypeIds: this.elementtypeIds,
             inNavigation: this.inNavigation,

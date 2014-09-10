@@ -36,69 +36,77 @@ class CatchController extends Controller
     public function sortfieldsAction(Request $request)
     {
         $query = $request->get('query');
-        $elementtypeIds = explode(',', $query);
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
+        $fieldRegistry = $this->get('phlexible_elementtype.field.registry');
 
-        $dsIds = null;
-        foreach ($elementtypeIds as $elementtypeId) {
-            $elementtype = $elementtypeService->findElementtype($elementtypeId);
-            $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
-            $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
+        $fields = array();
 
-            $dsIds = (null === $dsIds)
-                ? $elementtypeStructure->getAllDsIds()
-                : array_intersect($dsIds, $elementtypeStructure->getAllDsIds());
-        }
+        if ($query) {
+            $elementtypeIds = explode(',', $query);
 
-        $result = array();
-        foreach ($dsIds as $dsId) {
-            $node = $elementtypeStructure->getNode($dsId);
+            $dsIds = null;
+            foreach ($elementtypeIds as $elementtypeId) {
+                $elementtype = $elementtypeService->findElementtype($elementtypeId);
+                $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
+                $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
 
-            // skip fields without working title
-            if (!strlen($node->getName())) {
-                continue;
+                $dsIds = (null === $dsIds)
+                    ? $elementtypeStructure->getAllDsIds()
+                    : array_intersect($dsIds, $elementtypeStructure->getAllDsIds());
             }
 
-            // skip fields of types that cannot be sorted by
-            static $skipFieldTypes = array(
-                'accordion',
-                'businesslogic',
-                'download',
-                'flash',
-                'form',
-                'group',
-                'image',
-                'reference',
-                'referenceroot',
-                'root',
-                'tab',
-                'table',
-                'video',
-            );
+            foreach ($dsIds as $dsId) {
+                $node = $elementtypeStructure->getNode($dsId);
 
-            $fieldType = $node->getType();
-            if (in_array($fieldType, $skipFieldTypes)) {
-                continue;
+                // skip fields without working title
+                if (!strlen($node->getName())) {
+                    continue;
+                }
+
+                // skip fields of types that cannot be sorted by
+                static $skipFieldTypes = array(
+                    'accordion',
+                    'businesslogic',
+                    'download',
+                    'flash',
+                    'form',
+                    'group',
+                    'image',
+                    'reference',
+                    'referenceroot',
+                    'root',
+                    'tab',
+                    'table',
+                    'video',
+                );
+
+                $fieldType = $node->getType();
+                $field = $fieldRegistry->getField($fieldType);
+                if ($field->isContainer()) {
+                    continue;
+                }
+                if (!in_array($field->getDataType(), array('string', 'float', 'integer', 'number', 'checkbox'))) {
+                     continue;
+                 }
+
+                if (in_array($fieldType, $skipFieldTypes)) {
+                    continue;
+                }
+
+                $fields[] = array(
+                    'ds_id' => $dsId,
+                    'title' => $node->getName() . ' (' . $node->getLabel('fieldlabel', $this->getUser()->getInterfaceLanguage('en')) . ')',
+                    'icon'  => $field->getIcon(),
+                );
             }
 
-            $result[] = array(
-                'ds_id' => $dsId,
-                'title' => $node->getName() . ' (' . $node->getLabel('fieldlabel', $this->getUser()->getInterfaceLanguage()) . ')',
-                'icon'  => 'm-fields-field_' . $fieldType . '-icon',
-            );
+            array_multisort(array_column($fields, 'title'), $fields);
         }
-
-        array_multisort(array_column($result, 'title'), $result);
 
         $translator = $this->get('translator');
         array_unshift(
-            $result,
-            array(
-                'ds_id' => '',
-                'title' => $translator->trans('elements.unsorted', array(), 'gui'),
-                'icon'  => '',
-            ),
+            $fields,
             array(
                 'ds_id' => ElementFinderConfig::SORT_TITLE_BACKEND,
                 'title' => $translator->trans('elements.backend_title', array(), 'gui'),
@@ -126,7 +134,7 @@ class CatchController extends Controller
             )
         );
 
-        return new ResultResponse(true, 'Matching fields.', $result);
+        return new ResultResponse(true, 'Matching fields.', $fields);
     }
 
     /**
@@ -171,11 +179,7 @@ class CatchController extends Controller
             $keys[] = $metaset->getName();
         }
 
-        $translator = $this->get('translator');
-
-        $result = array(
-            array('key' => '', 'value' => $translator->trans('teasers.no_filter', array(), 'gui')),
-        );
+        $result = array();
 
         foreach ($keys as $key) {
             $result[] = array(
@@ -198,12 +202,12 @@ class CatchController extends Controller
         $name = $request->get('key');
         $language = $request->get('language');
 
-        // TODO: repair
         $metasetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaset = $metasetManager->findOneByName($name);
 
         $data = array();
-        //$values = $metaset->getMetaKeyValues($key, $language);
+        // TODO: repair
+        $values = array();//$metaset->getMetaKeyValues($key, $language);
         foreach ($values as $value) {
             $data[]['keyword'] = $value;
         }

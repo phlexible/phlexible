@@ -1,7 +1,7 @@
 Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
-    strings: Phlexible.teasers.Strings,
-    title: Phlexible.teasers.Strings['catch'],
-    iconCls: 'p-element-tab_data-icon',
+    strings: Phlexible.elementfinder.Strings,
+    title: Phlexible.elementfinder.Strings.finder,
+    iconCls: 'p-elementfinder-finder-icon',
     cls: 'p-elements-catch-panel',
     autoScroll: true,
     //autoWidth: false,
@@ -69,7 +69,7 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                     },
                     {
                         xtype: 'numberfield',
-                        fieldLabel: this.strings.catch_max_depth,
+                        fieldLabel: this.strings.max_depth,
                         name: 'max_depth',
                         width: 30,
                         value: this.maxDepth,
@@ -86,7 +86,7 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                             width: 300,
                             listWidth: 300,
                             fieldLabel: Phlexible.elements.Strings.sort_field,
-                            hiddenName: 'catch_sort_field',
+                            hiddenName: 'sort_field',
                             store: new Ext.data.JsonStore({
                                 url: Phlexible.Router.generate('elementfinder_catch_sortfields'),
                                 root: 'data',
@@ -113,7 +113,7 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                                 width: 300,
                                 listWidth: 300,
                                 fieldLabel: Phlexible.elements.Strings.sort_order,
-                                hiddenName: 'catch_sort_order',
+                                hiddenName: 'sort_order',
                                 store: new Ext.data.SimpleStore({
                                     fields: ['title', 'value'],
                                     data: [
@@ -142,7 +142,7 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                             width: 300,
                             listWidth: 300,
                             fieldLabel: Phlexible.elements.Strings.meta_filter,
-                            hiddenName: 'catch_meta_key_1',
+                            hiddenName: 'meta_key_1',
                             store: new Ext.data.JsonStore({
                                 url: Phlexible.Router.generate('elementfinder_catch_metakey'),
                                 root: 'metakeys',
@@ -167,7 +167,7 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                         {
                             xtype: 'multiselect',
                             fieldLabel: Phlexible.elements.Strings.meta_keywords,
-                            name: 'catch_meta_keywords_1',
+                            name: 'meta_keywords_1',
                             store: new Ext.data.JsonStore({
                                 url: Phlexible.Router.generate('elementfinder_catch_metakeywords', {id: this.siteroot_id}),
                                 root: 'meta_keywords',
@@ -180,17 +180,17 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                                         };
 
                                         if (this.getForm()) {
-                                            var keyField = this.getForm().findField('catch_meta_key_1');
+                                            var keyField = this.getForm().findField('meta_key_1');
                                             if (keyField && keyField.isFormField) {
                                                 options['params']['key'] = keyField.getValue();
                                             }
                                         }
                                     },
                                     load: function () {
-                                        var onLoad = this.getForm().findField('catch_meta_keywords_1').setOnLoad;
+                                        var onLoad = this.getForm().findField('meta_keywords_1').setOnLoad;
                                         if (onLoad) {
-                                            this.getForm().findField('catch_meta_keywords_1').setValue(onLoad);
-                                            this.getForm().findField('catch_meta_keywords_1').setOnLoad = false;
+                                            this.getForm().findField('meta_keywords_1').setValue(onLoad);
+                                            this.getForm().findField('meta_keywords_1').setOnLoad = false;
                                         }
                                     },
                                     scope: this
@@ -226,7 +226,7 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
         this.getForm().reset();
 
         // reset Meta Keywords options
-        this.getForm().findField('catch_meta_keywords_1').store.removeAll();
+        this.getForm().findField('meta_keywords_1').store.removeAll();
 
         if (this.reloadLinkFieldStore) {
             var field = this.getForm().findField('for_tree_id');
@@ -259,8 +259,8 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
 
         }, this);
 
-        this.getForm().findField('catch_meta_keywords_1').setOnLoad = this.catchConfig.catch_meta_keywords_1;
-        this.getForm().findField('catch_meta_keywords_1').store.load();
+        this.getForm().findField('meta_keywords_1').setOnLoad = this.catchConfig.meta_keywords_1;
+        this.getForm().findField('meta_keywords_1').store.load();
     },
 
     isValid: function() {

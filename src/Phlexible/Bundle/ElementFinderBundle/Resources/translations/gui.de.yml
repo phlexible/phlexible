@@ -1,6 +1,15 @@
 elementfinder:
     finder: Finder
+    elements: Elemente
+    elementtype: Elementtyp
+    select_elementtype: Elementtyp auswählen
+    in_navigation: In Navigation
     max_depth: Max. Suchtiefe
+    sort_field: Sortierfeld
+    unsorted: Nicht sortiert
+    sort_dir: Sortierrichtung
+    sort_ascending: Aufsteigend
+    sort_descending: Absteigend
     filter: Filter
     no_filter: Kein Filter
     template: Template

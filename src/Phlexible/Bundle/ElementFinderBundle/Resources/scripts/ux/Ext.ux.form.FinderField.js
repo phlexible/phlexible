@@ -1,7 +1,6 @@
 Ext.ux.form.FinderField = Ext.extend(Ext.form.TwinTriggerField, {
     trigger1Class: 'x-form-clear-trigger',
-    trigger2Class: 'p-elementfinder-catch-icon',
-    triggerClass: 'p-elementfinder-catch-icon',
+    trigger2Class: 'p-form-finder-trigger',
     hiddenValue: '',
     hideTrigger1: true,
 
