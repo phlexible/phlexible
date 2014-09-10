@@ -29,16 +29,6 @@ class ContentTreeNode extends TreeNode
     private $slugs;
 
     /**
-     * @var array
-     */
-    private $languages;
-
-    /**
-     * @var array
-     */
-    private $versions;
-
-    /**
      * @var string
      */
     private $language;

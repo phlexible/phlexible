@@ -95,6 +95,11 @@ class UrlExtension extends \Twig_Extension
         return new ContentTreeContext($treeNode);
     }
 
+    public function element($eid)
+    {
+
+    }
+
     /**
      * @return string
      */

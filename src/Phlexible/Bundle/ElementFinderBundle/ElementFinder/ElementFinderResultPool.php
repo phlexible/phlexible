@@ -69,6 +69,49 @@ class ElementFinderResultPool
     }
 
     /**
+     * @param int $from
+     * @param int $to
+     *
+     * @return array
+     */
+    public function range($from, $to)
+    {
+        return array_slice($this->items, $from, $to - $from);
+    }
+
+    /**
+     * @param int $from
+     * @param int $length
+     *
+     * @return array
+     */
+    public function slice($from, $length)
+    {
+        return array_slice($this->items, $from, $length);
+    }
+
+    /**
+     * @param int $pageSize
+     * @param int $page
+     *
+     * @return array
+     */
+    public function page($pageSize, $page)
+    {
+        return array_slice($this->items, $page * $pageSize, $pageSize);
+    }
+
+    /**
+     * @param int $pageSize
+     *
+     * @return int
+     */
+    public function pageCount($pageSize)
+    {
+        return ceil(count($this->items) / $pageSize);
+    }
+
+    /**
      * @param array $items
      *
      * @return $this

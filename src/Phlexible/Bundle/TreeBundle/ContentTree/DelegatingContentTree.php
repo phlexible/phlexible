@@ -280,54 +280,6 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getLanguages(TreeNodeInterface $node)
-    {
-        if ($node instanceof TreeNodeInterface) {
-            $id = $node->getId();
-        } else {
-            $id = $node;
-        }
-
-        $languages = array();
-
-        return $languages;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getVersions(TreeNodeInterface $node)
-    {
-        if ($node instanceof TreeNodeInterface) {
-            $id = $node->getId();
-        } else {
-            $id = $node;
-        }
-
-        $versions = array();
-
-        return $versions;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getVersion(TreeNodeInterface $node, $language)
-    {
-        if ($node instanceof TreeNodeInterface) {
-            $id = $node->getId();
-        } else {
-            $id = $node;
-        }
-
-        $version = 0;
-
-        return $version;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function isInstance(TreeNodeInterface $node)
     {
         return $this->tree->isInstance($node);
@@ -411,5 +363,13 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     public function findOneOnlineByTreeNodeAndLanguage(TreeNodeInterface $node, $language = null)
     {
         return $this->tree->findOneOnlineByTreeNodeAndLanguage($node, $language ?: $this->language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getVersion(TreeNodeInterface $node, $language)
+    {
+        return $this->mediator->getVersionedObject($node)->getVersion();
     }
 }

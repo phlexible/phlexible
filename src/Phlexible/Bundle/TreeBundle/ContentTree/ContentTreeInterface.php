@@ -63,20 +63,6 @@ interface ContentTreeInterface extends TreeInterface
 
     /**
      * @param TreeNodeInterface $node
-     *
-     * @return array
-     */
-    public function getLanguages(TreeNodeInterface $node);
-
-    /**
-     * @param TreeNodeInterface $node
-     *
-     * @return array
-     */
-    public function getVersions(TreeNodeInterface $node);
-
-    /**
-     * @param TreeNodeInterface $node
      * @param string            $language
      *
      * @return int

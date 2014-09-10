@@ -1,7 +1,6 @@
 teasers:
     no_filter: 'no filter'
     inherited_teasers: 'Inherited teasers'
-    catched: Catched
     teaser_node: Teasernode
     teaser_id: 'Teaser ID'
     publish_teaser: Publish
@@ -12,26 +11,15 @@ teasers:
     set_teaser_offline_description: 'Set selected teaser offline'
     teaser: Teaser
     teasers: Teasers
-    add_teaser: 'Add Teaser'
-    add_teaser_reference: 'Add Teaser instance'
-    add_teaser_reference_header: 'Add Teaser instance'
+    add_teaser: 'Create Teaser'
+    add_teaser_reference: 'Create teaser instance'
+    add_teaser_reference_header: 'New teaser instance'
     add_teaser_reference_description: 'Please select a part element you want to add an instance for at this place.'
     new_teaser: 'New Teaser'
     new_teaser_header: 'Create new Teaser'
     new_teaser_description: 'Please enter the required information for the new Teaser.'
-    add_catch: 'Add Catch'
-    new_catch: 'New Catch'
-    new_catch_header: 'Create Catch'
-    new_catch_description: 'Please enter the required information for the new Catch.'
     delete_teaser: 'Delete Teaser'
-    delete_catch: 'Delete Catch'
     inherited_teaser: Inherited
     stopped_inherited_teaser: 'Stopped inheritation'
     not_shown_teaser: 'Not shown here'
     inherited: Inherited
-    catch_showing: 'showing {0} of {1}'
-    catch_max_elements: 'Maximum Number of Teasers'
-    catch_rotation: Rotation
-    catch_pool_size: 'Rotation Pool'
-    catch_max_depth: 'Maximum Search Depth'
-    catch_elements_per_page: 'Elements per page'

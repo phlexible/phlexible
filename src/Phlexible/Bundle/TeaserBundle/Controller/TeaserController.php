@@ -35,46 +35,21 @@ class TeaserController extends Controller
         $teaser = $this->get('phlexible_teaser.teaser_service')->find($teaserId);
         $language = $request->get('language', 'de');
 
-        if ($teaser->getType() === 'element') {
-            $request->attributes->set('language', $language);
-            $request->attributes->set('contentDocument', $teaser);
+        $request->attributes->set('language', $language);
+        $request->attributes->set('contentDocument', $teaser);
 
-            $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
-            $renderConfig = $renderConfigurator->configure($request);
+        $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
+        $renderConfig = $renderConfigurator->configure($request);
 
-            if ($request->get('template')) {
-                $renderConfig->set('template', $request->get('template', 'teaser'));
-            }
-
-            $dataProvider = $this->get('phlexible_twig_renderer.data_provider');
-            $templating = $this->get('templating');
-            $data = $dataProvider->provide($renderConfig);
-            $template = $renderConfig->get('template');
-
-            return $templating->renderResponse($template, (array) $data);
-        } elseif ($teaser->getType() === 'catch') {
-            $catchRepository = $this->get('phlexible_teaser.teaser_service');
-            $catcher = $this->get('phlexible_teaser.catcher');
-            $catch = $catchRepository->find($teaser->getTypeId());
-
-            $resultPool = $catcher->catchElements($catch, array($language), false);
-
-            $request = Request::createFromGlobals();
-            $request->attributes->set('language', $language);
-
-            $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
-            $renderConfig = $renderConfigurator->configure($request, $resultPool);
-
-            if ($request->get('template')) {
-                $renderConfig->set('template', $request->get('template', 'catch'));
-            }
-
-            $renderer = $this->get('phlexible_dwoo_renderer.renderer');
-            $content = $renderer->render($renderConfig);
-        } else {
-            $content = 'what?';
+        if ($request->get('template')) {
+            $renderConfig->set('template', $request->get('template', 'teaser'));
         }
 
-        return new Response($content);
+        $dataProvider = $this->get('phlexible_twig_renderer.data_provider');
+        $templating = $this->get('templating');
+        $data = $dataProvider->provide($renderConfig);
+        $template = $renderConfig->get('template');
+
+        return $templating->renderResponse($template, (array) $data);
     }
 }

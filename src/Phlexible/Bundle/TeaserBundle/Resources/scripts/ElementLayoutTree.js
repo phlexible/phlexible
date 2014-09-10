@@ -115,13 +115,13 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                     // 0
                     text: '.',
                     cls: 'x-btn-text-icon-bold',
-                    iconCls: 'p-teasers-layoutarea-icon'
+                    iconCls: 'p-teaser-layoutarea-icon'
                 },
                 '-',
                 {
                     // 2
                     text: this.strings.add_teaser,
-                    iconCls: 'p-teasers-teaser_add-icon',
+                    iconCls: 'p-teaser-teaser_add-icon',
                     handler: function (item) {
                         var node = item.parentMenu.node;
                         var w = new Phlexible.teasers.NewTeaserWindow({
@@ -151,7 +151,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 {
                     // 3
                     text: this.strings.add_teaser_reference,
-                    iconCls: 'p-teasers-teaser_reference-icon',
+                    iconCls: 'p-teaser-teaser_reference-icon',
                     handler: function (item) {
                         var node = item.parentMenu.node;
                         var w = new Phlexible.teasers.NewTeaserInstanceWindow({
@@ -186,31 +186,9 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                     },
                     scope: this
                 },
-                {
-                    // 4
-                    text: this.strings.add_catch,
-                    iconCls: 'p-teasers-catch_add-icon',
-                    handler: function (item) {
-                        var node = item.parentMenu.node;
-                        Phlexible.console.log(node);
-                        Ext.Ajax.request({
-                            url: Phlexible.Router.generate('teasers_layout_createcatch'),
-                            params: {
-                                siteroot_id: this.element.siteroot_id,
-                                tree_id: node.attributes.parent_tid, //this.element.tid,
-                                eid: node.attributes.parent_eid, //this.element.eid,
-                                layoutarea_id: node.attributes.area_id
-                            },
-                            success: function (node) {
-                                node.getOwnerTree().getRootNode().reload();
-                            }.createDelegate(this, [node], false)
-                        });
-                    },
-                    scope: this
-                },
                 '-',
                 {
-                    // 6
+                    // 5
                     text: this.strings.inherited_teaser,
                     checked: true,
                     handler: function (item) {
@@ -264,7 +242,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                     scope: this
                 },
                 {
-                    // 7
+                    // 6
                     text: this.strings.not_shown_teaser,
                     checked: true,
                     handler: function (item) {
@@ -366,7 +344,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 },
                 '-',
                 {
-                    // 9
+                    // 8
                     text: Phlexible.elements.Strings.copy,
                     iconCls: 'p-element-copy-icon',
                     handler: function (menu) {
@@ -375,7 +353,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                     }
                 },
                 {
-                    // 10
+                    // 9
                     text: Phlexible.elements.Strings.paste,
                     iconCls: 'p-element-paste-icon',
                     menu: [
@@ -387,7 +365,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         '-',
                         {
                             text: Phlexible.elements.Strings.paste_alias,
-                            iconCls: 'p-teasers-teaser_reference-icon',
+                            iconCls: 'p-teaser-teaser_reference-icon',
                             handler: function (menu) {
                                 if (Phlexible.Clipboard.isInactive() || Phlexible.Clipboard.getType() != 'teaser') {
                                     return;
@@ -424,9 +402,9 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 },
                 '-',
                 {
-                    // 12
-                    text: this.strings['delete_teaser'],
-                    iconCls: 'p-teasers-teaser_delete-icon',
+                    // 11
+                    text: this.strings.delete_teaser,
+                    iconCls: 'p-teaser-teaser_delete-icon',
                     hidden: true,
                     handler: function (item) {
                         var node = item.parentMenu.node;
@@ -476,6 +454,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                     this.fireEvent('teaserselect', node.attributes.id, node);
                 }
                 else if (node.attributes.type == 'catch') {
+                    // legacy
                     this.fireEvent('catchselect', node.attributes.id, node.attributes.catchConfig, node);
                     return false;
                 }
@@ -496,7 +475,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
 
                     if (type === 'area' || type === 'layout') {
                         this.items.items[0].setText('[Layoutarea]');
-                        this.items.items[0].setIconClass('p-teasers-layoutarea-icon');
+                        this.items.items[0].setIconClass('p-teaser-layoutarea-icon');
 
                         this.items.items[2].show();
                         this.items.items[3].show();
@@ -504,83 +483,81 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
 
                         this.items.items[5].hide();
                         this.items.items[6].hide();
-                        this.items.items[7].hide();
-                        this.items.items[8].show();
-                        this.items.items[9].hide();
-                        this.items.items[10].show();
+                        this.items.items[7].show();
+                        this.items.items[8].hide();
+                        this.items.items[9].show();
+                        this.items.items[10].hide();
                         this.items.items[11].hide();
-                        this.items.items[12].hide();
 
                         if (!Phlexible.Clipboard.isInactive() && Phlexible.Clipboard.getType() === 'teaser') {
-                            this.items.items[10].menu.items.items[0].setText(String.format(Phlexible.elements.Strings.paste_as, Phlexible.Clipboard.getText()));
-                            this.items.items[10].enable();
+                            this.items.items[9].menu.items.items[0].setText(String.format(Phlexible.elements.Strings.paste_as, Phlexible.Clipboard.getText()));
+                            this.items.items[9].enable();
                         } else {
-                            this.items.items[10].disable();
+                            this.items.items[9].disable();
                         }
                     }
                     else if (type === 'teaser' || type === 'element') {
                         this.items.items[0].setText('[Teaser]');
-                        this.items.items[0].setIconClass('p-teasers-teaser-icon');
+                        this.items.items[0].setIconClass('p-teaser-teaser-icon');
 
                         this.items.items[2].hide();
                         this.items.items[3].hide();
                         this.items.items[4].hide();
 
-                        this.items.items[5].hide();
-                        this.items.items[7].show();
+                        this.items.items[6].show();
 
                         if (node.attributes.no_display) {
-                            this.items.items[7].setChecked(true);
+                            this.items.items[6].setChecked(true);
                         }
                         else {
-                            this.items.items[7].setChecked(false);
+                            this.items.items[6].setChecked(false);
                         }
 
                         if (node.attributes.inherited) {
-                            this.items.items[6].setChecked(node.attributes.stop_inherit);
-                            this.items.items[6].setText(Phlexible.teasers.Strings.stopped_inherited_teaser);
+                            this.items.items[5].setChecked(node.attributes.stop_inherit);
+                            this.items.items[5].setText(Phlexible.teasers.Strings.stopped_inherited_teaser);
 
+                            this.items.items[7].hide();
                             this.items.items[8].hide();
                             this.items.items[9].hide();
                             this.items.items[10].hide();
                             this.items.items[11].hide();
-                            this.items.items[12].hide();
                         }
                         else {
-                            this.items.items[6].setChecked(node.attributes.inherit);
-                            this.items.items[6].setText(Phlexible.teasers.Strings.inherited_teaser);
+                            this.items.items[5].setChecked(node.attributes.inherit);
+                            this.items.items[5].setText(Phlexible.teasers.Strings.inherited_teaser);
 
+                            this.items.items[7].show();
                             this.items.items[8].show();
-                            this.items.items[9].show();
-                            this.items.items[10].hide();
+                            this.items.items[9].hide();
+                            this.items.items[10].show();
+                            this.items.items[11].setText(Phlexible.teasers.Strings.delete_teaser);
+                            this.items.items[11].setIconClass('p-teaser-teaser_delete-icon');
                             this.items.items[11].show();
-                            this.items.items[12].setText(Phlexible.teasers.Strings.delete_teaser);
-                            this.items.items[12].setIconClass('p-teasers-teaser_delete-icon');
-                            this.items.items[12].show();
                         }
 
-                        this.items.items[6].show();
+                        this.items.items[5].show();
                     }
                     else if (type == 'catch') {
+                        // legacy
                         this.items.items[0].setText('[Catch]');
-                        this.items.items[0].setIconClass('p-teasers-catch-icon');
+                        this.items.items[0].setIconClass('p-teaser-catch-icon');
 
                         this.items.items[2].hide();
                         this.items.items[3].hide();
                         this.items.items[4].hide();
 
                         this.items.items[5].hide();
-                        this.items.items[6].hide();
 
+                        this.items.items[6].hide();
                         this.items.items[7].hide();
                         this.items.items[8].hide();
                         this.items.items[9].hide();
-                        this.items.items[10].hide();
 
-                        this.items.items[11].hide();
-                        this.items.items[12].setText(Phlexible.teasers.Strings.delete_catch);
-                        this.items.items[12].setIconClass('p-teasers-catch_delete-icon');
-                        this.items.items[12].show();
+                        this.items.items[10].hide();
+                        this.items.items[11].setText(Phlexible.teasers.Strings.delete_catch);
+                        this.items.items[11].setIconClass('p-teaser-catch_delete-icon');
+                        this.items.items[11].show();
                     }
                     else {
                         return;
@@ -595,14 +572,14 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         this.items.items[2].disable();
                         this.items.items[3].disable();
                         this.items.items[4].disable();
-                        this.items.items[10].disable();
+                        this.items.items[9].disable();
                     }
 
                     if (this.element.isAllowed('DELETE')) {
-                        this.items.items[12].enable();
+                        this.items.items[11].enable();
                     }
                     else {
-                        this.items.items[12].disable();
+                        this.items.items[11].disable();
                     }
 
                     this.showAt([coords[0], coords[1]]);
