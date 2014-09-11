@@ -150,6 +150,7 @@ class ElementStructureLoader
 
                         $structure = new ElementStructure();
                         $structure
+                            ->setDefaultLanguage($defaultLanguage)
                             ->setId($row['id'])
                             ->setDsId($row['ds_id'])
                             ->setName($row['name'])

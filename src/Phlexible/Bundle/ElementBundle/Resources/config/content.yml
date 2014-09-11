@@ -8,7 +8,7 @@ services:
         arguments:
             - @event_dispatcher
             - @logger
-            - @phlexible_element.content_loader.chain
+            - @phlexible_element.content_loader.delegating
 
     phlexible_element.content_loader.chain:
         class: Phlexible\Bundle\ElementBundle\ContentElement\Loader\ChainLoader
