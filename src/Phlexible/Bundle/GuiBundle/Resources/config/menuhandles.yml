@@ -51,4 +51,4 @@ phpinfo:
 components:
     parent: admin
     xtype: Phlexible.gui.menuhandle.BundlesHandle
-    resources: [components]
+    resources: [bundles]
