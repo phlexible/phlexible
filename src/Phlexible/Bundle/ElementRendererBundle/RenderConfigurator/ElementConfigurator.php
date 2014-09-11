@@ -12,8 +12,9 @@ use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
+use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
-use Phlexible\Bundle\ElementRendererBundle\VersionStrategy\OnlineVersionStrategy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,15 +101,10 @@ class ElementConfigurator implements ConfiguratorInterface
             ->addFeature('templateFile')
             ->set('templateFile', $template);
 
+        $event = new ConfigureEvent($renderConfiguration);
+        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_ELEMENT, $event);
+
         return;
-        // Before Init Element Event
-        /*
-        $beforeEvent = new \Makeweb_Renderers_Event_BeforeInitElement($this);
-        if (!$this->dispatcher->dispatch($beforeEvent))
-        {
-            return false;
-        }
-        */
 
         $eid = $renderConfiguration->get('eid');
         $element = $this->elementService->findElement($eid);
@@ -193,10 +189,7 @@ class ElementConfigurator implements ConfiguratorInterface
             ->addFeature('template')
             ->set('template', $template);
 
-        // Init Element Event
-        /*
-        $event = new \Makeweb_Renderers_Event_InitElement($this);
-        $this->dispatcher->dispatch($event);
-        */
+        $event = new ConfigureEvent($renderConfiguration);
+        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_ELEMENT, $event);
     }
 }

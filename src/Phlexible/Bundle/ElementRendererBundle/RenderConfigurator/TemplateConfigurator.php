@@ -9,6 +9,8 @@
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Dwoo\Template\File;
+use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
+use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -59,6 +61,8 @@ class TemplateConfigurator implements ConfiguratorInterface
         $renderConfiguration
             ->addFeature('template')
             ->set('template', $template);
-    }
 
+        $event = new ConfigureEvent($renderConfiguration);
+        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_TEMPLATE, $event);
+    }
 }

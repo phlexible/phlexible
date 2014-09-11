@@ -10,6 +10,8 @@ namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\ContentchannelBundle\Contentchannel\ContentchannelRepository;
 use Phlexible\Bundle\ContentchannelBundle\Model\ContentchannelManagerInterface;
+use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
+use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -61,15 +63,6 @@ class ContentchannelConfigurator implements ConfiguratorInterface
             return;
         }
 
-        // Before Init View Event
-        /*
-        $beforeEvent = new \Makeweb_Renderers_Event_BeforeInitContentChannel($this);
-        if (!$this->dispatcher->dispatch($beforeEvent))
-        {
-            return false;
-        }
-        */
-
         $contentchannel = $this->contentchannelManager->find(
             $request->attributes->get('siterootUrl')->getSiteroot()->getDefaultContentChannelId()
         );
@@ -77,11 +70,7 @@ class ContentchannelConfigurator implements ConfiguratorInterface
             ->addFeature('contentchannel')
             ->set('contentchannel', $contentchannel);
 
-        // Init View Event
-        /*
-        $event = new \Makeweb_Renderers_Event_InitContentChannel($this);
-        $this->dispatcher->dispatch($event);
-        */
+        $event = new ConfigureEvent($renderConfiguration);
+        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_CONTENTCHANNEL, $event);
     }
-
 }

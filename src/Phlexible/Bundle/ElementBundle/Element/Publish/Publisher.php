@@ -1,8 +1,28 @@
 <?php
+/**
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
+ */
+
+namespace Phlexible\Bundle\ElementBundle\Element\Publish;
 
 use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\SecurityBundle\Acl\Acl;
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
-class Makeweb_Elements_Publish
+/**
+ * Publisher
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
+class Publisher
 {
     /**
      * @var Connection
@@ -10,79 +30,46 @@ class Makeweb_Elements_Publish
     private $connection;
 
     /**
-     * @var Makeweb_Elements_Tree_Manager
+     * @var TreeManager
      */
-    protected $_treeManager = null;
+    private $treeManager;
 
     /**
-     * @var Makeweb_Elements_Element_Version_Manager
+     * @var TeaserManagerInterface
      */
-    protected $_elementVersionManager = null;
+    private $teaserManager;
 
     /**
-     * @var Zend_Db_Select
+     * @var ElementService
      */
-    protected $_versionSelect = null;
+    private $elementService;
 
     /**
-     * @var Zend_Db_Select
+     * @var SecurityContextInterface
      */
-    protected $_instanceSelect = null;
+    private $securityContext;
 
     /**
-     * @var Zend_Db_Select
-     */
-    protected $_teaserSelect = null;
-
-    /**
-     * @var Zend_Db_Select
-     */
-    protected $_teaserInstanceSelect = null;
-
-    /**
-     * @var Phlexible\Bundle\AccessControlBundle\Rights
-     */
-    protected $_contentRightsManager = null;
-
-    /**
-     * @var MWF_Core_Users_User
-     */
-    protected $_currentUser = null;
-
-    /**
-     * @var array
-     */
-    protected $_rightsIdentifiers;
-
-    /**
-     * Constructor
-     *
-     * @param Connection                                  $connection
-     * @param Makeweb_Elements_Tree_Manager               $treeManager
-     * @param Makeweb_Elements_Element_Version_Manager    $elementVersionManager
-     * @param Phlexible\Bundle\AccessControlBundle\Rights $contentRightsManager
-     * @param MWF_Core_Users_User                         $currentUser
+     * @param Connection               $connection
+     * @param TreeManager              $treeManager
+     * @param TeaserManagerInterface   $teaserManager
+     * @param ElementService           $elementService
+     * @param SecurityContextInterface $securityContext
      */
     public function __construct(
         Connection $connection,
-        Makeweb_Elements_Tree_Manager $treeManager,
-        Makeweb_Elements_Element_Version_Manager $elementVersionManager,
-        Phlexible\Bundle\AccessControlBundle\Rights $contentRightsManager,
-        MWF_Core_Users_User $currentUser)
+        TreeManager $treeManager,
+        TeaserManagerInterface $teaserManager,
+        ElementService $elementService,
+        SecurityContextInterface $securityContext)
     {
         $this->connection = $connection;
-        $this->_elementVersionManager = $elementVersionManager;
-        $this->_treeManager = $treeManager;
-        $this->_contentRightsManager = $contentRightsManager;
-        $this->_currentUser = $currentUser;
+        $this->treeManager = $treeManager;
+        $this->teaserManager = $teaserManager;
+        $this->elementService = $elementService;
+        $this->securityContext = $securityContext;
 
-        $this->_rightsIdentifiers = array(
-            array('uid' => $currentUser->getId())
-        );
-        foreach ($currentUser->getGroups() as $group) {
-            $this->_rightsIdentifiers[] = array('gid' => $group->getId());
-        }
-
+        /*
         $this->_versionSelect = $db->select()
             ->from($db->prefix . 'element', 'latest_version')
             ->where('eid = :eid')
@@ -113,11 +100,25 @@ class Makeweb_Elements_Publish
             ->from($db->prefix . 'element_tree_teasers', array('id'))
             ->where('teaser_eid = :eid')
             ->where('id != :skipTeaserId');
+        */
     }
 
+    /**
+     * @param int    $treeId
+     * @param string $language
+     * @param int    $version
+     * @param bool   $includeElements
+     * @param bool   $includeElementInstances
+     * @param bool   $includeTeasers
+     * @param bool   $includeTeaserInstances
+     * @param bool   $recursive
+     * @param bool   $onlyOffline
+     * @param bool   $onlyAsync
+     *
+     * @return array
+     */
     public function getPreview(
-        $tid,
-        $teaserId,
+        $treeId,
         $language,
         $version,
         $includeElements,
@@ -128,16 +129,17 @@ class Makeweb_Elements_Publish
         $onlyOffline,
         $onlyAsync)
     {
-        $node = $this->_treeManager->getNodeByNodeId($tid);
+        $tree = $this->treeManager->getByNodeId($treeId);
+        $treeNode = $tree->get($treeId);
 
         $result = array();
 
         if ($includeElements) {
-            $result = $this->_handleTreeNode(
+            $result = $this->handleTreeNode(
                 $result,
                 0,
-                implode('/', $node->getPath()),
-                $node,
+                implode('/', $treeNode->getPath()),
+                $treeNode,
                 $version,
                 $language,
                 $onlyAsync,
@@ -145,11 +147,11 @@ class Makeweb_Elements_Publish
             );
         }
         if ($includeTeasers) {
-            $result = $this->_getTeaserArray(
+            $result = $this->handleTreeNodeTeasers(
                 $result,
                 0,
-                implode('/', $node->getPath()),
-                $node,
+                implode('/', $treeNode->getPath()),
+                $treeNode,
                 $language,
                 $onlyAsync,
                 $onlyOffline,
@@ -158,15 +160,15 @@ class Makeweb_Elements_Publish
         }
 
         if ($recursive) {
-            $iterator = new Makeweb_Elements_Tree_Node_Iterator($node);
-            $rii = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
+            $rii = new \RecursiveIteratorIterator($treeNode->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
 
             foreach ($rii as $childNode) {
-                /* @var $childNode Makeweb_Elements_Tree_Node */
+                /* @var $childNode TreeNodeInterface */
+
                 set_time_limit(5);
 
                 if ($includeElements) {
-                    $result = $this->_handleTreeNode(
+                    $result = $this->handleTreeNode(
                         $result,
                         $rii->getDepth() + 1,
                         implode('/', $childNode->getPath()),
@@ -178,7 +180,7 @@ class Makeweb_Elements_Publish
                     );
                 }
                 if ($includeTeasers) {
-                    $result = $this->_getTeaserArray(
+                    $result = $this->handleTreeNodeTeasers(
                         $result,
                         $rii->getDepth() + 1,
                         implode('/', $childNode->getPath()),
@@ -194,18 +196,12 @@ class Makeweb_Elements_Publish
 
         foreach ($result as $key => $row) {
             if ($includeElementInstances && 'full_element' === $row['type']) {
-                $instanceTids = $this->_db->fetchCol(
-                    $this->_instanceSelect,
-                    array(
-                        'eid'     => $row['eid'],
-                        'skipTid' => $row['tid'],
-                    )
-                );
+                $instanceNodes = $this->treeManager->getInstanceNodes($treeNode);
 
-                foreach ($instanceTids as $instanceTid) {
-                    $instanceNode = $this->_treeManager->getNodeByNodeId($instanceTid);
+                foreach ($instanceNodes as $instanceNode) {
+                    /* @var $instanceNode TreeNodeInterface */
 
-                    $result = $this->_handleTreeNode(
+                    $result = $this->handleTreeNode(
                         $result,
                         $row['depth'],
                         $row['path'],
@@ -218,24 +214,10 @@ class Makeweb_Elements_Publish
                     );
                 }
             } elseif ($includeTeaserInstances && 'part_element' === $row['type']) {
-                $instanceTeaserIds = $this->_db->fetchCol(
-                    $this->_teaserInstanceSelect,
-                    array(
-                        'eid'          => $row['eid'],
-                        'skipTeaserId' => $row['teaser_id'],
-                    )
-                );
+                $instanceTeasers = $this->teaserManager->getInstances($teaser);
 
-                foreach ($instanceTeaserIds as $instanceTeaserId) {
-                    $teaser = $this->_db->fetchRow(
-                        $this->_teaserSelect,
-                        array(
-                            'teaserId' => $instanceTeaserId,
-                            'language' => $language,
-                        )
-                    );
-
-                    $result = $this->_handleTeaser(
+                foreach ($instanceTeasers as $instanceTeaser) {
+                    $result = $this->handleTeaser(
                         $result,
                         $row['depth'],
                         $teaser,
@@ -251,18 +233,18 @@ class Makeweb_Elements_Publish
         return array_values($result);
     }
 
-    protected function _handleTreeNode(
+    private function handleTreeNode(
         array $result,
         $depth,
         $path,
-        Makeweb_Elements_Tree_Node $node,
+        TreeNodeInterface $treeNode,
         $version,
         $language,
         $onlyAsync,
         $onlyOffline,
         $isInstance = false)
     {
-        if (array_key_exists('treenode_' . $node->getId(), $result)) {
+        if (array_key_exists('treenode_' . $treeNode->getId(), $result)) {
             return $result;
         }
 
@@ -271,18 +253,17 @@ class Makeweb_Elements_Publish
         if ($onlyAsync || $onlyOffline) {
             $include = false;
 
-            if ($onlyAsync && $node->isAsync($language)) {
+            if ($onlyAsync && $treeNode->getTree()->isAsync($treeNode, $language)) {
                 $include = true;
             }
-            if ($onlyOffline && !$node->isPublished($language)) {
+            if ($onlyOffline && !$treeNode->getTree()->isPublished($treeNode, $language)) {
                 $include = true;
             }
         }
-        if (!$this->_currentUser->isGranted(MWF_Core_Acl_Acl::RESOURCE_SUPERADMIN) &&
-            !$this->_currentUser->isGranted(MWF_Core_Acl_Acl::RESOURCE_DEVELOPMENT)
+        if (!$this->securityContext->isGranted(Acl::RESOURCE_SUPERADMIN, $treeNode) &&
+            !$this->securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT, $treeNode)
         ) {
-            $this->_contentRightsManager->calculateRights('internal', $node, $this->_rightsIdentifiers);
-            if (!$this->_contentRightsManager->hasRight('PUBLISH', $language)) {
+            if (!$this->securityContext->isGranted($treeNode, array('right' => 'PUBLISH', 'language' => $language))) {
                 $include = false;
             }
         }
@@ -291,61 +272,54 @@ class Makeweb_Elements_Publish
             return $result;
         }
 
-        if ($version === null) {
-            $version = $this->_db->fetchOne($this->_versionSelect, array('eid' => $node->getEid()));
+        $element = $this->elementService->findElement($treeNode->getTypeId(), $version);
+        if ($version) {
+            $elementVersion = $this->elementService->findElementVersion($element, $version);
+        } else {
+            $elementVersion = $this->elementService->findLatestElementVersion($element);
         }
 
-        $elementVersion = $this->_elementVersionManager->get($node->getEid(), $version);
-
-        $result['treenode_' . $node->getId()] = array(
+        $result['treenode_' . $treeNode->getId()] = array(
             'type'      => 'full_element',
             'instance'  => $isInstance,
             'depth'     => $depth,
             'path'      => $path . '+' . $language,
-            'tid'       => $node->getId(),
+            'tid'       => $treeNode->getId(),
             'teaser_id' => null,
-            'eid'       => $node->getEid(),
+            'eid'       => $treeNode->getEid(),
             'version'   => $version,
             'language'  => $language,
             'title'     => $elementVersion->getBackendTitle($language),
-            'icon'      => $elementVersion->getIconUrl($node->getIconParams($language)),
+            'icon'      => '',// TODO: $elementVersion->getIconUrl($treeNode->getIconParams($language)),
         );
 
         return $result;
     }
 
-    protected function _getTeaserArray(
+    protected function handleTreeNodeTeasers(
         array $result,
         $depth,
         $path,
-        Makeweb_Elements_Tree_Node $node,
+        TreeNodeInterface $treeNode,
         $language,
         $onlyAsync,
         $onlyOffline,
         $includeTeaserInstances)
     {
-        $teaser = null;
-
-        $teasers = $this->_db->fetchAll(
-            $this->_teasersSelect,
-            array(
-                'tid'      => $node->getId(),
-                'language' => $language
-            )
-        );
+        $teasers = $this->teaserManager->findForLayoutAreaAndTreeNode(null, $treeNode);
 
         foreach ($teasers as $teaser) {
-            $result = $this->_handleTeaser($result, $depth, $path, $teaser, $language, $onlyAsync, $onlyOffline);
+            $result = $this->handleTeaser($result, $depth, $path, $teaser, $language, $onlyAsync, $onlyOffline);
         }
 
         return $result;
     }
 
-    protected function _handleTeaser(
+    protected function handleTeaser(
         $result,
         $depth,
         $path,
-        $teaser,
+        Teaser $teaser,
         $language,
         $onlyAsync,
         $onlyOffline,
@@ -380,7 +354,7 @@ class Makeweb_Elements_Publish
             return $result;
         }
 
-        $elementVersion = $this->_elementVersionManager->get($teaser['teaser_eid'], $version);
+        $elementVersion = $this->elementService->get($teaser['teaser_eid'], $version);
 
         $teaserNode = new Makeweb_Teasers_Node($teaser['id']);
 

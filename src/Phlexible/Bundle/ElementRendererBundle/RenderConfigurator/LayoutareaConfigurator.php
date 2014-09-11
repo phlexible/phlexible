@@ -9,6 +9,8 @@
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
+use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
@@ -72,15 +74,6 @@ class LayoutareaConfigurator implements ConfiguratorInterface
             return;
         }
 
-        // Before Init Teasers Event
-        /*
-        $beforeEvent = new \Makeweb_Renderers_Event_BeforeInitTeasers($this);
-        if (!$this->dispatcher->dispatch($beforeEvent))
-        {
-            return false;
-        }
-        */
-
         $elementtypeId = $renderConfiguration->get('contentElement')->getElementtypeId();
         $elementtypeService = $this->elementService->getElementtypeService();
         $elementtype = $elementtypeService->findElementtype($elementtypeId);
@@ -136,11 +129,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
             ->addFeature('layoutarea')
             ->set('layoutareas', $areas);
 
-        // Before Init Teasers Event
-        /*
-        $event = new Makeweb_Renderers_Event_InitTeasers($this);
-        $this->_dispatcher->dispatch($event);
-        */
+        $event = new ConfigureEvent($renderConfiguration);
+        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_LAYOUTAREA, $event);
     }
-
 }

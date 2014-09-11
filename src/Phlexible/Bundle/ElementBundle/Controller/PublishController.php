@@ -114,18 +114,26 @@ class PublishController extends Controller
             $languages = array($language);
         }
 
-        $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-        $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
-        $db = $this->getContainer()->dbPool->default;
-        $contentRightsManager = $this->getContainer()->contentRightsManager;
-        $currentUser = MWF_Env::getUser();
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
+        $currentUser = $this->getUser();
+        $publisher = $this->get('publisher');
 
         $result = array();
 
-        $publish = new Makeweb_Elements_Publish($db, $treeManager, $elementVersionManager, $contentRightsManager, $currentUser);
-
         foreach ($languages as $language) {
-            $langResult = $publish->getPreview($tid, $teaserId, $language, $version, $includeElements, $includeElementInstances, $includeTeasers, $includeTeaserInstances, $recursive, $onlyOffline, $onlyAsync);
+            $langResult = $publish->getPreview(
+                $tid,
+                $language,
+                $version,
+                $includeElements,
+                $includeElementInstances,
+                $includeTeasers,
+                $includeTeaserInstances,
+                $recursive,
+                $onlyOffline,
+                $onlyAsync
+            );
             $result = array_merge($result, $langResult);
         }
 

@@ -7,7 +7,6 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
     minWidth: 980,
     height: 520,
     minHeight: 520,
-    maximizable: true,
     layout: 'border',
     border: false,
     modal: true,
@@ -65,19 +64,17 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                                         boxLabel: this.strings.include_full_elements,
                                         checked: true,
                                         listeners: {
-                                            check: {
-                                                fn: function (cb, checked) {
-                                                    if (checked) {
-                                                        this.getComponent(0).getComponent(0).getComponent(0).getComponent(1).enable();
-                                                    }
-                                                    else {
-                                                        this.getComponent(0).getComponent(0).getComponent(0).getComponent(1).disable();
-                                                    }
+                                            check: function (cb, checked) {
+                                                if (checked) {
+                                                    this.getComponent(0).getComponent(0).getComponent(0).getComponent(1).enable();
+                                                }
+                                                else {
+                                                    this.getComponent(0).getComponent(0).getComponent(0).getComponent(1).disable();
+                                                }
 
-                                                    this.delayTask();
-                                                },
-                                                scope: this
-                                            }
+                                                this.delayTask();
+                                            },
+                                            scope: this
                                         }
                                     },
                                     {
@@ -85,10 +82,8 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                                         name: 'include_element_instances',
                                         boxLabel: this.strings.include_full_element_instances,
                                         listeners: {
-                                            check: {
-                                                fn: this.delayTask,
-                                                scope: this
-                                            }
+                                            check: this.delayTask,
+                                            scope: this
                                         }
                                     }
                                 ]
@@ -108,19 +103,17 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                                         name: 'include_teasers',
                                         boxLabel: this.strings.include_part_elements,
                                         listeners: {
-                                            check: {
-                                                fn: function (cb, checked) {
-                                                    if (checked) {
-                                                        this.getComponent(0).getComponent(0).getComponent(1).getComponent(1).enable();
-                                                    }
-                                                    else {
-                                                        this.getComponent(0).getComponent(0).getComponent(1).getComponent(1).disable();
-                                                    }
+                                            check: function (cb, checked) {
+                                                if (checked) {
+                                                    this.getComponent(0).getComponent(0).getComponent(1).getComponent(1).enable();
+                                                }
+                                                else {
+                                                    this.getComponent(0).getComponent(0).getComponent(1).getComponent(1).disable();
+                                                }
 
-                                                    this.delayTask();
-                                                },
-                                                scope: this
-                                            }
+                                                this.delayTask();
+                                            },
+                                            scope: this
                                         }
                                     },
                                     {
@@ -129,10 +122,8 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                                         boxLabel: this.strings.include_part_element_instances,
                                         disabled: true,
                                         listeners: {
-                                            check: {
-                                                fn: this.delayTask,
-                                                scope: this
-                                            }
+                                            check: this.delayTask,
+                                            scope: this
                                         }
                                     }
                                 ]
@@ -152,10 +143,8 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                                         name: 'recursive',
                                         boxLabel: this.strings.recursive,
                                         listeners: {
-                                            check: {
-                                                fn: this.delayTask,
-                                                scope: this
-                                            }
+                                            check: this.delayTask,
+                                            scope: this
                                         }
                                     },
                                     {
@@ -163,10 +152,8 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                                         name: 'only_offline',
                                         boxLabel: this.strings.only_offline_elements,
                                         listeners: {
-                                            check: {
-                                                fn: this.delayTask,
-                                                scope: this
-                                            }
+                                            check: this.delayTask,
+                                            scope: this
                                         }
                                     },
                                     {
@@ -174,10 +161,8 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                                         name: 'only_async',
                                         boxLabel: this.strings.only_async_elements,
                                         listeners: {
-                                            check: {
-                                                fn: this.delayTask,
-                                                scope: this
-                                            }
+                                            check: this.delayTask,
+                                            scope: this
                                         }
                                     }
                                 ]
@@ -194,10 +179,8 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                             fields: ['code', 'title', 'iconCls', 'action'],
                             data: languages,
                             listeners: {
-                                update: {
-                                    fn: this.delayTask,
-                                    scope: this
-                                }
+                                update: this.delayTask,
+                                scope: this
                             }
                         }),
                         columns: [
@@ -244,7 +227,7 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                 title: this.strings.preview,
                 region: 'center',
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('elements_publish_previewpublish'),
+                    url: Phlexible.Router.generate('elements_publish_preview'),
                     //id: 'tid',
                     root: 'preview',
                     fields: ['action', 'type', 'instance', 'tid', 'teaser_id', 'eid', 'version', 'language', 'depth', 'path', 'icon', 'title'],
@@ -253,18 +236,16 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                         direction: 'asc'
                     },
                     listeners: {
-                        load: {
-                            fn: function (store) {
-                                var cnt = store.getCount();
-                                if (cnt === 1) {
-                                    cnt += ' ' + this.strings.element;
-                                } else {
-                                    cnt += ' ' + this.strings.elements;
-                                }
-                                this.getComponent(1).getBottomToolbar().items.items[1].setText(cnt);
-                            },
-                            scope: this
-                        }
+                        load: function (store) {
+                            var cnt = store.getCount();
+                            if (cnt === 1) {
+                                cnt += ' ' + this.strings.element;
+                            } else {
+                                cnt += ' ' + this.strings.elements;
+                            }
+                            this.getComponent(1).getBottomToolbar().items.items[1].setText(cnt);
+                        },
+                        scope: this
                     }
                 }),
                 viewConfig: {
@@ -359,10 +340,8 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                         scope: this
                     }],
                 listeners: {
-                    render: {
-                        fn: this.delayTask,
-                        scope: this
-                    }
+                    render: this.delayTask,
+                    scope: this
                 }
             }
         ];

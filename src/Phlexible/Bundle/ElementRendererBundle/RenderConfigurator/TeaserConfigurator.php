@@ -10,6 +10,8 @@ namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
+use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Psr\Log\LoggerInterface;
@@ -71,15 +73,6 @@ class TeaserConfigurator implements ConfiguratorInterface
             return;
         }
 
-        // Before Init Element Event
-        /*
-        $beforeEvent = new \Makeweb_Renderers_Event_BeforeInitElement($this);
-        if (!$this->dispatcher->dispatch($beforeEvent))
-        {
-            return false;
-        }
-        */
-
         $teaser = $request->attributes->get('contentDocument');
 
         $element = $this->elementService->findElement($teaser->getTypeId());
@@ -93,10 +86,7 @@ class TeaserConfigurator implements ConfiguratorInterface
             ->set('version', $version)
             ->set('language', 'de');
 
-        // Init Element Event
-        /*
-        $event = new \Makeweb_Renderers_Event_InitElement($this);
-        $this->dispatcher->dispatch($event);
-        */
+        $event = new ConfigureEvent($renderConfiguration);
+        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_TEASER, $event);
     }
 }

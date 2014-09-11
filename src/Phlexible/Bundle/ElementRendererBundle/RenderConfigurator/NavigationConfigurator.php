@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
+use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
+use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
@@ -51,15 +53,6 @@ class NavigationConfigurator implements ConfiguratorInterface
             return;
         }
 
-        // Before Init Navigation Event
-        /*
-        $beforeEvent = new \Makeweb_Renderers_Event_BeforeInitNavigation($this);
-        if (!$this->dispatcher->dispatch($beforeEvent))
-        {
-            return false;
-        }
-        */
-
         /** @var Url $siterootUrl */
         $siterootUrl = $request->attributes->get('siterootUrl');
 
@@ -79,15 +72,11 @@ class NavigationConfigurator implements ConfiguratorInterface
             );
         }
 
-        // Init Navigation Event
-        /*
-        $event = new \Makeweb_Renderers_Event_InitNavigation($this);
-        $this->dispatcher->dispatch($event);
-        */
-
         $renderConfiguration
             ->addFeature('navigation')
             ->set('navigations', $navigations);
-    }
 
+        $event = new ConfigureEvent($renderConfiguration);
+        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_NAVIGATION, $event);
+    }
 }

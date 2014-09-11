@@ -1,0 +1,22 @@
+services:
+    # asset providers
+    phlexible_form.asset_provider:
+        class: Phlexible\Bundle\FormBundle\AssetProvider\FormAssetProvider
+        public: false
+        arguments: [@file_locator]
+        tags:
+            - {name: phlexible_gui.asset.provider}
+
+    # event listeners
+    phlexible_frontend_media.listener.render:
+        class: Phlexible\Bundle\FormBundle\EventListener\ElementRendererListener
+        arguments: [@form.factory]
+        tags:
+            - {name: kernel.event_subscriber}
+
+    # fields
+    phlexible_form.field.form:
+        class: Phlexible\Bundle\FormBundle\Field\FormField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: form}
