@@ -192,13 +192,13 @@ class ElementService
 
     /**
      * @param ElementVersion $elementVersion
-     * @param string         $language
+     * @param string         $defaultLanguage
      *
      * @return ElementStructure
      */
-    public function findElementStructure(ElementVersion $elementVersion, $language)
+    public function findElementStructure(ElementVersion $elementVersion, $defaultLanguage = null)
     {
-        $elementVersionData = $this->elementStructureManager->find($elementVersion, $language);
+        $elementVersionData = $this->elementStructureManager->find($elementVersion, $defaultLanguage);
 
         return $elementVersionData;
     }
@@ -270,15 +270,15 @@ class ElementService
     }
 
     /**
-     * @param Element                 $element
-     * @param ElementStructure[]|null $elementStructures
-     * @param string                  $triggerLanguage
-     * @param string                  $userId
-     * @param string                  $comment
+     * @param Element          $element
+     * @param ElementStructure $elementStructure
+     * @param string           $triggerLanguage
+     * @param string           $userId
+     * @param string           $comment
      *
      * @return ElementVersion
      */
-    public function createElementVersion(Element $element, array $elementStructures = null, $triggerLanguage, $userId, $comment = null)
+    public function createElementVersion(Element $element, ElementStructure $elementStructure = null, $triggerLanguage, $userId, $comment = null)
     {
         $oldElementVersion = $this->findLatestElementVersion($element);
 
@@ -303,23 +303,11 @@ class ElementService
 
         $this->elementManager->updateElement($element, false);
 
-        if ($elementStructures) {
-            $masterElementStructure = $elementStructures[$element->getMasterLanguage()];
-            unset($elementStructures[$element->getMasterLanguage()]);
+        if ($elementStructure) {
+            $this->fixElementVersion($elementStructure, $elementVersion);
+            $this->elementStructureManager->updateElementStructure($elementStructure, false);
 
-            $this->fixElementVersion($masterElementStructure, $elementVersion);
-            $this->elementStructureManager->updateElementStructure($masterElementStructure, false, false);
-
-            foreach ($elementStructures as $elementStructure) {
-                $this->fixElementVersion($elementStructure, $elementVersion);
-                $this->elementStructureManager->updateElementStructure($elementStructure, true, false);
-            }
-
-            $this->fieldMapper->apply($elementVersion, $masterElementStructure, array($element->getMasterLanguage()));
-
-            foreach ($elementStructures as $language => $elementStructure) {
-                $this->fieldMapper->apply($elementVersion, $elementStructure, array($language));
-            }
+            $this->fieldMapper->apply($elementVersion, $elementStructure, $elementStructure->getLanguages());
         }
 
         $this->elementVersionManager->updateElementVersion($elementVersion, true);

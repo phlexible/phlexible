@@ -29,13 +29,13 @@ class TitleFieldMapper implements FieldMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function map(ElementStructure $elementStructure, array $mapping)
+    public function map(ElementStructure $elementStructure, $language, array $mapping)
     {
         $pattern = $mapping['pattern'];
         $replace = array();
         foreach ($mapping['fields'] as $field) {
             $dsId = $field['ds_id'];
-            $replace['$' . $field['index']] = $this->findValue($elementStructure, $dsId);
+            $replace['$' . $field['index']] = $this->findValue($elementStructure, $dsId, $language);
         }
         $title = str_replace(array_keys($replace), array_values($replace), $pattern);
 
@@ -49,17 +49,18 @@ class TitleFieldMapper implements FieldMapperInterface
     /**
      * @param ElementStructure $elementStructure
      * @param string           $dsId
+     * @param string           $language
      *
      * @return null|ElementStructureValue
      */
-    private function findValue(ElementStructure $elementStructure, $dsId)
+    private function findValue(ElementStructure $elementStructure, $dsId, $language)
     {
-        if ($elementStructure->hasValueByDsId($dsId)) {
-            return $elementStructure->getValueByDsId($dsId);
+        if ($elementStructure->hasValueByDsId($dsId, $language)) {
+            return $elementStructure->getValueByDsId($dsId, $language);
         }
 
         foreach ($elementStructure->getStructures() as $childStructure) {
-            $value = $this->findValue($childStructure, $dsId);
+            $value = $this->findValue($childStructure, $dsId, $language);
             if ($value) {
                 return $value;
             }

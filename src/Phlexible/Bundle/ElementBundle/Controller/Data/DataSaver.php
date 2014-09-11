@@ -142,6 +142,7 @@ class DataSaver
         $elementtypeStructure = $this->elementService->getElementtypeService()->findElementtypeStructure($elementtypeVersion);
 
         $oldElementVersion = $this->elementService->findLatestElementVersion($element);
+        $oldElementStructure = $this->elementService->findElementStructure($oldElementVersion, 'de');
         $oldVersion = $oldElementVersion->getVersion();
         $isMaster = $element->getMasterLanguage() === $language;
 
@@ -158,8 +159,17 @@ class DataSaver
             $elementComment = $data['comment'];
         }
 
-        $elementStructure = $this->createStructure($elementtypeStructure, $values, $language);
-        $elementVersion = $this->elementService->createElementVersion($element, array($language => $elementStructure), $language, $user->getId(), $elementComment);
+        if ($language === $element->getMasterLanguage()) {
+            $elementStructure = new ElementStructure();
+            $map = $this->applyStructure($elementStructure, $elementtypeStructure, $values, $language, $oldElementStructure);
+            $this->applyOldValues($elementStructure, $oldElementStructure, $language);
+            $this->applyValues($elementStructure, $elementtypeStructure, $values, $language, $map);
+        } else {
+            $elementStructure = clone $oldElementStructure;
+            $this->applyValues($elementStructure, $elementtypeStructure, $values, $language);
+        }
+
+        $elementVersion = $this->elementService->createElementVersion($element, $elementStructure, $language, $user->getId(), $elementComment);
 
         if ($teaser) {
             $this->saveTeaserData($teaser, $language, $data);
@@ -423,17 +433,16 @@ class DataSaver
     }
 
     /**
+     * @param ElementStructure     $rootElementStructure
      * @param ElementtypeStructure $elementtypeStructure
      * @param array                $values
-     * @param string               $language
      *
      * @return ElementStructure
      */
-    private function createStructure($elementtypeStructure, array $values, $language)
+    private function applyStructure(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values)
     {
-        $rootElementStructure = new ElementStructure();
-
         $this->structures[null] = $rootElementStructure;
+        $map = array(null => null);
 
         foreach ($values as $key => $value) {
             $parts = explode('__', $key);
@@ -443,41 +452,17 @@ class DataSaver
                 $repeatableIdentifier = $parts[1];
             }
 
-            if (preg_match('/^field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
-                // existing root value
-                $dsId = $match[1];
-                $id = $match[2];
-                $node = $elementtypeStructure->getNode($dsId);
-                $options = null;
-                $field = $this->fieldRegistry->getField($node->getType());
-                $value = $field->fromRaw($value);
-                $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
-                $elementStructure = $this->structures[$repeatableIdentifier];
-                $elementStructure->setValue($elementStructureValue);
-            } elseif (preg_match('/^field-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match)) {
-                // new root value
-                $dsId = $match[1];
-                $foundId = $match[2];
-                $id = $this->elementService->getElementStructureManager()->getNextStructureValueId();
-                $node = $elementtypeStructure->getNode($dsId);
-                $field = $this->fieldRegistry->getField($node->getType());
-                $value = $field->fromRaw($value);
-                $options = null;
-                $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $node->getName(), $value, $options);
-                $elementStructure = $this->structures[$repeatableIdentifier];
-                $elementStructure->setValue($elementStructureValue);
-            } elseif (preg_match('/^group-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
+            if (preg_match('/^group-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
                 // existing repeatable group
                 $parent = $this->structures[$repeatableIdentifier];
                 $dsId = $match[1];
                 $id = $match[2];
                 $node = $elementtypeStructure->getNode($dsId);
+                $map[$identifier] = (int) $id;
                 $this->structures[$identifier] = $elementStructure = new ElementStructure();
                 $elementStructure
                     ->setId($id)
                     ->setDsId($dsId)
-                    #->setRepeatableId($parent->getId())
-                    #->setRepeatableDsId($parent->getDsId())
                     ->setParentName($parent->getName())
                     ->setName($node->getName());
                 $parent->addStructure($elementStructure);
@@ -488,15 +473,117 @@ class DataSaver
                 $foundId = $match[2];
                 $id = $this->elementService->getElementStructureManager()->getNextStructureId();
                 $node = $elementtypeStructure->getNode($dsId);
+                $map[$identifier] = (int) $id;
                 $this->structures[$identifier] = $elementStructure = new ElementStructure();
                 $elementStructure
                     ->setId($id)
                     ->setDsId($dsId)
-                    #->setRepeatableId($parent->getId())
-                    #->setRepeatableDsId($parent->getDsId())
                     ->setParentName($parent->getName())
                     ->setName($node->getName());
                 $parent->addStructure($elementStructure);
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * @param ElementStructure $rootElementStructure
+     * @param ElementStructure $oldRootElementStructure
+     * @param string           $skipLanguage
+     */
+    private function applyOldValues(ElementStructure $rootElementStructure, ElementStructure $oldRootElementStructure, $skipLanguage)
+    {
+        foreach ($oldRootElementStructure->getValues() as $value) {
+            if ($value->getLanguage() === $skipLanguage) {
+                continue;
+            }
+            $rootElementStructure->setValue($value);
+        }
+
+        $rii = new \RecursiveIteratorIterator($rootElementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($rii as $structure) {
+            $oldStructure = $oldRootElementStructure->findStructure($structure->getId());
+            if (!$oldStructure) {
+                continue;
+            }
+            foreach ($oldStructure->getValues() as $value) {
+                if ($value->getLanguage() === $skipLanguage) {
+                    continue;
+                }
+                $structure->setValue($value);
+            }
+        }
+    }
+
+    /**
+     * @param ElementStructure     $rootElementStructure
+     * @param ElementtypeStructure $elementtypeStructure
+     * @param array                $values
+     * @param string               $language
+     * @param array                $map
+     *
+     * @return ElementStructure
+     */
+    private function applyValues(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values, $language, array $map = null)
+    {
+        $rootElementStructure->removeLanguage($language);
+
+        foreach ($values as $key => $value) {
+            $parts = explode('__', $key);
+            $identifier = $parts[0];
+            $repeatableIdentifier = null;
+            if (isset($parts[1])) {
+                $repeatableIdentifier = $parts[1];
+            }
+
+            if (preg_match('/^field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
+                // existing value
+                $dsId = $match[1];
+                $id = $match[2];
+                $node = $elementtypeStructure->getNode($dsId);
+                $options = null;
+                $field = $this->fieldRegistry->getField($node->getType());
+                $value = $field->fromRaw($value);
+                $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $field->getDataType(), $node->getName(), $value, $options);
+                if ($map) {
+                    $mapId = $map[$repeatableIdentifier];
+                } else {
+                    $mapId = null;
+                    if ($repeatableIdentifier) {
+                        $dummy = explode('-', $repeatableIdentifier);
+                        $mapId = (int) end($dummy);
+                    }
+                }
+                $elementStructure = $rootElementStructure->findStructure($mapId);
+                if (!$elementStructure) {
+                    throw new \Exception('Element structure not found.');
+                }
+                $elementStructure->setValue($elementStructureValue);
+            } elseif (preg_match('/^field-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match)) {
+                // new value
+                $dsId = $match[1];
+                $foundId = $match[2];
+                $id = $this->elementService->getElementStructureManager()->getNextStructureValueId();
+                $node = $elementtypeStructure->getNode($dsId);
+                $field = $this->fieldRegistry->getField($node->getType());
+                $value = $field->fromRaw($value);
+                $options = null;
+                $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $field->getDataType(), $node->getName(), $value, $options);
+                if ($map) {
+                    $mapId = $map[$repeatableIdentifier];
+                } else {
+                    $mapId = null;
+                    if ($repeatableIdentifier) {
+                        $dummy = explode('-', $repeatableIdentifier);
+                        $mapId = (int) end($dummy);
+                    }
+                }
+                $elementStructure = $rootElementStructure->findStructure($mapId);
+                if (!$elementStructure) {
+                    throw new \Exception('Element structure not found.');
+                }
+                $elementStructure->setValue($elementStructureValue);
             }
         }
 

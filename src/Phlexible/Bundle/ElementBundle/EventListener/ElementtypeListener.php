@@ -72,17 +72,13 @@ class ElementtypeListener implements EventSubscriberInterface
 
         foreach ($elements as $element) {
             $latestElementVersion = $this->elementService->findLatestElementVersion($element);
+            $latestElementStructure = $this->elementService->findElementStructure($latestElementVersion);
 
-            $elementStructures = array();
-            foreach ($this->languages as $language) {
-                $latestElementStructure = $this->elementService->findElementStructure($latestElementVersion, $language);
-
-                $elementStructures[$language] = $elementStructure = $this->iterateStructure($latestElementStructure);
-            }
+            $elementStructure = clone($latestElementStructure);
 
             $elementVersion = $this->elementService->createElementVersion(
                 $element,
-                $elementStructures,
+                $elementStructure,
                 null,
                 $elementtypeVersion->getCreateUserId()
             );

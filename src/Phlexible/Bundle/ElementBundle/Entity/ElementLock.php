@@ -32,10 +32,11 @@ class ElementLock
     private $id;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var Element
+     * @ORM\ManyToOne(targetEntity="Element")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="CASCADE")
      */
-    private $eid;
+    private $element;
 
     /**
      * @var string
@@ -88,21 +89,21 @@ class ElementLock
     }
 
     /**
-     * @return int
+     * @return Element
      */
-    public function getEid()
+    public function getElement()
     {
-        return $this->eid;
+        return $this->element;
     }
 
     /**
-     * @param int $eid
+     * @param Element $element
      *
      * @return $this
      */
-    public function setEid($eid)
+    public function setElement($element)
     {
-        $this->eid = $eid;
+        $this->element = $element;
 
         return $this;
     }

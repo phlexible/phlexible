@@ -13,7 +13,6 @@ use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 use Phlexible\Bundle\ElementBundle\Entity\Repository\ElementLockRepository;
 use Phlexible\Bundle\ElementBundle\Exception\LockFailedException;
-use Phlexible\Bundle\ElementBundle\Lock\LockIdentityInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementLockManagerInterface;
 
 /**
@@ -75,7 +74,7 @@ class ElementLockManager implements ElementLockManagerInterface
      */
     public function isMasterLocked(Element $element)
     {
-        $locks = $this->getLockRepository()->findByEid($element->getEid());
+        $locks = $this->getLockRepository()->findByElement($element);
 
         foreach ($locks as $lock) {
             if ($lock->getLanguage() === null) {
@@ -91,7 +90,7 @@ class ElementLockManager implements ElementLockManagerInterface
      */
     public function isSlaveLocked(Element $element, $language)
     {
-        $locks = $this->getLockRepository()->findByEid($element->getEid());
+        $locks = $this->getLockRepository()->findByElement($element);
 
         foreach ($locks as $lock) {
             if ($lock->getLanguage() === $language) {
@@ -123,7 +122,7 @@ class ElementLockManager implements ElementLockManagerInterface
      */
     public function isMasterLockedByUser(Element $element, $userId)
     {
-        $locks = $this->getLockRepository()->findByEidAndUserId($element->getEid(), $userId);
+        $locks = $this->getLockRepository()->findByElementAndUserId($element, $userId);
 
         foreach ($locks as $lock) {
             if ($lock->getLanguage() === null) {
@@ -139,7 +138,7 @@ class ElementLockManager implements ElementLockManagerInterface
      */
     public function isSlaveLockedByUser(Element $element, $language, $userId)
     {
-        $locks = $this->getLockRepository()->findByEidAndUserId($element->getEid(), $userId);
+        $locks = $this->getLockRepository()->findByElementAndUserId($element, $userId);
 
         foreach ($locks as $lock) {
             if ($lock->getLanguage() === $language) {
@@ -171,7 +170,7 @@ class ElementLockManager implements ElementLockManagerInterface
      */
     public function isMasterLockedByOtherUser(Element $element, $userId)
     {
-        $locks = $this->getLockRepository()->findByEidAndNotUserId($element->getEid(), $userId);
+        $locks = $this->getLockRepository()->findByElementAndNotUserId($element, $userId);
 
         foreach ($locks as $lock) {
             if ($lock->getLanguage() === null) {
@@ -187,7 +186,7 @@ class ElementLockManager implements ElementLockManagerInterface
      */
     public function isSlaveLockedByOtherUser(Element $element, $language, $userId)
     {
-        $locks = $this->getLockRepository()->findByEidAndNotUserId($element->getEid(), $userId);
+        $locks = $this->getLockRepository()->findByElementAndNotUserId($element, $userId);
 
         foreach ($locks as $lock) {
             if ($lock->getLanguage() === $language) {
@@ -204,18 +203,18 @@ class ElementLockManager implements ElementLockManagerInterface
     public function lock(Element $element, $userId, $language = null, $type = ElementLock::TYPE_TEMPORARY)
     {
         if (!$language || $element->getMasterLanguage() === $language) {
-            if ($this->isMasterLocked($element)) {
+            if ($this->isMasterLockedByOtherUser($element, $userId)) {
                 throw new LockFailedException('Can\'t aquire lock, already locked.');
             }
         } else {
-            if ($this->isSlaveLocked($element, $language)) {
+            if ($this->isSlaveLockedByOtherUser($element, $language, $userId)) {
                 throw new LockFailedException('Can\'t aquire lock, already locked.');
             }
         }
 
         $lock = new ElementLock();
         $lock
-            ->setEid($element->getEid())
+            ->setElement($element)
             ->setLanguage($language)
             ->setType($type)
             ->setUserId($userId)

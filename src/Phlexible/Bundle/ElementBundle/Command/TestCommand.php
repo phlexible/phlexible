@@ -66,35 +66,30 @@ class TestCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
+        $stopwatch = $this->getContainer()->get('debug.stopwatch');
 
-        $elementtype = $elementService->getElementtypeService()->findElementtype(3);
-        $elementtypeVersion = $elementService->getElementtypeService()->findElementtypeVersion($elementtype, 58);
+        $stopwatch->start('total');
 
-        $elements = $elementService->findElementsByElementtype($elementtypeVersion->getElementtype());
+        $stopwatch->start('element');
+        $element = $elementService->findElement(9);
+        $elementEvent = $stopwatch->stop('element');
 
-        $languages = array('de', 'en');
-        foreach ($elements as $element) {
-            if ($element->getEid() !== 9) {
-                #continue;
-            }
-            $latestElementVersion = $elementService->findLatestElementVersion($element);
-            $output->writeln($element->getEid()." ".$latestElementVersion->getVersion());
+        $stopwatch->start('elementVersion');
+        $elementVersion = $elementService->findLatestElementVersion($element);
+        $elementVersionEvent = $stopwatch->stop('elementVersion');
 
-            $elementStructures = array();
-            foreach ($languages as $language) {
-                $latestElementStructure = $elementService->findElementStructure($latestElementVersion, $language);
+        $stopwatch->start('elementStructure');
+        $elementStructure = $elementService->findElementStructure($elementVersion, 'de');
+        $elementStructureEvent = $stopwatch->stop('elementStructure');
 
-                $elementStructures[$language] = $elementStructure = $this->iterateStructure($latestElementStructure);
-            }
+        //$output->writeln($elementStructure->dump());
 
-            $elementVersion = $elementService->createElementVersion(
-                $element,
-                $elementStructures,
-                null,
-                $elementtypeVersion->getCreateUserId()
-            );
-        }
+        $totalEvent = $stopwatch->start('total');
 
+        $output->writeln('Element:          ' . $elementEvent->getDuration());
+        $output->writeln('ElementVersion:   ' . $elementVersionEvent->getDuration());
+        $output->writeln('ElementStructure: ' . $elementStructureEvent->getDuration());
+        $output->writeln('Total:            ' . $totalEvent->getDuration());
         die;
 
         $element = $elementService->findElement(1115);

@@ -89,7 +89,7 @@ class FieldMapper
 
             foreach ($mappings as $key => $mapping) {
                 if ($mapper = $this->findFieldMapper($key)) {
-                    $title = $mapper->map($elementStructure, $mapping);
+                    $title = $mapper->map($elementStructure, $language, $mapping);
                     if ($title) {
                         $titles[$key] = $title;
                     }

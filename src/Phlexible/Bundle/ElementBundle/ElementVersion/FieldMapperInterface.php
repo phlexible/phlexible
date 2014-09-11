@@ -26,9 +26,10 @@ interface FieldMapperInterface
 
     /**
      * @param ElementStructure $elementStructure
+     * @param string           $language
      * @param array            $mapping
      *
      * @return string|null
      */
-    public function map(ElementStructure $elementStructure, array $mapping);
+    public function map(ElementStructure $elementStructure, $language, array $mapping);
 }

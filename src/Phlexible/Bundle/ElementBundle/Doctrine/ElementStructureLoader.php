@@ -64,13 +64,13 @@ class ElementStructureLoader
      * Load data
      *
      * @param ElementVersion $elementVersion
-     * @param string         $language
+     * @param string         $defaultLanguage
      *
      * @return ElementStructure
      */
-    public function load(ElementVersion $elementVersion, $language)
+    public function load(ElementVersion $elementVersion, $defaultLanguage = null)
     {
-        $identifier = $elementVersion->getElement()->getEid() . '_' . $elementVersion->getVersion() . '_' . $language;
+        $identifier = $elementVersion->getElement()->getEid() . '_' . $elementVersion->getVersion();
 
         if (isset($this->map[$identifier])) {
             return $this->map[$identifier];
@@ -84,11 +84,13 @@ class ElementStructureLoader
         $elementtypeStructure = $this->elementtypeService->findElementtypeStructure($elementtypeVersion);
 
         $structureRows = $this->queryStructures($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
-        $dataRows = $this->queryValues($elementVersion->getElement()->getEid(), $elementVersion->getVersion(), $language);
+        $dataRows = $this->queryValues($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
 
-        $dummy = array(
+        $structures = array(
             null => $rootStructure = new ElementStructure()
         );
+
+        $rootStructure->setDefaultLanguage($defaultLanguage);
 
         if (!$structureRows && !$dataRows) {
             return $rootStructure;
@@ -108,12 +110,13 @@ class ElementStructureLoader
 
                 $structure = new ElementStructure();
                 $structure
+                    ->setDefaultLanguage($defaultLanguage)
                     ->setId($row['id'])
                     ->setDsId($row['ds_id'])
                     ->setName($row['name'])
                     ->setParentName($myParentNode->getName());
                 $rootStructure->addStructure($structure);
-                $dummy[$row['id']] = $structure;
+                $structures[$row['id']] = $structure;
 
                 if (isset($dataRows[$row['id']])) {
                     foreach ($dataRows[$row['id']] as $dataRow) {
@@ -153,16 +156,16 @@ class ElementStructureLoader
                             ->setParentName($myParentNode->getName());
                         /* @var $parentStructure ElementStructure */
 
-                        if (!isset($dummy[$row['repeatable_id']])) {
+                        if (!isset($structures[$row['repeatable_id']])) {
                             continue;
                             ldd($structure);
                             echo PHP_EOL.$node->getName()." ".$node->getDsId().PHP_EOL;
                             die;
                         }
-                        $parentStructure = $dummy[$row['repeatable_id']];
+                        $parentStructure = $structures[$row['repeatable_id']];
                         $parentStructure->addStructure($structure);
 
-                        $dummy[$row['id']] = $structure;
+                        $structures[$row['id']] = $structure;
 
                         if (isset($dataRows[$row['id']])) {
                             foreach ($dataRows[$row['id']] as $dataRow) {
@@ -238,13 +241,12 @@ class ElementStructureLoader
     }
 
     /**
-     * @param int    $eid
-     * @param int    $version
-     * @param string $language
+     * @param int $eid
+     * @param int $version
      *
      * @return array
      */
-    private function queryValues($eid, $version, $language)
+    private function queryValues($eid, $version)
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
@@ -264,7 +266,7 @@ class ElementStructureLoader
             ->from('element_structure_value', 'esv')
             ->where($qb->expr()->eq('esv.eid', $eid))
             ->andWhere($qb->expr()->eq('esv.version', $version))
-            ->andWhere($qb->expr()->eq('esv.language', $qb->expr()->literal($language)));
+        ;
 
         $result = $this->connection->fetchAll($qb->getSQL());
 

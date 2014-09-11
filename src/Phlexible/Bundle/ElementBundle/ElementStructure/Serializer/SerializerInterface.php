@@ -21,8 +21,9 @@ interface SerializerInterface
      * Serialize structure
      *
      * @param ElementStructure $elementStructure
+     * @param string           $language
      *
      * @return string
      */
-    public function serialize(ElementStructure $elementStructure);
+    public function serialize(ElementStructure $elementStructure, $language);
 }

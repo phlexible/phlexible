@@ -19,11 +19,11 @@ interface ElementStructureManagerInterface
 {
     /**
      * @param ElementVersion $elementVersion
-     * @param string         $language
+     * @param string         $defaultLanguage
      *
      * @return ElementStructure
      */
-    public function find(ElementVersion $elementVersion, $language);
+    public function find(ElementVersion $elementVersion, $defaultLanguage = null);
 
     /**
      * @return int
@@ -37,8 +37,7 @@ interface ElementStructureManagerInterface
 
     /**
      * @param ElementStructure $elementStructure
-     * @param bool             $onlyValues
      * @param bool             $flush
      */
-    public function updateElementStructure(ElementStructure $elementStructure, $onlyValues, $flush = true);
+    public function updateElementStructure(ElementStructure $elementStructure, $flush = true);
 }

@@ -278,7 +278,7 @@ class DataController extends Controller
 
             $lockInfo = array(
                 'status'   => 'locked',
-                'id'       => $lock->getEid(),
+                'id'       => $lock->getElement()->getEid(),
                 'username' => $lockUser->getDisplayName(),
                 'time'     => $lock->getLockedAt()->format('Y-m-d H:i:s'),
                 'age'      => time() - $lock->getLockedAt()->format('U'),
@@ -531,7 +531,7 @@ class DataController extends Controller
         $serializedStructure = $elementtypeSerializer->serialize($elementtypeStructure);
 
         $elementSerializer = new ElementArraySerializer();
-        $serializedValues = $elementSerializer->serialize($elementStructure);
+        $serializedValues = $elementSerializer->serialize($elementStructure, $language);
 
         $data = array(
             'success'             => true,

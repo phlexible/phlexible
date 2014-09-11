@@ -45,7 +45,7 @@ Phlexible.elements.PublishSlaveWindow = Ext.extend(Ext.Window, {
                         dataIndex: 'language',
                         width: 120,
                         renderer: function (v) {
-                            return Phlexible.inlineIcon('p-flags-' + v + '-icon') + ' ' + Phlexible.languages.Strings[v];
+                            return Phlexible.inlineIcon('p-flags-' + v + '-icon') + ' ' + Phlexible.gui.Strings[v];
                         }
                     },
                     {

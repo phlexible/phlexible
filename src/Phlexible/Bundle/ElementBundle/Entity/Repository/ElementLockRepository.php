@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 
 /**
@@ -19,45 +20,39 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 class ElementLockRepository extends EntityRepository
 {
     /**
-     * Retrieve lock by identifier
-     *
-     * @param int    $eid
-     * @param string $userId
+     * @param Element $element
+     * @param string  $userId
      *
      * @return ElementLock
      */
-    public function findByEidAndUserId($eid, $userId)
+    public function findByElementAndUserId(Element $element, $userId)
     {
-        return $this->findBy(array('eid' => $eid, 'userId' => $userId));
+        return $this->findBy(array('element' => $element, 'userId' => $userId));
     }
 
     /**
-     * Retrieve lock by identifier
-     *
-     * @param int    $eid
-     * @param string $notUserId
+     * @param Element $element
+     * @param string  $notUserId
      *
      * @return ElementLock
      */
-    public function findByEidAndNotUserId($eid, $notUserId)
+    public function findByElementAndNotUserId(Element $element, $notUserId)
     {
         $qb = $this->createQueryBuilder('l');
         $qb
-            ->where($qb->expr()->eq('l.eid', $eid))
+            ->where($qb->expr()->eq('l.element', $element->getEid()))
             ->andWhere($qb->expr()->neq('l.userId', $qb->expr()->literal($notUserId)));
 
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * Retrieve lock by identifier
-     *
-     * @param int $eid
+     * @param Element $element
      *
      * @return ElementLock[]
      */
-    public function findByEid($eid)
+    public function findByEid(Element $element)
     {
-        return $this->findBy(array('eid' => $eid));
+        return $this->findBy(array('element' => $element));
     }
 }

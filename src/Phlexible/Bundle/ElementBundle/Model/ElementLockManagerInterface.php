@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\ElementBundle\Model;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 use Phlexible\Bundle\ElementBundle\Exception\LockFailedException;
-use Phlexible\Bundle\ElementBundle\Lock\LockIdentityInterface;
 
 /**
  * Lock manager interface

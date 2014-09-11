@@ -100,23 +100,23 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
     /**
      * @param ElementVersion $elementVersion
-     * @param string         $language
+     * @param string         $defaultLanguage
      *
      * @return ElementStructure
      */
-    public function find(ElementVersion $elementVersion, $language)
+    public function find(ElementVersion $elementVersion, $defaultLanguage = null)
     {
-        return $this->elementStructureLoader->load($elementVersion, $language);
+        return $this->elementStructureLoader->load($elementVersion, $defaultLanguage);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateElementStructure(ElementStructure $elementStructure, $onlyValues = false, $flush = true)
+    public function updateElementStructure(ElementStructure $elementStructure, $flush = true)
     {
         $conn = $this->entityManager->getConnection();
 
-        $this->insertStructure($elementStructure, $conn, $onlyValues, true);
+        $this->insertStructure($elementStructure, $conn, true);
 
         $this->insertLinks($elementStructure);
 
@@ -144,13 +144,23 @@ class ElementStructureManager implements ElementStructureManagerInterface
     /**
      * @param ElementStructure $elementStructure
      * @param Connection       $conn
-     * @param bool             $onlyValues
      * @param bool             $isRoot
      */
-    private function insertStructure(ElementStructure $elementStructure, Connection $conn, $onlyValues, $isRoot = false)
+    private function insertStructure(ElementStructure $elementStructure, Connection $conn, $isRoot = false)
     {
-        if (!$isRoot && !$onlyValues) {
-            $structureEntity = new StructureEntity();
+        if (!$isRoot) {
+            $repo = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructure');
+
+            $structureEntity = $repo->findOneBy(
+                array(
+                    'dataId'  => $elementStructure->getId(),
+                    'element' => $elementStructure->getElementVersion()->getElement(),
+                    'version' => $elementStructure->getElementVersion()->getVersion(),
+                )
+            );
+            if (!$structureEntity) {
+                $structureEntity = new StructureEntity();
+            }
             $structureEntity
                 ->setDataId($elementStructure->getId())
                 ->setElement($elementStructure->getElementVersion()->getElement())
@@ -163,69 +173,66 @@ class ElementStructureManager implements ElementStructureManagerInterface
                 ->setSort(0);
 
             $this->entityManager->persist($structureEntity);
-            /*
-            $conn->insert(
-                'element_structure',
-                array(
-                    'data_id'          => $elementStructure->getId(),
-                    'eid'              => $elementStructure->getElementVersion()->getElement()->getEid(),
-                    'version'          => $elementStructure->getElementVersion()->getVersion(),
-                    'ds_id'            => $elementStructure->getDsId(),
-                    'type'             => 'group',//$elementStructure->getType(),
-                    'name'             => $elementStructure->getName(),
-                    'cnt'              => 0,
-                    'repeatable_id'    => $elementStructure->getRepeatableId() ?: null,
-                    'repeatable_ds_id' => $elementStructure->getRepeatableDsId() ?: null,
-                    'sort'             => 0,
-                )
-            );
-            */
         }
 
-        foreach ($elementStructure->getValues() as $elementStructureValue) {
-            if ($elementStructureValue->getValue()) {
-                $value = $elementStructureValue->getValue();
-                $field = $this->fieldRegistry->getField($elementStructureValue->getType());
-                $value = trim($field->toRaw($value));
+        foreach ($elementStructure->getLanguages() as $language) {
+            foreach ($elementStructure->getValues($language) as $elementStructureValue) {
+                if ($elementStructureValue->getValue()) {
+                    $value = $elementStructureValue->getValue();
+                    $field = $this->fieldRegistry->getField($elementStructureValue->getType());
+                    $value = trim($field->toRaw($value));
 
-                $valueEntity = new ValueEntity();
-                $valueEntity
-                    ->setDataId($elementStructureValue->getId())
-                    ->setElement($elementStructure->getElementVersion()->getElement())
-                    ->setVersion($elementStructure->getElementVersion()->getVersion())
-                    ->setLanguage($elementStructureValue->getLanguage())
-                    ->setDsId($elementStructureValue->getDsId())
-                    ->setType($elementStructureValue->getType())
-                    ->setName($elementStructureValue->getName())
-                    ->setRepeatableId($elementStructure->getId() ?: null)
-                    ->setRepeatableDsId($elementStructure->getDsId() ?: null)
-                    ->setContent($value)
-                    ->setOptions(!empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null);
+                    $repo = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructureValue');
 
-                $this->entityManager->persist($valueEntity);
-                /*
-                $conn->insert(
-                    'element_structure_value',
-                    array(
-                        'data_id'          => $elementStructureValue->getId(),
-                        'eid'              => $elementStructure->getElementVersion()->getElement()->getEid(),
-                        'version'          => $elementStructure->getElementVersion()->getVersion(),
-                        'language'         => $elementStructureValue->getLanguage(),
-                        'ds_id'            => $elementStructureValue->getDsId(),
-                        'type'             => $elementStructureValue->getType(),
-                        'name'             => $elementStructureValue->getName(),
-                        'repeatable_id'    => $elementStructure->getId() ?: null,
-                        'repeatable_ds_id' => $elementStructure->getDsId() ?: null,
-                        'content'          => $value,
-                        'options'          => !empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null,
-                    )
-                );
-                */
+                    $valueEntity = $repo->findOneBy(
+                        array(
+                            'dataId'   => $elementStructure->getId(),
+                            'element'  => $elementStructure->getElementVersion()->getElement(),
+                            'version'  => $elementStructure->getElementVersion()->getVersion(),
+                            'language' => $elementStructureValue->getLanguage(),
+                        )
+                    );
+                    if (!$valueEntity) {
+                        $valueEntity = new ValueEntity();
+                    }
+                    $valueEntity
+                        ->setDataId($elementStructureValue->getId())
+                        ->setElement($elementStructure->getElementVersion()->getElement())
+                        ->setVersion($elementStructure->getElementVersion()->getVersion())
+                        ->setLanguage($elementStructureValue->getLanguage())
+                        ->setDsId($elementStructureValue->getDsId())
+                        ->setType($elementStructureValue->getType())
+                        ->setName($elementStructureValue->getName())
+                        ->setRepeatableId($elementStructure->getId() ?: null)
+                        ->setRepeatableDsId($elementStructure->getDsId() ?: null)
+                        ->setContent($value)
+                        ->setOptions(!empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null);
+
+                    $this->entityManager->persist($valueEntity);
+                    /*
+                    $conn->insert(
+                        'element_structure_value',
+                        array(
+                            'data_id'          => $elementStructureValue->getId(),
+                            'eid'              => $elementStructure->getElementVersion()->getElement()->getEid(),
+                            'version'          => $elementStructure->getElementVersion()->getVersion(),
+                            'language'         => $elementStructureValue->getLanguage(),
+                            'ds_id'            => $elementStructureValue->getDsId(),
+                            'type'             => $elementStructureValue->getType(),
+                            'name'             => $elementStructureValue->getName(),
+                            'repeatable_id'    => $elementStructure->getId() ?: null,
+                            'repeatable_ds_id' => $elementStructure->getDsId() ?: null,
+                            'content'          => $value,
+                            'options'          => !empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null,
+                        )
+                    );
+                    */
+                }
             }
         }
 
         foreach ($elementStructure->getStructures() as $childStructure) {
-            $this->insertStructure($childStructure, $conn, $onlyValues);
+            $this->insertStructure($childStructure, $conn);
         }
     }
 

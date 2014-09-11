@@ -10,7 +10,7 @@ Phlexible.elements.accordion.DataTemplate = new Ext.XTemplate(
     '</tpl>',
     //'<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{author}</td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td>{[Phlexible.inlineIcon("p-flags-"+values.masterlanguage+"-icon")]} {masterlanguage}</td></tr>',
-    //'<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td>{[Phlexible.inlineIcon("p-flags-"+values.masterlanguage+"-icon")]} {[Phlexible.languages.Strings[values.masterlanguage]]}</td></tr>',
+    //'<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td>{[Phlexible.inlineIcon("p-flags-"+values.masterlanguage+"-icon")]} {[Phlexible.gui.Strings[values.masterlanguage]]}</td></tr>',
 
     '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.element_version]}</div><hr /><div style="clear: left;" /></td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{version}</td></tr>',

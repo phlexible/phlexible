@@ -20,15 +20,21 @@ class ArraySerializer implements SerializerInterface
     /**
      * {@inheritdoc}
      */
-    public function serialize(ElementStructure $elementStructure)
+    public function serialize(ElementStructure $elementStructure, $language)
     {
-        return $this->walk($elementStructure);
+        return $this->walk($elementStructure, $language);
     }
 
-    private function walk(ElementStructure $elementStructure)
+    /**
+     * @param ElementStructure $elementStructure
+     * @param string           $language
+     *
+     * @return array
+     */
+    private function walk(ElementStructure $elementStructure, $language)
     {
         $valueDatas = array();
-        foreach ($elementStructure->getValues() as $value) {
+        foreach ($elementStructure->getValues($language) as $value) {
             $valueDatas[] = array(
                 'id'      => $value->getId(),
                 'dsId'    => $value->getDsId(),
@@ -40,7 +46,7 @@ class ArraySerializer implements SerializerInterface
 
         $structureDatas = array();
         foreach ($elementStructure->getStructures() as $subStructure) {
-            $structureDatas[] = $this->walk($subStructure);
+            $structureDatas[] = $this->walk($subStructure, $language);
         }
 
         $structureData = array(

@@ -18,6 +18,11 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 class ElementStructure implements \IteratorAggregate
 {
     /**
+     * @var string
+     */
+    private $defaultLanguage;
+
+    /**
      * @var ElementVersion
      */
     private $elementVersion;
@@ -61,6 +66,34 @@ class ElementStructure implements \IteratorAggregate
      * @var ElementStructureValue[]
      */
     private $values = array();
+
+    /**
+     * Clone
+     */
+    public function __clone()
+    {
+        $this->elementVersion = null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultLanguage()
+    {
+        return $this->defaultLanguage;
+    }
+
+    /**
+     * @param string $defaultLanguage
+     *
+     * @return $this
+     */
+    public function setDefaultLanguage($defaultLanguage)
+    {
+        $this->defaultLanguage = $defaultLanguage;
+
+        return $this;
+    }
 
     /**
      * @return ElementVersion
@@ -219,6 +252,27 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
+     * @param int $id
+     *
+     * @return ElementStructure|null
+     */
+    public function findStructure($id)
+    {
+        if ($this->getId() === $id) {
+            return $this;
+        }
+
+        foreach ($this->structures as $childStructure) {
+            $result = $childStructure->findStructure($id);
+            if ($result) {
+                return $result;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return ElementStructure[]
      */
     public function getStructures()
@@ -233,51 +287,76 @@ class ElementStructure implements \IteratorAggregate
      */
     public function setValue(ElementStructureValue $value)
     {
-        $this->values[$value->getName()] = $value;
+        $this->values[$value->getLanguage()][$value->getName()] = $value;
 
         return $this;
     }
 
     /**
      * @param string $name
+     * @param string $language
      *
      * @return ElementStructureValue
      */
-    public function getValue($name)
+    public function getValue($name, $language = null)
     {
-        if (!$this->hasValue($name)) {
+        if (!$this->hasValue($name, $language)) {
             return null;
         }
 
-        return $this->values[$name];
+        if (!$language) {
+            $language = $this->defaultLanguage;
+        }
+
+        return $this->values[$language][$name];
     }
 
     /**
      * @param string $name
+     * @param string $language
      *
      * @return bool
      */
-    public function hasValue($name)
+    public function hasValue($name, $language = null)
     {
-        return isset($this->values[$name]);
+        if (!$language) {
+            $language = $this->defaultLanguage;
+        }
+
+        return isset($this->values[$language][$name]);
     }
 
     /**
+     * @param string $language
+     *
      * @return ElementStructureValue[]
      */
-    public function getValues()
+    public function getValues($language = null)
     {
-        return $this->values;
+        if (!$language) {
+            $language = $this->defaultLanguage;
+        }
+
+        if (!isset($this->values[$language])) {
+            return array();
+        }
+
+        return $this->values[$language];
     }
 
     /**
      * @param string $dsId
+     * @param string $language
      *
      * @return bool
      */
-    public function hasValueByDsId($dsId)
+    public function hasValueByDsId($dsId, $language = null)
     {
-        foreach ($this->values as $value) {
+        if (!$language) {
+            $language = $this->defaultLanguage;
+        }
+
+        foreach ($this->values[$language] as $value) {
             if ($value->getDsId() === $dsId) {
                 return true;
             }
@@ -289,18 +368,46 @@ class ElementStructure implements \IteratorAggregate
 
     /**
      * @param string $dsId
+     * @param string $language
      *
      * @return ElementStructureValue|null
      */
-    public function getValueByDsId($dsId)
+    public function getValueByDsId($dsId, $language = null)
     {
-        foreach ($this->values as $value) {
+        if (!$language) {
+            $language = $this->defaultLanguage;
+        }
+
+        if (!isset($this->values[$language])) {
+            return null;
+        }
+
+        foreach ($this->values[$language] as $value) {
             if ($value->getDsId() === $dsId) {
                 return $value;
             }
         }
 
         return null;
+    }
+
+    /**
+     * @param string $language
+     */
+    public function removeLanguage($language)
+    {
+        unset($this->values[$language]);
+        foreach ($this->structures as $structure) {
+            $structure->removeLanguage($language);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getLanguages()
+    {
+        return array_keys($this->values);
     }
 
     /**
@@ -362,18 +469,25 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
-     * @param int $indent
+     * @param bool $withValues
+     * @param int  $depth
      *
      * @return string
      */
-    public function dump($indent = 0)
+    public function dump($withValues = true, $depth = 0)
     {
-        $dump = str_repeat(' ', $indent) . 'S '.$this->getId().' '.$this->getDsId().' '.$this->getName().' '.$this->getParentName().' '.($this->getElementVersion() ? 'EV' : 'noEV').PHP_EOL;
-        foreach ($this->structures as $structure) {
-            $dump .= $structure->dump($indent + 1);
+        //$dump = str_repeat(' ', $depth * 2) . '+ '.$this->getName().' ('.$this->getParentName().') '.$this->getId().' '.$this->getDsId().PHP_EOL;
+        $dump = str_repeat(' ', $depth * 2) . '+ <fg=green>'.$this->getName().'</fg=green> ('.$this->getParentName().') '.$this->getId().PHP_EOL;
+        if ($withValues) {
+            foreach ($this->values as $values) {
+                foreach ($values as $value) {
+                    //$dump .= str_repeat(' ', $depth * 2 + 2).'= '.$value->getName().' '.$value->getDsId().' '.(is_array($value->getValue()) ? json_encode($value->getValue()) : $value->getValue()).PHP_EOL;
+                    $dump .= str_repeat(' ', $depth * 2 + 2).'= <fg=yellow>'.$value->getName().'</fg=yellow>: ['.$value->getLanguage().','.$value->getId().'] <fg=cyan>'.(is_array($value->getValue()) ? json_encode($value->getValue()) : $value->getValue()).'</fg=cyan>'.PHP_EOL;
+                }
+            }
         }
-        foreach ($this->values as $value) {
-            $dump .= str_repeat(' ', $indent+1).'V '.$value->getId().' '.$value->getDsId().' '.$value->getName().' '.$value->getValue().PHP_EOL;
+        foreach ($this->structures as $structure) {
+            $dump .= $structure->dump($withValues, $depth + 1);
         }
         return $dump;
     }
