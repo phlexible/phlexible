@@ -241,7 +241,7 @@ class ElementLockManager implements ElementLockManagerInterface
             }
         }
 
-        $lock = $this->getLockRepository()->findOneBy(array('eid' => $element->getEid(), 'language' => $language));
+        $lock = $this->getLockRepository()->findOneBy(array('element' => $element, 'language' => $language));
 
         $this->entityManager->remove($lock);
     }
@@ -259,7 +259,7 @@ class ElementLockManager implements ElementLockManagerInterface
      */
     public function findMasterLock(Element $element)
     {
-        return $this->getLockRepository()->findOneBy(array('eid' => $element->getEid(), 'language' => null));
+        return $this->getLockRepository()->findOneBy(array('element' => $element, 'language' => null));
     }
 
     /**
@@ -267,7 +267,7 @@ class ElementLockManager implements ElementLockManagerInterface
      */
     public function findSlaveLock(Element $element, $language)
     {
-        return $this->getLockRepository()->findOneBy(array('eid' => $element->getEid(), 'language' => $language));
+        return $this->getLockRepository()->findOneBy(array('element' => $element, 'language' => $language));
     }
 
     /**
