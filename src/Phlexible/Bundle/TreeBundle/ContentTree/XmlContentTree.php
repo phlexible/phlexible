@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree;
 use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
+use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
@@ -275,26 +276,20 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function getChildren($node)
+    public function getChildren(TreeNodeInterface $node)
     {
-        if ($node instanceof TreeNodeInterface) {
-            $id = $node->getId();
-        } else {
-            $id = (int) $node;
+        if (isset($this->childNodes[$node->getId()])) {
+            return $this->childNodes[$node->getId()];
         }
 
-        if (isset($this->childNodes[$id])) {
-            return $this->childNodes[$id];
-        }
-
-        $elements = $this->xpath->query("//node[@id=$id]/node");
+        $elements = $this->xpath->query("//node[@id={$node->getId()}]/node");
 
         if (!$elements->length) {
             return array();
         }
 
         $childNodes = $this->mapNodes($elements);
-        $this->childNodes[$id] = $childNodes;
+        $this->childNodes[$node->getId()] = $childNodes;
 
         return $childNodes;
     }
@@ -302,7 +297,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function hasChildren($node)
+    public function hasChildren(TreeNodeInterface $node)
     {
         return count($this->getChildren($node)) > 0;
     }
@@ -310,19 +305,15 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function getParent($node)
+    public function getParent(TreeNodeInterface $node)
     {
-        if (!$node instanceof TreeNodeInterface) {
-            $node = $this->get($node);
-        }
-
-        return $node->getParentNode();
+        return $this->getParent($node);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getIdPath($node)
+    public function getIdPath(TreeNodeInterface $node)
     {
         return array_keys($this->getPath($node));
     }
@@ -330,15 +321,9 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function getPath($node)
+    public function getPath(TreeNodeInterface $node)
     {
-        if ($node instanceof TreeNodeInterface) {
-            $nodeId = $node->getId();
-        } else {
-            $nodeId = (int) $node;
-        }
-
-        $elements = $this->xpath->query("//node[@id=$nodeId]");
+        $elements = $this->xpath->query("//node[@id={$node->getId()}]");
         if (!$elements->length) {
             return array();
         }
@@ -357,39 +342,25 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function isRoot($node)
+    public function isRoot(TreeNodeInterface $node)
     {
-        if ($node instanceof TreeNodeInterface) {
-            $id = $node->getId();
-        } else {
-            $id = (int) $node;
-        }
-
-        return $this->getRoot()->getId() === $id;
+        return $this->getRoot()->getId() === $node->getId();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isChildOf($childId, $parentId)
+    public function isChildOf(TreeNodeInterface $childNode, TreeNodeInterface $parentNode)
     {
-        if ($childId instanceof TreeNodeInterface) {
-            $childId = $childId->getId();
-        }
-
-        if ($parentId instanceof TreeNodeInterface) {
-            $parentId = $parentId->getId();
-        }
-
-        return $this->xpath->query("//node[@id=$parentId]//node[@id=$childId]")->length > 0;
+        return $this->xpath->query("//node[@id={$parentNode->getId()}]//node[@id={$childNode->getId()}]")->length > 0;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isParentOf($parentId, $childId)
+    public function isParentOf(TreeNodeInterface $parentNode, TreeNodeInterface $childNode)
     {
-        return $this->isChildOf($childId, $parentId);
+        return $this->isChildOf($childNode, $parentNode);
     }
 
     /**
@@ -438,15 +409,9 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function getVersion($node, $language)
+    public function getVersion(TreeNodeInterface $node, $language)
     {
-        if ($node instanceof TreeNodeInterface) {
-            $id = $node->getId();
-        } else {
-            $id = $node;
-        }
-
-        $elements = $this->xpath->query("//node[@id=$id]/versions/version[@language=\"$language\"]");
+        $elements = $this->xpath->query("//node[@id={$node->getId()}]/versions/version[@language=\"$language\"]");
         if (!$elements->length) {
             throw new \Exception("language $language not found");
         }
@@ -512,7 +477,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             ->setSortDir((string) $element->getAttribute('sortDir'))
             ->setTitles($titles)
             ->setSlugs($slugs)
-            ->setVersions($versions)
+            #->setVersions($versions)
             ->setCreatedAt(new \DateTime((string) $element->getAttribute('createdAt')))
             ->setCreateUserId((string) $element->getAttribute('createUserId'));
 
@@ -526,32 +491,117 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     }
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return bool
      */
-    public function isInstance($node)
+    public function isInstance(TreeNodeInterface $node)
     {
         return false;
     }
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return bool
      */
-    public function isInstanceMaster($node)
+    public function isInstanceMaster(TreeNodeInterface $node)
     {
         return false;
     }
 
     /**
-     * @param TreeNodeInterface|int $node
+     * @param TreeNodeInterface $node
      *
      * @return TreeNodeInterface[]
      */
-    public function getInstances($node)
+    public function getInstances(TreeNodeInterface $node)
     {
         return array();
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return bool
+     */
+    public function isPublished(TreeNodeInterface $node, $language)
+    {
+        // TODO: Implement isPublished() method.
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return array
+     */
+    public function getPublishedLanguages(TreeNodeInterface $node)
+    {
+        // TODO: Implement getPublishedLanguages() method.
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return int|null
+     */
+    public function getPublishedVersion(TreeNodeInterface $node, $language)
+    {
+        // TODO: Implement getPublishedVersion() method.
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return \DateTime|null
+     */
+    public function getPublishedAt(TreeNodeInterface $node, $language)
+    {
+        // TODO: Implement getPublishedAt() method.
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return array
+     */
+    public function getPublishedVersions(TreeNodeInterface $node)
+    {
+        // TODO: Implement getPublishedVersions() method.
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return bool
+     */
+    public function isAsync(TreeNodeInterface $node, $language)
+    {
+        // TODO: Implement isAsync() method.
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return TreeNodeOnline[]
+     */
+    public function findOnlineByTreeNode(TreeNodeInterface $node)
+    {
+        // TODO: Implement findOnlineByTreeNode() method.
+    }
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return TreeNodeOnline
+     */
+    public function findOneOnlineByTreeNodeAndLanguage(TreeNodeInterface $node, $language)
+    {
+        // TODO: Implement findOneOnlineByTreeNodeAndLanguage() method.
     }
 }

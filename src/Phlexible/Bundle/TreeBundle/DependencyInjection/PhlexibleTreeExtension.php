@@ -29,8 +29,11 @@ class PhlexibleTreeExtension extends Extension
         $loader->load('services.yml');
         $loader->load('doctrine.yml');
         $loader->load('mediators.yml');
+        $loader->load('content.yml');
 
         $container->setAlias('phlexible_tree.tree_factory', 'phlexible_tree.doctrine.tree_factory');
         $container->setAlias('phlexible_tree.state_manager', 'phlexible_tree.doctrine.state_manager');
+
+        $container->setAlias('phlexible_tree.content_tree_manager', 'phlexible_tree.content_tree_manager.xml');
     }
 }

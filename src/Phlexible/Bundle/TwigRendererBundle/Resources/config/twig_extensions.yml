@@ -36,7 +36,7 @@ services:
     phlexible_twig_renderer.twig.extension.tree:
         class: Phlexible\Bundle\TwigRendererBundle\Twig\Extension\TreeExtension
         public: false
-        arguments: [@phlexible_tree.content_tree_manager.delegating]
+        arguments: [@phlexible_tree.content_tree_manager]
         tags:
             - {name: twig.extension}
 

@@ -47,7 +47,10 @@ class DumpCommand extends ContainerAwareCommand
         $tree = $treeManager->getBySiteRootId($siterootId);
         $siteroot = $siterootManager->find($siterootId);
 
-        $dumper->dump($tree, $siteroot, '/tmp/test.xml');
+        $xmlDir = $this->getContainer()->getParameter('phlexible_tree.content.xml_dir');
+        $dumper->dump($tree, $siteroot, $xmlDir . $siteroot->getId() . '.xml');
+
+        die;
 
         $loadedTree = new XmlContentTree('/tmp/test.xml');
         print_r($loadedTree->getSpecialTids());

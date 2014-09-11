@@ -9,12 +9,12 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree\Dumper;
 
 use Cocur\Slugify\Slugify;
-use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * XML dumper
@@ -59,8 +59,6 @@ class XmlDumper
     {
         $dom = new \DOMDocument();
         $dom->formatOutput = true;
-
-        $nodes = array();
 
         $contentTreeNode = $dom->createElement('contentTree');
         $dom->appendChild($contentTreeNode);
@@ -134,6 +132,8 @@ class XmlDumper
             $navigationNode->appendChild($maxDepthAttr);
         }
 
+        $nodes = array();
+
         $treeNode = $nodes[null] = $dom->createElement('tree');
         $contentTreeNode->appendChild($treeNode);
 
@@ -142,15 +142,22 @@ class XmlDumper
             /* @var $node TreeNodeInterface */
 
             $nodes[$node->getId()] = $nodeNode = $dom->createElement('node');
-            $nodes[$node->getParentNode()->getId()]->appendChild($nodeNode);
+            if ($node->getParentNode()) {
+                $parentId = $node->getParentNode()->getId();
+            } else {
+                $parentId = null;
+            }
+            $nodes[$parentId]->appendChild($nodeNode);
 
             $idAttr = $dom->createAttribute('id');
             $idAttr->value = $node->getId();
             $nodeNode->appendChild($idAttr);
 
-            $parentIdAttr = $dom->createAttribute('parentId');
-            $parentIdAttr->value = $node->getParentNode()->getId();
-            $nodeNode->appendChild($parentIdAttr);
+            if ($parentId) {
+                $parentIdAttr = $dom->createAttribute('parentId');
+                $parentIdAttr->value = $node->getParentNode()->getId();
+                $nodeNode->appendChild($parentIdAttr);
+            }
 
             $typeAttr = $dom->createAttribute('type');
             $typeAttr->value = $node->getType();
@@ -183,10 +190,12 @@ class XmlDumper
             $attributesNode = $dom->createElement('attributes');
             $nodeNode->appendChild($attributesNode);
 
-            foreach ($node->getAttributes() as $key => $value) {
-                $attributeKeyAttr = $dom->createAttribute($key);
-                $attributeKeyAttr->value = $value;
-                $attributesNode->appendChild($attributeKeyAttr);
+            if ($node->getAttributes()) {
+                foreach ($node->getAttributes() as $key => $value) {
+                    $attributeKeyAttr = $dom->createAttribute($key);
+                    $attributeKeyAttr->value = $value;
+                    $attributesNode->appendChild($attributeKeyAttr);
+                }
             }
 
             $versionsNode = $dom->createElement('versions');
@@ -229,6 +238,9 @@ class XmlDumper
                 $titleNode->appendChild($languageAttr);
             }
         }
+
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(dirname($filename));
 
         $dom->save($filename);
     }

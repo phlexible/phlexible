@@ -38,6 +38,11 @@ class ElementStructureValue
     /**
      * @var string
      */
+    private $dataType;
+
+    /**
+     * @var string
+     */
     private $name;
 
     /**
@@ -55,17 +60,19 @@ class ElementStructureValue
      * @param string $dsId
      * @param string $language
      * @param string $type
+     * @param string $dataType
      * @param string $name
      * @param string $value
      * @param array  $options
      */
-    public function __construct($id, $dsId, $language, $type, $name, $value, array $options = null)
+    public function __construct($id, $dsId, $language, $type, $dataType, $name, $value, array $options = null)
     {
         $this->id = (int) $id;
         $this->dsId = $dsId;
         $this->language = $language;
         $this->name = $name;
         $this->type = $type;
+        $this->dataType = $dataType;
         $this->value = $value;
         $this->options = $options;
     }
@@ -173,7 +180,27 @@ class ElementStructureValue
      */
     public function setType($type)
     {
-        $this->$type = $type;
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataType()
+    {
+        return $this->dataType;
+    }
+
+    /**
+     * @param string $dataType
+     *
+     * @return $this
+     */
+    public function setDataType($dataType)
+    {
+        $this->dataType = $dataType;
 
         return $this;
     }

@@ -57,7 +57,7 @@ services:
             - [addConfigurator, [@phlexible_element_renderer.configurator.treenode]]
             - [addConfigurator, [@phlexible_element_renderer.configurator.teaser]]
             - [addConfigurator, [@phlexible_element_renderer.configurator.element]]
-            - [addConfigurator, [@phlexible_element_renderer.configurator.contentchannel]]
+            # - [addConfigurator, [@phlexible_element_renderer.configurator.contentchannel]]
             - [addConfigurator, [@phlexible_element_renderer.configurator.template]]
             - [addConfigurator, [@phlexible_element_renderer.configurator.navigation]]
             - [addConfigurator, [@phlexible_element_renderer.configuration.layoutarea]]

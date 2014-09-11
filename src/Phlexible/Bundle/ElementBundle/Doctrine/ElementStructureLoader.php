@@ -106,14 +106,10 @@ class ElementStructureLoader
                     $myParentNode = $elementtypeStructure->getNode($myParentNode->getParentDsId());
                 } while (in_array($myParentNode->getType(), array('reference', 'referenceroot')));
 
-
-                //echo 'add ' . $row['id']." " .$row['ds_id'].PHP_EOL;
                 $structure = new ElementStructure();
                 $structure
                     ->setId($row['id'])
                     ->setDsId($row['ds_id'])
-                    //->setParentId(null)//$myNode->getParentId())
-                    //->setParentDsId(null)//$myNode->getParentDsId())
                     ->setName($row['name'])
                     ->setParentName($myParentNode->getName());
                 $rootStructure->addStructure($structure);
@@ -137,8 +133,6 @@ class ElementStructureLoader
         foreach ($rii as $node) {
             /* @var $node ElementtypeStructureNode */
             if ($node->isRepeatable() || $node->isOptional()) {
-                //echo $node->getName() . " " .$node->getId()." ".$node->getDsId().($node->isOptional() ? ' optional' : '').($node->isRepeatable() ? ' repeatable' : '').PHP_EOL;
-
                 if (isset($structureRows[$node->getDsId()])) {
                     foreach ($structureRows[$node->getDsId()] as $row) {
                         $myNode = $elementtypeStructure->getNode($row['ds_id']);
@@ -151,13 +145,10 @@ class ElementStructureLoader
                             $myParentNode = $elementtypeStructure->getNode($myParentNode->getParentDsId());
                         } while (in_array($myParentNode->getType(), array('reference', 'referenceroot')));
 
-                        //echo 'add ' . $row['id']." " .$row['ds_id'].PHP_EOL;
                         $structure = new ElementStructure();
                         $structure
                             ->setId($row['id'])
                             ->setDsId($row['ds_id'])
-                            //->setParentId($myNode->getParentId())
-                            //->setParentDsId($myNode->getParentDsId())
                             ->setName($row['name'])
                             ->setParentName($myParentNode->getName());
                         /* @var $parentStructure ElementStructure */
@@ -204,6 +195,7 @@ class ElementStructureLoader
             $dataRow['ds_id'],
             $dataRow['language'],
             $dataRow['type'],
+            $field->getDataType(),
             $dataRow['name'],
             $value,
             $dataRow['options']

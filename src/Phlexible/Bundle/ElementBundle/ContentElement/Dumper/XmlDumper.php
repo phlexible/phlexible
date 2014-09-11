@@ -110,16 +110,37 @@ class XmlDumper implements DumperInterface
 
         foreach ($structure->getValues() as $value) {
             $valueNode = $dom->createElement('value');
-            $valueNode->appendChild($dom->createCDATASection($value));
-            $nameAttr = $dom->createAttribute('name');
-            $nameAttr->value = $value->getName();
-            $valueNode->appendChild($nameAttr);
+
+            $idAttr = $dom->createAttribute('id');
+            $idAttr->value = $value->getId();
+            $valueNode->appendChild($idAttr);
+
             $dsIdAttr = $dom->createAttribute('dsId');
             $dsIdAttr->value = $value->getDsId();
             $valueNode->appendChild($dsIdAttr);
+
+            $languageAttr = $dom->createAttribute('language');
+            $languageAttr->value = $value->getLanguage();
+            $valueNode->appendChild($languageAttr);
+
+            $nameAttr = $dom->createAttribute('name');
+            $nameAttr->value = $value->getName();
+            $valueNode->appendChild($nameAttr);
+
             $typeAttr = $dom->createAttribute('type');
             $typeAttr->value = $value->getType();
             $valueNode->appendChild($typeAttr);
+
+            $dataTypeAttr = $dom->createAttribute('dataType');
+            $dataTypeAttr->value = $value->getDataType();
+            $valueNode->appendChild($dataTypeAttr);
+
+            $rawValue = $value->getValue();
+            if ($value->getDataType() === 'array') {
+                $rawValue = json_encode($rawValue);
+            }
+            $valueNode->appendChild($dom->createCDATASection($rawValue));
+
             $structureNode->appendChild($valueNode);
         }
 

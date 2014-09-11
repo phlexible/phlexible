@@ -1,0 +1,15 @@
+parameters:
+    phlexible_tree.content.xml_dir: %kernel.cache_dir%/tree/
+
+services:
+    phlexible_tree.content_tree_dumper:
+        class: Phlexible\Bundle\TreeBundle\ContentTree\Dumper\XmlDumper
+        arguments: [@phlexible_tree.doctrine.state_manager, @phlexible_tree.mediator]
+
+    phlexible_tree.content_tree_manager.delegating:
+        class: Phlexible\Bundle\TreeBundle\ContentTree\DelegatingContentTreeManager
+        arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.tree_manager, @phlexible_tree.mediator]
+
+    phlexible_tree.content_tree_manager.xml:
+        class: Phlexible\Bundle\TreeBundle\ContentTree\XmlContentTreeManager
+        arguments: [%phlexible_tree.content.xml_dir%]

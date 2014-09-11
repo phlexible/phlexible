@@ -16,9 +16,22 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree;
 class XmlContentTreeManager implements ContentTreeManagerInterface
 {
     /**
+     * @var string
+     */
+    private $xmlDir;
+
+    /**
      * @var XmlContentTree[]
      */
     private $trees;
+
+    /**
+     * @param string $xmlDir
+     */
+    public function __construct($xmlDir)
+    {
+        $this->xmlDir = $xmlDir;
+    }
 
     /**
      * @return XmlContentTree[]
@@ -26,7 +39,7 @@ class XmlContentTreeManager implements ContentTreeManagerInterface
     public function findAll()
     {
         if ($this->trees === null) {
-            $xmlFiles = glob('/tmp/*.xml');
+            $xmlFiles = glob($this->xmlDir . '*.xml');
 
             foreach ($xmlFiles as $xmlFile) {
                 $this->trees[] = new XmlContentTree($xmlFile);
