@@ -6,12 +6,10 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TwigRendererBundle\Extension;
+namespace Phlexible\Bundle\TwigRendererBundle\Twig\Extension;
 
-use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**

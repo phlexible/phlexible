@@ -1,7 +1,7 @@
 services:
     # twig extensions
     phlexible_twig_renderer.twig.extension.element:
-        class: Phlexible\Bundle\TwigRendererBundle\Extension\ElementExtension
+        class: Phlexible\Bundle\TwigRendererBundle\Twig\Extension\ElementExtension
         public: false
         arguments:
             - @phlexible_element.content_loader
@@ -9,7 +9,7 @@ services:
             - {name: twig.extension}
 
     phlexible_twig_renderer.twig.extension.media:
-        class: Phlexible\Bundle\TwigRendererBundle\Extension\MediaExtension
+        class: Phlexible\Bundle\TwigRendererBundle\Twig\Extension\MediaExtension
         public: false
         arguments:
             - @router
@@ -20,7 +20,7 @@ services:
             - {name: twig.extension}
 
     phlexible_twig_renderer.twig.extension.media_template:
-        class: Phlexible\Bundle\TwigRendererBundle\Extension\MediaTemplateExtension
+        class: Phlexible\Bundle\TwigRendererBundle\Twig\Extension\MediaTemplateExtension
         public: false
         arguments:
             - @phlexible_media_template.template_manager
@@ -28,20 +28,20 @@ services:
             - {name: twig.extension}
 
     phlexible_twig_renderer.twig.extension.misc:
-        class: Phlexible\Bundle\TwigRendererBundle\Extension\MiscExtension
+        class: Phlexible\Bundle\TwigRendererBundle\Twig\Extension\MiscExtension
         public: false
         tags:
             - {name: twig.extension}
 
     phlexible_twig_renderer.twig.extension.tree:
-        class: Phlexible\Bundle\TwigRendererBundle\Extension\TreeExtension
+        class: Phlexible\Bundle\TwigRendererBundle\Twig\Extension\TreeExtension
         public: false
         arguments: [@phlexible_tree.content_tree_manager.delegating]
         tags:
             - {name: twig.extension}
 
     phlexible_twig_renderer.twig.extension.url:
-        class: Phlexible\Bundle\TwigRendererBundle\Extension\UrlExtension
+        class: Phlexible\Bundle\TwigRendererBundle\Twig\Extension\UrlExtension
         public: false
         arguments: [@router, @phlexible_tree.content_tree_manager.delegating]
         tags:
