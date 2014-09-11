@@ -8,14 +8,6 @@ services:
         tags:
             - {name: twig.extension}
 
-    phlexible_twig_renderer.twig.extension.element_finder:
-        class: Phlexible\Bundle\TwigRendererBundle\Extension\ElementFinderExtension
-        public: false
-        arguments:
-            - @phlexible_element_finder.finder
-        tags:
-            - {name: twig.extension}
-
     phlexible_twig_renderer.twig.extension.media:
         class: Phlexible\Bundle\TwigRendererBundle\Extension\MediaExtension
         public: false

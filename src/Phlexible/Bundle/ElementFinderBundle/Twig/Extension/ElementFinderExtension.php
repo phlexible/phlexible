@@ -6,13 +6,12 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TwigRendererBundle\Extension;
+namespace Phlexible\Bundle\ElementFinderBundle\Twig\Extension;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementFinderBundle\ElementFinder\ElementFinder;
 use Phlexible\Bundle\ElementFinderBundle\ElementFinder\ElementFinderResultPool;
 use Phlexible\Bundle\ElementFinderBundle\Entity\ElementFinderConfig;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
 
 /**
  * Twig element finder extension
