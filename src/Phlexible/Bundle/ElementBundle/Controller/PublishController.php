@@ -7,6 +7,9 @@
  */
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
+use Phlexible\Bundle\ElementBundle\Element\Publish\Selection;
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Component\Util\FileLock;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
@@ -93,7 +96,7 @@ class PublishController extends Controller
      * @return JsonResponse
      * @Route("/preview", name="elements_publish_preview")
      */
-    public function previewpublishAction(Request $request)
+    public function previewAction(Request $request)
     {
         $tid                     = $request->get('tid');
         $teaserId                = $request->get('teaser_id', null);
@@ -114,15 +117,12 @@ class PublishController extends Controller
             $languages = array($language);
         }
 
-        $treeManager = $this->get('phlexible_tree.tree_manager');
-        $elementService = $this->get('phlexible_element.element_service');
-        $currentUser = $this->getUser();
-        $publisher = $this->get('publisher');
+        $selector = $this->get('phlexible_element.publish.selector');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
-        $result = array();
-
+        $selection = new Selection();
         foreach ($languages as $language) {
-            $langResult = $publish->getPreview(
+            $langSelection = $selector->select(
                 $tid,
                 $language,
                 $version,
@@ -134,11 +134,32 @@ class PublishController extends Controller
                 $onlyOffline,
                 $onlyAsync
             );
-            $result = array_merge($result, $langResult);
+            $selection->merge($langSelection);
         }
 
-        foreach ($result as $key => $row) {
-            $result[$key]['action'] = true;
+        $result = array();
+        foreach ($selection->all() as $selectionItem) {
+            if ($selectionItem->getTarget() instanceof TreeNodeInterface) {
+                $id = $selectionItem->getTarget()->getId();
+                $icon = $iconResolver->resolveTreeNode($selectionItem->getTarget(), $selectionItem->getLanguage());
+            } else {
+                $id = $selectionItem->getTarget()->getId();
+                $icon = $iconResolver->resolveTeaser($selectionItem->getTarget(), $selectionItem->getLanguage());
+            }
+
+            $result[] = array(
+                'type'      => $selectionItem->getTarget() instanceof TreeNodeInterface ? 'full_element' : 'part_element',
+                'instance'  => $selectionItem->isInstance(),
+                'depth'     => $selectionItem->getDepth(),
+                'path'      => $selectionItem->getPath(),
+                'id'        => $id,
+                'eid'       => $selectionItem->getTarget()->getTypeId(),
+                'version'   => $selectionItem->getVersion(),
+                'language'  => $selectionItem->getLanguage(),
+                'title'     => $selectionItem->getTitle(),
+                'icon'      => $icon,
+                'action'    => true,
+            );
         }
 
         return new JsonResponse(array('preview' => $result));
@@ -148,10 +169,10 @@ class PublishController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @throws Makeweb_Elements_Element_Exception
+     * @throws \Exception
      * @Route("/advanced", name="elements_publish_advanced")
      */
-    public function advancedpublishAction(Request $request)
+    public function advancedPublishAction(Request $request)
     {
         $tid      = $request->get('tid');
         $version  = $request->get('version');
@@ -160,54 +181,48 @@ class PublishController extends Controller
         $data     = $request->get('data');
         $data     = json_decode($data, true);
 
-        $lock = new FileLock($this->getContainer()->getParameter('app.lock_dir') . 'elements_publish_lock');
+        $lock = new FileLock($this->container->getParameter('app.lock_dir') . 'elements_publish_lock');
         if (!$lock->acquire()) {
-            throw new Makeweb_Elements_Element_Exception('Another advanced publish running.');
+            throw new \Exception('Another advanced publish running.');
         }
 
-        $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-        $db = $this->getContainer()->dbPool->default;
-
-        //$fileUsage = new Makeweb_Elements_Element_FileUsage(MWF_Registry::getContainer()->dbPool);
-
-        $queueService = $this->getContainer()->get('queue.service');
-        $db->beginTransaction();
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         foreach ($data as $row) {
             set_time_limit(15);
-            if (empty($row['teaser_id'])) {
-                $node = $treeManager->getNodeByNodeId($row['tid']);
-                $tree = $node->getTree();
+            if ($row['type'] === 'full_element') {
+                $tree = $treeManager->getByNodeId($row['id']);
+                $treeNode = $tree->get($row['id']);
 
-                $tree->publishNode($node, $row['language'], $row['version'], false, $comment);
+                $tree->publish($treeNode, $row['version'], $row['language'], $this->getUser()->getId(), $comment);
+            } elseif ($row['type'] === 'part_element') {
+                $teaser = $teaserManager->find($row['id']);
 
-                $eid = $node->getEid();
-                //$fileUsage->update($node->getEid());
+                $teaserManager->publishTeaser($teaser, $row['version'], $row['language'], $this->getUser()->getId(), $comment);
             } else {
-                $teaserManager = Makeweb_Teasers_Manager::getInstance();
-
-                $eid = $teaserManager->publish($row['teaser_id'], $row['version'], $row['language'], $comment, $row['tid']);
-
-                //$fileUsage->update($eid);
+                continue;
             }
 
+            // TODO: update usage
+            /*
             $job = new Makeweb_Elements_Job_UpdateUsage();
             $job->setEid($eid);
             $queueService->addUniqueJob($job);
+            */
         }
-
-        $db->commit();
 
         $data = array();
 
-        $node = $treeManager->getNodeByNodeId($tid);
-        $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
-        $elementVersion = $elementVersionManager->get($node->getEid(), $version);
+        $tree = $treeManager->getByNodeId($tid);
+        $treeNode = $tree->get($tid);
 
-        $iconStatus   = $node->isAsync($language) ? 'async' : ($node->isPublished($language) ? 'online' : null);
-        $iconInstance = ($node->isInstance() ? ($node->isInstanceMaster() ? 'master' : 'slave') : false);
-
-        $data['icon'] = $elementVersion->getIconUrl($node->getIconParams($language));
+        $data = array(
+            'tid' => $tid,
+            'language' => $language,
+            'icon' => $iconResolver->resolveTreeNode($treeNode, $language),
+        );
 
         $lock->release();
 

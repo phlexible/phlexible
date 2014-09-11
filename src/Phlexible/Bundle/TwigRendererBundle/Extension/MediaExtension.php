@@ -87,7 +87,7 @@ class MediaExtension extends \Twig_Extension
         }
 
         // deliver original file
-        $src = $this->router->generate('frontendmedia_thumbnail', array('fileId' => $fileId));
+        $src = $this->router->generate('frontendmedia_inline', array('fileId' => $fileId));
 
         return $src;
     }
@@ -219,6 +219,6 @@ class MediaExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'media';
+        return 'phlexible_media';
     }
 }

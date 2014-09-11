@@ -17,11 +17,11 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
- * Publisher
+ * Selector
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Publisher
+class Selector
 {
     /**
      * @var ElementService
@@ -59,39 +59,6 @@ class Publisher
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
         $this->securityContext = $securityContext;
-
-        /*
-        $this->_versionSelect = $db->select()
-            ->from($db->prefix . 'element', 'latest_version')
-            ->where('eid = :eid')
-            ->limit(1);
-
-        $this->_instanceSelect = $db->select()
-            ->from($db->prefix . 'element_tree', array('id'))
-            ->where('eid = :eid')
-            ->where('id != :skipTid');
-
-        $this->_teasersSelect = $db->select()
-            ->from(array('ett' => $db->prefix . 'element_tree_teasers'))
-            ->joinLeft(
-                array('etto' => $db->prefix . 'element_tree_teasers_online'),
-                'ett.id = etto.teaser_id AND etto.language = :language'
-            )
-            ->where('ett.tree_id = :tid');
-
-        $this->_teaserSelect = $db->select()
-            ->from(array('ett' => $db->prefix . 'element_tree_teasers'))
-            ->joinLeft(
-                array('etto' => $db->prefix . 'element_tree_teasers_online'),
-                'ett.id = etto.teaser_id AND etto.language = :language'
-            )
-            ->where('ett.id = :teaserId');
-
-        $this->_teaserInstanceSelect = $db->select()
-            ->from($db->prefix . 'element_tree_teasers', array('id'))
-            ->where('teaser_eid = :eid')
-            ->where('id != :skipTeaserId');
-        */
     }
 
     /**
@@ -108,7 +75,7 @@ class Publisher
      *
      * @return array
      */
-    public function getPreview(
+    public function select(
         $treeId,
         $language,
         $version,
@@ -123,13 +90,13 @@ class Publisher
         $tree = $this->treeManager->getByNodeId($treeId);
         $treeNode = $tree->get($treeId);
 
-        $result = array();
+        $selection = new Selection();
 
         if ($includeElements) {
-            $result = $this->handleTreeNode(
-                $result,
+            $this->handleTreeNode(
+                $selection,
                 0,
-                implode('/', $treeNode->getPath()),
+                implode('/', $tree->getIdPath($treeNode)),
                 $treeNode,
                 $version,
                 $language,
@@ -138,10 +105,10 @@ class Publisher
             );
         }
         if ($includeTeasers) {
-            $result = $this->handleTreeNodeTeasers(
-                $result,
+            $this->handleTreeNodeTeasers(
+                $selection,
                 0,
-                implode('/', $treeNode->getPath()),
+                implode('/', $tree->getIdPath($treeNode)),
                 $treeNode,
                 $language,
                 $onlyAsync,
@@ -159,10 +126,10 @@ class Publisher
                 set_time_limit(5);
 
                 if ($includeElements) {
-                    $result = $this->handleTreeNode(
-                        $result,
+                    $this->handleTreeNode(
+                        $selection,
                         $rii->getDepth() + 1,
-                        implode('/', $childNode->getPath()),
+                        implode('/', $tree->getIdPath($childNode)),
                         $childNode,
                         null,
                         $language,
@@ -171,10 +138,10 @@ class Publisher
                     );
                 }
                 if ($includeTeasers) {
-                    $result = $this->handleTreeNodeTeasers(
-                        $result,
+                    $this->handleTreeNodeTeasers(
+                        $selection,
                         $rii->getDepth() + 1,
-                        implode('/', $childNode->getPath()),
+                        implode('/', $tree->getIdPath($childNode)),
                         $childNode,
                         $language,
                         $onlyAsync,
@@ -185,17 +152,17 @@ class Publisher
             }
         }
 
-        foreach ($result as $key => $row) {
-            if ($includeElementInstances && 'full_element' === $row['type']) {
-                $instanceNodes = $this->treeManager->getInstanceNodes($treeNode);
+        foreach ($selection->all() as $selectionItem) {
+            if ($includeElementInstances && $selectionItem->getTarget() instanceof TreeNodeInterface) {
+                $instanceNodes = $this->treeManager->getInstanceNodes($selectionItem->getTarget());
 
                 foreach ($instanceNodes as $instanceNode) {
                     /* @var $instanceNode TreeNodeInterface */
 
-                    $result = $this->handleTreeNode(
-                        $result,
-                        $row['depth'],
-                        $row['path'],
+                    $this->handleTreeNode(
+                        $selection,
+                        $selectionItem->getDepth(),
+                        $selectionItem->getDepth(),
                         $instanceNode,
                         null,
                         $language,
@@ -204,14 +171,14 @@ class Publisher
                         true
                     );
                 }
-            } elseif ($includeTeaserInstances && 'part_element' === $row['type']) {
-                $instanceTeasers = $this->teaserManager->getInstances($teaser);
+            } elseif ($includeTeaserInstances && $selectionItem->getTarget() instanceof Teaser) {
+                $instanceTeasers = $this->teaserManager->getInstances($selectionItem->getTarget());
 
                 foreach ($instanceTeasers as $instanceTeaser) {
-                    $result = $this->handleTeaser(
-                        $result,
-                        $row['depth'],
-                        $teaser,
+                    $this->handleTeaser(
+                        $selection,
+                        $selectionItem->getDepth(),
+                        $instanceTeaser,
                         $language,
                         $onlyAsync,
                         $onlyOffline,
@@ -221,11 +188,22 @@ class Publisher
             }
         }
 
-        return array_values($result);
+        return $selection;
     }
 
+    /**
+     * @param Selection         $selection
+     * @param int               $depth
+     * @param array             $path
+     * @param TreeNodeInterface $treeNode
+     * @param int               $version
+     * @param string            $language
+     * @param bool              $onlyAsync
+     * @param bool              $onlyOffline
+     * @param bool              $isInstance
+     */
     private function handleTreeNode(
-        array $result,
+        Selection $selection,
         $depth,
         $path,
         TreeNodeInterface $treeNode,
@@ -235,8 +213,8 @@ class Publisher
         $onlyOffline,
         $isInstance = false)
     {
-        if (array_key_exists('treenode_' . $treeNode->getId(), $result)) {
-            return $result;
+        if ($selection->has($treeNode, $language)) {
+            return;
         }
 
         $include = true;
@@ -260,35 +238,41 @@ class Publisher
         }
 
         if (!$include) {
-            return $result;
+            return;
         }
 
-        $element = $this->elementService->findElement($treeNode->getTypeId(), $version);
+        $element = $this->elementService->findElement($treeNode->getTypeId());
         if ($version) {
             $elementVersion = $this->elementService->findElementVersion($element, $version);
         } else {
             $elementVersion = $this->elementService->findLatestElementVersion($element);
         }
 
-        $result['treenode_' . $treeNode->getId()] = array(
-            'type'      => 'full_element',
-            'instance'  => $isInstance,
-            'depth'     => $depth,
-            'path'      => $path . '+' . $language,
-            'tid'       => $treeNode->getId(),
-            'teaser_id' => null,
-            'eid'       => $treeNode->getEid(),
-            'version'   => $version,
-            'language'  => $language,
-            'title'     => $elementVersion->getBackendTitle($language),
-            'icon'      => '',// TODO: $elementVersion->getIconUrl($treeNode->getIconParams($language)),
+        $selection->add(
+            new SelectionItem(
+                $treeNode,
+                $elementVersion->getVersion(),
+                $language,
+                $elementVersion->getBackendTitle($language),
+                $isInstance,
+                $depth,
+                $path . '+' . $language . '+' . $treeNode->getId() . '+' . $language
+            )
         );
-
-        return $result;
     }
 
-    protected function handleTreeNodeTeasers(
-        array $result,
+    /**
+     * @param Selection         $selection
+     * @param int               $depth
+     * @param array             $path
+     * @param TreeNodeInterface $treeNode
+     * @param string            $language
+     * @param bool              $onlyAsync
+     * @param bool              $onlyOffline
+     * @param bool              $includeTeaserInstances
+     */
+    private function handleTreeNodeTeasers(
+        Selection $selection,
         $depth,
         $path,
         TreeNodeInterface $treeNode,
@@ -297,17 +281,37 @@ class Publisher
         $onlyOffline,
         $includeTeaserInstances)
     {
-        $teasers = $this->teaserManager->findForLayoutAreaAndTreeNode(null, $treeNode);
+        $element = $this->elementService->findElement($treeNode->getTypeId());
+        $elementtype = $this->elementService->findElementtype($element);
 
-        foreach ($teasers as $teaser) {
-            $result = $this->handleTeaser($result, $depth, $path, $teaser, $language, $onlyAsync, $onlyOffline);
+        $layoutareas = array();
+        foreach ($this->elementService->getElementtypeService()->findElementtypeByType('layout') as $layoutarea) {
+            if (in_array($elementtype->getId(), $this->elementService->getElementtypeService()->findAllowedParentIds($layoutarea))) {
+                $layoutareas[] = $layoutarea;
+            }
         }
 
-        return $result;
+        foreach ($layoutareas as $layoutarea) {
+            $teasers = $this->teaserManager->findForLayoutAreaAndTreeNode($layoutarea, $treeNode);
+
+            foreach ($teasers as $teaser) {
+                $this->handleTeaser($selection, $depth + 1, $path, $teaser, $language, $onlyAsync, $onlyOffline);
+            }
+        }
     }
 
-    protected function handleTeaser(
-        $result,
+    /**
+     * @param Selection $selection
+     * @param int       $depth
+     * @param array     $path
+     * @param Teaser    $teaser
+     * @param string    $language
+     * @param bool      $onlyAsync
+     * @param bool      $onlyOffline
+     * @param bool      $isInstance
+     */
+    private function handleTeaser(
+        Selection $selection,
         $depth,
         $path,
         Teaser $teaser,
@@ -316,18 +320,16 @@ class Publisher
         $onlyOffline,
         $isInstance = false)
     {
-        if ($teaser['type'] !== 'teaser') {
-            return $result;
+        if ($teaser->getType() !== 'element') {
+            return;
         }
 
-        if (array_key_exists('teaser_' . $teaser['id'], $result)) {
-            return $result;
+        if ($selection->has($teaser, $language)) {
+            return;
         }
 
-        $version = $this->_db->fetchOne($this->_versionSelect, array('eid' => $teaser['teaser_eid']));
-
-        $isAsync = !!($teaser['version'] && $teaser['version'] != $version);
-        $isPublished = !!$teaser['version'];
+        $isAsync = $this->teaserManager->isAsync($teaser, $language);
+        $isPublished = $this->teaserManager->isPublished($teaser, $language);
 
         $include = true;
         if ($onlyAsync || $onlyOffline) {
@@ -342,27 +344,22 @@ class Publisher
         }
 
         if (!$include) {
-            return $result;
+            return;
         }
 
-        $elementVersion = $this->elementService->get($teaser['teaser_eid'], $version);
+        $element = $this->elementService->findElement($teaser->getTypeId());
+        $elementVersion = $this->elementService->findLatestElementVersion($element);
 
-        $teaserNode = new Makeweb_Teasers_Node($teaser['id']);
-
-        $result['teaser_' . $teaser['id']] = array(
-            'type'      => 'part_element',
-            'instance'  => $isInstance,
-            'depth'     => $depth,
-            'path'      => $path . '+' . $language . '+' . $teaser['id'] . '+' . $language,
-            'tid'       => null,
-            'teaser_id' => $teaser['id'],
-            'eid'       => $teaser['teaser_eid'],
-            'version'   => $version,
-            'language'  => $language,
-            'title'     => $elementVersion->getBackendTitle($language),
-            'icon'      => $elementVersion->getIconUrl($teaserNode->getIconParams($language)),
+        $selection->add(
+            new SelectionItem(
+                $teaser,
+                $elementVersion->getVersion(),
+                $language,
+                $elementVersion->getBackendTitle($language),
+                $isInstance,
+                $depth,
+                $path . '+' . $language . '+' . $teaser->getId() . '+' . $language
+            )
         );
-
-        return $result;
     }
 }

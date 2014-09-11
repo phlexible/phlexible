@@ -10,8 +10,8 @@ namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
+use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
-use Phlexible\Bundle\TreeBundle\ContentTree\XmlContentTree;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -222,12 +222,12 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * Match identifieres (tid, language, ...)
      *
-     * @param Request        $request
-     * @param XmlContentTree $tree
+     * @param Request              $request
+     * @param ContentTreeInterface $tree
      *
      * @return array
      */
-    protected function matchIdentifiers(Request $request, XmlContentTree $tree)
+    protected function matchIdentifiers(Request $request, ContentTreeInterface $tree)
     {
         $match = array();
         $path = $request->getPathInfo();

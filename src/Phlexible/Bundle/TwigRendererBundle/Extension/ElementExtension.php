@@ -78,6 +78,6 @@ class ElementExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'element';
+        return 'phlexible_element';
     }
 }

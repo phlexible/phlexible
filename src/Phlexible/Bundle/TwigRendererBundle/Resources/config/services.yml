@@ -70,6 +70,13 @@ services:
         tags:
             - {name: twig.extension}
 
+    phlexible_twig_renderer.twig.extension.tree:
+        class: Phlexible\Bundle\TwigRendererBundle\Extension\TreeExtension
+        public: false
+        arguments: [@phlexible_tree.content_tree_manager.delegating]
+        tags:
+            - {name: twig.extension}
+
     phlexible_twig_renderer.twig.extension.url:
         class: Phlexible\Bundle\TwigRendererBundle\Extension\UrlExtension
         public: false

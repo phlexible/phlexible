@@ -13,6 +13,22 @@ services:
             - @phlexible_element.element_history_manager
             - @phlexible_element.field_mapper
 
+    phlexible_element.publish.publisher:
+        class: Phlexible\Bundle\ElementBundle\Element\Publish\Publisher
+        arguments:
+            - @phlexible_element.element_service
+            - @phlexible_tree.tree_manager
+            - @phlexible_teaser.teaser_manager
+            - @security.context
+
+    phlexible_element.publish.selector:
+        class: Phlexible\Bundle\ElementBundle\Element\Publish\Selector
+        arguments:
+            - @phlexible_element.element_service
+            - @phlexible_tree.tree_manager
+            - @phlexible_teaser.teaser_manager
+            - @security.context
+
     phlexible_element.context.manager:
         class: Phlexible\Bundle\ElementBundle\Context\ContextManager
 

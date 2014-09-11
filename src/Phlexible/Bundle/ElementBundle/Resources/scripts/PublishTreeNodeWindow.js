@@ -230,7 +230,7 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                     url: Phlexible.Router.generate('elements_publish_preview'),
                     //id: 'tid',
                     root: 'preview',
-                    fields: ['action', 'type', 'instance', 'tid', 'teaser_id', 'eid', 'version', 'language', 'depth', 'path', 'icon', 'title'],
+                    fields: ['action', 'type', 'instance', 'id', 'eid', 'version', 'language', 'depth', 'path', 'icon', 'title'],
                     sortInfo: {
                         field: 'path',
                         direction: 'asc'
@@ -252,7 +252,7 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                     deferEmptyText: true,
                     emptyText: this.strings.no_elements_match_filter
                 },
-                autoExpandColumn: 8,
+                autoExpandColumn: 7,
                 loadMask: true,
                 plugins: [previewCheckColumn],
                 columns: [
@@ -272,13 +272,8 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                             return v;
                         }
                     }, {
-                        header: this.strings.tid,
-                        dataIndex: 'tid',
-                        width: 50,
-                        sortable: true
-                    }, {
-                        header: this.strings.teaser_id,
-                        dataIndex: 'teaser_id',
+                        header: this.strings.id,
+                        dataIndex: 'id',
                         width: 50,
                         sortable: true
                     }, {
@@ -347,21 +342,16 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
         ];
 
         this.buttons = [
-            {/*
-             text: this.strings.preview,
-             iconCls: 'p-element-preview-icon',
-             handler: this.onPreview,
-             scope: this
-             },{*/
+            {
+                text: this.strings.cancel,
+                handler: this.close,
+                scope: this
+            },
+            {
                 text: this.strings.publish,
                 iconCls: 'p-element-publish-icon',
                 disabled: true,
                 handler: this.doPublish,
-                scope: this
-            },
-            {
-                text: this.strings.cancel,
-                handler: this.close,
                 scope: this
             }
         ];
@@ -370,7 +360,7 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
     },
 
     delayTask: function () {
-        this.buttons[0].disable();
+        this.buttons[1].disable();
 
         this.task.delay(800);
     },
@@ -396,7 +386,7 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
             params: params,
             callback: function (records) {
                 if (records.length) {
-                    this.buttons[0].enable();
+                    this.buttons[1].enable();
                 }
             },
             scope: this
@@ -404,7 +394,7 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
     },
 
     doPublish: function () {
-        this.buttons[0].disable();
+        this.buttons[1].disable();
 
         if (!this.getComponent(0).getComponent(2).getForm().isValid()) {
             Ext.MessageBox.alert(this.strings.error, this.strings.check_input);
@@ -418,11 +408,12 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
             if (!r.data.action) return;
 
             data.push({
+                type: r.data.type,
                 eid: r.data.eid,
-                tid: r.data.tid,
-                teaser_id: r.data.teaser_id,
+                id: r.data.id,
                 version: r.data.version,
-                language: r.data.language
+                language: r.data.language,
+                action: r.data.action
             });
         });
 
@@ -440,7 +431,7 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
         };
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('elements_publish_advancedpublish'),
+            url: Phlexible.Router.generate('elements_publish_advanced'),
             params: params,
             timeout: 600000,
             success: function (response) {

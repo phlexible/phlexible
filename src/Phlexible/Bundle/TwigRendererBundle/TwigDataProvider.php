@@ -28,29 +28,26 @@ class TwigDataProvider implements DataProviderInterface
 
         $request = $renderConfiguration->get('request');
 
-        $data->request   = $request;
         $data->language  = $request->attributes->get('language');
-        $data->isPreview = true;//(bool) $renderRequest->getVersionStrategy() === 'latest';
+        $data->isPreview = $request->attributes->get('preview');
 
         if ($renderConfiguration->hasFeature('treeNode')) {
-            $treeNode = $renderConfiguration->get('treeNode');
-            $data->treeNode     = $treeNode;
+            $data->treeNode     = $renderConfiguration->get('treeNode');
             $data->treeContext  = $renderConfiguration->get('treeContext');
-            $data->tid          = $treeNode->getId();
-            $data->parentTid    = $treeNode->getParentNode()->getId();
-            $data->isPublished  = false;//(bool) $treeNode->isPublished($renderConfiguration->get('elementLanguage'));
-            $data->isRestricted = false;//(bool) $treeNode->isRestricted($version);
-            $data->inNavigation = false;//(bool) $treeNode->inNavigation($version);
+        }
+
+        if ($renderConfiguration->hasFeature('teaser')) {
+            $data->teaser = $renderConfiguration->get('teaser');
         }
 
         if ($request->attributes->has('siterootUrl')) {
-            $data->siterootId  = $request->attributes->get('siterootUrl')->getSiteroot()->getId();
+            $data->siteroot  = $request->attributes->get('siterootUrl')->getSiteroot();
             $data->specialTids = $this->createSpecialTids($renderConfiguration, $renderConfiguration->get('language'));
         }
 
         if ($renderConfiguration->hasFeature('template')) {
             $template = $renderConfiguration->get('template');
-            if (substr($template, 0, 2) !== '::') {
+            if (substr($template, 0, 1) !== '@' && substr($template, 0, 2) !== '::') {
                 $template = '::' . $template;
             }
             if (substr($template, -10) !== '.html.twig') {
@@ -62,15 +59,13 @@ class TwigDataProvider implements DataProviderInterface
 
         if ($renderConfiguration->hasFeature('element')) {
             $data->contentElement      = $renderConfiguration->get('contentElement');
-            $data->eid                 = $data->contentElement->getEid();
-            $data->version             = $data->contentElement->getVersion();
-            $data->elementLanguage     = $data->contentElement->getLanguage();
-            $data->elementUniqueId     = $data->contentElement->getUniqueId();
-            $data->elementTypeUniqueId = $data->contentElement->getElementtypeUniqueId();
-            $data->content             = new ElementStructureWrap($data->contentElement->getStructure());//new ElementVersionDataWrap($renderConfiguration->get('elementData')->getTree());
-            $data->publishDate         = new \DateTime();//$renderConfiguration->get('treeNode')->getPublishDate($renderConfiguration->get('elementLanguage'));
+            //$data->eid                 = $data->contentElement->getEid();
+            //$data->version             = $data->contentElement->getVersion();
+            //$data->elementLanguage     = $data->contentElement->getLanguage();
+            //$data->elementUniqueId     = $data->contentElement->getUniqueId();
+            //$data->elementTypeUniqueId = $data->contentElement->getElementtypeUniqueId();
+            $data->content             = $data->contentElement->getStructure();
 
-            /* @deprecated */ $data->createDate       = $data->publishDate;
             $data->contentLanguages = array('de');
         }
 
@@ -109,8 +104,9 @@ class TwigDataProvider implements DataProviderInterface
      *
      * @return array
      */
-    protected function createSpecialTids(RenderConfiguration $renderConfiguration, $language)
+    private function createSpecialTids(RenderConfiguration $renderConfiguration, $language)
     {
+        // TODO: mit antonia klären
         $specialTids = array(
             'default_start_eid'       => -1,
             'default_pw_aendern'      => -1,
@@ -131,42 +127,4 @@ class TwigDataProvider implements DataProviderInterface
 
         return $specialTids;
     }
-
-    protected function _assignLocaleDate(RenderConfiguration $renderConfiguration, $data)
-    {
-        switch ($renderConfiguration->get('request')->attributes->get('language'))
-        {
-            case 'de':
-                $localeDate = '%d.%m.%Y';
-                $localeTime = '%H:%M:%S';
-                $localeTimeShort = '%H:%M';
-                break;
-
-            case 'gb':
-                $localeDate = '%d/%m/%Y';
-                $localeTime = '%I:%M:%S %p';
-                $localeTimeShort = '%I:%M %p';
-                break;
-
-            case 'us':
-                $localeDate = '%Y-%m-%d';
-                $localeTime = '%I:%M:%S %p';
-                $localeTimeShort = '%I:%M %p';
-                break;
-
-            default:
-                $localeDate = '%Y-%m-%d';
-                $localeTime = '%I:%M:%S %p';
-                $localeTimeShort = '%I:%M %p';
-
-                break;
-        }
-
-        $data->localeDate          = $localeDate;
-        $data->localeTime          = $localeTime;
-        $data->localeTimeShort     = $localeTimeShort;
-        $data->localeDateTime      = $localeDate . ' ' . $localeTime;
-        $data->localeDateTimeShort = $localeDate . ' ' . $localeTimeShort;
-    }
-
 }

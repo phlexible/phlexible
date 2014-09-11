@@ -79,6 +79,6 @@ class ElementFinderExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'element_finder';
+        return 'phlexible_element_finder';
     }
 }

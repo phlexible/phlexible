@@ -96,6 +96,6 @@ class MiscExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'misc';
+        return 'phlexible_misc';
     }
 }

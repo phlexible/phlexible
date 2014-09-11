@@ -61,6 +61,6 @@ class MediaTemplateExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'media_template';
+        return 'phlexible_media_template';
     }
 }

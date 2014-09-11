@@ -41,17 +41,27 @@ class TemplateCollection
      */
     public function get($key)
     {
-        if (isset($this->templates[$key])) {
-            return $this->templates[$key];
+        if ($this->has($key)) {
+            return $this->templates[(string) $key];
         }
 
         return null;
     }
 
     /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        return isset($this->templates[(string) $key]);
+    }
+
+    /**
      * @return TemplateInterface[]
      */
-    public function getAll()
+    public function all()
     {
         return $this->templates;
     }

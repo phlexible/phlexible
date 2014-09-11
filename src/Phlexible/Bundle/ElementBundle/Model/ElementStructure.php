@@ -245,6 +245,10 @@ class ElementStructure implements \IteratorAggregate
      */
     public function getValue($name)
     {
+        if (!$this->hasValue($name)) {
+            return null;
+        }
+
         return $this->values[$name];
     }
 
@@ -307,6 +311,61 @@ class ElementStructure implements \IteratorAggregate
         return new ElementStructureIterator($this->getStructures());
     }
 
+    /**
+     * @param string $name
+     *
+     * @return ElementStructure|ElementStructureValue|null
+     */
+    public function find($name)
+    {
+        if ($this->hasValue($name)) {
+            return $this->getValue($name);
+        }
+
+        foreach ($this->getStructures() as $childStructure) {
+            if ($result = $childStructure->find($name)) {
+                return $result;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return ElementStructure
+     */
+    public function children($name = null)
+    {
+        if (!$name) {
+            return $this->getStructures();
+        }
+
+        $result = array();
+        foreach ($this->getStructures() as $childStructure) {
+            if ($childStructure->getParentName() === $name) {
+                $result[] = $childStructure;
+            } else {
+                $localResult = $childStructure->children($name);
+                if ($localResult) {
+                    $result = array_merge($result, $localResult);
+                }
+            }
+        }
+
+        if (!count($result)) {
+            return null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $indent
+     *
+     * @return string
+     */
     public function dump($indent = 0)
     {
         $dump = str_repeat(' ', $indent) . 'S '.$this->getId().' '.$this->getDsId().' '.$this->getName().' '.$this->getParentName().' '.($this->getElementVersion() ? 'EV' : 'noEV').PHP_EOL;

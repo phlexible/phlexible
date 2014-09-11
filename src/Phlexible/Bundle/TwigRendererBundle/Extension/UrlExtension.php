@@ -83,28 +83,10 @@ class UrlExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $treeId
-     *
-     * @return ContentTreeContext
-     */
-    public function treeNode($treeId)
-    {
-        $tree = $this->contentTreeManager->findByTreeId($treeId);
-        $treeNode = $tree->get($treeId);
-
-        return new ContentTreeContext($treeNode);
-    }
-
-    public function element($eid)
-    {
-
-    }
-
-    /**
      * @return string
      */
     public function getName()
     {
-        return 'url';
+        return 'phlexible_url';
     }
 }
