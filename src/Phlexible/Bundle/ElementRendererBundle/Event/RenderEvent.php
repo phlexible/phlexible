@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle\Event;
 
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\Renderer;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -36,7 +36,7 @@ class RenderEvent extends Event
 
     /**
      * @param Renderer            $renderer
-     * @param RenderConfiguration $configuration
+     * @param \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration $configuration
      * @param string              $content
      */
     public function __construct(Renderer $renderer, RenderConfiguration $configuration, $content)

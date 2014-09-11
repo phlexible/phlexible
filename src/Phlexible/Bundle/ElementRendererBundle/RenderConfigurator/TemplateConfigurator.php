@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Dwoo\Template\File;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;

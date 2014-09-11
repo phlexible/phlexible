@@ -28,20 +28,10 @@ class OnlineController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // check online status of treenode/language
-        // determine version
-        // transform parameters if necessary
-        //$parameters['version'] = 1;
+        $dataProvider = $this->get('phlexible_element_renderer.data_provider');
+        $data = $dataProvider->provide($request);
 
-        $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
-        $renderConfig = $renderConfigurator->configure($request);
-
-        $dataProvider = $this->get('phlexible_twig_renderer.data_provider');
-        $templating = $this->get('templating');
-        $data = $dataProvider->provide($renderConfig);
-        $template = $renderConfig->get('template');
-
-        return $templating->renderResponse($template, (array) $data);
+        return $this->render($data['template'], (array) $data);
     }
 
     public function oldAction()

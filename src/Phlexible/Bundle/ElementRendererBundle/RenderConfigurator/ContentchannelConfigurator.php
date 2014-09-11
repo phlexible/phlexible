@@ -10,9 +10,9 @@ namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\ContentchannelBundle\Contentchannel\ContentchannelRepository;
 use Phlexible\Bundle\ContentchannelBundle\Model\ContentchannelManagerInterface;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;

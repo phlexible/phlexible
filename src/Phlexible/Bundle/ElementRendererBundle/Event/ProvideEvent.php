@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle\Event;
 
-use Phlexible\Bundle\ElementRendererBundle\DataProvider;
+use Phlexible\Bundle\ElementRendererBundle\DataProvider\DataProvider;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\Event;
 class ProvideEvent extends Event
 {
     /**
-     * @var DataProvider
+     * @var \Phlexible\Bundle\ElementRendererBundle\DataProvider\DataProvider
      */
     private $dataProvider = null;
 
@@ -41,7 +41,7 @@ class ProvideEvent extends Event
     /**
      * Return data provider
      *
-     * @return DataProvider
+     * @return \Phlexible\Bundle\ElementRendererBundle\DataProvider\DataProvider
      */
     public function getDataProvider()
     {

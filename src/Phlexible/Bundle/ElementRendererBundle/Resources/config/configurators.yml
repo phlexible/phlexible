@@ -1,0 +1,63 @@
+services:
+    phlexible_element_renderer.configurator.treenode:
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator\TreeNodeConfigurator
+        public: false
+        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service, @security.context]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}
+
+    phlexible_element_renderer.configurator.teaser:
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator\TeaserConfigurator
+        public: false
+        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service, @security.context]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}
+
+    phlexible_element_renderer.configurator.element:
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator\ElementConfigurator
+        public: false
+        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service, @phlexible_element.content_loader, @security.context]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}
+
+    phlexible_element_renderer.configurator.contentchannel:
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator\ContentchannelConfigurator
+        public: false
+        arguments: [@event_dispatcher, @logger, @phlexible_contentchannel.contentchannel_manager]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}
+
+    phlexible_element_renderer.configurator.template:
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator\TemplateConfigurator
+        public: false
+        arguments: [@event_dispatcher, @logger]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}
+
+    phlexible_element_renderer.configurator.navigation:
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator\NavigationConfigurator
+        public: false
+        arguments: [@event_dispatcher, @logger, @phlexible_tree.tree_manager]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}
+
+    phlexible_element_renderer.configuration.layoutarea:
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator\LayoutareaConfigurator
+        public: false
+        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service, @phlexible_teaser.content_teaser_manager.delegating]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}
+
+    phlexible_element_renderer.configurator:
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator
+        arguments: [@event_dispatcher, @logger]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}
+        calls:
+            - [addConfigurator, [@phlexible_element_renderer.configurator.treenode]]
+            - [addConfigurator, [@phlexible_element_renderer.configurator.teaser]]
+            - [addConfigurator, [@phlexible_element_renderer.configurator.element]]
+            - [addConfigurator, [@phlexible_element_renderer.configurator.contentchannel]]
+            - [addConfigurator, [@phlexible_element_renderer.configurator.template]]
+            - [addConfigurator, [@phlexible_element_renderer.configurator.navigation]]
+            - [addConfigurator, [@phlexible_element_renderer.configuration.layoutarea]]

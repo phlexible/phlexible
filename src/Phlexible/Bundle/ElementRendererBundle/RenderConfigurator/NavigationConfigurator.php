@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
+use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Psr\Log\LoggerInterface;

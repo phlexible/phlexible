@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,7 +20,7 @@ interface ConfiguratorInterface
 {
     /**
      * @param Request             $renderRequest
-     * @param RenderConfiguration $renderConfiguration
+     * @param \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration $renderConfiguration
      */
     public function configure(Request $renderRequest, RenderConfiguration $renderConfiguration);
 }

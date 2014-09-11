@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementRendererBundle;
+namespace Phlexible\Bundle\ElementRendererBundle\Configurator;
 
 /**
  * Element renderer configuration

@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\FormBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
@@ -73,7 +73,7 @@ class ElementRendererListener implements EventSubscriberInterface
 
     /**
      * @param string              $formName
-     * @param RenderConfiguration $configuration
+     * @param \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration $configuration
      */
     private function processForm($formName, RenderConfiguration $configuration)
     {

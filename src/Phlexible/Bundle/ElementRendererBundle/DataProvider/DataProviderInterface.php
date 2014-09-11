@@ -6,7 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementRendererBundle;
+namespace Phlexible\Bundle\ElementRendererBundle\DataProvider;
+
+use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 
 /**
  * Data provider interface
@@ -16,7 +18,7 @@ namespace Phlexible\Bundle\ElementRendererBundle;
 interface DataProviderInterface
 {
     /**
-     * @param RenderConfiguration $renderConfiguration
+     * @param \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration $renderConfiguration
      *
      * @return \ArrayObject
      */

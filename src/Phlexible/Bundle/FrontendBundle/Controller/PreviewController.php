@@ -54,15 +54,10 @@ class PreviewController extends Controller
 
         $this->get('router.request_context')->setParameter('preview', true);
 
-        $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
-        $renderConfig = $renderConfigurator->configure($request);
+        $dataProvider = $this->get('phlexible_element_renderer.data_provider');
+        $data = $dataProvider->provide($request);
 
-        $dataProvider = $this->get('phlexible_twig_renderer.data_provider');
-        $templating = $this->get('templating');
-        $data = $dataProvider->provide($renderConfig);
-        $template = $renderConfig->get('template');
-
-        return $templating->renderResponse($template, (array) $data);
+        return $this->render($data['template'], (array) $data);
     }
 
     /**

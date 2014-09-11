@@ -6,11 +6,10 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TwigRendererBundle;
+namespace Phlexible\Bundle\TwigRendererBundle\DataProvider;
 
-use Phlexible\Bundle\ElementRendererBundle\DataProviderInterface;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfiguration;
-use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructureWrap;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\DataProvider\DataProviderInterface;
 
 /**
  * Twig data provider
@@ -86,10 +85,6 @@ class TwigDataProvider implements DataProviderInterface
             $data->catched = $renderConfiguration->get('catchResults');
 
         }
-        if ($renderConfiguration->hasFeature('locale')) {
-            $this->_assignLocaleDate($renderConfiguration, $data);
-        }
-
         if ($renderConfiguration->hasFeature('form')) {
             $data->forms = $renderConfiguration->get('forms');
             $data->formViews = $renderConfiguration->get('formViews');
@@ -99,7 +94,7 @@ class TwigDataProvider implements DataProviderInterface
     }
 
     /**
-     * @param RenderConfiguration $renderConfiguration
+     * @param \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration $renderConfiguration
      * @param string              $language
      *
      * @return array

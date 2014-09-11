@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementRendererBundle;
+namespace Phlexible\Bundle\ElementRendererBundle\Configurator;
 
 use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Psr\Log\LoggerInterface;

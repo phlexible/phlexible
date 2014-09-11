@@ -1,15 +1,4 @@
-parameters:
-    phlexible_twig_renderer.template_dir: ""
-    phlexible_twig_renderer.cache_dir: %kernel.cache_dir%/twig/
-    phlexible_twig_renderer.charset: UTF-8
-
 services:
-    phlexible_twig_renderer.twig.loader.filesystem:
-        class: Twig_Loader_Filesystem
-
-    phlexible_twig_renderer.data_provider:
-        class: Phlexible\Bundle\TwigRendererBundle\DataProvider\TwigDataProvider
-
     # twig extensions
     phlexible_twig_renderer.twig.extension.element:
         class: Phlexible\Bundle\TwigRendererBundle\Extension\ElementExtension
