@@ -226,7 +226,6 @@ class ElementStructureLoader
                     'es.repeatable_id',
                     'es.repeatable_ds_id',
                     'es.sort',
-                    'es.cnt',
                     'es.ds_id',
                     'es.name',
                 )
