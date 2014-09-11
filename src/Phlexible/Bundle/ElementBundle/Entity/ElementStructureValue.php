@@ -16,20 +16,20 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="element_structure_value")
+ * @ORM\Table(name="element_structure_value", uniqueConstraints={@ORM\UniqueConstraint(columns={"eid", "version", "language", "name", "repeatable_id"})})
  */
 class ElementStructureValue
 {
     /**
      * @var int
      * @ORM\Id
-     * @ORM\Column(name="data_id", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="id", type="integer")
      */
-    private $dataId;
+    private $id;
 
     /**
      * @var Element
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Element")
      * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
      */
@@ -37,14 +37,12 @@ class ElementStructureValue
 
     /**
      * @var int
-     * @ORM\Id
      * @ORM\Column(type="integer")
      */
     private $version;
 
     /**
      * @var string
-     * @ORM\Id
      * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
     private $language;
@@ -94,25 +92,25 @@ class ElementStructureValue
     /**
      * @return int
      */
-    public function getDataId()
+    public function getId()
     {
-        return $this->dataId;
+        return $this->id;
     }
 
     /**
-     * @param int $dataId
+     * @param int $id
      *
      * @return $this
      */
-    public function setDataId($dataId)
+    public function setId($id)
     {
-        $this->dataId = $dataId;
+        $this->id = $id;
 
         return $this;
     }
 
     /**
-     * @return \Phlexible\Bundle\ElementBundle\Entity\Element
+     * @return Element
      */
     public function getElement()
     {
@@ -120,7 +118,7 @@ class ElementStructureValue
     }
 
     /**
-     * @param \Phlexible\Bundle\ElementBundle\Entity\Element $element
+     * @param Element $element
      *
      * @return $this
      */

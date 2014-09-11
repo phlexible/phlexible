@@ -252,7 +252,7 @@ class ElementStructureLoader
         $qb
             ->select(
                 array(
-                    'esv.data_id AS id',
+                    'esv.id',
                     'esv.ds_id',
                     'esv.language',
                     'esv.repeatable_id',

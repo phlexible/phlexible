@@ -540,12 +540,11 @@ class DataSaver
             if (preg_match('/^field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
                 // existing value
                 $dsId = $match[1];
-                $id = $match[2];
                 $node = $elementtypeStructure->getNode($dsId);
                 $options = null;
                 $field = $this->fieldRegistry->getField($node->getType());
                 $value = $field->fromRaw($value);
-                $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $field->getDataType(), $node->getName(), $value, $options);
+                $elementStructureValue = new ElementStructureValue(null, $dsId, $language, $node->getType(), $field->getDataType(), $node->getName(), $value, $options);
                 if ($map) {
                     $mapId = $map[$repeatableIdentifier];
                 } else {
@@ -564,12 +563,11 @@ class DataSaver
                 // new value
                 $dsId = $match[1];
                 $foundId = $match[2];
-                $id = $this->elementService->getElementStructureManager()->getNextStructureValueId();
                 $node = $elementtypeStructure->getNode($dsId);
                 $field = $this->fieldRegistry->getField($node->getType());
                 $value = $field->fromRaw($value);
                 $options = null;
-                $elementStructureValue = new ElementStructureValue($id, $dsId, $language, $node->getType(), $field->getDataType(), $node->getName(), $value, $options);
+                $elementStructureValue = new ElementStructureValue(null, $dsId, $language, $node->getType(), $field->getDataType(), $node->getName(), $value, $options);
                 if ($map) {
                     $mapId = $map[$repeatableIdentifier];
                 } else {

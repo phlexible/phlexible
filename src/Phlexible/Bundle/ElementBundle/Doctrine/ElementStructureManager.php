@@ -173,6 +173,21 @@ class ElementStructureManager implements ElementStructureManagerInterface
                 ->setSort(0);
 
             $this->entityManager->persist($structureEntity);
+        } else {
+            $repo = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructureValue');
+
+            foreach ($elementStructure->getLanguages() as $language) {
+                $valueEntities = $repo->findBy(
+                    array(
+                        'element'  => $elementStructure->getElementVersion()->getElement(),
+                        'version'  => $elementStructure->getElementVersion()->getVersion(),
+                        'language' => $language,
+                    )
+                );
+                foreach ($valueEntities as $valueEntity) {
+                    $this->entityManager->remove($valueEntity);
+                }
+            }
         }
 
         foreach ($elementStructure->getLanguages() as $language) {
@@ -182,21 +197,8 @@ class ElementStructureManager implements ElementStructureManagerInterface
                     $field = $this->fieldRegistry->getField($elementStructureValue->getType());
                     $value = trim($field->toRaw($value));
 
-                    $repo = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructureValue');
-
-                    $valueEntity = $repo->findOneBy(
-                        array(
-                            'dataId'   => $elementStructure->getId(),
-                            'element'  => $elementStructure->getElementVersion()->getElement(),
-                            'version'  => $elementStructure->getElementVersion()->getVersion(),
-                            'language' => $elementStructureValue->getLanguage(),
-                        )
-                    );
-                    if (!$valueEntity) {
-                        $valueEntity = new ValueEntity();
-                    }
+                    $valueEntity = new ValueEntity();
                     $valueEntity
-                        ->setDataId($elementStructureValue->getId())
                         ->setElement($elementStructure->getElementVersion()->getElement())
                         ->setVersion($elementStructure->getElementVersion()->getVersion())
                         ->setLanguage($elementStructureValue->getLanguage())
