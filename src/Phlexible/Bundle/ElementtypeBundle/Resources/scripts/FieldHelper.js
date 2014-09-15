@@ -191,7 +191,7 @@ Phlexible.fields.FieldHelper = {
 
             if (!this.diffEl) {
                 var height = (targetEl.getHeight && targetEl.getHeight() > 32) ? targetEl.getHeight() : 32;
-                var html = this.attributes.oldValue;
+                var html = '_old_value: ' + this.attributes.oldValue + '<br/>_diff: ' + this.attributes.diffValue;
 
                 this.diffEl = targetEl.insertSibling({
                     tag: 'div',
