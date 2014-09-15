@@ -28,6 +28,21 @@ Ext.ux.form.Group = Ext.extend(Ext.Panel, {
 
         this.el.addClass('p-fields-group');
 
+        if (this.attributes && this.attributes.diff) {
+            switch (this.attributes.diff) {
+                case 'added':
+                    this.el.addClass('p-fields-diff-added');
+                    break;
+
+                case 'modified':
+                    this.el.addClass('p-fields-diff-modified');
+                    break;
+
+                case 'removed':
+                    this.el.addClass('p-fields-diff-removed');
+                    break;
+            }
+        }
         if (this.isRepeatable) {
             this.el.addClass('p-fields-group-repeatable');
         }

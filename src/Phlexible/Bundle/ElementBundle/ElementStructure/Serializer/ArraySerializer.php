@@ -36,11 +36,12 @@ class ArraySerializer implements SerializerInterface
         $valueDatas = array();
         foreach ($elementStructure->getValues($language) as $value) {
             $valueDatas[] = array(
-                'id'      => $value->getId(),
-                'dsId'    => $value->getDsId(),
-                'name'    => $value->getName(),
-                'type'    => $value->getType(),
-                'content' => $value->getValue(),
+                'id'         => $value->getId(),
+                'dsId'       => $value->getDsId(),
+                'name'       => $value->getName(),
+                'type'       => $value->getType(),
+                'content'    => $value->getValue(),
+                'attributes' => $value->getAttributes(),
             );
         }
 
@@ -56,6 +57,7 @@ class ArraySerializer implements SerializerInterface
             'parentDsId' => $elementStructure->getRepeatableDsId(),
             'name'       => $elementStructure->getName(),
             'parentName' => $elementStructure->getParentName(),
+            'attributes' => $elementStructure->getAttributes(),
             'structures' => $structureDatas,
             'values'     => $valueDatas,
         );

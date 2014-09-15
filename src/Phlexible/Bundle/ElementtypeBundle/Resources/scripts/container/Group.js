@@ -27,8 +27,6 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
         repeatableId = groupId;
     }
 
-    console.log(name);
-
     var config = {
         xtype: 'group',
         title: item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
@@ -40,6 +38,7 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
         name: name,
         dsId: item.dsId,
         repeatableId: repeatableId,
+        attributes: valueStructure.attributes,
         helpText: item.labels.context_help[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
         isMaster: element.master,
         isDiff: !!element.data.diff,

@@ -61,8 +61,9 @@ Phlexible.fields.FieldHelper = {
             labelSeparator: labelSeparator,
             hideLabel: hideLabel,
 
-            value: itemValue ? itemValue.content : '',//item.rawContent ? item.rawContent : (forceAdd && item.default_content ? item.default_content : ''),
-            masterValue: '',//(item.data_options && typeof item.data_options.master_value != 'undefined') ? item.data_options.master_value : item.rawContent,
+            value: itemValue ? itemValue.content : '',
+            masterValue: '', // TODO
+            attributes: itemValue ? itemValue.attributes : {},
 
             isMaster: element.master,
             isDiff: !!element.data.diff,
@@ -81,7 +82,6 @@ Phlexible.fields.FieldHelper = {
             allowBlank: item.validation.required != 'always',
 
             element: element,
-            diff: item.diff,
 
             listeners: {
                 render: function (c) {
@@ -148,26 +148,40 @@ Phlexible.fields.FieldHelper = {
     },
 
     diff: function (styleEl) {
-        if (this.diff) {
-            if (!styleEl) styleEl = this.el;
+        if (!this.attributes || !this.attributes.diff) {
+            return
+        }
 
-            switch (this.diff.type) {
-                case 'change':
-                    styleEl.addClass('p-fields-diff-change');
-                    break;
+        if (!styleEl) {
+            styleEl = this.el;
+        }
 
-                case 'new':
-                    styleEl.addClass('p-fields-diff-new');
-                    break;
-            }
+        switch (this.attributes.diff) {
+            case 'modified':
+                styleEl.addClass('p-fields-diff-modified');
+                break;
+
+            case 'added':
+                styleEl.addClass('p-fields-diff-added');
+                break;
+
+            case 'removed':
+                styleEl.addClass('p-fields-diff-removed');
+                break;
         }
     },
 
     inlineDiff: function (targetEl, clickEl) {
-        if (!this.element || !this.diff) return;
+        if (!this.element || !this.attributes || !this.attributes.diff || this.attributes.diff !== 'modified') {
+            return;
+        }
 
-        if (!targetEl) targetEl = this.el;
-        if (!clickEl) clickEl = targetEl;
+        if (!targetEl) {
+            targetEl = this.el;
+        }
+        if (!clickEl) {
+            clickEl = targetEl;
+        }
 
         targetEl.on('click', function () {
             if (this.element.activeDiffEl && this.element.activeDiffEl.isVisible() && !e.within(targetEl.dom, false, true) && !e.within(this.element.activeDiffEl.dom, false, true)) {
@@ -177,14 +191,7 @@ Phlexible.fields.FieldHelper = {
 
             if (!this.diffEl) {
                 var height = (targetEl.getHeight && targetEl.getHeight() > 32) ? targetEl.getHeight() : 32;
-                var html = '';
-                if (this.diff['type'] == 'change') {
-                    html = this.diff.content_diff;
-                }
-                else {
-                    html = Phlexible.elementtypes.Strings.diff_new_field;
-                    height = 14;
-                }
+                var html = this.attributes.oldValue;
 
                 this.diffEl = targetEl.insertSibling({
                     tag: 'div',

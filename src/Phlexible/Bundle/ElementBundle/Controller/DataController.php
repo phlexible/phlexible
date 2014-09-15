@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
+use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\DiffApplier;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
@@ -51,6 +52,11 @@ class DataController extends Controller
         $version = $request->get('version');
         $unlockId = $request->get('unlock');
         $doLock = (bool) $request->get('lock', false);
+
+        $diff = $request->get('diff');
+        $diffVersionFrom = (int) $request->get('diff_version_from');
+        $diffVersionTo = (int) $request->get('diff_version_to');
+        $diffLanguage = $request->get('diff_language');
 
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $treeManager = $this->get('phlexible_tree.tree_manager');
@@ -99,6 +105,8 @@ class DataController extends Controller
         } else {
             $elementVersion = $elementService->findLatestElementVersion($element);
         }
+
+        $elementStructure = $elementService->findElementStructure($elementVersion, $language);
 
         $elementtypeService = $elementService->getElementtypeService();
 
@@ -205,21 +213,21 @@ class DataController extends Controller
 
         // diff
 
-        $diff = $request->get('diff');
-        $diffVersionFrom = $request->get('diff_version_from');
-        $diffVersionTo = $request->get('diff_version_to');
-        $diffLanguage = $request->get('diff_language');
-
-        if ($diff && $diffVersionTo) {
+        if ($diff && $diffVersionFrom) {
             $fromElementVersion = $elementService->findElementVersion($element, $diffVersionFrom);
-            $fromElementStructure = $elementService->findElementStructure($fromElementVersion, $diffLanguage);
-            $toElementVersion = $elementService->findElementVersion($element, $diffVersionTo);
-            $toElementStructure = $elementService->findElementStructure($toElementVersion, $diffLanguage);
+            $fromElementStructure = $elementService->findElementStructure($fromElementVersion);
+
+            if ($diffVersionTo) {
+                $toElementVersion = $elementService->findElementVersion($element, $diffVersionTo);
+                $toElementStructure = $elementService->findElementStructure($toElementVersion);
+            } else {
+                $toElementStructure = $elementStructure;
+            }
+
             $differ = new Differ();
-            $diff = $differ->diff($fromElementStructure, $toElementStructure);
-            $elementStructure = $elementService->findElementStructure($elementVersion, $language);
-        } else {
-            $elementStructure = $elementService->findElementStructure($elementVersion, $language);
+            $differ->diff($fromElementStructure, $toElementStructure);
+
+            $elementStructure = $fromElementStructure;
         }
 
         $diffInfo = null;

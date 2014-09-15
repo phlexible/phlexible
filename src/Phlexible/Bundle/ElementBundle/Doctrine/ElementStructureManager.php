@@ -39,16 +39,6 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private $elementStructureLoader;
 
     /**
-     * @var ElementStructureSequence
-     */
-    private $elementStructureSequence;
-
-    /**
-     * @var ElementStructureValueSequence
-     */
-    private $elementStructureValueSequence;
-
-    /**
      * @var FieldRegistry
      */
     private $fieldRegistry;
@@ -71,8 +61,6 @@ class ElementStructureManager implements ElementStructureManagerInterface
     /**
      * @param EntityManager                 $entityManager
      * @param ElementStructureLoader        $elementStructureLoader
-     * @param ElementStructureSequence      $elementStructureSequence
-     * @param ElementStructureValueSequence $elementStructureValueSequence
      * @param FieldRegistry                 $fieldRegistry
      * @param LinkExtractor                 $linkExtractor
      * @param EventDispatcherInterface      $dispatcher
@@ -81,8 +69,6 @@ class ElementStructureManager implements ElementStructureManagerInterface
     public function __construct(
         EntityManager $entityManager,
         ElementStructureLoader $elementStructureLoader,
-        ElementStructureSequence $elementStructureSequence,
-        ElementStructureValueSequence $elementStructureValueSequence,
         FieldRegistry $fieldRegistry,
         LinkExtractor $linkExtractor,
         EventDispatcherInterface $dispatcher,
@@ -90,8 +76,6 @@ class ElementStructureManager implements ElementStructureManagerInterface
     {
         $this->entityManager = $entityManager;
         $this->elementStructureLoader = $elementStructureLoader;
-        $this->elementStructureSequence = $elementStructureSequence;
-        $this->elementStructureValueSequence = $elementStructureValueSequence;
         $this->fieldRegistry = $fieldRegistry;
         $this->linkExtractor = $linkExtractor;
         $this->dispatcher = $dispatcher;
@@ -126,67 +110,48 @@ class ElementStructureManager implements ElementStructureManagerInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getNextStructureId()
-    {
-        return $this->elementStructureSequence->next();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getNextStructureValueId()
-    {
-        return $this->elementStructureValueSequence->next();
-    }
-
-    /**
      * @param ElementStructure $elementStructure
      * @param Connection       $conn
      * @param bool             $isRoot
      */
     private function insertStructure(ElementStructure $elementStructure, Connection $conn, $isRoot = false)
     {
-        if (!$isRoot) {
-            $repo = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructure');
+        $structureRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructure');
 
-            $structureEntity = $repo->findOneBy(
+        $structureEntity = $structureRepository->findOneBy(
+            array(
+                'dataId'  => $elementStructure->getId(),
+                'element' => $elementStructure->getElementVersion()->getElement(),
+                'version' => $elementStructure->getElementVersion()->getVersion(),
+            )
+        );
+        if (!$structureEntity) {
+            $structureEntity = new StructureEntity();
+        }
+        $structureEntity
+            ->setDataId($elementStructure->getId())
+            ->setElement($elementStructure->getElementVersion()->getElement())
+            ->setVersion($elementStructure->getElementVersion()->getVersion())
+            ->setDsId($elementStructure->getDsId())
+            ->setType($isRoot ? 'root' : 'group')
+            ->setName($elementStructure->getName())
+            ->setRepeatableId($elementStructure->getRepeatableId() ?: null)
+            ->setRepeatableDsId($elementStructure->getRepeatableDsId() ?: null);
+
+        $this->entityManager->persist($structureEntity);
+
+        $valueRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructureValue');
+
+        foreach ($elementStructure->getLanguages() as $language) {
+            $valueEntities = $valueRepository->findBy(
                 array(
-                    'dataId'  => $elementStructure->getId(),
-                    'element' => $elementStructure->getElementVersion()->getElement(),
-                    'version' => $elementStructure->getElementVersion()->getVersion(),
+                    'element'  => $elementStructure->getElementVersion()->getElement(),
+                    'version'  => $elementStructure->getElementVersion()->getVersion(),
+                    'language' => $language,
                 )
             );
-            if (!$structureEntity) {
-                $structureEntity = new StructureEntity();
-            }
-            $structureEntity
-                ->setDataId($elementStructure->getId())
-                ->setElement($elementStructure->getElementVersion()->getElement())
-                ->setVersion($elementStructure->getElementVersion()->getVersion())
-                ->setDsId($elementStructure->getDsId())
-                ->setType('group')
-                ->setName($elementStructure->getName())
-                ->setRepeatableId($elementStructure->getRepeatableId() ?: null)
-                ->setRepeatableDsId($elementStructure->getRepeatableDsId() ?: null)
-                ->setSort(0);
-
-            $this->entityManager->persist($structureEntity);
-        } else {
-            $repo = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructureValue');
-
-            foreach ($elementStructure->getLanguages() as $language) {
-                $valueEntities = $repo->findBy(
-                    array(
-                        'element'  => $elementStructure->getElementVersion()->getElement(),
-                        'version'  => $elementStructure->getElementVersion()->getVersion(),
-                        'language' => $language,
-                    )
-                );
-                foreach ($valueEntities as $valueEntity) {
-                    $this->entityManager->remove($valueEntity);
-                }
+            foreach ($valueEntities as $valueEntity) {
+                $this->entityManager->remove($valueEntity);
             }
         }
 
@@ -205,8 +170,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
                         ->setDsId($elementStructureValue->getDsId())
                         ->setType($elementStructureValue->getType())
                         ->setName($elementStructureValue->getName())
-                        ->setRepeatableId($elementStructure->getId() ?: null)
-                        ->setRepeatableDsId($elementStructure->getDsId() ?: null)
+                        ->setStructure($structureEntity)
                         ->setContent($value)
                         ->setOptions(!empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null);
 

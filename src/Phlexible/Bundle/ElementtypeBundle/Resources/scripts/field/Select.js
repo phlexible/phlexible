@@ -69,6 +69,7 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
         config.onTrigger1Click = Ext.emptyFn;
         config.onTrigger2Click = Ext.emptyFn;
     }
+
     return config;
 });
 

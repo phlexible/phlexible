@@ -56,6 +56,11 @@ class ElementStructureValue
     private $options;
 
     /**
+     * @var array
+     */
+    private $attributes = array();
+
+    /**
      * @param int    $id
      * @param string $dsId
      * @param string $language
@@ -243,6 +248,52 @@ class ElementStructureValue
         $this->options = $options;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return $this
+     */
+    public function setAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function hasAttribute($key)
+    {
+        return isset($this->attributes[$key]);
+    }
+
+    /**
+     * @param string     $key
+     * @param mixed|null $defaultValue
+     *
+     * @return mixed|null
+     */
+    public function getAttribute($key, $defaultValue = null)
+    {
+        if ($this->hasAttribute($key)) {
+            return $this->attributes[$key];
+        }
+
+        return $defaultValue;
     }
 }
 

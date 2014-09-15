@@ -26,16 +26,6 @@ interface ElementStructureManagerInterface
     public function find(ElementVersion $elementVersion, $defaultLanguage = null);
 
     /**
-     * @return int
-     */
-    public function getNextStructureId();
-
-    /**
-     * @return int
-     */
-    public function getNextStructureValueId();
-
-    /**
      * @param ElementStructure $elementStructure
      * @param bool             $flush
      */

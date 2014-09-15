@@ -21,9 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
 class ElementStructure
 {
     /**
-     * @var int
+     * @var string
      * @ORM\Id
-     * @ORM\Column(name="data_id", type="integer")
+     * @ORM\Column(name="data_id", type="string", length=36, options={"fixed"=true})
      */
     private $dataId;
 
@@ -79,7 +79,7 @@ class ElementStructure
     private $sort;
 
     /**
-     * @return int
+     * @return string
      */
     public function getDataId()
     {
@@ -87,7 +87,7 @@ class ElementStructure
     }
 
     /**
-     * @param int $dataId
+     * @param string $dataId
      *
      * @return $this
      */
@@ -99,7 +99,7 @@ class ElementStructure
     }
 
     /**
-     * @return \Phlexible\Bundle\ElementBundle\Entity\Element
+     * @return Element
      */
     public function getElement()
     {
@@ -107,7 +107,7 @@ class ElementStructure
     }
 
     /**
-     * @param \Phlexible\Bundle\ElementBundle\Entity\Element $element
+     * @param Element $element
      *
      * @return $this
      */
@@ -194,26 +194,6 @@ class ElementStructure
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCount()
-    {
-        return $this->count;
-    }
-
-    /**
-     * @param int $count
-     *
-     * @return $this
-     */
-    public function setCount($count)
-    {
-        $this->count = $count;
 
         return $this;
     }

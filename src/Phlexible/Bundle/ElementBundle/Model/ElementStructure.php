@@ -23,14 +23,19 @@ class ElementStructure implements \IteratorAggregate
     private $defaultLanguage;
 
     /**
+     * @var string
+     */
+    private $id;
+
+    /**
      * @var ElementVersion
      */
     private $elementVersion;
 
     /**
-     * @var int
+     * @var string
      */
-    private $id;
+    private $dsId;
 
     /**
      * @var int
@@ -40,12 +45,12 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @var string
      */
-    private $dsId;
+    private $repeatableDsId;
 
     /**
      * @var string
      */
-    private $repeatableDsId;
+    private $type;
 
     /**
      * @var string
@@ -66,6 +71,11 @@ class ElementStructure implements \IteratorAggregate
      * @var ElementStructureValue[]
      */
     private $values = array();
+
+    /**
+     * @var array
+     */
+    private $attributes = array();
 
     /**
      * Clone
@@ -96,6 +106,26 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * @return ElementVersion
      */
     public function getElementVersion()
@@ -111,46 +141,6 @@ class ElementStructure implements \IteratorAggregate
     public function setElementVersion(ElementVersion $elementVersion)
     {
         $this->elementVersion = $elementVersion;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = (int) $id;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRepeatableId()
-    {
-        return $this->repeatableId;
-    }
-
-    /**
-     * @param int $parentId
-     *
-     * @return $this
-     */
-    public function setRepeatableId($parentId)
-    {
-        $this->repeatableId = $parentId !== null ? (int) $parentId : null;
 
         return $this;
     }
@@ -176,6 +166,26 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
+     * @return int
+     */
+    public function getRepeatableId()
+    {
+        return $this->repeatableId;
+    }
+
+    /**
+     * @param int $parentId
+     *
+     * @return $this
+     */
+    public function setRepeatableId($parentId)
+    {
+        $this->repeatableId = $parentId !== null ? $parentId : null;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getRepeatableDsId()
@@ -191,6 +201,26 @@ class ElementStructure implements \IteratorAggregate
     public function setRepeatableDsId($parentDsId)
     {
         $this->repeatableDsId = $parentDsId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return $this
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -242,9 +272,11 @@ class ElementStructure implements \IteratorAggregate
      */
     public function addStructure(ElementStructure $elementStructure)
     {
-        $elementStructure
-            ->setRepeatableId($this->getId())
-            ->setRepeatableDsId($this->getDsId());
+        if ($this->type !== 'root') {
+            $elementStructure
+                ->setRepeatableId($this->getId())
+                ->setRepeatableDsId($this->getDsId());
+        }
 
         $this->structures[] = $elementStructure;
 
@@ -469,27 +501,95 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
-     * @param bool $withValues
-     * @param int  $depth
+     * @param bool   $withValues
+     * @param string $language
+     * @param int    $depth
      *
      * @return string
      */
-    public function dump($withValues = true, $depth = 0)
+    public function dump($withValues = true, $language = null, $depth = 0)
     {
-        //$dump = str_repeat(' ', $depth * 2) . '+ '.$this->getName().' ('.$this->getParentName().') '.$this->getId().' '.$this->getDsId().PHP_EOL;
-        $dump = str_repeat(' ', $depth * 2) . '+ <fg=green>'.$this->getName().'</fg=green> ('.$this->getParentName().') '.$this->getId().PHP_EOL;
+        $dump = str_repeat(' ', $depth * 2) . '+'
+            . " <fg=green>{$this->getName()}</fg=green>"
+            . " " . ($this->getParentName() ? "parentName:<fg=yellow>{$this->getParentName()}</fg=yellow>," : "<fg=yellow>root</fg=yellow>")
+            . " id:<fg=yellow>{$this->getId()}</fg=yellow>";
+        if ($this->hasAttribute('diff')) {
+            $dump .= " <fg=red>{$this->getAttribute('diff')}</fg=red>";
+        }
+        $dump .= PHP_EOL;
+
         if ($withValues) {
             foreach ($this->values as $values) {
                 foreach ($values as $value) {
-                    //$dump .= str_repeat(' ', $depth * 2 + 2).'= '.$value->getName().' '.$value->getDsId().' '.(is_array($value->getValue()) ? json_encode($value->getValue()) : $value->getValue()).PHP_EOL;
-                    $dump .= str_repeat(' ', $depth * 2 + 2).'= <fg=yellow>'.$value->getName().'</fg=yellow>: ['.$value->getLanguage().','.$value->getId().'] <fg=cyan>'.(is_array($value->getValue()) ? json_encode($value->getValue()) : $value->getValue()).'</fg=cyan>'.PHP_EOL;
+                    if ($language && $value->getLanguage() !== $language) {
+                        continue;
+                    }
+                    $dump .= str_repeat(' ', $depth * 2 + 2)
+                        . '='
+                        . " <fg=cyan>{$value->getName()}</fg=cyan>"
+                        . " language:<fg=magenta>{$value->getLanguage()}</fg=magenta>,"
+                        . " id:<fg=magenta>{$value->getId()}</fg=magenta>,"
+                        . " content:<fg=magenta>" . (is_array($value->getValue())
+                            ? json_encode($value->getValue())
+                            : $value->getValue())
+                        . "</fg=magenta>";
+                    if ($value->hasAttribute('diff')) {
+                        $dump .= " <fg=red>{$value->getAttribute('diff')}</fg=red>";
+                    }
+                    $dump .= PHP_EOL;
                 }
             }
         }
         foreach ($this->structures as $structure) {
-            $dump .= $structure->dump($withValues, $depth + 1);
+            $dump .= $structure->dump($withValues, $language, $depth + 1);
         }
         return $dump;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return $this
+     */
+    public function setAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function hasAttribute($key)
+    {
+        return isset($this->attributes[$key]);
+    }
+
+    /**
+     * @param string     $key
+     * @param mixed|null $defaultValue
+     *
+     * @return mixed|null
+     */
+    public function getAttribute($key, $defaultValue = null)
+    {
+        if ($this->hasAttribute($key)) {
+            return $this->attributes[$key];
+        }
+
+        return $defaultValue;
     }
 }
 

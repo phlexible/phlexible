@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="element_structure_value", uniqueConstraints={@ORM\UniqueConstraint(columns={"eid", "version", "language", "name", "repeatable_id"})})
+ * @ORM\Table(name="element_structure_value", uniqueConstraints={@ORM\UniqueConstraint(columns={"eid", "version", "language", "name", "structure_id"})})
  */
 class ElementStructureValue
 {
@@ -66,16 +66,17 @@ class ElementStructureValue
     private $name;
 
     /**
-     * @var int
-     * @ORM\Column(name="repeatable_id", type="integer", length=255, nullable=true)
+     * @var string
+     * @ORM\ManyToOne(targetEntity="ElementStructure")
+     * @ORM\JoinColumn(name="structure_id", referencedColumnName="data_id")
      */
-    private $repeatableId;
+    private $structure;
 
     /**
      * @var string
-     * @ORM\Column(name="repeatable_ds_id", type="string", length=36, nullable=true, options={"fixed"=true})
+     * @ORM\Column(name="structure_ds_id", type="string", length=36, nullable=true, options={"fixed"=true})
      */
-    private $repeatableDsId;
+    private $structureDsId;
 
     /**
      * @var string
@@ -230,41 +231,22 @@ class ElementStructureValue
     }
 
     /**
-     * @return int
+     * @return ElementStructure
      */
-    public function getRepeatableId()
+    public function getStructure()
     {
-        return $this->repeatableId;
+        return $this->structure;
     }
 
     /**
-     * @param int $repeatableId
+     * @param ElementStructure $structure
      *
      * @return $this
      */
-    public function setRepeatableId($repeatableId)
+    public function setStructure(ElementStructure $structure)
     {
-        $this->repeatableId = $repeatableId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRepeatableDsId()
-    {
-        return $this->repeatableDsId;
-    }
-
-    /**
-     * @param string $repeatableDsId
-     *
-     * @return $this
-     */
-    public function setRepeatableDsId($repeatableDsId)
-    {
-        $this->repeatableDsId = $repeatableDsId;
+        $this->structure = $structure;
+        $this->structureDsId = $structure->getDsId();
 
         return $this;
     }

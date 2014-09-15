@@ -66,54 +66,6 @@ class TestCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
-        $stopwatch = $this->getContainer()->get('debug.stopwatch');
-
-        $stopwatch->start('total');
-
-        $stopwatch->start('element');
-        $element = $elementService->findElement(9);
-        $elementEvent = $stopwatch->stop('element');
-
-        $stopwatch->start('elementVersion');
-        $elementVersion = $elementService->findLatestElementVersion($element);
-        $elementVersionEvent = $stopwatch->stop('elementVersion');
-
-        $stopwatch->start('elementStructure');
-        $elementStructure = $elementService->findElementStructure($elementVersion, 'de');
-        $elementStructureEvent = $stopwatch->stop('elementStructure');
-
-        //$output->writeln($elementStructure->dump());
-
-        $totalEvent = $stopwatch->start('total');
-
-        $output->writeln('Element:          ' . $elementEvent->getDuration());
-        $output->writeln('ElementVersion:   ' . $elementVersionEvent->getDuration());
-        $output->writeln('ElementStructure: ' . $elementStructureEvent->getDuration());
-        $output->writeln('Total:            ' . $totalEvent->getDuration());
-        die;
-
-        $element = $elementService->findElement(1115);
-        $fromElementVersion = $elementService->findElementVersion($element, 68);
-        $toElementVersion = $elementService->findElementVersion($element, 72);
-        $fromElementStructure = $elementService->findElementStructure($fromElementVersion, 'de');
-        $toElementStructure = $elementService->findElementStructure($toElementVersion, 'de');
-
-        $differ = new Differ();
-        $diff = $differ->diff($fromElementStructure, $toElementStructure);
-
-        $output->writeln('Added');
-        foreach ($diff->getAdded() as $added) {
-            echo '  '.$added['structure']->getName()." ".$added['structure']->getId().": ".$added['newValue']->getValue().PHP_EOL;
-        }
-        $output->writeln('Modified');
-        foreach ($diff->getModified() as $modified) {
-            echo '  '.($modified['structure']->getName() ?: 'root')." ".$modified['structure']->getId().": ".$modified['oldValue']->getValue()." -> ".$modified['newValue']->getValue().PHP_EOL;
-        }
-        $output->writeln('Removed');
-        foreach ($diff->getRemoved() as $removed) {
-            echo '  '.$removed['structure']->getName()." ".$removed['structure']->getId().": ".$removed['oldValue']->getValue().PHP_EOL;
-        }
-        die;
 
         $fieldMapper = $this->getContainer()->get('phlexible_element.field.mapper');
         $connectionManager = $this->getContainer()->get('connection_manager');

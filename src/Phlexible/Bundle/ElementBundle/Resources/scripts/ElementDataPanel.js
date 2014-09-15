@@ -209,11 +209,11 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
                 emptyText: this.strings.from_version,
                 tpl: Phlexible.elements.DiffVersionComboTemplate,
                 //value: (parseInt(this.element.version, 10) - 1),
-                store: new Ext.data.SimpleStore({
+                store: new Ext.data.JsonStore({
                     fields: [
                         {name: 'version'},
                         {name: 'format'},
-                        {name: 'date'},
+                        {name: 'create_date'},
                         {name: 'was_published', type: 'boolean'},
                         {name: 'is_published', type: 'boolean'}
                     ],
@@ -248,11 +248,11 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
                 emptyText: this.strings.to_version,
                 tpl: Phlexible.elements.DiffVersionComboTemplate,
                 //value: (parseInt(this.element.version, 10) - 1),
-                store: new Ext.data.SimpleStore({
+                store: new Ext.data.JsonStore({
                     fields: [
                         {name: 'version'},
                         {name: 'format'},
-                        {name: 'date'},
+                        {name: 'create_date'},
                         {name: 'was_published', type: 'boolean'},
                         {name: 'is_published', type: 'boolean'}
                     ],
@@ -386,7 +386,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         var tb = this.getTopToolbar();
         var v = [];
         for (var i = 0; i < element.data.versions.length; i++) {
-            if (element.data.versions[i][1] > 1) {
+            if (element.data.versions[i]['format'] > 1) {
                 v.push(element.data.versions[i]);
             }
         }

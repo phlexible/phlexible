@@ -90,6 +90,7 @@ class ElementStructureLoader
             null => $rootStructure = new ElementStructure()
         );
 
+        $rootId = null;
         $rootStructure->setDefaultLanguage($defaultLanguage);
 
         if (!$structureRows && !$dataRows) {
@@ -98,6 +99,13 @@ class ElementStructureLoader
 
         if (isset($structureRows[null])) {
             foreach ($structureRows[null] as $row) {
+                if ($row['type'] === 'root') {
+                    $rootId = $row['id'];
+                    $rootStructure
+                        ->setId($row['id'])
+                        ->setDsId($row['ds_id']);
+                    continue;
+                }
                 $myNode = $elementtypeStructure->getNode($row['ds_id']);
                 if (!$myNode) {
                     //throw new \Exception('Broken structure.');
@@ -113,6 +121,7 @@ class ElementStructureLoader
                     ->setDefaultLanguage($defaultLanguage)
                     ->setId($row['id'])
                     ->setDsId($row['ds_id'])
+                    ->setType($row['type'])
                     ->setName($row['name'])
                     ->setParentName($myParentNode->getName());
                 $rootStructure->addStructure($structure);
@@ -126,8 +135,8 @@ class ElementStructureLoader
             }
         }
 
-        if (isset($dataRows[null])) {
-            foreach ($dataRows[null] as $dataRow) {
+        if (isset($dataRows[$rootId])) {
+            foreach ($dataRows[$rootId] as $dataRow) {
                 $rootStructure->setValue($this->createValue($dataRow));
             }
         }
@@ -153,17 +162,18 @@ class ElementStructureLoader
                             ->setDefaultLanguage($defaultLanguage)
                             ->setId($row['id'])
                             ->setDsId($row['ds_id'])
+                            ->setType($row['type'])
                             ->setName($row['name'])
                             ->setParentName($myParentNode->getName());
                         /* @var $parentStructure ElementStructure */
 
-                        if (!isset($structures[$row['repeatable_id']])) {
+                        if (!isset($structures[$row['structure_id']])) {
                             continue;
                             ldd($structure);
                             echo PHP_EOL.$node->getName()." ".$node->getDsId().PHP_EOL;
                             die;
                         }
-                        $parentStructure = $structures[$row['repeatable_id']];
+                        $parentStructure = $structures[$row['structure_id']];
                         $parentStructure->addStructure($structure);
 
                         $structures[$row['id']] = $structure;
@@ -221,6 +231,7 @@ class ElementStructureLoader
                     'es.data_id AS id',
                     'es.repeatable_id',
                     'es.repeatable_ds_id',
+                    'es.type',
                     'es.sort',
                     'es.ds_id',
                     'es.name',
@@ -256,8 +267,8 @@ class ElementStructureLoader
                     'esv.id',
                     'esv.ds_id',
                     'esv.language',
-                    'esv.repeatable_id',
-                    'esv.repeatable_ds_id',
+                    'esv.structure_id',
+                    'esv.structure_ds_id',
                     'esv.name',
                     'esv.type',
                     'esv.content AS value',
@@ -273,7 +284,7 @@ class ElementStructureLoader
 
         $data = array();
         foreach ($result as $row) {
-            $data[$row['repeatable_id']][] = $row;
+            $data[$row['structure_id']][] = $row;
         }
 
         return $data;

@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\ElementStructure\Diff;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
+use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 
 /**
  * Differ
@@ -18,82 +19,130 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 class Differ
 {
     /**
-     * @param ElementStructure $fromStructure
-     * @param ElementStructure $toStructure
-     *
-     * @return Diff
+     * @param ElementStructure $structure
+     * @param ElementStructure $compareStructure
      */
-    public function diff(ElementStructure $fromStructure, ElementStructure $toStructure)
+    public function diff(ElementStructure $structure, ElementStructure $compareStructure)
     {
-        $diff = new Diff();
+        foreach ($structure->getValues() as $structureValue) {
+            $name = $structureValue->getName();
+            $fromValue = $structureValue->getValue();
+            if ($compareStructure && $compareStructure->hasValue($name)) {
+                $compareStructureValue = $compareStructure->getValue($name);
+                $toValue = $compareStructureValue->getValue();
 
-        $this->doDiff($diff, $fromStructure, $toStructure);
+                if ($fromValue !== $toValue) {
+                    $this->applyModifiedValue($structureValue, $toValue);
+                }
+            } else {
+                $this->applyAddedValue($structureValue);
+            }
+        }
 
-        return $diff;
+        foreach ($compareStructure->getValues() as $compareStructureValue) {
+            if ($structure && !$structure->hasValue($compareStructureValue->getName())) {
+                $this->applyRemovedValue($compareStructureValue);
+                $structure->setValue($compareStructureValue);
+            }
+        }
+
+        foreach ($structure->getStructures() as $structureChild) {
+            $found = false;
+            foreach ($compareStructure->getStructures() as $compareStructureChild) {
+                if ($structureChild->getId() === $compareStructureChild->getId()) {
+                    $found = true;
+                    $this->diff($structureChild, $compareStructureChild);
+                    break;
+                }
+            }
+            if ($found) {
+                $this->applyAdded($structureChild);
+            }
+        }
+
+        foreach ($compareStructure->getStructures() as $compareStructureChild) {
+            $found = false;
+            foreach ($structure->getStructures() as $structureChild) {
+                if ($structureChild->getId() === $compareStructureChild->getId()) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $this->applyRemoved($compareStructureChild);
+                $structure->addStructure($compareStructureChild);
+            }
+        }
     }
 
     /**
-     * @param Diff             $diff
-     * @param ElementStructure $fromStructure
-     * @param ElementStructure $toStructure
-     *
-     * @return Diff
+     * @param ElementStructure $structure
      */
-    private function doDiff(Diff $diff, ElementStructure $fromStructure = null, ElementStructure $toStructure = null)
+    private function applyAdded(ElementStructure $structure)
     {
-        if ($fromStructure) {
-            foreach ($fromStructure->getValues() as $fromElementStructureValue) {
-                $name = $fromElementStructureValue->getName();
-                $fromValue = $fromElementStructureValue->getValue();
-                if ($toStructure && $toStructure->hasValue($name)) {
-                    $toElementStructureValue = $toStructure->getValue($name);
-                    $toValue = $toElementStructureValue->getValue();
+        $structure
+            ->setAttribute('diff', 'added');
 
-                    if ($fromValue !== $toValue) {
-                        $diff->addModified($fromStructure, $fromElementStructureValue, $toElementStructureValue);
-                    }
-                } else {
-                    $diff->addRemoved($fromStructure, $fromElementStructureValue);
-                }
-            }
+        foreach ($structure->getValues() as $value) {
+            //$this->applyAddedValue($value);
         }
 
-        if ($toStructure) {
-            foreach ($toStructure->getValues() as $toElementStructureValue) {
-                if (!$fromStructure || !$fromStructure->hasValue($toElementStructureValue->getName())) {
-                    $diff->addAdded($toStructure, $toElementStructureValue);
-                }
-            }
+        foreach ($structure->getStructures() as $childStructure) {
+            $this->applyAdded($structure);
+        }
+    }
+
+    /**
+     * @param ElementStructureValue $value
+     */
+    private function applyAddedValue(ElementStructureValue $value)
+    {
+        $value
+            ->setAttribute('diff', 'added')
+            ->setAttribute('oldValue', '');
+    }
+
+    /**
+     * @param ElementStructureValue $value
+     * @param mixed                 $oldValue
+     */
+    private function applyModifiedValue(ElementStructureValue $value, $oldValue)
+    {
+        $granularity = new \cogpowered\FineDiff\Granularity\Word;
+        $diff = new \cogpowered\FineDiff\Diff($granularity);
+
+        $value
+            ->setAttribute('diff', 'modified')
+            ->setAttribute('oldValue', $oldValue)
+            ->setAttribute('diffValue', $diff->render($oldValue, $value->getValue()));
+    }
+
+    /**
+     * @param ElementStructure $structure
+     */
+    private function applyRemoved(ElementStructure $structure)
+    {
+        $structure
+            ->setAttribute('diff', 'removed');
+
+        foreach ($structure->getValues() as $value) {
+            //$this->applyRemovedValue($value);
         }
 
-        if ($fromStructure) {
-            foreach ($fromStructure->getStructures() as $fromStructureChild) {
-                if ($toStructure) {
-                    foreach ($toStructure->getStructures() as $toStructureChild) {
-                        if ($fromStructureChild->getId() === $toStructureChild->getId()) {
-                            $this->doDiff($diff, $fromStructureChild, $toStructureChild);
-                            break 2;
-                        }
-                    }
-                }
-                $this->doDiff($diff, $fromStructureChild, null);
-            }
+        foreach ($structure->getStructures() as $childStructure) {
+            $this->applyRemoved($structure);
         }
+    }
 
-        if ($toStructure) {
-            foreach ($toStructure->getStructures() as $toStructureChild) {
-                if ($fromStructure) {
-                    foreach ($fromStructure->getStructures() as $fromStructureChild) {
-                        echo $fromStructureChild->getId()." ".$toStructureChild->getId().PHP_EOL;
-                        if ($fromStructureChild->getId() === $toStructureChild->getId()) {
-                            break 2;
-                        }
-                    }
-                }
-                $this->doDiff($diff, null, $toStructureChild);
-            }
-        }
-
-        return $diff;
+    /**
+     * @param ElementStructureValue $value
+     */
+    private function applyRemovedValue(ElementStructureValue $value)
+    {
+        $value
+            ->setAttribute('diff', 'removed')
+            ->setAttribute('oldValue', $value->getValue())
+            //->setValue('')
+        ;
     }
 }
