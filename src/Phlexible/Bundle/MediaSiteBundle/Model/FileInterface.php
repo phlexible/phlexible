@@ -166,6 +166,13 @@ interface FileInterface
     public function setAttribute($key, $value);
 
     /**
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function removeAttribute($key);
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt();

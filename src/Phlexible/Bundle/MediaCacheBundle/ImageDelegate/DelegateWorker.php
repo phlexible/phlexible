@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaCacheBundle\ImageDelegate;
 
 use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
 use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\File;
+use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;

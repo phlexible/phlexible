@@ -11,7 +11,7 @@ parameters:
 services:
     phlexible_media_manager.site_default:
         class: Phlexible\Bundle\MediaSiteBundle\Driver\DoctrineDriver
-        arguments: [@doctrine.dbal.default_connection]
+        arguments: [@doctrine.orm.entity_manager]
 
     phlexible_media_manager.upload.temp_storage:
         class: Phlexible\Bundle\MediaManagerBundle\Upload\TempStorage

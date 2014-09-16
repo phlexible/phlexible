@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MediaSiteBundle\Entity\File;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
@@ -50,7 +49,7 @@ class FileUsage
 
     /**
      * @var FileInterface
-     * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaSiteBundle\Entity\File")
+     * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaManagerBundle\Entity\File")
      * @ORM\JoinColumns(
      *   @ORM\JoinColumn(name="file_id", referencedColumnName="id"),
      *   @ORM\JoinColumn(name="file_version", referencedColumnName="version")

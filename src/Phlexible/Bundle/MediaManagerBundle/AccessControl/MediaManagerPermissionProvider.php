@@ -27,7 +27,7 @@ class MediaManagerPermissionProvider implements PermissionProviderInterface
     /**
      * @param string $contentClass
      */
-    public function __construct($contentClass = 'Phlexible\Bundle\MediaSiteBundle\Model\Folder')
+    public function __construct($contentClass = 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder')
     {
         $this->contentClass = $contentClass;
     }

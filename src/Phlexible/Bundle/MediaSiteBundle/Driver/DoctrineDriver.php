@@ -9,6 +9,8 @@
 namespace Phlexible\Bundle\MediaSiteBundle\Driver;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ActionInterface;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFileAction;
@@ -24,16 +26,14 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ReplaceFileAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
-use Phlexible\Bundle\MediaSiteBundle\Exception\NotFoundException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotWritableException;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\StreamSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
-use Phlexible\Bundle\MediaSiteBundle\Model\File;
-use Phlexible\Bundle\MediaSiteBundle\Model\Folder;
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -44,29 +44,61 @@ use Symfony\Component\Filesystem\Filesystem;
 class DoctrineDriver extends AbstractDriver
 {
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
 
     /**
      * @var string
      */
-    protected $folderTable;
+    private $folderTable;
 
     /**
      * @var string
      */
-    protected $fileTable;
+    private $fileTable;
 
     /**
-     * @param Connection $connection
+     * @var string
      */
-    public function __construct(Connection $connection)
+    private $folderClass = 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder';
+
+    /**
+     * @var string
+     */
+    private $fileClass = 'Phlexible\Bundle\MediaManagerBundle\Entity\File';
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
     {
-        $this->connection = $connection;
+        $this->entityManager = $entityManager;
+        $this->connection = $entityManager->getConnection();
 
         $this->folderTable = 'media_site_folder';
         $this->fileTable = 'media_site_file';
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    private function getFileRepository()
+    {
+        return $this->entityManager->getRepository($this->fileClass);
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    private function getFolderRepository()
+    {
+        return $this->entityManager->getRepository($this->folderClass);
     }
 
     /**
@@ -78,19 +110,18 @@ class DoctrineDriver extends AbstractDriver
             return $this->findRootFolder();
         }
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fo.*')
-            ->from($this->folderTable, 'fo')
-            ->where($qb->expr()->eq('fo.id', $qb->expr()->literal($id)));
+        $folder = $this->getFolderRepository()->findOneBy(
+            array(
+                'siteId' => $this->getSite()->getId(),
+                'id'     => $id
+            )
+        );
 
-        $row = $this->connection->fetchAssoc($qb->getSQL());
-
-        if (!$row) {
-            throw new NotFoundException("Folder $id not found.");
+        if ($folder) {
+            $folder->setSite($this->getSite());
         }
 
-        return $this->mapFolderRow($row);
+        return $folder;
     }
 
     /**
@@ -98,20 +129,18 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findRootFolder()
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fo.*')
-            ->from($this->folderTable, 'fo')
-            ->where($qb->expr()->eq('fo.site_id', $qb->expr()->literal($this->getSite()->getId())))
-            ->andWhere($qb->expr()->isNull('fo.parent_id'));
+        $folder = $this->getFolderRepository()->findOneBy(
+            array(
+                'siteId'   => $this->getSite()->getId(),
+                'parentId' => null
+            )
+        );
 
-        $row = $this->connection->fetchAssoc($qb->getSQL());
-
-        if (!$row) {
-            throw new NotFoundException("Root folder not found.");
+        if ($folder) {
+            $folder->setSite($this->getSite());
         }
 
-        return $this->mapFolderRow($row);
+        return $folder;
     }
 
     /**
@@ -121,20 +150,18 @@ class DoctrineDriver extends AbstractDriver
     {
         $path = ltrim($path, '/');
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fo.*')
-            ->from($this->folderTable, 'fo')
-            ->where($qb->expr()->eq('fo.site_id', $qb->expr()->literal($this->getSite()->getId())))
-            ->andWhere($qb->expr()->eq('fo.path', $qb->expr()->literal($path)));
+        $folder = $this->getFolderRepository()->findOneBy(
+            array(
+                'siteId' => $this->getSite()->getId(),
+                'path'   => $path
+            )
+        );
 
-        $row = $this->connection->fetchAssoc($qb->getSQL());
-
-        if (!$row) {
-            return null;
+        if ($folder) {
+            $folder->setSite($this->getSite());
         }
 
-        return $this->mapFolderRow($row);
+        return $folder;
     }
 
     /**
@@ -142,16 +169,17 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findFoldersByParentFolder(FolderInterface $parentFolder)
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fo.*')
-            ->from($this->folderTable, 'fo')
-            ->where($qb->expr()->eq('fo.parent_id', $qb->expr()->literal($parentFolder->getId())))
-            ->orderBy('fo.name', 'ASC');
+        $folders = $this->getFolderRepository()->findBy(
+            array(
+                'parentId' => $parentFolder->getId(),
+            )
+        );
 
-        $rows = $this->connection->fetchAll($qb->getSQL());
+        foreach ($folders as $folder) {
+            $folder->setSite($this->getSite());
+        }
 
-        return $this->mapFolderRows($rows);
+        return $folders;
     }
 
     /**
@@ -159,13 +187,12 @@ class DoctrineDriver extends AbstractDriver
      */
     public function countFoldersByParentFolder(FolderInterface $parentFolder)
     {
-        $qb = $this->connection->createQueryBuilder();
+        $qb = $this->getFolderRepository()->createQueryBuilder('fo');
         $qb
             ->select('COUNT(fo.id)')
-            ->from($this->folderTable, 'fo')
-            ->where($qb->expr()->eq('fo.parent_id', $qb->expr()->literal($parentFolder->getId())));
+            ->where($qb->expr()->eq('fo.parentId', $qb->expr()->literal($parentFolder->getId())));
 
-        return (int) $this->connection->fetchColumn($qb->getSQL());
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -173,20 +200,16 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findFolderByFileId($fileId)
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fo.*')
-            ->from($this->folderTable, 'fo')
-            ->join('fo', $this->fileTable, 'fi', 'fo.id = fi.folder_id')
-            ->where($qb->expr()->eq('fi.id', $qb->expr()->literal($fileId)));
+        $file = $this->findFile($fileId);
 
-        $row = $this->connection->fetchAssoc($qb->getSQL());
-
-        if (!$row) {
-            throw new NotFoundException("Folder for file $fileId not found.");
+        if (!$file) {
+            return null;
         }
 
-        return $this->mapFolderRow($row);
+        $folder = $file->getFolder();
+        $folder->setSite($this->getSite());
+
+        return $folder;
     }
 
     /**
@@ -194,20 +217,18 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findFile($id, $version = 1)
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fi.*')
-            ->from($this->fileTable, 'fi')
-            ->where($qb->expr()->eq('fi.id', $qb->expr()->literal($id)))
-            ->andWhere($qb->expr()->eq('fi.version', $version));
+        $file = $this->getFileRepository()->findOneBy(
+            array(
+                'id'      => $id,
+                'version' => $version
+            )
+        );
 
-        $row = $this->connection->fetchAssoc($qb->getSQL());
-
-        if (!$row) {
-            throw new NotFoundException("File $id version $version not found.");
+        if ($file) {
+            $file->setSite($this->getSite());
         }
 
-        return $this->mapFileRow($row);
+        return $file;
     }
 
     /**
@@ -218,22 +239,20 @@ class DoctrineDriver extends AbstractDriver
         $name = basename($path);
         $folderPath = trim(dirname($path), '/');
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fi.*')
-            ->from($this->fileTable, 'fi')
-            ->join('fi', $this->folderTable, 'fo', 'fo.id = fi.folder_id')
-            ->where($qb->expr()->eq('fo.path', $qb->expr()->literal($folderPath)))
-            ->andWhere($qb->expr()->eq('fi.name', $qb->expr()->literal($name)))
-            ->andWhere($qb->expr()->eq('fi.version', $version));
+        $folder = $this->findFolderByPath($folderPath);
 
-        $row = $this->connection->fetchAssoc($qb->getSQL());
+        $file = $this->getFileRepository()->findOneBy(
+            array(
+                'name'   => $name,
+                'folder' => $folder
+            )
+        );
 
-        if (!$row) {
-            return null;
+        if ($file) {
+            $file->setSite($this->getSite());
         }
 
-        return $this->mapFileRow($row);
+        return $file;
     }
 
     /**
@@ -241,16 +260,17 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findFileVersions($id)
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fi.*')
-            ->from($this->fileTable, 'fi')
-            ->where($qb->expr()->eq('fi.id', $qb->expr()->literal($id)))
-            ->orderBy('fi.version', 'DESC');
+        $files = $this->getFileRepository()->findBy(
+            array(
+                'id' => $id
+            )
+        );
 
-        $rows = $this->connection->fetchAll($qb->getSQL());
+        foreach ($files as $file) {
+            $file->setSite($this->getSite());
+        }
 
-        return $this->mapFileRows($rows);
+        return $files;
     }
 
     /**
@@ -263,33 +283,26 @@ class DoctrineDriver extends AbstractDriver
         $start = null,
         $includeHidden = false)
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fi.*')
-            ->from($this->fileTable, 'fi')
-            ->join('fi', $this->folderTable, 'fo', 'fo.id = fi.folder_id')
-            ->where($qb->expr()->eq('fi.folder_id', $qb->expr()->literal($folder->getId())));
-
-        if ($order) {
-            foreach ($order as $field => $dir) {
-                $qb->orderBy($field, $dir);
-            }
-        }
-
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-        if ($start) {
-            $qb->setFirstResult($start);
-        }
+        $criteria = array(
+            'folder' => $folder
+        );
 
         if (!$includeHidden) {
-            $qb->andWhere('fi.hidden = 0');
+            $criteria['hidden'] = false;
         }
 
-        $rows = $this->connection->fetchAll($qb->getSQL());
+        $files = $this->getFileRepository()->findBy(
+            $criteria,
+            $order,
+            $limit,
+            $start
+        );
 
-        return $this->mapFileRows($rows);
+        foreach ($files as $file) {
+            $file->setSite($this->getSite());
+        }
+
+        return $files;
     }
 
     /**
@@ -297,13 +310,12 @@ class DoctrineDriver extends AbstractDriver
      */
     public function countFilesByFolder(FolderInterface $folder)
     {
-        $qb = $this->connection->createQueryBuilder();
+        $qb = $this->getFileRepository()->createQueryBuilder('fi');
         $qb
             ->select('COUNT(fi.id)')
-            ->from($this->fileTable, 'fi')
-            ->where($qb->expr()->eq('fi.folder_id', $qb->expr()->literal($folder->getId())));
+            ->where($qb->expr()->eq('fi.folder', $qb->expr()->literal($folder->getId())));
 
-        return (int) $this->connection->fetchColumn($qb->getSQL());
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -311,16 +323,13 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findLatestFiles($limit = 20)
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fi.*')
-            ->from($this->fileTable, 'fi')
-            ->join('fi', $this->folderTable, 'fo', 'fo.id = fi.folder_id')
-            ->orderBy('fi.created_at DESC');
+        $files = $this->getFileRepository()->findBy(array(), array('createdAt' => 'DESC'), $limit);
 
-        $rows = $this->connection->fetchAll($qb->getSQL());
+        foreach ($files as $file) {
+            $file->setSite($this->getSite());
+        }
 
-        return $this->mapFileRows($rows);
+        return $files;
     }
 
     /**
@@ -328,15 +337,16 @@ class DoctrineDriver extends AbstractDriver
      */
     public function search($query)
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('fi.*')
-            ->from($this->fileTable, 'fi')
-            ->where($qb->expr()->like('fi.name', $qb->expr()->literal("%$query%")));
+        $qb = $this->getFileRepository()->createQueryBuilder('fi');
+        $qb->where($qb->expr()->like('fi.name', $qb->expr()->literal("%$query%")));
 
-        $rows = $this->connection->fetchAll($qb->getSQL());
+        $files = $qb->getQuery()->getResult();
 
-        return $this->mapFileRows($rows);
+        foreach ($files as $file) {
+            $file->setSite($this->getSite());
+        }
+
+        return $files;
     }
 
     /**
@@ -468,7 +478,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param CreateFileAction $action
      *
-     * @return File
+     * @return FileInterface
      * @throws IOException
      */
     private function executeCreateFileAction(CreateFileAction $action)
@@ -483,12 +493,12 @@ class DoctrineDriver extends AbstractDriver
         $path = $this->getSite()->getRootDir() . $hash;
 
         // prepare folder's name and id
-        $file = new File();
+        $fileClass = $this->fileClass;
+        $file = new $fileClass();
         $file
             ->setSite($this->getSite())
             ->setId(Uuid::generate())
-            ->setFolderId($targetFolder->getId())
-            ->setPhysicalPath($path)
+            ->setFolder($targetFolder)
             ->setName($fileSource->getName())
             ->setCreatedAt($action->getDate())
             ->setCreateUserid($action->getUserId())
@@ -523,22 +533,8 @@ class DoctrineDriver extends AbstractDriver
         }
 
         try {
-            $this->connection->insert(
-                $this->fileTable,
-                array(
-                    'id'             => $file->getId(),
-                    'folder_id'      => $file->getFolderId(),
-                    'name'           => $file->getName(),
-                    'mime_type'      => $file->getMimeType(),
-                    'size'           => $file->getSize(),
-                    'hash'           => $file->getHash(),
-                    'attributes'     => count($file->getAttributes()) ? serialize($file->getAttributes()) : null,
-                    'create_user_id' => $file->getCreateUserId(),
-                    'created_at'     => $file->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'modify_user_id' => $file->getModifyUserId(),
-                    'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
-                )
-            );
+            $this->entityManager->persist($file);
+            $this->entityManager->flush($file);
         } catch (\Exception $e) {
             $filesystem->remove($path);
 
@@ -551,7 +547,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param ReplaceFileAction $action
      *
-     * @return File
+     * @return FileInterface
      * @throws IOException
      */
     private function executeReplaceFileAction(ReplaceFileAction $action)
@@ -597,21 +593,7 @@ class DoctrineDriver extends AbstractDriver
         }
 
         try {
-            $this->connection->update(
-                $this->fileTable,
-                array(
-                    'name'           => $file->getName(),
-                    'mime_type'      => $file->getMimeType(),
-                    'size'           => $file->getSize(),
-                    'hash'           => $file->getHash(),
-                    'attributes'     => count($file->getAttributes()) ? serialize($file->getAttributes()) : null,
-                    'modify_user_id' => $file->getModifyUserId(),
-                    'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
-                ),
-                array(
-                    'id' => $file->getId(),
-                )
-            );
+            $this->entityManager->flush($file);
         } catch (\Exception $e) {
             $filesystem->remove($path);
 
@@ -624,7 +606,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param RenameFileAction $action
      *
-     * @return File
+     * @return FileInterface
      * @throws IOException
      */
     private function executeRenameFileAction(RenameFileAction $action)
@@ -642,17 +624,7 @@ class DoctrineDriver extends AbstractDriver
             ->setModifyUserId($action->getUserId());
 
         try {
-            $this->connection->update(
-                $this->fileTable,
-                array(
-                    'name'           => $file->getName(),
-                    'modify_user_id' => $file->getModifyUserId(),
-                    'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
-                ),
-                array(
-                    'id' => $file->getId()
-                )
-            );
+            $this->entityManager->flush($file);
         } catch (\Exception $e) {
             throw new IOException("Rename file from $oldName to {$file->getName()} failed.", 0, $e);
         }
@@ -663,7 +635,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param MoveFileAction $action
      *
-     * @return File
+     * @return FileInterface
      * @throws IOException
      */
     private function executeMoveFileAction(MoveFileAction $action)
@@ -680,17 +652,7 @@ class DoctrineDriver extends AbstractDriver
             ->setModifyUserId($action->getUserId());
 
         try {
-            $this->connection->update(
-                $this->fileTable,
-                array(
-                    'folder_id'      => $file->getFolderId(),
-                    'modify_user_id' => $file->getModifyUserId(),
-                    'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
-                ),
-                array(
-                    'id' => $file->getId()
-                )
-            );
+            $this->entityManager->flush($file);
         } catch (\Exception $e) {
             throw new IOException("Move file failed.", 0, $e);
         }
@@ -701,7 +663,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param CopyFileAction $action
      *
-     * @return File
+     * @return FileInterface
      * @throws IOException
      */
     private function executeCopyFileAction(CopyFileAction $action)
@@ -719,22 +681,7 @@ class DoctrineDriver extends AbstractDriver
             ->setFolderId($targetFolder->getId());
 
         try {
-            $this->connection->insert(
-                $this->fileTable,
-                array(
-                    'id'             => $file->getId(),
-                    'folder_id'      => $file->getFolderId(),
-                    'name'           => $file->getName(),
-                    'mime_type'      => $file->getMimeType(),
-                    'size'           => $file->getSize(),
-                    'hash'           => $file->getHash(),
-                    'attributes'     => count($file->getAttributes()) ? serialize($file->getAttributes()) : null,
-                    'create_user_id' => $file->getCreateUserId(),
-                    'created_at'     => $file->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'modify_user_id' => $file->getModifyUserId(),
-                    'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
-                )
-            );
+            $this->entityManager->flush($file);
         } catch (\Exception $e) {
             throw new IOException("Copy file failed.", 0, $e);
         }
@@ -745,7 +692,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param DeleteFileAction $action
      *
-     * @return File
+     * @return FileInterface
      * @throws IOException
      */
     private function executeDeleteFileAction(DeleteFileAction $action)
@@ -753,12 +700,8 @@ class DoctrineDriver extends AbstractDriver
         $file = $action->getFile();
 
         try {
-            $this->connection->delete(
-                $this->fileTable,
-                array(
-                    'id' => $file->getId(),
-                )
-            );
+            $this->entityManager->remove($file);
+            $this->entityManager->flush();
         } catch (\Exception $e) {
             throw new IOException("Copy file failed.", 0, $e);
         }
@@ -769,7 +712,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param SetFileAttributesAction $action
      *
-     * @return File
+     * @return FileInterface
      * @throws IOException
      */
     private function executeSetFileAttributesAction(SetFileAttributesAction $action)
@@ -782,17 +725,7 @@ class DoctrineDriver extends AbstractDriver
             ->setAttributes($action->getAttributes());
 
         try {
-            $this->connection->update(
-                $this->fileTable,
-                array(
-                    'attributes'     => count($file->getAttributes()) ? serialize($file->getAttributes()) : null,
-                    'modify_user_id' => $file->getModifyUserId(),
-                    'modified_at'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
-                ),
-                array(
-                    'id' => $file->getId(),
-                )
-            );
+            $this->entityManager->flush($file);
         } catch (\Exception $e) {
             throw new IOException("Set file attributes failed.", 0, $e);
         }
@@ -829,21 +762,8 @@ class DoctrineDriver extends AbstractDriver
             ->setModifyUserid($folder->getCreateUserId());
 
         try {
-            $this->connection->insert(
-                $this->folderTable,
-                array(
-                    'id'             => $folder->getId(),
-                    'parent_id'      => $folder->getParentId(),
-                    'site_id'        => $folder->getSite()->getId(),
-                    'name'           => $folder->getName(),
-                    'path'           => $folder->getPath(),
-                    'attributes'     => count($folder->getAttributes()) ? serialize($folder->getAttributes()) : null,
-                    'create_user_id' => $folder->getCreateUserId(),
-                    'created_at'     => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'modify_user_id' => $folder->getModifyUserId(),
-                    'modified_at'    => $folder->getModifiedAt()->format('Y-m-d H:i:s'),
-                )
-            );
+            $this->entityManager->persist($folder);
+            $this->entityManager->flush($folder);
         } catch (\Exception $e) {
             throw new IOException("Create folder {$folder->getName()} failed", 0, $e);
         }
@@ -854,7 +774,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param RenameFolderAction $action
      *
-     * @return Folder
+     * @return FolderInterface
      * @throws IOException
      */
     private function executeRenameFolderAction(RenameFolderAction $action)
@@ -867,17 +787,7 @@ class DoctrineDriver extends AbstractDriver
             ->setModifyUserId($action->getUserId());
 
         try {
-            $this->connection->update(
-                $this->folderTable,
-                array(
-                    'name'           => $folder->getName(),
-                    'modify_user_id' => $folder->getModifyUserId(),
-                    'modified_at'    => $folder->getModifiedAt()->format('Y-m-d H:i:s'),
-                ),
-                array(
-                    'id' => $folder->getId()
-                )
-            );
+            $this->entityManager->flush($folder);
         } catch (\Exception $e) {
             throw new IOException("Rename folder to {$folder->getName()} failed", 0, $e);
         }
@@ -889,7 +799,7 @@ class DoctrineDriver extends AbstractDriver
             $folder->setPath($newPath);
 
             try {
-                $qb = $this->connection->createQueryBuilder();
+                $qb = $this->getFolderRepository()->createQueryBuilder('fo');
                 $qb
                     ->update($this->folderTable, 'f')
                     ->set('f.path', 'REPLACE(path, ' . $qb->expr()->literal($oldPath) . ', ' . $qb->expr()->literal($newPath) . ')')
@@ -899,7 +809,7 @@ class DoctrineDriver extends AbstractDriver
                         $qb->expr()->like('f.path', $qb->expr()->literal("$oldPath/%"))
                     ));
 
-                $this->connection->exec($qb->getSQL());
+                $qb->getQuery()->execute();
             } catch (\Exception $e) {
                 throw new IOException("Rename folder from $oldPath to $newPath failed.", 0, $e);
             }
@@ -911,7 +821,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param MoveFolderAction $action
      *
-     * @return Folder
+     * @return FolderInterface
      * @throws IOException
      */
     private function executeMoveFolderAction(MoveFolderAction $action)
@@ -936,20 +846,9 @@ class DoctrineDriver extends AbstractDriver
             ->setModifyUserId($action->getUserId());
 
         try {
-            $this->connection->update(
-                $this->folderTable,
-                array(
-                    'path'           => $folder->getPath(),
-                    'parent_id'      => $action->getTargetFolder()->getId(),
-                    'modify_user_id' => $folder->getModifyUserId(),
-                    'modified_at'    => $folder->getModifiedAt()->format('Y-m-d H:i:s'),
-                ),
-                array(
-                    'id' => $folder->getId()
-                )
-            );
+            $this->entityManager->flush($folder);
 
-            $qb = $this->connection->createQueryBuilder();
+            $qb = $this->getFolderRepository()->createQueryBuilder('fo');
 
             if ($action->getTargetFolder()->isRoot()) {
                 $pathExpression = 'CONCAT(' . $qb->expr()->literal($action->getTargetFolder()->getPath()) . ', path)';
@@ -961,12 +860,14 @@ class DoctrineDriver extends AbstractDriver
                 ->update($this->folderTable, 'f')
                 ->set('f.path', $pathExpression)
                 ->where($qb->expr()->eq('f.site_id', $qb->expr()->literal($this->getSite()->getId())))
-                ->andWhere($qb->expr()->orX(
+                ->andWhere(
+                    $qb->expr()->orX(
                         $qb->expr()->eq('f.path', $qb->expr()->literal($oldPath)),
                         $qb->expr()->like('f.path', $qb->expr()->literal("$oldPath/%"))
-                    ));
+                    )
+                );
 
-            $this->connection->exec($qb->getSQL());
+            $qb->getQuery()->execute();
         } catch (\Exception $e) {
             throw new IOException("Move folder from $oldPath to $newPath failed.", 0, $e);
         }
@@ -989,7 +890,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param DeleteFolderAction $action
      *
-     * @return Folder
+     * @return FolderInterface
      * @throws IOException
      */
     private function executeDeleteFolderAction(DeleteFolderAction $action)
@@ -997,12 +898,7 @@ class DoctrineDriver extends AbstractDriver
         $folder = $action->getFolder();
 
         try {
-            $this->connection->delete(
-                $this->folderTable,
-                array(
-                    'id' => $folder->getId(),
-                )
-            );
+            $this->entityManager->remove($folder);
         } catch (\Exception $e) {
             throw new IOException("Delete folder failed.", 0, $e);
         }
@@ -1013,7 +909,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * @param SetFolderAttributesAction $action
      *
-     * @return Folder
+     * @return FolderInterface
      * @throws IOException
      */
     private function executeSetFolderAttributesAction(SetFolderAttributesAction $action)
@@ -1026,17 +922,7 @@ class DoctrineDriver extends AbstractDriver
             ->setAttributes($action->getAttributes());
 
         try {
-            $this->connection->update(
-                $this->folderTable,
-                array(
-                    'attributes'     => count($folder->getAttributes()) ? serialize($folder->getAttributes()) : null,
-                    'modify_user_id' => $folder->getModifyUserId(),
-                    'modified_at'    => $folder->getModifiedAt()->format('Y-m-d H:i:s'),
-                ),
-                array(
-                    'id' => $folder->getId(),
-                )
-            );
+            $this->entityManager->flush($folder);
         } catch (\Exception $e) {
             throw new IOException("Set folder attributes failed.", 0, $e);
         }
@@ -1044,6 +930,13 @@ class DoctrineDriver extends AbstractDriver
         return $action->getFolder();
     }
 
+    /**
+     * @param FolderInterface $folder
+     * @param string          $userId
+     *
+     * @throws NotWritableException
+     * @throws IOException
+     */
     private function deletePhysicalFolder(FolderInterface $folder, $userId)
     {
         $filesystem = new Filesystem();
@@ -1069,96 +962,5 @@ class DoctrineDriver extends AbstractDriver
         $filesystem->remove($physicalPath);
 
         $folder->setId(null);
-    }
-
-    /**
-     * @param array $rows
-     *
-     * @return Folder[]
-     */
-    private function mapFolderRows(array $rows)
-    {
-        $folders = array();
-        foreach ($rows as $row) {
-            $folders[] = $this->mapFolderRow($row);
-        }
-
-        return $folders;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return Folder
-     */
-    private function mapFolderRow(array $row)
-    {
-        $physicalPath = $this->getSite()->getRootDir() . '/' . $row['path'];
-
-        $attributes = !empty($row['attributes']) ? unserialize($row['attributes']) : new AttributeBag();
-
-        $folder = new Folder();
-        $folder
-            ->setSite($this->getSite())
-            ->setId($row['id'])
-            ->setParentId($row['parent_id'])
-            ->setName($row['name'])
-            ->setPath($row['path'])
-            ->setPhysicalPath($physicalPath)
-            ->setAttributes($attributes)
-            ->setCreatedAt(new \DateTime($row['created_at']))
-            ->setCreateUserId($row['create_user_id'])
-            ->setModifiedAt(new \DateTime($row['modified_at']))
-            ->setModifyUserId($row['modify_user_id']);
-
-        return $folder;
-    }
-
-    /**
-     * @param array $rows
-     *
-     * @return File[]
-     */
-    private function mapFileRows(array $rows)
-    {
-        $files = array();
-        foreach ($rows as $row) {
-            $files[] = $this->mapFileRow($row);
-        }
-
-        return $files;
-    }
-
-    /**
-     * @param array $row
-     *
-     * @return File
-     */
-    private function mapFileRow(array $row)
-    {
-        $rootDir = rtrim($this->getSite()->getRootDir(), '/');
-        $physicalPath = $rootDir . '/' . $row['hash'];
-
-        $attributes = !empty($row['attributes']) ? unserialize($row['attributes']) : new AttributeBag();
-
-        $file = new File();
-        $file
-            ->setSite($this->getSite())
-            ->setId($row['id'])
-            ->setVersion($row['version'])
-            ->setFolderId($row['folder_id'])
-            ->setName($row['name'])
-            ->setMimeType($row['mime_type'])
-            ->setHidden($row['hidden'])
-            ->setPhysicalPath($physicalPath)
-            ->setSize($row['size'])
-            ->setHash($row['hash'])
-            ->setAttributes($attributes)
-            ->setCreatedAt(new \DateTime($row['created_at']))
-            ->setCreateUserId($row['create_user_id'])
-            ->setModifiedAt(new \DateTime($row['modified_at']))
-            ->setModifyUserId($row['modify_user_id']);
-
-        return $file;
     }
 }

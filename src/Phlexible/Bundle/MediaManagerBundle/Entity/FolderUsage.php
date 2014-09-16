@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MediaSiteBundle\Entity\Folder;
 use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
@@ -50,7 +49,7 @@ class FolderUsage
 
     /**
      * @var FolderInterface
-     * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaSiteBundle\Entity\Folder")
+     * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaManagerBundle\Entity\Folder")
      * @ORM\JoinColumn(name="folder_id", referencedColumnName="id")
      */
     private $folder;

@@ -8,76 +8,103 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Model;
 
-use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIdentifier;
 use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIterator;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
-use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**
  * Folder
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @ORM\MappedSuperclass
  */
-class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterface, ContentObjectInterface
+class Folder implements FolderInterface
 {
     /**
-     * @var SiteInterface
+     * @var string
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
-    private $site;
+    protected $id;
 
     /**
      * @var string
+     * @ORM\Column(name="site_id", type="string", length=36, options={"fixed"=true})
      */
-    private $id;
+    protected $siteId;
 
     /**
      * @var string
+     * @ORM\Column(name="parent_id", type="string", length=36, nullable=true, options={"fixed"=true})
      */
-    private $parentId;
+    protected $parentId;
 
     /**
      * @var string
+     * @ORM\Column(type="string", length=100)
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
+     * @ORM\Column(type="string", length=255)
      */
-    private $path;
-
-    /**
-     * @var string
-     */
-    private $physicalPath;
+    protected $path;
 
     /**
      * @var AttributeBag
+     * @ORM\Column(type="object", nullable=true)
      */
-    private $attributes;
+    protected $attributes;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $deleted = false;
 
     /**
      * @var string
+     * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
      */
-    private $createUserId;
+    protected $createUserId;
 
     /**
      * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @var string
+     * @ORM\Column(name="modify_user_id", type="string", length=36, options={"fixed"=true})
      */
-    private $modifyUserId;
+    protected $modifyUserId;
 
     /**
      * @var \DateTime
+     * @ORM\Column(name="modified_at", type="datetime")
      */
-    private $modifiedAt;
+    protected $modifiedAt;
+
+    /**
+     * @var File[]
+     * @ORM\OneToMany(targetEntity="File", mappedBy="folder")
+     */
+    protected $files;
+
+    /**
+     * @var SiteInterface
+     */
+    protected $site;
 
     public function __construct()
     {
+        $this->files = new ArrayCollection();
         $this->attributes = new AttributeBag();
     }
 
@@ -226,7 +253,7 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
      */
     public function getPhysicalPath()
     {
-        return $this->physicalPath;
+        return null;
     }
 
     /**
@@ -271,6 +298,16 @@ class Folder implements FolderInterface, \IteratorAggregate, IdentifiableInterfa
     public function setAttribute($key, $value)
     {
         $this->attributes->set($key, $value);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeAttribute($key)
+    {
+        $this->attributes->remove($key);
 
         return $this;
     }

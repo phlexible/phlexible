@@ -8,92 +8,110 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Model;
 
+use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\MediaSiteBundle\File\FileIdentifier;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site;
-use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**
  * File
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @ORM\MappedSuperclass
  */
-class File implements FileInterface, IdentifiableInterface
+class File implements FileInterface
 {
     /**
-     * @var SiteInterface
-     */
-    private $site;
-
-    /**
      * @var string
+     * @ORM\Id
+     * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var int
+     * @ORM\Id
+     * @ORM\Column(type="integer", options={"default"=1})
      */
-    private $version = 1;
+    protected $version = 1;
 
     /**
      * @var string
+     * @ORM\Column(type="string", length=255)
      */
-    private $folderId;
+    protected $name;
 
     /**
      * @var string
+     * @ORM\Column(name="mime_type", type="string", length=100)
      */
-    private $name;
+    protected $mimeType;
 
     /**
      * @var string
+     * @ORM\Column(type="string", length=32, options={"fixed"=true})
      */
-    private $mimeType;
-
-    /**
-     * @var bool
-     */
-    private $hidden = false;
-
-    /**
-     * @var string
-     */
-    private $physicalPath;
+    protected $hash;
 
     /**
      * @var int
+     * @ORM\Column(type="integer")
      */
-    private $size;
-
-    /**
-     * @var string
-     */
-    private $hash;
+    protected $size;
 
     /**
      * @var AttributeBag
+     * @ORM\Column(type="object", nullable=true)
      */
-    private $attributes;
+    protected $attributes;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $deleted = false;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $hidden = false;
 
     /**
      * @var string
+     * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
      */
-    private $createUserId;
+    protected $createUserId;
 
     /**
      * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @var string
+     * @ORM\Column(name="modify_user_id", type="string", length=36, options={"fixed"=true})
      */
-    private $modifyUserId;
+    protected $modifyUserId;
 
     /**
      * @var \DateTime
+     * @ORM\Column(name="modified_at", type="datetime")
      */
-    private $modifiedAt;
+    protected $modifiedAt;
+
+    /**
+     * @var Folder
+     * @ORM\ManyToOne(targetEntity="Folder", inversedBy="files")
+     * @ORM\JoinColumn(name="folder_id", referencedColumnName="id")
+     */
+    protected $folder;
+
+    /**
+     * @var SiteInterface
+     */
+    protected $site;
 
     public function __construct()
     {
@@ -163,11 +181,31 @@ class File implements FileInterface, IdentifiableInterface
     }
 
     /**
+     * @return Folder
+     */
+    public function getFolder()
+    {
+        return $this->folder;
+    }
+
+    /**
+     * @param FolderInterface $folder
+     *
+     * @return $this
+     */
+    public function setFolder(FolderInterface $folder)
+    {
+        $this->folder = $folder;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getFolderId()
     {
-        return $this->folderId;
+        return $this->folder->getId();
     }
 
     /**
@@ -221,7 +259,10 @@ class File implements FileInterface, IdentifiableInterface
      */
     public function getPhysicalPath()
     {
-        return $this->physicalPath;
+        $rootDir = rtrim($this->getSite()->getRootDir(), '/');
+        $physicalPath = $rootDir . '/' . $this->hash;
+
+        return $physicalPath;
     }
 
     /**
@@ -229,8 +270,6 @@ class File implements FileInterface, IdentifiableInterface
      */
     public function setPhysicalPath($physicalPath)
     {
-        $this->physicalPath = $physicalPath;
-
         return $this;
     }
 
@@ -320,6 +359,16 @@ class File implements FileInterface, IdentifiableInterface
     public function setAttribute($key, $value)
     {
         $this->attributes->set($key, $value);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeAttribute($key)
+    {
+        $this->attributes->remove($key);
 
         return $this;
     }
