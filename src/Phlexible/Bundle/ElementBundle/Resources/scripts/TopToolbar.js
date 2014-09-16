@@ -229,14 +229,14 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
 
         this.tbarIndex.add('fill_lock', '->');
         this.tbarIndex.add('locks', {
-            iconCls: 'p-element-status_idle-icon',
+            iconCls: 'p-element-lock-icon',
             hidden: true,
             handler: function () {
                 if (Phlexible.User.isGranted('element_locks')) {
                     return;
                 }
 
-                Phlexible.LoadHandler.handleDialog('Phlexible.locks.LockStatsWindow');
+                Phlexible.LoadHandler.handleDialog('Phlexible.elements.LocksWindow');
             }
         });
         this.tbarIndex.add('lock', {
@@ -434,14 +434,12 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             case 'edit':
                 targetItem1.setText('<span style="font-weight: bold; color: green;">' + this.strings.locked_by_me + '</span>');
                 targetItem1.show();
-                targetItem2.setIconClass('p-element-status_edit-icon');
                 targetItem2.show();
                 break;
 
             case 'locked':
                 targetItem1.setText('<span style="font-weight: bold; color: red;">' + String.format(this.strings.locked_by_user, this.element.data.lockinfo.username) + '</span>');
                 targetItem1.show();
-                targetItem2.setIconClass('p-element-status_locked-icon');
                 targetItem2.show();
                 break;
 
@@ -450,7 +448,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     + String.format(this.strings.locked_by_user_permanently, this.element.data.lockinfo.username)
                     + '</span>');
                 targetItem1.show();
-                targetItem2.setIconClass('p-element-status_locked-icon');
                 targetItem2.show();
                 break;
 

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
+use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 use Phlexible\Bundle\ElementBundle\Lock\ElementMasterLockIdentifier;
 use Phlexible\Bundle\ElementBundle\Lock\ElementSlaveLockIdentifier;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
@@ -41,6 +42,7 @@ class LocksController extends Controller
 
         $data = array();
         foreach ($locks as $lock) {
+            /* @var $lock ElementLock */
             $username = '(unknown user)';
             $user = $userManager->find($lock->getUserId());
             if ($user) {
@@ -53,8 +55,8 @@ class LocksController extends Controller
                 'user'        => $username,
                 'ts'          => $lock->getLockedAt()->format('Y-m-d H:i:s'),
                 'lock_type'   => $lock->getType(),
-                'object_type' => $lock->getObjectType(),
-                'object_id'   => $lock->getObjectId(),
+                'object_type' => 'element',
+                'object_id'   => $lock->getElement()->getEid(),
             );
         }
 

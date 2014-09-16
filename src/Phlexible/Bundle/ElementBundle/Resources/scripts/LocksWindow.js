@@ -1,9 +1,9 @@
-Phlexible.locks.LocksWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.locks.Strings.locks,
-    strings: Phlexible.locks.Strings,
+Phlexible.elements.LocksWindow = Ext.extend(Ext.Window, {
+    title: Phlexible.elements.Strings.lock.locks,
+    strings: Phlexible.elements.Strings.lock,
     width: 660,
     height: 300,
-    iconCls: 'p-lock-lock-icon',
+    iconCls: 'p-element-lock-icon',
     layout: 'fit',
     maximizable: true,
 
@@ -17,7 +17,7 @@ Phlexible.locks.LocksWindow = Ext.extend(Ext.Window, {
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('locks_list'),
                     root: 'locks',
-                    fields: ['id', 'uid', 'user', 'ts', 'object_type', 'object_id', 'lock_type'],
+                    fields: ['id', 'uid', 'user', 'ts', 'eid', 'lock_type'],
                     id: 'id',
                     autoLoad: true,
                     sortInfo: {
@@ -27,17 +27,15 @@ Phlexible.locks.LocksWindow = Ext.extend(Ext.Window, {
                 }),
                 sm: new Ext.grid.RowSelectionModel({
                     listeners: {
-                        selectionchange: {
-                            fn: function (sm) {
-                                var records = sm.getSelections();
-                                if (!records) {
-                                    this.getTopToolbar().items.items[0].disable();
-                                } else {
-                                    this.getTopToolbar().items.items[0].enable();
-                                }
-                            },
-                            scope: this
-                        }
+                        selectionchange: function (sm) {
+                            var records = sm.getSelections();
+                            if (!records) {
+                                this.getTopToolbar().items.items[0].disable();
+                            } else {
+                                this.getTopToolbar().items.items[0].enable();
+                            }
+                        },
+                        scope: this
                     }
                 }),
                 columns: [
@@ -68,19 +66,13 @@ Phlexible.locks.LocksWindow = Ext.extend(Ext.Window, {
                         sortable: true
                     },
                     {
-                        header: 'oType',
-                        dataIndex: 'object_type',
+                        header: 'EID',
+                        dataIndex: 'eid',
                         width: 100,
                         sortable: true
                     },
                     {
-                        header: 'oID',
-                        dataIndex: 'object_id',
-                        width: 100,
-                        sortable: true
-                    },
-                    {
-                        header: 'lType',
+                        header: 'Lock Type',
                         dataIndex: 'lock_type',
                         width: 130,
                         sortable: true
@@ -164,6 +156,6 @@ Phlexible.locks.LocksWindow = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.locks.LocksWindow.superclass.initComponent.call(this);
+        Phlexible.elements.LocksWindow.superclass.initComponent.call(this);
     }
 });
