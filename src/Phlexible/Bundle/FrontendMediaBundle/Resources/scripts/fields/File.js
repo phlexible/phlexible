@@ -15,6 +15,10 @@ Phlexible.fields.Registry.addFactory('file', function (parentConfig, item, value
         folder_path: item.media.folder_path || false,
         fileTitle: item.media.name,
 
+        assetType: item.configuration.assetType || '',
+        documenttypes: item.configuration.documenttypes || '',
+        viewMode: item.configuration.viewMode || 'tile',
+
         supportsPrefix: true,
         supportsSuffix: true,
         supportsDiff: true,

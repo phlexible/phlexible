@@ -44,14 +44,11 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.mediamanager.Strings,
     enableDragDrop: true,
     ddGroup: 'mediamanager',
-    activeFilter: false,
 
     folder_rights: {},
 
     // private
     initComponent: function () {
-        //this.title = this.strings.files;
-
         this.addEvents(
             /**
              * @event fileChange
@@ -73,6 +70,16 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
             'downloadFiles'
         );
 
+        this.activeFilter = {};
+
+        if (this.assetType) {
+            this.activeFilter['assetType'] = this.assetType;
+        }
+
+        if (this.documenttypes) {
+            this.activeFilter['documenttypes'] = this.documenttypes;
+        }
+
         this.store = new Ext.data.GroupingStore({
             proxy: new Ext.data.HttpProxy({
                 url: Phlexible.Router.generate('mediamanager_file_list')
@@ -85,35 +92,32 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
             }),
             sortInfo: {field: "name", direction: "ASC"},
             baseParams: {
-                limit: Phlexible.Config.get('mediamanager.files.num_files')
+                limit: Phlexible.Config.get('mediamanager.files.num_files'),
+                filter: Ext.encode(this.activeFilter)
             },
             remoteSort: true,
             listeners: {
-                load: {
-                    fn: function (store) {
-                        if (this.start_file_id) {
-                            var index = store.find('id', this.start_file_id);
-                            this.start_file_id = false;
+                load: function (store) {
+                    if (this.start_file_id) {
+                        var index = store.find('id', this.start_file_id);
+                        this.start_file_id = false;
 
-                            if (index != -1) {
-                                var r = store.getAt(index);
-                                this.selectedRecordDummy = r;
-                                this.selModel.selectRecords([r]);
-                                this.fireEvent('fileChange', r, this.selModel);
-                            }
+                        if (index != -1) {
+                            var r = store.getAt(index);
+                            this.selectedRecordDummy = r;
+                            this.selModel.selectRecords([r]);
+                            this.fireEvent('fileChange', r, this.selModel);
                         }
-                    },
-                    scope: this
-                }
+                    }
+                },
+                scope: this
             }
         });
 
         this.selModel = new Ext.grid.RowSelectionModel({
             listeners: {
-                rowselect: {
-                    fn: this.onSelectionChange,
-                    scope: this
-                }
+                rowselect: this.onSelectionChange,
+                scope: this
             }
         });
 
@@ -213,38 +217,33 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
                 maxValue: 250,
                 plugins: new Ext.ux.SliderTip(),
                 listeners: {
-                    drag: {
-                        fn: function (slider) {
-                            this.getBottomToolbar().items.items[13].setText(slider.getValue());
-                        },
-                        scope: this
+                    drag: function (slider) {
+                        this.getBottomToolbar().items.items[13].setText(slider.getValue());
                     },
-                    changecomplete: {
-                        fn: function (slider, value) {
-                            var pager = this.getBottomToolbar();
-                            pager.pageSize = value;
-                            pager.items.items[13].setText(value);
-                            this.store.baseParams.limit = value;
+                    changecomplete: function (slider, value) {
+                        var pager = this.getBottomToolbar();
+                        pager.pageSize = value;
+                        pager.items.items[13].setText(value);
+                        this.store.baseParams.limit = value;
 
-                            if (this.store.totalLength < value) {
-                                this.store.reload({
-                                    params: {
-                                        start: 0
-                                    }
-                                });
-                                return;
-                            } else if (pager.cursor % value !== 0) {
-                                this.store.reload({
-                                    params: {
-                                        start: Math.floor(pager.cursor / value) * value
-                                    }
-                                });
-                                return;
-                            }
-                            this.store.reload();
-                        },
-                        scope: this
-                    }
+                        if (this.store.totalLength < value) {
+                            this.store.reload({
+                                params: {
+                                    start: 0
+                                }
+                            });
+                            return;
+                        } else if (pager.cursor % value !== 0) {
+                            this.store.reload({
+                                params: {
+                                    start: Math.floor(pager.cursor / value) * value
+                                }
+                            });
+                            return;
+                        }
+                        this.store.reload();
+                    },
+                    scope: this
                 }
             }), {
                 text: this.store.baseParams.limit
@@ -260,37 +259,26 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
         this.plugins = [new Phlexible.mediamanager.ToolbarHidePlugin()];
 
         this.addListener({
-            render: {
-                fn: function (c) {
-                    var firstGridDropTargetEl = c.getView().scroller.dom;
-                    var firstGridDropTarget = new Ext.dd.DropTarget(firstGridDropTargetEl, {
-                        ddGroup: 'versions',
-                        notifyDrop: function (ddSource, e, data) {
-                            Phlexible.console.log(arguments);
-                            return true;
+            render: function (c) {
+                var firstGridDropTargetEl = c.getView().scroller.dom;
+                var firstGridDropTarget = new Ext.dd.DropTarget(firstGridDropTargetEl, {
+                    ddGroup: 'versions',
+                    notifyDrop: function (ddSource, e, data) {
+                        Phlexible.console.log(arguments);
+                        return true;
 //                                var records =  ddSource.dragData.selections;
 //                                Ext.each(records, ddSource.grid.store.remove, ddSource.grid.store);
 //                                firstGrid.store.add(records);
 //                                firstGrid.store.sort('name', 'ASC');
 //                                return true
-                        }
-                    });
-                },
-                scope: this
+                    }
+                });
             },
-            rowcontextmenu: {
-                fn: this.onRowContextMenu,
-                scope: this
-            }
+            rowcontextmenu: this.onRowContextMenu,
+            scope: this
         });
 
         Phlexible.mediamanager.FilesGrid.superclass.initComponent.call(this);
-
-        if (this.assetType) {
-            this.activeFilter = {key: 'assetType', value: this.assetType};
-            this.store.on('load', this.applySetFilter, this);
-//            this.fireEvent('filterChange', this, 'assetType', this.assetType);
-        }
     },
 
     populateContextMenuItems: function () {
@@ -417,76 +405,64 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
         this.setTitle(this.strings.search_results);
     },
 
-    setTimeFilter: function (key, value) {
+    setAssetTypeFilter: function(assetType) {
+        this.setFilter('assetType', assetType);
+    },
 
-        switch (value) {
-            case "3days":
-                var timeModifier = 259200 * 1000;
-                break;
-            case "10days":
-                var timeModifier = 864000 * 1000;
-                break;
-            case "1month":
-                var timeModifier = 25930000 * 1000;
-                break;
-            case "6month":
-                var timeModifier = 15552000 * 1000;
-                break;
-            default:
-                var timeModifier = 0;
-                break;
-        }
-
-        if ((timeModifier > 0) && key) {
-            var dateObject = new Date();
-            var timeNow = dateObject.getTime();
-            var pastMoment = timeNow - timeModifier;
-
-            this.store.filterBy(function (record, id) {
-
-                if (key == 'filterTimeModified') {
-                    if ((record.data.modify_time !== 0) && (record.data.modify_date < timeNow) && (record.data.modify_time > pastMoment)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-                if (key == 'filterTimeCreated') {
-                    if ((record.data.create_time < timeNow) && (record.data.create_time > pastMoment)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-            }, this);
-
-            this.fireEvent('filterChange', this, key, value);
-        }
+    setUserFilter: function(key, value) {
 
     },
 
-    applySetFilter: function () {
-        this.store.filter(this.activeFilter.key, this.activeFilter.value);
+    setTimeFilter: function (key, value) {
+        var time = new Date();
+
+        switch (value) {
+            case "1day":
+                time.add(Date.DAY, -1)
+
+                break;
+
+            case "2days":
+                time.add(Date.DAY, -2)
+                break;
+
+            case "1week":
+                time.add(Date.DAY, -7)
+                break;
+
+            case "1month":
+                time.add(Date.MONTH, -1)
+                break;
+
+            case "6months":
+                time.add(Date.MONTH, -6)
+                break;
+
+            default:
+                return;
+        }
+
+        if (time && key) {
+            this.setFilter(key, time.format('U'));
+        }
     },
 
     setFilter: function (key, value) {
-        this.activeFilter = {
-            key: key,
-            value: value
-        };
-        this.applySetFilter();
-        this.store.on('load', this.applySetFilter, this);
-        this.fireEvent('filterChange', this, key, value);
+        this.activeFilter[key] = value;
+
+        this.store.baseParams['filter'] = Ext.encode(this.activeFilter);
+        this.store.reload();
+
+        this.fireEvent('filterChange', this, this.activeFilter);
     },
 
     clearFilter: function () {
-        this.activeFilter = false;
-        this.store.clearFilter();
-        this.store.un('load', this.applySetFilter, this);
+        this.activeFilter = {};
 
-        this.fireEvent('filterChange', this, 'clear');
+        this.store.baseParams['filter'] = Ext.encode(this.activeFilter);
+        this.store.reload();
+
+        this.fireEvent('filterChange', this, this.activeFilter);
     },
 
     nameRenderer: function (name, e, r) {
@@ -498,30 +474,6 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
 
         prefix += Phlexible.mediamanager.Bullets.getWithTrailingSpace(r.data);
 
-        /*
-         if (!r.data.present) {
-         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_cross.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
-         }
-
-         if (r.data.used & 8) {
-         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_green.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
-         }
-         if (r.data.used & 4) {
-         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_yellow.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
-         }
-         if (r.data.used & 2) {
-         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_gray.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
-         }
-         if (r.data.used & 1) {
-         prefix += '<img src="'+Phlexible.component('/phlexiblemediamanager/images/bullet_black.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
-         }
-         if (r.data.used) {
-         prefix += ' ';
-         }
-         if (r.data.focal) {
-         prefix += '<img src="'+Phlexible.component('/focalpoint/images/bullet_focal.gif')+'" width="8" height="12" style="vertical-align: middle;" /> ';
-         }
-         */
         if (r.data.hidden) {
             style += 'text-decoration: line-through;';
         }
@@ -551,10 +503,8 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
                 file_id: selFile.data.id
             },
             listeners: {
-                success: {
-                    fn: this.onRename,
-                    scope: this
-                }
+                success: this.onRename,
+                scope: this
             }
         });
 

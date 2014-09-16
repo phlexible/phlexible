@@ -42,6 +42,7 @@ class ListController extends Controller
             $documenttypes[] = array(
                 'id'        => $documenttype->getKey(),
                 'key'       => $documenttype->getKey(),
+                'upperkey'  => strtoupper($documenttype->getKey()),
                 'type'      => $documenttype->getType(),
                 'de'        => $documenttype->getTitle('de'),
                 'en'        => $documenttype->getTitle('en'),

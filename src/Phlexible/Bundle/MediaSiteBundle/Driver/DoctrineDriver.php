@@ -235,6 +235,126 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
+    public function findFiles(array $criteria, $order = null, $limit = null, $start = null, $includeHidden = false)
+    {
+        $qb = $this->getFileRepository()->createQueryBuilder('fi');
+
+        foreach ($criteria as $field => $value) {
+            switch ($field) {
+                case 'folder':
+                    $qb->andWhere($qb->expr()->eq('fi.folder', $qb->expr()->literal($value->getId())));
+                    break;
+
+                case 'assetType':
+                    $qb->andWhere($qb->expr()->eq('fi.assetType', $qb->expr()->literal($value)));
+                    break;
+
+                case 'documenttypes':
+                    $qb->andWhere($qb->expr()->in('fi.documenttype', explode(',', $value)));
+                    break;
+
+                case 'timeCreated':
+                    $qb->andWhere($qb->expr()->gte('fi.createdAt', $qb->expr()->literal(\DateTime::createFromFormat('U', $value)->format('Y-m-d H:i:s'))));
+                    break;
+
+                case 'timeModified':
+                    $qb->andWhere($qb->expr()->gte('fi.modifiedAt', $qb->expr()->literal(\DateTime::createFromFormat('U', $value)->format('Y-m-d H:i:s'))));
+                    break;
+
+                case 'hidden':
+                    $qb->andWhere($qb->expr()->eq('fi.hidden', $value ? 1 : 0));
+                    break;
+
+                case 'notCreateUserId':
+                    $qb->andWhere($qb->expr()->neq('fi.createUserId', $qb->expr()->literal($value)));
+                    break;
+
+                case 'notModifyUserId':
+                    $qb->andWhere($qb->expr()->neq('fi.modifyUserId', $qb->expr()->literal($value)));
+                    break;
+
+                default:
+                    $qb->andWhere($qb->expr()->eq("fi.$field", $qb->expr()->literal($value)));
+            }
+        }
+
+        if ($order) {
+            foreach ($order as $field => $dir) {
+                $qb->addOrderBy("fi.$field", $dir);
+            }
+        }
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        if ($start) {
+            $qb->setFirstResult($start);
+        }
+
+        $files = $qb->getQuery()->getResult();
+
+        foreach ($files as $file) {
+            $file->setSite($this->getSite());
+        }
+
+        return $files;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function countFiles(array $criteria)
+    {
+
+        $qb = $this->getFileRepository()->createQueryBuilder('fi');
+        $qb->select('COUNT(fi.id)');
+
+        foreach ($criteria as $field => $value) {
+            switch ($field) {
+                case 'folder':
+                    $qb->andWhere($qb->expr()->eq('fi.folder', $qb->expr()->literal($value->getId())));
+                    break;
+
+                case 'assetType':
+                    $qb->andWhere($qb->expr()->eq('fi.assetType', $qb->expr()->literal($value)));
+                    break;
+
+                case 'documenttypes':
+                    $qb->andWhere($qb->expr()->in('fi.documenttype', explode(',', $value)));
+                    break;
+
+                case 'timeCreated':
+                    $qb->andWhere($qb->expr()->gte('fi.createdAt', $qb->expr()->literal(\DateTime::createFromFormat('U', $value)->format('Y-m-d H:i:s'))));
+                    break;
+
+                case 'timeModified':
+                    $qb->andWhere($qb->expr()->gte('fi.modifiedAt', $qb->expr()->literal(\DateTime::createFromFormat('U', $value)->format('Y-m-d H:i:s'))));
+                    break;
+
+                case 'hidden':
+                    $qb->andWhere($qb->expr()->eq('fi.hidden', $value ? 1 : 0));
+                    break;
+
+                case 'notCreateUserId':
+                    $qb->andWhere($qb->expr()->neq('fi.createUserId', $qb->expr()->literal($value)));
+                    break;
+
+                case 'notModifyUserId':
+                    $qb->andWhere($qb->expr()->neq('fi.modifyUserId', $qb->expr()->literal($value)));
+                    break;
+
+                default:
+                    $qb->andWhere($qb->expr()->eq("fi.$field", $qb->expr()->literal($value)));
+            }
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findFileByPath($path, $version = 1)
     {
         $name = basename($path);

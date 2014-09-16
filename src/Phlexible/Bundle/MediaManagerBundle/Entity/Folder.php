@@ -17,7 +17,7 @@ use Phlexible\Bundle\MediaSiteBundle\Model\Folder as BaseFolder;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="media_site_folder")
+ * @ORM\Table(name="media_folder")
  */
 class Folder extends BaseFolder
 {

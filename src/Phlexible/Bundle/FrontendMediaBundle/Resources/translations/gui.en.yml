@@ -1,4 +1,5 @@
 frontendmedia:
     file: File
-    asset_types: Asset types
-    document_types: Document types
+    asset_type: Asset type
+    documenttypes: Document types
+    view_mode: View mode

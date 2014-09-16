@@ -6,21 +6,6 @@ Phlexible.elementtypes.configuration.FieldConfigurationLink = Ext.extend(Ext.for
     labelWidth: 139,
 
     initComponent: function () {
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('elementtypes_list', {type: 'full'}),
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                this.linkElementtypesStore.loadData(data.elementtypes);
-            },
-            scope: this
-        });
-
-        this.linkElementtypesStore = new Ext.data.ObjectStore({
-            fields: ['id', 'title'],
-            id: 'id'
-        });
-
         this.items = [
             {
                 xtype: 'checkboxgroup',
@@ -65,7 +50,13 @@ Phlexible.elementtypes.configuration.FieldConfigurationLink = Ext.extend(Ext.for
                 maxHeight: 200,
                 width: 183,
                 listWidth: 200,
-                store: this.linkElementtypesStore,
+                store: new Ext.data.JsonStore({
+                    url: Phlexible.Router.generate('elementtypes_list', {type: 'full'}),
+                    fields: ['id', 'title'],
+                    id: 'id',
+                    root: 'elementtypes',
+                    autoLoad: true
+                }),
                 displayField: 'title',
                 valueField: 'id',
                 editable: false,

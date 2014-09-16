@@ -52,15 +52,20 @@ class FileController extends Controller
      */
     public function listAction(Request $request)
     {
-        $folderId = $request->get('folder_id', null);
+        $folderId = $request->get('folder_id');
         $start = $request->get('start', 0);
         $limit = $request->get('limit', 25);
         $sort = $request->get('sort', 'name');
         $dir = $request->get('dir', 'ASC');
         $showHidden = $request->get('show_hidden', false);
+        $filter = $request->get('filter');
 
         if (!$folderId) {
             die("No folder ID");
+        }
+
+        if ($filter) {
+            $filter = json_decode($filter, true);
         }
 
         $data = array();
@@ -77,9 +82,19 @@ class FileController extends Controller
             } elseif ($sort === 'document_type_key') {
                 $sort = 'mime_type';
             }
-            //$files = $site->findFiles(array('folder' => $folder), array($sort => $dir), $limit, $start);
-            $files = $site->findFilesByFolder($folder, array($sort => $dir), $limit, $start, $showHidden);
-            $total = $site->countFilesByFolder($folder, $showHidden);
+
+            if ($filter) {
+                $filter['folder'] = $folder;
+                if (!$showHidden) {
+                    $filter['hidden'] = false;
+                }
+                $files = $site->findFiles($filter, array($sort => $dir), $limit, $start);
+                $total = $site->countFiles($filter);
+            } else {
+                $files = $site->findFilesByFolder($folder, array($sort => $dir), $limit, $start, $showHidden);
+                $total = $site->countFilesByFolder($folder, $showHidden);
+            }
+
             $data = $this->filesToArray($site, $files);
         }
 

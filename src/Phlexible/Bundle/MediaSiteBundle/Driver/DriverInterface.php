@@ -94,6 +94,23 @@ interface DriverInterface
     public function findFile($id, $version = 1);
 
     /**
+     * @param array      $criteria
+     * @param array|null $order
+     * @param int|null   $limit
+     * @param int|null   $start
+     *
+     * @return FileInterface[]
+     */
+    public function findFiles(array $criteria, $order = null, $limit = null, $start = null);
+
+    /**
+     * @param array $criteria
+     *
+     * @return int
+     */
+    public function countFiles(array $criteria);
+
+    /**
      * @param string $path
      * @param int    $version
      *

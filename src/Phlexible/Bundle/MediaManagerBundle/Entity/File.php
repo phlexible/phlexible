@@ -17,7 +17,7 @@ use Phlexible\Bundle\MediaSiteBundle\Model\File as BaseFile;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="media_site_file")
+ * @ORM\Table(name="media_file")
  */
 class File extends BaseFile
 {
@@ -29,9 +29,9 @@ class File extends BaseFile
 
     /**
      * @var string
-     * @ORM\Column(name="document_type", type="string")
+     * @ORM\Column(name="documenttype", type="string")
      */
-    private $documentType;
+    private $documenttype;
 
     /**
      * @param string $assetType
@@ -54,13 +54,13 @@ class File extends BaseFile
     }
 
     /**
-     * @param string $documentType
+     * @param string $documenttype
      *
      * @return $this
      */
-    public function setDocumentType($documentType)
+    public function setDocumenttype($documenttype)
     {
-        $this->documentType = $documentType;
+        $this->documenttype = $documenttype;
 
         return $this;
     }
@@ -68,8 +68,8 @@ class File extends BaseFile
     /**
      * @return string
      */
-    public function getDocumentType()
+    public function getDocumenttype()
     {
-        return $this->documentType;
+        return $this->documenttype;
     }
 }

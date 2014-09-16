@@ -26,12 +26,10 @@ Phlexible.mediamanager.MediamanagerWindow = Ext.extend(Ext.Window, {
                 mode: this.mode,
                 params: this.params,
                 listeners: {
-                    fileSelect: {
-                        fn: function (file_id, file_version, file_name, folder_id) {
-                            this.fireEvent('fileSelectWindow', this, file_id, file_version, file_name, folder_id);
-                        },
-                        scope: this
-                    }
+                    fileSelect: function (file_id, file_version, file_name, folder_id) {
+                        this.fireEvent('fileSelectWindow', this, file_id, file_version, file_name, folder_id);
+                    },
+                    scope: this
                 }
             })
         ];

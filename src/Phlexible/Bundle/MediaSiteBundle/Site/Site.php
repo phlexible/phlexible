@@ -200,6 +200,22 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    public function findFiles(array $criteria, $order = null, $limit = null, $start = null)
+    {
+        return $this->driver->findFiles($criteria, $order, $limit, $start);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function countFiles(array $criteria)
+    {
+        return $this->driver->countFiles($criteria);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findFileByPath($path, $version = 1)
     {
         return $this->driver->findFileByPath($path, $version);

@@ -9,7 +9,8 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
         this.items = [
             {
                 xtype: 'twincombobox',
-                fieldLabel: this.strings.asset_types,
+                hiddenName: 'assettype',
+                fieldLabel: this.strings.asset_type,
                 width: 200,
                 listWidth: 200,
                 store: new Ext.data.JsonStore({
@@ -18,8 +19,10 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
                         {key: 'image', title: 'Image'},
                         {key: 'audio', title: 'Audio'},
                         {key: 'video', title: 'Video'},
-                        {key: 'documents', title: 'Document'},
-                        {key: 'flash', title: 'Flash'}
+                        {key: 'document', title: 'Document'},
+                        {key: 'flash', title: 'Flash'},
+                        {key: 'archive', title: 'Archive'},
+                        {key: 'other', title: 'Other'}
                     ]
                 }),
                 displayField: 'title',
@@ -29,24 +32,56 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
                 mode: 'local'
             },
             {
-                xtype: 'twincombobox',
-                fieldLabel: this.strings.document_types,
+                xtype: 'lovcombo',
+                hiddenName: 'documenttypes',
+                fieldLabel: this.strings.documenttypes,
                 width: 200,
                 listWidth: 200,
                 store: new Ext.data.JsonStore({
-                    fields: ['id', 'key', 'de', 'en'],
+                    fields: ['key', 'upperkey'],
                     url: Phlexible.Router.generate('documenttypes_list'),
                     root: 'documenttypes',
+                    id: 'key',
                     sortInfo: {
                         field: 'key',
                         direction: 'asc'
+                    },
+                    autoLoad: true,
+                    listeners: {
+                        load: function() {
+                            this.getComponent(1).setValue(this.getComponent(1).getValue());
+                        },
+                        scope: this
                     }
                 }),
-                displayField: 'key',
+                displayField: 'upperkey',
                 valueField: 'key',
                 editable: false,
                 triggerAction: 'all',
                 mode: 'remote'
+            },
+            {
+                xtype: 'twincombobox',
+                hiddenName: 'viewMode',
+                fieldLabel: this.strings.view_mode,
+                width: 200,
+                listWidth: 200,
+                store: new Ext.data.JsonStore({
+                    fields: ['key', 'title'],
+                    data: [
+                        {key: 'extralarge', title: 'Extra Large'},
+                        {key: 'large', title: 'Large'},
+                        {key: 'medium', title: 'Medium'},
+                        {key: 'small', title: 'Small'},
+                        {key: 'tile', title: 'Tile'},
+                        {key: 'detail', title: 'Detail'}
+                    ]
+                }),
+                displayField: 'title',
+                valueField: 'key',
+                editable: false,
+                triggerAction: 'all',
+                mode: 'local'
             }
         ];
 
@@ -55,31 +90,36 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
 
     updateVisibility: function (type) {
         var isFile = type === 'file';
-        this.getComponent(0).setDisabled(!isFile );
-        this.getComponent(1).setDisabled(!isFile );
-        this.setVisible(isFile );
+        this.getComponent(0).setDisabled(!isFile);
+        this.getComponent(1).setDisabled(!isFile);
+        this.getComponent(2).setDisabled(!isFile);
+        this.setVisible(isFile);
     },
 
     loadData: function (fieldData, fieldType) {
-        fieldData.asset_types = fieldData.asset_types || '';
-        fieldData.document_types = fieldData.document_types || '';
+        fieldData.assetType = fieldData.assetType || null;
+        fieldData.documenttypes = fieldData.documenttypes || '';
+        fieldData.viewMode = fieldData.viewMode || '';
 
-        this.getComponent(0).setValue(fieldData.asset_types);
-        this.getComponent(1).setValue(fieldData.document_types);
+        this.getComponent(0).setValue(fieldData.assetType);
+        this.getComponent(1).setValue(fieldData.documenttypes);
+        this.getComponent(2).setValue(fieldData.viewMode);
 
         this.isValid();
     },
 
     getSaveValues: function () {
         return {
-            asset_types: this.getComponent(0).getValue(),
-            document_types: this.getComponent(1).getValue()
+            assetType: this.getComponent(0).getValue(),
+            documenttypes: this.getComponent(1).getValue(),
+            viewMode: this.getComponent(2).getValue()
         };
     },
 
     isValid: function () {
         return this.getComponent(0).isValid()
-            && this.getComponent(1).isValid();
+            && this.getComponent(1).isValid()
+            && this.getComponent(2).isValid();
     }
 });
 

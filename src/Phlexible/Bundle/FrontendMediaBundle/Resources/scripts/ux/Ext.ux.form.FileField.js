@@ -61,7 +61,9 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
     },
 
     onAdd: function () {
-        if (this.disabled) return;
+        if (this.disabled) {
+            return;
+        }
 
         var w = new Phlexible.mediamanager.MediamanagerWindow({
             width: 800,
@@ -70,8 +72,10 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
             params: {
                 start_file_id: this.file_id || false,
                 start_folder_path: this.folder_path || false,
-                file_view: 'medium',
-                hide_properties: true
+                file_view: this.viewMode,
+                hide_properties: true,
+                assetType: this.assetType,
+                documenttypes: this.documenttypes
             },
             listeners: {
                 fileSelectWindow: this.onFileSelect,
