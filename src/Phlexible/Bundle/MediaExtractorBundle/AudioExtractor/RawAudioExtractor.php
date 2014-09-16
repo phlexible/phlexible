@@ -30,7 +30,7 @@ class RawAudioExtractor implements AudioExtractorInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('assettype')) === 'audio';
+        return strtolower($file->getAssettype()) === 'audio';
     }
 
     /**

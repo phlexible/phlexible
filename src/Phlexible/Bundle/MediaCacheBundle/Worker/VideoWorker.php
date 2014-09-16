@@ -111,7 +111,7 @@ class VideoWorker extends AbstractWorker
      */
     public function accept(TemplateInterface $template, FileInterface $file)
     {
-        return $template instanceof VideoTemplate && strtolower($file->getAttribute('assettype')) === 'video';
+        return $template instanceof VideoTemplate && strtolower($file->getAssettype()) === 'video';
     }
 
     /**
@@ -156,7 +156,7 @@ class VideoWorker extends AbstractWorker
             ->setTemplateRevision($template->getRevision())
             ->setStatus(CacheItem::STATUS_DELEGATE)
             ->setMimeType($file->getMimeType())
-            ->setDocumentTypeKey(strtolower($file->getAttribute('documenttype')))
+            ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
             ->setExtension('')
             ->setFileSize(0)
             ->setError(null)
@@ -177,7 +177,7 @@ class VideoWorker extends AbstractWorker
 
             try {
                 $matchFormat = $template->hasParameter('match_format') ? $template->getParameter('match_format') : false;
-                if ($matchFormat && strtolower($file->getAttribute('documenttype')) === strtolower($template->getParameter('format'))) {
+                if ($matchFormat && strtolower($file->getDocumenttype()) === strtolower($template->getParameter('format'))) {
                     $tempFilename = $inputFilename;
                 } else {
                     $this->applier->apply($template, $inputFilename, $tempFilename);

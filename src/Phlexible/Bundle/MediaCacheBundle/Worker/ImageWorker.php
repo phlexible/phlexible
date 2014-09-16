@@ -161,7 +161,7 @@ class ImageWorker extends AbstractWorker
             ->setTemplateRevision($template->getRevision())
             ->setStatus(CacheItem::STATUS_DELEGATE)
             ->setMimeType($file->getMimeType())
-            ->setDocumentTypeKey(strtolower($file->getAttribute('documenttype')))
+            ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
             ->setExtension(isset($pathinfo['extension']) ? $pathinfo['extension'] : '')
             ->setFileSize(0)
             ->setError(null)

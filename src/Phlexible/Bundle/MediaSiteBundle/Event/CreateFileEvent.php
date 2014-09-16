@@ -8,15 +8,37 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFileAction;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
  * Create file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
- *
- * @method CreateFileAction getAction()
  */
-class CreateFileEvent extends AbstractActionFileEvent
+class CreateFileEvent extends FileEvent
 {
+    /**
+     * @var FileSourceInterface
+     */
+    private $fileSource;
+
+    /**
+     * @param FileInterface       $file
+     * @param FileSourceInterface $fileSource
+     */
+    public function __construct(FileInterface $file, FileSourceInterface $fileSource)
+    {
+        parent::__construct($file);
+
+        $this->fileSource = $fileSource;
+    }
+
+    /**
+     * @return FileSourceInterface
+     */
+    public function getFileSource()
+    {
+        return $this->fileSource;
+    }
 }

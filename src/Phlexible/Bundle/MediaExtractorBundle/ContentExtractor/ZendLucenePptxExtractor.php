@@ -30,7 +30,7 @@ class ZendLucenePptxExtractor implements ContentExtractorInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('documenttype')) === 'pptx';
+        return strtolower($file->getDocumenttype()) === 'pptx';
     }
 
     /**

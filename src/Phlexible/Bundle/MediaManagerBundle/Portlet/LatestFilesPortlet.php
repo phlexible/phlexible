@@ -122,7 +122,7 @@ class LatestFilesPortlet extends Portlet
                     'file_version'      => $file->getVersion(),
                     'folder_id'         => $file->getFolderId(),
                     'folder_path'       => $folder->getIdPath(),
-                    'document_type_key' => strtolower($file->getAttribute('documenttype')),
+                    'document_type_key' => strtolower($file->getDocumenttype()),
                     'time'              => $file->getCreatedAt()->format('U'),
                     'title'             => $file->getName(),
                     'cache'             => $cacheStatus

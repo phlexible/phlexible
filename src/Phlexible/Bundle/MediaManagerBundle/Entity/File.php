@@ -21,4 +21,55 @@ use Phlexible\Bundle\MediaSiteBundle\Model\File as BaseFile;
  */
 class File extends BaseFile
 {
+    /**
+     * @var string
+     * @ORM\Column(name="asset_type", type="string")
+     */
+    private $assetType;
+
+    /**
+     * @var string
+     * @ORM\Column(name="document_type", type="string")
+     */
+    private $documentType;
+
+    /**
+     * @param string $assetType
+     *
+     * @return $this
+     */
+    public function setAssetType($assetType)
+    {
+        $this->assetType = $assetType;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssetType()
+    {
+        return $this->assetType;
+    }
+
+    /**
+     * @param string $documentType
+     *
+     * @return $this
+     */
+    public function setDocumentType($documentType)
+    {
+        $this->documentType = $documentType;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentType()
+    {
+        return $this->documentType;
+    }
 }

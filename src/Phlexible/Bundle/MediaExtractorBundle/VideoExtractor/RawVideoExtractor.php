@@ -30,7 +30,7 @@ class RawVideoExtractor implements VideoExtractorInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('assettype')) === 'video';
+        return strtolower($file->getAssettype()) === 'video';
     }
 
     /**

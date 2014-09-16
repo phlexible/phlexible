@@ -8,15 +8,36 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Rename folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
- *
- * @method RenameFolderAction getAction()
  */
-class RenameFolderEvent extends AbstractActionFolderEvent
+class RenameFolderEvent extends FolderEvent
 {
+    /**
+     * @var string
+     */
+    private $oldName;
+
+    /**
+     * @param FolderInterface $folder
+     * @param string          $oldName
+     */
+    public function __construct(FolderInterface $folder, $oldName)
+    {
+        parent::__construct($folder);
+
+        $this->oldName = $oldName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOldName()
+    {
+        return $this->oldName;
+    }
 }

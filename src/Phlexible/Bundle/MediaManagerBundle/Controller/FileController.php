@@ -126,8 +126,8 @@ class FileController extends Controller
                 'versions' => $hasVersions,
                 'debug'    => array(
                     'mimeType'     => $file->getMimeType(),
-                    'documentType' => strtolower($file->getAttribute('documenttype')),
-                    'assetType'    => strtolower($file->getAttribute('assettype')),
+                    'documentType' => strtolower($file->getDocumenttype()),
+                    'assetType'    => strtolower($file->getAssettype()),
                     'fileId'       => $file->getID(),
                     'folderId'     => $file->getFolderId(),
                 )
@@ -143,7 +143,7 @@ class FileController extends Controller
             $properties['meta'] = $meta;
             $properties['metaCnt'] = count($properties['meta']);
 
-            $documentType = $documenttypeManager->find(strtolower($file->getAttribute('documenttype')));
+            $documentType = $documenttypeManager->find(strtolower($file->getDocumenttype()));
 
             if (!$documentType) {
                 $documentType = new Documenttype();
@@ -169,7 +169,7 @@ class FileController extends Controller
                     ));
                 } else {
                     $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', array(
-                        'documenttypeKey' => $file->getAttribute('documenttype'),
+                        'documenttypeKey' => $file->getDocumenttype(),
                         'templateKey'     => $cacheItem->getTemplateKey(),
                     ));
                 }
@@ -193,10 +193,10 @@ class FileController extends Controller
                 'site_id'           => $site->getId(),
                 'folder_id'         => $file->getFolderID(),
                 'folder'            => '/Root/' . $folder->getPath(),
-                'asset_type'        => strtolower($file->getAttribute('assettype')),
+                'asset_type'        => strtolower($file->getAssettype()),
                 'mime_type'         => $file->getMimetype(),
                 'document_type'     => $documentTypeTitle,
-                'document_type_key' => strtolower($file->getAttribute('documenttype')),
+                'document_type_key' => strtolower($file->getDocumenttype()),
                 'present'           => file_exists($file->getPhysicalPath()),
                 'size'              => $file->getSize(),
                 'hidden'            => $file->isHidden() ? 1 : 0,
@@ -328,8 +328,8 @@ class FileController extends Controller
         $properties['path'] = '/' . $folder->getPath();
         $properties['name'] = $file->getName();
         $properties['size'] = $file->getSize();
-        $properties['document_type_key'] = strtolower($file->getAttribute('documenttype'));
-        $properties['asset_type'] = strtolower($file->getAttribute('assettype'));
+        $properties['document_type_key'] = strtolower($file->getDocumenttype());
+        $properties['asset_type'] = strtolower($file->getAssettype());
         $properties['create_user_id'] = $file->getCreateUserId();
         $properties['create_time'] = $file->getCreatedAt()->format('U');
 
@@ -344,8 +344,8 @@ class FileController extends Controller
 
         $properties['debug'] = array(
             'mimeType'     => $file->getMimeType(),
-            'documentType' => strtolower($file->getAttribute('documenttype')),
-            'assetType'    => strtolower($file->getAttribute('assettype')),
+            'documentType' => strtolower($file->getDocumenttype()),
+            'assetType'    => strtolower($file->getAssettype()),
             'fileId'       => $fileId,
             'folderId'     => $folder->getId(),
         );
@@ -356,8 +356,8 @@ class FileController extends Controller
             'name'              => $file->getName(),
             'size'              => $file->getSize(),
             'version'           => $file->getVersion(),
-            'document_type_key' => strtolower($file->getAttribute('documenttype')),
-            'asset_type'        => strtolower($file->getAttribute('assettype')),
+            'document_type_key' => strtolower($file->getDocumenttype()),
+            'asset_type'        => strtolower($file->getAssettype()),
             'create_user_id'    => $file->getCreateUserId(),
             'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
         );
@@ -406,8 +406,8 @@ class FileController extends Controller
                 'name'              => $file->getName(),
                 'size'              => $file->getSize(),
                 'version'           => $file->getVersion(),
-                'document_type_key' => strtolower($file->getAttribute('documenttype')),
-                'asset_type'        => strtolower($file->getAttribute('assettype')),
+                'document_type_key' => strtolower($file->getDocumenttype()),
+                'asset_type'        => strtolower($file->getAssettype()),
                 'create_user_id'    => $file->getCreateUserId(),
                 'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
             );

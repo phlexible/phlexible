@@ -155,7 +155,7 @@ class UploadController extends Controller
 
                 $data['old_name'] = $tempFile->getName();
                 $data['old_id']   = $tempFile->getFileId();
-                $data['old_type'] = $oldFile->getAttribute('documenttype');
+                $data['old_type'] = $oldFile->getDocumenttype();
                 $data['old_size'] = $oldFile->getSize();
                 $data['alternative_name'] = $alternativeName;
             }

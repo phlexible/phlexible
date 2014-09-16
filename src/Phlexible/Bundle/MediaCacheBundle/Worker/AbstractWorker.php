@@ -46,8 +46,8 @@ abstract class AbstractWorker implements WorkerInterface
             . 'File path: ' . $inputFilename . PHP_EOL
             . 'File ID: ' . $file->getId() . ':' . $file->getVersion() . PHP_EOL
             . 'File type: ' . $file->getMimeType() . PHP_EOL
-            . 'File asset type: ' . strtolower($file->getAttribute('assettype', 'no assettype')) . PHP_EOL
-            . 'File document type: ' . strtolower($file->getAttribute('documenttype', 'no documenttype'));
+            . 'File asset type: ' . strtolower($file->getAssettype()) . PHP_EOL
+            . 'File document type: ' . strtolower($file->getDocumenttype());
 
         $cacheItem
             ->setStatus($status)

@@ -51,7 +51,7 @@ class VideoConverterImageExtractor implements ImageExtractorInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('assettype')) === 'video';
+        return strtolower($file->getAssettype()) === 'video';
     }
 
     /**

@@ -1,4 +1,7 @@
 services:
+    phlexible_media_site.hash_calculator:
+        class: Phlexible\Bundle\MediaSiteBundle\HashCalculator\MessageDigestHashCalculator
+
     phlexible_media_site.site_manager:
         class: Phlexible\Bundle\MediaSiteBundle\Site\SiteManager
         arguments: [[]]

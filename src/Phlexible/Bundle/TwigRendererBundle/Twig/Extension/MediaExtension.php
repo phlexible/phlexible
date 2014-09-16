@@ -192,8 +192,8 @@ class MediaExtension extends \Twig_Extension
 
         $info = array(
             'mimetype'     => $file->getMimeType(),
-            'assettype'    => $file->getAttribute('assettype'),
-            'documenttype' => $file->getAttribute('documenttype'),
+            'assettype'    => $file->getAssettype(),
+            'documenttype' => $file->getDocumenttype(),
             'size'         => $file->getSize(),
             'attributes'   => $file->getAttribute('attributes'),
             'meta'         => array(),

@@ -6,16 +6,17 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaSiteBundle\Driver\Action;
+namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
- * File action
+ * File event
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-abstract class FileAction extends Action
+class FileEvent extends Event
 {
     /**
      * @var FileInterface
@@ -24,13 +25,9 @@ abstract class FileAction extends Action
 
     /**
      * @param FileInterface $file
-     * @param \DateTime     $date
-     * @param string        $userId
      */
-    public function __construct(FileInterface $file, \DateTime $date, $userId)
+    public function __construct(FileInterface $file)
     {
-        parent::__construct($date, $userId);
-
         $this->file = $file;
     }
 

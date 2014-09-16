@@ -45,7 +45,7 @@ class PdfToTextExtractor implements ContentExtractorInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('documenttype')) === 'pdf';
+        return strtolower($file->getDocumenttype()) === 'pdf';
     }
 
     /**

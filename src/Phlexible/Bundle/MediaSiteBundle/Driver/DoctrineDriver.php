@@ -12,20 +12,20 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ActionInterface;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\DeleteFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\DeleteFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ReplaceFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
+use Phlexible\Bundle\MediaSiteBundle\Event\CopyFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\FolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\MoveFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\MoveFolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\RenameFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\RenameFolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\FilesystemFileSource;
+use Phlexible\Bundle\MediaSiteBundle\HashCalculator\HashCalculatorInterface;
+use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
@@ -33,7 +33,7 @@ use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotWritableException;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\StreamSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -49,19 +49,29 @@ class DoctrineDriver extends AbstractDriver
     private $entityManager;
 
     /**
+     * @var HashCalculatorInterface
+     */
+    private $hashCalculator;
+
+    /**
      * @var Connection
      */
     private $connection;
 
     /**
-     * @var string
+     * @var EventDispatcherInterface
      */
-    private $folderTable;
+    private $eventDispatcher;
 
     /**
      * @var string
      */
-    private $fileTable;
+    private $folderTable = 'media_site_folder';
+
+    /**
+     * @var string
+     */
+    private $fileTable = 'media_site_file';
 
     /**
      * @var string
@@ -74,11 +84,16 @@ class DoctrineDriver extends AbstractDriver
     private $fileClass = 'Phlexible\Bundle\MediaManagerBundle\Entity\File';
 
     /**
-     * @param EntityManager $entityManager
+     * @param EntityManager            $entityManager
+     * @param HashCalculatorInterface  $hashCalculator
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, HashCalculatorInterface $hashCalculator, EventDispatcherInterface $eventDispatcher)
     {
         $this->entityManager = $entityManager;
+        $this->hashCalculator = $hashCalculator;
+        $this->eventDispatcher = $eventDispatcher;
+
         $this->connection = $entityManager->getConnection();
 
         $this->folderTable = 'media_site_folder';
@@ -267,6 +282,7 @@ class DoctrineDriver extends AbstractDriver
         );
 
         foreach ($files as $file) {
+            /* @var $file FileInterface */
             $file->setSite($this->getSite());
         }
 
@@ -299,6 +315,7 @@ class DoctrineDriver extends AbstractDriver
         );
 
         foreach ($files as $file) {
+            /* @var $file FileInterface */
             $file->setSite($this->getSite());
         }
 
@@ -326,6 +343,7 @@ class DoctrineDriver extends AbstractDriver
         $files = $this->getFileRepository()->findBy(array(), array('createdAt' => 'DESC'), $limit);
 
         foreach ($files as $file) {
+            /* @var $file FileInterface */
             $file->setSite($this->getSite());
         }
 
@@ -343,165 +361,36 @@ class DoctrineDriver extends AbstractDriver
         $files = $qb->getQuery()->getResult();
 
         foreach ($files as $file) {
+            /* @var $file FileInterface */
             $file->setSite($this->getSite());
         }
 
         return $files;
     }
-
     /**
-     * {@inheritdoc}
-     */
-    public function validateCreateFolderAction(CreateFolderAction $action)
-    {
-        $folderPath = trim($action->getTargetFolder()->getPath() . '/' . $action->getName(), '/');
-
-        if ($this->findFolderByPath($folderPath)) {
-            throw new AlreadyExistsException("Create folder {$action->getName()} failed.");
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateRenameFolderAction(RenameFolderAction $action)
-    {
-        $parentFolder = $this->findFolder($action->getFolder()->getParentId());
-        $folderPath = trim($parentFolder->getPath() . '/' . $action->getName(), '/');
-
-        if ($this->findFolderByPath($folderPath)) {
-            throw new AlreadyExistsException("Rename folder to {$action->getName()} failed.");
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateCopyFolderAction(CopyFolderAction $action)
-    {
-        $folderPath = trim($action->getTargetFolder()->getPath() . '/' . $action->getFolder()->getName(), '/');
-
-        if ($this->findFolderByPath($folderPath)) {
-            throw new AlreadyExistsException("Copy folder {$action->getFolder()->getName()} failed.");
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateMoveFolderAction(MoveFolderAction $action)
-    {
-        $folderPath = trim($action->getTargetFolder()->getPath() . '/' . $action->getFolder()->getName(), '/');
-
-        if ($this->findFolderByPath($folderPath)) {
-            throw new AlreadyExistsException("Move folder {$action->getFolder()->getName()} failed.");
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateDeleteFolderAction(DeleteFolderAction $action)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateCreateFileAction(CreateFileAction $action)
-    {
-        if ($this->findFileByPath($action->getTargetFolder()->getPath() . '/' . $action->getFileSource()->getName())) {
-            throw new AlreadyExistsException("Create file {$action->getFileSource()->getName()} failed, already exists in database.");
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateRenameFileAction(RenameFileAction $action)
-    {
-        $folder = $this->findFolder($action->getFile()->getFolderId());
-        if ($this->findFileByPath($folder->getPath() . '/' . $action->getName())) {
-            throw new AlreadyExistsException("Rename file to {$action->getName()} failed, already exists in database.");
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateMoveFileAction(MoveFileAction $action)
-    {
-        if ($this->findFileByPath($action->getTargetFolder()->getPath() . '/' . $action->getFile()->getName())) {
-            throw new AlreadyExistsException("Move file {$action->getFile()->getName()} failed, already exists in database.");
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateCopyFileAction(CopyFileAction $action)
-    {
-        $folder = $this->findFolder($action->getFile()->getFolderId());
-        if ($this->findFileByPath($folder->getPath() . '/' . $action->getFile()->getName())) {
-            throw new AlreadyExistsException("Copy file {$action->getFile()->getName()} failed, already exists in database.");
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateDeleteFileAction(DeleteFileAction $action)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function execute(ActionInterface $action)
-    {
-        $rc = new \ReflectionClass($action);
-        $class = $rc->getShortName();
-
-        $validate = 'validate' . $class;
-        if (method_exists($this, $validate)) {
-            $this->$validate($action);
-        }
-
-        $execute = 'execute' . $class;
-        if (!method_exists($this, $execute)) {
-            throw new \InvalidArgumentException("Invalid action $execute");
-        }
-
-        return $this->$execute($action);
-    }
-
-    /**
-     * @param CreateFileAction $action
+     * @param FolderInterface     $targetFolder
+     * @param FileSourceInterface $fileSource
+     * @param AttributeBag        $attributes
+     * @param string              $userId
      *
      * @return FileInterface
      * @throws IOException
      */
-    private function executeCreateFileAction(CreateFileAction $action)
+    public function createFile(FolderInterface $targetFolder, FileSourceInterface $fileSource, AttributeBag $attributes, $userId)
     {
-        $hashCalculator = $action->getHashCalulator();
-        $fileSource = $action->getFileSource();
-        $targetFolder = $action->getTargetFolder();
-        $userId = $action->getUserId();
-        $attributes = $action->getAttributes();
-
-        $hash = $hashCalculator->fromFileSource($fileSource);
-        $path = $this->getSite()->getRootDir() . $hash;
+        $hash = $this->hashCalculator->fromFileSource($fileSource);
 
         // prepare folder's name and id
         $fileClass = $this->fileClass;
         $file = new $fileClass();
+        /* @var $file FileInterface */
         $file
             ->setSite($this->getSite())
             ->setId(Uuid::generate())
             ->setFolder($targetFolder)
             ->setName($fileSource->getName())
-            ->setCreatedAt($action->getDate())
-            ->setCreateUserid($action->getUserId())
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserid($userId)
             ->setModifiedAt($file->getCreatedAt())
             ->setModifyUserid($file->getCreateUserId())
             ->setMimeType($fileSource->getMimeType())
@@ -509,9 +398,14 @@ class DoctrineDriver extends AbstractDriver
             ->setHash($hash)
             ->setAttributes($attributes);
 
-        $fileSource = $action->getFileSource();
-        $path = $file->getPhysicalPath();
+        $this->validateCreateFile($file);
 
+        $event = new CreateFileEvent($file, $fileSource);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_CREATE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Create file {$file->getName()} failed.");
+        }
+
+        $path = $file->getPhysicalPath();
         $filesystem = new Filesystem();
 
         if (!file_exists($path)) {
@@ -541,37 +435,39 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Create file {$file->getName()} failed.", 0, $e);
         }
 
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::CREATE_FILE, $event);
+
         return $file;
     }
 
     /**
-     * @param ReplaceFileAction $action
+     * @param FileInterface       $file
+     * @param FileSourceInterface $fileSource
+     * @param AttributeBag        $attributes
+     * @param string              $userId
      *
      * @return FileInterface
      * @throws IOException
      */
-    private function executeReplaceFileAction(ReplaceFileAction $action)
+    public function replaceFile(FileInterface $file, FileSourceInterface $fileSource, AttributeBag $attributes, $userId)
     {
-        $file = $action->getFile();
-        $hashCalculator = $action->getHashCalulator();
-        $fileSource = $action->getFileSource();
-        $attributes = $action->getAttributes();
-
-        $hash = $hashCalculator->fromFileSource($fileSource);
-        $path = $this->getSite()->getRootDir() . $hash;
+        $hash = $this->hashCalculator->fromFileSource($fileSource);
 
         $file
             ->setName($fileSource->getName())
-            ->setPhysicalPath($path)
             ->setSize($fileSource->getSize())
             ->setHash($hash)
             ->setAttributes($attributes)
-            ->setModifiedAt($action->getDate())
-            ->setModifyUserid($action->getUserId());
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserid($userId);
+
+        $event = new ReplaceFileEvent($file, $fileSource);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_REPLACE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Create file {$file->getName()} failed.");
+        }
 
         $filesystem = new Filesystem();
-
-        $fileSource = $action->getFileSource();
         $path = $file->getPhysicalPath();
 
         if (!file_exists($path)) {
@@ -600,28 +496,38 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Create file {$file->getName()} failed.", 0, $e);
         }
 
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::REPLACE_FILE, $event);
+
         return $file;
     }
 
     /**
-     * @param RenameFileAction $action
+     * @param FileInterface $file
+     * @param string        $name
+     * @param string        $userId
      *
      * @return FileInterface
      * @throws IOException
      */
-    private function executeRenameFileAction(RenameFileAction $action)
+    public function renameFile(FileInterface $file, $name, $userId)
     {
-        $file = $action->getFile();
-
-        if ($file->getName() === $action->getName()) {
-            return $action->getFile();
+        if ($file->getName() === $name) {
+            return $file;
         }
 
         $oldName = $file->getName();
         $file
-            ->setName($action->getName())
-            ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId());
+            ->setName($name)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $this->validateRenameFile($file);
+
+        $event = new RenameFileEvent($file, $oldName);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_RENAME_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Rename file {$file->getName()} cancelled.");
+        }
 
         try {
             $this->entityManager->flush($file);
@@ -629,27 +535,37 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Rename file from $oldName to {$file->getName()} failed.", 0, $e);
         }
 
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::RENAME_FILE, $event);
+
         return $file;
     }
 
     /**
-     * @param MoveFileAction $action
+     * @param FileInterface   $file
+     * @param FolderInterface $targetFolder
+     * @param string          $userId
      *
      * @return FileInterface
      * @throws IOException
      */
-    private function executeMoveFileAction(MoveFileAction $action)
+    public function moveFile(FileInterface $file, FolderInterface $targetFolder, $userId)
     {
-        $file = $action->getFile();
-
-        if ($file->getFolderId() === $action->getTargetFolder()->getId()) {
+        if ($file->getFolder()->getId() === $targetFolder->getId()) {
             return $file;
         }
 
         $file
-            ->setFolderId($action->getTargetFolder()->getId())
-            ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId());
+            ->setFolderId($targetFolder->getId())
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $this->validateMoveFile($file);
+
+        $event = new MoveFileEvent($file, $targetFolder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_MOVE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Move file {$file->getName()} cancelled.");
+        }
 
         try {
             $this->entityManager->flush($file);
@@ -657,28 +573,37 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Move file failed.", 0, $e);
         }
 
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::MOVE_FILE, $event);
+
         return $file;
     }
 
     /**
-     * @param CopyFileAction $action
+     * @param FileInterface   $originalFile
+     * @param FolderInterface $targetFolder
+     * @param string          $userId
      *
      * @return FileInterface
      * @throws IOException
      */
-    private function executeCopyFileAction(CopyFileAction $action)
+    public function copyFile(FileInterface $originalFile, FolderInterface $targetFolder, $userId)
     {
-        $originalFile = $action->getFile();
-        $targetFolder = $action->getTargetFolder();
-
         $file = clone $originalFile;
         $file
             ->setId(Uuid::generate())
             ->setCreatedAt(new \DateTime())
-            ->setCreateUserId($action->getUserId())
+            ->setCreateUserId($userId)
             ->setModifiedAt($file->getCreatedAt())
             ->setModifyUserId($file->getCreateUserId())
             ->setFolderId($targetFolder->getId());
+
+        $this->validateCopyFile($file);
+
+        $event = new CopyFileEvent($file, $originalFile, $targetFolder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_COPY_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Copy file {$file->getName()} cancelled.");
+        }
 
         try {
             $this->entityManager->flush($file);
@@ -686,18 +611,25 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Copy file failed.", 0, $e);
         }
 
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::COPY_FILE, $event);
+
         return $file;
     }
 
     /**
-     * @param DeleteFileAction $action
+     * @param FileInterface $file
+     * @param string        $userId
      *
      * @return FileInterface
      * @throws IOException
      */
-    private function executeDeleteFileAction(DeleteFileAction $action)
+    public function deleteFile(FileInterface $file, $userId)
     {
-        $file = $action->getFile();
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_DELETE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Delete file {$file->getName()} cancelled.");
+        }
 
         try {
             $this->entityManager->remove($file);
@@ -706,23 +638,31 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Copy file failed.", 0, $e);
         }
 
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::DELETE_FILE, $event);
+
         return $file;
     }
 
     /**
-     * @param SetFileAttributesAction $action
+     * @param FileInterface $file
+     * @param AttributeBag  $attributes
+     * @param string        $userId
      *
      * @return FileInterface
      * @throws IOException
      */
-    private function executeSetFileAttributesAction(SetFileAttributesAction $action)
+    public function setFileAttributes(FileInterface $file, AttributeBag $attributes, $userId)
     {
-        $file = $action->getFile();
-
         $file
-            ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId())
-            ->setAttributes($action->getAttributes());
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId)
+            ->setAttributes($attributes);
+
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_SET_FILE_ATTRIBUTES, $event)->isPropagationStopped()) {
+            throw new IOException("Delete file {$file->getName()} cancelled.");
+        }
 
         try {
             $this->entityManager->flush($file);
@@ -730,36 +670,47 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Set file attributes failed.", 0, $e);
         }
 
-        return $action->getFile();
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::SET_FILE_ATTRIBUTES, $event);
+
+        return $file;
     }
 
     /**
-     * @param CreateFolderAction $action
+     * @param FolderInterface $targetFolder
+     * @param string          $name
+     * @param AttributeBag    $attributes
+     * @param string          $userId
      *
      * @return FolderInterface
      * @throws IOException
      */
-    private function executeCreateFolderAction(CreateFolderAction $action)
+    public function createFolder(FolderInterface $targetFolder, $name, AttributeBag $attributes, $userId)
     {
-        $targetFolder = $action->getTargetFolder();
-        $name = $action->getName();
-        $userId = $action->getUserId();
-
-        $folderPath = trim($targetFolder->getPath() . '/' . $name, '/');
+        $folderPath = rtrim($targetFolder->getPath(), '/') . '/' . $name;
 
         // prepare folder's name and id
-        $folder = new Folder();
+        $folderClass = $this->folderClass;
+        $folder = new $folderClass();
+        /* @var $folder FolderInterface */
         $folder
             ->setSite($this->getSite())
             ->setId(Uuid::generate())
             ->setName($name)
             ->setParentId($targetFolder->getId())
             ->setPath($folderPath)
-            ->setAttributes($action->getAttributes())
-            ->setCreatedAt($action->getDate())
-            ->setCreateUserid($action->getUserId())
+            ->setAttributes($attributes)
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserid($userId)
             ->setModifiedAt($folder->getCreatedAt())
             ->setModifyUserid($folder->getCreateUserId());
+
+        $this->validateCreateFolder($folder);
+
+        $event = new FolderEvent($folder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_CREATE_FOLDER, $event)->isPropagationStopped()) {
+            throw new IOException("Create folder {$folder->getName()} cancelled.");
+        }
 
         try {
             $this->entityManager->persist($folder);
@@ -768,23 +719,34 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Create folder {$folder->getName()} failed", 0, $e);
         }
 
+        $event = new FolderEvent($folder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::CREATE_FOLDER, $event);
+
         return $folder;
     }
 
     /**
-     * @param RenameFolderAction $action
+     * @param FolderInterface $folder
+     * @param string          $name
+     * @param string          $userId
      *
      * @return FolderInterface
      * @throws IOException
      */
-    private function executeRenameFolderAction(RenameFolderAction $action)
+    public function renameFolder(FolderInterface $folder, $name, $userId)
     {
-        $folder = $action->getFolder();
-
+        $oldName = $folder->getName();
         $folder
-            ->setName($action->getName())
-            ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId());
+            ->setName($name)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $this->validateRenameFolder($folder);
+
+        $event = new RenameFolderEvent($folder, $oldName);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_RENAME_FOLDER, $event)->isPropagationStopped()) {
+            throw new IOException("Rename folder {$folder->getName()} cancelled.");
+        }
 
         try {
             $this->entityManager->flush($folder);
@@ -795,7 +757,7 @@ class DoctrineDriver extends AbstractDriver
         if (!$folder->isRoot()) {
             $oldPath = $folder->getPath();
             $parentFolder = $this->findFolder($folder->getParentId());
-            $newPath = ltrim($parentFolder->getPath() . '/' . $action->getName(), '/');
+            $newPath = ltrim($parentFolder->getPath() . '/' . $name, '/');
             $folder->setPath($newPath);
 
             try {
@@ -815,45 +777,55 @@ class DoctrineDriver extends AbstractDriver
             }
         }
 
+        $event = new FolderEvent($folder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::RENAME_FOLDER, $event);
+
         return $folder;
     }
 
     /**
-     * @param MoveFolderAction $action
+     * @param FolderInterface $folder
+     * @param FolderInterface $targetFolder
+     * @param string          $userId
      *
      * @return FolderInterface
      * @throws IOException
      */
-    private function executeMoveFolderAction(MoveFolderAction $action)
+    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
     {
-        $folder = $action->getFolder();
-
-        if ($folder->getParentId() === $action->getTargetFolder()->getId()) {
+        if ($folder->getParentId() === $targetFolder->getId()) {
             return null;
         }
 
-        if ($folder->getId() === $action->getTargetFolder()->getId()) {
+        if ($folder->getId() === $targetFolder->getId()) {
             return null;
         }
 
-        $newPath = trim($action->getTargetFolder()->getPath() . '/' . $folder->getName(), '/');
+        $newPath = rtrim($targetFolder->getPath(), '/') . '/' . $folder->getName();
         $oldPath = $folder->getPath();
 
         $folder
-            ->setParentId($action->getTargetFolder()->getId())
+            ->setParentId($targetFolder->getId())
             ->setPath($newPath)
-            ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId());
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $this->validateMoveFolder($folder);
+
+        $event = new MoveFolderEvent($folder, $targetFolder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_MOVE_FOLDER, $event)->isPropagationStopped()) {
+            throw new IOException("Move folder {$folder->getName()} cancelled.");
+        }
 
         try {
             $this->entityManager->flush($folder);
 
             $qb = $this->getFolderRepository()->createQueryBuilder('fo');
 
-            if ($action->getTargetFolder()->isRoot()) {
-                $pathExpression = 'CONCAT(' . $qb->expr()->literal($action->getTargetFolder()->getPath()) . ', path)';
+            if ($targetFolder->isRoot()) {
+                $pathExpression = 'CONCAT(' . $qb->expr()->literal($targetFolder->getPath()) . ', path)';
             } else {
-                $pathExpression = 'REPLACE(path, ' . $qb->expr()->literal($action->getTargetFolder()->getPath()) . ', ' . $qb->expr()->literal($action->getTargetFolder()->getPath()) . ')';
+                $pathExpression = 'REPLACE(path, ' . $qb->expr()->literal($targetFolder->getPath()) . ', ' . $qb->expr()->literal($targetFolder->getPath()) . ')';
             }
 
             $qb
@@ -872,33 +844,58 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Move folder from $oldPath to $newPath failed.", 0, $e);
         }
 
+        $event = new FolderEvent($folder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::MOVE_FOLDER, $event);
+
         return $folder;
     }
 
     /**
-     * @param CopyFolderAction $action
+     * @param FolderInterface $folder
+     * @param FolderInterface $targetFolder
+     * @param string          $userId
      *
      * @return FolderInterface
      */
-    private function executeCopyFolderAction(CopyFolderAction $action)
+    public function copyFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
     {
-        $folder = $action->getFolder();
+        $this->validateCopyFolder($folder, $targetFolder);
+
+        $copiedFolder = $this->createFolder($targetFolder, $folder->getName() . uniqid(), $folder->getAttributes(), $userId);
+
+        foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
+            $this->copyFolder($subFolder, $copiedFolder, $userId);
+        }
+
+        foreach ($this->findFilesByFolder($folder) as $file) {
+            $fileSource = new FilesystemFileSource($file->getPhysicalPath(), $file->getMimeType(), $file->getSize());
+            $this->createFile($copiedFolder, $fileSource, $file->getAttributes(), $userId);
+        }
 
         return $folder;
     }
 
     /**
-     * @param DeleteFolderAction $action
+     * @param FolderInterface $folder
+     * @param string          $userId
      *
      * @return FolderInterface
      * @throws IOException
      */
-    private function executeDeleteFolderAction(DeleteFolderAction $action)
+    public function deleteFolder(FolderInterface $folder, $userId)
     {
-        $folder = $action->getFolder();
+        foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
+            $this->deleteFolder($subFolder, $userId);
+        }
+
+        foreach ($this->findFilesByFolder($folder) as $file) {
+            $this->deleteFile($file, $userId);
+        }
 
         try {
             $this->entityManager->remove($folder);
+
+            $this->entityManager->flush();
         } catch (\Exception $e) {
             throw new IOException("Delete folder failed.", 0, $e);
         }
@@ -907,19 +904,19 @@ class DoctrineDriver extends AbstractDriver
     }
 
     /**
-     * @param SetFolderAttributesAction $action
+     * @param FolderInterface $folder
+     * @param AttributeBag    $attributes
+     * @param string          $userId
      *
      * @return FolderInterface
      * @throws IOException
      */
-    private function executeSetFolderAttributesAction(SetFolderAttributesAction $action)
+    public function setFolderAttributes(FolderInterface $folder, AttributeBag $attributes, $userId)
     {
-        $folder = $action->getFolder();
-
         $folder
-            ->setModifiedAt($action->getDate())
-            ->setModifyUserId($action->getUserId())
-            ->setAttributes($action->getAttributes());
+            ->setAttributes($attributes)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
 
         try {
             $this->entityManager->flush($folder);
@@ -927,8 +924,121 @@ class DoctrineDriver extends AbstractDriver
             throw new IOException("Set folder attributes failed.", 0, $e);
         }
 
-        return $action->getFolder();
+        return $folder;
     }
+
+    /**
+     * @param FolderInterface $folder
+     *
+     * @throws AlreadyExistsException
+     */
+    private function validateCreateFolder(FolderInterface $folder)
+    {
+        $targetFolder = $this->findFolder($folder->getParentId());
+        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
+
+        if ($this->findFolderByPath($folderPath)) {
+            throw new AlreadyExistsException("Folder {$folderPath} already exists.");
+        }
+    }
+
+    /**
+     * @param FolderInterface $folder
+     *
+     * @throws AlreadyExistsException
+     */
+    private function validateRenameFolder(FolderInterface $folder)
+    {
+        $targetFolder = $this->findFolder($folder->getParentId());
+        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
+
+        if ($this->findFolderByPath($folderPath)) {
+            throw new AlreadyExistsException("Folder {$folderPath} already exists.");
+        }
+    }
+
+    /**
+     * @param FolderInterface $folder
+     *
+     * @throws AlreadyExistsException
+     */
+    private function validateMoveFolder(FolderInterface $folder)
+    {
+        $targetFolder = $this->findFolder($folder->getParentId());
+        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
+
+        if ($this->findFolderByPath($folderPath)) {
+            throw new AlreadyExistsException("Folder {$folderPath} already exists.");
+        }
+    }
+
+    /**
+     * @param FolderInterface $folder
+     * @param FolderInterface $targetFolder
+     *
+     * @throws AlreadyExistsException
+     */
+    private function validateCopyFolder(FolderInterface $folder, FolderInterface $targetFolder)
+    {
+        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
+
+        if ($this->findFolderByPath($folderPath)) {
+            throw new AlreadyExistsException("Folder {$folderPath} already exists.");
+        }
+    }
+
+    /**
+     * @param FileInterface $file
+     *
+     * @throws AlreadyExistsException
+     */
+    private function validateCreateFile(FileInterface $file)
+    {
+        $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
+        if ($this->findFileByPath($filePath)) {
+            throw new AlreadyExistsException("File {$filePath} already exists.");
+        }
+    }
+
+    /**
+     * @param FileInterface $file
+     *
+     * @throws AlreadyExistsException
+     */
+    private function validateRenameFile(FileInterface $file)
+    {
+        $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
+        if ($this->findFileByPath($filePath)) {
+            throw new AlreadyExistsException("File {$filePath} already exists.");
+        }
+    }
+
+    /**
+     * @param FileInterface $file
+     *
+     * @throws AlreadyExistsException
+     */
+    private function validateMoveFile(FileInterface $file)
+    {
+        $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
+        if ($this->findFileByPath($filePath)) {
+            throw new AlreadyExistsException("File {$filePath} already exists.");
+        }
+    }
+
+    /**
+     * @param FileInterface $file
+     *
+     * @throws AlreadyExistsException
+     */
+    private function validateCopyFile(FileInterface $file)
+    {
+        $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
+        if ($this->findFileByPath($filePath)) {
+            throw new AlreadyExistsException("File {$filePath} already exists.");
+        }
+    }
+
 
     /**
      * @param FolderInterface $folder

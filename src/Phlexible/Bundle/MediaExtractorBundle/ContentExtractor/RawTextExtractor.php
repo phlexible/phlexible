@@ -43,7 +43,7 @@ class RawTextExtractor implements ContentExtractorInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('assettype')) === 'text';
+        return strtolower($file->getAssettype()) === 'text';
     }
 
     /**

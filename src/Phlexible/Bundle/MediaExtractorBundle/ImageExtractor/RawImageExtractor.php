@@ -30,7 +30,7 @@ class RawImageExtractor implements ImageExtractorInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('assettype')) === 'image' || strtolower($file->getAttribute('documenttype')) === 'pdf';
+        return strtolower($file->getAssettype()) === 'image' || strtolower($file->getDocumenttype()) === 'pdf';
     }
 
     /**

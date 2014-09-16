@@ -14,7 +14,7 @@ use Phlexible\Bundle\MediaCacheBundle\Queue\Batch;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Worker;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\DeleteFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
@@ -87,32 +87,32 @@ class FileListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            MediaSiteEvents::CREATE_FILE => 'onAddFile',
+            MediaSiteEvents::CREATE_FILE => 'onCreateFile',
             MediaSiteEvents::REPLACE_FILE => 'onReplaceFile',
             MediaSiteEvents::DELETE_FILE => 'onDeleteFile',
         );
     }
 
     /**
-     * @param CreateFileEvent $event
+     * @param FileEvent $event
      */
-    public function onAddFile(CreateFileEvent $event)
+    public function onCreateFile(FileEvent $event)
     {
         $this->processFile($event->getFile());
     }
 
     /**
-     * @param ReplaceFileEvent $event
+     * @param FileEvent $event
      */
-    public function onReplaceFile(ReplaceFileEvent $event)
+    public function onReplaceFile(FileEvent $event)
     {
         $this->processFile($event->getFile());
     }
 
     /**
-     * @param DeleteFileEvent $event
+     * @param FileEvent $event
      */
-    public function onDeleteFile(DeleteFileEvent $event)
+    public function onDeleteFile(FileEvent $event)
     {
         $fileId = $event->getFile()->getId();
 

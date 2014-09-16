@@ -8,25 +8,7 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Site;
 
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CopyFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\CreateFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\DeleteFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\DeleteFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFolderAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ReplaceFileAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFileAttributesAction;
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\SetFolderAttributesAction;
 use Phlexible\Bundle\MediaSiteBundle\Driver\DriverInterface;
-use Phlexible\Bundle\MediaSiteBundle\Driver\FindInterface;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Media site interface
@@ -34,7 +16,7 @@ use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface SiteInterface extends FindInterface
+interface SiteInterface extends DriverInterface
 {
     /**
      * @return string
@@ -54,152 +36,4 @@ interface SiteInterface extends FindInterface
     /**
      * @return DriverInterface
      */
-    public function getDriver();
-
-    /**
-     * @param string $feature
-     *
-     * @return bool
-     */
-    public function hasFeature($feature);
-
-    /**
-     * @return \Media_SiteDb_Folder_Peer
-     *
-     * @deprecated
-     */
-    public function getFolderPeer();
-
-    /**
-     * @return \Media_SiteDb_File_Peer
-     *
-     * @deprecated
-     */
-    public function getFilePeer();
-
-    /**
-     * @param FolderInterface $targetFolder
-     * @param string          $name
-     * @param AttributeBag    $attributes
-     * @param string          $userId
-     *
-     * @return CreateFolderAction
-     */
-    public function createFolder(FolderInterface $targetFolder, $name, AttributeBag $attributes, $userId);
-
-    /**
-     * @param FolderInterface $folder
-     * @param string          $name
-     * @param string          $userId
-     *
-     * @return RenameFolderAction
-     */
-    public function renameFolder(FolderInterface $folder, $name, $userId);
-
-    /**
-     * @param FolderInterface $folder
-     * @param FolderInterface $targetFolder
-     * @param string          $userId
-     *
-     * @return MoveFolderAction
-     */
-    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId);
-
-    /**
-     * @param FolderInterface $folder
-     * @param FolderInterface $targetFolder
-     * @param string          $userId
-     *
-     * @return CopyFolderAction
-     */
-    public function copyFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId);
-
-    /**
-     * @param FolderInterface $folder
-     * @param string          $userId
-     *
-     * @return DeleteFolderAction
-     */
-    public function deleteFolder(FolderInterface $folder, $userId);
-
-    /**
-     * @param FolderInterface $folder
-     * @param AttributeBag    $attributes
-     * @param string          $userId
-     *
-     * @return SetFolderAttributesAction
-     */
-    public function setFolderAttributes(FolderInterface $folder, AttributeBag $attributes, $userId);
-
-    /**
-     * @param FolderInterface     $targetFolder
-     * @param FileSourceInterface $fileSource
-     * @param AttributeBag        $attributes
-     * @param string              $userId
-     *
-     * @return CreateFileAction
-     */
-    public function createFile(
-        FolderInterface $targetFolder,
-        FileSourceInterface $fileSource,
-        AttributeBag $attributes,
-        $userId);
-
-    /**
-     * @param FileInterface       $file
-     * @param FileSourceInterface $fileSource
-     * @param AttributeBag        $attributes
-     * @param string              $userId
-     *
-     * @return ReplaceFileAction
-     */
-    public function replaceFile(
-        FileInterface $file,
-        FileSourceInterface $fileSource,
-        AttributeBag $attributes,
-        $userId);
-
-    /**
-     * @param FileInterface $file
-     * @param string        $name
-     * @param string        $userId
-     *
-     * @return RenameFileAction
-     */
-    public function renameFile(FileInterface $file, $name, $userId);
-
-    /**
-     * @param FileInterface   $file
-     * @param FolderInterface $targetFolder
-     * @param string          $userId
-     *
-     * @return MoveFileAction
-     */
-    public function moveFile(FileInterface $file, FolderInterface $targetFolder, $userId);
-
-    /**
-     * @param FileInterface   $file
-     * @param FolderInterface $targetFolder
-     * @param string          $userId
-     *
-     * @return CopyFileAction
-     */
-    public function copyFile(FileInterface $file, FolderInterface $targetFolder, $userId);
-
-    /**
-     * @param FileInterface $file
-     * @param string        $userId
-     *
-     * @return DeleteFileAction
-     */
-    public function deleteFile(FileInterface $file, $userId);
-
-    /**
-     * @param FileInterface $file
-     * @param AttributeBag  $attributes
-     * @param string        $userId
-     *
-     * @return SetFileAttributesAction
-     */
-    public function setFileAttributes(FileInterface $file, AttributeBag $attributes, $userId);
-}
+    public function getDriver();}

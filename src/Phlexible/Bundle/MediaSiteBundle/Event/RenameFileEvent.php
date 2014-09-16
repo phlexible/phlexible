@@ -8,15 +8,36 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\RenameFileAction;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
  * Rename file event
  *
  * @author Stephan Wentz <sw@brainbits.net>
- *
- * @method RenameFileAction getAction()
  */
-class RenameFileEvent extends AbstractActionFileEvent
+class RenameFileEvent extends FileEvent
 {
+    /**
+     * @var string
+     */
+    private $oldName;
+
+    /**
+     * @param FileInterface $file
+     * @param string        $oldName
+     */
+    public function __construct(FileInterface $file, $oldName)
+    {
+        parent::__construct($file);
+
+        $this->oldName = $oldName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOldName()
+    {
+        return $this->oldName;
+    }
 }

@@ -8,16 +8,15 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\ActionInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Action folderevent
+ * Abstract folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class AbstractActionFolderEvent extends AbstractActionEvent
+class FolderEvent extends Event
 {
     /**
      * @var FolderInterface
@@ -25,13 +24,10 @@ class AbstractActionFolderEvent extends AbstractActionEvent
     private $folder;
 
     /**
-     * @param ActionInterface $action
      * @param FolderInterface $folder
      */
-    public function __construct(ActionInterface $action, FolderInterface $folder)
+    public function __construct(FolderInterface $folder)
     {
-        parent::__construct($action);
-
         $this->folder = $folder;
     }
 

@@ -94,7 +94,7 @@ class PdfWorker extends AbstractWorker
      */
     public function accept(TemplateInterface $template, FileInterface $file)
     {
-        return $template instanceof PdfTemplate && strtolower($file->getAttribute('documenttype')) === 'pdf';
+        return $template instanceof PdfTemplate && strtolower($file->getDocumenttype()) === 'pdf';
     }
 
     /**
@@ -137,7 +137,7 @@ class PdfWorker extends AbstractWorker
             ->setTemplateRevision($template->getRevision())
             ->setStatus(CacheItem::STATUS_DELEGATE)
             ->setMimeType($file->getMimeType())
-            ->setDocumentTypeKey(strtolower($file->getAttribute('documenttype')))
+            ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
             ->setExtension('')
             ->setFileSize(0)
             ->setError(null)

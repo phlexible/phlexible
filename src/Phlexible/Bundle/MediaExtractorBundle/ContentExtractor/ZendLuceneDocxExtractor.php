@@ -30,7 +30,7 @@ class ZendLuceneDocxExtractor implements ContentExtractorInterface
      */
     public function supports(FileInterface $file)
     {
-        return strtolower($file->getAttribute('documenttype')) === 'docx';
+        return strtolower($file->getDocumenttype()) === 'docx';
     }
 
     /**

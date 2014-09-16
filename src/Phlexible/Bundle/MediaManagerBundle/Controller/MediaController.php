@@ -65,7 +65,7 @@ class MediaController extends Controller
 
             if ($cacheItem && $cacheItem->getStatus() === CacheItem::STATUS_WAITING) {
                 $file = $siteManager->getByFileId($fileId)->findFile($fileId);
-                $documenttype = $documenttypeManager->find(strtolower($file->getAttribute('documenttype')));
+                $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
                 $filePath = $delegateService->getWaiting($template, $documenttype);
             }
 
@@ -75,7 +75,7 @@ class MediaController extends Controller
 
         if (empty($filePath) || !file_exists($filePath)) {
             $file = $siteManager->getByFileId($fileId)->findFile($fileId);
-            $documenttype = $documenttypeManager->find(strtolower($file->getAttribute('documenttype')));
+            $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
             $filePath = $delegateService->getClean($template, $documenttype);
             $fileSize = filesize($filePath);
             $mimeType = 'image/gif';

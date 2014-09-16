@@ -8,15 +8,36 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Event;
 
-use Phlexible\Bundle\MediaSiteBundle\Driver\Action\MoveFolderAction;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Move folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
- *
- * @method MoveFolderAction getAction()
  */
-class MoveFolderEvent extends AbstractActionFolderEvent
+class MoveFolderEvent extends FolderEvent
 {
+    /**
+     * @var FolderInterface
+     */
+    private $targetFolder;
+
+    /**
+     * @param FolderInterface $folder
+     * @param FolderInterface $targetFolder
+     */
+    public function __construct(FolderInterface $folder, FolderInterface $targetFolder)
+    {
+        parent::__construct($folder);
+
+        $this->targetFolder = $targetFolder;
+    }
+
+    /**
+     * @return FolderInterface
+     */
+    public function getTargetFolder()
+    {
+        return $this->targetFolder;
+    }
 }

@@ -42,8 +42,8 @@ class DebugController extends Controller
 
         $debug = array(
             array('key' => 'mimeType', 'value' => $file->getMimeType()),
-            array('key' => 'documentType', 'value' => strtolower($file->getAttribute('documenttype'))),
-            array('key' => 'assetType', 'value' => strtolower($file->getAttribute('assettype'))),
+            array('key' => 'documentType', 'value' => strtolower($file->getDocumenttype())),
+            array('key' => 'assetType', 'value' => strtolower($file->getAssettype())),
             array('key' => 'fileId', 'value' => $file->getId()),
             array('key' => 'folderId', 'value' => $file->getFolderId()),
         );

@@ -66,6 +66,18 @@ interface FileInterface
     public function setName($name);
 
     /**
+     * @return FolderInterface
+     */
+    public function getFolder();
+
+    /**
+     * @param FolderInterface $folder
+     *
+     * @return $this
+     */
+    public function setFolder(FolderInterface $folder);
+
+    /**
      * @return string
      */
     public function getFolderId();

@@ -11,9 +11,12 @@ namespace Phlexible\Bundle\MediaAssetBundle\EventListener;
 use Phlexible\Bundle\MediaAssetBundle\AttributeReader\AttributeReaderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeReplaceFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -48,42 +51,42 @@ class MediaSiteListener implements EventSubscriberInterface
     }
 
     /**
-     * @param BeforeCreateFileEvent $event
+     * @param CreateFileEvent $event
      */
-    public function onBeforeCreateFile(BeforeCreateFileEvent $event)
+    public function onBeforeCreateFile(CreateFileEvent $event)
     {
-        $fileSource = $event->getAction()->getFileSource();
-        $fileAttributes = $event->getAction()->getAttributes();
+        $file = $event->getFile();
+        $fileSource = $event->getFileSource();
 
-        $this->process($fileSource, $fileAttributes);
+        $this->processAttributes($file, $fileSource);
     }
 
     /**
-     * @param BeforeReplaceFileEvent $event
+     * @param ReplaceFileEvent $event
      */
-    public function onBeforeReplaceFile(BeforeReplaceFileEvent $event)
+    public function onBeforeReplaceFile(ReplaceFileEvent $event)
     {
-        $fileSource = $event->getAction()->getFileSource();
-        $fileAttributes = $event->getAction()->getAttributes();
+        $file = $event->getFile();
+        $fileSource = $event->getFileSource();
 
-        $this->process($fileSource, $fileAttributes);
+        $this->processAttributes($file, $fileSource);
     }
 
     /**
+     * @param FileInterface       $file
      * @param PathSourceInterface $fileSource
-     * @param AttributeBag        $fileAttributes
      */
-    private function process(PathSourceInterface $fileSource, AttributeBag $fileAttributes)
+    private function processAttributes(FileInterface $file, PathSourceInterface $fileSource)
     {
         $attributes = new AttributeBag();
 
-        $documenttype = $fileAttributes->get('documenttype', '');
-        $assettype = $fileAttributes->get('assettype', '');
+        $assettype = $file->getAssettype();
+        $documenttype = $file->getDocumenttype();
 
         if ($this->attributeReader->supports($fileSource, $documenttype, $assettype)) {
             $this->attributeReader->read($fileSource, $documenttype, $assettype, $attributes);
         }
 
-        $fileAttributes->set('attributes', $attributes->all());
+        $file->getAttributes()->set('attributes', $attributes->all());
     }
 }

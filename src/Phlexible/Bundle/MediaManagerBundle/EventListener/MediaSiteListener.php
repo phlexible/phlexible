@@ -9,14 +9,14 @@
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
 use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
-use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFolderEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\BeforeDeleteFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\BeforeDeleteFolderEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\BeforeReplaceFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\FolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -63,28 +63,32 @@ class MediaSiteListener implements EventSubscriberInterface
     }
 
     /**
-     * @param BeforeCreateFileEvent $event
+     * @param CreateFileEvent $event
      */
-    public function onBeforeCreateFile(BeforeCreateFileEvent $event)
+    public function onBeforeCreateFile(CreateFileEvent $event)
     {
-        $fileSource = $event->getAction()->getFileSource();
-        $attributes = $event->getAction()->getAttributes();
+        $file = $event->getFile();
+        $fileSource = $event->getFileSource();
 
-        $this->process($fileSource, $attributes);
+        $this->processFile($file, $fileSource);
     }
 
     /**
-     * @param BeforeReplaceFileEvent $event
+     * @param ReplaceFileEvent $event
      */
-    public function onBeforeReplaceFile(BeforeReplaceFileEvent $event)
+    public function onBeforeReplaceFile(ReplaceFileEvent $event)
     {
-        $fileSource = $event->getAction()->getFileSource();
-        $attributes = $event->getAction()->getAttributes();
+        $file = $event->getFile();
+        $fileSource = $event->getFileSource();
 
-        $this->process($fileSource, $attributes);
+        $this->processFile($file, $fileSource);
     }
 
-    private function process(PathSourceInterface $fileSource, AttributeBag $attributes)
+    /**
+     * @param FileInterface       $file
+     * @param PathSourceInterface $fileSource
+     */
+    private function processFile(FileInterface $file, PathSourceInterface $fileSource)
     {
         try {
             $documenttype = $this->documenttypeManager->findByMimetype($fileSource->getMimeType());
@@ -92,16 +96,16 @@ class MediaSiteListener implements EventSubscriberInterface
             $documenttype = $this->documenttypeManager->find('binary');
         }
 
-        $attributes->set('documenttype', $documenttype->getKey());
-        $attributes->set('assettype', $documenttype->getType());
+        $file->setAssettype($documenttype->getType());
+        $file->setDocumenttype($documenttype->getKey());
 
         try {
             $fileMetaSet = $this->metaSetManager->findOneByName('file');
             if ($fileMetaSet) {
-                $metasets = $attributes->get('metasets', array());
+                $metasets = $file->getAttributes()->get('metasets', array());
                 if (!in_array($fileMetaSet->getId(), $metasets)) {
                     $metasets[] = $fileMetaSet->getId();
-                    $attributes->set('metasets', $metasets);
+                    $file->getAttributes()->set('metasets', $metasets);
                 }
             }
         } catch (\Exception $e) {
@@ -109,11 +113,11 @@ class MediaSiteListener implements EventSubscriberInterface
     }
 
     /**
-     * @param BeforeCreateFolderEvent $event
+     * @param FolderEvent $event
      */
-    public function onBeforeCreateFolder(BeforeCreateFolderEvent $event)
+    public function onBeforeCreateFolder(FolderEvent $event)
     {
-        $attributes = $event->getAction()->getAttributes();
+        $attributes = $event->getFolder()->getAttributes();
 
         try {
             $folderMetaSet = $this->metaSetManager->findOneByName('folder');
@@ -129,17 +133,17 @@ class MediaSiteListener implements EventSubscriberInterface
     }
 
     /**
-     * @param BeforeDeleteFileEvent $event
+     * @param FileEvent $event
      */
-    public function onBeforeDeleteFile(BeforeDeleteFileEvent $event)
+    public function onBeforeDeleteFile(FileEvent $event)
     {
 
     }
 
     /**
-     * @param BeforeDeleteFolderEvent $event
+     * @param FolderEvent $event
      */
-    public function onBeforeDeleteFolder(BeforeDeleteFolderEvent $event)
+    public function onBeforeDeleteFolder(FolderEvent $event)
     {
 
     }

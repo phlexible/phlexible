@@ -103,7 +103,7 @@ class AudioWorker extends AbstractWorker
      */
     public function accept(TemplateInterface $template, FileInterface $file)
     {
-        return $template instanceof AudioTemplate && strtolower($file->getAttribute('assettype')) === 'audio';
+        return $template instanceof AudioTemplate && strtolower($file->getAssettype()) === 'audio';
     }
 
     /**
@@ -148,7 +148,7 @@ class AudioWorker extends AbstractWorker
             ->setTemplateRevision($template->getRevision())
             ->setStatus(CacheItem::STATUS_DELEGATE)
             ->setMimeType($file->getMimeType())
-            ->setDocumentTypeKey(strtolower($file->getAttribute('documenttype')))
+            ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
             ->setExtension('')
             ->setFileSize(0)
             ->setError(null)
