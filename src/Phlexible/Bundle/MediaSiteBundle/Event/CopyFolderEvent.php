@@ -11,33 +11,33 @@ namespace Phlexible\Bundle\MediaSiteBundle\Event;
 use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
- * Rename folder event
+ * Copy folder event
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class RenameFolderEvent extends FolderEvent
+class CopyFolderEvent extends FolderEvent
 {
     /**
-     * @var string
+     * @var FolderInterface
      */
-    private $oldPath;
+    private $targetFolder;
 
     /**
      * @param FolderInterface $folder
-     * @param string          $oldPath
+     * @param FolderInterface $targetFolder
      */
-    public function __construct(FolderInterface $folder, $oldPath)
+    public function __construct(FolderInterface $folder, FolderInterface $targetFolder)
     {
         parent::__construct($folder);
 
-        $this->oldPath = $oldPath;
+        $this->targetFolder = $targetFolder;
     }
 
     /**
-     * @return string
+     * @return FolderInterface
      */
-    public function getOldName()
+    public function getTargetFolder()
     {
-        return $this->oldPath;
+        return $this->targetFolder;
     }
 }

@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Alchemy\Zippy\Zippy;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIterator;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderIterator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

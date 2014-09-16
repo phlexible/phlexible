@@ -8,11 +8,8 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
-use Brainbits\Mime\MimeDetector;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIterator;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -30,11 +27,6 @@ class TestCommand extends ContainerAwareCommand
     {
         $this
             ->setName('media-manager:test')
-            ->setDefinition(
-                array(
-                    new InputArgument('file-id', InputArgument::REQUIRED, 'File ID'),
-                )
-            )
             ->setDescription('Test');
     }
 
@@ -43,25 +35,27 @@ class TestCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $fileId = $input->getArgument('file-id');
-
-        $metaSetManager = $this->getContainer()->get('phlexible_meta_set.meta_set_manager');
-        $fileMetaManager = $this->getContainer()->get('phlexible_media_manager.file_meta_data_manager');
         $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
-        $site = current($siteManager->getAll());
-        $folder = $site->findRootFolder();
-        ldd($folder);
+        $userManager = $this->getContainer()->get('phlexible_user.user_manager');
 
-        $metaSetIds = $file->getAttribute('metasets');
-        foreach ($metaSetIds as $metaSetId) {
-            $metaSet = $metaSetManager->find($metaSetId);
-            if (!$metaSet) {
-                throw new \Exception("Meta set $metaSetId not found.");
-            }
-            $output->writeln($metaSet->getName());
-            $metaData = $fileMetaManager->findByMetaSetAndIdentifiers($metaSet, array('file_id' => $file->getId(), 'file_version' => $file->getVersion()));
-            ld($metaData);
+        $systemUserId = $userManager->getSystemUserId();
+        $site = $siteManager->get('test');
+        $rootFolder = $site->findRootFolder();
+
+        foreach ($site->findFoldersByParentFolder($rootFolder) as $subFolder) {
+            $site->deleteFolder($subFolder, $systemUserId);
         }
+
+        $folder1 = $site->createFolder($rootFolder, 'a', new AttributeBag(), $systemUserId);
+        $folder2 = $site->createFolder($folder1, 'bb', new AttributeBag(), $systemUserId);
+        $folder3 = $site->createFolder($folder2, 'ccc', new AttributeBag(), $systemUserId);
+        $folder4 = $site->createFolder($folder1, 'dd', new AttributeBag(), $systemUserId);
+        $folder5 = $site->createFolder($folder4, 'eee', new AttributeBag(), $systemUserId);
+        $folder6 = $site->createFolder($folder5, 'ffff', new AttributeBag(), $systemUserId);
+        $folder7 = $site->createFolder($folder5, 'gagg', new AttributeBag(), $systemUserId);
+        $folder8 = $site->createFolder($rootFolder, 'h', new AttributeBag(), $systemUserId);
+
+        $site->copyFolder($folder1, $folder8, $systemUserId);
 
         return 0;
     }

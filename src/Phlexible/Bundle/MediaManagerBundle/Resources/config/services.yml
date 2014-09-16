@@ -9,9 +9,17 @@ parameters:
     phlexible_media_manager.delete_policy: hide_old
 
 services:
-    phlexible_media_manager.site_default:
+    phlexible_media_site.site_manager:
+        class: Phlexible\Bundle\MediaSiteBundle\Site\SiteManager
+        arguments: [[]]
+
+    phlexible_media_manager.hash_calculator:
+        class: Phlexible\Bundle\MediaSiteBundle\HashCalculator\MessageDigestHashCalculator
+
+    phlexible_media_manager.driver.doctrine:
         class: Phlexible\Bundle\MediaSiteBundle\Driver\DoctrineDriver
-        arguments: [@doctrine.orm.entity_manager, @phlexible_media_site.hash_calculator, @event_dispatcher]
+        scope: prototype
+        arguments: [@doctrine.orm.entity_manager, @phlexible_media_manager.hash_calculator]
 
     phlexible_media_manager.upload.temp_storage:
         class: Phlexible\Bundle\MediaManagerBundle\Upload\TempStorage

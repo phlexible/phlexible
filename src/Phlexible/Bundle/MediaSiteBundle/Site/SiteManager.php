@@ -93,11 +93,8 @@ class SiteManager
     public function getByFolderId($folderId)
     {
         foreach ($this->sites as $site) {
-            try {
-                $site->findFolder($folderId);
-
+            if ($site->findFolder($folderId)) {
                 return $site;
-            } catch (\Exception $e) {
             }
         }
 

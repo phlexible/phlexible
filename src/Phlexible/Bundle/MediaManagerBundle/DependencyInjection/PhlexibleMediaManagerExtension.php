@@ -10,7 +10,10 @@ namespace Phlexible\Bundle\MediaManagerBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -32,6 +35,25 @@ class PhlexibleMediaManagerExtension extends Extension
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
+
+        $ids = array();
+        foreach ($config['sites'] as $name => $siteConfig) {
+            $driverId = $siteConfig['driver'];
+
+            $siteDefinition = new Definition('Phlexible\Bundle\MediaSiteBundle\Site\Site', array(
+                $siteConfig['id'],
+                $siteConfig['root_dir'],
+                $siteConfig['quota'],
+                new Reference($driverId, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false),
+                new Reference('event_dispatcher'),
+            ));
+            $id = 'phlexible_media_manager.site.' . strtolower($name);
+            $container->setDefinition($id, $siteDefinition);
+
+            $ids[$name] = new Reference($id);
+        }
+
+        $container->getDefinition('phlexible_media_site.site_manager')->replaceArgument(0, $ids);
 
         $container->setParameter('phlexible_media_manager.portlet.style', $config['portlet']['style']);
         $container->setParameter('phlexible_media_manager.portlet.num_items', $config['portlet']['num_items']);

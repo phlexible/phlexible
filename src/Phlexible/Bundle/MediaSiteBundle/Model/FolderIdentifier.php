@@ -6,9 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaSiteBundle\Folder;
+namespace Phlexible\Bundle\MediaSiteBundle\Model;
 
-use Brainbits_Identifier as Identifier;
+use Phlexible\Component\Identifier\Identifier;
 
 /**
  * Folder identifier

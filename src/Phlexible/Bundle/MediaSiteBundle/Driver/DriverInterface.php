@@ -8,8 +8,9 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver;
 
+use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\HashCalculator\HashCalculatorInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
@@ -28,6 +29,21 @@ interface DriverInterface
      * @return bool
      */
     public function hasFeature($feature);
+
+    /**
+     * @return string
+     */
+    public function getFileClass();
+
+    /**
+     * @return string
+     */
+    public function getFolderClass();
+
+    /**
+     * @return HashCalculatorInterface
+     */
+    public function getHashCalculator();
 
     /**
      * @return FolderInterface
@@ -130,129 +146,105 @@ interface DriverInterface
     public function search($query);
 
     /**
-     * @param FolderInterface $targetFolder
-     * @param string          $name
-     * @param AttributeBag    $attributes
-     * @param string          $userId
-     *
-     * @return FolderInterface
+     * @param FolderInterface $folder
      */
-    public function createFolder(FolderInterface $targetFolder, $name, AttributeBag $attributes, $userId);
+    public function updateFolder(FolderInterface $folder);
 
     /**
      * @param FolderInterface $folder
-     * @param string          $name
-     * @param string          $userId
-     *
-     * @return FolderInterface
+     * @param string          $oldPath
      */
-    public function renameFolder(FolderInterface $folder, $name, $userId);
+    public function renameFolder(FolderInterface $folder, $oldPath);
 
     /**
      * @param FolderInterface $folder
-     * @param FolderInterface $targetFolder
-     * @param string          $userId
-     *
-     * @return FolderInterface
+     * @param string          $oldPath
      */
-    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId);
+    public function moveFolder(FolderInterface $folder, $oldPath);
 
     /**
      * @param FolderInterface $folder
-     * @param FolderInterface $targetFolder
-     * @param string          $userId
-     *
-     * @return FolderInterface
      */
-    public function copyFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId);
+    public function deleteFolder(FolderInterface $folder);
 
     /**
-     * @param FolderInterface $folder
-     * @param string          $userId
-     *
-     * @return FolderInterface
+     * @param FileInterface $file
      */
-    public function deleteFolder(FolderInterface $folder, $userId);
-
-    /**
-     * @param FolderInterface $folder
-     * @param AttributeBag    $attributes
-     * @param string          $userId
-     *
-     * @return FolderInterface
-     */
-    public function setFolderAttributes(FolderInterface $folder, AttributeBag $attributes, $userId);
-
-    /**
-     * @param FolderInterface     $targetFolder
-     * @param FileSourceInterface $fileSource
-     * @param AttributeBag        $attributes
-     * @param string              $userId
-     *
-     * @return FileInterface
-     */
-    public function createFile(
-        FolderInterface $targetFolder,
-        FileSourceInterface $fileSource,
-        AttributeBag $attributes,
-        $userId);
+    public function updateFile(FileInterface $file);
 
     /**
      * @param FileInterface       $file
      * @param FileSourceInterface $fileSource
-     * @param AttributeBag        $attributes
-     * @param string              $userId
-     *
-     * @return FileInterface
      */
-    public function replaceFile(
-        FileInterface $file,
-        FileSourceInterface $fileSource,
-        AttributeBag $attributes,
-        $userId);
+    public function createFile(FileInterface $file, FileSourceInterface $fileSource);
+
+    /**
+     * @param FileInterface       $file
+     * @param FileSourceInterface $fileSource
+     */
+    public function replaceFile(FileInterface $file, FileSourceInterface $fileSource);
 
     /**
      * @param FileInterface $file
-     * @param string        $name
-     * @param string        $userId
      *
      * @return FileInterface
      */
-    public function renameFile(FileInterface $file, $name, $userId);
+    public function deleteFile(FileInterface $file);
 
     /**
-     * @param FileInterface   $file
+     * @param FolderInterface $folder
+     *
+     * @throws AlreadyExistsException
+     */
+    public function validateCreateFolder(FolderInterface $folder);
+
+    /**
+     * @param FolderInterface $folder
+     *
+     * @throws AlreadyExistsException
+     */
+    public function validateRenameFolder(FolderInterface $folder);
+
+    /**
+     * @param FolderInterface $folder
+     *
+     * @throws AlreadyExistsException
+     */
+    public function validateMoveFolder(FolderInterface $folder);
+
+    /**
+     * @param FolderInterface $folder
      * @param FolderInterface $targetFolder
-     * @param string          $userId
      *
-     * @return FileInterface
+     * @throws AlreadyExistsException
      */
-    public function moveFile(FileInterface $file, FolderInterface $targetFolder, $userId);
-
-    /**
-     * @param FileInterface   $file
-     * @param FolderInterface $targetFolder
-     * @param string          $userId
-     *
-     * @return FileInterface
-     */
-    public function copyFile(FileInterface $file, FolderInterface $targetFolder, $userId);
+    public function validateCopyFolder(FolderInterface $folder, FolderInterface $targetFolder);
 
     /**
      * @param FileInterface $file
-     * @param string        $userId
      *
-     * @return FileInterface
+     * @throws AlreadyExistsException
      */
-    public function deleteFile(FileInterface $file, $userId);
+    public function validateCreateFile(FileInterface $file);
 
     /**
      * @param FileInterface $file
-     * @param AttributeBag  $attributes
-     * @param string        $userId
      *
-     * @return FileInterface
+     * @throws AlreadyExistsException
      */
-    public function setFileAttributes(FileInterface $file, AttributeBag $attributes, $userId);
+    public function validateRenameFile(FileInterface $file);
 
+    /**
+     * @param FileInterface $file
+     *
+     * @throws AlreadyExistsException
+     */
+    public function validateMoveFile(FileInterface $file);
+
+    /**
+     * @param FileInterface $file
+     *
+     * @throws AlreadyExistsException
+     */
+    public function validateCopyFile(FileInterface $file);
 }

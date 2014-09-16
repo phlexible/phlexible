@@ -9,6 +9,10 @@
 namespace Phlexible\Bundle\MediaSiteBundle\Site;
 
 use Phlexible\Bundle\MediaSiteBundle\Driver\DriverInterface;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 
 /**
  * Media site interface
@@ -16,7 +20,7 @@ use Phlexible\Bundle\MediaSiteBundle\Driver\DriverInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface SiteInterface extends DriverInterface
+interface SiteInterface
 {
     /**
      * @return string
@@ -36,4 +40,231 @@ interface SiteInterface extends DriverInterface
     /**
      * @return DriverInterface
      */
-    public function getDriver();}
+    public function getDriver();
+
+    /**
+     * @return FolderInterface
+     */
+    public function findRootFolder();
+
+    /**
+     * @param string $id
+     *
+     * @return FolderInterface
+     */
+    public function findFolder($id);
+
+    /**
+     * @param int $fileId
+     *
+     * @return FolderInterface
+     */
+    public function findFolderByFileId($fileId);
+
+    /**
+     * @param string $path
+     *
+     * @return FolderInterface
+     */
+    public function findFolderByPath($path);
+
+    /**
+     * @param FolderInterface $parentFolder
+     *
+     * @return FolderInterface[]
+     */
+    public function findFoldersByParentFolder(FolderInterface $parentFolder);
+
+    /**
+     * @param FolderInterface $parentFolder
+     *
+     * @return int
+     */
+    public function countFoldersByParentFolder(FolderInterface $parentFolder);
+
+    /**
+     * @param int $id
+     * @param int $version
+     *
+     * @return FileInterface
+     */
+    public function findFile($id, $version = 1);
+
+    /**
+     * @param string $path
+     * @param int    $version
+     *
+     * @return FileInterface
+     */
+    public function findFileByPath($path, $version = 1);
+
+    /**
+     * @param int $id
+     *
+     * @return FileInterface[]
+     */
+    public function findFileVersions($id);
+
+    /**
+     * @param FolderInterface $folder
+     * @param string          $order
+     * @param int             $limit
+     * @param int             $start
+     * @param bool            $includeHidden
+     *
+     * @return FileInterface[]
+     */
+    public function findFilesByFolder(
+        FolderInterface $folder,
+        $order = null,
+        $limit = null,
+        $start = null,
+        $includeHidden = false);
+
+    /**
+     * @param FolderInterface $folder
+     *
+     * @return int
+     */
+    public function countFilesByFolder(FolderInterface $folder);
+
+    /**
+     * @param int $limit
+     *
+     * @return FileInterface[]
+     */
+    public function findLatestFiles($limit = 20);
+
+    /**
+     * @param string $query
+     *
+     * @return FileInterface[]
+     */
+    public function search($query);
+
+    /**
+     * @param FolderInterface $targetFolder
+     * @param string          $name
+     * @param AttributeBag    $attributes
+     * @param string          $userId
+     *
+     * @return FolderInterface
+     */
+    public function createFolder(FolderInterface $targetFolder, $name, AttributeBag $attributes, $userId);
+
+    /**
+     * @param FolderInterface $folder
+     * @param string          $name
+     * @param string          $userId
+     *
+     * @return FolderInterface
+     */
+    public function renameFolder(FolderInterface $folder, $name, $userId);
+
+    /**
+     * @param FolderInterface $folder
+     * @param FolderInterface $targetFolder
+     * @param string          $userId
+     *
+     * @return FolderInterface
+     */
+    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId);
+
+    /**
+     * @param FolderInterface $folder
+     * @param FolderInterface $targetFolder
+     * @param string          $userId
+     *
+     * @return FolderInterface
+     */
+    public function copyFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId);
+
+    /**
+     * @param FolderInterface $folder
+     * @param string          $userId
+     *
+     * @return FolderInterface
+     */
+    public function deleteFolder(FolderInterface $folder, $userId);
+
+    /**
+     * @param FolderInterface $folder
+     * @param AttributeBag    $attributes
+     * @param string          $userId
+     *
+     * @return FolderInterface
+     */
+    public function setFolderAttributes(FolderInterface $folder, AttributeBag $attributes, $userId);
+
+    /**
+     * @param FolderInterface     $targetFolder
+     * @param FileSourceInterface $fileSource
+     * @param AttributeBag        $attributes
+     * @param string              $userId
+     *
+     * @return FileInterface
+     */
+    public function createFile(
+        FolderInterface $targetFolder,
+        FileSourceInterface $fileSource,
+        AttributeBag $attributes,
+        $userId);
+
+    /**
+     * @param FileInterface       $file
+     * @param FileSourceInterface $fileSource
+     * @param AttributeBag        $attributes
+     * @param string              $userId
+     *
+     * @return FileInterface
+     */
+    public function replaceFile(
+        FileInterface $file,
+        FileSourceInterface $fileSource,
+        AttributeBag $attributes,
+        $userId);
+
+    /**
+     * @param FileInterface $file
+     * @param string        $name
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function renameFile(FileInterface $file, $name, $userId);
+
+    /**
+     * @param FileInterface   $file
+     * @param FolderInterface $targetFolder
+     * @param string          $userId
+     *
+     * @return FileInterface
+     */
+    public function moveFile(FileInterface $file, FolderInterface $targetFolder, $userId);
+
+    /**
+     * @param FileInterface   $file
+     * @param FolderInterface $targetFolder
+     * @param string          $userId
+     *
+     * @return FileInterface
+     */
+    public function copyFile(FileInterface $file, FolderInterface $targetFolder, $userId);
+
+    /**
+     * @param FileInterface $file
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function deleteFile(FileInterface $file, $userId);
+
+    /**
+     * @param FileInterface $file
+     * @param AttributeBag  $attributes
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function setFileAttributes(FileInterface $file, AttributeBag $attributes, $userId);
+}

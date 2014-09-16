@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Site;
 
-use Brainbits_Identifier as Identifier;
+use Phlexible\Component\Identifier\Identifier;
 
 /**
  * Site identifier

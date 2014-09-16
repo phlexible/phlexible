@@ -77,6 +77,7 @@ class FileController extends Controller
             } elseif ($sort === 'document_type_key') {
                 $sort = 'mime_type';
             }
+            //$files = $site->findFiles(array('folder' => $folder), array($sort => $dir), $limit, $start);
             $files = $site->findFilesByFolder($folder, array($sort => $dir), $limit, $start, $showHidden);
             $total = $site->countFilesByFolder($folder, $showHidden);
             $data = $this->filesToArray($site, $files);

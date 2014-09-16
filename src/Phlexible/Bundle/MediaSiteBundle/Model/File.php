@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaSiteBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MediaSiteBundle\File\FileIdentifier;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 
 /**
@@ -140,6 +139,7 @@ class File implements FileInterface
     public function setSite(SiteInterface $site)
     {
         $this->site = $site;
+        $this->siteId = $site->getId();
 
         return $this;
     }

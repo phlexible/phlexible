@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
 use Brainbits\Mime\MimeDetector;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIterator;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderIterator;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;

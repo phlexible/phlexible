@@ -8,12 +8,27 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Site;
 
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MediaSiteBundle\Driver\DriverInterface;
+use Phlexible\Bundle\MediaSiteBundle\Event\CopyFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\CopyFolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\FolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\MoveFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\MoveFolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\RenameFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\RenameFolderEvent;
+use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
+use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIterator;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\FilesystemFileSource;
+use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderIterator;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Site
@@ -43,17 +58,24 @@ class Site implements SiteInterface, \IteratorAggregate
     private $driver;
 
     /**
-     * @param string          $id
-     * @param string          $rootDir
-     * @param int             $quota
-     * @param DriverInterface $driver
+     * @var EventDispatcherInterface
      */
-    public function __construct($id, $rootDir, $quota, DriverInterface $driver)
+    private $eventDispatcher;
+
+    /**
+     * @param string                   $id
+     * @param string                   $rootDir
+     * @param int                      $quota
+     * @param DriverInterface          $driver
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function __construct($id, $rootDir, $quota, DriverInterface $driver, EventDispatcherInterface $eventDispatcher)
     {
         $this->id = $id;
         $this->rootDir = $rootDir;
         $this->quota = $quota;
         $this->driver = $driver;
+        $this->eventDispatcher = $eventDispatcher;
 
         $driver->setSite($this);
     }
@@ -238,7 +260,35 @@ class Site implements SiteInterface, \IteratorAggregate
         AttributeBag $attributes,
         $userId)
     {
-        $file = $this->driver->createFile($targetFolder, $fileSource, $attributes, $userId);
+        $hash = $this->driver->getHashCalculator()->fromFileSource($fileSource);
+
+        // prepare folder's name and id
+        $fileClass = $this->driver->getFileClass();
+        $file = new $fileClass();
+        /* @var $file FileInterface */
+        $file
+            ->setSite($this)
+            ->setId(Uuid::generate())
+            ->setFolder($targetFolder)
+            ->setName($fileSource->getName())
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserid($userId)
+            ->setModifiedAt($file->getCreatedAt())
+            ->setModifyUserid($file->getCreateUserId())
+            ->setMimeType($fileSource->getMimeType())
+            ->setSize($fileSource->getSize())
+            ->setHash($hash)
+            ->setAttributes($attributes);
+
+        $event = new CreateFileEvent($file, $fileSource);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_CREATE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Create file {$file->getName()} failed.");
+        }
+
+        $this->driver->createFile($file, $fileSource);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::CREATE_FILE, $event);
 
         return $file;
     }
@@ -252,7 +302,25 @@ class Site implements SiteInterface, \IteratorAggregate
         AttributeBag $attributes,
         $userId)
     {
-        $file = $this->driver->replaceFile($file, $fileSource, $attributes, $userId);
+        $hash = $this->driver->getHashCalculator()->fromFileSource($fileSource);
+
+        $file
+            ->setName($fileSource->getName())
+            ->setSize($fileSource->getSize())
+            ->setHash($hash)
+            ->setAttributes($attributes)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserid($userId);
+
+        $event = new ReplaceFileEvent($file, $fileSource);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_REPLACE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Create file {$file->getName()} failed.");
+        }
+
+        $this->driver->replaceFile($file, $fileSource);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::REPLACE_FILE, $event);
 
         return $file;
     }
@@ -262,7 +330,27 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function renameFile(FileInterface $file, $name, $userId)
     {
-        $file = $this->driver->renameFile($file, $name, $userId);
+        if ($file->getName() === $name) {
+            return $file;
+        }
+
+        $oldName = $file->getName();
+        $file
+            ->setName($name)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $this->driver->validateRenameFile($file);
+
+        $event = new RenameFileEvent($file, $oldName);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_RENAME_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Rename file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->updateFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::RENAME_FILE, $event);
 
         return $file;
     }
@@ -272,7 +360,26 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function moveFile(FileInterface $file, FolderInterface $targetFolder, $userId)
     {
-        $file = $this->driver->moveFile($file, $targetFolder, $userId);
+        if ($file->getFolder()->getId() === $targetFolder->getId()) {
+            return $file;
+        }
+
+        $file
+            ->setFolderId($targetFolder->getId())
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $this->driver->validateMoveFile($file);
+
+        $event = new MoveFileEvent($file, $targetFolder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_MOVE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Move file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->updateFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::MOVE_FILE, $event);
 
         return $file;
     }
@@ -280,9 +387,28 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function copyFile(FileInterface $file, FolderInterface $targetFolder, $userId)
+    public function copyFile(FileInterface $originalFile, FolderInterface $targetFolder, $userId)
     {
-        $file = $this->driver->copyFile($file, $targetFolder, $userId);
+        $file = clone $originalFile;
+        $file
+            ->setId(Uuid::generate())
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserId($userId)
+            ->setModifiedAt($file->getCreatedAt())
+            ->setModifyUserId($file->getCreateUserId())
+            ->setFolderId($targetFolder->getId());
+
+        $this->driver->validateCopyFile($file);
+
+        $event = new CopyFileEvent($file, $originalFile, $targetFolder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_COPY_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Copy file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->updateFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::COPY_FILE, $event);
 
         return $file;
     }
@@ -292,7 +418,15 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function deleteFile(FileInterface $file, $userId)
     {
-        $file = $this->driver->deleteFile($file, $userId);
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_DELETE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Delete file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->deleteFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::DELETE_FILE, $event);
 
         return $file;
     }
@@ -302,7 +436,20 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function setFileAttributes(FileInterface $file, AttributeBag $attributes, $userId)
     {
-        $file = $this->driver->setFileAttributes($file, $attributes, $userId);
+        $file
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId)
+            ->setAttributes($attributes);
+
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_SET_FILE_ATTRIBUTES, $event)->isPropagationStopped()) {
+            throw new IOException("Delete file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->updateFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::SET_FILE_ATTRIBUTES, $event);
 
         return $file;
     }
@@ -310,9 +457,43 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function createFolder(FolderInterface $targetFolder, $name, AttributeBag $attributes, $userId)
+    public function createFolder(FolderInterface $targetFolder = null, $name, AttributeBag $attributes, $userId)
     {
-        $folder = $this->driver->createFolder($targetFolder, $name, $attributes, $userId);
+        $folderPath = '';
+        if ($targetFolder) {
+            $folderPath = $name;
+            if ($targetFolder->getPath()) {
+                $folderPath = rtrim($targetFolder->getPath(), '/') . '/' . $folderPath;
+            }
+        }
+
+        // prepare folder's name and id
+        $folderClass = $this->driver->getFolderClass();
+        $folder = new $folderClass();
+        /* @var $folder FolderInterface */
+        $folder
+            ->setSite($this)
+            ->setId(Uuid::generate())
+            ->setName($name)
+            ->setParentId($targetFolder ? $targetFolder->getId() : null)
+            ->setPath($folderPath)
+            ->setAttributes($attributes)
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserid($userId)
+            ->setModifiedAt($folder->getCreatedAt())
+            ->setModifyUserid($folder->getCreateUserId());
+
+        $this->driver->validateCreateFolder($folder);
+
+        $event = new FolderEvent($folder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_CREATE_FOLDER, $event)->isPropagationStopped()) {
+            throw new IOException("Create folder {$folder->getName()} cancelled.");
+        }
+
+        $this->driver->updateFolder($folder);
+
+        $event = new FolderEvent($folder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::CREATE_FOLDER, $event);
 
         return $folder;
     }
@@ -322,7 +503,30 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function renameFolder(FolderInterface $folder, $name, $userId)
     {
-        $folder = $this->driver->renameFolder($folder, $name, $userId);
+        $oldPath = $folder->getPath();
+        $parentFolder = $this->findFolder($folder->getParentId());
+        $newPath = $name;
+        if ($parentFolder->getPath()) {
+            $newPath = rtrim($parentFolder->getPath(), '/') . '/' . $newPath;
+        }
+
+        $folder
+            ->setName($name)
+            ->setPath($newPath)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $this->driver->validateRenameFolder($folder);
+
+        $event = new RenameFolderEvent($folder, $oldPath);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_RENAME_FOLDER, $event)->isPropagationStopped()) {
+            throw new IOException("Rename folder {$folder->getName()} cancelled.");
+        }
+
+        $this->driver->renameFolder($folder, $oldPath);
+
+        $event = new FolderEvent($folder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::RENAME_FOLDER, $event);
 
         return $folder;
     }
@@ -332,7 +536,37 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
     {
-        $folder = $this->driver->moveFolder($folder, $targetFolder, $userId);
+        if ($folder->getParentId() === $targetFolder->getId()) {
+            return null;
+        }
+
+        if ($folder->getId() === $targetFolder->getId()) {
+            return null;
+        }
+
+        $oldPath = $folder->getPath();
+        $newPath = $folder->getName();
+        if ($targetFolder->getPath()) {
+            $newPath = rtrim($targetFolder->getPath(), '/') . '/' . $newPath;
+        }
+
+        $folder
+            ->setParentId($targetFolder->getId())
+            ->setPath($newPath)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $this->driver->validateMoveFolder($folder);
+
+        $event = new MoveFolderEvent($folder, $targetFolder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_MOVE_FOLDER, $event)->isPropagationStopped()) {
+            throw new IOException("Move folder {$folder->getName()} cancelled.");
+        }
+
+        $this->driver->moveFolder($folder, $oldPath);
+
+        $event = new FolderEvent($folder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::MOVE_FOLDER, $event);
 
         return $folder;
     }
@@ -342,9 +576,28 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function copyFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
     {
-        $file = $this->driver->copyFolder($folder, $targetFolder, $userId);
+        $this->driver->validateCopyFolder($folder, $targetFolder);
 
-        return $file;
+        $event = new CopyFolderEvent($folder, $targetFolder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_COPY_FOLDER, $event)->isPropagationStopped()) {
+            throw new IOException("Move folder {$folder->getName()} cancelled.");
+        }
+
+        $copiedFolder = $this->createFolder($targetFolder, $folder->getName() . '_copy_' . uniqid(), $folder->getAttributes(), $userId);
+
+        foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
+            $this->copyFolder($subFolder, $copiedFolder, $userId);
+        }
+
+        foreach ($this->findFilesByFolder($folder) as $file) {
+            $fileSource = new FilesystemFileSource($file->getPhysicalPath(), $file->getMimeType(), $file->getSize());
+            $this->createFile($copiedFolder, $fileSource, $file->getAttributes(), $userId);
+        }
+
+        $event = new FolderEvent($copiedFolder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::COPY_FOLDER, $event);
+
+        return $copiedFolder;
     }
 
     /**
@@ -352,7 +605,23 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function deleteFolder(FolderInterface $folder, $userId)
     {
-        $folder = $this->driver->deleteFolder($folder, $userId);
+        foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
+            $this->deleteFolder($subFolder, $userId);
+        }
+
+        foreach ($this->findFilesByFolder($folder) as $file) {
+            $this->deleteFile($file, $userId);
+        }
+
+        $event = new FolderEvent($folder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_DELETE_FOLDER, $event)->isPropagationStopped()) {
+            throw new IOException("Move folder {$folder->getName()} cancelled.");
+        }
+
+        $this->driver->deleteFolder($folder, $userId);
+
+        $event = new FolderEvent($folder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::DELETE_FOLDER, $event);
 
         return $folder;
     }
@@ -362,7 +631,20 @@ class Site implements SiteInterface, \IteratorAggregate
      */
     public function setFolderAttributes(FolderInterface $folder, AttributeBag $attributes, $userId)
     {
-        $folder = $this->driver->setFolderAttributes($folder, $attributes, $userId);
+        $folder
+            ->setAttributes($attributes)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $event = new FolderEvent($folder);
+        if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_SET_FOLDER_ATTRIBUTES, $event)->isPropagationStopped()) {
+            throw new IOException("Move folder {$folder->getName()} cancelled.");
+        }
+
+        $this->driver->updateFolder($folder);
+
+        $event = new FolderEvent($folder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::SET_FOLDER_ATTRIBUTES, $event);
 
         return $folder;
     }

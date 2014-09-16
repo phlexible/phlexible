@@ -10,8 +10,6 @@ namespace Phlexible\Bundle\MediaSiteBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIdentifier;
-use Phlexible\Bundle\MediaSiteBundle\Folder\FolderIterator;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 
 /**
@@ -172,6 +170,7 @@ class Folder implements FolderInterface
     public function setSite(SiteInterface $site)
     {
         $this->site = $site;
+        $this->siteId = $site->getId();
 
         return $this;
     }

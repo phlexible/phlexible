@@ -6,10 +6,8 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaSiteBundle\Folder;
+namespace Phlexible\Bundle\MediaSiteBundle\Model;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\Folder;
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 
 /**

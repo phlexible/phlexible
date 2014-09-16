@@ -29,7 +29,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
-                ->booleanNode('use_log_handler')->defaultValue(true)->end()
+                ->booleanNode('use_log_handler')->defaultValue(false)->end()
                 ->booleanNode('audit_entities')->defaultValue(false)->end()
             ->end();
 
