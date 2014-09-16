@@ -4,7 +4,7 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
     ids: {},
     prototypes: {},
 
-    mediaFields: ['image', 'flash', 'video', 'download', 'folder'],
+    mediaFields: ['file', 'folder'],
     listFields: ['select', 'multiselect', 'form'],
 
     clear: function () {

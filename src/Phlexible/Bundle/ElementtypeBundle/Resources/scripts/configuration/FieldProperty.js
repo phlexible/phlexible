@@ -133,24 +133,6 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
     },
 
     onSelect: function (combo, record, index) {
-        switch (record.get('key')) {
-            case 'image':
-            case 'download':
-            case 'flash':
-            case 'video':
-                //this.optionsGrid.hide();
-                break;
-
-            case 'select':
-            case 'checkbox':
-            case 'radio':
-                //this.optionsGrid.show();
-                break;
-
-            default:
-            //this.optionsGrid.hide();
-        }
-        this.doLayout();
     },
 
     loadData: function (field, node, fieldType) {

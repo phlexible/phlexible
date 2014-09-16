@@ -68,17 +68,14 @@ class CatchController extends Controller
                 static $skipFieldTypes = array(
                     'accordion',
                     'businesslogic',
-                    'download',
-                    'flash',
+                    'file',
                     'form',
                     'group',
-                    'image',
                     'reference',
                     'referenceroot',
                     'root',
                     'tab',
                     'table',
-                    'video',
                 );
 
                 $fieldType = $node->getType();

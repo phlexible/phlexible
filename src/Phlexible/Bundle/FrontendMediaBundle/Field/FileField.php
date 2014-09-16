@@ -11,18 +11,18 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Field;
 use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
 
 /**
- * Folder field
+ * Abstract media field
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class FolderField extends AbstractField
+class FileField extends AbstractField
 {
     /**
      * {@inheritdoc}
      */
     public function getIcon()
     {
-        return 'p-frontendmedia-field_folder-icon';
+        return 'p-frontendmedia-field_file-icon';
     }
 
     /**

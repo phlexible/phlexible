@@ -38,7 +38,13 @@ class FrontendMediaAssetProvider implements AssetProviderInterface
      */
     public function getUxScriptsCollection()
     {
-        return null;
+
+        $collection = new AssetCollection(array(
+            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FileField.js')),
+            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FolderField.js')),
+        ));
+
+        return $collection;
     }
 
     /**
@@ -56,15 +62,12 @@ class FrontendMediaAssetProvider implements AssetProviderInterface
     {
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/Definitions.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/MediaTemplatesWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/FieldHelper.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/FolderSelector.js')),
 
             new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/fields/Folder.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/fields/DownloadFile.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/fields/ImageFile.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/fields/FlashFile.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/fields/VideoFile.js')),
+            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/fields/File.js')),
+
+            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/configuration/FieldConfigurationFile.js')),
         ));
 
         return $collection;

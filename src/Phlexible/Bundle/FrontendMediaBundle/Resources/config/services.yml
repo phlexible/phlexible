@@ -38,26 +38,8 @@ services:
         tags:
             - {name: phlexible_elementtype.field, alias: folder}
 
-    phlexible_frontend_media.field.download:
-        class: Phlexible\Bundle\FrontendMediaBundle\Field\DownloadField
+    phlexible_frontend_media.field.file:
+        class: Phlexible\Bundle\FrontendMediaBundle\Field\FileField
         public: false
         tags:
-            - {name: phlexible_elementtype.field, alias: download}
-
-    phlexible_frontend_media.field.flash:
-        class: Phlexible\Bundle\FrontendMediaBundle\Field\FlashField
-        public: false
-        tags:
-            - {name: phlexible_elementtype.field, alias: flash}
-
-    phlexible_frontend_media.field.image:
-        class: Phlexible\Bundle\FrontendMediaBundle\Field\ImageField
-        public: false
-        tags:
-            - {name: phlexible_elementtype.field, alias: image}
-
-    phlexible_frontend_media.field.video:
-        class: Phlexible\Bundle\FrontendMediaBundle\Field\VideoField
-        public: false
-        tags:
-            - {name: phlexible_elementtype.field, alias: video}
+            - {name: phlexible_elementtype.field, alias: file}

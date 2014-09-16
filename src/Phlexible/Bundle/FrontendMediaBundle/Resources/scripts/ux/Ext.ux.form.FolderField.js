@@ -1,4 +1,4 @@
-Phlexible.frontendmedia.FolderSelector = Ext.extend(Ext.ux.TreeSelector, {
+Ext.ux.form.FolderField = Ext.extend(Ext.ux.TreeSelector, {
     maxHeight: 300,
     listenForLoad: false,
 
@@ -40,7 +40,7 @@ Phlexible.frontendmedia.FolderSelector = Ext.extend(Ext.ux.TreeSelector, {
 //            loader.doPreload(node);
 //        });
 
-        Phlexible.frontendmedia.FolderSelector.superclass.initComponent.call(this);
+        Ext.ux.form.FolderField.superclass.initComponent.call(this);
 
         // selecting folders is not allowed, so filter them
         //this.tree.getSelectionModel().on('beforeselect', this.beforeSelection, this);
@@ -66,7 +66,7 @@ Phlexible.frontendmedia.FolderSelector = Ext.extend(Ext.ux.TreeSelector, {
     },
 
     onRender: function () {
-        Phlexible.frontendmedia.FolderSelector.superclass.onRender.apply(this, arguments);
+        Ext.ux.form.FolderField.superclass.onRender.apply(this, arguments);
 
         this.hiddenField = this.wrap.createChild({
             tag: 'input',
@@ -125,5 +125,4 @@ Phlexible.frontendmedia.FolderSelector = Ext.extend(Ext.ux.TreeSelector, {
     yonTrigger2Click: Ext.emptyFn
 
 });
-Ext.reg('folderselector', Phlexible.frontendmedia.FolderSelector);
-Ext.reg('folderfield', Phlexible.frontendmedia.FolderSelector);
+Ext.reg('folderfield', Ext.ux.form.FolderField);

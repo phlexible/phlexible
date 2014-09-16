@@ -39,12 +39,6 @@ class MediaManagerAssetProvider implements AssetProviderInterface
     public function getUxScriptsCollection()
     {
         $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.FileField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.DownloadFileField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.ImageFileField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.FlashFileField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.form.VideoFileField.js')),
-
             //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.js')),
             //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/moxie.js')),
             //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.dev.js')),

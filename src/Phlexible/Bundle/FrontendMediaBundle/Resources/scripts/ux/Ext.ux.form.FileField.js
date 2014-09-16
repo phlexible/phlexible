@@ -1,5 +1,5 @@
 /**
- * @class Ext.form.FileField
+ * @class Ext.ux.form.FileField
  * @extends Ext.form.Field
  * Basic text field.  Can be used as a direct replacement for traditional text inputs, or as the base
  * class for more sophisticated input controls (like {@link Ext.form.TextArea} and {@link Ext.form.ComboBox}).
@@ -7,7 +7,7 @@
  * Creates a new TextField
  * @param {Object} config Configuration options
  */
-Ext.form.FileField = Ext.extend(Ext.form.Field, {
+Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
     /**
      * @cfg {String} vtypeText A custom error message to display in place of the default message provided
      * for the {@link #vtype} currently set for this field (defaults to '').  Only applies if vtype is set, else ignored.
@@ -51,21 +51,44 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
      */
     emptyImage: Ext.BLANK_IMAGE_URL,
 
-    addIconCls: 'p-mediamanager-image_add-icon',
-    removeIconCls: 'p-mediamanager-image_delete-icon',
+    addIconCls: 'p-mediamanager-download_add-icon',
+    removeIconCls: 'p-mediamanager-download_delete-icon',
 
     emptyAddText: Phlexible.mediamanager.Strings.click_to_add_file,
 
     getPlaceholder: function () {
-        return Phlexible.component('/phlexiblemediamanager/images/default-img.gif');
+        return Phlexible.component('/phlexiblefrontendmedia/images/form-file.gif');
     },
 
     onAdd: function () {
+        if (this.disabled) return;
 
+        var w = new Phlexible.mediamanager.MediamanagerWindow({
+            width: 800,
+            height: 600,
+            mode: 'select',
+            params: {
+                start_file_id: this.file_id || false,
+                start_folder_path: this.folder_path || false,
+                file_view: 'medium',
+                hide_properties: true
+            },
+            listeners: {
+                fileSelectWindow: this.onFileSelect,
+                scope: this
+            }
+        });
+        w.show();
     },
 
     onClear: function () {
         this.clearFile();
+    },
+
+    onFileSelect: function (w, file_id, file_version, file_name, folder_id) {
+        this.setFile(file_id, file_version, file_name, folder_id);
+
+        w.close();
     },
 
     setFile: function (file_id, file_version, file_name, folder_id) {
@@ -199,6 +222,42 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
 
         this.el.addClass([this.fieldClass, this.cls]);
         this.initValue();
+
+        Phlexible.frontendmedia.FieldHelper.inlineDiff.call(this);
+        Phlexible.frontendmedia.FieldHelper.unlink.call(this);
+
+        this.dropZone = new Ext.dd.DropZone(this.el.dom, {
+            ddGroup: 'imageDD',
+            /*notifyDrop: function(dd, e, data){
+             alert(data);
+             return true;
+             }*/
+            getTargetFromEvent: function (e) {
+                return e.getTarget('.x-form-item');
+            },
+            xonNodeEnter: function (target, dd, e, data) {
+                Phlexible.console.log('onNodeEnter');
+                //Ext.fly(target).addClass('flower-target-hover');
+            },
+            xonNodeOut: function (target, dd, e, data) {
+                Phlexible.console.log('onNodeOut');
+                //Ext.fly(target).removeClass('flower-target-hover');
+            },
+            onNodeOver: function (target, dd, e, data) {
+                return Ext.dd.DropZone.prototype.dropAllowed;
+            },
+            onNodeDrop: function (target, dd, e, data) {
+                this.setFile(data.record.data.id, data.record.data.version, data.record.data.name, data.record.data.folder_id);
+                /*  var rowIndex = g.getView().findRowIndex(target);
+                 var h = g.getStore().getAt(rowIndex);
+                 var targetEl = Ext.get(target);
+                 targetEl.update(data.patientData.name + ', ' + targetEl.dom.innerHTML);
+                 Ext.Msg.alert('Drop gesture', 'Dropped patient ' + data.patientData.name +
+                 ' on hospital ' +
+                 h.data.name);*/
+                return true;
+            }.createDelegate(this)
+        });
     },
 
     // private
@@ -206,7 +265,7 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
         if (this.rendered) {
             this.el.mask();
         }
-        Ext.form.FileField.superclass.onDisable.call(this);
+        Ext.ux.form.FileField.superclass.onDisable.call(this);
     },
 
     // private
@@ -214,11 +273,11 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
         if (this.rendered) {
             this.el.unmask();
         }
-        Ext.form.FileField.superclass.onEnable.call(this);
+        Ext.ux.form.FileField.superclass.onEnable.call(this);
     },
 
     initComponent: function () {
-        Ext.form.FileField.superclass.initComponent.call(this);
+        Ext.ux.form.FileField.superclass.initComponent.call(this);
         this.addEvents(
             /**
              * @event autosize
@@ -234,7 +293,7 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
 
     // private
     initEvents: function () {
-        Ext.form.FileField.superclass.initEvents.call(this);
+        Ext.ux.form.FileField.superclass.initEvents.call(this);
         if (this.validationEvent !== false) {
             this.el.on(this.validationEvent, this.validate, this, {buffer: this.validationDelay});
         }
@@ -262,7 +321,7 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
      * Also adds emptyText and emptyClass if the original value was blank.
      */
     reset: function () {
-        Ext.form.FileField.superclass.reset.call(this);
+        Ext.ux.form.FileField.superclass.reset.call(this);
         this.applyEmptyText();
     },
 
@@ -415,3 +474,5 @@ Ext.form.FileField = Ext.extend(Ext.form.Field, {
         return true;
     }
 });
+
+Ext.reg('filefield', Ext.ux.form.FileField);

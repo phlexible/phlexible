@@ -1,15 +1,15 @@
 Phlexible.fields.Registry = {
-    factory: {},
+    factories: {},
 
     hasFactory: function (key) {
-        return !!this.factory[key];
+        return !!this.factories[key];
     },
 
     addFactory: function (key, fn) {
-        this.factory[key] = fn;
+        this.factories[key] = fn;
     },
 
     getFactory: function (key) {
-        return this.factory[key];
+        return this.factories[key];
     }
 };
