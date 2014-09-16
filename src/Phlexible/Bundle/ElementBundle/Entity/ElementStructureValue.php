@@ -31,9 +31,16 @@ class ElementStructureValue
     /**
      * @var Element
      * @ORM\ManyToOne(targetEntity="Element")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="CASCADE")
      */
     private $element;
+
+    /**
+     * @var string
+     * @ORM\ManyToOne(targetEntity="ElementStructure")
+     * @ORM\JoinColumn(name="structure_id", referencedColumnName="data_id", onDelete="CASCADE")
+     */
+    private $structure;
 
     /**
      * @var int
@@ -64,13 +71,6 @@ class ElementStructureValue
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $name;
-
-    /**
-     * @var string
-     * @ORM\ManyToOne(targetEntity="ElementStructure")
-     * @ORM\JoinColumn(name="structure_id", referencedColumnName="data_id")
-     */
-    private $structure;
 
     /**
      * @var string

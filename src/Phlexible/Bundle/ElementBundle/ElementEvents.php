@@ -56,6 +56,16 @@ class ElementEvents
     const UPDATE_ELEMENT_VERSION = 'phlexible_element.update_element_version';
 
     /**
+     * Fired before an element is deleted.
+     */
+    const BEFORE_DELETE_ELEMENT = 'phlexible_element.before_delete_element';
+
+    /**
+     * Fired after an element is deleted.
+     */
+    const DELETE_ELEMENT = 'phlexible_element.delete_element';
+
+    /**
      * Fired before element is saved.
      */
     const BEFORE_SAVE_ELEMENT = 'phlexible_element.before_save_element';

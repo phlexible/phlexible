@@ -120,11 +120,11 @@ Phlexible.elements.LocksWindow = Ext.extend(Ext.Window, {
                             var data = Ext.decode(response.responseText);
 
                             if (data.success) {
-                                Phlexible.msg('Success', data.message);
+                                Phlexible.success(data.msg);
 
                                 this.getComponent(0).store.reload();
                             } else {
-                                Ext.MessageBox.alert('Failure', data.message);
+                                Phlexible.failure(data.msg);
                             }
                         },
                         scope: this
@@ -142,11 +142,11 @@ Phlexible.elements.LocksWindow = Ext.extend(Ext.Window, {
                             var data = Ext.decode(response.responseText);
 
                             if (data.success) {
-                                Phlexible.msg('Success', data.message);
+                                Phlexible.success(data.msg);
 
                                 this.getComponent(0).store.reload();
                             } else {
-                                Ext.MessageBox.alert('Failure', data.message);
+                                Phlexible.failure(data.msg);
                             }
                         },
                         scope: this

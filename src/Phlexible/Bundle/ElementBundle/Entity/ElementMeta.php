@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MediaSiteBundle\Entity\Folder;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
 
 /**
@@ -55,10 +54,11 @@ class ElementMeta
     private $field;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
+     * @var Element
+     * @ORM\ManyToOne(targetEntity="Element")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="CASCADE")
      */
-    private $eid;
+    private $element;
 
     /**
      * @var int

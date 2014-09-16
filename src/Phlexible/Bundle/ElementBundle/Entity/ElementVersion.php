@@ -44,7 +44,7 @@ class ElementVersion
     /**
      * @var Element
      * @ORM\ManyToOne(targetEntity="Element")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="CASCADE")
      */
     private $element;
 

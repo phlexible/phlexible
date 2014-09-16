@@ -393,10 +393,14 @@ class TreeController extends Controller
         }
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
 
         foreach ($treeIds as $treeId) {
             $tree = $treeManager->getByNodeId($treeId);
             $node = $tree->get($treeId);
+            $element = $elementService->findElement($node->getTypeId());
+
+            $elementService->deleteElement($element);
             $tree->delete($node, $this->getUser()->getId());
         }
 

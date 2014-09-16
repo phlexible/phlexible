@@ -230,7 +230,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('fill_lock', '->');
         this.tbarIndex.add('locks', {
             iconCls: 'p-element-lock-icon',
-            hidden: true,
             handler: function () {
                 if (Phlexible.User.isGranted('element_locks')) {
                     return;
@@ -426,7 +425,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
 
     updateLockInfo: function () {
         var targetItem1 = this.items.items[this.tbarIndex.indexOfKey('lock')];
-        var targetItem2 = this.items.items[this.tbarIndex.indexOfKey('locks')];
 
         var lockStatus = this.element.getLockStatus();
 
@@ -434,13 +432,11 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             case 'edit':
                 targetItem1.setText('<span style="font-weight: bold; color: green;">' + this.strings.locked_by_me + '</span>');
                 targetItem1.show();
-                targetItem2.show();
                 break;
 
             case 'locked':
                 targetItem1.setText('<span style="font-weight: bold; color: red;">' + String.format(this.strings.locked_by_user, this.element.data.lockinfo.username) + '</span>');
                 targetItem1.show();
-                targetItem2.show();
                 break;
 
             case 'locked_permanently':
@@ -448,14 +444,11 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     + String.format(this.strings.locked_by_user_permanently, this.element.data.lockinfo.username)
                     + '</span>');
                 targetItem1.show();
-                targetItem2.show();
                 break;
 
             default:
                 targetItem1.setText('');
                 targetItem1.hide();
-                targetItem2.setIconClass('p-element-status_idle-icon');
-                targetItem2.hide();
         }
     },
 

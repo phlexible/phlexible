@@ -31,7 +31,7 @@ class ElementStructure
      * @var Element
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Element")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid")
+     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="CASCADE")
      */
     private $element;
 

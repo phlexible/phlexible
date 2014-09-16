@@ -316,6 +316,14 @@ class ElementService
     }
 
     /**
+     * @param Element $element
+     */
+    public function deleteElement(Element $element)
+    {
+        $this->elementManager->deleteElement($element);
+    }
+
+    /**
      * @param ElementStructure $elementStructure
      * @param ElementVersion   $elementVersion
      */

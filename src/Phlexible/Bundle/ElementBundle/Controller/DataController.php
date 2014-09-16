@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\ElementBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
-use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\DiffApplier;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
@@ -246,7 +245,7 @@ class DataController extends Controller
 
         if ($unlockId !== null) {
             $unlockElement = $elementService->findElement($unlockId);
-            if ($lockManager->isLockedByUser($unlockElement, $language, $this->getUser()->getId())) {
+            if ($unlockElement && $lockManager->isLockedByUser($unlockElement, $language, $this->getUser()->getId())) {
                 try {
                     $lockManager->unlock($unlockElement, $this->getUser()->getId());
                 } catch (\Exception $e) {
@@ -847,7 +846,7 @@ class DataController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/urls", name="element_data_urls")
+     * @Route("/urls", name="elements_data_urls")
      */
     public function urlsAction(Request $request)
     {

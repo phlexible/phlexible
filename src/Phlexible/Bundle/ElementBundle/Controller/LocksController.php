@@ -50,13 +50,12 @@ class LocksController extends Controller
             }
 
             $data[] = array(
-                'id'          => $lock->getId(),
-                'uid'         => $lock->getUserId(),
-                'user'        => $username,
-                'ts'          => $lock->getLockedAt()->format('Y-m-d H:i:s'),
-                'lock_type'   => $lock->getType(),
-                'object_type' => 'element',
-                'object_id'   => $lock->getElement()->getEid(),
+                'id'        => $lock->getId(),
+                'uid'       => $lock->getUserId(),
+                'user'      => $username,
+                'ts'        => $lock->getLockedAt()->format('Y-m-d H:i:s'),
+                'eid'       => $lock->getElement()->getEid(),
+                'lock_type' => $lock->getType(),
             );
         }
 
