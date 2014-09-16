@@ -12,14 +12,6 @@ parameters:
     phlexible_frontend.request.force_protocol: ~
 
 services:
-    # asset providers
-    phlexible_frontend.asset_provider:
-        class: Phlexible\Bundle\FrontendBundle\AssetProvider\FrontendAssetProvider
-        public: false
-        arguments: [@file_locator]
-        tags:
-            - {name: phlexible_gui.asset.provider}
-
     # event listeners
     phlexible_frontend.listener.render:
         class: Phlexible\Bundle\FrontendBundle\EventListener\RenderListener

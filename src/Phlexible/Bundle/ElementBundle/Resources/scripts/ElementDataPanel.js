@@ -174,7 +174,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
             {
                 // 5
                 xtype: 'tbtext',
-                text: this.strings.show,
+                text: this.strings.diff.show,
                 hidden: true
             },
             ' ',
@@ -184,7 +184,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
                 hidden: true,
                 width: 140,
                 value: this.element.language,
-                emptyText: this.strings.language,
+                emptyText: this.strings.diff.language,
                 store: new Ext.data.ObjectStore({
                     fields: ['langKey', 'text', 'iconCls'],
                     data: this.element.languages
@@ -206,7 +206,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
                 hidden: true,
                 width: 80,
                 listWidth: 200,
-                emptyText: this.strings.from_version,
+                emptyText: this.strings.diff.from_version,
                 tpl: Phlexible.elements.DiffVersionComboTemplate,
                 //value: (parseInt(this.element.version, 10) - 1),
                 store: new Ext.data.JsonStore({
@@ -230,7 +230,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
             },
             {
                 // 10
-                text: this.strings.compare_to,
+                text: this.strings.diff.compare_to,
                 enableToggle: true,
                 hidden: true,
                 toggleHandler: function (btn, state) {
@@ -245,7 +245,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
                 hidden: true,
                 disabled: true,
                 listWidth: 200,
-                emptyText: this.strings.to_version,
+                emptyText: this.strings.diff.to_version,
                 tpl: Phlexible.elements.DiffVersionComboTemplate,
                 //value: (parseInt(this.element.version, 10) - 1),
                 store: new Ext.data.JsonStore({
@@ -270,7 +270,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
             ' ',
             {
                 // 13
-                text: this.strings.load,
+                text: this.strings.diff.load,
                 hidden: true,
                 handler: this.loadDiff,
                 scope: this
@@ -278,7 +278,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
             '-',
             {
                 // 15
-                text: this.strings.compare,
+                text: this.strings.diff.compare,
                 iconCls: 'p-element-diff-icon',
                 enableToggle: true,
                 toggleHandler: function (btn, state) {
@@ -401,8 +401,8 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
 
         tb.items.items[this.btnIndex.version_from].store.loadData(v);
         tb.items.items[this.btnIndex.version_to].store.loadData(v);
-        tb.items.items[this.btnIndex.version_from].setValue(element.version);
-        tb.items.items[this.btnIndex.version_to].setValue(toVersion);
+        tb.items.items[this.btnIndex.version_from].setValue(toVersion);
+        tb.items.items[this.btnIndex.version_to].setValue(element.version);
 
         if (this.diffParams.enabled) {
             tb.items.items[this.btnIndex.compare_to].toggle(true);
@@ -448,7 +448,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         this.compareElement.reload({
             id: this.element.tid,
             teaser_id: this.element.data.properties.teaser_id || null,
-            version: fromValue,
+            version: this.element.version,
             language: langValue,
             lock: 0,
             diff: 1,

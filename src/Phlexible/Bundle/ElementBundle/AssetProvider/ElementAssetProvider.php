@@ -114,6 +114,8 @@ class ElementAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/MainPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/TopToolbar.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/FileLinkWindow.js')),
+            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/UrlGrid.js')),
+            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementPreviewPanel.js')),
 
             new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/portlet/LatestElements.js')),
         ));

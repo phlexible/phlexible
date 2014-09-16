@@ -83,6 +83,10 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
                 accordionCollapsed: this.accordionCollapsed
             },
             {
+                xtype: 'elements-elementpreviewpanel',
+                element: this.element
+            },
+            {
                 xtype: 'elements-rightsgrid',
                 iconCls: 'p-element-tab_rights-icon',
                 element: this.element,
@@ -106,6 +110,10 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
             },
             {
                 xtype: 'elements-elementhistorygrid',
+                element: this.element
+            },
+            {
+                xtype: 'elements-urlgrid',
                 element: this.element
             }
         ];

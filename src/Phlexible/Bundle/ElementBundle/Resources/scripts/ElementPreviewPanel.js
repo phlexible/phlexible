@@ -1,7 +1,7 @@
-Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
-    title: Phlexible.frontend.Strings.preview,
-    strings: Phlexible.frontend.Strings,
-    iconCls: 'p-frontend-preview-icon',
+Phlexible.elements.ElementPreviewPanel = Ext.extend(Ext.Panel, {
+    title: Phlexible.elements.Strings.preview.preview,
+    strings: Phlexible.elements.Strings.preview,
+    iconCls: 'p-element-preview-icon',
     closable: false,
     layout: 'fit',
 
@@ -105,7 +105,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             {
                 // 2
                 text: this.strings.preview,
-                iconCls: 'p-frontend-preview_preview-icon',
+                iconCls: 'p-element-preview_preview-icon',
                 pressed: true,
                 enableToggle: true,
                 allowDepress: false,
@@ -119,8 +119,8 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             },
             {
                 // 3
-                text: this.strings.preview_online,
-                iconCls: 'p-frontend-preview_online-icon',
+                text: this.strings.online,
+                iconCls: 'p-element-preview_online-icon',
                 enableToggle: true,
                 allowDepress: false,
                 toggleGroup: 'preview',
@@ -134,8 +134,8 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             '-',
             {
                 // 5
-                text: this.strings.preview_horizontal,
-                iconCls: 'p-frontend-preview_horizontal-icon',
+                text: this.strings.horizontal,
+                iconCls: 'p-element-preview_horizontal-icon',
                 enableToggle: true,
                 allowDepress: false,
                 toggleGroup: 'preview',
@@ -148,8 +148,8 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             },
             {
                 // 6
-                text: this.strings.preview_vertical,
-                iconCls: 'p-frontend-preview_vertical-icon',
+                text: this.strings.vertical,
+                iconCls: 'p-element-preview_vertical-icon',
                 enableToggle: true,
                 allowDepress: false,
                 toggleGroup: 'preview',
@@ -162,7 +162,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        Phlexible.frontend.ElementPreviewPanel.superclass.initComponent.call(this);
+        Phlexible.elements.ElementPreviewPanel.superclass.initComponent.call(this);
     },
 
     onLoadElement: function (element) {
@@ -282,7 +282,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                     tbar: [
                         {
                             // 0
-                            iconCls: 'p-frontend-back-icon',
+                            iconCls: 'p-element-back-icon',
                             handler: function () {
                                 this.singleIframe.iframe.dom.contentWindow.history.back();
                             },
@@ -290,7 +290,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                         },
                         {
                             // 1
-                            iconCls: 'p-frontend-forward-icon',
+                            iconCls: 'p-element-forward-icon',
                             handler: function () {
                                 this.singleIframe.iframe.dom.contentWindow.history.forward();
                             },
@@ -298,7 +298,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                         },
                         {
                             // 2
-                            iconCls: 'p-frontend-home-icon',
+                            iconCls: 'p-element-home-icon',
                             handler: function () {
                                 this.getComponent(0).setSrc(this.currentSingleUrl);
                             },
@@ -313,7 +313,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                         },
                         {
                             // 4
-                            iconCls: 'p-frontend-reload-icon',
+                            iconCls: 'p-element-reload-icon',
                             handler: function () {
                                 this.getComponent(0).setSrc();
                             },
@@ -338,7 +338,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                         {
                             xtype: 'iframepanel',
                             region: 'center',
-                            title: this.strings.preview_online,
+                            title: this.strings.online,
                             defaultSrc: this.online_url
                         }
                     ]
@@ -359,7 +359,7 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                         {
                             xtype: 'iframepanel',
                             height: '50%',
-                            title: this.strings.preview_online,
+                            title: this.strings.online,
                             defaultSrc: this.online_url
                         }
                     ]
@@ -383,4 +383,4 @@ Phlexible.frontend.ElementPreviewPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-elementpreviewpanel', Phlexible.frontend.ElementPreviewPanel);
+Ext.reg('elements-elementpreviewpanel', Phlexible.elements.ElementPreviewPanel);

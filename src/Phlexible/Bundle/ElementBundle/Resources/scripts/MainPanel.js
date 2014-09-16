@@ -192,7 +192,7 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
                             xtype: 'grid',
                             tabTip: this.strings.element_search,
                             title: '&nbsp;',
-                            iconCls: 'p-frontend-preview-icon',
+                            iconCls: 'p-element-preview-icon',
                             cls: 'p-elements-resource-search-panel',
                             viewConfig: {
                                 forceFit: true,

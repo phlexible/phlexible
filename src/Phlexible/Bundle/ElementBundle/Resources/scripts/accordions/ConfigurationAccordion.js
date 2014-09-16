@@ -1,6 +1,6 @@
 Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
-    strings: Phlexible.elements.Strings,
-    title: Phlexible.elements.Strings.configuration,
+    strings: Phlexible.elements.Strings.configuration,
+    title: Phlexible.elements.Strings.configuration.configuration,
     cls: 'p-elements-page-accordion',
     iconCls: 'p-element-action-icon',
     border: false,

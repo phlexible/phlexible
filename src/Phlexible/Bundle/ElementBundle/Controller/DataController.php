@@ -224,8 +224,10 @@ class DataController extends Controller
                 $toElementStructure = $elementStructure;
             }
 
-            $differ = new Differ();
-            $differ->diff($fromElementStructure, $toElementStructure);
+            if ($fromElementStructure !== $toElementStructure) {
+                $differ = new Differ();
+                $differ->diff($fromElementStructure, $toElementStructure);
+            }
 
             $elementStructure = $fromElementStructure;
         }

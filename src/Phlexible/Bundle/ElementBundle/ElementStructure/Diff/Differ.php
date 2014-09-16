@@ -27,8 +27,8 @@ class Differ
         foreach ($structure->getValues() as $structureValue) {
             $name = $structureValue->getName();
             $fromValue = $structureValue->getValue();
-            if ($compareStructure && $compareStructure->hasValue($name)) {
-                $compareStructureValue = $compareStructure->getValue($name);
+            if ($compareStructure && $compareStructure->hasValue($name, $structureValue->getLanguage())) {
+                $compareStructureValue = $compareStructure->getValue($name, $structureValue->getLanguage());
                 $toValue = $compareStructureValue->getValue();
 
                 if ($fromValue !== $toValue) {
@@ -40,7 +40,7 @@ class Differ
         }
 
         foreach ($compareStructure->getValues() as $compareStructureValue) {
-            if ($structure && !$structure->hasValue($compareStructureValue->getName())) {
+            if (!$structure->hasValue($compareStructureValue->getName(), $compareStructureValue->getLanguage())) {
                 $this->applyRemovedValue($compareStructureValue);
                 $structure->setValue($compareStructureValue);
             }

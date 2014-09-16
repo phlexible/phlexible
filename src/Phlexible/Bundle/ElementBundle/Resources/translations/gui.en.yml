@@ -55,7 +55,6 @@ elements:
     data: Data
     information: Information
     layout: 'Layout areas'
-    preview: Preview
     history: History
     date: Date
     action: Action
@@ -153,13 +152,11 @@ elements:
     descending: descending
     unsorted: unsorted
     page: Page
-    configuration: Configuration
     disable_caching: 'disable Caching'
     cache_lifetime: 'Cache lifetime (seconds)'
     http_response_code: 'HTTP Response Code'
     in_navigation: 'in Navigation'
     is_restricted: 'is Restricted'
-    use_https: 'use HTTPS'
     use_default: 'use default'
     free: Free
     first: First
@@ -201,16 +198,6 @@ elements:
     new_alias_header: 'Create Instance'
     new_alias_description: 'Please select an element you want to add an instance for at this place.'
     delete_alias: 'Delete Instance'
-    link_no_link: 'No Link'
-    link_tid: 'Element from this siteroot'
-    link_intrasiteroot: 'Element from all siteroot'
-    link_url: 'External URL'
-    link_mailto: Mailto
-    link_url_help: 'Format: http://www.test.com'
-    link_mailto_help: 'Format: test@test.com'
-    link_new_window: 'Open in new window'
-    link_language_help: 'Language of target site (optional)'
-    link_language_empty: 'Not specified'
     url: URL
     mailto: Mailto
     full_element: 'Full Element'
@@ -235,25 +222,6 @@ elements:
     no_country_context: 'No country context'
     country: Country
     active: Active
-    differences: Differences
-    show_differences: 'Show differences'
-    no_differences: 'No differences'
-    compare: Compare
-    show: Show
-    from_version: 'From version'
-    compare_to: 'compare to'
-    to_version: 'To version'
-    load: Load
-    task_publish_element: 'Publish element'
-    task_publish_element_template: 'Publish element "{title}" with TID {tid}.'
-    task_set_element_offline: 'Set element offline'
-    task_set_element_offline_template: 'Set element "{title}" with TID {tid} offline.'
-    task_delete_element: 'Delete element'
-    task_delete_element_template: 'Delete element "{title}" with TID {tid}.'
-    task_general: 'General task'
-    task_general_template: 'General task for element "{title}" with TID {tid}.'
-    task_done: 'Automatically set task finished through action.'
-    task_delete: 'Automatically set task finished through deletion of target.'
     access: Access
     user: User
     users: Users
@@ -291,17 +259,64 @@ elements:
     clipboard: Clipboard
     copy_text_type: 'Object "{0}" of type "{1}" copied to clipboard.'
     copy_text: 'Object "{0}" copied to clipboard.'
-    need_authentication: Need Authentication
-    route: Route
-    controller: Controller
-    template: Template
-    robots: Robots
-    robots_no_follow: No Follow
-    robots_no_index: No Index
-    internal_search: Internal Search
-    search_no_index: Don't index
-    caching: Caching
-    no_cache: Don't cache
-    private: Private
-    max_age: Max Age
-    shared_max_age: Shared Max Age
+
+    diff:
+        language: Language
+        differences: Differences
+        show_differences: 'Show differences'
+        no_differences: 'No differences'
+        compare: Compare
+        show: Show
+        from_version: 'From version'
+        compare_to: 'compare to'
+        to_version: 'To version'
+        load: Load
+
+    link:
+        no_link: 'No Link'
+        tid: 'Element from this siteroot'
+        intrasiteroot: 'Element from all siteroot'
+        url: 'External URL'
+        mailto: Mailto
+        url_help: 'Format: http://www.test.com'
+        mailto_help: 'Format: test@test.com'
+        new_window: 'Open in new window'
+        language_help: 'Language of target site (optional)'
+        language_empty: 'Not specified'
+
+    task:
+        publish_element: 'Publish element'
+        publish_element_template: 'Publish element "{title}" with TID {tid}.'
+        set_element_offline: 'Set element offline'
+        set_element_offline_template: 'Set element "{title}" with TID {tid} offline.'
+        delete_element: 'Delete element'
+        delete_element_template: 'Delete element "{title}" with TID {tid}.'
+        general: 'General task'
+        general_template: 'General task for element "{title}" with TID {tid}.'
+        done: 'Automatically set task finished through action.'
+        delete: 'Automatically set task finished through deletion of target.'
+
+    configuration:
+        configuration: Configuration
+        in_navigation: 'in Navigation'
+        need_authentication: Need Authentication
+        use_https: 'use HTTPS'
+        route: Route
+        controller: Controller
+        template: Template
+        robots: Robots
+        robots_no_follow: No Follow
+        robots_no_index: No Index
+        internal_search: Internal Search
+        search_no_index: Don't index
+        caching: Caching
+        no_cache: Don't cache
+        private: Private
+        max_age: Max Age
+        shared_max_age: Shared Max Age
+
+    preview:
+        preview: Preview
+        online: Online
+        vertical: Vertical
+        horizontal: Horizontal

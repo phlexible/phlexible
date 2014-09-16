@@ -76,9 +76,17 @@ class TranslationsBuilder
         $catalogue = $this->catalogAccessor->getCatalogues($language);
         $namespaces = array();
         foreach ($catalogue->all($domain) as $key => $value) {
-            list($component, $key) = explode('.', $key);
+            $parts = explode('.', $key);
+            $component = array_shift($parts);
             $namespace = 'Phlexible.' . strtolower($component) . '.Strings';
-            $namespaces[$namespace][$key] = $value;
+            if (count($parts) > 1) {
+                $key1 = array_shift($parts);
+                $key2 = array_shift($parts);
+                $namespaces[$namespace][$key1][$key2] = $value;
+            } else {
+                $key = array_shift($parts);
+                $namespaces[$namespace][$key] = $value;
+            }
         }
         foreach ($namespaces as $namespace => $keys) {
             $translations[$namespace] = $keys;

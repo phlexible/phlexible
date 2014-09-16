@@ -54,7 +54,6 @@ elements:
     data: Daten
     information: Informationen
     layout: Layoutbereiche
-    preview: Vorschau
     history: Verlauf
     date: Datum
     action: Aktion
@@ -152,13 +151,11 @@ elements:
     descending: absteigend
     unsorted: unsortiert
     page: Seite
-    configuration: Konfiguration
     disable_caching: 'Caching deaktivieren'
     cache_lifetime: 'Cache-Lebensdauer (Sekunden)'
     http_response_code: 'HTTP Response Code'
     in_navigation: 'in Navigation'
     is_restricted: 'Zugriff beschränkt'
-    use_https: 'HTTPS benutzen'
     use_default: 'Standard benutzen'
     free: Frei
     first: Zuerst
@@ -201,16 +198,6 @@ elements:
     new_alias_header: 'Instanz anlegen'
     new_alias_description: 'Bitte wählen Sie jenes Element aus, für das Sie an dieser Stelle eine Instanz anlegen möchten.'
     delete_alias: 'Instanz löschen'
-    link_no_link: 'Kein Link'
-    link_tid: 'Element aus diesem Siteroot'
-    link_intrasiteroot: 'Element aus allen Siteroots'
-    link_url: 'Externe URL'
-    link_mailto: Mailto
-    link_url_help: 'Format: http://www.test.com'
-    link_mailto_help: 'Format: test@test.com'
-    link_new_window: 'In neuem Fenster öffnen'
-    link_language_help: 'Sprache der Zielseite (optional)'
-    link_language_empty: 'Nicht angeben'
     url: URL
     mailto: Mailto
     full_element: Vollelement
@@ -235,25 +222,6 @@ elements:
     no_country_context: 'Kein Länderkontext'
     country: Land
     active: Aktiv
-    differences: Unterschiede
-    show_differences: 'Unterschiede anzeigen'
-    no_differences: 'Keine Unterschiede'
-    compare: Vergleichen
-    show: Zeige
-    from_version: 'Von Version'
-    compare_to: 'vergleiche mit'
-    to_version: 'Zu Version'
-    load: Laden
-    task_publish_element: 'Element veröffentlichen'
-    task_publish_element_template: 'Element "{title}" mit der TID {tid} veröffentlichen.'
-    task_set_element_offline: 'Element offline setzen'
-    task_set_element_offline_template: 'Element "{title}" mit der TID {tid} offline setzen.'
-    task_delete_element: 'Element löschen'
-    task_delete_element_template: 'Element "{title}" mit der TID {tid} löschen.'
-    task_general: 'Allgemeine Aufgabe'
-    task_general_template: 'Allgemeine Aufgabe für das Element "{title}" mit der TID {tid}.'
-    task_done: 'Aufgabe wurde durch Aktion automatisch erledigt.'
-    task_delete: 'Aufgabe wurde durch Löschen des Ziels automatisch erledigt.'
     access: Zugriff
     user: Benutzer
     users: Benutzer
@@ -291,17 +259,64 @@ elements:
     clipboard: Zwischenablage
     copy_text_type: 'Objekt "{0}" vom Typ "{1}" in die Zwischenablge kopiert.'
     copy_text: 'Objekt "{0}" in die Zwischenablage kopiert.'
-    need_authentication: Benötigt Authentifizierung
-    route: Route
-    controller: Controller
-    template: Template
-    robots: Robots
-    robots_no_follow: No Follow
-    robots_no_index: No Index
-    internal_search: Interne Suche
-    search_no_index: Nicht indizieren
-    caching: Caching
-    no_cache: Nicht cachen
-    private: Private
-    max_age: Max Age
-    shared_max_age: Shared Max Age
+
+    diff:
+        language: Sprache
+        differences: Unterschiede
+        show_differences: 'Unterschiede anzeigen'
+        no_differences: 'Keine Unterschiede'
+        compare: Vergleichen
+        show: Zeige
+        from_version: 'Von Version'
+        compare_to: 'vergleiche mit'
+        to_version: 'Zu Version'
+        load: Laden
+
+    link:
+        no_link: 'Kein Link'
+        tid: 'Element aus diesem Siteroot'
+        intrasiteroot: 'Element aus allen Siteroots'
+        url: 'Externe URL'
+        mailto: Mailto
+        url_help: 'Format: http://www.test.com'
+        mailto_help: 'Format: test@test.com'
+        new_window: 'In neuem Fenster öffnen'
+        language_help: 'Sprache der Zielseite (optional)'
+        language_empty: 'Nicht angeben'
+
+    task:
+        publish_element: 'Element veröffentlichen'
+        publish_element_template: 'Element "{title}" mit der TID {tid} veröffentlichen.'
+        set_element_offline: 'Element offline setzen'
+        set_element_offline_template: 'Element "{title}" mit der TID {tid} offline setzen.'
+        delete_element: 'Element löschen'
+        delete_element_template: 'Element "{title}" mit der TID {tid} löschen.'
+        general: 'Allgemeine Aufgabe'
+        general_template: 'Allgemeine Aufgabe für das Element "{title}" mit der TID {tid}.'
+        done: 'Aufgabe wurde durch Aktion automatisch erledigt.'
+        delete: 'Aufgabe wurde durch Löschen des Ziels automatisch erledigt.'
+
+    configuration:
+        configuration: Konfiguration
+        in_navigation: 'In Navigation'
+        use_https: 'HTTPS benutzen'
+        need_authentication: Benötigt Authentifizierung
+        route: Route
+        controller: Controller
+        template: Template
+        robots: Robots
+        robots_no_follow: No Follow
+        robots_no_index: No Index
+        internal_search: Interne Suche
+        search_no_index: Nicht indizieren
+        caching: Caching
+        no_cache: Nicht cachen
+        private: Private
+        max_age: Max Age
+        shared_max_age: Shared Max Age
+
+    preview:
+        preview: Vorschau
+        online: Online
+        vertical: Vertikal
+        horizontal: Horizontal

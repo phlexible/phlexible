@@ -342,11 +342,57 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
     populateExtendedMenu: function () {
         this.extendedMenuIndex = new Ext.util.MixedCollection();
 
-        if (Phlexible.tasks.Strings) {
+        this.extendedMenuIndex.add('history', {
+            // items[13]
+            text: this.strings.history,
+            iconCls: 'p-element-tab_history-icon',
+            handler: function () {
+                var w = new Phlexible.elements.HistoryWindow();
+                w.show();
+            },
+            scope: this
+        });
+
+        this.extendedMenuIndex.add('preview_sep', '-');
+        this.extendedMenuIndex.add('preview', {
+            // items[6]
+            xtype: 'tbsplit',
+            text: Phlexible.elements.Strings.preview.preview,
+            iconCls: 'p-element-preview_page-icon',
+            disabled: true,
+            handler: function () {
+                var src = this.element.data.urls.preview;
+                window.open(src, 'latest_preview'); //, 'width=1000,height=700,scrollbars=yes');
+            },
+            scope: this,
+            menu: [
+                {
+                    text: Phlexible.elements.Strings.preview.preview,
+                    iconCls: 'p-element-preview_preview-icon',
+                    handler: function () {
+                        var src = this.element.data.urls.preview;
+                        window.open(src, 'preview'); //, 'width=1000,height=700,scrollbars=yes');
+                    },
+                    scope: this
+                },
+                {
+                    text: Phlexible.elements.Strings.preview.online,
+                    iconCls: 'p-element-preview_online-icon',
+                    disabled: true,
+                    handler: function () {
+                        var src = this.element.data.urls.online;
+                        window.open(src, 'preview_live'); //, 'width=1000,height=700,scrollbars=yes');
+                    },
+                    scope: this
+                }
+            ]
+        });
+
+        if (Phlexible.tasks.Strings && Phlexible.User.isGranted('tasks')) {
+            this.extendedMenuIndex.add('task_sep', '-');
             this.extendedMenuIndex.add('task', {
                 text: Phlexible.tasks.Strings.new_task,
                 iconCls: 'p-tasks-component-icon',
-                hidden: Phlexible.User.isGranted('tasks'),
                 disabled: true,
                 handler: function () {
                     var payload = {
@@ -376,19 +422,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                 scope: this
             });
         }
-
-        this.extendedMenuIndex.add('sep_history', '-');
-        this.extendedMenuIndex.add('history', {
-            // items[13]
-            text: this.strings.history,
-            iconCls: 'p-element-tab_history-icon',
-            handler: function () {
-                var w = new Phlexible.elements.HistoryWindow();
-                w.show();
-            },
-            scope: this
-        });
-
     },
 
     updateLockInfo: function () {
@@ -484,6 +517,21 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             this.items.items[this.tbarIndex.indexOfKey('pager_reload')].hide();
             this.items.items[this.tbarIndex.indexOfKey('pager_next')].hide();
             this.items.items[this.tbarIndex.indexOfKey('pager_last')].hide();
+        }
+
+        var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
+        var previewItem = extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('preview')];
+        if (this.element.properties.et_type == Phlexible.elementtypes.TYPE_FULL) {
+            previewItem.enable();
+            if (this.element.properties.is_published) {
+                previewItem.menu.items.items[1].enable();
+            }
+            else {
+                previewItem.menu.items.items[1].disable();
+            }
+        }
+        else {
+            previewItem.disable();
         }
 
         this.updateLockInfo();
