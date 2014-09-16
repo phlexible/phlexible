@@ -545,9 +545,9 @@ class LayoutController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/createteaser", name="teasers_layout_createteaser")
+     * @Route("/create", name="teasers_layout_createteaser")
      */
-    public function createTeaserAction(Request $request)
+    public function createAction(Request $request)
     {
         $siterootId = $request->get('siteroot_id');
         $treeId = $request->get('tree_id');
@@ -595,7 +595,7 @@ class LayoutController extends Controller
      * @return ResultResponse
      * @Route("/createinstance", name="teasers_layout_createinstance")
      */
-    public function createTeaserInstanceAction(Request $request)
+    public function createInstanceAction(Request $request)
     {
         $treeId = $request->get('tid');
         $layoutAreaId = $request->get('id');
@@ -624,8 +624,18 @@ class LayoutController extends Controller
         $type = $request->get('type');
 
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+        $elementService = $this->get('phlexible_element.element_service');
 
         $teaser = $teaserManager->find($teaserId);
+        if ($teaser->getType() === 'element') {
+            $element = $elementService->findElement($teaser->getTypeId());
+            $elementService->deleteElement($element);
+        }
+
+        foreach ($teaserManager->findBy(array('type' => array('sort', 'stop', 'inherit'), 'typeId' => $teaser->getTypeId())) as $subTeaser) {
+            $teaserManager->deleteTeaser($subTeaser, $this->getUser()->getId());
+        }
+
         $teaserManager->deleteTeaser($teaser, $this->getUser()->getId());
 
         // TODO: fix
