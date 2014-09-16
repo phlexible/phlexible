@@ -80,7 +80,7 @@ Phlexible.elements.ElementPreviewPanel = Ext.extend(Ext.Panel, {
                         this.activeLanguage = btn.langKey;
 
                         Ext.Ajax.request({
-                            url: Phlexible.Router.generate('frontend_preview_urls'),
+                            url: Phlexible.Router.generate('elements_data_urls'),
                             params: {
                                 tid: this.activeTid,
                                 language: this.activeLanguage

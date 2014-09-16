@@ -59,40 +59,4 @@ class PreviewController extends Controller
 
         return $this->render($data['template'], (array) $data);
     }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/urls", name="frontend_preview_urls")
-     */
-    public function urlsAction(Request $request)
-    {
-        $tid = $request->get('tid');
-        $language = $request->get('language');
-
-        $treeManager = $this->get('phlexible_tree.tree_manager');
-        $stateManager = $this->get('phlexible_tree.state_manager');
-
-        $node = $treeManager->getByNodeId($tid)->get($tid);
-
-        $urls = array(
-            'preview' => '',
-            'online'  => '',
-        );
-
-        if ($node) {
-            $urls['preview'] = $this->generateUrl('frontend_preview', array('id' => $tid, 'language' => $language));
-
-            if ($stateManager->isPublished($node, $language)) {
-                try {
-                    //$urls['online'] = $this->generateUrl($node);
-                } catch (\Exception $e) {
-
-                }
-            }
-        }
-
-        return new ResultResponse(true, '', $urls);
-    }
 }

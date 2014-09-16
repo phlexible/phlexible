@@ -12,18 +12,6 @@ parameters:
     phlexible_frontend.request.force_protocol: ~
 
 services:
-    # event listeners
-    phlexible_frontend.listener.render:
-        class: Phlexible\Bundle\FrontendBundle\EventListener\RenderListener
-        arguments: [@service_container]
-        tags:
-            - {name: kernel.event_listener, event: xxxrenderer.render, method: onRender}
-
-    phlexible_frontend.listener.apply_successor:
-        class: Phlexible\Bundle\FrontendBundle\EventListener\ApplySuccessorListener
-        tags:
-            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
-
     # problem checkers
     phlexible_frontend.problem.specialtidcheck:
         class: Phlexible\Bundle\FrontendBundle\ProblemChecker\SpecialTidChecker
