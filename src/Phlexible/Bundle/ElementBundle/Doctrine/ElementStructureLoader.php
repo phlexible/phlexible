@@ -167,13 +167,13 @@ class ElementStructureLoader
                             ->setParentName($myParentNode->getName());
                         /* @var $parentStructure ElementStructure */
 
-                        if (!isset($structures[$row['structure_id']])) {
+                        if (!isset($structures[$row['repeatable_id']])) {
                             continue;
                             ldd($structure);
                             echo PHP_EOL.$node->getName()." ".$node->getDsId().PHP_EOL;
                             die;
                         }
-                        $parentStructure = $structures[$row['structure_id']];
+                        $parentStructure = $structures[$row['repeatable_id']];
                         $parentStructure->addStructure($structure);
 
                         $structures[$row['id']] = $structure;
