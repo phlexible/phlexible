@@ -306,4 +306,22 @@ class CatchController extends Controller
 
         return new ResultResponse(true, 'Catch created.');
     }
+
+    /**
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/preview", name="elementfinder_catch_preview")
+     */
+    public function previewAction(Request $request)
+    {
+        $elementFinderConfig = new ElementFinderConfig();
+        $elementFinderConfig
+            ->setTreeId(1);
+
+        $elementFinder = $this->get('phlexible_element_finder.finder');
+        $result = $elementFinder->find($elementFinderConfig, array('de'), true);
+
+        return new JsonResponse($result->range(0, 10));
+    }
 }

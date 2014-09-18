@@ -17,6 +17,8 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                         ['navigation'],
                         ['date'],
                         ['forward'],
+                        ['description'],
+                        ['keywords'],
                         ['custom1'],
                         ['custom2'],
                         ['custom3'],

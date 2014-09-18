@@ -12,6 +12,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementFinderBundle\ElementFinder\ElementFinder;
 use Phlexible\Bundle\ElementFinderBundle\ElementFinder\ElementFinderResultPool;
 use Phlexible\Bundle\ElementFinderBundle\Entity\ElementFinderConfig;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Twig element finder extension
@@ -26,11 +27,18 @@ class ElementFinderExtension extends \Twig_Extension
     private $elementFinder;
 
     /**
-     * @param ElementFinder $elementFinder
+     * @var RequestStack
      */
-    public function __construct(ElementFinder $elementFinder)
+    private $requestStack;
+
+    /**
+     * @param ElementFinder $elementFinder
+     * @param RequestStack  $requestStack
+     */
+    public function __construct(ElementFinder $elementFinder, RequestStack $requestStack)
     {
         $this->elementFinder = $elementFinder;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -58,17 +66,29 @@ class ElementFinderExtension extends \Twig_Extension
             return '';
         }
 
+        $elementtypeIds = !empty($values['elementtypeIds']) ? explode(',', $values['elementtypeIds']) : array();
+        $inNavigation = !empty($values['inNavigation']);
+        $maxDepth = strlen($values['maxDepth']) ? (int) $values['maxDepth'] : null;
+        $filter = !empty($values['filter']) ? $values['filter'] : null;
+        $sortField = !empty($values['sortField']) ? $values['sortField'] : null;
+        $sortDir = !empty($values['sortDir']) ? $values['sortDir'] : null;
+        $startTreeId = !empty($values['startTreeId']) ? $values['startTreeId'] : null;
+
         $elementFinderConfig = new ElementFinderConfig();
         $elementFinderConfig
-            ->setElementtypeIds(explode(',', $values['elementtypeIds']))
-            ->setNavigation($values['inNavigation'])
-            ->setMaxDepth($values['maxDepth'])
-            ->setFilter($values['filter'])
-            ->setSortField($values['sortField'])
-            ->setSortOrder($values['sortDir'])
-            ->setTreeId($values['startTreeId']);
+            ->setElementtypeIds($elementtypeIds)
+            ->setNavigation($inNavigation)
+            ->setMaxDepth($maxDepth)
+            ->setFilter($filter)
+            ->setSortField($sortField)
+            ->setSortOrder($sortDir)
+            ->setTreeId($startTreeId);
 
-        $resultPool = $this->elementFinder->find($elementFinderConfig, array('de'), true);
+        $resultPool = $this->elementFinder->find(
+            $elementFinderConfig,
+            array('de'),
+            $this->requestStack->getCurrentRequest()->attributes->get('preview', false)
+        );
 
         return $resultPool;
     }

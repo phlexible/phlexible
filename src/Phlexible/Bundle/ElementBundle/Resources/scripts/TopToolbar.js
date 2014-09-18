@@ -341,18 +341,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
     populateExtendedMenu: function () {
         this.extendedMenuIndex = new Ext.util.MixedCollection();
 
-        this.extendedMenuIndex.add('history', {
-            // items[13]
-            text: this.strings.history,
-            iconCls: 'p-element-tab_history-icon',
-            handler: function () {
-                var w = new Phlexible.elements.HistoryWindow();
-                w.show();
-            },
-            scope: this
-        });
-
-        this.extendedMenuIndex.add('preview_sep', '-');
         this.extendedMenuIndex.add('preview', {
             // items[6]
             xtype: 'tbsplit',
@@ -385,6 +373,18 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     scope: this
                 }
             ]
+        });
+
+        this.extendedMenuIndex.add('history_sep', '-');
+        this.extendedMenuIndex.add('history', {
+            // items[13]
+            text: this.strings.history,
+            iconCls: 'p-element-tab_history-icon',
+            handler: function () {
+                var w = new Phlexible.elements.HistoryWindow();
+                w.show();
+            },
+            scope: this
         });
 
         if (Phlexible.tasks.Strings && Phlexible.User.isGranted('tasks')) {

@@ -111,7 +111,7 @@ class ElementFinder
         #}
 
         #ld($elementCatch);
-        #echo $select.PHP_EOL;
+        #echo $select->getSQL();die;
         $items = $this->connection->fetchAll($select->getSQL());
         $newItems = array();
         foreach ($items as $item) {
@@ -127,7 +127,7 @@ class ElementFinder
 
         if (!$this->hasSelectSort($select, $elementCatch)) {
             // sort by tree order
-            $items = $resultPool->getItems();
+            $items = $resultPool->all();
             $orderedResult = array();
 
             $matchedTreeIds = $this->treeNodeMatcher->flatten($resultPool->getMatchedTreeIds());
@@ -140,7 +140,7 @@ class ElementFinder
             $resultPool->setItems($items);
         } elseif ($this->isNatSort) {
             // use natsort
-            $items = $resultPool->getItems();
+            $items = $resultPool->all();
             $sortedColumn = array_column($items, 'sort_field');
             natsort($sortedColumn);
 
@@ -162,7 +162,7 @@ class ElementFinder
             //}
 
             if ($limit) {
-                $items = $resultPool->getItems();
+                $items = $resultPool->all();
                 $items = array_slice($items, 0, $limit, true);
                 $resultPool->setItems($items);
             }
@@ -292,7 +292,9 @@ class ElementFinder
             }
         }
 
-        $select->andWhere($select->expr()->in('ch.elementtype_id', $elementCatch->getElementtypeIds()));
+        if (!empty($elementCatch->getElementtypeIds())) {
+            $select->andWhere($select->expr()->in('ch.elementtype_id', $elementCatch->getElementtypeIds()));
+        }
 
         if ($elementCatch->inNavigation()) {
             $select->andWhere('ch.in_navigation = 1');

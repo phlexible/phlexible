@@ -52,7 +52,7 @@ class ElementFinderConfig
      * @var array
      * @ORM\Column(name="elementtype_ids", type="simple_array")
      */
-    private $elementtypeIds = array(0);
+    private $elementtypeIds = array();
 
     /**
      * @var string
@@ -205,7 +205,7 @@ class ElementFinderConfig
      */
     public function setElementtypeIds(array $elementtypeIds)
     {
-        $this->elementtypeIds = count($elementtypeIds) ? $elementtypeIds : array(0);
+        $this->elementtypeIds = $elementtypeIds;
 
         return $this;
     }
