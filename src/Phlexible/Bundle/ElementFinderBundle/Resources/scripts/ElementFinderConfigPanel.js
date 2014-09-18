@@ -17,7 +17,8 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
 
     initComponent: function () {
         this.addEvents(
-            'save'
+            'save',
+            'values'
         );
 
         if (!this.values) {
@@ -39,6 +40,8 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
         if (!this.siterootId) {
             this.siterootId = '';
         }
+
+        this.fireEvent('values', this, this.values);
 
         this.items = [
             {

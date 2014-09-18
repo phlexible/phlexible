@@ -129,7 +129,7 @@ class TreeNodeMatcher
             }
         }
 
-        $matchedTreeIdsByLanguage = count($catched) ? $catched : array('');
+        $matchedTreeIdsByLanguage = count($catched) ? $catched : array();
 
         return $matchedTreeIdsByLanguage;
     }

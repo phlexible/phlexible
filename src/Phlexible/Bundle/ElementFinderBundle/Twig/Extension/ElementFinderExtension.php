@@ -87,7 +87,7 @@ class ElementFinderExtension extends \Twig_Extension
         $resultPool = $this->elementFinder->find(
             $elementFinderConfig,
             array('de'),
-            $this->requestStack->getCurrentRequest()->attributes->get('preview', false)
+            true //$this->requestStack->getCurrentRequest()->attributes->get('preview', false)
         );
 
         return $resultPool;

@@ -315,9 +315,33 @@ class CatchController extends Controller
      */
     public function previewAction(Request $request)
     {
+        $treeId = $request->get('startTreeId', null);
+        $maxDepth = $request->get('maxDepth', null);
+        $inNavigation = $request->get('inNavigation', false);
+        $elementtypeIds = trim($request->get('elementtypeIds', array()));
+        if ($elementtypeIds) {
+            $elementtypeIds = explode(',', $elementtypeIds);
+        } else {
+            $elementtypeIds = array();
+        }
+        $metaKey = $request->get('metaKey', null);
+        $metaKeywords = $request->get('metaKeywords', null);
+        $template = $request->get('template', null);
+        $sortField = $request->get('sortField', null);
+        $sortDir = $request->get('sortDir', null);
+
         $elementFinderConfig = new ElementFinderConfig();
         $elementFinderConfig
-            ->setTreeId(1);
+            ->setTreeId($treeId)
+            ->setMaxDepth($maxDepth)
+            ->setNavigation($inNavigation)
+            ->setElementtypeIds($elementtypeIds)
+            #->setMetaSearch($metaKey)
+            #->setMetaKeywords($metaKeywords)
+            ->setTemplate($template)
+            ->setSortField($sortField)
+            ->setSortOrder($sortDir)
+        ;
 
         $elementFinder = $this->get('phlexible_element_finder.finder');
         $result = $elementFinder->find($elementFinderConfig, array('de'), true);

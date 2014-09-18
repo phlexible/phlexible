@@ -10,6 +10,13 @@ Phlexible.elementfinder.ElementFinderConfigWindow = Ext.extend(Ext.Window, {
     border: false,
 
     initComponent: function () {
+        var store = new Ext.data.JsonStore({
+            url: Phlexible.Router.generate('elementfinder_catch_preview'),
+            fields: ['tree_id', 'eid', 'version', 'language'],
+            id: 'tree_id',
+            baseParams: {}
+        });
+
         this.items = [{
             xtype: 'elementfinder-finder-config-panel',
             region: 'west',
@@ -17,16 +24,18 @@ Phlexible.elementfinder.ElementFinderConfigWindow = Ext.extend(Ext.Window, {
             header: false,
             siterootId: this.siterootId,
             values: this.values,
-            baseValues: this.baseValues
+            baseValues: this.baseValues,
+            listeners: {
+                values: function(configPanel, values) {
+                    store.baseParams = values;
+                    store.load();
+                },
+                scope: this
+            }
         },{
             xtype: 'grid',
             region: 'center',
-            store: new Ext.data.JsonStore({
-                url: Phlexible.Router.generate('elementfinder_catch_preview'),
-                fields: ['tree_id', 'eid', 'version', 'language'],
-                id: 'tree_id',
-                autoLoad: true
-            }),
+            store: store,
             columns: [{
                 header: '_tree_id',
                 dataIndex: 'tree_id'
@@ -39,6 +48,14 @@ Phlexible.elementfinder.ElementFinderConfigWindow = Ext.extend(Ext.Window, {
             },{
                 header: '_language',
                 dataIndex: 'language'
+            }],
+            tbar: [{
+                text: '_preview',
+                handler: function() {
+                    this.getComponent(1).getStore().baseParams = this.getComponent(0).getValues();
+                    this.getComponent(1).getStore().reload();
+                },
+                scope: this
             }]
         }];
 
@@ -59,7 +76,7 @@ Phlexible.elementfinder.ElementFinderConfigWindow = Ext.extend(Ext.Window, {
                 this.close();
             },
             scope: this
-        }]
+        }];
 
         Phlexible.elementfinder.ElementFinderConfigWindow.superclass.initComponent.call(this);
     }
