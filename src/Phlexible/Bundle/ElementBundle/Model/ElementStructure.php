@@ -63,6 +63,11 @@ class ElementStructure implements \IteratorAggregate
     private $parentName;
 
     /**
+     * @var int
+     */
+    private $sort = 0;
+
+    /**
      * @var ElementStructure[]
      */
     private $structures = array();
@@ -266,6 +271,26 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
+     * @return mixed
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
+    /**
+     * @param mixed $sort
+     *
+     * @return $this
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+    /**
      * @param ElementStructure $elementStructure
      *
      * @return $this
@@ -455,14 +480,14 @@ class ElementStructure implements \IteratorAggregate
      *
      * @return ElementStructure|ElementStructureValue|null
      */
-    public function find($name)
+    public function first($name)
     {
         if ($this->hasValue($name)) {
             return $this->getValue($name);
         }
 
         foreach ($this->getStructures() as $childStructure) {
-            if ($result = $childStructure->find($name)) {
+            if ($result = $childStructure->first($name)) {
                 return $result;
             }
         }

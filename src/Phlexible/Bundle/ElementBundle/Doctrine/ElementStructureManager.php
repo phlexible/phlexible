@@ -100,12 +100,29 @@ class ElementStructureManager implements ElementStructureManagerInterface
     {
         $conn = $this->entityManager->getConnection();
 
+        $this->applyStructureSort($elementStructure);
         $this->insertStructure($elementStructure, $conn, true);
 
         $this->insertLinks($elementStructure);
 
         if ($flush) {
             $this->entityManager->flush();
+        }
+    }
+
+    /**
+     * @param ElementStructure $elementStructure
+     */
+    private function applyStructureSort(ElementStructure $elementStructure)
+    {
+        $sort = 1;
+
+        $elementStructure->setSort($sort++);
+
+        $rii = new \RecursiveIteratorIterator($elementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+
+        foreach ($rii as $structure) {
+            $structure->setSort($sort++);
         }
     }
 
@@ -136,7 +153,8 @@ class ElementStructureManager implements ElementStructureManagerInterface
             ->setType($isRoot ? 'root' : 'group')
             ->setName($elementStructure->getName())
             ->setRepeatableId($elementStructure->getRepeatableId() ?: null)
-            ->setRepeatableDsId($elementStructure->getRepeatableDsId() ?: null);
+            ->setRepeatableDsId($elementStructure->getRepeatableDsId() ?: null)
+            ->setSort($elementStructure->getSort());
 
         $this->entityManager->persist($structureEntity);
 
