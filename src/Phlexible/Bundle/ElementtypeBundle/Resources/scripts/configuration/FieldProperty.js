@@ -159,16 +159,18 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
 
     isValid: function () {
         if (this.getForm().isValid()) {
-            //this.header.child('span').removeClass('error');
             this.setIconClass('p-elementtype-tab_properties-icon');
 
             return true;
         } else {
-            //this.header.child('span').addClass('error');
             this.setIconClass('p-elementtype-tab_error-icon');
 
             return false;
         }
+    },
+
+    isActive: function() {
+        return true;
     },
 
     loadField: function (properties, node, fieldType) {

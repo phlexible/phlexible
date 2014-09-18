@@ -74,7 +74,10 @@ class ElementtypeListener implements EventSubscriberInterface
             $latestElementVersion = $this->elementService->findLatestElementVersion($element);
             $latestElementStructure = $this->elementService->findElementStructure($latestElementVersion);
 
-            $elementStructure = clone($latestElementStructure);
+            $elementStructure = null;
+            if ($latestElementStructure->getId()) {
+                $elementStructure = clone($latestElementStructure);
+            }
 
             $elementVersion = $this->elementService->createElementVersion(
                 $element,

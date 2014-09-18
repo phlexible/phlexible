@@ -87,7 +87,12 @@ Phlexible.elementtypes.configuration.FieldContentchannel = Ext.extend(Ext.form.F
         }
     },
 
+    isActive: function() {
+        return !!this.active;
+    },
+
     loadField: function (properties, node, fieldType) {
+        this.active = true;
         this.ownerCt.getTabEl(this).hidden = false;
         this.loadData(properties.content_channels, fieldType);
     }

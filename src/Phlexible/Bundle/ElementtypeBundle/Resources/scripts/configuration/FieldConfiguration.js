@@ -226,24 +226,28 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
         }
 
         if (valid) {
-            //this.header.child('span').removeClass('error');
             this.setIconClass('p-elementtype-tab_configuration-icon');
 
             return true;
         } else {
-            //this.header.child('span').addClass('error');
             this.setIconClass('p-elementtype-tab_error-icon');
 
             return false;
         }
     },
 
+    isActive: function() {
+        return !!this.active;
+    },
+
     loadField: function (properties, node, fieldType) {
         if (fieldType.config.configuration) {
+            this.active = true;
             this.ownerCt.getTabEl(this).hidden = false;
             this.loadData(properties.configuration, fieldType, node.attributes.type);
         }
         else {
+            this.active = false;
             this.ownerCt.getTabEl(this).hidden = true;
         }
     }

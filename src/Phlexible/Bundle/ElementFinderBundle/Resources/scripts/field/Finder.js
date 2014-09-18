@@ -41,7 +41,7 @@ Phlexible.fields.FieldTypes.addField('finder', {
         de: 'Finder',
         en: 'Finder'
     },
-    iconCls: 'p-teaser-catch-icon',
+    iconCls: 'p-elementfinder-finder-icon',
     allowedIn: [
 		'tab',
 		'accordion',
@@ -60,7 +60,7 @@ Phlexible.fields.FieldTypes.addField('finder', {
             sync: 1,
             width: 1,
             height: 0,
-            readonly: 0,
+            readonly: 1,
             hide_label: 1,
             sortable: 0
         },

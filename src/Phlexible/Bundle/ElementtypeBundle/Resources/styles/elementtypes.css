@@ -15,10 +15,14 @@
 }
 
 .p-elementtype-tree .dirty a span {
+    font-style: italic;
+}
+
+.p-elementtype-tree .valid a span {
     color: green;
 }
 
-.p-elementtype-tree .error a span {
+.p-elementtype-tree .invalid a span {
     color: red;
 }
 

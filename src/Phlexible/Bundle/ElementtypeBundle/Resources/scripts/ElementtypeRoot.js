@@ -185,9 +185,16 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
         valid = (this.getRootMappingsPanel().hidden || this.getRootMappingsPanel().isValid()) && valid;
 
         if (!valid) {
+            this.node.ui.removeClass('valid');
+            this.node.ui.addClass('invalid');
+            this.node.attributes.invalid = true;
             Ext.MessageBox.alert('Error', this.strings.check_input);
             return;
         }
+
+        this.node.ui.removeClass('invalid');
+        this.node.ui.addClass('valid');
+        this.node.attributes.invalid = false;
 
         var properties = {
             root: this.getRootPropertyPanel().getSaveValues(),
@@ -201,6 +208,7 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
         if (this.node.attributes.properties.root.icon !== properties.root.icon) {
             this.node.getUI().getIconEl().src = '/bundles/phlexibleelementtype/elementtypes/' + properties.root.icon;
         }
+
 
         this.node.attributes.properties = properties;
 

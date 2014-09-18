@@ -254,6 +254,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         });
 
         newNode.attributes.editable = true;
+        newNode.attributes.invalid = true;
 
         newNode.attributes.properties = Phlexible.clone(Phlexible.elementtypes.FieldMap);
 
@@ -261,27 +262,22 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         newNode.attributes.properties.field.type = item.id;
 
         if (item.appendMode == 'child') {
-            var newNode = activeNode.appendChild(newNode);
+            activeNode.appendChild(newNode);
             activeNode.expand();
-
-//            Phlexible.msg('Element Type Action', 'Node of Type "' + newNode.attributes.properties.field.type + '" created as child of "' + activeNode.text + '".');
         }
 
         if (item.appendMode == 'before') {
-            var newNode = parentNode.insertBefore(newNode, activeNode);
-
-//            Phlexible.msg('Element Type Action', 'Node of Type "' + newNode.attributes.properties.field.type + '" created before "' + activeNode.text + '".');
+            parentNode.insertBefore(newNode, activeNode);
         }
 
         if (item.appendMode == 'after') {
             var nextSiblingNode = activeNode.nextSibling;
-            var newNode = parentNode.insertBefore(newNode, nextSiblingNode);
-
-//            Phlexible.msg('Element Type Action', 'Node of Type "' + newNode.attributes.properties.field.type + '" created after "' + activeNode.text + '".');
+            parentNode.insertBefore(newNode, nextSiblingNode);
         }
 
         newNode.select();
         newNode.ui.addClass('dirty');
+        newNode.ui.addClass('invalid');
         newNode.getOwnerTree().setDirty();
         this.nodeChange(newNode);
     },
@@ -553,6 +549,10 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         }
 
         var rootNode = this.getRootNode();
+        if (!this.validateSaveNodes(rootNode)) {
+            Ext.Msg.alert('Invalid nodes', 'Tree contains invalid nodes. Please correct them and publish again.')
+            return;
+        }
         var data = Ext.encode(this.processSaveNodes(rootNode));
 
         Ext.Ajax.request({
@@ -584,6 +584,17 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         }
     },
 
+    validateSaveNodes: function(node) {
+        var valid = true;
+        node.eachChild(function() {
+            if (node.attributes.invalid) {
+                valid = false;
+                return false;
+            }
+        });
+        return valid;
+    },
+
     /*
      Recursive function
      sweeps the tree in all levels
@@ -612,7 +623,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
             saveNodes.push(nodeData);
         }
 
-        return saveNodes
+        return saveNodes;
     },
 
     nodeChange: function (node) {

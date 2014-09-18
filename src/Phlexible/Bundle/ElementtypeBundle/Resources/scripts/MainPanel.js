@@ -161,7 +161,6 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                                                 xtype: 'elementtypes-field',
                                                 border: false,
                                                 listeners: {
-//                            beforeSaveField: this.onBeforeSaveField,
                                                     saveField: this.onSaveField,
                                                     scope: this
                                                 }
@@ -304,19 +303,6 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
         } else {
             this.getRootTabs().disable();
             this.getFieldTabs().disable();
-        }
-    },
-
-    onBeforeSaveField: function (node, properties) {
-        node.ui.removeClass('error');
-        node.ui.removeClass('dirty');
-        //Phlexible.console.log(node);
-        //Phlexible.console.log(properties);
-        var root = node.getOwnerTree().getRootNode();
-        if (node.getOwnerTree().findWorkingTitle(root, node.id, properties.field.working_title)) {
-            node.ui.addClass('error');
-        } else {
-            node.ui.addClass('dirty');
         }
     },
 

@@ -31,60 +31,45 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
             {
                 text: this.strings.save_properties,
                 iconCls: 'p-elementtype-property_save-icon',
-                handler: function () {
-                    this.saveProperties();
-                    //Phlexible.console.log('save');
-                },
+                handler: this.saveProperties,
                 scope: this
             },
             '-',
             {
                 text: this.strings.reset_properties,
                 iconCls: 'p-elementtype-reset-icon',
-                handler: function () {
-                    this.loadProperties(this.node);
-
-//                Phlexible.msg('Element Type Action', 'Properties of "' + this.node.text + '" resetted.');
-                },
+                handler: this.reset,
                 scope: this
             }
         ];
 
         Phlexible.elementtypes.ElementtypeField.superclass.initComponent.call(this);
-
-        //Phlexible.console.log(this.tbar);
     },
 
     initMyItems: function () {
         this.items = [
             {
                 xtype: 'elementtypes-configuration-field-property',
-                isFieldAccordion: true,
                 key: 'field'
             },
             {
                 xtype: 'elementtypes-configuration-field-label',
-                isFieldAccordion: true,
                 key: 'labels'
             },
             {
                 xtype: 'elementtypes-configuration-field-configuration',
-                isFieldAccordion: true,
                 key: 'configuration'
             },
             {
                 xtype: 'elementtypes-configuration-field-value',
-                isFieldAccordion: true,
                 key: 'options'
             },
             {
                 xtype: 'elementtypes-configuration-field-validation',
-                isFieldAccordion: true,
                 key: 'validation'
             },
             {
                 xtype: 'elementtypes-configuration-field-contentchannel',
-                isFieldAccordion: true,
                 key: 'content_channels'
             }
         ];
@@ -106,6 +91,11 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
          */
     },
 
+    reset: function() {
+        this.loadFieldProperties(this.node);
+        this.enable();
+    },
+
     loadProperties: function (node) {
         this.node = node;
         this.loadFieldProperties(node);
@@ -117,9 +107,7 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
         var fieldType = Phlexible.fields.FieldTypes[node.attributes.type];
 
         this.items.each(function (panel) {
-            if (panel.isFieldAccordion) {
-                panel.loadField(properties, node, fieldType);
-            }
+            panel.loadField(properties, node, fieldType);
         });
 
         if (!this.getActiveTab() || this.getTabEl(this.getActiveTab()).hidden) {
@@ -138,16 +126,11 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
     saveFieldProperties: function () {
         var valid = true;
         this.items.each(function (panel) {
-            if (panel.isFieldAccordion && !panel.isValid() && !panel.hidden && valid) {
+            if (valid && !panel.isValid() && panel.isActive()) {
                 valid = false;
                 return false;
             }
         });
-
-        if (!valid) {
-            Ext.MessageBox.alert('Error', this.strings.check_input);
-            return false;
-        }
 
         var properties = {
             field: {},
@@ -159,14 +142,29 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
         };
 
         this.items.each(function (panel) {
-            if (panel.isFieldAccordion) {
-                Ext.apply(properties[panel.key], panel.getSaveValues());
-            }
+            Ext.apply(properties[panel.key], panel.getSaveValues());
         });
 
-        if (this.fireEvent('beforeSaveField', this.node, properties) === false) {
+        var root = this.node.getOwnerTree().getRootNode();
+        if (this.node.getOwnerTree().findWorkingTitle(root, this.node.id, properties.field.working_title)) {
+            valid = false;
+        }
+
+        if (this.fireEvent('beforeSaveField', this.node, properties, valid) === false) {
             return false;
         }
+
+        if (!valid) {
+            this.node.ui.removeClass('valid');
+            this.node.ui.addClass('invalid');
+            this.node.attributes.invalid = true;
+            Ext.MessageBox.alert('Error', this.strings.check_input);
+            return;
+        }
+
+        this.node.ui.removeClass('invalid');
+        this.node.ui.addClass('valid');
+        this.node.attributes.invalid = false;
 
         this.node.attributes.properties = properties;
         this.node.attributes.type = properties.field.type;

@@ -278,7 +278,7 @@ class ElementService
      *
      * @return ElementVersion
      */
-    public function createElementVersion(Element $element, ElementStructure $elementStructure, $triggerLanguage, $userId, $comment = null)
+    public function createElementVersion(Element $element, ElementStructure $elementStructure = null, $triggerLanguage, $userId, $comment = null)
     {
         $oldElementVersion = $this->findLatestElementVersion($element);
 
