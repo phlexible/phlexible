@@ -12,6 +12,7 @@ use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
+use Phlexible\Bundle\FormBundle\FormHandler\FormHandlerCollection;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
@@ -23,16 +24,16 @@ use Symfony\Component\Form\FormFactoryInterface;
 class ElementRendererListener implements EventSubscriberInterface
 {
     /**
-     * @var FormFactoryInterface
+     * @var FormHandlerCollection
      */
-    private $formFactory;
+    private $forms;
 
     /**
-     * @param FormFactoryInterface $formFactory
+     * @param FormHandlerCollection $forms
      */
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(FormHandlerCollection $forms)
     {
-        $this->formFactory = $formFactory;
+        $this->forms = $forms;
     }
 
     /**
@@ -73,26 +74,18 @@ class ElementRendererListener implements EventSubscriberInterface
 
     /**
      * @param string              $formName
-     * @param \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration $configuration
+     * @param RenderConfiguration $configuration
      */
     private function processForm($formName, RenderConfiguration $configuration)
     {
-        $form = $this->formFactory->createBuilder()
-            ->add('task', 'text')
-            ->add('dueDate', 'date')
-            ->add('save', 'submit', array('label' => 'Create Post'))
-            ->getForm();
+        $formHandler = $this->forms->get($formName);
+        $form = $formHandler->createForm();
+
+        $formHandler->handleRequest($configuration->get('request'));
 
         $configuration
             ->addFeature('form')
             ->set('forms', array($formName => $form))
             ->set('formViews', array($formName => $form->createView()));
-
-        $form->handleRequest($configuration->get('request'));
-
-        if ($form->isValid()) {
-            // perform some action, such as saving the task to the database
-            echo 'valid';
-        }
     }
 }

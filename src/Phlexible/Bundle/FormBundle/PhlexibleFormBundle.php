@@ -8,7 +8,9 @@
 
 namespace Phlexible\Bundle\FormBundle;
 
+use Phlexible\Bundle\FormBundle\DependencyInjection\Compiler\AddFormHandlersPass;
 use Phlexible\Bundle\ProblemBundle\Problem;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -18,4 +20,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleFormBundle extends Bundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new AddFormHandlersPass());
+    }
 }

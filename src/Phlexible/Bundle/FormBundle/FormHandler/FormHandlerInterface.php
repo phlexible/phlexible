@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\FormBundle\FormHandler;
 
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -23,9 +24,14 @@ interface FormHandlerInterface
     public function getName();
 
     /**
+     * @return Form
+     */
+    public function createForm();
+
+    /**
      * @param Request $request
      *
      * @return mixed
      */
-    public function process(Request $request);
+    public function handleRequest(Request $request);
 }

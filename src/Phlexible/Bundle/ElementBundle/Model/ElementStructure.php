@@ -478,7 +478,27 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @param string $name
      *
-     * @return ElementStructure|ElementStructureValue|null
+     * @return ElementStructureValue[]|null
+     */
+    public function all($name)
+    {
+        $items = array();
+
+        if ($this->hasValue($name)) {
+            $items[] = $this->getValue($name);
+        }
+
+        foreach ($this->getStructures() as $childStructure) {
+            $items = array_merge($items, $childStructure->all($name));
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return ElementStructureValue|null
      */
     public function first($name)
     {

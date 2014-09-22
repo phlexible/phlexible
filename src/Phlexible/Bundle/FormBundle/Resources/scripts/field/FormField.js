@@ -1,7 +1,9 @@
 Phlexible.fields.Registry.addFactory('form', function(parentConfig, item, valueStructure, element, repeatableId) {
-	var store = new Ext.data.SimpleStore({
-		fields: ['key','value'],
-		data: [['test', 'test']]
+	var store = new Ext.data.JsonStore({
+        url: Phlexible.Router.generate('form_list'),
+		fields: ['name'],
+        id: 'form',
+        autoLoad: true
 	});
 
 	var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
@@ -13,9 +15,9 @@ Phlexible.fields.Registry.addFactory('form', function(parentConfig, item, valueS
 		listWidth: (parseInt(item.configuration.width, 10) || 200),
 
 		store: store,
-		valueField: 'key',
-		displayField: 'value',
-		mode: 'local',
+		valueField: 'name',
+		displayField: 'name',
+		mode: 'remote',
 		typeAhead: false,
 		editable: false,
 		triggerAction: 'all',
