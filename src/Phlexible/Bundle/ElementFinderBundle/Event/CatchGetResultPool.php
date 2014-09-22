@@ -37,7 +37,7 @@ class Makeweb_Teasers_Event_CatchGetResultPool extends Brainbits_Event_Notificat
 
     /**
      * @param Makeweb_Teasers_Catch $catch
-     * @param Zend_Db_Select        $select
+     * @param array                      $result
      */
     public function __construct(Makeweb_Teasers_Catch $catch, array &$result)
     {

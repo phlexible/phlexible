@@ -295,7 +295,7 @@ class TeaserManager implements TeaserManagerInterface
             $sort = 0;
             if ($prevId) {
                 $select = $db->select()
-                    ->from($db->prefix . 'element_tree_teasers', new Zend_Db_Expr('sort + 1'))
+                    ->from($db->prefix . 'element_tree_teasers', 'sort + 1')
                     ->where('id = ?', $prevId);
 
                 $sort = $db->fetchOne($select);
@@ -303,7 +303,7 @@ class TeaserManager implements TeaserManagerInterface
 
             $db->update(
                 $db->prefix . 'element_tree_teasers',
-                array('sort' => new Zend_Db_Expr('sort + 1')),
+                array('sort' => ('sort + 1')),
                 array('tree_id = ?' => $treeId, 'sort >= ?' => $sort)
             );
         */

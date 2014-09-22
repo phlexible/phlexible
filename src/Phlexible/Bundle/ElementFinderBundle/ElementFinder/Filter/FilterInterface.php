@@ -71,10 +71,10 @@ interface FilterInterface
     /**
      * Add filter to a select statement.
      *
-     * @param \Zend_Db_Select $select
-     * @param bool            $all
+     * @param mixed $select
+     * @param bool  $all
      */
-    public function filterSelect(\Zend_Db_Select $select, $all = false);
+    public function filterSelect($select, $all = false);
 
     /**
      * Function to apply some postprocesing to the result.

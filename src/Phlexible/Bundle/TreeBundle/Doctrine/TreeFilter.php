@@ -204,7 +204,6 @@ class TreeFilter implements TreeFilterInterface
     private function _fetchCount()
     {
         $qb = $this->createFilterQueryBuilder();
-        //$select->columns(array(new Zend_Db_Expr('COUNT(et.id)')));
         $qb->select(array('et.id'));
 
         //$cnt = $this->_db->fetchOne($select);

@@ -267,17 +267,13 @@ class CatchController extends Controller
         $notEmpty = true;
         $i = 1;
 
-        $metaFilter = new \Zend_Filter();
-        $metaFilter->addFilter(new \Zend_Filter_StringTrim());
-        $metaFilter->addFilter(new \Zend_Filter_StripTags());
-
         $catchMetaSearch = array();
         do {
             if ($request->get('catch_meta_key_' . $i) &&
                 $request->get('catch_meta_keywords_' . $i)
             ) {
-                $catchMetaSearchKey = $metaFilter->filter($request->get('catch_meta_key_' . $i));
-                $catchMetaSearchKeyword = $metaFilter->filter($request->get('catch_meta_keywords_' . $i));
+                $catchMetaSearchKey = $this->filter($request->get('catch_meta_key_' . $i));
+                $catchMetaSearchKeyword = $this->filter($request->get('catch_meta_keywords_' . $i));
                 $i++;
                 if (strlen($catchMetaSearchKey) && strlen($catchMetaSearchKeyword)) {
                     $catchMetaSearch[$catchMetaSearchKey] = $catchMetaSearchKeyword;
@@ -307,6 +303,16 @@ class CatchController extends Controller
         $catchManager->updateCatch($catch);
 
         return new ResultResponse(true, 'Catch created.');
+    }
+
+    /**
+     * @param string $s
+     *
+     * @return string
+     */
+    private function filter($s)
+    {
+        return strip_tags(trim($s));
     }
 
     /**

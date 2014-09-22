@@ -31,15 +31,15 @@ class Makeweb_Teasers_Event_BeforeCatchGetResultPool extends Brainbits_Event_Not
     protected $_catch;
 
     /**
-     * @var Zend_Db_Select
+     * @var mixed
      */
     protected $_select;
 
     /**
      * @param Makeweb_Teasers_Catch $catch
-     * @param Zend_Db_Select        $select
+     * @param mixed        $select
      */
-    public function __construct(Makeweb_Teasers_Catch $catch, Zend_Db_Select $select)
+    public function __construct(Makeweb_Teasers_Catch $catch, $select)
     {
         $this->_catch = $catch;
         $this->_select = $select;
@@ -54,7 +54,7 @@ class Makeweb_Teasers_Event_BeforeCatchGetResultPool extends Brainbits_Event_Not
     }
 
     /**
-     * @return Zend_Db_Select
+     * @return mixed
      */
     public function getSelect()
     {

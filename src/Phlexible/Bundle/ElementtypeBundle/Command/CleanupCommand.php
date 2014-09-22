@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Command;
 
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -42,37 +43,36 @@ class CleanupCommand extends ContainerAwareCommand
     {
         $reallyDelete = $input->getOption('delete');
 
-        $container = $this->getContainer();
+        $conn = $this->getContainer()->get('doctrine.dbal.default_connection');
+        /* @var $conn Connection */
 
-        $db = $container->dbPool->default;
+        $qb = $conn->createQueryBuilder()
+            ->select('COUNT(etv.id)')
+            ->from('elementtype_version', 'etv');
 
-        $etVersionsCntSelect = $db->select()
-            ->from($db->prefix . 'elementtype_version', new Zend_Db_Expr('COUNT(*)'));
-        $etVersionCnt = $db->fetchOne($etVersionsCntSelect);
+        $etVersionCnt = $conn->fetchColumn($qb->getSQL());
 
+        $qb = $conn->createQueryBuilder()
+            ->select('DISTINCT et.id')
+            ->from('elementtype', 'et')
+            ->join('et', 'element', 'e', 'e.elementtype_id = et.id')
+            ->orderBy('et.id', 'ASC');
 
-        $etSelect = $db->select()
-            ->distinct()
-            ->from(array('et' => $db->prefix . 'elementtype'), 'element_type_id')
-            ->join(array('e' => $db->prefix . 'element'), 'e.element_type_id = et.element_type_id', array())
-            ->order('et.element_type_id ASC');
+        $etIds = array_column($conn->fetchAll($qb->getSQL()), 'id');
 
-        $etIds = $db->fetchCol($etSelect);
-
-        $etvSelect = $db->select()
-            ->distinct()
-            ->from($db->prefix . 'elementtype_version', 'version')
-            ->where('element_type_id = ?')
-            ->order('version ASC');
+        $qb = $conn->createQueryBuilder()
+            ->select('DISTINCT etv.version')
+            ->from('elementtype_version', 'etv')
+            ->where('elementtype_id = ?')
+            ->orderBy('etv.version', 'ASC');
 
         $deleteUpToETVersion = array();
 
         foreach ($etIds as $etId) {
-            $versions = $db->fetchCol($etvSelect, $etId);
+            $versions = array_column($conn->fetchAll($qb->getSQL(), array($etId)), 'version');
 
             foreach ($versions as $version) {
-                if ($this->_isUsedInElement($etId, $version)) {
-
+                if ($this->isUsedInElement($conn, $etId, $version)) {
                     continue 2;
                 }
 
@@ -81,12 +81,12 @@ class CleanupCommand extends ContainerAwareCommand
         }
 
         /*
-        $output .= print_r($deleteUpToETVersion, true);
-        $output .= '---------'.PHP_EOL;
+        $output->writeln(print_r($deleteUpToETVersion, true));
+        $output->writeln('---------');
         */
 
         if (count($deleteUpToETVersion)) {
-            $cnt = $this->_deleteVersions($deleteUpToETVersion, $reallyDelete);
+            $cnt = 1;//$this->deleteVersions($conn, $deleteUpToETVersion, $reallyDelete);
             if ($reallyDelete) {
                 $output->write('Deleted ');
             } else {
@@ -100,45 +100,55 @@ class CleanupCommand extends ContainerAwareCommand
         return 0;
     }
 
-    protected function _deleteVersions(array $versions, $reallyDelete)
+    /**
+     * @param Connection $conn
+     * @param array      $versions
+     * @param bool       $reallyDelete
+     *
+     * @return int
+     */
+    private function deleteVersions(Connection $conn, array $versions, $reallyDelete = false)
     {
-        $db = MWF_Registry::getContainer()->dbPool->default;
-        $db->beginTransaction();
+        $conn->beginTransaction();
 
         $total = 0;
         foreach ($versions as $etId => $version) {
-            $cnt = $db->delete(
-                $db->prefix . 'elementtype_version',
-                array(
-                    'element_type_id = ?' => $etId,
-                    'version <= ?'        => $version,
-                )
-            );
-            $total += $cnt;
+            $qb = $conn->createQueryBuilder()
+                ->delete()
+                ->from('elementtype_version', 'etv')
+                ->where('etv.elementtype_id = ?')
+                ->andWhere('etv.version < ?');
+
+            $total += $conn->executeUpdate($qb->getSQL(), array($etId, $version));
 
             //echo $eid . ' => '.$cnt.PHP_EOL;
         }
 
         if ($reallyDelete) {
-            $db->commit();
+            $conn->commit();
         } else {
-            $db->rollback();
+            $conn->rollback();
         }
 
         return $total;
     }
 
-    protected function _isUsedInElement($etId, $version)
+    /**
+     * @param Connection $conn
+     * @param int        $etId
+     * @param int        $version
+     *
+     * @return bool
+     */
+    private function isUsedInElement(Connection $conn, $etId, $version)
     {
-        $db = $this->getContainer()->dbPool->default;
+        $select = $conn->createQueryBuilder()
+            ->select('e.eid')
+            ->from('element_version', 'ev')
+            ->join('ev', 'element', 'e', 'ev.eid = e.eid')
+            ->where('e.elementtype_id = ?')
+            ->andWhere('ev.version = ?');
 
-        $select = $db->select()
-            ->from($db->prefix . 'element_version', 'eid')
-            ->where('element_type_id = ?', $etId)
-            ->where('element_type_version = ?', $version);
-
-        $id = $db->fetchOne($select);
-
-        return (bool) $id;
+        return (bool) $conn->fetchColumn($select, array($etId, $version));
     }
 }

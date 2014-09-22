@@ -116,8 +116,6 @@ class ElementFinder
         #    return $resultPool;
         #}
 
-        #ld($elementCatch);
-        #echo $qb->getSQL();die;
         $items = $this->connection->fetchAll($qb->getSQL());
         $newItems = array();
         foreach ($items as $item) {
@@ -162,7 +160,6 @@ class ElementFinder
         }
 
         $resultPool = new ResultPool();
-
         $resultPool->setQuery((string) $qb);
 
         foreach ($items as $row) {

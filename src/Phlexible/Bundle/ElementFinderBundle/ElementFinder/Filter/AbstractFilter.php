@@ -158,14 +158,14 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
     /**
      * Join a filed
      *
-     * @param \Zend_Db_Select $select
-     * @param int|string      $index
-     * @param array           $dsIds
-     * @param string|array    $whereValue
-     * @param string|array    $whereExpr
+     * @param mixed        $select
+     * @param int|string   $index
+     * @param array        $dsIds
+     * @param string|array $whereValue
+     * @param string|array $whereExpr
      */
     protected function _joinField(
-        \Zend_Db_Select $select,
+        $select,
         $index,
         array $dsIds,
         $whereValue = null,
@@ -177,14 +177,14 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
     /**
      * Join a filed
      *
-     * @param \Zend_Db_Select $select
-     * @param int|string      $index
-     * @param array           $dsIds
-     * @param string          $whereValue
-     * @param string          $whereExpr
+     * @param mixed      $select
+     * @param int|string $index
+     * @param array      $dsIds
+     * @param string     $whereValue
+     * @param string     $whereExpr
      */
     protected function _joinLeftField(
-        \Zend_Db_Select $select,
+        $select,
         $index,
         array $dsIds,
         $whereValue = null,
@@ -196,16 +196,16 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
     /**
      * Join a field
      *
-     * @param string          $joinMethod
-     * @param \Zend_Db_Select $select
-     * @param int|string      $index
-     * @param array           $dsIds
-     * @param string|array    $whereValue
-     * @param string          $whereExpr
+     * @param string       $joinMethod
+     * @param mixed        $select
+     * @param int|string   $index
+     * @param array        $dsIds
+     * @param string|array $whereValue
+     * @param string       $whereExpr
      */
     protected function _internalJoinField(
         $joinMethod,
-        \Zend_Db_Select $select,
+        $select,
         $index,
         array $dsIds,
         $whereValue = null,
@@ -252,7 +252,7 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
     }
 
     public function _joinConnection(
-        \Zend_Db_Select $select,
+        $select,
         $index,
         $origin,
         $type,
@@ -315,10 +315,10 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
         $contentFilter = 'filter_content_' . $filter;
 
         $select = $this->_catch->createReducedSelect();
-        $origColumns = $select->getPart(Zend_Db_Select::COLUMNS);
-        $select->reset(Zend_Db_Select::GROUP)
-            ->reset(Zend_Db_Select::COLUMNS)
-            ->reset(Zend_Db_Select::ORDER)
+        $origColumns = $select->getPart('columns');
+        $select->reset('group')
+            ->reset('columns')
+            ->reset('order')
             ->group($contentFilter);
 
         foreach ($origColumns as $column) {
@@ -327,7 +327,7 @@ abstract class AbstractFilter implements ResultFilterInterface, SelectFilterInte
             }
         }
 
-        $select->columns(array('counter' => new Zend_Db_Expr('count(ch.eid)')));
+        $select->columns(array('counter' => 'COUNT(ch.eid)'));
 
         $cacheId = md5((string) $select);
         if (!isset($cache[$cacheId])) {

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
+use Doctrine\DBAL\Connection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -32,90 +33,93 @@ class StatusController extends Controller
     {
         $out = '<pre>';
 
-        $db = $this->getContainer()->dbPool->read;
+        $elementService = $this->get('phlexible_element.element_service');
+        $elementtypeService = $elementService->getElementtypeService();
+        $conn = $this->get('doctrine.dbal.default_connection');
+        /* @var $conn Connection */
 
         // elements
 
-        $elementSelect = $db->select()
-            ->from($db->prefix . 'element', new Zend_Db_Expr('COUNT(*)'));
-        $numElements = $db->fetchOne($elementSelect);
+        $qb = $conn->createQueryBuilder()
+            ->select('COUNT(e.eid)')
+            ->from('element', 'e');
+        $numElements = $conn->fetchColumn($qb->getSQL());
 
-        $elementTreeSelect = $db->select()
-            ->distinct()
-            ->from(array('et' => $db->prefix . 'element_tree'), array('eid'))
-            ->join(array('e' => $db->prefix . 'element'), 'et.eid = e.eid', array());
-        $numTreeElements = count($db->fetchCol($elementTreeSelect));
+        $qb = $conn->createQueryBuilder()
+            ->select('DISTINCT t.type_id')
+            ->from('tree', 't')
+            ->join('t', 'element', 'e', 't.type_id = e.eid')
+            ->where('t.type = "element"');
+        $numTreeElements = count($conn->fetchAll($qb->getSQL()));
 
-        $elementTeaserSelect = $db->select()
-            ->distinct()
-            ->from(array('ett' => $db->prefix . 'element_tree_teasers'), array('teaser_eid'))
-            ->join(array('e' => $db->prefix . 'element'), 'ett.teaser_eid = e.eid', array());
-        $numTeaserElements = count($db->fetchCol($elementTeaserSelect));
+        $qb = $conn->createQueryBuilder()
+            ->select('DISTINCT t.type_id')
+            ->from('teaser', 't')
+            ->join('t', 'element', 'e', 't.type_id = e.eid')
+            ->where('t.type = "element"');
+        $numTeaserElements = count($conn->fetchAll($qb->getSQL()));
 
-        $elementUnusedSelect = $db->select()
-            ->distinct()
-            ->from($db->prefix . 'element', new Zend_Db_Expr('COUNT(*)'))
-            ->where('eid NOT IN (SELECT DISTINCT eid FROM ' . $db->prefix . 'element_tree)')
-            ->where(
-                'eid NOT IN (SELECT DISTINCT teaser_eid FROM ' . $db->prefix . 'element_tree_teasers WHERE teaser_eid IS NOT NULL)'
-            );
-        $numUnusedElements = $db->fetchOne($elementUnusedSelect);
+        $qb = $conn->createQueryBuilder()
+            ->select('COUNT(e.eid)')
+            ->from('element', 'e')
+            ->where('eid NOT IN (SELECT DISTINCT type_id FROM tree WHERE type = "element")')
+            ->andWhere('eid NOT IN (SELECT DISTINCT type_id FROM teaser WHERE type = "element")');
+        $numUnusedElements = $conn->fetchColumn($qb->getSQL());
 
-        $elementVersionsSelect = $db->select()
-            ->from($db->prefix . 'element_version', new Zend_Db_Expr('COUNT(*)'));
-        $numElementVersions = $db->fetchOne($elementVersionsSelect);
+        $qb = $conn->createQueryBuilder()
+            ->select('COUNT(ev.id)')
+            ->from('element_version', 'ev');
+        $numElementVersions = $conn->fetchColumn($qb->getSQL());
 
-        $elementGroupedVersionsSelect = $db->select()
-            ->from(
-                $db->prefix . 'element_version',
-                array('eid', new Zend_Db_Expr('COUNT(*) AS cnt'))
-            )
-            ->group('eid')
-            ->order('cnt DESC');
-        $numGroupedElementVersions = $db->fetchPairs($elementGroupedVersionsSelect);
+        $qb = $conn->createQueryBuilder()
+            ->select(array('ev.eid, COUNT(ev.eid) AS cnt'))
+            ->from('element_version', 'ev')
+            ->groupBy('ev.eid')
+            ->orderBy('cnt', 'DESC');
+        $numGroupedElementVersions = array();
+        foreach ($conn->fetchAll($qb->getSQL()) as $row) {
+            $numGroupedElementVersions[$row['eid']] = $row['cnt'];
+        }
 
         // elementtypes
 
-        $elementTypeSelect = $db->select()
-            ->from($db->prefix . 'elementtype', new Zend_Db_Expr('COUNT(*)'));
-        $numElementTypes = $db->fetchOne($elementTypeSelect);
+        $qb = $conn->createQueryBuilder()
+            ->select('COUNT(et.id)')
+            ->from('elementtype', 'et');
+        $numElementTypes = $conn->fetchColumn($qb->getSQL());
 
-        $elementTypeUnusedSelect = $db->select()
-            ->from($db->prefix . 'elementtype', new Zend_Db_Expr('COUNT(*)'))
-            ->where(
-                'element_type_id NOT IN (SELECT DISTINCT element_type_id FROM ' . $db->prefix . 'element)'
-            )
-            ->where(
-                'element_type_id NOT IN (SELECT DISTINCT reference_id FROM ' . $db->prefix . 'elementtype_structure)'
-            );
-        $numUnusedElementTypes = $db->fetchOne($elementTypeUnusedSelect);
+        $qb = $conn->createQueryBuilder()
+            ->select('COUNT(et.id)')
+            ->from('elementtype', 'et')
+            ->where('et.id NOT IN (SELECT DISTINCT element_type_id FROM element)')
+            ->where('et.id NOT IN (SELECT DISTINCT reference_id FROM elementtype_structure)');
+        $numUnusedElementTypes = $conn->fetchColumn($qb);
 
-        $elementTypeVersionsSelect = $db->select()
-            ->from($db->prefix . 'elementtype_version', new Zend_Db_Expr('COUNT(*)'));
-        $numElementTypeVersions = $db->fetchOne($elementTypeVersionsSelect);
+        $qb = $conn->createQueryBuilder()
+            ->select('COUNT(etv.id)')
+            ->from('elementtype_version', 'etv');
+        $numElementTypeVersions = $conn->fetchColumn($qb->getSQL());
 
-        $elementTypeGroupedVersionsSelect = $db->select()
-            ->from(
-                $db->prefix . 'elementtype_version',
-                array('element_type_id', new Zend_Db_Expr('COUNT(*) AS cnt'))
-            )
-            ->group('element_type_id')
-            ->order('cnt DESC');
-        $numGroupedElementTypeVersions = $db->fetchPairs($elementTypeGroupedVersionsSelect);
+        $qb = $conn->createQueryBuilder()
+            ->select(array('etv.elementtype_id', 'COUNT(etv.id) AS cnt'))
+            ->from('elementtype_version', 'etv')
+            ->groupBy('etv.elementtype_id')
+            ->orderBy('cnt', 'DESC');
+        $numGroupedElementTypeVersions = array();
+        foreach ($conn->fetchAll($qb->getSQL()) as $row) {
+            $numGroupedElementTypeVersions[$row['elementtype_id']] = $row['cnt'];
+        }
 
-        $elementTypeGroupedElementsSelect = $db->select()
-            ->from(
-                array('et' => $db->prefix . 'elementtype'),
-                array('element_type_id', new Zend_Db_Expr('COUNT(e.eid) AS cnt'))
-            )
-            ->joinLeft(
-                array('e' => $db->prefix . 'element'),
-                'e.element_type_id = et.element_type_id',
-                array()
-            )
-            ->group('element_type_id')
-            ->order('cnt DESC');
-        $numGroupedElementTypeElements = $db->fetchPairs($elementTypeGroupedElementsSelect);
+        $qb = $conn->createQueryBuilder()
+            ->select(array('et.id', 'COUNT(e.eid) AS cnt'))
+            ->from('elementtype', 'et')
+            ->leftJoin('et', 'element', 'e', 'e.elementtype_id = et.id')
+            ->groupBy('et.id')
+            ->orderBy('cnt', 'DESC');
+        $numGroupedElementTypeElements = array();
+        foreach ($conn->fetchAll($qb->getSQL()) as $row) {
+            $numGroupedElementTypeElements[$row['id']] = $row['cnt'];
+        }
 
         $out .= '##### Elements ############################################' . PHP_EOL;
         $out .= PHP_EOL;
@@ -136,12 +140,10 @@ class StatusController extends Controller
             if ($i >= 5) {
                 break;
             }
-            $element = Makeweb_Elements_Element_Version_Manager::getInstance()->getLatest($eid);
-            $out .= '  ' . str_pad(
-                    $element->getBackendTitle('de', 'en') . ' [' . $eid . ']',
-                    40,
-                    ' '
-                ) . ' => ' . str_pad($count, 4, ' ', STR_PAD_LEFT) . ' versions' . PHP_EOL;
+            $element = $elementService->findElement($eid);
+            $elementVersion = $elementService->findLatestElementVersion($element);
+            $out .= '  ' . str_pad($elementVersion->getBackendTitle('de', 'en') . ' [' . $eid . ']', 40, ' ')
+                . ' => ' . str_pad($count, 4, ' ', STR_PAD_LEFT) . ' versions' . PHP_EOL;
             $i++;
         }
         $out .= PHP_EOL;
@@ -158,13 +160,9 @@ class StatusController extends Controller
             if ($i >= 5) {
                 break;
             }
-            $elementType = Makeweb_Elementtypes_Elementtype_Version_Manager::getInstance()->getLatest($etId);
-            $out .= '  ' . str_pad($elementType->getTitle() . ' [' . $etId . ']', 40, ' ') . ' => ' . str_pad(
-                    $count,
-                    4,
-                    ' ',
-                    STR_PAD_LEFT
-                ) . ' versions' . PHP_EOL;
+            $elementtype = $elementtypeService->findElementtype($etId);
+            $out .= '  ' . str_pad($elementtype->getTitle() . ' [' . $etId . ']', 40, ' ') . ' => '
+                . str_pad($count, 4, ' ', STR_PAD_LEFT ) . ' versions' . PHP_EOL;
             $i++;
         }
         $out .= PHP_EOL;
@@ -174,13 +172,9 @@ class StatusController extends Controller
             if ($i >= 5) {
                 break;
             }
-            $elementType = Makeweb_Elementtypes_Elementtype_Version_Manager::getInstance()->getLatest($etId);
-            $out .= '  ' . str_pad($elementType->getTitle() . ' [' . $etId . ']', 40, ' ') . ' => ' . str_pad(
-                    $count,
-                    4,
-                    ' ',
-                    STR_PAD_LEFT
-                ) . ' elements' . PHP_EOL;
+            $elementtype = $elementtypeService->findElementtype($etId);
+            $out .= '  ' . str_pad($elementtype->getTitle() . ' [' . $etId . ']', 40, ' ') . ' => '
+                . str_pad($count, 4, ' ', STR_PAD_LEFT) . ' elements' . PHP_EOL;
             $i++;
         }
 

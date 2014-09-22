@@ -198,30 +198,6 @@ class ResultPool implements \Countable
     }
 
     /**
-     * Get paginator object.
-     *
-     * @param int $page
-     *
-     * @return \Zend_Paginator
-     */
-    public function getPaginator($page = 1)
-    {
-        $paginator = \Zend_Paginator::factory($this->getFilteredItems());
-
-        if (!$this->resultsPerPage) {
-            $paginator->setItemCountPerPage(PHP_INT_MAX);
-        } else {
-            $paginator->setItemCountPerPage($this->resultsPerPage);
-        }
-
-        if ($page > 1) {
-            $paginator->setCurrentPageNumber($page);
-        }
-
-        return $paginator;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function count()
