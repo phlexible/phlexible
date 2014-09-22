@@ -171,7 +171,7 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                         autoHeight: true,
                         anchor: '-15',
                         items: [{
-                            xtype: 'combo',
+                            xtype: 'twincombobox',
                             width: 300,
                             listWidth: 300,
                             fieldLabel: this.strings.meta_filter,
@@ -195,6 +195,9 @@ Phlexible.elementfinder.ElementFinderConfigPanel = Ext.extend(Ext.Panel, {
                                 select: function (combo, record, index) {
                                     var sortField = this.getForm().findField('metaKeywords');
                                     sortField.store.load();
+                                },
+                                clear: function() {
+                                    this.getComponent(0).getComponent(2).getComponent(1).getStore().removeAll();
                                 },
                                 scope: this
                             },
