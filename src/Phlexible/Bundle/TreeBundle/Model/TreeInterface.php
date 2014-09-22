@@ -57,6 +57,22 @@ interface TreeInterface
     public function has($id);
 
     /**
+     * @param mixed       $typeId
+     * @param string|null $type
+     *
+     * @return TreeNodeInterface[]
+     */
+    public function getByTypeId($typeId, $type = null);
+
+    /**
+     * @param mixed       $typeId
+     * @param string|null $type
+     *
+     * @return bool
+     */
+    public function hasByTypeId($typeId, $type = null);
+
+    /**
      * Return child nodes
      *
      * @param TreeNodeInterface $node

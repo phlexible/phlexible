@@ -1,6 +1,18 @@
 services:
-    phlexible_element.file.usage:
-        class: Phlexible\Bundle\ElementBundle\Usage\FileUsage
+    phlexible_element.file_usage_updater:
+        class: Phlexible\Bundle\ElementBundle\Usage\FileUsageUpdater
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @phlexible_element.element_service
+            - @phlexible_tree.tree_manager
+            - @phlexible_teaser.teaser_manager
+            - @phlexible_media_site.site_manager
 
-    phlexible_element.folder.usage:
-        class: Phlexible\Bundle\ElementBundle\Usage\FolderUsage
+    phlexible_element.folder_usage_updater:
+        class: Phlexible\Bundle\ElementBundle\Usage\FolderUsageUpdater
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @phlexible_element.element_service
+            - @phlexible_tree.tree_manager
+            - @phlexible_teaser.teaser_manager
+            - @phlexible_media_site.site_manager

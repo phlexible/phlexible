@@ -372,4 +372,20 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     {
         return $this->mediator->getVersionedObject($node)->getVersion();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getByTypeId($typeId, $type = null)
+    {
+        // TODO: Implement getByTypeId() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasByTypeId($typeId, $type = null)
+    {
+        // TODO: Implement hasByTypeId() method.
+    }
 }

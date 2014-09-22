@@ -604,4 +604,20 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     {
         // TODO: Implement findOneOnlineByTreeNodeAndLanguage() method.
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getByTypeId($typeId, $type = null)
+    {
+        // TODO: Implement getByTypeId() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasByTypeId($typeId, $type = null)
+    {
+        // TODO: Implement hasByTypeId() method.
+    }
 }

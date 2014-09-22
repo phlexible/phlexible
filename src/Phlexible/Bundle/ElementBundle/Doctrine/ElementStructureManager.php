@@ -243,8 +243,10 @@ class ElementStructureManager implements ElementStructureManagerInterface
     {
         $links = array();
 
-        foreach ($elementStructure->getValues() as $elementStructureValue) {
-            $links = array_merge($links, $this->linkExtractor->extract($elementStructureValue));
+        foreach ($elementStructure->getLanguages() as $language) {
+            foreach ($elementStructure->getValues($language) as $elementStructureValue) {
+                $links = array_merge($links, $this->linkExtractor->extract($elementStructureValue));
+            }
         }
 
         foreach ($elementStructure->getStructures() as $childStructure) {

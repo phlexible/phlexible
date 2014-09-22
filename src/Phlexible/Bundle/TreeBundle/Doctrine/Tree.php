@@ -152,6 +152,31 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
     /**
      * {@inheritdoc}
      */
+    public function getByTypeId($typeId, $type = null)
+    {
+        $criteria = array('typeId' => $typeId);
+        if ($type) {
+            $criteria['type'] = $type;
+        }
+        $nodes = $this->getTreeNodeRepository()->findBy($criteria);
+        foreach ($nodes as $node) {
+            $node->setTree($this);
+        }
+
+        return $nodes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasByTypeId($typeId, $type = null)
+    {
+        return $this->getByTypeId($typeId, $type) ? true : false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getChildren(TreeNodeInterface $node)
     {
         $nodes = $this->getTreeNodeRepository()->findBy(array('siterootId' => $this->siterootId, 'parentNode' => $node->getId()), array('sort' => 'ASC'));

@@ -112,6 +112,14 @@ class FileUsage
     }
 
     /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
      * Return array represenattion of this usage
      *
      * @return array

@@ -52,7 +52,7 @@ class TreeManager
      *
      * @param string $siteRootId
      *
-     * @return \Phlexible\Bundle\TreeBundle\Model\TreeInterface|WritableTreeInterface
+     * @return TreeInterface|WritableTreeInterface
      */
     public function getBySiteRootId($siteRootId)
     {
@@ -69,7 +69,7 @@ class TreeManager
      *
      * @param int $nodeId
      *
-     * @return \Phlexible\Bundle\TreeBundle\Model\TreeInterface|\Phlexible\Bundle\TreeBundle\Model\WritableTreeInterface
+     * @return TreeInterface|WritableTreeInterface
      * @throws NodeNotFoundException
      */
     public function getByNodeId($nodeId)
@@ -82,7 +82,29 @@ class TreeManager
             }
         }
 
-        throw new NodeNotFoundException("Tree for node $nodeId not found.");
+        throw new NodeNotFoundException("Tree for node ID $nodeId not found.");
+    }
+
+    /**
+     * Get tree by type ID
+     *
+     * @param int    $typeId
+     * @param string $type
+     *
+     * @return TreeInterface|WritableTreeInterface
+     * @throws NodeNotFoundException
+     */
+    public function getByTypeId($typeId, $type = null)
+    {
+        foreach ($this->siterootManager->findAll() as $siteroot) {
+            $tree = $this->getBySiteRootId($siteroot->getId());
+
+            if ($tree->hasByTypeId($typeId, $type)) {
+                return $tree;
+            }
+        }
+
+        throw new NodeNotFoundException("Tree for type ID $typeId not found.");
     }
 
     /**
