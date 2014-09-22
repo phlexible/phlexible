@@ -46,7 +46,7 @@ class GetConfigListener
 
         $languages = array();
         foreach ($this->availableLanguages as $language) {
-            $name = \Locale::getDisplayName($language, $event->getSecurityContext()->getToken()->getUser()->getInterfaceLanguage());
+            $name = \Locale::getDisplayName($language, $event->getSecurityContext()->getToken()->getUser()->getInterfaceLanguage('en'));
             $languages[$name] = $language;
         }
 

@@ -12,6 +12,7 @@ use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Phlexible\Bundle\GuiBundle\GuiEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Config builder
@@ -69,7 +70,7 @@ class ConfigBuilder
 
         $languages = array();
         foreach ($this->availableLanguages as $key => $language) {
-            $name = \Locale::getDisplayName($language, $this->securityContext->getToken()->getUser()->getInterfaceLanguage());
+            $name = \Locale::getDisplayName($language, $this->securityContext->getToken()->getUser()->getInterfaceLanguage('en'));
             $languages[$name] = $language;
             unset($languages[$key]);
         }

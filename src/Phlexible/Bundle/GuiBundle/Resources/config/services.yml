@@ -13,7 +13,11 @@ services:
 
     phlexible_gui.builder.config:
         class: Phlexible\Bundle\GuiBundle\Config\ConfigBuilder
-        arguments: [@event_dispatcher, @security.context, %phlexible_gui.languages.available%, %phlexible_gui.languages.default%]
+        arguments:
+            - @event_dispatcher
+            - @security.context
+            - %phlexible_gui.languages.available%
+            - %phlexible_gui.languages.default%
 
     phlexible_gui.menu.loader:
         class: Phlexible\Bundle\GuiBundle\Menu\MenuLoader

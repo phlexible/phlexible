@@ -46,7 +46,7 @@ Phlexible.elements.Element = function (config) {
                 hasChecked = true;
             }
             langBtns.push({
-                text: Phlexible.gui.Strings[languageRow[1]],
+                text: languageRow[1],
                 iconCls: languageRow[2],
                 langKey: languageRow[0],
                 checked: languageRow[0] === checkedLanguage

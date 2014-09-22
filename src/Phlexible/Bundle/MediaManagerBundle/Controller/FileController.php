@@ -166,7 +166,7 @@ class FileController extends Controller
                 $documentType->setKey('unknown');
             }
 
-            $interfaceLanguage = $this->getUser()->getInterfaceLanguage();
+            $interfaceLanguage = $this->getUser()->getInterfaceLanguage('en');
             $documentTypeTitle = $documentType->getTitle($interfaceLanguage);
 
             $version = 1;

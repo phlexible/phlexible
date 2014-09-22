@@ -76,7 +76,7 @@ class TreeController extends Controller
             $children = $elementtypeStructure->getChildNodes($rootNode->getDsId());
         }
 
-        $language = $this->getUser()->getInterfaceLanguage();
+        $language = $this->getUser()->getInterfaceLanguage('en');
         if (!$language) {
             $language = 'en';
         }

@@ -35,7 +35,7 @@ class SelectfieldController extends Controller
     public function listAction(Request $request)
     {
         $providerClassname = $request->get('provider');
-        $language = $this->getUser()->getInterfaceLanguage();
+        $language = $this->getUser()->getInterfaceLanguage('en');
 
         $data = array();
 
