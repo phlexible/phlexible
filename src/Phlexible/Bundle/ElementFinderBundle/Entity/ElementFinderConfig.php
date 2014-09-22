@@ -64,7 +64,7 @@ class ElementFinderConfig
      * @var string
      * @ORM\Column(name="sort_order", type="string", length=255, nullable=true)
      */
-    private $sortOrder;
+    private $sortDir;
 
     /**
      * @var string
@@ -77,36 +77,6 @@ class ElementFinderConfig
      * @ORM\Column(name="template", type="string", length=255, nullable=true)
      */
     private $template;
-
-    /**
-     * @var int
-     * @ORM\Column(name="results_per_page", type="integer")
-     */
-    private $resultsPerPage = PHP_INT_MAX;
-
-    /**
-     * @var int
-     * @ORM\Column(name="max_results", type="integer")
-     */
-    private $maxResults;
-
-    /**
-     * @var bool
-     * @ORM\Column(name="has_rotation", type="boolean")
-     */
-    private $hasRotation;
-
-    /**
-     * @var bool
-     * @ORM\Column(name="has_paginator", type="boolean")
-     */
-    private $hasPaginator;
-
-    /**
-     * @var int
-     * @ORM\Column(name="pool_size", type="integer")
-     */
-    private $poolSize;
 
     /**
      * @var int
@@ -245,9 +215,9 @@ class ElementFinderConfig
      *
      * @return $this
      */
-    public function setSortOrder($sortOrder)
+    public function setSortDir($sortOrder)
     {
-        $this->sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
+        $this->sortDir = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
 
         return $this;
     }
@@ -255,9 +225,9 @@ class ElementFinderConfig
     /**
      * @return string ASC/DESC
      */
-    public function getSortOrder()
+    public function getSortDir()
     {
-        return $this->sortOrder;
+        return $this->sortDir;
     }
 
     /**
@@ -278,86 +248,6 @@ class ElementFinderConfig
     public function getFilter()
     {
         return $this->filter;
-    }
-
-    /**
-     * @param bool $hasRotation
-     *
-     * @return $this
-     */
-    public function setRotation($hasRotation = true)
-    {
-        $this->hasRotation = (bool) $hasRotation;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasRotation()
-    {
-        return $this->hasRotation;
-    }
-
-    /**
-     * @param int $elementsPerPage
-     *
-     * @return $this
-     */
-    public function setResultsPerPage($elementsPerPage)
-    {
-        $this->resultsPerPage = (int) $elementsPerPage;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getResultsPerPage()
-    {
-        return $this->resultsPerPage;
-    }
-
-    /**
-     * @param int $maxElements
-     *
-     * @return $this
-     */
-    public function setMaxResults($maxElements)
-    {
-        $this->maxResults = (int) $maxElements;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxResults()
-    {
-        return $this->maxResults;
-    }
-
-    /**
-     * @param int $poolSize
-     *
-     * @return $this
-     */
-    public function setPoolSize($poolSize)
-    {
-        $this->poolSize = (int) $poolSize;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPoolSize()
-    {
-        return $this->poolSize;
     }
 
     /**

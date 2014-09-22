@@ -10,9 +10,8 @@ namespace Phlexible\Bundle\ElementFinderBundle\ElementFinder;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Phlexible\Bundle\ElementFinderBundle\ElementFinder\Filter\ResultFilterInterface;
-use Phlexible\Bundle\ElementFinderBundle\ElementFinder\Filter\SelectFilterInterface;
-use Phlexible\Bundle\ElementFinderBundle\ElementFinder\Matcher\TreeNodeMatcher;
+use Phlexible\Bundle\ElementFinderBundle\ElementFinder\Filter\QueryEnhancerInterface;
+use Phlexible\Bundle\ElementFinderBundle\ElementFinder\Matcher\TreeNodeMatcherInterface;
 use Phlexible\Bundle\ElementFinderBundle\Entity\ElementFinderConfig;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -42,7 +41,7 @@ class ElementFinder
     private $dispatcher;
 
     /**
-     * @var TreeNodeMatcher
+     * @var TreeNodeMatcherInterface
      */
     private $treeNodeMatcher;
 
@@ -51,19 +50,26 @@ class ElementFinder
      */
     private $useElementLanguageAsFallback;
 
+    /**
+     * @var bool
+     */
     private $isNatSort = false;
+
+    /**
+     * @var array
+     */
     private $tidSkipList = array();
 
     /**
      * @param Connection               $connection
      * @param EventDispatcherInterface $dispatcher
-     * @param TreeNodeMatcher          $treeNodeMatcher
+     * @param TreeNodeMatcherInterface $treeNodeMatcher
      * @param bool                     $useElementLanguageAsFallback
      */
     public function __construct(
         Connection $connection,
         EventDispatcherInterface $dispatcher,
-        TreeNodeMatcher $treeNodeMatcher,
+        TreeNodeMatcherInterface $treeNodeMatcher,
         $useElementLanguageAsFallback)
     {
         $this->connection = $connection;
@@ -87,85 +93,92 @@ class ElementFinder
      * @param array               $languages
      * @param bool                $isPreview
      * @param mixed               $filter
-     * @param string              $country
      *
-     * @return ElementFinderResultPool
+     * @return ResultPool
      */
     public function find(
         ElementFinderConfig $elementCatch,
         array $languages,
         $isPreview,
-        $filter = null,
-        $country = null)
+        $filter = null)
     {
-        $resultPool = new ElementFinderResultPool(
-            $elementCatch->getResultsPerPage(),
-            $filter
+        $matchedTreeIds = $this->treeNodeMatcher->getMatchingTreeIdsByLanguage(
+            $elementCatch->getTreeId(),
+            $elementCatch->getMaxDepth(),
+            $isPreview,
+            $languages
         );
 
-        $select = $this->createReducedSelect($elementCatch, $resultPool, $isPreview, $languages, $filter, $country);
+        $qb = $this->createSelect($elementCatch, $isPreview, $languages, $matchedTreeIds, $filter);
 
-        #$beforeEvent = new BeforeCatchGetResultPool($this, $select, $resultPool);
+        #$beforeEvent = new BeforeCatchGetResultPool($this, $qb, $resultPool);
         #if (!$this->dispatcher->dispatch($beforeEvent)) {
         #    return $resultPool;
         #}
 
         #ld($elementCatch);
-        #echo $select->getSQL();die;
-        $items = $this->connection->fetchAll($select->getSQL());
+        #echo $qb->getSQL();die;
+        $items = $this->connection->fetchAll($qb->getSQL());
         $newItems = array();
         foreach ($items as $item) {
             $newItems[$item['tree_id']] = $item;
         }
         $items = $newItems;
 
-        $resultPool->setItems($items);
-
+        /*
         if ($filter && $filter instanceof ResultFilterInterface) {
             $filter->filterResult($resultPool);
         }
+        */
 
-        if (!$this->hasSelectSort($select, $elementCatch)) {
+        if (!$elementCatch->getSortField()) {
             // sort by tree order
-            $items = $resultPool->all();
             $orderedResult = array();
 
-            $matchedTreeIds = $this->treeNodeMatcher->flatten($resultPool->getMatchedTreeIds());
+            $matchedTreeIds = $this->treeNodeMatcher->flatten($matchedTreeIds);
             foreach ($matchedTreeIds as $matchedTreeId) {
                 if (array_key_exists($matchedTreeId, $items)) {
                     $orderedResult[$matchedTreeId] = $items[$matchedTreeId];
                 }
             }
-
-            $resultPool->setItems($items);
+            sort($orderedResult);
+            $items = $orderedResult;
         } elseif ($this->isNatSort) {
-            // use natsort
-            $items = $resultPool->all();
+            // sort by sort field
             $sortedColumn = array_column($items, 'sort_field');
-            natsort($sortedColumn);
+            if ($this->isNatSort) {
+                // use natsort
+                natsort($sortedColumn);
+            } else {
+                // use sort
+                sort($sortedColumn);
+            }
 
             $orderedResult = array();
             foreach (array_keys($sortedColumn) as $key) {
                 $orderedResult[] = $items[$key];
             }
-
-            $resultPool->setItems($items);
+            $items = $orderedResult;
         }
 
-        if ($this->isNatSort || !$this->hasSelectSort($select, $elementCatch)) {
-            // If natsort is selected the sql limit clause cannot be used
-            // -> limit result by hand
-            //if ($elementCatch->hasRotation()) {
-            //    $limit = $elementCatch->getPoolSize() ?: 0;
-            //} else {
-            $limit = $elementCatch->getMaxResults() ? : 0;
-            //}
+        $resultPool = new ResultPool();
 
-            if ($limit) {
-                $items = $resultPool->all();
-                $items = array_slice($items, 0, $limit, true);
-                $resultPool->setItems($items);
-            }
+        $resultPool->setQuery((string) $qb);
+
+        foreach ($items as $row) {
+            $resultPool->addItem(
+                new ResultItem(
+                    $row['tree_id'],
+                    $row['eid'],
+                    $row['version'],
+                    $row['language'],
+                    $row['elementtype_id'],
+                    $row['in_navigation'],
+                    $row['is_restricted'],
+                    $row['published_at'],
+                    $row['custom_date']
+                )
+            );
         }
 
         #$event = new CatchGetResultPool($this, $resultPool);
@@ -177,65 +190,23 @@ class ElementFinder
     /**
      * Apply filter and limit clause.
      *
-     * @param ElementFinderConfig     $elementCatch
-     * @param ElementFinderResultPool $resultPool
-     * @param bool                    $isPreview
-     * @param array                   $languages
-     * @param mixed                   $filter
-     * @param string                  $country
+     * @param ElementFinderConfig $elementCatch
+     * @param bool                $isPreview
+     * @param array               $languages
+     * @param array|null          $matchedTreeIds
+     * @param mixed               $filter
      *
      * @return QueryBuilder
      */
-    private function createReducedSelect(
+    private function createSelect(
         ElementFinderConfig $elementCatch,
-        ElementFinderResultPool $resultPool,
         $isPreview,
         array $languages,
-        $filter,
-        $country)
+        array $matchedTreeIds = null,
+        $filter)
     {
-        $select = $this->createFullSelect($elementCatch, $resultPool, $isPreview, $languages, $country);
-
-        // apply filter
-        if ($filter && $filter instanceof SelectFilterInterface) {
-            $filter->filterSelect($elementCatch, $select);
-        }
-
-        // set sort information
-        $this->applySort($select, $elementCatch, $isPreview);
-
-        // set absolut limit clause
-        if (!$this->isNatSort && $this->hasSelectSort($select, $elementCatch)) {
-            $limit = $elementCatch->getMaxResults() ? : 0;
-
-            if ($limit) {
-                $select->setMaxResults($limit);
-            }
-        }
-
-        return $select;
-    }
-
-    /**
-     * Create select statement without reducing result sets by filters or other limitations.
-     *
-     * @param ElementFinderConfig     $elementCatch
-     * @param ElementFinderResultPool $resultPool
-     * @param bool                    $isPreview
-     * @param array                   $languages
-     * @param string                  $country
-     *
-     * @return QueryBuilder
-     */
-    private function createFullSelect(
-        ElementFinderConfig $elementCatch,
-        ElementFinderResultPool $resultPool,
-        $isPreview,
-        array $languages,
-        $country = null)
-    {
-        $select = $this->connection->createQueryBuilder();
-        $select
+        $qb = $this->connection->createQueryBuilder();
+        $qb
             ->select(
                 array(
                     'ch.tree_id',
@@ -253,201 +224,191 @@ class ElementFinder
             )
             ->from('catch_lookup_element', 'ch');
 
-        $whereChunk = array();
-        $matchedTreeIds = $this->treeNodeMatcher->getMatchingTreeIdsByLanguage(
-            $elementCatch->getTreeId(),
-            $elementCatch->getMaxDepth(),
-            $isPreview,
-            $languages
-        );
-        $resultPool->setMatchedTreeIds($matchedTreeIds);
-        foreach ($matchedTreeIds as $language => $tids) {
-            $whereChunk[] = '(ch.tree_id IN (' . implode(',', $tids) . ') AND ch.language = ' . $select->expr()->literal($language) . ')';
+        if ($matchedTreeIds === null) {
+            $qb->where('1 = 0');
+
+            return $qb;
         }
-        $select->where(implode(' OR ', $whereChunk));
+
+        $or = $qb->expr()->orX();
+        foreach ($matchedTreeIds as $language => $tids) {
+            $or->add(
+                $qb->expr()->andX(
+                    $qb->expr()->in('ch.tree_id', $tids),
+                    $qb->expr()->eq('ch.language', $qb->expr()->literal($language))
+                )
+            );
+        }
+        $qb->where($or);
 
         if ($isPreview) {
-            $select->andWhere('ch.is_preview = 1');
+            $qb->andWhere('ch.is_preview = 1');
         } else {
-            $select->andWhere('ch.is_preview = 0');
+            $qb->andWhere('ch.is_preview = 0');
         }
 
         if ($elementCatch->getMetaSearch()) {
             $metaI = 0;
             foreach ($elementCatch->getMetaSearch() as $key => $value) {
                 $alias = 'evmi' . ++$metaI;
-                $select
+                $qb
                     ->join('ch', 'catch_lookup_meta', $alias, $alias . '.eid = ch.eid AND ' . $alias . '.version = ch.version AND ' . $alias . '.language = ch.language')
-                    ->andWhere($select->expr()->eq("$alias.key", $select->expr()->literal($key)));
+                    ->andWhere($qb->expr()->eq("$alias.key", $qb->expr()->literal($key)));
 
                 $multiValueSelects = array();
                 foreach (explode(',', $value) as $singleValue) {
                     $singleValue = trim($singleValue);
-                    $multiValueSelects[] = $select->expr()->eq("$alias.value", $select->expr()->literal(mb_strtolower(html_entity_decode($singleValue, ENT_COMPAT, 'UTF-8'))));
+                    $multiValueSelects[] = $qb->expr()->eq("$alias.value", $qb->expr()->literal(mb_strtolower(html_entity_decode($singleValue, ENT_COMPAT, 'UTF-8'))));
                 }
 
                 if (count($multiValueSelects)) {
-                    $select->andWhere(implode(' OR ', $multiValueSelects));
+                    $qb->andWhere(implode(' OR ', $multiValueSelects));
                 }
             }
         }
 
         if (!empty($elementCatch->getElementtypeIds())) {
-            $select->andWhere($select->expr()->in('ch.elementtype_id', $elementCatch->getElementtypeIds()));
+            $qb->andWhere($qb->expr()->in('ch.elementtype_id', $elementCatch->getElementtypeIds()));
         }
 
         if ($elementCatch->inNavigation()) {
-            $select->andWhere('ch.in_navigation = 1');
+            $qb->andWhere('ch.in_navigation = 1');
         }
 
         if (count($this->tidSkipList)) {
             $tidSkipList = $this->tidSkipList;
 
-            $select->andWhere($select->expr()->notIn('ch.tree_id', $tidSkipList));
+            $qb->andWhere($qb->expr()->notIn('ch.tree_id', $tidSkipList));
         }
 
+        /*
         if ($country) {
             if ($country !== 'global') {
-                $select->andWhere(
+                $qb->andWhere(
                     '(ch.tree_id IN (SELECT DISTINCT tid FROM element_tree_context WHERE context = ? OR context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from element_tree_context))',
                     $country
                 );
             } else {
-                $select->andWhere(
+                $qb->andWhere(
                     '(ch.tree_id IN (SELECT DISTINCT tid FROM element_tree_context WHERE context = "global") OR ch.tree_id NOT IN (SELECT DISTINCT tid from element_tree_context))'
                 );
             }
         }
+        */
 
-        $select->groupBy('ch.eid');
+        $qb->groupBy('ch.eid');
 
-        return $select;
+        // apply filter
+        if ($filter && $filter instanceof QueryEnhancerInterface) {
+            $filter->enhance($elementCatch, $qb);
+        }
+
+        // set sort information
+        $this->applySort($qb, $elementCatch, $isPreview);
+
+        return $qb;
     }
 
     /**
      * Add a sort criteria to the select statement.
      *
-     * @param QueryBuilder        $select
+     * @param QueryBuilder        $qb
      * @param ElementFinderConfig $elementCatch
      * @param bool                $isPreview
      */
-    private function applySort(QueryBuilder $select, ElementFinderConfig $elementCatch, $isPreview)
+    private function applySort(QueryBuilder $qb, ElementFinderConfig $elementCatch, $isPreview)
     {
         $sortField = $elementCatch->getSortField();
-        if ($sortField) {
-            if (self::SORT_TITLE_BACKEND === $sortField) {
-                $this->applySortByTitle($select, 'backend', $elementCatch);
-            } elseif (self::SORT_TITLE_PAGE === $sortField) {
-                $this->applySortByTitle($select, 'page', $elementCatch);
-            } elseif (self::SORT_TITLE_NAVIGATION === $sortField) {
-                $this->applySortByTitle($select, 'navigation', $elementCatch);
-            } elseif (self::SORT_PUBLISH_DATE === $sortField) {
-                $this->applySortByPublishDate($select, $elementCatch, $isPreview);
-            } elseif (self::SORT_CUSTOM_DATE === $sortField) {
-                $this->applySortByCustomDate($select, $elementCatch);
-            } else {
-                $this->applySortByField($select, $elementCatch);
-            }
+        if (!$sortField) {
+            return;
+        }
+
+        if (self::SORT_TITLE_BACKEND === $sortField) {
+            $this->applySortByTitle($qb, 'backend', $elementCatch);
+        } elseif (self::SORT_TITLE_PAGE === $sortField) {
+            $this->applySortByTitle($qb, 'page', $elementCatch);
+        } elseif (self::SORT_TITLE_NAVIGATION === $sortField) {
+            $this->applySortByTitle($qb, 'navigation', $elementCatch);
+        } elseif (self::SORT_PUBLISH_DATE === $sortField) {
+            $this->applySortByPublishDate($qb, $elementCatch, $isPreview);
+        } elseif (self::SORT_CUSTOM_DATE === $sortField) {
+            $this->applySortByCustomDate($qb, $elementCatch);
+        } else {
+            $this->applySortByField($qb, $elementCatch);
         }
     }
 
     /**
      * Add field sorting to select statement.
      *
-     * @param QueryBuilder        $select
+     * @param QueryBuilder        $qb
      * @param ElementFinderConfig $elementCatch
      */
-    private function applySortByField(QueryBuilder $select, ElementFinderConfig $elementCatch)
+    private function applySortByField(QueryBuilder $qb, ElementFinderConfig $elementCatch)
     {
-        return;
-        $select
-            ->addSelect(self::FIELD_SORT . '.content')
+        $qb
+            ->addSelect('sort_esv.content AS sort_field')
             ->join(
                 'ch',
                 'element_structure',
-                'sort_d',
-                'ch.eid = sort_d.eid AND ch.version = sort_d.version'
+                'sort_es',
+                'ch.eid = sort_es.eid AND ch.version = sort_es.version'
             )
             ->join(
                 'sort_d',
                 'element_structure_value',
-                'sort_dl',
-                'sort_d.data_id = sort_dl.data_id AND sort_d.version = sort_dl.version AND sort_d.eid = sort_dl.eid AND sort_d.ds_id = ' . $select->expr()->literal($elementCatch->getSortField()) . ' AND sort_dl.language = ch.language'
+                'sort_esv',
+                'sort_es.data_id = sort_esvl.data_id AND sort_es.version = sort_esv.version AND sort_es.eid = sort_esv.eid AND sort_es.ds_id = ' . $qb->expr()->literal($elementCatch->getSortField()) . ' AND sort_esv.language = ch.language'
             );
-
-        if (!$this->isNatSort) {
-            $select->orderBy(self::FIELD_SORT, $elementCatch->getSortOrder());
-        }
     }
 
     /**
      * Add title sorting to select statement.
      *
-     * @param QueryBuilder        $select
+     * @param QueryBuilder        $qb
      * @param string              $title
      * @param ElementFinderConfig $elementCatch
      */
-    private function applySortByTitle(QueryBuilder $select, $title, ElementFinderConfig $elementCatch)
+    private function applySortByTitle(QueryBuilder $qb, $title, ElementFinderConfig $elementCatch)
     {
-        $select
-            ->addSelect("sort_field.$title")
+        $qb
+            ->addSelect("sort.$title AS sort_field")
             ->leftJoin(
                 'ch',
                 'element_version_mapped_fields',
-                'sort_t',
+                'sort',
                 'ch.eid = sort_t.eid AND ch.version = sort_t.version AND ch.language = sort_t.language'
             );
 
         if (!$this->isNatSort) {
-            $select->orderBy(self::FIELD_SORT, $elementCatch->getSortOrder());
+            $qb->orderBy(self::FIELD_SORT, $elementCatch->getSortDir());
         }
     }
 
     /**
      * Add title sorting to select statement.
      *
-     * @param QueryBuilder        $select
+     * @param QueryBuilder        $qb
      * @param ElementFinderConfig $elementCatch
      * @param bool                $isPreview
      */
-    private function applySortByPublishDate(QueryBuilder $select, ElementFinderConfig $elementCatch, $isPreview)
+    private function applySortByPublishDate(QueryBuilder $qb, ElementFinderConfig $elementCatch, $isPreview)
     {
         if (!$isPreview) {
-            $select->orderBy('ch.publish_time', $elementCatch->getSortOrder());
+            $qb
+                ->addSelect("ch.publish_time AS sort_field");
         }
     }
 
     /**
      * Add title sorting to select statement.
      *
-     * @param QueryBuilder        $select
+     * @param QueryBuilder        $qb
      * @param ElementFinderConfig $elementCatch
      */
-    private function applySortByCustomDate(QueryBuilder $select, ElementFinderConfig $elementCatch)
+    private function applySortByCustomDate(QueryBuilder $qb, ElementFinderConfig $elementCatch)
     {
-        $select->orderBy('ch.custom_date', $elementCatch->getSortOrder());
-    }
-
-    /**
-     * Check if catch definition or query have an sort field specified.
-     *
-     * @param QueryBuilder        $select
-     * @param ElementFinderConfig $elementCatch
-     *
-     * @return bool
-     */
-    private function hasSelectSort(QueryBuilder $select, ElementFinderConfig $elementCatch)
-    {
-        if ($elementCatch->getSortField()) {
-            return true;
-        }
-
-        $order = $select->getQueryPart('orderBy');
-
-        if (!is_array($order) || !count($order)) {
-            return false;
-        }
-
-        return true;
+        $qb
+            ->addSelect("ch.custom_date AS sort_field");
     }
 }

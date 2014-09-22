@@ -1,7 +1,11 @@
 services:
     phlexible_element_finder.treenode_matcher:
         class: Phlexible\Bundle\ElementFinderBundle\ElementFinder\Matcher\TreeNodeMatcher
-        arguments: [@phlexible_tree.tree_manager, @phlexible_element.element_service, false]
+        arguments:
+            - @phlexible_tree.tree_manager
+            - @phlexible_element.element_service
+            - @phlexible_element.element_history_manager
+            - %phlexible_element_finder.use_master_language_as_fallback%
 
     phlexible_element_finder.finder:
         class: Phlexible\Bundle\ElementFinderBundle\ElementFinder\ElementFinder

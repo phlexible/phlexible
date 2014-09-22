@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementFinderBundle\ElementFinder\Matcher;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
+use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class TreeNodeMatcher
+class TreeNodeMatcher implements TreeNodeMatcherInterface
 {
     /**
      * @var TreeManager
@@ -33,44 +33,42 @@ class TreeNodeMatcher
     private $elementService;
 
     /**
+     * @var ElementHistoryManagerInterface
+     */
+    private $elementHistoryManager;
+
+    /**
      * @var bool
      */
     private $useElementLanguageAsFallback;
 
     /**
-     * @param TreeManager $treeManager
-     * @param ElementService     $elementService
-     * @param bool               $useElementLanguageAsFallback
+     * @param TreeManager                    $treeManager
+     * @param ElementService                 $elementService
+     * @param ElementHistoryManagerInterface $elementHistoryManager
+     * @param bool                           $useElementLanguageAsFallback
      */
     public function __construct(
         TreeManager $treeManager,
         ElementService $elementService,
+        ElementHistoryManagerInterface $elementHistoryManager,
         $useElementLanguageAsFallback)
     {
         $this->treeManager = $treeManager;
         $this->elementService = $elementService;
+        $this->elementHistoryMAnager = $elementHistoryManager;
         $this->useElementLanguageAsFallback = $useElementLanguageAsFallback;
     }
 
     /**
-     * Traverse tree and find matching nodes.
-     * - check max depth
-     *
-     * @param int   $treeId
-     * @param int   $maxDepth
-     * @param bool  $isPreview
-     * @param array $languages
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getMatchingTreeIdsByLanguage($treeId, $maxDepth, $isPreview, $languages)
     {
         try {
             $tree = $this->treeManager->getByNodeId($treeId);
         } catch (\Exception $e) {
-            \MWF_Log::warn("Missing tree node ($treeId) of catch, maybe it is deleted");
-
-            return array('');
+            return null;
         }
 
         $iterator = new TreeIterator($tree->get($treeId));
@@ -84,18 +82,20 @@ class TreeNodeMatcher
             /* @var $childNode TreeNodeInterface */
 
             // TODO: repair
-            /*
             if ($isPreview) {
-                $onlineLanguages = Makeweb_Elements_History::getSavedLanguagesByEid(
-                    $childNode->getTypeId()
+                $actions = $this->elementHistoryManager->findBy(
+                    array(
+                        'eid' => $childNode->getTypeId(),
+                        'action' => ElementHistoryManagerInterface::ACTION_SAVE_ELEMENT
+                    )
                 );
+                foreach ($actions as $action) {
+                    $onlineLanguages[$action->getLanguage()] = $action->getLanguage();
+                }
+                $onlineLanguages = array_values($onlineLanguages);
             } else {
-                $onlineLanguages = $childNode->getOnlineLanguages();
+                $onlineLanguages = $tree->getPublishedLanguages($childNode);
             }
-            */
-            $onlineLanguages = array('de');
-
-            $childTreeId = (int) $childNode->getId();
 
             foreach ($languages as $language) {
                 if (in_array($language, $onlineLanguages)) {
@@ -103,7 +103,7 @@ class TreeNodeMatcher
                         $catched[$language] = array();
                     }
 
-                    $catched[$language][] = $childTreeId;
+                    $catched[$language][] = $childNode->getId();
                     break;
                 }
             }
@@ -112,11 +112,8 @@ class TreeNodeMatcher
             // and child node was not found yet
             // -> use master language as fallback
             // TODO: problem - $language might be unset
-            if ($this->useElementLanguageAsFallback && (!isset($catched[$language]) || !in_array(
-                        $childTreeId,
-                        $catched[$language]
-                    ))
-            ) {
+            if ($this->useElementLanguageAsFallback
+                    && (!isset($catched[$language]) || !in_array($childNode->getId(), $catched[$language]))) {
                 $masterLanguage = $this->elementService
                     ->findElement($childNode->getTypeId())
                     ->getMasterLanguage();
@@ -129,17 +126,13 @@ class TreeNodeMatcher
             }
         }
 
-        $matchedTreeIdsByLanguage = count($catched) ? $catched : array();
+        $matchedTreeIdsByLanguage = count($catched) ? $catched : null;
 
         return $matchedTreeIdsByLanguage;
     }
 
     /**
-     * Flatten matched tree ids by language to simple tree id array
-     *
-     * @param array $matchedTreeIdsByLanguage
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function flatten(array $matchedTreeIdsByLanguage)
     {

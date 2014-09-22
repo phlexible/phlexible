@@ -318,7 +318,7 @@ class CatchController extends Controller
         $treeId = $request->get('startTreeId', null);
         $maxDepth = $request->get('maxDepth', null);
         $inNavigation = $request->get('inNavigation', false);
-        $elementtypeIds = trim($request->get('elementtypeIds', array()));
+        $elementtypeIds = trim($request->get('elementtypeIds', ''));
         if ($elementtypeIds) {
             $elementtypeIds = explode(',', $elementtypeIds);
         } else {
@@ -340,12 +340,38 @@ class CatchController extends Controller
             #->setMetaKeywords($metaKeywords)
             ->setTemplate($template)
             ->setSortField($sortField)
-            ->setSortOrder($sortDir)
+            ->setSortDir($sortDir)
         ;
 
         $elementFinder = $this->get('phlexible_element_finder.finder');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
+
         $result = $elementFinder->find($elementFinderConfig, array('de'), true);
 
-        return new JsonResponse($result->range(0, 10));
+        $data = array();
+        foreach ($result->range(0,10) as $resultItem) {
+            $tree = $treeManager->getByNodeId($resultItem->getTreeId());
+            $treeNode = $tree->get($resultItem->getTreeId());
+            $element = $elementService->findElement($treeNode->getTypeId());
+            $elementVersion = $elementService->findElementVersion($element, $resultItem->getVersion());
+
+            $data[] = array(
+                'id'       => $resultItem->getTreeId(),
+                'version'  => $resultItem->getVersion(),
+                'language' => $resultItem->getLanguage(),
+                'title'    => $elementVersion->getBackendTitle($resultItem->getLanguage()),
+                'icon'     => $iconResolver->resolveTreeNode($treeNode, $resultItem->getLanguage()),
+            );
+        }
+
+        return new JsonResponse(
+            array(
+                'items' => $data,
+                'total' => count($result),
+                'query' => $result->getQuery(),
+            )
+        );
     }
 }

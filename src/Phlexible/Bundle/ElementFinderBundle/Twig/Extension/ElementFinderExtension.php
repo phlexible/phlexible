@@ -81,7 +81,7 @@ class ElementFinderExtension extends \Twig_Extension
             ->setMaxDepth($maxDepth)
             ->setFilter($filter)
             ->setSortField($sortField)
-            ->setSortOrder($sortDir)
+            ->setSortDir($sortDir)
             ->setTreeId($startTreeId);
 
         $resultPool = $this->elementFinder->find(

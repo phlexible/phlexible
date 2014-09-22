@@ -9,55 +9,93 @@
 namespace Phlexible\Bundle\ElementFinderBundle\ElementFinder;
 
 /**
- * Element finder result pool
+ * Result pool
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ElementFinderResultPool
+class ResultPool implements \Countable
 {
     /**
-     * @var array
+     * @var ResultItem[]
      */
     private $items = array();
 
     /**
-     * @var array
+     * @var mixed
      */
-    private $matchedTreeIds = array();
+    private $filter;
 
     /**
-     * @var int
+     * @var string
      */
-    private $resultsPerPage;
+    private $query;
 
     /**
-     * @param int   $resultsPerPage
-     * @param mixed $filter
-     */
-    public function __construct($resultsPerPage, $filter)
-    {
-        $this->resultsPerPage = $resultsPerPage;
-        $this->filter = $filter;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMatchedTreeIds()
-    {
-        return $this->matchedTreeIds;
-    }
-
-    /**
-     * @param array $matchedTreeIds
+     * @param string $query
      *
      * @return $this
      */
-    public function setMatchedTreeIds(array $matchedTreeIds)
+    public function setQuery($query)
     {
-        $this->matchedTreeIds = $matchedTreeIds;
+        $this->query = $query;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * @param ResultItem[] $items
+     *
+     * @return $this
+     */
+    public function setItems(array $items)
+    {
+        $this->items = array();
+
+        foreach ($items as $item) {
+            $this->addItem($item);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ResultItem $item
+     *
+     * @return $this
+     */
+    public function addItem(ResultItem $item)
+    {
+        $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * @param mixed $filter
+     *
+     * @return $this
+     */
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilter()
+    {
+        return $this->filter;
     }
 
     /**
@@ -112,26 +150,6 @@ class ElementFinderResultPool
     }
 
     /**
-     * @param array $items
-     *
-     * @return $this
-     */
-    public function setItems(array $items)
-    {
-        $this->items = $items;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFilter()
-    {
-        return $this->filter;
-    }
-
-    /**
      * @param array $values
      *
      * @return array
@@ -160,7 +178,7 @@ class ElementFinderResultPool
             $pos = $this->getLastRotationPosition() % $resultSize;
 
             $size = min(
-                $elementCatch->getPoolSize() ? : PHP_INT_MAX,
+                $elementCatch->getPoolSize() ?: PHP_INT_MAX,
                 $elementCatch->getMaxResults(),
                 $resultSize
             );
@@ -203,4 +221,11 @@ class ElementFinderResultPool
         return $paginator;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->items);
+    }
 }

@@ -1,5 +1,5 @@
 Phlexible.elementfinder.ElementFinderConfigWindow = Ext.extend(Ext.Window, {
-    strings: Phlexible.elementfinder.Strings,
+    strings: Phlexible.elementfinder.Strings.preview,
     title: Phlexible.elementfinder.Strings.finder,
     iconCls: 'p-elementfinder-finder-icon',
     width: 900,
@@ -12,9 +12,16 @@ Phlexible.elementfinder.ElementFinderConfigWindow = Ext.extend(Ext.Window, {
     initComponent: function () {
         var store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('elementfinder_catch_preview'),
-            fields: ['tree_id', 'eid', 'version', 'language'],
-            id: 'tree_id',
-            baseParams: {}
+            fields: ['id', 'version', 'language', 'title', 'icon'],
+            id: 'id',
+            root: 'items',
+            baseParams: {},
+            listeners: {
+                load: function(store) {
+                    this.getComponent(1).getTopToolbar().items.items[2].setText(String.format(this.strings.showing, 1, store.getCount(), store.reader.jsonData.total));
+                },
+                scope: this
+            }
         });
 
         this.items = [{
@@ -36,26 +43,40 @@ Phlexible.elementfinder.ElementFinderConfigWindow = Ext.extend(Ext.Window, {
             xtype: 'grid',
             region: 'center',
             store: store,
+            autoExpandColumn: 3,
+            emptyText: this.strings.no_match,
             columns: [{
-                header: '_tree_id',
-                dataIndex: 'tree_id'
+                header: this.strings.id,
+                dataIndex: 'id',
+                width: 50
             },{
-                header: '_eid',
-                dataIndex: 'eid'
+                header: this.strings.version,
+                dataIndex: 'version',
+                width: 50
             },{
-                header: '_version',
-                dataIndex: 'version'
+                header: this.strings.language,
+                dataIndex: 'language',
+                width: 50,
+                renderer: function(v) {
+                    return Phlexible.inlineIcon("p-flags-" + v + "-icon");
+                }
             },{
-                header: '_language',
-                dataIndex: 'language'
+                header: this.strings.title,
+                dataIndex: 'title',
+                renderer: function(v, md, r) {
+                    return '<img src="' + r.data.icon + '" width="18" height="18" style="vertical-align: middle;" /> ' + v;
+                }
             }],
             tbar: [{
-                text: '_preview',
+                text: this.strings.preview,
                 handler: function() {
                     this.getComponent(1).getStore().baseParams = this.getComponent(0).getValues();
                     this.getComponent(1).getStore().reload();
                 },
                 scope: this
+            },'->',{
+                xtype: 'tbtext',
+                text: '&nbsp;'
             }]
         }];
 

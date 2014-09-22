@@ -285,7 +285,7 @@ class LinkController extends Controller
         if (!count($elementtypeIds)) {
             $mode = !$targetTid ? self::MODE_NOET_NOTARGET : self::MODE_NOET_TARGET;
 
-            $nodes = $tree->getChildren($startNode);
+            $nodes = array($startNode);//$tree->getChildren($startNode);
             $data = $this->recurseLinkNodes($nodes, $language, $mode, $targetNode);
         } else {
             $mode = !$targetTid ? self::MODE_ET_NOTARGET : self::MODE_ET_TARGET;

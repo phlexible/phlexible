@@ -18,5 +18,14 @@ elementfinder:
     meta_keywords: Meta Keywords
     select_meta_keywords: Meta Keywords auswählen
     template: Template
-    store: Übernehmen
-    cancel: Abbrechen
+
+    preview:
+        preview: Preview
+        id: ID
+        version: Version
+        language: Sprache
+        title: Titel
+        no_match: Keine Treffer
+        showing: Zeige Ergebnisse {0} - {1} von {2}
+        store: Übernehmen
+        cancel: Abbrechen
