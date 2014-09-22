@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\ElementFinderBundle\EventListener;
 
+use Phlexible\Bundle\ElementBundle\ElementEvents;
+use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
 use Phlexible\Bundle\ElementFinderBundle\ElementFinder\LookupBuilder;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
@@ -32,11 +34,12 @@ class NodeListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
+            TreeEvents::CREATE_NODE          => 'onCreateNode',
+            TreeEvents::CREATE_NODE_INSTANCE => 'onCreateNodeInstance',
+            ElementEvents::SAVE_NODE_DATA    => 'onSaveNodeData',
             TreeEvents::PUBLISH_NODE         => 'onPublishNode',
             TreeEvents::SET_NODE_OFFLINE     => 'onSetNodeOffline',
             TreeEvents::DELETE_NODE          => 'onDeleteNode',
-            TreeEvents::UPDATE_NODE          => 'onUpdateNode',
-            TreeEvents::CREATE_NODE_INSTANCE => 'onCreateNodeInstance',
         );
     }
 
@@ -46,6 +49,36 @@ class NodeListener implements EventSubscriberInterface
     public function __construct(LookupBuilder $lookupBuilder)
     {
         $this->lookupBuilder = $lookupBuilder;
+    }
+
+    /**
+     * @param NodeEvent $event
+     */
+    public function onCreateNode(NodeEvent $event)
+    {
+        $node = $event->getNode();
+
+        $this->lookupBuilder->updatePreview($node);
+    }
+
+    /**
+     * @param NodeEvent $event
+     */
+    public function onCreateNodeInstance(NodeEvent $event)
+    {
+        $node = $event->getNode();
+
+        $this->lookupBuilder->updatePreview($node);
+    }
+
+    /**
+     * @param SaveNodeDataEvent $event
+     */
+    public function onSaveNodeData(SaveNodeDataEvent $event)
+    {
+        $node = $event->getNode();
+
+        $this->lookupBuilder->updatePreview($node);
     }
 
     /**
@@ -77,25 +110,5 @@ class NodeListener implements EventSubscriberInterface
         $node = $event->getNode();
 
         $this->lookupBuilder->remove($node);
-    }
-
-    /**
-     * @param NodeEvent $event
-     */
-    public function onUpdateNode(NodeEvent $event)
-    {
-        $node = $event->getNode();
-
-        $this->lookupBuilder->updatePreview($node);
-    }
-
-    /**
-     * @param NodeEvent $event
-     */
-    public function onCreateNodeInstance(NodeEvent $event)
-    {
-        $node = $event->getNode();
-
-        $this->lookupBuilder->updatePreview($node);
     }
 }

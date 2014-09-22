@@ -56,7 +56,7 @@ class TreeNodeMatcher implements TreeNodeMatcherInterface
     {
         $this->treeManager = $treeManager;
         $this->elementService = $elementService;
-        $this->elementHistoryMAnager = $elementHistoryManager;
+        $this->elementHistoryManager = $elementHistoryManager;
         $this->useElementLanguageAsFallback = $useElementLanguageAsFallback;
     }
 
@@ -81,7 +81,6 @@ class TreeNodeMatcher implements TreeNodeMatcherInterface
         foreach ($rii as $childNode) {
             /* @var $childNode TreeNodeInterface */
 
-            // TODO: repair
             if ($isPreview) {
                 $actions = $this->elementHistoryManager->findBy(
                     array(
@@ -89,10 +88,13 @@ class TreeNodeMatcher implements TreeNodeMatcherInterface
                         'action' => ElementHistoryManagerInterface::ACTION_SAVE_ELEMENT
                     )
                 );
+                $onlineLanguages = array();
                 foreach ($actions as $action) {
                     $onlineLanguages[$action->getLanguage()] = $action->getLanguage();
                 }
+                // TODO: repair
                 $onlineLanguages = array_values($onlineLanguages);
+                $onlineLanguages = array('de');
             } else {
                 $onlineLanguages = $tree->getPublishedLanguages($childNode);
             }

@@ -131,14 +131,14 @@ class ElementFinder
         }
         */
 
-        if (!$elementCatch->getSortField()) {
+        if (!$elementCatch->getSortField() && $matchedTreeIds) {
             // sort by tree order
             $orderedResult = array();
 
-            $matchedTreeIds = $this->treeNodeMatcher->flatten($matchedTreeIds);
-            foreach ($matchedTreeIds as $matchedTreeId) {
-                if (array_key_exists($matchedTreeId, $items)) {
-                    $orderedResult[$matchedTreeId] = $items[$matchedTreeId];
+            $treeIds = $this->treeNodeMatcher->flatten($matchedTreeIds);
+            foreach ($treeIds as $treeId) {
+                if (array_key_exists($treeId, $items)) {
+                    $orderedResult[$treeId] = $items[$treeId];
                 }
             }
             sort($orderedResult);
