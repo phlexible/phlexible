@@ -11,6 +11,7 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
     initComponent: function () {
         this.items = [
             {
+                // 0
                 xtype: 'textfield',
                 fieldLabel: this.strings.name,
                 name: 'title',
@@ -18,12 +19,14 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
                 allowBlank: false
             },
             {
+                // 1
                 fieldLabel: this.strings.uniqueid,
                 name: 'unique_id',
                 width: 200,
                 allowBlank: false
             },
             {
+                // 2
                 xtype: 'trigger',
                 fieldLabel: this.strings.icon,
                 name: 'icon',
@@ -45,6 +48,7 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
                 }.createDelegate(this)
             },
             {
+                // 3
                 xtype: 'twincombobox',
                 fieldLabel: this.strings.default_tab,
                 emptyText: this.strings.no_default_tab,
@@ -70,6 +74,7 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
                 allowEmpty: true
             },
             {
+                // 4
                 xtype: 'twincombobox',
                 fieldLabel: this.strings.default_content_tab,
                 emptyText: this.strings.no_default_content_tab,
@@ -92,20 +97,33 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
                 allowEmpty: true
             },
             {
+                // 5
                 xtype: 'twincombobox',
                 fieldLabel: this.strings.metaset,
                 emptyText: this.strings.no_metaset,
                 hiddenName: 'metaset',
                 width: 200,
                 listWidth: 200,
-                store: new Ext.data.SimpleStore({
-                    fields: ['id', 'title'],
-                    data: []
+                store: new Ext.data.JsonStore({
+                    fields: ['id', 'name'],
+                    url: Phlexible.Router.generate('metasets_sets_list'),
+                    root: 'sets',
+                    id: 'id',
+                    autoLoad: true,
+                    listeners: {
+                        load: function() {
+                            var value = this.getComponent(5).getValue();
+                            if (value) {
+                                this.getComponent(5).setValue(value);
+                            }
+                        },
+                        scope: this
+                    }
                 }),
-                displayField: 'title',
+                displayField: 'name',
                 valueField: 'id',
                 editable: false,
-                mode: 'local',
+                mode: 'remote',
                 typeAhead: false,
                 triggerAction: 'all',
                 selectOnFocus: true,
@@ -138,10 +156,6 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
         for (var i = 0; i < node.childNodes.length; i++) {
             store.add(new Ext.data.Record({id: i + '', title: node.childNodes[i].text}));
         }
-
-        var metaStore = this.getComponent(5).store;
-        metaStore.removeAll();
-        metaStore.loadData(properties.metasets);
 
         if (properties.root.default_content_tab !== null) {
             properties.root.default_content_tab += '';

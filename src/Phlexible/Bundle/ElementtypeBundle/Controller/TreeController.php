@@ -42,7 +42,6 @@ class TreeController extends Controller
         $mode = $request->get('mode', 'edit');
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
 
         $elementtype = $elementtypeService->findElementtype($id);
 
@@ -56,14 +55,6 @@ class TreeController extends Controller
 
         $rootNode = $elementtypeStructure->getRootNode();
         $type = $elementtype->getType(); // != 'reference' ? 'root' : 'referenceroot';
-
-        $metaSetId = $elementtypeVersion->getMetaSetId();
-        $allMetaSets = $metaSetManager->findAll();
-
-        $metaSets = array();
-        foreach ($allMetaSets as $metaSet) {
-            $metaSets[] = array($metaSet->getId(), $metaSet->getName());
-        }
 
         $children = array();
         $rootID = '';
@@ -109,11 +100,10 @@ class TreeController extends Controller
                         'default_tab'         => $elementtype->getDefaultTab(),
                         'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
                         'type'                => $type,
-                        'metaset'             => $metaSetId,
+                        'metaset'             => $elementtypeVersion->getMetaSetId(),
                         'comment'             => $elementtypeVersion->getComment(),
                     ),
-                    'mappings' => $elementtypeVersion->getMappings(),
-                    'metasets' => $metaSets,
+                    'mappings' => $elementtypeVersion->getMappings()
                 ),
                 'children' => $this->recurseTree(
                     $elementtypeStructure,

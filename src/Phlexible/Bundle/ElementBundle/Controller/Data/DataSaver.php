@@ -93,6 +93,8 @@ class DataSaver
      * @param FieldRegistry            $fieldRegistry
      * @param TreeManager              $treeManager
      * @param TeaserManagerInterface   $teaserManager
+     * @param ElementMetaSetResolver   $elementMetaSetResolver
+     * @param ElementMetaDataManager   $elementMetaDataManager
      * @param EventDispatcherInterface $dispatcher
      * @param string                   $availableLanguages
      */
@@ -102,6 +104,8 @@ class DataSaver
         FieldRegistry $fieldRegistry,
         TreeManager $treeManager,
         TeaserManagerInterface $teaserManager,
+        ElementMetaSetResolver $elementMetaSetResolver,
+        ElementMetaDataManager $elementMetaDataManager,
         EventDispatcherInterface $dispatcher,
         $availableLanguages)
     {
@@ -110,6 +114,8 @@ class DataSaver
         $this->fieldRegistry = $fieldRegistry;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
+        $this->elementMetaSetResolver = $elementMetaSetResolver;
+        $this->elementMetaDataManager = $elementMetaDataManager;
         $this->dispatcher = $dispatcher;
         $this->availableLanguages = explode(',', $availableLanguages);
     }
@@ -192,7 +198,7 @@ class DataSaver
         }
 
         // TODO: available languages
-        $this->saveMeta($elementVersion, $language, $isMaster, array('de'));
+        $this->saveMeta($elementVersion, $language, $isMaster, array('de'), $data);
 
         $event = new SaveElementEvent($element, $language, $oldVersion);
         $this->dispatcher->dispatch(ElementEvents::SAVE_ELEMENT, $event);
@@ -379,8 +385,9 @@ class DataSaver
      * @param string         $language
      * @param bool           $isMaster
      * @param array          $availableLanguages
+     * @param array          $data
      */
-    private function saveMeta(ElementVersion $elementVersion, $language, $isMaster, $availableLanguages)
+    private function saveMeta(ElementVersion $elementVersion, $language, $isMaster, array $availableLanguages, array $data)
     {
         // save meta
         // TODO: repair save meta
@@ -396,6 +403,10 @@ class DataSaver
         }
 
         $metaData = $this->elementMetaDataManager->findByMetaSetAndElementVersion($metaSet, $elementVersion);
+
+        if (!$metaData) {
+            $metaData = $this->elementMetaDataManager->createElementMetaData($metaSet, $elementVersion);
+        }
 
         /*
         $slaveLanguages = array();

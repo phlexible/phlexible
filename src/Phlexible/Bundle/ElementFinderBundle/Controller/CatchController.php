@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementFinderBundle\Controller;
 
+use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\ElementFinderBundle\Entity\ElementFinderConfig;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -190,20 +191,21 @@ class CatchController extends Controller
      */
     public function metaKeywordsAction(Request $request)
     {
-        $id = $request->get('key');
+        $id = $request->get('id');
         $language = $request->get('language');
 
         $conn = $this->get('doctrine.dbal.default_connection');
+        /* @var $conn Connection */
         $qb = $conn->createQueryBuilder();
         $qb
-            ->select('em.value')
+            ->select('DISTINCT em.value')
             ->from('element_meta', 'em')
             ->where($qb->expr()->eq('em.field_id', $qb->expr()->literal($id)))
             ->andWhere($qb->expr()->eq('em.language', $qb->expr()->literal($language)));
 
         // TODO: repair
         $keywords = array();
-        foreach ($conn->fetchAll($qb->getSQL()) as $value) {
+        foreach (array_column($conn->fetchAll($qb->getSQL()), 'value') as $value) {
             $keywords[]['keyword'] = $value;
         }
 

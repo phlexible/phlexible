@@ -64,6 +64,8 @@ services:
             - @phlexible_elementtype.field.registry
             - @phlexible_tree.tree_manager
             - @phlexible_teaser.teaser_manager
+            - @phlexible_element.element_meta_set_resolver
+            - @phlexible_element.element_meta_data_manager
             - @event_dispatcher
             - %phlexible_cms.languages.available%
 

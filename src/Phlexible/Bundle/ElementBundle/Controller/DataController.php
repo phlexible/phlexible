@@ -342,7 +342,7 @@ class DataController extends Controller
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $metaLanguage) {
                         if ($language === $metaLanguage) {
-                            $fieldData['value'] = $metaData->get($field->getId(), $language);
+                            $fieldData['value'] = $metaData->get($field->getName(), $language);
                             break;
                         }
                     }

@@ -43,6 +43,7 @@ class TreeSaver
      * @param Request       $request
      * @param UserInterface $user
      *
+     * @throws \Exception
      * @return ElementtypeVersion
      */
     public function save(Request $request, UserInterface $user)
@@ -75,6 +76,7 @@ class TreeSaver
         $hideChildren = !empty($rootConfig['hide_children']);
         $defaultTab = strlen($rootConfig['default_tab']) ? $rootConfig['default_tab'] : null;
         $defaultContentTab = strlen($rootConfig['default_content_tab']) ? $rootConfig['default_content_tab'] : null;
+        $metasetId = strlen($rootConfig['metaset']) ? $rootConfig['metaset'] : null;
         $comment = trim($rootConfig['comment']) ?: null;
 
         $elementtype = $this->elementtypeService->findElementtype($elementtypeId);
@@ -85,6 +87,7 @@ class TreeSaver
         $elementtypeVersion
             ->setVersion($elementtypeVersion->getVersion() + 1)
             ->setDefaultContentTab($defaultContentTab)
+            ->setMetaSetId($metasetId)
             ->setMappings($rootMappings)
             ->setComment($comment)
             ->setCreateUserId($user->getId())

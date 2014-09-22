@@ -312,6 +312,10 @@ class LookupBuilder
 
         $metadata = $this->metadataManager->findByMetaSetAndElementVersion($metaset, $elementVersion);
 
+        if (!$metadata) {
+            return;
+        }
+
         foreach ($metadata->getValues() as $name => $value) {
             $cleanString = str_replace(
                 array(',', ';'),
