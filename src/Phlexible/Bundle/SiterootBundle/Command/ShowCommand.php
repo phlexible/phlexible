@@ -49,15 +49,6 @@ class ShowCommand extends ContainerAwareCommand
                     }
                 }
 
-                if ($siteroot->getShortUrls()) {
-                    $output->writeln('  Short Urls:');
-                    foreach ($siteroot->getShortUrls() as $shortUrl) {
-                        $output->writeln(
-                            '    ' . $shortUrl->getHostname() . $shortUrl->getPath() . ' => ' . $shortUrl->getTarget()
-                        );
-                    }
-                }
-
                 if ($siteroot->getSpecialTids()) {
                     $output->writeln('  Special TIDs:');
                     foreach ($siteroot->getSpecialTids() as $name => $tid) {

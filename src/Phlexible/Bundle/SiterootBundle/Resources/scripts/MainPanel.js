@@ -54,13 +54,7 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
                         xtype: 'siteroots-urls'
                     },
                     {
-                        xtype: 'siteroots-shorturls'
-                    },
-                    {
                         xtype: 'siteroots-titles'
-                    },
-                    {
-                        xtype: 'siteroots-customtitles'
                     },
                     {
                         xtype: 'siteroots-properties'

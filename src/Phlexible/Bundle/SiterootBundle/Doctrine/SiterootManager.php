@@ -102,9 +102,6 @@ class SiterootManager implements SiterootManagerInterface
             foreach ($siteroot->getUrls() as $url) {
                 $this->entityManager->persist($url);
             }
-            foreach ($siteroot->getShortUrls() as $shortUrl) {
-                $this->entityManager->persist($shortUrl);
-            }
             $this->entityManager->flush();
 
             $event = new SiterootEvent($siteroot);
@@ -123,9 +120,6 @@ class SiterootManager implements SiterootManagerInterface
             }
             foreach ($siteroot->getUrls() as $url) {
                 $this->entityManager->persist($url);
-            }
-            foreach ($siteroot->getShortUrls() as $shortUrl) {
-                $this->entityManager->persist($shortUrl);
             }
             $this->entityManager->persist($siteroot);
             $this->entityManager->flush();

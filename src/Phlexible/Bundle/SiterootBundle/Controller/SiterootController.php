@@ -122,7 +122,6 @@ class SiterootController extends Controller
             'navigations'     => array(),
             'properties'      => array(),
             'titles'          => array(),
-            'shorturls'       => array(),
             'specialtids'     => array(),
             'urls'            => array(),
         );
@@ -156,19 +155,6 @@ class SiterootController extends Controller
             $data['properties'][$key] = strlen($property) ? $property : '';
         }
         */
-
-        foreach ($siteroot->getShortUrls() as $shortUrl) {
-            $data['shorturls'][] = array(
-                'id'             => $shortUrl->getId(),
-                'global_default' => 0, //$shortUrl->getGlobalDefault(),
-                'default'        => 0, //$shortUrl->getDefault(),
-                'siteroot_id'    => $siterootId,
-                'hostname'       => $shortUrl->getHostname(),
-                'path'           => $shortUrl->getPath(),
-                'language'       => $shortUrl->getLanguage(),
-                'target'         => $shortUrl->getTarget(),
-            );
-        }
 
         foreach ($siteroot->getSpecialTids() as $specialTid) {
             $data['specialtids'][] = array(

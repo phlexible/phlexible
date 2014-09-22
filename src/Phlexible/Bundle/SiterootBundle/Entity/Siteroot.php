@@ -102,12 +102,6 @@ class Siteroot
     private $navigations;
 
     /**
-     * @var ShortUrl[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="ShortUrl", mappedBy="siteroot")
-     */
-    private $shortUrls;
-
-    /**
      * @var Url[]|ArrayCollection
      * @ORM\OneToMany(targetEntity="Url", mappedBy="siteroot")
      */
@@ -116,7 +110,6 @@ class Siteroot
     public function __construct()
     {
         $this->navigations = new ArrayCollection();
-        $this->shortUrls = new ArrayCollection();
         $this->urls = new ArrayCollection();
     }
 
@@ -513,44 +506,6 @@ class Siteroot
         }
 
         return null;
-    }
-
-    /**
-     * @param ShortUrl $shortUrl
-     *
-     * @return $this
-     */
-    public function addShortUrl(ShortUrl $shortUrl)
-    {
-        if (!$this->shortUrls->contains($shortUrl)) {
-            $this->shortUrls->add($shortUrl);
-            $shortUrl->setSiteroot($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ShortUrl $shortUrl
-     *
-     * @return $this
-     */
-    public function removeShortUrl(ShortUrl $shortUrl)
-    {
-        if ($this->shortUrls->contains($shortUrl)) {
-            $this->shortUrls->removeElement($shortUrl);
-            $shortUrl->setSiteroot(null);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return ShortUrl[]
-     */
-    public function getShortUrls()
-    {
-        return $this->shortUrls;
     }
 
     /**

@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\SiterootBundle\Controller\Siteroot;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
-use Phlexible\Bundle\SiterootBundle\Entity\ShortUrl;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
@@ -56,7 +55,6 @@ class SiterootSaver
             ->applyCustomTitles($siteroot, $data)
             ->applyNamedTids($siteroot, $data)
             ->applyNavigations($siteroot, $data)
-            ->applyShortUrls($siteroot, $data)
             ->applyUrls($siteroot, $data);
 
         $this->siterootManager->updateSiteroot($siteroot);
@@ -230,60 +228,6 @@ class SiterootSaver
                 if ($navigation->getId() === $id) {
                     $siteroot->removeNavigation($navigation);
                     $this->siterootManager->deleteSiterootNavigation($navigation);
-                    break;
-                }
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Siteroot $siteroot
-     * @param array    $data
-     *
-     * @return $this
-     */
-    private function applyShortUrls(Siteroot $siteroot, array $data)
-    {
-        if (!array_key_exists('shorturls', $data)) {
-            // noting to save
-            return $this;
-        }
-
-        $shortUrlsData = $data['shorturls'];
-
-        foreach ($shortUrlsData['created'] as $row) {
-            $shortUrl = new ShortUrl();
-            $shortUrl
-                ->setSiteroot($siteroot)
-                ->setHostname(!empty($row['hostname']) ? $row['hostname'] : null)
-                ->setPath($row['path'])
-                ->setLanguage($row['language'])
-                ->setTarget($row['target']);
-
-            $siteroot->addShortUrl($shortUrl);
-        }
-
-        foreach ($shortUrlsData['modified'] as $row) {
-            foreach ($siteroot->getShortUrls() as $shortUrl) {
-                if ($shortUrl->getId() === $row['id']) {
-                    $shortUrl
-                        ->setSiteroot($siteroot)
-                        ->setHostname(!empty($row['hostname']) ? $row['hostname'] : null)
-                        ->setPath($row['path'])
-                        ->setLanguage($row['language'])
-                        ->setTarget($row['target']);
-
-                    break;
-                }
-            }
-        }
-
-        foreach ($shortUrlsData['deleted'] as $id) {
-            foreach ($siteroot->getShortUrls() as $shortUrl) {
-                if ($shortUrl->getId() === $id) {
-                    $siteroot->removeShortUrl($shortUrl);
                     break;
                 }
             }

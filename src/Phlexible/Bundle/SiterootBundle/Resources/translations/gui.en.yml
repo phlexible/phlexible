@@ -31,9 +31,6 @@ siteroots:
     err_path_empty: 'You have to specify a path.'
     err_language_empty: 'You have to specify a language.'
     err_target_empty: 'You have to specify a target.'
-    short_urls: 'Short URLs'
-    no_short_urls: 'No short URLs'
-    add_short_url: 'Add short url'
     navigations: Navigations
     no_navigations: 'No navigations'
     title: Title

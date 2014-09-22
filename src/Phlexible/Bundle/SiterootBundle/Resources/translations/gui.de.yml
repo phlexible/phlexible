@@ -31,9 +31,6 @@ siteroots:
     err_path_empty: 'Sie müssen einen Pfad angeben.'
     err_language_empty: 'Sie müssen eine Sprache angeben.'
     err_target_empty: 'Sie müssen ein Ziel angeben.'
-    short_urls: Kurz-URLs
-    no_short_urls: 'Keine Kurz-URLs'
-    add_short_url: 'Kurz-URL hinzufügen'
     navigations: Navigationen
     no_navigations: 'Keine Navigationen'
     title: Titel
