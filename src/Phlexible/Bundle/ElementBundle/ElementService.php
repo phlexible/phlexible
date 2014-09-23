@@ -306,11 +306,21 @@ class ElementService
         if ($elementStructure) {
             $this->fixElementVersion($elementStructure, $elementVersion);
             $this->elementStructureManager->updateElementStructure($elementStructure, false);
-
-            $this->fieldMapper->apply($elementVersion, $elementStructure, $elementStructure->getLanguages());
         }
 
+        $this->fieldMapper->apply($elementVersion, $elementStructure, $elementStructure->getLanguages());
+
         $this->elementVersionManager->updateElementVersion($elementVersion, true);
+
+        $this->elementHistoryManager->insert(
+            ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT_VERSION,
+            $element->getEid(),
+            $userId,
+            null,
+            null,
+            $elementVersion->getVersion(),
+            $triggerLanguage
+        );
 
         return $elementVersion;
     }

@@ -28,8 +28,9 @@ services:
 
     phlexible_frontend_media.listener.element:
         class: Phlexible\Bundle\FrontendMediaBundle\EventListener\ElementListener
+        arguments: [@phlexible_frontend_media.usage_updater]
         tags:
-            - {name: kernel.event_listener, event: phlexible_element.save, method: onSaveElement}
+            - {name: kernel.event_subscriber}
 
     # fields
     phlexible_frontend_media.field.folder:

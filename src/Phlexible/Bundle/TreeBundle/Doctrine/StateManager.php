@@ -148,7 +148,7 @@ class StateManager implements StateManagerInterface
             return null;
         }
 
-        return $treeNodeOnline->getLanguage();
+        return $treeNodeOnline->getVersion();
     }
 
     /**

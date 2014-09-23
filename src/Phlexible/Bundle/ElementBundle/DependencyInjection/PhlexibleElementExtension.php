@@ -28,7 +28,6 @@ class PhlexibleElementExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('tasks.yml');
-        $loader->load('usage.yml');
         $loader->load('field_mappers.yml');
         $loader->load('link_extractors.yml');
         $loader->load('content.yml');

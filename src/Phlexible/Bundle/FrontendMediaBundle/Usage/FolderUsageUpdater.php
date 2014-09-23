@@ -6,10 +6,10 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\Usage;
+namespace Phlexible\Bundle\FrontendMediaBundle\Usage;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FolderUsage;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
@@ -34,11 +34,6 @@ class FolderUsageUpdater
     private $entityManager;
 
     /**
-     * @var ElementService
-     */
-    private $elementService;
-
-    /**
      * @var TreeManager
      */
     private $treeManager;
@@ -55,32 +50,32 @@ class FolderUsageUpdater
 
     /**
      * @param EntityManager  $entityManager
-     * @param ElementService $elementService
      * @param TreeManager    $treeManager
      * @param TeaserManager  $teaserManager
      * @param SiteManager    $siteManager
      */
     public function __construct(
         EntityManager $entityManager,
-        ElementService $elementService,
         TreeManager $treeManager,
         TeaserManager $teaserManager,
         SiteManager $siteManager)
     {
         $this->entityManager = $entityManager;
-        $this->elementService = $elementService;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
         $this->siteManager = $siteManager;
     }
 
     /**
-     * @param $eid
+     * @param Element $element
+     * @param bool    $flush
      *
      * @return array
      */
-    public function updateUsage($eid)
+    public function updateUsage(Element $element, $flush = true)
     {
+        $eid = $element->getEid();
+
         $elementLinkRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementLink');
         $folderUsageRepository = $this->entityManager->getRepository('PhlexibleMediaManagerBundle:FolderUsage');
 
@@ -94,43 +89,43 @@ class FolderUsageUpdater
         $folderLinks = $qb->getQuery()->getResult();
         /* @var $folderLinks ElementLink[] */
 
-        $element = $this->elementService->findElement($eid);
-        $elementtype = $this->elementService->findElementtype($element);
-
         $flags = array();
 
         foreach ($folderLinks as $folderLink) {
             $folderId = $folderLink->getTarget();
+
             if (!isset($flags[$folderId])) {
                 $flags[$folderId] = 0;
             }
 
+            // add flag STATUS_LATEST if this link is a link to the latest element version
             if ($folderLink->getElementVersion()->getVersion() === $element->getLatestVersion()) {
                 $flags[$folderId] |= self::STATUS_LATEST;
             }
 
-            if ($elementtype->getType() === 'part') {
-                $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
-
-                foreach ($teasers as $teaser) {
-                    if ($this->teaserManager->getPublishedVersion($teaser, $folderLink->getLanguage()) === $folderLink->getElementVersion()->getVersion()) {
-                        $flags[$folderId] |= self::STATUS_ONLINE;
-                        break;
-                    }
-                }
-            } elseif ($elementtype->getType() !== 'layout') {
-                $tree = $this->treeManager->getByTypeId($eid, 'element');
-                $treeNodes = $tree->getByTypeId($eid, 'element');
-
-                foreach ($treeNodes as $treeNode) {
-                    if ($tree->getPublishedVersion($treeNode, $folderLink->getLanguage()) === $folderLink->getElementVersion()->getVersion()) {
-                        $flags[$folderId] |= self::STATUS_ONLINE;
-                        break;
-                    }
+            // add flag STATUS_ONLINE if this link is used in an online teaser version
+            $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
+            foreach ($teasers as $teaser) {
+                if ($this->teaserManager->getPublishedVersion($teaser, $folderLink->getLanguage()) === $folderLink->getElementVersion()->getVersion()) {
+                    $flags[$folderId] |= self::STATUS_ONLINE;
+                    break;
                 }
             }
 
-            $flags[$folderId] |= self::STATUS_OLD;
+            // add flag STATUS_ONLINE if this link is used in an online treeNode version
+            $tree = $this->treeManager->getByTypeId($eid, 'element');
+            $treeNodes = $tree->getByTypeId($eid, 'element');
+            foreach ($treeNodes as $treeNode) {
+                if ($tree->getPublishedVersion($treeNode, $folderLink->getLanguage()) === $folderLink->getElementVersion()->getVersion()) {
+                    $flags[$folderId] |= self::STATUS_ONLINE;
+                    break;
+                }
+            }
+
+            // add flag STATUS_OLD if this link is neither used in latest element version nor online version
+            if (!$flags && self::STATUS_LATEST && !$flags && self::STATUS_ONLINE) {
+                $flags[$folderId] |= self::STATUS_OLD;
+            }
         }
 
         foreach ($flags as $folderId => $flag) {
@@ -146,6 +141,8 @@ class FolderUsageUpdater
             }
         }
 
-        $this->entityManager->flush();
+        if ($flush) {
+            $this->entityManager->flush();
+        }
     }
 }

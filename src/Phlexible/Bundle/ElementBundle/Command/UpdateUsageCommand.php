@@ -39,8 +39,8 @@ class UpdateUsageCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $fileUsageUpdate = $this->getContainer()->get('phlexible_element.file_usage_updater');
-        $folderUsageUpdate = $this->getContainer()->get('phlexible_element.folder_usage_updater');
+        $fileUsageUpdate = $this->getContainer()->get('phlexible_element.usage_updater.file');
+        $folderUsageUpdate = $this->getContainer()->get('phlexible_element.usage_updater.folder');
 
         $eid = $input->getArgument('eid');
 

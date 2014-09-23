@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor;
+use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructure as StructureEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ValueEntity;
@@ -102,7 +103,6 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
         $this->applyStructureSort($elementStructure);
         $this->insertStructure($elementStructure, $conn, true);
-
         $this->insertLinks($elementStructure);
 
         if ($flush) {

@@ -6,10 +6,10 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\Usage;
+namespace Phlexible\Bundle\FrontendMediaBundle\Usage;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FileUsage;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
@@ -34,11 +34,6 @@ class FileUsageUpdater
     private $entityManager;
 
     /**
-     * @var ElementService
-     */
-    private $elementService;
-
-    /**
      * @var TreeManager
      */
     private $treeManager;
@@ -55,32 +50,32 @@ class FileUsageUpdater
 
     /**
      * @param EntityManager  $entityManager
-     * @param ElementService $elementService
      * @param TreeManager    $treeManager
      * @param TeaserManager  $teaserManager
      * @param SiteManager    $siteManager
      */
     public function __construct(
         EntityManager $entityManager,
-        ElementService $elementService,
         TreeManager $treeManager,
         TeaserManager $teaserManager,
         SiteManager $siteManager)
     {
         $this->entityManager = $entityManager;
-        $this->elementService = $elementService;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
         $this->siteManager = $siteManager;
     }
 
     /**
-     * @param $eid
+     * @param Element $element
+     * @param bool    $flush
      *
      * @return array
      */
-    public function updateUsage($eid)
+    public function updateUsage(Element $element, $flush = true)
     {
+        $eid = $element->getEid();
+
         $elementLinkRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementLink');
         $fileUsageRepository = $this->entityManager->getRepository('PhlexibleMediaManagerBundle:FileUsage');
 
@@ -94,9 +89,6 @@ class FileUsageUpdater
         $fileLinks = $qb->getQuery()->getResult();
         /* @var $fileLinks ElementLink[] */
 
-        $element = $this->elementService->findElement($eid);
-        $elementtype = $this->elementService->findElementtype($element);
-
         $flags = array();
 
         foreach ($fileLinks as $fileLink) {
@@ -106,36 +98,46 @@ class FileUsageUpdater
             if (isset($fileParts[1])) {
                 $fileVersion = $fileParts[1];
             }
+
             if (!isset($flags[$fileId][$fileVersion])) {
                 $flags[$fileId][$fileVersion] = 0;
             }
 
-            if ($fileLink->getElementVersion()->getVersion() === $element->getLatestVersion()) {
+            $linkVersion = $fileLink->getElementVersion()->getVersion();
+
+            $old = true;
+
+            // add flag STATUS_LATEST if this link is a link to the latest element version
+            if ($linkVersion === $element->getLatestVersion()) {
                 $flags[$fileId][$fileVersion] |= self::STATUS_LATEST;
+                $old = false;
             }
 
-            if ($elementtype->getType() === 'part') {
-                $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
-
-                foreach ($teasers as $teaser) {
-                    if ($this->teaserManager->getPublishedVersion($teaser, $fileLink->getLanguage()) === $fileLink->getElementVersion()->getVersion()) {
-                        $flags[$fileId][$fileVersion] |= self::STATUS_ONLINE;
-                        break;
-                    }
-                }
-            } elseif ($elementtype->getType() !== 'layout') {
-                $tree = $this->treeManager->getByTypeId($eid, 'element');
-                $treeNodes = $tree->getByTypeId($eid, 'element');
-
-                foreach ($treeNodes as $treeNode) {
-                    if ($tree->getPublishedVersion($treeNode, $fileLink->getLanguage()) === $fileLink->getElementVersion()->getVersion()) {
-                        $flags[$fileId][$fileVersion] |= self::STATUS_ONLINE;
-                        break;
-                    }
+            // add flag STATUS_ONLINE if this link is used in an online teaser version
+            $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
+            foreach ($teasers as $teaser) {
+                if ($this->teaserManager->getPublishedVersion($teaser, $fileLink->getLanguage()) === $linkVersion) {
+                    $flags[$fileId][$fileVersion] |= self::STATUS_ONLINE;
+                    $old = false;
+                    break;
                 }
             }
 
-            $flags[$fileId][$fileVersion] |= self::STATUS_OLD;
+            // add flag STATUS_ONLINE if this link is used in an online treeNode version
+            $tree = $this->treeManager->getByTypeId($eid, 'element');
+            $treeNodes = $tree->getByTypeId($eid, 'element');
+            foreach ($treeNodes as $treeNode) {
+                if ($tree->getPublishedVersion($treeNode, $fileLink->getLanguage()) === $linkVersion) {
+                    $flags[$fileId][$fileVersion] |= self::STATUS_ONLINE;
+                    $old = false;
+                    break;
+                }
+            }
+
+            // add flag STATUS_OLD if this link is neither used in latest element version nor online version
+            if ($old) {
+                $flags[$fileId][$fileVersion] |= self::STATUS_OLD;
+            }
         }
 
         foreach ($flags as $fileId => $fileVersions) {
@@ -150,17 +152,29 @@ class FileUsageUpdater
                     ->where($qb->expr()->eq('fu.usageType', $qb->expr()->literal('element')))
                     ->andWhere($qb->expr()->eq('fu.usageId', $eid))
                     ->andWhere($qb->expr()->eq('f.id', $qb->expr()->literal($file->getId())))
-                    ->andWhere($qb->expr()->eq('f.version', $file->getVersion()));
-                $fileUsage = $qb->getQuery()->getSingleResult();
-                if (!$fileUsage) {
+                    ->andWhere($qb->expr()->eq('f.version', $file->getVersion()))
+                    ->setMaxResults(1);
+                $fileUsages = $qb->getQuery()->getResult();
+                if (!count($fileUsages)) {
+                    if (!$flag) {
+                        continue;
+                    }
                     $folderUsage = new FileUsage($file, 'element', $eid, $flag);
                     $this->entityManager->persist($folderUsage);
                 } else {
-                    $fileUsage->setStatus($flag);
+                    $fileUsage = current($fileUsages);
+
+                    if ($flag) {
+                        $fileUsage->setStatus($flag);
+                    } else {
+                        $this->entityManager->remove($fileUsage);
+                    }
                 }
             }
         }
 
-        $this->entityManager->flush();
+        if ($flush) {
+            $this->entityManager->flush();
+        }
     }
 }

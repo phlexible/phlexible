@@ -8,23 +8,65 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\EventListener;
 
+use Phlexible\Bundle\ElementBundle\ElementEvents;
+use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
+use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
+use Phlexible\Bundle\FrontendMediaBundle\Usage\UsageUpdater;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
 /**
- * Render listener
+ * Element listener
  *
- * @author Michael van Engelshoven <mve@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
-class ElementListener
+class ElementListener implements EventSubscriberInterface
 {
     /**
-     * callback to save distributionlist and folder
-     *
-     * @param Makeweb_Elements_Event_SaveElement $event
+     * @var UsageUpdater
      */
-    public function onSaveElement(Makeweb_Elements_Event_SaveElement $event)
-    {
-        /* @var $container MWF_Container_ContainerInterface */
-        $container = $params['container'];
+    private $usageUpdater;
 
+    /**
+     * @param UsageUpdater $usageUpdater
+     */
+    public function __construct(UsageUpdater $usageUpdater)
+    {
+        $this->usageUpdater = $usageUpdater;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            ElementEvents::CREATE_ELEMENT_VERSION => 'onCreateElementVersion',
+            ElementEvents::UPDATE_ELEMENT_VERSION => 'onUpdateElementVersion',
+            //ElementEvents::SAVE_ELEMENT => 'onSaveElement',
+        );
+    }
+
+    /**
+     * @param ElementVersionEvent $event
+     */
+    public function onCreateElementVersion(ElementVersionEvent $event)
+    {
+        $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
+    }
+
+    /**
+     * @param ElementVersionEvent $event
+     */
+    public function onUpdateElementVersion(ElementVersionEvent $event)
+    {
+        $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
+    }
+
+    /**
+     * @param SaveElementEvent $event
+     */
+    public function onSaveElement(SaveElementEvent $event)
+    {
         if (!$container->components->has('distributionlists')) {
             return;
         }

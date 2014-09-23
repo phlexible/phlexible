@@ -27,6 +27,7 @@ class PhlexibleFrontendMediaExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('usage_updaters.yml');
 
         $bundles = $container->getParameter('kernel.bundles');
 
