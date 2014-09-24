@@ -6,52 +6,52 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MessageBundle\Controller;
+namespace Phlexible\Bundle\GuiBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Poll controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/messages/poll")
+ * @Route("/gui/poll")
  */
 class PollController extends Controller
 {
     /**
      * Poll Action
      *
+     * @param Request $request
+     *
      * @return JsonResponse
-     * @Route("", name="messages_poll")
+     * @Route("", name="gui_poll")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $messages = array();
 
         $data = array();
-        foreach ($this->get('portlets') as $portlet) {
+        foreach ($this->get('phlexible_dashboard.portlets') as $portlet) {
             $data[$portlet->getId()] = $portlet->getData();
         }
 
-        $message = new PollerMessage();
+        $message = new \stdClass();
         $message->type = 'start';
         $message->event = 'update';
-        $message->uid = $this->getSecurityContext()->getUser()->getId();
+        $message->uid = $this->getUser()->getId();
         $message->msg = null;
         $message->data = $data;
         $message->objectID = null;
         $message->ts = date('Y-m-d H:i:s');
 
-        $messages[] = $message;
+        $messages[] = (array) $message;
 
-        $pollSession = 1; // symf session
+        $request->getSession()->set('lastPoll', date('Y-m-d H:i:s'));
 
-        if (!isset($pollSession->lastPoll)) {
-            $pollSession->lastPoll = date('Y-m-d H:i:s');
-        }
-
+        /*
         $lastMessages = MWF_Core_Messages_Message_Query::getByFilter(
             array(
                 array(
@@ -87,6 +87,7 @@ class PollController extends Controller
 
             $messages[] = $message;
         }
+        */
 
         return new JsonResponse($messages);
     }

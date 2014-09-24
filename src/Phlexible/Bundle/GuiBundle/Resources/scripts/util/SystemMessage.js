@@ -67,7 +67,7 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
 
     poll: function () {
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('messages_poll'),
+            url: Phlexible.Router.generate('gui_poll'),
             params: {
                 dc: (new Date().getTime())
             },
