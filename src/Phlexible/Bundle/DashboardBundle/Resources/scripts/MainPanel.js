@@ -147,4 +147,4 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-
+Ext.reg('dashboard-main-panel', Phlexible.dashboard.MainPanel);

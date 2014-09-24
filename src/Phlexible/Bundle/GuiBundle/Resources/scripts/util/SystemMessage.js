@@ -24,8 +24,19 @@ Phlexible.gui.util.SystemMessage = function (config) {
     });
 
     if (!config) config = {};
-    this.pollBtn = null;
     if (config.noButton) this.noButton = true;
+
+    if (!this.noButton) {
+        Phlexible.gui.util.Frame.prototype.removeSplash = Phlexible.gui.util.Frame.prototype.removeSplash.createSequence(function () {
+            Phlexible.Frame.menu.addTrayItem({
+                trayId: 'poll',
+                cls: 'x-btn-icon',
+                iconCls: 'p-gui-update_inactive-icon',
+                handler: this.start,
+                scope: this
+            });
+        }, this);
+    }
 
     Phlexible.gui.util.SystemMessage.superclass.constructor.call(this, config);
 };
@@ -39,19 +50,11 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
     noButton: false,
 
     getButton: function () {
-        if (this.noButton) return false;
-
-        if (!this.pollBtn) {
-            this.pollBtn = Phlexible.Frame.taskbar.trayPanel.add({
-                id: 'update',
-                cls: 'x-btn-icon',
-                iconCls: 'p-gui-update_inactive-icon',
-                handler: this.start,
-                scope: this
-            });
+        if (this.noButton) {
+            return false;
         }
 
-        return this.pollBtn;
+        return Phlexible.Frame.getTrayButton('poll');
     },
 
     getTask: function () {

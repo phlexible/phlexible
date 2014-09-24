@@ -59,6 +59,8 @@ class SearchAssetProvider implements AssetProviderInterface
 
             new FileAsset($this->locator->locate('@PhlexibleSearchBundle/Resources/scripts/SearchBox.js')),
             new FileAsset($this->locator->locate('@PhlexibleSearchBundle/Resources/scripts/SearchPanel.js')),
+
+            new FileAsset($this->locator->locate('@PhlexibleSearchBundle/Resources/scripts/menuhandle/SearchBoxHandle.js')),
         ));
 
         return $collection;

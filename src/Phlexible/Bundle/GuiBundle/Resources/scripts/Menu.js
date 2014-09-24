@@ -10,7 +10,9 @@
  * </code></pre>
  * @constructor
  */
-Phlexible.gui.Menu = function () {
+Phlexible.gui.Menu = function (config) {
+    config = config || {};
+
     this.addEvents(
         /**
          * @event beforeload
@@ -23,14 +25,27 @@ Phlexible.gui.Menu = function () {
          * Fires after menu is loaded.
          * @param {Phlexible.gui.Menu} menu
          */
-        "load"
+        "load",
+        /**
+         * @event addTrayItem
+         * Fires after a tray item was added.
+         * @param {Phlexible.gui.Menu} menu
+         * @param {Object} item
+         */
+        "addTrayItem"
     );
+
+    if (config.listeners) {
+        this.on(config.listeners);
+    }
 
     this.load();
 };
 
 Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
     items: [],
+    trayItems: [],
+
     loaded: false,
 
     /**
@@ -79,6 +94,32 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
         return this.items;
     },
 
+    addTrayItem: function(item) {
+        if (!item.trayId) {
+            throw new Error('trayId not set');
+        }
+        this.trayItems.push(item);
+        this.fireEvent('addTrayItem', this, item);
+    },
+
+    getTrayItem: function(trayId) {
+        Ext.each(this.trayItems, function(item) {
+            if (item.trayId === trayId) {
+                return item;
+            }
+        })
+        throw new Error('Tray item ' + trayId + ' not found.');
+    },
+
+    getTrayItems: function() {
+        return this.trayItems;
+    },
+
+    /**
+     * @param {Array} data
+     * @returns {Array}
+     * @private
+     */
     iterate: function (data) {
         var items = [];
 

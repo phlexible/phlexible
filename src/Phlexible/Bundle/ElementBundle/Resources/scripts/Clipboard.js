@@ -5,8 +5,8 @@ Phlexible.elements.Clipboard = function () {
     this.active = false;
 
     Phlexible.gui.util.Frame.prototype.removeSplash = Phlexible.gui.util.Frame.prototype.removeSplash.createSequence(function () {
-        this.clipBtn = Phlexible.Frame.taskbar.trayPanel.add({
-            id: 'clipboard',
+        Phlexible.Frame.menu.addTrayItem({
+            trayId: 'clipboard',
             cls: 'x-btn-icon',
             iconCls: 'p-element-clipboard_inactive-icon',
             handler: this.copy,
@@ -68,8 +68,8 @@ Ext.extend(Phlexible.elements.Clipboard, Ext.util.Observable, {
     setActive: function () {
         this.active = true;
 
-        this.clipBtn.setIconClass('p-element-clipboard_active-icon');
-        this.clipBtn.show();
+        Phlexible.Frame.getTrayButton('clipboard').setIconClass('p-element-clipboard_active-icon');
+        Phlexible.Frame.getTrayButton('clipboard').show();
     },
 
     isActive: function () {
@@ -79,8 +79,8 @@ Ext.extend(Phlexible.elements.Clipboard, Ext.util.Observable, {
     setInactive: function () {
         this.active = false;
 
-        this.clipBtn.setIconClass('p-element-clipboard_inactive-icon');
-        this.clipBtn.hide();
+        Phlexible.Frame.getTrayButton('clipboard').setIconClass('p-element-clipboard_inactive-icon');
+        Phlexible.Frame.getTrayButton('clipboard').hide();
     },
 
     isInactive: function () {

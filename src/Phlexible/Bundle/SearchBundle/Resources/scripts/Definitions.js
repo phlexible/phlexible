@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.search');
+Ext.namespace('Phlexible.search.menuhandle');
 
 Phlexible.search.SearchRecord = Ext.data.Record.create([
     'id',
