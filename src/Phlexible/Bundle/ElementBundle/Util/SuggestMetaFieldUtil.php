@@ -8,146 +8,80 @@
 
 namespace Phlexible\Bundle\ElementBundle\Util;
 
-use Phlexible\Component\Database\ConnectionManager;
+use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaDataManagerInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 
 /**
- * Utility class for suggest meta fields.
+ * Utility class for suggest fields.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class SuggestMetaFieldUtil
 {
     /**
-     * Database connection pool.
-     *
-     * @var ConnectionManager
+     * @var MetaSetManagerInterface
      */
-    protected $_dbPool;
+    private $metaSetManager;
+
+    /**
+     * @var MetaDataManagerInterface
+     */
+    private $metaDataManager;
 
     /**
      * @var string
      */
-    protected $_seperatorChar;
+    private $seperatorChar;
 
     /**
-     * @param ConnectionManager $dbPool
-     * @param string            $seperatorChar
+     * @param MetaSetManagerInterface  $metaSetManager
+     * @param MetaDataManagerInterface $metaDataManager
+     * @param string                   $seperatorChar
      */
-    public function __construct(ConnectionManager $dbPool, $seperatorChar)
+    public function __construct(MetaSetManagerInterface $metaSetManager, MetaDataManagerInterface $metaDataManager, $seperatorChar)
     {
-        $this->_dbPool = $dbPool;
-        $this->_seperatorChar = $seperatorChar;
+        $this->metaSetManager = $metaSetManager;
+        $this->metaDataManager = $metaDataManager;
+        $this->seperatorChar = $seperatorChar;
     }
 
     /**
      * Fetch all data source values used in any element versions.
      *
-     * @param $dataSourceId
-     * @param $language
-     */
-    public function fetchUsedValues($dataSourceId, $language)
-    {
-        $db = $this->_dbPool->read;
-
-        $sql = $db->select()
-            ->distinct()
-
-            // used to limit on element type version
-            ->from(
-                array('ev' => $db->prefix . 'element_version'),
-                array()
-            )
-
-            // connection to content table element data language
-            ->join(
-                array('evmi' => $db->prefix . 'element_version_metaset_items'),
-                'evmi.eid = ev.eid AND ' .
-                'evmi.version = ev.version AND ' .
-                'evmi.language = :language',
-                array('value')
-            )
-
-            // used to limit on suggest fields and data source id
-            ->join(
-                array('msk' => $db->prefix . 'meta_set_keys'),
-                'msk.set_id = evmi.set_id AND ' .
-                'msk.key = evmi.key AND ' .
-                'msk.type = :field_type AND ' .
-                'msk.options = :datasource_id',
-                array()
-            );
-
-        $bind = array(
-            ':language'      => $language,
-            ':field_type'    => 'suggest',
-            ':datasource_id' => $dataSourceId,
-        );
-
-        // fetch suggest field content
-        $result = $db->fetchCol($sql, $bind);
-
-        $uniqueKeys = $this->splitSuggestValues($result);
-
-        return $uniqueKeys;
-    }
-
-    /**
-     * Fetch all data source values used in element online versions.
+     * @param DataSourceValueBag $valueBag
      *
-     * @param $dataSourceId
-     * @param $language
+     * @return array
      */
-    public function fetchOnlineValues($dataSourceId, $language)
+    public function fetchUsedValues(DataSourceValueBag $valueBag)
     {
-        $db = $this->_dbPool->read;
+        $metaSets = $this->metaSetManager->findAll();
 
-        $sql = $db->select()
-            ->distinct()
+        $fields = array();
+        foreach ($metaSets as $metaSet) {
+            foreach ($metaSet->getFields() as $field) {
+                if ($field->getOptions() === $valueBag->getDatasource()->getId()) {
+                    $fields[] = $field;
+                }
+            }
+        }
 
-            // fetch only online element versions
-            ->from(
-                array('eto' => $db->prefix . 'element_tree_online'),
-                array()
-            )
+        $values = array();
+        foreach ($fields as $field) {
+            /* @var $field MetaSetField */
+            foreach ($this->metaDataManager->findByMetaSet($field->getMetaSet()) as $metaData) {
+                /* @var $metaData MetaDataInterface */
+                $value = $metaData->get($field->getId(), $valueBag->getLanguage());
 
-            // used to limit on element type version
-            ->join(
-                array('ev' => $db->prefix . 'element_version'),
-                'eto.eid = ev.eid AND eto.version = ev.version',
-                array()
-            )
+                $values[] = $value;
+            }
+        }
 
-            // connection to content table element data language
-            ->join(
-                array('evmi' => $db->prefix . 'element_version_metaset_items'),
-                'evmi.eid = ev.eid AND ' .
-                'evmi.version = ev.version AND ' .
-                'evmi.language = :language',
-                array('value')
-            )
+        $values = $this->splitSuggestValues($values);
 
-            // used to limit on suggest fields and data source id
-            ->join(
-                array('msk' => $db->prefix . 'meta_set_keys'),
-                'msk.set_id = evmi.set_id AND ' .
-                'msk.key = evmi.key AND ' .
-                'msk.type = :field_type AND ' .
-                'msk.options = :datasource_id',
-                array()
-            );
-
-        $bind = array(
-            ':language'      => $language,
-            ':field_type'    => 'suggest',
-            ':datasource_id' => $dataSourceId,
-        );
-
-        // fetch suggest field content
-        $result = $db->fetchCol($sql, $bind);
-
-        $uniqueKeys = $this->splitSuggestValues($result);
-
-        return $uniqueKeys;
+        return $values;
     }
 
     /**
@@ -157,11 +91,11 @@ class SuggestMetaFieldUtil
      *
      * @return array
      */
-    public function splitSuggestValues(array $concatenated)
+    private function splitSuggestValues(array $concatenated)
     {
         $keys = array();
         foreach ($concatenated as $value) {
-            $splitted = explode($this->_seperatorChar, $value);
+            $splitted = explode($this->seperatorChar, $value);
             foreach ($splitted as $key) {
                 $key = trim($key);
 

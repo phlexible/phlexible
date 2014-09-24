@@ -70,7 +70,7 @@ class RenderConfigurator
         // Before Init Event
         /*
         $beforeEvent = new \Makeweb_Renderers_Event_BeforeInit($this);
-        if (!$this->dispatcher->dispatch($beforeEvent))
+        if ($this->dispatcher->dispatch($beforeEvent)->isPropagationStopped())
         {
             return $renderConfiguration;
         }

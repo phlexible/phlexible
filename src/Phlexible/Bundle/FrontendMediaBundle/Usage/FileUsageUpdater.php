@@ -23,11 +23,6 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
  */
 class FileUsageUpdater
 {
-    const STATUS_ONLINE = 8;
-    const STATUS_LATEST = 4;
-    const STATUS_OLD = 2;
-    const STATUS_DEAD = 1;
-
     /**
      * @var EntityManager
      */
@@ -104,12 +99,11 @@ class FileUsageUpdater
             }
 
             $linkVersion = $fileLink->getElementVersion()->getVersion();
-
             $old = true;
 
             // add flag STATUS_LATEST if this link is a link to the latest element version
             if ($linkVersion === $element->getLatestVersion()) {
-                $flags[$fileId][$fileVersion] |= self::STATUS_LATEST;
+                $flags[$fileId][$fileVersion] |= FileUsage::STATUS_LATEST;
                 $old = false;
             }
 
@@ -117,7 +111,7 @@ class FileUsageUpdater
             $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
             foreach ($teasers as $teaser) {
                 if ($this->teaserManager->getPublishedVersion($teaser, $fileLink->getLanguage()) === $linkVersion) {
-                    $flags[$fileId][$fileVersion] |= self::STATUS_ONLINE;
+                    $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
                     $old = false;
                     break;
                 }
@@ -128,7 +122,7 @@ class FileUsageUpdater
             $treeNodes = $tree->getByTypeId($eid, 'element');
             foreach ($treeNodes as $treeNode) {
                 if ($tree->getPublishedVersion($treeNode, $fileLink->getLanguage()) === $linkVersion) {
-                    $flags[$fileId][$fileVersion] |= self::STATUS_ONLINE;
+                    $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
                     $old = false;
                     break;
                 }
@@ -136,7 +130,7 @@ class FileUsageUpdater
 
             // add flag STATUS_OLD if this link is neither used in latest element version nor online version
             if ($old) {
-                $flags[$fileId][$fileVersion] |= self::STATUS_OLD;
+                $flags[$fileId][$fileVersion] |= FileUsage::STATUS_OLD;
             }
         }
 

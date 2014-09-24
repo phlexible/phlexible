@@ -118,7 +118,7 @@ class ElementFinderManager implements ElementFinderManagerInterface
 
         // post before delete event
         $event = new ElementFinderConfigEvent($catch);
-        if (!$this->dispatcher->dispatch(ElementFinderEvents::BEFORE_DELETE_CATCH, $event)) {
+        if ($this->dispatcher->dispatch(ElementFinderEvents::BEFORE_DELETE_CATCH, $event)->isPropagationStopped()) {
             return;
         }
 
@@ -133,5 +133,4 @@ class ElementFinderManager implements ElementFinderManagerInterface
         $message = ElementFinderMessage::create("Catch {$catch->getTitle()} deleted.");
         $this->messageService->post($message);
     }
-
 }

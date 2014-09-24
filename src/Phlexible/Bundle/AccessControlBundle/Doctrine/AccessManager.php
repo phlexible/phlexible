@@ -230,7 +230,7 @@ class AccessManager implements AccessManagerInterface
 
         foreach ($aces as $ace) {
             $event = new AccessControlEntryEvent($ace);
-            if (!$this->dispatcher->dispatch(AccessControlEvents::BEFORE_REMOVE_RIGHT, $event)) {
+            if ($this->dispatcher->dispatch(AccessControlEvents::BEFORE_REMOVE_RIGHT, $event)->isPropagationStopped()) {
                 return $this;
             }
 

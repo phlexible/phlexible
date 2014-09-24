@@ -198,6 +198,11 @@ interface SiteInterface
 
     /**
      * @param FolderInterface $folder
+     */
+    public function checkDeleteFolder(FolderInterface $folder);
+
+    /**
+     * @param FolderInterface $folder
      * @param string          $userId
      *
      * @return FolderInterface
@@ -267,6 +272,11 @@ interface SiteInterface
      * @return FileInterface
      */
     public function copyFile(FileInterface $file, FolderInterface $targetFolder, $userId);
+
+    /**
+     * @param FileInterface $file
+     */
+    public function checkDeleteFile(FileInterface $file);
 
     /**
      * @param FileInterface $file

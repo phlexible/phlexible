@@ -41,7 +41,7 @@ class Makeweb_Elements_Context
     protected $_db = null;
 
     /**
-     * @var Zend_Config
+     * @var array
      */
     protected $_config = null;
 

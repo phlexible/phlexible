@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle;
 
+use Phlexible\Bundle\MediaSiteBundle\Folder\SizeCalculator;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 
 /**
@@ -54,16 +55,16 @@ class Quota
     public function __toString()
     {
         return '<pre>' .
-        'Hard Quota:     ' . $this->getHardQuota() . PHP_EOL .
-        'Soft Quota:     ' . $this->getSoftQuota() . PHP_EOL .
-        'Soft Quota %:   ' . $this->getSoftQuotaPercent() . PHP_EOL .
-        'Usage:          ' . $this->getUsage() . PHP_EOL .
-        'Usage %:        ' . $this->getUsagePercent() . PHP_EOL .
-        'Remaining SQ:   ' . $this->getRemainingSoftQuota() . PHP_EOL .
-        'Remaining SQ %: ' . $this->getRemainingSoftQuotaPercent() . PHP_EOL .
-        'Remaining HQ:   ' . $this->getRemainingHardQuota() . PHP_EOL .
-        'Remaining HQ %: ' . $this->getRemainingHardQuotaPercent() . PHP_EOL .
-        '';
+            'Hard Quota:     ' . $this->getHardQuota() . PHP_EOL .
+            'Soft Quota:     ' . $this->getSoftQuota() . PHP_EOL .
+            'Soft Quota %:   ' . $this->getSoftQuotaPercent() . PHP_EOL .
+            'Usage:          ' . $this->getUsage() . PHP_EOL .
+            'Usage %:        ' . $this->getUsagePercent() . PHP_EOL .
+            'Remaining SQ:   ' . $this->getRemainingSoftQuota() . PHP_EOL .
+            'Remaining SQ %: ' . $this->getRemainingSoftQuotaPercent() . PHP_EOL .
+            'Remaining HQ:   ' . $this->getRemainingHardQuota() . PHP_EOL .
+            'Remaining HQ %: ' . $this->getRemainingHardQuotaPercent() . PHP_EOL .
+            '';
     }
 
     /**
@@ -124,18 +125,10 @@ class Quota
     public function getUsage()
     {
         if ($this->usage === null) {
-            $db = $this->site->getReadDb();
+            $calculator = new SizeCalculator();
+            $calculatedSize = $calculator->calculate($this->site, $this->site->findRootFolder());
 
-            $select = $db->select()
-                ->from(array('fo' => $db->prefix . 'mediamanager_folders'), array())
-                ->join(
-                    array('fi' => $db->prefix . 'mediamanager_files'),
-                    'fi.folder_id = fo.id',
-                    new Zend_Db_Expr('SUM(size)')
-                )
-                ->where('site_id = ?', $this->site->getId());
-
-            $this->usage = $db->fetchOne($select);
+            $this->usage = $calculatedSize->getSize();
         }
 
         return $this->usage;
@@ -219,18 +212,5 @@ class Quota
         }
 
         return $remainingHardQuota / $this->getHardQuota();
-    }
-
-    public function getDayPoints($from, $to)
-    {
-        $db = $this->site->getReadDb();
-
-        $select = $db->select()
-            ->from($db->prefix . 'mediamanager_site_usage_day', array('day', 'usage'))
-            ->where('day >= ?', $from)
-            ->where('day <= ?', $to)
-            ->order('day ASC');
-
-        return $db->fetchPairs($select);
     }
 }

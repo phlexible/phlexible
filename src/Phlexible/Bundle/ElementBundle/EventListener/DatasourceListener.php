@@ -41,15 +41,6 @@ class DatasourceListener implements EventSubscriberInterface
         $this->suggestMetaFieldUtil = $suggestMetaFieldUtil;
     }
 
-    private function _queueDataSourceCleanup()
-    {
-        // add cleanup job for suggets fields
-        MWF_Registry::getContainer()->queueService->addUniqueJob(
-            new \Phlexible\Bundle\DataSourceBundle\Job\CleanupJob(),
-            \Phlexible\Bundle\QueueBundle\QueueItem::PRIORITY_LOW
-        );
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -72,13 +63,13 @@ class DatasourceListener implements EventSubscriberInterface
         $language = $values->getLanguage();
 
         // fetch all data source values used in element online versions
-        $onlineValues = $this->suggestFieldUtil->fetchOnlineValues($datasourceId, $language);
+        $onlineValues = $this->suggestFieldUtil->fetchUsedValues($datasourceId, $language);
 
         // remove offline values from collection
         $event->markActive($onlineValues);
 
         // fetch all data source values used in element online versions
-        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchOnlineValues($datasourceId, $language);
+        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchUsedValues($datasourceId, $language);
 
         // remove offline values from collection
         $event->markActive($onlineMetaValues);

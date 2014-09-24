@@ -47,7 +47,7 @@ class Gallery extends \Dwoo\Plugin
     {
         /* @var $request Makeweb_Frontend_Request */
         $request = MWF_Registry::get('request');
-        $paginator = new Zend_Paginator($this->getPaginatorAdapter($folder));
+        $paginator = new Paginator($this->getPaginatorAdapter($folder));
         $paginator->setItemCountPerPage($limit)
             ->setCurrentPageNumber($request->getParam('page', 1));
 

@@ -119,7 +119,7 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
     public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure, $flush = true)
     {
         $event = new ElementtypeStructureEvent($elementtypeStructure);
-        if (!$this->dispatcher->dispatch(ElementtypeEvents::BEFORE_STRUCTURE_CREATE, $event)) {
+        if ($this->dispatcher->dispatch(ElementtypeEvents::BEFORE_STRUCTURE_CREATE, $event)->isPropagationStopped()) {
             throw new \Exception('Canceled by listener.');
         }
 

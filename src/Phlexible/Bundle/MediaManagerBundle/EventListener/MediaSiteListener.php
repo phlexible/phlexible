@@ -9,13 +9,14 @@
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
 use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
+use Phlexible\Bundle\MediaManagerBundle\Site\DeleteFileChecker;
+use Phlexible\Bundle\MediaManagerBundle\Site\DeleteFolderChecker;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\FolderEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -38,13 +39,31 @@ class MediaSiteListener implements EventSubscriberInterface
     private $metaSetManager;
 
     /**
+     * @var DeleteFileChecker
+     */
+    private $deleteFileChecker;
+
+    /**
+     * @var DeleteFolderChecker
+     */
+    private $deleteFolderChecker;
+
+    /**
      * @param DocumenttypeManagerInterface $documenttypeManager
      * @param MetaSetManagerInterface      $metaSetManager
+     * @param DeleteFileChecker            $deleteFileChecker
+     * @param DeleteFolderChecker          $deleteFolderChecker
      */
-    public function __construct(DocumenttypeManagerInterface $documenttypeManager, MetaSetManagerInterface $metaSetManager)
+    public function __construct(
+        DocumenttypeManagerInterface $documenttypeManager,
+        MetaSetManagerInterface $metaSetManager,
+        DeleteFileChecker $deleteFileChecker,
+        DeleteFolderChecker $deleteFolderChecker)
     {
         $this->documenttypeManager = $documenttypeManager;
         $this->metaSetManager = $metaSetManager;
+        $this->deleteFileChecker = $deleteFileChecker;
+        $this->deleteFolderChecker = $deleteFolderChecker;
     }
 
 
@@ -137,7 +156,9 @@ class MediaSiteListener implements EventSubscriberInterface
      */
     public function onBeforeDeleteFile(FileEvent $event)
     {
-
+        if (!$this->deleteFileChecker->isDeleteAllowed($event->getFile())) {
+            $event->stopPropagation();
+        }
     }
 
     /**
@@ -145,6 +166,8 @@ class MediaSiteListener implements EventSubscriberInterface
      */
     public function onBeforeDeleteFolder(FolderEvent $event)
     {
-
+        if (!$this->deleteFolderChecker->isDeleteAllowed($event->getFolder())) {
+            $event->stopPropagation();
+        }
     }
 }

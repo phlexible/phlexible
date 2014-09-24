@@ -42,22 +42,4 @@ class ElementVersionRepository extends EntityRepository
 
         return $versions;
     }
-
-    /**
-     * @param ElementVersion $elementVersion
-     *
-     * @throws \Exception
-     */
-    public function save(ElementVersion $elementVersion)
-    {
-        $beforeEvent = new BeforeVersionCreateEventEvent($elementVersion);
-        if (!$this->dispatcher->dispatch($beforeEvent)) {
-            throw new \Exception('Canceled by listener.');
-        }
-
-        $this->loader->insert($elementVersion);
-
-        $event = new VersionCreateEvent($elementVersion);
-        $this->dispatcher->dispatch($beforeEvent);
-    }
 }

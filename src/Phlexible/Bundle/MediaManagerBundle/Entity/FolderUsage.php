@@ -21,6 +21,11 @@ use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
  */
 class FolderUsage
 {
+    const STATUS_ONLINE = 8;
+    const STATUS_LATEST = 4;
+    const STATUS_OLD = 2;
+    const STATUS_DEAD = 1;
+
     /**
      * @var string
      * @ORM\Id

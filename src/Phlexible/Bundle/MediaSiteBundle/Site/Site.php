@@ -432,6 +432,15 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    public function checkDeleteFile(FileInterface $file)
+    {
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::CHECK_DELETE_FILE, $event);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function deleteFile(FileInterface $file, $userId)
     {
         $event = new FileEvent($file);
@@ -619,7 +628,37 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    public function checkDeleteFolder(FolderInterface $folder)
+    {
+        foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
+            $this->checkDeleteFolder($subFolder);
+        }
+
+        foreach ($this->findFilesByFolder($folder) as $file) {
+            $this->checkDeleteFile($file);
+        }
+
+        $event = new FolderEvent($folder);
+        $this->eventDispatcher->dispatch(MediaSiteEvents::CHECK_DELETE_FOLDER, $event);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function deleteFolder(FolderInterface $folder, $userId)
+    {
+        $this->checkDeleteFolder($folder);
+
+        return $this->doDeleteFolder($folder, $userId);
+    }
+
+    /**
+     * @param FolderInterface $folder
+     * @param string          $userId
+     *
+     * @return FolderInterface
+     */
+    private function doDeleteFolder(FolderInterface $folder, $userId)
     {
         foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
             $this->deleteFolder($subFolder, $userId);
@@ -631,7 +670,7 @@ class Site implements SiteInterface, \IteratorAggregate
 
         $event = new FolderEvent($folder);
         if ($this->eventDispatcher->dispatch(MediaSiteEvents::BEFORE_DELETE_FOLDER, $event)->isPropagationStopped()) {
-            throw new IOException("Move folder {$folder->getName()} cancelled.");
+            throw new IOException("Delete folder {$folder->getName()} cancelled.");
         }
 
         $this->driver->deleteFolder($folder, $userId);

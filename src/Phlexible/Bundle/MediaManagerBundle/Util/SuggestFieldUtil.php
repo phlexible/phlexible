@@ -51,7 +51,7 @@ class SuggestFieldUtil
     /**
      * Fetch all data source values used in any media file metaset.
      *
-     * @param DataSourceValueBag $values
+     * @param DataSourceValueBag $valueBag
      *
      * @return array
      */
@@ -82,47 +82,6 @@ class SuggestFieldUtil
         $values = $this->splitSuggestValues($values);
 
         return $values;
-
-        $valueSelects = array();
-        foreach ($languages as $language) {
-            $language = trim($language);
-
-            $valueSelects[] = $this->db
-                ->select()
-                ->from(
-                    array('msk' => $this->db->prefix . 'meta_set_keys'),
-                    array()
-                )
-                ->join(
-                    array('mfmi' => $this->db->prefix . 'mediamanager_files_metasets_items'),
-                    'mfmi.meta_key = msk.' . $this->db->quoteIdentifier('key'),
-                    array('meta_value_' . $language)
-                )
-                ->where('msk.type = ?', 'suggest')
-                ->where('msk.options = ?', $dataSourceId);
-
-            $valueSelects[] = $this->db
-                ->select()
-                ->from(
-                    array('msk' => $this->db->prefix . 'meta_set_keys'),
-                    array()
-                )
-                ->join(
-                    array('mfomi' => $this->db->prefix . 'mediamanager_folder_metasets_items'),
-                    'mfomi.meta_key = msk.' . $this->db->quoteIdentifier('key'),
-                    array('meta_value_' . $language)
-                )
-                ->where('msk.type = ?', 'suggest')
-                ->where('msk.options = ?', $dataSourceId);
-        }
-
-        $select = $this->db->select()->union($valueSelects);
-
-        $result = $this->db->fetchCol($select);
-
-        $uniqueKeys = $this->splitSuggestValues($result);
-
-        return $uniqueKeys;
     }
 
     /**

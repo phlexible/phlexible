@@ -8,7 +8,11 @@
 
 namespace Phlexible\Bundle\ElementBundle\Util;
 
-use Phlexible\Component\Database\ConnectionManager;
+use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaDataManagerInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 
 /**
  * Utility class for suggest fields.
@@ -18,90 +22,55 @@ use Phlexible\Component\Database\ConnectionManager;
 class SuggestFieldUtil
 {
     /**
-     * Database connection pool.
-     *
-     * @var ConnectionManager
-     */
-    protected $_dbPool;
-
-    /**
      * @var string
      */
-    protected $_seperatorChar;
+    private $seperatorChar;
 
     /**
-     * @param ConnectionManager $dbPool
-     * @param string            $seperatorChar
+     * @param string $seperatorChar
      */
-    public function __construct(ConnectionManager $dbPool, $seperatorChar)
+    public function __construct($seperatorChar)
     {
-        $this->_dbPool = $dbPool;
-        $this->_seperatorChar = $seperatorChar;
+        $this->seperatorChar = $seperatorChar;
     }
 
     /**
      * Fetch all data source values used in any element versions.
      *
-     * @param $dataSourceId
-     * @param $language
+     * @param DataSourceValueBag $valueBag
+     *
+     * @return array
      */
-    public function fetchUsedValues($dataSourceId, $language)
+    public function fetchUsedValues(DataSourceValueBag $valueBag)
     {
-        $db = $this->_dbPool->read;
+        /*
+        $metaSets = $this->metaSetManager->findAll();
 
-        $sql = $db->select()
-            ->distinct()
+        $fields = array();
+        foreach ($metaSets as $metaSet) {
+            foreach ($metaSet->getFields() as $field) {
+                if ($field->getOptions() === $valueBag->getDatasource()->getId()) {
+                    $fields[] = $field;
+                }
+            }
+        }
 
-            // used to limit on element type version
-            ->from(
-                array('ev' => $db->prefix . 'element_version'),
-                array()
-            )
+        $values = array();
+        foreach ($fields as $field) {
+            foreach ($this->metaDataManager->findByMetaSet($field->getMetaSet()) as $metaData) {
+                $value = $metaData->get($field->getId(), $valueBag->getLanguage());
 
-            // used to limit on suggest fields and data source id
-            ->join(
-                array('ets' => $db->prefix . 'elementtype_structure'),
-                'ets.element_type_id = ev.element_type_id AND ' .
-                'ets.version = ev.element_type_version',
-                array()
-            )
+                $values[] = $value;
+            }
+        }
+        */
+        // TODO: aus elementen
 
-            // connection to content table element data language
-            ->join(
-                array('ed' => $db->prefix . 'element_data'),
-                'ed.ds_id = ets.ds_id AND ' .
-                'ev.eid = ed.eid AND ev.version = ed.version',
-                array()
-            )
+        $values = array();
 
-            // fetch content
-            ->join(
-                array('edl' => $db->prefix . 'element_data_language'),
-                'ed.eid = edl.eid AND ed.version = edl.version AND ed.data_id = edl.data_id',
-                array('content')
-            )
+        $values = $this->splitSuggestValues($values);
 
-            // limit on suggest fields
-            ->where('ets.field_type = :field_type')
-
-            // limit on suggest fields
-            ->where('edl.language = :language')
-
-            // limit on data source
-            ->where('ets.options LIKE :options');
-
-        $bind = array(
-            ':language'   => $language,
-            ':field_type' => 'suggest',
-            ':options'    => '%s:13:"source_source";s:36:"' . $dataSourceId . '"%',
-        );
-
-        // fetch suggest field content
-        $result = $db->fetchCol($sql, $bind);
-
-        $uniqueKeys = $this->splitSuggestValues($result);
-
-        return $uniqueKeys;
+        return $values;
     }
 
     /**
@@ -111,11 +80,11 @@ class SuggestFieldUtil
      *
      * @return array
      */
-    public function splitSuggestValues(array $concatenated)
+    private function splitSuggestValues(array $concatenated)
     {
         $keys = array();
         foreach ($concatenated as $value) {
-            $splitted = explode($this->_seperatorChar, $value);
+            $splitted = explode($this->seperatorChar, $value);
             foreach ($splitted as $key) {
                 $key = trim($key);
 
@@ -127,78 +96,6 @@ class SuggestFieldUtil
         }
 
         $uniqueKeys = array_unique($keys);
-
-        return $uniqueKeys;
-    }
-
-    /**
-     * Fetch all data source values used in element online versions.
-     *
-     * @param $dataSourceId
-     * @param $language
-     */
-    public function fetchOnlineValues($dataSourceId, $language)
-    {
-        $db = $this->_dbPool->read;
-
-        $sql = $db->select()
-            ->distinct()
-
-            // fetch only online element versions
-            ->from(
-                array('eto' => $db->prefix . 'element_tree_online'),
-                array()
-            )
-
-            // used to limit on element type version
-            ->join(
-                array('ev' => $db->prefix . 'element_version'),
-                'eto.eid = ev.eid AND eto.version = ev.version',
-                array()
-            )
-
-            // used to limit on suggest fields and data source id
-            ->join(
-                array('ets' => $db->prefix . 'elementtype_structure'),
-                'ets.element_type_id = ev.element_type_id AND ' .
-                'ets.version = ev.element_type_version',
-                array()
-            )
-
-            // connection to content table element data language
-            ->join(
-                array('ed' => $db->prefix . 'element_data'),
-                'ed.ds_id = ets.ds_id AND ' .
-                'eto.eid = ed.eid AND eto.version = ed.version',
-                array()
-            )
-
-            // fetch content
-            ->join(
-                array('edl' => $db->prefix . 'element_data_language'),
-                'ed.eid = edl.eid AND ed.version = edl.version AND ed.data_id = edl.data_id AND eto.language = edl.language',
-                array('content')
-            )
-
-            // limit on suggest fields
-            ->where('eto.language = :language')
-
-            // limit on suggest fields
-            ->where('ets.field_type = :field_type')
-
-            // limit on data source
-            ->where('ets.options LIKE :options');
-
-        $bind = array(
-            ':language'   => $language,
-            ':field_type' => 'suggest',
-            ':options'    => '%s:13:"source_source";s:36:"' . $dataSourceId . '"%',
-        );
-
-        // fetch suggest field content
-        $result = $db->fetchCol($sql, $bind);
-
-        $uniqueKeys = $this->splitSuggestValues($result);
 
         return $uniqueKeys;
     }

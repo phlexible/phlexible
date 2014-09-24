@@ -112,7 +112,7 @@ class ElementFinder
         $qb = $this->createSelect($elementCatch, $isPreview, $languages, $matchedTreeIds, $filter);
 
         #$beforeEvent = new BeforeCatchGetResultPool($this, $qb, $resultPool);
-        #if (!$this->dispatcher->dispatch($beforeEvent)) {
+        #if ($this->dispatcher->dispatch($beforeEvent)->isPropagationStopped()) {
         #    return $resultPool;
         #}
 

@@ -23,11 +23,6 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
  */
 class FolderUsageUpdater
 {
-    const STATUS_ONLINE = 8;
-    const STATUS_LATEST = 4;
-    const STATUS_OLD = 2;
-    const STATUS_DEAD = 1;
-
     /**
      * @var EntityManager
      */
@@ -98,16 +93,21 @@ class FolderUsageUpdater
                 $flags[$folderId] = 0;
             }
 
+            $linkVersion = $folderLink->getElementVersion()->getVersion();
+            $old = true;
+
             // add flag STATUS_LATEST if this link is a link to the latest element version
-            if ($folderLink->getElementVersion()->getVersion() === $element->getLatestVersion()) {
-                $flags[$folderId] |= self::STATUS_LATEST;
+            if ($linkVersion === $element->getLatestVersion()) {
+                $flags[$folderId] |= FolderUsage::STATUS_LATEST;
+                $old = false;
             }
 
             // add flag STATUS_ONLINE if this link is used in an online teaser version
             $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
             foreach ($teasers as $teaser) {
-                if ($this->teaserManager->getPublishedVersion($teaser, $folderLink->getLanguage()) === $folderLink->getElementVersion()->getVersion()) {
-                    $flags[$folderId] |= self::STATUS_ONLINE;
+                if ($this->teaserManager->getPublishedVersion($teaser, $folderLink->getLanguage()) === $linkVersion) {
+                    $flags[$folderId] |= FolderUsage::STATUS_ONLINE;
+                    $old = false;
                     break;
                 }
             }
@@ -116,15 +116,16 @@ class FolderUsageUpdater
             $tree = $this->treeManager->getByTypeId($eid, 'element');
             $treeNodes = $tree->getByTypeId($eid, 'element');
             foreach ($treeNodes as $treeNode) {
-                if ($tree->getPublishedVersion($treeNode, $folderLink->getLanguage()) === $folderLink->getElementVersion()->getVersion()) {
-                    $flags[$folderId] |= self::STATUS_ONLINE;
+                if ($tree->getPublishedVersion($treeNode, $folderLink->getLanguage()) === $linkVersion) {
+                    $flags[$folderId] |= FolderUsage::STATUS_ONLINE;
+                    $old = false;
                     break;
                 }
             }
 
             // add flag STATUS_OLD if this link is neither used in latest element version nor online version
-            if (!$flags && self::STATUS_LATEST && !$flags && self::STATUS_ONLINE) {
-                $flags[$folderId] |= self::STATUS_OLD;
+            if ($old) {
+                $flags[$folderId] |= FolderUsage::STATUS_OLD;
             }
         }
 
@@ -137,7 +138,11 @@ class FolderUsageUpdater
                 $folderUsage = new FolderUsage($folder, 'element', $eid, $flag);
                 $this->entityManager->persist($folderUsage);
             } else {
-                $folderUsage->setStatus($flag);
+                if ($flag) {
+                    $folderUsage->setStatus($flag);
+                } else {
+                    $this->entityManager->remove($folderUsage);
+                }
             }
         }
 

@@ -177,7 +177,7 @@ class TempStorage
 
         /*
         $event = new BeforeStoreUploadEvent($this, $tempFile);
-        if ($this->dispatcher->dispatch(MediaSiteEvents::BEFORE_STORE_UPLOAD, $event) === false) {
+        if ($this->dispatcher->dispatch(MediaSiteEvents::BEFORE_STORE_UPLOAD, $event)->isPropagationStopped()) {
             return null;
         }
         */

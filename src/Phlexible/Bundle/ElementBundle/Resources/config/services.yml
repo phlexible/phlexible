@@ -50,11 +50,11 @@ services:
 
     phlexible_element.util.suggest_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
-        arguments: [@doctrine.dbal.default_connection, %phlexible_elementtype.field.suggest_seperator%]
+        arguments: [%phlexible_elementtype.field.suggest_seperator%]
 
     phlexible_element.util.suggest_meta_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil
-        arguments: [@doctrine.dbal.default_connection, %phlexible_meta_set.suggest.seperator%]
+        arguments: [@phlexible_meta_set.meta_set_manager, @phlexible_element.element_meta_data_manager, %phlexible_meta_set.suggest.seperator%]
 
     phlexible_element.request.data_saver:
         class: Phlexible\Bundle\ElementBundle\Controller\Data\DataSaver

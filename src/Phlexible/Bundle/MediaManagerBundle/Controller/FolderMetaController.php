@@ -102,7 +102,7 @@ class FolderMetaController extends Controller
 
         /*
         $beforeEvent = new BeforeSaveFolderMeta($folder);
-        if ($dispatcher->dispatch($beforeEvent) === false) {
+        if ($dispatcher->dispatch($beforeEvent)->isPropagationStopped()) {
             $this->getResponse()->setAjaxPayload(
                 MWF_Ext_Result::encode(false, null, $beforeEvent->getCancelReason())
             );
