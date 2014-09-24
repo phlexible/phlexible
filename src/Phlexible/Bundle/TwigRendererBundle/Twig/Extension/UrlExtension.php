@@ -48,7 +48,6 @@ class UrlExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('url', array($this, 'url')),
-            new \Twig_SimpleFunction('treeNode', array($this, 'treeNode')),
         );
     }
 
