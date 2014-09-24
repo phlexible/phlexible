@@ -39,7 +39,8 @@
         "alchemy/zippy": "~0.2",
         "cocur/slugify": "~0.8",
         "phansys/getid3": "v2.0.0-BETA1",
-        "cogpowered/finediff": ">=0.3.0"
+        "cogpowered/finediff": ">=0.3.0",
+        "nelmio/api-doc-bundle": "~2.5"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.1"
