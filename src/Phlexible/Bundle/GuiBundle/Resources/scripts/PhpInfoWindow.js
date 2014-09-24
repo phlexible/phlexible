@@ -10,6 +10,7 @@ Phlexible.gui.PhpInfoWindow = Ext.extend(Ext.Window, {
     initComponent: function () {
         this.items = new Ext.ux.ManagedIframePanel({
             defaultSrc: Phlexible.Router.generate('gui_status_php'),
+            border: false,
             disableMessaging: true
         });
 

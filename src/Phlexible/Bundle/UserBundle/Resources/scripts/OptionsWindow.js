@@ -12,7 +12,7 @@ Phlexible.users.OptionsWindow = Ext.extend(Ext.Window, {
     strings: Phlexible.users.Strings,
     plain: true,
     cls: 'p-users-options-window',
-    iconCls: 'p-user-user-icon',
+    iconCls: 'p-user-preferences-icon',
     width: 400,
     minWidth: 400,
     height: 400,
@@ -61,7 +61,7 @@ Phlexible.users.OptionsWindow = Ext.extend(Ext.Window, {
 
         items.unshift({
             bodyStyle: 'padding: 15px',
-            border: false,
+            border: true,
             html: '<ul class="user">' + lis + '</ul>',
             buttons: [
                 {
