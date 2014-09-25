@@ -473,7 +473,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
             $this->updateNode($sortNode, false);
         }
 
-        $this->entityManager->flush();
+        //$this->entityManager->flush();
 
         // history
         $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_NODE, $typeId, $userId, $node->getId());

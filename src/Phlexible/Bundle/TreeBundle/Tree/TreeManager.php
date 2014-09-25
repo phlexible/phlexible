@@ -91,20 +91,21 @@ class TreeManager
      * @param int    $typeId
      * @param string $type
      *
-     * @return TreeInterface|WritableTreeInterface
+     * @return TreeInterface[]|WritableTreeInterface[]
      * @throws NodeNotFoundException
      */
     public function getByTypeId($typeId, $type = null)
     {
+        $trees = array();
         foreach ($this->siterootManager->findAll() as $siteroot) {
             $tree = $this->getBySiteRootId($siteroot->getId());
 
             if ($tree->hasByTypeId($typeId, $type)) {
-                return $tree;
+                $trees[] = $tree;
             }
         }
 
-        throw new NodeNotFoundException("Tree for type ID $typeId not found.");
+        return $trees;
     }
 
     /**

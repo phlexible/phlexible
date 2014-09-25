@@ -118,13 +118,15 @@ class FileUsageUpdater
             }
 
             // add flag STATUS_ONLINE if this link is used in an online treeNode version
-            $tree = $this->treeManager->getByTypeId($eid, 'element');
-            $treeNodes = $tree->getByTypeId($eid, 'element');
-            foreach ($treeNodes as $treeNode) {
-                if ($tree->getPublishedVersion($treeNode, $fileLink->getLanguage()) === $linkVersion) {
-                    $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
-                    $old = false;
-                    break;
+            $trees = $this->treeManager->getByTypeId($eid, 'element');
+            foreach ($trees as $tree) {
+                $treeNodes = $tree->getByTypeId($eid, 'element');
+                foreach ($treeNodes as $treeNode) {
+                    if ($tree->getPublishedVersion($treeNode, $fileLink->getLanguage()) === $linkVersion) {
+                        $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
+                        $old = false;
+                        break;
+                    }
                 }
             }
 

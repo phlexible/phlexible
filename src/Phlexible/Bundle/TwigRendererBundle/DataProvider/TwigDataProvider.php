@@ -85,9 +85,14 @@ class TwigDataProvider implements DataProviderInterface
             $data->catched = $renderConfiguration->get('catchResults');
 
         }
+
         if ($renderConfiguration->hasFeature('form')) {
             $data->forms = $renderConfiguration->get('forms');
             $data->formViews = $renderConfiguration->get('formViews');
+        }
+
+        if ($renderConfiguration->hasFeature('businesslogic')) {
+            $data->businesslogics = $renderConfiguration->get('businesslogics');
         }
 
         return $data;

@@ -113,13 +113,15 @@ class FolderUsageUpdater
             }
 
             // add flag STATUS_ONLINE if this link is used in an online treeNode version
-            $tree = $this->treeManager->getByTypeId($eid, 'element');
-            $treeNodes = $tree->getByTypeId($eid, 'element');
-            foreach ($treeNodes as $treeNode) {
-                if ($tree->getPublishedVersion($treeNode, $folderLink->getLanguage()) === $linkVersion) {
-                    $flags[$folderId] |= FolderUsage::STATUS_ONLINE;
-                    $old = false;
-                    break;
+            $trees = $this->treeManager->getByTypeId($eid, 'element');
+            foreach ($trees as $tree) {
+                $treeNodes = $tree->getByTypeId($eid, 'element');
+                foreach ($treeNodes as $treeNode) {
+                    if ($tree->getPublishedVersion($treeNode, $folderLink->getLanguage()) === $linkVersion) {
+                        $flags[$folderId] |= FolderUsage::STATUS_ONLINE;
+                        $old = false;
+                        break;
+                    }
                 }
             }
 
