@@ -12,7 +12,7 @@ use Phlexible\Component\Formatter\AgeFormatter;
 use Phlexible\Component\Formatter\FilesizeFormatter;
 
 /**
- * Twig url extension
+ * Twig misc extension
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
