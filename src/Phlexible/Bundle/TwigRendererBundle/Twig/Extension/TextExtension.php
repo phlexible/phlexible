@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\TwigRendererBundle\Twig\Extension;
 
-use Phlexible\Component\Formatter\AgeFormatter;
-use Phlexible\Component\Formatter\FilesizeFormatter;
 use Phlexible\Component\Util\StringUtil;
 
 /**
@@ -39,7 +37,7 @@ class TextExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function truncateHtml($str, $length, $suffix = '...')
+    public function truncateHtml($str, $length, $suffix = '&hellip;')
     {
         $stringUitl = new StringUtil();
 
