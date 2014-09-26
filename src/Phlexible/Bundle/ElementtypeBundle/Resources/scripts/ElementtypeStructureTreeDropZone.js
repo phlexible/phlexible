@@ -1,83 +1,134 @@
 Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
+    debug: true,
+
     // private
     getDropPoint: function (e, n, dd) {
-        var tn = n.node;
-        if (tn.isRoot) {
-            return tn.allowChildren !== false ? "append" : false; // always append for root
+        var targetNode = n.node,
+            position;
+
+        if (targetNode.isRoot) {
+            position = targetNode.allowChildren !== false ? "append" : false; // always append for root
+            if (this.debug) Phlexible.console.log('getDropPoint.position: ' + position + ' (isRoot)');
+            return position;
         }
+
         var dragEl = n.ddel;
         var t = Ext.lib.Dom.getY(dragEl), b = t + dragEl.offsetHeight;
         var y = Ext.lib.Event.getPageY(e);
-        var noAppend = tn.allowChildren === false;
-//        Phlexible.console.log(tn);
-//        Phlexible.console.log('allowChildren: ');
-//        Phlexible.console.info(tn.allowChildren);
-//        Phlexible.console.log('appendOnly: ');
-//        Phlexible.console.info(this.appendOnly);
-        if (this.appendOnly || tn.parentNode.allowChildren === false) {
-            return noAppend ? false : "append";
+        var noAppend = targetNode.allowChildren === false;
+
+        if (this.debug) Phlexible.console.log('getDropPoint.noAppend: ', noAppend);
+        if (this.debug) Phlexible.console.log('getDropPoint.allowChildren: ', targetNode.allowChildren);
+        if (this.debug) Phlexible.console.log('getDropPoint.appendOnly: ', this.appendOnly);
+
+        if (this.appendOnly) {
+            position = noAppend ? false : "append";
+            if (this.debug) Phlexible.console.log('getDropPoint.position: ' + position + ' (appendOnly)');
+            return position;
         }
+
+        if (targetNode.parentNode.allowChildren === false) {
+            position = noAppend ? false : "append";
+            if (this.debug) Phlexible.console.log('getDropPoint.position: ' + position + ' (!allowChildren)');
+            return position;
+        }
+
         var noBelow = false;
         if (!this.allowParentInsert) {
-            noBelow = tn.hasChildNodes() && tn.isExpanded();
+            noBelow = targetNode.hasChildNodes() && targetNode.isExpanded();
         }
+        if (this.debug) Phlexible.console.log('getDropPoint.noBelow: ', noBelow);
+
         var q = (b - t) / (noAppend ? 2 : 3);
+
         if (y >= t && y < (t + q)) {
-            return "above";
+            position = "above";
         } else if (!noBelow && (noAppend || y >= b - q && y <= b)) {
-            return "below";
+            position = "below";
         } else {
-            return "append";
+            position = "append";
         }
+
+        if (this.debug) Phlexible.console.log('getDropPoint.position: ' + position);
+        return position;
     },
 
-    isValidDropPoint: function (n, pt, dd, e, data) {
+    isValidDropPoint: function (n, position, dd, e, data) {
+        if (position === false) {
+            return false;
+        }
+
         var targetNode = n.node;
         var sourceNode = data.node;
 
-        var debug = true;
+        if (this.debug) Phlexible.console.log('isValidDropPoint.position: ' + position);
 
-        if (pt !== 'append' && targetNode.parentNode.attributes.type == 'referenceroot' && targetNode.parentNode.firstChild) {
-            if (debug) Phlexible.console.log('referenceRootNode has already a child');
+        if (position !== 'append' && targetNode.parentNode.attributes.type == 'referenceroot' && targetNode.parentNode.firstChild) {
+            if (this.debug) Phlexible.console.warn('reference root node already has a child');
+            return false;
+        }
+        if (position === 'append' && targetNode.attributes.type == 'referenceroot' && targetNode.parentNode.firstChild) {
+            if (this.debug) Phlexible.console.warn('reference root node already has a child');
             return false;
         }
 
         if (sourceNode.ownerTree !== targetNode.ownerTree && targetNode.ownerTree.root.firstChild.attributes.type == 'referenceroot' && sourceNode.attributes.type == 'referenceroot') {
-            if (debug) Phlexible.console.log('target is already a reference');
+            if (this.debug) Phlexible.console.warn('target is already a reference');
             return false;
         }
 
         if (targetNode.isAncestor(sourceNode)) {
-            if (debug) Phlexible.console.info('isAncestor');
+            if (this.debug) Phlexible.console.warn('targetNode is ancestor of sourceNode');
             return false;
         }
         if (targetNode === sourceNode) {
-            if (debug) Phlexible.console.info('targetNode===sourceNode => false');
+            if (this.debug) Phlexible.console.warn('targetNode === sourceNode => false');
             return false;
         }
         if (targetNode.attributes.reference && targetNode.attributes.type != 'reference') {
-            if (debug) Phlexible.console.info('targetNode is referenceNode => false');
+            if (this.debug) Phlexible.console.warn('targetNode is reference => false');
             return false;
         }
-        if (targetNode.attributes.reference && targetNode.attributes.type != 'referenceroot' && pt == 'append') {
-            if (debug) Phlexible.console.info('targetNode is referenceRootNode, append => false');
+        if (targetNode.attributes.reference && targetNode.attributes.type != 'referenceroot' && position == 'append') {
+            if (this.debug) Phlexible.console.warn('targetNode is reference root node, append => false');
             return false;
         }
         if (sourceNode.attributes.reference && sourceNode.attributes.type != 'reference') {
-            if (debug) Phlexible.console.info('sourceNode is referenceNode => false');
+            if (this.debug) Phlexible.console.warn('sourceNode is reference => false');
             return false;
         }
-//        if(sourceNode.attributes.reference && sourceNode.attributes.type != 'referenceroot' && pt == 'append') {
-//            if (debug) Phlexible.console.info('sourceNode is referenceRootNode, append => false');
+//        if(sourceNode.attributes.reference && sourceNode.attributes.type != 'referenceroot' && position == 'append') {
+//            if (this.debug) Phlexible.console.warn('sourceNode is referenceRootNode, append => false');
 //            return false;
 //        }
 
-        var targetType = targetNode.attributes.type;
-        var sourceType = sourceNode.attributes.type;
+        var sourceType = sourceNode.attributes.type,
+            sourceField = Phlexible.fields.FieldTypes.getField(sourceType),
+            targetType = targetNode.attributes.type,
+            targetParentType = targetNode.parentNode.attributes.type || null;
 
+        if (position === 'append') {
+            if (sourceField.allowedIn.indexOf(targetType) !== -1) {
+                if (this.debug) Phlexible.console.info('sourceNode "' + sourceType + '" allowed in targetNode ' + targetType + ' => true');
+                return true;
+            }
+            if (this.debug) Phlexible.console.warn('sourceNode ' + sourceType + 'not allowed in targetNode ' + targetType + ' => false');
+            return false;
+        } else {
+            if (sourceField.allowedIn.indexOf(targetParentType) !== -1) {
+                if (this.debug) Phlexible.console.info('sourceNode ' + sourceType + ' allowed in targetParentNode ' + targetParentType + ' => true');
+                return true;
+            }
+            if (this.debug) Phlexible.console.warn('sourceNode ' + sourceType + ' not allowed in targetParentNode ' + targetParentType + ' => false');
+            return false;
+        }
+
+        return false;
+
+        /*
         if (targetType === 'reference') {
             if (!targetNode.childNodes || !targetNode.childNodes[0]) {
-                if (debug) Phlexible.console.info('targetNode is referenceNode and empty => false');
+                if (this.debug) Phlexible.console.warn('targetNode is referenceNode and empositiony => false');
                 return false;
             }
 
@@ -86,7 +137,7 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
 
         if (sourceType === 'reference') {
             if (!sourceNode.childNodes || !sourceNode.childNodes[0]) {
-                if (debug) Phlexible.console.info('sourceNode is referenceNode and empty => false');
+                if (this.debug) Phlexible.console.warn('sourceNode is referenceNode and empositiony => false');
                 return false;
             }
 
@@ -95,7 +146,7 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
 
         if (sourceType == 'referenceroot' && sourceNode.ownerTree !== targetNode.ownerTree) {
             if (!sourceNode.childNodes || !sourceNode.childNodes[0]) {
-                if (debug) Phlexible.console.info('from template, sourceNode is referenceRootNode and empty => false');
+                if (this.debug) Phlexible.console.warn('from template, sourceNode is referenceRootNode and empositiony => false');
                 return false;
             }
 
@@ -109,7 +160,7 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
             });
 
             if (found) {
-                if (debug) Phlexible.console.info('sourceNode is referenceRootNode && ds_id already present => false');
+                if (this.debug) Phlexible.console.warn('sourceNode is referenceRootNode && ds_id already present => false');
                 return false;
             }
 
@@ -121,7 +172,6 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
 
         switch (targetType) {
             case 'accordion':
-                targetType = 'accordion';
             case 'tab':
             case 'group':
             case 'referenceroot':
@@ -130,14 +180,14 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
                 break;
         }
 
-//        Phlexible.console.log(pt);
-        if (debug) Phlexible.console.log('targetType: ' + targetType);
+//        Phlexible.console.log(position);
+        if (this.debug) Phlexible.console.log('targetType: ' + targetType);
 
         // Target is item
         if (!targetIsContainer) {
             // Append mode - not allowed
-            if (pt == 'append') {
-                if (debug) Phlexible.console.info('!targetIsContainer && pt==append => false');
+            if (position == 'append') {
+                if (this.debug) Phlexible.console.warn('!targetIsContainer && position == append => false');
                 return false;
             }
             //
@@ -146,87 +196,91 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
 
         switch (sourceType) {
             case 'accordion':
-                sourceType = 'accordion';
             case 'tab':
             case 'group':
                 sourceIsContainer = true;
                 break;
         }
 
-        if (debug) Phlexible.console.log('sourceType: ' + sourceType);
+        if (this.debug) Phlexible.console.log('sourceType: ' + sourceType);
 //        Phlexible.console.log('---');
 
-        if (targetType == 'referenceroot' && pt == 'append') {
-            if (debug) Phlexible.console.info('targetType == referenceroot && append => true');
+        if ((targetType == 'root' || targetType == 'referenceroot') && position != 'append') {
+            if (this.debug) Phlexible.console.warn('targetType == (reference)root && !append => false');
+            return false;
+        }
+
+        if (targetType == 'referenceroot' && position == 'append') {
+            if (this.debug) Phlexible.console.info('targetType == referenceroot && append => true');
             return true;
         }
 
         if (sourceType == 'tab') {
             if (targetType == 'root') {
-                if (debug) Phlexible.console.info('targetType == root => true');
+                if (this.debug) Phlexible.console.info('targetType == root => true');
                 return true;
             }
-            if (targetType == 'tab' && pt != 'append') {
-                if (debug) Phlexible.console.info('targetType == tab => true');
+            if (targetType == 'tab' && position != 'append') {
+                if (this.debug) Phlexible.console.info('targetType == tab && !append => true');
                 return true;
             }
 
-            if (debug) Phlexible.console.info('sourceType == tab => false');
+            if (this.debug) Phlexible.console.warn('sourceType == tab => false');
             return false;
         }
 
         if (sourceType == 'accordion') {
-            if (targetType == 'tab' && pt == 'append') {
-                if (debug) Phlexible.console.info('sourceType == accordion && targetType == tab => true');
+            if (targetType == 'tab' && position == 'append') {
+                if (this.debug) Phlexible.console.info('sourceType == accordion && targetType == tab => true');
                 return true;
             }
-            if (targetType == 'accordion' && pt != 'append') {
-                if (debug) Phlexible.console.info('sourceType == accordion && targetType == accordion => true');
+            if (targetType == 'accordion' && position != 'append') {
+                if (this.debug) Phlexible.console.info('sourceType == accordion && targetType == accordion => true');
                 return true;
             }
-            if (targetNode.parentNode.attributes.type == 'tab' && pt != 'append') {
-                if (debug) Phlexible.console.info('sourceType == accordion && targetType == tab => true');
+            if (targetNode.parentNode.attributes.type == 'tab' && position != 'append') {
+                if (this.debug) Phlexible.console.info('sourceType == accordion && targetType == tab => true');
                 return true;
             }
 
-            if (debug) Phlexible.console.info('sourceType == accordion => false');
+            if (this.debug) Phlexible.console.warn('sourceType == accordion => false');
             return false;
         }
 
         if (sourceType == 'group') {
             if (targetType != 'root' && targetType != 'tab') {
-                if (debug) Phlexible.console.info('sourceType == group && targetType != root => true');
+                if (this.debug) Phlexible.console.info('sourceType == group && targetType != root => true');
                 return true;
             }
-            if (targetType == 'tab' && pt == 'append') {
-                if (debug) Phlexible.console.info('sourceType == group && targetType == tab && pt == append => true');
+            if (targetType == 'tab' && position == 'append') {
+                if (this.debug) Phlexible.console.info('sourceType == group && targetType == tab && position == append => true');
                 return true;
             }
 
-            if (debug) Phlexible.console.info('sourceType == group => false');
+            if (this.debug) Phlexible.console.warn('sourceType == group => false');
             return false;
         }
 
         if (!sourceIsContainer) {
             if (targetType == 'tab') {
-                if (pt == 'append') {
-                    if (debug) Phlexible.console.info('!sourceIsContainer && targetType == tab => true');
+                if (position == 'append') {
+                    if (this.debug) Phlexible.console.info('!sourceIsContainer && targetType == tab && append => true');
                     return true;
                 }
+                if (this.debug) Phlexible.console.warn('!sourceIsContainer && targetType == tab && !append => true');
                 return false;
             }
             if (targetType != 'root') {
-                if (debug) Phlexible.console.info('!sourceIsContainer && targetType != root => true');
-//                Phlexible.console.log(pt);
+                if (this.debug) Phlexible.console.info('!sourceIsContainer && targetType != root => true');
                 return true;
             }
 
-            if (debug) Phlexible.console.info('!sourceIsContainer => false');
+            if (this.debug) Phlexible.console.warn('!sourceIsContainer => false');
             return false;
         }
 
-        if (debug) Phlexible.console.info('=> true');
-
+        if (this.debug) Phlexible.console.info('=> true');
         return true;
+        */
     }
 });

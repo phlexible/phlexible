@@ -106,6 +106,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
 
                                                     if (e.dropNode.attributes.type == 'referenceroot') {
                                                         e.dropNode.text = e.dropNode.attributes.properties.root.reference_title;
+                                                        e.dropNode.allowChildren = true;
                                                         e.dropNode.attributes.type = 'reference';
                                                         e.dropNode.attributes.ds_id = new Ext.ux.GUID().toString();
                                                         e.dropNode.attributes.reference = {
@@ -116,20 +117,58 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                                                         e.dropNode.attributes.iconCls = 'p-elementtype-field_reference-icon';
 
                                                         e.dropNode.firstChild.cascade(function (node) {
+                                                            node.allowChildren = true;
                                                             node.attributes.reference = true;
                                                             node.attributes.cls += ' p-elementtypes-reference';
                                                         });
-
 //                                                    Phlexible.msg('Element Type Action', 'Reference Element Type "' + e.dropNode.text + '" added from Template Tree to Edit Tree.');
                                                     } else {
+                                                        e.dropNode.allowChildren = true;
                                                         e.dropNode.attributes.ds_id = new Ext.ux.GUID().toString();
                                                         e.dropNode.cascade(function (node) {
+                                                            node.allowChildren = true;
                                                             node.attributes.ds_id = new Ext.ux.GUID().toString();
                                                         });
 //                                                    Phlexible.msg('Element Type Action', 'Node "' + e.dropNode.text + '" copied from Template Tree to Edit Tree.');
                                                     }
                                                     this.getEditTreePanel().setDirty();
                                                 }
+                                            },
+                                            nodedrop: function(e) {
+                                                var hasInvalidWorkingTitle = function(node) {
+                                                    var invalid = false;
+                                                    node.getOwnerTree().getRootNode().cascade(function(cascadeNode) {
+                                                        if (node.id !== -1
+                                                                && node.id !== cascadeNode.id
+                                                                && node.attributes.properties
+                                                                && cascadeNode.attributes.properties
+                                                                && node.attributes.properties.field
+                                                                && cascadeNode.attributes.properties.field
+                                                                && node.attributes.properties.field.working_title == cascadeNode.attributes.properties.field.working_title) {
+                                                            invalid = true;
+                                                            return false;
+                                                        }
+                                                    });
+                                                    return invalid;
+                                                }
+
+                                                e.dropNode.attributes.invalid = hasInvalidWorkingTitle(e.dropNode);
+                                                e.dropNode.attributes.editable = true;
+
+                                                e.dropNode.ui.addClass('dirty');
+                                                if (e.dropNode.attributes.invalid) {
+                                                    e.dropNode.ui.addClass('invalid');
+                                                }
+
+                                                e.dropNode.cascade(function(node) {
+                                                    node.attributes.invalid = hasInvalidWorkingTitle(e.dropNode);
+                                                    e.dropNode.attributes.editable = true;
+
+                                                    node.ui.addClass('dirty');
+                                                    if (node.attributes.invalid) {
+                                                        node.ui.addClass('invalid');
+                                                    }
+                                                });
                                             },
                                             publish: this.onElementtypePublish,
                                             beforereset: this.onElementtypeReset,

@@ -586,7 +586,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
 
     validateSaveNodes: function(node) {
         var valid = true;
-        node.eachChild(function() {
+        node.cascade(function(node) {
             if (node.attributes.invalid) {
                 valid = false;
                 return false;
