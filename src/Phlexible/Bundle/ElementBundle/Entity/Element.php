@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 
 /**
  * Element

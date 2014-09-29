@@ -10,11 +10,8 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
-use Phlexible\Bundle\ElementBundle\Entity\Element;
-use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;

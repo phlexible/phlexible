@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

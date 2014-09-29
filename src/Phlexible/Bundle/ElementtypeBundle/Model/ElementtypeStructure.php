@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
 
 /**

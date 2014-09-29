@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

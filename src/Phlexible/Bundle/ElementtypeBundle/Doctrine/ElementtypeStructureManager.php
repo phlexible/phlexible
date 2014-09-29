@@ -10,13 +10,13 @@ namespace Phlexible\Bundle\ElementtypeBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Repository\ElementtypeStructureNodeRepository;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeStructureEvent;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -93,7 +93,7 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
     }
 
     /**
-     * @param Elementtype $referenceElementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $referenceElementtype
      *
      * @return ElementtypeStructureNode[]
      */
@@ -133,7 +133,7 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
         $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
 
         foreach ($rii as $node) {
-            /* @var $node ElementtypeStructureNode */
+            /* @var $node \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode */
 
             $this->entityManager->persist($node);
         }
@@ -174,7 +174,7 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
      * @param ElementtypeStructure     $structure
      * @param int                      $id
      * @param int                      $version
-     * @param ElementtypeStructureNode $referenceParentNode
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode $referenceParentNode
      */
     private function doLoad(ElementtypeStructure $structure, $id, $version, $referenceParentNode = null)
     {

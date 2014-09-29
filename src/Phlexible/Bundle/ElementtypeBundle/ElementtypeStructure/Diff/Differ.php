@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Diff;
 
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
  * Differ
@@ -57,7 +57,7 @@ class Differ
 
         $rii = new \RecursiveIteratorIterator($toStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $toNode) {
-            /* @var $toNode ElementtypeStructureNode */
+            /* @var $toNode \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode */
 
             if (!$fromStructure->getNode($toNode->getDsId())) {
                 $diff->addAdded($toNode);

@@ -17,8 +17,8 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
  * Element service
@@ -147,7 +147,7 @@ class ElementService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
      *
      * @return Element[]
      */
@@ -214,7 +214,7 @@ class ElementService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
      * @param string      $masterLanguage
      * @param string      $userId
      *

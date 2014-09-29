@@ -14,8 +14,8 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
  * Element version data
@@ -143,7 +143,7 @@ class ElementStructureLoader
 
         $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $node) {
-            /* @var $node ElementtypeStructureNode */
+            /* @var $node \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode */
             if ($node->isRepeatable() || $node->isOptional()) {
                 if (isset($structureRows[$node->getDsId()])) {
                     foreach ($structureRows[$node->getDsId()] as $row) {

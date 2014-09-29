@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Usage;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -34,7 +34,7 @@ class UsageManager
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
      *
      * @return Usage[]
      */

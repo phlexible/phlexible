@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeApply;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 
 /**

@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\File\Loader;
 
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\GuiBundle\Locator\PatternLocator;
 
 /**
@@ -149,7 +149,7 @@ class XmlLoader implements LoaderInterface
      * @param ElementtypeStructure     $elementtypeStructure
      * @param ElementtypeStructureNode $parentNode
      */
-    private function loadNode(\SimpleXMLElement $node, ElementtypeStructure $elementtypeStructure, ElementtypeStructureNode $parentNode = null)
+    private function loadNode(\SimpleXMLElement $node, ElementtypeStructure $elementtypeStructure, ElementtypeStructureNode $parentNode = null, $isReferenced = false)
     {
         $nodeAttr = $node->attributes();
         $type = (string) $nodeAttr['type'];
@@ -208,13 +208,14 @@ class XmlLoader implements LoaderInterface
             ->setConfiguration($configuration)
             ->setValidation($validation)
             ->setLabels($labels)
-            ->setReferenceElementtypeId($referenceElementtypeId);
+            ->setReferenceElementtypeId($referenceElementtypeId)
+            ->setReferenced($isReferenced);
 
         $elementtypeStructure->addNode($elementtypeStructureNode);
 
         if ($node->children) {
             foreach ($node->children->node as $childNode) {
-                $this->loadNode($childNode, $elementtypeStructure, $elementtypeStructureNode);
+                $this->loadNode($childNode, $elementtypeStructure, $elementtypeStructureNode, $isReferenced);
             }
         }
 
@@ -222,7 +223,7 @@ class XmlLoader implements LoaderInterface
             $referenceFilename = current($this->locator->locate("$referenceElementtypeId.xml", 'elementtypes'));
             $referenceXml = simplexml_load_file($referenceFilename);
             foreach ($referenceXml->structure->node as $referenceNode) {
-                $this->loadNode($referenceNode, $elementtypeStructure, $elementtypeStructureNode);
+                $this->loadNode($referenceNode, $elementtypeStructure, $elementtypeStructureNode, true);
             }
         }
     }

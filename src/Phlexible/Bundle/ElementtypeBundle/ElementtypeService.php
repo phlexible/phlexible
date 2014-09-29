@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle;
 
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Usage\UsageManager;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
@@ -58,7 +58,7 @@ class ElementtypeService
      *
      * @param int $elementtypeId
      *
-     * @return Elementtype
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype
      */
     public function findElementtype($elementtypeId)
     {
@@ -70,7 +70,7 @@ class ElementtypeService
      *
      * @param string $uniqueId
      *
-     * @return Elementtype
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype
      */
     public function findElementtypeByUniqueID($uniqueId)
     {
@@ -82,7 +82,7 @@ class ElementtypeService
      *
      * @param string $type
      *
-     * @return Elementtype[]
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype[]
      */
     public function findElementtypeByType($type)
     {
@@ -99,7 +99,7 @@ class ElementtypeService
     /**
      * Find all element types
      *
-     * @return Elementtype[]
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype[]
      */
     public function findAllElementtypes()
     {
@@ -107,9 +107,9 @@ class ElementtypeService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
      *
-     * @return Elementtype
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype
      */
     public function findElementtypeVersion(Elementtype $elementtype)
     {
@@ -117,9 +117,9 @@ class ElementtypeService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
      *
-     * @return Elementtype
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype
      */
     public function findLatestElementtypeVersion(Elementtype $elementtype)
     {
@@ -127,7 +127,7 @@ class ElementtypeService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
      *
      * @return ElementtypeStructure
      */
@@ -139,7 +139,7 @@ class ElementtypeService
     /**
      * @param Elementtype $elementtype
      *
-     * @return Elementtype[]
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype[]
      */
     public function findAllowedParents(Elementtype $elementtype)
     {
@@ -154,7 +154,7 @@ class ElementtypeService
     /**
      * @param Elementtype $elementtype
      *
-     * @return Elementtype[]
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype[]
      */
     public function findAllowedChildren(Elementtype $elementtype)
     {
@@ -167,9 +167,9 @@ class ElementtypeService
     }
 
     /**
-     * @param Elementtype $referenceElementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $referenceElementtype
      *
-     * @return Elementtype[]
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype[]
      */
     public function findElementtypesUsingReferenceElementtype(Elementtype $referenceElementtype)
     {
@@ -239,7 +239,7 @@ class ElementtypeService
     /**
      * Delete an Element Type
      *
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
      *
      * @return string
      */
@@ -262,10 +262,10 @@ class ElementtypeService
     /**
      * Duplicate an elementtype
      *
-     * @param Elementtype $sourceElementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $sourceElementtype
      * @param string      $userId
      *
-     * @return Elementtype
+     * @return \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype
      */
     public function duplicateElementtype(Elementtype $sourceElementtype, $userId)
     {
@@ -286,7 +286,7 @@ class ElementtypeService
         $idMap = array();
         $dsIdMap = array();
         foreach ($rii as $sourceNode) {
-            /* @var $sourceNode ElementtypeStructureNode */
+            /* @var $sourceNode \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode */
             $node = clone $sourceNode;
 
             $idMap[$sourceNode->getId()] = $node;

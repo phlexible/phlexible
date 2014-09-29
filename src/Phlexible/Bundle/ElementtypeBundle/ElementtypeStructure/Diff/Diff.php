@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Diff;
 
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
  * Diff
@@ -22,7 +22,7 @@ class Diff
     private $removed = array();
 
     /**
-     * @param ElementtypeStructureNode $newNode
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode $newNode
      *
      * @return $this
      */
@@ -63,7 +63,7 @@ class Diff
     }
 
     /**
-     * @param ElementtypeStructureNode $oldNode
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode $oldNode
      *
      * @return $this
      */

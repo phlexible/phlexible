@@ -9,10 +9,9 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Command;
 
 use Doctrine\DBAL\Connection;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Diff\Differ;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\File\Loader;
 
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
  * Loader interface
@@ -18,7 +18,7 @@ use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 interface DumperInterface
 {
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
      */
     public function dump(Elementtype $elementtype);
 }

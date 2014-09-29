@@ -15,8 +15,8 @@ use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer a
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;

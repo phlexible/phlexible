@@ -10,9 +10,9 @@ namespace Phlexible\Bundle\ElementtypeBundle\File\Loader;
 
 use FluentDOM\Document;
 use FluentDOM\Element;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
  * XML loader
@@ -79,7 +79,7 @@ class XmlDumper implements DumperInterface
 
     /**
      * @param ElementtypeStructure     $structure
-     * @param ElementtypeStructureNode $node
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode $node
      * @param Element                  $element
      *
      * @return Element

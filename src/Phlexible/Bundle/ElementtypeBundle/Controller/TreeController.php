@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -121,7 +121,7 @@ class TreeController extends Controller
      * Build an Element Type data tree
      *
      * @param ElementtypeStructure       $structure
-     * @param ElementtypeStructureNode[] $nodes
+     * @param \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode[] $nodes
      * @param string                     $language
      * @param string                     $mode
      * @param bool                       $reference

@@ -6,10 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementtypeBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 /**
  * Elementtype structure node

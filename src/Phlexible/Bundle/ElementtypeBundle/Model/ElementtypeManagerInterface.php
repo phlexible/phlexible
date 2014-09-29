@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
-
 /**
  * Elementtype manager interface
  *

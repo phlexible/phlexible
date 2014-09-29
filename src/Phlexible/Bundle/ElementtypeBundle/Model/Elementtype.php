@@ -6,11 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementtypeBundle\Entity;
+namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeIdentifier;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**

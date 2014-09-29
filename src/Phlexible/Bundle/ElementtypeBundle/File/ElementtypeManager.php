@@ -10,15 +10,14 @@ namespace Phlexible\Bundle\ElementtypeBundle\File;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypesMessage;
-use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeEvent;
 use Phlexible\Bundle\ElementtypeBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementtypeBundle\Exception\DeleteCancelledException;
 use Phlexible\Bundle\ElementtypeBundle\Exception\UpdateCancelledException;
 use Phlexible\Bundle\ElementtypeBundle\File\Loader\DumperInterface;
 use Phlexible\Bundle\ElementtypeBundle\File\Loader\LoaderInterface;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeManagerInterface;
-use Phlexible\Bundle\GuiBundle\Locator\PatternLocator;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
