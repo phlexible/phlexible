@@ -64,7 +64,7 @@ class LayoutController extends Controller
         $layouts = array();
         $layoutareas = array();
         foreach ($elementtypeService->findElementtypeByType('layout') as $layoutarea) {
-            if (in_array($elementtype->getId(), $elementtypeService->findAllowedParentIds($layoutarea))) {
+            if (in_array($elementtype, $elementtypeService->findAllowedParents($layoutarea))) {
                 $layoutareas[] = $layoutarea;
             }
         }
@@ -475,13 +475,11 @@ class LayoutController extends Controller
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $elementtype = $elementtypeService->findElementtype($id);
-        $children = $elementtypeService->findAllowedChildrenIds($elementtype);
+        $childElementtypes = $elementtypeService->findAllowedChildren($elementtype);
 
         $data = array();
-        foreach ($children as $childElementtypeId) {
-            $childElementtype = $elementtypeService->findElementtype($childElementtypeId);
-
-            $data[$childElementtype->getTitle() . $childElementtypeId] = array(
+        foreach ($childElementtypes as $childElementtype) {
+            $data[$childElementtype->getTitle() . $childElementtype->getId()] = array(
                 'id'    => $childElementtype->getId(),
                 'title' => $childElementtype->getTitle(),
                 'icon'  => $iconResolver->resolveElementtype($childElementtype),

@@ -39,11 +39,11 @@ Phlexible.elementtypes.FieldMap = {
     validation: {},
     configuration: {},
     labels: {
-        fieldlabel: {
+        fieldLabel: {
             de: '',
             en: ''
         },
-        boxlabel: {
+        boxLabel: {
             de: '',
             en: ''
         },
@@ -55,7 +55,7 @@ Phlexible.elementtypes.FieldMap = {
             de: '',
             en: ''
         },
-        context_help: {
+        contextHelp: {
             de: '',
             en: ''
         }

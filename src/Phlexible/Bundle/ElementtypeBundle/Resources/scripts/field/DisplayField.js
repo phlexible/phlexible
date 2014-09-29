@@ -9,14 +9,14 @@ Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, ite
         hideLabel = false;
     } else if (parentConfig.singleLine) {
         hideLabel = true;
-        label = item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')];
+        label = item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')];
     } else if (item.configuration.hide_label) {
         hideLabel = false;
         label = '';
         labelSeparator = '';
     } else {
         hideLabel = false;
-        label = item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')];
+        label = item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')];
     }
 
     var field_prefix = 'field_' + item.dsId + '_';
@@ -32,7 +32,7 @@ Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, ite
         dsId: item.dsId,
 
         fieldLabel: label,
-        helpText: (item.labels.context_help[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
+        helpText: (item.labels.contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
         prefix: (item.labels.prefix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
         suffix: (item.labels.suffix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
         labelSeparator: labelSeparator,

@@ -1,7 +1,7 @@
 Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'panel',
-        title: item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+        title: item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
         layout: 'form',
         cls: 'p-elements-data-tab',
         autoHeight: true,

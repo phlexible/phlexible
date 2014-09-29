@@ -214,30 +214,17 @@ class ElementService
     }
 
     /**
-     * @param ElementVersion $elementVersion
-     *
-     * @return ElementtypeVersion
-     */
-    public function findElementtypeVersion(ElementVersion $elementVersion)
-    {
-        return $this->elementtypeService->findElementtypeVersion(
-            $this->findElementtype($elementVersion->getElement()),
-            $elementVersion->getElementtypeVersion()
-        );
-    }
-
-    /**
-     * @param ElementtypeVersion $elementtypeVersion
-     * @param string             $masterLanguage
-     * @param string             $userId
+     * @param Elementtype $elementtype
+     * @param string      $masterLanguage
+     * @param string      $userId
      *
      * @return Element
      */
-    public function createElement(ElementtypeVersion $elementtypeVersion, $masterLanguage, $userId)
+    public function createElement(Elementtype $elementtype, $masterLanguage, $userId)
     {
         $element = new Element();
         $element
-            ->setElementtypeId($elementtypeVersion->getElementtype()->getId())
+            ->setElementtypeId($elementtype->getId())
             ->setMasterLanguage($masterLanguage)
             ->setLatestVersion(1)
             ->setCreateUserId($userId)
@@ -247,7 +234,7 @@ class ElementService
         $elementVersion
             ->setVersion(1)
             ->setElement($element)
-            ->setElementtypeVersion($elementtypeVersion->getVersion())
+            ->setElementtypeVersion($elementtype->getRevision())
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime());
 
@@ -283,13 +270,12 @@ class ElementService
         $oldElementVersion = $this->findLatestElementVersion($element);
 
         $elementtype = $this->findElementtype($element);
-        $elementtypeVersion = $this->getElementtypeService()->findLatestElementtypeVersion($elementtype);
 
         $elementVersion = clone $oldElementVersion;
         $elementVersion
             ->setId(null)
             ->setElement($element)
-            ->setElementtypeVersion($elementtypeVersion->getVersion())
+            ->setElementtypeVersion($elementtype->getRevision())
             ->setVersion($oldElementVersion->getVersion() + 1)
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime())

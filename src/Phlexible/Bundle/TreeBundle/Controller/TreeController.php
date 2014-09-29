@@ -96,19 +96,17 @@ class TreeController extends Controller
         $element = $elementService->findElement($eid);
         $elementtype = $elementService->findElementtype($element);
 
-        $childrenIds = $elementService->getElementtypeService()->findAllowedChildrenIds($elementtype);
+        $childElementtypes = $elementService->getElementtypeService()->findAllowedChildren($elementtype);
 
         $data = array();
-        foreach ($childrenIds as $childElementtypeId) {
-            $childElementtype = $elementService->getElementtypeService()->findElementtype($childElementtypeId);
-
+        foreach ($childElementtypes as $childElementtype) {
             if (!in_array($childElementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE))) {
                 continue;
             }
 
-            $data[$childElementtype->getTitle().'_'.$childElementtype->getId()] = array(
+            $data[$childElementtype->getName().'_'.$childElementtype->getId()] = array(
                 'id'    => $childElementtype->getId(),
-                'title' => $childElementtype->getTitle(),
+                'title' => $childElementtype->getName(),
                 'icon'  => $iconResolver->resolveElementtype($childElementtype),
                 'type'  => $childElementtype->getType(),
             );

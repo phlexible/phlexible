@@ -34,20 +34,20 @@ class ArraySerializer implements SerializerInterface
         foreach ($rii as $node) {
             /* @var $node ElementtypeStructureNode */
 
-            $nodeData = $nodeDatas[$node->getId()] = new \ArrayObject(
+            $nodeData = $nodeDatas[$node->getDsId()] = new \ArrayObject(
                 array(
                     'comment'          => $node->getComment(),
                     'configuration'    => $node->getConfiguration(),
                     'contentchannels'  => $node->getContentChannels(),
                     'dsId'             => $node->getDsId(),
-                    'id'               => $node->getId(),
+                    'id'               => md5(serialize($node)),
                     'labels'           => $this->normalizeLabels($node),
                     'name'             => $node->getName(),
                     'options'          => $node->getOptions(),
                     'parentDsId'       => $node->getParentDsId(),
-                    'parentId'         => $node->getParentId(),
-                    'referenceId'      => $node->getReferenceElementtype() ? $node->getReferenceElementtype()->getId() : null,
-                    'referenceVersion' => $node->getReferenceVersion() ?: null,
+                    'parentId'         => md5(serialize($node->getParentNode())),
+                    'referenceId'      => $node->getReferenceElementtypeId() ? $node->getReferenceElementtypeId() : null,
+                    'referenceVersion' => $node->getReferenceElementtypeId() ? 1 : null,
                     'type'             => $node->getType(),
                     'validation'       => $node->getValidation(),
                     'children'         => array()
@@ -55,8 +55,8 @@ class ArraySerializer implements SerializerInterface
                 \ArrayObject::ARRAY_AS_PROPS
             );
 
-            if ($node->getParentId()) {
-                $nodeDatas[$node->getParentId()]['children'][] = $nodeData;
+            if ($node->getParentDsId()) {
+                $nodeDatas[$node->getParentDsId()]['children'][] = $nodeData;
             } elseif (!in_array($node->getType(), array('referenceroot', 'reference'))) {
                 if (!empty($rootNode)) {
                     throw new \Exception('duplicate root: ' . print_r($nodeData, 1));
@@ -78,8 +78,8 @@ class ArraySerializer implements SerializerInterface
         $labels = $node->getLabels();
 
         $labels += array(
-            'fieldlabel' => array(),
-            'context_help' => array(),
+            'fieldLabel' => array(),
+            'contextHelp' => array(),
             'prefix' => array(),
             'suffix' => array()
         );

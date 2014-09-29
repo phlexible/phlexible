@@ -64,8 +64,7 @@ class ListController extends Controller
         $element = $elementService->findElement($eid);
         $elementMasterLanguage = $element->getMasterLanguage();
         $elementVersion = $elementService->findLatestElementVersion($element);
-        $elementTypeVersion = $elementService->findElementtypeVersion($elementVersion);
-        $elementType = $elementTypeVersion->getElementtype();
+        $elementtype = $elementService->findElementtype($element);
         //$elementData = $element->getData(0, 'en');
 
         if (!$language) {
@@ -96,8 +95,8 @@ class ListController extends Controller
             'teaser_id'       => (int) 0,
             'eid'             => (int) $eid,
             'title'           => $elementVersion->getBackendTitle($language, $elementMasterLanguage),
-            'element_type_id' => (int) $elementType->getId(),
-            'element_type'    => $elementType->getTitle(),
+            'element_type_id' => $elementtype->getId(),
+            'element_type'    => $elementtype->getName(),
             'icon'            => $iconResolver->resolveTreeNode($node, $language),
             'author'          => 'author',
             'version'         => $elementVersion->getVersion(),
@@ -113,7 +112,7 @@ class ListController extends Controller
             'status'          => ' o_O ',
             'rights'          => $userRights,
             'qtip'            =>
-                $elementType->getTitle() . ', Version ' . $elementTypeVersion->getVersion() . '<br>' .
+                $elementtype->getTitle() . ', Version ' . $elementtype->getRevision() . '<br>' .
                 'Version ' . $elementVersion->getVersion() . '<br>' .
                 37 . ' Versions<br>'
         );
@@ -154,16 +153,15 @@ class ListController extends Controller
             $childElement = $elementService->findElement($node->getTypeId());
             $childElementVersion = $elementService->findLatestElementVersion($childElement);
             $childTitle = $childElementVersion->getBackendTitle($language, $childElement->getMasterLanguage());
-            $childElementType = $elementService->findElementtype($childElement);
-            $childElementTypeVersion = $elementService->findElementtypeVersion($childElementVersion);
+            $childElementtype = $elementService->findElementtype($childElement);
 
             $data[] = array(
                 'tid'             => (int) $childNode->getId(),
                 'eid'             => (int) $childElement->getEid(),
                 '_type'           => 'element',
                 'title'           => $childTitle,
-                'element_type_id' => (int) $childElementType->getID(),
-                'element_type'    => $childElementType->getTitle(),
+                'element_type_id' => $childElementtype->getId(),
+                'element_type'    => $childElementtype->getName(),
                 'navigation'      => 0, //$childNode->inNavigation($childElementVersion->getVersion()),
                 'restricted'      => 0, //$childNode->isRestricted($childElementVersion->getVersion()),
                 'icon'            => $iconResolver->resolveTreeNode($childNode, $language),
@@ -179,8 +177,8 @@ class ListController extends Controller
                 'version_online'  => 2, //(int) $childNode->getOnlineVersion($language),
                 'status'          => '>o>',
                 'rights'          => $userRights,
-                'qtip'            => $childElementType->getTitle() . ', ' .
-                    'ET Version ' . $childElementTypeVersion->getVersion() . '<br>' .
+                'qtip'            => $childElementtype->getTitle() . ', ' .
+                    'ET Version ' . $childElementtype->getRevision() . '<br>' .
                     'Version ' . $childElementVersion->getVersion() . '<br>',
             );
         }

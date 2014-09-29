@@ -80,7 +80,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
         $layouts = array();
         $layoutareas = array();
         foreach ($elementtypeService->findElementtypeByType('layout') as $layoutarea) {
-            if (in_array($elementtype->getId(), $elementtypeService->findAllowedParentIds($layoutarea))) {
+            if (in_array($elementtype, $elementtypeService->findAllowedParents($layoutarea))) {
                 $layoutareas[] = $layoutarea;
             }
         }

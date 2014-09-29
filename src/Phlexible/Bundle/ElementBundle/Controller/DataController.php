@@ -110,8 +110,7 @@ class DataController extends Controller
         $elementtypeService = $elementService->getElementtypeService();
 
         $elementtype = $elementService->findElementtype($element);
-        $elementtypeVersion = $elementService->findElementtypeVersion($elementVersion);
-        $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
+        $elementtypeStructure = $elementtype->getStructure();
         $type = $elementtype->getType();
 
         // versions
@@ -195,16 +194,14 @@ class DataController extends Controller
 
         $allowedChildren = array();
         if (!$teaser) {
-            foreach ($elementtypeService->findAllowedChildrenIds($elementtype) as $allowedChildId) {
-                $childElementtype = $elementtypeService->findElementtype($allowedChildId);
-
+            foreach ($elementtypeService->findAllowedChildren($elementtype) as $childElementtype) {
                 if ($childElementtype->getType() !== 'full') {
                     continue;
                 }
 
                 $allowedChildren[] = array(
-                    $allowedChildId,
-                    $childElementtype->getTitle(),
+                    $childElementtype->getId(),
+                    $childElementtype->getName(),
                     $iconResolver->resolveElementtype($childElementtype),
                 );
             }
@@ -319,7 +316,7 @@ class DataController extends Controller
         $elementMetaSetResolver = $this->get('phlexible_element.element_meta_set_resolver');
         $elementMetaDataManager = $this->get('phlexible_element.element_meta_data_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
-        $metaSetId = $elementtypeVersion->getMetaSetId();
+        $metaSetId = $elementtype->getMetaSetId();
 
         if ($metaSetId) {
             $metaSet = $elementMetaSetResolver->resolve($elementVersion);
@@ -518,10 +515,9 @@ class DataController extends Controller
             ),
             'unique_id'        => $element->getUniqueID(),
             'et_id'            => $elementtype->getId(),
-            'et_title'         => $elementtype->getTitle(),
-            'et_version'       => $elementVersion->getElementTypeVersion()
-                . ' [' . $elementtypeService->findLatestElementtypeVersion($elementtype)->getVersion() . ']',
-            'et_unique_id'     => $elementtype->getUniqueId(),
+            'et_title'         => $elementtype->getName(),
+            'et_version'       => $elementVersion->getElementTypeVersion() . ' [' . $elementtype->getRevision() . ']',
+            'et_unique_id'     => $elementtype->getId(),
             'et_type'          => $elementtype->getType(),
             'author'           => $createUser->getDisplayName(),
             'create_date'      => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
@@ -550,7 +546,7 @@ class DataController extends Controller
             'meta'                => $meta,
             'redirects'           => $redirects,
             'default_tab'         => $elementtype->getDefaultTab(),
-            'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
+            'default_content_tab' => $elementtype->getDefaultContentTab(),
             'lockinfo'            => $lockInfo,
             'diff'                => $diffInfo,
             'urls'                => $urls,

@@ -36,8 +36,8 @@ class Element
     private $uniqueId;
 
     /**
-     * @var Elementtype
-     * @ORM\Column(name="elementtype_id", type="integer")
+     * @var string
+     * @ORM\Column(name="elementtype_id", type="string")
      */
     private $elementtypeId;
 
@@ -106,7 +106,7 @@ class Element
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getElementtypeId()
     {
@@ -114,7 +114,7 @@ class Element
     }
 
     /**
-     * @param int $elementtypeId
+     * @param string $elementtypeId
      *
      * @return $this
      */

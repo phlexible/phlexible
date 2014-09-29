@@ -21,14 +21,14 @@ Phlexible.fields.FieldHelper = {
             hideLabel = false;
         } else if (parentConfig.singleLine) {
             hideLabel = true;
-            label = item.labels.fieldlabel[language];
+            label = item.labels.fieldLabel[language];
         } else if (item.configuration.hide_label) {
             hideLabel = false;
             label = '';
             labelSeparator = '';
         } else {
             hideLabel = false;
-            label = item.labels.fieldlabel[language];
+            label = item.labels.fieldLabel[language];
         }
 
         var itemValue = null;
@@ -55,7 +55,7 @@ Phlexible.fields.FieldHelper = {
             dsId: item.dsId,
 
             fieldLabel: label,
-            helpText: (item.labels.context_help[language] || ''),
+            helpText: (item.labels.contextHelp[language] || ''),
             prefix: (item.labels.prefix[language] || ''),
             suffix: (item.labels.suffix[language] || ''),
             labelSeparator: labelSeparator,

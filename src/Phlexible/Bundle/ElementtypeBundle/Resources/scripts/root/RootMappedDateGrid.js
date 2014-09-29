@@ -115,7 +115,7 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
                         return;
                     }
 
-                    var fieldTitle = dragData.node.attributes.properties.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] + ' (' + dragData.node.attributes.properties.field.working_title + ')';
+                    var fieldTitle = dragData.node.attributes.properties.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] + ' (' + dragData.node.attributes.properties.field.working_title + ')';
                     var r = new Ext.data.Record({
                         ds_id: dragData.node.attributes.ds_id,
                         field: fieldTitle,

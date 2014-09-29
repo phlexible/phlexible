@@ -1,7 +1,7 @@
 Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'panel',
-        html: item.content || item.labels.context_help[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+        html: item.content || item.labels.contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
         plain: true,
         border: false,
         cls: 'p-fields-label'

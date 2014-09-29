@@ -165,23 +165,23 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
     loadData: function (fieldData, fieldType) {
         this.updateVisibility(fieldType);
 
-        fieldData.fieldlabel = fieldData.fieldlabel || {};
-        fieldData.boxlabel = fieldData.boxlabel || {};
+        fieldData.fieldLabel = fieldData.fieldLabel || {};
+        fieldData.boxLabel = fieldData.boxLabel || {};
         fieldData.prefix = fieldData.prefix || {};
         fieldData.suffix = fieldData.suffix || {};
-        fieldData.context_help = fieldData.context_help || {};
+        fieldData.contextJelp = fieldData.contextHelp || {};
 
         this.getForm().setValues([
-            {id: 'fieldlabel_de', value: fieldData.fieldlabel.de},
-            {id: 'fieldlabel_en', value: fieldData.fieldlabel.en},
-            {id: 'boxlabel_de', value: fieldData.boxlabel.de},
-            {id: 'boxlabel_en', value: fieldData.boxlabel.en},
+            {id: 'fieldlabel_de', value: fieldData.fieldLabel.de},
+            {id: 'fieldlabel_en', value: fieldData.fieldLabel.en},
+            {id: 'boxlabel_de', value: fieldData.boxLabel.de},
+            {id: 'boxlabel_en', value: fieldData.boxLabel.en},
             {id: 'prefix_de', value: fieldData.prefix.de},
             {id: 'prefix_en', value: fieldData.prefix.en},
             {id: 'suffix_de', value: fieldData.suffix.de},
             {id: 'suffix_en', value: fieldData.suffix.en},
-            {id: 'context_help_de', value: fieldData.context_help.de},
-            {id: 'context_help_en', value: fieldData.context_help.en}
+            {id: 'context_help_de', value: fieldData.contextHelp.de},
+            {id: 'context_help_en', value: fieldData.contextHelp.en}
         ]);
 
         this.isValid();
@@ -191,11 +191,11 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
         var values = this.getForm().getValues();
 
         return {
-            fieldlabel: {
+            fieldLabel: {
                 de: values.fieldlabel_de,
                 en: values.fieldlabel_en
             },
-            boxlabel: {
+            boxLabel: {
                 de: values.boxlabel_de,
                 en: values.boxlabel_en
             },
@@ -207,7 +207,7 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
                 de: values.suffix_de,
                 en: values.suffix_en
             },
-            context_help: {
+            contextHelp: {
                 de: values.context_help_de,
                 en: values.context_help_en
             }

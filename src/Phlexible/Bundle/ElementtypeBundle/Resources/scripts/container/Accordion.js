@@ -1,7 +1,7 @@
 Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'accordion',
-        title: item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+        title: item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
         layout: 'form',
         frame: false,
         border: false,
@@ -33,7 +33,7 @@ Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, 
                 if (isRepeatable || isOptional) {
                     allowedItems[child.dsId] = {
                         max: maxRepeat,
-                        title: child.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')]
+                        title: child.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')]
                     };
                     has = true;
                 }

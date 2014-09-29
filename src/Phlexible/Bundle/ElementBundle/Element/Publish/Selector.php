@@ -286,7 +286,7 @@ class Selector
 
         $layoutareas = array();
         foreach ($this->elementService->getElementtypeService()->findElementtypeByType('layout') as $layoutarea) {
-            if (in_array($elementtype->getId(), $this->elementService->getElementtypeService()->findAllowedParentIds($layoutarea))) {
+            if (in_array($elementtype, $this->elementService->getElementtypeService()->findAllowedParents($layoutarea))) {
                 $layoutareas[] = $layoutarea;
             }
         }

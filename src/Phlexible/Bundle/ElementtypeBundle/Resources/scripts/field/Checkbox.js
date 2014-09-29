@@ -3,7 +3,7 @@ Phlexible.fields.Registry.addFactory('checkbox', function (parentConfig, item, v
 
     Ext.apply(config, {
         xtype: 'xcheckbox',
-        boxLabel: (item.labels.boxlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
+        boxLabel: (item.labels.boxLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
         checked: config.value,
 
         submitOffValue: '',

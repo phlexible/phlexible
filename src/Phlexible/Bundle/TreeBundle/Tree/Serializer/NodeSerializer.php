@@ -148,18 +148,18 @@ class NodeSerializer
         #}
         */
 
-        $elementtypeVersion = $this->elementService->findElementtypeVersion($elementVersion);
-        $elementtype = $elementtypeVersion->getElementtype();
-
-        $allowedElementTypeIds = $this->elementService->getElementtypeService()->findAllowedChildrenIds($elementtype);
+        $elementtype = $this->elementService->findElementtype($element);
+        $allowedElementtypeIds = array();
+        foreach ($this->elementService->getElementtypeService()->findAllowedChildren($elementtype) as $allowedElementtype) {
+            $allowedElementtypeIds[] = $allowedElementtype->getId();
+        }
 
         $qtip = 'TID: ' . $node->getId() . '<br />' .
             'EID: ' . $element->getEid() . '<br />' .
             'Version: ' . $elementVersion->getVersion() . '<br />' .
             '<hr>' .
-            'Element Type: ' . $elementtype->getTitle() . '<br />' .
-            'Element Type Version: ' . $elementtypeVersion->getVersion() . ' [' . $elementtypeVersion->getVersion(
-            ) . ']' .
+            'Element Type: ' . $elementtype->getName() . '<br />' .
+            'Element Type Version: ' . $elementtype->getRevision() .
             $lockQtip;
 
         $data = array(
@@ -169,20 +169,20 @@ class NodeSerializer
             'icon'                => $this->iconResolver->resolveTreeNode($node, $language),
             'navigation'          => $node->getInNavigation(),
             'restricted'          => $node->getNeedAuthentication(),
-            'element_type'        => $elementtype->getTitle(),
+            'element_type'        => $elementtype->getName(),
             'element_type_id'     => $elementtype->getId(),
             'element_type_type'   => $elementtype->getType(),
             'alias'               => 1, //$node->isInstance(),
             'allow_drag'          => true,
             'sort_mode'           => $node->getSortMode(),
             'areas'               => array(355),
-            'allowed_et'          => $allowedElementTypeIds,
+            'allowed_et'          => $allowedElementtypeIds,
             'is_published'        => $this->stateManager->isPublished($node, $language),
             'rights'              => $userRights,
             'qtip'                => $qtip,
             'allow_children'      => $elementtype->getHideChildren() ? false : true,
             'default_tab'         => $elementtype->getDefaultTab(),
-            'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
+            'default_content_tab' => $elementtype->getDefaultContentTab(),
             'masterlanguage'      => $element->getMasterLanguage()
         );
 

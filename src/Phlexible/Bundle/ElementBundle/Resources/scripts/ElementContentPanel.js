@@ -96,7 +96,7 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
              Ext.each(structure, function(item) {
              var config = {
              xtype: 'panel',
-             title: noTitle ? null : item.labels.fieldlabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+             title: noTitle ? null : item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
              iconCls: noTitle ? null : 'p-element-tab-icon',
              hideMode: 'offsets',
              autoScroll: true,

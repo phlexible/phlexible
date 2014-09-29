@@ -131,7 +131,6 @@ class ElementConfigurator implements ConfiguratorInterface
         }
 
         $elementtype = $this->elementService->findElementtype($element);
-        $elementtypeVersion = $this->elementService->findElementtypeVersion($elementVersion);
 
         /*
         if ($forward = $elementVersion->getMappedField('forward'))
