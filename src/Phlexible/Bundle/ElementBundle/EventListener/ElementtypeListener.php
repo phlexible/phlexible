@@ -57,18 +57,18 @@ class ElementtypeListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            ElementtypeEvents::VERSION_CREATE => 'onElementtypeVersionCreate',
+            ElementtypeEvents::UPDATE => 'onElementtypeUpdate',
         );
     }
 
     /**
-     * @param ElementtypeVersionEvent $event
+     * @param ElementtypeEvent $event
      */
-    public function onElementtypeVersionCreate(ElementtypeVersionEvent $event)
+    public function onElementtypeUpdate(ElementtypeEvent $event)
     {
-        $elementtypeVersion = $event->getElementtypeVersion();
+        $elementtype = $event->getElementtype();
 
-        $elements = $this->elementService->findElementsByElementtype($elementtypeVersion->getElementtype());
+        $elements = $this->elementService->findElementsByElementtype($elementtype);
 
         foreach ($elements as $element) {
             $latestElementVersion = $this->elementService->findLatestElementVersion($element);
@@ -83,7 +83,7 @@ class ElementtypeListener implements EventSubscriberInterface
                 $element,
                 $elementStructure,
                 null,
-                $elementtypeVersion->getCreateUserId()
+                $elementtype->getModifyUserId()
             );
         }
 

@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class UpdateCancelledException extends Exception
+class UpdateCancelledException extends \RuntimeException
 {
 
 }
