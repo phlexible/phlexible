@@ -57,11 +57,9 @@ class TreeController extends Controller
         $type = $elementtype->getType(); // != 'reference' ? 'root' : 'referenceroot';
 
         $children = array();
-        $rootID = '';
         $rootDsId = '';
         $rootType = 'root';
         if ($rootNode) {
-            $rootID = $rootNode->getId();
             $rootDsId = $rootNode->getDsId();
             $rootType = $rootNode->getType();
             $children = $elementtypeStructure->getChildNodes($rootNode->getDsId());
@@ -74,13 +72,13 @@ class TreeController extends Controller
 
         $data = array(
             array(
-                'text'                 => $elementtype->getTitle() .
-                    ' [v' . $elementtypeVersion->getVersion() . ', ' .
+                'text'                 => $elementtype->getName() .
+                    ' [v' . $elementtypeVersion->getRevision() . ', ' .
                     $elementtype->getType() . ']',
-                'id'                   => $rootID,
+                'id'                   => md5(serialize($rootNode)),
                 'ds_id'                => $rootDsId,
                 'element_type_id'      => $elementtype->getId(),
-                'element_type_version' => $elementtypeVersion->getVersion(),
+                'element_type_version' => $elementtypeVersion->getRevision(),
                 'icon'                 => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
                 'cls'                  => 'p-elementtypes-type-' . $type,
                 'leaf'                 => false,
@@ -91,10 +89,10 @@ class TreeController extends Controller
                 'editable'             => $mode == 'edit',
                 'properties'           => array(
                     'root' => array(
-                        'title'               => $elementtype->getTitle(),
-                        'reference_title'     => $elementtype->getTitle() .
-                            ' [v' . $elementtypeVersion->getVersion() . ']',
-                        'unique_id'           => $elementtype->getUniqueID(),
+                        'title'               => $elementtype->getName(),
+                        'reference_title'     => $elementtype->getName() .
+                            ' [v' . $elementtypeVersion->getRevision() . ']',
+                        'unique_id'           => $elementtype->getId(),
                         'icon'                => $elementtype->getIcon(),
                         'hide_children'       => $elementtype->getHideChildren() ? 'on' : '',
                         'default_tab'         => $elementtype->getDefaultTab(),
@@ -147,8 +145,8 @@ class TreeController extends Controller
             /* @var $node ElementtypeStructureNode */
 
             $tmp = array(
-                'text'       => $node->getLabel('fieldlabel', $language) . ' (' . $node->getName() . ')',
-                'id'         => $node->getId(),
+                'text'       => $node->getLabel('fieldLabel', $language) . ' (' . $node->getName() . ')',
+                'id'         => md5(serialize($node)),
                 'ds_id'      => $node->getDsId(),
                 'cls'        => 'p-elementtypes-node p-elementtypes-type-' . $node->getType(
                     ) . ($reference ? ' p-elementtypes-reference' : ''),
@@ -191,17 +189,14 @@ class TreeController extends Controller
             if ($node->isReference()) {
                 $elementtypesService = $this->get('phlexible_elementtype.elementtype_service');
 
-                $referenceId = $node->getReferenceElementtype()->getId();
-                $referenceVersion = $node->getReferenceVersion();
-                $elementtype = $elementtypesService->findElementtype($referenceId);
-                $elementtypeVersion = $elementtypesService->findElementtypeVersion($elementtype, $referenceVersion);
+                $referenceElementtype = $elementtypesService->findElementtype($node->getReferenceElementtypeId());
                 $children = $structure->getChildNodes($node->getDsId());
                 $referenceRoot = $children[0];
 
-                $tmp['text'] = $elementtype->getTitle() . ' [v' . $elementtypeVersion->getVersion() . ']';
+                $tmp['text'] = $referenceElementtype->getName() . ' [v' . $referenceElementtype->getRevision() . ']';
                 $tmp['leaf'] = false;
                 $tmp['expanded'] = true;
-                $tmp['reference'] = array('refID' => $referenceId, 'refVersion' => $referenceVersion);
+                $tmp['reference'] = array('refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision());
                 $tmp['editable'] = false;
                 $tmp['allowDrag'] = true;
                 $tmp['children'] = $this->recurseTree(

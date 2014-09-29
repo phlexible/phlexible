@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ContentchannelBundle\File;
 
 use Phlexible\Bundle\ContentchannelBundle\File\Loader\LoaderInterface;
 use Phlexible\Bundle\ContentchannelBundle\Model\ContentchannelCollection;
+use Phlexible\Bundle\GuiBundle\Locator\PatternLocator;
 
 /**
  * Content channel loader
@@ -19,14 +20,9 @@ use Phlexible\Bundle\ContentchannelBundle\Model\ContentchannelCollection;
 class ContentchannelLoader
 {
     /**
-     * @var array
+     * @var PatternLocator
      */
-    private $bundles;
-
-    /**
-     * @var string
-     */
-    private $fileDir;
+    private $locator;
 
     /**
      * @var LoaderInterface[]
@@ -34,13 +30,11 @@ class ContentchannelLoader
     private $loaders = array();
 
     /**
-     * @param array  $bundles
-     * @param string $fileDir
+     * @param PatternLocator $locator
      */
-    public function __construct(array $bundles, $fileDir)
+    public function __construct(PatternLocator $locator)
     {
-        $this->bundles = $bundles;
-        $this->fileDir = $fileDir;
+        $this->locator = $locator;
     }
 
     /**
@@ -62,23 +56,11 @@ class ContentchannelLoader
     {
         $contentChannels = new ContentchannelCollection();
 
-        $dirs = array();
-        foreach ($this->bundles as $class) {
-            $reflection = new \ReflectionClass($class);
-            $componentDir = dirname($reflection->getFileName()) . '/_content_channels/';
-            if (file_exists($componentDir)) {
-                $dirs[] = $componentDir;
-            }
-        }
-        $dirs[] = $this->fileDir;
+        foreach ($this->loaders as $extension => $loader) {
+            $files = $this->locator->locate('*.' . $extension, 'contentchannels');
 
-        foreach ($dirs as $dir) {
-            foreach ($this->loaders as $extension => $loader) {
-                $files = glob($dir . '*.' . $extension);
-
-                foreach ($files as $file) {
-                    $contentChannels->add($loader->load($file));
-                }
+            foreach ($files as $file) {
+                $contentChannels->add($loader->load($file));
             }
         }
 

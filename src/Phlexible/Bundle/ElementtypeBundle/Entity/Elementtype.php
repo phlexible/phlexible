@@ -10,15 +10,13 @@ namespace Phlexible\Bundle\ElementtypeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeIdentifier;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**
  * Elementtype
  *
  * @author Stephan Wentz <sw@brainbits.net>
- *
- * @ORM\Entity(repositoryClass="Phlexible\Bundle\ElementtypeBundle\Entity\Repository\ElementtypeRepository")
- * @ORM\Table(name="elementtype")
  */
 class Elementtype implements IdentifiableInterface
 {
@@ -30,75 +28,92 @@ class Elementtype implements IdentifiableInterface
     const TYPE_REFERENCE = 'reference';
 
     /**
-     * @var int
-     * @ORM\Id
-     * @ORM\GeneratedValue("AUTO")
-     * @ORM\Column(type="integer")
+     * @var string
      */
     private $id;
 
     /**
-     * @var string
-     * @ORM\Column(name="unique_id", type="string", length=255, unique=true)
+     * @var int
      */
-    private $uniqueId;
+    private $revision;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=20)
      */
     private $type;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
      */
-    private $title;
+    private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $icon;
 
     /**
      * @var int
-     * @ORM\Column(name="default_tab", type="integer", nullable=true)
      */
     private $defaultTab = 0;
 
     /**
      * @var bool
-     * @ORM\Column(name="hide_children", type="boolean")
      */
     private $hideChildren = false;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean", options={"default"=0})
      */
     private $deleted = false;
 
     /**
-     * @var int
-     * @ORM\Column(name="latest_version", type="integer")
+     * @var string
      */
-    private $latestVersion = 0;
+    private $comment;
+
+    /**
+     * @var int
+     */
+    private $defaultContentTab;
+
+    /**
+     * @var string
+     */
+    private $metaSetId;
+
+    /**
+     * @var array
+     */
+    private $mappings = array();
+
+    /**
+     * @var ElementtypeStructure
+     */
+    private $structure;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
 
     /**
      * @var string
-     * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
      */
     private $createUserId;
 
     /**
-     * @return int
+     * @var \DateTime
+     */
+    private $modifiedAt;
+
+    /**
+     * @var string
+     */
+    private $modifyUserId;
+
+    /**
+     * @return string
      */
     public function getId()
     {
@@ -106,33 +121,33 @@ class Elementtype implements IdentifiableInterface
     }
 
     /**
-     * @param int $id
+     * @param string $id
      *
      * @return $this
      */
     public function setId($id)
     {
-        $this->id = (int) $id;
+        $this->id = $id;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getUniqueId()
+    public function getRevision()
     {
-        return $this->uniqueId;
+        return $this->revision;
     }
 
     /**
-     * @param string $uniqueId
+     * @param int $revision
      *
      * @return $this
      */
-    public function setUniqueId($uniqueId)
+    public function setRevision($revision)
     {
-        $this->uniqueId = $uniqueId;
+        $this->revision = $revision;
 
         return $this;
     }
@@ -160,19 +175,19 @@ class Elementtype implements IdentifiableInterface
     /**
      * @return string
      */
-    public function getTitle()
+    public function getName()
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
-     * @param string $title
+     * @param string $name
      *
      * @return $this
      */
-    public function setTitle($title)
+    public function setName($name)
     {
-        $this->title = $title;
+        $this->name = $name;
 
         return $this;
     }
@@ -246,26 +261,6 @@ class Elementtype implements IdentifiableInterface
     }
 
     /**
-     * @return int
-     */
-    public function getLatestVersion()
-    {
-        return $this->latestVersion;
-    }
-
-    /**
-     * @param int $latestVersion
-     *
-     * @return $this
-     */
-    public function setLatestVersion($latestVersion)
-    {
-        $this->latestVersion = $latestVersion;
-
-        return $this;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -306,6 +301,46 @@ class Elementtype implements IdentifiableInterface
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getModifiedAt()
+    {
+        return $this->modifiedAt;
+    }
+
+    /**
+     * @param \DateTime $modifiedAt
+     *
+     * @return $this
+     */
+    public function setModifiedAt(\DateTime $modifiedAt)
+    {
+        $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModifyUserId()
+    {
+        return $this->modifyUserId;
+    }
+
+    /**
+     * @param string $modifyUserId
+     *
+     * @return $this
+     */
+    public function setModifyUserId($modifyUserId)
+    {
+        $this->modifyUserId = $modifyUserId;
+
+        return $this;
+    }
+
+    /**
      * @return ElementtypeIdentifier
      */
     public function getIdentifier()
@@ -332,4 +367,107 @@ class Elementtype implements IdentifiableInterface
 
         return $this;
     }
+
+    /**
+     * @return ElementtypeStructure
+     */
+    public function getStructure()
+    {
+        return $this->structure;
+    }
+
+    /**
+     * @param ElementtypeStructure $structure
+     *
+     * @return $this
+     */
+    public function setStructure($structure)
+    {
+        $this->structure = $structure;
+
+        return $this;
+    }
+
+    /**
+     * Return element type default content tab
+     *
+     * @return string
+     */
+    public function getDefaultContentTab()
+    {
+        return $this->defaultContentTab;
+    }
+
+    /**
+     * @param int $defaultContentTab
+     *
+     * @return $this
+     */
+    public function setDefaultContentTab($defaultContentTab)
+    {
+        $this->defaultContentTab = isset($defaultContentTab) ? (int) $defaultContentTab : null;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetaSetId()
+    {
+        return $this->metaSetId;
+    }
+
+    /**
+     * @param string $metaSetId
+     *
+     * @return $this
+     */
+    public function setMetaSetId($metaSetId)
+    {
+        $this->metaSetId = $metaSetId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     *
+     * @return $this
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMappings()
+    {
+        return $this->mappings;
+    }
+
+    /**
+     * @param array $mappings
+     *
+     * @return $this
+     */
+    public function setMappings(array $mappings = null)
+    {
+        $this->mappings = $mappings;
+
+        return $this;
+    }
+
 }

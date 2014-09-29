@@ -40,18 +40,18 @@ class ListController extends Controller
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
         $elementtypes = array();
-        foreach ($elementtypeService->findElementtypeByType($type) as $elementtype) {
-            //if ($type === null && !in_array($elementtype->getType(), $allowedTypes)) {
-            //    continue;
-            //}
+        foreach ($elementtypeService->findAllElementtypes() as $elementtype) {
+            if ($type !== $elementtype->getType()) {
+                continue;
+            }
 
             $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
 
-            $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = array(
+            $elementtypes[$elementtype->getName() . $elementtype->getId()] = array(
                 'id'      => $elementtype->getId(),
-                'title'   => $elementtype->getTitle(),
+                'title'   => $elementtype->getName(),
                 'icon'    => $elementtype->getIcon(),
-                'version' => $elementtypeVersion->getVersion(),
+                'version' => $elementtypeVersion->getRevision(),
                 'type'    => $elementtype->getType(),
             );
         }
@@ -137,25 +137,21 @@ class ListController extends Controller
         $userManager = $this->get('phlexible_user.user_manager');
 
         $elementtype = $elementtypeService->findElementtype($id);
-        $versionList = $elementtypeService->getVersions($elementtype);
 
-        $versions = array();
-        foreach ($versionList as $version) {
-            $versionElementtypeVersion = $elementtypeService->findElementtypeVersion($elementtype, $version);
-
-            try {
-                $user = $userManager->find($versionElementtypeVersion->getCreateUserId());
-                $username = $user->getDisplayName();
-            } catch (\Exception $e) {
-                $username = '(unknown)';
-            }
-
-            $versions[] = array(
-                'version'     => $version,
-                'create_user' => $username,
-                'create_time' => $versionElementtypeVersion->getCreatedAt()->format('Y-m-d H:i:s'),
-            );
+        try {
+            $user = $userManager->find($elementtype->getCreateUserId());
+            $username = $user->getDisplayName();
+        } catch (\Exception $e) {
+            $username = '(unknown)';
         }
+
+        $versions = array(
+            array(
+                'version'     => $elementtype->getRevision(),
+                'create_user' => $username,
+                'create_time' => $elementtype->getCreatedAt()->format('Y-m-d H:i:s'),
+            )
+        );
 
         return new JsonResponse(array('versions' => $versions));
     }

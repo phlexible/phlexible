@@ -50,14 +50,11 @@ class ElementtypeUsageListener
 
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('ev.eid', 'MAX(ev.elementtype_version) AS latest_version', 'et.type', 'evmf.backend AS title1', 'et.title AS title2', 'ev.id')
+            ->select('ev.eid', 'MAX(ev.elementtype_version) AS latest_version', 'evmf.backend AS title', 'ev.id')
             ->from('element', 'e')
             ->join('e', 'element_version', 'ev', 'ev.eid = e.eid AND ev.version = e.latest_version')
             ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = ' . $qb->expr()->literal($language))
-            ->join('e', 'elementtype', 'et', 'e.elementtype_id = et.id')
-            //->from(array('ev' => $this->db->prefix.'element_version'), array('eid'))
-            //->join(array('et' => $this->db->prefix.'element_tree'), 'ev.eid = et.eid', array())
-            ->where($qb->expr()->eq('e.elementtype_id', $elementtypeId))
+            ->where($qb->expr()->eq('e.elementtype_id', $qb->expr()->literal($elementtypeId)))
             ->groupBy('ev.eid');
 
         $rows = $this->connection->fetchAll($qb->getSQL());
@@ -65,10 +62,10 @@ class ElementtypeUsageListener
         foreach ($rows as $row) {
             $event->addUsage(
                 new Usage(
-                    $row['type'] . ' element',
+                    $event->getElementtype()->getType() . ' element',
                     'element',
                     $row['eid'],
-                    $row['title1'] ?: '[' . $row['title2'] . ']',
+                    $row['title'],
                     $row['latest_version']
                 )
             );

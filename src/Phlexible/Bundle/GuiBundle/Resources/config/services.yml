@@ -3,6 +3,10 @@ parameters:
     app.web_dir:              %kernel.root_dir%/../web/
 
 services:
+    pattern_locator:
+        class: Phlexible\Bundle\GuiBundle\Locator\PatternLocator
+        arguments: [@kernel]
+
     properties:
         class: Phlexible\Bundle\GuiBundle\Properties\Properties
         arguments: [@doctrine.orm.entity_manager]

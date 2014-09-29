@@ -3,8 +3,6 @@ services:
       class: Phlexible\Bundle\ElementtypeBundle\ElementtypeService
       arguments:
         - @phlexible_elementtype.elementtype_manager
-        - @phlexible_elementtype.elementtype_version_manager
-        - @phlexible_elementtype.elementtype_structure_manager
         - @phlexible_elementtype.viability_manager
         - @phlexible_elementtype.usage_manager
 

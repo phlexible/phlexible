@@ -180,7 +180,7 @@ class ElementtypeStructureManager implements ElementtypeStructureManagerInterfac
     {
         $nodes = $this->getStructureNodeRepository()->findBy(
             array(
-                'elementtype' => $id,
+                'elementtypeId' => $id,
                 'version' => $version
             )
         );

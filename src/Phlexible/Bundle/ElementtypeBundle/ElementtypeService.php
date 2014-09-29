@@ -10,11 +10,8 @@ namespace Phlexible\Bundle\ElementtypeBundle;
 
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureManagerInterface;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeVersionManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Usage\UsageManager;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
@@ -32,16 +29,6 @@ class ElementtypeService
     private $elementtypeManager;
 
     /**
-     * @var ElementtypeVersionManagerInterface
-     */
-    private $elementtypeVersionManager;
-
-    /**
-     * @var ElementtypeStructureManagerInterface
-     */
-    private $elementtypeStructureManager;
-
-    /**
      * @var ViabilityManagerInterface
      */
     private $viabilityManager;
@@ -52,22 +39,16 @@ class ElementtypeService
     private $usageManager;
 
     /**
-     * @param ElementtypeManagerInterface          $elementtypeManager
-     * @param ElementtypeVersionManagerInterface   $elementtypeVersionManager
-     * @param ElementtypeStructureManagerInterface $elementtypeStructureManager
-     * @param ViabilityManagerInterface            $viabilityManager
-     * @param UsageManager                         $usageManager
+     * @param ElementtypeManagerInterface $elementtypeManager
+     * @param ViabilityManagerInterface   $viabilityManager
+     * @param UsageManager                $usageManager
      */
     public function __construct(
         ElementtypeManagerInterface $elementtypeManager,
-        ElementtypeVersionManagerInterface $elementtypeVersionManager,
-        ElementtypeStructureManagerInterface $elementtypeStructureManager,
         ViabilityManagerInterface $viabilityManager,
         UsageManager $usageManager)
     {
         $this->elementtypeManager = $elementtypeManager;
-        $this->elementtypeVersionManager = $elementtypeVersionManager;
-        $this->elementtypeStructureManager = $elementtypeStructureManager;
         $this->viabilityManager = $viabilityManager;
         $this->usageManager = $usageManager;
     }
@@ -75,29 +56,29 @@ class ElementtypeService
     /**
      * Find element type by ID
      *
-     * @param int $elementTypeId
+     * @param int $elementtypeId
      *
      * @return Elementtype
      */
-    public function findElementtype($elementTypeId)
+    public function findElementtype($elementtypeId)
     {
-        return $this->elementtypeManager->find($elementTypeId);
+        return $this->elementtypeManager->find($elementtypeId);
     }
 
     /**
      * Find element type by unique ID
      *
-     * @param string $uniqueID
+     * @param string $uniqueId
      *
      * @return Elementtype
      */
-    public function findElementtypeByUniqueID($uniqueID)
+    public function findElementtypeByUniqueID($uniqueId)
     {
-        return $this->elementtypeManager->findByUniqueID($uniqueID);
+        return $this->elementtypeManager->findOneByUniqueId($uniqueId);
     }
 
     /**
-     * Find element types by type
+     * Find element type by unique ID
      *
      * @param string $type
      *
@@ -105,7 +86,14 @@ class ElementtypeService
      */
     public function findElementtypeByType($type)
     {
-        return $this->elementtypeManager->findByType($type);
+        $elementtypes = array();
+        foreach ($this->elementtypeManager->findAll() as $elementtype) {
+            if ($elementtype->getType() === $type) {
+                $elementtypes[] = $elementtype;
+            }
+        }
+
+        return $elementtypes;
     }
 
     /**
@@ -119,85 +107,63 @@ class ElementtypeService
     }
 
     /**
-     * Get all Element Type IDs
-     *
-     * @return array
-     */
-    public function findAllElementtypeIDs()
-    {
-        $ids = array();
-        foreach ($this->findAllElementtypes() as $elementtype) {
-            $ids[] = $elementtype->getId();
-        }
-
-        return $ids;
-    }
-
-    /**
      * @param Elementtype $elementtype
-     * @param             $version
      *
-     * @return ElementtypeVersion
+     * @return Elementtype
      */
-    public function findElementtypeVersion(Elementtype $elementtype, $version)
+    public function findElementtypeVersion(Elementtype $elementtype)
     {
-        $elementtypeVersion = $this->elementtypeVersionManager->find($elementtype, $version);
-
-        return $elementtypeVersion;
+        return $elementtype;
     }
 
     /**
      * @param Elementtype $elementtype
      *
-     * @return ElementtypeVersion
+     * @return Elementtype
      */
     public function findLatestElementtypeVersion(Elementtype $elementtype)
     {
-        $elementtypeVersion = $this->elementtypeVersionManager->find($elementtype, $elementtype->getLatestVersion());
-
-        return $elementtypeVersion;
+        return $elementtype;
     }
 
     /**
      * @param Elementtype $elementtype
-     *
-     * @return array
-     */
-    public function getVersions(Elementtype $elementtype)
-    {
-        return $this->elementtypeVersionManager->getVersions($elementtype);
-    }
-
-    /**
-     * @param ElementtypeVersion $elementtypeVersion
      *
      * @return ElementtypeStructure
      */
-    public function findElementtypeStructure(ElementtypeVersion $elementtypeVersion)
+    public function findElementtypeStructure(Elementtype $elementtype)
     {
-        $elementtypeStructure = $this->elementtypeStructureManager->find($elementtypeVersion);
-
-        return $elementtypeStructure;
+        return $elementtype->getStructure();
     }
 
     /**
      * @param Elementtype $elementtype
      *
-     * @return array
+     * @return Elementtype[]
      */
-    public function findAllowedParentIds(Elementtype $elementtype)
+    public function findAllowedParents(Elementtype $elementtype)
     {
-        return $this->viabilityManager->getAllowedParentIds($elementtype);
+        $elementtypes = array();
+        foreach ($this->viabilityManager->findAllowedParents($elementtype) as $viability) {
+            $elementtypes[] = $this->findElementtype($viability->getUnderElementtypeId());
+        }
+
+        return $elementtypes;
     }
 
     /**
      * @param Elementtype $elementtype
      *
-     * @return array
+     * @return Elementtype[]
      */
-    public function findAllowedChildrenIds(Elementtype $elementtype)
+    public function findAllowedChildren(Elementtype $elementtype)
     {
-        return $this->viabilityManager->getAllowedChildrenIds($elementtype);
+        $elementtypes = array();
+        foreach ($this->viabilityManager->findAllowedChildren($elementtype) as $viability) {
+            $elementtypes[] = $this->findElementtype($viability->getElementtypeId());
+        }
+
+        return $elementtypes;
     }
 
     /**
@@ -207,7 +173,8 @@ class ElementtypeService
      */
     public function findElementtypesUsingReferenceElementtype(Elementtype $referenceElementtype)
     {
-        return $this->elementtypeStructureManager->findElementtypesUsingReferenceElementtype($referenceElementtype);
+        // TODO: references
+        return array();//$this->elementtypeStructureManager->findElementtypesUsingReferenceElementtype($referenceElementtype);
     }
 
     /**
@@ -215,14 +182,14 @@ class ElementtypeService
      *
      * @param string $type
      * @param string $uniqueId
-     * @param string $title
+     * @param string $name
      * @param string $icon
      * @param string $userId
      * @param bool   $flush
      *
-     * @return ElementtypeVersion
+     * @return Elementtype
      */
-    public function createElementtype($type, $uniqueId, $title, $icon, $userId, $flush = true)
+    public function createElementtype($type, $uniqueId, $name, $icon, $userId, $flush = true)
     {
         if (!$icon) {
             $icons = array(
@@ -239,25 +206,16 @@ class ElementtypeService
 
         $elementtype = new Elementtype();
         $elementtype
-            ->setUniqueId($uniqueId)
             ->setType($type)
-            ->setTitle($title)
+            ->setName($name)
             ->setIcon($icon)
-            ->setLatestVersion(1)
+            ->setRevision(1)
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime());
 
-        $elementtypeVersion = new ElementtypeVersion();
-        $elementtypeVersion
-            ->setElementtype($elementtype)
-            ->setVersion(1)
-            ->setCreateUserId($elementtype->getCreateUserId())
-            ->setCreatedAt($elementtype->getCreatedAt());
+        $this->loader->update($elementtype);
 
-        $this->elementtypeManager->updateElementtype($elementtype, $flush);
-        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion, $flush);
-
-        return $elementtypeVersion;
+        return $elementtype;
     }
 
     /**
@@ -266,25 +224,7 @@ class ElementtypeService
      */
     public function updateElementtype(Elementtype $elementtype, $flush = true)
     {
-        $this->elementtypeManager->updateElementtype($elementtype, $flush);
-    }
-
-    /**
-     * @param ElementtypeVersion $elementtypeVersion
-     * @param bool               $flush
-     */
-    public function updateElementtypeVersion(ElementtypeVersion $elementtypeVersion, $flush = true)
-    {
-        $this->elementtypeVersionManager->updateElementtypeVersion($elementtypeVersion, $flush);
-    }
-
-    /**
-     * @param ElementtypeStructure $elementtypeStructure
-     * @param bool                 $flush
-     */
-    public function updateElementtypeStructure(ElementtypeStructure $elementtypeStructure, $flush = true)
-    {
-        $this->elementtypeStructureManager->updateElementtypeStructure($elementtypeStructure, $flush);
+        $this->loader->update($elementtype, $flush);
     }
 
     /**
@@ -308,19 +248,13 @@ class ElementtypeService
         $usage = $this->usageManager->getUsage($elementtype);
 
         if ($usage) {
-            $this->elementtypeManager->softDeleteElementtype($elementtype);
+            $elementtype->setDeleted(true);
+            $this->loader->update($elementtype);
 
             return 'softdelete';
         }
 
-        foreach ($this->getVersions($elementtype) as $version) {
-            $elementtypeVersion = $this->findElementtypeVersion($elementtype, $version);
-            $elementtypeStructure = $this->findElementtypeStructure($elementtypeVersion);
-
-            $this->elementtypeStructureManager->deleteElementtypeStructure($elementtypeStructure, false);
-            $this->elementtypeVersionManager->deleteElementtypeVersion($elementtypeVersion, false);
-        }
-        $this->elementtypeManager->deleteElementtype($elementtype);
+        $this->loader->delete($elementtype);
 
         return 'delete';
     }
@@ -331,38 +265,24 @@ class ElementtypeService
      * @param Elementtype $sourceElementtype
      * @param string      $userId
      *
-     * @return ElementtypeVersion
+     * @return Elementtype
      */
     public function duplicateElementtype(Elementtype $sourceElementtype, $userId)
     {
-        $sourceElementtypeVersion = $this->findLatestElementtypeVersion($sourceElementtype);
-        $sourceElementtypeStructure = $this->findElementtypeStructure($sourceElementtypeVersion);
-
         $uniqId = uniqid();
 
         $elementtype = clone $sourceElementtype;
-        $elementtypeVersion = clone $sourceElementtypeVersion;
 
         $elementtype
             ->setId(null)
-            ->setTitle($elementtype->getTitle() . ' - copy - ' . $uniqId)
-            ->setUniqueId($elementtype->getUniqueId() . '_copy_' . $uniqId)
-            ->setLatestVersion(1)
-            ->setCreatedAt(new \DateTime())
-            ->setCreateUserId($userId);
-
-        $elementtypeVersion
-            ->setId(null)
-            ->setElementtype($elementtype)
-            ->setVersion(1)
+            ->setName($elementtype->getName() . ' - copy - ' . $uniqId)
+            ->setRevision(1)
             ->setCreatedAt(new \DateTime())
             ->setCreateUserId($userId);
 
         $elementtypeStructure = new ElementtypeStructure();
-        $elementtypeStructure
-            ->setElementtypeVersion($elementtypeVersion);
 
-        $rii = new \RecursiveIteratorIterator($sourceElementtypeStructure, \RecursiveIteratorIterator::SELF_FIRST);
+        $rii = new \RecursiveIteratorIterator($sourceElementtype->getStructure(), \RecursiveIteratorIterator::SELF_FIRST);
         $idMap = array();
         $dsIdMap = array();
         foreach ($rii as $sourceNode) {
@@ -380,21 +300,15 @@ class ElementtypeService
             }
 
             $node
-                ->setId(null)
                 ->setDsId($dsId)
                 ->setParentNode($parentNode)
-                ->setParentDsId($parentDsId)
-                ->setElementtype($elementtype)
-                ->setVersion($elementtypeVersion->getVersion())
-                ->setElementtypeStructure($elementtypeStructure);
+                ->setParentDsId($parentDsId);
 
             $elementtypeStructure->addNode($node);
         }
 
-        $this->updateElementtype($elementtype, false);
-        $this->updateElementtypeVersion($elementtypeVersion, false);
-        $this->updateElementtypeStructure($elementtypeStructure, true);
+        $this->loader->update($elementtype);
 
-        return $elementtypeVersion;
+        return $elementtype;
     }
 }

@@ -48,22 +48,21 @@ class ElementtypeUsageListener
                     $elementtype->getType() . ' elementtype',
                     'reference',
                     $elementtype->getId(),
-                    $elementtype->getTitle(),
-                    $elementtype->getLatestVersion()
+                    $elementtype->getName(),
+                    $elementtype->getRevision()
                 )
             );
         }
 
         if ($elementtype->getType() === 'layout') {
-            foreach ($this->elementtypeService->findAllowedParentIds($elementtype) as $viabilityId) {
-                $viabilityElementtype = $this->elementtypeService->findElementtype($viabilityId);
+            foreach ($this->elementtypeService->findAllowedParents($elementtype) as $viabilityElementtype) {
                 $event->addUsage(
                     new Usage(
                         $viabilityElementtype->getType() . ' elementtype',
                         'layout area',
                         $viabilityElementtype->getId(),
-                        $viabilityElementtype->getTitle(),
-                        $viabilityElementtype->getLatestVersion()
+                        $viabilityElementtype->getName(),
+                        $viabilityElementtype->getRevision()
                     )
                 );
             }

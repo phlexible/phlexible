@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeApply;
 
 /**
  * Viability manager
@@ -20,16 +21,16 @@ interface ViabilityManagerInterface
     /**
      * @param Elementtype $elementtype
      *
-     * @return array
+     * @return ElementtypeApply[]
      */
-    public function getAllowedParentIds(Elementtype $elementtype);
+    public function findAllowedParents(Elementtype $elementtype);
 
     /**
      * @param Elementtype $elementtype
      *
-     * @return array
+     * @return ElementtypeApply[]
      */
-    public function getAllowedChildrenIds(Elementtype $elementtype);
+    public function findAllowedChildren(Elementtype $elementtype);
 
     /**
      * Save viability

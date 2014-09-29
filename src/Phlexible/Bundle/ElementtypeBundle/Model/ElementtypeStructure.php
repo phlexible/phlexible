@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeStructureNode;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
 
 /**
@@ -19,11 +18,6 @@ use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
  */
 class ElementtypeStructure implements \Countable, \IteratorAggregate
 {
-    /**
-     * @var ElementtypeVersion
-     */
-    private $elementtypeVersion;
-
     /**
      * @var string
      */
@@ -43,26 +37,6 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      * @var array
      */
     private $parentMap = array();
-
-    /**
-     * @return ElementTypeVersion
-     */
-    public function getElementtypeVersion()
-    {
-        return $this->elementtypeVersion;
-    }
-
-    /**
-     * @param ElementTypeVersion $elementTypeVersion
-     *
-     * @return $this
-     */
-    public function setElementtypeVersion(ElementtypeVersion $elementTypeVersion)
-    {
-        $this->elementtypeVersion = $elementTypeVersion;
-
-        return $this;
-    }
 
     /**
      * @param ElementtypeStructureNode $node

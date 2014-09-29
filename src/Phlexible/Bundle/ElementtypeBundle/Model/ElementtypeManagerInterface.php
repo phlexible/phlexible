@@ -36,15 +36,6 @@ interface ElementtypeManagerInterface
     public function findOneByUniqueId($uniqueID);
 
     /**
-     * Find element types by type
-     *
-     * @param string $type
-     *
-     * @return Elementtype[]
-     */
-    public function findByType($type);
-
-    /**
      * Find all element types
      *
      * @return Elementtype[]
@@ -70,13 +61,4 @@ interface ElementtypeManagerInterface
      * @return $this
      */
     public function deleteElementtype(Elementtype $elementtype, $flush = true);
-    /**
-     * Soft delete an elementtype
-     *
-     * @param Elementtype $elementtype
-     * @param bool        $flush
-     *
-     * @return $this
-     */
-    public function softDeleteElementtype(Elementtype $elementtype, $flush = true);
 }

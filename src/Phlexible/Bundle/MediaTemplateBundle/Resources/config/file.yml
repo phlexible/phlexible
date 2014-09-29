@@ -14,7 +14,7 @@ services:
     phlexible_media_template.file.loader:
         class: Phlexible\Bundle\MediaTemplateBundle\File\TemplateLoader
         public: false
-        arguments: [%kernel.bundles%, %phlexible_media_template.file_dir%]
+        arguments: [@pattern_locator]
         calls:
             - [addLoader, [@phlexible_media_template.file.loader.xml]]
 

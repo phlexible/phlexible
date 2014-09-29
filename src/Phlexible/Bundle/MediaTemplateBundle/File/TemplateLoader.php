@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\File;
 
+use Phlexible\Bundle\GuiBundle\Locator\PatternLocator;
 use Phlexible\Bundle\MediaTemplateBundle\File\Loader\LoaderInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateCollection;
 
@@ -19,27 +20,21 @@ use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateCollection;
 class TemplateLoader
 {
     /**
-     * @var array
+     * @var PatternLocator
      */
-    private $bundles;
+    private $locator;
 
     /**
-     * @var string
-     */
-    private $fileDir;
-
-    /**
-     * @var array
+     * @var LoaderInterface[]
      */
     private $loaders = array();
+
     /**
-     * @param array  $bundles
-     * @param string $fileDir
+     * @param PatternLocator $locator
      */
-    public function __construct(array $bundles, $fileDir)
+    public function __construct(PatternLocator $locator)
     {
-        $this->bundles = $bundles;
-        $this->fileDir = $fileDir;
+        $this->locator = $locator;
     }
 
     /**
@@ -61,23 +56,11 @@ class TemplateLoader
     {
         $templates = new TemplateCollection();
 
-        $dirs = array();
-        foreach ($this->bundles as $class) {
-            $reflection = new \ReflectionClass($class);
-            $componentDir = dirname($reflection->getFileName()) . '/Resources/mediatemplates/';
-            if (file_exists($componentDir)) {
-                $dirs[] = $componentDir;
-            }
-        }
-        $dirs[] = $this->fileDir;
+        foreach ($this->loaders as $extension => $loader) {
+            $files = $this->locator->locate('*.' . $extension, 'mediatemplates');
 
-        foreach ($dirs as $dir) {
-            foreach ($this->loaders as $extension => $loader) {
-                $files = glob($dir . '*.' . $extension);
-
-                foreach ($files as $file) {
-                    $templates->add($loader->load($file));
-                }
+            foreach ($files as $file) {
+                $templates->add($loader->load($file));
             }
         }
 

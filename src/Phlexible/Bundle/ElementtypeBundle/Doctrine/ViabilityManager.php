@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementtypeBundle\Entity\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeApply;
 use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 
 /**
@@ -35,19 +36,13 @@ class ViabilityManager implements ViabilityManagerInterface
     /**
      * @param Elementtype $elementtype
      *
-     * @return array
+     * @return ElementtypeApply[]
      */
-    public function getAllowedParentIds(Elementtype $elementtype)
+    public function findAllowedParents(Elementtype $elementtype)
     {
-        $connection = $this->entityManager->getConnection();
-        $qb = $connection->createQueryBuilder();
+        $viabilityRepository = $this->entityManager->getRepository('PhlexibleElementtypeBundle:ElementtypeApply');
 
-        $qb
-            ->select('v.apply_under_id')
-            ->from('elementtype_apply', 'v')
-            ->where($qb->expr()->eq('v.elementtype_id', $elementtype->getId()));
-
-        return array_column($connection->fetchAll($qb->getSQL()), 'apply_under_id');
+        return $viabilityRepository->findBy(array('elementtypeId' => $elementtype->getId()));
     }
 
     /**
@@ -55,17 +50,11 @@ class ViabilityManager implements ViabilityManagerInterface
      *
      * @return array
      */
-    public function getAllowedChildrenIds(Elementtype $elementtype)
+    public function findAllowedChildren(Elementtype $elementtype)
     {
-        $connection = $this->entityManager->getConnection();
-        $qb = $connection->createQueryBuilder();
+        $viabilityRepository = $this->entityManager->getRepository('PhlexibleElementtypeBundle:ElementtypeApply');
 
-        $qb
-            ->select('v.elementtype_id')
-            ->from('elementtype_apply', 'v')
-            ->where($qb->expr()->eq('v.apply_under_id', $elementtype->getId()));
-
-        return array_column($connection->fetchAll($qb->getSQL()), 'elementtype_id');
+        return $viabilityRepository->findBy(array('underElementtypeId' => $elementtype->getId()));
     }
 
     /**
@@ -78,23 +67,29 @@ class ViabilityManager implements ViabilityManagerInterface
      */
     public function updateViability(Elementtype $elementtype, array $parentIds)
     {
-        $connection = $this->entityManager->getConnection();
+        $viabilityRepository = $this->entityManager->getRepository('PhlexibleElementtypeBundle:ElementtypeApply');
 
-        $connection->delete(
-            'elementtype_apply',
-            array(
-                'elementtype_id' => $elementtype->getId()
-            )
-        );
+        $viabilities = $viabilityRepository->findBy(array('elementtypeId' => $elementtype->getId()));
+
+        foreach ($viabilities as $viability) {
+            if (in_array($viability->getUnderElementtypeId(), $parentIds)) {
+                unset($parentIds[array_search($viability->getUnderElementtypeId(), $parentIds)]);
+            }
+        }
 
         foreach ($parentIds as $parentId) {
-            $connection->insert(
-                'elementtype_apply',
-                array(
-                    'elementtype_id' => $elementtype->getId(),
-                    'apply_under_id' => $parentId,
-                )
-            );
+            $viability = new ElementtypeApply();
+            $viability
+                ->setElementtypeId($elementtype->getId())
+                ->setUnderElementtypeId($parentId);
+
+            $this->entityManager->persist($viability);
         }
+
+        foreach ($viabilities as $viability) {
+            $this->entityManager->remove($viability);
+        }
+
+        $this->entityManager->flush();
     }
 }

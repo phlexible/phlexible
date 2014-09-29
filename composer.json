@@ -27,6 +27,7 @@
         "doctrine/dbal": "~2.4",
         "doctrine/collections": "~1.1",
         "jms/cg": "dev-master",
+        "fluentdom/fluentdom": "~5.1",
         "kriswallsmith/assetic": "~1.0",
         "symfony/symfony": "~2.4",
         "symfony-cmf/routing-bundle": "~1.1",

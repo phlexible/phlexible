@@ -29,16 +29,74 @@ class ElementtypeApply
     private $id;
 
     /**
-     * @var Elementtype
-     * @ORM\ManyToOne(targetEntity="Elementtype")
-     * @ORM\JoinColumn(name="elementtype_id", referencedColumnName="id")
+     * @var string
+     * @ORM\Column(name="elementtype_id", type="string")
      */
-    private $elementtype;
+    private $elementtypeId;
 
     /**
-     * @var Elementtype
-     * @ORM\ManyToOne(targetEntity="Elementtype")
-     * @ORM\JoinColumn(name="apply_under_id", referencedColumnName="id")
+     * @var string
+     * @ORM\Column(name="under_elementtype_id", type="string")
      */
-    private $underElementtype;
+    private $underElementtypeId;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getElementtypeId()
+    {
+        return $this->elementtypeId;
+    }
+
+    /**
+     * @param string $elementtype
+     *
+     * @return $this
+     */
+    public function setElementtypeId($elementtype)
+    {
+        $this->elementtypeId = $elementtype;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnderElementtypeId()
+    {
+        return $this->underElementtypeId;
+    }
+
+    /**
+     * @param string $underElementtype
+     *
+     * @return $this
+     */
+    public function setUnderElementtypeId($underElementtype)
+    {
+        $this->underElementtypeId = $underElementtype;
+
+        return $this;
+    }
 }

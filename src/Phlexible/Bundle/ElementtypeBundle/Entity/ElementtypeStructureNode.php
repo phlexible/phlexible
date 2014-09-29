@@ -15,9 +15,6 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
  * Elementtype structure node
  *
  * @author Phillip Look <plook@brainbits.net>
- *
- * @ORM\Entity(repositoryClass="Phlexible\Bundle\ElementtypeBundle\Entity\Repository\ElementtypeStructureNodeRepository")
- * @ORM\Table(name="elementtype_structure")
  */
 class ElementtypeStructureNode
 {
@@ -25,202 +22,64 @@ class ElementtypeStructureNode
     const FIELD_TYPE_REFERENCE_ROOT = 'referenceroot';
 
     /**
-     * @var int
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
-     * @var Elementtype
-     * @ORM\ManyToOne(targetEntity="Elementtype")
-     * @ORM\JoinColumn(name="elementtype_id", referencedColumnName="id")
-     */
-    private $elementtype;
-
-    /**
-     * @var ElementtypeStructure
-     */
-    private $elementtypeStructure;
-
-    /**
      * @var ElementtypeStructureNode
-     * @ORM\ManyToOne(targetEntity="ElementtypeStructureNode")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
     private $parentNode;
 
     /**
-     * @var int
-     * @ORM\Column(name="elementtype_version", type="integer")
-     */
-    private $version;
-
-    /**
      * @var string
-     * @ORM\Column(name="ds_id", type="string", length=36, options={"fixed"=true})
      */
     private $dsId;
 
     /**
-     * @var int
-     * @ORM\Column(name="parent_id", type="integer", nullable=true)
-     */
-    private $parentId;
-
-    /**
      * @var string
-     * @ORM\Column(name="parent_ds_id", type="string", length=36, nullable=true, options={"fixed"=true})
      */
     private $parentDsId;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer")
-     */
-    private $sort;
-
-    /**
-     * @var Elementtype
-     * @ORM\ManyToOne(targetEntity="Elementtype")
-     * @ORM\JoinColumn(name="reference_id", referencedColumnName="id", nullable=true)
-     */
-    private $referenceElementtype;
-
-    /**
-     * @var int
-     * @ORM\Column(name="reference_version", type="integer", nullable=true)
-     */
-    private $referenceVersion;
-
-    /**
      * @var string
-     * @ORM\Column(type="string", length=20)
      */
     private $type;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
      */
     private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="json_array", nullable=true)
      */
     private $configuration;
 
     /**
      * @var string
-     * @ORM\Column(type="json_array", nullable=true)
      */
     private $validation;
 
     /**
      * @var string
-     * @ORM\Column(type="json_array", nullable=true)
      */
     private $labels;
 
     /**
      * @var string
-     * @ORM\Column(type="json_array", nullable=true)
      */
     private $options;
 
     /**
      * @var string
-     * @ORM\Column(name="content_channels", type="json_array", nullable=true)
      */
     private $contentChannels;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
 
     /**
-     * @return string
+     * @var int
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = (int) $id;
-
-        return $this;
-    }
-
-    /**
-     * @return Elementtype
-     */
-    public function getElementtype()
-    {
-        return $this->elementtype;
-    }
-
-    /**
-     * @param Elementtype $elementtype
-     *
-     * @return $this
-     */
-    public function setElementtype($elementtype)
-    {
-        $this->elementtype = $elementtype;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * @param int $version
-     *
-     * @return $this
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getElementtypeStructure()
-    {
-        return $this->elementtypeStructure;
-    }
-
-    /**
-     * @param ElementtypeStructure $elementtypeStructure
-     *
-     * @return $this
-     */
-    public function setElementtypeStructure(ElementtypeStructure $elementtypeStructure = null)
-    {
-        $this->elementtypeStructure = $elementtypeStructure;
-
-        return $this;
-    }
+    private $referenceElementtypeId;
 
     /**
      * @return ElementtypeStructureNode
@@ -235,23 +94,15 @@ class ElementtypeStructureNode
      *
      * @return $this
      */
-    public function setParentNode($parentNode)
+    public function setParentNode(ElementtypeStructureNode $parentNode = null)
     {
+        if ($parentNode) {
+            $this->parentDsId = $parentNode->getDsId();
+        }
+
         $this->parentNode = $parentNode;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getParentId()
-    {
-        if (!$this->parentNode) {
-            return null;
-        }
-
-        return $this->getParentNode()->getId();
     }
 
     /**
@@ -290,26 +141,6 @@ class ElementtypeStructureNode
     public function setParentDsId($parentDsId)
     {
         $this->parentDsId = $parentDsId ? (string) $parentDsId : null;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSort()
-    {
-        return $this->sort;
-    }
-
-    /**
-     * @param int $sort
-     *
-     * @return $this
-     */
-    public function setSort($sort)
-    {
-        $this->sort = $sort;
 
         return $this;
     }
@@ -370,46 +201,6 @@ class ElementtypeStructureNode
     public function setType($type)
     {
         $this->type = (string) $type;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getReferenceElementtype()
-    {
-        return $this->referenceElementtype;
-    }
-
-    /**
-     * @param Elementtype $referenceElementtype
-     *
-     * @return $this
-     */
-    public function setReferenceElementtype(Elementtype $referenceElementtype = null)
-    {
-        $this->referenceElementtype = $referenceElementtype;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getReferenceVersion()
-    {
-        return $this->referenceVersion;
-    }
-
-    /**
-     * @param int $referenceVersion
-     *
-     * @return $this
-     */
-    public function setReferenceVersion($referenceVersion)
-    {
-        $this->referenceVersion = (int) $referenceVersion;
 
         return $this;
     }
@@ -602,7 +393,7 @@ class ElementtypeStructureNode
      */
     public function isRoot()
     {
-        return $this->parentId === null;
+        return $this->parentDsId === null;
     }
 
     /**
@@ -690,5 +481,25 @@ class ElementtypeStructureNode
     public function isReferenced()
     {
         return $this->referenced;
+    }
+
+    /**
+     * @return int
+     */
+    public function getReferenceElementtypeId()
+    {
+        return $this->referenceElementtypeId;
+    }
+
+    /**
+     * @param int $referenceElementtypeId
+     *
+     * @return $this
+     */
+    public function setReferenceElementtypeId($referenceElementtypeId)
+    {
+        $this->referenceElementtypeId = $referenceElementtypeId;
+
+        return $this;
     }
 }

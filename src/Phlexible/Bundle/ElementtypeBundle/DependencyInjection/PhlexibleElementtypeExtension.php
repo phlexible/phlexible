@@ -28,6 +28,7 @@ class PhlexibleElementtypeExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('doctrine.yml');
+        $loader->load('file.yml');
         $loader->load('fields.yml');
 
         $configuration = $this->getConfiguration($config, $container);
@@ -36,8 +37,6 @@ class PhlexibleElementtypeExtension extends Extension
         $container->setParameter('phlexible_elementtype.field.suggest_seperator', $config['fields']['suggest_separator']);
 
         $container->setAlias('phlexible_elementtype.viability_manager', 'phlexible_elementtype.doctrine.viability_manager');
-        $container->setAlias('phlexible_elementtype.elementtype_manager', 'phlexible_elementtype.doctrine.elementtype_manager');
-        $container->setAlias('phlexible_elementtype.elementtype_version_manager', 'phlexible_elementtype.doctrine.elementtype_version_manager');
-        $container->setAlias('phlexible_elementtype.elementtype_structure_manager', 'phlexible_elementtype.doctrine.elementtype_structure_manager');
+        $container->setAlias('phlexible_elementtype.elementtype_manager', 'phlexible_elementtype.file.elementtype_manager');
     }
 }

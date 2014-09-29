@@ -18,8 +18,8 @@ Phlexible.elementtypes.ElementtypeStructureTreeNodeUI = Ext.extend(Ext.tree.Tree
                 isSingleLine = false;
 
             if (n.attributes.type == 'group') {
-                var minRepeat = n.attributes.properties.configuration.repeat_min.length ? (parseInt(n.attributes.properties.configuration.repeat_min, 10) || 0) : 1;
-                var maxRepeat = n.attributes.properties.configuration.repeat_max.length ? (parseInt(n.attributes.properties.configuration.repeat_max, 10) || 0) : 1;
+                var minRepeat = n.attributes.properties.configuration.repeat_min ? (parseInt(n.attributes.properties.configuration.repeat_min, 10) || 0) : 1;
+                var maxRepeat = n.attributes.properties.configuration.repeat_max ? (parseInt(n.attributes.properties.configuration.repeat_max, 10) || 0) : 1;
 
                 isOptional = !minRepeat;
                 isRepeatable = minRepeat != maxRepeat && maxRepeat > 1 ? true : false;
