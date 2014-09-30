@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\File\Loader;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
-use Phlexible\Bundle\GuiBundle\Locator\PatternLocator;
+use Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator;
 
 /**
  * XML loader
@@ -21,14 +21,14 @@ use Phlexible\Bundle\GuiBundle\Locator\PatternLocator;
 class XmlLoader implements LoaderInterface
 {
     /**
-     * @var PatternLocator
+     * @var PatternResourceLocator
      */
     private $locator;
 
     /**
-     * @param PatternLocator $locator
+     * @param PatternResourceLocator $locator
      */
-    public function __construct(PatternLocator $locator)
+    public function __construct(PatternResourceLocator $locator)
     {
         $this->locator = $locator;
     }

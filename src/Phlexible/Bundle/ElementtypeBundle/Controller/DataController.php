@@ -79,16 +79,14 @@ class DataController extends Controller
      */
     public function imagesAction(Request $request)
     {
+        $locator = $this->get('pattern_locator');
+        $files = $locator->locate('*.gif', 'public/elementtypes', false);
         $prefix = $request->getBasePath() . '/bundles/phlexibleelementtype/elementtypes/';
-
-        $finder = new \Symfony\Component\Finder\Finder();
-        $dirs = array(dirname(dirname(__FILE__)) . '/Resources/public/elementtypes');
-
-        foreach ($finder->in($dirs)->name('/^[^_].+\.gif$/') as $file) {
-            $filename = $file->getFilename();
-            $data[$filename] = array(
-                'title' => $filename,
-                'url'   => $prefix . $filename
+        
+        foreach ($files as $file) {
+            $data[basename($file)] = array(
+                'title' => basename($file),
+                'url'   => $prefix . $file
             );
         }
 

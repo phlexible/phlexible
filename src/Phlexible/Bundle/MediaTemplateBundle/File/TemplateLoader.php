@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\File;
 
-use Phlexible\Bundle\GuiBundle\Locator\PatternLocator;
+use Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator;
 use Phlexible\Bundle\MediaTemplateBundle\File\Loader\LoaderInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateCollection;
 
@@ -20,7 +20,7 @@ use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateCollection;
 class TemplateLoader
 {
     /**
-     * @var PatternLocator
+     * @var PatternResourceLocator
      */
     private $locator;
 
@@ -30,9 +30,9 @@ class TemplateLoader
     private $loaders = array();
 
     /**
-     * @param PatternLocator $locator
+     * @param PatternResourceLocator $locator
      */
-    public function __construct(PatternLocator $locator)
+    public function __construct(PatternResourceLocator $locator)
     {
         $this->locator = $locator;
     }
@@ -57,7 +57,7 @@ class TemplateLoader
         $templates = new TemplateCollection();
 
         foreach ($this->loaders as $extension => $loader) {
-            $files = $this->locator->locate('*.' . $extension, 'mediatemplates');
+            $files = $this->locator->locate("*.$extension", 'mediatemplates');
 
             foreach ($files as $file) {
                 $templates->add($loader->load($file));

@@ -4,8 +4,8 @@ parameters:
 
 services:
     pattern_locator:
-        class: Phlexible\Bundle\GuiBundle\Locator\PatternLocator
-        arguments: [@kernel]
+        class: Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator
+        arguments: [@kernel, "%kernel.root_dir%/Resources"]
 
     properties:
         class: Phlexible\Bundle\GuiBundle\Properties\Properties

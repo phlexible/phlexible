@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\ContentchannelBundle\File;
 
 use Phlexible\Bundle\ContentchannelBundle\File\Loader\LoaderInterface;
 use Phlexible\Bundle\ContentchannelBundle\Model\ContentchannelCollection;
-use Phlexible\Bundle\GuiBundle\Locator\PatternLocator;
+use Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator;
 
 /**
  * Content channel loader
@@ -20,7 +20,7 @@ use Phlexible\Bundle\GuiBundle\Locator\PatternLocator;
 class ContentchannelLoader
 {
     /**
-     * @var PatternLocator
+     * @var PatternResourceLocator
      */
     private $locator;
 
@@ -30,9 +30,9 @@ class ContentchannelLoader
     private $loaders = array();
 
     /**
-     * @param PatternLocator $locator
+     * @param PatternResourceLocator $locator
      */
-    public function __construct(PatternLocator $locator)
+    public function __construct(PatternResourceLocator $locator)
     {
         $this->locator = $locator;
     }
@@ -57,7 +57,7 @@ class ContentchannelLoader
         $contentChannels = new ContentchannelCollection();
 
         foreach ($this->loaders as $extension => $loader) {
-            $files = $this->locator->locate('*.' . $extension, 'contentchannels');
+            $files = $this->locator->locate("*.$extension", 'contentchannels');
 
             foreach ($files as $file) {
                 $contentChannels->add($loader->load($file));
