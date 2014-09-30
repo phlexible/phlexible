@@ -82,7 +82,7 @@ class DataController extends Controller
         $locator = $this->get('pattern_locator');
         $files = $locator->locate('*.gif', 'public/elementtypes', false);
         $prefix = $request->getBasePath() . '/bundles/phlexibleelementtype/elementtypes/';
-        
+
         foreach ($files as $file) {
             $data[basename($file)] = array(
                 'title' => basename($file),

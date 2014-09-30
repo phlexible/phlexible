@@ -53,7 +53,7 @@ class XmlLoader implements LoaderInterface
      */
     public function load($elementtypeId)
     {
-        $filename = current($this->locator->locate("$elementtypeId.xml", 'elementtypes'));
+        $filename = $this->locator->locate("$elementtypeId.xml", 'elementtypes', true);
 
         return $this->loadFile($filename);
     }
@@ -220,7 +220,7 @@ class XmlLoader implements LoaderInterface
         }
 
         if ($referenceElementtypeId) {
-            $referenceFilename = current($this->locator->locate("$referenceElementtypeId.xml", 'elementtypes'));
+            $referenceFilename = $this->locator->locate("$referenceElementtypeId.xml", 'elementtypes', true);
             $referenceXml = simplexml_load_file($referenceFilename);
             foreach ($referenceXml->structure->node as $referenceNode) {
                 $this->loadNode($referenceNode, $elementtypeStructure, $elementtypeStructureNode, true);
