@@ -33,7 +33,7 @@ class ElementtypeVersion implements IdentifiableInterface
     /**
      * @var Elementtype
      * @ORM\ManyToOne(targetEntity="Elementtype")
-     * @ORM\JoinColumn(name="elementtype_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="elementtype_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $elementtype;
 

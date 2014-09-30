@@ -88,7 +88,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
      */
     public function findOneByUniqueId($uniqueId)
     {
-        return $this->getElementtypeRepository()->findOneBy(array('uniqueId' => $uniqueId));
+        return $this->getElementtypeRepository()->findOneBy(array('uniqueId' => $uniqueId, 'deleted' => 0));
     }
 
     /**
@@ -96,7 +96,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
      */
     public function findByType($type)
     {
-        return $this->getElementtypeRepository()->findBy(array('type' => $type));
+        return $this->getElementtypeRepository()->findBy(array('type' => $type, 'deleted' => 0));
     }
 
     /**
@@ -104,7 +104,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
      */
     public function findAll()
     {
-        return $this->getElementtypeRepository()->findAll();
+        return $this->getElementtypeRepository()->findBy(array('deleted' => 0));
     }
 
     /**
