@@ -4,7 +4,7 @@ Phlexible.dashboard.StartListTemplate = new Ext.XTemplate(
     '<div class="x-panel-tl">',
     '<div class="x-panel-tr">',
     '<div class="x-panel-tc">',
-    '<div class="x-panel-header x-panel-icon {iconCls}">',
+    '<div class="x-panel-header x-panel-icon {iconCls}" style="cursor: pointer;" title="Click to add.">',
     '<span class="x-panel-header-text">{title}</span>',
     '</div>',
     '</div>',
@@ -25,28 +25,26 @@ Phlexible.dashboard.ListPanel = Ext.extend(Ext.Panel, {
             'portletOpen'
         );
 
-        this.items = [
-            {
-                xtype: 'dataview',
-                store: Phlexible.dashboard.ListStore,
-                tpl: Phlexible.dashboard.StartListTemplate,
-                style: 'margin: 4px 4px 0 4px;',
-                emptyText: this.strings.no_available_portlets,
-                deferEmptyText: false,
-                itemSelector: 'div.portlets-wrap',
-                overClass: 'x-view-over',
-                singleSelect: true,
-                listeners: {
-                    click: {
-                        fn: function (view, index, el) {
-                            var r = view.store.getAt(index);
-                            this.fireEvent('portletOpen', view.store, r);
-                        },
-                        scope: this
-                    }
+        this.items = [{
+            xtype: 'dataview',
+            store: Phlexible.dashboard.ListStore,
+            tpl: Phlexible.dashboard.StartListTemplate,
+            style: 'margin: 4px 4px 0 4px;',
+            emptyText: this.strings.no_available_portlets,
+            deferEmptyText: false,
+            itemSelector: 'div.portlets-wrap',
+            overClass: 'x-view-over',
+            singleSelect: true,
+            listeners: {
+                click: {
+                    fn: function (view, index, el) {
+                        var r = view.store.getAt(index);
+                        this.fireEvent('portletOpen', view.store, r);
+                    },
+                    scope: this
                 }
             }
-        ];
+        }];
 
         this.tbar = [
             {
