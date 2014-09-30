@@ -1,6 +1,6 @@
 parameters:
-    app.lock_dir:             %kernel.cache_dir%/locks/
-    app.web_dir:              %kernel.root_dir%/../web/
+    app.lock_dir: %kernel.cache_dir%/locks/
+    app.web_dir:  %kernel.root_dir%/../web/
 
 services:
     properties:
