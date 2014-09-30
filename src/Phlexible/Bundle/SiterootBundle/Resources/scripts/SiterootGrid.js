@@ -208,6 +208,7 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
                     var data = Ext.decode(response.responseText);
                     if (data.success) {
                         this.fireEvent('siterootDataChange');
+                        Phlexible.Frame.menu.load();
                     }
                     else {
                         Ext.Msg.alert('Failure', data.msg);
