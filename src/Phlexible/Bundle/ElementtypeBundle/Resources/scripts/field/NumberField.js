@@ -39,6 +39,7 @@ Phlexible.fields.FieldTypes.addField('numberfield', {
             help: 1
         },
         configuration: {
+            required: 1,
             sync: 1,
             width: 1,
             height: 0,
@@ -63,7 +64,6 @@ Phlexible.fields.FieldTypes.addField('numberfield', {
             text: 0
         },
         validation: {
-            required: 1,
             text: 1,
             numeric: 1,
             content: 0

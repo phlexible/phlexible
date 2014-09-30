@@ -14,7 +14,7 @@ use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeEvent;
 use Phlexible\Bundle\ElementtypeBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementtypeBundle\Exception\DeleteCancelledException;
 use Phlexible\Bundle\ElementtypeBundle\Exception\UpdateCancelledException;
-use Phlexible\Bundle\ElementtypeBundle\File\Loader\DumperInterface;
+use Phlexible\Bundle\ElementtypeBundle\File\Dumper\DumperInterface;
 use Phlexible\Bundle\ElementtypeBundle\File\Loader\LoaderInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeManagerInterface;
@@ -50,7 +50,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
 
     /**
      * @param LoaderInterface          $loader
-     * @param DumperInterface          $dumper
+     * @param \Phlexible\Bundle\ElementtypeBundle\File\Dumper\DumperInterface          $dumper
      * @param EventDispatcherInterface $dispatcher
      * @param MessagePoster            $messageService
      */

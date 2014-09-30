@@ -1,9 +1,11 @@
 Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valueStructure, element, repeatableId) {
-    var minRepeat = parseInt(item.configuration.repeat_min, 10) || 0;
-    var maxRepeat = parseInt(item.configuration.repeat_max, 10) || 0;
-    var isRepeatable = minRepeat != maxRepeat || maxRepeat > 1;
-    var isOptional = minRepeat == 0 && maxRepeat;
-    var defaultRepeat = parseInt(item.configuration.repeat_default, 10) || 0;
+    var minRepeat = parseInt(item.configuration.repeat_min, 10) || 0,
+        maxRepeat = parseInt(item.configuration.repeat_max, 10) || 0,
+        isRepeatable = minRepeat != maxRepeat || maxRepeat > 1,
+        isOptional = minRepeat == 0 && maxRepeat,
+        defaultRepeat = parseInt(item.configuration.repeat_default, 10) || 0,
+        contextHelp = item.labels.contextHelp || {};
+
     if (element.version > 1 && minRepeat === 0) {
         defaultRepeat = 0;
     }
@@ -39,7 +41,7 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
         dsId: item.dsId,
         repeatableId: repeatableId,
         attributes: valueStructure.attributes,
-        helpText: item.labels.contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
+        helpText: contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
         isMaster: element.master,
         isDiff: !!element.data.diff,
         isOptional: isOptional,
@@ -95,6 +97,7 @@ Phlexible.fields.FieldTypes.addField('group', {
     ],
     config: {
         labels: {
+            required: 0,
             field: 1,
             box: 0,
             prefix: 0,

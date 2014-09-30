@@ -6,6 +6,10 @@ services:
         - @phlexible_elementtype.viability_manager
         - @phlexible_elementtype.usage_manager
 
+    phlexible_elementtype.select_field_providers:
+        class: Phlexible\Bundle\ElementtypeBundle\SelectFieldProvider\SelectFieldProviderCollection
+        arguments: [[]]
+
     phlexible_elementtype.tree_saver:
         class: Phlexible\Bundle\ElementtypeBundle\Controller\Tree\TreeSaver
         arguments: [@phlexible_elementtype.elementtype_service]

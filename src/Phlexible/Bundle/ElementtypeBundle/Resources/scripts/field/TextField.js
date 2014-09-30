@@ -41,6 +41,7 @@ Phlexible.fields.FieldTypes.addField('textfield', {
             help: 1
         },
         configuration: {
+            required: 1,
             sync: 1,
             width: 1,
             height: 0,
@@ -65,7 +66,6 @@ Phlexible.fields.FieldTypes.addField('textfield', {
             text: 0
         },
         validation: {
-            required: 1,
             text: 1,
             numeric: 0,
             content: 1

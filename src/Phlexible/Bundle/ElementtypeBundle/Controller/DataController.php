@@ -24,32 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 class DataController extends Controller
 {
     /**
-     * Return available functions
-     *
-     * @return JsonResponse
-     * @Route("/select", name="elementtypes_data_select")
-     */
-    public function selectAction()
-    {
-        $callback = $this->get('componentCallback');
-        $selectFieldProviders = $callback->getSelectFieldProvider();
-
-        $data = array();
-        foreach ($selectFieldProviders as $selectFieldProvider) {
-            if (!class_exists($selectFieldProvider)) {
-                continue;
-            }
-
-            $data[] = array(
-                'function' => $selectFieldProvider,
-                'title'    => call_user_func(array($selectFieldProvider, 'getTitle')),
-            );
-        }
-
-        return new JsonResponse(array('functions' => $data));
-    }
-
-    /**
      * Return available content channels
      *
      * @return JsonResponse

@@ -219,7 +219,6 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
     },
 
     getSaveValues: function () {
-        console.log(this.mappings);
         return this.mappings;
 
         var data = [];

@@ -18,7 +18,14 @@ Phlexible.elementtypes.configuration.FieldConfigurationSuggest = Ext.extend(Ext.
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('datasources_list'),
                     root: 'datasources',
-                    fields: ['id', 'title']
+                    fields: ['id', 'title'],
+                    autoLoad: true,
+                    listeners: {
+                        load: function() {
+                            this.getComponent(0).setValue(this.getComponent(0).getValue());
+                        },
+                        scope: this
+                    }
                 }),
                 displayField: 'title',
                 valueField: 'id',

@@ -57,7 +57,7 @@ class TemplateLoader
         $templates = new TemplateCollection();
 
         foreach ($this->loaders as $extension => $loader) {
-            $files = $this->locator->locate("*.$extension", 'mediatemplates');
+            $files = $this->locator->locate("*.$extension", 'mediatemplates', false);
 
             foreach ($files as $file) {
                 $templates->add($loader->load($file));

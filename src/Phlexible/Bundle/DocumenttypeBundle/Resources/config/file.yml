@@ -10,7 +10,7 @@ services:
         class: Phlexible\Bundle\DocumenttypeBundle\File\DocumenttypeLoader
         public: false
         arguments:
-            - %kernel.bundles%
+            - @pattern_locator
             - @phlexible_documenttype.compiler.php
             - %phlexible_documenttype.file_dir%
             - %phlexible_documenttype.compiler.cache_dir%

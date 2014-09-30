@@ -10,8 +10,8 @@ Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.f
             {
                 xtype: 'combo',
                 fieldLabel: this.strings.source,
-                name: 'source',
-                hiddenName: 'source',
+                name: 'select_source',
+                hiddenName: 'select_source',
                 hideMode: 'display',
                 allowBlank: false,
                 store: new Ext.data.SimpleStore({
@@ -39,7 +39,7 @@ Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.f
                 }
             },
             {
-                xtype: 'elementtypes-configuration-field-value-grid',
+                xtype: 'elementtypes-configuration-select-value-grid',
                 hidden: true,
                 listeners: {
                     defaultchange: function (key) {
@@ -58,12 +58,19 @@ Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.f
                 hideMode: 'display',
                 allowBlank: false,
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('elementtypes_data_select'),
+                    url: Phlexible.Router.generate('elementtypes_selectfield_providers'),
                     root: 'functions',
-                    fields: ['function', 'title']
+                    fields: ['name', 'title'],
+                    autoLoad: true,
+                    listeners: {
+                        load: function() {
+                            this.getComponent(2).setValue(this.getComponent(2).getValue());
+                        },
+                        scope: this
+                    }
                 }),
                 displayField: 'title',
-                valueField: 'function',
+                valueField: 'name',
                 mode: 'remote',
                 typeAhead: false,
                 triggerAction: 'all',
@@ -81,43 +88,56 @@ Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.f
     },
 
     updateVisibility: function (type, fieldType, fieldData) {
-        this.updateSelectSourceVisibility(fieldData.select_source);
+        var isSelect = (type === 'select' || type === 'multiselect');
+        this.getComponent(0).setDisabled(!isSelect);
+        this.getComponent(2).setDisabled(!isSelect);
+        this.setVisible(isSelect);
 
-        this.setVisible(type === 'select' || type === 'multiselect');
+        this.updateSelectSourceVisibility(fieldData.select_source);
     },
 
     updateSelectSourceVisibility: function (source) {
         switch (source) {
             case 'list':
-                this.getValueGrid().enable();
-                this.getValueGrid().show();
+                this.getComponent(1).enable();
+                this.getComponent(1).show();
                 this.getComponent(2).disable();
                 this.getComponent(2).hide();
                 break;
 
             case 'function':
-                this.getValueGrid().disable();
-                this.getValueGrid().hide();
+                this.getComponent(1).disable();
+                this.getComponent(1).hide();
                 this.getComponent(2).enable();
                 this.getComponent(2).show();
                 break;
+
+            default:
+                this.getComponent(1).disable();
+                this.getComponent(1).hide();
+                this.getComponent(2).disable();
+                this.getComponent(2).hide();
         }
     },
 
-    loadData: function (fieldData, fieldType) {
+    loadData: function (fieldData, fieldType, properties) {
         this.getComponent(0).setValue(fieldData.select_source);
         this.getComponent(2).setValue(fieldData.select_function);
 
-        this.getValueGrid().loadData(fieldData.select_list, fieldData.default_value);
+        this.getValueGrid().loadData(properties.options, fieldData.default_value);
 
         this.isValid();
     },
 
     getSaveValues: function () {
-        var values = this.getForm().getValues();
+        var data = {
+            select_source: this.getComponent(0).getValue(),
+            select_function: this.getComponent(2).getValue(),
+            select_list: null
+        };
 
         if (this.getValueGrid().isVisible()) {
-            delete values.source_function;
+            data.source_function = null;;
 
             var list = [];
 
@@ -132,10 +152,10 @@ Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.f
 
             this.getValueGrid().store.commitChanges();
 
-            values.source_list = list;
+            data.select_list = list;
         }
 
-        return values;
+        return data;
     },
 
     isValid: function () {

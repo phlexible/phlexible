@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementtypeBundle\File\Loader;
+namespace Phlexible\Bundle\ElementtypeBundle\File\Dumper;
 
 use FluentDOM\Document;
 use FluentDOM\Element;
@@ -104,12 +104,6 @@ class XmlDumper implements DumperInterface
                     if (!$languageValue) {
                         continue;
                     }
-                    if ($key === 'context_help') {
-                        $key = 'contextHelp';
-                    }
-                    if ($key === 'fieldlabel') {
-                        $key = 'fieldLabel';
-                    }
                     $labelsElement->appendElement(
                         'label',
                         $languageValue,
@@ -155,15 +149,15 @@ class XmlDumper implements DumperInterface
         if ($node->getOptions()) {
             $optionsElement = $nodeElement->appendElement('options');
             foreach ($node->getOptions() as $option) {
-                $optionsElement->appendElement(
+                $optionElement = $optionsElement->appendElement(
                     'option',
                     '',
                     array(
                         'key' => $option['key'],
-                        'de'  => $option['de'],
-                        'en'  => $option['en'],
                     )
                 );
+                $optionElement->appendElement('value', $option['de'], array('language' => 'de'));
+                $optionElement->appendElement('value', $option['en'], array('language' => 'en'));
             }
         }
 

@@ -57,7 +57,7 @@ class ContentchannelLoader
         $contentChannels = new ContentchannelCollection();
 
         foreach ($this->loaders as $extension => $loader) {
-            $files = $this->locator->locate("*.$extension", 'contentchannels');
+            $files = $this->locator->locate("*.$extension", 'contentchannels', false);
 
             foreach ($files as $file) {
                 $contentChannels->add($loader->load($file));

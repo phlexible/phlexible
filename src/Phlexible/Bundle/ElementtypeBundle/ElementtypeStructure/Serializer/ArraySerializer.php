@@ -34,6 +34,15 @@ class ArraySerializer implements SerializerInterface
         foreach ($rii as $node) {
             /* @var $node ElementtypeStructureNode */
 
+            $options = array();
+            foreach ($node->getOptions() as $key => $optionValues) {
+                $options[$key]['key'] = $key;
+                foreach ($optionValues as $language => $optionValue) {
+                    $options[$key][$language] = $optionValue;
+                }
+            }
+            $options = array_values($options);
+
             $nodeData = $nodeDatas[$node->getDsId()] = new \ArrayObject(
                 array(
                     'comment'          => $node->getComment(),
@@ -43,7 +52,7 @@ class ArraySerializer implements SerializerInterface
                     'id'               => md5(serialize($node)),
                     'labels'           => $this->normalizeLabels($node),
                     'name'             => $node->getName(),
-                    'options'          => $node->getOptions(),
+                    'options'          => $options,
                     'parentDsId'       => $node->getParentDsId(),
                     'parentId'         => md5(serialize($node->getParentNode())),
                     'referenceId'      => $node->getReferenceElementtypeId() ? $node->getReferenceElementtypeId() : null,

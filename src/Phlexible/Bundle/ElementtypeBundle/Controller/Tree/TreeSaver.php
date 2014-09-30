@@ -44,7 +44,7 @@ class TreeSaver
      * @param UserInterface $user
      *
      * @throws \Exception
-     * @return ElementtypeVersion
+     * @return Elementtype
      */
     public function save(Request $request, UserInterface $user)
     {
@@ -80,48 +80,38 @@ class TreeSaver
         $comment = trim($rootConfig['comment']) ?: null;
 
         $elementtype = $this->elementtypeService->findElementtype($elementtypeId);
-
-        $priorElementtypeVersion = $this->elementtypeService->findLatestElementtypeVersion($elementtype);
-
-        $elementtypeVersion = clone $priorElementtypeVersion;
-        $elementtypeVersion
-            ->setVersion($elementtypeVersion->getVersion() + 1)
+        $elementtype
+            ->setRevision($elementtype->getRevision() + 1)
+            ->setName($title)
+            ->setIcon($icon)
+            ->setHideChildren($hideChildren)
+            ->setDefaultTab($defaultTab)
             ->setDefaultContentTab($defaultContentTab)
             ->setMetaSetId($metasetId)
             ->setMappings($rootMappings)
             ->setComment($comment)
             ->setCreateUserId($user->getId())
-            ->setCreatedAt(new \DateTime());
-
-        $elementtype
-            ->setUniqueId($uniqueId)
-            ->setTitle($title)
-            ->setIcon($icon)
-            ->setHideChildren($hideChildren)
-            ->setDefaultTab($defaultTab)
-            ->setLatestVersion($elementtypeVersion->getVersion());
+            ->setCreatedAt(new \DateTime())
+        ;
 
         $elementtypeStructure = null;
         if (isset($rootData['children'])) {
             $fieldData = $rootData['children'];
-            $elementtypeStructure = $this->buildElementtypeStructure($elementtypeVersion, $rootType, $rootDsId, $user, $fieldData);
+            $elementtypeStructure = $this->buildElementtypeStructure($rootType, $rootDsId, $user, $fieldData);
+            $elementtype->setStructure($elementtypeStructure);
         }
 
         $this->elementtypeService->updateElementtype($elementtype, false);
 
-        if ($elementtypeStructure) {
-            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, false);
-        }
-
-        $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, true);
-
         // update elementtypes that use this elementtype as reference
 
+        /*
         if ($elementtype->getType() === 'reference') {
             $this->updateElementtypesUsingReference($elementtype, $user->getId());
         }
+        */
 
-        return $elementtypeVersion;
+        return $elementtype;
     }
 
     /**
@@ -176,43 +166,35 @@ class TreeSaver
     }
 
     /**
-     * @param ElementtypeVersion $elementtypeVersion
-     * @param string             $rootType
-     * @param string             $rootDsId
-     * @param UserInterface      $user
-     * @param array              $data
+     * @param string        $rootType
+     * @param string        $rootDsId
+     * @param UserInterface $user
+     * @param array         $data
      *
      * @return ElementtypeStructure
      */
-    private function buildElementtypeStructure(ElementtypeVersion $elementtypeVersion, $rootType, $rootDsId, UserInterface $user, array $data)
+    private function buildElementtypeStructure($rootType, $rootDsId, UserInterface $user, array $data)
     {
-        $elementtype = $elementtypeVersion->getElementtype();
-
         $elementtypeStructure = new ElementtypeStructure();
-        $elementtypeStructure
-            ->setElementtypeVersion($elementtypeVersion);
 
         $sort = 1;
 
         $rootNode = new ElementtypeStructureNode();
         $rootNode
-            ->setElementtype($elementtype)
-            ->setVersion($elementtypeVersion->getVersion())
-            ->setElementtypeStructure($elementtypeStructure)
             ->setDsId($rootDsId)
             ->setType($rootType)
             ->setName('root')
-            ->setSort($sort);
+        //    ->setSort($sort++)
+        ;
 
         $elementtypeStructure->addNode($rootNode);
 
-        $this->iterateData($elementtypeVersion, $elementtypeStructure, $rootNode, $user, $sort, $data);
+        $this->iterateData($elementtypeStructure, $rootNode, $user, $sort, $data);
 
         return $elementtypeStructure;
     }
 
     /**
-     * @param ElementtypeVersion       $elementtypeVersion
      * @param ElementtypeStructure     $elementtypeStructure
      * @param ElementtypeStructureNode $rootNode
      * @param UserInterface            $user
@@ -222,7 +204,6 @@ class TreeSaver
      * @return mixed
      */
     private function iterateData(
-        ElementtypeVersion $elementtypeVersion,
         ElementtypeStructure $elementtypeStructure,
         ElementtypeStructureNode $rootNode,
         UserInterface $user,
@@ -237,44 +218,42 @@ class TreeSaver
             $parentNode = $elementtypeStructure->getNode($row['parent_ds_id']);
 
             $node
-                ->setElementtype($elementtypeVersion->getElementtype())
-                ->setVersion($elementtypeVersion->getVersion())
-                ->setElementtypeStructure($elementtypeStructure)
                 ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : Uuid::generate())
                 ->setParentDsId($parentNode->getDsId())
                 ->setParentNode($parentNode)
-                ->setSort(++$sort);
+            //    ->setSort(++$sort)
+            ;
 
             if ($row['type'] == 'reference' && isset($row['reference']['new'])) {
                 $firstChild = $row['children'][0];
-                $referenceElementtypeVersion = $this->elementtypeService->createElementtype(
-                    'reference',
-                    'reference_' . $firstChild['properties']['field']['working_title'] . '_' . uniqid(),
-                    'Reference ' . $firstChild['properties']['field']['working_title'],
-                    '_fallback.gif',
-                    $user->getId(),
-                    false
-                );
-                $referenceElementtype = $referenceElementtypeVersion->getElementtype();
+
                 $referenceRootDsId = Uuid::generate();
                 foreach ($row['children'] as $index => $referenceRow) {
                     $row['children'][$index]['parent_ds_id'] = $referenceRootDsId;
                 }
                 $referenceElementtypeStructure = $this->buildElementtypeStructure(
-                    $referenceElementtypeVersion,
                     'referenceroot',
                     $referenceRootDsId,
                     $user,
                     $row['children']
                 );
 
-                $this->elementtypeService->updateElementtypeStructure($referenceElementtypeStructure, false);
+                $referenceElementtype = $this->elementtypeService->createElementtype(
+                    'reference',
+                    'reference_' . $firstChild['properties']['field']['working_title'] . '_' . uniqid(),
+                    'Reference ' . $firstChild['properties']['field']['working_title'],
+                    '_fallback.gif',
+                    $referenceElementtypeStructure,
+                    $user->getId(),
+                    false
+                );
 
                 $node
                     ->setType('reference')
                     ->setName('reference_' . $referenceElementtype->getId())
-                    ->setReferenceElementtype($referenceElementtype)
-                    ->setReferenceVersion($referenceElementtypeVersion->getVersion());
+                    ->setReferenceElementtypeId($referenceElementtype->getId())
+                    //->setReferenceVersion($referenceElementtypeVersion->getVersion())
+                ;
 
                 $elementtypeStructure->addNode($node);
             } elseif ($row['type'] == 'reference') {
@@ -283,8 +262,9 @@ class TreeSaver
                 $node
                     ->setType('reference')
                     ->setName('reference_' . $referenceElementtype->getId())
-                    ->setReferenceElementtype($referenceElementtype)
-                    ->setReferenceVersion($row['reference']['refVersion']);
+                    ->setReferenceElementtypeId($referenceElementtype->getId())
+                //    ->setReferenceVersion($row['reference']['refVersion'])
+                ;
 
                 $elementtypeStructure->addNode($node);
             } else {
@@ -305,7 +285,7 @@ class TreeSaver
                 $elementtypeStructure->addNode($node);
 
                 if (!empty($row['children'])) {
-                    $sort = $this->iterateData($elementtypeVersion, $elementtypeStructure, $rootNode, $user, $sort, $row['children']);
+                    $sort = $this->iterateData($elementtypeStructure, $rootNode, $user, $sort, $row['children']);
                 }
             }
         }

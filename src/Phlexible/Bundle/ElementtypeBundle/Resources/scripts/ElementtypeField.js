@@ -61,10 +61,6 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
                 key: 'configuration'
             },
             {
-                xtype: 'elementtypes-configuration-field-value',
-                key: 'options'
-            },
-            {
                 xtype: 'elementtypes-configuration-field-validation',
                 key: 'validation'
             },

@@ -16,18 +16,27 @@ namespace Phlexible\Bundle\ElementtypeBundle\SelectFieldProvider;
 interface SelectFieldProviderInterface
 {
     /**
-     * Return title for this select provider
+     * Return name of this provider
      *
      * @return string
      */
-    public function getTitle();
+    public function getName();
 
     /**
-     * Return associative data for this select provider
+     * Return title for this provider
+     *
+     * @param string $language
+     *
+     * @return string
+     */
+    public function getTitle($language);
+
+    /**
+     * Return associative data for this provider
      *
      * @param string $language
      *
      * @return array
      */
-    public function get($language);
+    public function getData($language);
 }

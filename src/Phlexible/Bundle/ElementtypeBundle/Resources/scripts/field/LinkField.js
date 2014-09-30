@@ -64,36 +64,13 @@ Phlexible.fields.FieldTypes.addField('link', {
             help: 1
         },
         configuration: {
+            required: 1,
             sync: 1,
             width: 1,
             height: 0,
             readonly: 1,
             hide_label: 1,
             sortable: 0
-        },
-        /*
-         values: {
-         default_text: 0,
-         default_number: 0,
-         default_textarea: 0,
-         default_date: 0,
-         default_time: 0,
-         default_select: 0,
-         default_link: 1,
-         default_checkbox: 0,
-         default_table: 0,
-         source: 0,
-         source_values: 0,
-         source_function: 0,
-         source_datasource: 0,
-         text: 0
-         },
-         */
-        validation: {
-            required: 1,
-            text: 0,
-            numeric: 0,
-            content: 0
         }
     }
 });

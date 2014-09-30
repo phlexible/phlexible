@@ -135,6 +135,7 @@ elementtypes:
     link_external: 'External link'
     link_intra: 'Intra-Siteroot link'
     link_email: Email-link
+    select: Select
     table: Table
     table_rows: 'Number of rows'
     table_cols: 'Number of columns'
@@ -159,7 +160,7 @@ elementtypes:
     source: Source
     editable_list: 'Editable list'
     editable_value: 'Editable value'
-    component_function: 'Component function'
+    component_function: 'Select field provider'
     content_channels: 'Content channels'
     available: available
     specific: specific

@@ -169,7 +169,7 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
         fieldData.boxLabel = fieldData.boxLabel || {};
         fieldData.prefix = fieldData.prefix || {};
         fieldData.suffix = fieldData.suffix || {};
-        fieldData.contextJelp = fieldData.contextHelp || {};
+        fieldData.contextHelp = fieldData.contextHelp || {};
 
         this.getForm().setValues([
             {id: 'fieldlabel_de', value: fieldData.fieldLabel.de},

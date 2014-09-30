@@ -44,6 +44,7 @@ Phlexible.fields.FieldTypes.addField('timecodefield', {
             help: 1
         },
         configuration: {
+            required: 1,
             sync: 1,
             width: 1,
             height: 0,
@@ -66,12 +67,6 @@ Phlexible.fields.FieldTypes.addField('timecodefield', {
             source_function: 0,
             source_datasource: 0,
             text: 0
-        },
-        validation: {
-            required: 1,
-            text: 0,
-            numeric: 0,
-            content: 0
         }
     }
 });

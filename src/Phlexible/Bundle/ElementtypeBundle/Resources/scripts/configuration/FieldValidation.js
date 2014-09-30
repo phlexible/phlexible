@@ -11,29 +11,6 @@ Phlexible.elementtypes.configuration.FieldValidation = Ext.extend(Ext.form.FormP
     initComponent: function () {
         this.items = [
             {
-                xtype: 'combo',
-                width: 212,
-                listWidth: 230,
-                fieldLabel: this.strings.required,
-                hiddenName: 'required',
-                store: new Ext.data.SimpleStore({
-                    fields: ['key', 'value'],
-                    data: [
-                        ['no', this.strings.not_required],
-                        ['on_publish', this.strings.on_publish],
-                        ['always', this.strings.always]
-                    ]
-                }),
-                displayField: 'value',
-                valueField: 'key',
-                editable: false,
-                mode: 'local',
-                triggerAction: 'all',
-                selectOnFocus: true,
-                typeAhead: false,
-                value: 'no'
-            },
-            {
                 xtype: 'fieldset',
                 title: this.strings.text_validation,
 //            disabled: true,
@@ -169,47 +146,37 @@ Phlexible.elementtypes.configuration.FieldValidation = Ext.extend(Ext.form.FormP
     },
 
     updateVisibility: function (fieldType) {
-        // required
-        if (fieldType.config.validation.required) {
+        // text
+        if (fieldType.config.validation.text) {
             this.getComponent(0).show();
         }
         else {
             this.getComponent(0).hide();
         }
 
-        // text
-        if (fieldType.config.validation.text) {
+        // content
+        if (fieldType.config.validation.content) {
             this.getComponent(1).show();
         }
         else {
             this.getComponent(1).hide();
         }
 
-        // content
-        if (fieldType.config.validation.content) {
+        // numeric
+        if (fieldType.config.validation.numeric) {
             this.getComponent(2).show();
         }
         else {
             this.getComponent(2).hide();
         }
-
-        // numeric
-        if (fieldType.config.validation.numeric) {
-            this.getComponent(3).show();
-        }
-        else {
-            this.getComponent(3).hide();
-        }
     },
 
     loadData: function (fieldData, fieldType) {
-        this.getComponent(0).setValue(fieldData.required || 'no');
-
         this.updateVisibility(fieldType);
 
-        var text = this.getComponent(1);
-        var content = this.getComponent(2);
-        var number = this.getComponent(3);
+        var text = this.getComponent(0);
+        var content = this.getComponent(1);
+        var number = this.getComponent(2);
 
         text.getComponent(0).setValue(fieldData.min_length);
         text.getComponent(1).setValue(fieldData.max_length);
@@ -225,7 +192,21 @@ Phlexible.elementtypes.configuration.FieldValidation = Ext.extend(Ext.form.FormP
     },
 
     getSaveValues: function () {
-        return this.getForm().getValues();
+        var values = this.getForm().getValues();
+
+        return {
+            min_length: values.min_length,
+            max_length: values.max_length,
+            regexp: values.regexp,
+            global: values.global,
+            ignore: values.ignore,
+            multiline: values.multiline,
+            validator: values.validator,
+            allow_negative: values.allow_negative,
+            allow_decimals: values.allow_decimals,
+            min_value: values.min_value,
+            max_value: values.max_value
+        };
     },
 
     isValid: function () {

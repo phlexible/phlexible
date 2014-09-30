@@ -13,7 +13,10 @@ Phlexible.fields.FieldHelper = {
         var hideLabel,
             label,
             labelSeparator = ':',
-            language = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
+            language = Phlexible.Config.get('user.property.interfaceLanguage', 'en'),
+            contextHelp = item.labels.contextHelp || {},
+            prefix = item.labels.prefix || {}
+            suffix = item.labels.suffix || {};
 
         if (parentConfig.singleLineLabel) {
             label = parentConfig.singleLineLabel;
@@ -48,16 +51,15 @@ Phlexible.fields.FieldHelper = {
         if (repeatableId) {
             name += '__' + repeatableId;
         }
-        console.info(name);
 
         var config = {
             name: name,
             dsId: item.dsId,
 
             fieldLabel: label,
-            helpText: (item.labels.contextHelp[language] || ''),
-            prefix: (item.labels.prefix[language] || ''),
-            suffix: (item.labels.suffix[language] || ''),
+            helpText: contextHelp[language] || '',
+            prefix: prefix[language] || '',
+            suffix: suffix[language] || '',
             labelSeparator: labelSeparator,
             hideLabel: hideLabel,
 
@@ -73,11 +75,11 @@ Phlexible.fields.FieldHelper = {
             isUnlinked: item.data_options && item.data_options.unlinked,
 
 //            isRepeatable: (item.configuration.repeat_max > 1 ? true : false),
-            minRepeat: (item.configuration.repeat_min ? parseInt(item.configuration.repeat_min, 10) : 0),
-            maxRepeat: (item.configuration.repeat_max ? parseInt(item.configuration.repeat_max, 10) : 0),
-            defaultRepeat: (item.configuration.repeat_default ? parseInt(item.configuration.repeat_default, 10) : 0),
+            minRepeat: item.configuration.repeat_min ? parseInt(item.configuration.repeat_min, 10) : 0,
+            maxRepeat: item.configuration.repeat_max ? parseInt(item.configuration.repeat_max, 10) : 0,
+            defaultRepeat: item.configuration.repeat_default ? parseInt(item.configuration.repeat_default, 10) : 0,
 
-            width: (parseInt(item.configuration.width, 10) || 100),
+            width: parseInt(item.configuration.width, 10) || 100,
 
             allowBlank: item.validation.required != 'always',
 

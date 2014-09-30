@@ -138,9 +138,6 @@ class ElementtypeAssetProvider implements AssetProviderInterface
                 '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldValidation.js'
             )),
             new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldValue.js'
-            )),
-            new FileAsset($this->locator->locate(
                 '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldContentchannel.js'
             )),
             new FileAsset($this->locator->locate(
@@ -148,6 +145,12 @@ class ElementtypeAssetProvider implements AssetProviderInterface
             )),
             new FileAsset($this->locator->locate(
                 '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationAccordion.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationDefaultValue.js'
+            )),
+            new FileAsset($this->locator->locate(
+                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationLabel.js'
             )),
             new FileAsset($this->locator->locate(
                 '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationLink.js'
@@ -161,6 +164,7 @@ class ElementtypeAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate(
                 '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationTable.js'
             )),
+            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/configuration/SelectValueGrid.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeRoot.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeField.js')),
             new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/MainPanel.js')),

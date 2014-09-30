@@ -1,8 +1,12 @@
 Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     // labels
-    var hideLabel;
-    var label;
-    var labelSeparator = ':';
+    var hideLabel,
+        label,
+        labelSeparator = ':',
+        contextHelp = item.labels.contextHelp || {},
+        prefix = item.labels.prefix || {},
+        suffix = item.labels.suffix || {};
+
     if (parentConfig.singleLineLabel) {
         label = parentConfig.singleLineLabel;
         parentConfig.singleLineLabel = '';
@@ -32,13 +36,13 @@ Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, ite
         dsId: item.dsId,
 
         fieldLabel: label,
-        helpText: (item.labels.contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
-        prefix: (item.labels.prefix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
-        suffix: (item.labels.suffix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
+        helpText: contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
+        prefix: prefix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
+        suffix: suffix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
         labelSeparator: labelSeparator,
         hideLabel: hideLabel,
         value: item.content,
-        width: (item.configuration.width || 100),
+        width: item.configuration.width || 100,
         element: element,
 
         supportsPrefix: true,
@@ -75,28 +79,13 @@ Phlexible.fields.FieldTypes.addField('displayfield', {
             help: 1
         },
         configuration: {
+            required: 0,
             sync: 0,
             width: 1,
             height: 0,
             readonly: 0,
             hide_label: 1,
             sortable: 0
-        },
-        values: {
-            default_text: 0,
-            default_number: 0,
-            default_textarea: 0,
-            default_date: 0,
-            default_time: 0,
-            default_select: 0,
-            default_link: 0,
-            default_checkbox: 0,
-            default_table: 0,
-            source: 0,
-            source_values: 0,
-            source_function: 0,
-            source_datasource: 0,
-            text: 1
         }
     }
 });

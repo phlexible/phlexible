@@ -50,20 +50,16 @@ class PatternResourceLocator extends FileLocator
      */
     public function locate($name, $currentPath = null, $first = true)
     {
-        if (strpos($name, '*') === false) {
-            return parent::locate($name, $currentPath, $first);
-        }
-
         $paths = array();
+        $path = $this->kernel->getRootDir() . '/Resources/' . $currentPath;
+        if (file_exists($path)) {
+            $paths[] = $path;
+        }
         foreach ($this->kernel->getBundles() as $bundle) {
             $path = $bundle->getPath() . '/Resources/' . $currentPath;
             if (file_exists($path)) {
                 $paths[] = $path;
             }
-        }
-        $path = $this->kernel->getRootDir() . '/Resources/' . $currentPath;
-        if (file_exists($path)) {
-            $paths[] = $path;
         }
 
         $finder = new Finder();

@@ -9,22 +9,7 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
     labelWidth: 150,
 
     initComponent: function () {
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('elementtypes_list', {type: 'full'}),
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                this.linkElementtypesStore.loadData(data.elementtypes);
-            },
-            scope: this
-        });
-
         this.initMyItems();
-
-        this.linkElementtypesStore = new Ext.data.JsonStore({
-            fields: ['id', 'title'],
-            id: 'id'
-        });
 
         Phlexible.elementtypes.configuration.FieldConfiguration.superclass.initComponent.call(this);
     },
@@ -34,13 +19,36 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
             {
                 // 0
                 xtype: 'combo',
+                width: 183,
+                listWidth: 200,
+                fieldLabel: this.strings.required,
+                hiddenName: 'required',
+                store: new Ext.data.SimpleStore({
+                    fields: ['key', 'value'],
+                    data: [
+                        ['no', this.strings.not_required],
+                        ['on_publish', this.strings.on_publish],
+                        ['always', this.strings.always]
+                    ]
+                }),
+                displayField: 'value',
+                valueField: 'key',
+                editable: false,
+                mode: 'local',
+                triggerAction: 'all',
+                selectOnFocus: true,
+                typeAhead: false,
+                value: 'no'
+            },{
+                // 1
+                xtype: 'combo',
                 fieldLabel: this.strings.language,
                 hiddenName: 'synchronized',
                 store: new Ext.data.SimpleStore({
                     fields: ['key', 'title'],
                     data: [
                         ['no', this.strings.not_synchronized],
-                        ['synchronized', this.strings['synchronized']],
+                        ['synchronized', this.strings.synchronized],
                         ['synchronized_unlink', this.strings.synchronized_with_unlink]
                     ]
                 }),
@@ -54,7 +62,7 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
                 triggerAction: 'all'
             },
             {
-                // 1
+                // 2
                 xtype: 'numberfield',
                 fieldLabel: this.strings.width,
                 name: 'width',
@@ -64,7 +72,7 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
                 minValue: 20
             },
             {
-                // 2
+                // 3
                 xtype: 'numberfield',
                 fieldLabel: this.strings.height,
                 name: 'height',
@@ -74,7 +82,7 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
                 minValue: 20
             },
             {
-                // 3
+                // 4
                 xtype: 'checkbox',
                 name: 'readonly',
                 fieldLabel: '',
@@ -82,7 +90,7 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
                 boxLabel: this.strings.readonly
             },
             {
-                // 4
+                // 5
                 xtype: 'checkbox',
                 name: 'hide_label',
                 fieldLabel: '',
@@ -90,11 +98,15 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
                 boxLabel: this.strings.hide_label
             },
             {
-                //5
+                // 6
                 xtype: 'checkbox',
                 name: 'sortable',
                 fieldLabel: this.strings.child_items,
                 boxLabel: this.strings.can_be_sorted
+            },
+            {
+                xtype: 'elementtypes-configuration-field-configuration-default-value',
+                additional: true
             },
             {
                 xtype: 'elementtypes-configuration-field-configuration-accordion',
@@ -105,15 +117,17 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
                 additional: true
             },
             {
+                xtype: 'elementtypes-configuration-field-configuration-label',
+                additional: true
+            },
+            {
                 xtype: 'elementtypes-configuration-field-configuration-link',
                 additional: true
             },
-            /*
             {
                 xtype: 'elementtypes-configuration-field-configuration-select',
                 additional: true
             },
-            */
             {
                 xtype: 'elementtypes-configuration-field-configuration-suggest',
                 additional: true
@@ -127,51 +141,59 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
 
     updateVisibility: function (fieldType, type, fieldData) {
         // language sync
-        if (fieldType.config.configuration.sync) {
+        if (fieldType.config.configuration.required) {
             this.getComponent(0).show();
         }
         else {
             this.getComponent(0).hide();
         }
 
-        // width
-        if (fieldType.config.configuration.width) {
+        // language sync
+        if (fieldType.config.configuration.sync) {
             this.getComponent(1).show();
         }
         else {
             this.getComponent(1).hide();
         }
 
-        // height
-        if (fieldType.config.configuration.height) {
+        // width
+        if (fieldType.config.configuration.width) {
             this.getComponent(2).show();
         }
         else {
             this.getComponent(2).hide();
         }
 
-        // readonly
-        if (fieldType.config.configuration.readonly) {
+        // height
+        if (fieldType.config.configuration.height) {
             this.getComponent(3).show();
         }
         else {
             this.getComponent(3).hide();
         }
 
-        // hide label
-        if (fieldType.config.configuration.hide_label) {
+        // readonly
+        if (fieldType.config.configuration.readonly) {
             this.getComponent(4).show();
         }
         else {
             this.getComponent(4).hide();
         }
 
-        // children sortable
-        if (fieldType.config.configuration.sortable) {
+        // hide label
+        if (fieldType.config.configuration.hide_label) {
             this.getComponent(5).show();
         }
         else {
             this.getComponent(5).hide();
+        }
+
+        // children sortable
+        if (fieldType.config.configuration.sortable) {
+            this.getComponent(6).show();
+        }
+        else {
+            this.getComponent(6).hide();
         }
 
         this.items.each(function (panel) {
@@ -181,21 +203,24 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
         });
     },
 
-    loadData: function (fieldData, fieldType, type) {
+    loadData: function (properties, type, fieldType) {
+        var fieldData = properties.configuration;
+
         this.updateVisibility(fieldType, type, fieldData);
 
-        this.getForm().setValues([
-            {id: 'synchronized', value: fieldData['synchronized'] || 'no'},
-            {id: 'width', value: fieldData.width},
-            {id: 'height', value: fieldData.height},
-            {id: 'sortable', value: fieldData.sortable},
-            {id: 'readonly', value: fieldData.readonly},
-            {id: 'hide_label', value: fieldData.hide_label}
-        ]);
+        this.getForm().setValues({
+            required: fieldData.required || 'no',
+            synchronized: fieldData.synchronized || 'no',
+            width: fieldData.width,
+            height: fieldData.height,
+            sortable: fieldData.sortable,
+            readonly: fieldData.readonly,
+            hide_label: fieldData.hide_label
+        });
 
         this.items.each(function (panel) {
             if (panel.additional) {
-                panel.loadData(fieldData, fieldType);
+                panel.loadData(fieldData, fieldType, properties);
             }
         });
 
@@ -203,7 +228,17 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
     },
 
     getSaveValues: function () {
-        var data = this.getForm().getValues();
+        var values = this.getForm().getValues(),
+            data = {
+                required: values.required,
+                synchronized: values.synchronized,
+                width: values.width,
+                height: values.height,
+                sortable: values.sortable,
+                readonly: values.readonly,
+                hide_label: values.hide_label
+            };
+
 
         this.items.each(function (panel) {
             if (panel.additional && !panel.hidden) {
@@ -221,6 +256,9 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
             this.items.each(function (panel) {
                 if (panel.additional && panel.isVisible()) {
                     valid = valid && panel.isValid();
+                    if (!valid) {
+                        return false;
+                    }
                 }
             });
         }
@@ -244,7 +282,7 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
         if (fieldType.config.configuration) {
             this.active = true;
             this.ownerCt.getTabEl(this).hidden = false;
-            this.loadData(properties.configuration, fieldType, node.attributes.type);
+            this.loadData(properties, node.attributes.type, fieldType);
         }
         else {
             this.active = false;

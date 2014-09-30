@@ -144,6 +144,15 @@ class TreeController extends Controller
         foreach ($nodes as $node) {
             /* @var $node ElementtypeStructureNode */
 
+            $options = array();
+            foreach ($node->getOptions() as $key => $optionValues) {
+                $options[$key]['key'] = $key;
+                foreach ($optionValues as $language => $optionValue) {
+                    $options[$key][$language] = $optionValue;
+                }
+            }
+            $options = array_values($options);
+
             $tmp = array(
                 'text'       => $node->getLabel('fieldLabel', $language) . ' (' . $node->getName() . ')',
                 'id'         => md5(serialize($node)),
@@ -168,7 +177,7 @@ class TreeController extends Controller
                     ),
                     'configuration'    => $node->getConfiguration(),
                     'labels'           => $node->getLabels(),
-                    'options'          => $node->getOptions(),
+                    'options'          => $options,
                     'validation'       => $node->getValidation(),
                     'content_channels' => $node->getContentChannels(),
                 )

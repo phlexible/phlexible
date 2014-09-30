@@ -13,4 +13,4 @@ services:
       arguments: [@pattern_locator]
 
     phlexible_elementtype.file.dumper.xml:
-      class: Phlexible\Bundle\ElementtypeBundle\File\Loader\XmlDumper
+      class: Phlexible\Bundle\ElementtypeBundle\File\Dumper\XmlDumper

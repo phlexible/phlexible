@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Phlexible\Bundle\ElementtypeBundle\SelectFieldProvider\SelectFieldProviderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -25,27 +24,43 @@ use Symfony\Component\HttpFoundation\Request;
 class SelectfieldController extends Controller
 {
     /**
+     * Return available functions
+     *
+     * @return JsonResponse
+     * @Route("/select", name="elementtypes_selectfield_providers")
+     */
+    public function selectAction()
+    {
+        $selectFieldProviders = $this->get('phlexible_elementtype.select_field_providers');
+
+        $data = array();
+        foreach ($selectFieldProviders->all() as $selectFieldProvider) {
+            $data[] = array(
+                'name'  => $selectFieldProvider->getName(),
+                'title' => $selectFieldProvider->getTitle($this->getUser()->getInterfaceLanguage('en')),
+            );
+        }
+
+        return new JsonResponse(array('functions' => $data));
+    }
+
+    /**
      * Return selectfield data for lists
      *
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/list", name="elementtypes_selectfield_list")
+     * @Route("/function", name="elementtypes_selectfield_function")
      */
-    public function listAction(Request $request)
+    public function functionAction(Request $request)
     {
-        $providerClassname = $request->get('provider');
+        $selectFieldProviders = $this->get('phlexible_elementtype.select_field_providers');
+
+        $providerName = $request->get('provider');
         $language = $this->getUser()->getInterfaceLanguage('en');
 
-        $data = array();
-
-        if (class_exists($providerClassname)) {
-            $provider = new $providerClassname();
-
-            if ($provider instanceof SelectFieldProviderInterface) {
-                $data = $provider->get($language);
-            }
-        }
+        $provider = $selectFieldProviders->get($providerName);
+        $data = $provider->getData($language);
 
         return new JsonResponse(array('data' => $data));
     }

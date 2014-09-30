@@ -6,8 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementtypeBundle\File\Loader;
+namespace Phlexible\Bundle\ElementtypeBundle\File\Dumper;
 
+use FluentDOM\Document;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
@@ -18,7 +19,9 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 interface DumperInterface
 {
     /**
-     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
+     * @param Elementtype $elementtype
+     *
+     * @return Document
      */
     public function dump(Elementtype $elementtype);
 }

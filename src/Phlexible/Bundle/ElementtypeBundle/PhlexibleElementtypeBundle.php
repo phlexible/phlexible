@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle;
 
 use Phlexible\Bundle\ElementtypeBundle\DependencyInjection\Compiler\AddFieldsPass;
+use Phlexible\Bundle\ElementtypeBundle\DependencyInjection\Compiler\AddSelectFieldProvidersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -27,5 +28,6 @@ class PhlexibleElementtypeBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new AddFieldsPass());
+        $container->addCompilerPass(new AddSelectFieldProvidersPass());
     }
 }

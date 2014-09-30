@@ -11,9 +11,9 @@ namespace Phlexible\Bundle\DocumenttypeBundle\File;
 use Phlexible\Bundle\DocumenttypeBundle\Compiler\CompilerInterface;
 use Phlexible\Bundle\DocumenttypeBundle\File\Loader\LoaderInterface;
 use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeCollection;
+use Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Document type loader
@@ -23,9 +23,9 @@ use Symfony\Component\Filesystem\Filesystem;
 class DocumenttypeLoader
 {
     /**
-     * @var array
+     * @var PatternResourceLocator
      */
-    private $bundles;
+    private $locator;
 
     /**
      * @var CompilerInterface
@@ -43,15 +43,15 @@ class DocumenttypeLoader
     private $loaders = array();
 
     /**
-     * @param array             $bundles
-     * @param CompilerInterface $compiler
-     * @param string            $fileDir
-     * @param string            $cacheDir
-     * @param bool              $debug
+     * @param PatternResourceLocator $locator
+     * @param CompilerInterface      $compiler
+     * @param string                 $fileDir
+     * @param string                 $cacheDir
+     * @param bool                   $debug
      */
-    public function __construct(array $bundles, CompilerInterface $compiler, $fileDir, $cacheDir, $debug)
+    public function __construct(PatternResourceLocator $locator, CompilerInterface $compiler, $fileDir, $cacheDir, $debug)
     {
-        $this->bundles = $bundles;
+        $this->locator = $locator;
         $this->compiler = $compiler;
         $this->fileDir = $fileDir;
         $this->cacheDir = $cacheDir;
@@ -87,27 +87,18 @@ class DocumenttypeLoader
         $configCache = new ConfigCache($this->getFilename(), $this->debug);
 
         if (!$configCache->isFresh()) {
-            $dirs = array();
-            foreach ($this->bundles as $class) {
-                $reflection = new \ReflectionClass($class);
-                $componentDir = dirname($reflection->getFileName()) . '/Resources/documenttypes/';
-                if (file_exists($componentDir)) {
-                    $dirs[] = $componentDir;
-                }
-            }
-            $dirs[] = $this->fileDir;
 
             $resources = array();
-            foreach ($dirs as $dir) {
-                foreach ($this->loaders as $extension => $loader) {
-                    $files = glob($dir . '*.' . $extension);
+            foreach ($this->loaders as $extension => $loader) {
+                $files = $this->locator->locate("*.$extension", 'documenttypes', false);
 
-                    foreach ($files as $file) {
-                        $documentTypes->add($loader->load($file));
-                        $resources[] = new FileResource($file);
-                    }
+                foreach ($files as $file) {
+                    $documentTypes->add($loader->load($file));
+                    $resources[basename($file)] = new FileResource($file);
                 }
             }
+
+            $resources = array_values($resources);
 
             $configCache->write($this->compiler->compile($documentTypes), $resources);
         }

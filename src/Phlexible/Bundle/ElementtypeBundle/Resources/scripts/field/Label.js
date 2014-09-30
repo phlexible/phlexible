@@ -1,11 +1,13 @@
 Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valueStructure, element) {
-    var config = {
-        xtype: 'panel',
-        html: item.content || item.labels.contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
-        plain: true,
-        border: false,
-        cls: 'p-fields-label'
-    };
+    var contextHelp = item.labels.contextHelp || {},
+        fieldLabel = item.labels.fieldLabel || {},
+        config = {
+            xtype: 'panel',
+            html: item.content || contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+            plain: true,
+            border: false,
+            cls: 'p-fields-label'
+        };
 
     Ext.each(valueStructure.values, function (value) {
         if (value.dsId === item.dsId) {
@@ -30,27 +32,15 @@ Phlexible.fields.FieldTypes.addField('label', {
     ],
     config: {
         labels: {
+            required: 0,
             field: 1,
             box: 0,
             prefix: 0,
             suffix: 0,
             help: 1
         },
-        values: {
-            default_text: 0,
-            default_number: 0,
-            default_textarea: 0,
-            default_date: 0,
-            default_time: 0,
-            default_select: 0,
-            default_link: 0,
-            default_checkbox: 0,
-            default_table: 0,
-            source: 0,
-            source_values: 0,
-            source_function: 0,
-            source_datasource: 0,
-            text: 1
+        configuration: {
+
         }
     }
 });

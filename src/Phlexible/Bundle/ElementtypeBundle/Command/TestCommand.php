@@ -109,18 +109,68 @@ class TestCommand extends ContainerAwareCommand
             $configuration = json_decode($row['configuration'], true);
             $validation = json_decode($row['validation'], true);
 
-            if ($options && isset($options['source'])) {
-                $configuration['source'] = $options['source'];
+            if (isset($validation['required'])) {
+                $configuration['required'] = $validation['required'];
+                unset($validation['required']);
             }
 
-            if ($options && isset($options['source_function'])) {
-                $configuration['source_function'] = $options['source_function'];
+            if ($labels) {
+                if (isset($labels['fieldlabel'])) {
+                    $labels['fieldLabel'] = $labels['fieldlabel'];
+                    unset($labels['fieldlabel']);
+                }
+                if (isset($labels['context_help'])) {
+                    $labels['contextHelp'] = $labels['context_help'];
+                    unset($labels['context_help']);
+                }
+            }
+            if ($options) {
+                if (isset($options['default_value'])) {
+                    $configuration['default_value'] = $options['default_value'];
+                }
+
+                if (isset($options['text_de'])) {
+                    $configuration['text_de'] = $options['text_de'];
+                }
+
+                if (isset($options['text_en'])) {
+                    $configuration['text_en'] = $options['text_en'];
+                }
+
+                if (isset($options['source'])) {
+                    $configuration['select_source'] = $options['source'];
+                }
+
+                if (isset($options['source_function'])) {
+                    $configuration['select_function'] = $options['source_function'];
+                }
+
+                if (isset($options['source_list'])) {
+                    $options = $options['source_list'];
+                } else {
+                    $options = null;
+                }
             }
 
-            if ($options && isset($options['source_list'])) {
-                $options = $options['source_list'];
-            } else {
-                $options = null;
+            if ($configuration) {
+                foreach ($configuration as $key => $value) {
+                    if (substr($key, 0, 4) === 'ext-') {
+                        unset($configuration[$key]);
+                        continue;
+                    }
+                    if ($key === 'suggest_source' && $value === 'undefined') {
+                        unset($configuration[$key]);
+                        continue;
+                    }
+                    if ($row['type'] === 'group' && ($key === 'synchronized' || $key === 'required')) {
+                        unset($configuration[$key]);
+                        continue;
+                    }
+                    if ($row['type'] === 'tab') {
+                        unset($configuration[$key]);
+                        continue;
+                    }
+                }
             }
 
             $node = new ElementtypeStructureNode();

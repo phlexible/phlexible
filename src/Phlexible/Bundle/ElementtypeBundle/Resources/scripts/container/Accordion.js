@@ -66,6 +66,7 @@ Phlexible.fields.FieldTypes.addField('accordion', {
             help: 1
         },
         configuration: {
+            required: 0,
             sync: 0,
             width: 0,
             height: 0,

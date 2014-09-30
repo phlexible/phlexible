@@ -1,10 +1,10 @@
 Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item, valueStructure, element, repeatableId) {
-    var store, storeMode = 'remote';
-    if (item.options.source === 'component_function') {
+    var store, storeData, storeMode = 'remote', displayField = 'value';
+    if (item.configuration.select_source === 'function' && item.configuration.select_function) {
         store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('elementtypes_selectfield_list'),
+            url: Phlexible.Router.generate('elementtypes_selectfield_function'),
             baseParams: {
-                provider: item.options.component_function
+                provider: item.configuration.select_function
             },
             fields: ['key', 'value'],
             sortInfo: {
@@ -14,22 +14,28 @@ Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item
             autoLoad: true,
             listeners: {
                 load: function () {
-                    newItem.setValue(item.options.default_value);
+                    //newItem.setValue(item.options.default_value);
                 },
                 scope: this
             }
         });
-    } else if (item.options.source === 'list') {
-        var storeData = [];
-        if (item.options.source_list.length) {
-            for (var i = 0; i < item.options.source_list.length; i++) {
-                storeData.push([item.options.source_list[i].key, item.options.source_list[i][Phlexible.Config.get('user.property.interfaceLanguage', 'en')]]);
-            }
+    } else if (item.configuration.select_source === 'list') {
+        displayField = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
+        if (item.options.length) {
+            storeData = item.options;
         } else {
-            storeData.push(['no_valid_data', 'no_valid_data']);
+            storeData = [{key: 'no_valid_data', de: 'Keine gültigen Daten', en: 'No valid data'}];
         }
-        store = new Ext.data.SimpleStore({
-            fields: ['key', 'value'],
+        store = new Ext.data.JsonStore({
+            fields: ['key', 'de', 'en'],
+            data: storeData
+        });
+        storeMode = 'local';
+    } else {
+        displayField = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
+        storeData = [{key: 'no_valid_data', de: 'Keine gültigen Daten', en: 'No valid data'}];
+        store = new Ext.data.JsonStore({
+            fields: ['key', 'de', 'en'],
             data: storeData
         });
         storeMode = 'local';
@@ -46,7 +52,7 @@ Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item
         hideMode: 'offsets',
         store: store,
         valueField: 'key',
-        displayField: 'value',
+        displayField: displayField,
         mode: storeMode,
         typeAhead: false,
         editable: false,
@@ -99,6 +105,7 @@ Phlexible.fields.FieldTypes.addField('multiselect', {
             help: 1
         },
         configuration: {
+            required: 1,
             sync: 1,
             width: 1,
             height: 0,
@@ -122,12 +129,6 @@ Phlexible.fields.FieldTypes.addField('multiselect', {
             source_function: 1,
             source_datasource: 0,
             text: 0
-        },
-        validation: {
-            required: 1,
-            text: 0,
-            numeric: 0,
-            content: 0
         }
     }
 });
