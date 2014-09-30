@@ -2,25 +2,7 @@ Phlexible.gui.util.Frame = function () {
     this.addEvents({
         frameready: true
     });
-
-    this.initConfig();
 };
-
-
-Phlexible.gui.util.ToolbarEdge = function () {
-    var s = document.createElement("div");
-    s.className = "ytb-edge";
-    Phlexible.gui.util.ToolbarEdge.superclass.constructor.call(this, s);
-    this.edge = true;
-};
-Ext.extend(Phlexible.gui.util.ToolbarEdge, Ext.Toolbar.Item, {
-    enable: Ext.emptyFn,
-    disable: Ext.emptyFn,
-    focus: Ext.emptyFn
-});
-
-Ext.reg('tbedge', Phlexible.gui.util.ToolbarEdge);
-
 
 Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
     /**
@@ -86,30 +68,6 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
     /**
      * @private
      */
-    initStage2: function () {
-        this.initBody();
-
-        // initialize menu
-        this.initMenu();
-
-        // initialize system message
-        this.initSystemMessage();
-
-        // generate viewport
-        this.initViewport();
-
-        // do browser check
-        this.checkBrowser();
-
-        // remove splashscreen
-        this.removeSplash();
-
-        this.fireEvent('frameready', this);
-    },
-
-    /**
-     * @private
-     */
     initBody: function () {
         /* remove in 0.8 */
         Ext.isGecko10 = Ext.isGecko && /rv:10\./.test(navigator.userAgent.toLowerCase());
@@ -157,29 +115,53 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
     /**
      * @private
      */
-    initConfig: function () {
+    initFrame: function () {
+        // init config
+        this.initConfig();
+
+        // init body
+        this.initBody();
+
+        // initialize menu
+        this.initMenu();
+
+        // initialize system message
+        this.initSystemMessage();
+
+        // generate viewport
+        this.initViewport();
+
+        // do browser check
+        this.checkBrowser();
+
+        // remove splashscreen
+        this.removeSplash();
+
+        this.fireEvent('frameready', this);
+    },
+
+    initConfig: function() {
+        var config = Phlexible.config;
+        console.log(config);
+        delete Phlexible.config;
+        Phlexible.Config = new Phlexible.gui.util.Config(config);
+        Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
+    },
+
+    loadConfig: function () {
         // load config
         Ext.Ajax.request({
             url: Phlexible.Router.generate('gui_config'),
-            success: this.onLoadConfigSuccess,
+            success: function(response) {
+                var config = Ext.decode(response.responseText);
+                Phlexible.Config = new Phlexible.gui.util.Config(config);
+                Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
+            },
             failure: function () {
                 Ext.MessageBox.alert('Load error', 'Error loading config.');
             },
             scope: this
         });
-    },
-
-    /**
-     * @private
-     */
-    onLoadConfigSuccess: function (response) {
-        var config = Ext.decode(response.responseText);
-        Phlexible.Config = new Phlexible.gui.util.Config(config);
-        Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
-
-        this.initStage2();
-
-        this.handleConfig(Phlexible.Config);
     },
 
     handleConfig: Ext.emptyFn,
@@ -242,6 +224,9 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
             }
         });
 
+        // initialize system messages
+        this.systemMessage.deactivate.defer(2000, this.systemMessage);
+
         Phlexible.globalKeyMap.accessKey({key: 'j', alt: true}, this.systemMessage.poll, this.systemMessage);
     },
 
@@ -249,9 +234,6 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
      * @private
      */
     initViewport: function () {
-        // initialize system messages
-        this.systemMessage.deactivate.defer(2000, this.systemMessage);
-
         var mainItems = [{
             xtype: 'dashboard-main-panel',
             id: 'Phlexible_dashboard_MainPanel',
@@ -418,3 +400,17 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         return panel;
     }
 });
+
+Phlexible.gui.util.ToolbarEdge = function () {
+    var s = document.createElement("div");
+    s.className = "ytb-edge";
+    Phlexible.gui.util.ToolbarEdge.superclass.constructor.call(this, s);
+    this.edge = true;
+};
+Ext.extend(Phlexible.gui.util.ToolbarEdge, Ext.Toolbar.Item, {
+    enable: Ext.emptyFn,
+    disable: Ext.emptyFn,
+    focus: Ext.emptyFn
+});
+
+Ext.reg('tbedge', Phlexible.gui.util.ToolbarEdge);
