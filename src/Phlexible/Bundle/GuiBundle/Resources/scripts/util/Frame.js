@@ -65,6 +65,24 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         return this.getMainPanel().getActiveTab();
     },
 
+    loadConfig: function () {
+        // load config
+        Ext.Ajax.request({
+            url: Phlexible.Router.generate('gui_config'),
+            success: function(response) {
+                var config = Ext.decode(response.responseText);
+                Phlexible.Config = new Phlexible.gui.util.Config(config);
+                Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
+            },
+            failure: function () {
+                Ext.MessageBox.alert('Load error', 'Error loading config.');
+            },
+            scope: this
+        });
+    },
+
+    handleConfig: Ext.emptyFn,
+
     /**
      * @private
      */
@@ -79,30 +97,6 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
 
         bd.className += ' ext-gecko10';
         /*/remove in 0.8 */
-    },
-
-    /**
-     * @private
-     */
-    checkBrowser: function () {
-        var ok = true;
-        if (Ext.isGecko) {
-            if (Ext.isGecko1 || Ext.isGecko2) {
-                ok = false;
-            }
-        }
-        else if (!Ext.isIE && !Ext.isWebKit && !Ext.isOpera) {
-            ok = false;
-        }
-
-        if (!ok) {
-            Ext.MessageBox.alert(Phlexible.gui.Strings.warning, String.format(Phlexible.gui.Strings.check_not_suported, navigator.appName + ' ' + navigator.appVersion));
-        }
-        else {
-            if (Ext.isOpera) {
-                Ext.MessageBox.alert(Phlexible.gui.Strings.warning, String.format(Phlexible.gui.Strings.check_no_right_click, navigator.appName + ' ' + navigator.appVersion));
-            }
-        }
     },
 
     /**
@@ -140,6 +134,9 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         this.fireEvent('frameready', this);
     },
 
+    /**
+     * @private
+     */
     initConfig: function() {
         var config = Phlexible.config;
         console.log(config);
@@ -148,23 +145,29 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
     },
 
-    loadConfig: function () {
-        // load config
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('gui_config'),
-            success: function(response) {
-                var config = Ext.decode(response.responseText);
-                Phlexible.Config = new Phlexible.gui.util.Config(config);
-                Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
-            },
-            failure: function () {
-                Ext.MessageBox.alert('Load error', 'Error loading config.');
-            },
-            scope: this
-        });
-    },
+    /**
+     * @private
+     */
+    checkBrowser: function () {
+        var ok = true;
+        if (Ext.isGecko) {
+            if (Ext.isGecko1 || Ext.isGecko2) {
+                ok = false;
+            }
+        }
+        else if (!Ext.isIE && !Ext.isWebKit && !Ext.isOpera) {
+            ok = false;
+        }
 
-    handleConfig: Ext.emptyFn,
+        if (!ok) {
+            Ext.MessageBox.alert(Phlexible.gui.Strings.warning, String.format(Phlexible.gui.Strings.check_not_suported, navigator.appName + ' ' + navigator.appVersion));
+        }
+        else {
+            if (Ext.isOpera) {
+                Ext.MessageBox.alert(Phlexible.gui.Strings.warning, String.format(Phlexible.gui.Strings.check_no_right_click, navigator.appName + ' ' + navigator.appVersion));
+            }
+        }
+    },
 
     /**
      * @private
