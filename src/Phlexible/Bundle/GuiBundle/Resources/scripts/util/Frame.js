@@ -6,6 +6,22 @@ Phlexible.gui.util.Frame = function () {
     this.initConfig();
 };
 
+
+Phlexible.gui.util.ToolbarEdge = function () {
+    var s = document.createElement("div");
+    s.className = "ytb-edge";
+    Phlexible.gui.util.ToolbarEdge.superclass.constructor.call(this, s);
+    this.edge = true;
+};
+Ext.extend(Phlexible.gui.util.ToolbarEdge, Ext.Toolbar.Item, {
+    enable: Ext.emptyFn,
+    disable: Ext.emptyFn,
+    focus: Ext.emptyFn
+});
+
+Ext.reg('tbedge', Phlexible.gui.util.ToolbarEdge);
+
+
 Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
     /**
      * @returns {Phlexible.gui.Menu}
@@ -174,9 +190,16 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
     initMenu: function () {
         this.menu = new Phlexible.gui.Menu({
             listeners: {
-                load: function (menu) {
+                load: function (menu, items) {
+                    this.getToolbar().items.each(function(item) {
+                        if (item.edge) {
+                            return false;
+                        }
+                        item.destroy();
+                    });
+
                     var edge = 0;
-                    Ext.each(menu.getItems(), function (item) {
+                    Ext.each(items, function (item) {
                         if (item) {
                             if (item === '->') {
                                 item = new Ext.Toolbar.Fill();
@@ -201,7 +224,6 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                     }, this);
                 },
                 addTrayItem: function(menu, item) {
-                    console.log('addTrayItem', item);
                     this.getToolbar().add(item);
                 },
                 scope: this
@@ -256,7 +278,9 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                     xtype: 'toolbar',
                     region: 'north',
                     height: 34,
-                    items: [],
+                    items: [{
+                        xtype: 'tbedge'
+                    }],
                     listeners: {
                         render: function (c) {
                             c.el.first().setStyle('padding', '4px');

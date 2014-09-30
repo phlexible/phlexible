@@ -87,7 +87,7 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
 
         this.loaded = true;
 
-        this.fireEvent('load', this);
+        this.fireEvent('load', this, this.items);
     },
 
     getItems: function () {
