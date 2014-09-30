@@ -45,16 +45,6 @@ class ApplySuccessorListener
         $this->connection->update(
             'teaser',
             array(
-                'modify_user_id' => $toUid,
-            ),
-            array(
-                'modify_user_id' => $fromUid
-            )
-        );
-
-        $this->connection->update(
-            'teaser_history',
-            array(
                 'create_user_id' => $toUid,
             ),
             array(

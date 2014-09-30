@@ -254,8 +254,35 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
         }
 
         var uid = records[0].id;
-        var w = new Phlexible.users.SuccessorWindow({userId: uid});
+        var w = new Phlexible.users.SuccessorWindow({
+            userId: uid,
+            listeners: {
+                submit: function(values) {
+                    this.onSetSuccessor(uid, values.successor);
+                },
+                scope: this
+            }
+        });
         w.show();
+    },
+
+    onSetSuccessor: function(uid, successor) {
+        Ext.Ajax.request({
+            url: Phlexible.Router.generate('users_successor_set', {userId: uid}),
+            method: 'POST',
+            params: {
+                successor: successor
+            },
+            success: function (response) {
+                var data = Ext.decode(response.responseText);
+                if (data.success) {
+                    this.store.reload();
+                } else {
+                    Ext.Msg.alert('Failure', data.msg);
+                }
+            },
+            scope: this
+        });
     },
 
     deleteUser: function () {
@@ -277,7 +304,7 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
             uids: uids,
             listeners: {
                 submit: function (values) {
-                    this.onDeleteUser(uids, values.target_uid);
+                    this.onDeleteUser(uids, values.successor);
                 },
                 scope: this
             }

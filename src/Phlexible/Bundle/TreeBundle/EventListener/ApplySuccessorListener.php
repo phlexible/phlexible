@@ -45,16 +45,6 @@ class ApplySuccessorListener
         $this->connection->update(
             'tree',
             array(
-                'modify_user_id' => $toUid,
-            ),
-            array(
-                'modify_user_id' => $fromUid
-            )
-        );
-
-        $this->connection->update(
-            'tree_history',
-            array(
                 'create_user_id' => $toUid,
             ),
             array(
@@ -65,10 +55,10 @@ class ApplySuccessorListener
         $this->connection->update(
             'tree_online',
             array(
-                'publish_uid' => $toUid,
+                'publish_user_id' => $toUid,
             ),
             array(
-                'publish_uid' => $fromUid
+                'publish_user_id' => $fromUid
             )
         );
     }

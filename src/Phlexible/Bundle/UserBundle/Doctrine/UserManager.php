@@ -43,6 +43,11 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     private $encoderFactory;
 
     /**
+     * @var SuccessorService
+     */
+    private $successorService;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -65,6 +70,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     /**
      * @param EntityManager            $entityManager
      * @param EncoderFactoryInterface  $encoderFactory
+     * @param SuccessorService         $successorService
      * @param EventDispatcherInterface $dispatcher
      * @param string                   $userClass
      * @param string                   $systemUserId
@@ -73,6 +79,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     public function __construct(
         EntityManager $entityManager,
         EncoderFactoryInterface $encoderFactory,
+        SuccessorService $successorService,
         EventDispatcherInterface $dispatcher,
         $userClass,
         $systemUserId,
@@ -80,6 +87,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     {
         $this->entityManager = $entityManager;
         $this->encoderFactory = $encoderFactory;
+        $this->successorService = $successorService;
         $this->dispatcher = $dispatcher;
         $this->systemUserId = $systemUserId;
         $this->everyoneGroupId = $everyoneGroupId;
@@ -347,8 +355,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
      */
     public function deleteUser(UserInterface $user, UserInterface $successorUser)
     {
-        $successor = new SuccessorService();
-        $successor->setSuccessor($user, $successorUser);
+        $this->successorService->set($user, $successorUser);
 
         $event = new UserEvent($user);
         if ($this->dispatcher->dispatch(UserEvents::BEFORE_DELETE_USER, $event)->isPropagationStopped()) {

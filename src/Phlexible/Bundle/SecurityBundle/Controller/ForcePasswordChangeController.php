@@ -57,10 +57,10 @@ class ForcePasswordChangeController extends Controller
             'checkUrl'       => $this->generateUrl('security_forcepasswordchange_check'),
             'scripts'        => $forceChangePasswordView->get($request, $this->get('security.context')),
             'noScript'       => $forceChangePasswordView->getNoScript(
-                    $request->getBaseUrl(),
-                    $this->container->getParameter('app.app_title'),
-                    $this->container->getParameter('app.project_title')
-                ),
+                $request->getBaseUrl(),
+                $this->container->getParameter('app.app_title'),
+                $this->container->getParameter('app.project_title')
+            ),
         );
     }
 

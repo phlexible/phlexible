@@ -4,8 +4,7 @@ Hallo {{ user.firstname }} {{ user.lastname }},
 Ihre neuen Zugangsdaten lauten
 
 Username: {{ user.username }}
-Passwort: {{ user.password }}
 
-Unter folgender Adresse können Sie sich einloggen:
+Unter folgender Adresse können Sie sich ein Passwort setzen:
 
-{{ url("gui_index") }}
+{{ url("security_reset_view", {token: user.passwordToken}) }}
