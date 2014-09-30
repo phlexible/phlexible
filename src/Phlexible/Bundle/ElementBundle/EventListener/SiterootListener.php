@@ -134,8 +134,6 @@ class SiterootListener
             ->addNode($tab)
             ->addNode($textfield);
 
-        $this->elementService->getElementtypeService()->updateElementtypeStructure($elementtypeStructure, false);
-
         $elementtypeVersion->setMappings(
             array(
                 'backend' => array(
@@ -146,6 +144,9 @@ class SiterootListener
                 )
             )
         );
+
+        $this->elementService->getElementtypeService()->updateElementtypeStructure($elementtypeStructure, false);
+        $this->elementService->getElementtypeService()->updateElementtypeVersion($elementtypeVersion, true);
 
         $element = $this->elementService->createElement($elementtypeVersion, $this->masterLanguage, $siteroot->getModifyUserId());
 

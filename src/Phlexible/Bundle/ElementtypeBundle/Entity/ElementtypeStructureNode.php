@@ -35,7 +35,7 @@ class ElementtypeStructureNode
     /**
      * @var Elementtype
      * @ORM\ManyToOne(targetEntity="Elementtype")
-     * @ORM\JoinColumn(name="elementtype_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="elementtype_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $elementtype;
 
@@ -47,7 +47,7 @@ class ElementtypeStructureNode
     /**
      * @var ElementtypeStructureNode
      * @ORM\ManyToOne(targetEntity="ElementtypeStructureNode")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $parentNode;
 
