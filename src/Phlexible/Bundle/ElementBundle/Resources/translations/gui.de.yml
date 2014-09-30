@@ -1,6 +1,7 @@
 elements:
     elements: Elemente
     element: Element
+    websites: Webseiten
     element_version: 'Element Version'
     latest_version: 'Letzte Version'
     online_version: 'Online Version'

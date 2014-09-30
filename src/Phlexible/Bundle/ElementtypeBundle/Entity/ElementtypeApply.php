@@ -31,14 +31,14 @@ class ElementtypeApply
     /**
      * @var Elementtype
      * @ORM\ManyToOne(targetEntity="Elementtype")
-     * @ORM\JoinColumn(name="elementtype_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="elementtype_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $elementtype;
 
     /**
      * @var Elementtype
      * @ORM\ManyToOne(targetEntity="Elementtype")
-     * @ORM\JoinColumn(name="apply_under_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="apply_under_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $underElementtype;
 }
