@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Phlexible\Bundle\ElementBundle\Entity\ElementHistory;
+use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 
 /**
@@ -76,7 +77,7 @@ class ElementHistoryManager implements ElementHistoryManagerInterface
      * @param array        $criteria
      * @param QueryBuilder $qb
      *
-     * @throws \Exception
+     * @throws InvalidArgumentException
      */
     private function applyCriteriaToQueryBuilder(array $criteria, QueryBuilder $qb)
     {
@@ -88,7 +89,7 @@ class ElementHistoryManager implements ElementHistoryManagerInterface
             } elseif (in_array($key, array('comment'))) {
                 $qb->andWhere($qb->expr()->like("h.$key", $qb->expr()->literal("%$value%")));
             } else {
-                throw new \Exception("Unkown field $key");
+                throw new InvalidArgumentException("Unkown field $key");
             }
         }
     }

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\HashCalculator;
 
+use Phlexible\Bundle\MediaSiteBundle\Exception\RuntimeException;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
@@ -43,7 +44,7 @@ class MessageDigestHashCalculator implements HashCalculatorInterface
     /**
      * @param FileSourceInterface $fileSource
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      * @return string
      */
     public function fromFileSource(FileSourceInterface $fileSource)
@@ -52,7 +53,7 @@ class MessageDigestHashCalculator implements HashCalculatorInterface
             return $this->fromPath($fileSource->getPath());
         }
 
-        throw new \RuntimeException('Unsupported file source');
+        throw new RuntimeException('Unsupported file source');
     }
 
     /**

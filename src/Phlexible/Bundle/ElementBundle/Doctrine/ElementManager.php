@@ -14,6 +14,9 @@ use Phlexible\Bundle\ElementBundle\ElementsMessage;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\Repository\ElementRepository;
 use Phlexible\Bundle\ElementBundle\Event\ElementEvent;
+use Phlexible\Bundle\ElementBundle\Exception\CreateCancelledException;
+use Phlexible\Bundle\ElementBundle\Exception\DeleteCancelledException;
+use Phlexible\Bundle\ElementBundle\Exception\UpdateCancelledException;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -93,7 +96,7 @@ class ElementManager implements ElementManagerInterface
         if (!$element->getEid()) {
             $event = new ElementEvent($element);
             if ($this->dispatcher->dispatch(ElementEvents::BEFORE_CREATE_ELEMENT, $event)->isPropagationStopped()) {
-                throw new \Exception('Create canceled by listener.');
+                throw new CreateCancelledException('Create canceled by listener.');
             }
 
             $this->entityManager->persist($element);
@@ -111,7 +114,7 @@ class ElementManager implements ElementManagerInterface
         } else {
             $event = new ElementEvent($element);
             if ($this->dispatcher->dispatch(ElementEvents::BEFORE_UPDATE_ELEMENT, $event)->isPropagationStopped()) {
-                throw new \Exception('Create canceled by listener.');
+                throw new UpdateCancelledException('Update canceled by listener.');
             }
 
             $this->entityManager->persist($element);
@@ -137,7 +140,7 @@ class ElementManager implements ElementManagerInterface
     {
         $event = new ElementEvent($element);
         if ($this->dispatcher->dispatch(ElementEvents::BEFORE_DELETE_ELEMENT, $event)->isPropagationStopped()) {
-            throw new \Exception('Delete canceled by listener.');
+            throw new DeleteCancelledException('Delete canceled by listener.');
         }
 
         $this->entityManager->remove($element);

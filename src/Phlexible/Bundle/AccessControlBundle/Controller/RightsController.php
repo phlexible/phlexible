@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\Controller;
 
+use Phlexible\Bundle\AccessControlBundle\Exception\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -88,7 +89,7 @@ class RightsController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @throws \Exception
+     * @throws InvalidArgumentException
      * @Route("/save", name="accesscontrol_save")
      */
     public function saveAction(Request $request)
@@ -98,7 +99,7 @@ class RightsController extends Controller
         $modified  = $request->get('modified');
 
         if (!$deleted && !$modified) {
-            throw new \Exception('No save data.');
+            throw new InvalidArgumentException('No save data.');
         }
 
         if ($deleted) {

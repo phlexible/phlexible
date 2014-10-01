@@ -48,7 +48,8 @@ class MediaController extends Controller
         try {
             $cacheItem = $cacheManager->findByTemplateAndFile($templateKey, $fileId, $fileVersion);
             if ($cacheItem && $cacheItem->getTemplateKey() !== $templateKey) {
-                throw new \Exception('Requested template key <=> cache item template key mismatch.');
+                //throw new InvalidArgumentException('Requested template key <=> cache item template key mismatch.');
+                $cacheItem = null;
             }
         } catch (\Exception $e) {
             $cacheItem = null;

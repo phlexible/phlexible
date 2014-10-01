@@ -62,7 +62,6 @@ class DownloadController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @throws \Exception
      * @Route("/folder/zip", name="mediamanager_download_folder_zip")
      */
     public function folderZipAction(Request $request)
@@ -116,7 +115,6 @@ class DownloadController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @throws \Exception
      * @Route("/file/zip", name="mediamanager_download_file_zip")
      */
     public function fileZipAction(Request $request)

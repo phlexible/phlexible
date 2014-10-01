@@ -68,7 +68,7 @@ class PollController extends Controller
         foreach ($lastMessages as $lastMessage) {
             try {
                 $user = MWF_Core_Users_User_Peer::getByUserID($lastMessage['create_uid']);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $user = MWF_Core_Users_User_Peer::getSystemUser();
             }
 

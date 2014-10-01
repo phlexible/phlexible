@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\FileSource;
 
+use Phlexible\Bundle\MediaSiteBundle\Exception\InvalidArgumentException;
+
 /**
  * Stream file source
  *
@@ -41,7 +43,7 @@ class StreamFileSource implements StreamSourceInterface
     public function __construct($name, $stream, $mimeType, $size)
     {
         if (!is_resource($stream)) {
-            throw new \InvalidArgumentException('Not a stream.');
+            throw new InvalidArgumentException('Not a stream.');
         }
 
         $this->name = $name;

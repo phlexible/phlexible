@@ -13,6 +13,7 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Event\BeforeHideInheritedTeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Event\BeforeStopInheritInheritedTeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
+use Phlexible\Bundle\TeaserBundle\Exception\RuntimeException;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -663,7 +664,7 @@ class LayoutController extends Controller
         if ($teaser->getStopInherit()) {
             $event = new TeaserEvent($teaser);
             if ($dispatcher->dispatch(TeaserEvents::BEFORE_INHERIT_TEASER, $event)->isPropagationStopped()) {
-                throw new \Exception('Toggle inherit stopped.');
+                throw new RuntimeException('Toggle inherit stopped.');
             }
 
             $teaser->setStopInherit(false);
@@ -677,7 +678,7 @@ class LayoutController extends Controller
         } else {
             $event = new TeaserEvent($teaser);
             if ($dispatcher->dispatch(TeaserEvents::BEFORE_STOP_INHERIT_TEASER, $event)->isPropagationStopped()) {
-                throw new \Exception('Toggle inherit stopped.');
+                throw new RuntimeException('Toggle inherit stopped.');
             }
 
             $teaser->setStopInherit(true);
@@ -721,7 +722,7 @@ class LayoutController extends Controller
         if ($stopTeaser) {
             $event = new TeaserEvent($stopTeaser);
             if ($dispatcher->dispatch(TeaserEvents::BEFORE_INHERIT_INHERITED_TEASER, $event)->isPropagationStopped()) {
-                throw new \Exception('Stop inherit cancelled by event');
+                throw new RuntimeException('Stop inherit cancelled by event');
             }
 
             $teaserManager->deleteTeaser($stopTeaser, $this->getUser()->getId());
@@ -733,7 +734,7 @@ class LayoutController extends Controller
         } else {
             $event = new BeforeStopInheritInheritedTeaserEvent($treeId, $eid, $teaserId, $layoutAreaId);
             if ($dispatcher->dispatch(TeaserEvents::BEFORE_STOP_INHERIT_INHERITED_TEASER, $event)->isPropagationStopped()) {
-                throw new \Exception('Stop inherit cancelled by event');
+                throw new RuntimeException('Stop inherit cancelled by event');
             }
 
             $stopTeaser = $teaserManager->createTeaser(
@@ -777,7 +778,7 @@ class LayoutController extends Controller
 
         $beforeEvent = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_SHOW_TEASER, $beforeEvent)->isPropagationStopped()) {
-            throw new \Exception('Show cancelled by event');
+            throw new RuntimeException('Show cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
@@ -806,7 +807,7 @@ class LayoutController extends Controller
 
         $beforeEvent = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_HIDE_TEASER, $beforeEvent)->isPropagationStopped()) {
-            throw new \Exception('Show cancelled by event');
+            throw new RuntimeException('Show cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
@@ -846,7 +847,7 @@ class LayoutController extends Controller
         if ($hideTeaser) {
             $event = new TeaserEvent($hideTeaser);
             if ($dispatcher->dispatch(TeaserEvents::BEFORE_SHOW_INHERITED_TEASER, $event)->isPropagationStopped()) {
-                throw new \Exception('Show cancelled by event');
+                throw new RuntimeException('Show cancelled by event');
             }
 
             $teaserManager->deleteTeaser($hideTeaser, $this->getUser()->getId());
@@ -886,7 +887,7 @@ class LayoutController extends Controller
         if (!$hideTeaser) {
             $event = new BeforeHideInheritedTeaserEvent($treeId, $eid, $teaserId, $layoutAreaId);
             if ($dispatcher->dispatch(TeaserEvents::BEFORE_HIDE_INHERITED_TEASER, $event)->isPropagationStopped()) {
-                throw new \Exception('Hide cancelled by event');
+                throw new RuntimeException('Hide cancelled by event');
             }
 
             $hideTeaser = $teaserManager->createTeaser(

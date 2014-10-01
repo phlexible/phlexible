@@ -1056,7 +1056,7 @@ class TeaserManager implements TeaserManagerInterface
             $result = $db->fetchOne($select);
 
             return $result != $tid;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             MWF_Log::exception($e);
         }
 

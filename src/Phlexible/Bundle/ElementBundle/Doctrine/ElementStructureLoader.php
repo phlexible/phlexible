@@ -108,7 +108,6 @@ class ElementStructureLoader
                 }
                 $myNode = $elementtypeStructure->getNode($row['ds_id']);
                 if (!$myNode) {
-                    //throw new \Exception('Broken structure.');
                     continue;
                 }
                 $myParentNode = $myNode;
@@ -149,7 +148,6 @@ class ElementStructureLoader
                     foreach ($structureRows[$node->getDsId()] as $row) {
                         $myNode = $elementtypeStructure->getNode($row['ds_id']);
                         if (!$myNode) {
-                            //throw new \Exception('Broken structure.');
                             continue;
                         }
                         $myParentNode = $myNode;

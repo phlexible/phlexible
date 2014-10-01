@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
+use Phlexible\Bundle\TreeBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
@@ -45,7 +46,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
             $tree = $tree->getTree();
             $this->iterator = new \ArrayIterator($tree->getChildren($node));
         } else {
-            throw new \Exception('Unsupported type ' . get_class($tree) . '.');
+            throw new InvalidArgumentException('Unsupported type ' . get_class($tree) . '.');
         }
     }
 

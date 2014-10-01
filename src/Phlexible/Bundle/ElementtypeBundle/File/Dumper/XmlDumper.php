@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\File\Dumper;
 
 use FluentDOM\Document;
 use FluentDOM\Element;
+use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
@@ -146,7 +147,7 @@ class XmlDumper implements DumperInterface
                         $value = json_encode($value);
                         $attributes['type'] = 'json_array';
                     } elseif (!is_scalar($value)) {
-                        throw new \Exception('Value has to be array or scalar.');
+                        throw new InvalidArgumentException('Value has to be array or scalar.');
                     }
                     $configurationElement->appendElement(
                         'item',

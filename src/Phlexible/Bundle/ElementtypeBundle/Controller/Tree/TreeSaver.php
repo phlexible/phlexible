@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Controller\Tree;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
+use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
@@ -42,7 +43,7 @@ class TreeSaver
      * @param Request       $request
      * @param UserInterface $user
      *
-     * @throws \Exception
+     * @throws InvalidArgumentException
      * @return Elementtype
      */
     public function save(Request $request, UserInterface $user)
@@ -51,7 +52,7 @@ class TreeSaver
         $data = json_decode($request->get('data'), true);
 
         if (!$elementtypeId) {
-            throw new \Exception('No elementtype ID.');
+            throw new InvalidArgumentException('No elementtype ID.');
         }
 
         $rootData = $data[0];
@@ -62,11 +63,11 @@ class TreeSaver
         $rootDsId = !empty($rootData['ds_id']) ? $rootData['ds_id'] : Uuid::generate();
 
         if (!isset($rootData['type']) || ($rootData['type'] != 'root' && $rootData['type'] != 'referenceroot')) {
-            throw new \Exception('Invalid root node.');
+            throw new InvalidArgumentException('Invalid root node.');
         }
 
         if (!isset($rootConfig['unique_id']) || !trim($rootConfig['unique_id'])) {
-            throw new \Exception('No unique ID.');
+            throw new InvalidArgumentException('No unique ID.');
         }
 
         $uniqueId = trim($rootConfig['unique_id']);

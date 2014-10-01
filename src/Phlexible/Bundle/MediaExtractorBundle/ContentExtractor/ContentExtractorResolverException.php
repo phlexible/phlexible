@@ -8,13 +8,11 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
-use Exception as BaseException;
-
 /**
  * Content extractor resolver exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ContentExtractorResolverException extends BaseException
+class ContentExtractorResolverException extends \RuntimeException
 {
 }

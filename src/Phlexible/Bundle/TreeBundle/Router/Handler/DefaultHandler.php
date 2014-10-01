@@ -12,6 +12,7 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Exception\NoSiterootUrlFoundException;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -166,7 +167,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         if (null === $tree) {
             $msg = 'No matching siteroot url found, and no fallback siteroot url provided.';
-            throw new \Exception($msg);
+            throw new NoSiterootUrlFoundException($msg);
         }
 
         $parameters = $this->matchIdentifiers($request, $tree);

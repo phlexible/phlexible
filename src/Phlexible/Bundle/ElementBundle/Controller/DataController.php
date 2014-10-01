@@ -14,6 +14,7 @@ use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
+use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
@@ -79,7 +80,7 @@ class DataController extends Controller
             $node = $tree->get($treeId);
             $eid = $node->getTypeId();
         } else {
-            throw new \Exception('Unknown data requested.');
+            throw new InvalidArgumentException('Unknown data requested.');
         }
 
         $element = $elementService->findElement($eid);
@@ -96,7 +97,7 @@ class DataController extends Controller
             $isPublished = $tree->isPublished($node, $language);
             $onlineVersion = $tree->getPublishedVersion($node, $language);
         } else {
-            throw new \Exception('Unknown data requested.');
+            throw new InvalidArgumentException('Unknown data requested.');
         }
 
         if ($version) {
@@ -573,7 +574,6 @@ class DataController extends Controller
      *
      * @param Request $request
      *
-     * @throws \Exception
      * @return ResultResponse
      * @Route("/save", name="elements_data_save")
      */

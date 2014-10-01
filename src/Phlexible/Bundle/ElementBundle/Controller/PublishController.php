@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 use Phlexible\Bundle\ElementBundle\Element\Publish\Selection;
+use Phlexible\Bundle\ElementBundle\Exception\RuntimeException;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Component\Util\FileLock;
@@ -169,7 +170,7 @@ class PublishController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @throws \Exception
+     * @throws RuntimeException
      * @Route("/advanced", name="elements_publish_advanced")
      */
     public function advancedPublishAction(Request $request)
@@ -183,7 +184,7 @@ class PublishController extends Controller
 
         $lock = new FileLock($this->container->getParameter('app.lock_dir') . 'elements_publish_lock');
         if (!$lock->acquire()) {
-            throw new \Exception('Another advanced publish running.');
+            throw new RuntimeException('Another advanced publish running.');
         }
 
         $treeManager = $this->get('phlexible_tree.tree_manager');

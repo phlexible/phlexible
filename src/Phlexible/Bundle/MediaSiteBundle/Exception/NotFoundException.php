@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\MediaSiteBundle\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class NotFoundException extends \RuntimeException
+class NotFoundException extends RuntimeException
 {
 
 }

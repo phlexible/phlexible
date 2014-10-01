@@ -149,7 +149,7 @@ class ItemsController extends Controller
 
                 $templateData = array_values($templateData);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             MWF_Log::exception($e);
             $templateData = array();
         }

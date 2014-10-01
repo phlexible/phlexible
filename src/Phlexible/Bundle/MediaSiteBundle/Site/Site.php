@@ -128,22 +128,6 @@ class Site implements SiteInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getFilePeer()
-    {
-        throw new \RuntimeException('Removed.');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFolderPeer()
-    {
-        throw new \RuntimeException('Removed.');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function findRootFolder()
     {
         return $this->driver->findRootFolder();

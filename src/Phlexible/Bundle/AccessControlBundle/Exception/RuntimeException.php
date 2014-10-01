@@ -6,13 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TaskBundle\Exception;
+namespace Phlexible\Bundle\AccessControlBundle\Exception;
 
 /**
- * Task exception
+ * Runtime exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Exception extends \RuntimeException
+class RuntimeException extends \RuntimeException
 {
+
 }

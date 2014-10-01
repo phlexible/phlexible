@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Exception;
 
 /**
- * Media manager exception
+ * Runtime exception
  *
- * @author Matthias Harmuth <mharmuth@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
-class Exception extends \RuntimeException
+class RuntimeException extends \RuntimeException
 {
 
 }

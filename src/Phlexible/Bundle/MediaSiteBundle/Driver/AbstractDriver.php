@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\Driver;
 
-use Phlexible\Bundle\MediaSiteBundle\Exception;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
 
 /**

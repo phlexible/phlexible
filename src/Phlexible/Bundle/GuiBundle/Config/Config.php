@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\GuiBundle\Config;
 
+use Phlexible\Bundle\GuiBundle\Exception\InvalidArgumentException;
+
 /**
  * Config
  *
@@ -24,13 +26,13 @@ class Config
      * @param string $key
      * @param mixed  $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return $this
      */
     public function set($key, $value)
     {
         if (!is_scalar($value) && !is_array($value)) {
-            throw new \InvalidArgumentException('Value has to be a scalar or an array, but is ' . gettype(
+            throw new InvalidArgumentException('Value has to be a scalar or an array, but is ' . gettype(
                     $value
                 ) . '.');
         }
@@ -43,13 +45,13 @@ class Config
     /**
      * @param string $key
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return mixed
      */
     public function get($key)
     {
         if (!isset($this->values[$key])) {
-            throw new \InvalidArgumentException("Key $key not set.");
+            throw new InvalidArgumentException("Key $key not set.");
         }
 
         return $this->values[$key];

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer;
 
+use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
@@ -58,7 +59,7 @@ class ArraySerializer implements SerializerInterface
                 $nodeDatas[$node->getParentDsId()]['children'][] = $nodeData;
             } elseif (!in_array($node->getType(), array('referenceroot', 'reference'))) {
                 if (!empty($rootNode)) {
-                    throw new \Exception('duplicate root: ' . print_r($nodeData, 1));
+                    throw new InvalidArgumentException('duplicate root: ' . print_r($nodeData, 1));
                 }
                 $rootNode = $nodeData;
             }

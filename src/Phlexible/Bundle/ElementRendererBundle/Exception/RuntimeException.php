@@ -6,14 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TeaserBundle\Exception;
+namespace Phlexible\Bundle\ElementRendererBundle\Exception;
 
 /**
- * Exception
+ * Runtime exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Exception extends \RuntimeException
+class RuntimeException extends \RuntimeException
 {
 
 }

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\File;
 
+use Phlexible\Bundle\ElementRendererBundle\Exception\RuntimeException;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypesMessage;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeEvent;
@@ -169,7 +170,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
             throw new DeleteCancelledException('Delete canceled by listener.');
         }
 
-        throw new \Exception('todo');
+        throw new RuntimeException('todo');
 
         // send message
         $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" deleted.');

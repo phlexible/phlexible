@@ -51,7 +51,6 @@ interface MetaDataInterface
      * @param string $language
      *
      * @return string
-     * @throws \InvalidArgumentException
      */
     public function get($field, $language = null);
 
@@ -61,7 +60,6 @@ interface MetaDataInterface
      * @param string $language
      *
      * @return $this
-     * @throws \InvalidArgumentException
      */
     public function set($field, $value, $language = null);
 

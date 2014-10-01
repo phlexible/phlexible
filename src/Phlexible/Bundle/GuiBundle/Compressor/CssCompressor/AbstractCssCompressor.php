@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Compressor\CssCompressor;
 
+use Phlexible\Bundle\GuiBundle\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -33,12 +34,12 @@ abstract class AbstractCssCompressor implements CssCompressorInterface
 
     /**
      * {@inheritdoc}
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function compressStream($stream)
     {
         if (!is_resource($stream)) {
-            throw new \InvalidArgumentException('Argument is not a resource');
+            throw new InvalidArgumentException('Argument is not a resource');
         }
 
         rewind($stream);

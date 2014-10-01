@@ -8,14 +8,12 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Exception;
 
-use Exception as BaseException;
-
 /**
- * Meta sets exception
+ * Runtime exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Exception extends BaseException
+class RuntimeException extends \RuntimeException
 {
 
 }

@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\ElementStructure\Builder;
 
 use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructure;
 use Phlexible\Bundle\ElementBundle\ElementStructure\ElementStructureNode;
+use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\ElementtypeStructure;
 
 /**
@@ -72,12 +73,12 @@ class ElementStructureBuilder
      * @param string $name
      *
      * @return ElementStructureBuilder
-     * @throws \Exception
+     * @throws InvalidArgumentException
      */
     public function node($dsId, $id, $name)
     {
         if (!$this->elementtypeStructure->hasNode($dsId)) {
-            throw new \Exception("Node $dsId not found.");
+            throw new InvalidArgumentException("Node $dsId not found.");
         }
         $elementtypeNode = $this->elementtypeStructure->getNode($dsId);
 

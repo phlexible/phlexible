@@ -6,14 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\SiterootBundle\Exception;
+namespace Phlexible\Bundle\MediaManagerBundle\Exception;
 
 /**
- * Base exception
+ * Store uploaded files exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Exception extends \Exception
+class StoreUploadedFileException extends RuntimeException
 {
 
 }

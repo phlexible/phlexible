@@ -6,14 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TreeBundle\Exception;
+namespace Phlexible\Bundle\ElementBundle\Exception;
 
 /**
- * Lock exception
+ * Create cancelled exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LockException extends Exception
+class CreateCancelledException extends RuntimeException
 {
 
 }

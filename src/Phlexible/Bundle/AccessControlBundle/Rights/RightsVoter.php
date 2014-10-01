@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\AccessControlBundle\Rights;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
+use Phlexible\Bundle\AccessControlBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\AccessControlBundle\Model\AccessManagerInterface;
 use Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -159,7 +160,7 @@ class RightsVoter implements VoterInterface
      * @param int    $contentId
      * @param array  $path
      *
-     * @throws \Exception
+     * @throws InvalidArgumentException
      * @return array
      */
     public function fetchRights($objectType, $objectId, $rightType, $contentType, $contentId, array $path)
@@ -201,7 +202,7 @@ class RightsVoter implements VoterInterface
 
                     default:
                         $msg = 'Unknown status for right "' . $right . '" -> "' . $row['inherit'] . '"';
-                        throw new \Exception($msg);
+                        throw new InvalidArgumentException($msg);
                         break;
                 }
             }

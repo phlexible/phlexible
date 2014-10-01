@@ -57,7 +57,6 @@ class Rights
      * @param array  $securityFetchers
      *
      * @return array
-     * @throws \Exception
      */
     public function getRights(array $securityTypes, $rightType, $contentType, $contentId, array $contentIdPath, array $securityFetchers)
     {

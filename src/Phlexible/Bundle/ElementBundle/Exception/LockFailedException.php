@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\ElementBundle\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LockFailedException extends \RuntimeException
+class LockFailedException extends RuntimeException
 {
 
 }

@@ -21,7 +21,6 @@ interface AccessManagerInterface
      * @param array $criteria
      *
      * @return array
-     * @throws \Exception
      */
     public function findBy(array $criteria);
 

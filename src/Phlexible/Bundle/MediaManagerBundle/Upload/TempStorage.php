@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
+use Phlexible\Bundle\MediaManagerBundle\Exception\StoreUploadedFileException;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\UploadedFileSource;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -156,11 +157,11 @@ class TempStorage
         $tempName = $tempDir . basename($file->getPath());
 
         if (!file_exists($tempDir) && !mkdir($tempDir, 0777, true)) {
-            throw new \Exception('Error occured while creating temp upload folder.');
+            throw new StoreUploadedFileException('Error occured while creating temp upload folder.');
         }
 
         if (!move_uploaded_file($file->getPath(), $tempName)) {
-            throw new \Exception('Error occured during uploaded file move.');
+            throw new StoreUploadedFileException('Error occured during uploaded file move.');
         }
 
         $tempFile = new TempFile(

@@ -15,6 +15,8 @@ use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Entity\Repository\ElementVersionRepository;
 use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
+use Phlexible\Bundle\ElementBundle\Exception\CreateCancelledException;
+use Phlexible\Bundle\ElementBundle\Exception\UpdateCancelledException;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -99,7 +101,7 @@ class ElementVersionManager implements ElementVersionManagerInterface
         if (!$elementVersion->getId()) {
             $event = new ElementVersionEvent($elementVersion);
             if ($this->dispatcher->dispatch(ElementEvents::BEFORE_CREATE_ELEMENT_VERSION, $event)->isPropagationStopped()) {
-                throw new \Exception('Canceled by listener.');
+                throw new CreateCancelledException('Create canceled by listener.');
             }
 
             $this->entityManager->persist($elementVersion);
@@ -120,7 +122,7 @@ class ElementVersionManager implements ElementVersionManagerInterface
         } else {
             $event = new ElementVersionEvent($elementVersion);
             if ($this->dispatcher->dispatch(ElementEvents::BEFORE_UPDATE_ELEMENT_VERSION, $event)->isPropagationStopped()) {
-                throw new \Exception('Canceled by listener.');
+                throw new UpdateCancelledException('Update canceled by listener.');
             }
 
             foreach ($elementVersion->getMappedFields() as $mappedField) {

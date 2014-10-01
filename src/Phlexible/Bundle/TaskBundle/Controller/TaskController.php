@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
+use Phlexible\Bundle\TaskBundle\Exception\UnknownStatusException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -33,7 +34,6 @@ class TaskController extends Controller
      *
      * @param Request $request
      *
-     * @throws \Exception
      * @return JsonResponse
      * @Route("/list", name="tasks_list")
      * @Method({"GET", "POST"})
@@ -127,7 +127,7 @@ class TaskController extends Controller
             ) {
                 $assignedUser = $userManager->find($task->getCreateUserId());
             } else {
-                throw new \Exception('Unknown status.');
+                throw new UnknownStatusException('Unknown status.');
             }
 
             $createUser = $userManager->find($task->getCreateUserId());

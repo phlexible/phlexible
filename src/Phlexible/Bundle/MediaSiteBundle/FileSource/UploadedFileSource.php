@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaSiteBundle\FileSource;
 
+use Phlexible\Bundle\MediaSiteBundle\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -41,21 +42,21 @@ class UploadedFileSource implements PathSourceInterface
      * @param UploadedFile $file
      * @param string       $mimeType
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(UploadedFile $file, $mimeType = null)
     {
         if ($file->getError()) {
-            throw new \InvalidArgumentException('Error in upload: ' . $file->getError());
+            throw new InvalidArgumentException('Error in upload: ' . $file->getError());
         }
         if (!$file->getClientOriginalName()) {
-            throw new \InvalidArgumentException('Missing name.');
+            throw new InvalidArgumentException('Missing name.');
         }
         if (!$file->getType()) {
-            throw new \InvalidArgumentException('Missing type.');
+            throw new InvalidArgumentException('Missing type.');
         }
         if (!is_uploaded_file($file->getPathname())) {
-            throw new \InvalidArgumentException('Not an uploaded file: ' . $file->getPathname());
+            throw new InvalidArgumentException('Not an uploaded file: ' . $file->getPathname());
         }
 
         $this->name = $file->getClientOriginalName();

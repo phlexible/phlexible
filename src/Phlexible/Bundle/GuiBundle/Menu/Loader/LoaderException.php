@@ -8,13 +8,11 @@
 
 namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
 
-use Exception;
-
 /**
  * Loader exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LoaderException extends Exception
+class LoaderException extends \RuntimeException
 {
 }

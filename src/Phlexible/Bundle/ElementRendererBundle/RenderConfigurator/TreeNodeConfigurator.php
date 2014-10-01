@@ -13,6 +13,7 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
+use Phlexible\Bundle\ElementRendererBundle\Exception\RuntimeException;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -85,7 +86,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
 
                 $this->logger->debug($msg);
 
-                throw new \Exception($msg);
+                throw new RuntimeException($msg);
 
             }
         }

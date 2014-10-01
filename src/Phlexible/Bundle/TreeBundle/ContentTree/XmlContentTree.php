@@ -12,6 +12,7 @@ use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
+use Phlexible\Bundle\TreeBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
@@ -229,7 +230,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         $elements = $this->xpath->query('/contentTree/tree/node[1]');
 
         if (!$elements->length) {
-            throw new \Exception('Root node not found.');
+            throw new InvalidArgumentException('Root node not found.');
         }
 
         $element = $elements->item(0);
@@ -249,7 +250,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         $elements = $this->xpath->query("//node[@id=$id]");
 
         if (!$elements->length) {
-            throw new \Exception("$id not found");
+            throw new InvalidArgumentException("$id not found");
         }
 
         $element = $elements->item(0);
@@ -413,7 +414,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     {
         $elements = $this->xpath->query("//node[@id={$node->getId()}]/versions/version[@language=\"$language\"]");
         if (!$elements->length) {
-            throw new \Exception("language $language not found");
+            throw new InvalidArgumentException("language $language not found");
         }
         $version = (int) $elements->item(0)->textContent;
 

@@ -104,7 +104,6 @@ interface ElementLockManagerInterface
      * @param string  $type
      *
      * @return ElementLock
-     * @throws LockFailedException
      */
     public function lock(Element $element, $userId, $language = null, $type = ElementLock::TYPE_TEMPORARY);
 

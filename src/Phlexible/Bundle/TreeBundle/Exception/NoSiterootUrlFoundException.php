@@ -6,14 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\AccessControlBundle\Exception;
+namespace Phlexible\Bundle\TreeBundle\Exception;
 
 /**
- * Base exception
+ * No siteroot url found exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Exception extends \Exception
+class NoSiterootUrlFoundException extends RuntimeException
 {
 
 }

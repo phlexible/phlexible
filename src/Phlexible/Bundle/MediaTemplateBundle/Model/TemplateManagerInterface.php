@@ -28,7 +28,6 @@ interface TemplateManagerInterface
      * @param string $key
      *
      * @return TemplateInterface
-     * @throws NotFoundException
      */
     public function find($key);
 

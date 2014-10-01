@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Router;
 
+use Phlexible\Bundle\TreeBundle\Exception\BadMethodCallException;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -36,6 +37,6 @@ class TreeRouter extends DynamicRouter
      */
     public function match($pathinfo)
     {
-        throw new \Exception('match() not supported.');
+        throw new BadMethodCallException('match() not supported.');
     }
 }

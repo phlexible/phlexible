@@ -15,6 +15,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveTeaserDataEvent;
+use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager;
 use Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
@@ -548,7 +549,7 @@ class DataSaver
      * @param string               $language
      * @param array                $map
      *
-     * @throws \Exception
+     * @throws InvalidArgumentException
      * @return ElementStructure
      */
     private function applyValues(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values, $language, array $map = null)
@@ -581,7 +582,7 @@ class DataSaver
                 }
                 $elementStructure = $rootElementStructure->findStructure($mapId);
                 if (!$elementStructure) {
-                    throw new \Exception("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier.");
+                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier.");
                 }
                 $elementStructure->setValue($elementStructureValue);
             } elseif (preg_match('/^field-([-a-f0-9]{36})-new-.+$/', $identifier, $match)) {
@@ -602,7 +603,7 @@ class DataSaver
                 }
                 $elementStructure = $rootElementStructure->findStructure($mapId);
                 if (!$elementStructure) {
-                    throw new \Exception("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier.");
+                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier.");
                 }
                 $elementStructure->setValue($elementStructureValue);
             }

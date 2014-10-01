@@ -48,6 +48,16 @@ class DeleteCommand extends ContainerAwareCommand
         $user = $this->findUser($username);
         $successorUser = $this->findUser($successorUsername);
 
+        if (!$user) {
+            $output->writeln("<error>User $username not found</error>");
+            return 1;
+        }
+
+        if (!$successorUser) {
+            $output->writeln("<error>Successor user $successorUser not found</error>");
+            return 1;
+        }
+
         $output->writeln("Using delete user {$user->getId()}");
         $output->writeln("Using successor user {$successorUser->getId()}");
 
@@ -63,7 +73,6 @@ class DeleteCommand extends ContainerAwareCommand
      * @param string $username
      *
      * @return User
-     * @throws \Exception
      */
     private function findUser($username)
     {
@@ -76,7 +85,7 @@ class DeleteCommand extends ContainerAwareCommand
         }
 
         if (!$user) {
-            throw new \Exception("User $username not found.");
+            return null;
         }
 
         return $user;

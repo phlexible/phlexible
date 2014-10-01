@@ -8,6 +8,11 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Controller;
 
+use Phlexible\Bundle\MediaTemplateBundle\Exception\InvalidArgumentException;
+use Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate;
+use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
+use Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate;
+use Phlexible\Bundle\MediaTemplateBundle\Model\VideoTemplate;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -69,23 +74,23 @@ class TemplatesController extends Controller
 
         switch ($type) {
             case 'image':
-                $template = new \Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate();
+                $template = new ImageTemplate();
                 $template->setCache(false);
                 break;
             case 'video':
-                $template = new \Phlexible\Bundle\MediaTemplateBundle\Model\VideoTemplate();
+                $template = new VideoTemplate();
                 $template->setCache(true);
                 break;
             case 'audio':
-                $template = new \Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate();
+                $template = new AudioTemplate();
                 $template->setCache(true);
                 break;
             case 'pdf':
-                $template = new \Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate();
+                $template = new PdfTemplate();
                 $template->setCache(true);
                 break;
             default:
-                throw new \InvalidArgumentException("Unknown template type $type");
+                throw new InvalidArgumentException("Unknown template type $type");
         }
 
         $template->setKey($key);

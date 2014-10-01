@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\TreeBundle\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class InvalidNodeMoveException extends Exception
+class InvalidNodeMoveException extends RuntimeException
 {
 
 }

@@ -8,13 +8,11 @@
 
 namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
 
-use Exception as BaseException;
-
 /**
  * Loader resolver exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LoaderResolverException extends BaseException
+class LoaderResolverException extends \RuntimeException
 {
 }
