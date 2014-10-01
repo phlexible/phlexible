@@ -94,7 +94,6 @@ class Elementtype implements IdentifiableInterface
 
     /**
      * @var array
-     * @Assert\Count(min=1)
      */
     private $mappings = array();
 

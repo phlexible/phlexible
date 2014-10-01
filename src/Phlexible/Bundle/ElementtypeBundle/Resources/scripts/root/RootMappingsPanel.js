@@ -194,7 +194,7 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
             previewField = this.getMappedTitleGrid().getComponent(2);
 
         Ext.each(fields, function (field) {
-            pattern = pattern.replace('$' + field.index, field.field);
+            pattern = pattern.replace('$' + field.index, field.title);
         });
 
         previewField.setValue(pattern);
@@ -220,49 +220,6 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
 
     getSaveValues: function () {
         return this.mappings;
-
-        var data = [];
-
-        for (var i = 0; i < this.getComponent(1).store.getCount(); i++) {
-            var r = this.getComponent(1).store.getAt(i);
-            backend.push([r.get('id'), r.get('field'), r.get('prefix'), r.get('suffix')]);
-        }
-
-        if (!this.getComponent(3).getValue()) {
-            for (var i = 0; i < this.getComponent(4).store.getCount(); i++) {
-                var r = this.getComponent(4).store.getAt(i);
-                page.push([r.get('id'), r.get('field'), r.get('prefix'), r.get('suffix')]);
-            }
-        }
-
-        if (!this.getComponent(6).getValue()) {
-            for (var i = 0; i < this.getComponent(7).store.getCount(); i++) {
-                var r = this.getComponent(7).store.getAt(i);
-                navigation.push([r.get('id'), r.get('field'), r.get('prefix'), r.get('suffix')]);
-            }
-        }
-
-        var dateRecord = null, timeRecord = null;
-        for (var i = 0; i < this.getComponent(9).store.getCount(); i++) {
-            var r = this.getComponent(9).store.getAt(i);
-
-            if (r.get('type') == 'date') dateRecord = [r.get('id'), r.get('field'), r.get('type')];
-            else if (r.get('type') == 'time') timeRecord = [r.get('id'), r.get('field'), r.get('type')];
-        }
-        if (dateRecord) date.push(dateRecord);
-        if (timeRecord) date.push(timeRecord);
-
-        this.getComponent(1).store.commitChanges();
-        this.getComponent(4).store.commitChanges();
-        this.getComponent(7).store.commitChanges();
-        this.getComponent(9).store.commitChanges();
-
-        return {
-            backend: backend,
-            page: page,
-            navigation: navigation,
-            date: date
-        };
     },
 
     isValid: function () {

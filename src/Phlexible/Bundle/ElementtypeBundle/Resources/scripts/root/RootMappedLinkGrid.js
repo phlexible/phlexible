@@ -13,12 +13,12 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
 
     initComponent: function () {
         this.store = new Ext.data.JsonStore({
-            fields: ['ds_id', 'field'],
+            fields: ['dsId', 'field'],
             listeners: {
                 datachanged: function (store) {
                     var fields = [];
                     Ext.each(store.getRange(), function (r) {
-                        fields.push({ds_id: r.get('ds_id'), field: r.get('field')});
+                        fields.push({dsId: r.get('dsId'), title: r.get('title')});
                     });
                     this.fireEvent('change', fields);
                 },
@@ -29,7 +29,7 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
         this.columns = [
             {
                 header: this.strings.ds_id,
-                dataIndex: 'ds_id',
+                dataIndex: 'dsId',
                 width: 200,
                 hidden: true
             },
@@ -96,8 +96,8 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
 
                     var fieldTitle = dragData.node.attributes.properties.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] + ' (' + dragData.node.attributes.properties.field.working_title + ')';
                     var r = new Ext.data.Record({
-                        ds_id: dragData.node.attributes.ds_id,
-                        field: fieldTitle
+                        dsId: dragData.node.attributes.ds_id,
+                        title: fieldTitle
                     });
 
                     this.store.removeAll();
@@ -123,24 +123,6 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
         });
 
         Phlexible.elementtypes.RootMappedLinkGrid.superclass.initComponent.call(this);
-    },
-
-    loadData: function (date) {
-        this.store.loadData(date);
-    },
-
-    getSaveValues: function () {
-        var date = [];
-
-        for (var i = 0; i < this.store.getCount(); i++) {
-            var r = this.store.getAt(i);
-            //Phlexible.console.log(r);
-            navigation.push([r.get('id'), r.get('field')]);
-        }
-
-        this.store.commitChanges();
-
-        return date;
     }
 });
 

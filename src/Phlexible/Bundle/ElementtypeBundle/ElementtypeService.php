@@ -190,7 +190,7 @@ class ElementtypeService
      *
      * @return Elementtype
      */
-    public function createElementtype($type, $uniqueId, $name, $icon, ElementtypeStructure $elementtypeStructure, $userId, $flush = true)
+    public function createElementtype($type, $uniqueId, $name, $icon, ElementtypeStructure $elementtypeStructure = null, $userId, $flush = true)
     {
         if (!$icon) {
             $icons = array(
@@ -215,7 +215,9 @@ class ElementtypeService
             ->setRevision(1)
             ->setStructure($elementtypeStructure)
             ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime());
+            ->setCreatedAt(new \DateTime())
+            ->setModifyUserId($elementtype->getCreateUserId())
+            ->setModifiedAt($elementtype->getCreatedAt());
 
         $this->elementtypeManager->updateElementtype($elementtype);
 

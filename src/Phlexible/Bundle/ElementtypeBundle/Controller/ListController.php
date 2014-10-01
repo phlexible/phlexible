@@ -175,7 +175,7 @@ class ListController extends Controller
         }
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $elementtypeService->createElementtype($type, $uniqueId, $title, null, $this->getUser()->getId());
+        $elementtypeService->createElementtype($type, $uniqueId, $title, null, null, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Element Type created.');
     }

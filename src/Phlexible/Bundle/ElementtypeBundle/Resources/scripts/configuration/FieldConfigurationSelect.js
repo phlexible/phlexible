@@ -120,11 +120,11 @@ Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.f
         }
     },
 
-    loadData: function (fieldData, fieldType, properties) {
+    loadData: function (fieldData, fieldType) {
         this.getComponent(0).setValue(fieldData.select_source);
         this.getComponent(2).setValue(fieldData.select_function);
 
-        this.getValueGrid().loadData(properties.options, fieldData.default_value);
+        this.getValueGrid().loadData(fieldData.select_list, fieldData.default_value);
 
         this.isValid();
     },

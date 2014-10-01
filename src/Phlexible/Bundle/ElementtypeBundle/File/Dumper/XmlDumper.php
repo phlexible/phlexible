@@ -74,9 +74,11 @@ class XmlDumper implements DumperInterface
         $structureElement = $rootElement->appendElement('structure');
         $structure = $elementtype->getStructure();
 
-        $rootNode = $structure->getRootNode();
-        if ($rootNode) {
-            $this->appendNode($structure, $rootNode, $structureElement);
+        if ($structure) {
+            $rootNode = $structure->getRootNode();
+            if ($rootNode) {
+                $this->appendNode($structure, $rootNode, $structureElement);
+            }
         }
 
         return $dom->saveXML();

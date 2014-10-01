@@ -9,30 +9,30 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
         emptyText: Phlexible.elementtypes.Strings.navigation_default_title,
         deferEmptyText: false
     },
-    autoExpandColumn: 'field',
+    autoExpandColumn: 2,
 
     initComponent: function () {
         this.store = new Ext.data.JsonStore({
-            fields: ['ds_id', 'field', 'index'],
+            fields: ['dsId', 'field', 'index'],
             listeners: {
                 add: function (store) {
                     var fields = [];
                     Ext.each(store.getRange(), function (r) {
-                        fields.push({ds_id: r.get('ds_id'), field: r.get('field'), index: r.get('index')});
+                        fields.push({dsId: r.get('dsId'), title: r.get('title'), index: r.get('index')});
                     });
                     this.fireEvent('change', fields);
                 },
                 remove: function (store) {
                     var fields = [];
                     Ext.each(store.getRange(), function (r) {
-                        fields.push({ds_id: r.get('ds_id'), field: r.get('field'), index: r.get('index')});
+                        fields.push({dsId: r.get('dsId'), title: r.get('title'), index: r.get('index')});
                     });
                     this.fireEvent('change', fields);
                 },
                 clear: function (store) {
                     var fields = [];
                     Ext.each(store.getRange(), function (r) {
-                        fields.push({ds_id: r.get('ds_id'), field: r.get('field'), index: r.get('index')});
+                        fields.push({dsId: r.get('dsId'), title: r.get('title'), index: r.get('index')});
                     });
                     this.fireEvent('change', fields);
                 },
@@ -51,14 +51,13 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
             },
             {
                 header: this.strings.ds_id,
-                dataIndex: 'ds_id',
+                dataIndex: 'dsId',
                 width: 200,
                 hidden: true
             },
             {
-                id: 'field',
                 header: this.strings.field,
-                dataIndex: 'field',
+                dataIndex: 'title',
                 width: 200
             }
         ];
@@ -139,8 +138,8 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
                     });
 
                     var r = new Ext.data.Record({
-                        ds_id: dragData.node.attributes.ds_id,
-                        field: fieldTitle,
+                        dsId: dragData.node.attributes.ds_id,
+                        title: fieldTitle,
                         index: ++index
                     });
                     this.store.add(r);
@@ -169,23 +168,6 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
         });
 
         Phlexible.elementtypes.RootMappedTitleGrid.superclass.initComponent.call(this);
-    },
-
-    loadData: function (navigation) {
-        this.store.loadData(navigation);
-    },
-
-    getSaveValues: function () {
-        var navigation = [];
-
-        for (var i = 0; i < this.store.getCount(); i++) {
-            var r = this.store.getAt(i);
-            navigation.push([r.get('id'), r.get('field')]);
-        }
-
-        this.store.commitChanges();
-
-        return navigation;
     }
 });
 

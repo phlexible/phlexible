@@ -9,16 +9,16 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
         emptyText: Phlexible.elementtypes.Strings.navigation_default_date,
         deferEmptyText: false
     },
-    autoExpandColumn: 'field',
+    autoExpandColumn: 1,
 
     initComponent: function () {
         this.store = new Ext.data.JsonStore({
-            fields: ['ds_id', 'field', 'type'],
+            fields: ['dsId', 'title', 'type'],
             listeners: {
                 datachanged: function (store) {
                     var fields = [];
                     Ext.each(store.getRange(), function (r) {
-                        fields.push({ds_id: r.get('ds_id'), field: r.get('field'), type: r.get('type')});
+                        fields.push({dsId: r.get('dsId'), title: r.get('title'), type: r.get('type')});
                     });
                     this.fireEvent('change', fields);
                 },
@@ -29,14 +29,13 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
         this.columns = [
             {
                 header: this.strings.ds_id,
-                dataIndex: 'ds_id',
+                dataIndex: 'dsId',
                 width: 200,
                 hidden: true
             },
             {
-                id: 'field',
                 header: this.strings.field,
-                dataIndex: 'field',
+                dataIndex: 'title',
                 width: 200
             }
         ];
@@ -117,8 +116,8 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
 
                     var fieldTitle = dragData.node.attributes.properties.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] + ' (' + dragData.node.attributes.properties.field.working_title + ')';
                     var r = new Ext.data.Record({
-                        ds_id: dragData.node.attributes.ds_id,
-                        field: fieldTitle,
+                        dsId: dragData.node.attributes.ds_id,
+                        title: fieldTitle,
                         type: fieldType
                     });
 
@@ -146,23 +145,6 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
         });
 
         Phlexible.elementtypes.RootMappedDateGrid.superclass.initComponent.call(this);
-    },
-
-    loadData: function (date) {
-        this.store.loadData(date);
-    },
-
-    getSaveValues: function () {
-        var date = [];
-
-        for (var i = 0; i < this.store.getCount(); i++) {
-            var r = this.store.getAt(i);
-            navigation.push([r.get('id'), r.get('field'), r.get('type')]);
-        }
-
-        this.store.commitChanges();
-
-        return date;
     }
 });
 

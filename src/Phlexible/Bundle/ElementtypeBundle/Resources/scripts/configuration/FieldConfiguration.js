@@ -220,7 +220,7 @@ Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.Fo
 
         this.items.each(function (panel) {
             if (panel.additional) {
-                panel.loadData(fieldData, fieldType, properties);
+                panel.loadData(fieldData, fieldType);
             }
         });
 

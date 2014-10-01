@@ -92,8 +92,8 @@ class TreeSaver
             ->setMetaSetId($metasetId)
             ->setMappings($rootMappings)
             ->setComment($comment)
-            ->setCreateUserId($user->getId())
-            ->setCreatedAt(new \DateTime())
+            ->setModifyUserId($user->getId())
+            ->setModifiedAt(new \DateTime())
         ;
 
         $elementtypeStructure = null;
