@@ -207,8 +207,10 @@ class ElementtypeService
 
         $elementtype = new Elementtype();
         $elementtype
+            ->setUniqueId($uniqueId)
             ->setType($type)
-            ->setTitle($name)
+            ->setTitle('de', $name)
+            ->setTitle('en', $name)
             ->setIcon($icon)
             ->setRevision(1)
             ->setStructure($elementtypeStructure)

@@ -12,7 +12,6 @@ use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,6 +42,7 @@ class TestCommand extends ContainerAwareCommand
         $conn = $this->getContainer()->get('doctrine.dbal.default_connection');
         /* @var $conn Connection */
         $dumper = $this->getContainer()->get('phlexible_elementtype.file.dumper.xml');
+        $elementtypeManager = $this->getContainer()->get('phlexible_elementtype.elementtype_manager');
 
         $qb = $conn->createQueryBuilder();
         $qb
@@ -75,6 +75,14 @@ class TestCommand extends ContainerAwareCommand
 
             $structure = $this->buildStructure($conn, $row['id'], $versionRow['version'], $map);
 
+            $mappings = json_decode($versionRow['mappings'], true);
+            if (isset($mappings['backend'])) {
+                foreach ($mappings['backend']['fields'] as $index => $mappingField) {
+                    $mappings['backend']['fields'][$index]['dsId'] = $mappingField['ds_id'];
+                    $mappings['backend']['fields'][$index]['title'] = $mappingField['field'];
+                }
+            }
+
             $elementtype = new Elementtype();
             $elementtype
                 ->setId($map[$row['id']]['id'])
@@ -90,7 +98,7 @@ class TestCommand extends ContainerAwareCommand
                 ->setComment($versionRow['comment'])
                 ->setDefaultContentTab($versionRow['default_content_tab'])
                 ->setMetaSetId($versionRow['metaset_id'])
-                ->setMappings(json_decode($versionRow['mappings'], true))
+                ->setMappings($mappings)
                 ->setStructure($structure)
                 ->setCreatedAt(new \DateTime($row['created_at']))
                 ->setCreateUserId($row['create_user_id'])
@@ -99,6 +107,8 @@ class TestCommand extends ContainerAwareCommand
             ;
 
             $output->writeln($row['id'] . " => " . $elementtype->getId() . " " . $elementtype->getUniqueId());
+
+            $elementtypeManager->validateElementtype($elementtype);
 
             $filesystem->dumpFile($path . $map[$row['id']]['uniqueId'] . '.xml', $dumper->dump($elementtype));
         }
@@ -119,6 +129,8 @@ class TestCommand extends ContainerAwareCommand
             ->orderBy('ets.sort', 'ASC');
 
         foreach ($conn->fetchAll($qb->getSQL()) as $row) {
+            $type = $row['type'];
+
             $labels = json_decode($row['labels'], true);
             $options = json_decode($row['options'], true);
             $configuration = json_decode($row['configuration'], true);
@@ -160,7 +172,7 @@ class TestCommand extends ContainerAwareCommand
                     $configuration['select_function'] = $options['source_function'];
                 }
 
-                if (isset($options['source_list'])) {
+                if (isset($options['source_list']) && ($type === 'select' || $type === 'multiselect')) {
                     $configuration['select_list'] = $options['source_list'];
                 }
             }

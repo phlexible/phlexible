@@ -11,11 +11,14 @@ namespace Phlexible\Bundle\ElementBundle\Validator;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -113,7 +116,7 @@ class ElementValidator
 
         $minValue = $node->getValidationValue('min_value');
         $allowNegative = $node->getValidationValue('allow_negative');
-        if ($minValue || !$allowNegative) {
+        if ($minValue || $allowNegative === false) {
             $greaterThanOrEqualConstraint = new GreaterThanOrEqual();
 
             $value = 0;
@@ -126,6 +129,18 @@ class ElementValidator
             $constraints[] = $greaterThanOrEqualConstraint;
         }
 
+        $allowDecimal = $node->getValidationValue('allow_decimal');
+        if ($allowDecimal !== null) {
+            $typeConstraint = new Type();
+            if ($allowDecimal) {
+                $typeConstraint->type = 'float';
+            } else {
+                $typeConstraint->type = 'int';
+            }
+
+            $constraints[] = $typeConstraint;
+        }
+
         if ($maxValue = $node->getValidationValue('max_value')) {
             $lessThanOrEqualConstraint = new LessThanOrEqual();
             $lessThanOrEqualConstraint->value = $maxValue;
@@ -133,7 +148,17 @@ class ElementValidator
             $constraints[] = $lessThanOrEqualConstraint;
         }
 
-        // decimal
+        if ($validator = $node->getValidationValue('validator')) {
+            if ($validator === 'email') {
+                $emailConstraint = new Email();
+                $constraints[] = $emailConstraint;
+
+            } elseif ($validator === 'url') {
+                $urlConstraint = new Url();
+
+                $constraints[] = $urlConstraint;
+            }
+        }
 
         return $constraints;
     }

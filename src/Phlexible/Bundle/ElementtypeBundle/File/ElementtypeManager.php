@@ -14,12 +14,15 @@ use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeEvent;
 use Phlexible\Bundle\ElementtypeBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementtypeBundle\Exception\DeleteCancelledException;
 use Phlexible\Bundle\ElementtypeBundle\Exception\UpdateCancelledException;
-use Phlexible\Bundle\ElementtypeBundle\File\Dumper\DumperInterface;
 use Phlexible\Bundle\ElementtypeBundle\File\Loader\LoaderInterface;
+use Phlexible\Bundle\ElementtypeBundle\File\Writer\WriterInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeManagerInterface;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Validator\Exception\ValidatorException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Elementtype manager
@@ -29,19 +32,19 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ElementtypeManager implements ElementtypeManagerInterface
 {
     /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
      * @var LoaderInterface
      */
     private $loader;
 
     /**
-     * @var DumperInterface
+     * @var WriterInterface
      */
-    private $dumper;
+    private $writer;
+
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
 
     /**
      * @var MessagePoster
@@ -49,19 +52,27 @@ class ElementtypeManager implements ElementtypeManagerInterface
     private $messageService;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * @param LoaderInterface          $loader
-     * @param \Phlexible\Bundle\ElementtypeBundle\File\Dumper\DumperInterface          $dumper
+     * @param WriterInterface          $writer
+     * @param ValidatorInterface       $validator
      * @param EventDispatcherInterface $dispatcher
      * @param MessagePoster            $messageService
      */
     public function __construct(
         LoaderInterface $loader,
-        DumperInterface $dumper,
+        WriterInterface $writer,
+        ValidatorInterface $validator,
         EventDispatcherInterface $dispatcher,
         MessagePoster $messageService)
     {
         $this->loader = $loader;
-        $this->dumper = $dumper;
+        $this->writer = $writer;
+        $this->validator = $validator;
         $this->dispatcher = $dispatcher;
         $this->messageService = $messageService;
     }
@@ -93,6 +104,21 @@ class ElementtypeManager implements ElementtypeManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function validateElementtype(Elementtype $elementtype)
+    {
+        $violations = $this->validator->validate($elementtype);
+        if ($violations->count()) {
+            $msg = 'Elementtype is invalid. Violations: ';
+            foreach ($violations as $violation) {
+                $msg .= $violation->getPropertyPath().': '.$violation->getMessage().': '.json_encode($violation->getInvalidValue()).'';
+            }
+            throw new ValidatorException($msg);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function updateElementtype(Elementtype $elementtype, $flush = true)
     {
         if (!$elementtype->getId()) {
@@ -101,8 +127,10 @@ class ElementtypeManager implements ElementtypeManagerInterface
                 throw new CreateCancelledException('Create canceled by callback.');
             }
 
-            $elementtype->setId('bla');
-            $this->dumper->dump($elementtype);
+            $elementtype->setId(Uuid::generate());
+
+            $this->validateElementtype($elementtype);
+            $this->writer->write($elementtype);
 
             $event = new ElementtypeEvent($elementtype);
             $this->dispatcher->dispatch(ElementtypeEvents::CREATE, $event);
@@ -116,7 +144,8 @@ class ElementtypeManager implements ElementtypeManagerInterface
                 throw new UpdateCancelledException('Update canceled by callback.');
             }
 
-            $this->dumper->dump($elementtype);
+            $this->validateElementtype($elementtype);
+            $this->writer->write($elementtype);
 
             $event = new ElementtypeEvent($elementtype);
             $this->dispatcher->dispatch(ElementtypeEvents::UPDATE, $event);

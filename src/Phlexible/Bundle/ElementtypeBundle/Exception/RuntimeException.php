@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Exception;
 
 /**
- * Field not available exception
+ * Runtime exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class FieldNotAvailableException extends RuntimeException
+class RuntimeException extends \RuntimeException
 {
 
 }

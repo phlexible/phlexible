@@ -227,13 +227,11 @@ class TreeController extends Controller
     {
         $treeSaver = $this->get('phlexible_elementtype.tree_saver');
 
-        $elementtypeVersion = $treeSaver->save($request, $this->getUser());
-
-        $this->getDoctrine()->getManager()->flush();
+        $elementtype = $treeSaver->save($request, $this->getUser());
 
         return new ResultResponse(
             true,
-            "Element Type {$elementtypeVersion->getElementtype()->getTitle()} saved as version {$elementtypeVersion->getVersion()}."
+            "Element Type {$elementtype->getTitle()} saved as version {$elementtype->getRevision()}."
         );
     }
 }

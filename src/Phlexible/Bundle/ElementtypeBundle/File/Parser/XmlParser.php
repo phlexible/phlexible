@@ -153,7 +153,19 @@ class XmlParser implements ParserInterface
             foreach ($node->configuration->item as $item) {
                 $itemAttr = $item->attributes();
                 $key = (string) $itemAttr['key'];
+                $configType = (string) $itemAttr['type'];
                 $configuration[$key] = (string) $item;
+                if ($configType === 'json_array') {
+                    $configuration[$key] = json_decode($configuration[$key], true);
+                } elseif ($configType === 'boolean') {
+                    $configuration[$key] = (bool) $configuration[$key];
+                } elseif ($configType === 'integer') {
+                    $configuration[$key] = (int) $configuration[$key];
+                } elseif ($configType === 'float') {
+                    $configuration[$key] = (float) $configuration[$key];
+                } elseif ($configType === 'double') {
+                    $configuration[$key] = (float) $configuration[$key];
+                }
             }
         }
 
@@ -171,8 +183,8 @@ class XmlParser implements ParserInterface
         }
 
         $validation = array();
-        if ($node->validations) {
-            foreach ($node->validations->constrain as $constrain) {
+        if ($node->validation) {
+            foreach ($node->validation->constrain as $constrain) {
                 $itemAttr = $constrain->attributes();
                 $key = (string) $itemAttr['key'];
                 $validation[$key] = (string) $constrain;

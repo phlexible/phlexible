@@ -8,12 +8,14 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Exception;
 
+use Symfony\Component\Validator\Exception\ValidatorException as BaseValidatorException;
+
 /**
- * Field not available exception
+ * Validator exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class FieldNotAvailableException extends RuntimeException
+class ValidatorException extends BaseValidatorException
 {
 
 }

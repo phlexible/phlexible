@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
- * XML loader
+ * XML dumper
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -63,8 +63,8 @@ class XmlDumper implements DumperInterface
                 $fieldsElement = $mappingElement->appendElement('fields');
                 foreach ($mapping['fields'] as $field) {
                     $fieldElement = $fieldsElement->appendElement('field');
-                    $fieldElement->appendElement('dsId', $field['ds_id']);
-                    $fieldElement->appendElement('title', $field['field']);
+                    $fieldElement->appendElement('dsId', $field['dsId']);
+                    $fieldElement->appendElement('title', $field['title']);
                     $fieldElement->appendElement('index', $field['index']);
                 }
             }
@@ -102,62 +102,79 @@ class XmlDumper implements DumperInterface
 
         $nodeElement = $element->appendElement('node', '', $nodeAttributes);
 
-        if ($node->getLabels()) {
-            $labelsElement = $nodeElement->appendElement('labels');
-            foreach ($node->getLabels() as $key => $value) {
+        $labels = $node->getLabels();
+        if ($labels) {
+            foreach ($labels as $key => $value) {
                 foreach ($value as $language => $languageValue) {
                     if (!$languageValue) {
-                        continue;
+                        unset($labels[$key][$language]);
                     }
-                    $labelsElement->appendElement(
-                        'label',
-                        $languageValue,
-                        array(
-                            'type'     => $key,
-                            'language' => $language
-                        )
+                }
+            }
+            if ($labels) {
+                $labelsElement = $nodeElement->appendElement('labels');
+                foreach ($labels as $key => $value) {
+                    foreach ($value as $language => $languageValue) {
+                        $labelsElement->appendElement(
+                            'label',
+                            $languageValue,
+                            array(
+                                'type'     => $key,
+                                'language' => $language
+                            )
+                        );
+                    }
+                }
+            }
+        }
+
+        $configuration = $node->getConfiguration();
+        if ($configuration) {
+            foreach ($configuration as $key => $value) {
+                if (!$value) {
+                    unset($configuration[$key]);
+                }
+            }
+            if ($configuration) {
+                $configurationElement = $nodeElement->appendElement('configuration');
+                foreach ($configuration as $key => $value) {
+                    $attributes = array(
+                        'key' => $key,
+                        'type' => gettype($value),
+                    );
+                    if (is_array($value)) {
+                        $value = json_encode($value);
+                        $attributes['type'] = 'json_array';
+                    } elseif (!is_scalar($value)) {
+                        throw new \Exception('Value has to be array or scalar.');
+                    }
+                    $configurationElement->appendElement(
+                        'item',
+                        $value,
+                        $attributes
                     );
                 }
             }
         }
 
-        if ($node->getConfiguration()) {
-            $configurationElement = $nodeElement->appendElement('configuration');
-            foreach ($node->getConfiguration() as $key => $value) {
+        $validation = $node->getValidation();
+        if ($validation) {
+            foreach ($validation as $key => $value) {
                 if (!$value) {
-                    continue;
+                    unset($validation[$key]);
                 }
-                $attributes = array(
-                    'key' => $key,
-                    'type' => gettype($value),
-                );
-                if (is_array($value)) {
-                    $value = json_encode($value);
-                    $attributes['type'] = 'json_array';
-                } elseif (!is_scalar($value)) {
-                    throw new \Exception('Value has to be array or scalar.');
-                }
-                $configurationElement->appendElement(
-                    'item',
-                    $value,
-                    $attributes
-                );
             }
-        }
-
-        if ($node->getValidation()) {
-            $validationElement = $nodeElement->appendElement('validation');
-            foreach ($node->getValidation() as $key => $value) {
-                if (!$value) {
-                    continue;
+            if ($validation) {
+                $validationElement = $nodeElement->appendElement('validation');
+                foreach ($validation as $key => $value) {
+                    $validationElement->appendElement(
+                        'constrain',
+                        $value,
+                        array(
+                            'key' => $key,
+                        )
+                    );
                 }
-                $validationElement->appendElement(
-                    'constrain',
-                    $value,
-                    array(
-                        'key' => $key,
-                    )
-                );
             }
         }
 

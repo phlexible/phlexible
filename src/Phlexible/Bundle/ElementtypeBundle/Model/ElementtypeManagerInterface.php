@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
+use Symfony\Component\Validator\ConstraintViolationListInterface;
+
 /**
  * Elementtype manager interface
  *
@@ -39,6 +41,13 @@ interface ElementtypeManagerInterface
      * @return Elementtype[]
      */
     public function findAll();
+
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return null|ConstraintViolationListInterface
+     */
+    public function validateElementtype(Elementtype $elementtype);
 
     /**
      * Save element type

@@ -6,22 +6,21 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementtypeBundle\File\Dumper;
+namespace Phlexible\Bundle\ElementtypeBundle\File\Writer;
 
-use FluentDOM\Document;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
- * Dumper interface
+ * Writer interface
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface DumperInterface
+interface WriterInterface
 {
     /**
      * @param Elementtype $elementtype
      *
-     * @return Document
+     * @return string
      */
-    public function dump(Elementtype $elementtype);
+    public function write(Elementtype $elementtype);
 }

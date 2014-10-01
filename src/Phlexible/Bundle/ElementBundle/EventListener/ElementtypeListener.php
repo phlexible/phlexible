@@ -57,7 +57,7 @@ class ElementtypeListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            ElementtypeEvents::UPDATE => 'onElementtypeUpdate',
+            //ElementtypeEvents::UPDATE => 'onElementtypeUpdate',
         );
     }
 

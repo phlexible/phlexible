@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Controller\Tree;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
@@ -82,7 +81,9 @@ class TreeSaver
         $elementtype = $this->elementtypeService->findElementtype($elementtypeId);
         $elementtype
             ->setRevision($elementtype->getRevision() + 1)
-            ->setTitle($title)
+            ->setUniqueId($uniqueId)
+            ->setTitle('de', $title)
+            ->setTitle('en', $title)
             ->setIcon($icon)
             ->setHideChildren($hideChildren)
             ->setDefaultTab($defaultTab)

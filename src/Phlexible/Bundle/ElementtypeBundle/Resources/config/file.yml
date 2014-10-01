@@ -3,7 +3,8 @@ services:
         class: Phlexible\Bundle\ElementtypeBundle\File\ElementtypeManager
         arguments:
             - @phlexible_elementtype.file.loader.xml
-            - @phlexible_elementtype.file.dumper.xml
+            - @phlexible_elementtype.file.writer.xml
+            - @validator
             - @event_dispatcher
             - @phlexible_message.message_poster
         public: false
@@ -11,6 +12,10 @@ services:
     phlexible_elementtype.file.loader.xml:
       class: Phlexible\Bundle\ElementtypeBundle\File\Loader\XmlLoader
       arguments: [@pattern_locator]
+
+    phlexible_elementtype.file.writer.xml:
+      class: Phlexible\Bundle\ElementtypeBundle\File\Writer\XmlWriter
+      arguments: [@phlexible_elementtype.file.dumper.xml, "%kernel.root_dir%/Resources/elementtypes"]
 
     phlexible_elementtype.file.dumper.xml:
       class: Phlexible\Bundle\ElementtypeBundle\File\Dumper\XmlDumper

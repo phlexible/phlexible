@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\Identifier\IdentifiableInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Elementtype
@@ -27,26 +28,32 @@ class Elementtype implements IdentifiableInterface
 
     /**
      * @var string
+     * @Assert\NotNull
      */
     private $id;
 
     /**
      * @var string
+     * @Assert\NotNull
      */
     private $uniqueId;
 
     /**
      * @var int
+     * @Assert\NotNull
      */
     private $revision;
 
     /**
      * @var string
+     * @Assert\NotNull
+     * @Assert\Choice(choices={"full", "part", "reference", "layout", "structure"})
      */
     private $type;
 
     /**
      * @var array
+     * @Assert\Count(min=1)
      */
     private $titles;
 
@@ -87,6 +94,7 @@ class Elementtype implements IdentifiableInterface
 
     /**
      * @var array
+     * @Assert\Count(min=1)
      */
     private $mappings = array();
 
@@ -97,21 +105,27 @@ class Elementtype implements IdentifiableInterface
 
     /**
      * @var \DateTime
+     * @Assert\NotNull()
      */
     private $createdAt;
 
     /**
      * @var string
+     * @Assert\NotNull()
+     * @Assert\Uuid()
      */
     private $createUserId;
 
     /**
      * @var \DateTime
+     * @Assert\NotNull()
      */
     private $modifiedAt;
 
     /**
      * @var string
+     * @Assert\NotNull()
+     * @Assert\Uuid()
      */
     private $modifyUserId;
 
