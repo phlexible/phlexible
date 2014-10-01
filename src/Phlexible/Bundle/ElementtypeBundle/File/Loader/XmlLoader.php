@@ -30,6 +30,16 @@ class XmlLoader implements LoaderInterface
     private $parser;
 
     /**
+     * @var array
+     */
+    private $idMap;
+
+    /**
+     * @var array
+     */
+    private $uniqueIdMap;
+
+    /**
      * @param PatternResourceLocator $locator
      */
     public function __construct(PatternResourceLocator $locator)
@@ -39,15 +49,39 @@ class XmlLoader implements LoaderInterface
         $this->parser = new XmlParser($this);
     }
 
+    private function createMap()
+    {
+        if ($this->idMap !== null)  {
+            return;
+        }
+
+        $files = $this->locator->locate('*.xml', 'elementtypes', false);
+
+        $idMap = array();
+        $uniqueIdMap = array();
+        foreach ($files as $file) {
+            $xml = simplexml_load_file($file);
+            $rootAttributes = $xml->attributes();
+            $id = (string) $rootAttributes['id'];
+            $uniqueId = (string) $rootAttributes['uniqueId'];
+
+            $idMap[$id] = $file;
+            $uniqueIdMap[$uniqueId] = $file;
+        }
+
+        $this->idMap = $idMap;
+        $this->uniqueIdMap = $uniqueIdMap;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function loadAll()
     {
-        $files = $this->locator->locate('*.xml', 'elementtypes', false);
+        $this->createMap();
 
         $elementtypes = array();
-        foreach ($files as $file) {
+        foreach ($this->idMap as $id => $file) {
             $elementtypes[] = $this->loadFile($file);
         }
 
@@ -59,7 +93,9 @@ class XmlLoader implements LoaderInterface
      */
     public function load($elementtypeId)
     {
-        $filename = $this->locator->locate("$elementtypeId.xml", 'elementtypes', true);
+        $this->createMap();
+
+        $filename = $this->idMap[$elementtypeId];
 
         return $this->loadFile($filename);
     }
@@ -71,7 +107,7 @@ class XmlLoader implements LoaderInterface
      */
     public function open($elementtypeId)
     {
-        $filename = $this->locator->locate("$elementtypeId.xml", 'elementtypes', true);
+        $filename = $this->idMap[$elementtypeId];
 
         return simplexml_load_file($filename);
     }

@@ -12,6 +12,7 @@ use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -53,7 +54,17 @@ class TestCommand extends ContainerAwareCommand
         $path = $this->getContainer()->getParameter('kernel.root_dir') . '/Resources/elementtypes/';
         $filesystem->mkdir($path);
 
-        foreach ($conn->fetchAll($qb->getSQL()) as $row) {
+        $rows = $conn->fetchAll($qb->getSQL());
+
+        $map = array();
+        foreach ($rows as $row) {
+            $uniqueId = str_replace('_', '-', $row['unique_id']);
+            $id = md5($uniqueId);
+            $id = substr($id, 0, 8) . '-' . substr($id, 8, 4) . '-' . substr($id, 12, 4) . '-' . substr($id, 16, 4) . '-' . substr($id, 20);
+            $map[$row['id']] = array('id' => $id, 'uniqueId' => $uniqueId);
+        }
+
+        foreach ($rows as $row) {
             $versionQb = $conn->createQueryBuilder();
             $versionQb
                 ->select('etv.*')
@@ -62,12 +73,14 @@ class TestCommand extends ContainerAwareCommand
                 ->orderBy('etv.version', 'DESC');
             $versionRow = $conn->fetchAssoc($versionQb->getSQL());
 
-            $structure = $this->buildStructure($conn, $row['id'], $versionRow['version']);
+            $structure = $this->buildStructure($conn, $row['id'], $versionRow['version'], $map);
 
             $elementtype = new Elementtype();
             $elementtype
-                ->setId($row['unique_id'])
-                ->setName($row['title'])
+                ->setId($map[$row['id']]['id'])
+                ->setUniqueId($map[$row['id']]['uniqueId'])
+                ->setTitle('de', $row['title'])
+                ->setTitle('en', $row['title'])
                 ->setType($row['type'])
                 ->setRevision($versionRow['version'])
                 ->setIcon($row['icon'])
@@ -85,13 +98,15 @@ class TestCommand extends ContainerAwareCommand
                 ->setModifyUserId($versionRow['create_user_id'])
             ;
 
-            $filesystem->dumpFile($path . $row['unique_id'] . '.xml', $dumper->dump($elementtype));
+            $output->writeln($row['id'] . " => " . $elementtype->getId() . " " . $elementtype->getUniqueId());
+
+            $filesystem->dumpFile($path . $map[$row['id']]['uniqueId'] . '.xml', $dumper->dump($elementtype));
         }
 
         return 0;
     }
 
-    private function buildStructure(Connection $conn, $id, $version)
+    private function buildStructure(Connection $conn, $id, $version, $map)
     {
         $structure = new ElementtypeStructure();
 
@@ -146,9 +161,7 @@ class TestCommand extends ContainerAwareCommand
                 }
 
                 if (isset($options['source_list'])) {
-                    $options = $options['source_list'];
-                } else {
-                    $options = null;
+                    $configuration['select_list'] = $options['source_list'];
                 }
             }
 
@@ -181,13 +194,12 @@ class TestCommand extends ContainerAwareCommand
                 ->setName($row['name'])
                 ->setComment($row['comment'])
                 ->setLabels($labels)
-                ->setOptions($options)
                 ->setConfiguration($configuration)
                 ->setValidation($validation)
             ;
 
             if ($row['reference_id']) {
-                $referenceElementtypeId = $conn->fetchColumn("SELECT unique_id FROM elementtype WHERE id = {$row['reference_id']}");
+                $referenceElementtypeId = $map[$row['reference_id']]['id'];
                 $node->setReferenceElementtypeId($referenceElementtypeId);
             }
 

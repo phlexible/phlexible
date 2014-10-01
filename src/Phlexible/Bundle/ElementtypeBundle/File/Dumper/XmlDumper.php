@@ -34,13 +34,18 @@ class XmlDumper implements DumperInterface
             '',
             array(
                 'id'         => $elementtype->getId(),
-                'name'       => $elementtype->getName(),
+                'uniqueId'   => $elementtype->getUniqueId(),
                 'revision'   => $elementtype->getRevision(),
                 'type'       => $elementtype->getType(),
                 'icon'       => $elementtype->getIcon(),
                 'defaultTab' => $elementtype->getDefaultTab(),
             )
         );
+
+        $titlesElement = $rootElement->appendElement('titles');
+        foreach ($elementtype->getTitles() as $language => $title) {
+            $titlesElement->appendElement('title', $title, array('language' => $language));
+        }
 
         $rootElement->appendElement('comment', $elementtype->getComment());
         $rootElement->appendElement('metasetId', $elementtype->getMetaSetId());
@@ -122,10 +127,20 @@ class XmlDumper implements DumperInterface
                 if (!$value) {
                     continue;
                 }
+                $attributes = array(
+                    'key' => $key,
+                    'type' => gettype($value),
+                );
+                if (is_array($value)) {
+                    $value = json_encode($value);
+                    $attributes['type'] = 'json_array';
+                } elseif (!is_scalar($value)) {
+                    throw new \Exception('Value has to be array or scalar.');
+                }
                 $configurationElement->appendElement(
                     'item',
                     $value,
-                    array('key' => $key)
+                    $attributes
                 );
             }
         }
@@ -143,21 +158,6 @@ class XmlDumper implements DumperInterface
                         'key' => $key,
                     )
                 );
-            }
-        }
-
-        if ($node->getOptions()) {
-            $optionsElement = $nodeElement->appendElement('options');
-            foreach ($node->getOptions() as $option) {
-                $optionElement = $optionsElement->appendElement(
-                    'option',
-                    '',
-                    array(
-                        'key' => $option['key'],
-                    )
-                );
-                $optionElement->appendElement('value', $option['de'], array('language' => 'de'));
-                $optionElement->appendElement('value', $option['en'], array('language' => 'en'));
             }
         }
 

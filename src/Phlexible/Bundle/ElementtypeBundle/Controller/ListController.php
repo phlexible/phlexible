@@ -47,9 +47,9 @@ class ListController extends Controller
 
             $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
 
-            $elementtypes[$elementtype->getName() . $elementtype->getId()] = array(
+            $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = array(
                 'id'      => $elementtype->getId(),
-                'title'   => $elementtype->getName(),
+                'title'   => $elementtype->getTitle(),
                 'icon'    => $elementtype->getIcon(),
                 'version' => $elementtypeVersion->getRevision(),
                 'type'    => $elementtype->getType(),

@@ -101,9 +101,9 @@ class TreeController extends Controller
                 continue;
             }
 
-            $data[$childElementtype->getName().'_'.$childElementtype->getId()] = array(
+            $data[$childElementtype->getTitle().'_'.$childElementtype->getId()] = array(
                 'id'    => $childElementtype->getId(),
-                'title' => $childElementtype->getName(),
+                'title' => $childElementtype->getTitle(),
                 'icon'  => $iconResolver->resolveElementtype($childElementtype),
                 'type'  => $childElementtype->getType(),
             );

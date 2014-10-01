@@ -201,7 +201,6 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                     }, this);
                 },
                 addTrayItem: function(menu, item) {
-                    console.log('addTrayItem', item);
                     this.getToolbar().add(item);
                 },
                 scope: this

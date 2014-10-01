@@ -61,11 +61,6 @@ class ElementtypeStructureNode
     /**
      * @var string
      */
-    private $options;
-
-    /**
-     * @var string
-     */
     private $contentChannels;
 
     /**
@@ -313,41 +308,6 @@ class ElementtypeStructureNode
         }
 
         return $this->labels[$key][$language];
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
-     * @param array|null $options
-     *
-     * @return $this
-     */
-    public function setOptions(array $options = null)
-    {
-        $this->options = $options;
-
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @param string $default
-     *
-     * @return mixed
-     */
-    public function getOptionsValue($key, $default = null)
-    {
-        if (is_array($this->options) && array_key_exists($key, $this->options)) {
-            return $this->options[$key];
-        }
-
-        return $default;
     }
 
     /**

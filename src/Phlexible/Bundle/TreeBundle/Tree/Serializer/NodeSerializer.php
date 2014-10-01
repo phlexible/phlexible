@@ -158,7 +158,7 @@ class NodeSerializer
             'EID: ' . $element->getEid() . '<br />' .
             'Version: ' . $elementVersion->getVersion() . '<br />' .
             '<hr>' .
-            'Element Type: ' . $elementtype->getName() . '<br />' .
+            'Element Type: ' . $elementtype->getTitle() . '<br />' .
             'Element Type Version: ' . $elementtype->getRevision() .
             $lockQtip;
 
@@ -169,7 +169,7 @@ class NodeSerializer
             'icon'                => $this->iconResolver->resolveTreeNode($node, $language),
             'navigation'          => $node->getInNavigation(),
             'restricted'          => $node->getNeedAuthentication(),
-            'element_type'        => $elementtype->getName(),
+            'element_type'        => $elementtype->getTitle(),
             'element_type_id'     => $elementtype->getId(),
             'element_type_type'   => $elementtype->getType(),
             'alias'               => 1, //$node->isInstance(),

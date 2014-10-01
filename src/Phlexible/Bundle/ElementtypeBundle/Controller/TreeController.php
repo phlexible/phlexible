@@ -72,7 +72,7 @@ class TreeController extends Controller
 
         $data = array(
             array(
-                'text'                 => $elementtype->getName() .
+                'text'                 => $elementtype->getTitle($language) .
                     ' [v' . $elementtypeVersion->getRevision() . ', ' .
                     $elementtype->getType() . ']',
                 'id'                   => md5(serialize($rootNode)),
@@ -89,10 +89,10 @@ class TreeController extends Controller
                 'editable'             => $mode == 'edit',
                 'properties'           => array(
                     'root' => array(
-                        'title'               => $elementtype->getName(),
-                        'reference_title'     => $elementtype->getName() .
+                        'title'               => $elementtype->getTitle($language),
+                        'reference_title'     => $elementtype->getTitle($language) .
                             ' [v' . $elementtypeVersion->getRevision() . ']',
-                        'unique_id'           => $elementtype->getId(),
+                        'unique_id'           => $elementtype->getUniqueId(),
                         'icon'                => $elementtype->getIcon(),
                         'hide_children'       => $elementtype->getHideChildren() ? 'on' : '',
                         'default_tab'         => $elementtype->getDefaultTab(),
@@ -144,15 +144,6 @@ class TreeController extends Controller
         foreach ($nodes as $node) {
             /* @var $node ElementtypeStructureNode */
 
-            $options = array();
-            foreach ($node->getOptions() as $key => $optionValues) {
-                $options[$key]['key'] = $key;
-                foreach ($optionValues as $language => $optionValue) {
-                    $options[$key][$language] = $optionValue;
-                }
-            }
-            $options = array_values($options);
-
             $tmp = array(
                 'text'       => $node->getLabel('fieldLabel', $language) . ' (' . $node->getName() . ')',
                 'id'         => md5(serialize($node)),
@@ -177,7 +168,6 @@ class TreeController extends Controller
                     ),
                     'configuration'    => $node->getConfiguration(),
                     'labels'           => $node->getLabels(),
-                    'options'          => $options,
                     'validation'       => $node->getValidation(),
                     'content_channels' => $node->getContentChannels(),
                 )
@@ -202,7 +192,7 @@ class TreeController extends Controller
                 $children = $structure->getChildNodes($node->getDsId());
                 $referenceRoot = $children[0];
 
-                $tmp['text'] = $referenceElementtype->getName() . ' [v' . $referenceElementtype->getRevision() . ']';
+                $tmp['text'] = $referenceElementtype->getTitle($language) . ' [v' . $referenceElementtype->getRevision() . ']';
                 $tmp['leaf'] = false;
                 $tmp['expanded'] = true;
                 $tmp['reference'] = array('refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision());

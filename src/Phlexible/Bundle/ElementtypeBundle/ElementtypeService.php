@@ -208,7 +208,7 @@ class ElementtypeService
         $elementtype = new Elementtype();
         $elementtype
             ->setType($type)
-            ->setName($name)
+            ->setTitle($name)
             ->setIcon($icon)
             ->setRevision(1)
             ->setStructure($elementtypeStructure)
@@ -277,7 +277,7 @@ class ElementtypeService
 
         $elementtype
             ->setId(null)
-            ->setName($elementtype->getName() . ' - copy - ' . $uniqId)
+            ->setTitle($elementtype->getTitle() . ' - copy - ' . $uniqId)
             ->setRevision(1)
             ->setCreatedAt(new \DateTime())
             ->setCreateUserId($userId);

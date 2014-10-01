@@ -201,7 +201,7 @@ class DataController extends Controller
 
                 $allowedChildren[] = array(
                     $childElementtype->getId(),
-                    $childElementtype->getName(),
+                    $childElementtype->getTitle(),
                     $iconResolver->resolveElementtype($childElementtype),
                 );
             }
@@ -515,7 +515,7 @@ class DataController extends Controller
             ),
             'unique_id'        => $element->getUniqueID(),
             'et_id'            => $elementtype->getId(),
-            'et_title'         => $elementtype->getName(),
+            'et_title'         => $elementtype->getTitle(),
             'et_version'       => $elementVersion->getElementTypeVersion() . ' [' . $elementtype->getRevision() . ']',
             'et_unique_id'     => $elementtype->getId(),
             'et_type'          => $elementtype->getType(),

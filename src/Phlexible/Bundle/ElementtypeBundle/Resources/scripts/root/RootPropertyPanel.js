@@ -13,7 +13,7 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
             {
                 // 0
                 xtype: 'textfield',
-                fieldLabel: this.strings.name,
+                fieldLabel: this.strings.title,
                 name: 'title',
                 width: 200,
                 allowBlank: false
@@ -23,7 +23,8 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
                 fieldLabel: this.strings.uniqueid,
                 name: 'unique_id',
                 width: 200,
-                allowBlank: false
+                allowBlank: false,
+                regex: /^[a-z0-9-_]+$/
             },
             {
                 // 2
@@ -87,6 +88,7 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
                         ['', 'No Tab defined']
                     ]
                 }),
+                forceSelection: true,
                 displayField: 'title',
                 valueField: 'id',
                 editable: false,
@@ -151,11 +153,8 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
     },
 
     loadValues: function (properties, node) {
-        var store = this.getComponent(4).store;
-        store.removeAll();
-        for (var i = 0; i < node.childNodes.length; i++) {
-            store.add(new Ext.data.Record({id: i + '', title: node.childNodes[i].text}));
-        }
+        this.node = node;
+        this.updateDefaultContentTabStore();
 
         if (properties.root.default_content_tab !== null) {
             properties.root.default_content_tab += '';
@@ -172,8 +171,24 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
         return this.getForm().getValues();
     },
 
+    updateDefaultContentTabStore: function() {
+        var store = this.getComponent(4).store;
+        store.removeAll();
+        for (var i = 0; i < this.node.childNodes.length; i++) {
+            store.add(new Ext.data.Record({id: i + '', title: this.node.childNodes[i].text}));
+        }
+    },
+
     isValid: function () {
-        if (this.getForm().isValid()) {
+        var valid = this.getForm().isValid(),
+            defaultContentTab = this.getComponent(4).getValue();
+
+        if (defaultContentTab) {
+            this.updateDefaultContentTabStore();
+            valid = valid && this.node.childNodes[defaultContentTab] !== undefined;
+        }
+
+        if (valid) {
             //this.header.child('span').removeClass('error');
             this.setIconClass('p-elementtype-tab_properties-icon');
 

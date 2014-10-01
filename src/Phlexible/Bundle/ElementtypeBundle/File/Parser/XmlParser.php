@@ -40,7 +40,7 @@ class XmlParser implements ParserInterface
     {
         $rootAttr = $xml->attributes();
         $id = (string) $rootAttr['id'];
-        $name = (string) $rootAttr['name'];
+        $uniqueId = (string) $rootAttr['uniqueId'];
         $revision = (int) $rootAttr['revision'];
         $type = (string) $rootAttr['type'];
         $icon = (string) $rootAttr['icon'];
@@ -75,13 +75,23 @@ class XmlParser implements ParserInterface
             }
         }
 
+        $titles = array();
+        if ($xml->titles) {
+            foreach ($xml->titles->title as $title) {
+                $titleAttr = $title->attributes();
+                $language = (string) $title['language'];
+                $titles[$language] = (string) $title;
+            }
+        }
+
         $elementtypeStructure = $this->loadStructure($xml->structure);
 
         $elementtype = new Elementtype();
         $elementtype
             ->setId($id)
+            ->setUniqueId($uniqueId)
             ->setType($type)
-            ->setName($name)
+            ->setTitles($titles)
             ->setIcon($icon)
             ->setComment($comment)
             ->setMetaSetId($metasetId)
@@ -177,7 +187,6 @@ class XmlParser implements ParserInterface
             ->setDsId($dsId)
             ->setParentNode($parentNode)
             ->setName($name)
-            ->setOptions($options)
             ->setComment($comment)
             ->setConfiguration($configuration)
             ->setValidation($validation)

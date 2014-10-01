@@ -91,7 +91,7 @@ elementtypes:
     number_allow_negative: 'can be negative'
     number_allow_decimals: 'can be a decimal'
     number_min_value: 'Minimum value'
-    number_max_value: Maximum
+    number_max_value: Maximum value'
     text_min_length: 'Minimum length'
     text_max_length: 'Maximum length'
     text_validator: Validator

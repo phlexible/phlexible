@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle;
 
 /**
- * Elements events
+ * Element events
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -31,6 +31,11 @@ class Elementtype implements IdentifiableInterface
     private $id;
 
     /**
+     * @var string
+     */
+    private $uniqueId;
+
+    /**
      * @var int
      */
     private $revision;
@@ -41,9 +46,9 @@ class Elementtype implements IdentifiableInterface
     private $type;
 
     /**
-     * @var string
+     * @var array
      */
-    private $name;
+    private $titles;
 
     /**
      * @var string
@@ -131,6 +136,26 @@ class Elementtype implements IdentifiableInterface
     }
 
     /**
+     * @return string
+     */
+    public function getUniqueId()
+    {
+        return $this->uniqueId;
+    }
+
+    /**
+     * @param string $uniqueId
+     *
+     * @return $this
+     */
+    public function setUniqueId($uniqueId)
+    {
+        $this->uniqueId = $uniqueId;
+
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getRevision()
@@ -171,21 +196,48 @@ class Elementtype implements IdentifiableInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getName()
+    public function getTitles()
     {
-        return $this->name;
+        return $this->titles;
     }
 
     /**
-     * @param string $name
+     * @param array $titles
      *
      * @return $this
      */
-    public function setName($name)
+    public function setTitles(array $titles)
     {
-        $this->name = $name;
+        $this->titles = $titles;
+
+        return $this;
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return string
+     */
+    public function getTitle($language = null)
+    {
+        if (!isset($this->titles[$language])) {
+            return current($this->titles);
+        }
+
+        return $this->titles[$language];
+    }
+
+    /**
+     * @param string $language
+     * @param string $title
+     *
+     * @return $this
+     */
+    public function setTitle($language, $title)
+    {
+        $this->titles[$language] = $title;
 
         return $this;
     }

@@ -82,7 +82,7 @@ class TreeSaver
         $elementtype = $this->elementtypeService->findElementtype($elementtypeId);
         $elementtype
             ->setRevision($elementtype->getRevision() + 1)
-            ->setName($title)
+            ->setTitle($title)
             ->setIcon($icon)
             ->setHideChildren($hideChildren)
             ->setDefaultTab($defaultTab)
@@ -277,7 +277,6 @@ class TreeSaver
                     ->setConfiguration(!empty($properties['configuration']) ? $properties['configuration'] : null)
                     ->setValidation(!empty($properties['validation']) ? $properties['validation'] : null)
                     ->setLabels(!empty($properties['labels']) ? $properties['labels'] : null)
-                    ->setOptions(!empty($properties['options']) ? $properties['options'] : null)
                     ->setContentChannels(
                         !empty($properties['content_channels']) ? $properties['content_channels'] : null
                     );
