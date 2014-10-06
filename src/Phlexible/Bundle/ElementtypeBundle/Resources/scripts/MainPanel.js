@@ -113,12 +113,14 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                                                             refID: e.dropNode.attributes.element_type_id,
                                                             refVersion: e.dropNode.attributes.element_type_version
                                                         };
-                                                        e.dropNode.attributes.cls = 'p-fields-type-reference';
+                                                        e.dropNode.attributes.editable = false;
+                                                        e.dropNode.attributes.cls = 'p-elementtypes-type-reference';
                                                         e.dropNode.attributes.iconCls = 'p-elementtype-field_reference-icon';
 
                                                         e.dropNode.firstChild.cascade(function (node) {
                                                             node.allowChildren = true;
                                                             node.attributes.reference = true;
+                                                            node.attributes.editable = false;
                                                             node.attributes.cls += ' p-elementtypes-reference';
                                                         });
 //                                                    Phlexible.msg('Element Type Action', 'Reference Element Type "' + e.dropNode.text + '" added from Template Tree to Edit Tree.');

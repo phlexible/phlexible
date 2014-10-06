@@ -5,6 +5,7 @@ services:
         arguments:
             - @doctrine.orm.entity_manager
             - @security.encoder_factory
+            - @phlexible_user.successor_service
             - @event_dispatcher
             - %phlexible_user.user.class%
             - %phlexible_user.user.system_user_id%

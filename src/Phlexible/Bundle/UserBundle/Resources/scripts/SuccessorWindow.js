@@ -10,15 +10,11 @@ Phlexible.users.SuccessorWindow = Ext.extend(Phlexible.gui.util.Dialog, {
 
     userId: null,
 
-    getSubmitUrl: function () {
-        return Phlexible.Router.generate('users_successor_set', {userId: this.userId});
-    },
-
     getFormItems: function () {
         return [
             {
                 xtype: 'combo',
-                hiddenName: 'successorUserId',
+                hiddenName: 'successor',
                 fieldLabel: Phlexible.users.Strings.successor,
                 anchor: '-80',
                 store: new Ext.data.JsonStore({

@@ -44,22 +44,24 @@ class ApplySuccessorListener
      */
     public function onApplySuccessor(ApplySuccessorEvent $event)
     {
+        // TODO: createUserId/modifyUserId?
+        return;
         $fromUser = $event->getFromUser();
         $toUser = $event->getToUser();
 
         $fromUserId = $fromUser->getId();
         $toUserId = $toUser->getId();
 
-        foreach ($this->groupManager->findBy('createUserId', $fromUserId) as $user) {
+        foreach ($this->groupManager->findBy(array('createUserId' => $fromUserId)) as $user) {
             $user->setCreateUserId($toUserId);
         }
-        foreach ($this->groupManager->findBy('modifyUserId', $fromUserId) as $user) {
+        foreach ($this->groupManager->findBy(array('modifyUserId' => $fromUserId)) as $user) {
             $user->setModifyUserId($toUserId);
         }
-        foreach ($this->userManager->findBy('createUserId', $fromUserId) as $user) {
+        foreach ($this->userManager->findBy(array('createUserId' => $fromUserId)) as $user) {
             $user->setCreateUserId($toUserId);
         }
-        foreach ($this->userManager->findBy('modifyUserId', $fromUserId) as $user) {
+        foreach ($this->userManager->findBy(array('modifyUserId' => $fromUserId)) as $user) {
             $user->setModifyUserId($toUserId);
         }
     }

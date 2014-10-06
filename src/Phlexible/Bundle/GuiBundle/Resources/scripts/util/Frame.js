@@ -2,8 +2,6 @@ Phlexible.gui.util.Frame = function () {
     this.addEvents({
         frameready: true
     });
-
-    this.initConfig();
 };
 
 Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
@@ -67,10 +65,55 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         return this.getMainPanel().getActiveTab();
     },
 
+    loadConfig: function () {
+        // load config
+        Ext.Ajax.request({
+            url: Phlexible.Router.generate('gui_config'),
+            success: function(response) {
+                var config = Ext.decode(response.responseText);
+                Phlexible.Config = new Phlexible.gui.util.Config(config);
+                Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
+            },
+            failure: function () {
+                Ext.MessageBox.alert('Load error', 'Error loading config.');
+            },
+            scope: this
+        });
+    },
+
+    handleConfig: Ext.emptyFn,
+
     /**
      * @private
      */
-    initStage2: function () {
+    initBody: function () {
+        /* remove in 0.8 */
+        Ext.isGecko10 = Ext.isGecko && /rv:10\./.test(navigator.userAgent.toLowerCase());
+
+        // find the body element
+        var bd = document.body || document.getElementsByTagName('body')[0];
+        if (!bd) return;
+        if (!Ext.isGecko && !Ext.isGecko10) return;
+
+        bd.className += ' ext-gecko10';
+        /*/remove in 0.8 */
+    },
+
+    /**
+     * @private
+     */
+    removeSplash: function () {
+        Ext.get("loading").fadeOut({remove: true});
+    },
+
+    /**
+     * @private
+     */
+    initFrame: function () {
+        // init config
+        this.initConfig();
+
+        // init body
         this.initBody();
 
         // initialize menu
@@ -94,17 +137,12 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
     /**
      * @private
      */
-    initBody: function () {
-        /* remove in 0.8 */
-        Ext.isGecko10 = Ext.isGecko && /rv:10\./.test(navigator.userAgent.toLowerCase());
-
-        // find the body element
-        var bd = document.body || document.getElementsByTagName('body')[0];
-        if (!bd) return;
-        if (!Ext.isGecko && !Ext.isGecko10) return;
-
-        bd.className += ' ext-gecko10';
-        /*/remove in 0.8 */
+    initConfig: function() {
+        var config = Phlexible.config;
+        console.log(config);
+        delete Phlexible.config;
+        Phlexible.Config = new Phlexible.gui.util.Config(config);
+        Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
     },
 
     /**
@@ -134,49 +172,19 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
     /**
      * @private
      */
-    removeSplash: function () {
-        Ext.get("loading").fadeOut({remove: true});
-    },
-
-    /**
-     * @private
-     */
-    initConfig: function () {
-        // load config
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('gui_config'),
-            success: this.onLoadConfigSuccess,
-            failure: function () {
-                Ext.MessageBox.alert('Load error', 'Error loading config.');
-            },
-            scope: this
-        });
-    },
-
-    /**
-     * @private
-     */
-    onLoadConfigSuccess: function (response) {
-        var config = Ext.decode(response.responseText);
-        Phlexible.Config = new Phlexible.gui.util.Config(config);
-        Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
-
-        this.initStage2();
-
-        this.handleConfig(Phlexible.Config);
-    },
-
-    handleConfig: Ext.emptyFn,
-
-    /**
-     * @private
-     */
     initMenu: function () {
         this.menu = new Phlexible.gui.Menu({
             listeners: {
-                load: function (menu) {
+                load: function (menu, items) {
+                    this.getToolbar().items.each(function(item) {
+                        if (item.edge) {
+                            return false;
+                        }
+                        item.destroy();
+                    });
+
                     var edge = 0;
-                    Ext.each(menu.getItems(), function (item) {
+                    Ext.each(items, function (item) {
                         if (item) {
                             if (item === '->') {
                                 item = new Ext.Toolbar.Fill();
@@ -219,6 +227,9 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
             }
         });
 
+        // initialize system messages
+        this.systemMessage.deactivate.defer(2000, this.systemMessage);
+
         Phlexible.globalKeyMap.accessKey({key: 'j', alt: true}, this.systemMessage.poll, this.systemMessage);
     },
 
@@ -226,9 +237,6 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
      * @private
      */
     initViewport: function () {
-        // initialize system messages
-        this.systemMessage.deactivate.defer(2000, this.systemMessage);
-
         var mainItems = [{
             xtype: 'dashboard-main-panel',
             id: 'Phlexible_dashboard_MainPanel',
@@ -255,7 +263,9 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                     xtype: 'toolbar',
                     region: 'north',
                     height: 34,
-                    items: [],
+                    items: [{
+                        xtype: 'tbedge'
+                    }],
                     listeners: {
                         render: function (c) {
                             c.el.first().setStyle('padding', '4px');
@@ -393,3 +403,17 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         return panel;
     }
 });
+
+Phlexible.gui.util.ToolbarEdge = function () {
+    var s = document.createElement("div");
+    s.className = "ytb-edge";
+    Phlexible.gui.util.ToolbarEdge.superclass.constructor.call(this, s);
+    this.edge = true;
+};
+Ext.extend(Phlexible.gui.util.ToolbarEdge, Ext.Toolbar.Item, {
+    enable: Ext.emptyFn,
+    disable: Ext.emptyFn,
+    focus: Ext.emptyFn
+});
+
+Ext.reg('tbedge', Phlexible.gui.util.ToolbarEdge);

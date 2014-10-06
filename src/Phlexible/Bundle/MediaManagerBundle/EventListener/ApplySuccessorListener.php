@@ -43,7 +43,7 @@ class ApplySuccessorListener
         $toUid = $toUser->getId();
 
         $this->connection->update(
-            'mediamanager_files',
+            'media_file',
             array(
                 'create_user_id' => $toUid,
             ),
@@ -53,7 +53,7 @@ class ApplySuccessorListener
         );
 
         $this->connection->update(
-            'mediamanager_files',
+            'media_file',
             array(
                 'modify_user_id' => $toUid,
             ),
@@ -63,7 +63,7 @@ class ApplySuccessorListener
         );
 
         $this->connection->update(
-            'mediamanager_folders',
+            'media_folder',
             array(
                 'create_user_id' => $toUid,
             ),
@@ -73,42 +73,12 @@ class ApplySuccessorListener
         );
 
         $this->connection->update(
-            'mediamanager_folders',
+            'media_folder',
             array(
                 'modify_user_id' => $toUid,
             ),
             array(
                 'modify_user_id' => $fromUid
-            )
-        );
-
-        $this->connection->update(
-            'mediamanager_folder_rights',
-            array(
-                'create_user_id' => $toUid,
-            ),
-            array(
-                'create_user_id' => $fromUid
-            )
-        );
-
-        $this->connection->update(
-            'mediamanager_folder_rights',
-            array(
-                'modify_user_id' => $toUid,
-            ),
-            array(
-                'modify_user_id' => $fromUid
-            )
-        );
-
-        $this->connection->update(
-            'mediamanager_site',
-            array(
-                'create_uid' => $toUid,
-            ),
-            array(
-                'create_uid' => $fromUid
             )
         );
     }

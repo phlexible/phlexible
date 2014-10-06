@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Successor controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/users/users")
+ * @Route("/users/successor")
  * @Security("is_granted('users')")
  */
 class SuccessorController extends Controller
@@ -30,7 +30,7 @@ class SuccessorController extends Controller
      * @param string $userId
      *
      * @return JsonResponse
-     * @Route("/{userId}/successors", name="users_successor_list")
+     * @Route("/list/{userId}", name="users_successor_list")
      * @Method({"GET", "POST"})
      * @ApiDoc(
      *   description="List applicable successor users"
@@ -69,8 +69,8 @@ class SuccessorController extends Controller
      * @param string  $userId
      *
      * @return ResultResponse
-     * @Route("/{userId}/setsuccessor", name="users_successor_set")
-     * @Method("POST")
+     * @Route("/set/{userId}", name="users_successor_set")
+     * @Method({"GET", "POST"})
      * @ApiDoc(
      *   description="Set successor",
      *   requirements={
@@ -80,13 +80,13 @@ class SuccessorController extends Controller
      */
     public function setAction(Request $request, $userId)
     {
-        $successorUserId = $request->get('successorUserId');
+        $successorUserId = $request->get('successor');
 
         $userManager = $this->get('phlexible_user.user_manager');
         $user = $userManager->find($userId);
         $successorUser = $userManager->find($successorUserId);
 
-        $successor = $this->get('users.successor_service');
+        $successor = $this->get('phlexible_user.successor_service');
         $successor->set($user, $successorUser);
 
         return new ResultResponse(true, 'Successor set');

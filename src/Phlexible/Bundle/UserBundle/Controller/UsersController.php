@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\UserBundle\Controller;
 use Doctrine\ORM\PersistentCollection;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Password\PasswordGenerator;
@@ -206,8 +207,6 @@ class UsersController extends Controller
      */
     public function createAction(Request $request)
     {
-        $notify = (bool) $request->request->get('notify', false);
-
         $userManager = $this->get('phlexible_user.user_manager');
 
         if ($request->get('username') && $userManager->checkUsername($request->get('username'))) {
@@ -225,9 +224,12 @@ class UsersController extends Controller
             ->setCreatedAt(new \DateTime())
             ->setModifiedAt(new \DateTime());
 
-        if ($notify && $request->request->get('password')) {
+        $optin = (bool) $request->request->get('optin', false);
+        if ($optin) {
+            $user->setPasswordToken(Uuid::generate());
+
             $mailer = $this->get('phlexible_user.mailer');
-            $mailer->sendNewAccountEmailMessage($user, $request->request->get('password'));
+            $mailer->sendNewAccountEmailMessage($user);
         }
 
         $userManager->updateUser($user);
@@ -286,9 +288,12 @@ class UsersController extends Controller
         $user
             ->setModifiedAt(new \DateTime());
 
-        if ($request->get('password_notify') && $request->request->get('password')) {
+        $optin = (bool) $request->request->get('optin', false);
+        if ($optin) {
+            $user->setPasswordToken(Uuid::generate());
+
             $mailer = $this->get('phlexible_user.mailer');
-            $mailer->sendNewPasswordEmailMessage($user, $request->request->get('password'));
+            $mailer->sendNewPasswordEmailMessage($user);
         }
 
         $userManager->updateUser($user);
@@ -383,12 +388,12 @@ class UsersController extends Controller
     {
         $successorUserId = $request->request->get('successor');
 
-        $userRepository = $this->get('phlexible_user.user_manager');
+        $userManager = $this->get('phlexible_user.user_manager');
 
-        $successorUser = $userRepository->find($successorUserId);
-        $user = $userRepository->find($userId);
+        $successorUser = $userManager->find($successorUserId);
+        $user = $userManager->find($userId);
 
-        $userRepository->deleteUser($user, $successorUser);
+        $userManager->deleteUser($user, $successorUser);
 
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" deleted.'));

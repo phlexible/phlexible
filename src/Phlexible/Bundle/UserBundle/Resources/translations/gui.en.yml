@@ -81,12 +81,15 @@ users:
     has_expire_date: 'Has expire date'
     impersonate: Impersonate
     account_expires_on: 'Account expires on'
+    credentials_expire_on: 'Password expires on'
     notify_user: 'Notify user'
-    generate: generate
-    copy: copy
+    generate: Generate
+    copy: Copy
     generated_password: 'Generated Password'
-    generate_password_text: 'Alternatively, use the field below to generate a password. Don''t forget to copy it into the password fields above afterwards.'
+    generate_password_text: 'Enter a password, or use the field below to generate a password.'
     account_is_expired: 'The account of this user is expired.'
     successor: Successor
     successor_header: 'Select successor'
     successor_description: 'The selected user will receive all user-related references from the original user.'
+    add_optin: 'Send an email containing a link to a page where the user can enter a password.'
+    edit_optin: 'Send an email containing a link to a page where the user can enter a new password.'

@@ -68,7 +68,8 @@
         project: "{{ projectTitle }}",
         baseUrl: "{{ baseUrl }}",
         basePath: "{{ basePath }}",
-        componentsPath: "{{ componentsPath }}"
+        componentsPath: "{{ componentsPath }}",
+        config: {{ render(path("gui_config"))|raw }}
     };
     //]]>
 </script>
@@ -80,6 +81,7 @@
     //<![CDATA[
     Ext.onReady(function () {
         Phlexible.Frame = new Phlexible.gui.util.Frame();
+        Phlexible.Frame.initFrame();
     });
     //]]>
 </script>

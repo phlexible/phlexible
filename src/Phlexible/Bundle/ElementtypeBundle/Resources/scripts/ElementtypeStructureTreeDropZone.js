@@ -103,30 +103,12 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
 //        }
 
         var sourceType = sourceNode.attributes.type,
-            sourceField = Phlexible.fields.FieldTypes.getField(sourceType),
-            targetType = targetNode.attributes.type,
-            targetParentType = targetNode.parentNode.attributes.type || null;
+            targetType = targetNode.attributes.type;;
 
-        if (position === 'append') {
-            if (sourceField.allowedIn.indexOf(targetType) !== -1) {
-                if (this.debug) Phlexible.console.info('sourceNode "' + sourceType + '" allowed in targetNode ' + targetType + ' => true');
-                return true;
-            }
-            if (this.debug) Phlexible.console.warn('sourceNode ' + sourceType + 'not allowed in targetNode ' + targetType + ' => false');
-            return false;
-        } else {
-            if (sourceField.allowedIn.indexOf(targetParentType) !== -1) {
-                if (this.debug) Phlexible.console.info('sourceNode ' + sourceType + ' allowed in targetParentNode ' + targetParentType + ' => true');
-                return true;
-            }
-            if (this.debug) Phlexible.console.warn('sourceNode ' + sourceType + ' not allowed in targetParentNode ' + targetParentType + ' => false');
-            return false;
-        }
-
-        return false;
-
-        /*
         if (targetType === 'reference') {
+            if (this.debug) Phlexible.console.warn('targetType is reference => false');
+            return false;
+
             if (!targetNode.childNodes || !targetNode.childNodes[0]) {
                 if (this.debug) Phlexible.console.warn('targetNode is referenceNode and empositiony => false');
                 return false;
@@ -144,9 +126,9 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
             sourceType = sourceNode.childNodes[0].attributes.type;
         }
 
-        if (sourceType == 'referenceroot' && sourceNode.ownerTree !== targetNode.ownerTree) {
+        if (sourceType === 'referenceroot' && sourceNode.ownerTree !== targetNode.ownerTree) {
             if (!sourceNode.childNodes || !sourceNode.childNodes[0]) {
-                if (this.debug) Phlexible.console.warn('from template, sourceNode is referenceRootNode and empositiony => false');
+                if (this.debug) Phlexible.console.warn('from template, sourceNode is referenceRootNode and empty => false');
                 return false;
             }
 
@@ -160,13 +142,35 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
             });
 
             if (found) {
-                if (this.debug) Phlexible.console.warn('sourceNode is referenceRootNode && ds_id already present => false');
+                if (this.debug) Phlexible.console.warn('sourceType is referenceroot && ds_id already present => false');
                 return false;
             }
 
             sourceType = sourceNode.childNodes[0].attributes.type;
         }
 
+        var sourceField = Phlexible.fields.FieldTypes.getField(sourceType),
+            targetParentType = targetNode.parentNode.attributes.type || null;
+
+        if (position === 'append') {
+            if (sourceField.allowedIn.indexOf(targetType) !== -1) {
+                if (this.debug) Phlexible.console.info('sourceType "' + sourceType + '" allowed in targetType ' + targetType + ' => true');
+                return true;
+            }
+            if (this.debug) Phlexible.console.warn('sourceType ' + sourceType + ' not allowed in targetType ' + targetType + ' => false');
+            return false;
+        } else {
+            if (sourceField.allowedIn.indexOf(targetParentType) !== -1) {
+                if (this.debug) Phlexible.console.info('sourceType ' + sourceType + ' allowed in targetParentType ' + targetParentType + ' => true');
+                return true;
+            }
+            if (this.debug) Phlexible.console.warn('sourceType ' + sourceType + ' not allowed in targetParentType ' + targetParentType + ' => false');
+            return false;
+        }
+
+        return false;
+
+        /*
         var targetIsContainer = false;
         var sourceIsContainer = false;
 

@@ -81,12 +81,16 @@ users:
     has_expire_date: 'Hat Ablaufdatum'
     impersonate: Imitieren
     account_expires_on: 'Zugang gültig bis'
+    credentials_expire_on: 'Passwort gültig bis'
     notify_user: 'Benutzer benachrichtigen'
-    generate: generieren
-    copy: kopieren
+    generate: Erzeugen
+    copy: Kopieren
     generated_password: 'Generiertes Passwort'
-    generate_password_text: 'Benutzen Sie das untere Feld um ein Passwort zu generieren. Vergessen Sie nicht es in die oberen Passwortfelder zu kopieren.'
+    generate_password_text: 'Geben Sie ein neues Passwort ein, oder benutzen Sie das Feld unten, um ein Passwort zu generieren.'
     account_is_expired: 'Der Zugang dieses Benutzers ist abgelaufen.'
     successor: Nachfolger
     successor_header: 'Nachfolger auswählen'
     successor_description: 'Der ausgewählte Benutzer wird alle Benuterbezogenen Referenzen des Originalbenutzers erhalten.'
+    optin: 'Benutzer muss sein Passwort selbst setzen.'
+    add_optin: 'E-Mail schicken, die einen Link auf eine Seite enthält, auf der der Benutzer ein Passwort setzen kann.'
+    edit_optin: 'E-Mail schicken, die einen Link auf eine Seite enthält, auf der der Benutzer ein neues Passwort setzen kann.'

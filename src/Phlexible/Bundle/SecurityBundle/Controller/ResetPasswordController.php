@@ -84,7 +84,7 @@ class ResetPasswordController extends Controller
             $user->setPasswordToken($token);
             $userManager->updateUser($user);
 
-            $validateUrl = $this->generateUrl('security_reset_set', array('token' => $token));
+            $validateUrl = $this->generateUrl('security_reset_view', array('token' => $token));
 
             $mailer = $this->get('phlexible_security.mailer');
             $mailer->sendValidateEmailMessage($user, $validateUrl);

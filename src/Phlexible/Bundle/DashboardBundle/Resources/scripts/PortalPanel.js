@@ -13,7 +13,9 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
             'portletExpand'
         );
 
-        Phlexible.Frame.getSystemMessage().on('message', this.processMessage, this);
+        Phlexible.Frame.on('frameready', function() {
+            Phlexible.Frame.getSystemMessage().on('message', this.processMessage, this);
+        });
 
         var items = [];
         for (var i = 0; i < this.cols; i++) {

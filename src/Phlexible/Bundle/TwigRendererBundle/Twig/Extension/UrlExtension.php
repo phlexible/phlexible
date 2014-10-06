@@ -47,35 +47,72 @@ class UrlExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
+            new \Twig_SimpleFunction('path', array($this, 'path')),
             new \Twig_SimpleFunction('url', array($this, 'url')),
         );
     }
 
     /**
-     * @param string $path
+     * @param string $name
+     * @param array  $parameters
      *
      * @return string
      */
-    public function url($path)
+    public function path($name, array $parameters = array())
     {
-        if ($path instanceof TreeNodeInterface) {
-            return $this->router->generate($path);
-        } elseif ($path instanceof ContentTreeContext) {
-            return $this->router->generate($path->getNode());
-        } elseif ($path instanceof ElementStructureValue) {
-            if ($path->getType() === 'link') {
-                $link = $path->getValue();
+        if ($name instanceof TreeNodeInterface) {
+            return $this->router->generate($name, $parameters);
+        } elseif ($name instanceof ContentTreeContext) {
+            return $this->router->generate($name->getNode(), $parameters);
+        } elseif ($name instanceof ElementStructureValue) {
+            if ($name->getType() === 'link') {
+                $link = $name->getValue();
                 if ($link['type'] === 'internal' || $link['type'] === 'intrasiteroot') {
                     $tree = $this->contentTreeManager->findByTreeId($link['tid']);
                     $node = $tree->get($link['tid']);
 
-                    return $this->router->generate($node);
+                    return $this->router->generate($node, $parameters);
                 } elseif ($link['type'] === 'external') {
                     return $link['url'];
                 } elseif ($link['type'] === 'mailto') {
                     return 'mailto:' . $link['recipient'];
                 }
             }
+        } elseif (is_string($name)) {
+            return $this->router->generate($name, $parameters);
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $name
+     * @param array  $parameters
+     *
+     * @return string
+     */
+    public function url($name, array $parameters = array())
+    {
+        if ($name instanceof TreeNodeInterface) {
+            return $this->router->generate($name, $parameters, RouterInterface::ABSOLUTE_URL);
+        } elseif ($name instanceof ContentTreeContext) {
+            return $this->router->generate($name->getNode(), $parameters, RouterInterface::ABSOLUTE_URL);
+        } elseif ($name instanceof ElementStructureValue) {
+            if ($name->getType() === 'link') {
+                $link = $name->getValue();
+                if ($link['type'] === 'internal' || $link['type'] === 'intrasiteroot') {
+                    $tree = $this->contentTreeManager->findByTreeId($link['tid']);
+                    $node = $tree->get($link['tid']);
+
+                    return $this->router->generate($node, $parameters, RouterInterface::ABSOLUTE_URL);
+                } elseif ($link['type'] === 'external') {
+                    return $link['url'];
+                } elseif ($link['type'] === 'mailto') {
+                    return 'mailto:' . $link['recipient'];
+                }
+            }
+        } elseif (is_string($name)) {
+            return $this->router->generate($name, $parameters, RouterInterface::ABSOLUTE_URL);
         }
 
         return '';

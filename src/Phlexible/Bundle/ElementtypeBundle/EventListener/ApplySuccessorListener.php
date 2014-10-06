@@ -53,22 +53,12 @@ class ApplySuccessorListener
         );
 
         $this->connection->update(
-            'elementtype',
-            array(
-                'modify_user_id' => $toUid,
-            ),
-            array(
-                'modify_user_id' => $fromUid
-            )
-        );
-
-        $this->connection->update(
             'elementtype_version',
             array(
-                'modify_user_id' => $toUid,
+                'create_user_id' => $toUid,
             ),
             array(
-                'modify_user_id' => $fromUid
+                'create_user_id' => $fromUid
             )
         );
     }

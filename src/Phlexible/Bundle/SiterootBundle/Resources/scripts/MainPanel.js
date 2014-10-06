@@ -112,6 +112,7 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
      *  - title of siteroot changed
      */
     onSiterootDataChange: function () {
+        Phlexible.Frame.loadConfig();
         Phlexible.Frame.menu.load();
     },
 
