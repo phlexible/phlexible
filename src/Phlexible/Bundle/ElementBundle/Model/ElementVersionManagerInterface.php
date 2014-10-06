@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\Model;
 
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
  * Element version manager interface
@@ -32,6 +33,13 @@ interface ElementVersionManagerInterface
      * @return array
      */
     public function getVersions(Element $element);
+
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return ElementVersion[]
+     */
+    public function findOutdatedElementVersions(Elementtype $elementtype);
 
     /**
      * @param ElementVersion $elementVersion

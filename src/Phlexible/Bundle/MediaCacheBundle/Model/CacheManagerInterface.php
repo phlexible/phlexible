@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Model;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 
 /**
  * Cache manager interface
@@ -63,6 +64,13 @@ interface CacheManagerInterface
      * @return CacheItem
      */
     public function findByTemplateAndFile($templateKey, $fileId, $fileVersion);
+
+    /**
+     * @param TemplateInterface $template
+     *
+     * @return CacheItem[]
+     */
+    public function findOutdatedTemplates(TemplateInterface $template);
 
     /**
      * @param CacheItem $cacheItem

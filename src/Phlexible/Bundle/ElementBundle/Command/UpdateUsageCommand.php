@@ -28,7 +28,7 @@ class UpdateUsageCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('elements:update-usage')
+            ->setName('element:update-usage')
             ->setDescription('Update usage for element.')
             ->addArgument('eid', InputArgument::REQUIRED, 'EID');
     }

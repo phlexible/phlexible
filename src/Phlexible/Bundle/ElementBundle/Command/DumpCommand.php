@@ -29,7 +29,7 @@ class DumpCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('elements:dump')
+            ->setName('element:dump')
             ->setDescription('Dump element structure.')
             ->addArgument('eid', InputArgument::REQUIRED, 'Element ID')
             ->addOption('ver', null, InputOption::VALUE_REQUIRED, 'Element version')

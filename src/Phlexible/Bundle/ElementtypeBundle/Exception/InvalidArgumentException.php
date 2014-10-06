@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Exception;
 
 /**
- * Invalid argument exception
+ * Invalid argument exception for elementtype bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
 
 }

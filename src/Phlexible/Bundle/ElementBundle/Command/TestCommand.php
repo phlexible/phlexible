@@ -27,7 +27,7 @@ class TestCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('elements:test')
+            ->setName('element:test')
             ->setDescription('test.');
     }
 

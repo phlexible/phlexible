@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Entity\Repository\CacheItemRepository;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
+use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 
 /**
  * Doctrine cache manager
@@ -36,8 +37,18 @@ class CacheManager implements CacheManagerInterface
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
 
-        $this->cacheRepository = $entityManager->getRepository('PhlexibleMediaCacheBundle:CacheItem');
+    /**
+     * @return CacheItemRepository
+     */
+    private function getCacheRepository()
+    {
+        if ($this->cacheRepository === null) {
+            $this->cacheRepository = $this->entityManager->getRepository('PhlexibleMediaCacheBundle:CacheItem');
+        }
+
+        return $this->cacheRepository;
     }
 
     /**
@@ -45,7 +56,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function find($id)
     {
-        return $this->cacheRepository->find($id);
+        return $this->getCacheRepository()->find($id);
     }
 
     /**
@@ -53,7 +64,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function findAll()
     {
-        return $this->cacheRepository->findAll();
+        return $this->getCacheRepository()->findAll();
     }
 
     /**
@@ -61,7 +72,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->cacheRepository->findBy($criteria, $orderBy, $limit, $offset);
+        return $this->getCacheRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -69,7 +80,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function findOneBy(array $criteria, $orderBy = null)
     {
-        return $this->cacheRepository->findOneBy($criteria, $orderBy);
+        return $this->getCacheRepository()->findOneBy($criteria, $orderBy);
     }
 
     /**
@@ -82,7 +93,7 @@ class CacheManager implements CacheManagerInterface
             $criteria['fileVersion'] = $fileVersion;
         }
 
-        return $this->cacheRepository->findBy($criteria);
+        return $this->getCacheRepository()->findBy($criteria);
     }
 
     /**
@@ -91,6 +102,19 @@ class CacheManager implements CacheManagerInterface
     public function findByTemplateAndFile($templateKey, $fileId, $fileVersion)
     {
         return $this->cacheRepository->findOneBy(array('templateKey' => $templateKey, 'fileId' => $fileId, 'fileVersion' => $fileVersion));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOutdatedTemplates(TemplateInterface $template)
+    {
+        $qb = $this->getCacheRepository()->createQueryBuilder('c');
+        $qb
+            ->where($qb->expr()->eq('c.templateKey', $qb->expr()->literal($template->getKey())))
+            ->andWhere($qb->expr()->neq('c.templateRevision', $qb->expr()->literal($template->getRevision())));
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

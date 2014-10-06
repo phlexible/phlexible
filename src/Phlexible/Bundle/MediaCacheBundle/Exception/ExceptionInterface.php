@@ -6,14 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MetaSetBundle\Exception;
+namespace Phlexible\Bundle\MediaCacheBundle\Exception;
 
 /**
- * Runtime exception
+ * Exception interface for media cache bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class RuntimeException extends \RuntimeException
+interface ExceptionInterface
 {
 
 }

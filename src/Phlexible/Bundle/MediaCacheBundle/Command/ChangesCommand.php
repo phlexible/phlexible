@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
-use Phlexible\Bundle\MediaCacheBundle\Commit\TemplateChangeCommitter;
+use Phlexible\Bundle\MediaCacheBundle\Change\TemplateChanges;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -31,6 +31,7 @@ class ChangesCommand extends ContainerAwareCommand
             ->setDefinition(
                 array(
                     new InputOption('commit', null, InputOption::VALUE_NONE, 'Commit changes'),
+                    new InputOption('queue', null, InputOption::VALUE_NONE, 'Via queue'),
                 )
             )
             ->setDescription('Show media template changes');
@@ -41,12 +42,14 @@ class ChangesCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-
-        $committer = new TemplateChangeCommitter(
-            $container->get('mediatemplates.repository'),
-            $container->get('mediacache.repository'),
-            $container->get('mediacache.queue')
+        $committer = new TemplateChanges(
+            $this->getContainer()->get('phlexible_media_template.template_manager'),
+            $this->getContainer()->get('phlexible_media_cache.cache_manager'),
+            $this->getContainer()->get('phlexible_media_site.site_manager'),
+            $this->getContainer()->get('phlexible_media_cache.queue.batch_builder'),
+            $this->getContainer()->get('phlexible_media_cache.queue.batch_resolver'),
+            $this->getContainer()->get('phlexible_media_cache.queue_manager'),
+            $this->getContainer()->get('phlexible_media_cache.queue.worker')
         );
 
         $changes = $committer->changes();
@@ -54,14 +57,14 @@ class ChangesCommand extends ContainerAwareCommand
         if (count($changes)) {
             foreach ($changes as $change) {
                 $output->writeln(
-                    'FILE ' . $change['fileId'] . ':' . $change['fileVersion'] . ' ' .
-                    'TEMPLATE ' . $change['template']->getKey() . ' ' .
-                    'REVISION ' . $change['fileRevision'] . ' => ' . $change['template']->getRevision()
+                    'FILE ' . $change->getFile()->getId() . ':' . $change->getFile()->getVersion() . ' ' .
+                    'TEMPLATE ' . $change->getTemplate()->getKey() . ' ' .
+                    'REVISION ' . $change->getRevision() . ' => ' . $change->getTemplate()->getRevision()
                 );
             }
 
             if ($input->getOption('commit')) {
-                $committer->commit();
+                $committer->commit($input->getOption('queue'));
             }
         } else {
             $output->writeln('No media template changes');

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TaskBundle\Exception;
 
 /**
- * Runtime exception
+ * Runtime exception for task bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

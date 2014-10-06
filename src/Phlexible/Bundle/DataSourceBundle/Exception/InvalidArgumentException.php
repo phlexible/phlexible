@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\DataSourceBundle\Exception;
 
 /**
- * Invalid argument exception
+ * Invalid argument exception for data source bundle
  *
  * @author Phillip Look <pl@brainbits.net>
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
 
 }

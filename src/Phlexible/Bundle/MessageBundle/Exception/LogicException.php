@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\MessageBundle\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LogicException extends \LogicException
+class LogicException extends \LogicException implements ExceptionInterface
 {
 
 }

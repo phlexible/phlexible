@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\MediaSiteBundle\Exception;
 
 /**
- * Runtime exception
+ * Runtime exception for media site bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class RuntimeException extends \RuntimeException
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 
 }

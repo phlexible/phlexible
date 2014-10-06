@@ -25,7 +25,7 @@ class RemoveLocksCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('elements:remove-locks')
+            ->setName('element:remove-locks')
             ->setDescription('Delete all locks');
     }
 

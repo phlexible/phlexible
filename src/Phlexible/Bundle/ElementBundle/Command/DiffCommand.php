@@ -28,7 +28,7 @@ class DiffCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('elements:diff')
+            ->setName('element:diff')
             ->setDescription('Diff element versions.')
             ->addArgument('eid', InputArgument::REQUIRED, 'Element ID')
             ->addOption('baseVersion', null, InputOption::VALUE_REQUIRED, 'Base version')

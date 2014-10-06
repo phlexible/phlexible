@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\TreeBundle\Exception;
 
 /**
- * Bad method call exception
+ * Bad method call exception for tree bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class BadMethodCallException extends \BadMethodCallException
+class BadMethodCallException extends \BadMethodCallException implements ExceptionInterface
 {
 
 }

@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\SiterootBundle\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class RuntimeException extends \RuntimeException
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 
 }

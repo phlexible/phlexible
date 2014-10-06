@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\ContentchannelBundle\Exception;
 
 /**
- * Invalid argument exception
+ * Invalid argument exception for contentchannel bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
 }

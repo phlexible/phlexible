@@ -18,6 +18,7 @@ use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
 use Phlexible\Bundle\ElementBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementBundle\Exception\UpdateCancelledException;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -83,6 +84,20 @@ class ElementVersionManager implements ElementVersionManagerInterface
                 'version' => $version,
             )
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOutdatedElementVersions(Elementtype $elementtype)
+    {
+        $qb = $this->getElementVersionRepository()->createQueryBuilder('ev');
+        $qb
+            ->join('ev.element', 'e')
+            ->where($qb->expr()->eq('e.elementtypeId', $qb->expr()->literal($elementtype->getId())))
+            ->andWhere($qb->expr()->neq('ev.elementtypeVersion', $qb->expr()->literal($elementtype->getRevision())));
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

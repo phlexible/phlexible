@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\ElementRendererBundle\Exception;
 
 /**
- * Runtime exception
+ * Runtime exception for element renderer bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class RuntimeException extends \RuntimeException
+class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 
 }

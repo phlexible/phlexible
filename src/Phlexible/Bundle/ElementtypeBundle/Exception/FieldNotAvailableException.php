@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class FieldNotAvailableException extends RuntimeException
+class FieldNotAvailableException extends InvalidArgumentException
 {
 
 }

@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\MediaSiteBundle\Exception;
 
 /**
- * Invalid argumentException exception
+ * Invalid argument exception for media site bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
 
 }

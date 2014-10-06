@@ -8,19 +8,21 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
+use Phlexible\Bundle\ElementBundle\Change\ElementtypeChanges;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Update command
+ * Changes command
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class UpdateCommand extends ContainerAwareCommand
+class ChangesCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -28,9 +30,11 @@ class UpdateCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('elements:update')
-            ->setDescription('Update element.')
-            ->addArgument('eid', InputArgument::REQUIRED, 'EID');
+            ->setName('element:changes')
+            ->setDescription('Show element changes.')
+            ->addOption('commit', null, InputOption::VALUE_NONE, 'Commit changes')
+            ->addOption('queue', null, InputOption::VALUE_NONE, 'Via queue')
+        ;
     }
 
 
@@ -39,25 +43,30 @@ class UpdateCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $elementService = $this->getContainer()->get('phlexible_element.element_service');
+        $committer = new ElementtypeChanges(
+            $this->getContainer()->get('phlexible_elementtype.elementtype_service'),
+            $this->getContainer()->get('phlexible_element.element_service')
+        );
 
-        $element = $elementService->findElement($input->getArgument('eid'));
-        $elementtype = $elementService->findElementtype($element);
+        $changes = $committer->changes();
 
-        $latestElementVersion = $elementService->findLatestElementVersion($element);
-        $latestElementStructure = $elementService->findElementStructure($latestElementVersion);
+        if (count($changes)) {
+            foreach ($changes as $change) {
+                $output->writeln(
+                    'ELEMENT ' . $change->getElementVersion()->getElement()->getEid() . ':' . $change->getElementVersion()->getVersion() . ' ' .
+                    'ELEMENTTYPE ' . $change->getElementtype()->getTitle() . ' ' .
+                    'REVISION ' . $change->getRevision() . ' => ' . $change->getElementtype()->getRevision()
+                );
+            }
 
-        $elementStructure = null;
-        if ($latestElementStructure->getId()) {
-            $elementStructure = clone $latestElementStructure;
+            if ($input->getOption('commit')) {
+                $committer->commit($input->getOption('queue'));
+            }
+        } else {
+            $output->writeln('No elementtype changes');
         }
 
-        $elementVersion = $elementService->createElementVersion(
-            $element,
-            $elementStructure,
-            null,
-            $elementtype->getModifyUserId()
-        );
+        return 0;
 
         // TODO: meta, titles
     }

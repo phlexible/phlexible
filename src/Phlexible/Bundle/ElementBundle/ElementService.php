@@ -161,6 +161,16 @@ class ElementService
     }
 
     /**
+     * @param Elementtype $elementtype
+     *
+     * @return ElementVersion[]
+     */
+    public function findOutdatedElementVersions(Elementtype $elementtype)
+    {
+        return $this->elementVersionManager->findOutdatedElementVersions($elementtype);
+    }
+
+    /**
      * @param Element $element
      *
      * @return array

@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Exception;
 
 /**
- * Invalid argument exception
+ * Invalid argument exception for media cache bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
 
 }
