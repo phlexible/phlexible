@@ -144,11 +144,12 @@ class ElementtypeService
      * @param string               $icon
      * @param string               $userId
      * @param ElementtypeStructure $elementtypeStructure
+     * @param array                $mappings
      * @param bool                 $flush
      *
      * @return Elementtype
      */
-    public function createElementtype($type, $uniqueId, $name, $icon, ElementtypeStructure $elementtypeStructure = null, $userId, $flush = true)
+    public function createElementtype($type, $uniqueId, $name, $icon, ElementtypeStructure $elementtypeStructure = null, array $mappings = null, $userId, $flush = true)
     {
         if (!$icon) {
             $icons = array(
@@ -172,6 +173,7 @@ class ElementtypeService
             ->setIcon($icon)
             ->setRevision(1)
             ->setStructure($elementtypeStructure)
+            ->setMappings($mappings)
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime())
             ->setModifyUserId($elementtype->getCreateUserId())

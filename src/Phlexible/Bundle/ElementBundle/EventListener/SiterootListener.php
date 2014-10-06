@@ -78,15 +78,6 @@ class SiterootListener
     {
         $siteroot = $event->getSiteroot();
 
-        $elementtypeVersion = $this->elementtypeService->createElementtype(
-            'structure',
-            'site_root_' . $siteroot->getId(),
-            'Site root ' . $siteroot->getTitle(),
-            'www_root.gif',
-            $siteroot->getModifyUserId(),
-            false
-        );
-
         $elementtypeStructure = new ElementtypeStructure();
 
         $root = new ElementtypeStructureNode();
@@ -124,20 +115,27 @@ class SiterootListener
             ->addNode($tab)
             ->addNode($textfield);
 
-        $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, false);
-
-        $elementtypeVersion->setMappings(
-            array(
-                'backend' => array(
-                    'fields' => array(
-                        array('ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1)
-                    ),
-                    'pattern' => '$1'
-                )
+        $mappings = array(
+            'backend' => array(
+                'fields' => array(
+                    array('ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1)
+                ),
+                'pattern' => '$1'
             )
         );
 
-        $element = $this->elementService->createElement($elementtypeVersion, $this->masterLanguage, $siteroot->getModifyUserId());
+        $elementtype = $this->elementtypeService->createElementtype(
+            'structure',
+            'site_root_' . $siteroot->getId(),
+            'Site root ' . $siteroot->getTitle(),
+            'www_root.gif',
+            $elementtypeStructure,
+            $mappings,
+            $siteroot->getModifyUserId(),
+            false
+        );
+
+        $element = $this->elementService->createElement($elementtype, $this->masterLanguage, $siteroot->getModifyUserId());
 
         $tree = $this->treeManager->getBySiteRootId($siteroot->getId());
         $tree->init('element', $element->getEid(), $element->getCreateUserId());

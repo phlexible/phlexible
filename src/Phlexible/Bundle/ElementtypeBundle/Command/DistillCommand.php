@@ -58,7 +58,6 @@ class DistillCommand extends ContainerAwareCommand
                 }
             }
         }
-        //$output->writeln(print_r($data, 1));
 
         return 0;
     }
