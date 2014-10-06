@@ -87,12 +87,6 @@ services:
             - {name: phlexible_gui.asset.provider, priority: 100}
 
     # event listeners
-    phlexible_element.listener.elementtype:
-        class: Phlexible\Bundle\ElementBundle\EventListener\ElementtypeListener
-        arguments: [@phlexible_element.element_service, @phlexible_element.field_mapper, %phlexible_cms.languages.available%]
-        tags:
-            - {name: kernel.event_subscriber}
-
     phlexible_element.listener.tree_node:
         class: Phlexible\Bundle\ElementBundle\EventListener\TreeNodeListener
         tags:
