@@ -82,14 +82,6 @@ class ElementService
     }
 
     /**
-     * @return ElementtypeService
-     */
-    public function getElementtypeService()
-    {
-        return $this->elementtypeService;
-    }
-
-    /**
      * @return ElementStructureManagerInterface
      */
     public function getElementStructureManager()
@@ -107,18 +99,6 @@ class ElementService
     public function findElement($eid)
     {
         return $this->elementManager->find($eid);
-    }
-
-    /**
-     * Find element by unique ID
-     *
-     * @param string $uniqueID
-     *
-     * @return Element
-     */
-    public function findElementByUniqueID($uniqueID)
-    {
-        return $this->elementManager->findByUniqueID($uniqueID);
     }
 
     /**
@@ -147,7 +127,7 @@ class ElementService
     }
 
     /**
-     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
+     * @param Elementtype $elementtype
      *
      * @return Element[]
      */
@@ -210,11 +190,12 @@ class ElementService
      */
     public function findElementtype(Element $element)
     {
+        // TODO: from ElementSource?
         return $this->elementtypeService->findElementtype($element->getElementtypeId());
     }
 
     /**
-     * @param \Phlexible\Bundle\ElementtypeBundle\Model\Elementtype $elementtype
+     * @param Elementtype $elementtype
      * @param string      $masterLanguage
      * @param string      $userId
      *

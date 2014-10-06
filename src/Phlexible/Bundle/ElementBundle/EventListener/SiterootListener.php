@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
+use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
@@ -30,14 +31,14 @@ class SiterootListener
     private $elementService;
 
     /**
+     * @var ElementtypeService
+     */
+    private $elementtypeService;
+
+    /**
      * @var TreeManager
      */
     private $treeManager;
-
-    /**
-     * @var FieldMapper
-     */
-    private $fieldMapper;
 
     /**
      * @var SecurityContextInterface
@@ -51,13 +52,20 @@ class SiterootListener
 
     /**
      * @param ElementService           $elementService
+     * @param ElementtypeService       $elementtypeService
      * @param TreeManager              $treeManager
      * @param SecurityContextInterface $securityContext
      * @param string                   $masterLanguage
      */
-    public function __construct(ElementService $elementService, TreeManager $treeManager, SecurityContextInterface $securityContext, $masterLanguage)
+    public function __construct(
+        ElementService $elementService,
+        ElementtypeService $elementtypeService,
+        TreeManager $treeManager,
+        SecurityContextInterface $securityContext,
+        $masterLanguage)
     {
         $this->elementService = $elementService;
+        $this->elementtypeService = $elementtypeService;
         $this->treeManager = $treeManager;
         $this->securityContext = $securityContext;
         $this->masterLanguage = $masterLanguage;
@@ -70,7 +78,7 @@ class SiterootListener
     {
         $siteroot = $event->getSiteroot();
 
-        $elementtypeVersion = $this->elementService->getElementtypeService()->createElementtype(
+        $elementtypeVersion = $this->elementtypeService->createElementtype(
             'structure',
             'site_root_' . $siteroot->getId(),
             'Site root ' . $siteroot->getTitle(),
@@ -83,55 +91,40 @@ class SiterootListener
 
         $root = new ElementtypeStructureNode();
         $root
-            ->setVersion($elementtypeVersion->getVersion())
-            ->setElementtype($elementtypeVersion->getElementtype())
-            ->setElementtypeStructure($elementtypeStructure)
             ->setDsId(Uuid::generate())
             ->setName('root')
-            ->setType('root')
-            ->setSort(1);
+            ->setType('root');
 
         $tab = new ElementtypeStructureNode();
         $tab
-            ->setVersion($elementtypeVersion->getVersion())
-            ->setElementtype($elementtypeVersion->getElementtype())
-            ->setElementtypeStructure($elementtypeStructure)
             ->setParentNode($root)
             ->setParentDsId($root->getDsId())
             ->setDsId(Uuid::generate())
             ->setName('data')
             ->setType('tab')
-            ->setSort(2)
             ->setLabels(array('fieldLabel' => array('de' => 'Daten', 'en' => 'Data')))
             ->setConfiguration(array())
             ->setContentChannels(array())
-            ->setValidation(array())
-            ->setOptions(array());
+            ->setValidation(array());
 
         $textfield = new ElementtypeStructureNode();
         $textfield
-            ->setVersion($elementtypeVersion->getVersion())
-            ->setElementtype($elementtypeVersion->getElementtype())
-            ->setElementtypeStructure($elementtypeStructure)
             ->setParentNode($tab)
             ->setParentDsId($tab->getDsId())
             ->setDsId(Uuid::generate())
             ->setName('title')
             ->setType('textfield')
-            ->setSort(3)
             ->setLabels(array('fieldLabel' => array('de' => 'Titel', 'en' => 'Title')))
-            ->setConfiguration(array())
+            ->setConfiguration(array('required' => 'always'))
             ->setContentChannels(array())
-            ->setValidation(array('required' => 'always'))
-            ->setOptions(array());
+            ->setValidation(array());
 
         $elementtypeStructure
-            ->setElementtypeVersion($elementtypeVersion)
             ->addNode($root)
             ->addNode($tab)
             ->addNode($textfield);
 
-        $this->elementService->getElementtypeService()->updateElementtypeStructure($elementtypeStructure, false);
+        $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, false);
 
         $elementtypeVersion->setMappings(
             array(

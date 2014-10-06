@@ -89,14 +89,6 @@ class ElementtypeManager implements ElementtypeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findOneByUniqueId($uniqueId)
-    {
-        return $this->loader->load($uniqueId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function findAll()
     {
         return $this->loader->loadAll();

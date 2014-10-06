@@ -146,8 +146,7 @@ class DataSaver
 
         $element = $this->elementService->findElement($eid);
         $elementtype = $this->elementService->findElementtype($element);
-        $elementtypeVersion = $this->elementService->getElementtypeService()->findLatestElementtypeVersion($elementtype);
-        $elementtypeStructure = $this->elementService->getElementtypeService()->findElementtypeStructure($elementtypeVersion);
+        $elementtypeStructure = $elementtype->getStructure();
 
         $oldElementVersion = $this->elementService->findLatestElementVersion($element);
         $oldElementStructure = $this->elementService->findElementStructure($oldElementVersion, 'de');

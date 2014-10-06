@@ -13,8 +13,8 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
+use Phlexible\Bundle\ElementtypeBundle\File\Parser\XmlParser;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
@@ -26,6 +26,11 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 class ElementStructureLoader
 {
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
      * @var Connection
      */
     private $connection;
@@ -36,23 +41,21 @@ class ElementStructureLoader
     private $fieldRegistry;
 
     /**
-     * @var ElementtypeService
+     * @var XmlParser
      */
-    private $elementtypeService;
+    private $xmlParser;
 
     /**
      * @param EntityManager      $entityManager
      * @param FieldRegistry      $fieldRegistry
-     * @param ElementtypeService $elementtypeService
      */
-    public function __construct(
-        EntityManager $entityManager,
-        FieldRegistry $fieldRegistry,
-        ElementtypeService $elementtypeService)
+    public function __construct(EntityManager $entityManager, FieldRegistry $fieldRegistry)
     {
-        $this->connection = $entityManager->getConnection();
+        $this->entityManager = $entityManager;
         $this->fieldRegistry = $fieldRegistry;
-        $this->elementtypeService = $elementtypeService;
+
+        $this->xmlParser = new XmlParser();
+        $this->connection = $entityManager->getConnection();
     }
 
     /**
@@ -70,20 +73,21 @@ class ElementStructureLoader
      */
     public function load(ElementVersion $elementVersion, $defaultLanguage = null)
     {
-        $identifier = $elementVersion->getElement()->getEid() . '_' . $elementVersion->getVersion();
+        $element = $elementVersion->getElement();
+
+        $identifier = $element->getEid() . '_' . $elementVersion->getVersion();
 
         if (isset($this->map[$identifier])) {
             return $this->map[$identifier];
         }
 
-        $elementtype = $this->elementtypeService->findElementtype($elementVersion->getElement()->getElementtypeId());
-        $elementtypeVersion = $this->elementtypeService->findElementtypeVersion(
-            $elementtype,
-            $elementVersion->getElementtypeVersion()
-        );
-        $elementtypeStructure = $this->elementtypeService->findElementtypeStructure($elementtypeVersion);
+        $source = $this->entityManager->getRepository('PhlexibleElementBundle:ElementSource')
+            ->findOneBy(array('id' => $element->getElementtypeId(), 'revision' => $elementVersion->getElementtypeVersion()));
 
-        $structureRows = $this->queryStructures($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
+        $elementtype = $this->xmlParser->parseString($source->getXml());
+        $elementtypeStructure = $elementtype->getStructure();
+
+        $structureRows = $this->queryStructures($elementVersion);
         $dataRows = $this->queryValues($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
 
         $structures = array(
@@ -142,7 +146,7 @@ class ElementStructureLoader
 
         $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $node) {
-            /* @var $node \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode */
+            /* @var $node ElementtypeStructureNode */
             if ($node->isRepeatable() || $node->isOptional()) {
                 if (isset($structureRows[$node->getDsId()])) {
                     foreach ($structureRows[$node->getDsId()] as $row) {
@@ -215,12 +219,11 @@ class ElementStructureLoader
     }
 
     /**
-     * @param int $eid
-     * @param int $version
+     * @param ElementVersion $elementVersion
      *
      * @return array
      */
-    private function queryStructures($eid, $version)
+    private function queryStructures(ElementVersion $elementVersion)
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
@@ -236,8 +239,7 @@ class ElementStructureLoader
                 )
             )
             ->from('element_structure', 'es')
-            ->where($qb->expr()->eq('es.eid', $eid))
-            ->andWhere($qb->expr()->eq('es.version', $version))
+            ->where($qb->expr()->eq('es.element_version_id', $elementVersion->getId()))
             ->orderBy('sort', 'ASC');
 
         $result = $this->connection->fetchAll($qb->getSQL());

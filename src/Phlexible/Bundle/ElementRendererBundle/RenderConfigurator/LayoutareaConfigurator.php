@@ -12,8 +12,8 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
+use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
-use Phlexible\Bundle\TeaserBundle\Teaser\TeaserService;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -27,6 +27,21 @@ use Symfony\Component\HttpFoundation\Request;
 class LayoutareaConfigurator implements ConfiguratorInterface
 {
     /**
+     * @var ElementService
+     */
+    private $elementService;
+
+    /**
+     * @var ElementtypeService
+     */
+    private $elementtypeService;
+
+    /**
+     * @var DelegatingContentTeaserManager
+     */
+    private $teaserManager;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -37,31 +52,24 @@ class LayoutareaConfigurator implements ConfiguratorInterface
     private $logger;
 
     /**
-     * @var ElementService
-     */
-    private $elementService;
-
-    /**
-     * @var DelegatingContentTeaserManager
-     */
-    private $teaserManager;
-
-    /**
+     * @param ElementService                 $elementService
+     * @param ElementtypeService             $elementtypeService
      * @param EventDispatcherInterface       $dispatcher
      * @param LoggerInterface                $logger
-     * @param ElementService                 $elementService
      * @param DelegatingContentTeaserManager $teaserManager
      */
     public function __construct(
-        EventDispatcherInterface $dispatcher,
-        LoggerInterface $logger,
         ElementService $elementService,
-        DelegatingContentTeaserManager $teaserManager)
+        ElementtypeService $elementtypeService,
+        DelegatingContentTeaserManager $teaserManager,
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger)
     {
+        $this->elementService = $elementService;
+        $this->elementtypeService = $elementtypeService;
+        $this->teaserManager = $teaserManager;
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
-        $this->elementService = $elementService;
-        $this->teaserManager = $teaserManager;
     }
 
     /**
@@ -74,13 +82,12 @@ class LayoutareaConfigurator implements ConfiguratorInterface
         }
 
         $elementtypeId = $renderConfiguration->get('contentElement')->getElementtypeId();
-        $elementtypeService = $this->elementService->getElementtypeService();
-        $elementtype = $elementtypeService->findElementtype($elementtypeId);
+        $elementtype = $this->elementtypeService->findElementtype($elementtypeId);
 
         $layouts = array();
         $layoutareas = array();
-        foreach ($elementtypeService->findElementtypeByType('layout') as $layoutarea) {
-            if (in_array($elementtype, $elementtypeService->findAllowedParents($layoutarea))) {
+        foreach ($this->elementtypeService->findElementtypeByType('layout') as $layoutarea) {
+            if (in_array($elementtype, $this->elementtypeService->findAllowedParents($layoutarea))) {
                 $layoutareas[] = $layoutarea;
             }
         }

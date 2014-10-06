@@ -25,13 +25,6 @@ interface LoaderInterface
     public function load($elementtypeId);
 
     /**
-     * @param string $elementtypeId
-     *
-     * @return mixed
-     */
-    public function open($elementtypeId);
-
-    /**
      * @return Elementtype[]
      */
     public function loadAll();

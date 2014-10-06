@@ -12,6 +12,7 @@ use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
+use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
@@ -28,6 +29,11 @@ class NodeSerializer
      * @var ElementService
      */
     private $elementService;
+
+    /**
+     * @var ElementtypeService
+     */
+    private $elementtypeService;
 
     /**
      * @var IconResolver
@@ -51,6 +57,7 @@ class NodeSerializer
 
     /**
      * @param ElementService           $elementService
+     * @param ElementtypeService       $elementtypeService
      * @param IconResolver             $iconResolver
      * @param StateManagerInterface    $stateManager
      * @param PermissionCollection     $permissions
@@ -58,6 +65,7 @@ class NodeSerializer
      */
     public function __construct(
         ElementService $elementService,
+        ElementtypeService $elementtypeService,
         IconResolver $iconResolver,
         StateManagerInterface $stateManager,
         PermissionCollection $permissions,
@@ -150,7 +158,7 @@ class NodeSerializer
 
         $elementtype = $this->elementService->findElementtype($element);
         $allowedElementtypeIds = array();
-        foreach ($this->elementService->getElementtypeService()->findAllowedChildren($elementtype) as $allowedElementtype) {
+        foreach ($this->elementtypeService->findAllowedChildren($elementtype) as $allowedElementtype) {
             $allowedElementtypeIds[] = $allowedElementtype->getId();
         }
 

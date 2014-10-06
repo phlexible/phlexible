@@ -10,6 +10,8 @@ namespace Phlexible\Bundle\ElementtypeBundle\Distiller;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 
 /**
@@ -42,9 +44,9 @@ class Distiller
     /**
      * {@inheritdoc}
      */
-    public function distill(ElementtypeVersion $elementtypeVersion)
+    public function distill(Elementtype $elementtype)
     {
-        $elementtypeStructure = $this->elementtypeService->findElementtypeStructure($elementtypeVersion);
+        $elementtypeStructure = $elementtype->getStructure();
 
         $rootNode = $elementtypeStructure->getRootNode();
         $data = $this->iterate($elementtypeStructure, $rootNode);
@@ -57,10 +59,10 @@ class Distiller
         $data = array();
 
         foreach ($structure->getChildNodes($node->getDsId()) as $childNode) {
-            $field = $this->fieldRegistry->getField($childNode->getFieldType());
+            $field = $this->fieldRegistry->getField($childNode->getType());
 
             if ($field->isField()) {
-                $data[$childNode->getWorkingTitle()] = array(
+                $data[$childNode->getName()] = array(
                     'node'  => $childNode,
                     'field' => $field,
                 );
@@ -70,7 +72,7 @@ class Distiller
                 $childData = $this->iterate($structure, $childNode);
 
                 if ($childNode->isRepeatable() || $childNode->isOptional()) {
-                    $data[$node->getWorkingTitle()] = array(
+                    $data[$node->getName()] = array(
                         'node'     => $childNode,
                         'field'    => $field,
                         'children' => $childData

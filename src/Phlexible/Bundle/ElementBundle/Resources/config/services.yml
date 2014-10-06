@@ -25,12 +25,10 @@ services:
         class: Phlexible\Bundle\ElementBundle\Element\Publish\Selector
         arguments:
             - @phlexible_element.element_service
+            - @phlexible_elementtype.elementtype_service
             - @phlexible_tree.tree_manager
             - @phlexible_teaser.teaser_manager
             - @security.context
-
-    phlexible_element.context.manager:
-        class: Phlexible\Bundle\ElementBundle\Context\ContextManager
 
     phlexible_element.icon_builder:
         class: Phlexible\Bundle\ElementBundle\Icon\IconBuilder
@@ -102,7 +100,12 @@ services:
 
     phlexible_element.listener.siteroot:
         class: Phlexible\Bundle\ElementBundle\EventListener\SiterootListener
-        arguments: [@phlexible_element.element_service, @phlexible_tree.tree_manager, @security.context, %phlexible_cms.languages.default%]
+        arguments:
+            - @phlexible_element.element_service
+            - @phlexible_elementtype.elementtype_service
+            - @phlexible_tree.tree_manager
+            - @security.context
+            - %phlexible_cms.languages.default%]
         tags:
             - {name: kernel.event_listener, event: phlexible_siteroot.create_siteroot, method: onCreateSiteroot}
 

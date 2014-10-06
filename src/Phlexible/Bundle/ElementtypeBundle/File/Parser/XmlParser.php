@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\File\Parser;
 
-use Phlexible\Bundle\ElementtypeBundle\File\Loader\LoaderInterface;
+use FluentDOM\Document;
+use FluentDOM\Element;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
@@ -21,52 +22,67 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 class XmlParser implements ParserInterface
 {
     /**
-     * @var LoaderInterface
+     * {@inheritdoc}
      */
-    private $loader;
-
-    /**
-     * @param LoaderInterface $loader
-     */
-    public function __construct(LoaderInterface $loader)
+    public function parseString($xml)
     {
-        $this->loader = $loader;
+        $dom = new Document();
+        $dom->loadXML($xml);
+
+        return $this->parse($dom);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function parse(\SimpleXMLElement $xml)
+    public function parse(Document $dom)
     {
-        $rootAttr = $xml->attributes();
-        $id = (string) $rootAttr['id'];
-        $uniqueId = (string) $rootAttr['uniqueId'];
-        $revision = (int) $rootAttr['revision'];
-        $type = (string) $rootAttr['type'];
-        $icon = (string) $rootAttr['icon'];
-        $defaultTab = (int) $rootAttr['defaultTab'];
+        $id = $dom->documentElement->getAttribute('id');
+        $uniqueId = $dom->documentElement->getAttribute('uniqueId');
+        $revision = (int) $dom->documentElement->getAttribute('revision');
+        $type = $dom->documentElement->getAttribute('type');
+        $icon = $dom->documentElement->getAttribute('icon');
+        $defaultTab = (int) $dom->documentElement->getAttribute('defaultTab');
 
-        $comment = (string) $xml->comment;
-        $metasetId = (string) $xml->metaset;
-        $defaultContentTab = (int) $xml->defaultContentTab;
-        $createdAt = (string) $xml->createdAt;
-        $createUserId = (string) $xml->createUserId;
-        $modifiedAt = (string) $xml->modifiedAt;
-        $modifyUserId = (string) $xml->modifyUserId;
+        $comments = $dom->documentElement->getElementsByTagName('comment');
+        $comment = $comments->length ? $comments->item(0)->textContent : '';
+
+        $metasetIdNodes = $dom->documentElement->getElementsByTagName('metasetId');
+        $metasetId = $metasetIdNodes->length ? $metasetIdNodes->item(0)->textContent : '';
+
+        $defaultContentTabNodes = $dom->documentElement->getElementsByTagName('defaultContentTab');
+        $defaultContentTab = $defaultContentTabNodes->length ? $defaultContentTabNodes->item(0)->textContent : '';
+
+        $createdAtNodes = $dom->documentElement->getElementsByTagName('createdAt');
+        $createdAt = $createdAtNodes->length ? $createdAtNodes->item(0)->textContent : '';
+
+        $createUserIdNodes = $dom->documentElement->getElementsByTagName('createUserId');
+        $createUserId = $createUserIdNodes->length ? $createUserIdNodes->item(0)->textContent : '';
+
+        $modifiedAtNodes = $dom->documentElement->getElementsByTagName('modifiedAt');
+        $modifiedAt = $modifiedAtNodes->length ? $modifiedAtNodes->item(0)->textContent : '';
+
+        $modifyUserIdNodes = $dom->documentElement->getElementsByTagName('modifyUserId');
+        $modifyUserId = $modifyUserIdNodes->length ? $modifyUserIdNodes->item(0)->textContent : '';
 
         $mappings = array();
-        if ($xml->mappings) {
-            foreach ($xml->mappings->mapping as $mapping) {
-                $mappingAttr = $mapping->attributes();
-                $key = (string) $mappingAttr['key'];
-                $pattern = (string) $mapping->pattern;
+        $mappingNodes = $dom->documentElement->evaluate('mappings/mapping');
+        if ($mappingNodes->length) {
+            foreach ($mappingNodes as $mappingNode) {
+                /* @var $mappingNode Element */
+                $key = $mappingNode->getAttribute('key');
+                $pattern = $mappingNode->getAttribute('pattern');
                 $fields = array();
-                foreach ($mapping->fields->field as $field) {
-                    $fields[] = array(
-                        'dsId'  => (string) $field->dsId,
-                        'title' => (string) $field->title,
-                        'index' => (int) $field->index,
-                    );
+                $fieldNodes = $dom->xpath()->evaluate('fields/field');
+                if ($fieldNodes->length) {
+                    foreach ($fieldNodes as $fieldNode) {
+                        /* @var $fieldNode Element */
+                        $fields[] = array(
+                            'dsId'  => $fieldNode->getAttribute('dsId'),
+                            'title' => $fieldNode->getAttribute('title'),
+                            'index' => (int) $fieldNode->getAttribute('index'),
+                        );
+                    }
                 }
                 $mappings[$key] = array(
                     'pattern' => $pattern,
@@ -76,15 +92,16 @@ class XmlParser implements ParserInterface
         }
 
         $titles = array();
-        if ($xml->titles) {
-            foreach ($xml->titles->title as $title) {
-                $titleAttr = $title->attributes();
-                $language = (string) $title['language'];
-                $titles[$language] = (string) $title;
+        $titleNodes = $dom->documentElement->evaluate('titles/title');
+        if ($titleNodes->length) {
+            foreach ($titleNodes as $titleNode) {
+                /* @var $titleNode Element */
+                $language = $titleNode->getAttribute('language');
+                $titles[$language] = $titleNode->textContent;
             }
         }
 
-        $elementtypeStructure = $this->loadStructure($xml->structure);
+        $elementtypeStructure = $this->loadStructure($dom);
 
         $elementtype = new Elementtype();
         $elementtype
@@ -110,51 +127,56 @@ class XmlParser implements ParserInterface
     }
 
     /**
-     * @param \SimpleXMLElement $structure
+     * @param Document $dom
      *
      * @return ElementtypeStructure
      */
-    private function loadStructure(\SimpleXMLElement $structure)
+    private function loadStructure(Document $dom)
     {
         $elementtypeStructure = new ElementtypeStructure();
 
-        foreach ($structure->node as $node) {
-            $this->loadNode($node, $elementtypeStructure);
+        $nodes = $dom->documentElement->evaluate('structure/node');
+        if ($nodes->length) {
+            foreach ($nodes as $node) {
+                $this->loadNode($node, $elementtypeStructure);
+            }
         }
 
         return $elementtypeStructure;
     }
 
     /**
-     * @param \SimpleXMLElement        $node
+     * @param Element                  $node
      * @param ElementtypeStructure     $elementtypeStructure
      * @param ElementtypeStructureNode $parentNode
      */
-    private function loadNode(\SimpleXMLElement $node, ElementtypeStructure $elementtypeStructure, ElementtypeStructureNode $parentNode = null, $isReferenced = false)
+    private function loadNode(Element $node, ElementtypeStructure $elementtypeStructure, ElementtypeStructureNode $parentNode = null, $isReferenced = false)
     {
-        $nodeAttr = $node->attributes();
-        $type = (string) $nodeAttr['type'];
-        $dsId = (string) $nodeAttr['dsId'];
-        $name = (string) $nodeAttr['name'];
-        $referenceElementtypeId = (string) $nodeAttr['referenceElementtypeId'] ? (string) $nodeAttr['referenceElementtypeId'] : null;
+        $type = $node->getAttribute('type');
+        $dsId = $node->getAttribute('dsId');
+        $name = $node->getAttribute('name');
+        $referenceElementtypeId = $node->hasAttribute('referenceElementtypeId') ? $node->getAttribute('referenceElementtypeId') : null;
 
         $labels = array();
-        if ($node->labels) {
-            foreach ($node->labels->label as $label) {
-                $itemAttr = $label->attributes();
-                $labelType = (string) $itemAttr['type'];
-                $language = (string) $itemAttr['language'];
-                $labels[$labelType][$language] = (string) $label;
+        $labelNodes = $node->evaluate('labels/label');
+        if ($labelNodes->length) {
+            foreach ($labelNodes as $labelNode) {
+                /* @var $labelNode Element */
+                $labelType = $labelNode->getAttribute('type');
+                $language = $labelNode->getAttribute('language');
+                $labels[$labelType][$language] = $labelNode->textContent;
             }
         }
 
         $configuration = array();
-        if ($node->configuration) {
-            foreach ($node->configuration->item as $item) {
-                $itemAttr = $item->attributes();
-                $key = (string) $itemAttr['key'];
-                $configType = (string) $itemAttr['type'];
-                $configuration[$key] = (string) $item;
+        $itemNodes = $node->evaluate('configuration/item');
+        if ($itemNodes->length) {
+            foreach ($itemNodes as $itemNode) {
+                /* @var $itemNode Element */
+                $key = $itemNode->getAttribute('key');
+                $configType = $itemNode->getAttribute('type');
+                $configuration[$key] = $itemNode->textContent;
+
                 if ($configType === 'json_array') {
                     $configuration[$key] = json_decode($configuration[$key], true);
                 } elseif ($configType === 'boolean') {
@@ -169,29 +191,21 @@ class XmlParser implements ParserInterface
             }
         }
 
-        $options = array();
-        if ($node->options) {
-            foreach ($node->options->option as $option) {
-                $itemAttr = $option->attributes();
-                $key = (string) $itemAttr['key'];
-                foreach ($option->value as $optionValue) {
-                    $optionValueAttr = $optionValue->attributes();
-                    $language = (string) $optionValueAttr['language'];
-                    $options[$key][$language] = (string) $optionValue;
-                }
-            }
-        }
-
         $validation = array();
-        if ($node->validation) {
-            foreach ($node->validation->constrain as $constrain) {
-                $itemAttr = $constrain->attributes();
-                $key = (string) $itemAttr['key'];
-                $validation[$key] = (string) $constrain;
+        $contraintNodes = $node->evaluate('validation/constraint');
+        if ($contraintNodes->length) {
+            foreach ($contraintNodes as $constraintNode) {
+                /* @var $constraintNode Element */
+                $key = $constraintNode->getAttribute('key');
+                $validation[$key] = $constraintNode->textContent;
             }
         }
 
-        $comment = (string) $node->comment;
+        $comment = null;
+        $commentNodes = $node->getElementsByTagName('comment');
+        if ($commentNodes->length) {
+            $comment = $commentNodes->item(0)->textContent;
+        }
 
         $elementtypeStructureNode = new ElementtypeStructureNode();
         $elementtypeStructureNode
@@ -208,15 +222,18 @@ class XmlParser implements ParserInterface
 
         $elementtypeStructure->addNode($elementtypeStructureNode);
 
-        if ($node->children) {
-            foreach ($node->children->node as $childNode) {
+        $childNodes = $node->evaluate('children/node');
+        if ($childNodes->length) {
+            foreach ($childNodes as $childNode) {
+                /* @var $childNode Element */
                 $this->loadNode($childNode, $elementtypeStructure, $elementtypeStructureNode, $isReferenced);
             }
         }
 
-        if ($referenceElementtypeId) {
-            $referenceXml = $this->loader->open($referenceElementtypeId);
-            foreach ($referenceXml->structure->node as $referenceNode) {
+        $referenceNodes = $node->evaluate('references/node');
+        if ($referenceNodes->length) {
+            foreach ($referenceNodes as $referenceNode) {
+                /* @var $referenceNode Element */
                 $this->loadNode($referenceNode, $elementtypeStructure, $elementtypeStructureNode, true);
             }
         }

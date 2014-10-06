@@ -44,14 +44,7 @@ class TreeController extends Controller
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
         $elementtype = $elementtypeService->findElementtype($id);
-
-        if ($version) {
-            $elementtypeVersion = $elementtypeService->findElementtypeVersion($elementtype, $version);
-        } else {
-            $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
-        }
-
-        $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
+        $elementtypeStructure = $elementtype->getStructure();
 
         $rootNode = $elementtypeStructure->getRootNode();
         $type = $elementtype->getType(); // != 'reference' ? 'root' : 'referenceroot';
@@ -72,13 +65,13 @@ class TreeController extends Controller
 
         $data = array(
             array(
-                'text'                 => $elementtype->getTitle($language) .
-                    ' [v' . $elementtypeVersion->getRevision() . ', ' .
-                    $elementtype->getType() . ']',
+                'text'                 => $elementtype->getTitle($language)
+                    . ' [v' . $elementtype->getRevision() . ', '
+                    . $elementtype->getType() . ']',
                 'id'                   => md5(serialize($rootNode)),
                 'ds_id'                => $rootDsId,
                 'element_type_id'      => $elementtype->getId(),
-                'element_type_version' => $elementtypeVersion->getRevision(),
+                'element_type_version' => $elementtype->getRevision(),
                 'icon'                 => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
                 'cls'                  => 'p-elementtypes-type-' . $type,
                 'leaf'                 => false,
@@ -90,18 +83,18 @@ class TreeController extends Controller
                 'properties'           => array(
                     'root' => array(
                         'title'               => $elementtype->getTitle($language),
-                        'reference_title'     => $elementtype->getTitle($language) .
-                            ' [v' . $elementtypeVersion->getRevision() . ']',
+                        'reference_title'     => $elementtype->getTitle($language)
+                            . ' [v' . $elementtype->getRevision() . ']',
                         'unique_id'           => $elementtype->getUniqueId(),
                         'icon'                => $elementtype->getIcon(),
                         'hide_children'       => $elementtype->getHideChildren() ? 'on' : '',
                         'default_tab'         => $elementtype->getDefaultTab(),
-                        'default_content_tab' => $elementtypeVersion->getDefaultContentTab(),
+                        'default_content_tab' => $elementtype->getDefaultContentTab(),
                         'type'                => $type,
-                        'metaset'             => $elementtypeVersion->getMetaSetId(),
-                        'comment'             => $elementtypeVersion->getComment(),
+                        'metaset'             => $elementtype->getMetaSetId(),
+                        'comment'             => $elementtype->getComment(),
                     ),
-                    'mappings' => $elementtypeVersion->getMappings()
+                    'mappings' => $elementtype->getMappings()
                 ),
                 'children' => $this->recurseTree(
                     $elementtypeStructure,

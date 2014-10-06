@@ -61,6 +61,7 @@ class DataController extends Controller
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
         $stateManager = $this->get('phlexible_tree.state_manager');
         $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
@@ -107,8 +108,6 @@ class DataController extends Controller
         }
 
         $elementStructure = $elementService->findElementStructure($elementVersion, $language);
-
-        $elementtypeService = $elementService->getElementtypeService();
 
         $elementtype = $elementService->findElementtype($element);
         $elementtypeStructure = $elementtype->getStructure();

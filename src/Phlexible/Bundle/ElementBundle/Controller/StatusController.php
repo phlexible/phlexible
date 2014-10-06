@@ -34,7 +34,7 @@ class StatusController extends Controller
         $out = '<pre>';
 
         $elementService = $this->get('phlexible_element.element_service');
-        $elementtypeService = $elementService->getElementtypeService();
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $conn = $this->get('doctrine.dbal.default_connection');
         /* @var $conn Connection */
 

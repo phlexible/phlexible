@@ -51,7 +51,7 @@ class LayoutController extends Controller
         $teaserService = $this->get('phlexible_teaser.teaser_service');
         $catchManager = $this->get('phlexible_element_finder.element_finder_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $elementtypeService = $elementService->getElementtypeService();
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $tree = $treeManager->getByNodeId($treeId);
@@ -269,6 +269,7 @@ class LayoutController extends Controller
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $elementService = $this->get('phlexible_element.element_service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $treeNode = $treeManager->getByNodeId($treeId)->get($treeId);
@@ -284,7 +285,7 @@ class LayoutController extends Controller
             $filter = json_decode($filter, true);
         }
 
-        $layoutarea = $elementService->getElementtypeService()->findElementtype($layoutAreaId);
+        $layoutarea = $elementtypeService->findElementtype($layoutAreaId);
         $teasers = $teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
 
         $parent = array(
@@ -563,14 +564,14 @@ class LayoutController extends Controller
         }
 
         $elementService = $this->get('phlexible_element.element_service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
 
-        $elementtype = $elementService->getElementtypeService()->findElementtype($elementtypeId);
-        $elementtypeVersion = $elementService->getElementtypeService()->findLatestElementtypeVersion($elementtype);
+        $elementtype = $elementtypeService->findElementtype($elementtypeId);
 
         $userId = $this->getUser()->getId();
 
-        $element = $elementService->createElement($elementtypeVersion, $masterLanguage, $userId);
+        $element = $elementService->createElement($elementtype, $masterLanguage, $userId);
 
         $teaser = $teaserManager->createTeaser(
             $treeId,

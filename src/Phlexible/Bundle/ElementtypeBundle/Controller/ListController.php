@@ -45,13 +45,11 @@ class ListController extends Controller
                 continue;
             }
 
-            $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
-
             $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = array(
                 'id'      => $elementtype->getId(),
                 'title'   => $elementtype->getTitle(),
                 'icon'    => $elementtype->getIcon(),
-                'version' => $elementtypeVersion->getRevision(),
+                'version' => $elementtype->getRevision(),
                 'type'    => $elementtype->getType(),
             );
         }
@@ -108,14 +106,12 @@ class ListController extends Controller
                 continue;
             }
 
-            $elementTypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
-
             $list[] = array(
                 'id'      => $elementtype->getId(),
                 'type'    => $elementtype->getType(),
                 'title'   => $elementtype->getTitle(),
                 'icon'    => $elementtype->getIcon(),
-                'version' => $elementTypeVersion->getVersion()
+                'version' => $elementtype->getRevision()
             );
 
         }

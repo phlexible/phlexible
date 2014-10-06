@@ -147,8 +147,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
         }
         $structureEntity
             ->setDataId($elementStructure->getId())
-            ->setElement($elementStructure->getElementVersion()->getElement())
-            ->setVersion($elementStructure->getElementVersion()->getVersion())
+            ->setElementVersion($elementStructure->getElementVersion())
             ->setDsId($elementStructure->getDsId())
             ->setType($isRoot ? 'root' : 'group')
             ->setName($elementStructure->getName())

@@ -10,8 +10,6 @@ namespace Phlexible\Bundle\ElementtypeBundle\EventListener;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureManagerInterface;
-use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 
 /**

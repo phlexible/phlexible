@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Element\Publish;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
@@ -29,6 +30,11 @@ class Selector
     private $elementService;
 
     /**
+     * @var ElementtypeService
+     */
+    private $elementtypeService;
+
+    /**
      * @var TreeManager
      */
     private $treeManager;
@@ -45,17 +51,20 @@ class Selector
 
     /**
      * @param ElementService           $elementService
+     * @param ElementtypeService       $elementtypeService
      * @param TreeManager              $treeManager
      * @param TeaserManagerInterface   $teaserManager
      * @param SecurityContextInterface $securityContext
      */
     public function __construct(
         ElementService $elementService,
+        ElementtypeService $elementtypeService,
         TreeManager $treeManager,
         TeaserManagerInterface $teaserManager,
         SecurityContextInterface $securityContext)
     {
         $this->elementService = $elementService;
+        $this->elementtypeService = $elementtypeService;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
         $this->securityContext = $securityContext;
@@ -285,8 +294,8 @@ class Selector
         $elementtype = $this->elementService->findElementtype($element);
 
         $layoutareas = array();
-        foreach ($this->elementService->getElementtypeService()->findElementtypeByType('layout') as $layoutarea) {
-            if (in_array($elementtype, $this->elementService->getElementtypeService()->findAllowedParents($layoutarea))) {
+        foreach ($this->elementtypeService->findElementtypeByType('layout') as $layoutarea) {
+            if (in_array($elementtype, $this->elementtypeService->findAllowedParents($layoutarea))) {
                 $layoutareas[] = $layoutarea;
             }
         }

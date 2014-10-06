@@ -28,19 +28,12 @@ class ElementStructure
     private $dataId;
 
     /**
-     * @var Element
+     * @var ElementVersion
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Element")
-     * @ORM\JoinColumn(name="eid", referencedColumnName="eid", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="ElementVersion")
+     * @ORM\JoinColumn(name="element_version_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $element;
-
-    /**
-     * @var int
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     */
-    private $version;
+    private $elementVersion;
 
     /**
      * @var string
@@ -99,41 +92,21 @@ class ElementStructure
     }
 
     /**
-     * @return Element
+     * @return ElementVersion
      */
-    public function getElement()
+    public function getElementVersion()
     {
-        return $this->element;
+        return $this->elementVersion;
     }
 
     /**
-     * @param Element $element
+     * @param ElementVersion $elementVersion
      *
      * @return $this
      */
-    public function setElement($element)
+    public function setElementVersion(ElementVersion $elementVersion)
     {
-        $this->element = $element;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * @param int $version
-     *
-     * @return $this
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
+        $this->elementVersion = $elementVersion;
 
         return $this;
     }

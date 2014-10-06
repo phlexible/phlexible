@@ -8,6 +8,10 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Command;
 
+use Phlexible\Bundle\ElementtypeBundle\Distiller\ClassMap;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,11 +31,6 @@ class DistillCommand extends ContainerAwareCommand
     {
         $this
             ->setName('elementtypes:distill')
-            ->setDefinition(
-                array(
-                    new InputArgument('elementtypeId', InputArgument::REQUIRED, 'Element type ID'),
-                )
-            )
             ->setDescription('Distill element type.');
     }
 
@@ -40,53 +39,94 @@ class DistillCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $elementtypeId = $input->getArgument('elementtypeId');
+        $elementtypeService = $this->getContainer()->get('phlexible_elementtype.elementtype_service');
 
-        $container = $this->getContainer();
+        $classMap = new ClassMap();
+        foreach ($elementtypeService->findAllElementtypes() as $elementtype) {
+            $this->mapElementtype($classMap, $elementtype);
 
-        $elementtypeService = $container->get('phlexible_elementtype.elementtype_service');
-        $elementtype = $elementtypeService->findElementtype($elementtypeId);
-        $elementtypeVersion = $elementtypeService->findLatestElementtypeVersion($elementtype);
-        $elementtypeStructure = $elementtypeService->findElementtypeStructure($elementtypeVersion);
+        }
 
-        $rootNode = $elementtypeStructure->getRootNode();
-        $data = $this->iterate($output, $elementtypeStructure, $rootNode);
-        $output->writeln(print_r($data, 1));
+        $classes = array_reverse($classMap->all());
+        $output->writeln(count($classes) . ' classes');
+
+        foreach ($classes as $class => $values) {
+            $output->writeln("<fg=yellow>$class</fg=yellow>");
+            if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
+                foreach ($values as $name => $type) {
+                    $output->writeln("  <info>$type</info> $name");
+                }
+            }
+        }
+        //$output->writeln(print_r($data, 1));
 
         return 0;
     }
 
-    private function iterate(
-        OutputInterface $output,
-        ElementtypeStructure $structure,
-        ElementtypeStructureNode $node
-    )
+    private function mapElementtype(ClassMap $classMap, Elementtype $elementtype)
+    {
+        $elementtypeStructure = $elementtype->getStructure();
+
+        if (!$elementtypeStructure) {
+            return;
+        }
+
+        $rootNode = $elementtypeStructure->getRootNode();
+
+        if (!$rootNode) {
+            return;
+        }
+
+        $rootData = $this->iterateStructure($classMap, $elementtypeStructure, $rootNode);
+
+        $classMap->add($this->toCamelCase($elementtype->getUniqueId()), $rootData);
+    }
+
+    /**
+     * @param ClassMap                 $classMap
+     * @param ElementtypeStructure     $structure
+     * @param ElementtypeStructureNode $node
+     *
+     * @return array
+     */
+    private function iterateStructure(ClassMap $classMap, ElementtypeStructure $structure, ElementtypeStructureNode $node)
     {
         $fieldRegistry = $this->getContainer()->get('phlexible_elementtype.field.registry');
         $data = array();
 
         foreach ($structure->getChildNodes($node->getDsId()) as $childNode) {
-            $field = $fieldRegistry->getField($childNode->getFieldType());
-
+            $field = $fieldRegistry->getField($childNode->getType());
             if ($field->isField()) {
-                $data[$childNode->getWorkingTitle()] = true;
-
-                $output->writeln(
-                    $childNode->getDsId() . ' ' . $childNode->getTitle() . ' ' . $childNode->getFieldType()
-                );
-            }
-
-            if ($structure->hasChildNodes($childNode->getDsId())) {
-                $childData = $this->iterate($output, $structure, $childNode);
-
-                if ($childNode->isRepeatable() || $childNode->isOptional()) {
-                    $data[$node->getWorkingTitle()] = $childData;
+                $data[$childNode->getName()] = $childNode->getType();
+            } else {
+                if ($childNode->isOptional() || $childNode->isRepeatable()) {
+                    $data[$childNode->getName()] = $this->toCamelCase($childNode->getName()) . '[]';
+                    $map = $this->iterateStructure($classMap, $structure, $childNode);
+                    $classMap->add($this->toCamelCase($childNode->getName()), $map);
                 } else {
-                    $data = array_merge($data, $childData);
+                    $data = array_merge($data, $this->iterateStructure($classMap, $structure, $childNode));
                 }
             }
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $str
+     *
+     * @return string
+     */
+    private function toCamelCase($str)
+    {
+        // Split string in words.
+        $words = preg_split('/[-_]/', strtolower($str)); //explode('_', strtolower($str));
+
+        $return = '';
+        foreach ($words as $word) {
+            $return .= ucfirst(trim($word));
+        }
+
+        return ($return);
     }
 }

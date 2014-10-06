@@ -68,18 +68,6 @@ class ElementtypeService
     /**
      * Find element type by unique ID
      *
-     * @param string $uniqueId
-     *
-     * @return Elementtype
-     */
-    public function findElementtypeByUniqueID($uniqueId)
-    {
-        return $this->elementtypeManager->findOneByUniqueId($uniqueId);
-    }
-
-    /**
-     * Find element type by unique ID
-     *
      * @param string $type
      *
      * @return Elementtype[]
@@ -104,36 +92,6 @@ class ElementtypeService
     public function findAllElementtypes()
     {
         return $this->elementtypeManager->findAll();
-    }
-
-    /**
-     * @param Elementtype $elementtype
-     *
-     * @return Elementtype
-     */
-    public function findElementtypeVersion(Elementtype $elementtype)
-    {
-        return $elementtype;
-    }
-
-    /**
-     * @param Elementtype $elementtype
-     *
-     * @return Elementtype
-     */
-    public function findLatestElementtypeVersion(Elementtype $elementtype)
-    {
-        return $elementtype;
-    }
-
-    /**
-     * @param Elementtype $elementtype
-     *
-     * @return ElementtypeStructure
-     */
-    public function findElementtypeStructure(Elementtype $elementtype)
-    {
-        return $elementtype->getStructure();
     }
 
     /**
@@ -279,9 +237,12 @@ class ElementtypeService
 
         $elementtype = clone $sourceElementtype;
 
+        foreach ($elementtype->getTitles() as $language => $title) {
+          $elementtype->setTitle($language, $title . ' - copy - ' . $uniqId);
+        }
+
         $elementtype
             ->setId(null)
-            ->setTitle($elementtype->getTitle() . ' - copy - ' . $uniqId)
             ->setRevision(1)
             ->setCreatedAt(new \DateTime())
             ->setCreateUserId($userId);
@@ -289,25 +250,21 @@ class ElementtypeService
         $elementtypeStructure = new ElementtypeStructure();
 
         $rii = new \RecursiveIteratorIterator($sourceElementtype->getStructure(), \RecursiveIteratorIterator::SELF_FIRST);
-        $idMap = array();
+
         $dsIdMap = array();
         foreach ($rii as $sourceNode) {
             /* @var $sourceNode ElementtypeStructureNode */
             $node = clone $sourceNode;
 
-            $idMap[$sourceNode->getId()] = $node;
             $dsIdMap[$sourceNode->getDsId()] = $dsId = Uuid::generate();
 
-            $parentNode = null;
             $parentDsId = null;
             if (!$sourceNode->isRoot()) {
-                $parentNode = $idMap[$sourceNode->getParentNode()->getId()];
                 $parentDsId = $dsIdMap[$sourceNode->getParentNode()->getDsId()];
             }
 
             $node
                 ->setDsId($dsId)
-                ->setParentNode($parentNode)
                 ->setParentDsId($parentDsId);
 
             $elementtypeStructure->addNode($node);

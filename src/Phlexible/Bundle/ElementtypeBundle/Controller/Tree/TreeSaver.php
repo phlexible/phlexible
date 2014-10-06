@@ -117,57 +117,6 @@ class TreeSaver
     }
 
     /**
-     * @param Elementtype $referenceElementtype
-     * @param string      $userId
-     */
-    private function updateElementtypesUsingReference(Elementtype $referenceElementtype, $userId)
-    {
-        $elementtypes = $this->elementtypeService->findElementtypesUsingReferenceElementtype($referenceElementtype);
-        foreach ($elementtypes as $elementtype) {
-            $elementtypeVersion = clone $this->elementtypeService->findLatestElementtypeVersion($elementtype);
-            $latestElementtypeStructure = $this->elementtypeService->findElementtypeStructure($elementtypeVersion);
-
-            $elementtypeVersion
-                ->setId(null)
-                ->setVersion($elementtypeVersion->getVersion() + 1)
-                ->setElementtype($elementtype)
-                ->setCreatedAt(new \Datetime())
-                ->setCreateUserId($userId);
-
-            $elementtype
-                ->setLatestVersion($elementtypeVersion->getVersion());
-
-            $elementtypeStructure = new ElementtypeStructure();
-
-            $rii = new \RecursiveIteratorIterator($latestElementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
-            foreach ($rii as $latestNode) {
-                if ($latestNode->isReferenced()) {
-                    continue;
-                }
-
-                /* @var $node ElementtypeStructureNode */
-                $node = clone $latestNode;
-                $node
-                    ->setId(null)
-                    ->setElementtype($elementtype)
-                    ->setVersion($elementtypeVersion->getVersion())
-                    ->setElementtypeStructure($elementtypeStructure)
-                    ->setParentNode($elementtypeStructure->getNode($node->getParentDsId()));
-
-                if ($node->isReference() && $node->getReferenceElementtype()->getId() === $referenceElementtype->getId()) {
-                    $node->setReferenceVersion($referenceElementtype->getLatestVersion());
-                }
-
-                $elementtypeStructure->addNode($node);
-            }
-
-            $this->elementtypeService->updateElementtype($elementtype, true);
-            $this->elementtypeService->updateElementtypeVersion($elementtypeVersion, true);
-            $this->elementtypeService->updateElementtypeStructure($elementtypeStructure, true);
-        }
-    }
-
-    /**
      * @param string        $rootType
      * @param string        $rootDsId
      * @param UserInterface $user

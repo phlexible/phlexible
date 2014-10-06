@@ -88,12 +88,13 @@ class TreeController extends Controller
         $eid = $request->get('eid');
 
         $elementService = $this->get('phlexible_element.element_service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $element = $elementService->findElement($eid);
         $elementtype = $elementService->findElementtype($element);
 
-        $childElementtypes = $elementService->getElementtypeService()->findAllowedChildren($elementtype);
+        $childElementtypes = $elementtypeService->findAllowedChildren($elementtype);
 
         $data = array();
         foreach ($childElementtypes as $childElementtype) {
@@ -182,6 +183,7 @@ class TreeController extends Controller
         $masterLanguage = $request->get('masterlanguage');
 
         $elementService = $this->get('phlexible_element.element_service');
+        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $treeManager = $this->get('phlexible_tree.tree_manager');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
@@ -190,10 +192,9 @@ class TreeController extends Controller
 
         $userId = $this->getUser()->getId();
 
-        $elementtype = $elementService->getElementtypeService()->findElementtype($elementtypeId);
-        $elementtypeVersion = $elementService->getElementtypeService()->findLatestElementtypeVersion($elementtype);
+        $elementtype = $elementtypeService->findElementtype($elementtypeId);
 
-        $element = $elementService->createElement($elementtypeVersion, $masterLanguage, $userId);
+        $element = $elementService->createElement($elementtype, $masterLanguage, $userId);
 
         $node = $tree->create(
             $parentNode,

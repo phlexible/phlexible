@@ -468,7 +468,7 @@ class Elementtype implements IdentifiableInterface
      */
     public function setDefaultContentTab($defaultContentTab)
     {
-        $this->defaultContentTab = isset($defaultContentTab) ? (int) $defaultContentTab : null;
+        $this->defaultContentTab = $defaultContentTab !== null ? (int) $defaultContentTab : null;
 
         return $this;
     }

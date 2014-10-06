@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\File\Loader;
 
+use FluentDOM\Document;
 use Phlexible\Bundle\ElementtypeBundle\File\Parser\XmlParser;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator;
@@ -35,11 +36,6 @@ class XmlLoader implements LoaderInterface
     private $idMap;
 
     /**
-     * @var array
-     */
-    private $uniqueIdMap;
-
-    /**
      * @param PatternResourceLocator $locator
      */
     public function __construct(PatternResourceLocator $locator)
@@ -58,19 +54,15 @@ class XmlLoader implements LoaderInterface
         $files = $this->locator->locate('*.xml', 'elementtypes', false);
 
         $idMap = array();
-        $uniqueIdMap = array();
         foreach ($files as $file) {
             $xml = simplexml_load_file($file);
             $rootAttributes = $xml->attributes();
             $id = (string) $rootAttributes['id'];
-            $uniqueId = (string) $rootAttributes['uniqueId'];
 
             $idMap[$id] = $file;
-            $uniqueIdMap[$uniqueId] = $file;
         }
 
         $this->idMap = $idMap;
-        $this->uniqueIdMap = $uniqueIdMap;
     }
 
     /**
@@ -82,7 +74,7 @@ class XmlLoader implements LoaderInterface
 
         $elementtypes = array();
         foreach ($this->idMap as $id => $file) {
-            $elementtypes[] = $this->loadFile($file);
+            $elementtypes[] = $this->parse($this->loadFile($file));
         }
 
         return $elementtypes;
@@ -92,6 +84,16 @@ class XmlLoader implements LoaderInterface
      * {@inheritdoc}
      */
     public function load($elementtypeId)
+    {
+        return $this->parse($this->loadElementtype($elementtypeId));
+    }
+
+    /**
+     * @param string $elementtypeId
+     *
+     * @return Document
+     */
+    private function loadElementtype($elementtypeId)
     {
         $this->createMap();
 
@@ -103,22 +105,41 @@ class XmlLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      *
-     * @return \SimpleXMLElement
-     */
-    public function open($elementtypeId)
-    {
-        $filename = $this->idMap[$elementtypeId];
-
-        return simplexml_load_file($filename);
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @return Elementtype
+     * @return Document
      */
     private function loadFile($filename)
     {
-        return $this->parser->parse(simplexml_load_file($filename));
+        $dom = new Document();
+        $dom->formatOutput = true;
+        $dom->load($filename);
+
+        $this->applyReferenceElementtype($dom);
+
+        return $dom;
+    }
+
+    /**
+     * @param Document $dom
+     */
+    private function applyReferenceElementtype(Document $dom)
+    {
+        foreach ($dom->xpath()->evaluate('//node[@referenceElementtypeId]') as $node) {
+            /* @var $node \FluentDOM\Element */
+            $referenceElementtypeId = $node->getAttribute('referenceElementtypeId');
+            $referenceDom = $this->loadElementtype($referenceElementtypeId);
+            foreach ($referenceDom->documentElement->evaluate('structure[1]/node') as $referenceNode) {
+                $node->appendElement('references')->append($referenceNode);
+            }
+        }
+    }
+
+    /**
+     * @param Document $dom
+     *
+     * @return Elementtype
+     */
+    private function parse(Document $dom)
+    {
+        return $this->parser->parse($dom);
     }
 }

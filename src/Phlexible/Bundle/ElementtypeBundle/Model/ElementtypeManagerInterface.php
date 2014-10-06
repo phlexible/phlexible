@@ -27,15 +27,6 @@ interface ElementtypeManagerInterface
     public function find($elementtypeId);
 
     /**
-     * Find element type by unique ID
-     *
-     * @param string $uniqueID
-     *
-     * @return Elementtype
-     */
-    public function findOneByUniqueId($uniqueID);
-
-    /**
      * Find all element types
      *
      * @return Elementtype[]

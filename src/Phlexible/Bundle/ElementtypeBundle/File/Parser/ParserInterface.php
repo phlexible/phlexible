@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\File\Parser;
 
+use FluentDOM\Document;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
@@ -18,9 +19,16 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 interface ParserInterface
 {
     /**
-     * @param \SimpleXMLElement $xml
+     * @param string $xml
      *
      * @return Elementtype
      */
-    public function parse(\SimpleXMLElement $xml);
+    public function parseString($xml);
+
+    /**
+     * @param Document $dom
+     *
+     * @return Elementtype
+     */
+    public function parse(Document $dom);
 }

@@ -77,15 +77,11 @@ class FieldMapper
     public function extract(ElementVersion $elementVersion, ElementStructure $elementStructure = null, $language)
     {
         $elementtype = $this->elementtypeService->findElementtype($elementVersion->getElement()->getElementtypeId());
-        $elementtypeVersion = $this->elementtypeService->findElementtypeVersion(
-            $elementtype,
-            $elementVersion->getElementtypeVersion()
-        );
 
         $titles = array();
 
         if ($elementStructure) {
-            $mappings = $elementtypeVersion->getMappings();
+            $mappings = $elementtype->getMappings();
 
             foreach ($mappings as $key => $mapping) {
                 if ($mapper = $this->findFieldMapper($key)) {

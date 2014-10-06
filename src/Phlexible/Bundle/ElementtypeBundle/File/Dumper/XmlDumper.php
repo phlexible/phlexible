@@ -63,10 +63,12 @@ class XmlDumper implements DumperInterface
                 $mappingElement->appendElement('pattern', $mapping['pattern']);
                 $fieldsElement = $mappingElement->appendElement('fields');
                 foreach ($mapping['fields'] as $field) {
-                    $fieldElement = $fieldsElement->appendElement('field');
-                    $fieldElement->appendElement('dsId', $field['dsId']);
-                    $fieldElement->appendElement('title', $field['title']);
-                    $fieldElement->appendElement('index', $field['index']);
+                    $attributes = array(
+                        'dsId'  => $field['dsId'],
+                        'title' => $field['title'],
+                        'index' => $field['index'],
+                    );
+                    $fieldsElement->appendElement('field', '', $attributes);
                 }
             }
         }
@@ -171,7 +173,7 @@ class XmlDumper implements DumperInterface
                 $validationElement = $nodeElement->appendElement('validation');
                 foreach ($validation as $key => $value) {
                     $validationElement->appendElement(
-                        'constrain',
+                        'constraint',
                         $value,
                         array(
                             'key' => $key,
