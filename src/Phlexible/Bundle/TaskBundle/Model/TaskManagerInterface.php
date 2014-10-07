@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TaskBundle\Model;
 
+use Finite\Transition\TransitionInterface;
 use Phlexible\Bundle\TaskBundle\Entity\Comment;
 use Phlexible\Bundle\TaskBundle\Entity\Status;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
@@ -112,6 +113,20 @@ interface TaskManagerInterface
      * @return int
      */
     public function countByStatus(array $status = array());
+
+    /**
+     * @param array $payload
+     *
+     * @return Task
+     */
+    public function findOneByPayload(array $payload);
+
+    /**
+     * @param Task $task
+     *
+     * @return TransitionInterface[]
+     */
+    public function getTransitions(Task $task);
 
     /**
      * Create task

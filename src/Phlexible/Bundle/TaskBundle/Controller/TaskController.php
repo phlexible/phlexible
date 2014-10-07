@@ -151,7 +151,7 @@ class TaskController extends Controller
                 'component'      => $type->getComponent(),
                 'link'           => $type->getLink($task),
                 'assigned_user'  => $assignedUser->getDisplayName(),
-                'latest_status'  => $task->getCurrentStatus(),
+                'latest_status'  => $task->getFiniteState(),
                 'create_user'    => $createUser->getDisplayName(),
                 'create_uid'     => $task->getCreateUserId(),
                 'create_date'    => $task->getCreatedAt()->format('Y-m-d H:i:s'),
@@ -343,7 +343,7 @@ class TaskController extends Controller
      *   requirements={
      *     {"name"="id", "dataType"="string", "required"=true, "description"="Task ID"},
      *     {"name"="recipient", "dataType"="string", "required"=false, "description"="Recipient"},
-     *     {"name"="status", "dataType"="string", "required"=true, "description"="Status for transition"},
+     *     {"name"="name", "dataType"="string", "required"=true, "description"="Transition name"},
      *     {"name"="comment", "dataType"="string", "required"=false, "description"="Comment"}
      *   }
      * )
@@ -352,7 +352,7 @@ class TaskController extends Controller
     {
         $id = $request->get('id');
         $assignedUserId = $request->get('recipient');
-        $status = $request->get('status');
+        $name = $request->get('name');
         $comment = $request->get('comment');
 
         if ($comment) {
@@ -368,7 +368,7 @@ class TaskController extends Controller
         }
 
         $task = $taskManager->find($id);
-        $taskManager->updateTask($task, $this->getUser(), $status, $assignUser, $comment);
+        $taskManager->updateTask($task, $this->getUser(), $name, $assignUser, $comment);
 
         return new ResultResponse(true, 'Task transition created.');
     }

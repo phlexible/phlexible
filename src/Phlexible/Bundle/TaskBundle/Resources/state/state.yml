@@ -1,0 +1,30 @@
+class: ~
+states:
+    open:
+        type: initial
+        properties: []
+    rejected:
+        type: normal
+        properties: []
+    reopened:
+        type: normal
+        properties: []
+    finished:
+        type: normal
+        properties: []
+    closed:
+        type: final
+        properties: []
+transitions:
+    reject:
+        from: [open, reopened]
+        to: rejected
+    reopen:
+        from: [rejected, finished]
+        to: reopened
+    finish:
+        from: [open, reopened]
+        to: finished
+    close:
+        from: [open, rejected, reopened, finished]
+        to: closed

@@ -3,13 +3,11 @@ Aufgabe wurde aktualisiert
 Die Aufgabe "{{ text }}" wurde von {{ byUser.firstname }} {{ byUser.lastname }} verändert.
 
 {% if changes.transition is defined %}
-Neuer Status:
-{{ changes.transition.status }}
+Status geändert von {{ changes.transition.oldState }} to {{ changes.transition.newState }}
 {% endif %}
 
 {% if changes.assign is defined %}
-Zugewiesen an:
-{{ changes.assign.displayName }}
+Zugewiesen an {{ changes.assign.displayName }}
 {% endif %}
 
 {% if changes.comment is defined %}

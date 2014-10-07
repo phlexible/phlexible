@@ -57,15 +57,11 @@ class LoadDataListener
         if ($teaser = $event->getTeaser()) {
             $taskPayload = array('teaser_id' => $teaser->getId(), 'language' => $event->getLanguage());
         } else {
-            $taskPayload = array('tid' => $event->getNode()->getId(), 'language' => $event->getLanguage());
+            $taskPayload = array('tree_id' => $event->getNode()->getId(), 'language' => $event->getLanguage());
         }
-
-        // TODO: repair
-        return;
 
         $task = $this->taskManager->findOneByPayload(
             $taskPayload,
-            null,
             array(
                 Task::STATUS_OPEN,
                 Task::STATUS_REJECTED,
@@ -79,7 +75,6 @@ class LoadDataListener
 
             $task = $this->taskManager->findOneByPayload(
                 $taskPayload,
-                null,
                 array(
                     Task::STATUS_OPEN,
                     Task::STATUS_REJECTED,
@@ -95,21 +90,25 @@ class LoadDataListener
 
         /* @var $task Task */
 
-        $latestStatus = $task->getLatestStatus();
         $createUserId = $task->getCreateUserId();
-        $recipientUserId = $task->getRecipientUserId();
+        $assignedUserId = $task->getAssignedUserId();
         $currentUserId = $this->securityContext->getToken()->getUser()->getId();
+
+        $type = '';
+        if ($task->getAssignedUserId() === $currentUserId) {
+            $type = 'assigned_to_me';
+        } elseif ($task->getCreateUserId() === $currentUserId) {
+            $type = 'created_by_me';
+        }
 
         $taskInfo = array(
             'id'        => $task->getId(),
-            'status'    => $latestStatus->getStatus(),
-            'type'      => $task->getCreateUserId() === $currentUserId
-                ? 1
-                : ($task->getRecipientUserId() === $currentUserId ? 2 : 3),
-            'generic'   => $task->isGeneric() ? 1 : 0,
-            'text'      => $task->getTitle(),
+            'status'    => $task->getFiniteState(),
+            'type'      => $type,
+            'generic'   => 0,// $task->isGeneric() ? 1 : 0, @TODO
+            'text'      => 'test', //$task->getTitle(),
             'creator'   => $this->userManager->find($createUserId)->getDisplayName(),
-            'recipient' => $this->userManager->find($recipientUserId)->getDisplayName(),
+            'recipient' => $this->userManager->find($assignedUserId)->getDisplayName(),
             'date'      => $task->getCreatedAt()->format('Y-m-d'),
             'time'      => $task->getCreatedAt()->format('H:i:s'),
         );

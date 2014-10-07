@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\TaskBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Finite\StatefulInterface;
 
 /**
  * Task
@@ -19,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="task")
  */
-class Task
+class Task implements StatefulInterface
 {
     const STATUS_OPEN     = 'open';
     const STATUS_REJECTED = 'rejected';
@@ -79,9 +80,9 @@ class Task
 
     /**
      * @var string
-     * @ORM\Column(name="current_status", type="string")
+     * @ORM\Column(name="finite_state", type="string")
      */
-    private $currentStatus;
+    private $finiteState;
 
     /**
      * @var Transition[]|ArrayCollection
@@ -230,19 +231,19 @@ class Task
      *
      * @return string
      */
-    public function getCurrentStatus()
+    public function getFiniteState()
     {
-        return $this->currentStatus;
+        return $this->finiteState;
     }
 
     /**
-     * @param string $currentStatus
+     * @param string $finiteState
      *
      * @return $this
      */
-    public function setCurrentStatus($currentStatus)
+    public function setFiniteState($finiteState)
     {
-        $this->currentStatus = $currentStatus;
+        $this->finiteState = $finiteState;
 
         return $this;
     }

@@ -32,7 +32,19 @@ class Transition
      * @var string
      * @ORM\Column(type="string")
      */
-    private $status;
+    private $name;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    private $oldState;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    private $newState;
 
     /**
      * @var string
@@ -76,19 +88,59 @@ class Transition
     /**
      * @return string
      */
-    public function getStatus()
+    public function getName()
     {
-        return $this->status;
+        return $this->name;
     }
 
     /**
-     * @param string $status
+     * @param string $name
      *
      * @return $this
      */
-    public function setStatus($status)
+    public function setName($name)
     {
-        $this->status = $status;
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOldState()
+    {
+        return $this->oldState;
+    }
+
+    /**
+     * @param string $oldState
+     *
+     * @return $this
+     */
+    public function setOldState($oldState)
+    {
+        $this->oldState = $oldState;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNewState()
+    {
+        return $this->newState;
+    }
+
+    /**
+     * @param string $newState
+     *
+     * @return $this
+     */
+    public function setNewState($newState)
+    {
+        $this->newState = $newState;
 
         return $this;
     }

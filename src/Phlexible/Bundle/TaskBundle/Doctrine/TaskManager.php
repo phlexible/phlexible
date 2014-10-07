@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\TaskBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Finite\StateMachine\StateMachineInterface;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\TaskBundle\Entity\Comment;
 use Phlexible\Bundle\TaskBundle\Entity\Status;
@@ -46,6 +47,11 @@ class TaskManager implements TaskManagerInterface
     private $types;
 
     /**
+     * @var StateMachineInterface
+     */
+    private $stateMachine;
+
+    /**
      * @var UserManagerInterface
      */
     private $userManager;
@@ -66,16 +72,18 @@ class TaskManager implements TaskManagerInterface
     private $sendMailOnClose;
 
     /**
-     * @param EntityManager        $entityManager
-     * @param TypeCollection       $types
-     * @param UserManagerInterface $userManager
-     * @param MessagePoster        $messageService
-     * @param Mailer               $mailer
-     * @param bool                 $sendMailOnClose
+     * @param EntityManager         $entityManager
+     * @param TypeCollection        $types
+     * @param StateMachineInterface $stateMachine
+     * @param UserManagerInterface  $userManager
+     * @param MessagePoster         $messageService
+     * @param Mailer                $mailer
+     * @param bool                  $sendMailOnClose
      */
     public function __construct(
         EntityManager $entityManager,
         TypeCollection $types,
+        StateMachineInterface $stateMachine,
         UserManagerInterface $userManager,
         MessagePoster $messageService,
         Mailer $mailer,
@@ -83,6 +91,7 @@ class TaskManager implements TaskManagerInterface
     {
         $this->entityManager = $entityManager;
         $this->types = $types;
+        $this->stateMachine = $stateMachine;
         $this->userManager = $userManager;
         $this->messageService = $messageService;
         $this->mailer = $mailer;
@@ -311,6 +320,29 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findOneByPayload(array $payload)
+    {
+        ksort($payload);
+
+        $payload = json_encode($payload);
+
+        return $this->getTaskRepository()->findOneBy(array('payload' => $payload));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTransitions(Task $task)
+    {
+        $this->stateMachine->setObject($task);
+        $this->stateMachine->initialize();
+
+        return $this->stateMachine->getCurrentState()->getTransitions();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function createTask(TypeInterface $type, UserInterface $createUser, UserInterface $assignedUser, array $payload, $description)
     {
         $task = new Task();
@@ -318,10 +350,13 @@ class TaskManager implements TaskManagerInterface
             ->setCreateUserId($createUser->getId())
             ->setCreatedAt(new \DateTime())
             ->setDescription($description)
-            ->setCurrentStatus(Task::STATUS_OPEN)
+            ->setFiniteState(Task::STATUS_OPEN)
             ->setPayload($payload)
             ->setAssignedUserId($assignedUser->getId())
             ->setType($type->getName());
+
+        $this->stateMachine->setObject($task);
+        $this->stateMachine->initialize();
 
         $this->entityManager->persist($task);
         $this->entityManager->flush();
@@ -343,19 +378,26 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateTask(Task $task, UserInterface $byUser, $status = null, UserInterface $assignUser = null, $comment = null)
+    public function updateTask(Task $task, UserInterface $byUser, $transitionName = null, UserInterface $assignUser = null, $comment = null)
     {
         $changes = array();
 
-        if ($status) {
-            $task->setCurrentStatus($status);
+        if ($transitionName) {
+            $oldState = $task->getFiniteState();
+
+            $this->stateMachine->setObject($task);
+            $this->stateMachine->initialize();
+            $this->stateMachine->apply($transitionName);
 
             $taskTransition = new Transition();
             $taskTransition
                 ->setTask($task)
+                ->setName($transitionName)
+                ->setOldState($oldState)
+                ->setNewState($task->getFiniteState())
                 ->setCreatedAt(new \DateTime())
                 ->setCreateUserId($byUser->getId())
-                ->setStatus($status);
+            ;
 
             $this->entityManager->persist($taskTransition);
 
@@ -375,7 +417,7 @@ class TaskManager implements TaskManagerInterface
                 ->setComment($comment)
                 ->setCreatedAt(new \DateTime())
                 ->setCreateUserId($byUser->getId())
-                ->setCurrentStatus($task->getCurrentStatus());
+                ->setCurrentStatus($task->getFiniteState());
 
             $this->entityManager->persist($taskComment);
 
@@ -384,10 +426,10 @@ class TaskManager implements TaskManagerInterface
 
         $body = 'Task updated:' . PHP_EOL;
         if (isset($changes['transition'])) {
-            $body .= 'New status:' . PHP_EOL . $changes['transition']->getStatus() . PHP_EOL;
+            $body .= "Status changed from {$changes['transition']->getOldState()} to {$changes['transition']->getNewState()}" . PHP_EOL;
         }
         if (isset($changes['assign'])) {
-            $body .= 'Assign to:' . PHP_EOL . $changes['assign']->getDisplayName() . PHP_EOL;
+            $body .= "Assigned to {$changes['assign']->getDisplayName()}" . PHP_EOL;
         }
         if (isset($changes['comment'])) {
             $body .= 'Comment:' . PHP_EOL . $changes['comment']->getComment() . PHP_EOL;

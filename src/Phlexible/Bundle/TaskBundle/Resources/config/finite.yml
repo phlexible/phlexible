@@ -1,0 +1,9 @@
+parameters:
+    phlexible.task.state_file: @@PhlexibleTaskBundle/Resources/state/state.yml
+
+services:
+    phlexible_task.state_machine:
+        class: Finite\StateMachine\StateMachine
+        factory_class: Phlexible\Bundle\TaskBundle\Finite\StateMachineFactory
+        factory_method: factory
+        arguments: [@file_locator, @event_dispatcher, %phlexible.task.state_file%]
