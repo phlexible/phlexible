@@ -20,7 +20,7 @@ class DeleteType extends AbstractType
      */
     public function getName()
     {
-        return 'elements.delete';
+        return 'element.delete';
     }
 
     /**
@@ -30,7 +30,7 @@ class DeleteType extends AbstractType
      */
     public function getRequiredParameters()
     {
-        return array('tid');
+        return array('type', 'type_id');
     }
 
     /**

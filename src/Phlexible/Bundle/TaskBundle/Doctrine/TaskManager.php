@@ -11,14 +11,17 @@ namespace Phlexible\Bundle\TaskBundle\Doctrine;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
+use Phlexible\Bundle\TaskBundle\Entity\Comment;
 use Phlexible\Bundle\TaskBundle\Entity\Status;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
+use Phlexible\Bundle\TaskBundle\Entity\Transition;
 use Phlexible\Bundle\TaskBundle\Mailer\Mailer;
 use Phlexible\Bundle\TaskBundle\Model\TaskManagerInterface;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeCollection;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeInterface;
 use Phlexible\Bundle\TaskBundle\TasksMessage;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Task manager
@@ -84,8 +87,18 @@ class TaskManager implements TaskManagerInterface
         $this->messageService = $messageService;
         $this->mailer = $mailer;
         $this->sendMailOnClose = $sendMailOnClose;
+    }
 
-        $this->taskRepository = $entityManager->getRepository('PhlexibleTaskBundle:Task');
+    /**
+     * @return EntityRepository
+     */
+    private function getTaskRepository()
+    {
+        if (null === $this->taskRepository) {
+            $this->taskRepository = $this->entityManager->getRepository('PhlexibleTaskBundle:Task');
+        }
+
+        return $this->taskRepository;
     }
 
     /**
@@ -93,7 +106,15 @@ class TaskManager implements TaskManagerInterface
      */
     public function find($id)
     {
-        return $this->taskRepository->find($id);
+        return $this->getTaskRepository()->find($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->getTaskRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -106,7 +127,7 @@ class TaskManager implements TaskManagerInterface
         $limit = null,
         $start = null)
     {
-        $qb = $this->taskRepository->createQueryBuilder('t');
+        $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb->where($qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)));
         $qb->where($qb->expr()->in('t.currentStatus', $status));
 
@@ -128,7 +149,7 @@ class TaskManager implements TaskManagerInterface
      */
     public function countByCreatedByAndStatus($userId, array $status = array())
     {
-        $qb = $this->taskRepository->createQueryBuilder('t');
+        $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb->select('COUNT(t.id)');
         $qb->where($qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)));
         $qb->where($qb->expr()->in('t.currentStatus', $status));
@@ -146,7 +167,7 @@ class TaskManager implements TaskManagerInterface
         $limit = null,
         $start = null)
     {
-        $qb = $this->taskRepository->createQueryBuilder('t');
+        $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb->where(
             $qb->expr()->orX(
                 $qb->expr()->andX(
@@ -182,7 +203,7 @@ class TaskManager implements TaskManagerInterface
      */
     public function countByAssignedToAndStatus($userId, array $status = array())
     {
-        $qb = $this->taskRepository->createQueryBuilder('t');
+        $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb->select('COUNT(t.id)');
         $qb->where(
             $qb->expr()->orX(
@@ -214,7 +235,7 @@ class TaskManager implements TaskManagerInterface
         $limit = null,
         $start = null)
     {
-        $qb = $this->taskRepository->createQueryBuilder('t');
+        $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb->where(
             $qb->expr()->orX(
                 $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
@@ -241,7 +262,7 @@ class TaskManager implements TaskManagerInterface
      */
     public function countByInvolvementAndStatus($userId, array $status = array())
     {
-        $qb = $this->taskRepository->createQueryBuilder('t');
+        $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb->select('COUNT(t.id)');
         $qb->where(
             $qb->expr()->orX(
@@ -259,7 +280,7 @@ class TaskManager implements TaskManagerInterface
      */
     public function findByStatus(array $status = array(), array $sort = array(), $limit = null, $start = null)
     {
-        $qb = $this->taskRepository->createQueryBuilder('t');
+        $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb->where($qb->expr()->in('t.currentStatus', $status));
 
         foreach ($sort as $field => $dir) {
@@ -280,7 +301,7 @@ class TaskManager implements TaskManagerInterface
      */
     public function countByStatus(array $status = array())
     {
-        $qb = $this->taskRepository->createQueryBuilder('t');
+        $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb->select('COUNT(t.id)');
         $qb->where($qb->expr()->in('t.currentStatus', $status));
 
@@ -290,42 +311,31 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function createTask(TypeInterface $type, $createUserId, $recipientUserId, array $payload, $comment)
+    public function createTask(TypeInterface $type, UserInterface $createUser, UserInterface $assignedUser, array $payload, $description)
     {
-        $status = Task::STATUS_OPEN;
-
         $task = new Task();
         $task
-            ->setCreateUserId($createUserId)
+            ->setCreateUserId($createUser->getId())
             ->setCreatedAt(new \DateTime())
-            ->setCurrentStatus($status)
+            ->setDescription($description)
+            ->setCurrentStatus(Task::STATUS_OPEN)
             ->setPayload($payload)
-            ->setRecipientUserId($recipientUserId)
+            ->setAssignedUserId($assignedUser->getId())
             ->setType($type->getName());
 
-        $taskStatus = new Status();
-        $taskStatus
-            ->setTask($task)
-            ->setCreateUserId($createUserId)
-            ->setCreatedAt(new \DateTime())
-            ->setComment($comment)
-            ->setStatus($status);
-
         $this->entityManager->persist($task);
-        $this->entityManager->persist($taskStatus);
         $this->entityManager->flush();
 
-        $createUser = $this->userManager->find($createUserId);
-        $recipientUser = $this->userManager->find($recipientUserId);
+        $body = 'New task created by ' . $createUser->getDisplayName() .
+            ', assigned to ' . $assignedUser->getDisplayName() . PHP_EOL .
+            'Description: ' . PHP_EOL . $description . PHP_EOL;
 
-        $body = 'Task created by ' . $createUser->getDisplayName() .
-            ' for ' . $recipientUser->getDisplayName() . PHP_EOL .
-            'Comment: ' . PHP_EOL . $comment . PHP_EOL;
-
-        $message = TasksMessage::create("Task set to status $status", $body);
+        $message = TasksMessage::create("New task", $body);
         $this->messageService->post($message);
 
-        $this->mailer->sendNewTaskEmailMessage($createUser, $recipientUser, $taskStatus, $type);
+        if ($createUser !== $assignedUser) {
+            $this->mailer->sendNewTaskEmailMessage($task, $createUser, $assignedUser, $type);
+        }
 
         return $task;
     }
@@ -333,45 +343,69 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function createStatus(Task $task, $userId, $comment, $newStatus = Task::STATUS_OPEN)
+    public function updateTask(Task $task, UserInterface $byUser, $status = null, UserInterface $assignUser = null, $comment = null)
     {
-        $task->setCurrentStatus($newStatus);
+        $changes = array();
 
-        if ($newStatus === Task::STATUS_CLOSED) {
-            $task->setClosedAt(new \DateTime());
+        if ($status) {
+            $task->setCurrentStatus($status);
+
+            $taskTransition = new Transition();
+            $taskTransition
+                ->setTask($task)
+                ->setCreatedAt(new \DateTime())
+                ->setCreateUserId($byUser->getId())
+                ->setStatus($status);
+
+            $this->entityManager->persist($taskTransition);
+
+            $changes['transition'] = $taskTransition;
         }
 
-        $taskStatus = new Status();
-        $taskStatus
-            ->setTask($task)
-            ->setComment($comment)
-            ->setCreatedAt(new \DateTime())
-            ->setCreateUserId($userId)
-            ->setStatus($newStatus);
-        $this->entityManager->persist($taskStatus);
-        $this->entityManager->flush();
+        if ($assignUser) {
+            $task->setAssignedUserId($assignUser->getId());
 
-        if ($userId == $task->getRecipientUserId()) {
-            $fromUser = $this->userManager->find($task->getCreateUserId());
-            $toUser = $this->userManager->find($task->getRecipientUserId());
-        } else {
-            $fromUser = $this->userManager->find($task->getRecipientUserId());
-            $toUser = $this->userManager->find($task->getCreateUserId());
+            $changes['assign'] = $assignUser;
         }
 
-        $body = 'Task status changed by ' . $fromUser->getDisplayName() .
-            ' for ' . $toUser->getDisplayName() . PHP_EOL .
-            'Comment: ' . PHP_EOL . $comment . PHP_EOL;
+        if ($comment) {
+            $taskComment = new Comment();
+            $taskComment
+                ->setTask($task)
+                ->setComment($comment)
+                ->setCreatedAt(new \DateTime())
+                ->setCreateUserId($byUser->getId())
+                ->setCurrentStatus($task->getCurrentStatus());
 
-        $message = TasksMessage::create("Task set to status $newStatus", $body);
+            $this->entityManager->persist($taskComment);
+
+            $changes['comment'] = $taskComment;
+        }
+
+        $body = 'Task updated:' . PHP_EOL;
+        if (isset($changes['transition'])) {
+            $body .= 'New status:' . PHP_EOL . $changes['transition']->getStatus() . PHP_EOL;
+        }
+        if (isset($changes['assign'])) {
+            $body .= 'Assign to:' . PHP_EOL . $changes['assign']->getDisplayName() . PHP_EOL;
+        }
+        if (isset($changes['comment'])) {
+            $body .= 'Comment:' . PHP_EOL . $changes['comment']->getComment() . PHP_EOL;
+        }
+
+        $message = TasksMessage::create("Task updated", $body);
         $this->messageService->post($message);
 
-        if ($newStatus !== Task::STATUS_CLOSED || $this->sendMailOnClose) {
-            $type = $this->types->get($task->getType());
+        $type = $this->types->get($task->getType());
 
-            $this->mailer->sendNewStatusEmailMessage($fromUser, $toUser, $taskStatus, $type);
+        $involvedUsers = array();
+        foreach ($task->getInvolvedUserIds() as $involvedUserId) {
+            $involvedUser = $this->userManager->find($involvedUserId);
+            if ($involvedUser) {
+                $involvedUsers[] = $involvedUser;
+            }
         }
 
-        return $taskStatus;
+        $this->mailer->sendUpdateEmailMessage($task, $byUser, $involvedUsers, $changes, $type);
     }
 }

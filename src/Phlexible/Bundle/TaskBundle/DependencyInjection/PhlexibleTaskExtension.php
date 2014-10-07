@@ -33,8 +33,12 @@ class PhlexibleTaskExtension extends Extension
 
         $container->setParameter('phlexible_task.portlet.num_items', $config['portlet']['num_items']);
         $container->setParameter('phlexible_task.mail_on_close', $config['mail_on_close']);
+        $container->setParameter('phlexible_task.mailer.from_email', array($config['mailer']['from_email']['address'] => $config['mailer']['from_email']['sender_name']));
+        $container->setParameter('phlexible_task.mailer.new_task.template', $config['mailer']['new_task']['template']);
+        $container->setParameter('phlexible_task.mailer.update.template', $config['mailer']['update']['template']);
 
         $loader->load('doctrine.yml');
+
         $container->setAlias('phlexible_task.task_manager', 'phlexible_task.doctrine.task_manager');
     }
 }

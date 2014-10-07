@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
-use Phlexible\Bundle\TaskBundle\Exception\UnknownStatusException;
+use Phlexible\Bundle\TaskBundle\Task\Type\TypeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -116,39 +116,29 @@ class TaskController extends Controller
 
         $data = array();
         foreach ($tasks as $task) {
-            $currentStatus = $task->getCurrentStatus();
-
-            if (in_array($currentStatus, array(Task::STATUS_OPEN, Task::STATUS_REOPENED, Task::STATUS_CLOSED))) {
-                $assignedUser = $userManager->find($task->getRecipientUserId());
-            } elseif (in_array(
-                $currentStatus,
-                array(Task::STATUS_REJECTED, Task::STATUS_FINISHED, Task::STATUS_CLOSED)
-            )
-            ) {
-                $assignedUser = $userManager->find($task->getCreateUserId());
-            } else {
-                throw new UnknownStatusException('Unknown status.');
-            }
-
+            /* @var $task Task */
+            $assignedUser = $userManager->find($task->getAssignedUserId());
             $createUser = $userManager->find($task->getCreateUserId());
-            // $recipientUser = $task->getRecipientUser();
-            $latestStatus = $task->getLatestStatus();
-            $latestUser = $userManager->find($latestStatus->getCreateUserId());
 
-            $historyItems = $task->getStatus();
-
-            $history = array();
-            foreach ($historyItems as $historyItem) {
-                $user = $userManager->find($historyItem->getCreateUserId());
-                $history[] = array(
-                    'create_date' => $historyItem->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'name'        => $user->getDisplayName(),
-                    'status'      => $historyItem->getStatus(),
-                    'comment'     => $historyItem->getComment(),
-                    'latest'      => $latestStatus->getId() == $historyItem->getId(),
+            $transitions = array();
+            foreach ($task->getTransitions() as $transition) {
+                $transitionUser = $userManager->find($transition->getCreateUserId());
+                $transitions[] = array(
+                    'create_date' => $transition->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'name'        => $transitionUser->getDisplayName(),
+                    'status'      => $transition->getStatus(),
                 );
             }
-            $history = array_reverse($history);
+
+            $comments = array();
+            foreach ($task->getComments() as $comment) {
+                $commentUser = $userManager->find($comment->getCreateUserId());
+                $comments[] = array(
+                    'create_date' => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'name'        => $commentUser->getDisplayName(),
+                    'comment'     => $comment->getComment(),
+                );
+            }
 
             $type = $types->get($task->getType());
 
@@ -160,19 +150,13 @@ class TaskController extends Controller
                 'text'           => $type->getText($task),
                 'component'      => $type->getComponent(),
                 'link'           => $type->getLink($task),
-                'created'        => $task->getCreateUserId() === $this->getUser()->getId() ? 1 : 0,
-                'received'       => $task->getRecipientUserId() === $this->getUser()->getId() ? 1 : 0,
-                'assigned_user'  => $assignedUser->getFirstname() . ' ' . $assignedUser->getLastname(),
-                'latest_status'  => $latestStatus->getStatus(),
-                'latest_comment' => $latestStatus->getComment(),
-                'latest_user'    => $latestUser->getFirstname() . ' ' . $latestUser->getLastname(),
-                'latest_uid'     => $latestStatus->getCreateUserId(),
-                'latest_date'    => $latestStatus->getCreatedAt()->format('Y-m-d H:i:s'),
-                'create_user'    => $createUser->getFirstname() . ' ' . $createUser->getLastname(),
+                'assigned_user'  => $assignedUser->getDisplayName(),
+                'latest_status'  => $task->getCurrentStatus(),
+                'create_user'    => $createUser->getDisplayName(),
                 'create_uid'     => $task->getCreateUserId(),
                 'create_date'    => $task->getCreatedAt()->format('Y-m-d H:i:s'),
-                'latest_id'      => $latestStatus->getId(),
-                'history'        => $history,
+                'transitions'    => $transitions,
+                'comments'       => $comments,
             );
         }
 
@@ -201,21 +185,22 @@ class TaskController extends Controller
     {
         $component = $request->request->get('component');
 
-        $types = $this->get('phlexible_task.types');
+        $taskTypes = $this->get('phlexible_task.types');
 
-        $tasks = array();
-        foreach ($types as $type) {
+        $types = array();
+        foreach ($taskTypes->all() as $type) {
+            /* @var $type TypeInterface */
             if ($component && $type->getComponent() !== $component) {
                 continue;
             }
 
-            $tasks[] = array(
-                'id'   => $type,
-                'task' => $type,
+            $types[] = array(
+                'id'   => $type->getName(),
+                'name' => $type->getName(),
             );
         }
 
-        return new JsonResponse(array('tasks' => $tasks));
+        return new JsonResponse(array('types' => $types));
     }
 
     /**
@@ -227,15 +212,19 @@ class TaskController extends Controller
      * @Route("/recipients", name="tasks_recipients")
      * @Method({"GET", "POST"})
      * @ApiDoc(
-     *   description="List recipients"
+     *   description="List recipients",
+     *   requirements={
+     *     {"name"="type", "dataType"="string", "required"=true, "description"="Task type"},
+     *   }
      * )
      */
     public function recipientsAction(Request $request)
     {
-        $taskType = $request->request->get('task_type');
+        $taskType = $request->get('type');
 
         $types = $this->get('phlexible_task.types');
         $userManager = $this->get('phlexible_user.user_manager');
+        $securityContext = $this->get('security.context');
 
         $systemUserId = $userManager->getSystemUserId();
 
@@ -247,11 +236,11 @@ class TaskController extends Controller
                 continue;
             }
 
-            if (!$user->isGranted('tasks')) {
+            if (!$securityContext->isGranted('tasks')) {
                 continue;
             }
 
-            if ($type->getResources() && !$user->isAllowed($type->getResources())) {
+            if ($type->getResource() && !$securityContext->isGranted($type->getResource())) {
                 continue;
             }
 
@@ -280,65 +269,146 @@ class TaskController extends Controller
      *   requirements={
      *     {"name"="type", "dataType"="string", "required"=true, "description"="Task type"},
      *     {"name"="recipient", "dataType"="string", "required"=true, "description"="Recipient"},
-     *     {"name"="comment", "dataType"="string", "required"=true, "description"="Comment"},
+     *     {"name"="description", "dataType"="string", "required"=true, "description"="Description"},
      *     {"name"="payload", "dataType"="array", "required"=true, "description"="Payload"}
      *   }
      * )
      */
-    public function createtaskAction(Request $request)
+    public function createTaskAction(Request $request)
     {
-        $taskType = $request->request->get('type');
-        $recipientUserId = $request->request->get('recipient');
-        $comment = $request->request->get('comment');
-        $payload = $request->request->get('payload');
+        $typeName = $request->get('type');
+        $assignedUserId = $request->get('recipient');
+        $description = $request->get('description');
+        $payload = $request->get('payload');
 
         if ($payload) {
             $payload = json_decode($payload, true);
         }
 
         $taskManager = $this->get('phlexible_task.task_manager');
+        $userManager = $this->get('phlexible_user.user_manager');
         $types = $this->get('phlexible_task.types');
-        $type = $types->get($taskType);
 
-        $task = $taskManager->createTask($type, $this->getUser()->getId(), $recipientUserId, $payload, $comment);
+        $type = $types->get($typeName);
+        $assignedUser = $userManager->find($assignedUserId);
+
+        $task = $taskManager->createTask($type, $this->getUser(), $assignedUser, $payload, $description);
 
         return new ResultResponse(true, 'Task created.');
     }
 
     /**
-     * Create task status
+     * Create task comment
      *
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/create/status", name="tasks_create_status")
+     * @Route("/create/comment", name="tasks_create_comment")
      * @Method({"GET", "POST"})
      * @ApiDoc(
      *   description="Create status",
      *   requirements={
-     *     {"name"="task_id", "dataType"="string", "required"=true, "description"="Task ID"},
-     *     {"name"="new_status", "dataType"="string", "required"=true, "description"="New status"},
+     *     {"name"="id", "dataType"="string", "required"=true, "description"="Task ID"},
      *     {"name"="comment", "dataType"="string", "required"=true, "description"="Comment"}
      *   }
      * )
      */
-    public function createstatusAction(Request $request)
+    public function commentAction(Request $request)
     {
-        $taskId = $request->request->get('task_id');
-        $newStatus = $request->request->get('new_status');
-        $comment = $request->request->get('comment');
+        $id = $request->get('id');
+        $comment = $request->get('comment');
 
         if ($comment) {
             $comment = urldecode($comment);
         }
 
-        $taskRepository = $this->getDoctrine()->getRepository('PhlexibleTaskBundle:Task');
         $taskManager = $this->get('phlexible_task.task_manager');
 
-        $task = $taskRepository->find($taskId);
-        $taskManager->createStatus($task, $this->getUser()->getId(), $comment, $newStatus);
+        $task = $taskManager->find($id);
+        $taskManager->updateTask($task, $this->getUser(), $comment, null, $comment);
 
-        return new ResultResponse(true, 'Task status created.');
+        return new ResultResponse(true, 'Task comment created.');
+    }
+
+    /**
+     * Create task transition
+     *
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/create/transition", name="tasks_create_transition")
+     * @Method({"GET", "POST"})
+     * @ApiDoc(
+     *   description="Create status",
+     *   requirements={
+     *     {"name"="id", "dataType"="string", "required"=true, "description"="Task ID"},
+     *     {"name"="recipient", "dataType"="string", "required"=false, "description"="Recipient"},
+     *     {"name"="status", "dataType"="string", "required"=true, "description"="Status for transition"},
+     *     {"name"="comment", "dataType"="string", "required"=false, "description"="Comment"}
+     *   }
+     * )
+     */
+    public function transitionAction(Request $request)
+    {
+        $id = $request->get('id');
+        $assignedUserId = $request->get('recipient');
+        $status = $request->get('status');
+        $comment = $request->get('comment');
+
+        if ($comment) {
+            $comment = urldecode($comment);
+        }
+
+        $taskManager = $this->get('phlexible_task.task_manager');
+        $userManager = $this->get('phlexible_user.user_manager');
+
+        $assignUser = null;
+        if ($assignedUserId) {
+            $assignUser = $userManager->find($assignedUserId);
+        }
+
+        $task = $taskManager->find($id);
+        $taskManager->updateTask($task, $this->getUser(), $status, $assignUser, $comment);
+
+        return new ResultResponse(true, 'Task transition created.');
+    }
+
+    /**
+     * Assign task
+     *
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/assign", name="tasks_assign")
+     * @Method({"GET", "POST"})
+     * @ApiDoc(
+     *   description="Create status",
+     *   requirements={
+     *     {"name"="id", "dataType"="string", "required"=true, "description"="Task ID"},
+     *     {"name"="recipient", "dataType"="string", "required"=true, "description"="Recipient"},
+     *     {"name"="comment", "dataType"="string", "required"=false, "description"="Comment"}
+     *   }
+     * )
+     */
+    public function assignAction(Request $request)
+    {
+        $id = $request->get('id');
+        $assignedUserId = $request->get('recipient');
+        $comment = $request->get('comment');
+
+        if ($comment) {
+            $comment = urldecode($comment);
+        }
+
+        $taskManager = $this->get('phlexible_task.task_manager');
+        $userManager = $this->get('phlexible_user.user_manager');
+
+        $task = $taskManager->find($id);
+        $assignUser = $userManager->find($assignedUserId);
+
+        $taskManager->updateTask($task, $this->getUser(), null, $assignUser, $comment);
+
+        return new ResultResponse(true, 'Task assigned.');
     }
 
     /**

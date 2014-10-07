@@ -8,7 +8,10 @@
 
 namespace Phlexible\Bundle\TaskBundle\Mailer;
 
+use Phlexible\Bundle\TaskBundle\Entity\Comment;
 use Phlexible\Bundle\TaskBundle\Entity\Status;
+use Phlexible\Bundle\TaskBundle\Entity\Task;
+use Phlexible\Bundle\TaskBundle\Entity\Transition;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeInterface;
 use Swift_Mailer;
 use Swift_Message;
@@ -50,72 +53,70 @@ class Mailer
     }
 
     /**
-     * Send an email to a user with the new task
+     * Send a new task email
      *
+     * @param Task          $task
      * @param UserInterface $createUser
-     * @param UserInterface $recipientUser
-     * @param Status        $taskStatus
+     * @param UserInterface $assignUser
      * @param TypeInterface $type
      */
     public function sendNewTaskEmailMessage(
+        Task $task,
         UserInterface $createUser,
-        UserInterface $recipientUser,
-        Status $taskStatus,
+        UserInterface $assignUser,
         TypeInterface $type)
     {
         // $createUser, $recipientUser, $task, $link
         $template = $this->parameters['new_task']['template'];
-        $from = $this->parameters['new_task']['from'];
+        $from = $this->parameters['new_task']['from_email'];
 
-        $task = $taskStatus->getTask();
         $text = $type->getText($task);
         $url = $type->getLink($task);
 
         $content = $this->templating->render(
             $template,
             array(
-                'user'       => $createUser,
-                'fromUser'   => $recipientUser,
-                'taskStatus' => $taskStatus,
+                'createUser' => $createUser,
+                'assignUser' => $assignUser,
+                'task'       => $task,
                 'text'       => $text,
                 'url'        => $url
             )
         );
-        $this->sendEmailMessage($content, $from, $recipientUser->getEmail());
+        $this->sendEmailMessage($content, $from, $assignUser->getEmail());
     }
 
     /**
-     * Send an email to a user with the new status
+     * Send an update email
      *
-     * @param UserInterface $createUser
-     * @param UserInterface $recipientUser
-     * @param Status        $taskStatus
-     * @param TypeInterface $type
+     * @param Task            $task
+     * @param UserInterface   $byUser
+     * @param UserInterface[] $involvedUsers
+     * @param array           $changes
+     * @param TypeInterface   $type
      */
-    public function sendNewStatusEmailMessage(
-        UserInterface $createUser,
-        UserInterface $recipientUser,
-        Status $taskStatus,
-        TypeInterface $type)
+    public function sendUpdateEmailMessage(Task $task, UserInterface $byUser, array $involvedUsers, array $changes, TypeInterface $type)
     {
-        $template = $this->parameters['new_status']['template'];
-        $from = $this->parameters['new_status']['from'];
+        $template = $this->parameters['update']['template'];
+        $from = $this->parameters['update']['from_email'];
 
-        $task = $taskStatus->getTask();
         $text = $type->getText($task);
         $url = $type->getLink($task);
 
         $content = $this->templating->render(
             $template,
             array(
-                'user'       => $createUser,
-                'fromUser'   => $recipientUser,
-                'taskStatus' => $taskStatus,
-                'text'       => $text,
-                'url'        => $url
+                'byUser'        => $byUser,
+                'involvedUsers' => $involvedUsers,
+                'changes'       => $changes,
+                'text'          => $text,
+                'url'           => $url
             )
         );
-        $this->sendEmailMessage($content, $from, $recipientUser->getEmail());
+
+        foreach ($involvedUsers as $involvedUser) {
+            $this->sendEmailMessage($content, $from, $involvedUser->getEmail());
+        }
     }
 
     /**

@@ -292,8 +292,8 @@ class RightsController extends Controller
             foreach ($subjects as $key => $subjectRow) {
                 $subjects[$key]['original'] = $subjects[$key]['rights'];
             }
-        } catch (Exception $e) {
-            MWF_Log::exception($e);
+        } catch (\Exception $e) {
+            die("repair me");
         }
 
 

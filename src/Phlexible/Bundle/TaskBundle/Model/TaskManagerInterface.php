@@ -8,9 +8,12 @@
 
 namespace Phlexible\Bundle\TaskBundle\Model;
 
+use Phlexible\Bundle\TaskBundle\Entity\Comment;
 use Phlexible\Bundle\TaskBundle\Entity\Status;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
+use Phlexible\Bundle\TaskBundle\Entity\Transition;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Task manager interface
@@ -25,6 +28,16 @@ interface TaskManagerInterface
      * @return Task
      */
     public function find($id);
+
+    /**
+     * @param array      $criteria
+     * @param array|null $orderBy
+     * @param int|null   $limit
+     * @param int|null   $offset
+     *
+     * @return Task[]
+     */
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
 
     /**
      * @param string $userId
@@ -104,24 +117,23 @@ interface TaskManagerInterface
      * Create task
      *
      * @param TypeInterface $type
-     * @param string        $createUserId
-     * @param string        $recipientUserId
+     * @param UserInterface $createUser
+     * @param UserInterface $assignedUser
      * @param array         $payload
-     * @param string        $comment
+     * @param string        $description
      *
      * @return Task
      */
-    public function createTask(TypeInterface $type, $createUserId, $recipientUserId, array $payload, $comment);
+    public function createTask(TypeInterface $type, UserInterface $createUser, UserInterface $assignedUser, array $payload, $description);
 
     /**
-     * Create task status
+     * @param Task               $task
+     * @param UserInterface      $byUser
+     * @param string|null        $status
+     * @param UserInterface|null $assignUser
+     * @param string|null        $comment
      *
-     * @param Task   $task
-     * @param string $userId
-     * @param string $comment
-     * @param string $newStatus
-     *
-     * @return Status
+     * @return Comment
      */
-    public function createStatus(Task $task, $userId, $comment, $newStatus = Task::STATUS_OPEN);
+    public function updateTask(Task $task, UserInterface $byUser, $status = null, UserInterface $assignUser = null, $comment = null);
 }

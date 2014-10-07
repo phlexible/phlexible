@@ -928,7 +928,7 @@ class LayoutController extends Controller
         try {
             $beforeEvent = new Makeweb_Teasers_Event_BeforeReorderTeasers($treeId, $eid, $layoutAreaId, $sortIds);
             if (false === $dispatcher->dispatch($beforeEvent)) {
-                throw new Exception('Teaser sort cancelled by event');
+                throw new RuntimeException('Teaser sort cancelled by event');
             }
 
             $db = $this->getContainer()->dbPool->default;

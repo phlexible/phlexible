@@ -11,14 +11,14 @@ namespace Phlexible\Bundle\TaskBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Task Status
+ * Task comment
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="task_status")
+ * @ORM\Table(name="task_comment")
  */
-class Status
+class Comment
 {
     /**
      * @var string
@@ -32,7 +32,7 @@ class Status
      * @var string
      * @ORM\Column(type="string")
      */
-    private $status;
+    private $currentStatus;
 
     /**
      * @var string
@@ -54,8 +54,8 @@ class Status
 
     /**
      * @var Task
-     * @ORM\ManyToOne(targetEntity="Task", inversedBy="status")
-     * @ORM\JoinColumn(name="task_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Task", inversedBy="comments")
+     * @ORM\JoinColumn(name="task_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $task;
 
@@ -102,19 +102,19 @@ class Status
     /**
      * @return string
      */
-    public function getStatus()
+    public function getCurrentStatus()
     {
-        return $this->status;
+        return $this->currentStatus;
     }
 
     /**
-     * @param string $status
+     * @param string $currentStatus
      *
      * @return $this
      */
-    public function setStatus($status)
+    public function setCurrentStatus($currentStatus)
     {
-        $this->status = $status;
+        $this->currentStatus = $currentStatus;
 
         return $this;
     }
@@ -180,7 +180,7 @@ class Status
     {
         $this->task = $task;
         if (null !== $task) {
-            $task->addStatus($this);
+            $task->addComment($this);
         }
 
         return $this;

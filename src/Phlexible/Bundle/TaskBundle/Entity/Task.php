@@ -48,16 +48,34 @@ class Task
     private $createdAt;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(name="recipient_user_id", type="string", length=36, options={"fixed" = true})
+     * @var string
+     * @ORM\Column(type="string")
      */
-    private $recipientUserId;
+    private $type;
 
     /**
      * @var string
      * @ORM\Column(type="string")
      */
-    private $type;
+    private $description;
+
+    /**
+     * @var string
+     * @ORM\Column(type="json_array")
+     */
+    private $payload;
+
+    /**
+     * @var string
+     * @ORM\Column(name="assigned_user_id", type="string", length=36, options={"fixed" = true})
+     */
+    private $assignedUserId;
+
+    /**
+     * @var array
+     * @ORM\Column(name="involved_user_ids", type="simple_array")
+     */
+    private $involvedUserIds = array();
 
     /**
      * @var string
@@ -66,26 +84,21 @@ class Task
     private $currentStatus;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(name="closed_at", type="datetime", nullable=true)
+     * @var Transition[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="Transition", mappedBy="task")
      */
-    private $closedAt;
+    private $transitions;
 
     /**
-     * @var string
-     * @ORM\Column(type="text")
+     * @var Comment[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="task")
      */
-    private $payload;
-
-    /**
-     * @var Status[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="Status", mappedBy="task")
-     */
-    private $status;
+    private $comments;
 
     public function __construct()
     {
-        $this->status = new ArrayCollection();
+        $this->transitions = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -133,19 +146,20 @@ class Task
     /**
      * @return string
      */
-    public function getRecipientUserId()
+    public function getAssignedUserId()
     {
-        return $this->recipientUserId;
+        return $this->assignedUserId;
     }
 
     /**
-     * @param string $recipientUserId
+     * @param string $assignedUserId
      *
      * @return $this
      */
-    public function setRecipientUserId($recipientUserId)
+    public function setAssignedUserId($assignedUserId)
     {
-        $this->recipientUserId = $recipientUserId;
+        $this->assignedUserId = $assignedUserId;
+        $this->addInvolvedUserId($assignedUserId);
 
         return $this;
     }
@@ -186,6 +200,7 @@ class Task
     public function setCreateUserId($createUserId)
     {
         $this->createUserId = $createUserId;
+        $this->addInvolvedUserId($createUserId);
 
         return $this;
     }
@@ -211,40 +226,6 @@ class Task
     }
 
     /**
-     * @return \DateTime
-     */
-    public function getClosedAt()
-    {
-        return $this->closedAt;
-    }
-
-    /**
-     * @param \DateTime $closedAt
-     *
-     * @return $this
-     */
-    public function setClosedAt(\DateTime $closedAt)
-    {
-        $this->closedAt = $closedAt;
-
-        return $this;
-    }
-
-    /**
-     * Return latest status item
-     *
-     * @return Status
-     */
-    public function getLatestStatus()
-    {
-        if (!$this->status->count()) {
-            return null;
-        }
-
-        return $this->status->last();
-    }
-
-    /**
      * Return current status
      *
      * @return string
@@ -267,40 +248,148 @@ class Task
     }
 
     /**
-     * Return all status items
+     * Return all transitions
      *
-     * @return Status[]
+     * @return Transition[]
      */
-    public function getStatus()
+    public function getTransitions()
     {
-        return $this->status;
+        return $this->transitions;
     }
 
     /**
-     * @param Status $status
+     * @param Transition $transition
      *
      * @return $this
      */
-    public function addStatus(Status $status)
+    public function addTransition(Transition $transition)
     {
-        if (!$this->status->contains($status)) {
-            $this->status->add($status);
-            $status->setTask($this);
+        if (!$this->transitions->contains($transition)) {
+            $this->transitions->add($transition);
+            $transition->setTask($this);
         }
 
         return $this;
     }
 
     /**
-     * @param Status $status
+     * @param Transition $transition
      *
      * @return $this
      */
-    public function removeStatus(Status $status)
+    public function removeTransition(Transition $transition)
     {
-        if ($this->status->contains($status)) {
-            $this->status->removeElement($status);
-            $status->setTask(null);
+        if ($this->transitions->contains($transition)) {
+            $this->transitions->removeElement($transition);
+            $transition->setTask(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Return all comments
+     *
+     * @return Comment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment $comment
+     *
+     * @return $this
+     */
+    public function addComment(Comment $comment)
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setTask($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Comment $comment
+     *
+     * @return $this
+     */
+    public function removeComment(Comment $comment)
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            $comment->setTask(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return $this
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvolvedUserIds()
+    {
+        return $this->involvedUserIds;
+    }
+
+    /**
+     * @param array $involvedUserIds
+     *
+     * @return $this
+     */
+    public function setInvolvedUserIds($involvedUserIds)
+    {
+        $this->involvedUserIds = $involvedUserIds;
+
+        return $this;
+    }
+
+    /**
+     * @param string $involvedUserId
+     *
+     * @return $this
+     */
+    public function addInvolvedUserId($involvedUserId)
+    {
+        if (!in_array($involvedUserId, $this->involvedUserIds)) {
+            $this->involvedUserIds[] = $involvedUserId;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $involvedUserId
+     *
+     * @return $this
+     */
+    public function removeInvolvedUserId($involvedUserId)
+    {
+        if (in_array($involvedUserId, $this->involvedUserIds)) {
+            unset($this->involvedUserIds[array_search($involvedUserId, $this->involvedUserIds)]);
         }
 
         return $this;

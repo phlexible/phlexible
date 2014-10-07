@@ -87,8 +87,8 @@ services:
             - {name: phlexible_gui.asset.provider, priority: 100}
 
     # event listeners
-    phlexible_element.listener.tree_node:
-        class: Phlexible\Bundle\ElementBundle\EventListener\TreeNodeListener
+    phlexible_element.listener.task:
+        class: Phlexible\Bundle\ElementBundle\EventListener\TaskListener
         tags:
             - {name: kernel.event_subscriber}
 

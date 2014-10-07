@@ -15,14 +15,12 @@ namespace Phlexible\Bundle\ElementBundle\Task\Type;
  */
 class GeneralType extends AbstractType
 {
-    protected $_generic = true;
-
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return 'elements.generic';
+        return 'element.general';
     }
 
     /**
@@ -32,7 +30,7 @@ class GeneralType extends AbstractType
      */
     public function getRequiredParameters()
     {
-        return array('tid');
+        return array('type', 'type_id');
     }
 
     /**

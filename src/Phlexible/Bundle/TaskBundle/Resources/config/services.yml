@@ -1,11 +1,3 @@
-parameters:
-    phlexible_task.portlet.num_items: 10
-    phlexible_task.mail_on_close: true
-    phlexible_task.mailer.new_task.template: PhlexibleTaskBundle/NewTask/email.txt.twig
-    phlexible_task.mailer.new_task.from: %phlexible_gui.mail.from_email%
-    phlexible_task.mailer.new_status.template: PhlexibleTaskBundle/NewStatus/email.txt.twig
-    phlexible_task.mailer.new_status.from: %phlexible_gui.mail.from_email%
-
 services:
     phlexible_task.types:
         class: Phlexible\Bundle\TaskBundle\Task\Type\TypeCollection
@@ -17,8 +9,12 @@ services:
             - @twig
             - @mailer
             -
-                new_task: {template: %phlexible_task.mailer.new_task.template%, from: %phlexible_task.mailer.new_task.from%}
-                new_status: {template: %phlexible_task.mailer.new_status.template%, from: %phlexible_task.mailer.new_status.from%}
+                new_task:
+                    template: %phlexible_task.mailer.new_task.template%
+                    from_email: %phlexible_task.mailer.from_email%
+                update:
+                    template: %phlexible_task.mailer.update.template%
+                    from_email: %phlexible_task.mailer.from_email%
 
     # acl providers
     phlexible_task.acl_provider:

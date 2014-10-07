@@ -20,7 +20,7 @@ class PublishType extends AbstractType
      */
     public function getName()
     {
-        return 'elements.publish';
+        return 'element.publish';
     }
 
     /**
@@ -30,7 +30,7 @@ class PublishType extends AbstractType
      */
     public function getRequiredParameters()
     {
-        return array('tid');
+        return array('type', 'type_id', 'language');
     }
 
     /**

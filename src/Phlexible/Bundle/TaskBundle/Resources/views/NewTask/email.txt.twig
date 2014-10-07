@@ -1,10 +1,10 @@
 Neue Aufgabe
-Hallo {{ user.firstname }} {{ user.lastname }},
+Hallo {{ assignUser.firstname }} {{ assignUser.lastname }},
 
-{{ fromUser.firstname }} {{ fromUser.lastname }} hat Ihnen die Aufgabe "{{ text }}" zugewiesen.
+{{ createUser.firstname }} {{ createUser.lastname }} hat Ihnen die Aufgabe "{{ text }}" zugewiesen.
 
-Kommentar:
-{{ taskStatus.comment }}
+Beschreibung:
+{{ task.description }}
 
 Um alle Details zu sehen, klicken Sie bitte auf den folgenden Link:
 {{ url }}
