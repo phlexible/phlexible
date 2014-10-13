@@ -61,15 +61,19 @@ class TaskAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/MainPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/FilterPanel.js')),
             new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/TasksGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/NewTaskWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/ViewWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/Manager.js')),
+            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/TaskManager.js')),
+
+            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/window/NewTaskWindow.js')),
+            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/window/AssignWindow.js')),
+            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/window/CommentWindow.js')),
 
             new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/portlet/MyTasks.js')),
 
             new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/menuhandle/TasksHandle.js')),
 
             new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/model/Task.js')),
+            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/model/Comment.js')),
+            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/model/Transition.js')),
         ));
 
         return $collection;

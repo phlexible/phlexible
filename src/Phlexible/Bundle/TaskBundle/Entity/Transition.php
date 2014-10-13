@@ -36,13 +36,13 @@ class Transition
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(name="old_state", type="string")
      */
     private $oldState;
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(name="new_state", type="string")
      */
     private $newState;
 

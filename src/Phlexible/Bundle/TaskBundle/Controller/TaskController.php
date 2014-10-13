@@ -124,9 +124,12 @@ class TaskController extends Controller
             foreach ($task->getTransitions() as $transition) {
                 $transitionUser = $userManager->find($transition->getCreateUserId());
                 $transitions[] = array(
+                    'id'          => $transition->getId(),
+                    'name'        => $transition->getName(),
+                    'new_state'   => $transition->getNewState(),
+                    'old_state'   => $transition->getOldState(),
                     'create_date' => $transition->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'name'        => $transitionUser->getDisplayName(),
-                    'status'      => $transition->getNewState(),
+                    'create_user' => $transitionUser->getDisplayName(),
                 );
             }
 
@@ -134,9 +137,11 @@ class TaskController extends Controller
             foreach ($task->getComments() as $comment) {
                 $commentUser = $userManager->find($comment->getCreateUserId());
                 $comments[] = array(
-                    'create_date' => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'name'        => $commentUser->getDisplayName(),
-                    'comment'     => $comment->getComment(),
+                    'id'            => $comment->getId(),
+                    'current_state' => $comment->getCurrentState(),
+                    'comment'       => $comment->getComment(),
+                    'create_date'   => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'create_user'   => $commentUser->getDisplayName(),
                 );
             }
 
@@ -148,15 +153,17 @@ class TaskController extends Controller
                 'generic'        => $task->getType() === 'generic',
                 'title'          => $type->getTitle($task),
                 'text'           => $type->getText($task),
+                'description'    => $task->getDescription(),
                 'component'      => $type->getComponent(),
                 'link'           => $type->getLink($task),
                 'assigned_user'  => $assignedUser->getDisplayName(),
-                'latest_status'  => $task->getFiniteState(),
+                'status'         => $task->getFiniteState(),
                 'create_user'    => $createUser->getDisplayName(),
                 'create_uid'     => $task->getCreateUserId(),
                 'create_date'    => $task->getCreatedAt()->format('Y-m-d H:i:s'),
                 'transitions'    => $transitions,
                 'comments'       => $comments,
+                'states'         => $taskManager->getTransitions($task),
             );
         }
 
@@ -457,7 +464,7 @@ class TaskController extends Controller
             $history[] = array(
                 'create_date' => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
                 'name'        => $commentUser->getDisplayName(),
-                'status'      => $comment->getCurrentStatus(),
+                'status'      => $comment->getCurrentState(),
                 'comment'     => $comment->getComment(),
                 'latest'      => 1,
             );

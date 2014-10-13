@@ -15,9 +15,15 @@ tasks:
     component: Component
     comment: Comment
     comments: Comments
+    description: Description
+    transition: Transition
+    transitions: Transitions
+    name: Name
+    new_state: New state
+    old_state: Old state
     id: ID
-    create_date: 'Created on'
-    create_user: 'Created by'
+    create_date: 'Created'
+    create_user: 'Author'
     change_date: 'Changed on'
     change_user: 'Changed by'
     title: Title
@@ -26,7 +32,7 @@ tasks:
     action: Action
     assigned_to_me: 'Assigned to me'
     created_by_me: 'Created by me'
-    assigned_to: 'Assigned to'
+    assigned_to: 'Assignee'
     involved: I am involved
     all_tasks: All
     open_target: 'Open target'
@@ -37,8 +43,8 @@ tasks:
     open: Open
     reopen: Reopen
     reopened: Reopened
-    reject: 'Send back'
-    rejected: 'Sent back'
+    reject: Reject
+    rejected: Rejected
     finish: Finish
     finished: Finished
     close: Close

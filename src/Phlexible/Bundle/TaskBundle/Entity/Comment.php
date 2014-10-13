@@ -30,9 +30,9 @@ class Comment
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(name="current_state", type="string")
      */
-    private $currentStatus;
+    private $currentState;
 
     /**
      * @var string
@@ -102,9 +102,9 @@ class Comment
     /**
      * @return string
      */
-    public function getCurrentStatus()
+    public function getCurrentState()
     {
-        return $this->currentStatus;
+        return $this->currentState;
     }
 
     /**
@@ -112,9 +112,9 @@ class Comment
      *
      * @return $this
      */
-    public function setCurrentStatus($currentStatus)
+    public function setCurrentState($currentStatus)
     {
-        $this->currentStatus = $currentStatus;
+        $this->currentState = $currentStatus;
 
         return $this;
     }

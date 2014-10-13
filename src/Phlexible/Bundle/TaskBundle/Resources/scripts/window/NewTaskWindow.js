@@ -44,18 +44,16 @@ Phlexible.tasks.NewTaskWindow = Ext.extend(Ext.Window, {
                         triggerAction: 'all',
                         selectOnFocus: true,
                         listeners: {
-                            select: {
-                                fn: function (combo, r) {
-                                    if (r) {
-                                        var c = this.getComponent(0).getComponent(1);
-                                        c.lastQuery = null;
-                                        c.store.baseParams.task_class = r.data.id;
-                                        c.setValue('');
-                                        c.enable();
-                                    }
-                                },
-                                scope: this
-                            }
+                            select: function (combo, r) {
+                                if (r) {
+                                    var c = this.getComponent(0).getComponent(1);
+                                    c.lastQuery = null;
+                                    c.store.baseParams.task_class = r.data.id;
+                                    c.setValue('');
+                                    c.enable();
+                                }
+                            },
+                            scope: this
                         }
                     },
                     {
@@ -114,14 +112,14 @@ Phlexible.tasks.NewTaskWindow = Ext.extend(Ext.Window, {
 
         this.buttons = [
             {
-                text: this.strings.send,
-                handler: this.onSend,
-                formBind: true,
+                text: this.strings.cancel,
+                handler: this.close,
                 scope: this
             },
             {
-                text: this.strings.cancel,
-                handler: this.close,
+                text: this.strings.send,
+                handler: this.onSend,
+                formBind: true,
                 scope: this
             }
         ];

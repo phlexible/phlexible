@@ -15,9 +15,15 @@ tasks:
     component: Komponente
     comment: Kommentar
     comments: Kommentare
+    description: Beschreibung
+    transition: Übergang
+    transitions: Übergänge
+    name: Name
+    new_state: Neuer Status
+    old_state: Alter Status
     id: ID
-    create_date: 'Angelegt am'
-    create_user: 'Angelegt von'
+    create_date: 'Erstellt'
+    create_user: 'Autor'
     change_date: 'Geändert am'
     change_user: 'Geändert von'
     title: Titel
@@ -26,7 +32,7 @@ tasks:
     action: Aktion
     assigned_to_me: 'Mir zugewiesen'
     created_by_me: 'Von mir erstellt'
-    assigned_to: 'Zugewiesen an'
+    assigned_to: 'Bearbeiter'
     involved: Ich bin beteiligt
     all_tasks: Alle
     open_target: 'Ziel öffnen'

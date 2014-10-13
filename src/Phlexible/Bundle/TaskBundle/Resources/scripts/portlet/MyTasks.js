@@ -61,24 +61,22 @@ Phlexible.tasks.portlet.MyTasks = Ext.extend(Ext.ux.Portlet, {
                 store: this.store,
                 tpl: Phlexible.tasks.portlet.MyTasksTemplate,
                 listeners: {
-                    dblclick: {
-                        fn: function (view, index) {
-                            r = view.store.getAt(index);
+                    dblclick: function (view, index) {
+                        r = view.store.getAt(index);
 
-                            if (!r) {
-                                return;
+                        if (!r) {
+                            return;
+                        }
+
+                        Phlexible.Frame.loadPanel(
+                            'Phlexible_tasks_MainPanel',
+                            Phlexible.tasks.MainPanel,
+                            {
+                                id: r.get('id')
                             }
-
-                            Phlexible.Frame.loadPanel(
-                                'Phlexible_tasks_MainPanel',
-                                Phlexible.tasks.MainPanel,
-                                {
-                                    id: r.get('id')
-                                }
-                            );
-                        },
-                        scope: this
-                    }
+                        );
+                    },
+                    scope: this
                 }
             }
         ];

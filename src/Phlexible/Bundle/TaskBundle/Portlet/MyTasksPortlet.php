@@ -88,7 +88,7 @@ class MyTasksPortlet extends Portlet
 
         $tasks = $this->taskManager->findByAssignedToAndStatus(
             $this->securityContext->getToken()->getUser()->getId(),
-            array(Task::STATUS_OPEN, Task::STATUS_REOPENED),
+            array(),
             array(),
             $tasksToShow
         );
@@ -96,47 +96,16 @@ class MyTasksPortlet extends Portlet
         $data = array();
 
         foreach ($tasks as $task) {
-            $latestStatus = $task->getLatestStatus();
-            $createUser   = $this->userManager->find($latestStatus->getCreateUserId());
-            $type         = $this->types->get($task);
+            $createUser   = $this->userManager->find($task->getCreateUserId());
+            $type         = $this->types->get($task->getType());
 
             $data[] = array(
                 'id'          => $task->getId(),
                 'text'        => $type->getText($task),
                 'type'        => $task->getType(),
-                'status'      => $latestStatus->getStatus(),
-                'comment'     => $latestStatus->getComment(),
+                'status'      => $task->getFiniteState(),
+                'comment'     => '',//$latestStatus->getComment(), TODO: fix
                 'create_user' => $createUser->getDisplayName(),
-                'create_uid'  => $task->getCreateUserId(),
-                'create_date' => $task->getCreatedAt()->format('Y-m-d H:i:s'),
-            );
-        }
-
-        $tasksToShow -= count($data);
-
-        if (!$tasksToShow) {
-            return $data;
-        }
-
-        $tasks = $this->taskManager->findByAssignedToAndStatus(
-            $this->securityContext->getToken()->getUser()->getId(),
-            array(Task::STATUS_REJECTED, Task::STATUS_FINISHED),
-            array(),
-            $tasksToShow
-        );
-
-        foreach ($tasks as $task) {
-            $latestStatus = $task->getLatestStatus();
-            $createUser   = $this->userManager->find($latestStatus->getCreateUserId());
-            $type         = $this->types->get($task);
-
-            $data[] = array(
-                'id'          => $task->getId(),
-                'text'        => $type->getText($task),
-                'type'        => $task->getType(),
-                'status'      => $latestStatus->getStatus(),
-                'comment'     => $latestStatus->getComment(),
-                'create_user' => $createUser,
                 'create_uid'  => $task->getCreateUserId(),
                 'create_date' => $task->getCreatedAt()->format('Y-m-d H:i:s'),
             );

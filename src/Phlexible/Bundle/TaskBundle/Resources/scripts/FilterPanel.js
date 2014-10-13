@@ -27,18 +27,16 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                         labelAlign: 'top',
                         enableKeyEvents: true,
                         listeners: {
-                            keyup: {
-                                fn: function (field, event) {
-                                    if (event.getKey() == event.ENTER) {
-                                        this.task.cancel();
-                                        this.updateFilter();
-                                        return;
-                                    }
+                            keyup: function (field, event) {
+                                if (event.getKey() == event.ENTER) {
+                                    this.task.cancel();
+                                    this.updateFilter();
+                                    return;
+                                }
 
-                                    this.task.delay(500);
-                                },
-                                scope: this
-                            }
+                                this.task.delay(500);
+                            },
+                            scope: this
                         }
                     }
                 ]
@@ -128,10 +126,8 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                         boxLabel: Phlexible.inlineIcon('p-task-status_open-icon') + ' ' + this.strings.open,
                         checked: true,
                         listeners: {
-                            check: {
-                                fn: this.updateFilter,
-                                scope: this
-                            }
+                            check: this.updateFilter,
+                            scope: this
                         }
                     },
                     {
@@ -140,10 +136,8 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                         boxLabel: Phlexible.inlineIcon('p-task-status_rejected-icon') + ' ' + this.strings.rejected,
                         checked: true,
                         listeners: {
-                            check: {
-                                fn: this.updateFilter,
-                                scope: this
-                            }
+                            check: this.updateFilter,
+                            scope: this
                         }
                     },
                     {
@@ -152,10 +146,8 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                         boxLabel: Phlexible.inlineIcon('p-task-status_reopened-icon') + ' ' + this.strings.reopened,
                         checked: true,
                         listeners: {
-                            check: {
-                                fn: this.updateFilter,
-                                scope: this
-                            }
+                            check: this.updateFilter,
+                            scope: this
                         }
                     },
                     {
@@ -164,10 +156,8 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                         boxLabel: Phlexible.inlineIcon('p-task-status_finished-icon') + ' ' + this.strings.finished,
                         checked: true,
                         listeners: {
-                            check: {
-                                fn: this.updateFilter,
-                                scope: this
-                            }
+                            check: this.updateFilter,
+                            scope: this
                         }
                     },
                     {
@@ -175,10 +165,8 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                         name: 'status_closed',
                         boxLabel: Phlexible.inlineIcon('p-task-status_closed-icon') + ' ' + this.strings.closed,
                         listeners: {
-                            check: {
-                                fn: this.updateFilter,
-                                scope: this
-                            }
+                            check: this.updateFilter,
+                            scope: this
                         }
                     }
                 ]
@@ -229,10 +217,8 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
 //                    name: 'priority_' + item.id,
 //                    boxLabel: '<img src="' + Phlexible.component(/resources/asset/icon/messages/priority_' + item.title + '.png)" style="vertical-align: middle;" width="16" height="16" /> ' + item.title,
 //                    listeners: {
-//                        check: {
-//                            fn: this.updateFilter,
-//                            scope: this
-//                        }
+//                        check: this.updateFilter,
+//                        scope: this
 //                    }
 //                });
 //            }, this);

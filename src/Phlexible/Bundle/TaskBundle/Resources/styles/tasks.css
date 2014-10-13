@@ -51,3 +51,18 @@
 .p-tasks-toolbar {
     background-image: url(/COMPONENTSPATH/tasks/images/toolbar-bg.gif) !IMPORTANT;
 }
+
+.p-tasks-comments, .p-tasks-transitions {
+    padding: 5px;
+}
+.p-tasks-comment, .p-tasks-transition {
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eaeaea;
+}
+.p-tasks-by {
+    padding-bottom: 4px;
+}
+.p-tasks-text {
+    font-size: 14px;
+}

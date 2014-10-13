@@ -72,6 +72,7 @@ class NodeSerializer
         SecurityContextInterface $securityContext)
     {
         $this->elementService = $elementService;
+        $this->elementtypeService = $elementtypeService;
         $this->iconResolver = $iconResolver;
         $this->stateManager = $stateManager;
         $this->permissions = $permissions;

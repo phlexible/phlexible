@@ -13,7 +13,6 @@ use Doctrine\ORM\EntityRepository;
 use Finite\StateMachine\StateMachineInterface;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\TaskBundle\Entity\Comment;
-use Phlexible\Bundle\TaskBundle\Entity\Status;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
 use Phlexible\Bundle\TaskBundle\Entity\Transition;
 use Phlexible\Bundle\TaskBundle\Mailer\Mailer;
@@ -180,22 +179,11 @@ class TaskManager implements TaskManagerInterface
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb
-            ->where(
-                $qb->expr()->orX(
-                    $qb->expr()->andX(
-                        $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
-                        $qb->expr()->IN(
-                            't.currentStatus',
-                            array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED)
-                        )
-                    ),
-                    $qb->expr()->andX(
-                        $qb->expr()->eq('t.assignedUserId', $qb->expr()->literal($userId)),
-                        $qb->expr()->IN('t.finiteState', array(Task::STATUS_OPEN, Task::STATUS_REOPENED))
-                    )
-                )
-            )
-            ->where($qb->expr()->in('t.finiteState', $status));
+            ->where($qb->expr()->eq('t.assignedUserId', $qb->expr()->literal($userId)));
+
+        if ($status) {
+            $qb->andWhere($qb->expr()->IN('t.finiteState', $status));
+        }
 
         foreach ($sort as $field => $dir) {
             $qb->orderBy("t.$field", $dir);
@@ -218,22 +206,11 @@ class TaskManager implements TaskManagerInterface
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb
             ->select('COUNT(t.id)')
-            ->where(
-                $qb->expr()->orX(
-                    $qb->expr()->andX(
-                        $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
-                        $qb->expr()->IN(
-                            't.currentStatus',
-                            array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED)
-                        )
-                    ),
-                    $qb->expr()->andX(
-                        $qb->expr()->eq('t.assignedUserId', $qb->expr()->literal($userId)),
-                        $qb->expr()->IN('t.finiteState', array(Task::STATUS_OPEN, Task::STATUS_REOPENED))
-                    )
-                )
-            )
-            ->where($qb->expr()->in('t.finiteState', $status));
+            ->where($qb->expr()->eq('t.assignedUserId', $qb->expr()->literal($userId)));
+
+        if ($status) {
+            $qb->andWhere($qb->expr()->IN('t.finiteState', $status));
+        }
 
         return $qb->getQuery()->getSingleScalarResult();
     }
@@ -286,7 +263,10 @@ class TaskManager implements TaskManagerInterface
     public function findByStatus(array $status = array(), array $sort = array(), $limit = null, $start = null)
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb->where($qb->expr()->in('t.finiteState', $status));
+
+        if ($status) {
+            $qb->where($qb->expr()->in('t.finiteState', $status));
+        }
 
         foreach ($sort as $field => $dir) {
             $qb->orderBy("t.$field", $dir);
@@ -311,7 +291,7 @@ class TaskManager implements TaskManagerInterface
             ->select('COUNT(t.id)')
             ->where($qb->expr()->in('t.finiteState', $status));
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -414,7 +394,7 @@ class TaskManager implements TaskManagerInterface
                 ->setComment($comment)
                 ->setCreatedAt(new \DateTime())
                 ->setCreateUserId($byUser->getId())
-                ->setCurrentStatus($task->getFiniteState());
+                ->setCurrentState($task->getFiniteState());
 
             $this->entityManager->persist($taskComment);
 
