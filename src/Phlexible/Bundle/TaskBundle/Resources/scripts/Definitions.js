@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.tasks.menuhandle');
+Ext.namespace('Phlexible.tasks.menuhandle', 'Phlexible.tasks.model');
 
 Phlexible.tasks.HistoryTemplate = new Ext.XTemplate(
     '<div class="p-tasks-history">',

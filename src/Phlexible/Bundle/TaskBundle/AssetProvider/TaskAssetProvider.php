@@ -68,6 +68,8 @@ class TaskAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/portlet/MyTasks.js')),
 
             new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/menuhandle/TasksHandle.js')),
+
+            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/model/Task.js')),
         ));
 
         return $collection;

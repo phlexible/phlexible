@@ -137,8 +137,9 @@ class TaskManager implements TaskManagerInterface
         $start = null)
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb->where($qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)));
-        $qb->where($qb->expr()->in('t.currentStatus', $status));
+        $qb
+            ->where($qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)))
+            ->where($qb->expr()->in('t.finiteState', $status));
 
         foreach ($sort as $field => $dir) {
             $qb->orderBy("t.$field", $dir);
@@ -159,9 +160,10 @@ class TaskManager implements TaskManagerInterface
     public function countByCreatedByAndStatus($userId, array $status = array())
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb->select('COUNT(t.id)');
-        $qb->where($qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)));
-        $qb->where($qb->expr()->in('t.currentStatus', $status));
+        $qb
+            ->select('COUNT(t.id)')
+            ->where($qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)))
+            ->where($qb->expr()->in('t.finiteState', $status));
 
         return $qb->getQuery()->getSingleScalarResult();
     }
@@ -177,22 +179,23 @@ class TaskManager implements TaskManagerInterface
         $start = null)
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb->where(
-            $qb->expr()->orX(
-                $qb->expr()->andX(
-                    $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
-                    $qb->expr()->IN(
-                        't.currentStatus',
-                        array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED)
+        $qb
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
+                        $qb->expr()->IN(
+                            't.currentStatus',
+                            array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED)
+                        )
+                    ),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('t.assignedUserId', $qb->expr()->literal($userId)),
+                        $qb->expr()->IN('t.finiteState', array(Task::STATUS_OPEN, Task::STATUS_REOPENED))
                     )
-                ),
-                $qb->expr()->andX(
-                    $qb->expr()->eq('t.recipientUserId', $qb->expr()->literal($userId)),
-                    $qb->expr()->IN('t.currentStatus', array(Task::STATUS_OPEN, Task::STATUS_REOPENED))
                 )
             )
-        );
-        $qb->where($qb->expr()->in('t.currentStatus', $status));
+            ->where($qb->expr()->in('t.finiteState', $status));
 
         foreach ($sort as $field => $dir) {
             $qb->orderBy("t.$field", $dir);
@@ -213,23 +216,24 @@ class TaskManager implements TaskManagerInterface
     public function countByAssignedToAndStatus($userId, array $status = array())
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb->select('COUNT(t.id)');
-        $qb->where(
-            $qb->expr()->orX(
-                $qb->expr()->andX(
-                    $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
-                    $qb->expr()->IN(
-                        't.currentStatus',
-                        array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED)
+        $qb
+            ->select('COUNT(t.id)')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
+                        $qb->expr()->IN(
+                            't.currentStatus',
+                            array(TASK::STATUS_REJECTED, TASK::STATUS_FINISHED, TASK::STATUS_CLOSED)
+                        )
+                    ),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('t.assignedUserId', $qb->expr()->literal($userId)),
+                        $qb->expr()->IN('t.finiteState', array(Task::STATUS_OPEN, Task::STATUS_REOPENED))
                     )
-                ),
-                $qb->expr()->andX(
-                    $qb->expr()->eq('t.recipientUserId', $qb->expr()->literal($userId)),
-                    $qb->expr()->IN('t.currentStatus', array(Task::STATUS_OPEN, Task::STATUS_REOPENED))
                 )
             )
-        );
-        $qb->where($qb->expr()->in('t.currentStatus', $status));
+            ->where($qb->expr()->in('t.finiteState', $status));
 
         return $qb->getQuery()->getSingleScalarResult();
     }
@@ -245,13 +249,9 @@ class TaskManager implements TaskManagerInterface
         $start = null)
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb->where(
-            $qb->expr()->orX(
-                $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
-                $qb->expr()->eq('t.recipientUserId', $qb->expr()->literal($userId))
-            )
-        );
-        $qb->where($qb->expr()->in('t.currentStatus', $status));
+        $qb
+            ->where($qb->expr()->like('t.involedUserIds', $qb->expr()->literal("%$userId%")))
+            ->where($qb->expr()->in('t.finiteState', $status));
 
         foreach ($sort as $field => $dir) {
             $qb->orderBy("t.$field", $dir);
@@ -272,14 +272,10 @@ class TaskManager implements TaskManagerInterface
     public function countByInvolvementAndStatus($userId, array $status = array())
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb->select('COUNT(t.id)');
-        $qb->where(
-            $qb->expr()->orX(
-                $qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)),
-                $qb->expr()->eq('t.recipientUserId', $qb->expr()->literal($userId))
-            )
-        );
-        $qb->where($qb->expr()->in('t.currentStatus', $status));
+        $qb
+            ->select('COUNT(t.id)')
+            ->where($qb->expr()->like('t.involedUserIds', $qb->expr()->literal("%$userId%")))
+            ->where($qb->expr()->in('t.finiteState', $status));
 
         return $qb->getQuery()->getSingleScalarResult();
     }
@@ -290,7 +286,7 @@ class TaskManager implements TaskManagerInterface
     public function findByStatus(array $status = array(), array $sort = array(), $limit = null, $start = null)
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb->where($qb->expr()->in('t.currentStatus', $status));
+        $qb->where($qb->expr()->in('t.finiteState', $status));
 
         foreach ($sort as $field => $dir) {
             $qb->orderBy("t.$field", $dir);
@@ -311,8 +307,9 @@ class TaskManager implements TaskManagerInterface
     public function countByStatus(array $status = array())
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb->select('COUNT(t.id)');
-        $qb->where($qb->expr()->in('t.currentStatus', $status));
+        $qb
+            ->select('COUNT(t.id)')
+            ->where($qb->expr()->in('t.finiteState', $status));
 
         return $qb->getQuery()->getResult();
     }
