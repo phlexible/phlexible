@@ -202,7 +202,7 @@ class TreeSaver
                 $node
                     ->setType('reference')
                     ->setName('reference_' . $referenceElementtype->getUniqueId())
-                    ->setReferenceElementtypeId($referenceElementtype->getUniqueId())
+                    ->setReferenceElementtypeId($referenceElementtype->getId())
                     //->setReferenceVersion($referenceElementtypeVersion->getVersion())
                 ;
 
@@ -212,7 +212,7 @@ class TreeSaver
 
                 $node
                     ->setType('reference')
-                    ->setName('reference_' . $referenceElementtype->getId())
+                    ->setName('reference_' . $referenceElementtype->getUniqueId())
                     ->setReferenceElementtypeId($referenceElementtype->getId())
                 //    ->setReferenceVersion($row['reference']['refVersion'])
                 ;

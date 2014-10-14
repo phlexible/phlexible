@@ -19,7 +19,6 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                         r.set('pattern', null);
                         r.set('state', 0);
                         r.commit();
-                        this.fireChange();
                     }.createDelegate(this)
                 }
             ]
@@ -326,6 +325,7 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
 
     loadData: function (mappings) {
         var name, r;
+        this.empty();
         for (name in mappings) {
             if (!mappings.hasOwnProperty(name)) {
                 continue;
@@ -336,6 +336,7 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
             this.validate(name);
         }
         this.getComponent(0).getStore().commitChanges();
+        this.getComponent(0).getSelectionModel().selectRow(0);
     },
 
     loadRoot: function (properties, node) {
