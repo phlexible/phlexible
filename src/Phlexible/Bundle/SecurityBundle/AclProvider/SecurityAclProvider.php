@@ -23,10 +23,10 @@ class SecurityAclProvider extends AclProvider
     public function provideRoles()
     {
         return array(
-            'anonymous',
-            'user',
-            'superadmin',
-            'developer',
+            'ANONYMOUS',
+            'USER',
+            'SUPERADMIN',
+            'DEVELOPER',
         );
     }
 
@@ -54,8 +54,8 @@ class SecurityAclProvider extends AclProvider
     public function provideAllow()
     {
         return array(
-            array('developer'),
-            array('superadmin'),
+            array('DEVELOPER'),
+            array('SUPERADMIN'),
         );
     }
 
@@ -65,9 +65,9 @@ class SecurityAclProvider extends AclProvider
     public function provideDeny()
     {
         return array(
-            array('superadmin', 'debug'),
-            array('superadmin', 'development'),
-            array('superadmin', 'testing'),
+            array('SUPERADMIN', 'debug'),
+            array('SUPERADMIN', 'development'),
+            array('SUPERADMIN', 'testing'),
         );
     }
 }

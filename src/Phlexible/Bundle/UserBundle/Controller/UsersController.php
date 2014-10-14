@@ -127,7 +127,7 @@ class UsersController extends Controller
                     }
 
                     if (substr($key, 0, 5) == 'role_') {
-                        $role = substr($key, 5);
+                        $role = strtoupper(substr($key, 5));
                         if (!in_array($role, $user->getRoles())) {
                             continue 2;
                         }
@@ -438,15 +438,11 @@ class UsersController extends Controller
 
         $roles = array();
         foreach ($allRoles as $role) {
-            if ($role == 'developer' && !in_array('developer', $currentUser->getRoles())) {
+            if ($role == 'DEVELOPER' && !$currentUser->hasRole('DEVELOPER')) {
                 continue;
             }
 
-            if ($role == 'superadmin' && !in_array('superadmin', $currentUser->getRoles()) && !in_array(
-                    'developer',
-                    $currentUser->getRoles()
-                )
-            ) {
+            if ($role == 'SUPERADMIN' && !$currentUser->hasRole('SUPERADMIN') && !$currentUser->hasRole('DEVELOPER')) {
                 continue;
             }
 

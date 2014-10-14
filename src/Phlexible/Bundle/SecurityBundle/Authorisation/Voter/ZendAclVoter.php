@@ -42,7 +42,7 @@ class ZendAclVoter implements VoterInterface
             return self::ACCESS_DENIED;
         }
 
-        if ($token->getUser()->hasRole('superadmin') || $token->getUser()->hasRole('developer')) {
+        if ($token->getUser()->hasRole('SUPERADMIN') || $token->getUser()->hasRole('DEVELOPER')) {
             return self::ACCESS_GRANTED;
         }
 

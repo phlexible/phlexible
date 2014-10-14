@@ -17,10 +17,10 @@ use Zend_Acl as BaseAcl;
  */
 class Acl extends BaseAcl
 {
-    const ROLE_ANONYMOUS   = 'anonymous';
-    const ROLE_USER        = 'user';
-    const ROLE_SUPERADMIN  = 'superadmin';
-    const ROLE_DEVELOPER   = 'developer';
+    const ROLE_ANONYMOUS   = 'ANONYMOUS';
+    const ROLE_USER        = 'USER';
+    const ROLE_SUPERADMIN  = 'SUPERADMIN';
+    const ROLE_DEVELOPER   = 'DEVELOPER';
 
     /* Developer specific */
     const RESOURCE_DEBUG       = 'debug';
