@@ -36,9 +36,9 @@ class ElementStructureValue
     private $element;
 
     /**
-     * @var string
+     * @var ElementStructure
      * @ORM\ManyToOne(targetEntity="ElementStructure")
-     * @ORM\JoinColumn(name="structure_id", referencedColumnName="data_id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="structure_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $structure;
 

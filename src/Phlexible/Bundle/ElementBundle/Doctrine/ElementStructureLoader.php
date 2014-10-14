@@ -102,8 +102,12 @@ class ElementStructureLoader
                 if ($row['type'] === 'root') {
                     $rootId = $row['id'];
                     $rootStructure
+                        ->setDefaultLanguage($defaultLanguage)
                         ->setId($row['id'])
-                        ->setDsId($row['ds_id']);
+                        ->setDataId($row['data_id'])
+                        ->setDsId($row['ds_id'])
+                        ->setType($row['type'])
+                        ->setName($row['name']);
                     continue;
                 }
                 $myNode = $elementtypeStructure->getNode($row['ds_id']);
@@ -120,6 +124,7 @@ class ElementStructureLoader
                 $structure
                     ->setDefaultLanguage($defaultLanguage)
                     ->setId($row['id'])
+                    ->setDataId($row['data_id'])
                     ->setDsId($row['ds_id'])
                     ->setType($row['type'])
                     ->setName($row['name'])
@@ -161,6 +166,7 @@ class ElementStructureLoader
                         $structure
                             ->setDefaultLanguage($defaultLanguage)
                             ->setId($row['id'])
+                            ->setDataId($row['data_id'])
                             ->setDsId($row['ds_id'])
                             ->setType($row['type'])
                             ->setName($row['name'])
@@ -228,7 +234,8 @@ class ElementStructureLoader
         $qb
             ->select(
                 array(
-                    'es.data_id AS id',
+                    'es.id',
+                    'es.data_id',
                     'es.repeatable_id',
                     'es.repeatable_ds_id',
                     'es.type',

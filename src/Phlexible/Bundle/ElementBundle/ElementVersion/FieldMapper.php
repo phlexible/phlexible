@@ -87,11 +87,13 @@ class FieldMapper
         if ($elementStructure) {
             $mappings = $elementtypeVersion->getMappings();
 
-            foreach ($mappings as $key => $mapping) {
-                if ($mapper = $this->findFieldMapper($key)) {
-                    $title = $mapper->map($elementStructure, $language, $mapping);
-                    if ($title) {
-                        $titles[$key] = $title;
+            if ($mappings) {
+                foreach ($mappings as $key => $mapping) {
+                    if ($mapper = $this->findFieldMapper($key)) {
+                        $title = $mapper->map($elementStructure, $language, $mapping);
+                        if ($title) {
+                            $titles[$key] = $title;
+                        }
                     }
                 }
             }

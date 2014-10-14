@@ -168,15 +168,15 @@ class DataSaver
 
         if ($language === $element->getMasterLanguage()) {
             $elementStructure = new ElementStructure();
-            if ($oldElementStructure->getId()) {
+            if ($oldElementStructure->getDataId()) {
                 $elementStructure
-                    ->setId($oldElementStructure->getId())
+                    ->setDataId($oldElementStructure->getDataId())
                     ->setDsId($oldElementStructure->getDsId())
                     ->setType('root')
                     ->setName($oldElementStructure->getName());
             } else {
                 $elementStructure
-                    ->setId(Uuid::generate())
+                    ->setDataId(Uuid::generate())
                     ->setDsId($elementtypeStructure->getRootDsId())
                     ->setType('root')
                     ->setName($elementtypeStructure->getRootNode()->getName());
