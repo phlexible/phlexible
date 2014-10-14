@@ -23,9 +23,14 @@ class ElementStructure implements \IteratorAggregate
     private $defaultLanguage;
 
     /**
-     * @var string
+     * @var int
      */
     private $id;
+
+    /**
+     * @var string
+     */
+    private $dataId;
 
     /**
      * @var ElementVersion
@@ -111,7 +116,7 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getId()
     {
@@ -119,13 +124,33 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
-     * @param string $id
+     * @param int $id
      *
      * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataId()
+    {
+        return $this->dataId;
+    }
+
+    /**
+     * @param string $dataId
+     *
+     * @return $this
+     */
+    public function setDataId($dataId)
+    {
+        $this->dataId = $dataId;
 
         return $this;
     }

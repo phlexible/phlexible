@@ -16,13 +16,20 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="element_structure")
+ * @ORM\Table(name="element_structure", uniqueConstraints={@ORM\UniqueConstraint(columns={"data_id", "eid", "version"})})
  */
 class ElementStructure
 {
     /**
-     * @var string
+     * @var int
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="id", type="integer")
+     */
+    private $id;
+
+    /**
+     * @var string
      * @ORM\Column(name="data_id", type="string", length=36, options={"fixed"=true})
      */
     private $dataId;
@@ -70,6 +77,26 @@ class ElementStructure
      * @ORM\Column(type="integer", nullable=true)
      */
     private $sort;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * @return string

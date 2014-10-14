@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor;
-use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructure as StructureEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ValueEntity;
@@ -146,7 +145,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
             $structureEntity = new StructureEntity();
         }
         $structureEntity
-            ->setDataId($elementStructure->getId())
+            ->setDataId($elementStructure->getDataId())
             ->setElementVersion($elementStructure->getElementVersion())
             ->setDsId($elementStructure->getDsId())
             ->setType($isRoot ? 'root' : 'group')
@@ -189,7 +188,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
                         ->setName($elementStructureValue->getName())
                         ->setStructure($structureEntity)
                         ->setContent($value)
-                        ->setOptions(!empty($elementStructureValue->getOptions()) ? $elementStructureValue->getOptions() : null);
+                        ->setOptions($elementStructureValue->getOptions() ? $elementStructureValue->getOptions() : null);
 
                     $this->entityManager->persist($valueEntity);
                     /*

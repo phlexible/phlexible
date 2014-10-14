@@ -49,7 +49,6 @@ class LayoutController extends Controller
         $translator = $this->get('translator');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $teaserService = $this->get('phlexible_teaser.teaser_service');
-        $catchManager = $this->get('phlexible_element_finder.element_finder_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
@@ -123,6 +122,8 @@ class LayoutController extends Controller
 
                 switch ($teaser->getType()) {
                     case 'catch':
+                        // TODO: via events
+                        $catchManager = $this->get('phlexible_element_finder.element_finder_manager');
                         $catch = $catchManager->findCatch($teaser->getTypeId());
 
                         $teaserData = array_merge(
