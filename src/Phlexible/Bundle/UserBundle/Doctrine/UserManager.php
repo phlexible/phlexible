@@ -8,39 +8,29 @@
 
 namespace Phlexible\Bundle\UserBundle\Doctrine;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
+use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
+use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Util\CanonicalizerInterface;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Bundle\UserBundle\Successor\SuccessorService;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * User manager
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class UserManager implements UserManagerInterface, UserProviderInterface
+class UserManager extends BaseUserManager implements UserManagerInterface
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
     /**
      * @var EntityRepository
      */
     private $userRepository;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
 
     /**
      * @var SuccessorService
@@ -68,31 +58,33 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     private $userClass;
 
     /**
-     * @param EntityManager            $entityManager
      * @param EncoderFactoryInterface  $encoderFactory
+     * @param CanonicalizerInterface   $usernameCanonicalizer
+     * @param CanonicalizerInterface   $emailCanonicalizer
+     * @param ObjectManager            $om
+     * @param string                   $class
      * @param SuccessorService         $successorService
      * @param EventDispatcherInterface $dispatcher
-     * @param string                   $userClass
      * @param string                   $systemUserId
      * @param string                   $everyoneGroupId
      */
     public function __construct(
-        EntityManager $entityManager,
         EncoderFactoryInterface $encoderFactory,
+        CanonicalizerInterface $usernameCanonicalizer,
+        CanonicalizerInterface $emailCanonicalizer,
+        ObjectManager $om,
+        $class,
         SuccessorService $successorService,
         EventDispatcherInterface $dispatcher,
-        $userClass,
         $systemUserId,
         $everyoneGroupId)
     {
-        $this->entityManager = $entityManager;
-        $this->encoderFactory = $encoderFactory;
+        parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $om, $class);
+
         $this->successorService = $successorService;
         $this->dispatcher = $dispatcher;
         $this->systemUserId = $systemUserId;
         $this->everyoneGroupId = $everyoneGroupId;
-
-        $this->userClass = $userClass;
     }
 
     /**
@@ -101,28 +93,10 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     private function getUserRepository()
     {
         if ($this->userRepository === null) {
-            $this->userRepository = $this->entityManager->getRepository($this->userClass);
+            $this->userRepository = $this->objectManager->getRepository($this->getClass());
         }
 
         return $this->userRepository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUserClass()
-    {
-        return $this->userClass;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function create()
-    {
-        $userClass = $this->getUserClass();
-
-        return new $userClass();
     }
 
     /**
@@ -260,26 +234,15 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function updatePassword(UserInterface $user)
-    {
-        if (0 !== strlen($password = $user->getPlainPassword())) {
-            $encoder = $this->encoderFactory->getEncoder($user);
-            $user->setPassword($encoder->encodePassword($password, $user->getSalt()));
-            $user->eraseCredentials();
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function updateUser(UserInterface $user)
+    public function updateUser(UserInterface $user, $andFlush = true)
     {
+        $this->updateCanonicalFields($user);
         $this->updatePassword($user);
 
         $isUpdate = false;
-        if ($this->entityManager->contains($user)) {
+        if ($this->objectManager->contains($user)) {
             $isUpdate = true;
         }
 
@@ -293,8 +256,10 @@ class UserManager implements UserManagerInterface, UserProviderInterface
             return;
         }
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush($user);
+        $this->objectManager->persist($user);
+        if ($andFlush) {
+            $this->objectManager->flush();
+        }
 
         $event = new UserEvent($user);
         if ($isUpdate) {
@@ -305,55 +270,10 @@ class UserManager implements UserManagerInterface, UserProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param UserInterface $user
+     * @param UserInterface $successorUser
      */
-    public function reloadUser(UserInterface $user)
-    {
-        $this->entityManager->refresh($user);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function loadUserByUsername($username)
-    {
-        $user = $this->findByUsername($username);
-
-        if (!$user) {
-            throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
-        }
-
-        return $user;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function refreshUser(UserInterface $user)
-    {
-        $reloadedUser = $this->find($user->getId());
-
-        if (!$reloadedUser) {
-            throw new UsernameNotFoundException(sprintf('User with ID "%d" could not be reloaded.', $user->getId()));
-        }
-
-        return $reloadedUser;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function supportsClass($class)
-    {
-        $userClass = $this->getUserClass();
-
-        return $class === $userClass || is_subclass_of($class, $userClass);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteUser(UserInterface $user, UserInterface $successorUser)
+    public function deleteUserWithSuccessor(UserInterface $user, UserInterface $successorUser)
     {
         $this->successorService->set($user, $successorUser);
 
@@ -362,8 +282,7 @@ class UserManager implements UserManagerInterface, UserProviderInterface
             return;
         }
 
-        $this->entityManager->remove($user);
-        $this->entityManager->flush($user);
+        $this->deleteUser($user);
 
         $event = new UserEvent($user);
         $this->dispatcher->dispatch(UserEvents::DELETE_USER, $event);

@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\UserBundle\Controller;
 
 use Doctrine\ORM\PersistentCollection;
+use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
@@ -64,7 +65,7 @@ class UsersController extends Controller
         }
 
         $userManager = $this->get('phlexible_user.user_manager');
-        $allUsers = $userManager->findAll();//By(array(), array($sort => $dir), $limit, $start);
+        $allUsers = $userManager->findAll();
         $securityContext = $this->get('security.context');
         $systemUserUid = $userManager->getSystemUserId();
 
@@ -72,6 +73,8 @@ class UsersController extends Controller
         $sortField = array();
 
         foreach ($allUsers as $user) {
+            /* @var $user UserInterface */
+
             if ($user->hasRole(Acl::ROLE_SUPERADMIN) &&
                 !$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) &&
                 !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)
@@ -133,7 +136,7 @@ class UsersController extends Controller
                     if (substr($key, 0, 6) == 'group_') {
                         $groupId = substr($key, 6);
                         $group = $this->get('phlexible_user.group_manager')->find($groupId);
-                        if (!$user->getGroups()->contains($group)) {
+                        if (!$user->hasGroup($group)) {
                             continue 2;
                         }
                     }
