@@ -48,7 +48,7 @@ class DataSourceValueBag
 
     /**
      * @var DataSource
-     * @ORM\ManyToOne(targetEntity="DataSource", inversedBy="values")
+     * @ORM\ManyToOne(targetEntity="DataSource", inversedBy="valueBags")
      * @ORM\JoinColumn(name="datasource_id", referencedColumnName="id")
      */
     private $datasource;
