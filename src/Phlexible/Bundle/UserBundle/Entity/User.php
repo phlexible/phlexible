@@ -10,7 +10,8 @@ namespace Phlexible\Bundle\UserBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use FOS\UserBundle\Entity\User as BaseUser;
+use FOS\UserBundle\Model\GroupInterface;
 
 /**
  * User
@@ -20,7 +21,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * @ORM\Entity
  * @ORM\Table(name="user")
  */
-class User implements AdvancedUserInterface
+class User extends BaseUser
 {
     const PROPERTY_THEME = 'theme';
     const PROPERTY_INTERFACE_LANGUAGE = 'interfaceLanguage';
@@ -34,30 +35,7 @@ class User implements AdvancedUserInterface
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="string", length=36, options={"fixed" = true})
      */
-    private $id;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255)
-     */
-    private $username;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $password;
-
-    /**
-     * @var string
-     */
-    private $plainPassword;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $salt;
+    protected $id;
 
     /**
      * @var string
@@ -76,36 +54,6 @@ class User implements AdvancedUserInterface
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255)
-     */
-    private $email;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(name="expires_at", type="datetime", nullable=true)
-     */
-    private $expiresAt;
-
-    /**
-     * @var string
-     * @ORM\Column(name="password_token", type="string", length=36, nullable=true, options={"fixed"=true})
-     */
-    private $passwordToken;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(name="password_changed_at", type="datetime", nullable=true)
-     */
-    private $passwordChangedAt;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", options={"default"=true})
-     */
-    private $enabled = true;
 
     /**
      * @var array
@@ -130,13 +78,7 @@ class User implements AdvancedUserInterface
      * @ORM\ManyToMany(targetEntity="Group", inversedBy="users")
      * @ORM\JoinTable(name="user_group")
      */
-    private $groups;
-
-    /**
-     * @var array
-     * @ORM\Column(type="json_array")
-     */
-    private $roles = array();
+    protected $groups;
 
     public function __construct()
     {
@@ -159,106 +101,6 @@ class User implements AdvancedUserInterface
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * @param string $username
-     *
-     * @return $this
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param string $password
-     *
-     * @return $this
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlainPassword()
-    {
-        return $this->plainPassword;
-    }
-
-    /**
-     * @param string $plainPassword
-     *
-     * @return $this
-     */
-    public function setPlainPassword($plainPassword)
-    {
-        $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSalt()
-    {
-        return $this->salt;
-    }
-
-    /**
-     * @param string $salt
-     *
-     * @return $this
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return $this
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
 
         return $this;
     }
@@ -338,86 +180,6 @@ class User implements AdvancedUserInterface
     /**
      * @return \DateTime
      */
-    public function getExpiresAt()
-    {
-        return $this->expiresAt;
-    }
-
-    /**
-     * @param \DateTime $expireDate
-     *
-     * @return $this
-     */
-    public function setExpiresAt(\DateTime $expireDate = null)
-    {
-        $this->expiresAt = $expireDate;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPasswordToken()
-    {
-        return $this->passwordToken;
-    }
-
-    /**
-     * @param string $passwordToken
-     *
-     * @return $this
-     */
-    public function setPasswordToken($passwordToken)
-    {
-        $this->passwordToken = $passwordToken;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getPasswordChangedAt()
-    {
-        return $this->passwordChangedAt;
-    }
-
-    /**
-     * @param \DateTime $passwordChangeTime
-     *
-     * @return $this
-     */
-    public function setPasswordChangedAt(\DateTime $passwordChangeTime = null)
-    {
-        $this->passwordChangedAt = $passwordChangeTime;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return $this->enabled;
-    }
-
-    /**
-     * @param bool $enabled
-     *
-     * @return $this
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = $enabled;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
     public function getCreatedAt()
     {
         return $this->createdAt;
@@ -464,24 +226,28 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param Group $group
+     * @param string $name
      *
      * @return bool
      */
-    public function hasGroup($group)
+    public function hasGroup($name)
     {
-        return $this->groups->contains($group);
+        if ($name instanceof GroupInterface) {
+            return $this->groups->contains($name);
+        }
+
+        return $this->groups->containsKey($name);
     }
 
     /**
-     * @param Group $group
+     * @param GroupInterface $group
      *
      * @return $this
      */
-    public function addGroup(Group $group)
+    public function addGroup(GroupInterface $group)
     {
-        if (!$this->groups->contains($group)) {
-            $this->groups->add($group);
+        if ($this->hasGroup($group)) {
+            $this->groups->set($group->getName(), $group);
             $group->addUser($this);
         }
 
@@ -489,75 +255,15 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param Group $group
+     * @param GroupInterface $group
      *
      * @return $this
      */
-    public function removeGroup($group)
+    public function removeGroup(GroupInterface $group)
     {
-        if ($this->groups->contains($group)) {
+        if ($this->hasGroup($group)) {
             $this->groups->removeElement($group);
             $group->addUser(null);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRoles()
-    {
-        return $this->roles;
-    }
-
-    /**
-     * @param array $roles
-     *
-     * @return $this
-     */
-    public function setRoles($roles)
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * @param string $role
-     *
-     * @return bool
-     */
-    public function hasRole($role)
-    {
-        return array_search($role, $this->roles) !== false;
-    }
-
-    /**
-     * @param string $role
-     *
-     * @return $this
-     */
-    public function addRole($role)
-    {
-        if (!$this->hasRole($role)) {
-            $this->roles[] = $role;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a role
-     *
-     * @param string $role
-     *
-     * @return $this
-     */
-    public function removeRole($role)
-    {
-        if ($this->hasRole($role)) {
-            unset($this->roles[array_search($role, $this->roles)]);
         }
 
         return $this;
@@ -644,6 +350,14 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
+
+    /**
      * @param string $defaultLanguage
      *
      * @return string
@@ -681,48 +395,6 @@ class User implements AdvancedUserInterface
     public function setContentLanguage($contentLanguage)
     {
         return $this->setProperty('contentLanguage', $contentLanguage);
-    }
-
-    /**
-     * @return float
-     */
-    public function getPasswordChangeDays()
-    {
-        $result = round((time() - strtotime($this->passwordChangedAt)) / 60 / 60 / 24);
-
-        return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function eraseCredentials()
-    {
-        $this->plainPassword = null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isAccountNonExpired()
-    {
-        return null === $this->getExpiresAt() || $this->getExpiresAt() > new \DateTime();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isAccountNonLocked()
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isCredentialsNonExpired()
-    {
-        return true;
     }
 }
 

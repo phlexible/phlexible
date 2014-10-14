@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\UserBundle\Model;
 
-use Phlexible\Bundle\UserBundle\Entity\User;
-use Symfony\Component\Security\Core\User\UserInterface;
+use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Model\UserManagerInterface as BaseUserManagerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
@@ -17,31 +17,21 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface UserManagerInterface
+interface UserManagerInterface extends BaseUserManagerInterface
 {
-    /**
-     * @return string
-     */
-    public function getUserClass();
-
-    /**
-     * @return User
-     */
-    public function create();
-
     /**
      * Find user
      *
      * @param int $userId
      *
-     * @return User
+     * @return UserInterface
      */
     public function find($userId);
 
     /**
      * Find all users
      *
-     * @return User[]
+     * @return UserInterface[]
      */
     public function findAll();
 
@@ -55,7 +45,7 @@ interface UserManagerInterface
      *
      * @param string $username
      *
-     * @return User
+     * @return UserInterface
      */
     public function findByUsername($username);
 
@@ -65,7 +55,7 @@ interface UserManagerInterface
      * @param int|null   $limit
      * @param int|null   $offset
      *
-     * @return User[]
+     * @return UserInterface[]
      */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
 
@@ -80,7 +70,7 @@ interface UserManagerInterface
      * @param array $criteria
      * @param array $order
      *
-     * @return User
+     * @return UserInterface
      */
     public function findOneBy(array $criteria, $order = array());
 
@@ -107,42 +97,13 @@ interface UserManagerInterface
     public function getSystemUser();
 
     /**
-     * @return User[]
+     * @return UserInterface[]
      */
     public function findLoggedInUsers();
-
-    /**
-     * @param string $username
-     *
-     * @return bool
-     */
-    public function checkUsername($username);
-
-    /**
-     * @param string $email
-     *
-     * @return bool
-     */
-    public function checkEmail($email);
-
-    /**
-     * {@inheritDoc}
-     */
-    public function updatePassword(UserInterface $user);
-
-    /**
-     * @param UserInterface $user
-     */
-    public function updateUser(UserInterface $user);
-
-    /**
-     * @param UserInterface $user
-     */
-    public function reloadUser(UserInterface $user);
 
     /**
      * @param UserInterface $user
      * @param UserInterface $successorUser
      */
-    public function deleteUser(UserInterface $user, UserInterface $successorUser);
+    public function deleteUserWithSuccessor(UserInterface $user, UserInterface $successorUser);
 }
