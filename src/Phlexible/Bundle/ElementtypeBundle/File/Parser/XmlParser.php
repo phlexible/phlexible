@@ -73,7 +73,7 @@ class XmlParser implements ParserInterface
                 $key = $mappingNode->getAttribute('key');
                 $pattern = $mappingNode->getAttribute('pattern');
                 $fields = array();
-                $fieldNodes = $dom->xpath()->evaluate('fields/field');
+                $fieldNodes = $dom->xpath()->evaluate('fields/field', $mappingNode);
                 if ($fieldNodes->length) {
                     foreach ($fieldNodes as $fieldNode) {
                         /* @var $fieldNode Element */

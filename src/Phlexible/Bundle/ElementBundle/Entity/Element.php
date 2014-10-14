@@ -37,6 +37,7 @@ class Element
     /**
      * @var string
      * @ORM\Column(name="elementtype_id", type="string")
+     * @TODO: elementSource?
      */
     private $elementtypeId;
 

@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="element_structure", uniqueConstraints={@ORM\UniqueConstraint(columns={"data_id", "eid", "version"})})
+ * @ORM\Table(name="element_structure", uniqueConstraints={@ORM\UniqueConstraint(columns={"data_id", "element_version_id"})})
  */
 class ElementStructure
 {
@@ -36,7 +36,6 @@ class ElementStructure
 
     /**
      * @var ElementVersion
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="ElementVersion")
      * @ORM\JoinColumn(name="element_version_id", referencedColumnName="id", onDelete="CASCADE")
      */

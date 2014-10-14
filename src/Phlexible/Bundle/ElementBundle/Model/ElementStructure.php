@@ -334,27 +334,6 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
-     * @param int $id
-     *
-     * @return ElementStructure|null
-     */
-    public function findStructure($id)
-    {
-        if ($this->getId() === $id) {
-            return $this;
-        }
-
-        foreach ($this->structures as $childStructure) {
-            $result = $childStructure->findStructure($id);
-            if ($result) {
-                return $result;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * @return ElementStructure[]
      */
     public function getStructures()

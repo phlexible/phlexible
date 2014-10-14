@@ -9,10 +9,8 @@
 namespace Phlexible\Bundle\ElementBundle\Command;
 
 use Phlexible\Bundle\ElementBundle\Change\ElementtypeChanges;
-use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -45,7 +43,8 @@ class ChangesCommand extends ContainerAwareCommand
     {
         $committer = new ElementtypeChanges(
             $this->getContainer()->get('phlexible_elementtype.elementtype_service'),
-            $this->getContainer()->get('phlexible_element.element_service')
+            $this->getContainer()->get('phlexible_element.element_service'),
+            $this->getContainer()->get('phlexible_element.doctrine.synchronizer')
         );
 
         $changes = $committer->changes();
@@ -53,9 +52,9 @@ class ChangesCommand extends ContainerAwareCommand
         if (count($changes)) {
             foreach ($changes as $change) {
                 $output->writeln(
-                    'ELEMENT ' . $change->getElementVersion()->getElement()->getEid() . ':' . $change->getElementVersion()->getVersion() . ' ' .
                     'ELEMENTTYPE ' . $change->getElementtype()->getTitle() . ' ' .
-                    'REVISION ' . $change->getRevision() . ' => ' . $change->getElementtype()->getRevision()
+                    'REVISION ' . $change->getRevision() . ' => ' . $change->getElementtype()->getRevision() . ' ' .
+                    'NUM ELEMENTVERSIONS ' . count($change->getElementVersions())
                 );
             }
 

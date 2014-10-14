@@ -4,73 +4,119 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
     layout: 'border',
 
     initComponent: function () {
+        var actions = new Ext.ux.grid.RowActions({
+            header: this.strings.actions,
+            width: 30,
+            actions: [
+                {
+                    iconCls: 'p-elementtype-delete-icon',
+                    tooltip: this.strings.remove,
+                    showIndex: 'state',
+                    callback: function (grid, record, action, row, col) {
+                        var r = grid.store.getAt(row);
+
+                        r.set('fields', null);
+                        r.set('pattern', null);
+                        r.set('state', 0);
+                        r.commit();
+                        this.fireChange();
+                    }.createDelegate(this)
+                }
+            ]
+        });
+
         this.items = [
             {
                 xtype: 'grid',
                 region: 'west',
-                width: 100,
+                width: 160,
                 store: new Ext.data.SimpleStore({
-                    fields: ['name'],
+                    fields: ['name', 'type', 'state', 'pattern', 'fields'],
                     data: [
-                        ['backend'],
-                        ['page'],
-                        ['navigation'],
-                        ['date'],
-                        ['forward'],
-                        ['description'],
-                        ['keywords'],
-                        ['custom1'],
-                        ['custom2'],
-                        ['custom3'],
-                        ['custom4'],
-                        ['custom5']
+                        ['backend', 'title', 0, null, null],
+                        ['page', 'title', 0, null, null],
+                        ['navigation', 'title', 0, null, null],
+                        ['date', 'date', 0, null, null],
+                        ['forward', 'link', 0, null, null],
+                        ['description', 'field', 0, null, null],
+                        ['keywords', 'field', 0, null, null],
+                        ['custom1', 'field', 0, null, null],
+                        ['custom2', 'field', 0, null, null],
+                        ['custom3', 'field', 0, null, null],
+                        ['custom4', 'field', 0, null, null],
+                        ['custom5', 'field', 0, null, null]
                     ]
                 }),
                 columns: [
                     {
+                        header: '&nbsp;',
+                        dataIndex: 'state',
+                        width: 30,
+                        renderer: function(v) {
+                            if (v === 1) {
+                                return Phlexible.inlineIcon('p-elementtype-tab_error-icon');
+                            } else if (v === 2) {
+                                return Phlexible.inlineIcon('p-elementtype-tab_validation-icon');
+                            }
+                            return '';
+                        }
+                    },{
                         header: this.strings.field,
-                        dataIndex: 'name'
-                    }
+                        dataIndex: 'name',
+                        width: 100
+                    },
+                    actions
                 ],
+                plugins: [actions],
                 sm: new Ext.grid.RowSelectionModel({
                     singleSelect: true,
                     listeners: {
                         selectionchange: function (sm) {
                             var r = sm.getSelected(),
-                                name, grid;
+                                name, type, grid;
                             if (!r) {
                                 return;
                             }
                             name = r.get('name');
-                            if (name === 'backend' || name === 'page' || name === 'navigation') {
+                            type = r.get('type');
+                            if (type === 'title') {
                                 this.getComponent(1).layout.setActiveItem(1);
                                 grid = this.getMappedTitleGrid();
                                 grid.getComponent(0).getView().refresh();
-                                if (this.mappings[name]) {
-                                    grid.getComponent(0).getStore().loadData(this.mappings[name].fields);
-                                    grid.getComponent(1).setValue(this.mappings[name].pattern);
-                                } else {
-                                    grid.getComponent(0).getStore().removeAll();
-                                    grid.getComponent(1).setValue('');
+                                grid.getComponent(0).getStore().removeAll();
+                                grid.getComponent(1).setValue('');
+                                if (r.get('state')) {
+                                    if (r.get('fields')) {
+                                        grid.getComponent(0).getStore().loadData(r.get('fields'));
+                                    }
+                                    if (r.get('pattern')) {
+                                        grid.getComponent(1).setValue(r.get('pattern'));
+                                    }
                                 }
                                 this.updatePreview(name);
-                            } else if (name === 'date') {
+                            } else if (type === 'date') {
                                 this.getComponent(1).layout.setActiveItem(2);
                                 grid = this.getMappedDateGrid();
                                 grid.getComponent(0).getView().refresh();
-                                if (this.mappings[name]) {
-                                    grid.getComponent(0).getStore().loadData(this.mappings[name].fields);
-                                } else {
-                                    grid.getComponent(0).getStore().removeAll();
+                                grid.getComponent(0).getStore().removeAll();
+                                if (r.get('state') && r.get('fields')) {
+                                    grid.getComponent(0).getStore().loadData(r.get('fields'));
                                 }
-                            } else if (name === 'forward') {
+                            } else if (type === 'link') {
                                 this.getComponent(1).layout.setActiveItem(3);
                                 grid = this.getMappedLinkGrid();
                                 grid.getComponent(0).getView().refresh();
-                                if (this.mappings[name]) {
-                                    grid.getComponent(0).getStore().loadData(this.mappings[name].fields);
-                                } else {
-                                    grid.getComponent(0).getStore().removeAll();
+                                grid.getComponent(0).getStore().removeAll();
+                                if (r.get('state') && r.get('fields')) {
+                                    grid.getComponent(0).getStore().loadData(r.get('fields'));
+                                }
+                            } else if (type === 'field') {
+                                this.getComponent(1).layout.setActiveItem(4);
+                                grid = this.getMappedFieldGrid();
+                                grid.getComponent(0).getView().refresh();
+                                grid.getComponent(0).getStore().removeAll();
+                                if (r.get('state') && r.get('fields')) {
+                                    grid.getComponent(0).getStore().loadData(r.get('fields'));
                                 }
                             } else {
                                 this.getComponent(1).layout.setActiveItem(0);
@@ -103,8 +149,8 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                                 listeners: {
                                     change: function (fields) {
                                         var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
-                                        this.mappings[name] = this.mappings[name] || {};
-                                        this.mappings[name].fields = fields;
+                                        this.findRecord(name).set('fields', fields);
+                                        this.validate(name);
                                         this.updatePreview(name);
                                     },
                                     scope: this
@@ -117,10 +163,10 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                                 anchor: '-10',
                                 allowBlank: false,
                                 listeners: {
-                                    change: function (field, value) {
+                                    change: function (field, pattern) {
                                         var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
-                                        this.mappings[name] = this.mappings[name] || {};
-                                        this.mappings[name].pattern = value;
+                                        this.findRecord(name).set('pattern', pattern);
+                                        this.validate(name);
                                         this.updatePreview(name);
                                     },
                                     scope: this
@@ -144,8 +190,8 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                                 listeners: {
                                     change: function (fields) {
                                         var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
-                                        this.mappings[name] = this.mappings[name] || {};
-                                        this.mappings[name].fields = fields;
+                                        this.findRecord(name).set('fields', fields);
+                                        this.validate(name);
                                     },
                                     scope: this
                                 }
@@ -161,8 +207,25 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                                 listeners: {
                                     change: function (fields) {
                                         var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
-                                        this.mappings[name] = this.mappings[name] || {};
-                                        this.mappings[name].fields = fields;
+                                        this.findRecord(name).set('fields', fields);
+                                        this.validate(name);
+                                    },
+                                    scope: this
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        border: false,
+                        items: [
+                            {
+                                xtype: 'elementtypes-root-mapped-title',
+                                height: 200,
+                                listeners: {
+                                    change: function (fields) {
+                                        var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
+                                        this.findRecord(name).set('fields', fields);
+                                        this.validate(name);
                                     },
                                     scope: this
                                 }
@@ -188,9 +251,62 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
         return this.getComponent(1).getComponent(3);
     },
 
+    getMappedFieldGrid: function () {
+        return this.getComponent(1).getComponent(4);
+    },
+
+    findRecord: function(name) {
+        var store = this.getComponent(0).getStore(),
+            index = store.find('name', name);
+        if (index === -1) {
+            throw new Error("Field " + name + " not found.");
+        }
+        return store.getAt(index);
+    },
+
+    validate: function(name) {
+        var r = this.findRecord(name),
+            state = 0,
+            type = r.get('type'),
+            fields = r.get('fields'),
+            pattern = r.get('pattern');
+
+        if (Ext.isArray(fields) && fields.length) {
+            state++;
+        }
+
+        switch (type) {
+            case 'title':
+                if (pattern) {
+                    state++;
+                }
+                break;
+            case 'date':
+                if (state) {
+                    state++;
+                }
+                break;
+            case 'link':
+                if (state) {
+                    state++;
+                }
+                break;
+            case 'field':
+                if (state) {
+                    state++;
+                }
+                break;
+            default:
+                throw new Error("Type " + type + " not known.");
+        }
+
+        r.set('state', state);
+    },
+
     updatePreview: function (name) {
-        var fields = this.mappings[name].fields,
-            pattern = Phlexible.clone(this.mappings[name].pattern) || '',
+        var r = this.findRecord(name),
+            fields = r.get('fields'),
+            pattern = Phlexible.clone(r.get('pattern')) || '',
             previewField = this.getMappedTitleGrid().getComponent(2);
 
         Ext.each(fields, function (field) {
@@ -201,11 +317,25 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
     },
 
     empty: function () {
-        this.mappings = {};
+        this.getComponent(0).getStore().each(function(r) {
+            r.set('state', 0);
+            r.set('pattern', '');
+            r.set('fields', null);
+        })
     },
 
     loadData: function (mappings) {
-        this.mappings = mappings || {};
+        var name, r;
+        for (name in mappings) {
+            if (!mappings.hasOwnProperty(name)) {
+                continue;
+            }
+            r = this.findRecord(name);
+            r.set('fields', mappings[name].fields)
+            r.set('pattern', mappings[name].pattern || '');
+            this.validate(name);
+        }
+        this.getComponent(0).getStore().commitChanges();
     },
 
     loadRoot: function (properties, node) {
@@ -219,11 +349,23 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
     },
 
     getSaveValues: function () {
-        return this.mappings;
+        var mappings = {};
+        this.getComponent(0).getStore().each(function(r) {
+            if (r.get('state') === 2) {
+                mappings[r.get('name')] = {
+                    fields: r.get('fields'),
+                    pattern: r.get('pattern')
+                };
+            }
+        });
+
+        console.log(mappings);
+
+        return mappings;
     },
 
     isValid: function () {
-        if (this.mappings.backend && this.mappings.backend.fields && this.mappings.backend.fields.length && this.mappings.backend.pattern) {
+        if (this.getComponent(0).getStore().find('state', 1) === -1) {
             //this.ownerCt.header.child('span').removeClass('error');
             this.setIconClass('p-elementtype-tab_titles-icon');
 

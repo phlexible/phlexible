@@ -29,14 +29,23 @@ class ElementtypeChanges
     private $elementService;
 
     /**
-     * @param ElementtypeService $elementtypeService
-     * @param ElementService              $elementService
+     * @var Synchronizer
      */
-    public function __construct(ElementtypeService $elementtypeService,
-                                ElementService $elementService)
+    private $synchronizer;
+
+    /**
+     * @param ElementtypeService $elementtypeService
+     * @param ElementService     $elementService
+     * @param Synchronizer       $synchronizer
+     */
+    public function __construct(
+        ElementtypeService $elementtypeService,
+        ElementService $elementService,
+        Synchronizer $synchronizer)
     {
         $this->elementtypeService = $elementtypeService;
         $this->elementService = $elementService;
+        $this->synchronizer = $synchronizer;
     }
 
     /**
@@ -50,8 +59,9 @@ class ElementtypeChanges
             $elementVersions = $this->elementService->findOutdatedElementVersions($elementtype);
 
             foreach ($elementVersions as $elementVersion) {
-                $change = new Change($elementVersion, $elementtype, $elementVersion->getElementtypeVersion());
-                $changes[] = $change;
+                $index = "{$elementtype->getId()}__{$elementVersion->getElementtypeVersion()}";
+                $changes[$index] = new Change($elementtype, $elementVersion->getElementtypeVersion());
+                $changes[$index]->addElementVersion($elementVersion);
             }
         }
 
@@ -63,10 +73,8 @@ class ElementtypeChanges
      */
     public function commit($viaQueue = false)
     {
-        $changes = $this->changes();
-
-        foreach ($changes as $change) {
-
+        foreach ($this->changes() as $change) {
+            $this->synchronizer->synchronize($change);
         }
     }
 }

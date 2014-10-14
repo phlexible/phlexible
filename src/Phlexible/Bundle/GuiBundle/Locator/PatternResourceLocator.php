@@ -69,7 +69,7 @@ class PatternResourceLocator extends FileLocator
             if ($first) {
                 return $file->getPathname();
             }
-            $files[$file->getFilename()] = $file->getPathname();
+            $files[] = $file->getPathname();
         }
 
         return $files;

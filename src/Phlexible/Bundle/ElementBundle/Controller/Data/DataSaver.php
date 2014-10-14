@@ -467,7 +467,7 @@ class DataSaver
     private function applyStructure(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values)
     {
         $this->structures[null] = $rootElementStructure;
-        $map = array(null => $rootElementStructure->getId());
+        $map = array(null => $rootElementStructure->getDataId());
 
         foreach ($values as $key => $value) {
             $parts = explode('__', $key);
@@ -481,12 +481,12 @@ class DataSaver
                 // existing repeatable group
                 $parent = $this->structures[$repeatableIdentifier];
                 $dsId = $match[1];
-                $id = $match[2];
+                $dataId = $match[2];
                 $node = $elementtypeStructure->getNode($dsId);
-                $map[$identifier] = $id;
+                $map[$identifier] = $dataId;
                 $this->structures[$identifier] = $elementStructure = new ElementStructure();
                 $elementStructure
-                    ->setId($id)
+                    ->setDataId($dataId)
                     ->setDsId($dsId)
                     ->setParentName($parent->getName())
                     ->setName($node->getName());
@@ -495,12 +495,12 @@ class DataSaver
                 // new repeatable group
                 $parent = $this->structures[$repeatableIdentifier];
                 $dsId = $match[1];
-                $id = Uuid::generate();
+                $dataId = Uuid::generate();
                 $node = $elementtypeStructure->getNode($dsId);
-                $map[$identifier] = $id;
+                $map[$identifier] = $dataId;
                 $this->structures[$identifier] = $elementStructure = new ElementStructure();
                 $elementStructure
-                    ->setId($id)
+                    ->setDataId($dataId)
                     ->setDsId($dsId)
                     ->setParentName($parent->getName())
                     ->setName($node->getName());
@@ -528,7 +528,7 @@ class DataSaver
         $rii = new \RecursiveIteratorIterator($rootElementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $structure) {
             /* @var $structure ElementStructure */
-            $oldStructure = $oldRootElementStructure->findStructure($structure->getId());
+            $oldStructure = $this->findStructureByDataId($oldRootElementStructure, $structure->getDataId());
             if (!$oldStructure) {
                 continue;
             }
@@ -574,14 +574,14 @@ class DataSaver
                 if ($map) {
                     $mapId = $map[$repeatableIdentifier];
                 } else {
-                    $mapId = $rootElementStructure->getId();
+                    $mapId = $rootElementStructure->getDataId();
                     if ($repeatableIdentifier) {
                         $mapId = substr($repeatableIdentifier, -36);
                     }
                 }
-                $elementStructure = $rootElementStructure->findStructure($mapId);
+                $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
                 if (!$elementStructure) {
-                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier.");
+                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
                 }
                 $elementStructure->setValue($elementStructureValue);
             } elseif (preg_match('/^field-([-a-f0-9]{36})-new-.+$/', $identifier, $match)) {
@@ -595,20 +595,42 @@ class DataSaver
                 if ($map) {
                     $mapId = $map[$repeatableIdentifier];
                 } else {
-                    $mapId = $rootElementStructure->getId();
+                    $mapId = $rootElementStructure->getDataId();
                     if ($repeatableIdentifier) {
                         $mapId = substr($repeatableIdentifier, -36);
                     }
                 }
-                $elementStructure = $rootElementStructure->findStructure($mapId);
+                $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
                 if (!$elementStructure) {
-                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier.");
+                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
                 }
                 $elementStructure->setValue($elementStructureValue);
             }
         }
 
         return $rootElementStructure;
+    }
+
+    /**
+     * @param ElementStructure $structure
+     * @param string           $dataId
+     *
+     * @return ElementStructure|null
+     */
+    private function findStructureByDataId(ElementStructure $structure, $dataId)
+    {
+        if ($structure->getDataId() === $dataId) {
+            return $structure;
+        }
+
+        foreach ($structure->getStructures() as $childStructure) {
+            $result = $this->findStructureByDataId($childStructure, $dataId);
+            if ($result) {
+                return $result;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -59,8 +59,7 @@ class XmlDumper implements DumperInterface
         if ($elementtype->getMappings()) {
             $mappingsElement = $rootElement->appendElement('mappings');
             foreach ($elementtype->getMappings() as $key => $mapping) {
-                $mappingElement = $mappingsElement->appendElement('mapping', '', array('key' => $key));
-                $mappingElement->appendElement('pattern', $mapping['pattern']);
+                $mappingElement = $mappingsElement->appendElement('mapping', '', array('key' => $key, 'pattern' => $mapping['pattern']));
                 $fieldsElement = $mappingElement->appendElement('fields');
                 foreach ($mapping['fields'] as $field) {
                     $attributes = array(

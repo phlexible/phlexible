@@ -34,3 +34,8 @@ services:
         class: Phlexible\Bundle\ElementBundle\Doctrine\ElementHistoryManager
         public: false
         arguments: [@doctrine.orm.entity_manager]
+
+    phlexible_element.doctrine.synchronizer:
+        class: Phlexible\Bundle\ElementBundle\Change\Synchronizer
+        # TODO: file.dumper?
+        arguments: [@doctrine.orm.entity_manager, @phlexible_element.element_version_manager, @phlexible_elementtype.file.dumper.xml]

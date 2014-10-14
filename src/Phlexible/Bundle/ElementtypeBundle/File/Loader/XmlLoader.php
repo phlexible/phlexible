@@ -51,7 +51,13 @@ class XmlLoader implements LoaderInterface
             return;
         }
 
-        $files = $this->locator->locate('*.xml', 'elementtypes', false);
+        $files = array();
+        foreach ($this->locator->locate('*.xml', 'elementtypes', false) as $file) {
+            $name = basename($file);
+            if (!isset($files[$name])) {
+                $files[$name] = $file;
+            }
+        }
 
         $idMap = array();
         foreach ($files as $file) {

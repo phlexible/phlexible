@@ -12,6 +12,23 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
     autoExpandColumn: 1,
 
     initComponent: function () {
+        var actions = new Ext.ux.grid.RowActions({
+            header: this.strings.actions,
+            width: 150,
+            actions: [
+                {
+                    iconCls: 'p-elementtype-delete-icon',
+                    tooltip: this.strings.remove,
+                    callback: function (grid, record, action, row, col) {
+                        var r = grid.store.getAt(row);
+
+                        this.store.remove(r);
+                        this.fireChange();
+                    }.createDelegate(this)
+                }
+            ]
+        });
+
         this.store = new Ext.data.JsonStore({
             fields: ['dsId', 'title', 'type'],
             listeners: {
@@ -37,12 +54,15 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
                 header: this.strings.field,
                 dataIndex: 'title',
                 width: 200
-            }
+            },
+            actions
         ];
 
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true
         });
+
+        this.plugins = [actions];
 
         this.tbar = [
             {

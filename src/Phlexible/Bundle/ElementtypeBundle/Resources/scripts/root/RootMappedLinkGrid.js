@@ -9,21 +9,28 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
         emptyText: Phlexible.elementtypes.Strings.navigation_default_link,
         deferEmptyText: false
     },
-    autoExpandColumn: 'field',
+    autoExpandColumn: 1,
 
     initComponent: function () {
+        var actions = new Ext.ux.grid.RowActions({
+            header: this.strings.actions,
+            width: 150,
+            actions: [
+                {
+                    iconCls: 'p-elementtype-delete-icon',
+                    tooltip: this.strings.remove,
+                    callback: function (grid, record, action, row, col) {
+                        var r = grid.store.getAt(row);
+
+                        this.store.remove(r);
+                        this.fireChange();
+                    }.createDelegate(this)
+                }
+            ]
+        });
+
         this.store = new Ext.data.JsonStore({
-            fields: ['dsId', 'field'],
-            listeners: {
-                datachanged: function (store) {
-                    var fields = [];
-                    Ext.each(store.getRange(), function (r) {
-                        fields.push({dsId: r.get('dsId'), title: r.get('title')});
-                    });
-                    this.fireEvent('change', fields);
-                },
-                scope: this
-            }
+            fields: ['dsId', 'title']
         });
 
         this.columns = [
@@ -34,16 +41,18 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
                 hidden: true
             },
             {
-                id: 'field',
                 header: this.strings.field,
                 dataIndex: 'field',
                 width: 200
-            }
+            },
+            actions
         ];
 
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true
         });
+
+        this.plugins = [actions];
 
         this.tbar = [
             {
@@ -51,6 +60,7 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
                 iconCls: 'p-elementtype-clear-icon',
                 handler: function () {
                     this.store.removeAll();
+                    this.fireChange();
                 },
                 scope: this
             }
@@ -123,6 +133,14 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
         });
 
         Phlexible.elementtypes.RootMappedLinkGrid.superclass.initComponent.call(this);
+    },
+
+    fireChange: function() {
+        var fields = [];
+        Ext.each(this.store.getRange(), function (r) {
+            fields.push({dsId: r.get('dsId'), title: r.get('title'), index: r.get('index')});
+        });
+        this.fireEvent('change', fields);
     }
 });
 

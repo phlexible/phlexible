@@ -134,13 +134,18 @@ class ElementStructureManager implements ElementStructureManagerInterface
     {
         $structureRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructure');
 
+        /*
         $structureEntity = $structureRepository->findOneBy(
             array(
-                'dataId'  => $elementStructure->getId(),
-                'element' => $elementStructure->getElementVersion()->getElement(),
-                'version' => $elementStructure->getElementVersion()->getVersion(),
+                'dataId'         => $elementStructure->getDataId(),
+                'elementVersion' => $elementStructure->getElementVersion(),
             )
         );
+        */
+        $structureEntity = null;
+        if ($elementStructure->getId()) {
+            $structureEntity = $structureRepository->find($elementStructure->getId());
+        }
         if (!$structureEntity) {
             $structureEntity = new StructureEntity();
         }
@@ -161,9 +166,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
         foreach ($elementStructure->getLanguages() as $language) {
             $valueEntities = $valueRepository->findBy(
                 array(
-                    'element'  => $elementStructure->getElementVersion()->getElement(),
-                    'version'  => $elementStructure->getElementVersion()->getVersion(),
-                    'language' => $language,
+                    'structure' => $structureEntity,
                 )
             );
             foreach ($valueEntities as $valueEntity) {

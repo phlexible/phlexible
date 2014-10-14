@@ -19,9 +19,9 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 class Change
 {
     /**
-     * @var ElementVersion
+     * @var ElementVersion[]
      */
-    private $elementVersion;
+    private $elementVersions;
 
     /**
      * @var Elementtype
@@ -34,23 +34,35 @@ class Change
     private $revision;
 
     /**
-     * @param ElementVersion $elementVersion
-     * @param Elementtype    $elementtype
-     * @param string         $revision
+     * @param Elementtype      $elementtype
+     * @param string           $revision
+     * @param ElementVersion[] $elementVersions
      */
-    public function __construct(ElementVersion $elementVersion, Elementtype $elementtype, $revision)
+    public function __construct(Elementtype $elementtype, $revision, array $elementVersions = array())
     {
-        $this->elementVersion = $elementVersion;
         $this->elementtype = $elementtype;
         $this->revision = $revision;
+        $this->elementVersions = $elementVersions;
     }
 
     /**
-     * @return ElementVersion
+     * @return ElementVersion[]
      */
-    public function getElementVersion()
+    public function getElementVersions()
     {
-        return $this->elementVersion;
+        return $this->elementVersions;
+    }
+
+    /**
+     * @param ElementVersion $elementVersion
+     *
+     * @return $this
+     */
+    public function addElementVersion(ElementVersion $elementVersion)
+    {
+        $this->elementVersions[] = $elementVersion;
+
+        return $this;
     }
 
     /**
