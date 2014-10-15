@@ -25,7 +25,7 @@ Phlexible.elements.accordion.DataTemplate = new Ext.XTemplate(
     '</tpl>',
 
     '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.elementtype]}</div><hr /><div style="clear: left;" /></td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.id]}:</th><td>{et_id}</td></tr>',
+    //'<tr><th>{[Phlexible.elements.Strings.id]}:</th><td>{et_id}</td></tr>',
     '<tpl if="et_unique_id && et_unique_id != \'null\'">',
     '<tr><th>{[Phlexible.elements.Strings.unique_id]}:</th><td>{et_unique_id}</td></tr>',
     '</tpl>',

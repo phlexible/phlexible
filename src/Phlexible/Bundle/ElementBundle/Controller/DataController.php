@@ -517,7 +517,7 @@ class DataController extends Controller
             'et_id'            => $elementtype->getId(),
             'et_title'         => $elementtype->getTitle(),
             'et_version'       => $elementVersion->getElementTypeVersion() . ' [' . $elementtype->getRevision() . ']',
-            'et_unique_id'     => $elementtype->getId(),
+            'et_unique_id'     => $elementtype->getUniqueId(),
             'et_type'          => $elementtype->getType(),
             'author'           => $createUser->getDisplayName(),
             'create_date'      => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
