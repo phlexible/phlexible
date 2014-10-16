@@ -102,6 +102,9 @@ class ElementVersion
      */
     private $mappedFields;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->mappedFields = new ArrayCollection();

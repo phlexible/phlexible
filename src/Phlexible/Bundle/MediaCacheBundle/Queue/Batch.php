@@ -30,6 +30,9 @@ class Batch
      */
     private $templates;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->files = new ArrayCollection();

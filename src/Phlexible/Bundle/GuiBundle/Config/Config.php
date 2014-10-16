@@ -32,9 +32,8 @@ class Config
     public function set($key, $value)
     {
         if (!is_scalar($value) && !is_array($value)) {
-            throw new InvalidArgumentException('Value has to be a scalar or an array, but is ' . gettype(
-                    $value
-                ) . '.');
+            $msg = 'Value has to be a scalar or an array, but is ' . gettype($value) . '.';
+            throw new InvalidArgumentException($msg);
         }
 
         $this->values[$key] = $value;

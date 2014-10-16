@@ -30,7 +30,7 @@ class MetaData implements MetaDataInterface, \Countable
     /**
      * @var array
      */
-    private $values = array();
+    private $values = [];
 
     /**
      * {@inheritdoc}
@@ -107,7 +107,7 @@ class MetaData implements MetaDataInterface, \Countable
     }
 
     /**
-     * @see get()
+     * {@inheritdoc}
      */
     public function __get($field)
     {
@@ -115,7 +115,7 @@ class MetaData implements MetaDataInterface, \Countable
     }
 
     /**
-     * @see set()
+     * {@inheritdoc}
      */
     public function __set($field, $value)
     {
@@ -123,7 +123,7 @@ class MetaData implements MetaDataInterface, \Countable
     }
 
     /**
-     * @see has()
+     * {@inheritdoc}
      */
     public function __isset($field)
     {

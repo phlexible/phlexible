@@ -72,6 +72,9 @@ class Group implements GroupInterface
      */
     private $users;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -271,7 +274,7 @@ class Group implements GroupInterface
      */
     public function getRoles()
     {
-        return array();
+        return [];
     }
 
     /**

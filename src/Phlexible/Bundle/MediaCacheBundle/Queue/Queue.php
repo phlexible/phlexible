@@ -23,6 +23,9 @@ class Queue implements \Countable
      */
     private $items;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->items = new ArrayCollection();

@@ -41,17 +41,17 @@ class YamlFileLoader implements LoaderInterface
         $yaml = new Yaml();
         $config = $yaml->parse(file_get_contents($yamlFile));
         $this->config = array_merge(
-            array(
+            [
                 'class'       => '',
-                'states'      => array(),
-                'transitions' => array(),
-            ),
+                'states'      => [],
+                'transitions' => [],
+            ],
             $config
         );
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritDoc}
      */
     public function load(StateMachineInterface $stateMachine)
     {
@@ -64,7 +64,7 @@ class YamlFileLoader implements LoaderInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritDoc}
      */
     public function supports(StatefulInterface $object)
     {
@@ -79,20 +79,20 @@ class YamlFileLoader implements LoaderInterface
     private function loadStates(StateMachineInterface $stateMachine)
     {
         $resolver = new OptionsResolver;
-        $resolver->setDefaults(array('type' => StateInterface::TYPE_NORMAL, 'properties' => array()));
+        $resolver->setDefaults(['type' => StateInterface::TYPE_NORMAL, 'properties' => []]);
         $resolver->setAllowedValues(
-            array(
-                'type' => array(
+            [
+                'type' => [
                     StateInterface::TYPE_INITIAL,
                     StateInterface::TYPE_NORMAL,
                     StateInterface::TYPE_FINAL
-                )
-            )
+                ]
+            ]
         );
 
         foreach ($this->config['states'] as $state => $config) {
             $config = $resolver->resolve($config);
-            $stateMachine->addState(new State($state, $config['type'], array(), $config['properties']));
+            $stateMachine->addState(new State($state, $config['type'], [], $config['properties']));
         }
     }
 
@@ -102,12 +102,18 @@ class YamlFileLoader implements LoaderInterface
     private function loadTransitions(StateMachineInterface $stateMachine)
     {
         $resolver = new OptionsResolver;
-        $resolver->setRequired(array('from', 'to'));
-        $resolver->setOptional(array('guard'));
-        $resolver->setNormalizers(array(
-            'from' => function (Options $options, $v) { return (array) $v; },
-            'guard' => function (Options $options, $v) { return !isset($v) ? null : $v; }
-        ));
+        $resolver->setRequired(['from', 'to']);
+        $resolver->setOptional(['guard']);
+        $resolver->setNormalizers(
+            [
+                'from' => function (Options $options, $v) {
+                    return (array) $v;
+                },
+                'guard' => function (Options $options, $v) {
+                    return !isset($v) ? null : $v;
+                }
+            ]
+        );
 
         foreach ($this->config['transitions'] as $transition => $config) {
             $config = $resolver->resolve($config);
@@ -124,12 +130,16 @@ class YamlFileLoader implements LoaderInterface
             return;
         }
 
-        foreach (array('before', 'after') as $position) {
+        foreach (['before', 'after'] as $position) {
             $this->loadCallbacksFor($position, $stateMachine);
         }
     }
 
-    private function loadCallbacksFor($position, $stateMachine)
+    /**
+     * @param string                $position
+     * @param StateMachineInterface $stateMachine
+     */
+    private function loadCallbacksFor($position, StateMachineInterface $stateMachine)
     {
         if (!isset($this->config['callbacks'][$position])) {
             return;

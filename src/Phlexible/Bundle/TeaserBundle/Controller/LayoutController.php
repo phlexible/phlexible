@@ -699,6 +699,7 @@ class LayoutController extends Controller
     /**
      * @param Request $request
      *
+     * @return ResultResponse
      * @Route("/inheritinherited", name="teasers_layout_inheritinherited")
      */
     public function toggleInheritInheritedAction(Request $request)

@@ -33,7 +33,7 @@ class PublishNodeEvent extends NodeEvent
     private $isRecursive = false;
 
     /**
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
+     * @param TreeNodeInterface $node
      * @param string            $language
      * @param int               $version
      * @param bool              $isRecursive

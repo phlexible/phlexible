@@ -125,13 +125,14 @@ abstract class AbstractType implements TypeInterface
         }
         */
         $textKeys = array();
+
         return $textKeys;
     }
 
     /**
      * Return the task link
      *
-     * @return MWF_Core_Menu_Item
+     * @return array
      */
     protected function _getLink()
     {
@@ -162,6 +163,7 @@ abstract class AbstractType implements TypeInterface
         */
 
         $menuItem = array();
+
         return $menuItem;
     }
 }

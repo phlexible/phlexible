@@ -18,6 +18,11 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 
+/**
+ * Tree filter
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class TreeFilter implements TreeFilterInterface
 {
     /**
@@ -33,7 +38,7 @@ class TreeFilter implements TreeFilterInterface
     /**
      * @var array
      */
-    private $filterValues = array();
+    private $filterValues = [];
 
     /**
      * @var string
@@ -137,6 +142,9 @@ class TreeFilter implements TreeFilterInterface
         return $this->sortMode;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setSortDir($sortDir)
     {
         $this->sortDir = $sortDir;
@@ -161,7 +169,7 @@ class TreeFilter implements TreeFilterInterface
         $ids = $this->fetchAllIds();
         $pos = array_search($id, $ids);
 
-        $pager = array(
+        $pager = [
             'first'   => $ids[0],
             'prev'    => null,
             'current' => $id,
@@ -169,7 +177,7 @@ class TreeFilter implements TreeFilterInterface
             'last'    => $ids[count($ids) - 1],
             'pos'     => $pos + 1,
             'total'   => count($ids),
-        );
+        ];
 
         if ($pos > 0) {
             $pager['prev'] = $ids[$pos - 1];
@@ -204,7 +212,7 @@ class TreeFilter implements TreeFilterInterface
     private function _fetchCount()
     {
         $qb = $this->createFilterQueryBuilder();
-        $qb->select(array('et.id'));
+        $qb->select(['et.id']);
 
         //$cnt = $this->_db->fetchOne($select);
         $cnt = count($this->connection->fetchAll($qb->getSQL()));
@@ -218,11 +226,11 @@ class TreeFilter implements TreeFilterInterface
     private function fetchAllIds()
     {
         $qb = $this->createFilterAndSortQueryBuilder();
-        $qb->select(array('et.id'));
+        $qb->select(['et.id']);
 
         $rows = $this->connection->fetchAll($qb->getSQL());
 
-        $ids = array();
+        $ids = [];
         foreach ($rows as $row) {
             $ids[] = $row['id'];
         }
@@ -239,7 +247,7 @@ class TreeFilter implements TreeFilterInterface
     private function fetchRangeIds($limit, $start)
     {
         $qb = $this->createFilterAndSortQueryBuilder();
-        $qb->select(array('et.id', 'e.latest_version'));
+        $qb->select(['et.id', 'e.latest_version']);
 
         if (null !== $limit) {
             $qb->setFirstResult($start);
@@ -248,7 +256,7 @@ class TreeFilter implements TreeFilterInterface
 
         $rows = $this->connection->fetchAll($qb->getSQL());
 
-        $ids = array();
+        $ids = [];
         foreach ($rows as $row) {
             $ids[$row['id']] = $row['latest_version'];
         }
@@ -381,7 +389,7 @@ class TreeFilter implements TreeFilterInterface
 
         if (!empty($this->filterValues['search'])) {
             $qb->join('e', 'element_data_language', 'edl_1', 'edl_1.eid = e.eid AND edl_1.version = e.latest_version AND edl_1.language = ' . $qb->expr()->literal($this->language) . ' AND edl_1.content LIKE ' . $qb->expr()->literal('%' . $this->filterValues['search'] . '%'));
-            $qb->groupBy(array('et.id', 'e.latest_version'));
+            $qb->groupBy(['et.id', 'e.latest_version']);
         }
 
         $event = new TreeFilterEvent($this->filterValues, $qb);

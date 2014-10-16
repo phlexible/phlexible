@@ -15,6 +15,10 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 class StateMachineFactory
 {
     /**
+     * @param FileLocator              $locator
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param string                   $yamlFile
+     *
      * @return StateMachine
      */
     public static function factory(FileLocator $locator, EventDispatcherInterface $eventDispatcher, $yamlFile)

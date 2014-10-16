@@ -114,7 +114,7 @@ class TreeController extends Controller
      * Build an Element Type data tree
      *
      * @param ElementtypeStructure       $structure
-     * @param \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode[] $nodes
+     * @param ElementtypeStructureNode[] $nodes
      * @param string                     $language
      * @param string                     $mode
      * @param bool                       $reference
@@ -141,8 +141,8 @@ class TreeController extends Controller
                 'text'       => $node->getLabel('fieldLabel', $language) . ' (' . $node->getName() . ')',
                 'id'         => md5(serialize($node)),
                 'ds_id'      => $node->getDsId(),
-                'cls'        => 'p-elementtypes-node p-elementtypes-type-' . $node->getType(
-                    ) . ($reference ? ' p-elementtypes-reference' : ''),
+                'cls'        => 'p-elementtypes-node p-elementtypes-type-' . $node->getType()
+                    . ($reference ? ' p-elementtypes-reference' : ''),
                 'leaf'       => true,
                 'expanded'   => false,
                 'type'       => $node->getType(),

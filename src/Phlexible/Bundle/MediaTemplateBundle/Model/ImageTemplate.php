@@ -17,6 +17,9 @@ class ImageTemplate extends AbstractTemplate
 {
     const TYPE_IMAGE = 'image';
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->setType(self::TYPE_IMAGE);

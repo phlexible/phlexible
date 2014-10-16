@@ -17,6 +17,9 @@ class AudioTemplate extends AbstractTemplate
 {
     const TYPE_AUDIO = 'audio';
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->setType(self::TYPE_AUDIO);

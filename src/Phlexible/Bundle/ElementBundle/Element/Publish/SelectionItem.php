@@ -58,9 +58,9 @@ class SelectionItem
      * @param int                      $version
      * @param string                   $language
      * @param string                   $title
+     * @param bool                     $isInstance
      * @param int                      $depth
      * @param string                   $path
-     * @param bool                     $isInstance
      */
     public function __construct($target, $version, $language, $title, $isInstance, $depth, $path)
     {

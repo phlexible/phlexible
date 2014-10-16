@@ -478,7 +478,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             ->setSortDir((string) $element->getAttribute('sortDir'))
             ->setTitles($titles)
             ->setSlugs($slugs)
-            #->setVersions($versions)
+            //->setVersions($versions)
             ->setCreatedAt(new \DateTime((string) $element->getAttribute('createdAt')))
             ->setCreateUserId((string) $element->getAttribute('createUserId'));
 

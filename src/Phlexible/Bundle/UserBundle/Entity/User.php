@@ -59,7 +59,7 @@ class User extends BaseUser
      * @var array
      * @ORM\Column(type="json_array")
      */
-    private $properties = array();
+    private $properties = [];
 
     /**
      * @var \DateTime
@@ -80,6 +80,9 @@ class User extends BaseUser
      */
     protected $groups;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->groups = new ArrayCollection();
@@ -286,7 +289,7 @@ class User extends BaseUser
      */
     public function setProperties($properties)
     {
-        $this->properties = array();
+        $this->properties = [];
 
         return $this->addProperties($properties);
     }

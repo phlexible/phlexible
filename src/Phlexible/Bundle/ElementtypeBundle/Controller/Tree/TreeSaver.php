@@ -93,8 +93,7 @@ class TreeSaver
             ->setMappings($rootMappings)
             ->setComment($comment)
             ->setModifyUserId($user->getId())
-            ->setModifiedAt(new \DateTime())
-        ;
+            ->setModifiedAt(new \DateTime());
 
         $elementtypeStructure = null;
         if (isset($rootData['children'])) {

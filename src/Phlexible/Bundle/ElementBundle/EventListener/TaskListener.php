@@ -50,11 +50,11 @@ class TaskListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             TreeEvents::PUBLISH_NODE => 'onPublishNode',
             TreeEvents::SET_NODE_OFFLINE => 'onSetNodeOffline',
             TreeEvents::DELETE_NODE => 'onDeleteNode',
-        );
+        ];
     }
 
     /**
@@ -66,15 +66,15 @@ class TaskListener implements EventSubscriberInterface
         $language = $event->getLanguage();
 
         if ($node->getType() !== 'element') {
-            return false;
+            return;
         }
 
         $this->doTask(
-            array(
+            [
                 'type' => 'element',
                 'type_id' => $node->getId(),
                 'language' => $language
-            ),
+            ],
             'element.publish',
             $this->securityContext->getToken()->getUser()->getId()
         );
@@ -89,15 +89,15 @@ class TaskListener implements EventSubscriberInterface
         $language = $event->getLanguage();
 
         if ($node->getType() !== 'element') {
-            return false;
+            return;
         }
 
         $this->doTask(
-            array(
+            [
                 'type' => 'element',
                 'type_id' => $node->getId(),
                 'language' => $language
-            ),
+            ],
             'element.set_offline',
             $this->securityContext->getToken()->getUser()->getId()
         );
@@ -112,30 +112,35 @@ class TaskListener implements EventSubscriberInterface
         $language = null;
 
         if ($node->getType() !== 'element') {
-            return false;
+            return;
         }
 
         $this->doTask(
-            array(
+            [
                 'type' => 'element',
                 'type_id' => $node->getId()
-            ),
+            ],
             'element.delete',
             $this->securityContext->getToken()->getUser()->getId()
         );
     }
 
+    /**
+     * @param array  $payload
+     * @param string $type
+     * @param string $userId
+     */
     private function doTask(array $payload, $type, $userId)
     {
         $tasks = $this->taskManager->findBy(
-            array(
+            [
                 'type' => $type,
-                'status' => array(
+                'status' => [
                     Task::STATUS_OPEN,
                     Task::STATUS_REJECTED,
                     Task::STATUS_REOPENED,
-                )
-            )
+                ]
+            ]
         );
 
         if (!$tasks) {

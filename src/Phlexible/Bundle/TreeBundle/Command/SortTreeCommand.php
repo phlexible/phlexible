@@ -133,10 +133,10 @@ class SortTreeCommand extends ContainerAwareCommand
 
         $profiles = $db->getProfiler()->getQueryProfiles();
         foreach ($profiles as $profile) {
-            #$outputter->writeln($profile->getElapsedSecs() . ' ' . str_replace("\n", ' ', $profile->getQuery()));
+            //$outputter->writeln($profile->getElapsedSecs() . ' ' . str_replace("\n", ' ', $profile->getQuery()));
         }
-        #$outputter->writeln($db->getProfiler()->getTotalNumQueries());
-        #$outputter->writeln($db->getProfiler()->getTotalElapsedSecs());
+        //$outputter->writeln($db->getProfiler()->getTotalNumQueries());
+        //$outputter->writeln($db->getProfiler()->getTotalElapsedSecs());
     }
 
 }

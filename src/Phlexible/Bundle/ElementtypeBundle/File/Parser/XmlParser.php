@@ -120,8 +120,7 @@ class XmlParser implements ParserInterface
             ->setCreatedAt(new \DateTime($createdAt))
             ->setCreateUserId($createUserId)
             ->setModifiedAt(new \DateTime($modifiedAt))
-            ->setModifyUserId($modifyUserId)
-        ;
+            ->setModifyUserId($modifyUserId);
 
         return $elementtype;
     }
@@ -149,6 +148,7 @@ class XmlParser implements ParserInterface
      * @param Element                  $node
      * @param ElementtypeStructure     $elementtypeStructure
      * @param ElementtypeStructureNode $parentNode
+     * @param bool                     $isReferenced
      */
     private function loadNode(Element $node, ElementtypeStructure $elementtypeStructure, ElementtypeStructureNode $parentNode = null, $isReferenced = false)
     {

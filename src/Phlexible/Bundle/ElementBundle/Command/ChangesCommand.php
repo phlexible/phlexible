@@ -31,8 +31,7 @@ class ChangesCommand extends ContainerAwareCommand
             ->setName('element:changes')
             ->setDescription('Show element changes.')
             ->addOption('commit', null, InputOption::VALUE_NONE, 'Commit changes')
-            ->addOption('queue', null, InputOption::VALUE_NONE, 'Via queue')
-        ;
+            ->addOption('queue', null, InputOption::VALUE_NONE, 'Via queue');
     }
 
 

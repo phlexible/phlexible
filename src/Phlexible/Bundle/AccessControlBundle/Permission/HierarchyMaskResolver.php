@@ -10,6 +10,11 @@ namespace Phlexible\Bundle\AccessControlBundle\Permission;
 
 use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
 
+/**
+ * Class HierarchyMaskResolver
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class HierarchyMaskResolver
 {
     /**

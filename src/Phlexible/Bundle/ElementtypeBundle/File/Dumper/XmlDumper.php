@@ -88,7 +88,7 @@ class XmlDumper implements DumperInterface
 
     /**
      * @param ElementtypeStructure     $structure
-     * @param \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode $node
+     * @param ElementtypeStructureNode $node
      * @param Element                  $element
      *
      * @return Element

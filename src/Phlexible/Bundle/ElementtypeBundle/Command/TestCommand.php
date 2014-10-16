@@ -47,8 +47,7 @@ class TestCommand extends ContainerAwareCommand
         $qb = $conn->createQueryBuilder();
         $qb
             ->select('et.*')
-            ->from('elementtype', 'et')
-        ;
+            ->from('elementtype', 'et');
 
         $filesystem = new Filesystem();
         $path = $this->getContainer()->getParameter('kernel.root_dir') . '/Resources/elementtypes/';
@@ -103,8 +102,7 @@ class TestCommand extends ContainerAwareCommand
                 ->setCreatedAt(new \DateTime($row['created_at']))
                 ->setCreateUserId($row['create_user_id'])
                 ->setModifiedAt(new \DateTime($versionRow['created_at']))
-                ->setModifyUserId($versionRow['create_user_id'])
-            ;
+                ->setModifyUserId($versionRow['create_user_id']);
 
             $output->writeln($row['id'] . " => " . $elementtype->getId() . " " . $elementtype->getUniqueId());
 
@@ -207,8 +205,7 @@ class TestCommand extends ContainerAwareCommand
                 ->setComment($row['comment'])
                 ->setLabels($labels)
                 ->setConfiguration($configuration)
-                ->setValidation($validation)
-            ;
+                ->setValidation($validation);
 
             if ($row['reference_id']) {
                 $referenceElementtypeId = $map[$row['reference_id']]['id'];

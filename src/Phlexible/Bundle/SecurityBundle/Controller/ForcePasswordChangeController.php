@@ -28,6 +28,7 @@ class ForcePasswordChangeController extends Controller
      * Show change password page
      *
      * @param Request $request
+     *
      * @return array
      * @Route("", name="security_forcepasswordchange_view")
      * @Template
@@ -68,6 +69,7 @@ class ForcePasswordChangeController extends Controller
      * Show change password page
      *
      * @param Request $request
+     *
      * @return array
      * @Route("/save", name="security_forcepasswordchange_check")
      */

@@ -112,6 +112,9 @@ class File implements FileInterface
      */
     protected $site;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->attributes = new AttributeBag();

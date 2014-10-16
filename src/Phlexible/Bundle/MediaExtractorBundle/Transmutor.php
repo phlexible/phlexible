@@ -51,11 +51,6 @@ class Transmutor
         $this->flashTransmutors = $flashTransmutors;
     }
 
-    public function transmute(FileInterface $file, $target)
-    {
-
-    }
-
     /**
      * Transmute asset to image file
      *

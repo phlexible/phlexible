@@ -11,10 +11,6 @@ services:
         class: Phlexible\Bundle\UserBundle\Successor\SuccessorService
         arguments: [@event_dispatcher, @phlexible_message.message_poster]
 
-    phlexible_user.password_checker:
-        class: Phlexible\Bundle\UserBundle\Password\PasswordChecker
-        arguments: [%phlexible_user.password.min_length%]
-
     phlexible_user.mailer:
         class: Phlexible\Bundle\UserBundle\Mailer\Mailer
         arguments:

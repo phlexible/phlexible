@@ -142,9 +142,9 @@ class ElementtypeService
      * @param string               $uniqueId
      * @param string               $name
      * @param string               $icon
-     * @param string               $userId
      * @param ElementtypeStructure $elementtypeStructure
      * @param array                $mappings
+     * @param string               $userId
      * @param bool                 $flush
      *
      * @return Elementtype

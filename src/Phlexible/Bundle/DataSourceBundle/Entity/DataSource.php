@@ -65,6 +65,9 @@ class DataSource
      */
     private $valueBags;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->valueBags = new ArrayCollection();
@@ -195,7 +198,7 @@ class DataSource
      */
     public function getLanguages()
     {
-        $languages = array();
+        $languages = [];
         foreach ($this->valueBags as $value) {
             $languages[] = $value->getLanguage();
         }
@@ -264,7 +267,7 @@ class DataSource
             }
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -280,7 +283,7 @@ class DataSource
             }
         }
 
-        return array();
+        return [];
     }
 
     /**

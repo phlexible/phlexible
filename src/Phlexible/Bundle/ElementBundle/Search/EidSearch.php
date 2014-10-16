@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Search;
 /**
  * EID search
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class EidSearch extends AbstractSearch
 {

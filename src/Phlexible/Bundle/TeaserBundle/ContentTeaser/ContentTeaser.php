@@ -402,7 +402,7 @@ class ContentTeaser
     }
 
     /**
-     * @param $title
+     * @param string $title
      *
      * @return $this
      */

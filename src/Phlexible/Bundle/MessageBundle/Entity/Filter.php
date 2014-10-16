@@ -65,6 +65,9 @@ class Filter
      */
     private $criteria;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->criteria = new Criteria();

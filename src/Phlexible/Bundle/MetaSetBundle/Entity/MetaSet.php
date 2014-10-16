@@ -66,6 +66,9 @@ class MetaSet
      */
     private $fields;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->fields = new ArrayCollection();

@@ -38,7 +38,8 @@ class FolderController extends Controller
             $rootFolder = $site->findRootFolder();
 
             if (!$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
-                #continue;
+                // TODO: uncomment
+                //continue;
             }
 
             $data[] = array(
@@ -70,7 +71,8 @@ class FolderController extends Controller
 
         foreach ($site->findFoldersByParentFolder($folder) as $subFolder) {
             if (!$securityContext->isGranted('FOLDER_READ', $subFolder)) {
-                #continue;
+                // TODO: uncomment
+                //continue;
             }
 
             $tmp = array(

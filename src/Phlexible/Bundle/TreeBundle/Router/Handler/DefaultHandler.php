@@ -325,7 +325,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * Generate path
      *
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
+     * @param TreeNodeInterface $node
      * @param string            $language
      *
      * @return string

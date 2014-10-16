@@ -103,7 +103,7 @@ class XmlLoader
 
         foreach ($structureNode->value as $valueNode) {
             $attr = $valueNode->attributes();
-            $value = (string)$valueNode;
+            $value = (string) $valueNode;
             if ((string) $attr['dataType'] === 'array') {
                 $value = json_decode($value, true);
             }

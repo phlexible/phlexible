@@ -25,7 +25,7 @@ class IconController extends Controller
      * Delivers an icon
      *
      * @param Request $request
-     * @param string $icon
+     * @param string  $icon
      *
      * @return Response
      * @Route("/{icon}", name="elements_icon")

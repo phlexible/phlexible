@@ -284,8 +284,7 @@ class ElementStructureLoader
             )
             ->from('element_structure_value', 'esv')
             ->where($qb->expr()->eq('esv.eid', $eid))
-            ->andWhere($qb->expr()->eq('esv.version', $version))
-        ;
+            ->andWhere($qb->expr()->eq('esv.version', $version));
 
         $result = $this->connection->fetchAll($qb->getSQL());
 

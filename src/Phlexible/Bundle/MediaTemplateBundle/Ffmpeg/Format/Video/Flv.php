@@ -18,6 +18,10 @@ use FFMpeg\Format\Video\DefaultVideo;
  */
 class Flv extends DefaultVideo
 {
+    /**
+     * @param string $audioCodec
+     * @param string $videoCodec
+     */
     public function __construct($audioCodec = 'libmp3lame', $videoCodec = 'flv')
     {
         $this
@@ -38,7 +42,7 @@ class Flv extends DefaultVideo
      */
     public function getAvailableAudioCodecs()
     {
-        return array('libmp3lame');
+        return ['libmp3lame'];
     }
 
     /**
@@ -46,6 +50,6 @@ class Flv extends DefaultVideo
      */
     public function getAvailableVideoCodecs()
     {
-        return array('flv');
+        return ['flv'];
     }
 }

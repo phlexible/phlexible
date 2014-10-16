@@ -100,6 +100,9 @@ class Folder implements FolderInterface
      */
     protected $site;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->files = new ArrayCollection();
@@ -127,10 +130,10 @@ class Folder implements FolderInterface
      */
     public function getContentObjectIdentifiers()
     {
-        return array(
+        return [
             'type' => 'folder',
             'id'   => $this->id,
-        );
+        ];
     }
 
     /**
@@ -146,7 +149,7 @@ class Folder implements FolderInterface
      */
     public function getIdPath()
     {
-        $path = array($this->id);
+        $path = [$this->id];
         $current = $this;
         while ($current->getParentId()) {
             $path[] = $current->getParentId();

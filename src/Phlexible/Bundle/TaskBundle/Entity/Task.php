@@ -76,7 +76,7 @@ class Task implements StatefulInterface
      * @var array
      * @ORM\Column(name="involved_user_ids", type="simple_array")
      */
-    private $involvedUserIds = array();
+    private $involvedUserIds = [];
 
     /**
      * @var string
@@ -96,6 +96,9 @@ class Task implements StatefulInterface
      */
     private $comments;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->transitions = new ArrayCollection();

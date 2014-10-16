@@ -17,6 +17,9 @@ class PdfTemplate extends AbstractTemplate
 {
     const TYPE_PDF = 'pdf';
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->setType(self::TYPE_PDF);

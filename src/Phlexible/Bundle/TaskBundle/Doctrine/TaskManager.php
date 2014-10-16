@@ -373,8 +373,7 @@ class TaskManager implements TaskManagerInterface
                 ->setOldState($oldState)
                 ->setNewState($task->getFiniteState())
                 ->setCreatedAt(new \DateTime())
-                ->setCreateUserId($byUser->getId())
-            ;
+                ->setCreateUserId($byUser->getId());
 
             $this->entityManager->persist($taskTransition);
 

@@ -49,6 +49,7 @@ class LinkController extends Controller
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
+        $translator = $this->get('translator');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
 
@@ -101,11 +102,7 @@ class LinkController extends Controller
                 'allowDrag'  => false,
                 'allowDrop'  => false,
                 'children'   => array(),
-                'qtip'       => $this->getContainer()->get('translator')->trans(
-                        'elements.doubleclick_to_sort',
-                        array(),
-                        'gui'
-                    ),
+                'qtip'       => $translator->trans('elements.doubleclick_to_sort', array(), 'gui'),
             );
 
             $teasers = $teaserManager->getAllByTID(
@@ -546,7 +543,7 @@ class LinkController extends Controller
      * @param array             $nodes
      * @param string            $language
      * @param int               $mode
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $targetNode
+     * @param TreeNodeInterface $targetNode
      *
      * @return array
      */
@@ -607,7 +604,7 @@ class LinkController extends Controller
     /**
      * Strip all disabled nodes recursivly
      *
-     * @param  array $data
+     * @param array $data
      *
      * @return array
      */

@@ -24,7 +24,7 @@ class MoveNodeEvent extends NodeEvent
 
     /**
      * @param TreeNodeInterface $node
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $parentNode
+     * @param TreeNodeInterface $parentNode
      */
     public function __construct(TreeNodeInterface $node, TreeNodeInterface $parentNode)
     {
@@ -34,7 +34,7 @@ class MoveNodeEvent extends NodeEvent
     }
 
     /**
-     * @return \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
+     * @return TreeNodeInterface
      */
     public function getParentNode()
     {

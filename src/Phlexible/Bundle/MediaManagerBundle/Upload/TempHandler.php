@@ -21,7 +21,7 @@ class TempHandler
 {
     const ACTION_SAVE = 'save';
     const ACTION_REPLACE = 'replace';
-    const ACTION_KEEP_BOtH = 'keep';
+    const ACTION_KEEP_BOTH = 'keep';
     const ACTION_DISCARD = 'discard';
     const ACTION_VERSION = 'version';
 

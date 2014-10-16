@@ -19,7 +19,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * TODO: elementSourceManager
+ * @TODO: elementSourceManager
  */
 class Synchronizer
 {
@@ -58,7 +58,7 @@ class Synchronizer
         $this->importElementtype($change->getElementtype());
 
         $elementVersions = $change->getElementVersions();
-        while(count($elementVersions)) {
+        while (count($elementVersions)) {
             $elementVersion = array_shift($elementVersions);
             $elementVersion->setElementtypeVersion($change->getElementtype()->getRevision());
             $this->elementVersionManager->updateElementVersion($elementVersion, !count($elementVersions));

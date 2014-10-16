@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
-use Doctrine\ORM\PersistentCollection;
 use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
@@ -69,8 +68,8 @@ class UsersController extends Controller
         $securityContext = $this->get('security.context');
         $systemUserUid = $userManager->getSystemUserId();
 
-        $users = array();
-        $sortField = array();
+        $users = [];
+        $sortField = [];
 
         foreach ($allUsers as $user) {
             /* @var $user UserInterface */
@@ -143,12 +142,12 @@ class UsersController extends Controller
                 }
             }
 
-            $groups = array();
+            $groups = [];
             foreach ($user->getGroups() as $group) {
                 $groups[] = $group->getId();
             }
 
-            $dummy = array(
+            $dummy = [
                 'uid'        => $user->getId(),
                 'username'   => $user->getUsername(),
                 'email'      => $user->getEmail(),
@@ -163,7 +162,7 @@ class UsersController extends Controller
                 'modifyDate' => $user->getModifiedAt()->format('Y-m-d H:i:s'),
                 'modifyUser' => '',
                 'properties' => $user->getProperties(),
-            );
+            ];
 
             $users[] = $dummy;
 
@@ -179,10 +178,12 @@ class UsersController extends Controller
         $count = count($users);
         $users = array_slice($users, $start, $limit);
 
-        return new JsonResponse(array(
-            'users' => $users,
-            'count' => $count
-        ));
+        return new JsonResponse(
+            [
+                'users' => $users,
+                'count' => $count
+            ]
+        );
     }
 
     /**
@@ -274,15 +275,12 @@ class UsersController extends Controller
         $user = $userManager->find($userId);
         /* @var $user User */
 
-        if ($request->get('username') && $request->get('username') !== $user->getUsername(
-            ) && $userManager->checkUsername($request->get('username'))
-        ) {
+        if ($request->get('username') && $request->get('username') !== $user->getUsername()
+                && $userManager->checkUsername($request->get('username'))) {
             throw new \Exception('Username "' . $request->get('username') . '" already exists.');
         }
-        if ($request->get('email') && $request->get('email') !== $user->getEmail() && $userManager->checkEmail(
-                $request->get('email')
-            )
-        ) {
+        if ($request->get('email') && $request->get('email') !== $user->getEmail()
+                && $userManager->checkEmail($request->get('email'))) {
             throw new \Exception('Email "' . $request->get('email') . '" already exists.');
         }
 
@@ -342,7 +340,7 @@ class UsersController extends Controller
         }
 
         // properties
-        $properties = array();
+        $properties = [];
         foreach ($request->request->all() as $key => $value) {
             if (substr($key, 0, 9) === 'property_') {
                 $key = substr($key, 9);
@@ -352,7 +350,7 @@ class UsersController extends Controller
         if (count($properties)) {
             $user->setProperties($properties);
         } else {
-            $user->setProperties(array());
+            $user->setProperties([]);
         }
 
         // roles
@@ -360,7 +358,7 @@ class UsersController extends Controller
         if ($roles) {
             $user->setRoles(explode(',', $roles));
         } else {
-            $user->setRoles(array());
+            $user->setRoles([]);
         }
 
         // groups
@@ -422,21 +420,21 @@ class UsersController extends Controller
         $allRoles = $acl->getRoles();
         $everyoneGroupId = $groupManager->getEveryoneGroupId();
 
-        $groups = array();
+        $groups = [];
         foreach ($allGroups as $group) {
             if ($group->getId() == $everyoneGroupId) {
                 continue;
             }
 
-            $groups[] = array(
+            $groups[] = [
                 'id'    => $group->getId(),
                 'title' => $group->getName()
-            );
+            ];
         }
 
         $currentUser = $this->getUser();
 
-        $roles = array();
+        $roles = [];
         foreach ($allRoles as $role) {
             if ($role == 'DEVELOPER' && !$currentUser->hasRole('DEVELOPER')) {
                 continue;
@@ -446,13 +444,13 @@ class UsersController extends Controller
                 continue;
             }
 
-            $roles[] = array('id' => $role, 'title' => ucfirst(str_replace('_', ' ', $role)));
+            $roles[] = ['id' => $role, 'title' => ucfirst(str_replace('_', ' ', $role))];
         }
 
-        $data = array(
+        $data = [
             'groups' => $groups,
             'roles'  => $roles,
-        );
+        ];
 
         return new JsonResponse($data);
     }
@@ -474,9 +472,11 @@ class UsersController extends Controller
         $generator = new PasswordGenerator();
         $password = $generator->create($minLength, PasswordGenerator::TYPE_UNPRONOUNCABLE);
 
-        return new JsonResponse(array(
-            'password' => $password,
-            'success'  => true
-        ));
+        return new JsonResponse(
+            [
+                'password' => $password,
+                'success'  => true
+            ]
+        );
     }
 }

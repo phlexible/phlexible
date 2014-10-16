@@ -487,7 +487,13 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
     /**
      * {@inheritdoc}
      */
-    public function createInstance(TreeNodeInterface $parentNode, TreeNodeInterface $afterNode = null, TreeNodeInterface $sourceNode, $userId) {
+    public function createInstance(
+        TreeNodeInterface $parentNode,
+        TreeNodeInterface $afterNode = null,
+        TreeNodeInterface $sourceNode,
+        $userId
+    )
+    {
 
         $sort = 0;
         $sortNodes = array();

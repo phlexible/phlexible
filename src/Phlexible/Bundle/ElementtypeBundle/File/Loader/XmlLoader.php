@@ -47,7 +47,7 @@ class XmlLoader implements LoaderInterface
 
     private function createMap()
     {
-        if ($this->idMap !== null)  {
+        if ($this->idMap !== null) {
             return;
         }
 

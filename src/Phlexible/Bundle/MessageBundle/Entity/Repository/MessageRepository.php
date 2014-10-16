@@ -191,6 +191,7 @@ class MessageRepository extends EntityRepository
                 $this->applyCriteriumToQueryBuilder($criterium, $qb, $expr, $prefix);
             }
         }
+
         return $expr;
     }
 

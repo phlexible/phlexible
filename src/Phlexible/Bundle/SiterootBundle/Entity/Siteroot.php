@@ -75,25 +75,25 @@ class Siteroot
      * @var array
      * @ORM\Column(name="special_tids", type="json_array")
      */
-    private $specialTids = array();
+    private $specialTids = [];
 
     /**
      * @var array
      * @ORM\Column(type="json_array")
      */
-    private $titles = array();
+    private $titles = [];
 
     /**
      * @var array
      * @ORM\Column(type="json_array")
      */
-    private $properties = array();
+    private $properties = [];
 
     /**
      * @var array
      * @ORM\Column(name="content_channels", type="json_array")
      */
-    private $contentChannels = array();
+    private $contentChannels = [];
 
     /**
      * @var Navigation[]|ArrayCollection
@@ -107,6 +107,9 @@ class Siteroot
      */
     private $urls;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->navigations = new ArrayCollection();
@@ -420,7 +423,7 @@ class Siteroot
      */
     public function getSpecialTidsForLanguage($language = null)
     {
-        $specialTids = array();
+        $specialTids = [];
 
         foreach ($this->specialTids as $specialTid) {
             if ($specialTid['language'] === $language || $specialTid['language'] === null) {
@@ -575,7 +578,7 @@ class Siteroot
     public function getContentChannelIds()
     {
         if (null === $this->contentChannels) {
-            return array();
+            return [];
         }
 
         return array_keys($this->contentChannels);

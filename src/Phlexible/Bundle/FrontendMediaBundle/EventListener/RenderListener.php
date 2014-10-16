@@ -15,6 +15,8 @@ namespace Phlexible\Bundle\FrontendMediaBundle\EventListener;
  */
 class RenderListener
 {
+    // TODO: repair
+    /*
     public function onElementtypeDocumentlist(Makeweb_Renderers_Event_Elementtype $event)
     {
         // TODO: parameter alle ans template übergeben? erspart callback...
@@ -27,4 +29,5 @@ class RenderListener
             $view->assign('fileid', $request->getParam('fileid'));
         }
     }
+    */
 }

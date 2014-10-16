@@ -92,6 +92,7 @@ class SearchController extends Controller
                 );
             }
         }
+
         return new JsonResponse(array('results' => $results));
     }
 

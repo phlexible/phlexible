@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Field;
 /**
  * Display field
  *
- * @author      Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class DisplayField extends AbstractField
 {

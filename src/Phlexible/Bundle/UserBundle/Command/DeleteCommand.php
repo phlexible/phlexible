@@ -50,11 +50,13 @@ class DeleteCommand extends ContainerAwareCommand
 
         if (!$user) {
             $output->writeln("<error>User $username not found</error>");
+
             return 1;
         }
 
         if (!$successorUser) {
             $output->writeln("<error>Successor user $successorUser not found</error>");
+
             return 1;
         }
 

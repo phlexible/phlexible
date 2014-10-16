@@ -34,8 +34,7 @@ class DumpCommand extends ContainerAwareCommand
             ->addArgument('eid', InputArgument::REQUIRED, 'Element ID')
             ->addOption('ver', null, InputOption::VALUE_REQUIRED, 'Element version')
             ->addOption('language', null, InputOption::VALUE_REQUIRED, 'Element language')
-            ->addOption('values', null, InputOption::VALUE_NONE, 'Show values')
-        ;
+            ->addOption('values', null, InputOption::VALUE_NONE, 'Show values');
     }
 
     /**

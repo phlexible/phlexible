@@ -80,6 +80,9 @@ class Site implements SiteInterface, \IteratorAggregate
         $driver->setSite($this);
     }
 
+    /**
+     * @return FolderIterator
+     */
     public function getIterator()
     {
         return new FolderIterator($this);

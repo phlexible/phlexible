@@ -674,11 +674,8 @@ class TeaserManager implements TeaserManagerInterface
                         }
 
                         $noDisplay = false;
-                        if (!$isInherited && ($teaserArray['no_display'] || in_array(
-                                    $teaserArray['teaser_eid'],
-                                    $hideEids
-                                ))
-                        ) {
+                        if (!$isInherited && ($teaserArray['no_display']
+                                || in_array($teaserArray['teaser_eid'], $hideEids))) {
                             $noDisplay = true;
                         }
 

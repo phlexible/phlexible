@@ -112,8 +112,8 @@ class LatestFilesPortlet extends Portlet
                 $cacheItems = $this->cacheManager->findByFile($file);
                 $cacheStatus = array();
                 foreach ($cacheItems as $cacheItem) {
-                    $cacheStatus[$cacheItem->getTemplateKey()] = $cacheItem->getStatus(
-                        ) . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
+                    $cacheStatus[$cacheItem->getTemplateKey()] =
+                        $cacheItem->getStatus() . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
                 }
 
                 $data[] = array(

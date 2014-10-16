@@ -592,6 +592,7 @@ class ElementStructure implements \IteratorAggregate
         foreach ($this->structures as $structure) {
             $dump .= $structure->dump($withValues, $language, $depth + 1);
         }
+
         return $dump;
     }
 

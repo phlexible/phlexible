@@ -33,16 +33,16 @@ class FolderIterator implements \Iterator, \RecursiveIterator
         if (is_array($folder)) {
             $this->iterator = new \ArrayIterator($folder);
         } elseif ($folder instanceof FolderInterface) {
-            $this->iterator = new \ArrayIterator(array($folder));
+            $this->iterator = new \ArrayIterator([$folder]);
         } elseif ($folder instanceof SiteInterface) {
-            $this->iterator = new \ArrayIterator(array($folder->findRootFolder()));
+            $this->iterator = new \ArrayIterator([$folder->findRootFolder()]);
         } else {
             throw new RuntimeException('FolderIterator needs either Site or Folder.');
         }
     }
 
     /**
-     * @return Folder
+     * {@inheritdoc}
      */
     public function current()
     {
@@ -50,25 +50,31 @@ class FolderIterator implements \Iterator, \RecursiveIterator
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function key()
     {
         return $this->current()->getId();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function next()
     {
         $this->iterator->next();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rewind()
     {
         $this->iterator->rewind();
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function valid()
     {

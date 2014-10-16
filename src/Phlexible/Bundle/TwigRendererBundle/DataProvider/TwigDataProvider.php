@@ -99,7 +99,7 @@ class TwigDataProvider implements DataProviderInterface
     }
 
     /**
-     * @param \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration $renderConfiguration
+     * @param RenderConfiguration $renderConfiguration
      * @param string              $language
      *
      * @return array

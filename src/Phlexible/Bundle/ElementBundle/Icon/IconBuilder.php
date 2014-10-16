@@ -36,9 +36,9 @@ class IconBuilder
      *
      * @return string
      */
-    public function getAssetPath($icon, array $params = array())
+    public function getAssetPath($icon, array $params = [])
     {
-        $overlay = array();
+        $overlay = [];
 
         if (!empty($params['status'])) {
             $overlay['status'] = $params['status'];
@@ -139,6 +139,9 @@ class IconBuilder
         return $cacheFilename;
     }
 
+    /**
+     * Flush
+     */
     public function flush()
     {
         $cacheDir = $this->getCacheDir();

@@ -48,7 +48,7 @@ class ElementMetaDataManager extends MetaDataManager
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return MetaDataInterface[]
      */

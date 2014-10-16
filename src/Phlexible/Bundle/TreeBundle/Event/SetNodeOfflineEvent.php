@@ -23,7 +23,7 @@ class SetNodeOfflineEvent extends NodeEvent
     private $language;
 
     /**
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
+     * @param TreeNodeInterface $node
      * @param string            $language
      */
     public function __construct(TreeNodeInterface $node, $language)

@@ -78,10 +78,10 @@ class ProxyGenerator
     }
 
     /**
-     * @param string $namespace
-     * @param string $prefix
+     * @param string   $namespace
+     * @param string   $prefix
      * @param PhpClass $parentClass
-     * @param array $items
+     * @param array    $items
      *
      * @return array
      */

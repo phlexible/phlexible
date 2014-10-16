@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Search;
 /**
  * Unique ID search
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class UniqueIdSearch extends AbstractSearch
 {

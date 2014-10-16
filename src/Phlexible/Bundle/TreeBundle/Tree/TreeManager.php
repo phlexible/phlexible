@@ -39,7 +39,7 @@ class TreeManager
 
     /**
      * @param SiterootManagerInterface $siterootManager
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeFactoryInterface     $treeFactory
+     * @param TreeFactoryInterface     $treeFactory
      */
     public function __construct(SiterootManagerInterface $siterootManager, TreeFactoryInterface $treeFactory)
     {

@@ -88,7 +88,9 @@ class TailCommand extends ContainerAwareCommand
             //$output->writeln($minTime->format('Y-m-d H:i:s').' '.count($messages));
 
             foreach ($messages as $message) {
-                $time = $message->getCreateTime();
+                /* @var $message Message */
+
+                $time = $message->getCreatedAt();
 
                 if ($time <= $minTime) {
                     continue;
@@ -108,9 +110,8 @@ class TailCommand extends ContainerAwareCommand
                     )
                 );
 
-                if ($showBody || $message->getPriority() >= Message::PRIORITY_URGENT || $message->getType(
-                    ) === Message::TYPE_ERROR
-                ) {
+                if ($showBody || $message->getPriority() >= Message::PRIORITY_URGENT
+                        || $message->getType() === Message::TYPE_ERROR) {
                     $output->writeln(' > ' . $message->getBody());
                 }
             }

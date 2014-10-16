@@ -71,6 +71,9 @@ class Role
      */
     private $resources;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->resources = new ArrayCollection();

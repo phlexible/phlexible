@@ -1,24 +1,17 @@
 <?php
 /**
- * MAKEweb
+ * phlexible
  *
- * PHP Version 5
- *
- * @category    MAKEweb
- * @package     Makeweb_Elements
- * @copyright   2007 brainbits GmbH (http://www.brainbits.net)
- * @version     SVN: $Id: Generator.php 2312 2007-01-25 18:46:27Z swentz $
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
 
 /**
- * Before Reorder Teasers Event
+ * Before reorder teasers event
  *
- * @category    MAKEweb
- * @package     Makeweb_Elements
- * @author      Peter Fahsel <pfahsel@brainbits.net>
- * @copyright   2012 brainbits GmbH (http://www.brainbits.net)
+ * @author Peter Fahsel <pfahsel@brainbits.net>
  */
-class Makeweb_Teasers_Event_BeforeReorderTeasers extends Brainbits_Event_Notification_Abstract
+class BeforeReorderTeasersEvent extends \Symfony\Component\EventDispatcher\Event
 {
     /**
      * @var string
@@ -45,13 +38,10 @@ class Makeweb_Teasers_Event_BeforeReorderTeasers extends Brainbits_Event_Notific
      */
     protected $_sortIds = null;
 
-
     /**
-     * Constructor
-     *
-     * @param       $treeId
-     * @param       $eid
-     * @param       $areaId
+     * @param int   $treeId
+     * @param int   $eid
+     * @param int   $areaId
      * @param array $sortIds
      */
     public function __construct($treeId, $eid, $areaId, array $sortIds = array())

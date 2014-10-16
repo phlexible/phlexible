@@ -85,6 +85,9 @@ class Message
      */
     private $createdAt;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -95,7 +98,7 @@ class Message
      */
     public function getDefaults()
     {
-        return array();
+        return [];
     }
 
     /**

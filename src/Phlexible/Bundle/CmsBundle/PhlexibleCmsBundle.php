@@ -20,6 +20,9 @@ class PhlexibleCmsBundle extends Bundle
     const RESOURCE_REPORTS = 'reports';
     const RESOURCE_STATISTICS = 'statistics';
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         if (extension_loaded('suhosin')) {

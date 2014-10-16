@@ -15,7 +15,7 @@ use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 /**
  * Abstract element search
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 abstract class AbstractSearch implements SearchProviderInterface
 {

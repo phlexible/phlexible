@@ -17,8 +17,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleFrontendMediaBundle extends Bundle
 {
-    public function getFrontendPublishItems()
-    {
-        return $this->getContainer()->get('frontendmediamanagerFrontendPublishItems')->getItems();
-    }
 }

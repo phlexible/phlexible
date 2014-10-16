@@ -52,22 +52,25 @@ class LoadDataListener
         $this->securityContext = $securityContext;
     }
 
+    /**
+     * @param LoadDataEvent $event
+     */
     public function onLoadData(LoadDataEvent $event)
     {
         if ($teaser = $event->getTeaser()) {
-            $taskPayload = array('teaser_id' => $teaser->getId(), 'language' => $event->getLanguage());
+            $taskPayload = ['teaser_id' => $teaser->getId(), 'language' => $event->getLanguage()];
         } else {
-            $taskPayload = array('tree_id' => $event->getNode()->getId(), 'language' => $event->getLanguage());
+            $taskPayload = ['tree_id' => $event->getNode()->getId(), 'language' => $event->getLanguage()];
         }
 
         $task = $this->taskManager->findOneByPayload(
             $taskPayload,
-            array(
+            [
                 Task::STATUS_OPEN,
                 Task::STATUS_REJECTED,
                 Task::STATUS_REOPENED,
                 Task::STATUS_FINISHED
-            )
+            ]
         );
 
         if (!$task) {
@@ -75,12 +78,12 @@ class LoadDataListener
 
             $task = $this->taskManager->findOneByPayload(
                 $taskPayload,
-                array(
+                [
                     Task::STATUS_OPEN,
                     Task::STATUS_REJECTED,
                     Task::STATUS_REOPENED,
                     Task::STATUS_FINISHED
-                )
+                ]
             );
         }
 
@@ -101,7 +104,7 @@ class LoadDataListener
             $type = 'created_by_me';
         }
 
-        $taskInfo = array(
+        $taskInfo = [
             'id'        => $task->getId(),
             'status'    => $task->getFiniteState(),
             'type'      => $type,
@@ -111,7 +114,7 @@ class LoadDataListener
             'recipient' => $this->userManager->find($assignedUserId)->getDisplayName(),
             'date'      => $task->getCreatedAt()->format('Y-m-d'),
             'time'      => $task->getCreatedAt()->format('H:i:s'),
-        );
+        ];
 
         $event->getData()->task = $taskInfo;
     }

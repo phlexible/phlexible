@@ -17,6 +17,9 @@ class VideoTemplate extends AbstractTemplate
 {
     const TYPE_VIDEO = 'video';
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->setType(self::TYPE_VIDEO);
@@ -27,7 +30,7 @@ class VideoTemplate extends AbstractTemplate
      */
     public function getDefaultParameters()
     {
-        return array(
+        return [
             'match_format'     => 0,
             'for_web'          => 0,
             'format'           => 'flv',
@@ -42,7 +45,7 @@ class VideoTemplate extends AbstractTemplate
             'audio_samplerate' => 0,
             'audio_samplebits' => 0,
             'audio_channels'   => 0,
-        );
+        ];
     }
 
     /**
@@ -50,7 +53,7 @@ class VideoTemplate extends AbstractTemplate
      */
     public function getAllowedParameters()
     {
-        return array(
+        return [
             'match_format',
             'for_web',
             'format',
@@ -65,7 +68,7 @@ class VideoTemplate extends AbstractTemplate
             'audio_samplerate',
             'audio_samplebits',
             'audio_channels',
-        );
+        ];
     }
 
     /**
