@@ -10,6 +10,9 @@ namespace Phlexible\Bundle\ElementBundle\Portlet;
 
 use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
+use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
+use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -22,17 +25,22 @@ class LatestElementsPortlet extends Portlet
     /**
      * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
-     * @var Makeweb_Elements_Element_Version_Manager
+     * @var ElementService
      */
-    private $versionManager;
+    private $elementService;
 
     /**
-     * @var Makeweb_Elements_Tree_Manager
+     * @var TreeManager
      */
     private $treeManager;
+
+    /**
+     * @var IconResolver
+     */
+    private $iconResolver;
 
     /**
      * @var int
@@ -40,28 +48,31 @@ class LatestElementsPortlet extends Portlet
     private $numItems;
 
     /**
-     * @param TranslatorInterface                      $translator
-     * @param Makeweb_Elements_Element_Version_Manager $versionManager
-     * @param Makeweb_Elements_Tree_Manager            $treeManager
-     * @param Connection                               $connection
-     * @param int                                      $numItems
+     * @param TranslatorInterface $translator
+     * @param ElementService      $elementService
+     * @param TreeManager         $treeManager
+     * @param IconResolver        $iconResolver
+     * @param Connection          $connection
+     * @param int                 $numItems
      */
     public function __construct(
         TranslatorInterface $translator,
-        Makeweb_Elements_Element_Version_Manager $versionManager,
-        Makeweb_Elements_Tree_Manager $treeManager,
+        ElementService $elementService,
+        TreeManager $treeManager,
+        IconResolver $iconResolver,
         Connection $connection,
         $numItems)
     {
         $this
             ->setId('elements-portlet')
-            ->setTitle($translator->trans('elements.latest_element_changes', array(), 'gui'))
-            ->setClass('Makeweb.elements.portlet.LatestElements')
+            ->setTitle($translator->trans('elements.latest_element_changes', [], 'gui'))
+            ->setClass('Phlexible.elements.portlet.LatestElements')
             ->setIconClass('p-element-component-icon')
             ->setResource('elements');
 
-        $this->versionManager = $versionManager;
+        $this->elementService = $elementService;
         $this->treeManager = $treeManager;
+        $this->iconResolver = $iconResolver;
         $this->connection = $connection;
         $this->numItems = $numItems;
     }
@@ -73,30 +84,25 @@ class LatestElementsPortlet extends Portlet
      */
     public function getData()
     {
-        $select = $this->db->select()
-            ->from(array('ev' => $this->db->prefix . 'element_version'), array('eid', 'trigger_language AS language'))
-            ->join(
-                array('e' => $this->db->prefix . 'element'),
-                'ev.eid = e.eid AND ev.version = e.latest_version',
-                'latest_version AS version'
-            )
-            ->join(array('et' => $this->db->prefix . 'element_tree'), 'ev.eid = et.eid', array('id'))
-            ->order('ev.create_time DESC')
-            ->limit($this->numItems);
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select(['et.id', 'ev.eid', 'ev.trigger_language AS language'])
+            ->from('element_version', 'ev')
+            ->join('ev', 'element_tree', 'et', 'ev.eid = et.eid')
+            ->orderBy('ev.created_at', 'DESC')
+            ->setMaxResults($this->numItems);
 
-        $items = $this->db->fetchAll($select);
+        $rows = $this->connection->fetchAll($qb->getSQL());
 
-        $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
-        $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
+        $data = [];
 
-        $data = array();
+        foreach ($rows as $row) {
+            $element = $this->elementService->findElement($row['eid']);
+            $elementVersion = $this->elementService->findLatestElementVersion($element);
+            $node = $this->treeManager->getByNodeId($row['id'])->get($row['id']);
+            //$siterootId = $node->getTree()->getSiterootId();
 
-        foreach ($items as $item) {
-            $elementVersion = $elementVersionManager->get($item['eid'], $item['version']);
-            $node = $treeManager->getNodeByNodeId($item['id']);
-            $siteroot = $node->getTree()->getSiteroot();
-
-            $baseTitle = $elementVersion->getBackendTitle(MWF_Env::getUser()->getInterfaceLanguage());
+            $baseTitle = $elementVersion->getBackendTitle($row['language']);
             $baseTitleArr = str_split($baseTitle, 16);
             $title = '';
 
@@ -106,17 +112,18 @@ class LatestElementsPortlet extends Portlet
                 $first = false;
             }
 
-            $title .= ' [' . $item['id'] . ']';
+            $title .= ' [' . $row['id'] . ']';
             /*
-                        $i = 0;
-                        do
-                        {
-                            $title .= ($i ? '<wbr />' : '') . substr($baseTitle, $i, $i + 16);
-                            $i += 16;
-                        }
-                        while($i <= strlen($baseTitle));
+                $i = 0;
+                do
+                {
+                    $title .= ($i ? '<wbr />' : '') . substr($baseTitle, $i, $i + 16);
+                    $i += 16;
+                }
+                while($i <= strlen($baseTitle));
             */
 
+            /*
             $menuItem = new MWF_Core_Menu_Item_Panel();
             $menuItem->setIdentifier('Makeweb_elements_MainPanel_' . $siteroot->getTitle())
                 ->setText($siteroot->getTitle())
@@ -126,23 +133,23 @@ class LatestElementsPortlet extends Portlet
                 ->setParam('title', $siteroot->getTitle())
                 ->setParam('id', $node->getId())
                 ->setParam('start_tid_path', '/' . implode('/', $node->getPath()))
-                ->setCheck(array('elements'));
+                ->setCheck(['elements']);
 
             $menu = $menuItem->get();
+            */
+            $menu = [];
 
-            $data[] = array(
-                'ident'    => $item['eid'] . '_' .
-                    'de' . '_' .
-                    $item['version'],
-                'eid'      => $item['eid'],
-                'language' => $item['language'],
-                'version'  => $item['version'],
+            $data[] = [
+                'ident'    => $row['eid'] . '_' . $row['language'] . '_' . $row['version'],
+                'eid'      => $row['eid'],
+                'language' => $row['language'],
+                'version'  => $row['version'],
                 'title'    => strip_tags($title),
-                'icon'     => $elementVersion->getIconUrl(),
-                'time'     => strtotime($elementVersion->getCreateTime()),
-                'author'   => $elementVersion->getCreateUser()->getUsername(),
+                'icon'     => $this->iconResolver->resolveTreeNode($node, $row['language']),
+                'time'     => strtotime($elementVersion->getCreatedAt()->format('Y-m-d H:i:s')),
+                'author'   => $elementVersion->getCreateUserId(),
                 'menu'     => $menu
-            );
+            ];
         }
 
         return $data;

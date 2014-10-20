@@ -126,16 +126,16 @@ Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.GridPanel, {
                     modal: true,
                     html: '<table><tr>' +
                         '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.component('/phlexibledocumenttype/mimetypes16/' + key + '.gif') + '" width="16" height="16" />' +
+                        '<img src="' + Phlexible.bundleAsset('/phlexibledocumenttype/mimetypes16/' + key + '.gif') + '" width="16" height="16" />' +
                         '</td>' +
                         '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.component('/phlexibledocumenttype/mimetypes32/' + key + '.gif') + '" width="32" height="32" />' +
+                        '<img src="' + Phlexible.bundleAsset('/phlexibledocumenttype/mimetypes32/' + key + '.gif') + '" width="32" height="32" />' +
                         '</td>' +
                         '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.component('/phlexibledocumenttype/mimetypes48/' + key + '.gif') + '" width="48" height="48" />' +
+                        '<img src="' + Phlexible.bundleAsset('/phlexibledocumenttype/mimetypes48/' + key + '.gif') + '" width="48" height="48" />' +
                         '</td>' +
                         '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.component('/phlexibledocumenttype/mimetypes256/' + key + '.gif') + '" width="256" height="256" />' +
+                        '<img src="' + Phlexible.bundleAsset('/phlexibledocumenttype/mimetypes256/' + key + '.gif') + '" width="256" height="256" />' +
                         '</td>' +
                         '</tr><tr>' +
                         '<td align="center">16x16</td>' +

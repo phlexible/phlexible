@@ -38,7 +38,7 @@ Phlexible.mediatemplates.video.PreviewPanel = Ext.extend(Phlexible.mediatemplate
             ]
             /*
              tag: 'embed',
-             src: Phlexible.component('/mediamanager/flash/player.swf'),
+             src: Phlexible.bundleAsset('/mediamanager/flash/player.swf'),
              width: parseInt(data.width, 10),
              height: parseInt(data.height, 10) + 20,
              allowfullscreen: 'false',

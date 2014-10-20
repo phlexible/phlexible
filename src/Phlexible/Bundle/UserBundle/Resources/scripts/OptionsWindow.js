@@ -1,7 +1,7 @@
 Phlexible.users.OptionsWindowThemeTemplate = new Ext.XTemplate(
     '<tpl for=".">',
     '<div class="thumb-wrap" id="{id}">',
-    '<div class="thumb"><img src="' + Phlexible.component('/phlexibleuser/images/{preview}') + '" title="{name}"></div>',
+    '<div class="thumb"><img src="' + Phlexible.bundleAsset('/phlexibleuser/images/{preview}') + '" title="{name}"></div>',
     '<span class="x-editable">{name}</span></div>',
     '</tpl>',
     '<div class="x-clear"></div>'

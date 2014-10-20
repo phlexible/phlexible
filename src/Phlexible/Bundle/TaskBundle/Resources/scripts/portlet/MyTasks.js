@@ -14,7 +14,7 @@ Phlexible.tasks.portlet.MyTasksTemplate = new Ext.XTemplate(
     '<tpl for=".">',
     '<div id="portal_tasks_{id}" class="portlet-task" style="cursor: pointer; padding-bottom: 5px;">',
     '<div>',
-    '<b><img src="{[Phlexible.component("/tasks/icons/status_"+values.status+".png")]} width="16" height="16" style="vertical-align: middle;"> {[Phlexible.tasks.Strings.get(values.status)]}</b>, von<b> {create_user}</b>, <b>{create_date}</b>',
+    '<b><img src="{[Phlexible.bundleAsset("/tasks/icons/status_"+values.status+".png")]} width="16" height="16" style="vertical-align: middle;"> {[Phlexible.tasks.Strings.get(values.status)]}</b>, von<b> {create_user}</b>, <b>{create_date}</b>',
     '</div>',
     '<div style="padding-left: 20px;">',
     '{text}',

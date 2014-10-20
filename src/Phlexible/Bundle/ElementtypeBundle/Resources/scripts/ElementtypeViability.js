@@ -51,7 +51,7 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
                 width: 250,
                 sortable: true,
                 renderer: function (value, meta, r) {
-                    return '<img src="' + Phlexible.component('/phlexibleelementtype/elementtypes/' + r.get('icon')) + '" width="18" height="18" style="vertical-align: middle;" /> ' + value;
+                    return '<img src="' + Phlexible.bundleAsset('/phlexibleelementtype/elementtypes/' + r.get('icon')) + '" width="18" height="18" style="vertical-align: middle;" /> ' + value;
                 }
             },
             this.actions
@@ -93,7 +93,7 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
                 triggerAction: 'all',
                 listClass: 'x-combo-list-big',
                 editable: false,
-                tpl: '<tpl for="."><div class="x-combo-list-item"><img src="{[Phlexible.component(\"/phlexibleelementtype/elementtypes/\" + values.icon)]}" width="18" height="18" style="vertical-align: middle;" /> {title}</div></tpl>',
+                tpl: '<tpl for="."><div class="x-combo-list-item"><img src="{[Phlexible.bundleAsset(\"/phlexibleelementtype/elementtypes/\" + values.icon)]}" width="18" height="18" style="vertical-align: middle;" /> {title}</div></tpl>',
                 width: 250,
                 listWidth: 250,
                 store: new Ext.data.JsonStore({

@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\GuiBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -33,12 +34,9 @@ class PhlexibleGuiExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $container->setParameter('app.app_title', $config['app']['title']);
-        $container->setParameter('app.app_version', $config['app']['version']);
-        $container->setParameter('app.app_url', $config['app']['url']);
-        $container->setParameter('app.project_title', $config['project']['title']);
-        $container->setParameter('app.project_version', $config['project']['version']);
-        $container->setParameter('app.project_url', $config['project']['url']);
+        $container->setParameter('phlexible_gui.project.title', $config['project']['title']);
+        $container->setParameter('phlexible_gui.project.version', $config['project']['version']);
+        $container->setParameter('phlexible_gui.project.url', $config['project']['url']);
         $container->setParameter('phlexible_gui.languages.default', $config['languages']['default']);
         $container->setParameter('phlexible_gui.languages.available', $config['languages']['available']);
         $container->setParameter('phlexible_gui.mail.from_email', $config['mail']['from_email']);

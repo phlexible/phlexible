@@ -9,6 +9,6 @@ Phlexible.security.menuhandle.LogoutHandle = Ext.extend(Phlexible.gui.menuhandle
             return;
         }
 
-        document.location.href = Phlexible.Router.generate('security_logout');
+        document.location.href = Phlexible.Router.generate('fos_user_security_logout');
     }
 });

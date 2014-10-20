@@ -15,10 +15,10 @@ Phlexible.teasers.ElementLayoutTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
         /*
         var prefix = '';
         if (n.attributes.inherited) {
-            prefix += '<img qtip="Is inherited" src="' + Phlexible.component('/phlexibleteaser/icons/inherited.png') + '" width="16" height="16" style="vertical-align: middle;" />';
+            prefix += '<img qtip="Is inherited" src="' + Phlexible.bundleAsset('/phlexibleteaser/icons/inherited.png') + '" width="16" height="16" style="vertical-align: middle;" />';
         }
         if (n.attributes.inherit !== undefined && !n.attributes.inherit) {
-            prefix += '<img qtip="Inherit stopped" src="' + Phlexible.component('/phlexibleteaser/icons/stop_inherit.png') + '" width="16" height="16" style="vertical-align: middle;" />';
+            prefix += '<img qtip="Inherit stopped" src="' + Phlexible.bundleAsset('/phlexibleteaser/icons/stop_inherit.png') + '" width="16" height="16" style="vertical-align: middle;" />';
         }
         if (prefix) {
             text += ' ' + prefix;

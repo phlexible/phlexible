@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
 <head>
-    <title>{{ appTitle }} - {{ projectTitle }}</title>
+    <title>{{ project.title }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7"/>
-    <link rel="icon" type="image/png" href="/bundles/phlexiblegui/images/phlexible.png">
-    <link href="{{ extjs('/resources/css/ext-all.css') }}" media="screen" rel="stylesheet" type="text/css"/>
-    {% if theme and theme != "default" %}
-        <link id="theme" href="{{ extjs('/resources/css/xtheme-' ~ theme ~ '.css') }}" media="screen" rel="stylesheet"
-              type="text/css"/>
+    <link rel="icon" type="image/png" href="{{ asset("bundles/phlexiblegui/images/phlexible.png") }}">
+    <link href="{{ asset("resources/css/ext-all.css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
+    {% set theme = app.user.property("theme", "default") %}
+    {% if  theme != "default" %}
+    <link id="theme" href="{{ asset("/resources/css/xtheme-" ~ theme ~ ".css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
     {% endif %}
     <link href="{{ path("asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
     <link href="{{ path("asset_icons") }}" media="screen" rel="stylesheet" type="text/css"/>
@@ -43,32 +43,32 @@
 </head>
 <body>
 <div id="loading" style="display: block">
-    <div class="loading-indicator"><img alt="Loading..." src="{{ component("/phlexiblegui/images/loading-large.gif") }}"
-                                        width="32" height="32"
-                                        style="margin-right:8px;float:left;vertical-align:top;"/>{{ appTitle }} {{ appVersion }}
-        - <a href="http://{{ appUrl }}" target="_blank">{{ appUrl }}</a><br/><span id="loading-msg">Loading...</span>
+    <div class="loading-indicator">
+        <img alt="Loading..." src="{{ asset("bundles/phlexiblegui/images/loading-large.gif") }}" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>
+        {{ project.title }} {{ project.version }} - <a href="http://{{ project.url }}" target="_blank">{{ project.url }}</a><br/><span id="loading-msg">Loading...</span>
     </div>
 </div>
 <noscript>{{ noScript }}</noscript>
 </body>
-<script type="text/javascript" src="{{ extjs('/adapter/ext/ext-base.js') }}"></script>
-{% if debug %}
-    <script type="text/javascript" src="{{ extjs('/ext-all-debug.js') }}"></script>
+<script type="text/javascript" src="{{ asset("adapter/ext/ext-base.js", "extjs") }}"></script>
+{% if app.debug %}
+<script type="text/javascript" src="{{ asset("ext-all-debug.js", "extjs") }}"></script>
 {% else %}
-    <script type="text/javascript" src="{{ extjs('/ext-all.js') }}"></script>
+<script type="text/javascript" src="{{ asset("ext-all.js", "extjs") }}"></script>
 {% endif %}
-<script type="text/javascript" src="{{ extjs("/locale/ext-lang-" ~ language ~ ".js") }}"></script>
+{% set language = app.user.getProperty("interfaceLanguage", "en") %}
+<script type="text/javascript" src="{{ asset("locale/ext-lang-" ~ language ~ ".js", "extjs") }}"></script>
 <script type="text/javascript">
     //<![CDATA[
-    Ext.BLANK_IMAGE_URL = "{{ component("/phlexiblegui/images/blank.gif") }}";
+    Ext.BLANK_IMAGE_URL = "{{ asset("bundles/phlexiblegui/images/blank.gif") }}";
     Ext.QuickTips.init();
     var Phlexible = {
-        title: "{{ appTitle }}",
-        version: "{{ appVersion }}",
-        project: "{{ projectTitle }}",
-        baseUrl: "{{ baseUrl }}",
-        basePath: "{{ basePath }}",
-        componentsPath: "{{ componentsPath }}",
+        title: "{{ project.title }}",
+        version: "{{ project.version }}",
+        project: "{{ project.title }}",
+        baseUrl: "{{ app.request.baseUrl }}/admin",
+        basePath: "{{ app.request.basePath }}/admin",
+        bundlePath: "{{ app.request.basePath }}/bundles",
         config: {{ render(path("gui_config"))|raw }}
     };
     //]]>

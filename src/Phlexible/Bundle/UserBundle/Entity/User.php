@@ -86,6 +86,10 @@ class User extends BaseUser
     public function __construct()
     {
         $this->groups = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->modifiedAt = new \DateTime();
+
+        parent::__construct();
     }
 
     /**

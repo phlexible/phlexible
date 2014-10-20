@@ -18,8 +18,8 @@ Phlexible.path = function (path) {
  * @param {String} path
  * @returns {String}
  */
-Phlexible.component = function (path) {
-    return Phlexible.componentsPath + path;
+Phlexible.bundleAsset = function (path) {
+    return Phlexible.bundlePath + path;
 }
 
 /**

@@ -72,7 +72,7 @@ Phlexible.mediamanager.FileUploadWindow = Ext.extend(Ext.Window, {
                 file_types: '*.*',
                 file_types_description: this.strings.all_files,
                 file_size_limit: "2000mb",
-                flash_url: document.location.protocol + '//' + document.location.hostname + Phlexible.component('/phlexiblemediamanager/flash/swfupload.swf'),
+                flash_url: document.location.protocol + '//' + document.location.hostname + Phlexible.bundleAsset('/phlexiblemediamanager/flash/swfupload.swf'),
 
                 // Set to true if you only want to select one file from the FileDialog.
                 single_file_select: false,

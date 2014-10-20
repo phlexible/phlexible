@@ -44,7 +44,7 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
             render: function () {
                 Ext.DomHelper.append(this.el, {
                     tag: 'img',
-                    src: Phlexible.component('/phlexiblegui/images/watermark.gif'),
+                    src: Phlexible.bundleAsset('/phlexiblegui/images/watermark.gif'),
                     width: 250,
                     height: 89,
                     cls: 'p-dashboard-watermark'

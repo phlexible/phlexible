@@ -33,16 +33,16 @@ Phlexible.elementtypes.ElementtypeStructureTreeNodeUI = Ext.extend(Ext.tree.Tree
             }
 
             if (isOptional) {
-                text += '<img qtip="Is optional" src="' + Phlexible.component('/phlexibleelementtype/images/is_optional.png') + '" width="15" height="15" style="vertical-align: middle;" />';
+                text += '<img qtip="Is optional" src="' + Phlexible.bundleAsset('/phlexibleelementtype/images/is_optional.png') + '" width="15" height="15" style="vertical-align: middle;" />';
             }
             if (isRepeatable) {
-                text += '<img qtip="Is repeatable" src="' + Phlexible.component('/phlexibleelementtype/images/is_repeatable.png') + '" width="15" height="15" style="vertical-align: middle;" />';
+                text += '<img qtip="Is repeatable" src="' + Phlexible.bundleAsset('/phlexibleelementtype/images/is_repeatable.png') + '" width="15" height="15" style="vertical-align: middle;" />';
             }
             if (isSingleLine) {
-                text += '<img qtip="Is single line" src="' + Phlexible.component('/phlexibleelementtype/images/is_singleline.png') + '" width="15" height="15" style="vertical-align: middle;" />';
+                text += '<img qtip="Is single line" src="' + Phlexible.bundleAsset('/phlexibleelementtype/images/is_singleline.png') + '" width="15" height="15" style="vertical-align: middle;" />';
             }
             if (isSortable) {
-                text += '<img qtip="Children are sortable" src="' + Phlexible.component('/phlexibleelementtype/images/is_sortable.png') + '" width="15" height="15" style="vertical-align: middle;" />';
+                text += '<img qtip="Children are sortable" src="' + Phlexible.bundleAsset('/phlexibleelementtype/images/is_sortable.png') + '" width="15" height="15" style="vertical-align: middle;" />';
             }
         }
         else {
@@ -54,7 +54,7 @@ Phlexible.elementtypes.ElementtypeStructureTreeNodeUI = Ext.extend(Ext.tree.Tree
                 }
 
                 if (isSynchronized) {
-                    text += '<img qtip="Is synchronized" src="' + Phlexible.component('/phlexibleelementtype/images/is_synchronized.png') + '" width="15" height="15" style="vertical-align: middle;" />';
+                    text += '<img qtip="Is synchronized" src="' + Phlexible.bundleAsset('/phlexibleelementtype/images/is_synchronized.png') + '" width="15" height="15" style="vertical-align: middle;" />';
                 }
             }
         }

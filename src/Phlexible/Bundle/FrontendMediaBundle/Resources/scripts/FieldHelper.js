@@ -93,7 +93,7 @@ Phlexible.frontendmedia.FieldHelper = {
                     }, 'after');
                     this.button_unlink = this.hidden_unlink.insertSibling({
                         tag: 'img',
-                        src: Phlexible.component('/elementtypes/icons/' + (this.isUnlinked ? 'unlink' : 'link')) + '.png',
+                        src: Phlexible.bundleAsset('/elementtypes/icons/' + (this.isUnlinked ? 'unlink' : 'link')) + '.png',
                         width: 16,
                         height: 16,
                         style: 'cursor: pointer; padding-left: 3px; vertical-align: middle;',
@@ -106,7 +106,7 @@ Phlexible.frontendmedia.FieldHelper = {
                                 value: ''
                             });
                             this.button_unlink.set({
-                                src: Phlexible.component('/elementtypes/icons/link.png'),
+                                src: Phlexible.bundleAsset('/elementtypes/icons/link.png'),
                                 qtip: 'Unlink'
                             });
                             this.el.removeClass('p-fields-synchronized-unlinked');
@@ -125,7 +125,7 @@ Phlexible.frontendmedia.FieldHelper = {
                                 value: '1'
                             });
                             this.button_unlink.set({
-                                src: Phlexible.component('/elementtypes/icons/unlink.png'),
+                                src: Phlexible.bundleAsset('/elementtypes/icons/unlink.png'),
                                 qtip: 'Link'
                             });
                             this.el.addClass('p-fields-synchronized-unlinked');

@@ -35,16 +35,9 @@ class InfoController extends Controller
 
         if ($securityContext->isGranted(Acl::RESOURCE_DEBUG)) {
             $lines[] = array(
-                'Release:',
-                $this->container->getParameter('app.app_title') . ' ' . $this->container->getParameter(
-                    'app.app_version'
-                )
-            );
-            $lines[] = array(
                 'Project:',
-                $this->container->getParameter('app.project_title') . ' ' . $this->container->getParameter(
-                    'app.project_version'
-                )
+                $this->container->getParameter('phlexible_gui.project.title') . ' '
+                    . $this->container->getParameter('phlexible_gui.project.version')
             );
             $lines[] = array(
                 'Env:',
@@ -73,16 +66,9 @@ class InfoController extends Controller
             $lines[] = array('UserAgent:', $_SERVER['HTTP_USER_AGENT']);
         } elseif ($securityContext->isGranted(Acl::RESOURCE_ADMIN)) {
             $lines[] = array(
-                'Release:',
-                $this->container->getParameter('app.app_title') . ' ' . $this->container->getParameter(
-                    'app.app_version'
-                )
-            );
-            $lines[] = array(
                 'Project:',
-                $this->container->getParameter('app.project_title') . ' ' . $this->container->getParameter(
-                    'app.project_version'
-                )
+                $this->container->getParameter('phlexible_gui.project.title') . ' '
+                . $this->container->getParameter('phlexible_gui.project.version')
             );
             $lines[] = array(
                 'Env:',
@@ -97,16 +83,9 @@ class InfoController extends Controller
             );
         } else {
             $lines[] = array(
-                'Release:',
-                $this->container->getParameter('app.app_title') . ' ' . $this->container->getParameter(
-                    'app.app_version'
-                )
-            );
-            $lines[] = array(
                 'Project:',
-                $this->container->getParameter('app.project_title') . ' ' . $this->container->getParameter(
-                    'app.project_version'
-                )
+                $this->container->getParameter('phlexible_gui.project.title') . ' '
+                . $this->container->getParameter('phlexible_gui.project.version')
             );
         }
 

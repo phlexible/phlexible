@@ -28,14 +28,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('app')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('title')->defaultValue('phlexible')->end()
-                        ->scalarNode('version')->defaultValue('1.0.0-dev')->end()
-                        ->scalarNode('url')->defaultValue('phlexible.net')->end()
-                    ->end()
-                ->end()
                 ->arrayNode('project')
                     ->addDefaultsIfNotSet()
                     ->children()

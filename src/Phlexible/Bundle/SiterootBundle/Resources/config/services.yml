@@ -9,7 +9,7 @@ services:
 
     phlexible_siteroot.title.resolver:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\TitleResolver
-        arguments: [@translator, %app.project_title%]
+        arguments: [@translator, %phlexible_gui.project.title%]
 
     # acl providers
     phlexible_siteroot.acl_provider:

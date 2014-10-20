@@ -688,8 +688,8 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 max_file_size: '2000mb'
             },
             url: Phlexible.Router.generate('mediamanager_upload'),
-            flash_swf_url: Phlexible.component('/phlexiblemediamanager/plupload/Moxie.swf'),
-            silverlight_xap_url: Phlexible.component('/phlexiblemediamanager/plupload/Moxie.xap'),
+            flash_swf_url: Phlexible.bundleAsset('/phlexiblemediamanager/plupload/Moxie.swf'),
+            silverlight_xap_url: Phlexible.bundleAsset('/phlexiblemediamanager/plupload/Moxie.xap'),
             drop_element: dropper,
             multipart: true,
             multipart_params: {

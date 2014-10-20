@@ -1,7 +1,19 @@
 services:
     # twig extensions
-    phlexible_gui.twig.extension.controller:
-        class: Phlexible\Bundle\GuiBundle\Twig\Extension\ControllerExtension
-        arguments: [@router]
+    phlexible_gui.twig.extension.gui:
+        class: Phlexible\Bundle\GuiBundle\Twig\Extension\GuiExtension
+        arguments:
+            - %phlexible_gui.project.title%
+            - %phlexible_gui.project.version%
+            - %phlexible_gui.project.url%
         tags:
             - {name: twig.extension}
+
+    # packages
+    phlexible_gui.templating.asset.extjs_package:
+        class: Phlexible\Bundle\GuiBundle\Templating\Asset\PathPackage
+        arguments:
+            - @request
+            - "bundles/phlexiblegui/scripts/ext-2.3.0"
+            - "2.3.0"
+        scope: request

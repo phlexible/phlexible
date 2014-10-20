@@ -87,7 +87,7 @@ Phlexible.security.LoginWindow = Ext.extend(Ext.Window, {
                 frame: false,
                 border: true,
                 style: 'text-align: center;',
-                html: '<img src="' + Phlexible.componentsPath + '/phlexiblegui/images/logo.gif" width="300" height="120" style="padding-top: 15px" />'
+                html: '<img src="' + Phlexible.bundlePath + '/phlexiblegui/images/logo.gif" width="300" height="120" style="padding-top: 15px" />'
             },
             {
                 region: 'center',

@@ -291,8 +291,8 @@ Phlexible.fields.FieldHelper = {
         if (this.isRepeatable) {
             var button_remove = this.el.insertSibling({tag: 'div', cls: 'x-tool x-tool-minus p-repeat-minus'}, 'before');
             var button_add = this.el.insertSibling({tag: 'div', cls: 'x-tool x-tool-plus p-repeat-plus'}, 'before');
-            //var button_remove = this.el.insertSibling({tag: 'img', src: Phlexible.component('/elements/asset/image/name/field_delete.png'), name: this.id+'-remove'}, 'after');
-            //var button_add = this.el.insertSibling({tag: 'img', src: Phlexible.component('/elements/asset/image/name/field_add.png'), name: this.id+'-add'}, 'after');
+            //var button_remove = this.el.insertSibling({tag: 'img', src: Phlexible.bundleAsset('/elements/asset/image/name/field_delete.png'), name: this.id+'-remove'}, 'after');
+            //var button_add = this.el.insertSibling({tag: 'img', src: Phlexible.bundleAsset('/elements/asset/image/name/field_add.png'), name: this.id+'-add'}, 'after');
 
             button_remove.on('click', function () {
                 if (this.element.prototypes.getCount(this.ds_id) > this.minRepeat) {

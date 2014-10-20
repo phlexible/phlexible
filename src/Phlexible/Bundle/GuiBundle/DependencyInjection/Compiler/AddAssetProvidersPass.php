@@ -24,6 +24,10 @@ class AddAssetProvidersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        $container->getDefinition('templating.helper.assets')->addMethodCall('addPackage', [
+            'extjs', new Reference('phlexible_gui.templating.asset.extjs_package'),
+        ]);
+
         $providers = array();
         foreach ($container->findTaggedServiceIds('phlexible_gui.asset.provider') as $id => $attributes) {
             $priority = isset($attributes[0]['priority']) ? (int) $attributes[0]['priority'] : 0;

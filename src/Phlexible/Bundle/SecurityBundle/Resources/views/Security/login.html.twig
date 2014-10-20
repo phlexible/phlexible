@@ -22,7 +22,7 @@
     <script type="text/javascript" src="{{ extjs("/locale/ext-lang-" ~ language ~ ".js") }}"></script>
     <script type="text/javascript">
         //<![CDATA[
-        Ext.BLANK_IMAGE_URL = "{{ component("/phlexiblegui/images/blank.gif") }}";
+        Ext.BLANK_IMAGE_URL = "{{ bundleAsset("/phlexiblegui/images/blank.gif") }}";
         Ext.QuickTips.init();
         var Phlexible = {
             title: "{{ appTitle }}",
@@ -30,7 +30,7 @@
             project: "{{ projectTitle }}",
             baseUrl: "{{ baseUrl }}",
             basePath: "{{ basePath }}",
-            componentsPath: "{{ componentsPath }}"
+            bundlePath: "{{ bundlePath }}"
         };
         //]]>
     </script>

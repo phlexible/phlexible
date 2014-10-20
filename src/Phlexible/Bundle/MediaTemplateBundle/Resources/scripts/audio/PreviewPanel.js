@@ -32,7 +32,7 @@ Phlexible.mediatemplates.audio.PreviewPanel = Ext.extend(Phlexible.mediatemplate
                 }
             ]
             /*
-             src: Phlexible.component('/mediamanager/flash/player.swf'),
+             src: Phlexible.bundleAsset('/mediamanager/flash/player.swf'),
              width: 300,
              height: 20,
              allowfullscreen: 'false',

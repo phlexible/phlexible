@@ -29,8 +29,7 @@ services:
             - @twig
             - @mailer
             - @logger
-            - %app.app_title%
-            - %app.project_title%
+            - %phlexible_gui.project.title%
             -
                 digest: {from: %phlexible_message.mailer.digest.from%, template: %phlexible_message.mailer.digest.template%}
                 from: {from: %phlexible_message.mailer.message.from%, template: %phlexible_message.mailer.message.template%}

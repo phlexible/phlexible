@@ -94,7 +94,7 @@ Phlexible.users.options.Theme = Ext.extend(Ext.form.FormPanel, {
         Phlexible.console.log(themeName);
         Ext.util.CSS.removeStyleSheet('theme');
         if (themeName != 'default') {
-            var theme = Phlexible.component('/phlexiblegui/scripts/ext-2.3.0/resources/css/xtheme-' + themeName + '.css');
+            var theme = Phlexible.bundleAsset('/phlexiblegui/scripts/ext-2.3.0/resources/css/xtheme-' + themeName + '.css');
             Ext.util.CSS.swapStyleSheet('theme', theme);
         }
     }

@@ -36,16 +36,6 @@ class Mailer
     private $logger;
 
     /**
-     * @var string
-     */
-    private $appTitle;
-
-    /**
-     * @var string
-     */
-    private $projectTitle;
-
-    /**
      * @var array
      */
     private $parameters;
@@ -54,23 +44,17 @@ class Mailer
      * @param \Twig_Environment $templating
      * @param \Swift_Mailer     $mailer
      * @param LoggerInterface   $logger
-     * @param string            $appTitle
-     * @param string            $projectTitle
      * @param array             $parameters
      */
     public function __construct(
         Twig_Environment $templating,
         \Swift_Mailer $mailer,
         LoggerInterface $logger,
-        $appTitle,
-        $projectTitle,
         array $parameters)
     {
         $this->templating = $templating;
         $this->mailer = $mailer;
         $this->logger = $logger;
-        $this->appTitle = $appTitle;
-        $this->projectTitle = $projectTitle;
         $this->parameters = $parameters;
     }
 
@@ -90,8 +74,6 @@ class Mailer
         $content = $this->templating->render(
             $template,
             array(
-                'appTitle'     => $this->appTitle,
-                'projectTitle' => $this->projectTitle,
                 'date'         => date('Y-m-d H:i:s'),
                 'messages'     => $messages
             )

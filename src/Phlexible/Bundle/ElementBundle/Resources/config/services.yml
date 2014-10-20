@@ -89,6 +89,7 @@ services:
     # event listeners
     phlexible_element.listener.task:
         class: Phlexible\Bundle\ElementBundle\EventListener\TaskListener
+        arguments: [@phlexible_task.task_manager, @security.context]
         tags:
             - {name: kernel.event_subscriber}
 

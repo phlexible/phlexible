@@ -215,7 +215,7 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
 //                this.getComponent(1).add({
 //                    xtype: 'checkbox',
 //                    name: 'priority_' + item.id,
-//                    boxLabel: '<img src="' + Phlexible.component(/resources/asset/icon/messages/priority_' + item.title + '.png)" style="vertical-align: middle;" width="16" height="16" /> ' + item.title,
+//                    boxLabel: '<img src="' + Phlexible.bundleAsset(/resources/asset/icon/messages/priority_' + item.title + '.png)" style="vertical-align: middle;" width="16" height="16" /> ' + item.title,
 //                    listeners: {
 //                        check: this.updateFilter,
 //                        scope: this

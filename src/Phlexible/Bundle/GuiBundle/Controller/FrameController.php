@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\GuiBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Phlexible\Bundle\GuiBundle\Menu\MenuLoader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -41,27 +40,11 @@ class FrameController extends Controller
         $viewIndex = $this->get('phlexible_gui.view.index');
 
         $securityContext = $this->get('security.context');
-        $user = $this->getUser();
 
-        return array(
-            'baseUrl'        => $request->getBaseUrl() . '/admin',
-            'basePath'       => $request->getBasePath() . '/admin',
-            'componentsPath' => '/bundles',
-            'extPath'        => $request->getBasePath() . '/bundles/phlexiblegui/scripts/ext-2.3.0/',
-            'debug'          => $this->container->getParameter('kernel.debug'),
-            'theme'          => $user->getProperty('theme', 'default'),
-            'language'       => $user->getInterfaceLanguage('en'),
-            'appTitle'       => $this->container->getParameter('app.app_title'),
-            'appVersion'     => $this->container->getParameter('app.app_version'),
-            'appUrl'         => $this->container->getParameter('app.app_url'),
-            'projectTitle'   => $this->container->getParameter('app.project_title'),
-            'scripts'        => $viewIndex->get($request, $securityContext),
-            'noScript'       => $viewIndex->getNoScript(
-                $request->getBaseUrl(),
-                $this->container->getParameter('app.app_title'),
-                $this->container->getParameter('app.project_title')
-            ),
-        );
+        return [
+            'scripts'  => $viewIndex->get($request, $securityContext),
+            'noScript' => $viewIndex->getNoScript(),
+        ];
     }
 
     /**
@@ -117,19 +100,19 @@ class FrameController extends Controller
     {
         $router = $this->get('router');
 
-        $routes = array();
+        $routes = [];
         foreach ($router->getRouteCollection() as $id => $route) {
             /* @var $route RoutingRoute */
 
             $compiledRoute = $route->compile();
             $variables = $compiledRoute->getVariables();
-            $placeholders = array();
+            $placeholders = [];
             foreach ($variables as $variable) {
                 $placeholders[$variable] = '{' . $variable . '}';
             }
 
             $routeDefaults = $route->getDefaults();
-            $defaults = array();
+            $defaults = [];
             foreach ($routeDefaults as $key => $default) {
                 if (!in_array($key, $variables)) {
                     continue;
@@ -138,23 +121,23 @@ class FrameController extends Controller
             }
 
             try {
-                $routes[$id] = array(
+                $routes[$id] = [
                     'path'      => $request->getBaseUrl() . $route->getPath(),
                     'variables' => array_values($variables),
                     'defaults'  => $defaults,
-                );
+                ];
             } catch (\Exception $e) {
             }
         }
 
-        $data = array(
+        $data = [
             'baseUrl'  => $request->getBaseUrl(),
             'basePath' => $request->getBasePath(),
             'routes'   => $routes,
-        );
+        ];
 
         $content = sprintf('Phlexible.Router.setData(%s);', json_encode($data));
 
-        return new Response($content, 200, array('Content-type' => 'text/javascript; charset=utf-8'));
+        return new Response($content, 200, ['Content-type' => 'text/javascript; charset=utf-8']);
     }
 }

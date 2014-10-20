@@ -1,7 +1,7 @@
 Phlexible.mediamanager.PropertiesTemplate = new Ext.XTemplate(
     '<div style="padding: 10px;">',
     '<div style="padding: 3px;">',
-    '<img style="vertical-align: middle;" src="' + Phlexible.component('/phlexiblemediamanager/images/folderdialog.gif') + '" width="60" height="60" />',
+    '<img style="vertical-align: middle;" src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/folderdialog.gif') + '" width="60" height="60" />',
     '{title}',
     '</div>',
     '<hr />',
