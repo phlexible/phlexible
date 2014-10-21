@@ -20,10 +20,16 @@ class SiterootsMessage extends Message
     /**
      * {@inheritdoc}
      */
-    public function getDefaults()
+    public static function getDefaultChannel()
     {
-        return array(
-            'channel' => 'siteroot',
-        );
+        return 'siteroots';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaultRole()
+    {
+        return 'ROLE_SITEROOT';
     }
 }

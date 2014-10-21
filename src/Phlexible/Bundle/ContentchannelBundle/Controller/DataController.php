@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/contentchannels")
- * @Security("is_granted('contentchannels')")
+ * @Security("is_granted('ROLE_CONTENTCHANNELS')")
  */
 class DataController extends Controller
 {

@@ -32,8 +32,8 @@ class Criteria implements \IteratorAggregate, \Countable
     const CRITERIUM_CHANNEL_IS       = 'channel_is';
     const CRITERIUM_CHANNEL_LIKE     = 'channel_like';
     const CRITERIUM_CHANNEL_IN       = 'channel_in';
-    const CRITERIUM_RESOURCE_IS      = 'resource_is';
-    const CRITERIUM_RESOURCE_IN      = 'resource_in';
+    const CRITERIUM_ROLE_IS          = 'role_is';
+    const CRITERIUM_ROLE_IN          = 'role_in';
     const CRITERIUM_MIN_AGE          = 'min_age';
     const CRITERIUM_MAX_AGE          = 'max_age';
     const CRITERIUM_START_DATE       = 'start_date';
@@ -274,9 +274,9 @@ class Criteria implements \IteratorAggregate, \Countable
      *
      * @return $this
      */
-    public function resourceIs($value)
+    public function roleIs($value)
     {
-        $this->add(new Criterium(self::CRITERIUM_RESOURCE_IS, $value));
+        $this->add(new Criterium(self::CRITERIUM_ROLE_IS, $value));
 
         return $this;
     }
@@ -286,9 +286,9 @@ class Criteria implements \IteratorAggregate, \Countable
      *
      * @return $this
      */
-    public function resourceIn(array $values)
+    public function roleIn(array $values)
     {
-        $this->add(new Criterium(self::CRITERIUM_RESOURCE_IN, $values));
+        $this->add(new Criterium(self::CRITERIUM_ROLE_IN, $values));
 
         return $this;
     }

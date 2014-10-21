@@ -53,7 +53,7 @@ class MessagesPortlet extends Portlet
             ->setTitle($translator->trans('messages.messages', array(), 'gui'))
             ->setClass('Phlexible.messages.portlet.Messages')
             ->setIconClass('p-message-component-icon')
-            ->setResource('messages_subscriptions');
+            ->setRole('ROLE_MESSAGE_SUBSCRIPTIONS');
 
         $this->subscriptionManager = $subscriptionManager;
         $this->messageManager = $messageManager;

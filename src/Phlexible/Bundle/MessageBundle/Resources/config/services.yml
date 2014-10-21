@@ -55,13 +55,6 @@ services:
         public: false
         arguments: [@phlexible_message.message_manager]
 
-    # acl providers
-    phlexible_message.acl_provider:
-        class: Phlexible\Bundle\MessageBundle\AclProvider\MessageAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_message.asset_provder:
         class: Phlexible\Bundle\MessageBundle\AssetProvider\MessageAssetProvider
@@ -97,3 +90,10 @@ services:
         arguments: [@translator, @phlexible_message.subscription_manager, @phlexible_message.message_manager, @security.context]
         tags:
             - {name: phlexible_dashboard.portlet}
+
+    # role providers
+    phlexible_message.role_provider:
+        class: Phlexible\Bundle\MessageBundle\RoleProvider\MessageRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

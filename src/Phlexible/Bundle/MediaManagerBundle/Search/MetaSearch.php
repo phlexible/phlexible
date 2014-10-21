@@ -61,9 +61,9 @@ class MetaSearch implements SearchProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getResource()
+    public function getRole()
     {
-        return 'mediamanager';
+        return 'ROLE_MEDIA';
     }
 
     /**

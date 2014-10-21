@@ -20,10 +20,16 @@ class TasksMessage extends Message
     /**
      * {@inheritdoc}
      */
-    public function getDefaults()
+    public static function getDefaultChannel()
     {
-        return array(
-            'component' => 'tasks',
-        );
+        return 'tasks';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaultRole()
+    {
+        return 'ROLE_TASKS';
     }
 }

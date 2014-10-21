@@ -39,8 +39,8 @@ class PortletController extends Controller
         $securityContext = $this->get('security.context');
 
         $data = array();
-        foreach ($this->get('phlexible_dashboard.portlets') as $portlet) {
-            if ($portlet->hasResource() && !$securityContext->isGranted($portlet->getResource())) {
+        foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
+            if ($portlet->hasRole() && !$securityContext->isGranted($portlet->getRole())) {
                 continue;
             }
 

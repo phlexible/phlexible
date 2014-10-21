@@ -55,9 +55,9 @@ Phlexible.messages.filter.PreviewPanel = Ext.extend(Ext.grid.GridPanel, {
                 dataIndex: 'channel',
                 sortable: true
             }, {
-                header: this.strings.resource,
+                header: this.strings.role,
                 width: 50,
-                dataIndex: 'resource',
+                dataIndex: 'role',
                 sortable: true
             }, {
                 header: this.strings.user,

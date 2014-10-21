@@ -64,7 +64,7 @@ class TailCommand extends ContainerAwareCommand
                         $types[$message->getType()],
                         $message->getSubject(),
                         $message->getChannel() ? : '-',
-                        $message->getResource() ? : '-'
+                        $message->getRole() ? : '-'
                     )
                 );
                 if ($showBody) {
@@ -106,7 +106,7 @@ class TailCommand extends ContainerAwareCommand
                         $types[$message->getType()],
                         $message->getSubject(),
                         $message->getChannel() ? : '-',
-                        $message->getResource() ? : '-'
+                        $message->getRole() ? : '-'
                     )
                 );
 

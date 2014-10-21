@@ -71,13 +71,6 @@ services:
         class: Phlexible\Bundle\ElementBundle\Element\ElementHasher
         arguments: [@phlexible_element.element_service]
 
-    # acl providers
-    phlexible_element.acl_provider:
-        class: Phlexible\Bundle\ElementBundle\AclProvider\ElementAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_element.asset_provider:
         class: Phlexible\Bundle\ElementBundle\AssetProvider\ElementAssetProvider
@@ -148,6 +141,13 @@ services:
     #    arguments: [@translator, @phlexible_element.version.repository, @phlexible_tree.tree_manager, @doctrine.dbal.default_connection, %phlexible_element.portlet.num_items%]
     #    tags:
     #        - {name: phlexible_dashboard.portlet}
+
+    # role providers
+    phlexible_element.role_provider:
+        class: Phlexible\Bundle\ElementBundle\RoleProvider\ElementRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}
 
     # searches
     phlexible_element.search.eid:

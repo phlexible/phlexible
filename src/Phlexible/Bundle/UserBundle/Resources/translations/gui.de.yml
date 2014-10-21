@@ -1,4 +1,8 @@
 users:
+    login:
+        enter_username_and_password: bla
+        lost_password: blubb
+    logout: Logout
     uid: 'Benutzer ID'
     gid: 'Gruppen ID'
     user: Benutzer

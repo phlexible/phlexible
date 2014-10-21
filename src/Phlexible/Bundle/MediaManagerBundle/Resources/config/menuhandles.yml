@@ -1,5 +1,5 @@
 media:
     parent: main
     xtype: Phlexible.mediamanager.menuhandle.MediaHandle
-    resources: [media]
+    roles: [ROLE_MEDIA]
 

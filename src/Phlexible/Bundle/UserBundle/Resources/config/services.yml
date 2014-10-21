@@ -20,13 +20,6 @@ services:
                 new_account: {template: %phlexible_user.mailer.new_account.template%, from: %phlexible_user.mailer.new_account.from%}
                 new_password: {template: %phlexible_user.mailer.new_password.template%, from: %phlexible_user.mailer.new_password.from%}
 
-    # acl providers
-    phlexible_user.acl_provider:
-        class: Phlexible\Bundle\UserBundle\AclProvider\UserAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_user.asset_provider:
         class: Phlexible\Bundle\UserBundle\AssetProvider\UserAssetProvider
@@ -45,7 +38,7 @@ services:
     phlexible_user.listener.get_config:
         class: Phlexible\Bundle\UserBundle\EventListener\GetConfigListener
         arguments:
-            - @acl
+            - @security.role_hierarchy
             -
                 language: %phlexible_user.defaults.language%
                 theme: %phlexible_user.defaults.theme%
@@ -63,6 +56,13 @@ services:
         arguments: [@translator, @phlexible_user.user_manager]
         tags:
             - {name: phlexible_dashboard.portlet}
+
+    # role providers
+    phlexible_user.role_provider:
+        class: Phlexible\Bundle\UserBundle\RoleProvider\UserRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}
 
     # searches
     phlexible_user.search.user:

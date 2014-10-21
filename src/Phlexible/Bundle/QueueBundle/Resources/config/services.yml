@@ -1,11 +1,4 @@
 services:
-    # acl providers
-    phlexible_queue.acl_provider:
-        class: Phlexible\Bundle\QueueBundle\AclProvider\QueueAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_queue.asset_provider:
         class: Phlexible\Bundle\QueueBundle\AssetProvider\QueueAssetProvider
@@ -26,3 +19,10 @@ services:
         arguments: [@phlexible_queue.job_manager]
         tags:
             - {name: kernel.event_subscriber}
+
+    # role providers
+    phlexible_queue.role_provider:
+        class: Phlexible\Bundle\QueueBundle\RoleProvider\QueueRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

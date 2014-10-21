@@ -1,5 +1,5 @@
 contentchannels:
     parent: config
     xtype: Phlexible.contentchannels.menuhandle.ContentchannelsHandle
-    resources: [contentchannels]
+    roles: [ROLE_CONTENTCHANNELS]
 

@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\SearchBundle\SearchProvider;
 
+use Phlexible\Bundle\SearchBundle\Search\SearchResult;
+
 /**
  * Search provider interface
  *
@@ -16,11 +18,11 @@ namespace Phlexible\Bundle\SearchBundle\SearchProvider;
 interface SearchProviderInterface
 {
     /**
-     * Return resource needed for this search
+     * Return role needed for this search
      *
      * @return string
      */
-    public function getResource();
+    public function getRole();
 
     /**
      * Return search key for this search

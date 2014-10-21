@@ -17,5 +17,20 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
  */
 class ElementsMessage extends Message
 {
-    protected $component = 'elements';
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaultChannel()
+    {
+        return 'elements';
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaultRole()
+    {
+        return 'ROLE_ELEMENTS';
+    }
 }

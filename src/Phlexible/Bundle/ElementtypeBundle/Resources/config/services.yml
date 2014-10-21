@@ -18,13 +18,6 @@ services:
         class: Phlexible\Bundle\ElementtypeBundle\Usage\UsageManager
         arguments: [@event_dispatcher]
 
-    # acl providers
-    phlexible_elementtype.acl_provider:
-        class: Phlexible\Bundle\ElementtypeBundle\AclProvider\ElementtypeAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_elementtype.asset_provider:
         class: Phlexible\Bundle\ElementtypeBundle\AssetProvider\ElementtypeAssetProvider
@@ -51,3 +44,10 @@ services:
         arguments: [@phlexible_elementtype.elementtype_service]
         tags:
             - {name: kernel.event_listener, event: phlexible_elementtype.usage, method: onElementtypeUsage}
+
+    # role providers
+    phlexible_elementtype.role_provider:
+        class: Phlexible\Bundle\ElementtypeBundle\RoleProvider\ElementtypeRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

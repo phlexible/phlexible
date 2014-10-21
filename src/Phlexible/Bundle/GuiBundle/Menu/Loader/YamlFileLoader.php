@@ -63,18 +63,18 @@ class YamlFileLoader implements LoaderInterface
             if (!isset($handlerData['xtype']) || !is_string($handlerData['xtype'])) {
                 throw new LoaderException('Data at index xtype has to be a string.' . $name);
             }
-            if (isset($handlerData['resources']) && !is_array($handlerData['resources'])) {
-                throw new LoaderException('Data at index resources has to be an array.');
+            if (isset($handlerData['roles']) && !is_array($handlerData['roles'])) {
+                throw new LoaderException('Data at index roles has to be an array.');
             }
 
             if (!isset($handlerData['parent'])) {
                 $handlerData['parent'] = null;
             }
-            if (!isset($handlerData['resources'])) {
-                $handlerData['resources'] = array();
+            if (!isset($handlerData['roles'])) {
+                $handlerData['roles'] = array();
             }
 
-            $handlers->set($name, new MenuItem($handlerData['xtype'], $handlerData['parent'], $handlerData['resources']));
+            $handlers->set($name, new MenuItem($handlerData['xtype'], $handlerData['parent'], $handlerData['roles']));
         }
 
         return $handlers;

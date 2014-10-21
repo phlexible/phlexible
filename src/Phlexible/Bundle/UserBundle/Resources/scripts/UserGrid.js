@@ -49,7 +49,7 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
             }
         ];
 
-        if (Phlexible.User.isGranted('users_impersonate')) {
+        if (Phlexible.User.isGranted('ROLE_SWITCH_USER')) {
             this.tbar.push('-');
             this.tbar.push({
                 text: this.strings.impersonate,
@@ -60,7 +60,7 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
             });
         }
 
-        if (Phlexible.User.isGranted('development')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             this.tbar.push('-');
             this.tbar.push({
                 id: 'successorBtn',

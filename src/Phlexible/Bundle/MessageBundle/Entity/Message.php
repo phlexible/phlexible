@@ -71,7 +71,7 @@ class Message
      * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $resource;
+    private $role;
 
     /**
      * @var string
@@ -86,29 +86,100 @@ class Message
     private $createdAt;
 
     /**
-     * Constructor.
+     * @param string    $subject
+     * @param string    $body
+     * @param int       $priority
+     * @param int       $type
+     * @param string    $channel
+     * @param string    $role
+     * @param string    $user
+     * @param \DateTime $createdAt
      */
-    public function __construct()
+    public function __construct($subject, $body, $priority, $type, $channel, $role, $user, \DateTime $createdAt)
     {
-        $this->createdAt = new \DateTime();
+        $this->subject = $subject;
+        $this->body = $body;
+        $this->priority = $priority;
+        $this->type = $type;
+        $this->channel = $channel;
+        $this->role = $role;
+        $this->user = $user;
+        $this->createdAt = $createdAt;
     }
 
     /**
-     * @return array
+     * @return string|null
      */
-    public function getDefaults()
+    public static function getDefaultSubject()
     {
-        return [];
+        return null;
     }
 
     /**
-     * @param string $subject
-     * @param string $body
-     * @param int    $priority
-     * @param int    $type
-     * @param string $channel
-     * @param string $resource
-     * @param string $user
+     * @return string|null
+     */
+    public static function getDefaultBody()
+    {
+        return null;
+    }
+
+    /**
+     * @return int|null
+     */
+    public static function getDefaultPriority()
+    {
+        return null;
+    }
+
+    /**
+     * @return int|null
+     */
+    public static function getDefaultType()
+    {
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getDefaultChannel()
+    {
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getDefaultRole()
+    {
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getDefaultUser()
+    {
+        return null;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public static function getDefaultCreatedAt()
+    {
+        return new \DateTime;
+    }
+
+    /**
+     * @param string    $subject
+     * @param string    $body
+     * @param int       $priority
+     * @param int       $type
+     * @param string    $channel
+     * @param string    $role
+     * @param string    $user
+     * @param \DateTime $createdAt
      *
      * @return Message
      */
@@ -118,47 +189,44 @@ class Message
         $priority = null,
         $type = null,
         $channel = null,
-        $resource = null,
-        $user = null)
+        $role = null,
+        $user = null,
+        \DateTime $createdAt = null)
     {
-        $staticMessage = new static();
-        $defaults = $staticMessage->getDefaults();
-
-        $message = new self();
-        if ($subject === null && isset($defaults['subject'])) {
-            $subject = $defaults['subject'];
+        if ($subject === null) {
+            $subject = static::getDefaultSubject();
         }
-        $message->setSubject($subject);
 
-        if ($body === null && isset($defaults['body'])) {
-            $body = $defaults['body'];
+        if ($body === null) {
+            $body = static::getDefaultBody();
         }
-        $message->setBody($body);
 
-        if ($priority === null && isset($defaults['priority'])) {
-            $priority = $defaults['priority'];
+        if ($priority === null) {
+            $priority = static::getDefaultPriority();
         }
-        $message->setPriority($priority);
 
-        if ($type === null && isset($defaults['type'])) {
-            $type = $defaults['type'];
+        if ($type === null) {
+            $type = static::getDefaultType();
         }
-        $message->setType($type);
 
-        if ($channel === null && isset($defaults['channel'])) {
-            $channel = $defaults['channel'];
+        if ($channel === null) {
+            $channel = static::getDefaultChannel();
         }
-        $message->setChannel($channel);
 
-        if ($resource === null && isset($defaults['resource'])) {
-            $resource = $defaults['resource'];
+        if ($role === null) {
+            $role = static::getDefaultRole();
         }
-        $message->setResource($resource);
 
-        if ($user === null && isset($defaults['user'])) {
-            $user = $defaults['user'];
+        if ($user === null) {
+            $user = static::getDefaultUser();
         }
-        $message->setResource($user);
+
+        if ($createdAt === null) {
+            $createdAt = static::getDefaultCreatedAt();
+        }
+
+        /* @var $message Message */
+        $message = new static($subject, $body, $priority, $type, $channel, $role, $user, $createdAt);
 
         return $message;
     }
@@ -172,35 +240,11 @@ class Message
     }
 
     /**
-     * @param string $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getSubject()
     {
         return $this->subject;
-    }
-
-    /**
-     * @param string $subject
-     *
-     * @return $this
-     */
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-
-        return $this;
     }
 
     /**
@@ -212,35 +256,11 @@ class Message
     }
 
     /**
-     * @param string $body
-     *
-     * @return $this
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
-
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getPriority()
     {
         return $this->priority;
-    }
-
-    /**
-     * @param int $priority
-     *
-     * @return $this
-     */
-    public function setPriority($priority)
-    {
-        $this->priority = (int) $priority;
-
-        return $this;
     }
 
     /**
@@ -252,18 +272,6 @@ class Message
     }
 
     /**
-     * @param int $type
-     *
-     * @return $this
-     */
-    public function setType($type)
-    {
-        $this->type = (int) $type;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getChannel()
@@ -272,35 +280,11 @@ class Message
     }
 
     /**
-     * @param string $channel
-     *
-     * @return $this
-     */
-    public function setChannel($channel)
-    {
-        $this->channel = $channel;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getResource()
+    public function getRole()
     {
-        return $this->resource;
-    }
-
-    /**
-     * @param string $resource
-     *
-     * @return $this
-     */
-    public function setResource($resource)
-    {
-        $this->resource = $resource;
-
-        return $this;
+        return $this->role;
     }
 
     /**
@@ -312,34 +296,10 @@ class Message
     }
 
     /**
-     * @param string $user
-     *
-     * @return $this
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getCreatedAt()
     {
         return $this->createdAt;
-    }
-
-    /**
-     * @param \DateTime $createdAt
-     *
-     * @return $this
-     */
-    public function setCreatedAt(\DateTime $createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 }

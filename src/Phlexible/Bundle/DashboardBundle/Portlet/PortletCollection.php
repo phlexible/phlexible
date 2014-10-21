@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\DashboardBundle\Portlet;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class PortletCollection implements \IteratorAggregate
+class PortletCollection
 {
     /**
      * @var array
@@ -26,7 +26,7 @@ class PortletCollection implements \IteratorAggregate
     public function __construct(array $portlets)
     {
         foreach ($portlets as $portlet) {
-            $this->addPortlet($portlet);
+            $this->add($portlet);
         }
     }
 
@@ -35,7 +35,7 @@ class PortletCollection implements \IteratorAggregate
      *
      * @return $this
      */
-    public function addPortlet(Portlet $portlet)
+    public function add(Portlet $portlet)
     {
         $this->portlets[] = $portlet;
 
@@ -43,10 +43,10 @@ class PortletCollection implements \IteratorAggregate
     }
 
     /**
-     * @return \ArrayIterator
+     * @return Portlet[]
      */
-    public function getIterator()
+    public function all()
     {
-        return new \ArrayIterator($this->portlets);
+        return $this->portlets;
     }
 }

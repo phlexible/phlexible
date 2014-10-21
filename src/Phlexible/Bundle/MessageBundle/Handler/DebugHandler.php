@@ -36,7 +36,7 @@ class DebugHandler implements HandlerInterface
             'priority'     => $message->getPriority(),
             'priorityName' => $message->getPriority(),
             'channel'      => $message->getChannel(),
-            'resource'     => $message->getResource(),
+            'role'         => $message->getRole(),
             'user'         => $message->getUser(),
             'createdAt'    => $message->getCreatedAt()->format('Y-m-d H:i:s'),
         );

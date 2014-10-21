@@ -95,7 +95,7 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
             },
             {
                 xtype: 'panel',
-                title: this.strings.resource,
+                title: this.strings.role,
                 layout: 'form',
                 frame: true,
                 collapsible: true,
@@ -211,11 +211,11 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
             }, this);
         }
 
-        if (facets.resources && facets.resources.length && Ext.isArray(facets.resources)) {
+        if (facets.roles && facets.roles.length && Ext.isArray(facets.roles)) {
             this.getComponent(4).items.each(function (item) {
                 var found = false;
-                Ext.each(facets.resources, function (resource) {
-                    if (item.name === 'resource_' + resource) {
+                Ext.each(facets.roles, function (role) {
+                    if (item.name === 'role_' + role) {
                         found = true;
                         return false;
                     }
@@ -287,12 +287,12 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
             this.getComponent(3).hide();
         }
 
-        if (facets.resources && facets.resources.length && Ext.isArray(facets.resources)) {
+        if (facets.roles && facets.roles.length && Ext.isArray(facets.roles)) {
             this.getComponent(4).body.update('');
-            Ext.each(facets.resources, function (item) {
+            Ext.each(facets.roles, function (item) {
                 this.getComponent(4).add({
                     xtype: 'checkbox',
-                    name: 'resource_' + item.id,
+                    name: 'role_' + item.id,
                     boxLabel: item.title,
                     listeners: {
                         check: this.updateFilter,

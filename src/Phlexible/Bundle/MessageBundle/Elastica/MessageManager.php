@@ -77,9 +77,9 @@ class MessageManager implements MessageManagerInterface
         $channelFacet->setField('channel');
         $query->addFacet($channelFacet);
 
-        $resourceFacet = new \Elastica\Facet\Terms('resources');
-        $resourceFacet->setField('resource');
-        $query->addFacet($resourceFacet);
+        $roleFacet = new \Elastica\Facet\Terms('roles');
+        $roleFacet->setField('role');
+        $query->addFacet($roleFacet);
 
         $resultSet = $this->getType()->search($query);
         $facets = $resultSet->getFacets();
@@ -87,7 +87,7 @@ class MessageManager implements MessageManagerInterface
             'priorities' => array_column($facets['priorities']['terms'], 'term'),
             'types'      => array_column($facets['types']['terms'], 'term'),
             'channels'   => array_column($facets['channels']['terms'], 'term'),
-            'resources'  => array_column($facets['resources']['terms'], 'term'),
+            'roles'      => array_column($facets['roles']['terms'], 'term'),
         );
 
         return $filterSets;
@@ -103,14 +103,6 @@ class MessageManager implements MessageManagerInterface
     public function getFacetsByCriteria(Criteria $criteria)
     {
         // TODO: Implement getFacetsByCriteria() method.
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function create()
-    {
-        return new Message();
     }
 
     /**
@@ -260,17 +252,20 @@ class MessageManager implements MessageManagerInterface
      */
     public function updateMessage(Message $message)
     {
-        $document = new Document($message->getId(), array(
-            'id'         => $message->getId(),
-            'subject'    => $message->getSubject(),
-            'body'       => $message->getBody(),
-            'priority'   => $message->getPriority(),
-            'type'       => $message->getType(),
-            'channel'    => $message->getChannel(),
-            'resource'   => $message->getResource(),
-            'user'       => $message->getUser(),
-            'created_at' => $message->getCreatedAt()->format('U'),
-        ));
+        $document = new Document(
+            $message->getId(),
+            array(
+                'id'         => $message->getId(),
+                'subject'    => $message->getSubject(),
+                'body'       => $message->getBody(),
+                'priority'   => $message->getPriority(),
+                'type'       => $message->getType(),
+                'channel'    => $message->getChannel(),
+                'role'       => $message->getRole(),
+                'user'       => $message->getUser(),
+                'created_at' => $message->getCreatedAt()->format('U'),
+            )
+        );
 
         $this->getType()->addDocument($document);
     }
@@ -307,18 +302,16 @@ class MessageManager implements MessageManagerInterface
      */
     private function mapDocument(array $row)
     {
-        $message = $this->create();
-
-        $message
-            ->setId($row['id'])
-            ->setSubject($row['subject'])
-            ->setBody($row['body'])
-            ->setPriority($row['priority'])
-            ->setType($row['type'])
-            ->setChannel($row['channel'])
-            ->setResource($row['resource'])
-            ->setUser($row['user'])
-            ->setCreatedAt(\DateTime::createFromFormat('U', $row['created_at']));
+        $message = Message::create(
+            $row['subject'],
+            $row['body'],
+            $row['priority'],
+            $row['type'],
+            $row['channel'],
+            $row['role'],
+            $row['user'],
+            \DateTime::createFromFormat('U', $row['created_at'])
+        );
 
         return $message;
     }
@@ -416,14 +409,14 @@ class MessageManager implements MessageManagerInterface
                     $andFilter->addFilter($orFilter);
                     break;
 
-                case Criteria::CRITERIUM_RESOURCE_IS:
-                    $andFilter->addFilter(new Term(array('resource' => $value)));
+                case Criteria::CRITERIUM_ROLE_IS:
+                    $andFilter->addFilter(new Term(array('role' => $value)));
                     break;
 
-                case Criteria::CRITERIUM_RESOURCE_IN:
+                case Criteria::CRITERIUM_ROLE_IN:
                     $orFilter = new BoolOr();
-                    foreach (explode(',', $value) as $resource) {
-                        $orFilter->addFilter(new Term(array('resource' => $resource)));
+                    foreach (explode(',', $value) as $role) {
+                        $orFilter->addFilter(new Term(array('role' => $role)));
                     }
                     $andFilter->addFilter($orFilter);
                     break;

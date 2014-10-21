@@ -129,7 +129,7 @@ class Digest
                 'Status: ' . PHP_EOL . print_r($digests, true),
                 Message::PRIORITY_NORMAL,
                 null,
-                'messages',
+                'ROLE_MESSAGES',
                 'cli'
             );
             $this->messageService->post($message);

@@ -31,12 +31,23 @@ services:
         class: Phlexible\Bundle\GuiBundle\Translator\CatalogAccessor
         arguments: [@translator]
 
-    # acl providers
-    phlexible_gui.acl_provider:
-        class: Phlexible\Bundle\GuiBundle\AclProvider\GuiAclProvider
+
+    phlexible_gui.security.role_hierarchy_factory:
+        class: Phlexible\Bundle\GuiBundle\Security\RoleHierarchyFactory
+        arguments: [%security.role_hierarchy.roles%]
+
+    security.role_hierarchy:
+        class: Symfony\Component\Security\Core\Role\RoleHierarchy
+        factory_service: phlexible_gui.security.role_hierarchy_factory
+        factory_method: factory
         public: false
+
+    phlexible_gui.security.access.role_hierarchy_voter:
+        class: Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter
+        public: false
+        arguments: [@security.role_hierarchy]
         tags:
-            - {name: phlexible_security.acl.provider}
+            - {name: security.voter, priority: 245}
 
     # asset providers
     phlexible_gui.asset_provider:
@@ -66,3 +77,11 @@ services:
         arguments: [@translator]
         tags:
             - {name: phlexible_dashboard.portlet}
+
+    # role providers
+    phlexible_gui.role_provider:
+        class: Phlexible\Bundle\GuiBundle\RoleProvider\GuiRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}
+

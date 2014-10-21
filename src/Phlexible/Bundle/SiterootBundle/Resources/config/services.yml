@@ -11,13 +11,6 @@ services:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\TitleResolver
         arguments: [@translator, %phlexible_gui.project.title%]
 
-    # acl providers
-    phlexible_siteroot.acl_provider:
-        class: Phlexible\Bundle\SiterootBundle\AclProvider\SiterootAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_siteroot.asset_provider:
         class: Phlexible\Bundle\SiterootBundle\AssetProvider\SiterootAssetProvider
@@ -40,3 +33,10 @@ services:
         arguments: [@phlexible_siteroot.siteroot_manager]
         tags:
             - {name: phlexible_problem.problem_checker}
+
+    # role providers
+    phlexible_siteroot.role_provider:
+        class: Phlexible\Bundle\SiterootBundle\RoleProvider\SiterootRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

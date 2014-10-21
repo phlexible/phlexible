@@ -12,7 +12,25 @@ Phlexible.gui.menuhandle.handle.Group = Ext.extend(Phlexible.gui.menuhandle.hand
                     return;
                 }
 
+                if (menuItem.roles) {
+                    var allowed = false;
+                    Ext.each(menuItem.roles, function(role) {
+                        if (Phlexible.User.isGranted(role)) {
+                            allowed = true;
+                            return false;
+                        }
+                    });
+                    if (!allowed) {
+                        return;
+                    }
+                }
+
                 handler = new handlerCls();
+
+                if (menuItem.parameters) {
+                    handler.setParameters(menuItem.parameters);
+                }
+
                 btns.push(handler.createConfig(menuItem));
             }, this);
         }

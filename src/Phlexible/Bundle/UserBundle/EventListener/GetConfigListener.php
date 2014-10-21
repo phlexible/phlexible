@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\UserBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
+use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
  * Get config listener
@@ -19,14 +19,14 @@ use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 class GetConfigListener
 {
     /**
-     * @var Acl
+     * @var RoleHierarchyInterface
      */
-    private $defaults;
+    private $roleHierarchy;
 
     /**
      * @var array
      */
-    private $acl;
+    private $defaults;
 
     /**
      * @var int
@@ -34,13 +34,13 @@ class GetConfigListener
     private $passwordMinLength;
 
     /**
-     * @param Acl   $acl
-     * @param array $defaults
-     * @param int   $passwordMinLength
+     * @param RoleHierarchyInterface $roleHierarchy
+     * @param array                  $defaults
+     * @param int                    $passwordMinLength
      */
-    public function __construct(Acl $acl, array $defaults, $passwordMinLength)
+    public function __construct(RoleHierarchyInterface $roleHierarchy, array $defaults, $passwordMinLength)
     {
-        $this->acl = $acl;
+        $this->roleHierarchy = $roleHierarchy;
         $this->defaults = $defaults;
         $this->passwordMinLength = $passwordMinLength;
     }
@@ -51,25 +51,21 @@ class GetConfigListener
     public function onGetConfig(GetConfigEvent $event)
     {
         $securityContext = $event->getSecurityContext();
-        $user = $securityContext->getToken()->getUser();
-
-        $resources = array();
-        $allResources = $this->acl->getResources();
-        foreach ($allResources as $resource) {
-            if ($securityContext->isGranted($resource)) {
-                $resources[] = $resource;
-            }
+        $token = $securityContext->getToken();
+        $user = $token->getUser();
+        $roles = array();
+        foreach ($this->roleHierarchy->getReachableRoles($token->getRoles()) as $role) {
+            $roles[] = $role->getRole();
         }
-        $roles = $user->getRoles();
 
         $event->getConfig()
             ->set('system.password_min_length', $this->passwordMinLength)
             ->set('user.id', $user->getId())
-            ->set('user.details.username', $user->getUsername())
-            ->set('user.details.email', $user->getEmail())
-            ->set('user.details.firstname', $user->getFirstname() ?: '')
-            ->set('user.details.lastname', $user->getLastname() ?: '')
-            ->set('user.resources', $resources)
+            ->set('user.username', $user->getUsername())
+            ->set('user.email', $user->getEmail())
+            ->set('user.firstname', $user->getFirstname() ?: '')
+            ->set('user.lastname', $user->getLastname() ?: '')
+            ->set('user.properties', $user->getProperties())
             ->set('user.roles', $roles)
             ->set('defaults', $this->defaults);
 

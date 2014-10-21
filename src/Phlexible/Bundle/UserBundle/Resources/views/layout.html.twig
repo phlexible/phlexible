@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+    <title>{{ project.title }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7"/>
+    <link rel="icon" type="image/png" href="{{ asset("bundles/phlexiblegui/images/phlexible.png") }}">
+    <link href="{{ asset("resources/css/ext-all.css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
+    <style>
+        .p-user-login-icon {
+            background-image:url({{ asset("bundles/phlexibleuser/icons/login.png") }}) !important;
+        }
+    </style>
+    <script type="text/javascript" src="{{ asset("adapter/ext/ext-base.js", "extjs") }}"></script>
+    {% if app.debug %}
+        <script type="text/javascript" src="{{ asset("ext-all-debug.js", "extjs") }}"></script>
+    {% else %}
+        <script type="text/javascript" src="{{ asset("ext-all.js", "extjs") }}"></script>
+    {% endif %}
+    <script type="text/javascript">
+        //<![CDATA[
+        Ext.BLANK_IMAGE_URL = "{{ asset("bundles/phlexiblegui/images/blank.gif") }}";
+        Ext.QuickTips.init();
+        var Phlexible = {
+            title: "{{ project.title }}",
+            version: "{{ project.version }}",
+            project: "{{ project.title }}",
+            baseUrl: "{{ app.request.baseUrl }}/admin",
+            basePath: "{{ app.request.basePath }}/admin",
+            bundlePath: "{{ app.request.basePath }}/bundles"
+        };
+        //]]>
+    </script>
+    <script type="text/javascript" src="{{ path("phlexible_user_asset_scripts") }}"></script>
+    {% block phlexible_user_content %}
+    {% endblock %}
+</head>
+<body>
+</body>
+</html>

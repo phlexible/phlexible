@@ -64,8 +64,9 @@ class UsersController extends Controller
         }
 
         $userManager = $this->get('phlexible_user.user_manager');
-        $allUsers = $userManager->findAll();
         $securityContext = $this->get('security.context');
+
+        $allUsers = $userManager->findAll();
         $systemUserUid = $userManager->getSystemUserId();
 
         $users = [];
@@ -74,21 +75,11 @@ class UsersController extends Controller
         foreach ($allUsers as $user) {
             /* @var $user UserInterface */
 
-            if ($user->hasRole(Acl::ROLE_SUPERADMIN) &&
-                !$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) &&
-                !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)
-            ) {
+            if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 continue;
             }
 
-            if ($user->hasRole(Acl::ROLE_DEVELOPER) &&
-                !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)
-            ) {
-                continue;
-            }
-
-            if ($user->getId() === $systemUserUid &&
-                !$securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)
+            if ($user->getId() === $systemUserUid && !$securityContext->isGranted('ROLE_SUPER_ADMIN')
             ) {
                 continue;
             }
@@ -414,10 +405,10 @@ class UsersController extends Controller
      */
     public function filtervaluesAction()
     {
-        $acl = $this->get('phlexible_security.acl');
+        $securityContext = $this->get('security.context');
         $groupManager = $this->get('phlexible_user.group_manager');
+
         $allGroups = $groupManager->findAll();
-        $allRoles = $acl->getRoles();
         $everyoneGroupId = $groupManager->getEveryoneGroupId();
 
         $groups = [];
@@ -432,15 +423,9 @@ class UsersController extends Controller
             ];
         }
 
-        $currentUser = $this->getUser();
-
         $roles = [];
-        foreach ($allRoles as $role) {
-            if ($role == 'DEVELOPER' && !$currentUser->hasRole('DEVELOPER')) {
-                continue;
-            }
-
-            if ($role == 'SUPERADMIN' && !$currentUser->hasRole('SUPERADMIN') && !$currentUser->hasRole('DEVELOPER')) {
+        foreach ($this->container->getParameter('security.role_hierarchy.roles') as $role) {
+            if (!$securityContext->isGranted($role)) {
                 continue;
             }
 

@@ -1,9 +1,0 @@
-logout:
-    parent: account
-    xtype: Phlexible.security.menuhandle.LogoutHandle
-    resources: [logout]
-
-roles:
-    parent: admin
-    xtype: Phlexible.security.menuhandle.RolesHandle
-    resources: [roles]

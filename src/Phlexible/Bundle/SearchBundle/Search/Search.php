@@ -55,8 +55,8 @@ class Search
                 continue;
             }
 
-            $resource = $searchProvider->getResource();
-            if ($resource && !$this->securityContext->isGranted($resource)) {
+            $role = $searchProvider->getRole();
+            if ($role && !$this->securityContext->isGranted($role)) {
                 continue;
             }
 

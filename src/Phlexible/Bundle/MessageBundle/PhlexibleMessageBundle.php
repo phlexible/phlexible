@@ -17,6 +17,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleMessageBundle extends Bundle
 {
-    const RESOURCE_MESSAGES = 'messages';
-    const RESOURCE_MESSAGES_CHANNELS = 'messages_channels';
 }

@@ -181,7 +181,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                 this.items.items[1].disable();
             }
 
-            if (Phlexible.User.isGranted('elements_create') &&
+            if (Phlexible.User.isGranted('ROLE_ELEMENT_CREATE') &&
                 node.attributes.rights.indexOf('CREATE') !== -1) {
                 this.items.items[3].enable();
                 this.items.items[4].enable();
@@ -200,7 +200,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
 
             if (Phlexible.Clipboard.isActive() &&
                 Phlexible.Clipboard.getType() == 'element' &&
-                Phlexible.User.isGranted('elements_create') &&
+                Phlexible.User.isGranted('ROLE_ELEMENT_CREATE') &&
                 node.attributes.rights.indexOf('CREATE') !== '-1') {
                 this.items.items[7].menu.items.items[0].setText(String.format(Phlexible.elements.Strings.paste_as, Phlexible.Clipboard.getText()));
                 this.items.items[7].enable();
@@ -209,10 +209,10 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                 this.items.items[7].disable();
             }
 
-            if (Phlexible.User.isGranted('elements_delete') &&
+            if (Phlexible.User.isGranted('ROLE_ELEMENT_DELETE') &&
                 node.attributes.rights.indexOf('DELETE') !== -1) {
                 if (!node.attributes.is_published ||
-                    (Phlexible.User.isGranted('elements_publish') &&
+                    (Phlexible.User.isGranted('ROLE_ELEMENT_PUBLISH') &&
                         node.attributes.rights.indexOf('PUBLISH') !== -1)) {
                     this.items.items[9].enable();
                 }

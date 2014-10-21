@@ -3,13 +3,6 @@ parameters:
     phlexible_cms.languages.available: en,de
 
 services:
-    # acl providers
-    phlexible_cms.acl_provider:
-        class: Phlexible\Bundle\CmsBundle\AclProvider\CmsAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_cms.asset_provider:
         class: Phlexible\Bundle\CmsBundle\AssetProvider\CmsAssetProvider
@@ -25,3 +18,9 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
 
+    # role providers
+    phlexible_cms.role_provider:
+        class: Phlexible\Bundle\CmsBundle\RoleProvider\CmsRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

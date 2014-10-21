@@ -238,9 +238,7 @@ class Selector
                 $include = true;
             }
         }
-        if (!$this->securityContext->isGranted(Acl::RESOURCE_SUPERADMIN, $treeNode) &&
-            !$this->securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT, $treeNode)
-        ) {
+        if (!$this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
             if (!$this->securityContext->isGranted($treeNode, array('right' => 'PUBLISH', 'language' => $language))) {
                 $include = false;
             }

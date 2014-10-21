@@ -66,9 +66,7 @@ class GetConfigListener
         foreach ($siteroots as $siteroot) {
             $siterootId = $siteroot->getId();
 
-            if ($securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) ||
-                $securityContext->isGranted(Acl::RESOURCE_DEVELOPMENT)
-            ) {
+            if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 $siterootLanguages[$siterootId] = $allLanguages;
             } else {
                 $siterootLanguages[$siterootId] = array();
@@ -77,7 +75,7 @@ class GetConfigListener
                     $tree = $treeManager->getBySiterootId($siterootId);
                     $root = $tree->getRoot();
 
-                    if (!$securityContext->isGranted($root, 'VIEW', $language)) {
+                    if (!$securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $root)) {
                         continue;
                     }
 

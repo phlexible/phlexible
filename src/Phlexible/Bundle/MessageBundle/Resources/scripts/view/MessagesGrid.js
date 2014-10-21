@@ -91,8 +91,8 @@ Phlexible.messages.view.MessagesGrid = Ext.extend(Ext.grid.GridPanel, {
                 sortable: true,
                 width: 100
             }, {
-                header: this.strings.resource,
-                dataIndex: 'resource',
+                header: this.strings.role,
+                dataIndex: 'role',
                 sortable: true,
                 width: 100
             }, {

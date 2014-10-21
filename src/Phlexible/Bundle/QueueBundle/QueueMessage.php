@@ -20,10 +20,16 @@ class QueueMessage extends Message
     /**
      * {@inheritdoc}
      */
-    public function getDefaults()
+    public static function getDefaultChannel()
     {
-        return array(
-            'component' => 'queue',
-        );
+        return 'queue';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaultRole()
+    {
+        return 'ROLE_QUEUE';
     }
 }

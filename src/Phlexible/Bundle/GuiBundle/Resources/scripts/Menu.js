@@ -133,11 +133,10 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
                 return;
             }
 
-            if (dataItem.resources) {
-                var userResources = Phlexible.Config.get('user.resources'),
-                    allowed = false;
-                Ext.each(dataItem.resources, function(resource) {
-                    if (userResources.indexOf(resource) !== -1) {
+            if (dataItem.roles) {
+                var allowed = false;
+                Ext.each(dataItem.roles, function(role) {
+                    if (User.isGranted(role)) {
                         allowed = true;
                         return false;
                     }

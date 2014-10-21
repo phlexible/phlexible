@@ -72,7 +72,15 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
             success: function(response) {
                 var config = Ext.decode(response.responseText);
                 Phlexible.Config = new Phlexible.gui.util.Config(config);
-                Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
+                Phlexible.User = new Phlexible.gui.util.User(
+                    config['user.id'],
+                    config['user.username'],
+                    config['user.email'],
+                    config['user.firstname'],
+                    config['user.lastname'],
+                    config['user.properties'],
+                    config['user.roles']
+                );
             },
             failure: function () {
                 Ext.MessageBox.alert('Load error', 'Error loading config.');
@@ -142,7 +150,15 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         console.log(config);
         delete Phlexible.config;
         Phlexible.Config = new Phlexible.gui.util.Config(config);
-        Phlexible.User = new Phlexible.gui.util.User(config['user.resources']);
+        Phlexible.User = new Phlexible.gui.util.User(
+            config['user.id'],
+            config['user.username'],
+            config['user.email'],
+            config['user.firstname'],
+            config['user.lastname'],
+            config['user.properties'],
+            config['user.roles']
+        );
     },
 
     /**

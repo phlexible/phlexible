@@ -75,6 +75,7 @@ class UserAssetProvider implements AssetProviderInterface
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/SuccessorWindow.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/menuhandle/UsersHandle.js')),
             new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/menuhandle/OptionsHandle.js')),
+            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/menuhandle/LogoutHandle.js')),
         ));
 
         return $collection;

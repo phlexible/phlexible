@@ -28,7 +28,7 @@ class MenuItem
     /**
      * @var array
      */
-    private $resources = array();
+    private $roles = array();
 
     /**
      * @var array
@@ -43,13 +43,13 @@ class MenuItem
     /**
      * @param string $xtype
      * @param null   $parent
-     * @param array  $resources
+     * @param array  $roles
      */
-    public function __construct($xtype, $parent = null, array $resources = array())
+    public function __construct($xtype, $parent = null, array $roles = array())
     {
         $this->xtype = $xtype;
         $this->parent = $parent;
-        $this->resources = $resources;
+        $this->roles = $roles;
     }
 
     /**
@@ -71,9 +71,9 @@ class MenuItem
     /**
      * @return array
      */
-    public function getResources()
+    public function getRoles()
     {
-        return $this->resources;
+        return $this->roles;
     }
 
     /**

@@ -68,7 +68,8 @@ class MyTasksPortlet extends Portlet
             ->setTitle($translator->trans('tasks.my_tasks', array(), 'gui'))
             //->setDescription('Displays your active tasks')
             ->setClass('Phlexible.tasks.portlet.MyTasks')
-            ->setIconClass('p-task-portlet-icon');
+            ->setIconClass('p-task-portlet-icon')
+            ->setRole('ROLE_TASKS');
 
         $this->taskManager = $taskManager;
         $this->types = $types;

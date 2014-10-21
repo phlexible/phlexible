@@ -1,11 +1,4 @@
 services:
-    # acl providers
-    phlexible_media_template.acl_provider:
-        class: Phlexible\Bundle\MediaTemplateBundle\AclProvider\MediaTemplateAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_media_template.asset_provider:
         class: Phlexible\Bundle\MediaTemplateBundle\AssetProvider\MediaTemplatesAssetProvider
@@ -13,3 +6,10 @@ services:
         arguments: [@file_locator]
         tags:
             - {name: phlexible_gui.asset.provider, priority: 600}
+
+    # role providers
+    phlexible_media_template.role_provider:
+        class: Phlexible\Bundle\MediaTemplateBundle\RoleProvider\MediaTemplateRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

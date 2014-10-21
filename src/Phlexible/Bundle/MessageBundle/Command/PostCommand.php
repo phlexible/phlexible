@@ -36,7 +36,7 @@ class PostCommand extends ContainerAwareCommand
                     new InputOption('priority', null, InputOption::VALUE_REQUIRED, 'Message priority', 1),
                     new InputOption('type', null, InputOption::VALUE_REQUIRED, 'Message type', 0),
                     new InputOption('channel', null, InputOption::VALUE_REQUIRED, 'Message channel'),
-                    new InputOption('resource', null, InputOption::VALUE_REQUIRED, 'Message resource'),
+                    new InputOption('role', null, InputOption::VALUE_REQUIRED, 'Message role'),
                 )
             )
             ->setDescription('Post message');
@@ -76,9 +76,9 @@ class PostCommand extends ContainerAwareCommand
         }
 
         $channel = $input->getOption('channel');
-        $resource = $input->getOption('resource');
+        $role = $input->getOption('role');
 
-        $message = Message::create($subject, $body, $priority, $type, $channel, $resource, 'cli');
+        $message = Message::create($subject, $body, $priority, $type, $channel, $role, 'cli');
         $messageService = $this->getContainer()->get('phlexible_message.message_poster');
         $messageService->post($message);
 

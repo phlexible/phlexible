@@ -54,7 +54,7 @@ class MessagesController extends Controller
         $priorityFilter = array();
         $typeFilter = array();
         $channelFilter = array();
-        $resourceFilter = array();
+        $roleFilter = array();
 
         $criteria = new Criteria();
         foreach ($filter as $key => $value) {
@@ -66,10 +66,10 @@ class MessagesController extends Controller
                 $priorityFilter[] = substr($key, 9);
             } elseif (substr($key, 0, 5) == 'type_') {
                 $typeFilter[] = substr($key, 5);
-            } elseif (substr($key, 0, 10) == 'channel_') {
+            } elseif (substr($key, 0, 8) == 'channel_') {
                 $channelFilter[] = substr($key, 8);
-            } elseif (substr($key, 0, 9) == 'resource_') {
-                $resourceFilter[] = substr($key, 9);
+            } elseif (substr($key, 0, 5) == 'role_') {
+                $roleFilter[] = substr($key, 9);
             } elseif ($key == 'date_after' && !empty($value)) {
                 $criteria->addRaw(Criteria::CRITERIUM_START_DATE, $value);
             } elseif ($key == 'date_before' && !empty($value)) {
@@ -98,10 +98,10 @@ class MessagesController extends Controller
             );
         }
 
-        if (count($resourceFilter)) {
+        if (count($roleFilter)) {
             $criteria->addRaw(
-                Criteria::CRITERIUM_RESOURCE_IN,
-                implode(',', $resourceFilter)
+                Criteria::CRITERIUM_ROLE_IN,
+                implode(',', $roleFilter)
             );
         }
 
@@ -116,7 +116,7 @@ class MessagesController extends Controller
                 'priority'  => $priorityList[$message->getPriority()],
                 'type'      => $typeList[$message->getType()],
                 'channel'   => $message->getChannel(),
-                'resource'  => $message->getResource(),
+                'role'      => $message->getRole(),
                 'user'      => $message->getUser(),
                 'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
             );
@@ -161,17 +161,17 @@ class MessagesController extends Controller
             $channels[] = array('id' => $channel, 'title' => $channel ? : '(no channel)');
         }
 
-        $resources = array();
-        sort($filterSets['resources']);
-        foreach ($filterSets['resources'] as $resource) {
-            $resources[] = array('id' => $resource, 'title' => $resource ? : '(no resource)');
+        $roles = array();
+        sort($filterSets['roles']);
+        foreach ($filterSets['roles'] as $role) {
+            $roles[] = array('id' => $role, 'title' => $role ? : '(no role)');
         }
 
         return new JsonResponse(array(
             'priorities' => $priorities,
             'types'      => $types,
             'channels'   => $channels,
-            'resources'  => $resources,
+            'roles'      => $roles,
         ));
     }
 }

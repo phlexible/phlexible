@@ -67,7 +67,7 @@ class LatestFilesPortlet extends Portlet
             ->setTitle($translator->trans('mediamanager.latest_files', array(), 'gui'))
             ->setClass('Phlexible.mediamanager.portlet.LatestFiles')
             ->setIconClass('p-mediamanager-portlet-icon')
-            ->setResource('media');
+            ->setRole('ROLE_MEDIA');
 
         $this->siteManager = $siteManager;
         $this->cacheManager = $cacheManager;

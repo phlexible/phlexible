@@ -1,0 +1,21 @@
+{% extends "PhlexibleUserBundle::layout.html.twig" %}
+
+{% block phlexible_user_content %}
+    <script type="text/javascript">
+        //<![CDATA[
+        Ext.onReady(function () {
+            win = new Phlexible.users.security.SendEmailWindow({
+                title: "{{ project.title }}",
+                loginUrl: "{{ path("fos_user_security_login") }}",
+                sendEmailUrl: "{{ path("fos_user_resetting_send_email") }}",
+                errorMessage: "{{ 'send_email.invalid_username'|trans({}, 'PhlexibleUserBundle') }}",
+                invalidUsername: "{% if invalid_username is defined %}{{ invalid_username }}{% endif %}",
+                usernameText: "{{ 'resetting.request.username'|trans({}, 'FOSUserBundle') }}",
+                backToLoginText: "{{ 'login.back_to_login'|trans({}, 'PhlexibleUserBundle') }}",
+                submitText: "{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}"
+            });
+            win.show();
+        });
+        //]]>
+    </script>
+{% endblock %}

@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/accesscontrol")
- * @Security("is_granted('accesscontrol')")
+ * @Security("is_granted('ROLE_ACCESS_CONTROL')")
  */
 class RightsController extends Controller
 {

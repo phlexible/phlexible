@@ -7,13 +7,6 @@ services:
         class: Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcher
         arguments: [@doctrine.orm.entity_manager, @event_dispatcher]
 
-    # acl providers
-    phlexible_problem.acl_provider:
-        class: Phlexible\Bundle\ProblemBundle\AclProvider\ProblemAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_problem.asset_provider:
         class: Phlexible\Bundle\ProblemBundle\AssetProvider\ProblemAssetProvider
@@ -36,3 +29,10 @@ services:
         arguments: [@translator, @phlexible_problem.problem_fetcher]
         tags:
             - {name: phlexible_dashboard.portlet}
+
+    # role providers
+    phlexible_problem.role_provider:
+        class: Phlexible\Bundle\ProblemBundle\RoleProvider\ProblemRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

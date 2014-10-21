@@ -252,7 +252,7 @@ class DataController extends Controller
         }
 
         if ($node instanceof ContentObjectInterface) {
-            if (!$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN) &&
+            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') &&
                 !$securityContext->isGranted(array('right' => 'EDIT', 'language' => $language), $node)
             ) {
                 $doLock = false;
@@ -461,7 +461,7 @@ class DataController extends Controller
 
         $userRights = array();
         if ($node instanceof ContentObjectInterface) {
-            if (!$securityContext->isGranted(Acl::RESOURCE_SUPERADMIN)) {
+            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
                 if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {

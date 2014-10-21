@@ -1,4 +1,4 @@
 tasks:
     parent: main
     xtype: Phlexible.tasks.menuhandle.TasksHandle
-    resources: [tasks]
+    roles: [ROLE_TASKS]

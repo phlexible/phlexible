@@ -1,0 +1,8 @@
+login:
+    enter_username_and_password: Enter your username and password
+    lost_password: Lost password
+    back_to_login: Back to login
+send_email:
+    invalid_username: Invalid username or email.
+reset:
+    enter_new_password: Please enter your new password.

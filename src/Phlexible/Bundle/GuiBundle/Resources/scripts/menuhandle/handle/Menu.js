@@ -20,11 +20,10 @@ Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handl
                     return;
                 }
 
-                if (menuItem.resources) {
-                    var userResources = Phlexible.Config.get('user.resources'),
-                        allowed = false;
-                    Ext.each(menuItem.resources, function(resource) {
-                        if (userResources.indexOf(resource) !== -1) {
+                if (menuItem.roles) {
+                    var allowed = false;
+                    Ext.each(menuItem.roles, function(role) {
+                        if (Phlexible.User.isGranted(role)) {
                             allowed = true;
                             return false;
                         }

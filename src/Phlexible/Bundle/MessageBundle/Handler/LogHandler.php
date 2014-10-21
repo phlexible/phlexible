@@ -44,10 +44,10 @@ class LogHandler implements HandlerInterface
     {
         $priority = $message->getPriority();
 
-        $channel   = $message->getChannel();
-        $resource  = $message->getResource();
-        $subject   = $message->getSubject();
-        $body      = $message->getBody();
+        $channel = $message->getChannel();
+        $role    = $message->getRole();
+        $subject = $message->getSubject();
+        $body    = $message->getBody();
 
         // build message
         $msg = "Message ($priority)";
@@ -56,8 +56,8 @@ class LogHandler implements HandlerInterface
             $msg .= ' in channel ' . $channel;
         }
 
-        if (!empty($resource)) {
-            $msg .= ' with resource ' . $resource;
+        if (!empty($role)) {
+            $msg .= ' with role ' . $role;
         }
 
         $msg .= ': ' . $subject;

@@ -37,7 +37,7 @@ class ProblemsPortlet extends Portlet
             ->setTitle($translator->trans('problems.problems', array(), 'gui'))
             ->setClass('Phlexible.problems.portlet.Problems')
             ->setIconClass('p-problem-portlet-icon')
-            ->setResource('problems');
+            ->setRole('ROLE_PROBLEMS');
 
         $this->fetcher = $fetcher;
     }

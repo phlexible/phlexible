@@ -25,14 +25,6 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class MessageRepository extends EntityRepository
 {
     /**
-     * @return Message
-     */
-    public function create()
-    {
-        return new Message();
-    }
-
-    /**
      * Find messages by criteria
      *
      * @param Criteria $criteria
@@ -106,13 +98,13 @@ class MessageRepository extends EntityRepository
         $channels = $this->createQueryBuilder('m')->select('DISTINCT m.channel')->getQuery()->getScalarResult();
         $types = $this->createQueryBuilder('m')->select('DISTINCT m.type')->getQuery()->getScalarResult();
         $priorities = $this->createQueryBuilder('m')->select('DISTINCT m.priority')->getQuery()->getScalarResult();
-        $resources = $this->createQueryBuilder('m')->select('DISTINCT m.resource')->getQuery()->getScalarResult();
+        $roles = $this->createQueryBuilder('m')->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
         return array(
             'channels'   => array_column($channels, 'channel'),
             'types'      => array_column($types, 'type'),
             'priorities' => array_column($priorities, 'priority'),
-            'resources'  => array_column($resources, 'resource'),
+            'roles'      => array_column($roles, 'role'),
         );
     }
 
@@ -134,14 +126,14 @@ class MessageRepository extends EntityRepository
         $priorityQb = clone $qb;
         $priorities = $priorityQb->select('DISTINCT m.priority')->getQuery()->getScalarResult();
 
-        $resourceQb = clone $qb;
-        $resources = $resourceQb->select('DISTINCT m.resource')->getQuery()->getScalarResult();
+        $roleQb = clone $qb;
+        $roles = $roleQb->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
         return array(
             'channels'   => array_column($channels, 'channel'),
             'types'      => array_column($types, 'type'),
             'priorities' => array_column($priorities, 'priority'),
-            'resources'  => array_column($resources, 'resource'),
+            'roles'      => array_column($roles, 'role'),
         );
     }
 
@@ -266,11 +258,11 @@ class MessageRepository extends EntityRepository
                 $composite->add($qb->expr()->in("$prefix.channel", $values));
                 break;
 
-            case Criteria::CRITERIUM_RESOURCE_IS:
-                $composite->add($qb->expr()->eq("$prefix.resource", $qb->expr()->literal("value")));
+            case Criteria::CRITERIUM_ROLE_IS:
+                $composite->add($qb->expr()->eq("$prefix.role", $qb->expr()->literal("value")));
                 break;
 
-            case Criteria::CRITERIUM_RESOURCE_IN:
+            case Criteria::CRITERIUM_ROLE_IN:
                 $value = (array) $value;
                 $values = array_map(
                     function ($value) use ($qb) {
@@ -278,7 +270,7 @@ class MessageRepository extends EntityRepository
                     },
                     $value
                 );
-                $composite->add($qb->expr()->in("$prefix.resource", $values));
+                $composite->add($qb->expr()->in("$prefix.role", $values));
                 break;
 
             case Criteria::CRITERIUM_MAX_AGE:

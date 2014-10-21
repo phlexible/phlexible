@@ -50,7 +50,7 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
                     cls: 'p-dashboard-watermark'
                 });
 
-                if (Phlexible.User.isGranted('admin')) {
+                if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
                     Ext.DomHelper.append(this.el, {
                         tag: 'div',
                         cls: 'p-dashboard-info'

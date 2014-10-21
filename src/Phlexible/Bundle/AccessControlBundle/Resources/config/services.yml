@@ -19,13 +19,6 @@ services:
         class: Phlexible\Bundle\AccessControlBundle\Provider\GroupProvider
         arguments: [@doctrine.orm.entity_manager]
 
-    # acl providers
-    phlexible_access_control.acl_provider:
-        class: Phlexible\Bundle\AccessControlBundle\AclProvider\AccessControlAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_access_control.asset_provider:
         class: Phlexible\Bundle\AccessControlBundle\AssetProvider\AccessControlAssetProvider
@@ -41,3 +34,10 @@ services:
         arguments: [@phlexible_access_control.access_manager, @phlexible_access_control.permissions]
         tags:
             - {name: security.voter}
+
+    # role providers
+    phlexible_access_control.role_provider:
+        class: Phlexible\Bundle\AccessControlBundle\RoleProvider\AccessControlRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

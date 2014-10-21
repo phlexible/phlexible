@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle;
 
-use Phlexible\Bundle\MediaSiteBundle\File;
-use Phlexible\Bundle\MediaSiteBundle\Folder;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
@@ -22,8 +20,16 @@ class MediaManagerMessage extends Message
     /**
      * {@inheritdoc}
      */
-    public function getDefaults()
+    public static function getDefaultChannel()
     {
-        return array('component' => 'mediamanager');
+        return 'mediamanager';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaultRole()
+    {
+        return 'ROLE_MEDIA';
     }
 }

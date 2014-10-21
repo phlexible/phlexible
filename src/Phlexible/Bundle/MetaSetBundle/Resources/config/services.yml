@@ -8,13 +8,6 @@ services:
     phlexible_meta_set.option_resolver:
         class: Phlexible\Bundle\MetaSetBundle\Model\OptionResolver
 
-    # acl providers
-    phlexible_meta_set.acl_provider:
-        class: Phlexible\Bundle\MetaSetBundle\AclProvider\MetaSetAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_meta_set.asset_provider:
         class: Phlexible\Bundle\MetaSetBundle\AssetProvider\MetaSetAssetProvider
@@ -29,3 +22,10 @@ services:
         arguments: [%phlexible_meta_set.languages.default%, %phlexible_meta_set.languages.available%]
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
+
+    # role providers
+    phlexible_meta_set.role_provider:
+        class: Phlexible\Bundle\MetaSetBundle\RoleProvider\MetaSetRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

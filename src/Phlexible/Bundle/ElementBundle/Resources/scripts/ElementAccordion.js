@@ -33,22 +33,21 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
             }
         ];
 
-        if (Phlexible.User.isGranted('elements_accordion_page') ||
-            Phlexible.User.isGranted('elements_accordion_page_advanced')) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_CONFIG')) {
             this.items.push({
                 xtype: 'elements-configurationaccordion',
                 collapsed: true
             });
         }
 
-        if (Phlexible.User.isGranted('elements_accordion_meta')) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_META')) {
             this.items.push({
                 xtype: 'elements-metaaccordion',
                 collapsed: true
             });
         }
 
-        if (Phlexible.User.isGranted('elements_accordion_children')) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_CHILDREN')) {
             this.items.push({
                 xtype: 'elements-allowedchildrenaccordion',
                 collapsed: true,
@@ -65,7 +64,7 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
             });
         }
 
-        if (Phlexible.User.isGranted('elements_accordion_versions')) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_VERSIONS')) {
             this.items.push({
                 xtype: 'elements-versionsaccordion',
                 collapsed: true,
@@ -80,7 +79,7 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
             });
         }
 
-        if (Phlexible.User.isGranted('elements_accordion_instances')) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_INSTANCES')) {
             this.items.push({
                 xtype: 'elements-instancesaccordion',
                 collapsed: true,
@@ -100,7 +99,7 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
             });
         }
 
-        if (Phlexible.User.isGranted('elements_accordion_comment')) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_COMMENT')) {
             this.items.push({
                 xtype: 'elements-commentaccordion',
                 collapsed: true
@@ -112,7 +111,7 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
         //    collapsed: true,
         //    element: this.element
 
-        if (Phlexible.User.isGranted('elements_accordion_context')) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_CONTEXT')) {
             this.items.push({
                 xtype: 'elements-contextaccordion',
                 collapsed: true

@@ -1,4 +1,4 @@
 metasets:
     parent: config
     xtype: Phlexible.metasets.menuhandle.MetaSetsHandle
-    resources: [metasets]
+    roles: [ROLE_META_SETS]

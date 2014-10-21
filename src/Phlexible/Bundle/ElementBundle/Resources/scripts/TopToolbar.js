@@ -183,7 +183,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('extended_sep', '-');
         this.tbarIndex.add('extended', extendedMenuBtn);
 
-        if (Phlexible.User.isGranted('debug')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             this.tbarIndex.add('debug_sep', '-');
             this.tbarIndex.add('debug', {
                 text: 'Debug',
@@ -231,7 +231,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('locks', {
             iconCls: 'p-element-lock-icon',
             handler: function () {
-                if (Phlexible.User.isGranted('element_locks')) {
+                if (Phlexible.User.isGranted('ROLE_ELEMENT_LOCKS')) {
                     return;
                 }
 
@@ -246,7 +246,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     return;
                 }
 
-                if (Phlexible.User.isGranted('element_locks')) {
+                if (Phlexible.User.isGranted('ROLE_ELEMENT_LOCKS')) {
                     return;
                 }
 
@@ -387,7 +387,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             scope: this
         });
 
-        if (Phlexible.tasks.Strings && Phlexible.User.isGranted('tasks')) {
+        if (Phlexible.tasks.Strings && Phlexible.User.isGranted('ROLE_ELEMENT_TASKS')) {
             this.extendedMenuIndex.add('task_sep', '-');
             this.extendedMenuIndex.add('task', {
                 text: Phlexible.tasks.Strings.new_task,
@@ -454,7 +454,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
 
     onLoadElement: function () {
         // add button
-        if (Phlexible.User.isGranted('elements_create') && this.element.data.rights.indexOf('CREATE') !== -1) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_CREATE') && this.element.data.rights.indexOf('CREATE') !== -1) {
             this.items.items[this.tbarIndex.indexOfKey('add')].enable();
         } else {
             this.items.items[this.tbarIndex.indexOfKey('add')].disable();
@@ -561,8 +561,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         }
 
         // publish/set offline button
-        if (Phlexible.User.isGranted('elements_publish') &&
-            this.element.isAllowed('PUBLISH')) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_PUBLISH') && this.element.isAllowed('PUBLISH')) {
             this.items.items[this.tbarIndex.indexOfKey('publish')].enable();
             if (this.element.properties.is_published) {
                 this.items.items[this.tbarIndex.indexOfKey('setOffline')].enable();
@@ -577,10 +576,9 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         }
 
         // delete button
-        if (Phlexible.User.isGranted('elements_delete') &&
-            this.element.isAllowed('DELETE')) {
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_DELETE') && this.element.isAllowed('DELETE')) {
             if (!this.element.properties.is_published ||
-                (Phlexible.User.isGranted('elements_publish') &&
+                (Phlexible.User.isGranted('ROLE_ELEMENT_PUBLISH') &&
                     this.element.data.rights.indexOf('PUBLISH') !== -1)) {
                 this.items.items[this.tbarIndex.indexOfKey('delete')].enable();
             } else {

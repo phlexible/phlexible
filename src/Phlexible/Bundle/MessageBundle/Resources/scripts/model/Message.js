@@ -5,7 +5,7 @@ Phlexible.messages.model.Message = Ext.data.Record.create([
     {name: 'priority'},
     {name: 'type'},
     {name: 'channel'},
-    {name: 'resource'},
+    {name: 'role'},
     {name: 'user'},
     {name: 'createdAt'}
 ]);

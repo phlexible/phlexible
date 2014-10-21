@@ -54,13 +54,6 @@ services:
         tags:
             - {name: phlexible_access_control.permission}
 
-    # acl providers
-    phlexible_media_manager.acl_provider:
-        class: Phlexible\Bundle\MediaManagerBundle\AclProvider\MediaManagerAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_media_manager.asset_provider:
         class: Phlexible\Bundle\MediaManagerBundle\AssetProvider\MediaManagerAssetProvider
@@ -116,6 +109,13 @@ services:
             - %phlexible_media_manager.portlet.num_items%
         tags:
             - {name: phlexible_dashboard.portlet}
+
+    # role providers
+    phlexible_media_manager.role_provider:
+        class: Phlexible\Bundle\MediaManagerBundle\RoleProvider\MediaManagerRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}
 
     # searches
     phlexible_media_manager.search.file:

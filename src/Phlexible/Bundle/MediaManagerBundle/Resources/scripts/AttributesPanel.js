@@ -108,7 +108,7 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
             small: true
         });
 
-        if (Phlexible.User.isGranted('debug')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             this.debugFileIndex = this.accordionPanels.length;
             this.accordionPanels.push({
                 xtype: 'editorgrid',
@@ -375,7 +375,7 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
             file_version: this.file_version
         });
 
-        if (Phlexible.User.isGranted('debug')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             var debugData = [
                 ['fileId', this.file_id],
                 ['fileVersion', this.file_version],
@@ -430,7 +430,7 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
         this.getFileMetaPanel().empty();
 
         // debug
-        if (Phlexible.User.isGranted('debug')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             this.getFileDebugPanel().getStore().removeAll();
             this.getCacheDebugPanel().getStore().removeAll();
         }

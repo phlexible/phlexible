@@ -49,9 +49,9 @@ abstract class AbstractSearch implements SearchProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getResource()
+    public function getRole()
     {
-        return 'elements';
+        return 'ROLE_ELEMENTS';
     }
 
     /**
@@ -102,9 +102,7 @@ abstract class AbstractSearch implements SearchProviderInterface
         foreach ($rows as $row) {
             $node = $treeManager->getNodeByNodeId($row['id']);
 
-            if (!MWF_Env::getUser()->isGranted(MWF_Core_Acl_Acl::RESOURCE_SUPERADMIN) &&
-                !MWF_Env::getUser()->isGranted(MWF_Core_Acl_Acl::RESOURCE_DEVELOPMENT)
-            ) {
+            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 $contentRightsManager->calculateRights('internal', $node, $rightsIdentifiers);
 
                 if (true !== $contentRightsManager->hasRight('VIEW', $language)) {

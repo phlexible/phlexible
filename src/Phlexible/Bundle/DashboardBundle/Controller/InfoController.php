@@ -33,7 +33,7 @@ class InfoController extends Controller
 
         $lines = array();
 
-        if ($securityContext->isGranted(Acl::RESOURCE_DEBUG)) {
+        if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
             $lines[] = array(
                 'Project:',
                 $this->container->getParameter('phlexible_gui.project.title') . ' '
@@ -64,23 +64,6 @@ class InfoController extends Controller
             );
 
             $lines[] = array('UserAgent:', $_SERVER['HTTP_USER_AGENT']);
-        } elseif ($securityContext->isGranted(Acl::RESOURCE_ADMIN)) {
-            $lines[] = array(
-                'Project:',
-                $this->container->getParameter('phlexible_gui.project.title') . ' '
-                . $this->container->getParameter('phlexible_gui.project.version')
-            );
-            $lines[] = array(
-                'Env:',
-                $this->container->getParameter('kernel.environment') . ($this->container->getParameter(
-                    'kernel.debug'
-                ) ? ' [DEBUG]' : '')
-            );
-
-            $lines[] = array(
-                'User:',
-                $this->getUser()->getUsername() . ' [' . implode(', ', $this->getUser()->getRoles()) . ']'
-            );
         } else {
             $lines[] = array(
                 'Project:',

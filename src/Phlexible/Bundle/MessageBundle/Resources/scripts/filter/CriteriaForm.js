@@ -84,7 +84,7 @@ Phlexible.messages.filter.CriteriaForm = Ext.extend(Ext.form.FormPanel, {
                 var data = Ext.decode(response.responseText);
 
                 this.bundleList = data.bundles;
-                this.resourcesList = data.resources;
+                this.roleList = data.roles;
                 this.criteriaStore.loadData(data.criteria);
             },
             scope: this
@@ -346,8 +346,8 @@ Phlexible.messages.filter.CriteriaForm = Ext.extend(Ext.form.FormPanel, {
                     ['channel_is', 'Channel is'],
                     ['channel_like', 'Channel like'],
                     ['channel_in', 'Channel in'],
-                    ['resource_is', 'Resource is'],
-                    ['resource_in', 'Resource in'],
+                    ['role_is', 'Role is'],
+                    ['role_in', 'Role in'],
                     ['min_age', 'Min age'],
                     ['max_age', 'Max age'],
                     ['start_date', 'Start date'],
@@ -585,12 +585,12 @@ Phlexible.messages.filter.CriteriaForm = Ext.extend(Ext.form.FormPanel, {
                 });
                 break;
 
-            case 'resource_is':
+            case 'role_is':
                 field = new Ext.form.ComboBox({
                     width: 200,
                     store: new Ext.data.SimpleStore({
                         fields: ['id', 'name'],
-                        data: this.resourcesList,
+                        data: this.rolesList,
                         sortInfo: {
                             field: 'name',
                             direction: 'ASC'
@@ -606,13 +606,13 @@ Phlexible.messages.filter.CriteriaForm = Ext.extend(Ext.form.FormPanel, {
                 });
                 break;
 
-            case 'resource_in':
+            case 'role_in':
                 field = new Ext.ux.form.LovCombo({
                     width: 200,
                     hideOnSelect: false,
                     store: new Ext.data.SimpleStore({
                         fields: ['id', 'name'],
-                        data: this.resourcesList
+                        data: this.rolesList
                     }),
                     mode: 'local',
                     allowBlank: false,

@@ -16,13 +16,6 @@ services:
                     template: %phlexible_task.mailer.update.template%
                     from_email: %phlexible_task.mailer.from_email%
 
-    # acl providers
-    phlexible_task.acl_provider:
-        class: Phlexible\Bundle\TaskBundle\AclProvider\TaskAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_task.asset_provider:
         class: Phlexible\Bundle\TaskBundle\AssetProvider\TaskAssetProvider
@@ -57,6 +50,13 @@ services:
             - %phlexible_task.portlet.num_items%]
         tags:
             - {name: phlexible_dashboard.portlet}
+
+    # role providers
+    phlexible_task.role_provider:
+        class: Phlexible\Bundle\TaskBundle\RoleProvider\TaskRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}
 
     # task types
     phlexible_task.type.generic:

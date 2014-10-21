@@ -66,12 +66,13 @@ class FiltersController extends Controller
      */
     public function filtervalueAction()
     {
-        $data = array();
+        $data = array('roles' => array());
 
-        $acl = $this->get('phlexible_security.acl');
-        foreach ($acl->getResources() as $resource) {
-            $data['resources'][] = array($resource, ucfirst($resource));
+        /*
+        foreach ($acl->getResources() as $role) {
+            $data['roles'][] = array($role, ucfirst($role));
         }
+        */
 
         $bundles = $this->container->getParameter('kernel.bundles');
         foreach ($bundles as $id => $class) {
@@ -91,7 +92,7 @@ class FiltersController extends Controller
             array('key' => 'channel_is', 'value' => 'Channel is'),
             array('key' => 'channel_like', 'value' => 'Channel like'),
             array('key' => 'channel_in', 'value' => 'Channel in'),
-            array('key' => 'resource_is', 'value' => 'Resource is'),
+            array('key' => 'role_is', 'value' => 'Role is'),
             array('key' => 'min_age', 'value' => 'Min age'),
             array('key' => 'max_age', 'value' => 'Max age'),
             array('key' => 'start_date', 'value' => 'Start date'),
@@ -242,7 +243,7 @@ class FiltersController extends Controller
                 'priority'   => $priorityList[$message->getPriority()],
                 'type'       => $typeList[$message->getType()],
                 'channel'    => $message->getChannel(),
-                'resource'   => $message->getResource(),
+                'role'       => $message->getRole(),
                 'created_at' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
                 'user'       => $message->getUser(),
             );

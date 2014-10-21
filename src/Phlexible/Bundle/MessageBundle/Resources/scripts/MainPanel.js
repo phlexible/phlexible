@@ -10,12 +10,12 @@ Phlexible.messages.MainPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        if (Phlexible.User.isGranted('messages_filters')) {
+        if (Phlexible.User.isGranted('ROLE_MESSAGE_FILTERS')) {
             mainItems.push({
                 xtype: 'messages-filter-mainpanel',
                 listeners: {
                     filterDeleted: function () {
-                        if (Phlexible.User.isGranted('messages_subscriptions')) {
+                        if (Phlexible.User.isGranted('ROLE_MESSAGE_SUBSCRIPTIONS')) {
                             this.getComponent(0).getComponent(2).reloadSubscriptions();
                         }
                     },
@@ -23,7 +23,7 @@ Phlexible.messages.MainPanel = Ext.extend(Ext.Panel, {
                 }
             });
         }
-        if (Phlexible.User.isGranted('messages_subscriptions')) {
+        if (Phlexible.User.isGranted('ROLE_MESSAGE_SUBSCRIPTIONS')) {
             mainItems.push({
                 xtype: 'messages-subscription-mainpanel'
             });

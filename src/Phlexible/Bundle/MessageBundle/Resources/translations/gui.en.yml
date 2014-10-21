@@ -14,7 +14,7 @@ messages:
     priority: Priority
     type: Type
     channel: Channel
-    resource: Resource
+    role: Role
     date: Date
     before: Vor
     after: Nach

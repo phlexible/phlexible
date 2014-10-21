@@ -30,7 +30,7 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
             }
         }
 
-        var dev = Phlexible.User.isGranted('debug');
+        var dev = Phlexible.User.isGranted('ROLE_SUPER_ADMIN');
 
         var typeCombo = {
             xtype: 'iconcombo',
@@ -97,7 +97,7 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
             }
         ];
 
-        if (Phlexible.User.isGranted('debug')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             this.items.push({
                 xtype: 'fieldset',
                 title: 'Debug',
@@ -143,7 +143,7 @@ Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPan
             'image': field.image
         };
 
-        if (Phlexible.User.isGranted('debug')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             values['debug_ds_id'] = node.attributes.ds_id;
             values['debug_dump'] = Phlexible.dump(node.attributes.properties);
         }

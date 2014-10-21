@@ -36,9 +36,9 @@ class UserSearch implements SearchProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getResource()
+    public function getRole()
     {
-        return 'users';
+        return 'ROLE_USERS';
     }
 
     /**

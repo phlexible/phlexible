@@ -137,14 +137,14 @@ class MessageChecker
                     }
                     break;
 
-                case Criteria::CRITERIUM_RESOURCE_IS:
-                    if ($message->getResource() != $value) {
+                case Criteria::CRITERIUM_ROLE_IS:
+                    if ($message->getRole() != $value) {
                         continue 2;
                     }
                     break;
 
-                case Criteria::CRITERIUM_RESOURCE_IN:
-                    if (!in_array($message->getResource(), $value)) {
+                case Criteria::CRITERIUM_ROLE_IN:
+                    if (!in_array($message->getRole(), $value)) {
                         continue 2;
                     }
                     break;

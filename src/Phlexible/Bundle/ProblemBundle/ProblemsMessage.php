@@ -20,11 +20,16 @@ class ProblemsMessage extends Message
     /**
      * {@inheritdoc}
      */
-    public function getDefaults()
+    public static function getDefaultChannel()
     {
-        return array(
-            'component' => 'problems',
-            'resources' => 'problems'
-        );
+        return 'problems';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaultRole()
+    {
+        return 'ROLE_PROBLEMS';
     }
 }

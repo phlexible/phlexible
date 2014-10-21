@@ -130,9 +130,6 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
                 width: 60
             }
         ];
-
-        if (Phlexible.User.isGranted('elements_accordion_page_advanced')) {
-        }
     },
 
     load: function (data) {
@@ -146,10 +143,6 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
         }
 
         this.getForm().setValues(data.configuration);
-
-        if (Phlexible.User.isGranted('elements_accordion_page_advanced')) {
-            //this.getComponent(4).setDisabled(this.getComponent(3).getValue());
-        }
 
         if (data.properties.et_type === 'part') {
             this.getComponent(0).hide();

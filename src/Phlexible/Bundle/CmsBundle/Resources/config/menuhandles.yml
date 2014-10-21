@@ -1,9 +1,7 @@
 reports:
     parent: menus
     xtype: Phlexible.cms.menuhandle.ReportsMenu
-    resources: []
 
 statistics:
     parent: menus
     xtype: Phlexible.cms.menuhandle.StatisticsMenu
-    resources: []

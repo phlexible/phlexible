@@ -20,11 +20,16 @@ class UsersMessage extends Message
     /**
      * {@inheritdoc}
      */
-    public function getDefaults()
+    public static function getDefaultChannel()
     {
-        return array(
-            'component' => 'users',
-            'resource'  => 'users'
-        );
+        return 'users';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaultRole()
+    {
+        return 'ROLE_USERS';
     }
 }

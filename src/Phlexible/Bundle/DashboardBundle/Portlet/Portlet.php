@@ -38,7 +38,7 @@ class Portlet
     /**
      * @var string
      */
-    private $resource;
+    private $role;
 
     /**
      * @var array
@@ -128,19 +128,19 @@ class Portlet
     /**
      * @return string
      */
-    public function getResource()
+    public function getRole()
     {
-        return $this->resource;
+        return $this->role;
     }
 
     /**
-     * @param string $resource
+     * @param string $role
      *
      * @return $this
      */
-    public function setResource($resource)
+    public function setRole($role)
     {
-        $this->resource = $resource;
+        $this->role = $role;
 
         return $this;
     }
@@ -148,9 +148,9 @@ class Portlet
     /**
      * @return bool
      */
-    public function hasResource()
+    public function hasRole()
     {
-        return $this->resource !== null;
+        return $this->role !== null;
     }
 
     /**
@@ -185,5 +185,4 @@ class Portlet
             'settings' => $this->getSettings(),
         );
     }
-
 }

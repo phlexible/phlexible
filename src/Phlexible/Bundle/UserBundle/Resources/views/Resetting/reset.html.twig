@@ -1,0 +1,22 @@
+{% extends "PhlexibleUserBundle::layout.html.twig" %}
+
+{% block phlexible_user_content %}
+    <script type="text/javascript">
+        //<![CDATA[
+        Ext.onReady(function () {
+            win = new Phlexible.users.security.ResetWindow({
+                title: "{{ project.title }}",
+                loginUrl: "{{ path("fos_user_security_login") }}",
+                setUrl: "{{ path("fos_user_resetting_reset", {token: token}) }}",
+                enterNewPasswordText: "{{ 'reset.enter_new_password'|trans({}, 'PhlexibleUserBundle') }}",
+                newPasswordText: "{{ "form.new_password"|trans({}, 'FOSUserBundle') }}",
+                newPasswordConfirmationText: "{{ "form.new_password_confirmation"|trans({}, 'FOSUserBundle') }}",
+                backToLoginText: "{{ 'login.back_to_login'|trans({}, 'PhlexibleUserBundle') }}",
+                token: "{{ form._token.vars.value }}",
+                submitText: "{{ 'resetting.reset.submit'|trans({}, 'FOSUserBundle') }}"
+            });
+            win.show();
+        });
+        //]]>
+    </script>
+{% endblock %}

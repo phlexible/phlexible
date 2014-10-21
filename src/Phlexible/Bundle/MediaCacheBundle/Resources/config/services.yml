@@ -46,13 +46,6 @@ services:
         class: Phlexible\Bundle\MediaCacheBundle\ImageDelegate\DelegateService
         arguments: [@phlexible_media_cache.image_delegate.worker]
 
-    # acl providers
-    phlexible_media_cache.acl_provider:
-        class: Phlexible\Bundle\MediaCacheBundle\AclProvider\MediaCacheAclProvider
-        public: false
-        tags:
-            - {name: phlexible_security.acl.provider}
-
     # asset providers
     phlexible_media_cache.asset_provider:
         class: Phlexible\Bundle\MediaCacheBundle\AssetProvider\MediaCacheAssetProvider
@@ -87,3 +80,10 @@ services:
         arguments: [@translator, @phlexible_media_cache.queue_manager]
         tags:
             - {name: phlexible_dashboard.portlet}
+
+    # role providers
+    phlexible_media_cache.role_provider:
+        class: Phlexible\Bundle\MediaCacheBundle\RoleProvider\MediaCacheRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

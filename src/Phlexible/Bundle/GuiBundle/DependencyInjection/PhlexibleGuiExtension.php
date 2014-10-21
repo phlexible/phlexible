@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\GuiBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -41,5 +40,8 @@ class PhlexibleGuiExtension extends Extension
         $container->setParameter('phlexible_gui.languages.available', $config['languages']['available']);
         $container->setParameter('phlexible_gui.mail.from_email', $config['mail']['from_email']);
         $container->setParameter('phlexible_gui.mail.from_name', $config['mail']['from_name']);
+
+        $container->removeDefinition('security.access.role_hierarchy_voter');
+        $container->removeDefinition('security.access.simple_role_voter');
     }
 }

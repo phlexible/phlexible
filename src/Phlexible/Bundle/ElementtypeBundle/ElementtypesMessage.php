@@ -20,10 +20,16 @@ class ElementtypesMessage extends Message
     /**
      * {@inheritdoc}
      */
-    public function getDefaults()
+    public static function getDefaultChannel()
     {
-        return array(
-            'channel' => 'elementtype',
-        );
+        return 'elementtype';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaultRole()
+    {
+        return 'ROLE_ELEMENTTYPES';
     }
 }
