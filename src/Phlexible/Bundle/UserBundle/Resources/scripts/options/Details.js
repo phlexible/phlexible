@@ -18,21 +18,21 @@ Phlexible.users.options.Details = Ext.extend(Ext.form.FormPanel, {
                 fieldLabel: this.strings.firstname,
                 name: 'firstname',
                 allowBlank: false,
-                value: Phlexible.Config.get('user.details.firstname'),
+                value: Phlexible.User.getFirstname(),
                 anchor: '100%'
             },
             {
                 fieldLabel: this.strings.lastname,
                 name: 'lastname',
                 allowBlank: false,
-                value: Phlexible.Config.get('user.details.lastname'),
+                value: Phlexible.User.getLastname(),
                 anchor: '100%'
             },
             {
                 fieldLabel: this.strings.email,
                 name: 'email',
                 allowBlank: false,
-                value: Phlexible.Config.get('user.details.email'),
+                value: Phlexible.User.getEmail(),
                 vtype: 'email',
                 anchor: '100%'
             }
@@ -47,9 +47,9 @@ Phlexible.users.options.Details = Ext.extend(Ext.form.FormPanel, {
                         success: function (form, result) {
                             if (result.success) {
                                 var values = form.getValues();
-                                Phlexible.Config.set('user.details.firstname', values.firstname);
-                                Phlexible.Config.set('user.details.lastname', values.lastname);
-                                Phlexible.Config.set('user.details.email', values.email);
+                                Phlexible.User.setFirstname(values.firstname);
+                                Phlexible.User.setLastname(values.lastname);
+                                Phlexible.User.setEmail(values.email);
 
                                 this.fireEvent('cancel');
                             } else {
