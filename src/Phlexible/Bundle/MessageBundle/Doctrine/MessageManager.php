@@ -123,7 +123,6 @@ class MessageManager implements MessageManagerInterface
         return array(
             0 => 'info',
             1 => 'error',
-            2 => 'audit',
         );
     }
 
@@ -146,7 +145,11 @@ class MessageManager implements MessageManagerInterface
             } else {
                 $user = 'unknown';
             }
-            $message->setUser($user);
+
+            $rc = new \ReflectionClass('Phlexible\Bundle\MessageBundle\Entity\Message');
+            $rp = $rc->getProperty('user');
+            $rp->setAccessible(true);
+            $rp->setValue($message, $user);
         }
 
         $this->entityManager->persist($message);

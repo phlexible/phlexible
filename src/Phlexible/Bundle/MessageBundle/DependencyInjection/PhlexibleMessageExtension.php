@@ -43,10 +43,6 @@ class PhlexibleMessageExtension extends Extension
         }
         $container->findDefinition('phlexible_message.handlers')->replaceArgument(0, $handlers);
 
-        if ($config['audit_entities']) {
-            $container->findDefinition('phlexible_message.listener.audit')->addTag('kernel.event_subscriber');
-        }
-
         $loader->load('doctrine_message.yml');
         $container->setAlias('phlexible_message.message_manager', 'phlexible_message.doctrine.message_manager');
 

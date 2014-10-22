@@ -27,7 +27,6 @@ class Message
 
     const TYPE_INFO = 0;
     const TYPE_ERROR = 1;
-    const TYPE_AUDIT = 2;
 
     /**
      * @var string
@@ -128,7 +127,7 @@ class Message
      */
     public static function getDefaultPriority()
     {
-        return null;
+        return self::PRIORITY_NORMAL;
     }
 
     /**
@@ -136,7 +135,7 @@ class Message
      */
     public static function getDefaultType()
     {
-        return null;
+        return self::TYPE_INFO;
     }
 
     /**
@@ -226,7 +225,7 @@ class Message
         }
 
         /* @var $message Message */
-        $message = new static($subject, $body, $priority, $type, $channel, $role, $user, $createdAt);
+        $message = new self($subject, $body, $priority, $type, $channel, $role, $user, $createdAt);
 
         return $message;
     }

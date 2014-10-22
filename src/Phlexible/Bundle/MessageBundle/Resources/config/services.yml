@@ -78,11 +78,6 @@ services:
         tags:
             - {name: kernel.event_subscriber}
 
-    phlexible_message.listener.audit:
-        class: Phlexible\Bundle\MessageBundle\EventListener\AuditListener
-        arguments: [@phlexible_message.message_poster]
-        # no kernel.event_subscriber tag here, added on demand in PhlexibleMessageExtension
-
     # portlets
     phlexible_message.portlet.messages:
         class: Phlexible\Bundle\MessageBundle\Portlet\MessagesPortlet

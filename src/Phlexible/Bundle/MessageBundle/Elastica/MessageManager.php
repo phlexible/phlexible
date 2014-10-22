@@ -243,7 +243,6 @@ class MessageManager implements MessageManagerInterface
         return array(
             0 => 'info',
             1 => 'error',
-            2 => 'audit',
         );
     }
 
