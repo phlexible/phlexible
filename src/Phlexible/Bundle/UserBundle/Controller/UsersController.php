@@ -424,7 +424,7 @@ class UsersController extends Controller
         }
 
         $roles = [];
-        foreach ($this->container->getParameter('security.role_hierarchy.roles') as $role) {
+        foreach ($this->container->getParameter('security.role_hierarchy.roles') as $role => $subRoles) {
             if (!$securityContext->isGranted($role)) {
                 continue;
             }
