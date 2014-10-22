@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/debug")
- * @Security("is_granted('debug')")
+ * @Security("is_granted('ROLE_SUPER_ADMIN')")
  */
 class DebugController extends Controller
 {

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  * @Route("/siteroots/customtitle")
- * @Security("is_granted('siteroots')")
+ * @Security("is_granted('ROLE_SITEROOTS')")
  */
 class CustomtitleController extends Controller
 {

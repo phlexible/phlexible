@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @Route("/gui/bundles")
- * @Security("is_granted('debug')")
+ * @Security("is_granted('ROLE_BUNDLES')")
  */
 class BundlesController extends Controller
 {

@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/teasers/layout")
- * @Security("is_granted('teasers')")
+ * @Security("is_granted('ROLE_TEASERS')")
  */
 class LayoutController extends Controller
 {

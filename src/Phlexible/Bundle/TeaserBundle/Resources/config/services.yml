@@ -25,3 +25,10 @@ services:
         arguments: [@doctrine.dbal.default_connection]
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    # role providers
+    phlexible_teaser.role_provider:
+        class: Phlexible\Bundle\TeaserBundle\RoleProvider\TeaserRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

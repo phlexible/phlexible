@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/documenttypes")
- * @Security("is_granted('documenttypes')")
+ * @Security("is_granted('ROLE_DOCUMENTTYPE')")
  */
 class ListController extends Controller
 {

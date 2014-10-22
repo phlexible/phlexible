@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elements/links")
- * @Security("is_granted('elements')")
+ * @Security("is_granted('ROLE_ELEMENTS')")
  */
 class LinksController extends Controller
 {

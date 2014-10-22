@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/foldermeta")
- * @Security("is_granted('media')")
+ * @Security("is_granted('ROLE_MEDIA')")
  */
 class FolderMetaController extends Controller
 {

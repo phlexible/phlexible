@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/users/groups")
- * @Security("is_granted('users')")
+ * @Security("is_granted('ROLE_USERS')")
  */
 class GroupsController extends Controller
 {

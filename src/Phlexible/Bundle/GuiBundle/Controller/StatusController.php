@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/status/gui")
- * @Security("is_granted('debug')")
+ * @Security("is_granted('ROLE_SUPER_ADMIN')")
  */
 class StatusController extends Controller
 {

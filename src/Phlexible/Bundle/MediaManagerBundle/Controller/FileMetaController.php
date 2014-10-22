@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/filemeta")
- * @Security("is_granted('media')")
+ * @Security("is_granted('ROLE_MEDIA')")
  */
 class FileMetaController extends Controller
 {

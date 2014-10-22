@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/upload")
- * @Security("is_granted('debug')")
+ * @Security("is_granted('ROLE_MEDIA')")
  */
 class UploadController extends Controller
 {

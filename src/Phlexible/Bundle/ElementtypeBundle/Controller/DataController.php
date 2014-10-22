@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elementtypes/data")
- * @Security("is_granted('elementtypes')")
+ * @Security("is_granted('ROLE_ELEMENTTYPES')")
  */
 class DataController extends Controller
 {

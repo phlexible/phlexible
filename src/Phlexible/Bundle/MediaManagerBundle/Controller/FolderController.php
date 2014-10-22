@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/folder")
- * @Security("is_granted('media')")
+ * @Security("is_granted('ROLE_MEDIA')")
  */
 class FolderController extends Controller
 {

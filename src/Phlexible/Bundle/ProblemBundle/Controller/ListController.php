@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/problems")
- * @Security("is_granted('problems')")
+ * @Security("is_granted('ROLE_PROBLEMS')")
  */
 class ListController extends Controller
 {

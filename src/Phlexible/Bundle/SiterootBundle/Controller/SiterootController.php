@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Phillip Look <plook@brainbits.net>
  * @Route("/siteroots/siteroot")
- * @Security("is_granted('siteroots')")
+ * @Security("is_granted('ROLE_SITEROOTS')")
  */
 class SiterootController extends Controller
 {

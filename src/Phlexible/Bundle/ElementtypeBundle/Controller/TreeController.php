@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elementtypes/tree")
- * @Security("is_granted('elementtypes')")
+ * @Security("is_granted('ROLE_ELEMENTTYPES')")
  */
 class TreeController extends Controller
 {

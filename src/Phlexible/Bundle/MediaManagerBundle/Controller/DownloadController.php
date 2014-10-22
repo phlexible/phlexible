@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/download")
- * @Security("is_granted('media')")
+ * @Security("is_granted('ROLE_MEDIA')")
  */
 class DownloadController extends Controller
 {

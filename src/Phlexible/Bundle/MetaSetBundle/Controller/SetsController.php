@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/metasets/sets")
- * @Security("is_granted('metasets')")
+ * @Security("is_granted('ROLE_META_SETS')")
  */
 class SetsController extends Controller
 {

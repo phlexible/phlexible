@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/status/elements")
- * @Security("is_granted('debug')")
+ * @Security("is_granted('ROLE_SUPER_ADMIN')")
  */
 class StatusController extends Controller
 {

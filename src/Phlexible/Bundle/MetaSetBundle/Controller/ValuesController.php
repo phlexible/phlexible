@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/metasets/values")
- * @Security("is_granted('metasets')")
+ * @Security("is_granted('ROLE_META_SETS')")
  */
 class ValuesController extends Controller
 {

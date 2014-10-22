@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/queue")
- * @Security("is_granted('queue')")
+ * @Security("is_granted('ROLE_QUEUE')")
  */
 class DataController extends Controller
 {

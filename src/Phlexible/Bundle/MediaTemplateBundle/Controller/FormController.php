@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatemplates/form")
- * @Security("is_granted('mediatemplates')")
+ * @Security("is_granted('ROLE_MEDIA_TEMPLATES')")
  */
 class FormController extends Controller
 {

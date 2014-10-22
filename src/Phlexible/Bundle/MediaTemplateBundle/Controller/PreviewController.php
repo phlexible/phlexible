@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatemplates/preview")
- * @Security("is_granted('mediatemplates')")
+ * @Security("is_granted('ROLE_MEDIA_TEMPLATES')")
  */
 class PreviewController extends Controller
 {

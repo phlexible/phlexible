@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatemplates/templates")
- * @Security("is_granted('mediatemplates')")
+ * @Security("is_granted('ROLE_MEDIA_TEMPLATES')")
  */
 class TemplatesController extends Controller
 {

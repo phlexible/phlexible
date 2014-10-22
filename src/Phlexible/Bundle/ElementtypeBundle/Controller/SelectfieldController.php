@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  * @Route("/elementtypes/selectfield")
- * @Security("is_granted('elementtypes')")
+ * @Security("is_granted('ROLE_ELEMENTTYPES')")
  */
 class SelectfieldController extends Controller
 {

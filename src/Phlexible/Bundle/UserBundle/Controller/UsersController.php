@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/users/users")
- * @Security("is_granted('users')")
+ * @Security("is_granted('ROLE_USERS')")
  */
 class UsersController extends Controller
 {

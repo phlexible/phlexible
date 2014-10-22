@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/datasources")
- * @Security("is_granted('datasources')")
+ * @Security("is_granted('ROLE_DATA_SOURCES')")
  */
 class DataController extends Controller
 {
