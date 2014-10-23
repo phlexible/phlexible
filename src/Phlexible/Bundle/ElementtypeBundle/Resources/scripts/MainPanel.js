@@ -217,6 +217,8 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                     },
                     {
                         xtype: 'elementtypes-versions',
+                        hidden: true,
+                        disabled: true,
                         listeners: {
                             loadVersion: this.onElementtypeChange,
                             scope: this
@@ -316,7 +318,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
         this.getRootTabs().clear();
         this.getFieldTabs().clear();
         this.getEditTreePanel().load(id, title, version, type);
-        this.getVersionsTab().load(id, title, version, type);
+        //this.getVersionsTab().load(id, title, version, type);
         this.getViabilityTab().load(id, title, version, type);
         this.getUsageTab().load(id, title, version, type);
     },

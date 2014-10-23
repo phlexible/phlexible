@@ -71,7 +71,8 @@ Phlexible.elementtypes.ElementtypeVersions = Ext.extend(Ext.grid.GridPanel, {
                 this.fireEvent('loadVersion', this.elementtypeId, this.elementtypeTitle, r.get('version'), this.elementtypeType);
             },
             scope: this
-        })
+        });
+
         Phlexible.elementtypes.ElementtypeVersions.superclass.initComponent.call(this);
     },
 
