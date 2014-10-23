@@ -115,7 +115,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         $url = '';
 
-        if ($referenceType === self::ABSOLUTE_URL) {
+        if (0 && $referenceType === self::ABSOLUTE_URL) {
             $scheme = $this->requestContext->getScheme();
             if (!$scheme || $scheme === 'http') {
                 $scheme = $treeNode->getAttribute('https', 'http');

@@ -5,15 +5,11 @@ Phlexible.elements.accordion.DataTemplate = new Ext.XTemplate(
 
     '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.element]}</div><hr /><div style="clear: left;" /></td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.eid]}:</th><td>{eid}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{version}</td></tr>',
     '<tpl if="unique_id && unique_id != \'null\'">',
     '<tr><th>{[Phlexible.elements.Strings.unique_id]}:</th><td>{unique_id}</td></tr>',
     '</tpl>',
-    //'<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{author}</td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td>{[Phlexible.inlineIcon("p-flags-"+values.masterlanguage+"-icon")]} {masterlanguage}</td></tr>',
-    //'<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td>{[Phlexible.inlineIcon("p-flags-"+values.masterlanguage+"-icon")]} {[Phlexible.gui.Strings[values.masterlanguage]]}</td></tr>',
-
-    '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.element_version]}</div><hr /><div style="clear: left;" /></td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{version}</td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{author}</td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.created]}:</th><td>{create_date}</td></tr>',
 

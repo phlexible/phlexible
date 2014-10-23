@@ -13,7 +13,6 @@ use Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -114,7 +113,7 @@ class NodeSerializer
     {
         $userRights = array();
         if ($node instanceof ContentObjectInterface) {
-            if (!$this->securityContext->isGranted(Acl::RESOURCE_SUPERADMIN)) {
+            if (!$this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 if ($this->securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
                     return null;
                 }

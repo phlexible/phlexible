@@ -40,7 +40,6 @@ class CmsAssetProvider implements AssetProviderInterface
     {
         $collection = new AssetCollection(array(
             new FileAsset($this->locator->locate('@PhlexibleCmsBundle/Resources/scripts/ux/Ext.form.FileUploadField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.TwinComboBox.js')),
             new FileAsset($this->locator->locate('@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.DDView.js')),
             new FileAsset($this->locator->locate('@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.Multiselect.js')),
             new FileAsset($this->locator->locate('@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.TreeSelector.js')),

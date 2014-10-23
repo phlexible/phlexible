@@ -1,6 +1,6 @@
 Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.elements.Strings.link,
-    strings: Phlexible.elements.Strings,
+    title: Phlexible.elements.Strings.link_window.link,
+    strings: Phlexible.elements.Strings.link_window,
     iconCls: 'p-element-link_edit-icon',
     width: 450,
     height: 200,
@@ -105,19 +105,19 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
         var typeValues = [];
 
         if (!this.hideNoLink) {
-            typeValues.push(['no', this.strings.link_no_link]);
+            typeValues.push(['no', this.strings.no_link]);
         }
         if (this.allowed.tid) {
-            typeValues.push(['internal', this.strings.link_tid]);
+            typeValues.push(['internal', this.strings.tid]);
         }
         if (this.allowed.intrasiteroot) {
-            typeValues.push(['intrasiteroot', this.strings.link_intrasiteroot]);
+            typeValues.push(['intrasiteroot', this.strings.intrasiteroot]);
         }
         if (this.allowed.url) {
-            typeValues.push(['external', this.strings.link_url]);
+            typeValues.push(['external', this.strings.url]);
         }
         if (this.allowed.mailto) {
-            typeValues.push(['mailto', this.strings.link_mailto]);
+            typeValues.push(['mailto', this.strings.mailto]);
         }
 
         if (typeValues.length < 2) {
@@ -242,7 +242,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         xtype: 'textfield',
                         name: 'url',
                         fieldLabel: this.strings.url,
-                        helpText: this.strings.link_url_help,
+                        helpText: this.strings.url_help,
                         vtype: 'url',
                         hidden: selected !== 'external',
                         width: 300,
@@ -253,18 +253,18 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         name: 'new_window',
                         fieldLabel: '',
                         labelSeparator: '',
-                        boxLabel: this.strings.link_new_window,
+                        boxLabel: this.strings.new_window,
                         vtype: 'url',
                         width: 300,
                         checked: newWindowValue,
                         hidden: this.hideNewWindow || selected === 'mailto'
                     },
                     {
-                        xtype: 'iconcombo',
+                        xtype: 'twiniconcombo',
                         hiddenName: 'target_language',
                         fieldLabel: this.strings.language,
-                        helpText: this.strings.link_language_help,
-                        emptyText: this.strings.link_language_empty,
+                        helpText: this.strings.language_help,
+                        emptyText: this.strings.language_empty,
                         width: 300,
                         store: new Ext.data.SimpleStore({
                             fields: ['key', 'title', 'icon'],
@@ -284,7 +284,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         xtype: 'textfield',
                         name: 'mailto',
                         fieldLabel: this.strings.mailto,
-                        helpText: this.strings.link_mailto_help,
+                        helpText: this.strings.mailto_help,
                         vtype: 'email',
                         hidden: selected !== 'mailto',
                         width: 300,

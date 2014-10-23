@@ -259,17 +259,22 @@ elements:
         to_version: 'To version'
         load: Load
 
-    link:
+    link_window:
+        link: Link
+        type: Type
         no_link: 'No Link'
         tid: 'Element from this siteroot'
         intrasiteroot: 'Element from all siteroot'
         url: 'External URL'
-        mailto: Mailto
         url_help: 'Format: http://www.test.com'
+        mailto: Mailto
         mailto_help: 'Format: test@test.com'
         new_window: 'Open in new window'
+        language: Language
         language_help: 'Language of target site (optional)'
         language_empty: 'Not specified'
+        cancel: Cancel
+        set: Set
 
     task:
         publish_element: 'Publish element'
