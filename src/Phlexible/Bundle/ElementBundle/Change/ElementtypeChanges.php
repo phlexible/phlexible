@@ -57,12 +57,7 @@ class ElementtypeChanges
 
         foreach ($this->elementtypeService->findAllElementtypes() as $elementtype) {
             $elementVersions = $this->elementService->findOutdatedElementVersions($elementtype);
-
-            foreach ($elementVersions as $elementVersion) {
-                $index = "{$elementtype->getId()}__{$elementVersion->getElementtypeVersion()}";
-                $changes[$index] = new Change($elementtype, $elementVersion->getElementtypeVersion());
-                $changes[$index]->addElementVersion($elementVersion);
-            }
+            $changes[] = new Change($elementtype, $elementVersions);
         }
 
         return $changes;

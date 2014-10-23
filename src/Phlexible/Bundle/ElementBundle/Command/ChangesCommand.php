@@ -52,7 +52,7 @@ class ChangesCommand extends ContainerAwareCommand
             foreach ($changes as $change) {
                 $output->writeln(
                     'ELEMENTTYPE ' . $change->getElementtype()->getTitle() . ' ' .
-                    'REVISION ' . $change->getRevision() . ' => ' . $change->getElementtype()->getRevision() . ' ' .
+                    //'REVISION ' . $change->getRevision() . ' => ' . $change->getElementtype()->getRevision() . ' ' .
                     'NUM ELEMENTVERSIONS ' . count($change->getElementVersions())
                 );
             }
