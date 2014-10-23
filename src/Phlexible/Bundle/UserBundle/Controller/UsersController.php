@@ -75,9 +75,9 @@ class UsersController extends Controller
         foreach ($allUsers as $user) {
             /* @var $user UserInterface */
 
-            if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-                continue;
-            }
+            //if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            //    continue;
+            //}
 
             if ($user->getId() === $systemUserUid && !$securityContext->isGranted('ROLE_SUPER_ADMIN')
             ) {

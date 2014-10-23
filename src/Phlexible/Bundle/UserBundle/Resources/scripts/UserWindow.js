@@ -266,7 +266,7 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
                 store: new Ext.data.JsonStore({
                     autoLoad: true,
                     fields: Phlexible.users.model.UserRole,
-                    url: Phlexible.Router.generate('security_acl_roles'),
+                    url: Phlexible.Router.generate('users_roles_list'),
                     listeners: {
                         load: function (store, records) {
                             Ext.each(records, function (record) {
