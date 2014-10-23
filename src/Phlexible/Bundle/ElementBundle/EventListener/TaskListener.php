@@ -135,7 +135,7 @@ class TaskListener implements EventSubscriberInterface
         $tasks = $this->taskManager->findBy(
             [
                 'type' => $type,
-                'status' => [
+                'finiteState' => [
                     Task::STATUS_OPEN,
                     Task::STATUS_REJECTED,
                     Task::STATUS_REOPENED,
