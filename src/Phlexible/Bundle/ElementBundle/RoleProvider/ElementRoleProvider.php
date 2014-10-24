@@ -24,16 +24,17 @@ class ElementRoleProvider extends RoleProvider
     {
         return [
             'ROLE_ELEMENTS',
-            'ROLE_ELEMENT_LOCKS',
-            'ROLE_ELEMENT_PUBLISH',
+            'ROLE_ELEMENT_CHILDREN',
+            'ROLE_ELEMENT_COMMENT',
+            'ROLE_ELEMENT_CONFIG',
             'ROLE_ELEMENT_CREATE',
             'ROLE_ELEMENT_DELETE',
-            'ROLE_ELEMENT_CHILDREN',
-            'ROLE_ELEMENT_CONFIG',
-            'ROLE_ELEMENT_VERSIONS',
             'ROLE_ELEMENT_INSTANCES',
-            'ROLE_ELEMENT_COMMENT',
+            'ROLE_ELEMENT_LOCKS',
             'ROLE_ELEMENT_META',
+            'ROLE_ELEMENT_PUBLISH',
+            'ROLE_ELEMENT_TASKS',
+            'ROLE_ELEMENT_VERSIONS',
         ];
     }
 

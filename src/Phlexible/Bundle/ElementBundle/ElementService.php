@@ -10,14 +10,14 @@ namespace Phlexible\Bundle\ElementBundle;
 
 use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
+use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
@@ -43,9 +43,9 @@ class ElementService
     private $elementStructureManager;
 
     /**
-     * @var ElementtypeService
+     * @var ElementSourceManagerInterface
      */
-    private $elementtypeService;
+    private $elementSourceManager;
 
     /**
      * @var ElementHistoryManagerInterface
@@ -61,7 +61,7 @@ class ElementService
      * @param ElementManagerInterface          $elementManager
      * @param ElementVersionManagerInterface   $elementVersionManager
      * @param ElementStructureManagerInterface $elementStructureManager
-     * @param ElementtypeService               $elementtypeService
+     * @param ElementSourceManagerInterface    $elementSourceManager
      * @param ElementHistoryManagerInterface   $elementHistoryManager
      * @param FieldMapper                      $fieldMapper
      */
@@ -69,14 +69,14 @@ class ElementService
         ElementManagerInterface $elementManager,
         ElementVersionManagerInterface $elementVersionManager,
         ElementStructureManagerInterface $elementStructureManager,
-        ElementtypeService $elementtypeService,
+        ElementSourceManagerInterface $elementSourceManager,
         ElementHistoryManagerInterface $elementHistoryManager,
         FieldMapper $fieldMapper)
     {
         $this->elementManager = $elementManager;
         $this->elementVersionManager = $elementVersionManager;
         $this->elementStructureManager = $elementStructureManager;
-        $this->elementtypeService = $elementtypeService;
+        $this->elementSourceManager = $elementSourceManager;
         $this->elementHistoryManager = $elementHistoryManager;
         $this->fieldMapper = $fieldMapper;
     }
@@ -133,7 +133,7 @@ class ElementService
      */
     public function findElementsByElementtype(Elementtype $elementtype)
     {
-        return $this->elementManager->findBy(array('elementtypeId' => $elementtype->getId()));
+        return $this->elementManager->findBy(['elementtypeId' => $elementtype->getId()]);
     }
 
     /**
@@ -158,16 +158,6 @@ class ElementService
     {
         // TODO: fetch online version
         return $this->findLatestElementVersion($element);
-    }
-
-    /**
-     * @param Elementtype $elementtype
-     *
-     * @return ElementVersion[]
-     */
-    public function findOutdatedElementVersions(Elementtype $elementtype)
-    {
-        return $this->elementVersionManager->findOutdatedElementVersions($elementtype);
     }
 
     /**
@@ -201,21 +191,42 @@ class ElementService
     public function findElementtype(Element $element)
     {
         // TODO: from ElementSource?
-        return $this->elementtypeService->findElementtype($element->getElementtypeId());
+        return $this->elementSourceManager->findElementtype($element->getElementtypeId());
+    }
+
+    /**
+     * @param string $elementtypeId
+     *
+     * @return Elementtype
+     */
+    public function findElementSource($elementtypeId)
+    {
+        // TODO: from ElementSource?
+        return $this->elementSourceManager->findElementSource($elementtypeId);
     }
 
     /**
      * @param Elementtype $elementtype
-     * @param string      $masterLanguage
-     * @param string      $userId
+     *
+     * @return ElementVersion[]
+     */
+    public function findOutdatedElementSources(Elementtype $elementtype)
+    {
+        return $this->elementSourceManager->findOutdatedElementSources($elementtype);
+    }
+
+    /**
+     * @param ElementSource $elementSource
+     * @param string        $masterLanguage
+     * @param string        $userId
      *
      * @return Element
      */
-    public function createElement(Elementtype $elementtype, $masterLanguage, $userId)
+    public function createElement(ElementSource $elementSource, $masterLanguage, $userId)
     {
         $element = new Element();
         $element
-            ->setElementtypeId($elementtype->getId())
+            ->setElementtypeId($elementSource->getElementtypeId())
             ->setMasterLanguage($masterLanguage)
             ->setLatestVersion(1)
             ->setCreateUserId($userId)
@@ -225,7 +236,7 @@ class ElementService
         $elementVersion
             ->setVersion(1)
             ->setElement($element)
-            ->setElementtypeVersion($elementtype->getRevision())
+            ->setElementSource($elementSource)
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime());
 
@@ -260,13 +271,13 @@ class ElementService
     {
         $oldElementVersion = $this->findLatestElementVersion($element);
 
-        $elementtype = $this->findElementtype($element);
+        $elementSource = $this->findElementSource($element->getElementtypeId());
 
         $elementVersion = clone $oldElementVersion;
         $elementVersion
             ->setId(null)
             ->setElement($element)
-            ->setElementtypeVersion($elementtype->getRevision())
+            ->setElementSource($elementSource)
             ->setVersion($oldElementVersion->getVersion() + 1)
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime())

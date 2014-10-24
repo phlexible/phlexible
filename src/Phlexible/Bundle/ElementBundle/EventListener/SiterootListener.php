@@ -135,7 +135,9 @@ class SiterootListener
             false
         );
 
-        $element = $this->elementService->createElement($elementtype, $this->masterLanguage, $siteroot->getModifyUserId());
+        $elementSource = $this->elementService->createElementSource($elementtype);
+
+        $element = $this->elementService->createElement($elementSource, $this->masterLanguage, $siteroot->getModifyUserId());
 
         $tree = $this->treeManager->getBySiteRootId($siteroot->getId());
         $tree->init('element', $element->getEid(), $element->getCreateUserId());

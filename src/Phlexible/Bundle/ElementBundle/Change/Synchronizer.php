@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\Change;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
+use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\File\Dumper\XmlDumper;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
@@ -19,7 +20,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @TODO: elementSourceManager
+ * @TODO   : elementSourceManager
  */
 class Synchronizer
 {
@@ -34,18 +35,27 @@ class Synchronizer
     private $elementVersionManager;
 
     /**
+     * @var ElementSourceManagerInterface
+     */
+    private $elementSourceManager;
+
+    /**
      * @var XmlDumper
      */
     private $xmlDumper;
 
     /**
-     * @param EntityManager                  $entityManager
      * @param ElementVersionManagerInterface $elementVersionManager
+     * @param ElementSourceManagerInterface  $elementSourceManager
      * @param XmlDumper                      $xmlDumper
      */
-    public function __construct(EntityManager $entityManager, ElementVersionManagerInterface $elementVersionManager, XmlDumper $xmlDumper)
+    public function __construct(
+        ElementVersionManagerInterface $elementVersionManager,
+        ElementSourceManagerInterface $elementSourceManager,
+        XmlDumper $xmlDumper
+    )
     {
-        $this->entityManager = $entityManager;
+        $this->elementSourceManager = $elementSourceManager;
         $this->elementVersionManager = $elementVersionManager;
         $this->xmlDumper = $xmlDumper;
     }
@@ -55,13 +65,16 @@ class Synchronizer
      */
     public function synchronize(Change $change)
     {
-        $this->importElementtype($change->getElementtype());
+        $elementSource = $this->importElementtype($change->getElementtype());
 
-        $elementVersions = $change->getElementVersions();
-        while (count($elementVersions)) {
-            $elementVersion = array_shift($elementVersions);
-            $elementVersion->setElementtypeVersion($change->getElementtype()->getRevision());
-            $this->elementVersionManager->updateElementVersion($elementVersion, !count($elementVersions));
+        $outdatedElementSources = $change->getOutdatedElementSources();
+        foreach ($outdatedElementSources as $outdatedElementSource) {
+            $elementVersions = $this->elementVersionManager->findByElementSource($elementSource);
+            foreach ($elementVersions as $elementVersion) {
+                $elementVersion->setElementSource($elementSource);
+                $this->elementVersionManager->updateElementVersion($elementVersion, false);
+            }
+            $this->removeOutdatedElementSource($outdatedElementSource);
         }
     }
 
@@ -72,23 +85,25 @@ class Synchronizer
      */
     private function importElementtype(Elementtype $elementtype)
     {
-        $elementSourceRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementSource');
-
-        $elementSource = $elementSourceRepository->findBy(array('id' => $elementtype->getId(), 'revision' => $elementtype->getRevision()));
+        $elementSource = $this->elementSourceManager->findByElementtype($elementtype);
         if ($elementSource) {
             return $elementSource;
         }
 
         $elementSource = new ElementSource();
         $elementSource
-            ->setId($elementtype->getId())
-            ->setCreatedAt(new \DateTime())
-            ->setRevision($elementtype->getRevision())
-            ->setXml($this->xmlDumper->dump($elementtype));
+            ->setElementtypeId($elementtype->getId())
+            ->setElementtypeRevision($elementtype->getRevision())
+            ->setXml($this->xmlDumper->dump($elementtype))
+            ->setCreatedAt(new \DateTime());
 
-        $this->entityManager->persist($elementSource);
-        $this->entityManager->flush($elementSource);
+        $this->elementSourceManager->updateElementSource($elementSource, false);
 
         return $elementSource;
+    }
+
+    private function removeOutdatedElementSource(ElementSource $elementSource)
+    {
+        $this->elementSourceManager->deleteElementSource($elementSource);
     }
 }

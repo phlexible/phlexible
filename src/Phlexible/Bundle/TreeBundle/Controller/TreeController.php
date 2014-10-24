@@ -183,7 +183,6 @@ class TreeController extends Controller
         $masterLanguage = $request->get('masterlanguage');
 
         $elementService = $this->get('phlexible_element.element_service');
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $treeManager = $this->get('phlexible_tree.tree_manager');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
@@ -192,9 +191,9 @@ class TreeController extends Controller
 
         $userId = $this->getUser()->getId();
 
-        $elementtype = $elementtypeService->findElementtype($elementtypeId);
+        $elementSource = $elementService->findElementSource($elementtypeId);
 
-        $element = $elementService->createElement($elementtype, $masterLanguage, $userId);
+        $element = $elementService->createElement($elementSource, $masterLanguage, $userId);
 
         $node = $tree->create(
             $parentNode,

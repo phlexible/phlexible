@@ -81,8 +81,7 @@ class ElementStructureLoader
             return $this->map[$identifier];
         }
 
-        $source = $this->entityManager->getRepository('PhlexibleElementBundle:ElementSource')
-            ->findOneBy(array('id' => $element->getElementtypeId(), 'revision' => $elementVersion->getElementtypeVersion()));
+        $source = $elementVersion->getElementSource();
 
         $elementtype = $this->xmlParser->parseString($source->getXml());
         $elementtypeStructure = $elementtype->getStructure();

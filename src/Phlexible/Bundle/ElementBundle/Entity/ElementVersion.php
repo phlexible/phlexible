@@ -55,10 +55,11 @@ class ElementVersion
     private $version;
 
     /**
-     * @var int
-     * @ORM\Column(name="elementtype_version", type="integer")
+     * @var ElementSource
+     * @ORM\ManyToOne(targetEntity="ElementSource")
+     * @ORM\JoinColumn(name="element_source_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $elementtypeVersion;
+    private $elementSource;
 
     /**
      * @var \DateTime
@@ -175,17 +176,25 @@ class ElementVersion
      */
     public function getElementtypeVersion()
     {
-        return $this->elementtypeVersion;
+        return $this->getElementSource()->getId();
     }
 
     /**
-     * @param int $elementtypeVersion
+     * @return ElementSource
+     */
+    public function getElementSource()
+    {
+        return $this->elementSource;
+    }
+
+    /**
+     * @param ElementSource $elementSource
      *
      * @return $this
      */
-    public function setElementtypeVersion($elementtypeVersion)
+    public function setElementSource(ElementSource $elementSource)
     {
-        $this->elementtypeVersion = $elementtypeVersion;
+        $this->elementSource = $elementSource;
 
         return $this;
     }

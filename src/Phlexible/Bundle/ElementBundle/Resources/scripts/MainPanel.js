@@ -609,12 +609,14 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
 
         }
 
+        /*
         this.setIconClass(null);
         if (this.header) {
             var el = Ext.get(this.header.query('img')[0]);
             el.dom.src = element.icon;
             el.addClass('element-icon');
         }
+        */
         //this.setIcon(element.icon);
         //this.mask.hide();
     },

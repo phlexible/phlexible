@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Change;
 
+use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
@@ -19,9 +20,9 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 class Change
 {
     /**
-     * @var ElementVersion[]
+     * @var ElementSource[]
      */
-    private $elementVersions;
+    private $outdatedElementSources = array();
 
     /**
      * @var Elementtype
@@ -29,31 +30,34 @@ class Change
     private $elementtype;
 
     /**
-     * @param Elementtype      $elementtype
-     * @param ElementVersion[] $elementVersions
+     * @param Elementtype     $elementtype
+     * @param ElementSource[] $outdatedElementSources
      */
-    public function __construct(Elementtype $elementtype, array $elementVersions = array())
+    public function __construct(Elementtype $elementtype, array $outdatedElementSources = [])
     {
         $this->elementtype = $elementtype;
-        $this->elementVersions = $elementVersions;
+
+        foreach ($outdatedElementSources as $outdatedElementSource) {
+            $this->addOutdatedElementSource($outdatedElementSource);
+        }
     }
 
     /**
-     * @return ElementVersion[]
+     * @return ElementSource[]
      */
-    public function getElementVersions()
+    public function getOutdatedElementSources()
     {
-        return $this->elementVersions;
+        return $this->outdatedElementSources;
     }
 
     /**
-     * @param ElementVersion $elementVersion
+     * @param ElementSource $outdatedElementSource
      *
      * @return $this
      */
-    public function addElementVersion(ElementVersion $elementVersion)
+    public function addOutdatedElementSource(ElementSource $outdatedElementSource)
     {
-        $this->elementVersions[] = $elementVersion;
+        $this->outdatedElementSources[] = $outdatedElementSource;
 
         return $this;
     }

@@ -56,6 +56,26 @@ class ElementEvents
     const UPDATE_ELEMENT_VERSION = 'phlexible_element.update_element_version';
 
     /**
+     * Fired before an element source is created.
+     */
+    const BEFORE_CREATE_ELEMENT_SOURCE = 'phlexible_element.before_create_element_source';
+
+    /**
+     * Fired after an element source is created.
+     */
+    const CREATE_ELEMENT_SOURCE = 'phlexible_element.create_element_source';
+
+    /**
+     * Fired before an element source is updated.
+     */
+    const BEFORE_UPDATE_ELEMENT_SOURCE = 'phlexible_element.before_update_element_source';
+
+    /**
+     * Fired after an element source has been updated.
+     */
+    const UPDATE_ELEMENT_SOURCE = 'phlexible_element.before_create_element_source';
+
+    /**
      * Fired before an element is deleted.
      */
     const BEFORE_DELETE_ELEMENT = 'phlexible_element.before_delete_element';

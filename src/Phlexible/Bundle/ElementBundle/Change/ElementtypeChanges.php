@@ -56,20 +56,19 @@ class ElementtypeChanges
         $changes = array();
 
         foreach ($this->elementtypeService->findAllElementtypes() as $elementtype) {
-            $elementVersions = $this->elementService->findOutdatedElementVersions($elementtype);
-            $changes[] = new Change($elementtype, $elementVersions);
+            $outdatedElementSources = $this->elementService->findOutdatedElementSources($elementtype);
+            $changes[] = new Change($elementtype, $outdatedElementSources);
         }
 
         return $changes;
     }
 
     /**
-     * @param bool $viaQueue
+     * @param Change $change
+     * @param bool   $viaQueue
      */
-    public function commit($viaQueue = false)
+    public function commit(Change $change, $viaQueue = false)
     {
-        foreach ($this->changes() as $change) {
-            $this->synchronizer->synchronize($change);
-        }
+        $this->synchronizer->synchronize($change);
     }
 }

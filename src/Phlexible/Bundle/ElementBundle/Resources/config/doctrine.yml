@@ -7,6 +7,10 @@ services:
         class: Phlexible\Bundle\ElementBundle\Doctrine\ElementVersionManager
         arguments: [@doctrine.orm.entity_manager, @event_dispatcher, @phlexible_message.message_poster]
 
+    phlexible_element.doctrine.element_source_manager:
+        class: Phlexible\Bundle\ElementBundle\Doctrine\ElementSourceManager
+        arguments: [@doctrine.orm.entity_manager, @event_dispatcher, @phlexible_message.message_poster]
+
     phlexible_element.doctrine.element_structure_manager:
         class: Phlexible\Bundle\ElementBundle\Doctrine\ElementStructureManager
         public: false
@@ -34,8 +38,3 @@ services:
         class: Phlexible\Bundle\ElementBundle\Doctrine\ElementHistoryManager
         public: false
         arguments: [@doctrine.orm.entity_manager]
-
-    phlexible_element.doctrine.synchronizer:
-        class: Phlexible\Bundle\ElementBundle\Change\Synchronizer
-        # TODO: file.dumper?
-        arguments: [@doctrine.orm.entity_manager, @phlexible_element.element_version_manager, @phlexible_elementtype.file.dumper.xml]

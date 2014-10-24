@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Model;
 
 use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
@@ -28,18 +29,18 @@ interface ElementVersionManagerInterface
     public function find(Element $element, $version);
 
     /**
+     * @param ElementSource $elementSource
+     *
+     * @return ElementVersion[]
+     */
+    public function findByElementSource(ElementSource $elementSource);
+
+    /**
      * @param Element $element
      *
      * @return array
      */
     public function getVersions(Element $element);
-
-    /**
-     * @param Elementtype $elementtype
-     *
-     * @return ElementVersion[]
-     */
-    public function findOutdatedElementVersions(Elementtype $elementtype);
 
     /**
      * @param ElementVersion $elementVersion

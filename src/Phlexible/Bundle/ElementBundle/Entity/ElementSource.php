@@ -21,18 +21,24 @@ use Doctrine\ORM\Mapping as ORM;
 class ElementSource
 {
     /**
-     * @var string
+     * @var int
      * @ORM\Id
-     * @ORM\Column(type="string")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Id
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="elementtype_id", type="string")
      */
-    private $revision;
+    private $elementtypeId;
+
+    /**
+     * @var int
+     * @ORM\Column(name="elementtype_revision", type="integer")
+     */
+    private $elementtypeRevision;
 
     /**
      * @var string
@@ -69,19 +75,39 @@ class ElementSource
     /**
      * @return string
      */
-    public function getRevision()
+    public function getElementtypeId()
     {
-        return $this->revision;
+        return $this->elementtypeId;
     }
 
     /**
-     * @param string $revision
+     * @param string $elementtypeId
      *
      * @return $this
      */
-    public function setRevision($revision)
+    public function setElementtypeId($elementtypeId)
     {
-        $this->revision = $revision;
+        $this->elementtypeId = $elementtypeId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getElementtypeRevision()
+    {
+        return $this->elementtypeRevision;
+    }
+
+    /**
+     * @param int $elementtypeRevision
+     *
+     * @return $this
+     */
+    public function setElementtypeRevision($elementtypeRevision)
+    {
+        $this->elementtypeRevision = $elementtypeRevision;
 
         return $this;
     }

@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\ElementVersion;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
+use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 
@@ -21,9 +22,9 @@ use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 class FieldMapper
 {
     /**
-     * @var ElementtypeService
+     * @var ElementSourceManagerInterface
      */
-    private $elementtypeService;
+    private $elementSourceManager;
 
     /**
      * @var array
@@ -33,16 +34,16 @@ class FieldMapper
     /**
      * @var FieldMapperInterface[]
      */
-    private $mappers = array();
+    private $mappers = [];
 
     /**
-     * @param ElementtypeService     $elementtypeService
-     * @param string                 $availableLanguages
-     * @param FieldMapperInterface[] $mappers
+     * @param ElementSourceManagerInterface $elementSourceManager
+     * @param string                        $availableLanguages
+     * @param FieldMapperInterface[]        $mappers
      */
-    public function __construct(ElementtypeService $elementtypeService, $availableLanguages, array $mappers = array())
+    public function __construct(ElementSourceManagerInterface $elementSourceManager, $availableLanguages, array $mappers = [])
     {
-        $this->elementtypeService = $elementtypeService;
+        $this->elementSourceManager = $elementSourceManager;
         $this->availableLanguages = explode(',', $availableLanguages);
         $this->mappers = $mappers;
     }
@@ -76,9 +77,13 @@ class FieldMapper
      */
     public function extract(ElementVersion $elementVersion, ElementStructure $elementStructure = null, $language)
     {
-        $elementtype = $this->elementtypeService->findElementtype($elementVersion->getElement()->getElementtypeId());
+        $elementtype = $this->elementSourceManager->findElementtype($elementVersion->getElement()->getElementtypeId());
 
-        $titles = array();
+        if (!$elementtype) {
+            echo $elementVersion->getElement()->getElementtypeId();die;
+        }
+
+        $titles = [];
 
         if ($elementStructure) {
             $mappings = $elementtype->getMappings();

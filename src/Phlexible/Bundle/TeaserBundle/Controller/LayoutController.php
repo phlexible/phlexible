@@ -565,14 +565,13 @@ class LayoutController extends Controller
         }
 
         $elementService = $this->get('phlexible_element.element_service');
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
 
-        $elementtype = $elementtypeService->findElementtype($elementtypeId);
+        $elementSource = $elementService->findElementSource($elementtypeId);
 
         $userId = $this->getUser()->getId();
 
-        $element = $elementService->createElement($elementtype, $masterLanguage, $userId);
+        $element = $elementService->createElement($elementSource, $masterLanguage, $userId);
 
         $teaser = $teaserManager->createTeaser(
             $treeId,

@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Command;
 use Phlexible\Bundle\ElementBundle\Change\ElementtypeChanges;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,22 +44,27 @@ class ChangesCommand extends ContainerAwareCommand
         $committer = new ElementtypeChanges(
             $this->getContainer()->get('phlexible_elementtype.elementtype_service'),
             $this->getContainer()->get('phlexible_element.element_service'),
-            $this->getContainer()->get('phlexible_element.doctrine.synchronizer')
+            $this->getContainer()->get('phlexible_element.synchronizer')
         );
 
         $changes = $committer->changes();
 
         if (count($changes)) {
-            foreach ($changes as $change) {
-                $output->writeln(
-                    'ELEMENTTYPE ' . $change->getElementtype()->getTitle() . ' ' .
-                    //'REVISION ' . $change->getRevision() . ' => ' . $change->getElementtype()->getRevision() . ' ' .
-                    'NUM ELEMENTVERSIONS ' . count($change->getElementVersions())
-                );
-            }
+            if (!$input->getOption('commit')) {
+                $table = new Table($output);
+                $table->setHeaders(['Elementtype', '# Element sources']);
 
-            if ($input->getOption('commit')) {
-                $committer->commit($input->getOption('queue'));
+                foreach ($changes as $change) {
+                    $table->addRow([$change->getElementtype()->getTitle(), count($change->getOutdatedElementSources())]);
+                }
+
+                $table->render();
+            } else {
+                foreach ($changes as $change) {
+                    $output->write("{$change->getElementtype()->getTitle()}... ");
+                    $committer->commit($change, $input->getOption('queue'));
+                    $output->writeln("<info>ok</info>");
+                }
             }
         } else {
             $output->writeln('No elementtype changes');

@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementsMessage;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Entity\Repository\ElementVersionRepository;
 use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
@@ -79,25 +80,19 @@ class ElementVersionManager implements ElementVersionManagerInterface
     public function find(Element $element, $version)
     {
         return $this->getElementVersionRepository()->findOneBy(
-            array(
+            [
                 'element' => $element,
                 'version' => $version,
-            )
+            ]
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findOutdatedElementVersions(Elementtype $elementtype)
+    public function findByElementSource(ElementSource $elementSource)
     {
-        $qb = $this->getElementVersionRepository()->createQueryBuilder('ev');
-        $qb
-            ->join('ev.element', 'e')
-            ->where($qb->expr()->eq('e.elementtypeId', $qb->expr()->literal($elementtype->getId())))
-            ->andWhere($qb->expr()->neq('ev.elementtypeVersion', $qb->expr()->literal($elementtype->getRevision())));
-
-        return $qb->getQuery()->getResult();
+        return $this->getElementVersionRepository()->findBy(['elementSource' => $elementSource]);
     }
 
     /**
