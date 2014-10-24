@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\MessageBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Message asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class MessageAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,33 +38,31 @@ class MessageAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleMessageBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/model/Criterium.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/model/Filter.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/model/Message.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/model/Subscription.js')),
+            '@PhlexibleMessageBundle/Resources/scripts/model/Criterium.js',
+            '@PhlexibleMessageBundle/Resources/scripts/model/Filter.js',
+            '@PhlexibleMessageBundle/Resources/scripts/model/Message.js',
+            '@PhlexibleMessageBundle/Resources/scripts/model/Subscription.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/view/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/view/FilterPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/view/MessagesGrid.js')),
+            '@PhlexibleMessageBundle/Resources/scripts/view/MainPanel.js',
+            '@PhlexibleMessageBundle/Resources/scripts/view/FilterPanel.js',
+            '@PhlexibleMessageBundle/Resources/scripts/view/MessagesGrid.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/filter/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/filter/ListGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/filter/CriteriaForm.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/filter/PreviewPanel.js')),
+            '@PhlexibleMessageBundle/Resources/scripts/filter/MainPanel.js',
+            '@PhlexibleMessageBundle/Resources/scripts/filter/ListGrid.js',
+            '@PhlexibleMessageBundle/Resources/scripts/filter/CriteriaForm.js',
+            '@PhlexibleMessageBundle/Resources/scripts/filter/PreviewPanel.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/subscription/MainPanel.js')),
+            '@PhlexibleMessageBundle/Resources/scripts/subscription/MainPanel.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/MainPanel.js')),
+            '@PhlexibleMessageBundle/Resources/scripts/MainPanel.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/portlet/Messages.js')),
+            '@PhlexibleMessageBundle/Resources/scripts/portlet/Messages.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/scripts/menuhandle/MessagesHandle.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleMessageBundle/Resources/scripts/menuhandle/MessagesHandle.js',
+        );
     }
 
     /**
@@ -88,12 +70,10 @@ class MessageAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/styles/messages.css')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/styles/filter.css')),
-            new FileAsset($this->locator->locate('@PhlexibleMessageBundle/Resources/styles/portlet.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleMessageBundle/Resources/styles/messages.css',
+            '@PhlexibleMessageBundle/Resources/styles/filter.css',
+            '@PhlexibleMessageBundle/Resources/styles/portlet.css',
+        );
     }
 }

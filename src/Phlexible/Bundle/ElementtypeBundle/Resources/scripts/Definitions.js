@@ -1,6 +1,7 @@
 Ext.namespace(
     'Phlexible.elementtypes.configuration',
     'Phlexible.elementtypes.menuhandle',
+    'Phlexible.elementtypes.model',
     'Phlexible.fields'
 );
 
@@ -20,14 +21,6 @@ Phlexible.elementtypes.Format = {
         return '';
     }
 };
-
-Phlexible.elementtypes.ElementtypeRecord = Ext.data.Record.create([
-    {name: 'id', type: 'string'},
-    {name: 'icon', type: 'string'},
-    {name: 'title', type: 'string'},
-    {name: 'version', type: 'string'},
-    {name: 'type', type: 'string'}
-]);
 
 Phlexible.elementtypes.FieldMap = {
     field: {

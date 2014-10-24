@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\SiterootBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Siteroot asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class SiterootAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,37 +38,29 @@ class SiterootAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleSiterootBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/model/Siteroot.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/model/Contentchannel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/model/Navigation.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/model/SpecialTid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/model/Url.js')),
+            '@PhlexibleSiterootBundle/Resources/scripts/model/Siteroot.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/model/Contentchannel.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/model/Navigation.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/model/SpecialTid.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/model/Url.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/SingleCheckColumn.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/LanguageCheckColumn.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/SiterootGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/UrlGrid.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleSiterootBundle/Resources/scripts/SiterootNavigationWindow.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleSiterootBundle/Resources/scripts/NavigationFlagsWindow.js'
-            )),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/NavigationGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/SpecialTidGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/ContentChannelGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/TitleForm.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/scripts/PropertyGrid.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleSiterootBundle/Resources/scripts/menuhandle/SiterootsHandle.js'
-            )),
-        ));
-
-        return $collection;
+            '@PhlexibleSiterootBundle/Resources/scripts/SingleCheckColumn.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/LanguageCheckColumn.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/MainPanel.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/SiterootGrid.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/UrlGrid.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/SiterootNavigationWindow.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/NavigationFlagsWindow.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/NavigationGrid.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/SpecialTidGrid.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/ContentChannelGrid.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/TitleForm.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/PropertyGrid.js',
+            '@PhlexibleSiterootBundle/Resources/scripts/menuhandle/SiterootsHandle.js',
+        );
     }
 
     /**
@@ -92,10 +68,8 @@ class SiterootAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleSiterootBundle/Resources/styles/siteroots.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleSiterootBundle/Resources/styles/siteroots.css',
+        );
     }
 }

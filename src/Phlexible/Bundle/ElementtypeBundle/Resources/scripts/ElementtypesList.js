@@ -51,7 +51,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
             root: 'elementtypes',
             totalProperty: 'total',
             id: 'id',
-            fields: Phlexible.elementtypes.ElementtypeRecord,
+            fields: Phlexible.elementtypes.model.Elementtype,
             autoLoad: true,
             sortInfo: {
                 field: 'title',

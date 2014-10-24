@@ -58,9 +58,8 @@ services:
     phlexible_media_manager.asset_provider:
         class: Phlexible\Bundle\MediaManagerBundle\AssetProvider\MediaManagerAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider, priority: 300}
+            - {name: phlexible_gui.asset_provider, priority: 300}
 
     # event listeners
     phlexible_media_manager.listener.media_site:

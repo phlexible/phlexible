@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\UserBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * User asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class UserAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,31 +38,29 @@ class UserAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/Definitions.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/model/Group.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/model/User.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/model/UserGroup.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/model/UserRole.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/options/Details.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/options/Password.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/options/Preferences.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/options/Theme.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/portlet/Online.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/OptionsWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/UserGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/UserFilterPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/UserWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/UsersMainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/GroupsMainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/SuccessorWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/menuhandle/UsersHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/menuhandle/OptionsHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/scripts/menuhandle/LogoutHandle.js')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleUserBundle/Resources/scripts/Definitions.js',
+            '@PhlexibleUserBundle/Resources/scripts/model/Group.js',
+            '@PhlexibleUserBundle/Resources/scripts/model/User.js',
+            '@PhlexibleUserBundle/Resources/scripts/model/UserGroup.js',
+            '@PhlexibleUserBundle/Resources/scripts/model/UserRole.js',
+            '@PhlexibleUserBundle/Resources/scripts/options/Details.js',
+            '@PhlexibleUserBundle/Resources/scripts/options/Password.js',
+            '@PhlexibleUserBundle/Resources/scripts/options/Preferences.js',
+            '@PhlexibleUserBundle/Resources/scripts/options/Theme.js',
+            '@PhlexibleUserBundle/Resources/scripts/portlet/Online.js',
+            '@PhlexibleUserBundle/Resources/scripts/OptionsWindow.js',
+            '@PhlexibleUserBundle/Resources/scripts/UserGrid.js',
+            '@PhlexibleUserBundle/Resources/scripts/UserFilterPanel.js',
+            '@PhlexibleUserBundle/Resources/scripts/UserWindow.js',
+            '@PhlexibleUserBundle/Resources/scripts/UsersMainPanel.js',
+            '@PhlexibleUserBundle/Resources/scripts/GroupsMainPanel.js',
+            '@PhlexibleUserBundle/Resources/scripts/MainPanel.js',
+            '@PhlexibleUserBundle/Resources/scripts/SuccessorWindow.js',
+            '@PhlexibleUserBundle/Resources/scripts/menuhandle/UsersHandle.js',
+            '@PhlexibleUserBundle/Resources/scripts/menuhandle/OptionsHandle.js',
+            '@PhlexibleUserBundle/Resources/scripts/menuhandle/LogoutHandle.js',
+        );
     }
 
     /**
@@ -86,11 +68,9 @@ class UserAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/styles/users.css')),
-            new FileAsset($this->locator->locate('@PhlexibleUserBundle/Resources/styles/portlet.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleUserBundle/Resources/styles/users.css',
+            '@PhlexibleUserBundle/Resources/styles/portlet.css',
+        );
     }
 }

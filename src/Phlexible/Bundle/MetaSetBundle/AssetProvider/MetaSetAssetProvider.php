@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Meta set asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class MetaSetAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,21 +38,19 @@ class MetaSetAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleMetaSetBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/Fields.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/MetaSetsWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/MetaSuggestWindow.js')),
+            '@PhlexibleMetaSetBundle/Resources/scripts/Fields.js',
+            '@PhlexibleMetaSetBundle/Resources/scripts/MainPanel.js',
+            '@PhlexibleMetaSetBundle/Resources/scripts/MetaSetsWindow.js',
+            '@PhlexibleMetaSetBundle/Resources/scripts/MetaSuggestWindow.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/SelectConfigurationWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/SuggestConfigurationWindow.js')),
+            '@PhlexibleMetaSetBundle/Resources/scripts/SelectConfigurationWindow.js',
+            '@PhlexibleMetaSetBundle/Resources/scripts/SuggestConfigurationWindow.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMetaSetBundle/Resources/scripts/menuhandle/MetaSetsHandle.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleMetaSetBundle/Resources/scripts/menuhandle/MetaSetsHandle.js',
+        );
     }
 
     /**

@@ -7,9 +7,8 @@ services:
     phlexible_dashboard.asset_provider:
         class: Phlexible\Bundle\DashboardBundle\AssetProvider\DashboardAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider, priority: 700}
+            - {name: phlexible_gui.asset_provider, priority: 700}
 
     # event listeners
     phlexible_dashboard.listener.get_config:

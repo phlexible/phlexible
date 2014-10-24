@@ -82,9 +82,8 @@ services:
     phlexible_element.asset_provider:
         class: Phlexible\Bundle\ElementBundle\AssetProvider\ElementAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider, priority: 100}
+            - {name: phlexible_gui.asset_provider, priority: 100}
 
     # event listeners
     phlexible_element.listener.task:

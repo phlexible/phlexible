@@ -15,9 +15,8 @@ services:
     phlexible_teaser.asset_provider:
         class: Phlexible\Bundle\TeaserBundle\AssetProvider\TeaserAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider, priority: 100}
+            - {name: phlexible_gui.asset_provider, priority: 100}
 
     # event listeners
     phlexible_teaser.listener.apply_successor:

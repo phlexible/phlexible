@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Media cache asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class MediaCacheAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,13 +38,9 @@ class MediaCacheAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate(
-                '@PhlexibleMediaCacheBundle/Resources/scripts/portlet/CacheStatus.js'
-            )),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleMediaCacheBundle/Resources/scripts/portlet/CacheStatus.js'
+        );
     }
 
     /**

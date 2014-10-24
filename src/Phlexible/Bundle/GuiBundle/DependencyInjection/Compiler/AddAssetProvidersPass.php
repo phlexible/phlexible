@@ -29,7 +29,7 @@ class AddAssetProvidersPass implements CompilerPassInterface
         ]);
 
         $providers = array();
-        foreach ($container->findTaggedServiceIds('phlexible_gui.asset.provider') as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds('phlexible_gui.asset_provider') as $id => $attributes) {
             $priority = isset($attributes[0]['priority']) ? (int) $attributes[0]['priority'] : 0;
             $providers[$priority][] = new Reference($id);
         }

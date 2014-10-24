@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\ContentchannelBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Contentchannel asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class ContentchannelAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,21 +38,13 @@ class ContentchannelAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleContentchannelBundle/Resources/scripts/Definitions.js')),
-            new FileAsset($this->locator->locate('@PhlexibleContentchannelBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelsGrid.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelForm.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleContentchannelBundle/Resources/scripts/menuhandle/ContentchannelsHandle.js'
-            )),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleContentchannelBundle/Resources/scripts/Definitions.js',
+            '@PhlexibleContentchannelBundle/Resources/scripts/MainPanel.js',
+            '@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelsGrid.js',
+            '@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelForm.js',
+            '@PhlexibleContentchannelBundle/Resources/scripts/menuhandle/ContentchannelsHandle.js',
+        );
     }
 
     /**

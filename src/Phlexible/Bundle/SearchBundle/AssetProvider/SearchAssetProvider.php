@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\SearchBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Search asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class SearchAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,16 +38,14 @@ class SearchAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleSearchBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleSearchBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleSearchBundle/Resources/scripts/SearchBox.js')),
-            new FileAsset($this->locator->locate('@PhlexibleSearchBundle/Resources/scripts/SearchPanel.js')),
+            '@PhlexibleSearchBundle/Resources/scripts/SearchBox.js',
+            '@PhlexibleSearchBundle/Resources/scripts/SearchPanel.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleSearchBundle/Resources/scripts/menuhandle/SearchBoxHandle.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleSearchBundle/Resources/scripts/menuhandle/SearchBoxHandle.js',
+        );
     }
 
     /**
@@ -71,10 +53,8 @@ class SearchAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleSearchBundle/Resources/styles/search.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleSearchBundle/Resources/styles/search.css',
+        );
     }
 }

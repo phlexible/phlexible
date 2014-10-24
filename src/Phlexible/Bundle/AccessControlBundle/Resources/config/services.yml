@@ -23,9 +23,8 @@ services:
     phlexible_access_control.asset_provider:
         class: Phlexible\Bundle\AccessControlBundle\AssetProvider\AccessControlAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider, priority: 110}
+            - {name: phlexible_gui.asset_provider, priority: 110}
 
     # voters
     phlexible_access_control.voter.rights:

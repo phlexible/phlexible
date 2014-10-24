@@ -11,6 +11,5 @@ services:
     phlexible_search.asset_provider:
         class: Phlexible\Bundle\SearchBundle\AssetProvider\SearchAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider}
+            - {name: phlexible_gui.asset_provider}

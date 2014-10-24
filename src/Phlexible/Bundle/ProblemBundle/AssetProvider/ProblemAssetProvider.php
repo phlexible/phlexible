@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\ProblemBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Problem asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class ProblemAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,19 +38,17 @@ class ProblemAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleProblemBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/scripts/ProblemsGrid.js')),
+            '@PhlexibleProblemBundle/Resources/scripts/ProblemsGrid.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/scripts/model/Problem.js')),
+            '@PhlexibleProblemBundle/Resources/scripts/model/Problem.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/scripts/portlet/Problems.js')),
+            '@PhlexibleProblemBundle/Resources/scripts/portlet/Problems.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/scripts/menuhandle/ProblemsHandle.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleProblemBundle/Resources/scripts/menuhandle/ProblemsHandle.js',
+        );
     }
 
     /**
@@ -74,10 +56,8 @@ class ProblemAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleProblemBundle/Resources/styles/problems.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleProblemBundle/Resources/styles/problems.css',
+        );
     }
 }

@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\DashboardBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Dashboard asset provider
@@ -21,31 +18,16 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 class DashboardAssetProvider implements AssetProviderInterface
 {
     /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getUxScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portal.js')),
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portal.DropZone.js')),
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.PortalColumn.js')),
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portlet.js')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portal.js',
+            '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portal.DropZone.js',
+            '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.PortalColumn.js',
+            '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portlet.js',
+        );
     }
 
     /**
@@ -53,11 +35,9 @@ class DashboardAssetProvider implements AssetProviderInterface
      */
     public function getUxCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/styles/ux/Ext.ux.Portlet.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleDashboardBundle/Resources/styles/ux/Ext.ux.Portlet.css',
+        );
     }
 
     /**
@@ -65,15 +45,13 @@ class DashboardAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/scripts/Definitions.js')),
-            //new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/scripts/StartMessage.js')),
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/scripts/ListPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/scripts/PortalPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/scripts/MainPanel.js')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleDashboardBundle/Resources/scripts/Definitions.js',
+            //'@PhlexibleDashboardBundle/Resources/scripts/StartMessage.js',
+            '@PhlexibleDashboardBundle/Resources/scripts/ListPanel.js',
+            '@PhlexibleDashboardBundle/Resources/scripts/PortalPanel.js',
+            '@PhlexibleDashboardBundle/Resources/scripts/MainPanel.js',
+        );
     }
 
     /**
@@ -81,11 +59,9 @@ class DashboardAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/styles/portlets.css')),
-            new FileAsset($this->locator->locate('@PhlexibleDashboardBundle/Resources/styles/dashboard.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleDashboardBundle/Resources/styles/portlets.css',
+            '@PhlexibleDashboardBundle/Resources/styles/dashboard.css',
+        );
     }
 }

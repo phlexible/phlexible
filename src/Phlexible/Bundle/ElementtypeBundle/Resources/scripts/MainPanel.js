@@ -216,15 +216,6 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                         xtype: 'elementtypes-viability'
                     },
                     {
-                        xtype: 'elementtypes-versions',
-                        hidden: true,
-                        disabled: true,
-                        listeners: {
-                            loadVersion: this.onElementtypeChange,
-                            scope: this
-                        }
-                    },
-                    {
                         xtype: 'elementtypes-usage'
                     },
                     {
@@ -278,12 +269,8 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
         return this.getMainTabPanel().getComponent(1);
     },
 
-    getVersionsTab: function () {
-        return this.getMainTabPanel().getComponent(2);
-    },
-
     getUsageTab: function () {
-        return this.getMainTabPanel().getComponent(3);
+        return this.getMainTabPanel().getComponent(2);
     },
 
     getPropertyCards: function () {

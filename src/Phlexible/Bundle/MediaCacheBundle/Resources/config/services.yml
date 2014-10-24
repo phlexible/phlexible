@@ -50,9 +50,8 @@ services:
     phlexible_media_cache.asset_provider:
         class: Phlexible\Bundle\MediaCacheBundle\AssetProvider\MediaCacheAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider}
+            - {name: phlexible_gui.asset_provider}
 
     # event listeners
     phlexible_media_cache.listener.file:

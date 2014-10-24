@@ -120,39 +120,6 @@ class ListController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/versions", name="elementtypes_list_versions")
-     */
-    public function versionsAction(Request $request)
-    {
-        $id = $request->get('id');
-
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $userManager = $this->get('phlexible_user.user_manager');
-
-        $elementtype = $elementtypeService->findElementtype($id);
-
-        try {
-            $user = $userManager->find($elementtype->getCreateUserId());
-            $username = $user->getDisplayName();
-        } catch (\Exception $e) {
-            $username = '(unknown)';
-        }
-
-        $versions = array(
-            array(
-                'version'     => $elementtype->getRevision(),
-                'create_user' => $username,
-                'create_time' => $elementtype->getCreatedAt()->format('Y-m-d H:i:s'),
-            )
-        );
-
-        return new JsonResponse(array('versions' => $versions));
-    }
-
-    /**
      * Create an elementtype
      *
      * @param Request $request

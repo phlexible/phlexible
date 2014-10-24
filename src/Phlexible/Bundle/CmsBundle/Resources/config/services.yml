@@ -7,9 +7,8 @@ services:
     phlexible_cms.asset_provider:
         class: Phlexible\Bundle\CmsBundle\AssetProvider\CmsAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider, priority: 200}
+            - {name: phlexible_gui.asset_provider, priority: 200}
 
     # event listeners
     phlexible_cms.listener.get_config:

@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Media manager asset provider
@@ -20,35 +17,21 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class MediaManagerAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
 
     /**
      * {@inheritDoc}
      */
     public function getUxScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.js')),
-            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/moxie.js')),
-            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.dev.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.full.min.js')),
-            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/SwfUpload.js')),
-            //new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.SwfUploadPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.LocationBar.js')),
-        ));
-
-        return $collection;
+        return array(
+            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.js',
+            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/moxie.js',
+            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.dev.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.full.min.js',
+            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/SwfUpload.js',
+            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.SwfUploadPanel.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.LocationBar.js',
+        );
     }
 
     /**
@@ -56,12 +39,10 @@ class MediaManagerAssetProvider implements AssetProviderInterface
      */
     public function getUxCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/styles/SwfUploadPanel.css')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/styles/Ext.ux.LocationBar.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleMediaManagerBundle/Resources/styles/SwfUploadPanel.css',
+            '@PhlexibleMediaManagerBundle/Resources/styles/Ext.ux.LocationBar.css',
+        );
     }
 
     /**
@@ -69,48 +50,46 @@ class MediaManagerAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleMediaManagerBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/model/File.js')),
+            '@PhlexibleMediaManagerBundle/Resources/scripts/model/File.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/util/Bullets.js')),
+            '@PhlexibleMediaManagerBundle/Resources/scripts/util/Bullets.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/Templates.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FolderTreeNodeUI.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FolderTree.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FilesGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/AttributesPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FilePreviewPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FileVersionsPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FileUploadWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FileUploadWizard.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/RenameFolderWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/RenameFolderWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/RenameFileWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/CustomGridView.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FileMeta.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FileMetaGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FolderMeta.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FolderMetaGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/TagsPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/MediamanagerWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/NewFolderWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FileReplaceWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/PropertiesWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FileDetailWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FolderDetailWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/FolderPropertiesPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/UploadStatusBar.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/UploadChecker.js')),
+            '@PhlexibleMediaManagerBundle/Resources/scripts/Templates.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FolderTreeNodeUI.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FolderTree.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FilesGrid.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/AttributesPanel.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FilePreviewPanel.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FileVersionsPanel.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FileUploadWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FileUploadWizard.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/RenameFolderWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/RenameFolderWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/RenameFileWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/CustomGridView.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FileMeta.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FileMetaGrid.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FolderMeta.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FolderMetaGrid.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/TagsPanel.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/MainPanel.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/MediamanagerWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/NewFolderWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FileReplaceWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/PropertiesWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FileDetailWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FolderDetailWindow.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/FolderPropertiesPanel.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/UploadStatusBar.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts/UploadChecker.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/portlet/LatestFiles.js')),
+            '@PhlexibleMediaManagerBundle/Resources/scripts/portlet/LatestFiles.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/scripts/menuhandle/MediaHandle.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleMediaManagerBundle/Resources/scripts/menuhandle/MediaHandle.js',
+        );
     }
 
     /**
@@ -118,12 +97,10 @@ class MediaManagerAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/styles/mediamanager.css')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/styles/portlet.css')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaManagerBundle/Resources/styles/filefield.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleMediaManagerBundle/Resources/styles/mediamanager.css',
+            '@PhlexibleMediaManagerBundle/Resources/styles/portlet.css',
+            '@PhlexibleMediaManagerBundle/Resources/styles/filefield.css',
+        );
     }
 }

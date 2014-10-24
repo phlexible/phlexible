@@ -25,10 +25,9 @@ services:
             - @phlexible_documenttype.documenttype_manager
             - @phlexible_documenttype.compiler.script
             - @phlexible_documenttype.compiler.css
-            - @file_locator
             - %phlexible_documenttype.compiler.cache_dir%
         tags:
-            - {name: phlexible_gui.asset.provider, priority: 600}
+            - {name: phlexible_gui.asset_provider, priority: 600}
 
     # role provider
     phlexible_documenttype.role_provider:

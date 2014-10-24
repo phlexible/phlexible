@@ -59,9 +59,8 @@ services:
     phlexible_message.asset_provder:
         class: Phlexible\Bundle\MessageBundle\AssetProvider\MessageAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider}
+            - {name: phlexible_gui.asset_provider}
 
     # data collectors
     phlexible_message.data_collector.messages:

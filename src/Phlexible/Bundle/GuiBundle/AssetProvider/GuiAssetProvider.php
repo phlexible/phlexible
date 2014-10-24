@@ -8,10 +8,6 @@
 
 namespace Phlexible\Bundle\GuiBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
-use Symfony\Component\HttpKernel\Config\FileLocator;
-
 /**
  * Gui asset provider
  *
@@ -20,55 +16,42 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 class GuiAssetProvider implements AssetProviderInterface
 {
     /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getUxScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.ManagedIFrame.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.AutoGridPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.plugins.ToggleCollapsible.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.dd.GridReorderDropTarget.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.Spinner.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.Spinner.Strategy.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.SpinnerPlugin.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.XCheckbox.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.XmlTreeLoader.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.SuperBoxSelect.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.TwinComboBox.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.IconCombo.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.TwinIconCombo.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.grid.CheckColumn.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.grid.CheckboxColumn.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.GUID.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.PasswordField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.grid.RowExpander.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.GoogleChart.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.Notification.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.grid.RowActions.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.ColorField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.TabPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.UploadDialog.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.Sortable.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.SliderTip.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.LovCombo.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.PanelBlind.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.tree.TreeFilterX.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.data.ObjectStore.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.WriteStore.js')),
+        return array(
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.ManagedIFrame.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.AutoGridPanel.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.plugins.ToggleCollapsible.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.dd.GridReorderDropTarget.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.Spinner.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.Spinner.Strategy.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.SpinnerPlugin.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.XCheckbox.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.XmlTreeLoader.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.SuperBoxSelect.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.TwinComboBox.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.IconCombo.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.TwinIconCombo.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.grid.CheckColumn.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.grid.CheckboxColumn.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.GUID.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.PasswordField.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.grid.RowExpander.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.GoogleChart.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.Notification.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.grid.RowActions.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.ColorField.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.TabPanel.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.UploadDialog.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.Sortable.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.SliderTip.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.form.LovCombo.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.PanelBlind.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.tree.TreeFilterX.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.data.ObjectStore.js',
+            '@PhlexibleGuiBundle/Resources/scripts/ux/Ext.ux.WriteStore.js',
 
             // $scriptDir.'Ext.ux.MultiSelectTextField.js',
             // $scriptDir.'Ext.ux.layout.RowFitLayout.js',
@@ -91,9 +74,7 @@ class GuiAssetProvider implements AssetProviderInterface
 
             // $scriptDir.'editor/htmleditor.js',
             // $scriptDir.'editor/htmleditorimage.js',
-        ));
-
-        return $collection;
+        );
     }
 
     /**
@@ -101,23 +82,21 @@ class GuiAssetProvider implements AssetProviderInterface
      */
     public function getUxCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.dd.GridReorderDropTarget.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.form.Spinner.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.IconCombo.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.PasswordField.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.Notification.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.grid.RowActions.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.form.ColorField.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.form.LovCombo.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.TabPanel.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.UploadDialog.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.PanelBlind.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.form.SuperBoxSelect.css')),
-            // new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.GridRowDeleter.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.dd.GridReorderDropTarget.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.form.Spinner.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.IconCombo.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.PasswordField.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.Notification.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.grid.RowActions.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.form.ColorField.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.form.LovCombo.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.TabPanel.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.UploadDialog.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.PanelBlind.css',
+            '@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.form.SuperBoxSelect.css',
+            //'@PhlexibleGuiBundle/Resources/styles/ux/Ext.ux.GridRowDeleter.css',
+        );
     }
 
     /**
@@ -125,65 +104,63 @@ class GuiAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/dev.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/overrides.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/prototypes.js')),
+        return array(
+            '@PhlexibleGuiBundle/Resources/scripts/dev.js',
+            '@PhlexibleGuiBundle/Resources/scripts/overrides.js',
+            '@PhlexibleGuiBundle/Resources/scripts/prototypes.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Phlexible.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/EntryManager.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/PluginRegistry.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/Router.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Phlexible.functions.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/Console.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Phlexible.cookie.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Phlexible.Format.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Definitions.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/Frame.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/SystemMessage.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Phlexible.LoadHandler.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/PhpInfoWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/portlet/Load.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/Dialog.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/ImageSelectWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/Config.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/util/User.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/grid/TypeColumnModel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/bundle/BundlesFilterPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/bundle/BundlesGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/bundle/BundlesMainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Menu.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/Help.js')),
+            '@PhlexibleGuiBundle/Resources/scripts/Phlexible.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/EntryManager.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/PluginRegistry.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/Router.js',
+            '@PhlexibleGuiBundle/Resources/scripts/Phlexible.functions.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/Console.js',
+            '@PhlexibleGuiBundle/Resources/scripts/Phlexible.cookie.js',
+            '@PhlexibleGuiBundle/Resources/scripts/Phlexible.Format.js',
+            '@PhlexibleGuiBundle/Resources/scripts/Definitions.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/Frame.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/SystemMessage.js',
+            '@PhlexibleGuiBundle/Resources/scripts/Phlexible.LoadHandler.js',
+            '@PhlexibleGuiBundle/Resources/scripts/PhpInfoWindow.js',
+            '@PhlexibleGuiBundle/Resources/scripts/portlet/Load.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/Dialog.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/ImageSelectWindow.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/Config.js',
+            '@PhlexibleGuiBundle/Resources/scripts/util/User.js',
+            '@PhlexibleGuiBundle/Resources/scripts/grid/TypeColumnModel.js',
+            '@PhlexibleGuiBundle/Resources/scripts/bundle/BundlesFilterPanel.js',
+            '@PhlexibleGuiBundle/Resources/scripts/bundle/BundlesGrid.js',
+            '@PhlexibleGuiBundle/Resources/scripts/bundle/BundlesMainPanel.js',
+            '@PhlexibleGuiBundle/Resources/scripts/Menu.js',
+            '@PhlexibleGuiBundle/Resources/scripts/Help.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/Handle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/Menu.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/BubbleMenu.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/Group.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/IframeHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/FunctionHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/HrefHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/WindowHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/XtypeHandle.js')),
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/Handle.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/Menu.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/BubbleMenu.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/Group.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/IframeHandle.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/FunctionHandle.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/HrefHandle.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/WindowHandle.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/handle/XtypeHandle.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/Spacer.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/Separator.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/Fill.js')),
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/Spacer.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/Separator.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/Fill.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/MainGroup.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/MenusGroup.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/AccountGroup.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/TrayGroup.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/ConfigurationMenu.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/AdministrationMenu.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/DebugMenu.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/ToolsMenu.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/BundlesHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/HelpHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/PhpInfoHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/scripts/menuhandle/PropertiesHandle.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/MainGroup.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/MenusGroup.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/AccountGroup.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/TrayGroup.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/ConfigurationMenu.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/AdministrationMenu.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/DebugMenu.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/ToolsMenu.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/BundlesHandle.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/HelpHandle.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/PhpInfoHandle.js',
+            '@PhlexibleGuiBundle/Resources/scripts/menuhandle/PropertiesHandle.js',
+        );
     }
 
     /**
@@ -191,14 +168,12 @@ class GuiAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/frame.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/extensions.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/util/Dialog.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/util/ImageSelectWindow.css')),
-            new FileAsset($this->locator->locate('@PhlexibleGuiBundle/Resources/styles/overrides.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleGuiBundle/Resources/styles/frame.css',
+            '@PhlexibleGuiBundle/Resources/styles/extensions.css',
+            '@PhlexibleGuiBundle/Resources/styles/util/Dialog.css',
+            '@PhlexibleGuiBundle/Resources/styles/util/ImageSelectWindow.css',
+            '@PhlexibleGuiBundle/Resources/styles/overrides.css',
+        );
     }
 }

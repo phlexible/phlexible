@@ -22,9 +22,8 @@ services:
     phlexible_elementtype.asset_provider:
         class: Phlexible\Bundle\ElementtypeBundle\AssetProvider\ElementtypeAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider, priority: 100}
+            - {name: phlexible_gui.asset_provider, priority: 100}
 
     # event listeners
     phlexible_elementtype.listener.apply_successor:

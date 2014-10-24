@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Media templates asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class MediaTemplatesAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,33 +38,31 @@ class MediaTemplatesAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/BasePreviewPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/TemplatesGrid.js')),
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/MainPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/BasePreviewPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/TemplatesGrid.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/image/FormPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/image/PreviewPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/image/MainPanel.js')),
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/image/FormPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/image/PreviewPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/image/MainPanel.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/video/FormPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/video/PreviewPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/video/MainPanel.js')),
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/video/FormPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/video/PreviewPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/video/MainPanel.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/audio/FormPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/audio/PreviewPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/audio/MainPanel.js')),
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/audio/FormPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/audio/PreviewPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/audio/MainPanel.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/pdf2swf/FormPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/pdf2swf/PreviewPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/pdf2swf/MainPanel.js')),
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/pdf2swf/FormPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/pdf2swf/PreviewPanel.js',
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/pdf2swf/MainPanel.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/scripts/menuhandle/MediaTemplatesHandle.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleMediaTemplateBundle/Resources/scripts/menuhandle/MediaTemplatesHandle.js',
+        );
     }
 
     /**
@@ -88,10 +70,8 @@ class MediaTemplatesAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/styles/mediatemplates.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleMediaTemplateBundle/Resources/styles/mediatemplates.css',
+        );
     }
 }

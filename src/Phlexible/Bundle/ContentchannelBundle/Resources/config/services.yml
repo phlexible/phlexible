@@ -6,10 +6,8 @@ services:
     phlexible_contentchannel.asset_provider:
         class: Phlexible\Bundle\ContentchannelBundle\AssetProvider\ContentchannelAssetProvider
         public: false
-        arguments: [@file_locator]
-        public: false
         tags:
-            - {name: phlexible_gui.asset.provider}
+            - {name: phlexible_gui.asset_provider}
 
     # role providers
     phlexible_contentchannel.role_provider:

@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\TeaserBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Teaser asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class TeaserAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,20 +38,18 @@ class TeaserAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleTeaserBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTree.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTreeLoader.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTreeNodeUI.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/NewTeaserWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/NewTeaserInstanceWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/PublishTeaserWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTeaserBundle/Resources/scripts/SetTeaserOfflineWindow.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTree.js',
+            '@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTreeLoader.js',
+            '@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTreeNodeUI.js',
+            '@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutPanel.js',
+            '@PhlexibleTeaserBundle/Resources/scripts/NewTeaserWindow.js',
+            '@PhlexibleTeaserBundle/Resources/scripts/NewTeaserInstanceWindow.js',
+            '@PhlexibleTeaserBundle/Resources/scripts/PublishTeaserWindow.js',
+            '@PhlexibleTeaserBundle/Resources/scripts/SetTeaserOfflineWindow.js',
+        );
     }
 
     /**

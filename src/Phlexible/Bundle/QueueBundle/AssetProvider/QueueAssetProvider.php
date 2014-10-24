@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\QueueBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Queue asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class QueueAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,17 +38,15 @@ class QueueAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleQueueBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleQueueBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleQueueBundle/Resources/scripts/QueueStatsWindow.js')),
+            '@PhlexibleQueueBundle/Resources/scripts/QueueStatsWindow.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleQueueBundle/Resources/scripts/model/Job.js')),
+            '@PhlexibleQueueBundle/Resources/scripts/model/Job.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleQueueBundle/Resources/scripts/menuhandle/QueueStatsHandle.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleQueueBundle/Resources/scripts/menuhandle/QueueStatsHandle.js',
+        );
     }
 
     /**

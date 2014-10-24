@@ -24,9 +24,8 @@ services:
     phlexible_user.asset_provider:
         class: Phlexible\Bundle\UserBundle\AssetProvider\UserAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider}
+            - {name: phlexible_gui.asset_provider}
 
     # event listeners
     phlexible_user.listener.apply_successor:

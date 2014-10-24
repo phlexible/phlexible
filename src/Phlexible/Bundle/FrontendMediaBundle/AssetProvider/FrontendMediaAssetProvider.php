@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Frontend media asset provider
@@ -21,30 +18,14 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 class FrontendMediaAssetProvider implements AssetProviderInterface
 {
     /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getUxScriptsCollection()
     {
-
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FileField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FolderField.js')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FileField.js',
+            '@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FolderField.js',
+        );
     }
 
     /**
@@ -60,17 +41,15 @@ class FrontendMediaAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/Definitions.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/FieldHelper.js')),
+        return array(
+            '@PhlexibleFrontendMediaBundle/Resources/scripts/Definitions.js',
+            '@PhlexibleFrontendMediaBundle/Resources/scripts/FieldHelper.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/fields/Folder.js')),
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/fields/File.js')),
+            '@PhlexibleFrontendMediaBundle/Resources/scripts/fields/Folder.js',
+            '@PhlexibleFrontendMediaBundle/Resources/scripts/fields/File.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/scripts/configuration/FieldConfigurationFile.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleFrontendMediaBundle/Resources/scripts/configuration/FieldConfigurationFile.js',
+        );
     }
 
     /**
@@ -78,10 +57,8 @@ class FrontendMediaAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleFrontendMediaBundle/Resources/styles/folderselector.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleFrontendMediaBundle/Resources/styles/folderselector.css',
+        );
     }
 }

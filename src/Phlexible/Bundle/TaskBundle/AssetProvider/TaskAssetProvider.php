@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\TaskBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Task asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class TaskAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,29 +38,27 @@ class TaskAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleTaskBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/Definitions.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/FilterPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/TasksGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/TaskManager.js')),
+            '@PhlexibleTaskBundle/Resources/scripts/Definitions.js',
+            '@PhlexibleTaskBundle/Resources/scripts/MainPanel.js',
+            '@PhlexibleTaskBundle/Resources/scripts/FilterPanel.js',
+            '@PhlexibleTaskBundle/Resources/scripts/TasksGrid.js',
+            '@PhlexibleTaskBundle/Resources/scripts/TaskManager.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/window/NewTaskWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/window/AssignWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/window/CommentWindow.js')),
+            '@PhlexibleTaskBundle/Resources/scripts/window/NewTaskWindow.js',
+            '@PhlexibleTaskBundle/Resources/scripts/window/AssignWindow.js',
+            '@PhlexibleTaskBundle/Resources/scripts/window/CommentWindow.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/portlet/MyTasks.js')),
+            '@PhlexibleTaskBundle/Resources/scripts/portlet/MyTasks.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/menuhandle/TasksHandle.js')),
+            '@PhlexibleTaskBundle/Resources/scripts/menuhandle/TasksHandle.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/model/Task.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/model/Comment.js')),
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/scripts/model/Transition.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleTaskBundle/Resources/scripts/model/Task.js',
+            '@PhlexibleTaskBundle/Resources/scripts/model/Comment.js',
+            '@PhlexibleTaskBundle/Resources/scripts/model/Transition.js',
+        );
     }
 
     /**
@@ -84,10 +66,8 @@ class TaskAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleTaskBundle/Resources/styles/tasks.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleTaskBundle/Resources/styles/tasks.css',
+        );
     }
 }

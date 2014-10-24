@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Elementtype asset provider
@@ -21,45 +18,20 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 class ElementtypeAssetProvider implements AssetProviderInterface
 {
     /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getUxScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.Accordion.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.DisplayField.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.Group.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.LinkField.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.TableField.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.InputTextMask.js'
-            )),
-        ));
+        $input = [
+            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.Accordion.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.DisplayField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.Group.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.LinkField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.TableField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.InputTextMask.js',
+        ];
 
-        return $collection;
+        return $input;
     }
 
     /**
@@ -67,13 +39,11 @@ class ElementtypeAssetProvider implements AssetProviderInterface
      */
     public function getUxCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/styles/ux/Ext.form.DisplayField.css'
-            )),
-        ));
+        $input = [
+            '@PhlexibleElementtypeBundle/Resources/styles/ux/Ext.form.DisplayField.css',
+        ];
 
-        return $collection;
+        return $input;
     }
 
     /**
@@ -81,135 +51,71 @@ class ElementtypeAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/Definitions.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/NewElementtypeWindow.js'
-            )),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/FieldDragZone.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTreeRootNodeUI.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTreeNodeUI.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTreeLoader.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTreeDropZone.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTree.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeVersions.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeViability.js'
-            )),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeUsage.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/ElementtypesList.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/root/RootPropertyPanel.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/root/RootMappingsPanel.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/root/RootMappedTitleGrid.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/root/RootMappedDateGrid.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/root/RootMappedLinkGrid.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfiguration.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldLabel.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldProperty.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldValidation.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldContentchannel.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationGroup.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationAccordion.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationDefaultValue.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationLabel.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationLink.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationSelect.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationSuggest.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationTable.js'
-            )),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/configuration/SelectValueGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeRoot.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/Definitions.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/FieldHelper.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/FieldTypes.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/Prototypes.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/Registry.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/container/Root.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/container/Tab.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/container/Accordion.js'
-            )),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/container/Group.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/container/Reference.js'
-            )),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/container/ReferenceRoot.js'
-            )),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/Checkbox.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/DateField.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/field/DisplayField.js'
-            )),
-            //new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/HtmlEditor.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/Label.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/LinkField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/MultiSelect.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/NumberField.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/Select.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/Suggest.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/Table.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/TextArea.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/TextField.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/field/TimecodeField.js'
-            )),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/scripts/field/TimeField.js')),
-            new FileAsset($this->locator->locate(
-                '@PhlexibleElementtypeBundle/Resources/scripts/menuhandle/ElementtypesHandle.js'
-            )),
-        ));
+        $input = [
+            '@PhlexibleElementtypeBundle/Resources/scripts/Definitions.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/NewElementtypeWindow.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/FieldDragZone.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTreeRootNodeUI.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTreeNodeUI.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTreeLoader.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTreeDropZone.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeStructureTree.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeViability.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeUsage.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeRoot.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypeField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/ElementtypesList.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/root/RootPropertyPanel.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/root/RootMappingsPanel.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/root/RootMappedTitleGrid.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/root/RootMappedDateGrid.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/root/RootMappedLinkGrid.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfiguration.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldLabel.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldProperty.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldValidation.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldContentchannel.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationGroup.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationAccordion.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationDefaultValue.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationLabel.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationLink.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationSelect.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationSuggest.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/FieldConfigurationTable.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/configuration/SelectValueGrid.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/MainPanel.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/Definitions.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/FieldHelper.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/FieldTypes.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/Prototypes.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/Registry.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/container/Root.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/container/Tab.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/container/Accordion.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/container/Group.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/container/Reference.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/container/ReferenceRoot.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/Checkbox.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/DateField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/DisplayField.js',
+            //'@PhlexibleElementtypeBundle/Resources/scripts/field/HtmlEditor.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/Label.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/LinkField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/MultiSelect.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/NumberField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/Select.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/Suggest.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/Table.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/TextArea.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/TextField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/TimecodeField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/field/TimeField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/model/Elementtype.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts/menuhandle/ElementtypesHandle.js',
+        ];
 
-        return $collection;
+        return $input;
     }
 
     /**
@@ -217,12 +123,12 @@ class ElementtypeAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/styles/elementtypes.css')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/styles/portlet.css')),
-            new FileAsset($this->locator->locate('@PhlexibleElementtypeBundle/Resources/styles/fields.css')),
-        ));
+        $input = [
+            '@PhlexibleElementtypeBundle/Resources/styles/elementtypes.css',
+            '@PhlexibleElementtypeBundle/Resources/styles/portlet.css',
+            '@PhlexibleElementtypeBundle/Resources/styles/fields.css',
+        ];
 
-        return $collection;
+        return $input;
     }
 }

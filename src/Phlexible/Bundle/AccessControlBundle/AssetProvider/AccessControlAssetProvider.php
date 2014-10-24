@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Access control asset provider
@@ -20,19 +17,6 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
  */
 class AccessControlAssetProvider implements AssetProviderInterface
 {
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -54,13 +38,11 @@ class AccessControlAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleAccessControlBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleAccessControlBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleAccessControlBundle/Resources/scripts/RightsGrid.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleAccessControlBundle/Resources/scripts/RightsGrid.js',
+        );
     }
 
     /**
@@ -68,10 +50,8 @@ class AccessControlAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleAccessControlBundle/Resources/styles/actions.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleAccessControlBundle/Resources/styles/actions.css',
+        );
     }
 }

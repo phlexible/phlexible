@@ -8,14 +8,10 @@
 
 namespace Phlexible\Bundle\DocumenttypeBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\DocumenttypeBundle\Compiler\CssCompiler;
 use Phlexible\Bundle\DocumenttypeBundle\Compiler\ScriptCompiler;
 use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Documenttypes asset provider
@@ -40,11 +36,6 @@ class DocumenttypesAssetProvider implements AssetProviderInterface
     private $cssCompiler;
 
     /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
      * @var string
      */
     private $cacheDir;
@@ -53,19 +44,16 @@ class DocumenttypesAssetProvider implements AssetProviderInterface
      * @param DocumenttypeManagerInterface $documenttypeManager
      * @param ScriptCompiler               $scriptCompiler
      * @param CssCompiler                  $cssCompiler
-     * @param FileLocator                  $locator
      * @param string                       $cacheDir
      */
     public function __construct(DocumenttypeManagerInterface $documenttypeManager,
                                 ScriptCompiler $scriptCompiler,
                                 CssCompiler $cssCompiler,
-                                FileLocator $locator,
                                 $cacheDir)
     {
         $this->documenttypeManager = $documenttypeManager;
         $this->scriptCompiler = $scriptCompiler;
         $this->cssCompiler = $cssCompiler;
-        $this->locator = $locator;
         $this->cacheDir = $cacheDir;
     }
 
@@ -96,21 +84,19 @@ class DocumenttypesAssetProvider implements AssetProviderInterface
             file_put_contents($cacheFile, $this->scriptCompiler->compile($this->documenttypeManager->getCollection()));
         }
 
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleDocumenttypeBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleDocumenttypeBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleDocumenttypeBundle/Resources/scripts/DocumenttypesGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleDocumenttypeBundle/Resources/scripts/MimetypesGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleDocumenttypeBundle/Resources/scripts/MainPanel.js')),
+            '@PhlexibleDocumenttypeBundle/Resources/scripts/DocumenttypesGrid.js',
+            '@PhlexibleDocumenttypeBundle/Resources/scripts/MimetypesGrid.js',
+            '@PhlexibleDocumenttypeBundle/Resources/scripts/MainPanel.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleDocumenttypeBundle/Resources/scripts/model/Documenttype.js')),
+            '@PhlexibleDocumenttypeBundle/Resources/scripts/model/Documenttype.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleDocumenttypeBundle/Resources/scripts/menuhandle/DocumenttypesHandle.js')),
+            '@PhlexibleDocumenttypeBundle/Resources/scripts/menuhandle/DocumenttypesHandle.js',
 
-            new FileAsset($cacheFile),
-        ));
-
-        return $collection;
+            $cacheFile,
+        );
     }
 
     /**
@@ -124,10 +110,8 @@ class DocumenttypesAssetProvider implements AssetProviderInterface
             file_put_contents($cacheFile, $this->cssCompiler->compile($this->documenttypeManager->getCollection()));
         }
 
-        $collection = new AssetCollection(array(
-            new FileAsset((string) $cacheFile),
-        ));
-
-        return $collection;
+        return array(
+            (string) $cacheFile,
+        );
     }
 }

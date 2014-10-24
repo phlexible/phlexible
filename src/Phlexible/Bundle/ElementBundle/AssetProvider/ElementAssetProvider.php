@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\AssetProvider;
 
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderInterface;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Element asset provider
@@ -21,28 +18,13 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 class ElementAssetProvider implements AssetProviderInterface
 {
     /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @param FileLocator $locator
-     */
-    public function __construct(FileLocator $locator)
-    {
-        $this->locator = $locator;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getUxScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ux/Ext.ux.layout.RowFitLayout.js')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleElementBundle/Resources/scripts/ux/Ext.ux.layout.RowFitLayout.js',
+        );
     }
 
     /**
@@ -58,70 +40,68 @@ class ElementAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/Definitions.js')),
+        return array(
+            '@PhlexibleElementBundle/Resources/scripts/Definitions.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/menuhandle/ElementsHandle.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/menuhandle/ElementHandle.js')),
+            '@PhlexibleElementBundle/Resources/scripts/menuhandle/ElementsHandle.js',
+            '@PhlexibleElementBundle/Resources/scripts/menuhandle/ElementHandle.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/Clipboard.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/Element.js')),
+            '@PhlexibleElementBundle/Resources/scripts/Clipboard.js',
+            '@PhlexibleElementBundle/Resources/scripts/Element.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/model/ElementHistory.js')),
+            '@PhlexibleElementBundle/Resources/scripts/model/ElementHistory.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementsTreeDropZone.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementsTreeNodeUI.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementsTreeLoader.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementsTree.js')),
+            '@PhlexibleElementBundle/Resources/scripts/ElementsTreeDropZone.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementsTreeNodeUI.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementsTreeLoader.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementsTree.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/AllowedChildrenAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/CommentAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/ConfigurationAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/ContextAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/DataAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/DiffAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/InstancesAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/MetaAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/QuickInfo.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/accordions/VersionsAccordion.js')),
+            '@PhlexibleElementBundle/Resources/scripts/accordions/AllowedChildrenAccordion.js',
+            '@PhlexibleElementBundle/Resources/scripts/accordions/CommentAccordion.js',
+            '@PhlexibleElementBundle/Resources/scripts/accordions/ConfigurationAccordion.js',
+            '@PhlexibleElementBundle/Resources/scripts/accordions/ContextAccordion.js',
+            '@PhlexibleElementBundle/Resources/scripts/accordions/DataAccordion.js',
+            '@PhlexibleElementBundle/Resources/scripts/accordions/DiffAccordion.js',
+            '@PhlexibleElementBundle/Resources/scripts/accordions/InstancesAccordion.js',
+            '@PhlexibleElementBundle/Resources/scripts/accordions/MetaAccordion.js',
+            '@PhlexibleElementBundle/Resources/scripts/accordions/QuickInfo.js',
+            '@PhlexibleElementBundle/Resources/scripts/accordions/VersionsAccordion.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/HistoryWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/HistoryFilter.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/HistoryGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/RightsGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementAccordion.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementListGridFilter.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementListGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementDataPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementContentPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementContentTabPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementTabPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementDataTabHelper.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementDataTab.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementLinksGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementHistoryGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/NewElementWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/NewElementInstanceWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/PublishTreeNodeWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/SetTreeNodeOfflineWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementDataWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/EidSelector.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/LinkWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/TaskBar.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/PublishSlaveWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/DeleteInstancesWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/MainPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/TopToolbar.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/FileLinkWindow.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/UrlGrid.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/ElementPreviewPanel.js')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/LocksWindow.js')),
+            '@PhlexibleElementBundle/Resources/scripts/HistoryWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/HistoryFilter.js',
+            '@PhlexibleElementBundle/Resources/scripts/HistoryGrid.js',
+            '@PhlexibleElementBundle/Resources/scripts/RightsGrid.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementAccordion.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementListGridFilter.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementListGrid.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementDataPanel.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementContentPanel.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementContentTabPanel.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementTabPanel.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementPanel.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementDataTabHelper.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementDataTab.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementLinksGrid.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementHistoryGrid.js',
+            '@PhlexibleElementBundle/Resources/scripts/NewElementWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/NewElementInstanceWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/PublishTreeNodeWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/SetTreeNodeOfflineWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementDataWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/EidSelector.js',
+            '@PhlexibleElementBundle/Resources/scripts/LinkWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/TaskBar.js',
+            '@PhlexibleElementBundle/Resources/scripts/PublishSlaveWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/DeleteInstancesWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/MainPanel.js',
+            '@PhlexibleElementBundle/Resources/scripts/TopToolbar.js',
+            '@PhlexibleElementBundle/Resources/scripts/FileLinkWindow.js',
+            '@PhlexibleElementBundle/Resources/scripts/UrlGrid.js',
+            '@PhlexibleElementBundle/Resources/scripts/ElementPreviewPanel.js',
+            '@PhlexibleElementBundle/Resources/scripts/LocksWindow.js',
 
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/scripts/portlet/LatestElements.js')),
-        ));
-
-        return $collection;
+            '@PhlexibleElementBundle/Resources/scripts/portlet/LatestElements.js',
+        );
     }
 
     /**
@@ -129,12 +109,10 @@ class ElementAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        $collection = new AssetCollection(array(
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/styles/elements.css')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/styles/portlet.css')),
-            new FileAsset($this->locator->locate('@PhlexibleElementBundle/Resources/styles/eidselector.css')),
-        ));
-
-        return $collection;
+        return array(
+            '@PhlexibleElementBundle/Resources/styles/elements.css',
+            '@PhlexibleElementBundle/Resources/styles/portlet.css',
+            '@PhlexibleElementBundle/Resources/styles/eidselector.css',
+        );
     }
 }

@@ -20,9 +20,8 @@ services:
     phlexible_task.asset_provider:
         class: Phlexible\Bundle\TaskBundle\AssetProvider\TaskAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider}
+            - {name: phlexible_gui.asset_provider}
 
     # event listeners
     phlexible_task.listener.apply_successor:

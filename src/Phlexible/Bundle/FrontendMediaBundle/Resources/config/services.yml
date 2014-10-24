@@ -3,9 +3,8 @@ services:
     phlexible_frontend_media.asset_provider:
         class: Phlexible\Bundle\FrontendMediaBundle\AssetProvider\FrontendMediaAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider}
+            - {name: phlexible_gui.asset_provider}
 
     # dwoo plugins
     phlexible_frontend_media.dwoo.plugin.documentlist:

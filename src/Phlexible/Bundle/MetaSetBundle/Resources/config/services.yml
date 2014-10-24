@@ -12,9 +12,8 @@ services:
     phlexible_meta_set.asset_provider:
         class: Phlexible\Bundle\MetaSetBundle\AssetProvider\MetaSetAssetProvider
         public: false
-        arguments: [@file_locator]
         tags:
-            - {name: phlexible_gui.asset.provider}
+            - {name: phlexible_gui.asset_provider}
 
     # event listeners
     phlexible_meta_set.listener.get_config:
