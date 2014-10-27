@@ -38,7 +38,6 @@
         "brainbits/imagemagick": "dev-master",
         "brainbits/image-analyzer": "dev-master",
         "brainbits/image-converter": "dev-master",
-        "brainbits/toolkit": "dev-master",
         "rhumsaa/uuid": "~2.7",
         "php-ffmpeg/php-ffmpeg": "~0.5",
         "php-ffmpeg/extras": "~0.3",
