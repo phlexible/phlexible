@@ -160,11 +160,11 @@ class UploadController extends Controller
                 $data['alternative_name'] = $alternativeName;
             }
 
-            if (!empty($tempFile->getFileId())) {
+            if ($tempFile->getFileId()) {
                 $data['file_id'] = $tempFile->getFileId();
             }
 
-            if (!empty($tempFile->getUseWizard())) {
+            if ($tempFile->getUseWizard()) {
                 $data['wizard'] = true;
             }
 
