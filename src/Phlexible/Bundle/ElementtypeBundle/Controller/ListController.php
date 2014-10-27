@@ -45,6 +45,10 @@ class ListController extends Controller
                 continue;
             }
 
+            if ($elementtype->getDeleted()) {
+                continue;
+            }
+
             $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = array(
                 'id'      => $elementtype->getId(),
                 'title'   => $elementtype->getTitle(),
@@ -138,7 +142,7 @@ class ListController extends Controller
         }
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $elementtypeService->createElementtype($type, $uniqueId, $title, null, null, $this->getUser()->getId());
+        $elementtypeService->createElementtype($type, $uniqueId, $title, null, null, array(), $this->getUser()->getId());
 
         return new ResultResponse(true, 'Element Type created.');
     }
@@ -158,9 +162,9 @@ class ListController extends Controller
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $elementtype = $elementtypeService->findElementtype($id);
 
-        $result = $elementtypeService->deleteElementtype($elementtype);
+        $elementtypeService->deleteElementtype($elementtype);
 
-        return new ResultResponse(true, "Element type $id {$result}d.");
+        return new ResultResponse(true, "Element type $id soft deleted.");
     }
 
     /**

@@ -112,7 +112,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateElementtype(Elementtype $elementtype, $flush = true)
+    public function updateElementtype(Elementtype $elementtype)
     {
         if (!$elementtype->getId()) {
             $event = new ElementtypeEvent($elementtype);
@@ -154,7 +154,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteElementtype(Elementtype $elementtype, $flush = true)
+    public function deleteElementtype(Elementtype $elementtype)
     {
         // post before event
         $event = new ElementtypeEvent($elementtype);
@@ -162,10 +162,11 @@ class ElementtypeManager implements ElementtypeManagerInterface
             throw new DeleteCancelledException('Delete canceled by listener.');
         }
 
-        throw new RuntimeException('todo');
+        $elementtype->setDeleted(true);
+        $this->updateElementtype($elementtype);
 
         // send message
-        $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" deleted.');
+        $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" soft deleted.');
         $this->messageService->post($message);
 
         // post event

@@ -40,6 +40,7 @@ class XmlDumper implements DumperInterface
                 'type'       => $elementtype->getType(),
                 'icon'       => $elementtype->getIcon(),
                 'defaultTab' => $elementtype->getDefaultTab(),
+                'deleted'    => $elementtype->getDeleted() ? '1' : '0',
             )
         );
 

@@ -43,6 +43,7 @@ class XmlParser implements ParserInterface
         $type = $dom->documentElement->getAttribute('type');
         $icon = $dom->documentElement->getAttribute('icon');
         $defaultTab = (int) $dom->documentElement->getAttribute('defaultTab');
+        $deleted = (bool) $dom->documentElement->getAttribute('deleted');
 
         $comments = $dom->documentElement->getElementsByTagName('comment');
         $comment = $comments->length ? $comments->item(0)->textContent : '';
@@ -116,6 +117,7 @@ class XmlParser implements ParserInterface
             ->setRevision($revision)
             ->setDefaultTab($defaultTab)
             ->setDefaultContentTab($defaultContentTab)
+            ->setDeleted($deleted)
             ->setStructure($elementtypeStructure)
             ->setCreatedAt(new \DateTime($createdAt))
             ->setCreateUserId($createUserId)

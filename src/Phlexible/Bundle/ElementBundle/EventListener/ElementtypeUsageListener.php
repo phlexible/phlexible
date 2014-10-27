@@ -50,9 +50,10 @@ class ElementtypeUsageListener
 
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('ev.eid', 'MAX(ev.elementtype_version) AS latest_version', 'evmf.backend AS title', 'ev.id')
+            ->select('ev.eid', 'es.elementtype_revision AS latest_version', 'evmf.backend AS title', 'ev.id')
             ->from('element', 'e')
-            ->join('e', 'element_version', 'ev', 'ev.eid = e.eid AND ev.version = e.latest_version')
+            ->join('e', 'element_source', 'es', 'es.elementtype_id = e.elementtype_id')
+            ->join('es', 'element_version', 'ev', 'ev.element_source_id = es.id')
             ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = ' . $qb->expr()->literal($language))
             ->where($qb->expr()->eq('e.elementtype_id', $qb->expr()->literal($elementtypeId)))
             ->groupBy('ev.eid');

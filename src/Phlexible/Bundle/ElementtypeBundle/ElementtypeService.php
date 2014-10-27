@@ -186,11 +186,10 @@ class ElementtypeService
 
     /**
      * @param Elementtype $elementtype
-     * @param bool        $flush
      */
-    public function updateElementtype(Elementtype $elementtype, $flush = true)
+    public function updateElementtype(Elementtype $elementtype)
     {
-        $this->elementtypeManager->updateElementtype($elementtype, $flush);
+        $this->elementtypeManager->updateElementtype($elementtype);
     }
 
     /**
@@ -206,23 +205,10 @@ class ElementtypeService
      * Delete an Element Type
      *
      * @param Elementtype $elementtype
-     *
-     * @return string
      */
     public function deleteElementtype(Elementtype $elementtype)
     {
-        $usage = $this->usageManager->getUsage($elementtype);
-
-        if ($usage) {
-            $elementtype->setDeleted(true);
-            $this->elementtypeManager->updateElementtype($elementtype);
-
-            return 'softdelete';
-        }
-
         $this->elementtypeManager->deleteElementtype($elementtype);
-
-        return 'delete';
     }
 
     /**

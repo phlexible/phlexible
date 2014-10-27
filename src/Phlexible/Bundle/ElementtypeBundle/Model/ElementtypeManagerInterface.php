@@ -34,6 +34,8 @@ interface ElementtypeManagerInterface
     public function findAll();
 
     /**
+     * Validate element type
+     *
      * @param Elementtype $elementtype
      *
      * @return null|ConstraintViolationListInterface
@@ -44,19 +46,13 @@ interface ElementtypeManagerInterface
      * Save element type
      *
      * @param Elementtype $elementtype
-     * @param bool        $flush
-     *
-     * @return $this
      */
-    public function updateElementtype(Elementtype $elementtype, $flush = true);
+    public function updateElementtype(Elementtype $elementtype);
 
     /**
-     * Delete an Element Type
+     * Delete an element type
      *
      * @param Elementtype $elementtype
-     * @param bool        $flush
-     *
-     * @return $this
      */
-    public function deleteElementtype(Elementtype $elementtype, $flush = true);
+    public function deleteElementtype(Elementtype $elementtype);
 }
