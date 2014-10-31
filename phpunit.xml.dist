@@ -1,29 +1,40 @@
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="bootstrap.php"
+         bootstrap="tests/bootstrap.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         syntaxCheck="true">
-    <testsuite name="phlexible">
-        <directory>src/Phlexible/</directory>
-    </testsuite>
-    <testsuite name="phlexible-bundles">
-        <directory>src/Phlexible/Bundle/</directory>
-    </testsuite>
-    <testsuite name="phlexible-components">
-        <directory>src/Phlexible/Component/</directory>
-    </testsuite>
-    <testsuite name="phlexible-access-control">
-        <directory>src/Phlexible/Bundle/AccessControlBundle</directory>
-    </testsuite>
-    <testsuite name="phlexible-data-source">
-        <directory>src/Phlexible/Bundle/DataSourceBundle</directory>
-    </testsuite>
+         strict="true"
+         syntaxCheck="true"
+         verbose="true">
+    <testsuites>
+        <testsuite name="phlexible">
+            <directory>src/Phlexible/</directory>
+        </testsuite>
+        <testsuite name="phlexible-bundles">
+            <directory>src/Phlexible/Bundle/</directory>
+        </testsuite>
+        <testsuite name="phlexible-components">
+            <directory>src/Phlexible/Component/</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-html" target="build/coverage" title="phpDox"
+             charset="UTF-8" yui="true" highlight="true"
+             lowUpperBound="35" highLowerBound="70"/>
+        <!-- log type="coverage-clover" target="build/logs/clover.xml"/ -->
+        <log type="coverage-xml" target="build/logs/coverage"/>
+        <!-- log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/ -->
+    </logging>
+
     <filter>
-        <blacklist>
-            <directory suffix=".php">src/Phlexible/Bundle/ElementBundle/Tests/Util/</directory>
-        </blacklist>
+        <whitelist>
+            <directory suffix=".php">src/</directory>
+            <exclude>
+                <directory suffix=".php">src/Phlexible/Bundle/ElementBundle/Tests/Util/</directory>
+            </exclude>
+        </whitelist>
     </filter>
 </phpunit>

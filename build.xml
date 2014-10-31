@@ -2,17 +2,12 @@
 
 <project name="phlexible" default="help">
 
-    <property name="src.dir" value="src/Phlexible" />
-    <property name="reports.dir" value="./reports" />
-    <property name="phpmd.rulesets" value="cleancode,codesize,naming" />
-    <property name="phpdoc.template" value="responsive-twig" />
+    <property name="source" value="src" />
 
-    <!-- ============================================  -->
-    <!-- Target: help                                  -->
-    <!-- ============================================  -->
     <target name="help">
         <echo msg="Available tasks:" />
         <echo msg="" />
+        <echo msg="  clean" />
         <echo msg="  lint" />
         <echo msg="  phpcpd" />
         <echo msg="  phploc" />
@@ -20,121 +15,84 @@
         <echo msg="  phpmd" />
         <echo msg="  pdepend" />
         <echo msg="  phpdoc" />
-        <echo msg="  all (default)" />
+        <echo msg="  build" />
     </target>
 
-    <!-- ============================================  -->
-    <!-- Target: lint                                  -->
-    <!-- ============================================  -->
+    <target name="clean">
+        <delete dir="${basedir}/build/api"/>
+        <delete dir="${basedir}/build/code-browser"/>
+        <delete dir="${basedir}/build/coverage"/>
+        <delete dir="${basedir}/build/logs"/>
+        <delete dir="${basedir}/build/pdepend"/>
+
+        <mkdir dir="${basedir}/build/api"/>
+        <mkdir dir="${basedir}/build/code-browser"/>
+        <mkdir dir="${basedir}/build/coverage"/>
+        <mkdir dir="${basedir}/build/logs"/>
+        <mkdir dir="${basedir}/build/pdepend"/>
+    </target>
+
     <target name="lint">
         <phplint>
-            <fileset dir="${src.dir}">
+            <fileset dir="${source}">
                 <include name="**/*.php"/>
             </fileset>
         </phplint>
     </target>
 
-    <!-- ============================================  -->
-    <!-- Target: prepare                               -->
-    <!-- ============================================  -->
-    <target name="prepare">
-        <echo msg="Making directory ${reports.dir}" />
-        <mkdir dir="${reports.dir}" />
+    <target name="phpunit">
+        <exec executable="phpunit" checkreturn="true" />
     </target>
 
-    <!-- ============================================  -->
-    <!-- Target: phpcpd                                -->
-    <!-- ============================================  -->
-    <target name="phpcpd" depends="prepare">
-        <phpcpd>
-            <fileset dir="${src.dir}">
-                <include name="**/*.php"/>
-            </fileset>
-            <formatter type="default" outfile="${reports.dir}/phpcpd.txt"/>
-            <formatter type="pmd" outfile="${reports.dir}/phpcpd.xml"/>
-        </phpcpd>
+    <target name="pdepend">
+        <exec executable="pdepend">
+            <arg line="--jdepend-xml=${basedir}/build/logs/jdepend.xml
+              --jdepend-chart=${basedir}/build/pdepend/dependencies.svg
+              --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg
+              ${source}"/>
+        </exec>
     </target>
 
-    <!-- ============================================  -->
-    <!-- Target: phploc                                -->
-    <!-- ============================================  -->
+    <target name="phpmd">
+        <exec executable="phpmd">
+            <arg line="${source}
+              xml
+              codesize,design,naming,unusedcode
+              --reportfile ${basedir}/build/logs/pmd.xml"/>
+        </exec>
+    </target>
+
+    <target name="phpcpd">
+        <exec executable="phpcpd">
+            <arg line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml ${source}"/>
+        </exec>
+    </target>
+
     <target name="phploc" description="Measures the size of the project and count it's tests">
-        <phploc countTests="true"
-                reportType="txt"
-                reportName="phploc"
-                reportDirectory="${reports.dir}">
-            <fileset dir="${src.dir}">
-                <include name="**/*.php"/>
-            </fileset>
-        </phploc>
+        <exec executable="phploc">
+            <arg line="--count-tests --log-xml ${basedir}/build/logs/phploc.xml ${source} tests"/>
+        </exec>
     </target>
 
-    <!-- ============================================  -->
-    <!-- Target: phpcs                                 -->
-    <!-- ============================================  -->
-    <target name="phpcs" depends="prepare">
-        <phpcodesniffer standard="Symfony2"
-                        showSniffs="true"
-                        showWarnings="true"
-                        file="${src.dir}"
-                        docGenerator="HTML"
-                        docFile="${reports.dir}/phpcs-standard.html"
-                        allowedFileExtensions="php"
-                        ignorePatterns="*Test.php">
-            <formatter type="html" outfile="${reports.dir}/phpcs.html"/>
-            <formatter type="full" outfile="${reports.dir}/phpcs.txt"/>
-            <formatter type="checkstyle" outfile="${reports.dir}/phpcs.xml"/>
-        </phpcodesniffer>
+    <target name="phpcs">
+         <exec executable="phpcs" output="/dev/null">
+            <arg line="--report=checkstyle
+              --report-file=${basedir}/build/logs/checkstyle.xml
+              --standard=Symfony2
+              ${source}"/>
+        </exec>
     </target>
 
-    <!-- ============================================  -->
-    <!-- Target: phpmd                                 -->
-    <!-- ============================================  -->
-    <target name="phpmd" depends="prepare">
-        <phpmd rulesets="${phpmd.rulesets}"
-               allowedFileExtensions="php">
-            <fileset dir="${src.dir}">
-                <include name="**/*.php"/>
-            </fileset>
-            <formatter type="html" outfile="${reports.dir}/phpmd.html"/>
-            <formatter type="text" outfile="${reports.dir}/phpmd.txt"/>
-            <formatter type="xml" outfile="${reports.dir}/phpmd.xml"/>
-        </phpmd>
+    <target name="phpdoc">
+        <exec executable="phpdoc">
+            <arg line="-d ${source} -t ${basedir/build/api}" />
+        </exec>
     </target>
 
-    <!-- ============================================  -->
-    <!-- Target: pdepend                               -->
-    <!-- ============================================  -->
-    <target name="pdepend" depends="prepare">
-        <phpdepend allowedFileExtensions="php">
-            <fileset dir="${src.dir}">
-                <include name="**/*.php"/>
-            </fileset>
-            <logger type="jdepend-xml" outfile="${reports.dir}/pdepend-jdepend.xml"/>
-            <logger type="summary-xml" outfile="${reports.dir}/pdepend-summary.xml"/>
-            <analyzer type="coderank-mode" value="method"/>
-        </phpdepend>
+    <target name="phpdox">
+        <exec executable="phpdox" />
     </target>
 
-    <!-- ============================================  -->
-    <!-- Target: phpdoc                                -->
-    <!-- ============================================  -->
-    <target name="phpdoc" depends="prepare">
-        <echo msg="Making directory ./reports/apidocs" />
-        <mkdir dir="${reports.dir}/apidocs" />
-        <phpdoc2 title="phlexible API Documentation"
-                 destdir="${reports.dir}/apidocs"
-                 template="${phpdoc.template}">
-            <fileset dir="${src.dir}">
-                <include name="**/*.php"/>
-            </fileset>
-        </phpdoc2>
-    </target>
-
-    <!-- ============================================  -->
-    <!-- Target: all                                   -->
-    <!-- ============================================  -->
-    <target name="all" depends="lint, phpcpd, phploc, phpcs, phpdoc">
-    </target>
+    <target name="build" depends="lint, clean, phpunit, pdepend, phpmd, phpcpd, phpcs, phploc, phpdox" />
 
 </project>
