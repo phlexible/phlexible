@@ -229,7 +229,12 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function getParent(TreeNodeInterface $node)
     {
-        return $this->get($node->getParentNode()->getId());
+        $parentNode = $node->getParentNode();
+        if (!$parentNode) {
+            return null;
+        }
+
+        return $this->get($parentNode->getId());
     }
 
     /**

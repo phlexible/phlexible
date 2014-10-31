@@ -77,7 +77,7 @@ class ContentTreeContext
     public function before()
     {
         $tree = $this->node->getTree();
-        $parentNode = $tree->get($this->node->getParentId());
+        $parentNode = $this->node->getParentNode();
 
         $children = array();
         $keep = true;
@@ -100,7 +100,7 @@ class ContentTreeContext
     public function after()
     {
         $tree = $this->node->getTree();
-        $parentNode = $tree->get($this->node->getParentId());
+        $parentNode = $this->node->getParentNode();
 
         $children = array();
         $keep = false;
@@ -148,8 +148,13 @@ class ContentTreeContext
      */
     public function parent()
     {
+        $parentNode = $this->node->getParentNode();
+        if (!$parentNode) {
+            return null;
+        }
+
         return new self(
-            $this->node->getTree()->getParent($this->node),
+            $this->node->getTree()->get($parentNode->getId()),
             $this->referenceNode,
             $this->maxDepth,
             $this->depth - 1
@@ -173,6 +178,17 @@ class ContentTreeContext
         }
 
         return $children;
+    }
+
+    public function path()
+    {
+        $path = array();
+        $current = $this;
+        do {
+            $path[] = $current;
+        } while($current = $current->parent());
+
+        return array_reverse($path);
     }
 
     /**
