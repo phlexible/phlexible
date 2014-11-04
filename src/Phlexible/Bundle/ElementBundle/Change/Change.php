@@ -22,7 +22,12 @@ class Change
     /**
      * @var ElementSource[]
      */
-    private $outdatedElementSources = array();
+    private $outdatedElementSources = [];
+
+    /**
+     * @var bool
+     */
+    private $needImport = false;
 
     /**
      * @var Elementtype
@@ -31,11 +36,13 @@ class Change
 
     /**
      * @param Elementtype     $elementtype
+     * @param bool            $needImport
      * @param ElementSource[] $outdatedElementSources
      */
-    public function __construct(Elementtype $elementtype, array $outdatedElementSources = [])
+    public function __construct(Elementtype $elementtype, $needImport = false, array $outdatedElementSources = [])
     {
         $this->elementtype = $elementtype;
+        $this->needImport = $needImport;
 
         foreach ($outdatedElementSources as $outdatedElementSource) {
             $this->addOutdatedElementSource($outdatedElementSource);
@@ -48,6 +55,14 @@ class Change
     public function getOutdatedElementSources()
     {
         return $this->outdatedElementSources;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getNeedImport()
+    {
+        return $this->needImport;
     }
 
     /**

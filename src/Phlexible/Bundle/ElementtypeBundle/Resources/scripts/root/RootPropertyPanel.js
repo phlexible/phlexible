@@ -132,20 +132,27 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
                 allowEmpty: true
             },
             {
-                xtype: 'textarea',
-                fieldLabel: this.strings.comment,
-                name: 'comment',
+                // 6
+                xtype: 'textfield',
+                fieldLabel: this.strings.template,
+                name: 'template',
                 width: 200
             },
             {
-                hidden: true
-            },
-            {
+                // 7
                 xtype: 'checkbox',
                 fieldLabel: '',
                 labelSeparator: '',
                 boxLabel: this.strings.hide_children,
                 name: 'hide_children'
+            },
+            {
+                // 8
+                xtype: 'textarea',
+                fieldLabel: this.strings.comment,
+                name: 'comment',
+                width: 200,
+                height: 100
             }
         ];
 

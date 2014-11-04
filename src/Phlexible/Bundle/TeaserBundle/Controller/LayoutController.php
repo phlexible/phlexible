@@ -50,6 +50,7 @@ class LayoutController extends Controller
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $teaserService = $this->get('phlexible_teaser.teaser_service');
         $elementService = $this->get('phlexible_element.element_service');
+        $elementSourceManager = $this->get('phlexible_element.element_source_manager');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $tree = $treeManager->getByNodeId($treeId);
@@ -63,7 +64,7 @@ class LayoutController extends Controller
         $layouts = array();
         $layoutareas = array();
         // TODO: repair
-        foreach ($elementService->findElementtypeByType('layout') as $layoutarea) {
+        foreach ($elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
             if (in_array($elementtype, $elementService->findAllowedParents($layoutarea))) {
                 $layoutareas[] = $layoutarea;
             }

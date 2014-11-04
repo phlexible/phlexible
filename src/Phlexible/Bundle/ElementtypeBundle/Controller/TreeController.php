@@ -91,6 +91,7 @@ class TreeController extends Controller
                         'default_tab'         => $elementtype->getDefaultTab(),
                         'default_content_tab' => $elementtype->getDefaultContentTab(),
                         'type'                => $type,
+                        'template'            => $elementtype->getTemplate(),
                         'metaset'             => $elementtype->getMetaSetId(),
                         'comment'             => $elementtype->getComment(),
                     ),

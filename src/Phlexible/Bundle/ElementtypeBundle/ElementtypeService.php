@@ -125,12 +125,12 @@ class ElementtypeService
      * @param string               $icon
      * @param ElementtypeStructure $elementtypeStructure
      * @param array                $mappings
-     * @param string               $userId
+     * @param string               $user
      * @param bool                 $flush
      *
      * @return Elementtype
      */
-    public function createElementtype($type, $uniqueId, $name, $icon, ElementtypeStructure $elementtypeStructure = null, array $mappings = null, $userId, $flush = true)
+    public function createElementtype($type, $uniqueId, $name, $icon, ElementtypeStructure $elementtypeStructure = null, array $mappings = null, $user, $flush = true)
     {
         if (!$icon) {
             $icons = array(
@@ -155,9 +155,9 @@ class ElementtypeService
             ->setRevision(1)
             ->setStructure($elementtypeStructure)
             ->setMappings($mappings)
-            ->setCreateUserId($userId)
+            ->setCreateUser($user)
             ->setCreatedAt(new \DateTime())
-            ->setModifyUserId($elementtype->getCreateUserId())
+            ->setModifyUser($elementtype->getCreateUser())
             ->setModifiedAt($elementtype->getCreatedAt());
 
         $this->elementtypeManager->updateElementtype($elementtype);
@@ -196,11 +196,11 @@ class ElementtypeService
      * Duplicate an elementtype
      *
      * @param Elementtype $sourceElementtype
-     * @param string      $userId
+     * @param string      $user
      *
      * @return Elementtype
      */
-    public function duplicateElementtype(Elementtype $sourceElementtype, $userId)
+    public function duplicateElementtype(Elementtype $sourceElementtype, $user)
     {
         $uniqId = uniqid();
 
@@ -214,7 +214,7 @@ class ElementtypeService
             ->setId(null)
             ->setRevision(1)
             ->setCreatedAt(new \DateTime())
-            ->setCreateUserId($userId);
+            ->setCreateUser($user);
 
         $elementtypeStructure = new ElementtypeStructure();
 

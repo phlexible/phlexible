@@ -96,6 +96,7 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
                 default_tab: '',
                 default_content_tab: '',
                 metaset: '',
+                template: '',
                 comment: '',
                 hide_children: ''
             },

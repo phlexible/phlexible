@@ -62,10 +62,18 @@ class Synchronizer
 
     /**
      * @param Change $change
+     * @param bool   $force
      */
-    public function synchronize(Change $change)
+    public function synchronize(Change $change, $force = false)
     {
-        $elementSource = $this->importElementtype($change->getElementtype());
+        $elementtype = $change->getElementtype();
+        $elementSource = $this->elementSourceManager->findByElementtype($elementtype);
+        if (!$elementSource || $force) {
+            if (!$elementSource) {
+                $elementSource = new ElementSource();
+            }
+            $this->applyElementtypeToElementSource($elementtype, $elementSource);
+        }
 
         $outdatedElementSources = $change->getOutdatedElementSources();
         foreach ($outdatedElementSources as $outdatedElementSource) {
@@ -79,27 +87,19 @@ class Synchronizer
     }
 
     /**
-     * @param Elementtype $elementtype
-     *
-     * @return ElementSource
+     * @param Elementtype   $elementtype
+     * @param ElementSource $elementSource
      */
-    private function importElementtype(Elementtype $elementtype)
+    private function applyElementtypeToElementSource(Elementtype $elementtype, ElementSource $elementSource)
     {
-        $elementSource = $this->elementSourceManager->findByElementtype($elementtype);
-        if ($elementSource) {
-            return $elementSource;
-        }
-
-        $elementSource = new ElementSource();
         $elementSource
             ->setElementtypeId($elementtype->getId())
             ->setElementtypeRevision($elementtype->getRevision())
+            ->setType($elementtype->getType())
             ->setXml($this->xmlDumper->dump($elementtype))
-            ->setCreatedAt(new \DateTime());
+            ->setImportedAt(new \DateTime());
 
-        $this->elementSourceManager->updateElementSource($elementSource, false);
-
-        return $elementSource;
+        $this->elementSourceManager->updateElementSource($elementSource);
     }
 
     private function removeOutdatedElementSource(ElementSource $elementSource)

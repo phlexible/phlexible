@@ -93,9 +93,14 @@ class Elementtype implements IdentifiableInterface
     private $metaSetId;
 
     /**
+     * @var string
+     */
+    private $template;
+
+    /**
      * @var array
      */
-    private $mappings = array();
+    private $mappings = [];
 
     /**
      * @var ElementtypeStructure
@@ -111,9 +116,8 @@ class Elementtype implements IdentifiableInterface
     /**
      * @var string
      * @Assert\NotNull()
-     * @Assert\Uuid()
      */
-    private $createUserId;
+    private $createUser;
 
     /**
      * @var \DateTime
@@ -124,9 +128,8 @@ class Elementtype implements IdentifiableInterface
     /**
      * @var string
      * @Assert\NotNull()
-     * @Assert\Uuid()
      */
-    private $modifyUserId;
+    private $modifyUser;
 
     /**
      * @return string
@@ -346,19 +349,19 @@ class Elementtype implements IdentifiableInterface
     /**
      * @return string
      */
-    public function getCreateUserId()
+    public function getCreateUser()
     {
-        return $this->createUserId;
+        return $this->createUser;
     }
 
     /**
-     * @param string $createUserId
+     * @param string $createUser
      *
      * @return $this
      */
-    public function setCreateUserId($createUserId)
+    public function setCreateUser($createUser)
     {
-        $this->createUserId = $createUserId;
+        $this->createUser = $createUser;
 
         return $this;
     }
@@ -386,19 +389,19 @@ class Elementtype implements IdentifiableInterface
     /**
      * @return string
      */
-    public function getModifyUserId()
+    public function getModifyUser()
     {
-        return $this->modifyUserId;
+        return $this->modifyUser;
     }
 
     /**
-     * @param string $modifyUserId
+     * @param string $modifyUser
      *
      * @return $this
      */
-    public function setModifyUserId($modifyUserId)
+    public function setModifyUser($modifyUser)
     {
-        $this->modifyUserId = $modifyUserId;
+        $this->modifyUser = $modifyUser;
 
         return $this;
     }
@@ -529,6 +532,26 @@ class Elementtype implements IdentifiableInterface
     public function setMappings(array $mappings = null)
     {
         $this->mappings = $mappings;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @param string $template
+     *
+     * @return $this
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
 
         return $this;
     }

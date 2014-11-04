@@ -9,14 +9,15 @@
 namespace Phlexible\Bundle\ElementBundle\Change;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 
 /**
- * Elementtype changes
+ * Elementtype change checker
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ElementtypeChanges
+class Checker
 {
     /**
      * @var ElementtypeService
@@ -29,46 +30,41 @@ class ElementtypeChanges
     private $elementService;
 
     /**
-     * @var Synchronizer
+     * @var ElementSourceManagerInterface
      */
-    private $synchronizer;
+    private $elementSourceManager;
 
     /**
-     * @param ElementtypeService $elementtypeService
-     * @param ElementService     $elementService
-     * @param Synchronizer       $synchronizer
+     * @param ElementtypeService            $elementtypeService
+     * @param ElementService                $elementService
+     * @param ElementSourceManagerInterface $elementSourceManager
      */
     public function __construct(
         ElementtypeService $elementtypeService,
         ElementService $elementService,
-        Synchronizer $synchronizer)
+        ElementSourceManagerInterface $elementSourceManager)
     {
         $this->elementtypeService = $elementtypeService;
         $this->elementService = $elementService;
-        $this->synchronizer = $synchronizer;
+        $this->elementSourceManager = $elementSourceManager;
     }
 
     /**
      * @return Change[]
      */
-    public function changes()
+    public function check()
     {
-        $changes = array();
+        $changes = [];
 
         foreach ($this->elementtypeService->findAllElementtypes() as $elementtype) {
+            $needImport = true;
+            if ($this->elementSourceManager->findByElementtype($elementtype)) {
+                $needImport = false;
+            }
             $outdatedElementSources = $this->elementService->findOutdatedElementSources($elementtype);
-            $changes[] = new Change($elementtype, $outdatedElementSources);
+            $changes[] = new Change($elementtype, $needImport, $outdatedElementSources);
         }
 
         return $changes;
-    }
-
-    /**
-     * @param Change $change
-     * @param bool   $viaQueue
-     */
-    public function commit(Change $change, $viaQueue = false)
-    {
-        $this->synchronizer->synchronize($change);
     }
 }

@@ -100,9 +100,9 @@ class TestCommand extends ContainerAwareCommand
                 ->setMappings($mappings)
                 ->setStructure($structure)
                 ->setCreatedAt(new \DateTime($row['created_at']))
-                ->setCreateUserId($row['create_user_id'])
+                ->setCreateUser($row['create_user'])
                 ->setModifiedAt(new \DateTime($versionRow['created_at']))
-                ->setModifyUserId($versionRow['create_user_id']);
+                ->setModifyUser($versionRow['create_user']);
 
             $output->writeln($row['id'] . " => " . $elementtype->getId() . " " . $elementtype->getUniqueId());
 

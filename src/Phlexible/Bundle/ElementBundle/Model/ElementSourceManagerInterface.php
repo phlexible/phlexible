@@ -26,11 +26,32 @@ interface ElementSourceManagerInterface
     public function findElementSource($elementtypeId);
 
     /**
+     * @param string $type
+     *
+     * @return ElementSource[]
+     */
+    public function findByType($type);
+
+    /**
      * @param string $elementtypeId
      *
      * @return Elementtype
      */
     public function findElementtype($elementtypeId);
+
+    /**
+     * @param string $type
+     *
+     * @return Elementtype[]
+     */
+    public function findElementtypesByType($type);
+
+    /**
+     * @param ElementSource $elementSource
+     *
+     * @return Elementtype
+     */
+    public function findElementtypeByElementSource(ElementSource $elementSource);
 
     /**
      * @param Elementtype $elementtype

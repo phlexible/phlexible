@@ -46,7 +46,7 @@ services:
         public: false
         arguments:
             - @phlexible_element.element_service
-            - @phlexible_elementtype.elementtype_service
+            - @phlexible_element.element_source_manager
             - @phlexible_teaser.content_teaser_manager.delegating
             - @event_dispatcher
             - @logger

@@ -9,14 +9,13 @@
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 
 /**
  * Siteroot listener
@@ -41,9 +40,9 @@ class SiterootListener
     private $treeManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var UserManagerInterface
      */
-    private $securityContext;
+    private $userManager;
 
     /**
      * @var string
@@ -51,23 +50,23 @@ class SiterootListener
     private $masterLanguage;
 
     /**
-     * @param ElementService           $elementService
-     * @param ElementtypeService       $elementtypeService
-     * @param TreeManager              $treeManager
-     * @param SecurityContextInterface $securityContext
-     * @param string                   $masterLanguage
+     * @param ElementService       $elementService
+     * @param ElementtypeService   $elementtypeService
+     * @param TreeManager          $treeManager
+     * @param UserManagerInterface $userManager
+     * @param string               $masterLanguage
      */
     public function __construct(
         ElementService $elementService,
         ElementtypeService $elementtypeService,
         TreeManager $treeManager,
-        SecurityContextInterface $securityContext,
+        UserManagerInterface $userManager,
         $masterLanguage)
     {
         $this->elementService = $elementService;
         $this->elementtypeService = $elementtypeService;
         $this->treeManager = $treeManager;
-        $this->securityContext = $securityContext;
+        $this->userManager = $userManager;
         $this->masterLanguage = $masterLanguage;
     }
 
@@ -93,10 +92,10 @@ class SiterootListener
             ->setDsId(Uuid::generate())
             ->setName('data')
             ->setType('tab')
-            ->setLabels(array('fieldLabel' => array('de' => 'Daten', 'en' => 'Data')))
-            ->setConfiguration(array())
-            ->setContentChannels(array())
-            ->setValidation(array());
+            ->setLabels(['fieldLabel' => ['de' => 'Daten', 'en' => 'Data']])
+            ->setConfiguration([])
+            ->setContentChannels([])
+            ->setValidation([]);
 
         $textfield = new ElementtypeStructureNode();
         $textfield
@@ -105,24 +104,26 @@ class SiterootListener
             ->setDsId(Uuid::generate())
             ->setName('title')
             ->setType('textfield')
-            ->setLabels(array('fieldLabel' => array('de' => 'Titel', 'en' => 'Title')))
-            ->setConfiguration(array('required' => 'always'))
-            ->setContentChannels(array())
-            ->setValidation(array());
+            ->setLabels(['fieldLabel' => ['de' => 'Titel', 'en' => 'Title']])
+            ->setConfiguration(['required' => 'always'])
+            ->setContentChannels([])
+            ->setValidation([]);
 
         $elementtypeStructure
             ->addNode($root)
             ->addNode($tab)
             ->addNode($textfield);
 
-        $mappings = array(
-            'backend' => array(
-                'fields' => array(
-                    array('ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1)
-                ),
+        $mappings = [
+            'backend' => [
+                'fields' => [
+                    ['ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1]
+                ],
                 'pattern' => '$1'
-            )
-        );
+            ]
+        ];
+
+        $user = $this->userManager->find($siteroot->getModifyUserId());
 
         $elementtype = $this->elementtypeService->createElementtype(
             'structure',
@@ -131,7 +132,7 @@ class SiterootListener
             'www_root.gif',
             $elementtypeStructure,
             $mappings,
-            $siteroot->getModifyUserId(),
+            $user->getUsername(),
             false
         );
 

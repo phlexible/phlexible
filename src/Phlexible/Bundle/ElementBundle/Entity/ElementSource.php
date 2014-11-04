@@ -42,15 +42,21 @@ class ElementSource
 
     /**
      * @var string
+     * @ORM\Column(type="string")
+     */
+    private $type;
+
+    /**
+     * @var string
      * @ORM\Column(type="text")
      */
     private $xml;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="imported_at", type="datetime")
      */
-    private $createdAt;
+    private $importedAt;
 
     /**
      * @return string
@@ -137,17 +143,37 @@ class ElementSource
      */
     public function getCreatedAt()
     {
-        return $this->createdAt;
+        return $this->importedAt;
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param \DateTime $importedAt
      *
      * @return $this
      */
-    public function setCreatedAt(\DateTime $createdAt)
+    public function setImportedAt(\DateTime $importedAt)
     {
-        $this->createdAt = $createdAt;
+        $this->importedAt = $importedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return $this
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }

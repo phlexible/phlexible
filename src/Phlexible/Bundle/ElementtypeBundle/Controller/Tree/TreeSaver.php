@@ -77,6 +77,7 @@ class TreeSaver
         $defaultTab = strlen($rootConfig['default_tab']) ? $rootConfig['default_tab'] : null;
         $defaultContentTab = strlen($rootConfig['default_content_tab']) ? $rootConfig['default_content_tab'] : null;
         $metasetId = strlen($rootConfig['metaset']) ? $rootConfig['metaset'] : null;
+        $template = trim($rootConfig['template']) ?: null;
         $comment = trim($rootConfig['comment']) ?: null;
 
         $elementtype = $this->elementtypeService->findElementtype($elementtypeId);
@@ -90,9 +91,10 @@ class TreeSaver
             ->setDefaultTab($defaultTab)
             ->setDefaultContentTab($defaultContentTab)
             ->setMetaSetId($metasetId)
+            ->setTemplate($template)
             ->setMappings($rootMappings)
             ->setComment($comment)
-            ->setModifyUserId($user->getId())
+            ->setModifyUser($user->getUsername())
             ->setModifiedAt(new \DateTime());
 
         $elementtypeStructure = null;

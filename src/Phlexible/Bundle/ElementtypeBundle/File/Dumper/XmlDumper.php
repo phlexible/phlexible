@@ -49,13 +49,14 @@ class XmlDumper implements DumperInterface
             $titlesElement->appendElement('title', $title, array('language' => $language));
         }
 
-        $rootElement->appendElement('comment', $elementtype->getComment());
+        $rootElement->appendElement('template', $elementtype->getTemplate());
         $rootElement->appendElement('metasetId', $elementtype->getMetaSetId());
         $rootElement->appendElement('defaultContentTab', $elementtype->getDefaultContentTab());
+        $rootElement->appendElement('comment', $elementtype->getComment());
         $rootElement->appendElement('createdAt', $elementtype->getCreatedAt()->format('Y-m-d H:i:s'));
-        $rootElement->appendElement('createUserId', $elementtype->getCreateUserId());
+        $rootElement->appendElement('createUser', $elementtype->getCreateUser());
         $rootElement->appendElement('modifiedAt', $elementtype->getModifiedAt()->format('Y-m-d H:i:s'));
-        $rootElement->appendElement('modifyUserId', $elementtype->getModifyUserId());
+        $rootElement->appendElement('modifyUser', $elementtype->getModifyUser());
 
         if ($elementtype->getMappings()) {
             $mappingsElement = $rootElement->appendElement('mappings');

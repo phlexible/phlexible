@@ -182,7 +182,7 @@ class ListController extends Controller
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $sourceElementtype = $elementtypeService->findElementtype($id);
 
-        $elementtype = $elementtypeService->duplicateElementtype($sourceElementtype, $this->getUser()->getId());
+        $elementtype = $elementtypeService->duplicateElementtype($sourceElementtype, $this->getUser()->getUsername());
 
         return new ResultResponse(true, 'Element type duplicated.');
     }

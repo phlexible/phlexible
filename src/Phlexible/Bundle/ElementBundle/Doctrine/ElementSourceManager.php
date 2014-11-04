@@ -100,6 +100,14 @@ class ElementSourceManager implements ElementSourceManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findByType($type)
+    {
+        return $this->getElementSourceRepository()->findBy(['type' => $type]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findElementtype($elementtypeId)
     {
         $elementSource = $this->findElementSource($elementtypeId);
@@ -108,6 +116,27 @@ class ElementSourceManager implements ElementSourceManagerInterface
             return null;
         }
 
+        return $this->parser->parseString($elementSource->getXml());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findElementtypesByType($type)
+    {
+        $elementtypes = [];
+        foreach ($this->getElementSourceRepository()->findBy(['type' => $type]) as $elementSource) {
+            $elementtypes[] = $this->findElementtypeByElementSource($elementSource);
+        }
+
+        return $elementtypes;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findElementtypeByElementSource(ElementSource $elementSource)
+    {
         return $this->parser->parseString($elementSource->getXml());
     }
 
@@ -170,7 +199,7 @@ class ElementSourceManager implements ElementSourceManagerInterface
                 $this->entityManager->flush();
             }
 
-            $event = new ElementVersionEvent($elementSource);
+            $event = new ElementSourceEvent($elementSource);
             $this->dispatcher->dispatch(ElementEvents::UPDATE_ELEMENT_SOURCE, $event);
 
             // post message

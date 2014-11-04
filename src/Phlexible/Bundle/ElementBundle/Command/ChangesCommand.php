@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
-use Phlexible\Bundle\ElementBundle\Change\ElementtypeChanges;
+use Phlexible\Bundle\ElementBundle\Change\Checker;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
@@ -31,6 +31,7 @@ class ChangesCommand extends ContainerAwareCommand
         $this
             ->setName('element:changes')
             ->setDescription('Show element changes.')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Force import')
             ->addOption('commit', null, InputOption::VALUE_NONE, 'Commit changes')
             ->addOption('queue', null, InputOption::VALUE_NONE, 'Via queue');
     }
@@ -41,28 +42,35 @@ class ChangesCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $committer = new ElementtypeChanges(
+        $checker = new Checker(
             $this->getContainer()->get('phlexible_elementtype.elementtype_service'),
             $this->getContainer()->get('phlexible_element.element_service'),
-            $this->getContainer()->get('phlexible_element.synchronizer')
+            $this->getContainer()->get('phlexible_element.element_source_manager')
         );
+        $synchronizer = $this->getContainer()->get('phlexible_element.synchronizer');
 
-        $changes = $committer->changes();
+        $changes = $checker->check();
 
         if (count($changes)) {
             if (!$input->getOption('commit')) {
                 $table = new Table($output);
-                $table->setHeaders(['Elementtype', '# Element sources']);
+                $table->setHeaders(['Elementtype', 'Needs import?', '# Element source updates']);
 
                 foreach ($changes as $change) {
-                    $table->addRow([$change->getElementtype()->getTitle(), count($change->getOutdatedElementSources())]);
+                    $table->addRow(
+                        [
+                            $change->getElementtype()->getTitle(),
+                            $change->getNeedImport() ? '<fg=red>yes</fg=red>' : '<fg=green>no</fg=green>',
+                            count($change->getOutdatedElementSources())
+                        ]
+                    );
                 }
 
                 $table->render();
             } else {
                 foreach ($changes as $change) {
                     $output->write("{$change->getElementtype()->getTitle()}... ");
-                    $committer->commit($change, $input->getOption('queue'));
+                    $synchronizer->synchronize($change, $input->getOption('force'));
                     $output->writeln("<info>ok</info>");
                 }
             }

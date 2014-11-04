@@ -45,8 +45,11 @@ class XmlParser implements ParserInterface
         $defaultTab = (int) $dom->documentElement->getAttribute('defaultTab');
         $deleted = (bool) $dom->documentElement->getAttribute('deleted');
 
-        $comments = $dom->documentElement->getElementsByTagName('comment');
-        $comment = $comments->length ? $comments->item(0)->textContent : '';
+        $commentNodes = $dom->documentElement->getElementsByTagName('comment');
+        $comment = $commentNodes->length ? $commentNodes->item(0)->textContent : '';
+
+        $templateNodes = $dom->documentElement->getElementsByTagName('template');
+        $template = $templateNodes->length ? $templateNodes->item(0)->textContent : '';
 
         $metasetIdNodes = $dom->documentElement->getElementsByTagName('metasetId');
         $metasetId = $metasetIdNodes->length ? $metasetIdNodes->item(0)->textContent : '';
@@ -57,14 +60,14 @@ class XmlParser implements ParserInterface
         $createdAtNodes = $dom->documentElement->getElementsByTagName('createdAt');
         $createdAt = $createdAtNodes->length ? $createdAtNodes->item(0)->textContent : '';
 
-        $createUserIdNodes = $dom->documentElement->getElementsByTagName('createUserId');
-        $createUserId = $createUserIdNodes->length ? $createUserIdNodes->item(0)->textContent : '';
+        $createUserNodes = $dom->documentElement->getElementsByTagName('createUser');
+        $createUser = $createUserNodes->length ? $createUserNodes->item(0)->textContent : '';
 
         $modifiedAtNodes = $dom->documentElement->getElementsByTagName('modifiedAt');
         $modifiedAt = $modifiedAtNodes->length ? $modifiedAtNodes->item(0)->textContent : '';
 
-        $modifyUserIdNodes = $dom->documentElement->getElementsByTagName('modifyUserId');
-        $modifyUserId = $modifyUserIdNodes->length ? $modifyUserIdNodes->item(0)->textContent : '';
+        $modifyUserNodes = $dom->documentElement->getElementsByTagName('modifyUser');
+        $modifyUser = $modifyUserNodes->length ? $modifyUserNodes->item(0)->textContent : '';
 
         $mappings = array();
         $mappingNodes = $dom->documentElement->evaluate('mappings/mapping');
@@ -111,8 +114,9 @@ class XmlParser implements ParserInterface
             ->setType($type)
             ->setTitles($titles)
             ->setIcon($icon)
-            ->setComment($comment)
             ->setMetaSetId($metasetId)
+            ->setTemplate($template)
+            ->setComment($comment)
             ->setMappings($mappings)
             ->setRevision($revision)
             ->setDefaultTab($defaultTab)
@@ -120,9 +124,9 @@ class XmlParser implements ParserInterface
             ->setDeleted($deleted)
             ->setStructure($elementtypeStructure)
             ->setCreatedAt(new \DateTime($createdAt))
-            ->setCreateUserId($createUserId)
+            ->setCreateUser($createUser)
             ->setModifiedAt(new \DateTime($modifiedAt))
-            ->setModifyUserId($modifyUserId);
+            ->setModifyUser($modifyUser);
 
         return $elementtype;
     }

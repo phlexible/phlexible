@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -32,9 +32,9 @@ class LayoutareaConfigurator implements ConfiguratorInterface
     private $elementService;
 
     /**
-     * @var ElementtypeService
+     * @var ElementSourceManagerInterface
      */
-    private $elementtypeService;
+    private $elementSourceManager;
 
     /**
      * @var DelegatingContentTeaserManager
@@ -53,20 +53,20 @@ class LayoutareaConfigurator implements ConfiguratorInterface
 
     /**
      * @param ElementService                 $elementService
-     * @param ElementtypeService             $elementtypeService
+     * @param ElementSourceManagerInterface  $elementSourceManager
      * @param EventDispatcherInterface       $dispatcher
      * @param LoggerInterface                $logger
      * @param DelegatingContentTeaserManager $teaserManager
      */
     public function __construct(
         ElementService $elementService,
-        ElementtypeService $elementtypeService,
+        ElementSourceManagerInterface $elementSourceManager,
         DelegatingContentTeaserManager $teaserManager,
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger)
     {
         $this->elementService = $elementService;
-        $this->elementtypeService = $elementtypeService;
+        $this->elementSourceManager = $elementSourceManager;
         $this->teaserManager = $teaserManager;
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
@@ -82,12 +82,11 @@ class LayoutareaConfigurator implements ConfiguratorInterface
         }
 
         $elementtypeId = $renderConfiguration->get('contentElement')->getElementtypeId();
-        $elementtype = $this->elementtypeService->findElementtype($elementtypeId);
+        $elementtype = $this->elementSourceManager->findElementtype($elementtypeId);
 
-        $layouts = array();
-        $layoutareas = array();
-        // TODO: repair
-        foreach ($this->elementService->findElementtypeByType('layout') as $layoutarea) {
+        $layouts = [];
+        $layoutareas = [];
+        foreach ($this->elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
             if (in_array($elementtype, $this->elementService->findAllowedParents($layoutarea))) {
                 $layoutareas[] = $layoutarea;
             }
@@ -102,7 +101,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
         $availableLanguages = $request->attributes->get('availableLanguages');
         $isPreview = true;
 
-        $areas = array();
+        $areas = [];
 
         foreach ($layoutareas as $layoutarea) {
             //$beforeAreaEvent = new Brainbits_Event_Notification(new stdClass(), 'before_area');
@@ -122,11 +121,11 @@ class LayoutareaConfigurator implements ConfiguratorInterface
 
             $teasers = $this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
 
-            $areas[$layoutarea->getUniqueId()] = array(
+            $areas[$layoutarea->getUniqueId()] = [
                 'title'    => $layoutarea->getTitle(),
                 'uniqueId' => $layoutarea->getUniqueId(),
                 'children' => $teasers
-            );
+            ];
 
             //$areaEvent = new Brainbits_Event_Notification(new stdClass(), 'area');
             //$this->_dispatcher->dispatch($areaEvent);
