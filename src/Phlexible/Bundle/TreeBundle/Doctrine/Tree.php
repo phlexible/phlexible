@@ -613,7 +613,8 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
 
         $this->updateNode($node);
 
-        $this->sorter->sortNode($toNode);
+        // TODO: sort
+        //$this->sorter->sortNode($toNode);
 
         $event = new MoveNodeEvent($node, $toNode);
         $this->dispatcher->dispatch(TreeEvents::MOVE_NODE, $event);

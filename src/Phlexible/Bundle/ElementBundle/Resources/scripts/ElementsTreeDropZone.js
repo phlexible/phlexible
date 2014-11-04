@@ -106,6 +106,7 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
             // grid drag
             var r = data.selections[0];
 
+            console.log(r.get('_type'));
             if (r.get('_type') == 'teaser') {
                 // from layoutarea
                 if (pt != 'append') {
@@ -146,13 +147,17 @@ Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
             var sourceNode = data.node;
 
             if (sourceNode.id === targetNode.id) {
+                console.log('a');
                 return false;
             }
             if (targetNode.isAncestor(sourceNode)) {
+                console.log('b');
                 return false;
             }
 
             var sourceETID = sourceNode.attributes.element_type_id;
+            console.log(sourceETID);
+            console.log(targetNode);
             if (Ext.isArray(targetNode.attributes.allowed_et) && targetNode.attributes.allowed_et.indexOf(sourceETID) !== -1) {
                 result2 = true;
             }

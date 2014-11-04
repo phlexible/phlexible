@@ -110,13 +110,6 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
         //    xtype: 'elements-diffaccordion',
         //    collapsed: true,
         //    element: this.element
-
-        if (Phlexible.User.isGranted('ROLE_ELEMENT_CONTEXT')) {
-            this.items.push({
-                xtype: 'elements-contextaccordion',
-                collapsed: true
-            });
-        }
     },
 
     onLoadElement: function (element) {

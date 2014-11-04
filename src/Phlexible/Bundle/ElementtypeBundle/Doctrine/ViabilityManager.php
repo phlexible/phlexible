@@ -71,9 +71,10 @@ class ViabilityManager implements ViabilityManagerInterface
 
         $viabilities = $viabilityRepository->findBy(array('elementtypeId' => $elementtype->getId()));
 
-        foreach ($viabilities as $viability) {
+        foreach ($viabilities as $index => $viability) {
             if (in_array($viability->getUnderElementtypeId(), $parentIds)) {
                 unset($parentIds[array_search($viability->getUnderElementtypeId(), $parentIds)]);
+                unset($viabilities[$index]);
             }
         }
 

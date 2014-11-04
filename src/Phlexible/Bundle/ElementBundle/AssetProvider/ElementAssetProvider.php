@@ -59,7 +59,6 @@ class ElementAssetProvider implements AssetProviderInterface
             '@PhlexibleElementBundle/Resources/scripts/accordions/AllowedChildrenAccordion.js',
             '@PhlexibleElementBundle/Resources/scripts/accordions/CommentAccordion.js',
             '@PhlexibleElementBundle/Resources/scripts/accordions/ConfigurationAccordion.js',
-            '@PhlexibleElementBundle/Resources/scripts/accordions/ContextAccordion.js',
             '@PhlexibleElementBundle/Resources/scripts/accordions/DataAccordion.js',
             '@PhlexibleElementBundle/Resources/scripts/accordions/DiffAccordion.js',
             '@PhlexibleElementBundle/Resources/scripts/accordions/InstancesAccordion.js',
