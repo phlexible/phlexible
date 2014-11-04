@@ -18,7 +18,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 class ContentTreeContext
 {
     /**
-     * @var \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
+     * @var TreeNodeInterface
      */
     private $node;
 
@@ -79,7 +79,7 @@ class ContentTreeContext
         $tree = $this->node->getTree();
         $parentNode = $this->node->getParentNode();
 
-        $children = array();
+        $children = [];
         $keep = true;
         foreach ($tree->getChildren($parentNode) as $childNode) {
             if ($childNode->getId() === $this->node->getId()) {
@@ -102,7 +102,7 @@ class ContentTreeContext
         $tree = $this->node->getTree();
         $parentNode = $this->node->getParentNode();
 
-        $children = array();
+        $children = [];
         $keep = false;
         foreach ($tree->getChildren($parentNode) as $childNode) {
             if ($childNode->getId() === $this->node->getId()) {
@@ -167,12 +167,12 @@ class ContentTreeContext
     public function children()
     {
         if ($this->maxDepth && $this->depth >= $this->maxDepth) {
-            return array();
+            return [];
         }
 
         $tree = $this->node->getTree();
 
-        $children = array();
+        $children = [];
         foreach ($tree->getChildren($this->getNode()) as $childNode) {
             $children[] = new self($childNode, $this->referenceNode, $this->maxDepth, $this->depth + 1);
         }
@@ -180,9 +180,12 @@ class ContentTreeContext
         return $children;
     }
 
+    /**
+     * @return array
+     */
     public function path()
     {
-        $path = array();
+        $path = [];
         $current = $this;
         do {
             $path[] = $current;
@@ -212,8 +215,16 @@ class ContentTreeContext
      *
      * @return bool
      */
-    public function online($language)
+    public function online($language = null)
     {
         return $this->node->getTree()->isPublished($this->node, $language);
+    }
+
+    /**
+     * @return bool
+     */
+    public function viewable()
+    {
+        return true;
     }
 }

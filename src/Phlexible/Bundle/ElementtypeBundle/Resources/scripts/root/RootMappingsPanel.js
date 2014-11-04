@@ -308,9 +308,11 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
             pattern = Phlexible.clone(r.get('pattern')) || '',
             previewField = this.getMappedTitleGrid().getComponent(2);
 
-        Ext.each(fields, function (field) {
-            pattern = pattern.replace('$' + field.index, field.title);
-        });
+        if (fields) {
+            Ext.each(fields, function (field) {
+                pattern = pattern.replace('$' + field.index, field.title);
+            });
+        }
 
         previewField.setValue(pattern);
     },
