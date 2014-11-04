@@ -88,13 +88,11 @@ class TreeController extends Controller
         $eid = $request->get('eid');
 
         $elementService = $this->get('phlexible_element.element_service');
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $element = $elementService->findElement($eid);
         $elementtype = $elementService->findElementtype($element);
-
-        $childElementtypes = $elementtypeService->findAllowedChildren($elementtype);
+        $childElementtypes = $elementService->findAllowedChildren($elementtype);
 
         $data = array();
         foreach ($childElementtypes as $childElementtype) {

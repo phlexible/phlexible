@@ -92,18 +92,20 @@ class ViabilityController extends Controller
         $id = $request->get('id');
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
+        $viabilityManager = $this->get('phlexible_elementtype.viability_manager');
         $elementtype = $elementtypeService->findElementtype($id);
 
-        $viability = array();
-        foreach ($elementtypeService->findAllowedParents($elementtype) as $viabilityElementtype) {
-            $viability[] = array(
+        $viabilities = array();
+        foreach ($viabilityManager->findAllowedParents($elementtype) as $viability) {
+            $viabilityElementtype = $elementtypeService->findElementtype($viability->getUnderElementtypeId());
+            $viabilities[] = array(
                 'id'    => $viabilityElementtype->getId(),
                 'title' => $viabilityElementtype->getTitle(),
                 'icon'  => $viabilityElementtype->getIcon()
             );
         }
 
-        return new JsonResponse(array('viability' => $viability));
+        return new JsonResponse(array('viability' => $viabilities));
     }
 
     /**

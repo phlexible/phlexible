@@ -98,30 +98,11 @@ class ElementtypeService
      * @param Elementtype $elementtype
      *
      * @return Elementtype[]
+     * @deprecated
      */
     public function findAllowedParents(Elementtype $elementtype)
     {
-        $elementtypes = array();
-        foreach ($this->viabilityManager->findAllowedParents($elementtype) as $viability) {
-            $elementtypes[] = $this->findElementtype($viability->getUnderElementtypeId());
-        }
-
-        return $elementtypes;
-    }
-
-    /**
-     * @param Elementtype $elementtype
-     *
-     * @return Elementtype[]
-     */
-    public function findAllowedChildren(Elementtype $elementtype)
-    {
-        $elementtypes = array();
-        foreach ($this->viabilityManager->findAllowedChildren($elementtype) as $viability) {
-            $elementtypes[] = $this->findElementtype($viability->getElementtypeId());
-        }
-
-        return $elementtypes;
+        throw new \Exception('removed.');
     }
 
     /**

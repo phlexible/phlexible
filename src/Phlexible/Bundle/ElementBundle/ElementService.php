@@ -19,6 +19,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 
 /**
  * Element service
@@ -53,6 +54,11 @@ class ElementService
     private $elementHistoryManager;
 
     /**
+     * @var ViabilityManagerInterface
+     */
+    private $viabilityManager;
+
+    /**
      * @var FieldMapper
      */
     private $fieldMapper;
@@ -63,6 +69,7 @@ class ElementService
      * @param ElementStructureManagerInterface $elementStructureManager
      * @param ElementSourceManagerInterface    $elementSourceManager
      * @param ElementHistoryManagerInterface   $elementHistoryManager
+     * @param ViabilityManagerInterface        $viabilityManager
      * @param FieldMapper                      $fieldMapper
      */
     public function __construct(
@@ -71,6 +78,7 @@ class ElementService
         ElementStructureManagerInterface $elementStructureManager,
         ElementSourceManagerInterface $elementSourceManager,
         ElementHistoryManagerInterface $elementHistoryManager,
+        ViabilityManagerInterface $viabilityManager,
         FieldMapper $fieldMapper)
     {
         $this->elementManager = $elementManager;
@@ -78,6 +86,7 @@ class ElementService
         $this->elementStructureManager = $elementStructureManager;
         $this->elementSourceManager = $elementSourceManager;
         $this->elementHistoryManager = $elementHistoryManager;
+        $this->viabilityManager = $viabilityManager;
         $this->fieldMapper = $fieldMapper;
     }
 
@@ -213,6 +222,36 @@ class ElementService
     public function findOutdatedElementSources(Elementtype $elementtype)
     {
         return $this->elementSourceManager->findOutdatedElementSources($elementtype);
+    }
+
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return Elementtype[]
+     */
+    public function findAllowedParents(Elementtype $elementtype)
+    {
+        $elementtypes = [];
+        foreach ($this->viabilityManager->findAllowedParents($elementtype) as $viability) {
+            $elementtypes[] = $this->elementSourceManager->findElementtype($viability->getUnderElementtypeId());
+        }
+
+        return $elementtypes;
+    }
+
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return Elementtype[]
+     */
+    public function findAllowedChildren(Elementtype $elementtype)
+    {
+        $elementtypes = [];
+        foreach ($this->viabilityManager->findAllowedChildren($elementtype) as $viability) {
+            $elementtypes[] = $this->elementSourceManager->findElementtype($viability->getElementtypeId());
+        }
+
+        return $elementtypes;
     }
 
     /**

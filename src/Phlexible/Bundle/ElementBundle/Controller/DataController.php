@@ -61,7 +61,6 @@ class DataController extends Controller
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
         $stateManager = $this->get('phlexible_tree.state_manager');
         $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
@@ -194,7 +193,7 @@ class DataController extends Controller
 
         $allowedChildren = array();
         if (!$teaser) {
-            foreach ($elementtypeService->findAllowedChildren($elementtype) as $childElementtype) {
+            foreach ($elementService->findAllowedChildren($elementtype) as $childElementtype) {
                 if ($childElementtype->getType() !== 'full') {
                     continue;
                 }

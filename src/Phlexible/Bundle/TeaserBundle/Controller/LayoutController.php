@@ -50,21 +50,21 @@ class LayoutController extends Controller
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $teaserService = $this->get('phlexible_teaser.teaser_service');
         $elementService = $this->get('phlexible_element.element_service');
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $tree = $treeManager->getByNodeId($treeId);
         $treeNode = $tree->get($treeId);
         $element = $elementService->findElement($treeNode->getTypeId());
         $elementMasterLanguage = $element->getMasterLanguage();
-        $elementtype = $elementtypeService->findElementtype($element->getElementtypeId());
+        $elementtype = $elementService->findElementtype($element);
 
         $treeNodePath = $tree->getPath($treeNode);
 
         $layouts = array();
         $layoutareas = array();
-        foreach ($elementtypeService->findElementtypeByType('layout') as $layoutarea) {
-            if (in_array($elementtype, $elementtypeService->findAllowedParents($layoutarea))) {
+        // TODO: repair
+        foreach ($elementService->findElementtypeByType('layout') as $layoutarea) {
+            if (in_array($elementtype, $elementService->findAllowedParents($layoutarea))) {
                 $layoutareas[] = $layoutarea;
             }
         }
@@ -474,11 +474,11 @@ class LayoutController extends Controller
 
         $id = $request->get('id');
 
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
+        $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
-        $elementtype = $elementtypeService->findElementtype($id);
-        $childElementtypes = $elementtypeService->findAllowedChildren($elementtype);
+        $elementtype = $elementService->findElementtype($id);
+        $childElementtypes = $elementService->findAllowedChildren($elementtype);
 
         $data = array();
         foreach ($childElementtypes as $childElementtype) {

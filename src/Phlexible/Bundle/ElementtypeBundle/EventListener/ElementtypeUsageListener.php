@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\EventListener;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
+use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 
 /**
@@ -25,11 +26,18 @@ class ElementtypeUsageListener
     private $elementtypeService;
 
     /**
-     * @param ElementtypeService $elementtypeService
+     * @var ViabilityManagerInterface
      */
-    public function __construct(ElementtypeService $elementtypeService)
+    private $viabilityManager;
+
+    /**
+     * @param ElementtypeService        $elementtypeService
+     * @param ViabilityManagerInterface $viabilityManager
+     */
+    public function __construct(ElementtypeService $elementtypeService, ViabilityManagerInterface $viabilityManager)
     {
         $this->elementtypeService = $elementtypeService;
+        $this->viabilityManager = $viabilityManager;
     }
 
     /**
@@ -53,7 +61,7 @@ class ElementtypeUsageListener
         }
 
         if ($elementtype->getType() === 'layout') {
-            foreach ($this->elementtypeService->findAllowedParents($elementtype) as $viabilityElementtype) {
+            foreach ($this->viabilityManager->findAllowedParents($elementtype) as $viabilityElementtype) {
                 $event->addUsage(
                     new Usage(
                         $viabilityElementtype->getType() . ' elementtype',

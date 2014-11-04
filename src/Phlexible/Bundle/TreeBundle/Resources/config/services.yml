@@ -7,7 +7,6 @@ services:
         class: Phlexible\Bundle\TreeBundle\Tree\Serializer\NodeSerializer
         arguments:
             - @phlexible_element.element_service
-            - @phlexible_elementtype.elementtype_service
             - @phlexible_element.icon_resolver
             - @phlexible_tree.state_manager
             - @phlexible_access_control.permissions

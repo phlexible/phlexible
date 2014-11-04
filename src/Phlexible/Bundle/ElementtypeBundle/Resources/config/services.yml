@@ -40,7 +40,7 @@ services:
 
     phlexible_elementtype.listener.elementtype_usage:
         class: Phlexible\Bundle\ElementtypeBundle\EventListener\ElementtypeUsageListener
-        arguments: [@phlexible_elementtype.elementtype_service]
+        arguments: [@phlexible_elementtype.elementtype_service, @phlexible_elementtype.viability_manager]
         tags:
             - {name: kernel.event_listener, event: phlexible_elementtype.usage, method: onElementtypeUsage}
 

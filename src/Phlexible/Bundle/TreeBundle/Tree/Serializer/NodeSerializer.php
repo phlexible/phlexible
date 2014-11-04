@@ -12,7 +12,6 @@ use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -28,11 +27,6 @@ class NodeSerializer
      * @var ElementService
      */
     private $elementService;
-
-    /**
-     * @var ElementtypeService
-     */
-    private $elementtypeService;
 
     /**
      * @var IconResolver
@@ -56,7 +50,6 @@ class NodeSerializer
 
     /**
      * @param ElementService           $elementService
-     * @param ElementtypeService       $elementtypeService
      * @param IconResolver             $iconResolver
      * @param StateManagerInterface    $stateManager
      * @param PermissionCollection     $permissions
@@ -64,14 +57,12 @@ class NodeSerializer
      */
     public function __construct(
         ElementService $elementService,
-        ElementtypeService $elementtypeService,
         IconResolver $iconResolver,
         StateManagerInterface $stateManager,
         PermissionCollection $permissions,
         SecurityContextInterface $securityContext)
     {
         $this->elementService = $elementService;
-        $this->elementtypeService = $elementtypeService;
         $this->iconResolver = $iconResolver;
         $this->stateManager = $stateManager;
         $this->permissions = $permissions;
@@ -158,7 +149,7 @@ class NodeSerializer
 
         $elementtype = $this->elementService->findElementtype($element);
         $allowedElementtypeIds = array();
-        foreach ($this->elementtypeService->findAllowedChildren($elementtype) as $allowedElementtype) {
+        foreach ($this->elementService->findAllowedChildren($elementtype) as $allowedElementtype) {
             $allowedElementtypeIds[] = $allowedElementtype->getId();
         }
 
@@ -180,7 +171,7 @@ class NodeSerializer
             'element_type'        => $elementtype->getTitle(),
             'element_type_id'     => $elementtype->getId(),
             'element_type_type'   => $elementtype->getType(),
-            'alias'               => 1, //$node->isInstance(),
+            'alias'               => $node->getTree()->isInstance($node),
             'allow_drag'          => true,
             'sort_mode'           => $node->getSortMode(),
             'areas'               => array(355),

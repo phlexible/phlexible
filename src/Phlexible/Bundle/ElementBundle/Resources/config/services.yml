@@ -11,6 +11,7 @@ services:
             - @phlexible_element.element_structure_manager
             - @phlexible_element.element_source_manager
             - @phlexible_element.element_history_manager
+            - @phlexible_elementtype.viability_manager
             - @phlexible_element.field_mapper
 
     phlexible_element.synchronizer:
