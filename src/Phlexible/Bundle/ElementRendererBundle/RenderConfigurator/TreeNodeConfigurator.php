@@ -75,25 +75,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
             return;
         }
 
-        /* Context */
-        if ($request->attributes->has('country')) {
-            $context = $request->attributes->get('country');
-
-            if (!$context->isRelevantForTid($parameters->getId(), $request->attributes->get('availableLanguages'))) {
-                $msg = 'TID "' . $parameters->getId() . '": '
-                    . 'Language "' . $request->attributes->get('language') . '"'
-                    . ' not available in country "' . $context->getCountry() . '".';
-
-                $this->logger->debug($msg);
-
-                throw new RuntimeException($msg);
-
-            }
-        }
-
-        /* Context */
-
-        /* @var $parameters TreeNodeInterface */
+        /* @var $treeNode TreeNodeInterface */
         $treeNode = $originalTreeNode = $request->attributes->get('contentDocument');
         $tree = $treeNode->getTree();
 
@@ -222,6 +204,12 @@ class TreeNodeConfigurator implements ConfiguratorInterface
             ->set('eid', $treeNode->getTypeId())
             ->set('version', 1)//$tree->getPublishedVersion($treeNode, 'de'))
             ->set('language', 'de');
+
+        if ($treeNode->getTemplate()) {
+            $renderConfiguration
+                ->addFeature('template')
+                ->set('template', $treeNode->getTemplate());
+        }
 
         $event = new ConfigureEvent($renderConfiguration);
         $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_TREE_NODE, $event);

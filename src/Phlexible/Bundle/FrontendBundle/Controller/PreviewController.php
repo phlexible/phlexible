@@ -57,6 +57,7 @@ class PreviewController extends Controller
         $dataProvider = $this->get('phlexible_element_renderer.data_provider');
         $data = $dataProvider->provide($request);
 
+        ldd((array) $data);
         return $this->render($data['template'], (array) $data);
     }
 }

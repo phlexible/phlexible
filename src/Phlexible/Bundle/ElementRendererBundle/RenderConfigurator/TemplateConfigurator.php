@@ -51,6 +51,7 @@ class TemplateConfigurator implements ConfiguratorInterface
      */
     public function configure(Request $request, RenderConfiguration $renderConfiguration)
     {
+        return;
         if (!$renderConfiguration->hasFeature('templateFile')) {
             return;
         }

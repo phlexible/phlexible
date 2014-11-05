@@ -93,13 +93,18 @@ class ElementConfigurator implements ConfiguratorInterface
             $elementLanguage
         );
 
-        $template = $contentElement->getElementtypeUniqueId();
-
         $renderConfiguration
             ->addFeature('element')
-            ->set('contentElement', $contentElement)
-            ->addFeature('templateFile')
-            ->set('templateFile', $template);
+            ->set('contentElement', $contentElement);
+
+        ldd($contentElement);
+        if (!$renderConfiguration->hasFeature('template')) {
+            $template = $contentElement->getElementtypeUniqueId();
+
+            $renderConfiguration
+                ->addFeature('template')
+                ->set('template', $template);
+        }
 
         $event = new ConfigureEvent($renderConfiguration);
         $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_ELEMENT, $event);
