@@ -70,4 +70,12 @@ class ElementMediator implements MediatorInterface
     {
         return $this->elementService->findLatestElementVersion($this->getObject($node));
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isViewable(TreeNodeInterface $node)
+    {
+        return $node->getType() === 'element-full' || $node->getType() === 'element-structure';
+    }
 }

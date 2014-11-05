@@ -167,8 +167,8 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
             ->setCreateUserId($treeNode->getCreateUserId())
             ->setAttributes($treeNode->getAttributes());
 
-        $titles = array();
-        foreach (array('de', 'en') as $language) {
+        $titles = [];
+        foreach (['de', 'en'] as $language) {
             $titles[$language] = $this->mediator->getTitle($treeNode, 'navigation', $language);
         }
         $contentNode->setTitles($titles);
@@ -208,7 +208,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function getChildren(TreeNodeInterface $node)
     {
-        $children = array();
+        $children = [];
         foreach ($this->tree->getChildren($node) as $childNode) {
             $children[] = $this->get($childNode->getId());
         }
@@ -250,7 +250,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function getPath(TreeNodeInterface $node)
     {
-        $path = array();
+        $path = [];
         foreach ($this->tree->getPath($node) as $pathNode) {
             $path[] = $this->get($pathNode->getId());
         }
@@ -392,5 +392,13 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     public function hasByTypeId($typeId, $type = null)
     {
         // TODO: Implement hasByTypeId() method.
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isViewable(TreeNodeInterface $node)
+    {
+        return $this->mediator->isViewable($node);
     }
 }

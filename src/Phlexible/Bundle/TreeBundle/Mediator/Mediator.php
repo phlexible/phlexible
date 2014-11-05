@@ -8,9 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\Mediator;
 
-use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementBundle\Entity\Element;
-use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
@@ -23,12 +20,12 @@ class Mediator implements MediatorInterface
     /**
      * @var MediatorInterface[]
      */
-    private $mediators = array();
+    private $mediators = [];
 
     /**
      * @param MediatorInterface[] $mediators
      */
-    public function __construct(array $mediators = array())
+    public function __construct(array $mediators = [])
     {
         foreach ($mediators as $mediator) {
             $this->addMediator($mediator);
@@ -68,8 +65,6 @@ class Mediator implements MediatorInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return Element
      */
     public function getObject(TreeNodeInterface $node)
     {
@@ -82,8 +77,6 @@ class Mediator implements MediatorInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return ElementVersion
      */
     public function getVersionedObject(TreeNodeInterface $node)
     {
@@ -92,6 +85,18 @@ class Mediator implements MediatorInterface
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isViewable(TreeNodeInterface $node)
+    {
+        if ($mediator = $this->findMediator($node)) {
+            return $mediator->isViewable($node);
+        }
+
+        return false;
     }
 
     /**

@@ -46,4 +46,11 @@ interface MediatorInterface
      * @return mixed
      */
     public function getVersionedObject(TreeNodeInterface $node);
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return bool
+     */
+    public function isViewable(TreeNodeInterface $node);
 }

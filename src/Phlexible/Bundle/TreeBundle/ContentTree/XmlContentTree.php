@@ -621,4 +621,12 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     {
         // TODO: Implement hasByTypeId() method.
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isViewable(TreeNodeInterface $node)
+    {
+        return false;
+    }
 }

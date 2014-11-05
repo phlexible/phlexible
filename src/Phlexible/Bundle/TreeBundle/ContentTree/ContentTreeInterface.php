@@ -68,4 +68,11 @@ interface ContentTreeInterface extends TreeInterface
      * @return int
      */
     public function getVersion(TreeNodeInterface $node, $language);
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return bool
+     */
+    public function isViewable(TreeNodeInterface $node);
 }
