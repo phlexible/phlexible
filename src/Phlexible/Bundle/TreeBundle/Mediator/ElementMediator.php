@@ -38,7 +38,7 @@ class ElementMediator implements MediatorInterface
      */
     public function accept(TreeNodeInterface $node)
     {
-        return $node->getType() === 'element';
+        return $node->getType() === 'element-full' || $node->getType() === 'element-structure';
     }
 
     /**

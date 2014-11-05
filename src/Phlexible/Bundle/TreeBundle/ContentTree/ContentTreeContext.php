@@ -225,6 +225,6 @@ class ContentTreeContext
      */
     public function viewable()
     {
-        return true;
+        return $this->node->getType() === 'element-full' || $this->node->getType() === 'element-structure';
     }
 }
