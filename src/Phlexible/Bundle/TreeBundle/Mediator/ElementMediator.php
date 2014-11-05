@@ -76,6 +76,6 @@ class ElementMediator implements MediatorInterface
      */
     public function isViewable(TreeNodeInterface $node)
     {
-        return $node->getType() === 'element-full' || $node->getType() === 'element-structure';
+        return $node->getType() === 'element-full';
     }
 }
