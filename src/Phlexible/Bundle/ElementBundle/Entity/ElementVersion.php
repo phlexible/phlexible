@@ -57,7 +57,7 @@ class ElementVersion
     /**
      * @var ElementSource
      * @ORM\ManyToOne(targetEntity="ElementSource")
-     * @ORM\JoinColumn(name="element_source_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="element_source_id", referencedColumnName="id")
      */
     private $elementSource;
 

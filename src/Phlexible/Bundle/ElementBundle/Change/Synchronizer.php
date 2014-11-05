@@ -69,18 +69,16 @@ class Synchronizer
         $elementtype = $change->getElementtype();
         $elementSource = $this->elementSourceManager->findByElementtype($elementtype);
         if (!$elementSource || $force) {
-            if (!$elementSource) {
-                $elementSource = new ElementSource();
-            }
+            $elementSource = new ElementSource();
             $this->applyElementtypeToElementSource($elementtype, $elementSource);
         }
 
-        $outdatedElementSources = $change->getOutdatedElementSources();
-        foreach ($outdatedElementSources as $outdatedElementSource) {
-            $elementVersions = $this->elementVersionManager->findByElementSource($elementSource);
+        foreach ($change->getOutdatedElementSources() as $outdatedElementSource) {
+            $elementVersions = $this->elementVersionManager->findByElementSource($outdatedElementSource);
             foreach ($elementVersions as $elementVersion) {
+                echo $elementVersion->getId().PHP_EOL;
                 $elementVersion->setElementSource($elementSource);
-                $this->elementVersionManager->updateElementVersion($elementVersion, false);
+                $this->elementVersionManager->updateElementVersion($elementVersion, true);
             }
             $this->removeOutdatedElementSource($outdatedElementSource);
         }
