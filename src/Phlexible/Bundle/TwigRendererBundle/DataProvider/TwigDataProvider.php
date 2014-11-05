@@ -46,7 +46,7 @@ class TwigDataProvider implements DataProviderInterface
 
         if ($renderConfiguration->hasFeature('template')) {
             $template = $renderConfiguration->get('template');
-            if (substr($template, 0, 1) !== '@' && substr($template, 0, 2) !== '::') {
+            if (strpos($template, '::') === false) {
                 $template = '::' . $template;
             }
             if (substr($template, -10) !== '.html.twig') {

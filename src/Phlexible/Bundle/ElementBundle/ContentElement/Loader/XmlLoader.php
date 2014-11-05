@@ -50,7 +50,8 @@ class XmlLoader
         $uniqueId = (string) $xml->uniqueId;
         $elementtypeId = (int) $xml->elementtypeId;
         $elementtypeUniqueId = (string) $xml->elementtypeUniqueId;
-        $elementtypeType = (string) '';
+        $elementtypeType = (string) $xml->elementtypeType;
+        $elementtypeTemplate = (string) $xml->elementtypeTemplate;
         $version = (int) $xml->version;
         $language = (string) $xml->language;
 
@@ -70,6 +71,7 @@ class XmlLoader
             $elementtypeId,
             $elementtypeUniqueId,
             $elementtypeType,
+            $elementtypeTemplate,
             $version,
             $language,
             $mappedFields,

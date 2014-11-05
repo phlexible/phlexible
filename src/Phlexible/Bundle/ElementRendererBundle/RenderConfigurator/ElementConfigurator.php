@@ -97,9 +97,12 @@ class ElementConfigurator implements ConfiguratorInterface
             ->addFeature('element')
             ->set('contentElement', $contentElement);
 
-        ldd($contentElement);
         if (!$renderConfiguration->hasFeature('template')) {
-            $template = $contentElement->getElementtypeUniqueId();
+            if ($contentElement->getElementtypeTemplate()) {
+                $template = $contentElement->getElementtypeTemplate();
+            } else {
+                $template = $contentElement->getElementtypeUniqueId();
+            }
 
             $renderConfiguration
                 ->addFeature('template')

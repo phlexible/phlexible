@@ -50,6 +50,7 @@ class XmlDumper implements DumperInterface
         $rootNode->appendChild($dom->createElement('elementtypeId', $contentElement->getElementtypeId()));
         $rootNode->appendChild($dom->createElement('elementtypeUniqueId', $contentElement->getElementtypeUniqueId()));
         $rootNode->appendChild($dom->createElement('elementtypeType', $contentElement->getElementtypeType()));
+        $rootNode->appendChild($dom->createElement('elementtypeTemplate', $contentElement->getElementtypeTemplate()));
         $rootNode->appendChild($dom->createElement('version', $contentElement->getVersion()));
         $rootNode->appendChild($dom->createElement('language', $contentElement->getLanguage()));
 

@@ -45,6 +45,7 @@ class DelegatingLoader implements LoaderInterface
         $elementtypeId = $elementtype ->getId();
         $elementtypeUniqueId = $elementtype->getUniqueId();
         $elementtypeType = $elementtype->getType();
+        $elementtypeTemplate = $elementtype->getTemplate();
 
         $mappedFields = $elementVersion->getMappedFields()[$language];
 
@@ -56,6 +57,7 @@ class DelegatingLoader implements LoaderInterface
             $elementtypeId,
             $elementtypeUniqueId,
             $elementtypeType,
+            $elementtypeTemplate,
             $version,
             $language,
             $mappedFields,

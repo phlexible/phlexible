@@ -46,6 +46,11 @@ class ContentElement
     /**
      * @var string
      */
+    private $elementtypeTemplate;
+
+    /**
+     * @var string
+     */
     private $language;
 
     /**
@@ -69,6 +74,7 @@ class ContentElement
      * @param int                       $elementtypeId
      * @param string                    $elementtypeUniqueId
      * @param string                    $elementtypeType
+     * @param string                    $elementtypeTemplate
      * @param int                       $version
      * @param string                    $language
      * @param ElementVersionMappedField $mappedField
@@ -80,16 +86,18 @@ class ContentElement
         $elementtypeId,
         $elementtypeUniqueId,
         $elementtypeType,
+        $elementtypeTemplate,
         $version,
         $language,
         ElementVersionMappedField $mappedField = null,
-        ElementStructure $structure)
-    {
+        ElementStructure $structure
+    ) {
         $this->eid = (int) $eid;
         $this->uniqueId = $uniqueId ? : null;
         $this->elementtypeId = $elementtypeId;
         $this->elementtypeUniqueId = $elementtypeUniqueId;
         $this->elementtypeType = $elementtypeType;
+        $this->elementtypeTemplate = $elementtypeTemplate;
         $this->version = (int) $version;
         $this->language = $language;
         $this->mappedField = $mappedField;
@@ -134,6 +142,14 @@ class ContentElement
     public function getElementtypeType()
     {
         return $this->elementtypeType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getElementtypeTemplate()
+    {
+        return $this->elementtypeTemplate;
     }
 
     /**

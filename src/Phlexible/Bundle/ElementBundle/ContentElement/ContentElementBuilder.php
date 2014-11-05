@@ -71,6 +71,7 @@ class ContentElementBuilder
             $elementtype->getId(),
             $elementtype->getUniqueId(),
             $elementtype->getType(),
+            $elementtype->getTemplate(),
             $elementVersion->getVersion(),
             $language,
             $mappedFields,
