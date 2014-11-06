@@ -130,7 +130,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
      * @param Connection       $conn
      * @param bool             $isRoot
      */
-    private function insertStructure(ElementStructure $elementStructure, Connection $conn, $isRoot = false)
+    private function insertStructure(ElementStructure $elementStructure, Connection $conn, $isRoot = false, array $entities = array())
     {
         $structureRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructure');
 
@@ -149,17 +149,20 @@ class ElementStructureManager implements ElementStructureManagerInterface
         if (!$structureEntity) {
             $structureEntity = new StructureEntity();
         }
+        $parentStructureEntity = $elementStructure->getParentStructure() ? $entities[spl_object_hash($elementStructure->getParentStructure())] : null;
         $structureEntity
             ->setDataId($elementStructure->getDataId())
             ->setElementVersion($elementStructure->getElementVersion())
             ->setDsId($elementStructure->getDsId())
             ->setType($isRoot ? 'root' : 'group')
             ->setName($elementStructure->getName())
-            ->setRepeatableId($elementStructure->getRepeatableId() ?: null)
-            ->setRepeatableDsId($elementStructure->getRepeatableDsId() ?: null)
+            ->setParentStructure($parentStructureEntity)
+            ->setParentDsId($elementStructure->getParentDsId())
             ->setSort($elementStructure->getSort());
 
         $this->entityManager->persist($structureEntity);
+
+        $entities[spl_object_hash($elementStructure)] = $structureEntity;
 
         $valueRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructureValue');
 
@@ -217,7 +220,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
         }
 
         foreach ($elementStructure->getStructures() as $childStructure) {
-            $this->insertStructure($childStructure, $conn);
+            $this->insertStructure($childStructure, $conn, false, $entities);
         }
     }
 

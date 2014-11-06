@@ -29,6 +29,13 @@ class ElementStructure
     private $id;
 
     /**
+     * @var ElementStructure
+     * @ORM\ManyToOne(targetEntity="ElementStructure")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     */
+    private $parentStructure;
+
+    /**
      * @var string
      * @ORM\Column(name="data_id", type="string", length=36, options={"fixed"=true})
      */
@@ -67,9 +74,9 @@ class ElementStructure
 
     /**
      * @var string
-     * @ORM\Column(name="repeatable_ds_id", type="string", length=36, nullable=true, options={"fixed"=true})
+     * @ORM\Column(name="parent_ds_id", type="string", length=36, nullable=true, options={"fixed"=true})
      */
-    private $repeatableDsId;
+    private $parentDsId;
 
     /**
      * @var int
@@ -93,6 +100,26 @@ class ElementStructure
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return ElementStructure
+     */
+    public function getParentStructure()
+    {
+        return $this->parentStructure;
+    }
+
+    /**
+     * @param ElementStructure $parentStructure
+     *
+     * @return $this
+     */
+    public function setParentStructure(ElementStructure $parentStructure = null)
+    {
+        $this->parentStructure = $parentStructure;
 
         return $this;
     }
@@ -200,39 +227,19 @@ class ElementStructure
     /**
      * @return string
      */
-    public function getRepeatableId()
+    public function getParentDsId()
     {
-        return $this->repeatableId;
+        return $this->parentDsId;
     }
 
     /**
-     * @param string $repeatableId
+     * @param string $parentDsId
      *
      * @return $this
      */
-    public function setRepeatableId($repeatableId)
+    public function setParentDsId($parentDsId)
     {
-        $this->repeatableId = $repeatableId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRepeatableDsId()
-    {
-        return $this->repeatableDsId;
-    }
-
-    /**
-     * @param string $repeatableDsId
-     *
-     * @return $this
-     */
-    public function setRepeatableDsId($repeatableDsId)
-    {
-        $this->repeatableDsId = $repeatableDsId;
+        $this->parentDsId = $parentDsId;
 
         return $this;
     }

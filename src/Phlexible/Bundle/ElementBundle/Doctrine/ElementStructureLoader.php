@@ -133,7 +133,6 @@ class ElementStructureLoader
                     ->setParentName($myParentNode->getName());
                 $rootStructure->addStructure($structure);
                 $structures[$row['id']] = $structure;
-
                 if (isset($dataRows[$row['id']])) {
                     foreach ($dataRows[$row['id']] as $dataRow) {
                         $structure->setValue($this->createValue($dataRow));
@@ -173,14 +172,13 @@ class ElementStructureLoader
                             ->setName($row['name'])
                             ->setParentName($myParentNode->getName());
 
-                        if (!isset($structures[$row['repeatable_id']])) {
+                        if (!isset($structures[$row['parent_id']])) {
                             continue;
-                            ldd($structure);
                             echo PHP_EOL.$node->getName()." ".$node->getDsId().PHP_EOL;
                             die;
                         }
                         /* @var $parentStructure ElementStructure */
-                        $parentStructure = $structures[$row['repeatable_id']];
+                        $parentStructure = $structures[$row['parent_id']];
                         $parentStructure->addStructure($structure);
 
                         $structures[$row['id']] = $structure;
@@ -236,8 +234,8 @@ class ElementStructureLoader
                 array(
                     'es.id',
                     'es.data_id',
-                    'es.repeatable_id',
-                    'es.repeatable_ds_id',
+                    'es.parent_id',
+                    'es.parent_ds_id',
                     'es.type',
                     'es.sort',
                     'es.ds_id',
@@ -252,7 +250,7 @@ class ElementStructureLoader
 
         $data = array();
         foreach ($result as $row) {
-            $data[$row['repeatable_ds_id']][] = $row;
+            $data[$row['parent_ds_id']][] = $row;
         }
 
         return $data;

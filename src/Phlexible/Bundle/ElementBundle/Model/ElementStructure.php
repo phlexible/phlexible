@@ -75,17 +75,22 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @var ElementStructure[]
      */
-    private $structures = array();
+    private $structures = [];
+
+    /**
+     * @var ElementStructure
+     */
+    private $parentStructure;
 
     /**
      * @var ElementStructureValue[]
      */
-    private $values = array();
+    private $values = [];
 
     /**
      * @var array
      */
-    private $attributes = array();
+    private $attributes = [];
 
     /**
      * Clone
@@ -196,46 +201,6 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
-     * @return int
-     */
-    public function getRepeatableId()
-    {
-        return $this->repeatableId;
-    }
-
-    /**
-     * @param int $parentId
-     *
-     * @return $this
-     */
-    public function setRepeatableId($parentId)
-    {
-        $this->repeatableId = $parentId !== null ? $parentId : null;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRepeatableDsId()
-    {
-        return $this->repeatableDsId;
-    }
-
-    /**
-     * @param string $parentDsId
-     *
-     * @return $this
-     */
-    public function setRepeatableDsId($parentDsId)
-    {
-        $this->repeatableDsId = $parentDsId;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getType()
@@ -316,6 +281,42 @@ class ElementStructure implements \IteratorAggregate
     }
 
     /**
+     * @return ElementStructure
+     */
+    public function getParentStructure()
+    {
+        return $this->parentStructure;
+    }
+
+    /**
+     * @param ElementStructure $parentStructure
+     *
+     * @return $this
+     */
+    public function setParentStructure(ElementStructure $parentStructure)
+    {
+        $this->parentStructure = $parentStructure;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getParentId()
+    {
+        return $this->parentStructure ? $this->parentStructure->getId() : null;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getParentDsId()
+    {
+        return $this->parentStructure ? $this->parentStructure->getDsId() : null;
+    }
+
+    /**
      * @param ElementStructure $elementStructure
      *
      * @return $this
@@ -323,9 +324,7 @@ class ElementStructure implements \IteratorAggregate
     public function addStructure(ElementStructure $elementStructure)
     {
         if ($this->type !== 'root') {
-            $elementStructure
-                ->setRepeatableId($this->getId())
-                ->setRepeatableDsId($this->getDsId());
+            $elementStructure->setParentStructure($this);
         }
 
         $this->structures[] = $elementStructure;
@@ -399,7 +398,7 @@ class ElementStructure implements \IteratorAggregate
         }
 
         if (!isset($this->values[$language])) {
-            return array();
+            return [];
         }
 
         return $this->values[$language];
@@ -486,7 +485,7 @@ class ElementStructure implements \IteratorAggregate
      */
     public function all($name)
     {
-        $items = array();
+        $items = [];
 
         if ($this->hasValue($name)) {
             $items[] = $this->getValue($name);
@@ -530,7 +529,7 @@ class ElementStructure implements \IteratorAggregate
             return $this->getStructures();
         }
 
-        $result = array();
+        $result = [];
         foreach ($this->getStructures() as $childStructure) {
             if ($childStructure->getParentName() === $name) {
                 $result[] = $childStructure;

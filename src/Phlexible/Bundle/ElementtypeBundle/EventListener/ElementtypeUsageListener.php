@@ -61,7 +61,8 @@ class ElementtypeUsageListener
         }
 
         if ($elementtype->getType() === 'layout') {
-            foreach ($this->viabilityManager->findAllowedParents($elementtype) as $viabilityElementtype) {
+            foreach ($this->viabilityManager->findAllowedParents($elementtype) as $viability) {
+                $viabilityElementtype = $this->elementtypeService->findElementtype($viability->getUnderElementtypeId());
                 $event->addUsage(
                     new Usage(
                         $viabilityElementtype->getType() . ' elementtype',

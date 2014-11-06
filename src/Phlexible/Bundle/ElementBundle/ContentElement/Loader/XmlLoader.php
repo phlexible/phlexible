@@ -96,8 +96,7 @@ class XmlLoader
             ->setId((int) $attr['id'])
             ->setName((string) $attr['name'])
             ->setParentName((string) $attr['parentName'])
-            ->setDsId((string) $attr['dsId'])
-            ->setRepeatableDsId((string) $attr['parentDsId']);
+            ->setDsId((string) $attr['dsId']);
 
         foreach ($structureNode->structure as $subStructureNode) {
             $structure->addStructure($this->loadStructure($subStructureNode));

@@ -51,10 +51,12 @@ class ArraySerializer implements SerializerInterface
         }
 
         $structureData = array(
-            'id'         => $elementStructure->getId(),
+            //'id'         => $elementStructure->getId(),
+            //'dataId'     => $elementStructure->getDataId(),
+            'id'         => $elementStructure->getDataId(),
             'dsId'       => $elementStructure->getDsId(),
-            'parentId'   => $elementStructure->getRepeatableId(),
-            'parentDsId' => $elementStructure->getRepeatableDsId(),
+            'parentId'   => $elementStructure->getParentId(),
+            'parentDsId' => $elementStructure->getParentDsId(),
             'name'       => $elementStructure->getName(),
             'parentName' => $elementStructure->getParentName(),
             'attributes' => $elementStructure->getAttributes(),
