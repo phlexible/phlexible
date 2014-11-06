@@ -122,23 +122,31 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
      */
     public function getRoot()
     {
-        $node = $this->getTreeNodeRepository()->findOneBy(array('siterootId' => $this->siterootId, 'parentNode' => null));
+        $node = $this->getTreeNodeRepository()->findOneBy(['siterootId' => $this->siterootId, 'parentNode' => null]);
         $node->setTree($this);
 
         return $node;
     }
 
     /**
+     * @var TreeNodeInterface
+     */
+    private $nodes = [];
+
+    /**
      * {@inheritdoc}
      */
     public function get($id)
     {
-        $node = $this->getTreeNodeRepository()->findOneBy(array('siterootId' => $this->siterootId, 'id' => $id));
-        if ($node) {
-            $node->setTree($this);
+        if (!isset($this->nodes[$id]) || $this->nodes[$id] === null) {
+            $node = $this->getTreeNodeRepository()->findOneBy(['siterootId' => $this->siterootId, 'id' => $id]);
+            if ($node) {
+                $node->setTree($this);
+            }
+            $this->nodes[$id] = $node;
         }
 
-        return $node;
+        return $this->nodes[$id];
     }
 
     /**
@@ -154,7 +162,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
      */
     public function getByTypeId($typeId, $type = null)
     {
-        $criteria = array('typeId' => $typeId);
+        $criteria = ['typeId' => $typeId];
         if ($type) {
             $criteria['type'] = $type;
         }
@@ -179,7 +187,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
      */
     public function getChildren(TreeNodeInterface $node)
     {
-        $nodes = $this->getTreeNodeRepository()->findBy(array('siterootId' => $this->siterootId, 'parentNode' => $node->getId()), array('sort' => 'ASC'));
+        $nodes = $this->getTreeNodeRepository()->findBy(['siterootId' => $this->siterootId, 'parentNode' => $node->getId()], ['sort' => 'ASC']);
         foreach ($nodes as $node) {
             $node->setTree($this);
         }
@@ -213,7 +221,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
      */
     public function getIdPath(TreeNodeInterface $node)
     {
-        $ids = array();
+        $ids = [];
         foreach ($this->getPath($node) as $pathNode) {
             $ids[] = $pathNode->getId();
         }
@@ -226,7 +234,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
      */
     public function getPath(TreeNodeInterface $node)
     {
-        $path = array();
+        $path = [];
 
         do {
             $path[$node->getId()] = $node;
@@ -290,7 +298,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
      */
     public function getInstances(TreeNodeInterface $node)
     {
-        $nodes = $this->getTreeNodeRepository()->findBy(array('siterootId' => $this->siterootId, 'type' => $node->getType(), 'typeId' => $node->getTypeId()));
+        $nodes = $this->getTreeNodeRepository()->findBy(['siterootId' => $this->siterootId, 'type' => $node->getType(), 'typeId' => $node->getTypeId()]);
         foreach ($nodes as $node) {
             $node->setTree($this);
         }
@@ -433,7 +441,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
         }
 
         $sort = 0;
-        $sortNodes = array();
+        $sortNodes = [];
         if ($parentNode->getSortMode() === 'free') {
             if ($afterNode) {
                 $sort = $afterNode->getSort() + 1;
@@ -496,7 +504,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
     {
 
         $sort = 0;
-        $sortNodes = array();
+        $sortNodes = [];
         if ($parentNode->getSortMode() === 'free') {
             if ($afterNode) {
                 $sort = $afterNode->getSort() + 1;
@@ -569,7 +577,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
             $sort = $targetNode->getSort() + 1;
         }
 
-        $updatesNodes = array();
+        $updatesNodes = [];
 
         foreach ($this->getChildren($node->getParentNode()) as $childNode) {
             if ($childNode->getSort() <= $sort) {
