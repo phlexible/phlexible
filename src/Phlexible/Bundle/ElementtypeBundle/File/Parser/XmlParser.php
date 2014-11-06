@@ -163,7 +163,7 @@ class XmlParser implements ParserInterface
         $name = $node->getAttribute('name');
         $referenceElementtypeId = $node->hasAttribute('referenceElementtypeId') ? $node->getAttribute('referenceElementtypeId') : null;
 
-        $labels = array();
+        $labels = [];
         $labelNodes = $node->evaluate('labels/label');
         if ($labelNodes->length) {
             foreach ($labelNodes as $labelNode) {
@@ -174,7 +174,7 @@ class XmlParser implements ParserInterface
             }
         }
 
-        $configuration = array();
+        $configuration = [];
         $itemNodes = $node->evaluate('configuration/item');
         if ($itemNodes->length) {
             foreach ($itemNodes as $itemNode) {
@@ -197,10 +197,10 @@ class XmlParser implements ParserInterface
             }
         }
 
-        $validation = array();
-        $contraintNodes = $node->evaluate('validation/constraint');
-        if ($contraintNodes->length) {
-            foreach ($contraintNodes as $constraintNode) {
+        $validation = [];
+        $constraintNodes = $node->evaluate('validation/constraint');
+        if ($constraintNodes->length) {
+            foreach ($constraintNodes as $constraintNode) {
                 /* @var $constraintNode Element */
                 $key = $constraintNode->getAttribute('key');
                 $validation[$key] = $constraintNode->textContent;
