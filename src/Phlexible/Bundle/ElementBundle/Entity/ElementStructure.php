@@ -68,12 +68,6 @@ class ElementStructure
 
     /**
      * @var string
-     * @ORM\Column(name="repeatable_id", type="string", length=255, nullable=true)
-     */
-    private $repeatableId;
-
-    /**
-     * @var string
      * @ORM\Column(name="parent_ds_id", type="string", length=36, nullable=true, options={"fixed"=true})
      */
     private $parentDsId;
