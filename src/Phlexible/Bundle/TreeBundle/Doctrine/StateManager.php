@@ -174,7 +174,7 @@ class StateManager implements StateManagerInterface
             return false;
         }
 
-        $version = $this->mediator->getVersionedObject($treeNode)->getVersion();
+        $version = $this->mediator->getContentDocument($treeNode)->getVersion();
 
         if ($version === $treeOnline->getVersion()) {
             return false;

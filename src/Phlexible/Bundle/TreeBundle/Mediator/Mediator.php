@@ -66,22 +66,10 @@ class Mediator implements MediatorInterface
     /**
      * {@inheritdoc}
      */
-    public function getObject(TreeNodeInterface $node)
+    public function getContentDocument(TreeNodeInterface $node)
     {
         if ($mediator = $this->findMediator($node)) {
-            return $mediator->getObject($node);
-        }
-
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getVersionedObject(TreeNodeInterface $node)
-    {
-        if ($mediator = $this->findMediator($node)) {
-            return $mediator->getVersionedObject($node);
+            return $mediator->getContentDocument($node);
         }
 
         return null;

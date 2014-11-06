@@ -38,14 +38,7 @@ interface MediatorInterface
      *
      * @return mixed
      */
-    public function getObject(TreeNodeInterface $node);
-
-    /**
-     * @param TreeNodeInterface $node
-     *
-     * @return mixed
-     */
-    public function getVersionedObject(TreeNodeInterface $node);
+    public function getContentDocument(TreeNodeInterface $node);
 
     /**
      * @param TreeNodeInterface $node

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
+use Cocur\Slugify\Slugify;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
@@ -168,10 +169,14 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
             ->setAttributes($treeNode->getAttributes());
 
         $titles = [];
+        $slugs = [];
+        $slugify = new Slugify();
         foreach (['de', 'en'] as $language) {
             $titles[$language] = $this->mediator->getTitle($treeNode, 'navigation', $language);
+            $slugs[$language] = $slugify->slugify($titles[$language]);
         }
         $contentNode->setTitles($titles);
+        $contentNode->setSlugs($slugs);
 
         return $contentNode;
     }

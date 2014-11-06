@@ -276,6 +276,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         if ($tid) {
             $request->attributes->set('tid', $tid);
 
+            $tree->setLanguage($language);
             $treeNode = $tree->get($tid);
             /*
             if ($siterootUrl->getSiteroot()->getId() === $tree->getSiteRootId()) {
@@ -346,7 +347,9 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         $parts = array();
 
         foreach ($pathNodes as $pathNode) {
-            $parts[] = $pathNode->getSlug($language);
+            if ($tree->isViewable($pathNode)) {
+                $parts[] = $pathNode->getSlug($language);
+            }
         }
 
         if (!count($parts)) {

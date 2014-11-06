@@ -46,7 +46,7 @@ class ElementMediator implements MediatorInterface
      */
     public function getTitle(TreeNodeInterface $node, $field, $language)
     {
-        $elementVersion = $this->getVersionedObject($node);
+        $elementVersion = $this->getContentDocument($node);
 
         return $elementVersion->getMappedField($field, $language);
     }
@@ -54,21 +54,11 @@ class ElementMediator implements MediatorInterface
     /**
      * {@inheritdoc}
      *
-     * @return Element
-     */
-    public function getObject(TreeNodeInterface $node)
-    {
-        return $this->elementService->findElement($node->getTypeId());
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @return ElementVersion
      */
-    public function getVersionedObject(TreeNodeInterface $node)
+    public function getContentDocument(TreeNodeInterface $node)
     {
-        return $this->elementService->findLatestElementVersion($this->getObject($node));
+        return $this->elementService->findLatestElementVersion($this->elementService->findElement($node->getTypeId()));
     }
 
     /**
