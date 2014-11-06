@@ -196,7 +196,7 @@ class TreeController extends Controller
         $node = $tree->create(
             $parentNode,
             $afterNode,
-            'element',
+            'element-' . $elementSource->getType(),
             $element->getEid(),
             array(),
             $this->getUser()->getId(),
