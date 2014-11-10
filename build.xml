@@ -1,35 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="phlexible" default="help">
+<project name="controlling" default="build">
 
     <property name="source" value="src" />
-
-    <target name="help">
-        <echo msg="Available tasks:" />
-        <echo msg="" />
-        <echo msg="  clean" />
-        <echo msg="  lint" />
-        <echo msg="  phpcpd" />
-        <echo msg="  phploc" />
-        <echo msg="  phpcs" />
-        <echo msg="  phpmd" />
-        <echo msg="  pdepend" />
-        <echo msg="  phpdoc" />
-        <echo msg="  build" />
-    </target>
+    <property name="builddir" value="build" />
 
     <target name="clean">
-        <delete dir="${basedir}/build/api"/>
-        <delete dir="${basedir}/build/code-browser"/>
-        <delete dir="${basedir}/build/coverage"/>
-        <delete dir="${basedir}/build/logs"/>
-        <delete dir="${basedir}/build/pdepend"/>
+        <delete dir="${builddir}/logs"/>
+        <delete dir="${builddir}/coverage"/>
+        <delete dir="${builddir}/phpdoc"/>
+        <delete dir="${builddir}/phpdox"/>
+        <delete dir="${builddir}/pdepend"/>
+        <delete dir="${builddir}/phpmetrics"/>
 
-        <mkdir dir="${basedir}/build/api"/>
-        <mkdir dir="${basedir}/build/code-browser"/>
-        <mkdir dir="${basedir}/build/coverage"/>
-        <mkdir dir="${basedir}/build/logs"/>
-        <mkdir dir="${basedir}/build/pdepend"/>
+        <mkdir dir="${builddir}/logs"/>
+        <mkdir dir="${builddir}/coverage"/>
+        <mkdir dir="${builddir}/phpdoc"/>
+        <mkdir dir="${builddir}/phpdox"/>
+        <mkdir dir="${builddir}/pdepend"/>
+        <mkdir dir="${builddir}/phpmetrics"/>
     </target>
 
     <target name="lint">
@@ -41,58 +30,83 @@
     </target>
 
     <target name="phpunit">
-        <exec executable="phpunit" checkreturn="true" />
+        <exec executable="phpunit" checkreturn="true">
+        </exec>
     </target>
 
     <target name="pdepend">
         <exec executable="pdepend">
-            <arg line="--jdepend-xml=${basedir}/build/logs/jdepend.xml
-              --jdepend-chart=${basedir}/build/pdepend/dependencies.svg
-              --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg
-              ${source}"/>
+            <arg line="--jdepend-xml=${builddir}/logs/jdepend.xml
+                       --jdepend-chart=${builddir}/pdepend/dependencies.svg
+                       --overview-pyramid=${builddir}/pdepend/overview-pyramid.svg
+                       ${source}"/>
         </exec>
     </target>
 
     <target name="phpmd">
         <exec executable="phpmd">
             <arg line="${source}
-              xml
-              codesize,design,naming,unusedcode
-              --reportfile ${basedir}/build/logs/pmd.xml"/>
+                       xml
+                       codesize,design,naming,unusedcode
+                       --reportfile ${builddir}/logs/pmd.xml"/>
+        </exec>
+    </target>
+
+    <target name="phpmetrics">
+        <exec executable="phpmetrics">
+            <arg line="--report-html=${builddir}/phpmetrics/index.html
+                       ${source}"/>
         </exec>
     </target>
 
     <target name="phpcpd">
         <exec executable="phpcpd">
-            <arg line="--log-pmd ${basedir}/build/logs/pmd-cpd.xml ${source}"/>
+            <arg line="--log-pmd ${builddir}/logs/pmd-cpd.xml
+                       ${source}"/>
+        </exec>
+    </target>
+
+    <target name="phpdpd">
+        <exec executable="phpdpd">
+            <arg line="${source}"/>
+        </exec>
+    </target>
+
+    <target name="phpdoccheck">
+        <exec executable="phpdoccheck">
+            <arg line="--directory ${source}"/>
         </exec>
     </target>
 
     <target name="phploc" description="Measures the size of the project and count it's tests">
         <exec executable="phploc">
-            <arg line="--count-tests --log-xml ${basedir}/build/logs/phploc.xml ${source} tests"/>
+            <arg line="--count-tests
+                       --log-xml ${builddir}/logs/phploc.xml
+                       ${source}"/>
         </exec>
     </target>
 
     <target name="phpcs">
-         <exec executable="phpcs" output="/dev/null">
+        <exec executable="phpcs" output="/dev/null">
             <arg line="--report=checkstyle
-              --report-file=${basedir}/build/logs/checkstyle.xml
-              --standard=Symfony2
-              ${source}"/>
+                       --report-file=${builddir}/logs/phpcs.xml
+                       --standard=Symfony2
+                       ${source}"/>
         </exec>
     </target>
 
     <target name="phpdoc">
         <exec executable="phpdoc">
-            <arg line="-d ${source} -t ${basedir/build/api}" />
+            <arg line="--directory ${source}
+                       --target ${builddir}/phpdoc
+                       --cache-folder ${builddir}/build/phpdoc" />
         </exec>
     </target>
 
     <target name="phpdox">
-        <exec executable="phpdox" />
+        <exec executable="phpdox" checkreturn="true" />
     </target>
 
-    <target name="build" depends="lint, clean, phpunit, pdepend, phpmd, phpcpd, phpcs, phploc, phpdox" />
+    <target name="build" depends="lint, clean, phpunit, pdepend, phpmd, phpmetrics, phpcpd, phpcs, phploc, phpdoc, phpdox" />
 
 </project>
