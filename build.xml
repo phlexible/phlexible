@@ -107,6 +107,6 @@
         <exec executable="phpdox" checkreturn="true" />
     </target>
 
-    <target name="build" depends="lint, clean, phpunit, pdepend, phpmd, phpmetrics, phpcpd, phpcs, phploc, phpdoc, phpdox" />
+    <target name="build" depends="lint, clean, phpunit, pdepend, phpmd, phpmetrics, phpcpd, phpcs, phploc, phpdox" />
 
 </project>
