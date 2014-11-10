@@ -475,10 +475,11 @@ class LayoutController extends Controller
 
         $id = $request->get('id');
 
+        $elementSourceManager = $this->get('phlexible_element.element_source_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
-        $elementtype = $elementService->findElementtype($id);
+        $elementtype = $elementSourceManager->findElementtype($id);
         $childElementtypes = $elementService->findAllowedChildren($elementtype);
 
         $data = array();
