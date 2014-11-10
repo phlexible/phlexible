@@ -9,7 +9,7 @@
                 <dependency path="${basedir}/../../symfony/symfony/src" />
             </inheritance>
         </collector>
-        <generator output="${basedir}/docs">
+        <generator output="${basedir}/build/phpdox">
             <enrich base="${basedir}/build/logs">
                 <source type="build" />
                 <source type="phploc" />
