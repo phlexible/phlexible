@@ -248,7 +248,10 @@ class ElementService
     {
         $elementtypes = [];
         foreach ($this->viabilityManager->findAllowedChildren($elementtype) as $viability) {
-            $elementtypes[] = $this->elementSourceManager->findElementtype($viability->getElementtypeId());
+            $viabilityElementtype = $this->elementSourceManager->findElementtype($viability->getElementtypeId());
+            if ($viabilityElementtype) {
+                $elementtypes[] = $viabilityElementtype;
+            }
         }
 
         return $elementtypes;
