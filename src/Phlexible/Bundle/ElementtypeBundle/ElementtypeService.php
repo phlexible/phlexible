@@ -202,9 +202,8 @@ class ElementtypeService
      */
     public function duplicateElementtype(Elementtype $sourceElementtype, $user)
     {
-        $uniqId = uniqid();
-
         $elementtype = clone $sourceElementtype;
+        $uniqId = uniqid();
 
         foreach ($elementtype->getTitles() as $language => $title) {
           $elementtype->setTitle($language, $title . ' - copy - ' . $uniqId);
@@ -212,6 +211,7 @@ class ElementtypeService
 
         $elementtype
             ->setId(null)
+            ->setUniqueId($elementtype->getUniqueId() . '-' . $uniqId)
             ->setRevision(1)
             ->setCreatedAt(new \DateTime())
             ->setCreateUser($user);

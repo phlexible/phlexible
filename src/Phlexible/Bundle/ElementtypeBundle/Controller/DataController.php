@@ -60,7 +60,7 @@ class DataController extends Controller
         foreach ($files as $file) {
             $data[basename($file)] = array(
                 'title' => basename($file),
-                'url'   => $prefix . $file
+                'url'   => $prefix . basename($file)
             );
         }
 
