@@ -149,7 +149,7 @@ class FieldMapper
                 return $mapper;
             }
         }
-        
+
         return null;
     }
 }
