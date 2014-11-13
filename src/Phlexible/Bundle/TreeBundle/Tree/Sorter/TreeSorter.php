@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\TreeBundle\Tree;
 use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\TreeBundle\Doctrine\Tree;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Component\Database\ConnectionManager;
 
 /**
  * Tree interface
@@ -58,14 +57,14 @@ class TreeSorter
                 continue;
             }
 
-            $sortedChildren = $this->_getSortedChildren($node);
+            $sortedChildren = $this->getSortedChildren($node);
 
             foreach ($sortedChildren as $sort => $tid) {
                 $sort++;
                 $this->_db->update(
                     $this->_db->prefix . 'element_tree',
-                    array('sort' => $sort),
-                    array('id = ?' => $tid)
+                    ['sort' => $sort],
+                    ['id = ?' => $tid]
                 );
             }
         }
@@ -82,21 +81,21 @@ class TreeSorter
             return;
         }
 
-        $sortedChildren = $this->_getSortedChildren($node);
+        $sortedChildren = $this->getSortedChildren($node);
 
         foreach ($sortedChildren as $sort => $tid) {
             $sort++;
             $this->_db->update(
                 $this->_db->prefix . 'element_tree',
-                array('sort' => $sort),
-                array('id = ?' => $tid)
+                ['sort' => $sort],
+                ['id = ?' => $tid]
             );
         }
 
         $node->getTree()->_getMeta(true);
     }
 
-    protected function _getSortedChildren(TreeNode $node)
+    protected function getSortedChildren(TreeNode $node)
     {
         $db = $this->_db;
         $sortLang = $this->_sortLang;
@@ -107,10 +106,10 @@ class TreeSorter
 
         $select = $db->select()
             ->from(
-                array('et' => $db->prefix . 'element_tree'),
-                array(
+                ['et' => $db->prefix . 'element_tree'],
+                [
                     'id'
-                )
+                ]
             )
             ->where('et.parent_id = ?', $parentId);
 
@@ -118,16 +117,16 @@ class TreeSorter
             case TreeInterface::SORT_MODE_TITLE:
                 $select
                     ->joinLeft(
-                        array('e' => $db->prefix . 'element'),
+                        ['e' => $db->prefix . 'element'],
                         'et.eid = e.eid',
-                        array()
+                        []
                     )
                     ->joinLeft(
-                        array('evt' => $db->prefix . 'element_version_titles'),
+                        ['evt' => $db->prefix . 'element_version_titles'],
                         'e.eid = evt.eid AND e.latest_version = evt.version AND evt.language = ' . $db->quote(
                             $sortLang
                         ),
-                        array()
+                        []
                     )
                     ->order('evt.backend ' . $sortDir);
                 break;
@@ -139,9 +138,9 @@ class TreeSorter
             case TreeInterface::SORT_MODE_PUBLISHDATE:
                 $select
                     ->joinLeft(
-                        array('eto' => $db->prefix . 'element_tree_online'),
+                        ['eto' => $db->prefix . 'element_tree_online'],
                         'eto.tree_id = et.id AND eto.language = ' . $db->quote($sortLang),
-                        array()
+                        []
                     )
                     ->order('eto.publish_time ' . $sortDir);
                 break;
@@ -149,16 +148,16 @@ class TreeSorter
             case TreeInterface::SORT_MODE_CUSTOMDATE:
                 $select
                     ->joinLeft(
-                        array('e' => $db->prefix . 'element'),
+                        ['e' => $db->prefix . 'element'],
                         'et.eid = e.eid',
-                        array()
+                        []
                     )
                     ->joinLeft(
-                        array('evt' => $db->prefix . 'element_version_titles'),
+                        ['evt' => $db->prefix . 'element_version_titles'],
                         'e.eid = evt.eid AND e.latest_version = evt.version AND evt.language = ' . $db->quote(
                             $sortLang
                         ),
-                        array()
+                        []
                     )
                     ->order('evt.date ' . $sortDir);
                 break;

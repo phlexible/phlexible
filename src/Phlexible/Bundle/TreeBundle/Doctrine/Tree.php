@@ -685,7 +685,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
         $this->dispatcher->dispatch(TreeEvents::SET_NODE_OFFLINE, $event);
     }
 
-    protected function _deleteCheck(Makeweb_Elements_Tree_Node $node, array $rightsIdentifiers)
+    protected function deleteCheck(Makeweb_Elements_Tree_Node $node, array $rightsIdentifiers)
     {
         $eid = $node->getEid();
         $uid = MWF_Env::getUid();
@@ -717,7 +717,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
         }
 
         foreach ($node->getChildren() as $childNode) {
-            $this->_deleteCheck($childNode, $rightsIdentifiers);
+            $this->deleteCheck($childNode, $rightsIdentifiers);
         }
     }
 

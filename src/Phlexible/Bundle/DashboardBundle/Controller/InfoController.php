@@ -59,7 +59,7 @@ class InfoController extends Controller
                 ) . ']'
             ];
 
-            $lines[] = ['Session:', $request->getSession()->getId() . ' [' . $_SERVER['REMOTE_ADDR'] . ']'];
+            $lines[] = ['Session:', $request->getSession()->getId() . ' [' . $request->server->get('REMOTE_ADDR') . ']'];
 
             $lines[] = [
                 'User:',

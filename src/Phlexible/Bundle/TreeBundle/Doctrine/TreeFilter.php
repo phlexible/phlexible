@@ -195,7 +195,7 @@ class TreeFilter implements TreeFilterInterface
      */
     public function getCount()
     {
-        return $this->_fetchCount();
+        return $this->fetchCount();
     }
 
     /**
@@ -209,7 +209,7 @@ class TreeFilter implements TreeFilterInterface
     /**
      * @return int
      */
-    private function _fetchCount()
+    private function fetchCount()
     {
         $qb = $this->createFilterQueryBuilder();
         $qb->select(['et.id']);
