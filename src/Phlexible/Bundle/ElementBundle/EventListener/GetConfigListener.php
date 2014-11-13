@@ -10,7 +10,10 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
+use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Get config listener
@@ -20,11 +23,74 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class GetConfigListener
 {
     /**
-     * @param ContainerInterface $container
+     * @var SiterootManagerInterface
      */
-    public function __construct(ContainerInterface $container)
+    private $siterootManager;
+
+    /**
+     * @var TreeManager
+     */
+    private $treeManager;
+
+    /**
+     * @var SecurityContextInterface
+     */
+    private $securityContext;
+
+    /**
+     * @var bool
+     */
+    private $publishCommentRequired;
+
+    /**
+     * @var bool
+     */
+    private $publishConfirmRequired;
+
+    /**
+     * @var bool
+     */
+    private $createUseMultilanguage;
+
+    /**
+     * @var bool
+     */
+    private $createRestricted;
+
+    /**
+     * @var string
+     */
+    private $availableLanguages;
+
+    /**
+     * @param SiterootManagerInterface $siterootManager
+     * @param TreeManager              $treeManager
+     * @param SecurityContextInterface $securityContext
+     * @param bool                     $publishCommentRequired
+     * @param bool                     $publishConfirmRequired
+     * @param bool                     $createUseMultilanguage
+     * @param bool                     $createRestricted
+     * @param string                   $availableLanguages
+     */
+    public function __construct(
+        SiterootManagerInterface $siterootManager,
+        TreeManager $treeManager,
+        SecurityContextInterface $securityContext,
+        $publishCommentRequired,
+        $publishConfirmRequired,
+        $createUseMultilanguage,
+        $createRestricted,
+        $availableLanguages
+    )
     {
-        $this->container = $container;
+        $this->siterootManager = $siterootManager;
+        $this->treeManager = $treeManager;
+        $this->securityContext = $securityContext;
+        $this->publishCommentRequired = $publishCommentRequired;
+        $this->publishConfirmRequired = $publishConfirmRequired;
+        $this->createUseMultilanguage = $createUseMultilanguage;
+        $this->createRestricted = $createRestricted;
+        $this->availableLanguages = $availableLanguages;
     }
 
     /**
@@ -32,50 +98,32 @@ class GetConfigListener
      */
     public function onGetConfig(GetConfigEvent $event)
     {
-        $container = $this->container;
-
         $config = $event->getConfig();
 
-        $config->set(
-            'elements.publish.comment_required',
-            (bool) $container->getParameter('phlexible_element.publish.comment_required')
-        );
-        $config->set(
-            'elements.publish.confirm_required',
-            (bool) $container->getParameter('phlexible_element.publish.confirm_required')
-        );
-        $config->set(
-            'elements.create.use_multilanguage',
-            (bool) $container->getParameter('phlexible_element.create.use_multilanguage')
-        );
-        $config->set(
-            'elements.create.restricted',
-            (bool) $container->getParameter('phlexible_element.create.restricted')
-        );
+        $config->set('elements.publish.comment_required', (bool) $this->publishCommentRequired);
+        $config->set('elements.publish.confirm_required', (bool) $this->publishConfirmRequired);
+        $config->set('elements.create.use_multilanguage', (bool) $this->createUseMultilanguage);
+        $config->set('elements.create.restricted', (bool) $this->createRestricted);
 
-        $siterootManager = $container->get('phlexible_siteroot.siteroot_manager');
-        $treeManager = $container->get('phlexible_tree.tree_manager');
-        $securityContext = $container->get('security.context');
+        $siteroots = $this->siterootManager->findAll();
+        $allLanguages = explode(',', $this->availableLanguages);
 
-        $siteroots = $siterootManager->findAll();
-        $allLanguages = explode(',', $container->getParameter('phlexible_cms.languages.available'));
-
-        $siterootLanguages = array();
-        $siterootConfig = array();
+        $siterootLanguages = [];
+        $siterootConfig = [];
 
         foreach ($siteroots as $siteroot) {
             $siterootId = $siteroot->getId();
 
-            if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            if ($this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 $siterootLanguages[$siterootId] = $allLanguages;
             } else {
-                $siterootLanguages[$siterootId] = array();
+                $siterootLanguages[$siterootId] = [];
 
                 foreach ($allLanguages as $language) {
-                    $tree = $treeManager->getBySiterootId($siterootId);
+                    $tree = $this->treeManager->getBySiterootId($siterootId);
                     $root = $tree->getRoot();
 
-                    if (!$securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $root)) {
+                    if (!$this->securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $root)) {
                         continue;
                     }
 
@@ -84,10 +132,10 @@ class GetConfigListener
             }
 
             if (count($siterootLanguages[$siterootId])) {
-                $siterootConfig[$siterootId] = array(
+                $siterootConfig[$siterootId] = [
                     'id' => $siteroot->getId(),
                     'title' => $siteroot->getTitle(),
-                );
+                ];
             }
         }
 

@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
 use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Upload temp storage

@@ -78,9 +78,9 @@ class CheckCommand extends ContainerAwareCommand
                 $output->writeln("<fg=green>- {$existingProblem->getId()}</fg=green>");
                 $em->remove($existingProblem);
             }
-
-            $em->flush();
         }
+
+        $em->flush();
 
         $message = null;
         $subject = null;

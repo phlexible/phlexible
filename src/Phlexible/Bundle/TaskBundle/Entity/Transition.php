@@ -202,7 +202,7 @@ class Transition
      *
      * @return $this
      */
-    public function setTask($task = null)
+    public function setTask(Task $task = null)
     {
         $this->task = $task;
         if (null !== $task) {

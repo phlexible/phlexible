@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Bundle\MediaCacheBundle\Entity\QueueItem;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
@@ -65,7 +66,7 @@ class WriteCommand extends ContainerAwareCommand
 
             $cacheItem = $queueWorker->process(
                 $queueItem,
-                function ($status, $worker, $queueItem, $cacheItem) use ($output, $breakOnError, $current, $total) {
+                function ($status, $worker, QueueItem $queueItem, CacheItem $cacheItem) use ($output, $breakOnError, $current, $total) {
                     $worker = ($worker ? get_class($worker) : '-');
                     $fileId = $queueItem->getFileId();
                     $templateKey = $queueItem->getTemplateKey();

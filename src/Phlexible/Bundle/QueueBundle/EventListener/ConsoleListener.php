@@ -39,11 +39,7 @@ class ConsoleListener implements EventSubscriberInterface
     {
         $this->jobManager = $jobManager;
 
-        if (isset($_ENV['phlexibleJobId'])) {
-            $this->jobId = $_ENV['phlexibleJobId'];
-        } elseif (isset($_SERVER['phlexibleJobId'])) {
-            $this->jobId = $_SERVER['phlexibleJobId'];
-        }
+        $this->jobId = getenv('phlexibleJobId');
     }
 
     /**
