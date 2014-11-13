@@ -52,18 +52,13 @@ Phlexible.fields.FieldTypes.addField('file', {
             help: 1
         },
         configuration: {
+            required: 1,
             sync: 1,
             width: 0,
             height: 0,
             readonly: 1,
             hide_label: 1,
             sortable: 0
-        },
-        validation: {
-            required: 1,
-            text: 0,
-            numeric: 0,
-            content: 0
         }
     }
 });

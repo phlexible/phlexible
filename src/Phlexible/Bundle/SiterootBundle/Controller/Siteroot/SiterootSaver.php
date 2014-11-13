@@ -227,7 +227,6 @@ class SiterootSaver
             foreach ($siteroot->getNavigations() as $navigation) {
                 if ($navigation->getId() === $id) {
                     $siteroot->removeNavigation($navigation);
-                    $this->siterootManager->deleteSiterootNavigation($navigation);
                     break;
                 }
             }

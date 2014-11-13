@@ -61,7 +61,7 @@ class FileController extends Controller
         $filter = $request->get('filter');
 
         if (!$folderId) {
-            die("No folder ID");
+            throw new \RuntimeException("No folder ID");
         }
 
         if ($filter) {

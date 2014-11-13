@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\DashboardBundle\Controller;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -24,52 +25,54 @@ class InfoController extends Controller
     /**
      * Return info
      *
+     * @param Request $request
+     *
      * @return Response
      * @Route("", name="dashboard_info")
      */
-    public function infoAction()
+    public function infoAction(Request $request)
     {
         $securityContext = $this->get('security.context');
 
-        $lines = array();
+        $lines = [];
 
         if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-            $lines[] = array(
+            $lines[] = [
                 'Project:',
                 $this->container->getParameter('phlexible_gui.project.title') . ' '
                     . $this->container->getParameter('phlexible_gui.project.version')
-            );
-            $lines[] = array(
+            ];
+            $lines[] = [
                 'Env:',
                 $this->container->getParameter('kernel.environment') . ($this->container->getParameter(
                     'kernel.debug'
                 ) ? ' [DEBUG]' : '')
-            );
-            $lines[] = array('Host:', $_SERVER['SERVER_NAME'] . ' [' . PHP_SAPI . ']');
+            ];
+            $lines[] = ['Host:', $request->server->get('SERVER_NAME') . ' [' . PHP_SAPI . ']'];
 
             $connection = $this->getDoctrine()->getConnection();
             /* @var $connection \Doctrine\DBAL\Connection */
 
-            $lines[] = array(
+            $lines[] = [
                 'Default Database:',
                 $connection->getHost() . ' / ' . $connection->getDatabase() . ' [' . $connection->getDriver()->getName(
                 ) . ']'
-            );
+            ];
 
-            $lines[] = array('Session:', session_id() . ' [' . $_SERVER['REMOTE_ADDR'] . ']');
+            $lines[] = ['Session:', $request->getSession()->getId() . ' [' . $_SERVER['REMOTE_ADDR'] . ']'];
 
-            $lines[] = array(
+            $lines[] = [
                 'User:',
                 $this->getUser()->getUsername() . ' [' . implode(', ', $this->getUser()->getRoles()) . ']'
-            );
+            ];
 
-            $lines[] = array('UserAgent:', $_SERVER['HTTP_USER_AGENT']);
+            $lines[] = ['UserAgent:', $request->server->get('HTTP_USER_AGENT')];
         } else {
-            $lines[] = array(
+            $lines[] = [
                 'Project:',
                 $this->container->getParameter('phlexible_gui.project.title') . ' '
                 . $this->container->getParameter('phlexible_gui.project.version')
-            );
+            ];
         }
 
         $l1 = 0;

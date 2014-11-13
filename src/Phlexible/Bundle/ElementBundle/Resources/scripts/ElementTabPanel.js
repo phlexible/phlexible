@@ -113,7 +113,7 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
                 element: this.element
             },
             {
-                xtype: 'elements-urlgrid',
+                xtype: 'elements-urlpanel',
                 element: this.element
             }
         ];

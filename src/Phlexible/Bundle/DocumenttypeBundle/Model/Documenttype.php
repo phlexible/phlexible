@@ -142,10 +142,6 @@ class Documenttype
     public function setMimetypes($mimetypes)
     {
         $this->mimetypes = $mimetypes;
-        if (!is_array($mimetypes)) {
-            print_r($this);
-            die;
-        }
 
         return $this;
     }

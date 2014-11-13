@@ -95,7 +95,7 @@ class ElementAssetProvider implements AssetProviderInterface
             '@PhlexibleElementBundle/Resources/scripts/MainPanel.js',
             '@PhlexibleElementBundle/Resources/scripts/TopToolbar.js',
             '@PhlexibleElementBundle/Resources/scripts/FileLinkWindow.js',
-            '@PhlexibleElementBundle/Resources/scripts/UrlGrid.js',
+            '@PhlexibleElementBundle/Resources/scripts/UrlPanel.js',
             '@PhlexibleElementBundle/Resources/scripts/ElementPreviewPanel.js',
             '@PhlexibleElementBundle/Resources/scripts/LocksWindow.js',
 

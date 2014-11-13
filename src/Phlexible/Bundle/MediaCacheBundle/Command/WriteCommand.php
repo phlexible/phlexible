@@ -105,7 +105,7 @@ class WriteCommand extends ContainerAwareCommand
                     if ($status === 'error' && $cacheItem && $cacheItem->getStatus() === CacheItem::STATUS_ERROR) {
                         $output->writeln('<error>' . $cacheItem->getError() . '<error>');
                         if ($breakOnError) {
-                            exit(1);
+                            return 1;
                         }
                     }
                 }
