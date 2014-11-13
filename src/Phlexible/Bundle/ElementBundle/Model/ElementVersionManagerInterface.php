@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\ElementBundle\Model;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
  * Element version manager interface

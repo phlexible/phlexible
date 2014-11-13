@@ -22,12 +22,12 @@ class CmsAssetProvider implements AssetProviderInterface
      */
     public function getUxScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleCmsBundle/Resources/scripts/ux/Ext.form.FileUploadField.js',
             '@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.DDView.js',
             '@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.Multiselect.js',
             '@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.TreeSelector.js',
-        );
+        ];
     }
 
     /**
@@ -35,11 +35,11 @@ class CmsAssetProvider implements AssetProviderInterface
      */
     public function getUxCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleCmsBundle/Resources/styles/ux/Ext.form.FileUploadField.css',
             '@PhlexibleCmsBundle/Resources/styles/ux/Ext.ux.Multiselect.css',
             '@PhlexibleCmsBundle/Resources/styles/ux/Ext.ux.TreeSelector.css',
-        );
+        ];
     }
 
     /**
@@ -47,12 +47,12 @@ class CmsAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleCmsBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleCmsBundle/Resources/scripts/menuhandle/ReportsMenu.js',
             '@PhlexibleCmsBundle/Resources/scripts/menuhandle/StatisticsMenu.js',
-        );
+        ];
     }
 
     /**

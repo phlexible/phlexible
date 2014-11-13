@@ -21,7 +21,7 @@ class Selection
     /**
      * @var array
      */
-    private $items = array();
+    private $items = [];
 
     /**
      * @param SelectionItem $item

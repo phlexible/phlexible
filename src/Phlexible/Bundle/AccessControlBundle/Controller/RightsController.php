@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\AccessControlBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\Exception\InvalidArgumentException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -74,12 +74,12 @@ class RightsController extends Controller
         $contentClass = $request->get('contentClass');
 
         $permissions = $this->get('phlexible_access_control.permissions');
-        $contentRights = array();
+        $contentRights = [];
         foreach ($permissions->getByContentClass($contentClass) as $permission) {
-            $contentRights[] = array(
+            $contentRights[] = [
                 'name'    => $permission->getName(),
                 'iconCls' => $permission->getIconClass(),
-            );
+            ];
         }
 
         return new JsonResponse($contentRights);
@@ -152,11 +152,11 @@ class RightsController extends Controller
                         $modifiedRow['language']
                     );
 
-                    if (!in_array($rightRow['status'], array(
+                    if (!in_array($rightRow['status'], [
                         \Phlexible\Bundle\AccessControlBundle\Rights\Rights::RIGHT_STATUS_INHERITABLE,
                         \Phlexible\Bundle\AccessControlBundle\Rights\Rights::RIGHT_STATUS_SINGLE,
                         \Phlexible\Bundle\AccessControlBundle\Rights\Rights::RIGHT_STATUS_STOPPED
-                    ))) {
+                    ])) {
                         continue;
                     }
 

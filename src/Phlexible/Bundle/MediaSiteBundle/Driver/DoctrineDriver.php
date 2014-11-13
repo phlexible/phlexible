@@ -11,15 +11,15 @@ namespace Phlexible\Bundle\MediaSiteBundle\Driver;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\HashCalculator\HashCalculatorInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\IOException;
 use Phlexible\Bundle\MediaSiteBundle\Exception\NotWritableException;
+use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\StreamSourceInterface;
+use Phlexible\Bundle\MediaSiteBundle\HashCalculator\HashCalculatorInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -111,10 +111,10 @@ class DoctrineDriver extends AbstractDriver
         }
 
         $folder = $this->getFolderRepository()->findOneBy(
-            array(
+            [
                 'siteId' => $this->getSite()->getId(),
                 'id'     => $id
-            )
+            ]
         );
 
         if ($folder) {
@@ -130,10 +130,10 @@ class DoctrineDriver extends AbstractDriver
     public function findRootFolder()
     {
         $folder = $this->getFolderRepository()->findOneBy(
-            array(
+            [
                 'siteId'   => $this->getSite()->getId(),
                 'parentId' => null
-            )
+            ]
         );
 
         if ($folder) {
@@ -151,10 +151,10 @@ class DoctrineDriver extends AbstractDriver
         $path = ltrim($path, '/');
 
         $folder = $this->getFolderRepository()->findOneBy(
-            array(
+            [
                 'siteId' => $this->getSite()->getId(),
                 'path'   => $path
-            )
+            ]
         );
 
         if ($folder) {
@@ -170,9 +170,9 @@ class DoctrineDriver extends AbstractDriver
     public function findFoldersByParentFolder(FolderInterface $parentFolder)
     {
         $folders = $this->getFolderRepository()->findBy(
-            array(
+            [
                 'parentId' => $parentFolder->getId(),
-            )
+            ]
         );
 
         foreach ($folders as $folder) {
@@ -219,10 +219,10 @@ class DoctrineDriver extends AbstractDriver
     public function findFile($id, $version = 1)
     {
         $file = $this->getFileRepository()->findOneBy(
-            array(
+            [
                 'id'      => $id,
                 'version' => $version
-            )
+            ]
         );
 
         if ($file) {
@@ -363,10 +363,10 @@ class DoctrineDriver extends AbstractDriver
         $folder = $this->findFolderByPath($folderPath);
 
         $file = $this->getFileRepository()->findOneBy(
-            array(
+            [
                 'name'   => $name,
                 'folder' => $folder
-            )
+            ]
         );
 
         if ($file) {
@@ -382,9 +382,9 @@ class DoctrineDriver extends AbstractDriver
     public function findFileVersions($id)
     {
         $files = $this->getFileRepository()->findBy(
-            array(
+            [
                 'id' => $id
-            )
+            ]
         );
 
         foreach ($files as $file) {
@@ -405,9 +405,9 @@ class DoctrineDriver extends AbstractDriver
         $start = null,
         $includeHidden = false)
     {
-        $criteria = array(
+        $criteria = [
             'folder' => $folder
-        );
+        ];
 
         if (!$includeHidden) {
             $criteria['hidden'] = false;
@@ -446,7 +446,7 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findLatestFiles($limit = 20)
     {
-        $files = $this->getFileRepository()->findBy(array(), array('createdAt' => 'DESC'), $limit);
+        $files = $this->getFileRepository()->findBy([], ['createdAt' => 'DESC'], $limit);
 
         foreach ($files as $file) {
             /* @var $file FileInterface */

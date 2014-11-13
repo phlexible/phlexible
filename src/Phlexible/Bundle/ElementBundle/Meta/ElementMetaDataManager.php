@@ -64,13 +64,13 @@ class ElementMetaDataManager extends MetaDataManager
 
         $rows = $connection->fetchAll($qb->getSQL());
 
-        $metaDatas = array();
+        $metaDatas = [];
 
         foreach ($rows as $row) {
-            $identifiers = array(
+            $identifiers = [
                 'eid'     => $row['eid'],
                 'version' => $row['version'],
-            );
+            ];
 
             $id = '';
             foreach ($identifiers as $value) {
@@ -101,9 +101,9 @@ class ElementMetaDataManager extends MetaDataManager
      */
     private function getIdentifiersFromElementVersion(ElementVersion $elementVersion)
     {
-        return array(
+        return [
             'eid'     => $elementVersion->getElement()->getEid(),
             'version' => $elementVersion->getVersion(),
-        );
+        ];
     }
 }

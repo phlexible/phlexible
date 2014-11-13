@@ -27,7 +27,7 @@ class ContentchannelLoader
     /**
      * @var LoaderInterface[]
      */
-    private $loaders = array();
+    private $loaders = [];
 
     /**
      * @param PatternResourceLocator $locator

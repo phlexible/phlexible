@@ -20,12 +20,12 @@ class AssetProviderCollection implements AssetProviderInterface
     /**
      * @var AssetProviderInterface[]
      */
-    private $assetProviders = array();
+    private $assetProviders = [];
 
     /**
      * @param array $assetProviders
      */
-    public function __construct(array $assetProviders = array())
+    public function __construct(array $assetProviders = [])
     {
         foreach ($assetProviders as $assetProvider) {
             $this->addAssetProvider($assetProvider);

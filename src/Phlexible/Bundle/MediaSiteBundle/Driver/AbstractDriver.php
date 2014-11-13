@@ -43,7 +43,7 @@ abstract class AbstractDriver implements DriverInterface
      */
     public function getFeatures()
     {
-        return array();
+        return [];
     }
 
     /**

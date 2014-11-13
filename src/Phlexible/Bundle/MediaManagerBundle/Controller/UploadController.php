@@ -50,10 +50,10 @@ class UploadController extends Controller
                 return new ResultResponse(
                     false,
                     'Target folder not found.',
-                    array(
+                    [
                         'params' => $request->request->all(),
                         'files'  => $request->files->all(),
-                    )
+                    ]
                 );
             }
 
@@ -61,10 +61,10 @@ class UploadController extends Controller
                 return new ResultResponse(
                     false,
                     'No files received.',
-                    array(
+                    [
                         'params' => $request->request->all(),
                         'files'  => $request->files->all(),
-                    )
+                    ]
                 );
             }
 
@@ -92,21 +92,21 @@ class UploadController extends Controller
             return new ResultResponse(
                 true,
                 $cnt . ' file(s) uploaded.',
-                array(
+                [
                     'params' => $request->request->all(),
                     'files'  => $request->files->all(),
-                )
+                ]
             );
         } catch (\Exception $e) {
             return new ResultResponse(
                 false,
                 $e->getMessage(),
-                array(
+                [
                     'params' => $request->request->all(),
                     'files'  => $request->files->all(),
                     'trace'  => $e->getTraceAsString(),
                     'traceArray'  => $e->getTrace(),
-                )
+                ]
             );
         }
     }
@@ -122,7 +122,7 @@ class UploadController extends Controller
         $siteManager = $this->get('phlexible_media_site.site_manager');
         $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
 
-        $data = array();
+        $data = [];
 
         if ($tempStorage->count()) {
             $tempFile = $tempStorage->next();
@@ -136,7 +136,7 @@ class UploadController extends Controller
                 $newType = $documenttypeManager->find('binary');
             }
 
-            $data = array(
+            $data = [
                 'versions' => $supportsVersions,
                 'temp_key' => $tempFile->getId(),
                 'temp_id'  => $tempFile->getId(),
@@ -146,7 +146,7 @@ class UploadController extends Controller
                 'new_size' => $tempFile->getSize(),
                 'wizard'   => false,
                 'total'    => $tempStorage->count(),
-            );
+            ];
 
             if ($tempFile->getFileId()) {
                 $oldFile = $site->findFile($tempFile->getFileId());
@@ -242,9 +242,9 @@ class UploadController extends Controller
         $imageApplier->apply($template, new File(), $tempFile->getPath(), $outFilename);
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($outFilename, 'image/png', array(
+            ->create($outFilename, 'image/png', [
                 'absolute_path' => true,
-            ));
+            ]);
     }
 
     /**
@@ -255,15 +255,15 @@ class UploadController extends Controller
     {
         $allSets = $this->getContainer()->get('metasets.repository')->getAll();
 
-        $sets = array();
+        $sets = [];
         foreach ($allSets as $key => $set) {
-            $sets[] = array(
+            $sets[] = [
                 'key' => $key,
                 'title' => $set->getTitle()
-            );
+            ];
         }
 
-        return new JsonResponse(array('metasets' => $sets));
+        return new JsonResponse(['metasets' => $sets]);
     }
 
     /**
@@ -277,7 +277,7 @@ class UploadController extends Controller
         $metaSet = $this->getContainer()->get('metasets.repository')->find('document');
         $keys = $metaSet->getKeys();
 
-        $meta = array();
+        $meta = [];
 
         $t9n = $this->getContainer()->t9n;
         $pageKeys = $t9n->{'metadata-keys'}->toArray();
@@ -308,15 +308,15 @@ class UploadController extends Controller
                     if (!empty($pageSelect[$okey])) {
                         $value = $pageSelect[$okey];
                     }
-                    $options[$k] = array($okey, $value);
+                    $options[$k] = [$okey, $value];
                 }
 
                 $meta[$key]['options'] = $options;
             } elseif ($row['type'] == 'suggest') {
                 $sourceId = $row['options'];
-                $options = array('source_id' => $sourceId);
+                $options = ['source_id' => $sourceId];
 
-                foreach (array('de', 'en') as $language) {
+                foreach (['de', 'en'] as $language) {
                     $source = $dataSourceRepository->getDataSourceById(
                         $sourceId,
                         $language
@@ -325,7 +325,7 @@ class UploadController extends Controller
                     $keys = $source->getKeys();
 
                     foreach ($keys as $value) {
-                        $options["values_$language"][] = array($value, $value);
+                        $options["values_$language"][] = [$value, $value];
                     }
 
                 }
@@ -361,15 +361,15 @@ class UploadController extends Controller
                             if (!empty($pageSelect[$okey])) {
                                 $value = $pageSelect[$okey];
                             }
-                            $options[$k] = array($okey, $value);
+                            $options[$k] = [$okey, $value];
                         }
 
                         $meta[$key]['options'] = $options;
                     } elseif ($row['type'] == 'suggest') {
                         $sourceId = $row['options'];
-                        $options = array('source_id' => $sourceId);
+                        $options = ['source_id' => $sourceId];
 
-                        foreach (array('de', 'en') as $language) {
+                        foreach (['de', 'en'] as $language) {
                             $source = $dataSourceRepository->getDataSourceById(
                                 $sourceId,
                                 $language
@@ -378,7 +378,7 @@ class UploadController extends Controller
                             $keys = $source->getKeys();
 
                             foreach ($keys as $value) {
-                                $options["values_$language"][] = array($value, $value);
+                                $options["values_$language"][] = [$value, $value];
                             }
                         }
 

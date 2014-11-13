@@ -104,7 +104,7 @@ class IconResolver
      */
     public function resolveTreeNode(TreeNodeInterface $treeNode, $language)
     {
-        $parameters = array();
+        $parameters = [];
 
         if (!$treeNode->isRoot()) {
             $tree = $treeNode->getTree();
@@ -145,7 +145,7 @@ class IconResolver
      */
     public function resolveTeaser(Teaser $teaser, $language)
     {
-        $parameters = array();
+        $parameters = [];
 
         if ($this->teaserManager->isPublished($teaser, $language)) {
             $parameters['status'] = $this->teaserManager->isAsync($teaser, $language) ? 'async': 'online';

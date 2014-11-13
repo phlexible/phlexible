@@ -28,10 +28,10 @@ class ChangePasswordCommand extends ContainerAwareCommand
         $this
             ->setName('user:change-password')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('username', InputArgument::REQUIRED, 'Username'),
                     new InputArgument('password', InputArgument::REQUIRED, 'Password'),
-                )
+                ]
             )
             ->setDescription('Change password for user.');
     }

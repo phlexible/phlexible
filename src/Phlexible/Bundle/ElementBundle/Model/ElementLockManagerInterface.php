@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\ElementBundle\Model;
 
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
-use Phlexible\Bundle\ElementBundle\Exception\LockFailedException;
 
 /**
  * Lock manager interface
@@ -148,7 +147,7 @@ interface ElementLockManagerInterface
      *
      * @return ElementLock[]
      */
-    public function findBy(array $criteria, array $sort = array(), $limit = null, $offset = null);
+    public function findBy(array $criteria, array $sort = [], $limit = null, $offset = null);
 
     /**
      * @param ElementLock $lock

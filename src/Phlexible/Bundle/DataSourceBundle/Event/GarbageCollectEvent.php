@@ -26,12 +26,12 @@ class GarbageCollectEvent extends Event
     /**
      * @var array
      */
-    private $activeValues = array();
+    private $activeValues = [];
 
     /**
      * @var array
      */
-    private $inactiveValues = array();
+    private $inactiveValues = [];
 
     /**
      * @param DataSourceValueBag $values
@@ -57,7 +57,7 @@ class GarbageCollectEvent extends Event
     public function markActive($values)
     {
         if (!is_array($values)) {
-            $values = array($values);
+            $values = [$values];
         }
 
         foreach ($values as $value) {
@@ -83,7 +83,7 @@ class GarbageCollectEvent extends Event
     public function markInactive($values)
     {
         if (!is_array($values)) {
-            $values = array($values);
+            $values = [$values];
         }
 
         foreach ($values as $value) {

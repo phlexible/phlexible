@@ -29,7 +29,7 @@ class TestCommand extends ContainerAwareCommand
         $this
             ->setName('queue:test')
             ->setDefinition(
-                array(
+                [
                     new InputOption('queue', null, InputOption::VALUE_NONE, 'Queue test job.'),
                     new InputOption('error', null, InputOption::VALUE_NONE, 'Triggers an error.'),
                     new InputOption('exception', null, InputOption::VALUE_NONE, 'Throws an exception.'),
@@ -38,7 +38,7 @@ class TestCommand extends ContainerAwareCommand
                     new InputOption('sleep5', null, InputOption::VALUE_NONE, 'Sleeps for 5 seconds.'),
                     new InputOption('sleep30', null, InputOption::VALUE_NONE, 'Sleeps 6 times for 30 seconds.'),
                     new InputOption('noop', null, InputOption::VALUE_NONE, 'Does nothing.'),
-                )
+                ]
             )
             ->setDescription('Create test job.');
     }
@@ -74,7 +74,7 @@ class TestCommand extends ContainerAwareCommand
 
         if ($input->getOption('queue')) {
             $queueManager = $this->getContainer()->get('phlexible_queue.job_manager');
-            $job = new Job('queue:test', array("--$target"));
+            $job = new Job('queue:test', ["--$target"]);
             $queueManager->addJob($job);
 
             $output->writeln("Job created.");

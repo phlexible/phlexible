@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\Doctrine;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;

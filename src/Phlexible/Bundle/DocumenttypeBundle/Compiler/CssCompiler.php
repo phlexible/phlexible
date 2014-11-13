@@ -43,7 +43,7 @@ class CssCompiler implements CompilerInterface
      */
     public function compile(DocumenttypeCollection $documenttypes)
     {
-        $sizes = array(16 => 'small'); //, 32 => 'medium', 48 => 'tile');
+        $sizes = [16 => 'small']; //, 32 => 'medium', 48 => 'tile');
 
         $classname = $this->getClassname();
 

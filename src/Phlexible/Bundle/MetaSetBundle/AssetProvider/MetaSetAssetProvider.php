@@ -38,7 +38,7 @@ class MetaSetAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleMetaSetBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleMetaSetBundle/Resources/scripts/Fields.js',
@@ -50,7 +50,7 @@ class MetaSetAssetProvider implements AssetProviderInterface
             '@PhlexibleMetaSetBundle/Resources/scripts/SuggestConfigurationWindow.js',
 
             '@PhlexibleMetaSetBundle/Resources/scripts/menuhandle/MetaSetsHandle.js',
-        );
+        ];
     }
 
     /**

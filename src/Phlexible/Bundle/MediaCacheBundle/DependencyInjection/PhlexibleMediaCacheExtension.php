@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\MediaCacheBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -37,7 +36,7 @@ class PhlexibleMediaCacheExtension extends Extension
 
         $container->setParameter('phlexible_media_cache.immediately_cache_system_templates', $config['immediately_cache_system_templates']);
 
-        $ids = array();
+        $ids = [];
         foreach ($config['storages'] as $name => $storageConfig) {
             if (!isset($storageConfig['id']) || !isset($storageConfig['options'])) {
                 throw new InvalidArgumentException('Storage config needs id and options.');

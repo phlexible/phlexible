@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\Command;
 
-use Phlexible\Bundle\TreeBundle\ContentTree\Dumper\XmlDumper;
 use Phlexible\Bundle\TreeBundle\ContentTree\XmlContentTree;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;

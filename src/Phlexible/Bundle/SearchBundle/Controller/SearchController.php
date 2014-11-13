@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\SearchBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -51,9 +51,9 @@ class SearchController extends Controller
         $search = $this->get('phlexible_search.search');
         $results = $search->search($query);
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'totalCount' => count($results),
             'results'    => array_slice($results, $start, $limit)
-        ));
+        ]);
     }
 }

@@ -30,11 +30,11 @@ class ExportCommand extends ContainerAwareCommand
         $this
             ->setName('media-manager:export')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('site', InputArgument::REQUIRED, 'Site to export.'),
                     new InputArgument('target', InputArgument::REQUIRED, 'Target directory.'),
                     new InputOption('symlink', null, InputOption::VALUE_NONE, 'Symlink'),
-                )
+                ]
             )
             ->setDescription('Export site');
     }

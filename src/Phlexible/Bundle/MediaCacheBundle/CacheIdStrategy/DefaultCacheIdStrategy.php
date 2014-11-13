@@ -23,7 +23,7 @@ class DefaultCacheIdStrategy implements CacheIdStrategyInterface
      */
     public function createCacheId(TemplateInterface $template, FileInterface $file)
     {
-        $identifiers = array($template->getKey(), $file->getId(), $file->getVersion(), $file->getHash());
+        $identifiers = [$template->getKey(), $file->getId(), $file->getVersion(), $file->getHash()];
 
         return md5(implode('__', $identifiers));
     }

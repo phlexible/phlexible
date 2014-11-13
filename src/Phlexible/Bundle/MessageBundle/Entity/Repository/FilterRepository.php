@@ -38,7 +38,7 @@ class FilterRepository extends EntityRepository
      */
     public function findOneByUserIdAndTitle($userId, $title)
     {
-        return $this->findOneBy(array('userId' => $userId, 'title' => $title));
+        return $this->findOneBy(['userId' => $userId, 'title' => $title]);
     }
 
     /**
@@ -57,7 +57,7 @@ class FilterRepository extends EntityRepository
             $filters = $this->findAll();
         }
 
-        $applicableFilters = array();
+        $applicableFilters = [];
 
         $checker = new MessageChecker();
         foreach ($filters as $filter) {

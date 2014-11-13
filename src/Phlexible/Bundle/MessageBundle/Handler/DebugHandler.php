@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MessageBundle\Handler;
 
 use Phlexible\Bundle\MessageBundle\Entity\Message;
-use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 
 /**
  * Debug handler
@@ -21,14 +20,14 @@ class DebugHandler implements HandlerInterface
     /**
      * @var array
      */
-    private $messages = array();
+    private $messages = [];
 
     /**
      * {@inheritdoc}
      */
     public function handle(Message $message)
     {
-        $this->messages[] = array(
+        $this->messages[] = [
             'subject'      => $message->getSubject(),
             'body'         => $message->getBody(),
             'type'         => $message->getType(),
@@ -39,7 +38,7 @@ class DebugHandler implements HandlerInterface
             'role'         => $message->getRole(),
             'user'         => $message->getUser(),
             'createdAt'    => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-        );
+        ];
     }
 
     /**

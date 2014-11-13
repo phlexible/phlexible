@@ -60,7 +60,7 @@ class SortTreeCommand extends ContainerAwareCommand
             $this->sortByNode($node);
         } elseif (!empty($commandArgs->options['siterootid'])) {
             $siterootId = $commandArgs->options['siterootid'];
-            $siteroots = array($siterootId => Makeweb_Siteroots_Siteroot_Manager::getInstance()->getById($siterootId));
+            $siteroots = [$siterootId => Makeweb_Siteroots_Siteroot_Manager::getInstance()->getById($siterootId)];
 
             $this->sortBySiteroots($siteroots);
         } else {

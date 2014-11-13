@@ -51,7 +51,7 @@ class Subscription
      * @var array
      * @ORM\Column(type="json_array", nullable=true)
      */
-    private $attributes = array();
+    private $attributes = [];
 
     /**
      * @return string

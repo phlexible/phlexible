@@ -38,7 +38,7 @@ class TaskAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleTaskBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleTaskBundle/Resources/scripts/Definitions.js',
@@ -58,7 +58,7 @@ class TaskAssetProvider implements AssetProviderInterface
             '@PhlexibleTaskBundle/Resources/scripts/model/Task.js',
             '@PhlexibleTaskBundle/Resources/scripts/model/Comment.js',
             '@PhlexibleTaskBundle/Resources/scripts/model/Transition.js',
-        );
+        ];
     }
 
     /**
@@ -66,8 +66,8 @@ class TaskAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleTaskBundle/Resources/styles/tasks.css',
-        );
+        ];
     }
 }

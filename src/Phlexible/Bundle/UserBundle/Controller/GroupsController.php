@@ -41,21 +41,21 @@ class GroupsController extends Controller
     {
         $groupManager = $this->get('phlexible_user.group_manager');
 
-        $groups = array();
+        $groups = [];
         foreach ($groupManager->findAll() as $group) {
-            $members = array();
+            $members = [];
             foreach ($group->getUsers() as $user) {
                 $members[] = $user->getDisplayName();
             }
             sort($members);
 
-            $groups[] = array(
+            $groups[] = [
                 'gid'       => $group->getId(),
                 'name'      => $group->getName(),
                 'readonly'  => false,
                 'memberCnt' => count($members),
                 'members'   => $members
-            );
+            ];
         }
 
         return new JsonResponse($groups);

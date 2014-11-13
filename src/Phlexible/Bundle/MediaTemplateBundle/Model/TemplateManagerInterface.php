@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Model;
 
-use Phlexible\Bundle\MediaTemplateBundle\Exception\NotFoundException;
-
 /**
  * Media template manager interface
  *

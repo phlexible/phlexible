@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\TeaserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Component\Identifier\IdentifiableInterface;
 use Phlexible\Bundle\TeaserBundle\Teaser\TeaserIdentifier;
+use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**
  * Teaser
@@ -376,7 +376,7 @@ class Teaser implements IdentifiableInterface
      */
     public function getCache()
     {
-        return $this->getAttribute('cache', array());
+        return $this->getAttribute('cache', []);
     }
 
     /**

@@ -21,7 +21,7 @@ class ElementtypeUsageEvent extends ElementtypeEvent
     /**
      * @var Usage[]
      */
-    private $usage = array();
+    private $usage = [];
 
     /**
      * @param Elementtype $elementtype

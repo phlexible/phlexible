@@ -83,13 +83,13 @@ class DataSourceRepository extends EntityRepository
 
         $this->db->update(
             $this->db->prefix . self::T_DATASOURCE_VALUE,
-            array(
+            [
                 self::C_DATASOURCE_VALUE_ACTIVE => (int) $isActive,
-            ),
-            array(
+            ],
+            [
                 self::C_DATASOURCE_VALUE_ID . ' in (?)'     => $existingIds,
                 self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
-            )
+            ]
         );
     }
 
@@ -115,14 +115,14 @@ class DataSourceRepository extends EntityRepository
 
             $this->db->insert(
                 $this->db->prefix . self::T_DATASOURCE_VALUE,
-                array(
+                [
                     self::C_DATASOURCE_VALUE_ID        => Uuid::generate(),
                     self::C_DATASOURCE_VALUE_SOURCE_ID => $dataSourceId,
                     self::C_DATASOURCE_VALUE_LANGUAGE  => $language,
                     self::C_DATASOURCE_VALUE_KEY       => $insertedKey,
                     self::C_DATASOURCE_VALUE_ACTIVE    => (int) $isActive,
                     self::C_DATASOURCE_VALUE_HASH      => md5($hashableString),
-                )
+                ]
             );
         }
     }
@@ -139,24 +139,24 @@ class DataSourceRepository extends EntityRepository
             // delete all
             $this->db->delete(
                 $this->db->prefix . self::T_DATASOURCE_VALUE,
-                array(
+                [
                     self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
-                )
+                ]
             );
         } elseif (count($deletedIds)) {
             $this->db->delete(
                 $this->db->prefix . self::T_DATASOURCE_VALUE,
-                array(
+                [
                     self::C_DATASOURCE_VALUE_ID . ' in (?)'     => $deletedIds,
                     self::C_DATASOURCE_VALUE_SOURCE_ID . ' = ?' => $dataSourceId,
-                )
+                ]
             );
         }
     }
 
     protected function lowerValueAsKey(array $values)
     {
-        $result = array();
+        $result = [];
 
         foreach ($values as $value) {
             $result[mb_strtolower($value, 'UTF-8')] = $value;

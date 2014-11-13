@@ -59,7 +59,7 @@ class SuggestFieldUtil
     {
         $metaSets = $this->metaSetManager->findAll();
 
-        $fields = array();
+        $fields = [];
         foreach ($metaSets as $metaSet) {
             foreach ($metaSet->getFields() as $field) {
                 if ($field->getOptions() === $valueBag->getDatasource()->getId()) {
@@ -68,7 +68,7 @@ class SuggestFieldUtil
             }
         }
 
-        $values = array();
+        $values = [];
         foreach ($fields as $field) {
             /* @var $field MetaSetField */
             foreach ($this->metaDataManager->findByMetaSet($field->getMetaSet()) as $metaData) {
@@ -93,7 +93,7 @@ class SuggestFieldUtil
      */
     public function splitSuggestValues(array $concatenated)
     {
-        $keys = array();
+        $keys = [];
         foreach ($concatenated as $value) {
             $splitted = explode($this->seperatorChar, $value);
             foreach ($splitted as $key) {

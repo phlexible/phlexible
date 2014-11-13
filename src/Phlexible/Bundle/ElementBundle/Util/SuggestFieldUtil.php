@@ -9,10 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
-use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
-use Phlexible\Bundle\MetaSetBundle\Model\MetaDataManagerInterface;
-use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 
 /**
  * Utility class for suggest fields.
@@ -66,7 +62,7 @@ class SuggestFieldUtil
         */
         // TODO: aus elementen
 
-        $values = array();
+        $values = [];
 
         $values = $this->splitSuggestValues($values);
 
@@ -82,7 +78,7 @@ class SuggestFieldUtil
      */
     private function splitSuggestValues(array $concatenated)
     {
-        $keys = array();
+        $keys = [];
         foreach ($concatenated as $value) {
             $splitted = explode($this->seperatorChar, $value);
             foreach ($splitted as $key) {

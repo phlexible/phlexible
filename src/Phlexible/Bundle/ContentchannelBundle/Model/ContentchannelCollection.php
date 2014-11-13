@@ -20,12 +20,12 @@ class ContentchannelCollection
     /**
      * @var Contentchannel[]
      */
-    private $contentchannels = array();
+    private $contentchannels = [];
 
     /**
      * @var array
      */
-    private $uniqueIdMap = array();
+    private $uniqueIdMap = [];
 
     /**
      * Add template

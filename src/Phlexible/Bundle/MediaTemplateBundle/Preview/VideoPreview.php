@@ -105,7 +105,7 @@ class VideoPreview implements PreviewerInterface
         }
 
         $videoStream = $video->getStreams()->videos()->first();
-        $data = array(
+        $data = [
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
             'template' => $templateKey,
@@ -114,7 +114,7 @@ class VideoPreview implements PreviewerInterface
             'format'   => $extension,
             'mimetype' => $this->applier->getMimetype($template),
             'debug'    => $debug
-        );
+        ];
 
         return $data;
     }

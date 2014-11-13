@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,7 +43,7 @@ class HistoryController extends Controller
         $offset   = $request->get('start', 0);
         $limit    = $request->get('limit', 25);
 
-        $criteria = array();
+        $criteria = [];
 
         if ($eid) {
             $criteria['eid'] = $eid;
@@ -66,10 +66,10 @@ class HistoryController extends Controller
         }
 
         $historyManager = $this->get('phlexible_element.element_history_manager');
-        $entries = $historyManager->findBy($criteria, array($sort => $dir), $limit, $offset);
+        $entries = $historyManager->findBy($criteria, [$sort => $dir], $limit, $offset);
         $count = $historyManager->countBy($criteria);
 
-        $elementHistory = array();
+        $elementHistory = [];
         foreach ($entries as $entry) {
             $type = '-';
             if (stripos($entry->getAction(), 'element')) {
@@ -80,7 +80,7 @@ class HistoryController extends Controller
                 $type = 'teaser';
             }
 
-            $elementHistory[] = array(
+            $elementHistory[] = [
                 'eid'         => $entry->getEid(),
                 'type'        => $type,
                 'id'          => $entry->getId(),
@@ -91,13 +91,13 @@ class HistoryController extends Controller
                 'action'      => $entry->getAction(),
                 'username'    => $entry->getCreateUserId(),
                 'create_time' => $entry->getCreatedAt()->format('Y-m-d H:i:s'),
-            );
+            ];
         }
 
-        $data = array(
+        $data = [
             'total'   => $count,
             'history' => $elementHistory,
-        );
+        ];
 
         return new JsonResponse($data);
     }

@@ -43,7 +43,7 @@ class Transmutor
      * @param array $audioTransmutors
      * @param array $flashTransmutors
      */
-    public function __construct(array $imageTransmutors = array(), array $videoTransmutors = array(), array $audioTransmutors = array(), array $flashTransmutors = array())
+    public function __construct(array $imageTransmutors = [], array $videoTransmutors = [], array $audioTransmutors = [], array $flashTransmutors = [])
     {
         $this->imageTransmutors = $imageTransmutors;
         $this->audioTransmutors = $audioTransmutors;

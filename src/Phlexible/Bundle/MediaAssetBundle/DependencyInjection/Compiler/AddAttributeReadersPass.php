@@ -25,7 +25,7 @@ class AddAttributeReadersPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $chainReaderDefinition = $container->getDefinition('phlexible_media_asset.reader.attribute');
-        $ids = array();
+        $ids = [];
         foreach ($container->findTaggedServiceIds('phlexible_media_asset.attribute_reader') as $id => $definition) {
             $ids[] = new Reference($id);
         }

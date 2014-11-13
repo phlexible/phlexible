@@ -40,7 +40,7 @@ class DocumenttypeLoader
     /**
      * @var array
      */
-    private $loaders = array();
+    private $loaders = [];
 
     /**
      * @param PatternResourceLocator $locator
@@ -88,7 +88,7 @@ class DocumenttypeLoader
 
         if (!$configCache->isFresh()) {
 
-            $resources = array();
+            $resources = [];
             foreach ($this->loaders as $extension => $loader) {
                 $files = $this->locator->locate("*.$extension", 'documenttypes', false);
 

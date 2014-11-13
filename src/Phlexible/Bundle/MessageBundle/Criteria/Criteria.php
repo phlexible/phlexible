@@ -43,7 +43,7 @@ class Criteria implements \IteratorAggregate, \Countable
     /**
      * @var array
      */
-    private $criteria = array();
+    private $criteria = [];
 
     /**
      * @var string
@@ -54,7 +54,7 @@ class Criteria implements \IteratorAggregate, \Countable
      * @param array  $criteria
      * @param string $mode
      */
-    public function __construct(array $criteria = array(), $mode = self::MODE_AND)
+    public function __construct(array $criteria = [], $mode = self::MODE_AND)
     {
         $this->criteria = $criteria;
         $this->mode = $mode;
@@ -68,7 +68,7 @@ class Criteria implements \IteratorAggregate, \Countable
      */
     public function setMode($mode)
     {
-        if (!in_array($mode, array(self::MODE_AND, self::MODE_OR))) {
+        if (!in_array($mode, [self::MODE_AND, self::MODE_OR])) {
             throw new InvalidArgumentException("Invalid mode $mode");
         }
         $this->mode = $mode;
@@ -382,7 +382,7 @@ class Criteria implements \IteratorAggregate, \Countable
      */
     public function toArray()
     {
-        $data = array();
+        $data = [];
         foreach ($this->criteria as $criterium) {
             $data[] = $criterium->toArray();
         }

@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\DashboardBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,7 +38,7 @@ class PortletController extends Controller
     {
         $securityContext = $this->get('security.context');
 
-        $data = array();
+        $data = [];
         foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
             if ($portlet->hasRole() && !$securityContext->isGranted($portlet->getRole())) {
                 continue;

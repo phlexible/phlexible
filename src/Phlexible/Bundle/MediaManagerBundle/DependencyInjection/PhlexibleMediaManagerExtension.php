@@ -36,17 +36,17 @@ class PhlexibleMediaManagerExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $ids = array();
+        $ids = [];
         foreach ($config['sites'] as $name => $siteConfig) {
             $driverId = $siteConfig['driver'];
 
-            $siteDefinition = new Definition('Phlexible\Bundle\MediaSiteBundle\Site\Site', array(
+            $siteDefinition = new Definition('Phlexible\Bundle\MediaSiteBundle\Site\Site', [
                 $siteConfig['id'],
                 $siteConfig['root_dir'],
                 $siteConfig['quota'],
                 new Reference($driverId, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false),
                 new Reference('event_dispatcher'),
-            ));
+            ]);
             $id = 'phlexible_media_manager.site.' . strtolower($name);
             $container->setDefinition($id, $siteDefinition);
 

@@ -31,9 +31,9 @@ class PollController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $messages = array();
+        $messages = [];
 
-        $data = array();
+        $data = [];
         foreach ($this->get('phlexible_dashboard.portlets') as $portlet) {
             $data[$portlet->getId()] = $portlet->getData();
         }

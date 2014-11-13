@@ -84,7 +84,7 @@ class FileUsageUpdater
         $fileLinks = $qb->getQuery()->getResult();
         /* @var $fileLinks ElementLink[] */
 
-        $flags = array();
+        $flags = [];
 
         foreach ($fileLinks as $fileLink) {
             $fileParts = explode(';', $fileLink->getTarget());
@@ -108,7 +108,7 @@ class FileUsageUpdater
             }
 
             // add flag STATUS_ONLINE if this link is used in an online teaser version
-            $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
+            $teasers = $this->teaserManager->findBy(['typeId' => $eid, 'type' => 'element']);
             foreach ($teasers as $teaser) {
                 if ($this->teaserManager->getPublishedVersion($teaser, $fileLink->getLanguage()) === $linkVersion) {
                     $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;

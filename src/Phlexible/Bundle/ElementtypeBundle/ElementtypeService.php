@@ -74,7 +74,7 @@ class ElementtypeService
      */
     public function findElementtypeByType($type)
     {
-        $elementtypes = array();
+        $elementtypes = [];
         foreach ($this->elementtypeManager->findAll() as $elementtype) {
             if ($elementtype->getType() === $type) {
                 $elementtypes[] = $elementtype;
@@ -113,7 +113,7 @@ class ElementtypeService
     public function findElementtypesUsingReferenceElementtype(Elementtype $referenceElementtype)
     {
         // TODO: references
-        return array();//$this->elementtypeStructureManager->findElementtypesUsingReferenceElementtype($referenceElementtype);
+        return [];//$this->elementtypeStructureManager->findElementtypesUsingReferenceElementtype($referenceElementtype);
     }
 
     /**
@@ -133,14 +133,14 @@ class ElementtypeService
     public function createElementtype($type, $uniqueId, $name, $icon, ElementtypeStructure $elementtypeStructure = null, array $mappings = null, $user, $flush = true)
     {
         if (!$icon) {
-            $icons = array(
+            $icons = [
                 Elementtype::TYPE_FULL            => 'artikel_list.gif',
                 Elementtype::TYPE_STRUCTURE       => 'nav_haupt.gif',
                 Elementtype::TYPE_LAYOUTAREA      => '_fallback.gif',
                 Elementtype::TYPE_LAYOUTCONTAINER => '_fallback.gif',
                 Elementtype::TYPE_PART            => 'teaser_hellblau_list.gif',
                 Elementtype::TYPE_REFERENCE       => '_fallback.gif',
-            );
+            ];
 
             $icon = $icons[$type];
         }
@@ -220,7 +220,7 @@ class ElementtypeService
 
         $rii = new \RecursiveIteratorIterator($sourceElementtype->getStructure(), \RecursiveIteratorIterator::SELF_FIRST);
 
-        $dsIdMap = array();
+        $dsIdMap = [];
         foreach ($rii as $sourceNode) {
             /* @var $sourceNode ElementtypeStructureNode */
             $node = clone $sourceNode;

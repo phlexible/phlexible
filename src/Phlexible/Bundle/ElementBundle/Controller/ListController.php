@@ -47,10 +47,10 @@ class ListController extends Controller
         if ($filterValues) {
             $filterValues = json_decode($filterValues, true);
         } else {
-            $filterValues = array();
+            $filterValues = [];
         }
 
-        $data = array();
+        $data = [];
 
         $dispatcher = $this->get('event_dispatcher');
         $treeManager = $this->get('phlexible_tree.tree_manager');
@@ -71,17 +71,17 @@ class ListController extends Controller
             $language = $elementMasterLanguage;
         }
 
-        $userRights = array();
+        $userRights = [];
         $userAdminRights = null;
         if ($node instanceof ContentObjectInterface) {
             if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
+                if ($securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
                     return null;
                 }
 
-                $userRights = array(); //$contentRightsManager->getRights($language);
+                $userRights = []; //$contentRightsManager->getRights($language);
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = $userAdminRights = array_keys(
@@ -90,7 +90,7 @@ class ListController extends Controller
             }
         }
 
-        $parent = array(
+        $parent = [
             'tid'             => (int) $tid,
             'teaser_id'       => (int) 0,
             'eid'             => (int) $eid,
@@ -115,7 +115,7 @@ class ListController extends Controller
                 $elementtype->getTitle() . ', Version ' . $elementtype->getRevision() . '<br>' .
                 'Version ' . $elementVersion->getVersion() . '<br>' .
                 37 . ' Versions<br>'
-        );
+        ];
 
         $filter = new TreeFilter(
             $this->get('doctrine.dbal.default_connection'),
@@ -133,18 +133,18 @@ class ListController extends Controller
         $childIds = $filter->getIds($limit, $start);
         $cnt = $filter->getCount();
 
-        $data = array();
+        $data = [];
         foreach ($childIds as $childId => $latestVersion) {
             $childNode = $tree->get($childId);
 
             if (!$userAdminRights) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
+                if ($securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
                     return null;
                 }
 
-                $userRights = array(); //$contentRightsManager->getRights($language);
+                $userRights = []; //$contentRightsManager->getRights($language);
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = $userAdminRights;
@@ -155,7 +155,7 @@ class ListController extends Controller
             $childTitle = $childElementVersion->getBackendTitle($language, $childElement->getMasterLanguage());
             $childElementtype = $elementService->findElementtype($childElement);
 
-            $data[] = array(
+            $data[] = [
                 'tid'             => (int) $childNode->getId(),
                 'eid'             => (int) $childElement->getEid(),
                 '_type'           => 'element',
@@ -180,16 +180,16 @@ class ListController extends Controller
                 'qtip'            => $childElementtype->getTitle() . ', ' .
                     'ET Version ' . $childElementtype->getRevision() . '<br>' .
                     'Version ' . $childElementVersion->getVersion() . '<br>',
-            );
+            ];
         }
 
         //$data['totalChilds'] = $element->getChildCount();
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'parent' => $parent,
             'list'   => $data,
             'total'  => $cnt
-        ));
+        ]);
     }
 
     /**

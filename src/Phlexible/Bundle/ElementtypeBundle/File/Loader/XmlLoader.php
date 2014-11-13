@@ -51,7 +51,7 @@ class XmlLoader implements LoaderInterface
             return;
         }
 
-        $files = array();
+        $files = [];
         foreach ($this->locator->locate('*.xml', 'elementtypes', false) as $file) {
             $name = basename($file);
             if (!isset($files[$name])) {
@@ -59,7 +59,7 @@ class XmlLoader implements LoaderInterface
             }
         }
 
-        $idMap = array();
+        $idMap = [];
         foreach ($files as $file) {
             $xml = simplexml_load_file($file);
             $rootAttributes = $xml->attributes();
@@ -78,7 +78,7 @@ class XmlLoader implements LoaderInterface
     {
         $this->createMap();
 
-        $elementtypes = array();
+        $elementtypes = [];
         foreach ($this->idMap as $id => $file) {
             $elementtypes[] = $this->parse($this->loadFile($file));
         }

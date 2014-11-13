@@ -95,7 +95,7 @@ class SiterootSaver
 
         $contentchannelsData = $data['contentchannels'];
 
-        $contentchannels = array();
+        $contentchannels = [];
         foreach ($contentchannelsData as $row) {
             if (!$row['used']) {
                 continue;
@@ -166,13 +166,13 @@ class SiterootSaver
 
         $specialTidsData = $data['specialtids'];
 
-        $specialTids = array();
+        $specialTids = [];
         foreach ($specialTidsData as $row) {
-            $specialTids[] = array(
+            $specialTids[] = [
                 'name'     => $row['key'],
                 'language' => !empty($row['language']) ? $row['language'] : null,
                 'treeId'   => $row['tid'],
-            );
+            ];
         }
         $siteroot->setSpecialTids($specialTids);
 

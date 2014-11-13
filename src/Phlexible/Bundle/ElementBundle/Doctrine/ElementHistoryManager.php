@@ -82,11 +82,11 @@ class ElementHistoryManager implements ElementHistoryManagerInterface
     private function applyCriteriaToQueryBuilder(array $criteria, QueryBuilder $qb)
     {
         foreach ($criteria as $key => $value) {
-            if (in_array($key, array('treeId', 'teaserId', 'eid', 'version'))) {
+            if (in_array($key, ['treeId', 'teaserId', 'eid', 'version'])) {
                 $qb->andWhere($qb->expr()->eq("h.$key", $value));
-            } elseif (in_array($key, array('language', 'action'))) {
+            } elseif (in_array($key, ['language', 'action'])) {
                 $qb->andWhere($qb->expr()->eq("h.$key", $qb->expr()->literal($value)));
-            } elseif (in_array($key, array('comment'))) {
+            } elseif (in_array($key, ['comment'])) {
                 $qb->andWhere($qb->expr()->like("h.$key", $qb->expr()->literal("%$value%")));
             } else {
                 throw new InvalidArgumentException("Unkown field $key");

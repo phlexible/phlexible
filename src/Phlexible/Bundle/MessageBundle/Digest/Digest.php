@@ -87,7 +87,7 @@ class Digest
         $subscriptionRepository = $this->entityManager->getRepository('PhlexibleMessageBundle:Subscription');
         $subscriptions = $subscriptionRepository->findByHandler('digest');
 
-        $digests = array();
+        $digests = [];
         foreach ($subscriptions as $subscription) {
             $filter = $this->filterManager->find($subscription->getFilterId());
             if (!$filter) {
@@ -107,7 +107,7 @@ class Digest
                 $lastSend = new \DateTime($lastSend);
             }
 
-            $criteria = new Criteria(array($filter->getCriteria()), Criteria::MODE_AND);
+            $criteria = new Criteria([$filter->getCriteria()], Criteria::MODE_AND);
             $criteria->dateFrom($lastSend);
             $messages = $this->messageRepository->findByCriteria($criteria);
             if (!count($messages)) {
@@ -115,11 +115,11 @@ class Digest
             }
 
             if ($this->mailer->sendDigestMail($user, $messages)) {
-                $digests[] = array('filter' => $filter->getTitle(), 'to' => $user->getEmail(), 'status' => 'ok');
+                $digests[] = ['filter' => $filter->getTitle(), 'to' => $user->getEmail(), 'status' => 'ok'];
                 $subscription->setAttribute('lastSend', date('Y-m-d H:i:s'));
                 $this->subscriptionRepository->save($subscription);
             } else {
-                $digests[] = array('filter' => $filter->getTitle(), 'to' => $user->getEmail(), 'status' => 'failed');
+                $digests[] = ['filter' => $filter->getTitle(), 'to' => $user->getEmail(), 'status' => 'failed'];
             }
         }
 

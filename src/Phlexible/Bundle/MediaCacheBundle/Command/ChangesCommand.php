@@ -29,10 +29,10 @@ class ChangesCommand extends ContainerAwareCommand
         $this
             ->setName('media-cache:changes')
             ->setDefinition(
-                array(
+                [
                     new InputOption('commit', null, InputOption::VALUE_NONE, 'Commit changes'),
                     new InputOption('queue', null, InputOption::VALUE_NONE, 'Via queue'),
-                )
+                ]
             )
             ->setDescription('Show media template changes');
     }

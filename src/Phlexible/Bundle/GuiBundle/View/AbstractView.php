@@ -27,7 +27,7 @@ abstract class AbstractView
     /**
      * @var array
      */
-    private $parts = array();
+    private $parts = [];
 
     /**
      * @param EventDispatcherInterface $dispatcher

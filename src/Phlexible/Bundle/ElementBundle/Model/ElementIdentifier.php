@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\Model;
 
-use Phlexible\Component\Identifier\Identifier;
 use Phlexible\Bundle\LockBundle\Lock\LockIdentityInterface;
+use Phlexible\Component\Identifier\Identifier;
 
 /**
  * Element identifier

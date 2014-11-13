@@ -22,10 +22,10 @@ class FrontendMediaAssetProvider implements AssetProviderInterface
      */
     public function getUxScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FileField.js',
             '@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FolderField.js',
-        );
+        ];
     }
 
     /**
@@ -41,7 +41,7 @@ class FrontendMediaAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleFrontendMediaBundle/Resources/scripts/Definitions.js',
             '@PhlexibleFrontendMediaBundle/Resources/scripts/FieldHelper.js',
 
@@ -49,7 +49,7 @@ class FrontendMediaAssetProvider implements AssetProviderInterface
             '@PhlexibleFrontendMediaBundle/Resources/scripts/fields/File.js',
 
             '@PhlexibleFrontendMediaBundle/Resources/scripts/configuration/FieldConfigurationFile.js',
-        );
+        ];
     }
 
     /**
@@ -57,8 +57,8 @@ class FrontendMediaAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleFrontendMediaBundle/Resources/styles/folderselector.css',
-        );
+        ];
     }
 }

@@ -102,14 +102,14 @@ class AudioPreview implements PreviewerInterface
             $debug = '';
         }
 
-        $data = array(
+        $data = [
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
             'template' => $templateKey,
             'format'   => $extension,
             'mimetype' => $this->applier->getMimetype($template),
             'debug'    => $debug,
-        );
+        ];
 
         return $data;
     }

@@ -100,7 +100,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
         /* @var $treeNode TreeNodeInterface */
         $treeNode = $name;
@@ -181,11 +181,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         return $parameters;
 
-        return array(
+        return [
             'siterootUrl' => $siterootUrl,
             'identifiers' => $identifiers,
             'parameters'  => $parameters,
-        );
+        ];
     }
 
     /**
@@ -206,7 +206,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
                     return $tree;
                 }
                 if ($tree->isDefaultSiteroot()) {
-                    $default = array('tree' => $tree, 'siterootUrl' => $siterootUrl);
+                    $default = ['tree' => $tree, 'siterootUrl' => $siterootUrl];
                 }
             }
         }
@@ -230,13 +230,13 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     protected function matchIdentifiers(Request $request, ContentTreeInterface $tree)
     {
-        $match = array();
+        $match = [];
         $path = $request->getPathInfo();
 
         /* @var $siterootUrl Url */
         $siterootUrl = $request->attributes->get('siterootUrl');
 
-        $attributes = array();
+        $attributes = [];
 
         if (!strlen($path)) {
             // no path, use siteroot defaults
@@ -344,7 +344,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         // have paths
         $pathNodes = array_reverse($tree->getPath($node));
 
-        $parts = array();
+        $parts = [];
 
         foreach ($pathNodes as $pathNode) {
             if ($tree->isViewable($pathNode)) {

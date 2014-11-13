@@ -38,11 +38,11 @@ class AccessControlAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleAccessControlBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleAccessControlBundle/Resources/scripts/RightsGrid.js',
-        );
+        ];
     }
 
     /**
@@ -50,8 +50,8 @@ class AccessControlAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleAccessControlBundle/Resources/styles/actions.css',
-        );
+        ];
     }
 }

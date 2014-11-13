@@ -25,7 +25,7 @@ class Identifier implements IdentifierInterface
     /**
      * @var array
      */
-    private $args = array();
+    private $args = [];
 
     /**
      * Create a new identifier based on the given parameters

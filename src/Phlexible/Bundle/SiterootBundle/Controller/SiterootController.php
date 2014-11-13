@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\SiterootBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Phlexible\Bundle\SiterootBundle\SiterootsMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,18 +35,18 @@ class SiterootController extends Controller
     {
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $siteroots = array();
+        $siteroots = [];
         foreach ($siterootManager->findAll() as $siteroot) {
-            $siteroots[] = array(
+            $siteroots[] = [
                 'id'    => $siteroot->getId(),
                 'title' => $siteroot->getTitle(),
-            );
+            ];
         }
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'siteroots' => $siteroots,
             'count'     => count($siteroots)
-        ));
+        ]);
     }
 
     /**
@@ -117,26 +116,26 @@ class SiterootController extends Controller
         $usedContentChannelIds = $siteroot->getContentChannelIds();
         $defaultContentChannelId = $siteroot->getDefaultContentChannelId();
 
-        $data = array(
-            'contentchannels' => array(),
-            'navigations'     => array(),
-            'properties'      => array(),
-            'titles'          => array(),
-            'specialtids'     => array(),
-            'urls'            => array(),
-        );
+        $data = [
+            'contentchannels' => [],
+            'navigations'     => [],
+            'properties'      => [],
+            'titles'          => [],
+            'specialtids'     => [],
+            'urls'            => [],
+        ];
         foreach ($contentChannelRepository->findAll() as $contentchannel) {
-            $data['contentchannels'][] = array(
+            $data['contentchannels'][] = [
                 'contentchannel_id' => $contentchannel->getId(),
                 'contentchannel'    => $contentchannel->getTitle(),
                 'used'              => in_array($contentchannel->getId(), $usedContentChannelIds),
                 'default'           => $contentchannel->getId() === $defaultContentChannelId,
-            );
+            ];
         }
 
         // get all siteroot navigations
         foreach ($siteroot->getNavigations() as $navigation) {
-            $data['navigations'][] = array(
+            $data['navigations'][] = [
                 'id'         => $navigation->getId(),
                 'title'      => $navigation->getTitle(),
                 'handler'    => $navigation->getHandler(),
@@ -145,7 +144,7 @@ class SiterootController extends Controller
                 'supports'   => '', //call_user_func(array($navigation->getHandler(), 'getSupportedFlags')),
                 'flags'      => $navigation->getFlags(),
                 'additional' => $navigation->getAdditional()
-            );
+            ];
         }
 
         // TODO: siteroot properties from bundles
@@ -157,30 +156,30 @@ class SiterootController extends Controller
         */
 
         foreach ($siteroot->getSpecialTids() as $specialTid) {
-            $data['specialtids'][] = array(
+            $data['specialtids'][] = [
                 'siteroot_id' => $siterootId,
                 'key'         => $specialTid['name'],
                 'language'    => !empty($specialTid['language']) ? $specialTid['language'] : null,
                 'tid'         => $specialTid['treeId'],
-            );
+            ];
         }
 
         $data['titles'] = $siteroot->getTitles();
 
-        $data['customtitles'] = array(
+        $data['customtitles'] = [
             'head_title'       => $siteroot->getHeadTitle(),
             'start_head_title' => $siteroot->getStartHeadTitle(),
-        );
+        ];
 
         foreach ($siteroot->getUrls() as $url) {
-            $data['urls'][] = array(
+            $data['urls'][] = [
                 'id'             => $url->getId(),
                 'global_default' => $url->isGlobalDefault(),
                 'default'        => $url->isDefault(),
                 'hostname'       => $url->getHostname(),
                 'language'       => $url->getLanguage(),
                 'target'         => $url->getTarget(),
-            );
+            ];
         }
 
         return new JsonResponse($data);

@@ -29,93 +29,93 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testColumnEmpty()
     {
-        $src = array();
+        $src = [];
 
         $result = $this->util->column($src, 'a');
 
-        $expected = array();
+        $expected = [];
 
         $this->assertEquals($expected, $result);
     }
 
     public function testColumnNormal()
     {
-        $src = array(
-            array('a1', 'b1'),
-            array('a2', 'b2'),
-            array('a3', 'b3'),
-        );
+        $src = [
+            ['a1', 'b1'],
+            ['a2', 'b2'],
+            ['a3', 'b3'],
+        ];
 
         $result = $this->util->column($src, 0);
 
-        $expected = array('a1', 'a2', 'a3');
+        $expected = ['a1', 'a2', 'a3'];
 
         $this->assertEquals($expected, $result);
     }
 
     public function testColumnAssoziative()
     {
-        $src = array(
-            array('d' => 'a1', 'e' => 'b1'),
-            array('d' => 'a2', 'e' => 'b2'),
-            array('d' => 'a3', 'e' => 'b3'),
-        );
+        $src = [
+            ['d' => 'a1', 'e' => 'b1'],
+            ['d' => 'a2', 'e' => 'b2'],
+            ['d' => 'a3', 'e' => 'b3'],
+        ];
 
         $result = $this->util->column($src, 'd');
 
-        $expected = array('a1', 'a2', 'a3');
+        $expected = ['a1', 'a2', 'a3'];
 
         $this->assertEquals($expected, $result);
     }
 
     public function testColumnAssoziativeMissingKey()
     {
-        $src = array(
-            array('d' => 'a1', 'e' => 'b1'),
-            array('x' => 'a2', 'e' => 'b2'),
-            array('d' => 'a3', 'e' => 'b3'),
-        );
+        $src = [
+            ['d' => 'a1', 'e' => 'b1'],
+            ['x' => 'a2', 'e' => 'b2'],
+            ['d' => 'a3', 'e' => 'b3'],
+        ];
 
         $result = $this->util->column($src, 'd');
 
-        $expected = array('a1', null, 'a3');
+        $expected = ['a1', null, 'a3'];
 
         $this->assertEquals($expected, $result);
     }
 
     public function testColumnAssoziativeMissingKeyWithSkip()
     {
-        $src = array(
-            array('d' => 'a1', 'e' => 'b1'),
-            array('x' => 'a2', 'e' => 'b2'),
-            array('d' => 'a3', 'e' => 'b3'),
-        );
+        $src = [
+            ['d' => 'a1', 'e' => 'b1'],
+            ['x' => 'a2', 'e' => 'b2'],
+            ['d' => 'a3', 'e' => 'b3'],
+        ];
 
         $result = $this->util->column($src, 'd', true);
 
-        $expected = array(0 => 'a1', 2 => 'a3');
+        $expected = [0 => 'a1', 2 => 'a3'];
 
         $this->assertEquals($expected, $result);
     }
 
     public function testColumnAssoziativeMissingKeyWithSkipEmpty()
     {
-        $src = array(
-            array('d' => '', 'e' => 'b1'),
-            array('x' => 'a2', 'e' => 'b2'),
-            array('d' => 'a3', 'e' => 'b3'),
-        );
+        $src = [
+            ['d' => '', 'e' => 'b1'],
+            ['x' => 'a2', 'e' => 'b2'],
+            ['d' => 'a3', 'e' => 'b3'],
+        ];
 
         $result = $this->util->column($src, 'd', true, true);
 
-        $expected = array(2 => 'a3');
+        $expected = [2 => 'a3'];
 
         $this->assertEquals($expected, $result);
     }
 
     public function testGet()
     {
-        $src = array('eins', 'zwei', 5 => 'fünf', 'abc' => 'def');
+        $src = ['eins', 'zwei', 5 => 'fünf', 'abc' => 'def'];
 
         $this->assertEquals('eins', $this->util->get($src, 0));
         $this->assertEquals('zwei', $this->util->get($src, 1));
@@ -131,95 +131,95 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
 
     public function testGroupByEmpty()
     {
-        $src = array();
+        $src = [];
 
         $result = $this->util->groupBy($src, 'col');
 
-        $expected = array();
+        $expected = [];
 
         $this->assertEquals($expected, $result);
     }
 
     public function testGroupByOneColumn()
     {
-        $src = array(
-            array('key' => 1, 'value' => '1'),
-            array('key' => 3, 'value' => '1'),
-            array('key' => 2, 'value' => '1'),
-            array('key' => 3, 'value' => '2'),
-            array('key' => 3, 'value' => '3'),
-            array('key' => 2, 'value' => '2'),
-        );
+        $src = [
+            ['key' => 1, 'value' => '1'],
+            ['key' => 3, 'value' => '1'],
+            ['key' => 2, 'value' => '1'],
+            ['key' => 3, 'value' => '2'],
+            ['key' => 3, 'value' => '3'],
+            ['key' => 2, 'value' => '2'],
+        ];
 
         $result = $this->util->groupBy($src, 'key');
 
-        $expected = array(
-            '1' => array(
-                array('key' => 1, 'value' => '1'),
-            ),
-            '3' => array(
-                array('key' => 3, 'value' => '1'),
-                array('key' => 3, 'value' => '2'),
-                array('key' => 3, 'value' => '3'),
-            ),
-            '2' => array(
-                array('key' => 2, 'value' => '1'),
-                array('key' => 2, 'value' => '2'),
-            ),
-        );
+        $expected = [
+            '1' => [
+                ['key' => 1, 'value' => '1'],
+            ],
+            '3' => [
+                ['key' => 3, 'value' => '1'],
+                ['key' => 3, 'value' => '2'],
+                ['key' => 3, 'value' => '3'],
+            ],
+            '2' => [
+                ['key' => 2, 'value' => '1'],
+                ['key' => 2, 'value' => '2'],
+            ],
+        ];
 
         $this->assertEquals($expected, $result);
     }
 
     public function testGroupByTwoColumns()
     {
-        $src = array(
-            array('keyA' => 1, 'keyB' => 1, 'value' => '1'),
-            array('keyA' => 3, 'keyB' => 1, 'value' => '2'),
-            array('keyA' => 2, 'keyB' => 1, 'value' => '1'),
-            array('keyA' => 1, 'keyB' => 1, 'value' => '2'),
-            array('keyA' => 2, 'keyB' => 1, 'value' => '2'),
-            array('keyA' => 1, 'keyB' => 2, 'value' => '1'),
-            array('keyA' => 2, 'keyB' => 2, 'value' => '1'),
-            array('keyA' => 2, 'keyB' => 2, 'value' => '2'),
-            array('keyA' => 3, 'keyB' => 1, 'value' => '1'),
-            array('keyA' => 2, 'keyB' => 3, 'value' => '1'),
-            array('keyA' => 3, 'keyB' => 1, 'value' => '3'),
-        );
+        $src = [
+            ['keyA' => 1, 'keyB' => 1, 'value' => '1'],
+            ['keyA' => 3, 'keyB' => 1, 'value' => '2'],
+            ['keyA' => 2, 'keyB' => 1, 'value' => '1'],
+            ['keyA' => 1, 'keyB' => 1, 'value' => '2'],
+            ['keyA' => 2, 'keyB' => 1, 'value' => '2'],
+            ['keyA' => 1, 'keyB' => 2, 'value' => '1'],
+            ['keyA' => 2, 'keyB' => 2, 'value' => '1'],
+            ['keyA' => 2, 'keyB' => 2, 'value' => '2'],
+            ['keyA' => 3, 'keyB' => 1, 'value' => '1'],
+            ['keyA' => 2, 'keyB' => 3, 'value' => '1'],
+            ['keyA' => 3, 'keyB' => 1, 'value' => '3'],
+        ];
 
-        $result = $this->util->groupBy($src, array('keyA', 'keyB'));
+        $result = $this->util->groupBy($src, ['keyA', 'keyB']);
 
-        $expected = array(
-            '1' => array(
-                '1' => array(
-                    array('keyA' => 1, 'keyB' => 1, 'value' => '1'),
-                    array('keyA' => 1, 'keyB' => 1, 'value' => '2'),
-                ),
-                '2' => array(
-                    array('keyA' => 1, 'keyB' => 2, 'value' => '1'),
-                ),
-            ),
-            '3' => array(
-                '1' => array(
-                    array('keyA' => 3, 'keyB' => 1, 'value' => '2'),
-                    array('keyA' => 3, 'keyB' => 1, 'value' => '1'),
-                    array('keyA' => 3, 'keyB' => 1, 'value' => '3'),
-                ),
-            ),
-            '2' => array(
-                '1' => array(
-                    array('keyA' => 2, 'keyB' => 1, 'value' => '1'),
-                    array('keyA' => 2, 'keyB' => 1, 'value' => '2'),
-                ),
-                '2' => array(
-                    array('keyA' => 2, 'keyB' => 2, 'value' => '1'),
-                    array('keyA' => 2, 'keyB' => 2, 'value' => '2'),
-                ),
-                '3' => array(
-                    array('keyA' => 2, 'keyB' => 3, 'value' => '1'),
-                ),
-            ),
-        );
+        $expected = [
+            '1' => [
+                '1' => [
+                    ['keyA' => 1, 'keyB' => 1, 'value' => '1'],
+                    ['keyA' => 1, 'keyB' => 1, 'value' => '2'],
+                ],
+                '2' => [
+                    ['keyA' => 1, 'keyB' => 2, 'value' => '1'],
+                ],
+            ],
+            '3' => [
+                '1' => [
+                    ['keyA' => 3, 'keyB' => 1, 'value' => '2'],
+                    ['keyA' => 3, 'keyB' => 1, 'value' => '1'],
+                    ['keyA' => 3, 'keyB' => 1, 'value' => '3'],
+                ],
+            ],
+            '2' => [
+                '1' => [
+                    ['keyA' => 2, 'keyB' => 1, 'value' => '1'],
+                    ['keyA' => 2, 'keyB' => 1, 'value' => '2'],
+                ],
+                '2' => [
+                    ['keyA' => 2, 'keyB' => 2, 'value' => '1'],
+                    ['keyA' => 2, 'keyB' => 2, 'value' => '2'],
+                ],
+                '3' => [
+                    ['keyA' => 2, 'keyB' => 3, 'value' => '1'],
+                ],
+            ],
+        ];
 
         $this->assertEquals($expected, $result);
     }

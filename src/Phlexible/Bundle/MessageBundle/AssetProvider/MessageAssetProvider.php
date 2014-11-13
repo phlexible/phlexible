@@ -38,7 +38,7 @@ class MessageAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleMessageBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleMessageBundle/Resources/scripts/model/Criterium.js',
@@ -62,7 +62,7 @@ class MessageAssetProvider implements AssetProviderInterface
             '@PhlexibleMessageBundle/Resources/scripts/portlet/Messages.js',
 
             '@PhlexibleMessageBundle/Resources/scripts/menuhandle/MessagesHandle.js',
-        );
+        ];
     }
 
     /**
@@ -70,10 +70,10 @@ class MessageAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleMessageBundle/Resources/styles/messages.css',
             '@PhlexibleMessageBundle/Resources/styles/filter.css',
             '@PhlexibleMessageBundle/Resources/styles/portlet.css',
-        );
+        ];
     }
 }

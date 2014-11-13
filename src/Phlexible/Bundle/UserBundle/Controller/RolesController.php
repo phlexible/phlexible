@@ -9,14 +9,11 @@
 namespace Phlexible\Bundle\UserBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\UserBundle\UsersMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Roles controller
@@ -41,9 +38,9 @@ class RolesController extends Controller
     {
         $roleHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
 
-        $roles = array();
+        $roles = [];
         foreach (array_keys($roleHierarchy) as $role) {
-            $roles[] = array('id' => $role, 'name' => $role);
+            $roles[] = ['id' => $role, 'name' => $role];
         }
 
         return new JsonResponse($roles);

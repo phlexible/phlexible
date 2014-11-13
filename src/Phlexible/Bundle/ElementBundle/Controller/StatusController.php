@@ -72,11 +72,11 @@ class StatusController extends Controller
         $numElementVersions = $conn->fetchColumn($qb->getSQL());
 
         $qb = $conn->createQueryBuilder()
-            ->select(array('ev.eid, COUNT(ev.eid) AS cnt'))
+            ->select(['ev.eid, COUNT(ev.eid) AS cnt'])
             ->from('element_version', 'ev')
             ->groupBy('ev.eid')
             ->orderBy('cnt', 'DESC');
-        $numGroupedElementVersions = array();
+        $numGroupedElementVersions = [];
         foreach ($conn->fetchAll($qb->getSQL()) as $row) {
             $numGroupedElementVersions[$row['eid']] = $row['cnt'];
         }
@@ -101,22 +101,22 @@ class StatusController extends Controller
         $numElementTypeVersions = $conn->fetchColumn($qb->getSQL());
 
         $qb = $conn->createQueryBuilder()
-            ->select(array('etv.elementtype_id', 'COUNT(etv.id) AS cnt'))
+            ->select(['etv.elementtype_id', 'COUNT(etv.id) AS cnt'])
             ->from('elementtype_version', 'etv')
             ->groupBy('etv.elementtype_id')
             ->orderBy('cnt', 'DESC');
-        $numGroupedElementTypeVersions = array();
+        $numGroupedElementTypeVersions = [];
         foreach ($conn->fetchAll($qb->getSQL()) as $row) {
             $numGroupedElementTypeVersions[$row['elementtype_id']] = $row['cnt'];
         }
 
         $qb = $conn->createQueryBuilder()
-            ->select(array('et.id', 'COUNT(e.eid) AS cnt'))
+            ->select(['et.id', 'COUNT(e.eid) AS cnt'])
             ->from('elementtype', 'et')
             ->leftJoin('et', 'element', 'e', 'e.elementtype_id = et.id')
             ->groupBy('et.id')
             ->orderBy('cnt', 'DESC');
-        $numGroupedElementTypeElements = array();
+        $numGroupedElementTypeElements = [];
         foreach ($conn->fetchAll($qb->getSQL()) as $row) {
             $numGroupedElementTypeElements[$row['id']] = $row['cnt'];
         }

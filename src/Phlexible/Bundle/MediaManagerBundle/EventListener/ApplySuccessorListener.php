@@ -44,42 +44,42 @@ class ApplySuccessorListener
 
         $this->connection->update(
             'media_file',
-            array(
+            [
                 'create_user_id' => $toUid,
-            ),
-            array(
+            ],
+            [
                 'create_user_id' => $fromUid
-            )
+            ]
         );
 
         $this->connection->update(
             'media_file',
-            array(
+            [
                 'modify_user_id' => $toUid,
-            ),
-            array(
+            ],
+            [
                 'modify_user_id' => $fromUid
-            )
+            ]
         );
 
         $this->connection->update(
             'media_folder',
-            array(
+            [
                 'create_user_id' => $toUid,
-            ),
-            array(
+            ],
+            [
                 'create_user_id' => $fromUid
-            )
+            ]
         );
 
         $this->connection->update(
             'media_folder',
-            array(
+            [
                 'modify_user_id' => $toUid,
-            ),
-            array(
+            ],
+            [
                 'modify_user_id' => $fromUid
-            )
+            ]
         );
     }
 }

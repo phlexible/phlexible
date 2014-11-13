@@ -119,7 +119,7 @@ class ElementConfigurator implements ConfiguratorInterface
 
         $versionStrategy = new OnlineVersionStrategy($this->elementService);
 
-        $availableLanguages = $request->attributes->get('availableLanguages', array('de'));
+        $availableLanguages = $request->attributes->get('availableLanguages', ['de']);
         $elementLanguage = $versionStrategy->findLanguage($request, $element, $availableLanguages);
 
         if (!$elementLanguage) {

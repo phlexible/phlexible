@@ -13,7 +13,6 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -91,7 +90,7 @@ class DistillCommand extends ContainerAwareCommand
     private function iterateStructure(ClassMap $classMap, ElementtypeStructure $structure, ElementtypeStructureNode $node)
     {
         $fieldRegistry = $this->getContainer()->get('phlexible_elementtype.field.registry');
-        $data = array();
+        $data = [];
 
         foreach ($structure->getChildNodes($node->getDsId()) as $childNode) {
             $field = $fieldRegistry->getField($childNode->getType());

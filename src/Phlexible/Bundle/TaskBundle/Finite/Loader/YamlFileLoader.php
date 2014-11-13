@@ -4,10 +4,10 @@ namespace Phlexible\Bundle\TaskBundle\Finite\Loader;
 
 use Finite\Event\CallbackHandler;
 use Finite\Loader\LoaderInterface;
-use Finite\StatefulInterface;
-use Finite\StateMachine\StateMachineInterface;
 use Finite\State\State;
 use Finite\State\StateInterface;
+use Finite\StatefulInterface;
+use Finite\StateMachine\StateMachineInterface;
 use Finite\Transition\Transition;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;

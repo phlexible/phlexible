@@ -38,13 +38,13 @@ class DataSourceValueBag
      * @var string
      * @ORM\Column(name="active_values", type="json_array")
      */
-    private $activeValues = array();
+    private $activeValues = [];
 
     /**
      * @var string
      * @ORM\Column(name="inactive_values", type="json_array")
      */
-    private $inactiveValues = array();
+    private $inactiveValues = [];
 
     /**
      * @var DataSource

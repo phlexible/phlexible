@@ -116,7 +116,7 @@ class ImagePreview implements PreviewerInterface
             $debug = '';
         }
 
-        $data = array(
+        $data = [
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
             'template' => $templateKey,
@@ -125,7 +125,7 @@ class ImagePreview implements PreviewerInterface
             'format'   => $extension,
             'mimetype' => $this->applier->getMimetype($template),
             'debug'    => $debug,
-        );
+        ];
 
         return $data;
     }

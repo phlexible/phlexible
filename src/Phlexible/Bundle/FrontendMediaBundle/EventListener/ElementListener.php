@@ -39,11 +39,11 @@ class ElementListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             ElementEvents::CREATE_ELEMENT_VERSION => 'onCreateElementVersion',
             ElementEvents::UPDATE_ELEMENT_VERSION => 'onUpdateElementVersion',
             //ElementEvents::SAVE_ELEMENT => 'onSaveElement',
-        );
+        ];
     }
 
     /**

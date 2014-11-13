@@ -24,7 +24,7 @@ class AddSearchProvidersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $searches = array();
+        $searches = [];
         foreach ($container->findTaggedServiceIds('phlexible_search.provider') as $id => $definition) {
             $searches[] = new Reference($id);
         }

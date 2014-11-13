@@ -48,7 +48,7 @@ class Search
      */
     public function search($query)
     {
-        $searchProviders = array();
+        $searchProviders = [];
 
         foreach ($this->searchProviders as $searchProvider) {
             if (!$searchProvider instanceof SearchProviderInterface) {
@@ -65,7 +65,7 @@ class Search
 
         $explodedQuery = explode(':', $query);
         if (count($explodedQuery) > 1) {
-            $keySearchProviders = array();
+            $keySearchProviders = [];
             $keyWord = strtolower(array_shift($explodedQuery));
 
             foreach ($searchProviders as $searchProvider) {
@@ -81,7 +81,7 @@ class Search
             }
         }
 
-        $results = array();
+        $results = [];
         foreach ($searchProviders as $searchProvider) {
             $searchResults = $searchProvider->search($query);
             foreach ($searchResults as $searchResult) {

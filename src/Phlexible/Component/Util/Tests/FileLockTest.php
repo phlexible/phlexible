@@ -30,7 +30,7 @@ class LockFileTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        vfsStream::setup('test', array(), array('testfile.txt' => 'test'));
+        vfsStream::setup('test', [], ['testfile.txt' => 'test']);
 
         $this->lockFileName = vfsStream::url('test/testfile.txt');
     }

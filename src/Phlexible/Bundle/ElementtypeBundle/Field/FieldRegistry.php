@@ -25,7 +25,7 @@ class FieldRegistry
     /**
      * @param array $fields
      */
-    public function __construct(array $fields = array())
+    public function __construct(array $fields = [])
     {
         $this->setFields($fields);
     }

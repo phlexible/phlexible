@@ -9,13 +9,12 @@
 namespace Phlexible\Bundle\ElementBundle\Controller;
 use Phlexible\Bundle\ElementBundle\Element\Publish\Selection;
 use Phlexible\Bundle\ElementBundle\Exception\RuntimeException;
-use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Component\Util\FileLock;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -54,7 +53,7 @@ class PublishController extends Controller
             $eid = $node->getEid();
             //$fileUsage->update($node->getEid());
 
-            $data = array();
+            $data = [];
 
             $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
             $elementVersion = $elementVersionManager->get($node->getEid(), $version);
@@ -115,7 +114,7 @@ class PublishController extends Controller
         if ($languages) {
             $languages = explode(',', $languages);
         } else {
-            $languages = array($language);
+            $languages = [$language];
         }
 
         $selector = $this->get('phlexible_element.publish.selector');
@@ -138,7 +137,7 @@ class PublishController extends Controller
             $selection->merge($langSelection);
         }
 
-        $result = array();
+        $result = [];
         foreach ($selection->all() as $selectionItem) {
             if ($selectionItem->getTarget() instanceof TreeNodeInterface) {
                 $id = $selectionItem->getTarget()->getId();
@@ -148,7 +147,7 @@ class PublishController extends Controller
                 $icon = $iconResolver->resolveTeaser($selectionItem->getTarget(), $selectionItem->getLanguage());
             }
 
-            $result[] = array(
+            $result[] = [
                 'type'      => $selectionItem->getTarget() instanceof TreeNodeInterface ? 'full_element' : 'part_element',
                 'instance'  => $selectionItem->isInstance(),
                 'depth'     => $selectionItem->getDepth(),
@@ -160,10 +159,10 @@ class PublishController extends Controller
                 'title'     => $selectionItem->getTitle(),
                 'icon'      => $icon,
                 'action'    => true,
-            );
+            ];
         }
 
-        return new JsonResponse(array('preview' => $result));
+        return new JsonResponse(['preview' => $result]);
     }
 
     /**
@@ -214,16 +213,16 @@ class PublishController extends Controller
             */
         }
 
-        $data = array();
+        $data = [];
 
         $tree = $treeManager->getByNodeId($tid);
         $treeNode = $tree->get($tid);
 
-        $data = array(
+        $data = [
             'tid' => $tid,
             'language' => $language,
             'icon' => $iconResolver->resolveTreeNode($treeNode, $language),
-        );
+        ];
 
         $lock->release();
 

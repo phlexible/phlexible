@@ -68,7 +68,7 @@ class JobRepository extends EntityRepository
 
         $result = $qb->getQuery()->getScalarResult();
 
-        $stats = array();
+        $stats = [];
         foreach ($result as $item) {
             if (!preg_match('/"(.+?)"/', $item['class'], $match)) {
                 continue;

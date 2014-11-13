@@ -41,7 +41,7 @@ class DataProvider
      * @param EventDispatcherInterface $dispatcher
      * @param DataProviderInterface[]  $dataProviders
      */
-    public function __construct(RenderConfigurator $configurator, EventDispatcherInterface $dispatcher, array $dataProviders = array())
+    public function __construct(RenderConfigurator $configurator, EventDispatcherInterface $dispatcher, array $dataProviders = [])
     {
         $this->configurator = $configurator;
         $this->dispatcher = $dispatcher;

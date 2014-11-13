@@ -68,7 +68,7 @@ class FileController extends Controller
             $filter = json_decode($filter, true);
         }
 
-        $data = array();
+        $data = [];
         $total = 0;
 
         $site = $this->getSiteByFolderId($folderId);
@@ -88,17 +88,17 @@ class FileController extends Controller
                 if (!$showHidden) {
                     $filter['hidden'] = false;
                 }
-                $files = $site->findFiles($filter, array($sort => $dir), $limit, $start);
+                $files = $site->findFiles($filter, [$sort => $dir], $limit, $start);
                 $total = $site->countFiles($filter);
             } else {
-                $files = $site->findFilesByFolder($folder, array($sort => $dir), $limit, $start, $showHidden);
+                $files = $site->findFilesByFolder($folder, [$sort => $dir], $limit, $start, $showHidden);
                 $total = $site->countFilesByFolder($folder, $showHidden);
             }
 
             $data = $this->filesToArray($site, $files);
         }
 
-        return new JsonResponse(array('files' => $data, 'totalCount' => $total));
+        return new JsonResponse(['files' => $data, 'totalCount' => $total]);
     }
 
     /**
@@ -111,7 +111,7 @@ class FileController extends Controller
      */
     private function filesToArray(SiteInterface $site, array $files)
     {
-        $data = array();
+        $data = [];
         $userManager = $this->get('phlexible_user.user_manager');
         $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
 
@@ -136,20 +136,20 @@ class FileController extends Controller
                 $modifyUserName = 'Unknown';
             }
 
-            $properties = array(
+            $properties = [
                 //'attributes'    => array(),
                 //'attributesCnt' => 0,
                 'versions' => $hasVersions,
-                'debug'    => array(
+                'debug'    => [
                     'mimeType'     => $file->getMimeType(),
                     'documentType' => strtolower($file->getDocumenttype()),
                     'assetType'    => strtolower($file->getAssettype()),
                     'fileId'       => $file->getID(),
                     'folderId'     => $file->getFolderId(),
-                )
-            );
+                ]
+            ];
 
-            $meta = array();
+            $meta = [];
             // TODO: enable
             //foreach ($asset->getMetas()->getAll() as $metaData) {
             //    foreach ($metaData->getValues() as $key => $value) {
@@ -175,19 +175,19 @@ class FileController extends Controller
             }
 
             $cacheItems = $this->get('phlexible_media_cache.cache_manager')->findByFile($file->getID(), $version);
-            $cache = array();
+            $cache = [];
             foreach ($cacheItems as $cacheItem) {
                 if ($cacheItem->getStatus() === CacheItem::STATUS_OK) {
-                    $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media', array(
+                    $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media', [
                         'file_id'      => $file->getId(),
                         'file_version' => $file->getVersion(),
                         'template_key' => $cacheItem->getTemplateKey(),
-                    ));
+                    ]);
                 } else {
-                    $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', array(
+                    $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', [
                         'documenttypeKey' => $file->getDocumenttype(),
                         'templateKey'     => $cacheItem->getTemplateKey(),
-                    ));
+                    ]);
                 }
             }
 
@@ -200,10 +200,10 @@ class FileController extends Controller
                 $focal = 1;
             }
 
-            $attributes = $file->getAttribute('attributes', array());
+            $attributes = $file->getAttribute('attributes', []);
 
             $folder = $site->findFolder($file->getFolderId());
-            $data[] = array(
+            $data[] = [
                 'id'                => $file->getID(),
                 'name'              => $file->getName(),
                 'site_id'           => $site->getId(),
@@ -229,7 +229,7 @@ class FileController extends Controller
                 'used'              => $usage,
                 'focal'             => $focal,
                 'attributes'        => $attributes,
-            );
+            ];
         }
 
         return $data;
@@ -331,14 +331,14 @@ class FileController extends Controller
         $file = $site->findFile($fileId, $fileVersion);
         $folder = $site->findFolder($file->getFolderId());
 
-        $attributes = $file->getAttribute('attributes', array());
+        $attributes = $file->getAttribute('attributes', []);
 
-        $versions = array();
+        $versions = [];
         if ($site->hasFeature('versions')) {
             $versions = $site->findFileVersions($file);
         }
 
-        $properties = array();
+        $properties = [];
         $properties['id'] = $fileId;
         $properties['version'] = $fileVersion;
         $properties['path'] = '/' . $folder->getPath();
@@ -355,18 +355,18 @@ class FileController extends Controller
         $properties['versions'] = $versions;
         $properties['versionsCnt'] = count($properties['versions']);
 
-        $properties['keywords'] = array();
+        $properties['keywords'] = [];
         $properties['keywordsCnt'] = count($properties['keywords']);
 
-        $properties['debug'] = array(
+        $properties['debug'] = [
             'mimeType'     => $file->getMimeType(),
             'documentType' => strtolower($file->getDocumenttype()),
             'assetType'    => strtolower($file->getAssettype()),
             'fileId'       => $fileId,
             'folderId'     => $folder->getId(),
-        );
+        ];
 
-        $properties['detail'] = array(
+        $properties['detail'] = [
             'id'                => $file->getId(),
             'folder_id'         => $file->getFolderId(),
             'name'              => $file->getName(),
@@ -376,7 +376,7 @@ class FileController extends Controller
             'asset_type'        => strtolower($file->getAssettype()),
             'create_user_id'    => $file->getCreateUserId(),
             'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
-        );
+        ];
 
         /*
         $previousFile = $site->findPreviousFile($file, 'name ASC');
@@ -385,18 +385,18 @@ class FileController extends Controller
 
         $properties['prev'] = null;
         if (!empty($previousFile)) {
-            $properties['prev'] = array(
+            $properties['prev'] = [
                 'file_id'      => $previousFile->getId(),
                 'file_version' => $previousFile->getVersion(),
-            );
+            ];
         }
 
         $properties['next'] = null;
         if (!empty($nextFile)) {
-            $properties['next'] = array(
+            $properties['next'] = [
                 'file_id'      => $nextFile->getId(),
                 'file_version' => $nextFile->getVrsion(),
-            );
+            ];
         }
 
         return new JsonResponse($properties);
@@ -414,9 +414,9 @@ class FileController extends Controller
 
         $site = $this->get('phlexible_media_site.site_manager')->getByFileId($id);
 
-        $detail = array();
+        $detail = [];
         foreach ($site->findFileVersions($id) as $file) {
-            $detail[] = array(
+            $detail[] = [
                 'id'                => $file->getId(),
                 'folder_id'         => $file->getFolderId(),
                 'name'              => $file->getName(),
@@ -426,13 +426,13 @@ class FileController extends Controller
                 'asset_type'        => strtolower($file->getAssettype()),
                 'create_user_id'    => $file->getCreateUserId(),
                 'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
-            );
+            ];
         }
 
         return new JsonResponse(
-            array(
+            [
                 'detail' => $detail
-            )
+            ]
         );
     }
 
@@ -476,7 +476,7 @@ class FileController extends Controller
         $site = $this->getSiteByFolderId($folderId);
         $folder = $site->findFolder($folderId);
 
-        $skippedFiles = array();
+        $skippedFiles = [];
 
         foreach ($fileIds as $fileId) {
             $file = $site->findFile($fileId);

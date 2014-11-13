@@ -32,7 +32,7 @@ class PhlexibleSiterootExtension extends Extension
         $config = $this->processConfiguration($configuration, $config);
 
         if (!empty($config['overrides'])) {
-            $overrides = array();
+            $overrides = [];
             foreach ($config['overrides'] as $siterootId => $siteroot) {
                 $overrides[str_replace('_', '-', $siterootId)] = $siteroot;
             }

@@ -44,22 +44,22 @@ class ApplySuccessorListener
 
         $this->connection->update(
             'teaser',
-            array(
+            [
                 'create_user_id' => $toUid,
-            ),
-            array(
+            ],
+            [
                 'create_user_id' => $fromUid
-            )
+            ]
         );
 
         $this->connection->update(
             'teaser_online',
-            array(
+            [
                 'publish_user_id' => $toUid,
-            ),
-            array(
+            ],
+            [
                 'publish_user_id' => $fromUid
-            )
+            ]
         );
     }
 }

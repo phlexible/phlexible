@@ -35,13 +35,13 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetActiveKeys()
     {
-        $keys = array('key-1', 'key-2');
+        $keys = ['key-1', 'key-2'];
 
         $dataSource = new DataSource();
         $dataSource->setValues('de', $keys);
 
         $this->assertEquals($keys, $dataSource->getActiveValuesForLanguage('de'));
-        $this->assertEquals(array(), $dataSource->getActiveValuesForLanguage('en'));
+        $this->assertEquals([], $dataSource->getActiveValuesForLanguage('en'));
     }
 
     /**
@@ -55,7 +55,7 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
         $dataSource->deactivateValuesForLanguage('de', $deactivateKeys);
 
         $this->assertEquals($deactivateKeys, $dataSource->getInactiveValuesForLanguage('de'));
-        $this->assertEquals(array(), $dataSource->getInactiveValuesForLanguage('en'));
+        $this->assertEquals([], $dataSource->getInactiveValuesForLanguage('en'));
     }
 
     /**
@@ -70,7 +70,7 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
         $dataSource->deactivateValuesForLanguage('de', $deactivateKeys);
 
         $this->assertEquals($expected, $dataSource->getActiveValuesForLanguage('de'));
-        $this->assertEquals(array(), $dataSource->getActiveValuesForLanguage('en'));
+        $this->assertEquals([], $dataSource->getActiveValuesForLanguage('en'));
     }
 
     /**
@@ -81,7 +81,7 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeactivateKeysUsingNumericArray()
     {
-        $deactivateKeys   = array('a', 'b');
+        $deactivateKeys   = ['a', 'b'];
         $expectedInactive = $this->createKeysAlphabet('a', 'b');
         $expectedActive   = $this->createKeysAlphabet('c', 'z');
 
@@ -97,7 +97,7 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testActivateKeysUsingNumericArray()
     {
-        $activateKeys     = array('c', 'd', 'e');
+        $activateKeys     = ['c', 'd', 'e'];
         $expectedInactive = $this->createKeysAlphabet('a', 'b');
         $expectedActive   = $this->createKeysAlphabet('c', 'z');
 
@@ -116,7 +116,7 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
      */
     public function testDeactivateKeysDoesNotAddNewValues()
     {
-        $deactivateKeys   = array_merge($this->createKeysAlphabet('a', 'b'), array('neu' => 'neu'));
+        $deactivateKeys   = array_merge($this->createKeysAlphabet('a', 'b'), ['neu' => 'neu']);
         $expectedInactive = $this->createKeysAlphabet('a', 'b');
         $expectedActive   = $this->createKeysAlphabet('c', 'z');
 
@@ -164,7 +164,7 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
     public function testRemoveValuesFromKeysUsingNumericArray()
     {
         $language         = 'de';
-        $removeKeys       = array('e', 'f', 'g', 'h', 'i');
+        $removeKeys       = ['e', 'f', 'g', 'h', 'i'];
         $expectedActive   = $this->createKeysAlphabet('j', 'z');
         $expectedInactive = $this->createKeysAlphabet('a', 'd');
 
@@ -228,7 +228,7 @@ class DataSourceTest extends \PHPUnit_Framework_TestCase
         $startOrd = ord($startChar);
         $endOrd   = ord($endChar);
 
-        $keys = array();
+        $keys = [];
         for ($i = $startOrd; $i <= $endOrd; ++$i) {
             $c = chr($i);
             $keys[] = $c;

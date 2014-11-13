@@ -25,7 +25,7 @@ class ContentExtractorResolver implements ContentExtractorResolverInterface
     /**
      * @param ContentExtractorInterface[] $extractors
      */
-    public function __construct(array $extractors = array())
+    public function __construct(array $extractors = [])
     {
         $this->extractors = $extractors;
     }

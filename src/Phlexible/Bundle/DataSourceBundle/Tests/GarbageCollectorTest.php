@@ -15,7 +15,6 @@ use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
 use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
 use Phlexible\Bundle\DataSourceBundle\GarbageCollector\GarbageCollector;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -64,7 +63,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->managerMock
             ->expects($this->any())
             ->method('findBy')
-            ->will($this->returnValue(array($this->datasource)));
+            ->will($this->returnValue([$this->datasource]));
     }
 
     public function testEvents()
@@ -107,11 +106,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array(),
-                'inactive' => array(),
-                'remove' => array('value1', 'value2'),
-            ),
+            [
+                'active' => [],
+                'inactive' => [],
+                'remove' => ['value1', 'value2'],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -126,11 +125,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array(),
-                'inactive' => array(),
-                'remove' => array('value1', 'value2'),
-            ),
+            [
+                'active' => [],
+                'inactive' => [],
+                'remove' => ['value1', 'value2'],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -145,11 +144,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array(),
-                'inactive' => array('value1', 'value2'),
-                'remove' => array(),
-            ),
+            [
+                'active' => [],
+                'inactive' => ['value1', 'value2'],
+                'remove' => [],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -162,7 +161,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->dispatcherMock->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(array('value1', 'value2'));
+                $event->markActive(['value1', 'value2']);
             }
         );
 
@@ -171,11 +170,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array('value1', 'value2'),
-                'inactive' => array(),
-                'remove' => array(),
-            ),
+            [
+                'active' => ['value1', 'value2'],
+                'inactive' => [],
+                'remove' => [],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -188,7 +187,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->dispatcherMock->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(array('value1', 'value2'));
+                $event->markActive(['value1', 'value2']);
             }
         );
 
@@ -197,11 +196,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array('value1', 'value2'),
-                'inactive' => array(),
-                'remove' => array(),
-            ),
+            [
+                'active' => ['value1', 'value2'],
+                'inactive' => [],
+                'remove' => [],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -214,7 +213,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->dispatcherMock->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(array('value1', 'value2'));
+                $event->markActive(['value1', 'value2']);
             }
         );
 
@@ -223,11 +222,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array('value1', 'value2'),
-                'inactive' => array(),
-                'remove' => array(),
-            ),
+            [
+                'active' => ['value1', 'value2'],
+                'inactive' => [],
+                'remove' => [],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -240,7 +239,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->dispatcherMock->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markInactive(array('value1', 'value2'));
+                $event->markInactive(['value1', 'value2']);
             }
         );
 
@@ -249,11 +248,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array(),
-                'inactive' => array('value1', 'value2'),
-                'remove' => array(),
-            ),
+            [
+                'active' => [],
+                'inactive' => ['value1', 'value2'],
+                'remove' => [],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -266,7 +265,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->dispatcherMock->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markInactive(array('value1', 'value2'));
+                $event->markInactive(['value1', 'value2']);
             }
         );
 
@@ -275,11 +274,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array(),
-                'inactive' => array(),
-                'remove' => array('value1', 'value2'),
-            ),
+            [
+                'active' => [],
+                'inactive' => [],
+                'remove' => ['value1', 'value2'],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -292,7 +291,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->dispatcherMock->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markInactive(array('value1', 'value2'));
+                $event->markInactive(['value1', 'value2']);
             }
         );
 
@@ -301,11 +300,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array(),
-                'inactive' => array('value1', 'value2'),
-                'remove' => array(),
-            ),
+            [
+                'active' => [],
+                'inactive' => ['value1', 'value2'],
+                'remove' => [],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -322,8 +321,8 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->dispatcherMock->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(array('value1', 'value2'));
-                $event->markInactive(array('value3', 'value4'));
+                $event->markActive(['value1', 'value2']);
+                $event->markInactive(['value3', 'value4']);
             }
         );
 
@@ -332,11 +331,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array('value1', 'value2'),
-                'inactive' => array('value3', 'value4'),
-                'remove' => array('value5', 'value6'),
-            ),
+            [
+                'active' => ['value1', 'value2'],
+                'inactive' => ['value3', 'value4'],
+                'remove' => ['value5', 'value6'],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -353,8 +352,8 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->dispatcherMock->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(array('value1', 'value2'));
-                $event->markInactive(array('value3', 'value4'));
+                $event->markActive(['value1', 'value2']);
+                $event->markInactive(['value3', 'value4']);
             }
         );
 
@@ -363,11 +362,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array('value1', 'value2'),
-                'inactive' => array(),
-                'remove' => array('value3', 'value4', 'value5', 'value6'),
-            ),
+            [
+                'active' => ['value1', 'value2'],
+                'inactive' => [],
+                'remove' => ['value3', 'value4', 'value5', 'value6'],
+            ],
             $result['testDatasource']['de']
         );
     }
@@ -384,8 +383,8 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->dispatcherMock->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(array('value1', 'value2'));
-                $event->markInactive(array('value3', 'value4'));
+                $event->markActive(['value1', 'value2']);
+                $event->markInactive(['value3', 'value4']);
             }
         );
 
@@ -394,11 +393,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            array(
-                'active' => array('value1', 'value2'),
-                'inactive' => array('value3', 'value4', 'value5', 'value6'),
-                'remove' => array(),
-            ),
+            [
+                'active' => ['value1', 'value2'],
+                'inactive' => ['value3', 'value4', 'value5', 'value6'],
+                'remove' => [],
+            ],
             $result['testDatasource']['de']
         );
     }

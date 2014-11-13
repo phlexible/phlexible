@@ -44,7 +44,7 @@ class GetConfigListener
     {
         $config = $event->getConfig();
 
-        $languages = array();
+        $languages = [];
         foreach ($this->availableLanguages as $language) {
             $name = \Locale::getDisplayName($language, $event->getSecurityContext()->getToken()->getUser()->getInterfaceLanguage('en'));
             $languages[$name] = $language;
@@ -52,13 +52,13 @@ class GetConfigListener
 
         ksort($languages);
 
-        $frontendLanguages = array();
+        $frontendLanguages = [];
         foreach ($languages as $languageTitle => $language) {
-            $frontendLanguages[] = array(
+            $frontendLanguages[] = [
                 $language,
                 $languageTitle,
                 'p-flags-' . $language . '-icon',
-            );
+            ];
         }
 
         $config->set('language.frontend', $this->defaultLanguage);

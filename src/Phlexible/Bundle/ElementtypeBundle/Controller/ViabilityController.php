@@ -41,16 +41,16 @@ class ViabilityController extends Controller
 
         $elementtypes = $elementtypeService->findAllElementtypes();
 
-        $allowedForFull = $allowedForStructure = $allowedForArea = array(
+        $allowedForFull = $allowedForStructure = $allowedForArea = [
             Elementtype::TYPE_FULL,
             Elementtype::TYPE_STRUCTURE
-        );
-        $allowedForContainer = $allowedForPart = array(
+        ];
+        $allowedForContainer = $allowedForPart = [
             Elementtype::TYPE_LAYOUTAREA,
             Elementtype::TYPE_LAYOUTCONTAINER
-        );
+        ];
 
-        $list = array();
+        $list = [];
         foreach ($elementtypes as $elementtype) {
             $type = $elementtype->getType();
 
@@ -68,17 +68,17 @@ class ViabilityController extends Controller
                 continue;
             }
 
-            $list[] = array(
+            $list[] = [
                 'id'      => $elementtype->getId(),
                 'type'    => $elementtype->getType(),
                 'title'   => $elementtype->getTitle(),
                 'icon'    => $elementtype->getIcon(),
                 'version' => $elementtype->getRevision()
-            );
+            ];
 
         }
 
-        return new JsonResponse(array('elementtypes' => $list, 'total' => count($list)));
+        return new JsonResponse(['elementtypes' => $list, 'total' => count($list)]);
     }
 
     /**
@@ -95,17 +95,17 @@ class ViabilityController extends Controller
         $viabilityManager = $this->get('phlexible_elementtype.viability_manager');
         $elementtype = $elementtypeService->findElementtype($id);
 
-        $viabilities = array();
+        $viabilities = [];
         foreach ($viabilityManager->findAllowedParents($elementtype) as $viability) {
             $viabilityElementtype = $elementtypeService->findElementtype($viability->getUnderElementtypeId());
-            $viabilities[] = array(
+            $viabilities[] = [
                 'id'    => $viabilityElementtype->getId(),
                 'title' => $viabilityElementtype->getTitle(),
                 'icon'  => $viabilityElementtype->getIcon()
-            );
+            ];
         }
 
-        return new JsonResponse(array('viability' => $viabilities));
+        return new JsonResponse(['viability' => $viabilities]);
     }
 
     /**

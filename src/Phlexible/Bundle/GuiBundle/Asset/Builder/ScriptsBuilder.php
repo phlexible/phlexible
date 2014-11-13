@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Assetic\Asset\AssetCache;
-use Assetic\Asset\AssetCollection;
 use Assetic\Cache\FilesystemCache;
 use Assetic\FilterManager;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\FilenameFilter;

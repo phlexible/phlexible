@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\ProblemBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -38,9 +38,9 @@ class ListController extends Controller
     {
         $problemFetcher = $this->get('phlexible_problem.problem_fetcher');
 
-        $data = array();
+        $data = [];
         foreach ($problemFetcher->fetch() as $problem) {
-            $data[] = array(
+            $data[] = [
                 'id'            => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
                 'iconCls'       => $problem->getIconClass(),
                 'severity'      => $problem->getSeverity(),
@@ -50,7 +50,7 @@ class ListController extends Controller
                 'createdAt'     => $problem->getCreatedAt()->format('Y-m-d H:i:s'),
                 'lastCheckedAt' => $problem->getLastCheckedAt()->format('Y-m-d H:i:s'),
                 'source'        => $problem->isLive() ? 'live' : 'cached',
-            );
+            ];
         }
 
         return new JsonResponse($data);

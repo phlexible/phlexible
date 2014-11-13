@@ -37,9 +37,9 @@ class ListController extends Controller
 
         $allDocumenttypes = $repository->findAll();
 
-        $documenttypes = array();
+        $documenttypes = [];
         foreach ($allDocumenttypes as $documenttype) {
-            $documenttypes[] = array(
+            $documenttypes[] = [
                 'id'        => $documenttype->getKey(),
                 'key'       => $documenttype->getKey(),
                 'upperkey'  => strtoupper($documenttype->getKey()),
@@ -51,12 +51,12 @@ class ListController extends Controller
                 'icon32'    => $documenttype->hasIcon(32),
                 'icon48'    => $documenttype->hasIcon(48),
                 'icon256'   => $documenttype->hasIcon(256),
-            );
+            ];
         }
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'totalCount'    => count($documenttypes),
             'documenttypes' => $documenttypes
-        ));
+        ]);
     }
 }

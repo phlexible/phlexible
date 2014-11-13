@@ -123,7 +123,7 @@ class Publisher
         $tree = $this->treeManager->getByNodeId($treeId);
         $treeNode = $tree->get($treeId);
 
-        $result = array();
+        $result = [];
 
         if ($includeElements) {
             $result = $this->handleTreeNode(
@@ -252,7 +252,7 @@ class Publisher
             }
         }
         if (!$this->securityContext->isGranted('ROLE_SUPER_ADMIN', $treeNode)) {
-            if (!$this->securityContext->isGranted($treeNode, array('right' => 'PUBLISH', 'language' => $language))) {
+            if (!$this->securityContext->isGranted($treeNode, ['right' => 'PUBLISH', 'language' => $language])) {
                 $include = false;
             }
         }
@@ -268,7 +268,7 @@ class Publisher
             $elementVersion = $this->elementService->findLatestElementVersion($element);
         }
 
-        $result['treenode_' . $treeNode->getId()] = array(
+        $result['treenode_' . $treeNode->getId()] = [
             'type'      => 'full_element',
             'instance'  => $isInstance,
             'depth'     => $depth,
@@ -280,7 +280,7 @@ class Publisher
             'language'  => $language,
             'title'     => $elementVersion->getBackendTitle($language),
             'icon'      => '',// TODO: $elementVersion->getIconUrl($treeNode->getIconParams($language)),
-        );
+        ];
 
         return $result;
     }
@@ -322,7 +322,7 @@ class Publisher
             return $result;
         }
 
-        $version = $this->_db->fetchOne($this->_versionSelect, array('eid' => $teaser['teaser_eid']));
+        $version = $this->_db->fetchOne($this->_versionSelect, ['eid' => $teaser['teaser_eid']]);
 
         $isAsync = !!($teaser['version'] && $teaser['version'] != $version);
         $isPublished = !!$teaser['version'];
@@ -347,7 +347,7 @@ class Publisher
 
         $teaserNode = new Makeweb_Teasers_Node($teaser['id']);
 
-        $result['teaser_' . $teaser['id']] = array(
+        $result['teaser_' . $teaser['id']] = [
             'type'      => 'part_element',
             'instance'  => $isInstance,
             'depth'     => $depth,
@@ -359,7 +359,7 @@ class Publisher
             'language'  => $language,
             'title'     => $elementVersion->getBackendTitle($language),
             'icon'      => $elementVersion->getIconUrl($teaserNode->getIconParams($language)),
-        );
+        ];
 
         return $result;
     }

@@ -8,15 +8,15 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Controller;
 
+use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaTemplateBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\VideoTemplate;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -41,19 +41,19 @@ class TemplatesController extends Controller
 
         $allTemplates = $repository->findAll();
 
-        $templates = array();
+        $templates = [];
         foreach ($allTemplates as $template) {
             if (substr($template->getKey(), 0, 4) === '_mm_') {
                 continue;
             }
 
-            $templates[] = array(
+            $templates[] = [
                 'key'  => $template->getKey(),
                 'type' => $template->getType()
-            );
+            ];
         }
 
-        return new JsonResponse(array('templates' => $templates));
+        return new JsonResponse(['templates' => $templates]);
     }
 
     /**

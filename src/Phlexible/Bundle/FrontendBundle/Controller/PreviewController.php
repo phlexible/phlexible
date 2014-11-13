@@ -8,9 +8,6 @@
 
 namespace Phlexible\Bundle\FrontendBundle\Controller;
 
-use Phlexible\Bundle\ContentchannelBundle\Entity\Contentchannel;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +40,7 @@ class PreviewController extends Controller
         $node = $tree->get($tid);
 
         $siteroot = $siterootManager->find($node->getTree()->getSiterootId());
-        $siteroot->setContentChannels(array(1 => 1));
+        $siteroot->setContentChannels([1 => 1]);
         $siterootUrl = $siteroot->getDefaultUrl();
 
         $request->attributes->set('language', $language);

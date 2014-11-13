@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -37,7 +37,7 @@ class BundlesController extends Controller
      */
     public function listAction()
     {
-        $modules = array();
+        $modules = [];
 
         $components = $this->container->getParameter('kernel.bundles');
 
@@ -52,18 +52,18 @@ class BundlesController extends Controller
                 $package = current($namespaceParts);
             }
 
-            $icon = 'p-' . str_replace(array('bundle', 'phlexible'), array('', ''), strtolower($id)) . '-component-icon';
+            $icon = 'p-' . str_replace(['bundle', 'phlexible'], ['', ''], strtolower($id)) . '-component-icon';
 
             $reflection = new \ReflectionClass($class);
             $path = $reflection->getFileName();
 
-            $modules[$id] = array(
+            $modules[$id] = [
                 'id'          => $id,
                 'classname'   => $className,
                 'package'     => $package,
                 'icon'        => $icon,
                 'path'        => $path,
-            );
+            ];
         }
 
         ksort($modules);
@@ -86,7 +86,7 @@ class BundlesController extends Controller
     {
         $bundles = $this->container->getParameter('kernel.bundles');
 
-        $packageList = array();
+        $packageList = [];
         foreach ($bundles as $id => $class) {
             $reflection = new \ReflectionClass($class);
             $namespace = $reflection->getNamespaceName();
@@ -94,13 +94,13 @@ class BundlesController extends Controller
             $packageList[$package] = 1;
         }
 
-        $packages = array();
+        $packages = [];
         foreach (array_keys($packageList) as $package) {
-            $packages[] = array('id' => $package, 'title' => ucfirst($package), 'checked' => true);
+            $packages[] = ['id' => $package, 'title' => ucfirst($package), 'checked' => true];
         }
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'packages' => $packages,
-        ));
+        ]);
     }
 }

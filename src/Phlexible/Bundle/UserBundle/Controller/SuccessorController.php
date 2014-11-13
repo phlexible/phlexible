@@ -41,21 +41,21 @@ class SuccessorController extends Controller
         $userManager = $this->get('phlexible_user.user_manager');
         $systemUid = $userManager->getSystemUserId();
 
-        $skipUserIds = array($userId);
+        $skipUserIds = [$userId];
         if (!in_array($systemUid, $skipUserIds)) {
             $skipUserIds[] = $systemUid;
         }
 
-        $users = array();
+        $users = [];
         foreach ($userManager->findAll() as $user) {
             if (in_array($user->getId(), $skipUserIds)) {
                 continue;
             }
 
-            $users[$user->getDisplayName()] = array(
+            $users[$user->getDisplayName()] = [
                 'uid'  => $user->getId(),
                 'name' => $user->getDisplayName()
-            );
+            ];
         }
 
         ksort($users);

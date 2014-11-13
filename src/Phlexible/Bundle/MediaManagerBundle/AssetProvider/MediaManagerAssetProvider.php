@@ -23,7 +23,7 @@ class MediaManagerAssetProvider implements AssetProviderInterface
      */
     public function getUxScriptsCollection()
     {
-        return array(
+        return [
             //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.js',
             //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/moxie.js',
             //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.dev.js',
@@ -31,7 +31,7 @@ class MediaManagerAssetProvider implements AssetProviderInterface
             //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/SwfUpload.js',
             //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.SwfUploadPanel.js',
             '@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.LocationBar.js',
-        );
+        ];
     }
 
     /**
@@ -39,10 +39,10 @@ class MediaManagerAssetProvider implements AssetProviderInterface
      */
     public function getUxCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleMediaManagerBundle/Resources/styles/SwfUploadPanel.css',
             '@PhlexibleMediaManagerBundle/Resources/styles/Ext.ux.LocationBar.css',
-        );
+        ];
     }
 
     /**
@@ -50,7 +50,7 @@ class MediaManagerAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleMediaManagerBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleMediaManagerBundle/Resources/scripts/model/File.js',
@@ -89,7 +89,7 @@ class MediaManagerAssetProvider implements AssetProviderInterface
             '@PhlexibleMediaManagerBundle/Resources/scripts/portlet/LatestFiles.js',
 
             '@PhlexibleMediaManagerBundle/Resources/scripts/menuhandle/MediaHandle.js',
-        );
+        ];
     }
 
     /**
@@ -97,10 +97,10 @@ class MediaManagerAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleMediaManagerBundle/Resources/styles/mediamanager.css',
             '@PhlexibleMediaManagerBundle/Resources/styles/portlet.css',
             '@PhlexibleMediaManagerBundle/Resources/styles/filefield.css',
-        );
+        ];
     }
 }

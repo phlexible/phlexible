@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
-use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 
 /**
@@ -27,13 +26,13 @@ class LinkExtractor
     /**
      * @var LinkExtractorInterface[]
      */
-    private $extractors = array();
+    private $extractors = [];
 
     /**
      * @param FieldRegistry            $fieldRegistry
      * @param LinkExtractorInterface[] $extractors
      */
-    public function __construct(FieldRegistry $fieldRegistry, array $extractors = array())
+    public function __construct(FieldRegistry $fieldRegistry, array $extractors = [])
     {
         $this->fieldRegistry = $fieldRegistry;
 
@@ -61,7 +60,7 @@ class LinkExtractor
     {
         $field = $this->fieldRegistry->getField($value->getType());
 
-        $links = array();
+        $links = [];
         foreach ($this->extractors as $extractor) {
             if ($extractor->supports($value, $field)) {
                 foreach ($extractor->extract($value, $field) as $link) {

@@ -22,8 +22,8 @@ class TeasersMessage extends Message
      */
     public function getDefaults()
     {
-        return array(
+        return [
             'channel' => 'teaser',
-        );
+        ];
     }
 }

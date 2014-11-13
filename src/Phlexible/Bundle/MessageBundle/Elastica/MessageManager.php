@@ -83,12 +83,12 @@ class MessageManager implements MessageManagerInterface
 
         $resultSet = $this->getType()->search($query);
         $facets = $resultSet->getFacets();
-        $filterSets = array(
+        $filterSets = [
             'priorities' => array_column($facets['priorities']['terms'], 'term'),
             'types'      => array_column($facets['types']['terms'], 'term'),
             'channels'   => array_column($facets['channels']['terms'], 'term'),
             'roles'      => array_column($facets['roles']['terms'], 'term'),
-        );
+        ];
 
         return $filterSets;
     }
@@ -176,7 +176,7 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findBy(array $criteria = array(), $limit = null, $offset = 0, $order = null)
+    public function findBy(array $criteria = [], $limit = null, $offset = 0, $order = null)
     {
         $this->getFilterSets();
         $query = new Query();
@@ -184,7 +184,7 @@ class MessageManager implements MessageManagerInterface
         if (count($criteria)) {
             $andFilter = new BoolAnd();
             foreach ($criteria as $key => $value) {
-                $andFilter->addFilter(new Term(array($key => $value)));
+                $andFilter->addFilter(new Term([$key => $value]));
             }
             $query->setFilter($andFilter);
         }
@@ -197,7 +197,7 @@ class MessageManager implements MessageManagerInterface
         if ($order !== null) {
             if (!is_array($order)) {
                 $order = explode(' ', $order);
-                $order = array($order[0] => strtolower($order[1]));
+                $order = [$order[0] => strtolower($order[1])];
             }
             $query->setSort($order);
         }
@@ -227,12 +227,12 @@ class MessageManager implements MessageManagerInterface
      */
     public function getPriorityNames()
     {
-        return array(
+        return [
             0 => 'low',
             1 => 'normal',
             2 => 'high',
             3 => 'urgent',
-        );
+        ];
     }
 
     /**
@@ -240,10 +240,10 @@ class MessageManager implements MessageManagerInterface
      */
     public function getTypeNames()
     {
-        return array(
+        return [
             0 => 'info',
             1 => 'error',
-        );
+        ];
     }
 
     /**
@@ -253,7 +253,7 @@ class MessageManager implements MessageManagerInterface
     {
         $document = new Document(
             $message->getId(),
-            array(
+            [
                 'id'         => $message->getId(),
                 'subject'    => $message->getSubject(),
                 'body'       => $message->getBody(),
@@ -263,7 +263,7 @@ class MessageManager implements MessageManagerInterface
                 'role'       => $message->getRole(),
                 'user'       => $message->getUser(),
                 'created_at' => $message->getCreatedAt()->format('U'),
-            )
+            ]
         );
 
         $this->getType()->addDocument($document);
@@ -285,7 +285,7 @@ class MessageManager implements MessageManagerInterface
      */
     private function mapDocuments(ResultSet $resultSet)
     {
-        $mesages = array();
+        $mesages = [];
 
         foreach ($resultSet->getResults() as $result) {
             $mesages[] = $this->mapDocument($result->getSource());
@@ -365,35 +365,35 @@ class MessageManager implements MessageManagerInterface
                     break;
 
                 case Criteria::CRITERIUM_PRIORITY_IS:
-                    $andFilter->addFilter(new Term(array('priority', $value)));
+                    $andFilter->addFilter(new Term(['priority', $value]));
                     break;
 
                 case Criteria::CRITERIUM_PRIORITY_MIN:
-                    $andFilter->addFilter(new Range('priority', array('gte' => $value)));
+                    $andFilter->addFilter(new Range('priority', ['gte' => $value]));
                     break;
 
                 case Criteria::CRITERIUM_PRIORITY_IN:
                     $orFilter = new BoolOr();
                     foreach (explode(',', $value) as $priority) {
-                        $orFilter->addFilter(new Term(array('priority' => $priority)));
+                        $orFilter->addFilter(new Term(['priority' => $priority]));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
 
                 case Criteria::CRITERIUM_TYPE_IS:
-                    $andFilter->addFilter(new Term(array('type' => $value)));
+                    $andFilter->addFilter(new Term(['type' => $value]));
                     break;
 
                 case Criteria::CRITERIUM_TYPE_IN:
                     $orFilter = new BoolOr();
                     foreach (explode(',', $value) as $type) {
-                        $orFilter->addFilter(new Term(array('type' => $type)));
+                        $orFilter->addFilter(new Term(['type' => $type]));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
 
                 case Criteria::CRITERIUM_CHANNEL_IS:
-                    $andFilter->addFilter(new Term(array('channel' => $value)));
+                    $andFilter->addFilter(new Term(['channel' => $value]));
                     break;
 
                 case Criteria::CRITERIUM_CHANNEL_LIKE:
@@ -403,45 +403,45 @@ class MessageManager implements MessageManagerInterface
                 case Criteria::CRITERIUM_CHANNEL_IN:
                     $orFilter = new BoolOr();
                     foreach (explode(',', $value) as $channel) {
-                        $orFilter->addFilter(new Term(array('channel' => $channel)));
+                        $orFilter->addFilter(new Term(['channel' => $channel]));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
 
                 case Criteria::CRITERIUM_ROLE_IS:
-                    $andFilter->addFilter(new Term(array('role' => $value)));
+                    $andFilter->addFilter(new Term(['role' => $value]));
                     break;
 
                 case Criteria::CRITERIUM_ROLE_IN:
                     $orFilter = new BoolOr();
                     foreach (explode(',', $value) as $role) {
-                        $orFilter->addFilter(new Term(array('role' => $role)));
+                        $orFilter->addFilter(new Term(['role' => $role]));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
 
                 case Criteria::CRITERIUM_MAX_AGE:
-                    $andFilter->addFilter(new Range('created_at', array('gt' => time() - ($value * 24 * 60 * 60))));
+                    $andFilter->addFilter(new Range('created_at', ['gt' => time() - ($value * 24 * 60 * 60)]));
                     break;
 
                 case Criteria::CRITERIUM_MIN_AGE:
-                    $andFilter->addFilter(new Range('created_at', array('lt' => time() - ($value * 24 * 60 * 60))));
+                    $andFilter->addFilter(new Range('created_at', ['lt' => time() - ($value * 24 * 60 * 60)]));
                     break;
 
                 case Criteria::CRITERIUM_START_DATE:
-                    $andFilter->addFilter(new Range('created_at', array('gt' => $value->format('U'))));
+                    $andFilter->addFilter(new Range('created_at', ['gt' => $value->format('U')]));
                     break;
 
                 case Criteria::CRITERIUM_END_DATE:
-                    $andFilter->addFilter(new Range('created_at', array('lt' => $value->format('U'))));
+                    $andFilter->addFilter(new Range('created_at', ['lt' => $value->format('U')]));
                     break;
 
                 case Criteria::CRITERIUM_DATE_IS:
                     $andFilter->addFilter(
-                        new Range('created_at', array(
+                        new Range('created_at', [
                             'gte' => $value->format('U'),
                             'lt'  => $value->format('U'),
-                        ))
+                        ])
                     );
                     break;
             }

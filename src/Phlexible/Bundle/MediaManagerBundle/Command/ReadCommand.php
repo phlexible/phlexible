@@ -31,9 +31,9 @@ class ReadCommand extends ContainerAwareCommand
         $this
             ->setName('media-manager:read')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('folderId', InputArgument::OPTIONAL, 'Folder ID'),
-                )
+                ]
             )
             ->setDescription('Re-read all metadata');
     }

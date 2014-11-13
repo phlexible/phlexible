@@ -30,7 +30,7 @@ class CreateCommand extends ContainerAwareCommand
         $this
             ->setName('media-cache:create')
             ->setDefinition(
-                array(
+                [
                     new InputOption('all', null, InputOption::VALUE_NONE, 'Create all cachable templates and files.'),
                     new InputOption('template', null, InputOption::VALUE_REQUIRED, 'Create cache items by template key.'),
                     new InputOption('file', null, InputOption::VALUE_REQUIRED, 'Create cache items by File ID.'),
@@ -39,7 +39,7 @@ class CreateCommand extends ContainerAwareCommand
                     new InputOption('error', null, InputOption::VALUE_NONE, 'Only create items that are marked as status error.'),
                     new InputOption('queue', null, InputOption::VALUE_NONE, 'Use queue instead of immediate creation.'),
                     new InputOption('show', null, InputOption::VALUE_NONE, 'Show matches.'),
-                )
+                ]
             )
             ->setDescription('Create chache items.');
     }
@@ -99,7 +99,7 @@ class CreateCommand extends ContainerAwareCommand
             }
         }
 
-        $flags = array();
+        $flags = [];
         if ($input->getOption('error')) {
             $flags[] = 'error';
         }
@@ -117,18 +117,18 @@ class CreateCommand extends ContainerAwareCommand
             // only show
             $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
             $table = new Table($output);
-            $table->setHeaders(array('Idx', 'Template', 'Path', 'File ID'));
+            $table->setHeaders(['Idx', 'Template', 'Path', 'File ID']);
             foreach ($queue->all() as $idx => $queueItem) {
                 $site = $siteManager->getByFileId($queueItem->getFileId());
                 $file = $site->findFile($queueItem->getFileId(), $queueItem->getFileVersion());
                 $folder = $site->findFolder($file->getFolderId());
                 $table->addRow(
-                    array(
+                    [
                         $idx,
                         $queueItem->getTemplateKey(),
                         $folder->getPath() . $file->getName(),
                         $queueItem->getFileId()
-                    )
+                    ]
                 );
             }
             $table->render();

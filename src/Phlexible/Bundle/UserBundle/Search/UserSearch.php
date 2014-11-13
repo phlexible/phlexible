@@ -59,7 +59,7 @@ class UserSearch implements SearchProviderInterface
         $createUser = new User();
         $createUser->setUsername('(unknown)');
 
-        $results = array();
+        $results = [];
         foreach ($users as $user) {
             $results[] = new SearchResult(
                 $user->getId(),
@@ -68,13 +68,13 @@ class UserSearch implements SearchProviderInterface
                 $user->getCreatedAt()->format('U'),
                 '/bundles/phlexibleuser/icons/user.png',
                 'Users Search',
-                array(
+                [
                     'xtype'      => 'Phlexible.users.menuhandle.UsersHandle',
-                    'parameters' => array(
+                    'parameters' => [
                         'userId' => $user->getId(),
                         'query'  => $user->getUsername()
-                    ),
-                )
+                    ],
+                ]
             );
         }
 

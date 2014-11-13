@@ -20,22 +20,22 @@ class PermissionCollection
     /**
      * @var array
      */
-    private $permissions = array();
+    private $permissions = [];
 
     /**
      * @var array
      */
-    private $classMaps = array();
+    private $classMaps = [];
 
     /**
      * @var array
      */
-    private $bitMaps = array();
+    private $bitMaps = [];
 
     /**
      * @param array $permissions
      */
-    public function __construct(array $permissions = array())
+    public function __construct(array $permissions = [])
     {
         foreach ($permissions as $permission) {
             $this->add($permission);

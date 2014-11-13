@@ -43,11 +43,11 @@ class ScriptCompiler implements CompilerInterface
      */
     public function compile(DocumenttypeCollection $documenttypes)
     {
-        $classMap = array();
+        $classMap = [];
         foreach ($documenttypes->getAll() as $documenttype) {
-            $classMapItem = array(
+            $classMapItem = [
                 'cls' => 'p-documenttype-' . $documenttype->getKey()
-            );
+            ];
 
             foreach ($documenttype->getTitles() as $key => $title) {
                 $classMapItem[$key] = $title;

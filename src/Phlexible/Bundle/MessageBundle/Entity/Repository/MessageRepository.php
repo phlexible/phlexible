@@ -100,12 +100,12 @@ class MessageRepository extends EntityRepository
         $priorities = $this->createQueryBuilder('m')->select('DISTINCT m.priority')->getQuery()->getScalarResult();
         $roles = $this->createQueryBuilder('m')->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
-        return array(
+        return [
             'channels'   => array_column($channels, 'channel'),
             'types'      => array_column($types, 'type'),
             'priorities' => array_column($priorities, 'priority'),
             'roles'      => array_column($roles, 'role'),
-        );
+        ];
     }
 
     /**
@@ -129,12 +129,12 @@ class MessageRepository extends EntityRepository
         $roleQb = clone $qb;
         $roles = $roleQb->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
-        return array(
+        return [
             'channels'   => array_column($channels, 'channel'),
             'types'      => array_column($types, 'type'),
             'priorities' => array_column($priorities, 'priority'),
             'roles'      => array_column($roles, 'role'),
-        );
+        ];
     }
 
     /**

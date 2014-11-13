@@ -63,7 +63,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('delete_policy')
                     ->defaultValue('hide_old')
                     ->validate()
-                        ->ifNotInArray(array('hide_old', 'delete_old', 'delete_all'))
+                        ->ifNotInArray(['hide_old', 'delete_old', 'delete_all'])
                         ->thenInvalid('delete_policy has to be one of "hide_old", "delete_old", "delete_all"')
                     ->end()
                 ->end()

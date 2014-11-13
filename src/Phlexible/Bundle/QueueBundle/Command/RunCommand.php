@@ -34,7 +34,7 @@ class RunCommand extends ContainerAwareCommand
     /**
      * @var RunningJob[]
      */
-    private $runningJobs = array();
+    private $runningJobs = [];
 
     /**
      * @var bool
@@ -49,11 +49,11 @@ class RunCommand extends ContainerAwareCommand
         $this
             ->setName('queue:run')
             ->setDefinition(
-                array(
+                [
                     new InputOption('idle-time', 'i', InputOption::VALUE_REQUIRED, 'Idle time in seconds if no job was found.', 1),
                     new InputOption('max-concurrent-jobs', 'j', InputOption::VALUE_REQUIRED, 'Maximum number of concurrent jobs.', 2),
                     new InputOption('max-runtime', 'r', InputOption::VALUE_REQUIRED, 'Maximum runtime in seconds.', 600),
-                )
+                ]
             )
             ->setDescription('Run queued job(s).');
     }

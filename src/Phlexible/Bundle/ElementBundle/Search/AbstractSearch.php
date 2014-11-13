@@ -89,16 +89,16 @@ abstract class AbstractSearch implements SearchProviderInterface
         $siteRootManager = Makeweb_Siteroots_Siteroot_Manager::getInstance();
         $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
 
-        $rightsIdentifiers = array(
-            array('uid' => MWF_Env::getUid())
-        );
+        $rightsIdentifiers = [
+            ['uid' => MWF_Env::getUid()]
+        ];
         foreach (MWF_Env::getUser()->getGroups() as $group) {
-            $rightsIdentifiers[] = array('gid' => $group->getId());
+            $rightsIdentifiers[] = ['gid' => $group->getId()];
         }
 
         $contentRightsManager = MWF_Registry::getContainer()->contentRightsManager;
 
-        $results = array();
+        $results = [];
         foreach ($rows as $row) {
             $node = $treeManager->getNodeByNodeId($row['id']);
 
@@ -127,10 +127,10 @@ abstract class AbstractSearch implements SearchProviderInterface
                 $createUser = MWF_Core_Users_User_Peer::getSystemUser();
             }
 
-            $iconParams = array(
+            $iconParams = [
                 'status' => $node->isAsync($language) ? 'async' : ($node->isPublished($language) ? 'online' : null),
                 'instance' => ($node->isInstance() ? ($node->isInstanceMaster() ? 'master' : 'slave') : false),
-            );
+            ];
 
             $results[] = new MWF_Core_Search_Result(
                 $node->getId(),

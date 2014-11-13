@@ -29,9 +29,9 @@ class InitCommand extends ContainerAwareCommand
         $this
             ->setName('media-manager:init')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('siteName', InputArgument::REQUIRED, 'Site name'),
-                )
+                ]
             )
             ->setDescription('Initialise filesystem');
     }

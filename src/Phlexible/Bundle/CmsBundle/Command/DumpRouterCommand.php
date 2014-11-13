@@ -39,7 +39,7 @@ class DumpRouterCommand extends ContainerAwareCommand
 
         foreach ($router->getRoutes() as $name => $route) {
             $vars = $route->getVariables();
-            $data = array();
+            $data = [];
             foreach ($vars as $var) {
                 $data[$var] = '{' . $var . '}';
             }

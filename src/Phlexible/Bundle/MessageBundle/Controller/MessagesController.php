@@ -43,7 +43,7 @@ class MessagesController extends Controller
         }
 
         if (!is_array($filter)) {
-            $filter = array();
+            $filter = [];
         }
 
         $messageManager = $this->get('phlexible_message.message_manager');
@@ -51,10 +51,10 @@ class MessagesController extends Controller
         $priorityList = $messageManager->getPriorityNames();
         $typeList = $messageManager->getTypeNames();
 
-        $priorityFilter = array();
-        $typeFilter = array();
-        $channelFilter = array();
-        $roleFilter = array();
+        $priorityFilter = [];
+        $typeFilter = [];
+        $channelFilter = [];
+        $roleFilter = [];
 
         $criteria = new Criteria();
         foreach ($filter as $key => $value) {
@@ -106,11 +106,11 @@ class MessagesController extends Controller
         }
 
         $count = $messageManager->countByCriteria($criteria);
-        $messages = $messageManager->findByCriteria($criteria, array($sort => $dir), $limit, $start);
+        $messages = $messageManager->findByCriteria($criteria, [$sort => $dir], $limit, $start);
 
-        $data = array();
+        $data = [];
         foreach ($messages as $message) {
-            $data[] = array(
+            $data[] = [
                 'subject'   => $message->getSubject(),
                 'body'      => nl2br($message->getBody()),
                 'priority'  => $priorityList[$message->getPriority()],
@@ -119,14 +119,14 @@ class MessagesController extends Controller
                 'role'      => $message->getRole(),
                 'user'      => $message->getUser(),
                 'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-            );
+            ];
         }
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'totalCount' => $count,
             'messages'   => $data,
             'facets'     => $messageManager->getFacetsByCriteria($criteria),
-        ));
+        ]);
     }
 
     /**
@@ -143,35 +143,35 @@ class MessagesController extends Controller
         $priorityList = $messageManager->getPriorityNames();
         $typeList = $messageManager->getTypeNames();
 
-        $priorities = array();
+        $priorities = [];
         arsort($filterSets['priorities']);
         foreach ($filterSets['priorities'] as $priority) {
-            $priorities[] = array('id' => $priority, 'title' => $priorityList[$priority]);
+            $priorities[] = ['id' => $priority, 'title' => $priorityList[$priority]];
         }
 
-        $types = array();
+        $types = [];
         arsort($filterSets['types']);
         foreach ($filterSets['types'] as $key => $type) {
-            $types[] = array('id' => $type, 'title' => $typeList[$type]);
+            $types[] = ['id' => $type, 'title' => $typeList[$type]];
         }
 
-        $channels = array();
+        $channels = [];
         sort($filterSets['channels']);
         foreach ($filterSets['channels'] as $channel) {
-            $channels[] = array('id' => $channel, 'title' => $channel ? : '(no channel)');
+            $channels[] = ['id' => $channel, 'title' => $channel ? : '(no channel)'];
         }
 
-        $roles = array();
+        $roles = [];
         sort($filterSets['roles']);
         foreach ($filterSets['roles'] as $role) {
-            $roles[] = array('id' => $role, 'title' => $role ? : '(no role)');
+            $roles[] = ['id' => $role, 'title' => $role ? : '(no role)'];
         }
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'priorities' => $priorities,
             'types'      => $types,
             'channels'   => $channels,
             'roles'      => $roles,
-        ));
+        ]);
     }
 }

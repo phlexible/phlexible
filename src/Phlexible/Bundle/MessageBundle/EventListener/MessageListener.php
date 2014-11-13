@@ -40,11 +40,11 @@ class MessageListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             MessageEvents::MESSAGE => 'onMessage',
             KernelEvents::TERMINATE => 'onTerminate',
             ConsoleEvents::TERMINATE => 'onTerminate',
-        );
+        ];
     }
 
     /**

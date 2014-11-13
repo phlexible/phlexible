@@ -46,7 +46,7 @@ class FormController extends Controller
             unset($parameters['method']);
         }
 
-        return new JsonResponse(array('success' => true, 'data' => $parameters));
+        return new JsonResponse(['success' => true, 'data' => $parameters]);
     }
 
     /**

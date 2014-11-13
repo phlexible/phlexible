@@ -13,9 +13,7 @@ use Phlexible\Bundle\MediaCacheBundle\Model\QueueManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Batch;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Worker;
-use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
@@ -86,11 +84,11 @@ class FileListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             MediaSiteEvents::CREATE_FILE => 'onCreateFile',
             MediaSiteEvents::REPLACE_FILE => 'onReplaceFile',
             MediaSiteEvents::DELETE_FILE => 'onDeleteFile',
-        );
+        ];
     }
 
     /**
@@ -116,11 +114,11 @@ class FileListener implements EventSubscriberInterface
     {
         $fileId = $event->getFile()->getId();
 
-        foreach ($this->cacheManager->findBy(array('fileId' => $fileId)) as $cacheItem) {
+        foreach ($this->cacheManager->findBy(['fileId' => $fileId]) as $cacheItem) {
             $this->cacheManager->deleteCacheItem($cacheItem);
         }
 
-        foreach ($this->queueManager->findBy(array('fileId' => $fileId)) as $queueItem) {
+        foreach ($this->queueManager->findBy(['fileId' => $fileId]) as $queueItem) {
             $this->queueManager->deleteQueueItem($queueItem);
         }
     }
@@ -130,8 +128,8 @@ class FileListener implements EventSubscriberInterface
      */
     private function processFile(FileInterface $file)
     {
-        $systemTemplates = $this->templateManager->findBy(array('system' => true, 'cache' => true));
-        $otherTemplates = $this->templateManager->findBy(array('system' => false, 'cache' => true));
+        $systemTemplates = $this->templateManager->findBy(['system' => true, 'cache' => true]);
+        $otherTemplates = $this->templateManager->findBy(['system' => false, 'cache' => true]);
         foreach ($systemTemplates as $index => $systemTemplate) {
             if ($systemTemplate->getType() !== 'image') {
                 $otherTemplates[] = $systemTemplate;

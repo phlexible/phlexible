@@ -38,7 +38,7 @@ class SiterootAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleSiterootBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleSiterootBundle/Resources/scripts/model/Siteroot.js',
@@ -60,7 +60,7 @@ class SiterootAssetProvider implements AssetProviderInterface
             '@PhlexibleSiterootBundle/Resources/scripts/TitleForm.js',
             '@PhlexibleSiterootBundle/Resources/scripts/PropertyGrid.js',
             '@PhlexibleSiterootBundle/Resources/scripts/menuhandle/SiterootsHandle.js',
-        );
+        ];
     }
 
     /**
@@ -68,8 +68,8 @@ class SiterootAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleSiterootBundle/Resources/styles/siteroots.css',
-        );
+        ];
     }
 }

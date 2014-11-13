@@ -36,15 +36,15 @@ class SetsController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSet = $metaSetManager->findAll();
 
-        $data = array();
+        $data = [];
         foreach ($metaSet as $set) {
-            $data[] = array(
+            $data[] = [
                 'id'   => $set->getId(),
                 'name' => $set->getName(),
-            );
+            ];
         }
 
-        return new JsonResponse(array('sets' => $data));
+        return new JsonResponse(['sets' => $data]);
     }
 
     /**
@@ -63,9 +63,9 @@ class SetsController extends Controller
         $metaSet = $metaSetManager->find($id);
         $fields = $metaSet->getFields();
 
-        $data = array();
+        $data = [];
         foreach ($fields as $field) {
-            $data[] = array(
+            $data[] = [
                 'id'           => $field->getId(),
                 'key'          => $field->getName(),
                 'type'         => $field->getType(),
@@ -73,10 +73,10 @@ class SetsController extends Controller
                 'synchronized' => $field->isSynchronized(),
                 'readonly'     => $field->isReadonly(),
                 'options'      => $field->getOptions(),
-            );
+            ];
         }
 
-        return new JsonResponse(array('values' => $data));
+        return new JsonResponse(['values' => $data]);
     }
 
     /**
@@ -155,14 +155,14 @@ class SetsController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSet = $metaSetManager->find($id);
 
-        $fields = array();
+        $fields = [];
         foreach ($metaSet->getFields() as $field) {
             $fields[$field->getId()] = $field;
         }
 
         foreach ($data as $item) {
             if (!empty($item['options'])) {
-                $options = array();
+                $options = [];
                 foreach (explode(',', $item['options']) as $key => $value) {
                     $options[$key] = trim($value);
                 }

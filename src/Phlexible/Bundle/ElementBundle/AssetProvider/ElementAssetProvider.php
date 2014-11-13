@@ -22,9 +22,9 @@ class ElementAssetProvider implements AssetProviderInterface
      */
     public function getUxScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleElementBundle/Resources/scripts/ux/Ext.ux.layout.RowFitLayout.js',
-        );
+        ];
     }
 
     /**
@@ -40,7 +40,7 @@ class ElementAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleElementBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleElementBundle/Resources/scripts/menuhandle/ElementsHandle.js',
@@ -100,7 +100,7 @@ class ElementAssetProvider implements AssetProviderInterface
             '@PhlexibleElementBundle/Resources/scripts/LocksWindow.js',
 
             '@PhlexibleElementBundle/Resources/scripts/portlet/LatestElements.js',
-        );
+        ];
     }
 
     /**
@@ -108,10 +108,10 @@ class ElementAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleElementBundle/Resources/styles/elements.css',
             '@PhlexibleElementBundle/Resources/styles/portlet.css',
             '@PhlexibleElementBundle/Resources/styles/eidselector.css',
-        );
+        ];
     }
 }

@@ -49,7 +49,7 @@ class Job
      * @var string
      * @ORM\Column(type="json_array")
      */
-    private $arguments = array();
+    private $arguments = [];
 
     /**
      * @var string
@@ -133,7 +133,7 @@ class Job
      * @param string $command
      * @param array  $arguments
      */
-    public function __construct($command, array $arguments = array())
+    public function __construct($command, array $arguments = [])
     {
         $this->setCommand($command);
         $this->setArguments($arguments);

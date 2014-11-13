@@ -24,7 +24,7 @@ class AddTaskTypesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $types = array();
+        $types = [];
         foreach ($container->findTaggedServiceIds('phlexible_task.type') as $id => $definition) {
             $types[] = new Reference($id);
         }

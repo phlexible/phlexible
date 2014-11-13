@@ -59,13 +59,13 @@ class MediaExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('image', array($this, 'image')),
-            new \Twig_SimpleFunction('icon', array($this, 'icon')),
-            new \Twig_SimpleFunction('thumbnail', array($this, 'thumbnail')),
-            new \Twig_SimpleFunction('download', array($this, 'download')),
-            new \Twig_SimpleFunction('fileinfo', array($this, 'fileinfo')),
-        );
+        return [
+            new \Twig_SimpleFunction('image', [$this, 'image']),
+            new \Twig_SimpleFunction('icon', [$this, 'icon']),
+            new \Twig_SimpleFunction('thumbnail', [$this, 'thumbnail']),
+            new \Twig_SimpleFunction('download', [$this, 'download']),
+            new \Twig_SimpleFunction('fileinfo', [$this, 'fileinfo']),
+        ];
     }
 
     /**
@@ -87,7 +87,7 @@ class MediaExtension extends \Twig_Extension
         }
 
         // deliver original file
-        $src = $this->router->generate('frontendmedia_inline', array('fileId' => $fileId));
+        $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId]);
 
         return $src;
     }
@@ -111,7 +111,7 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_icon', array('fileId' => $fileId, 'size' => $size));
+        $src = $this->router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => $size]);
 
         return $src;
     }
@@ -137,10 +137,10 @@ class MediaExtension extends \Twig_Extension
 
         if ($template === null) {
             // deliver original file
-            $src = $this->router->generate('frontendmedia_inline', array('fileId' => $fileId));
+            $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId]);
         } else {
             // deliver thumbnail
-            $src = $this->router->generate('frontendmedia_thumbnail', array('fileId' => $fileId, 'template' => $template));
+            $src = $this->router->generate('frontendmedia_thumbnail', ['fileId' => $fileId, 'template' => $template]);
         }
 
         return $src;
@@ -164,7 +164,7 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_download', array('fileId' => $fileId));
+        $src = $this->router->generate('frontendmedia_download', ['fileId' => $fileId]);
 
         return $src;
     }
@@ -177,7 +177,7 @@ class MediaExtension extends \Twig_Extension
     public function fileinfo($file)
     {
         if (!$file) {
-            return array();
+            return [];
         }
 
         $parts = explode(';', $file);
@@ -190,20 +190,20 @@ class MediaExtension extends \Twig_Extension
         $site = $this->siteManager->getByFileId($fileId, $fileVersion);
         $file = $site->findFile($fileId, $fileVersion);
 
-        $info = array(
+        $info = [
             'mimetype'     => $file->getMimeType(),
             'assettype'    => $file->getAssettype(),
             'documenttype' => $file->getDocumenttype(),
             'size'         => $file->getSize(),
             'attributes'   => $file->getAttribute('attributes'),
-            'meta'         => array(),
-        );
+            'meta'         => [],
+        ];
 
         $metasets = $this->metaSetResolver->resolve($file);
         foreach ($metasets as $metaset) {
             $metadata = $this->metaDataManager->findByMetaSetAndFile($metaset, $file);
             if ($metadata) {
-                $data = array();
+                $data = [];
                 foreach ($metaset->getFields() as $field) {
                     $data[$field->getName()] = $metadata->get($field->getName(), 'de');
                 }

@@ -37,7 +37,7 @@ class SpecialTidChecker implements ProblemCheckerInterface
      */
     public function check()
     {
-        $problems = array();
+        $problems = [];
 
         foreach ($this->entityManager->getRepository('PhlexibleSiterootBundle:Siteroot')->findAll() as $siteroot) {
             if (!$siteroot->getSpecialTid(null, 'error_404')) {

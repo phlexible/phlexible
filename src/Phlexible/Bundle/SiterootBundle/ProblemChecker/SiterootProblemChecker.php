@@ -51,7 +51,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                 ->setHint('Add at least one siteroot.')
                 ->setIconClass('p-siteroot-component-icon');
 
-            return array($problem);
+            return [$problem];
         }
 
         foreach ($siteroots as $siteRoot) {

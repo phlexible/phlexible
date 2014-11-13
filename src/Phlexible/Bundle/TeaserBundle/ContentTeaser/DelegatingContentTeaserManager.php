@@ -170,7 +170,7 @@ class DelegatingContentTeaserManager
      */
     public function createContentTeasersFromTeasers(array $teasers)
     {
-        $contentTeasers = array();
+        $contentTeasers = [];
         foreach ($teasers as $teaser) {
             $contentTeasers[] = $this->createContentTeaserFromTeaser($teaser);
         }

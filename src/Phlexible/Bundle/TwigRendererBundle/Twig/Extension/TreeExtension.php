@@ -37,9 +37,9 @@ class TreeExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('treeNode', array($this, 'treeNode')),
-        );
+        return [
+            new \Twig_SimpleFunction('treeNode', [$this, 'treeNode']),
+        ];
     }
 
     /**

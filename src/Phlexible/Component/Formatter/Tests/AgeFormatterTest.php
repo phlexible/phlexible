@@ -54,26 +54,26 @@ class AgeFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormatDateWithArrayResult()
     {
-        $this->assertEquals(array('1',  'second'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:00:01', true));
-        $this->assertEquals(array('7', 'seconds'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:00:07', true));
-        $this->assertEquals(array('31', 'seconds'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:00:31', true));
-        $this->assertEquals(array('1', 'minute'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:01:00', true));
-        $this->assertEquals(array('6', 'minutes'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:06:00', true));
-        $this->assertEquals(array('48', 'minutes'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:48:00', true));
-        $this->assertEquals(array('1', 'hour'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 01:00:00', true));
-        $this->assertEquals(array('5', 'hours'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 05:00:00', true));
-        $this->assertEquals(array('22', 'hours'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 22:00:00', true));
-        $this->assertEquals(array('1', 'day'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-02 00:00:00', true));
-        $this->assertEquals(array('2', 'days'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-03 00:00:00', true));
-        $this->assertEquals(array('6', 'days'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-07 00:00:00', true));
-        $this->assertEquals(array('1', 'week'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-10 00:00:00', true));
-        $this->assertEquals(array('2', 'weeks'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-16 00:00:00', true));
-        $this->assertEquals(array('3', 'weeks'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-22 00:00:00', true));
-        $this->assertEquals(array('1', 'month'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-02-01 00:00:00', true));
-        $this->assertEquals(array('2', 'months'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-03-01 00:00:00', true));
-        $this->assertEquals(array('10', 'months'), $this->formatter->formatDate('2010-01-01 00:00:00', '2010-11-01 00:00:00', true));
-        $this->assertEquals(array('1', 'year'), $this->formatter->formatDate('2010-01-01 00:00:00', '2011-01-01 00:00:00', true));
-        $this->assertEquals(array('5', 'years'), $this->formatter->formatDate('2010-01-01 00:00:00', '2015-01-01 00:00:00', true));
-        $this->assertEquals(array('18', 'years'), $this->formatter->formatDate('2010-01-01 00:00:00', '2028-01-01 00:00:00', true));
+        $this->assertEquals(['1',  'second'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:00:01', true));
+        $this->assertEquals(['7', 'seconds'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:00:07', true));
+        $this->assertEquals(['31', 'seconds'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:00:31', true));
+        $this->assertEquals(['1', 'minute'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:01:00', true));
+        $this->assertEquals(['6', 'minutes'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:06:00', true));
+        $this->assertEquals(['48', 'minutes'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 00:48:00', true));
+        $this->assertEquals(['1', 'hour'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 01:00:00', true));
+        $this->assertEquals(['5', 'hours'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 05:00:00', true));
+        $this->assertEquals(['22', 'hours'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-01 22:00:00', true));
+        $this->assertEquals(['1', 'day'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-02 00:00:00', true));
+        $this->assertEquals(['2', 'days'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-03 00:00:00', true));
+        $this->assertEquals(['6', 'days'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-07 00:00:00', true));
+        $this->assertEquals(['1', 'week'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-10 00:00:00', true));
+        $this->assertEquals(['2', 'weeks'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-16 00:00:00', true));
+        $this->assertEquals(['3', 'weeks'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-01-22 00:00:00', true));
+        $this->assertEquals(['1', 'month'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-02-01 00:00:00', true));
+        $this->assertEquals(['2', 'months'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-03-01 00:00:00', true));
+        $this->assertEquals(['10', 'months'], $this->formatter->formatDate('2010-01-01 00:00:00', '2010-11-01 00:00:00', true));
+        $this->assertEquals(['1', 'year'], $this->formatter->formatDate('2010-01-01 00:00:00', '2011-01-01 00:00:00', true));
+        $this->assertEquals(['5', 'years'], $this->formatter->formatDate('2010-01-01 00:00:00', '2015-01-01 00:00:00', true));
+        $this->assertEquals(['18', 'years'], $this->formatter->formatDate('2010-01-01 00:00:00', '2028-01-01 00:00:00', true));
     }
 }

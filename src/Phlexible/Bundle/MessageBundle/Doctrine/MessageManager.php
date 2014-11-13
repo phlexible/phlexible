@@ -107,12 +107,12 @@ class MessageManager implements MessageManagerInterface
      */
     public function getPriorityNames()
     {
-        return array(
+        return [
             0 => 'low',
             1 => 'normal',
             2 => 'high',
             3 => 'urgent',
-        );
+        ];
     }
 
     /**
@@ -120,10 +120,10 @@ class MessageManager implements MessageManagerInterface
      */
     public function getTypeNames()
     {
-        return array(
+        return [
             0 => 'info',
             1 => 'error',
-        );
+        ];
     }
 
     /**

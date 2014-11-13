@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -40,17 +40,17 @@ class UsageController extends Controller
 
         $elementtype = $elementtypeService->findElementtype($id);
 
-        $usages = array();
+        $usages = [];
         foreach ($usageManager->getUsage($elementtype) as $usage) {
-            $usages[] = array(
+            $usages[] = [
                 'type'           => $usage->getType(),
                 'as'             => $usage->getAs(),
                 'id'             => $usage->getId(),
                 'title'          => $usage->getTitle(),
                 'latest_version' => $usage->getLatestVersion(),
-            );
+            ];
         }
 
-        return new JsonResponse(array('list' => $usages, 'total' => count($usages)));
+        return new JsonResponse(['list' => $usages, 'total' => count($usages)]);
     }
 }

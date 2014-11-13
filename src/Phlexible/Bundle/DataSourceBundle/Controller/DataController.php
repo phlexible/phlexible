@@ -35,17 +35,17 @@ class DataController extends Controller
     {
         $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
 
-        $dataSources = $dataSourceManager->findBy(array());
+        $dataSources = $dataSourceManager->findBy([]);
 
-        $sources = array();
+        $sources = [];
         foreach ($dataSources as $dataSource) {
-            $sources[] = array(
+            $sources[] = [
                 'id' => $dataSource->getId(),
                 'title' => $dataSource->getTitle()
-            );
+            ];
         }
 
-        return new JsonResponse(array('datasources' => $sources));
+        return new JsonResponse(['datasources' => $sources]);
     }
 
     /**

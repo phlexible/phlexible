@@ -72,13 +72,13 @@ class MediaSiteListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            MediaSiteEvents::BEFORE_CREATE_FILE   => array('onBeforeCreateFile', 500),
-            MediaSiteEvents::BEFORE_CREATE_FOLDER => array('onBeforeCreateFolder', 500),
-            MediaSiteEvents::BEFORE_REPLACE_FILE   => array('onBeforeReplaceFile', 500),
+        return [
+            MediaSiteEvents::BEFORE_CREATE_FILE   => ['onBeforeCreateFile', 500],
+            MediaSiteEvents::BEFORE_CREATE_FOLDER => ['onBeforeCreateFolder', 500],
+            MediaSiteEvents::BEFORE_REPLACE_FILE   => ['onBeforeReplaceFile', 500],
             MediaSiteEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
             MediaSiteEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
-        );
+        ];
     }
 
     /**
@@ -121,7 +121,7 @@ class MediaSiteListener implements EventSubscriberInterface
         try {
             $fileMetaSet = $this->metaSetManager->findOneByName('file');
             if ($fileMetaSet) {
-                $metasets = $file->getAttributes()->get('metasets', array());
+                $metasets = $file->getAttributes()->get('metasets', []);
                 if (!in_array($fileMetaSet->getId(), $metasets)) {
                     $metasets[] = $fileMetaSet->getId();
                     $file->getAttributes()->set('metasets', $metasets);
@@ -141,7 +141,7 @@ class MediaSiteListener implements EventSubscriberInterface
         try {
             $folderMetaSet = $this->metaSetManager->findOneByName('folder');
             if ($folderMetaSet) {
-                $metasets = $attributes->get('metasets', array());
+                $metasets = $attributes->get('metasets', []);
                 if (!in_array($folderMetaSet->getId(), $metasets)) {
                     $metasets[] = $folderMetaSet->getId();
                     $attributes->set('metasets', $metasets);

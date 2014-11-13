@@ -31,7 +31,7 @@ class TeaserHasher
     /**
      * @var array
      */
-    private $hashes = array();
+    private $hashes = [];
 
     /**
      * @param ElementHasher $elementHasher

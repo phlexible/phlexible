@@ -51,8 +51,8 @@ class BaseUrlFilter implements FilterInterface
     {
         $asset->setContent(
             str_replace(
-                array('/makeweb/', '/BASEPATH/', '/BASEURL/', '/COMPONENTSPATH/'),
-                array($this->basePath, $this->basePath, $this->baseUrl, $this->basePath . 'bundles/'),
+                ['/makeweb/', '/BASEPATH/', '/BASEURL/', '/COMPONENTSPATH/'],
+                [$this->basePath, $this->basePath, $this->baseUrl, $this->basePath . 'bundles/'],
                 $asset->getContent()
             )
         );

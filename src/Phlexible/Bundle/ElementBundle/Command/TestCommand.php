@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
-use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -91,20 +90,20 @@ class TestCommand extends ContainerAwareCommand
                     $map = $fieldMapper->map($elementVersion, $language);
                     $output->writeln($element->getEid() . ' ' . $version . ': ' . json_encode($map));
 
-                    $fields = array();
+                    $fields = [];
                     foreach ($map as $field => $value) {
                         $fields[$language][$field] = $value;
                     }
 
                     $db->update(
                         $db->prefix . 'element_version',
-                        array(
+                        [
                            'mapped_fields' => json_encode($fields)
-                        ),
-                        array(
+                        ],
+                        [
                             'eid = ?'     => $element->getEid(),
                             'version = ?' => $elementVersion->getVersion(),
-                        )
+                        ]
                     );
                 } catch (\Exception $e) {
                     $output->writeln('<error>' . $element->getEid() . ' ' . $version . '</error>: ' . $e->getMessage());

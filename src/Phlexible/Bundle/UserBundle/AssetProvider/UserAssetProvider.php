@@ -38,7 +38,7 @@ class UserAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleUserBundle/Resources/scripts/Definitions.js',
             '@PhlexibleUserBundle/Resources/scripts/model/Group.js',
             '@PhlexibleUserBundle/Resources/scripts/model/User.js',
@@ -60,7 +60,7 @@ class UserAssetProvider implements AssetProviderInterface
             '@PhlexibleUserBundle/Resources/scripts/menuhandle/UsersHandle.js',
             '@PhlexibleUserBundle/Resources/scripts/menuhandle/OptionsHandle.js',
             '@PhlexibleUserBundle/Resources/scripts/menuhandle/LogoutHandle.js',
-        );
+        ];
     }
 
     /**
@@ -68,9 +68,9 @@ class UserAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleUserBundle/Resources/styles/users.css',
             '@PhlexibleUserBundle/Resources/styles/portlet.css',
-        );
+        ];
     }
 }

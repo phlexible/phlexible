@@ -37,19 +37,19 @@ class DataController extends Controller
 
         $allContentChannels = $contentchannelManager->findAll();
 
-        $contentChannels = array();
+        $contentChannels = [];
         foreach ($allContentChannels as $contentChannel) {
-            $contentChannels[] = array(
+            $contentChannels[] = [
                 'id'                 => $contentChannel->getId(),
                 'unique_id'          => $contentChannel->getUniqueId(),
                 'title'              => $contentChannel->getTitle(),
                 'renderer_classname' => $contentChannel->getRendererClassname(),
                 'icon'               => $contentChannel->getIcon(),
                 'template_folder'    => $contentChannel->getTemplateFolder(),
-            );
+            ];
         }
 
-        return new JsonResponse(array('contentchannels' => $contentChannels));
+        return new JsonResponse(['contentchannels' => $contentChannels]);
     }
 
     /**

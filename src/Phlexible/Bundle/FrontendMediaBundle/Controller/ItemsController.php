@@ -35,26 +35,26 @@ class ItemsController extends Controller
         }
 
         try {
-            $templateData = array();
+            $templateData = [];
 
             $db = $this->getContainer()->dbPool->read;
 
             $select = $db->select()
-                ->from(array('ed' => $db->prefix . 'element_data'), array())
+                ->from(['ed' => $db->prefix . 'element_data'], [])
                 ->join(
-                    array('ev' => $db->prefix . 'element_version'),
+                    ['ev' => $db->prefix . 'element_version'],
                     'ev.eid = ed.eid AND ev.version = ed.version',
-                    array()
+                    []
                 )
                 ->join(
-                    array('etv' => $db->prefix . 'elementtype_version'),
+                    ['etv' => $db->prefix . 'elementtype_version'],
                     'etv.element_type_id = ev.element_type_id AND etv.version = ev.element_type_version',
-                    array()
+                    []
                 )
                 ->join(
-                    array('ets' => $db->prefix . 'elementtype_structure'),
+                    ['ets' => $db->prefix . 'elementtype_structure'],
                     'ets.element_type_id = etv.element_type_id AND ets.version = etv.version AND ed.ds_id = ets.ds_id',
-                    array('media')
+                    ['media']
                 )
                 ->where('ed.eid = ?', $eid)
                 ->where('ed.version = ?', $version)
@@ -64,26 +64,26 @@ class ItemsController extends Controller
 
             if (empty($media)) {
                 $select = $db->select()
-                    ->from(array('ed' => $db->prefix . 'element_data'), array())
+                    ->from(['ed' => $db->prefix . 'element_data'], [])
                     ->join(
-                        array('ev' => $db->prefix . 'element_version'),
+                        ['ev' => $db->prefix . 'element_version'],
                         'ev.eid = ed.eid AND ev.version = ed.version',
-                        array()
+                        []
                     )
                     ->join(
-                        array('etv' => $db->prefix . 'elementtype_version'),
+                        ['etv' => $db->prefix . 'elementtype_version'],
                         'etv.element_type_id = ev.element_type_id AND etv.version = ev.element_type_version',
-                        array()
+                        []
                     )
                     ->join(
-                        array('ets' => $db->prefix . 'elementtype_structure'),
+                        ['ets' => $db->prefix . 'elementtype_structure'],
                         'ets.element_type_id = etv.element_type_id AND ets.version = etv.version',
-                        array()
+                        []
                     )
                     ->join(
-                        array('etsr' => $db->prefix . 'elementtype_structure'),
+                        ['etsr' => $db->prefix . 'elementtype_structure'],
                         'etsr.element_type_id = ets.reference_id AND etsr.version = ets.reference_version AND ed.ds_id = etsr.ds_id',
-                        array('media')
+                        ['media']
                     )
                     ->where('ed.eid = ?', $eid)
                     ->where('ed.version = ?', $version)
@@ -95,7 +95,7 @@ class ItemsController extends Controller
             if (!empty($media)) {
                 $media = unserialize($media);
                 foreach ($media['imageList'] as $templateItem) {
-                    $templateData[$templateItem[0]] = array();
+                    $templateData[$templateItem[0]] = [];
                 }
 
                 //echo "<pre>"; print_r($item);die;
@@ -151,9 +151,9 @@ class ItemsController extends Controller
             }
         } catch (\Exception $e) {
             MWF_Log::exception($e);
-            $templateData = array();
+            $templateData = [];
         }
 
-        $this->_response->setAjaxPayload(array('templates' => $templateData));
+        $this->_response->setAjaxPayload(['templates' => $templateData]);
     }
 }

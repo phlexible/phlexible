@@ -38,7 +38,7 @@ class MediaTemplatesAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleMediaTemplateBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleMediaTemplateBundle/Resources/scripts/MainPanel.js',
@@ -62,7 +62,7 @@ class MediaTemplatesAssetProvider implements AssetProviderInterface
             '@PhlexibleMediaTemplateBundle/Resources/scripts/pdf2swf/MainPanel.js',
 
             '@PhlexibleMediaTemplateBundle/Resources/scripts/menuhandle/MediaTemplatesHandle.js',
-        );
+        ];
     }
 
     /**
@@ -70,8 +70,8 @@ class MediaTemplatesAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleMediaTemplateBundle/Resources/styles/mediatemplates.css',
-        );
+        ];
     }
 }

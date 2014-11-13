@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
 use Phlexible\Bundle\MediaManagerBundle\Exception\StoreUploadedFileException;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\UploadedFileSource;
-use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -46,7 +45,7 @@ class TempStorage
     public function all()
     {
         if (!$this->count()) {
-            return array();
+            return [];
         }
 
         return $this->session->get('mediamanager.temp_files');

@@ -53,7 +53,7 @@ class GetConfigListener
         $securityContext = $event->getSecurityContext();
         $token = $securityContext->getToken();
         $user = $token->getUser();
-        $roles = array();
+        $roles = [];
         foreach ($this->roleHierarchy->getReachableRoles($token->getRoles()) as $role) {
             $roles[] = $role->getRole();
         }

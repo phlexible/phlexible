@@ -69,7 +69,7 @@ class QueueManager implements QueueManagerInterface
      */
     public function findByFile($fileId, $fileVersion = null)
     {
-        $criteria = array('fileId' => $fileId);
+        $criteria = ['fileId' => $fileId];
         if ($fileVersion) {
             $criteria['fileVersion'] = $fileVersion;
         }
@@ -82,7 +82,7 @@ class QueueManager implements QueueManagerInterface
      */
     public function findByTemplateAndFile($templateKey, $fileId, $fileVersion)
     {
-        return $this->queueRepository->findOneBy(array('template' => $templateKey, 'fileId' => $fileId, 'fileVersion' => $fileVersion));
+        return $this->queueRepository->findOneBy(['template' => $templateKey, 'fileId' => $fileId, 'fileVersion' => $fileVersion]);
     }
 
     /**

@@ -44,10 +44,10 @@ class MediaSiteListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             MediaSiteEvents::BEFORE_CREATE_FILE => 'onBeforeCreateFile',
             MediaSiteEvents::BEFORE_REPLACE_FILE => 'onBeforeReplaceFile',
-        );
+        ];
     }
 
     /**

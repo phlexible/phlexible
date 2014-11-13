@@ -8,10 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\ContentElement\Loader;
 
-use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
-use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementBundle\Entity\ElementVersionMappedField;
-
 /**
  * Chain loader
  *

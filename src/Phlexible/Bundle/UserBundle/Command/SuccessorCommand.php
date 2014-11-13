@@ -28,10 +28,10 @@ class SuccessorCommand extends ContainerAwareCommand
         $this
             ->setName('user:successor')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('fromUsername', InputArgument::REQUIRED, 'From username'),
                     new InputArgument('toUsername', null, InputArgument::REQUIRED, 'Successor username'),
-                )
+                ]
             )
             ->setDescription('Set successor.');
     }

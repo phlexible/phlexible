@@ -39,7 +39,7 @@ class ListController extends Controller
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
-        $elementtypes = array();
+        $elementtypes = [];
         foreach ($elementtypeService->findAllElementtypes() as $elementtype) {
             if ($type !== $elementtype->getType()) {
                 continue;
@@ -49,22 +49,22 @@ class ListController extends Controller
                 continue;
             }
 
-            $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = array(
+            $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = [
                 'id'      => $elementtype->getId(),
                 'title'   => $elementtype->getTitle(),
                 'icon'    => $elementtype->getIcon(),
                 'version' => $elementtype->getRevision(),
                 'type'    => $elementtype->getType(),
-            );
+            ];
         }
 
         ksort($elementtypes);
         $elementtypes = array_values($elementtypes);
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'elementtypes' => $elementtypes,
             'total'        => count($elementtypes)
-        ));
+        ]);
     }
 
     /**
@@ -83,16 +83,16 @@ class ListController extends Controller
 
         $elementtypes = $elementtypeService->findAllElementtypes();
 
-        $allowedForFull = $allowedForStructure = $allowedForArea = array(
+        $allowedForFull = $allowedForStructure = $allowedForArea = [
             Elementtype::TYPE_FULL,
             Elementtype::TYPE_STRUCTURE
-        );
-        $allowedForContainer = $allowedForPart = array(
+        ];
+        $allowedForContainer = $allowedForPart = [
             Elementtype::TYPE_LAYOUTAREA,
             Elementtype::TYPE_LAYOUTCONTAINER
-        );
+        ];
 
-        $list = array();
+        $list = [];
         foreach ($elementtypes as $elementtype) {
             $type = $elementtype->getType();
 
@@ -110,17 +110,17 @@ class ListController extends Controller
                 continue;
             }
 
-            $list[] = array(
+            $list[] = [
                 'id'      => $elementtype->getId(),
                 'type'    => $elementtype->getType(),
                 'title'   => $elementtype->getTitle(),
                 'icon'    => $elementtype->getIcon(),
                 'version' => $elementtype->getRevision()
-            );
+            ];
 
         }
 
-        return new JsonResponse(array('elementtypes' => $list, 'total' => count($list)));
+        return new JsonResponse(['elementtypes' => $list, 'total' => count($list)]);
     }
 
     /**
@@ -142,7 +142,7 @@ class ListController extends Controller
         }
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $elementtypeService->createElementtype($type, $uniqueId, $title, null, null, array(), $this->getUser()->getId());
+        $elementtypeService->createElementtype($type, $uniqueId, $title, null, null, [], $this->getUser()->getId());
 
         return new ResultResponse(true, 'Element Type created.');
     }

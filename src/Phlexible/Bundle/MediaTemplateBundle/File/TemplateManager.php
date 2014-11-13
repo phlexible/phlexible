@@ -83,7 +83,7 @@ class TemplateManager implements TemplateManagerInterface
      */
     public function findBy(array $criteria)
     {
-        $found = array();
+        $found = [];
         foreach ($this->getCollection()->all() as $template) {
             foreach ($criteria as $criterium => $value) {
                 $method = 'get' . ucfirst(strtolower($criterium));

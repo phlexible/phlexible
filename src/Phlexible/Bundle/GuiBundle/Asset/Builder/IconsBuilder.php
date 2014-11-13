@@ -134,7 +134,7 @@ class IconsBuilder
      */
     private function buildIconsForDir(array $bundles, $assetDir, $baseUrl, \ArrayObject $resources)
     {
-        $data = array();
+        $data = [];
 
         foreach ($bundles as $id => $class) {
             $reflection = new \ReflectionClass($class);
@@ -170,13 +170,13 @@ class IconsBuilder
 
                 $selector = sprintf('.%s-%s-%s-icon', substr('p', 0, 1), $key, basename($icon, '.' . $ext));
 
-                $data[] = array(
+                $data[] = [
                     'component' => $id,
                     'file'      => $icon,
                     'name'      => $name,
                     'selector'  => $selector,
                     'ext'       => $ext,
-                );
+                ];
             }
         }
 
@@ -185,8 +185,8 @@ class IconsBuilder
         $content = '';
         foreach ($data as $row) {
             $url = str_replace(
-                array('%component%', '%name%', '%dir%'),
-                array($row['component'], $row['name'], $assetDir),
+                ['%component%', '%name%', '%dir%'],
+                [$row['component'], $row['name'], $assetDir],
                 $urlTemplate
             );
 

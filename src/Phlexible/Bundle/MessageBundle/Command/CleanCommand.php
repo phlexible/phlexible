@@ -29,9 +29,9 @@ class CleanCommand extends ContainerAwareCommand
         $this
             ->setName('message:clean')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('days', InputArgument::OPTIONAL, 'Keep latest <days> days of messages.', 30),
-                )
+                ]
             )
             ->setDescription('Delete old messages.');
     }
@@ -49,7 +49,7 @@ class CleanCommand extends ContainerAwareCommand
         $criteria->maxAge($days);
 
         $count = 0;
-        while ($messages = $messageManager->findByCriteria($criteria, array('createdAt' => 'ASC'), 100, null)) {
+        while ($messages = $messageManager->findByCriteria($criteria, ['createdAt' => 'ASC'], 100, null)) {
             foreach ($messages as $message) {
                 $messageManager->deleteMessage($message);
                 $count++;

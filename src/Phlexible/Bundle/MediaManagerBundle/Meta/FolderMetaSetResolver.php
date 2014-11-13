@@ -39,8 +39,8 @@ class FolderMetaSetResolver
      */
     public function resolve(FolderInterface $folder)
     {
-        $metaSets = array();
-        $metaSetIds = $folder->getAttribute('metasets', array());
+        $metaSets = [];
+        $metaSetIds = $folder->getAttribute('metasets', []);
         foreach ($metaSetIds as $metaSetId) {
             $metaSets[] = $this->metaSetManager->find($metaSetId);
         }

@@ -32,12 +32,12 @@ class PermissionResolverTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->permissions = new PermissionCollection(
-            array(
+            [
                 new Permission('contentClass', 'read', 1, 'read-icon'),
                 new Permission('contentClass', 'create', 2, 'create-icon'),
                 new Permission('contentClass', 'update', 4, 'update-icon'),
                 new Permission('contentClass', 'delete', 8, 'delete-icon'),
-            )
+            ]
         );
         $this->resolver = new PermissionResolver($this->permissions);
     }

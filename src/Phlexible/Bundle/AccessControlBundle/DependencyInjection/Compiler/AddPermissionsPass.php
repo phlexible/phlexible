@@ -27,7 +27,7 @@ class AddPermissionsPass implements CompilerPassInterface
         $permissions = $container->findDefinition('phlexible_access_control.permissions');
         foreach ($container->findTaggedServiceIds('phlexible_access_control.permission') as $id => $attributes) {
             $definition = $container->findDefinition($id);
-            $permissions->addMethodCall('addProvider', array(new Reference($id)));
+            $permissions->addMethodCall('addProvider', [new Reference($id)]);
         }
     }
 }

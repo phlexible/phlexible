@@ -12,7 +12,6 @@ use Finite\Transition\TransitionInterface;
 use Phlexible\Bundle\TaskBundle\Entity\Comment;
 use Phlexible\Bundle\TaskBundle\Entity\Status;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
-use Phlexible\Bundle\TaskBundle\Entity\Transition;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -49,7 +48,7 @@ interface TaskManagerInterface
      *
      * @return Task[]
      */
-    public function findByCreatedByAndStatus($userId, array $status = array(), array $sort = array(), $limit = null, $start = null);
+    public function findByCreatedByAndStatus($userId, array $status = [], array $sort = [], $limit = null, $start = null);
 
     /**
      * @param string $userId
@@ -57,7 +56,7 @@ interface TaskManagerInterface
      *
      * @return int
      */
-    public function countByCreatedByAndStatus($userId, array $status = array());
+    public function countByCreatedByAndStatus($userId, array $status = []);
 
     /**
      * @param string $userId
@@ -68,7 +67,7 @@ interface TaskManagerInterface
      *
      * @return Task[]
      */
-    public function findByAssignedToAndStatus($userId, array $status = array(), array $sort = array(), $limit = null, $start = null);
+    public function findByAssignedToAndStatus($userId, array $status = [], array $sort = [], $limit = null, $start = null);
 
     /**
      * @param string $userId
@@ -76,7 +75,7 @@ interface TaskManagerInterface
      *
      * @return int
      */
-    public function countByAssignedToAndStatus($userId, array $status = array());
+    public function countByAssignedToAndStatus($userId, array $status = []);
 
     /**
      * @param string $userId
@@ -87,7 +86,7 @@ interface TaskManagerInterface
      *
      * @return Task[]
      */
-    public function findByInvolvementAndStatus($userId, array $status = array(), array $sort = array(), $limit = null, $start = null);
+    public function findByInvolvementAndStatus($userId, array $status = [], array $sort = [], $limit = null, $start = null);
 
     /**
      * @param string $userId
@@ -95,7 +94,7 @@ interface TaskManagerInterface
      *
      * @return int
      */
-    public function countByInvolvementAndStatus($userId, array $status = array());
+    public function countByInvolvementAndStatus($userId, array $status = []);
 
     /**
      * @param array $status
@@ -105,14 +104,14 @@ interface TaskManagerInterface
      *
      * @return Task[]
      */
-    public function findByStatus(array $status = array(), array $sort = array(), $limit = null, $start = null);
+    public function findByStatus(array $status = [], array $sort = [], $limit = null, $start = null);
 
     /**
      * @param array $status
      *
      * @return int
      */
-    public function countByStatus(array $status = array());
+    public function countByStatus(array $status = []);
 
     /**
      * @param array $payload

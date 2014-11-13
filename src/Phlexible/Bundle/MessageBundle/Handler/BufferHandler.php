@@ -25,7 +25,7 @@ class BufferHandler implements HandlerInterface
     /**
      * @var Message[]
      */
-    private $messages = array();
+    private $messages = [];
 
     /**
      * @param HandlerInterface $handler

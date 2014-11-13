@@ -29,9 +29,9 @@ class CleanupCommand extends ContainerAwareCommand
         $this
             ->setName('elementtypes:cleanup')
             ->setDefinition(
-                array(
+                [
                     new InputOption('delete', null, InputOption::VALUE_NONE, 'Really delete'),
-                )
+                ]
             )
             ->setDescription('Cleanup old/unused elementtypes.');
     }
@@ -66,10 +66,10 @@ class CleanupCommand extends ContainerAwareCommand
             ->where('elementtype_id = ?')
             ->orderBy('etv.version', 'ASC');
 
-        $deleteUpToETVersion = array();
+        $deleteUpToETVersion = [];
 
         foreach ($etIds as $etId) {
-            $versions = array_column($conn->fetchAll($qb->getSQL(), array($etId)), 'version');
+            $versions = array_column($conn->fetchAll($qb->getSQL(), [$etId]), 'version');
 
             foreach ($versions as $version) {
                 if ($this->isUsedInElement($conn, $etId, $version)) {
@@ -119,7 +119,7 @@ class CleanupCommand extends ContainerAwareCommand
                 ->where('etv.elementtype_id = ?')
                 ->andWhere('etv.version < ?');
 
-            $total += $conn->executeUpdate($qb->getSQL(), array($etId, $version));
+            $total += $conn->executeUpdate($qb->getSQL(), [$etId, $version]);
 
             //echo $eid . ' => '.$cnt.PHP_EOL;
         }
@@ -149,6 +149,6 @@ class CleanupCommand extends ContainerAwareCommand
             ->where('e.elementtype_id = ?')
             ->andWhere('ev.version = ?');
 
-        return (bool) $conn->fetchColumn($select, array($etId, $version));
+        return (bool) $conn->fetchColumn($select, [$etId, $version]);
     }
 }

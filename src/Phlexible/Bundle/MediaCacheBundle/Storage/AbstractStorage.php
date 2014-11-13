@@ -52,11 +52,11 @@ abstract class AbstractStorage implements  StorageInterface
         $fileName      = rawurlencode($file->getName());
         $iconFileName  = rawurlencode($this->replaceExtension($file->getName(), '.gif'));
 
-        $urls     = array(
+        $urls     = [
             self::MEDIA_PATH_DOWNLOAD => $baseUrl . '/' . self::MEDIA_PATH_DOWNLOAD . '/' . $fileId . '/' . $fileName,
             self::MEDIA_PATH_INLINE   => $baseUrl . '/' . self::MEDIA_PATH_INLINE . '/' . $fileId . '/' . $fileName,
             self::MEDIA_PATH_ICON     => $baseUrl . '/' . self::MEDIA_PATH_ICON . '/' . $fileId . '/16/' . $iconFileName,
-        );
+        ];
 
         return $urls;
     }

@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\File;
 
-use Phlexible\Bundle\ElementRendererBundle\Exception\RuntimeException;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypesMessage;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeEvent;

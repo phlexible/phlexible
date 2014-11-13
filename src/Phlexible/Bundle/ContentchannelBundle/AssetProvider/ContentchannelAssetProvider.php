@@ -38,13 +38,13 @@ class ContentchannelAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleContentchannelBundle/Resources/scripts/Definitions.js',
             '@PhlexibleContentchannelBundle/Resources/scripts/MainPanel.js',
             '@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelsGrid.js',
             '@PhlexibleContentchannelBundle/Resources/scripts/ContentchannelForm.js',
             '@PhlexibleContentchannelBundle/Resources/scripts/menuhandle/ContentchannelsHandle.js',
-        );
+        ];
     }
 
     /**

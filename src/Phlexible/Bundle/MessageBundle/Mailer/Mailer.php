@@ -73,10 +73,10 @@ class Mailer
 
         $content = $this->templating->render(
             $template,
-            array(
+            [
                 'date'         => date('Y-m-d H:i:s'),
                 'messages'     => $messages
-            )
+            ]
         );
 
         return $this->sendEmailMessage($content, $from, $user->getEmail());

@@ -80,7 +80,7 @@ class GenericType implements TypeInterface
     {
         $text = 'Allgemeine Aufgabe "{title}".'; //$this->translator->trans('tasks.general_template');
 
-        $replace = array('{title}' => $this->getTitle($task));
+        $replace = ['{title}' => $this->getTitle($task)];
 
         $text = str_replace(array_keys($replace), array_values($replace), $text);
 
@@ -102,9 +102,9 @@ class GenericType implements TypeInterface
      */
     public function getMenuHandle(Task $task)
     {
-        $menuHandle = array(
+        $menuHandle = [
             'xtype' => 'tasks'
-        );
+        ];
 
         return $menuHandle;
     }

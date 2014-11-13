@@ -33,16 +33,16 @@ class DataController extends Controller
     {
         $allContentChannels = $this->get('phlexible_contentchannel.contentchannel_manager')->findAll();
 
-        $contentChannels = array();
+        $contentChannels = [];
         foreach ($allContentChannels as $contentChannelID => $contentChannel) {
-            $contentChannels[] = array(
+            $contentChannels[] = [
                 'id'        => $contentChannelID,
                 'title'     => $contentChannel->getTitle(),
                 'available' => false
-            );
+            ];
         }
 
-        return new JsonResponse(array('contentChannels' => $contentChannels));
+        return new JsonResponse(['contentChannels' => $contentChannels]);
     }
 
     /**
@@ -58,15 +58,15 @@ class DataController extends Controller
         $prefix = $request->getBasePath() . '/bundles/phlexibleelementtype/elementtypes/';
 
         foreach ($files as $file) {
-            $data[basename($file)] = array(
+            $data[basename($file)] = [
                 'title' => basename($file),
                 'url'   => $prefix . basename($file)
-            );
+            ];
         }
 
         ksort($data);
         $data = array_values($data);
 
-        return new JsonResponse(array('images' => $data));
+        return new JsonResponse(['images' => $data]);
     }
 }

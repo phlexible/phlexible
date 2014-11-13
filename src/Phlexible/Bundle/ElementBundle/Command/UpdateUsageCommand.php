@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
-use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
-use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

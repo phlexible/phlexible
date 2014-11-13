@@ -23,7 +23,7 @@ class ForwardFieldMapper implements FieldMapperInterface
      */
     public function accept($key)
     {
-        return in_array($key, array('forward'));
+        return in_array($key, ['forward']);
     }
 
     /**
@@ -32,7 +32,7 @@ class ForwardFieldMapper implements FieldMapperInterface
     public function map(ElementStructure $elementStructure, $language, array $mapping)
     {
         $pattern = $mapping['pattern'];
-        $replace = array();
+        $replace = [];
         foreach ($mapping['fields'] as $field) {
             $dsId = $field['ds_id'];
             $replace['$' . $field['index']] = $this->findValue($elementStructure, $dsId, $language);

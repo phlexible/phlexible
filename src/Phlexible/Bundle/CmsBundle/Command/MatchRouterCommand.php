@@ -27,9 +27,9 @@ class MatchRouterCommand extends ContainerAwareCommand
     {
         $this
             ->setName('cms:router:match')
-            ->setDefinition(array(
+            ->setDefinition([
                 new InputArgument('uri', InputArgument::REQUIRED, 'URI to match'),
-            ))
+            ])
             ->setDescription('Match frontend route.');
     }
 

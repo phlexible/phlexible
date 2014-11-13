@@ -55,7 +55,7 @@ abstract class AbstractTemplate implements TemplateInterface
     /**
      * @var array
      */
-    private $parameters = array();
+    private $parameters = [];
 
     /**
      * @var \DateTime

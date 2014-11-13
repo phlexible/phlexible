@@ -55,7 +55,7 @@ class XmlLoader
         $version = (int) $xml->version;
         $language = (string) $xml->language;
 
-        $mappedFields = array();
+        $mappedFields = [];
         foreach ($xml->mappedFields->children() as $mappedFieldNode) {
             $name = $mappedFieldNode->attributes()['name'];
             $value = (string) $mappedFieldNode;

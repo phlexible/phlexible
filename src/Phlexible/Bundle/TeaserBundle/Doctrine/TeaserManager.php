@@ -120,7 +120,7 @@ class TeaserManager implements TeaserManagerInterface
     public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath)
     {
         /* @var $teasers Teaser[] */
-        $teasers = array();
+        $teasers = [];
         $forTreeId = end($treeNodePath)->getId();
 
         foreach ($treeNodePath as $treeNode) {
@@ -153,10 +153,10 @@ class TeaserManager implements TeaserManagerInterface
     public function findForLayoutAreaAndTreeNode($layoutarea, TreeNodeInterface $treeNode)
     {
         $teasers = $this->getTeaserRepository()->findBy(
-            array(
+            [
                 'layoutareaId' => $layoutarea->getId(),
                 'treeId'       => $treeNode->getId()
-            )
+            ]
         );
 
         return $teasers;
@@ -190,10 +190,10 @@ class TeaserManager implements TeaserManagerInterface
     public function getInstances(Teaser $teaser)
     {
         return $this->getTeaserRepository()->findBy(
-            array(
+            [
                 'type'   => $teaser->getType(),
                 'typeId' => $teaser->getTypeId(),
-            )
+            ]
         );
     }
 
@@ -462,13 +462,13 @@ class TeaserManager implements TeaserManagerInterface
         $treePath,
         ElementtypeVersion $layoutArea,
         $language = null,
-        array $availableLanguages = array(),
+        array $availableLanguages = [],
         $isPreview = false
     )
     {
         $teaserData = $this->getAllByTIDPath($treePath, $layoutArea, $language, $availableLanguages, $isPreview);
 
-        $result = array();
+        $result = [];
         foreach ($teaserData['children'] as $teaserItem) {
             if ($teaserItem['type'] !== self::TYPE_INHERITED) {
                 $result[] = $teaserItem;
@@ -491,7 +491,7 @@ class TeaserManager implements TeaserManagerInterface
         $treePath,
         ElementtypeVersion $layoutArea,
         $language = null,
-        array $availableLanguages = array(),
+        array $availableLanguages = [],
         $isPreview = false
     )
     {
@@ -502,33 +502,33 @@ class TeaserManager implements TeaserManagerInterface
         $elementVersionManager = $container->elementsVersionManager;
 
         if (!count($availableLanguages)) {
-            $availableLanguages = array($language);
+            $availableLanguages = [$language];
         }
 
-        $areaRoot = array(
+        $areaRoot = [
             'id'                 => 'area_' . $layoutArea->getId(),
             'type'               => 'area',
             'layoutareaId'       => $layoutArea->getId(),
             'text'               => $layoutArea->getTitle(),
             'icon'               => $layoutArea->getIconUrl(),
             'elementTypeVersion' => $layoutArea,
-            'children'           => array(),
-        );
+            'children'           => [],
+        ];
 
         $inheritUsed = false;
-        $dummyInherit = array(
+        $dummyInherit = [
             'id'           => -1, //layoutArea->getId() . '_inherit',
             'type'         => self::TYPE_INHERITED,
             'layoutareaId' => $layoutArea->getId(),
             'text'         => 'inherited_teasers',
             'icon'         => '/resources/asset/elementtypes/elementtypes/_up.gif',
-            'children'     => array(),
-        );
+            'children'     => [],
+        ];
 
-        $hideEids = array();
-        $inheritedStopEids = array();
-        $localStopEids = array();
-        $inheritedEids = array();
+        $hideEids = [];
+        $inheritedStopEids = [];
+        $localStopEids = [];
+        $inheritedEids = [];
 
         $localTreeId = end($treePath)->getId();
 
@@ -600,11 +600,11 @@ class TeaserManager implements TeaserManagerInterface
                         }
 
                         $catchConfig = unserialize($teaserArray['configuration']);
-                        $catchConfig = is_array($catchConfig) ? $catchConfig : array();
+                        $catchConfig = is_array($catchConfig) ? $catchConfig : [];
 
-                        $availableLanguages = array(
+                        $availableLanguages = [
                             $language,
-                        );
+                        ];
 
                         $catch = new Makeweb_Teasers_Catch(
                             $teaserArray['id'],
@@ -614,7 +614,7 @@ class TeaserManager implements TeaserManagerInterface
                             0
                         );
 
-                        $dummyCatch = array(
+                        $dummyCatch = [
                             'id'           => $teaserArray['id'],
                             'type'         => self::TYPE_CATCH,
                             'layoutareaId' => $layoutArea->getID(),
@@ -622,7 +622,7 @@ class TeaserManager implements TeaserManagerInterface
                             'icon'         => '/resources/asset/elementtypes/elementtypes/_left.gif',
                             'sort'         => $teaserArray['sort'],
                             'catch'        => $catch,
-                        );
+                        ];
 
                         $areaRoot['children'][] = $dummyCatch;
 
@@ -679,7 +679,7 @@ class TeaserManager implements TeaserManagerInterface
                             $noDisplay = true;
                         }
 
-                        $dummyTeaser = array(
+                        $dummyTeaser = [
                             'id'             => $teaserArray['id'],
                             'eid'            => $teaserArray['teaser_eid'],
                             'type'           => self::TYPE_TEASER,
@@ -694,7 +694,7 @@ class TeaserManager implements TeaserManagerInterface
                             'inherited'      => $isInherited,
                             'stopInherit'    => $stopInherit,
                             'noDisplay'      => $noDisplay
-                        );
+                        ];
 
                         if ($isInherited) {
                             $dummyInherit['children'][] = $dummyTeaser;
@@ -772,7 +772,7 @@ class TeaserManager implements TeaserManagerInterface
         $areaId = null,
         $language = null,
         $includeInherit = false,
-        array $availableLanguages = array(),
+        array $availableLanguages = [],
         $isPreview = false
     )
     {
@@ -780,8 +780,8 @@ class TeaserManager implements TeaserManagerInterface
 
         $select = $db->select()
             ->from(
-                array('ett' => $db->prefix . 'element_tree_teasers'),
-                array(
+                ['ett' => $db->prefix . 'element_tree_teasers'],
+                [
                     'tree_id',
                     'eid',
                     'layoutarea_id',
@@ -795,7 +795,7 @@ class TeaserManager implements TeaserManagerInterface
                     'id',
                     'template_id',
                     'no_display',
-                )
+                ]
             )
             ->where('tree_id = ?', (int) $tid)
             ->order('sort ASC');
@@ -803,39 +803,39 @@ class TeaserManager implements TeaserManagerInterface
         if ($isPreview) {
             $select
                 ->joinLeft(
-                    array('e' => $db->prefix . 'element'),
+                    ['e' => $db->prefix . 'element'],
                     'e.eid = ett.teaser_eid',
-                    array(
+                    [
                         'latest_version',
-                    )
+                    ]
                 )
                 ->joinLeft(
-                    array('eh' => $db->prefix . 'element_history'),
+                    ['eh' => $db->prefix . 'element_history'],
                     'eh.eid = ett.teaser_eid AND NOT ISNULL(eh.language)',
                     'language'
                 )
                 ->joinLeft(
-                    array('etto' => $db->prefix . 'element_tree_teasers_online'),
+                    ['etto' => $db->prefix . 'element_tree_teasers_online'],
                     'etto.teaser_id = ett.id AND eh.language = etto.language',
-                    array(
+                    [
                         'online_version' => 'version'
-                    )
+                    ]
                 )
-                ->group(array('ett.teaser_eid', 'ett.type', 'eh.language', 'ett.configuration'));
+                ->group(['ett.teaser_eid', 'ett.type', 'eh.language', 'ett.configuration']);
         } else {
             $select
                 ->joinLeft(
-                    array('e' => $db->prefix . 'element'),
+                    ['e' => $db->prefix . 'element'],
                     'e.eid = ett.teaser_eid',
                     'latest_version'
                 )
                 ->joinLeft(
-                    array('etto' => $db->prefix . 'element_tree_teasers_online'),
+                    ['etto' => $db->prefix . 'element_tree_teasers_online'],
                     'etto.teaser_id = ett.id',
-                    array(
+                    [
                         'online_version' => 'version',
                         'language'
-                    )
+                    ]
                 );
         }
 
@@ -848,19 +848,19 @@ class TeaserManager implements TeaserManagerInterface
         }
 
         if (!count($availableLanguages)) {
-            $availableLanguages = array($language);
+            $availableLanguages = [$language];
         }
 
         $results = $db->fetchAll($select);
 
         $groupedResults = Brainbits_Util_Array::groupBy(
             $results,
-            array('sort', 'teaser_eid', 'language')
+            ['sort', 'teaser_eid', 'language']
         );
 
         $hasInherit = false;
 
-        $teasers = array();
+        $teasers = [];
         foreach ($groupedResults as $sortValue => $teaserEidArray) {
             foreach ($teaserEidArray as $teaserEid => $languageArray) {
                 if (!count($languageArray)) {
@@ -943,10 +943,10 @@ class TeaserManager implements TeaserManagerInterface
             $node = $tree->getNodeByEid($eid);
             $path = $node->getEidPath();
         } else {
-            $path = array($eid);
+            $path = [$eid];
         }
 
-        $teasers = array();
+        $teasers = [];
         foreach ($path as $pathEid) {
             $select = $db->select()
                 ->from($db->prefix . 'element_tree_teasers')
@@ -968,11 +968,11 @@ class TeaserManager implements TeaserManagerInterface
                 if ($type == self::TYPE_TEASER) {
                     $teaser = self::getByEID($teaserEid);
 
-                    $teasers[$teaserEid] = array(
+                    $teasers[$teaserEid] = [
                         'elementVersion' => $teaser,
                         'inherit'        => $teaserRow['inherit'],
                         'stop_inherit'   => $teaserRow['stop_inherit'],
-                    );
+                    ];
                 } else {
                     if ($type == 'inherit') {
                         $teasers['inherit'] = null;
@@ -1015,7 +1015,7 @@ class TeaserManager implements TeaserManagerInterface
             ->from($db->prefix . 'element_tree_teasers', 'teaser_eid')
             ->where('id = :id');
 
-        $result = (int) $db->fetchOne($select, array(':id' => $id));
+        $result = (int) $db->fetchOne($select, [':id' => $id]);
 
         return $result;
     }
@@ -1032,7 +1032,7 @@ class TeaserManager implements TeaserManagerInterface
             ->from($db->prefix . 'element_tree_teasers', 'layoutarea_id')
             ->where('id = :id');
 
-        $result = (int) $db->fetchOne($select, array(':id' => $id));
+        $result = (int) $db->fetchOne($select, [':id' => $id]);
 
         return $result;
     }

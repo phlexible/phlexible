@@ -22,12 +22,12 @@ class DashboardAssetProvider implements AssetProviderInterface
      */
     public function getUxScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portal.js',
             '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portal.DropZone.js',
             '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.PortalColumn.js',
             '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portlet.js',
-        );
+        ];
     }
 
     /**
@@ -35,9 +35,9 @@ class DashboardAssetProvider implements AssetProviderInterface
      */
     public function getUxCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleDashboardBundle/Resources/styles/ux/Ext.ux.Portlet.css',
-        );
+        ];
     }
 
     /**
@@ -45,13 +45,13 @@ class DashboardAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleDashboardBundle/Resources/scripts/Definitions.js',
             //'@PhlexibleDashboardBundle/Resources/scripts/StartMessage.js',
             '@PhlexibleDashboardBundle/Resources/scripts/ListPanel.js',
             '@PhlexibleDashboardBundle/Resources/scripts/PortalPanel.js',
             '@PhlexibleDashboardBundle/Resources/scripts/MainPanel.js',
-        );
+        ];
     }
 
     /**
@@ -59,9 +59,9 @@ class DashboardAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleDashboardBundle/Resources/styles/portlets.css',
             '@PhlexibleDashboardBundle/Resources/styles/dashboard.css',
-        );
+        ];
     }
 }

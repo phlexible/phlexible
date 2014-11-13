@@ -79,7 +79,7 @@ class SearchResult
      */
     public function toArray()
     {
-        return array(
+        return [
             'id'        => $this->id,
             'author'    => $this->author,
             'title'     => $this->title,
@@ -87,6 +87,6 @@ class SearchResult
             'component' => $this->component,
             'image'     => $this->image,
             'menu'      => $this->menuHandler
-        );
+        ];
     }
 }

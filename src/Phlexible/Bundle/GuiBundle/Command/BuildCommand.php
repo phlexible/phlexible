@@ -39,7 +39,7 @@ class BuildCommand extends ContainerAwareCommand
 
         $basePath = '/cms';
         $baseUrl = $basePath . '/index' . ($container->getParameter('kernel.debug') ? '_dev' : '') . '.php';
-        $languages = array('de', 'en');
+        $languages = ['de', 'en'];
 
         $formatter = new FilesizeFormatter();
 

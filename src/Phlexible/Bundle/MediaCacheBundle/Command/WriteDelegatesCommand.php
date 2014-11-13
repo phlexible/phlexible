@@ -29,9 +29,9 @@ class WriteDelegatesCommand extends ContainerAwareCommand
         $this
             ->setName('media-cache:write:delegates')
             ->setDefinition(
-                array(
+                [
                     new InputOption('force', null, InputOption::VALUE_NONE, 'Force creation, even if not modified.'),
-                )
+                ]
             )
             ->setDescription('Write delegate thumbs');
     }

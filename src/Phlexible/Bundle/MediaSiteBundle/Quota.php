@@ -74,7 +74,7 @@ class Quota
      */
     public function toArray()
     {
-        return array(
+        return [
             'hard_quota'                   => $this->getHardQuota(),
             'soft_quota'                   => $this->getSoftQuota(),
             'soft_quota_percent'           => $this->getSoftQuotaPercent(),
@@ -84,7 +84,7 @@ class Quota
             'remaining_soft_quota_percent' => $this->getRemainingSoftQuotaPercent(),
             'remaining_hard_quota'         => $this->getRemainingHardQuota(),
             'remaining_hard_quota_percent' => $this->getRemainingHardQuotaPercent(),
-        );
+        ];
     }
 
     /**

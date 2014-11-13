@@ -38,7 +38,7 @@ class ProblemAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleProblemBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleProblemBundle/Resources/scripts/ProblemsGrid.js',
@@ -48,7 +48,7 @@ class ProblemAssetProvider implements AssetProviderInterface
             '@PhlexibleProblemBundle/Resources/scripts/portlet/Problems.js',
 
             '@PhlexibleProblemBundle/Resources/scripts/menuhandle/ProblemsHandle.js',
-        );
+        ];
     }
 
     /**
@@ -56,8 +56,8 @@ class ProblemAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleProblemBundle/Resources/styles/problems.css',
-        );
+        ];
     }
 }

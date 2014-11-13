@@ -25,18 +25,18 @@ class GetConfigListener
         $user = $event->getSecurityContext()->getToken()->getUser();
         $config = $event->getConfig();
 
-        $defaultPortlets = array(
-            'online-portlet'   => array(
+        $defaultPortlets = [
+            'online-portlet'   => [
                 'mode' => 'opened',
                 'col'  => 1,
                 'pos'  => 1
-            ),
-            'problems-portlet' => array(
+            ],
+            'problems-portlet' => [
                 'mode' => 'opened',
                 'col'  => 0,
                 'pos'  => 2
-            )
-        );
+            ]
+        ];
 
         if ($user->getProperty('portlets')) {
             $portlets = json_decode($user->getProperty('portlets'), true);

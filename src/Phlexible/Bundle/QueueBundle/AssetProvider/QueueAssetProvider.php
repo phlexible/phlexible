@@ -38,7 +38,7 @@ class QueueAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleQueueBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleQueueBundle/Resources/scripts/QueueStatsWindow.js',
@@ -46,7 +46,7 @@ class QueueAssetProvider implements AssetProviderInterface
             '@PhlexibleQueueBundle/Resources/scripts/model/Job.js',
 
             '@PhlexibleQueueBundle/Resources/scripts/menuhandle/QueueStatsHandle.js',
-        );
+        ];
     }
 
     /**

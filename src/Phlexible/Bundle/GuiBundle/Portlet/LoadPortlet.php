@@ -25,7 +25,7 @@ class LoadPortlet extends Portlet
     {
         $this
             ->setId('load-portlet')
-            ->setTitle($translator->trans('gui.server_load', array(), 'gui'))
+            ->setTitle($translator->trans('gui.server_load', [], 'gui'))
             ->setClass('Phlexible.gui.portlet.Load')
             ->setIconClass('p-gui-load-icon');
     }
@@ -38,7 +38,7 @@ class LoadPortlet extends Portlet
         if (function_exists('sys_getloadavg')) {
             $data = sys_getloadavg();
         } else {
-            $data = array(0, 0, 0);
+            $data = [0, 0, 0];
         }
 
         return $data;

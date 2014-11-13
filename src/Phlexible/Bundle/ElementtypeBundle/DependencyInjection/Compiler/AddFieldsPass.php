@@ -24,7 +24,7 @@ class AddFieldsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $fields = array();
+        $fields = [];
         foreach ($container->findTaggedServiceIds('phlexible_elementtype.field') as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
                 throw new InvalidArgumentException('Tag phlexible_elementtype.field needs alias');

@@ -44,10 +44,10 @@ class StatsCommand extends ContainerAwareCommand
         $cntCache = $cacheRepository->countAll();
         $cntWaiting = $queueRepository->countAll();
 
-        $cntMissing = $cacheRepository->countBy(array('status' => CacheItem::STATUS_MISSING));
-        $cntError = $cacheRepository->countBy(array('status' => CacheItem::STATUS_ERROR));
-        $cntOk = $cacheRepository->countBy(array('status' => CacheItem::STATUS_OK));
-        $cntDelegate = $cacheRepository->countBy(array('status' => CacheItem::STATUS_DELEGATE));
+        $cntMissing = $cacheRepository->countBy(['status' => CacheItem::STATUS_MISSING]);
+        $cntError = $cacheRepository->countBy(['status' => CacheItem::STATUS_ERROR]);
+        $cntOk = $cacheRepository->countBy(['status' => CacheItem::STATUS_OK]);
+        $cntDelegate = $cacheRepository->countBy(['status' => CacheItem::STATUS_DELEGATE]);
 
         $output->writeln($cntCache . ' cached items.');
         $output->writeln($cntWaiting . ' waiting items.');

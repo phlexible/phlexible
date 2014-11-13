@@ -23,7 +23,7 @@ class TwigDataProvider implements DataProviderInterface
      */
     public function provide(RenderConfiguration $renderConfiguration)
     {
-        $data = new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS);
+        $data = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
 
         $request = $renderConfiguration->get('request');
 
@@ -65,7 +65,7 @@ class TwigDataProvider implements DataProviderInterface
             //$data->elementTypeUniqueId = $data->contentElement->getElementtypeUniqueId();
             $data->content             = $data->contentElement->getStructure();
 
-            $data->contentLanguages = array('de');
+            $data->contentLanguages = ['de'];
         }
 
         if ($renderConfiguration->hasFeature('navigation')) {
@@ -107,7 +107,7 @@ class TwigDataProvider implements DataProviderInterface
     private function createSpecialTids(RenderConfiguration $renderConfiguration, $language)
     {
         // TODO: mit antonia klären
-        $specialTids = array(
+        $specialTids = [
             'default_start_eid'       => -1,
             'default_pw_aendern'      => -1,
             'glossar_eid'             => -1,
@@ -115,7 +115,7 @@ class TwigDataProvider implements DataProviderInterface
             'schnellsuche_eid'        => -1,
             'default_quicksearch_eid' => -1,
             'sitemap_eid'             => -1,
-        );
+        ];
 
         foreach ($renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids(null) as $specialTid) {
             $specialTids[$specialTid['name']] = $specialTid['treeId'];

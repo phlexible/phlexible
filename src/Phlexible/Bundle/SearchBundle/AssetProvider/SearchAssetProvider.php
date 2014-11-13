@@ -38,14 +38,14 @@ class SearchAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleSearchBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleSearchBundle/Resources/scripts/SearchBox.js',
             '@PhlexibleSearchBundle/Resources/scripts/SearchPanel.js',
 
             '@PhlexibleSearchBundle/Resources/scripts/menuhandle/SearchBoxHandle.js',
-        );
+        ];
     }
 
     /**
@@ -53,8 +53,8 @@ class SearchAssetProvider implements AssetProviderInterface
      */
     public function getCssCollection()
     {
-        return array(
+        return [
             '@PhlexibleSearchBundle/Resources/styles/search.css',
-        );
+        ];
     }
 }

@@ -33,6 +33,6 @@ class AssetController extends Controller
         $content .= file_get_contents(__DIR__ . '/../Resources/scripts/security/SendEmailWindow.js');
         $content .= file_get_contents(__DIR__ . '/../Resources/scripts/security/ResetWindow.js');
 
-        return new Response($content, 200, array('Content-type' => 'text/javascript'));
+        return new Response($content, 200, ['Content-type' => 'text/javascript']);
     }
 }

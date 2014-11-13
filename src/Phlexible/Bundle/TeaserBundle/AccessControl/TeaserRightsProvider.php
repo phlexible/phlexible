@@ -22,35 +22,35 @@ class TeaserRightsProvider implements RightsProviderInterface
      */
     public function getRights()
     {
-        return array(
-            'internal' => array(
-                'teaser' => array(
-                    'VIEW' => array(
+        return [
+            'internal' => [
+                'teaser' => [
+                    'VIEW' => [
                         'iconCls' => 'p-element-view-icon',
                         'bit'     => 1,
-                    ),
-                    'EDIT' => array(
+                    ],
+                    'EDIT' => [
                         'iconCls' => 'p-element-edit-icon',
                         'bit'     => 2,
-                    ),
-                    'CREATE' => array(
+                    ],
+                    'CREATE' => [
                         'iconCls' => 'p-element-add-icon',
                         'bit'     => 4,
-                    ),
-                    'DELETE' => array(
+                    ],
+                    'DELETE' => [
                         'iconCls' => 'p-element-delete-icon',
                         'bit'     => 8,
-                    ),
-                    'PUBLISH' => array(
+                    ],
+                    'PUBLISH' => [
                         'iconCls' => 'p-element-publish-icon',
                         'bit'     => 16,
-                    ),
-                    'ACCESS' => array(
+                    ],
+                    'ACCESS' => [
                         'iconCls' => 'p-element-tab_rights-icon',
                         'bit'     => 32,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
     }
 }

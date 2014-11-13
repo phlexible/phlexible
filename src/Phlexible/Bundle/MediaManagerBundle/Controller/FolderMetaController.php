@@ -41,25 +41,25 @@ class FolderMetaController extends Controller
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
-        $meta = array();
+        $meta = [];
 
-        foreach ($folder->getAttribute('metasets', array()) as $metaSetId) {
+        foreach ($folder->getAttribute('metasets', []) as $metaSetId) {
             $metaSet = $metaSetManager->find($metaSetId);
             $metaData = $folderMetaDataManager->findByMetaSetAndFolder($metaSet, $folder);
 
-            $fieldDatas = array();
+            $fieldDatas = [];
 
             foreach ($metaSet->getFields() as $field) {
                 $options = $optionResolver->resolve($field);
 
-                $fieldData = array(
+                $fieldData = [
                     'key'          => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $options,
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
-                );
+                ];
 
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $language) {
@@ -70,14 +70,14 @@ class FolderMetaController extends Controller
                 $fieldDatas[] = $fieldData;
             }
 
-            $meta[] = array(
+            $meta[] = [
                 'set_id' => $metaSetId,
                 'title'  => $metaSet->getName(),
                 'fields' => $fieldDatas
-            );
+            ];
         }
 
-        return new JsonResponse(array('meta' => $meta));
+        return new JsonResponse(['meta' => $meta]);
     }
 
     /**
@@ -111,7 +111,7 @@ class FolderMetaController extends Controller
         }
         */
 
-        $metaSetIds = $folder->getAttribute('metasets', array());
+        $metaSetIds = $folder->getAttribute('metasets', []);
 
         foreach ($data as $metaSetId => $fields) {
             $metaSet = $metaSetManager->find($metaSetId);
@@ -169,15 +169,15 @@ class FolderMetaController extends Controller
         $folder = $siteManager->getByFolderId($folderId)->findFolder($folderId);
         $metaSets = $folderMetaSetResolver->resolve($folder);
 
-        $sets = array();
+        $sets = [];
         foreach ($metaSets as $metaSet) {
-            $sets[] = array(
+            $sets[] = [
                 'id'   => $metaSet->getId(),
                 'name' => $metaSet->getName(),
-            );
+            ];
         }
 
-        return new JsonResponse(array('sets' => $sets));
+        return new JsonResponse(['sets' => $sets]);
     }
 
     /**
@@ -193,7 +193,7 @@ class FolderMetaController extends Controller
         if ($joinedIds) {
             $ids = explode(',', $joinedIds);
         } else {
-            $ids = array();
+            $ids = [];
         }
 
         $siteManager = $this->get('phlexible_media_site.site_manager');

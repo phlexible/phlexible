@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,15 +38,15 @@ class ValuesController extends Controller
         $datasource = $datasourceManager->find($sourceId);
         $keys = $datasource->getValuesForLanguage($language);
 
-        $data = array();
+        $data = [];
         foreach ($keys as $key) {
             if (!$key) {
                 continue;
             }
 
-            $data[] = array('key' => $key, 'value' => $key);
+            $data[] = ['key' => $key, 'value' => $key];
         }
 
-        return new JsonResponse(array('values' => $data));
+        return new JsonResponse(['values' => $data]);
     }
 }

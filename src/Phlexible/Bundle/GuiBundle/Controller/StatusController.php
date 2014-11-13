@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route as RoutingRoute;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
  * Status controller
@@ -73,7 +73,7 @@ class StatusController extends Controller
     {
         $components = $this->container->getParameter('kernel.bundles');
 
-        $allCallbacks = array();
+        $allCallbacks = [];
         $out = '';
 
         foreach ($components as $id => $class) {
@@ -82,7 +82,7 @@ class StatusController extends Controller
             $callbacks = get_class_methods($class);
             $reflection = new \ReflectionClass('Symfony\Component\HttpKernel\Bundle\Bundle');
             $methods = $reflection->getMethods();
-            $nonCallbacks = array('__construct', 'initContainer', 'setCallbacks', 'setDependencies', 'setDescription', 'setName', 'setOrder', 'setPath', 'getFile', 'setFile', 'getPath', 'getContainer', 'setContainer', 'getControllerDirectory', 'setControllerDirectory', 'init');
+            $nonCallbacks = ['__construct', 'initContainer', 'setCallbacks', 'setDependencies', 'setDescription', 'setName', 'setOrder', 'setPath', 'getFile', 'setFile', 'getPath', 'getContainer', 'setContainer', 'getControllerDirectory', 'setControllerDirectory', 'init'];
             foreach ($methods as $method) {
                 $nonCallbacks[] = $method->getName();
             }
@@ -98,7 +98,7 @@ class StatusController extends Controller
                 }
                 $allCallbacks[$callback]++;
 
-                $url = $this->generateUrl('gui_status_callback', array('callback' => $callback, 'component' => $id));
+                $url = $this->generateUrl('gui_status_callback', ['callback' => $callback, 'component' => $id]);
                 $cur .= "<a href='$url'>$id::$callback()</a>" . PHP_EOL;
             }
 
@@ -109,7 +109,7 @@ class StatusController extends Controller
 
         $output = "<pre>" . str_repeat('=', 3).' Callbacks '.str_repeat('=', 80).PHP_EOL.PHP_EOL;
         foreach ($allCallbacks as $callback => $count) {
-            $url = $this->generateUrl('gui_status_callback', array('callback' => $callback));
+            $url = $this->generateUrl('gui_status_callback', ['callback' => $callback]);
             $output .= "<a href='$url'>$callback()</a> ($count)" . PHP_EOL;
         }
 
@@ -136,7 +136,7 @@ class StatusController extends Controller
         $result = null;
         if (!$component) {
             $output .= 'Callback: '.$callback.'()'.PHP_EOL.PHP_EOL;
-            $result = array();
+            $result = [];
             foreach ($components as $class) {
                 if (method_exists($class, $callback)) {
                     $bundle = new $class();
@@ -222,7 +222,7 @@ class StatusController extends Controller
         $nameParser = $this->get('controller_name_converter');
 
         $routes = $router->getRouteCollection();
-        $paths = array();
+        $paths = [];
         foreach ($routes as $name => $route) {
             /* @var $route RoutingRoute  */
 

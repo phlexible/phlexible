@@ -25,17 +25,17 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     /**
      * @var array
      */
-    private $dsIdMap = array();
+    private $dsIdMap = [];
 
     /**
      * @var array
      */
-    private $childrenMap = array();
+    private $childrenMap = [];
 
     /**
      * @var array
      */
-    private $parentMap = array();
+    private $parentMap = [];
 
     /**
      * @param ElementtypeStructureNode $node
@@ -162,10 +162,10 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     {
         $childrenDsIds = (array_key_exists($dsId, $this->childrenMap))
             ? $this->childrenMap[$dsId]
-            : array();
+            : [];
 
         if (($level > 1) && count($childrenDsIds)) {
-            $subChildDsIds = array($childrenDsIds);
+            $subChildDsIds = [$childrenDsIds];
 
             foreach ($childrenDsIds as $childDsId) {
                 $subChildDsIds[] = $this->getChildrenDsIds($childDsId, $level - 1);
@@ -201,7 +201,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      */
     public function getChildNodes($dsId, $level = 1)
     {
-        $children = array();
+        $children = [];
 
         $childrenDsIds = $this->getChildrenDsIds($dsId, $level);
         foreach ($childrenDsIds as $childDsId) {
@@ -262,7 +262,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      */
     public function getParentNodes($dsId)
     {
-        $parents = array();
+        $parents = [];
 
         $node = $this->getNode($dsId);
         while ($node) {
@@ -287,7 +287,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      */
     public function getDsIdsByFieldType($fieldType)
     {
-        $result = array();
+        $result = [];
         foreach ($this->dsIdMap as $dsId => $node) {
             /* @var $node ElementtypeStructureNode */
             if ($fieldType == $node->getType()) {
@@ -307,7 +307,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      */
     public function getNamesByFieldType($fieldType)
     {
-        $result = array();
+        $result = [];
         foreach ($this->dsIdMap as $node) {
             /* @var $node ElementtypeStructureNode */
             if ($fieldType == $node->getType()) {

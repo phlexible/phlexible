@@ -9,8 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
-use Phlexible\Bundle\ElementBundle\Lock\ElementMasterLockIdentifier;
-use Phlexible\Bundle\ElementBundle\Lock\ElementSlaveLockIdentifier;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -40,7 +38,7 @@ class LocksController extends Controller
 
         $locks = $lockManager->findAll();
 
-        $data = array();
+        $data = [];
         foreach ($locks as $lock) {
             /* @var $lock ElementLock */
             $username = '(unknown user)';
@@ -49,17 +47,17 @@ class LocksController extends Controller
                 $username = $user->getDisplayName();
             }
 
-            $data[] = array(
+            $data[] = [
                 'id'        => $lock->getId(),
                 'uid'       => $lock->getUserId(),
                 'user'      => $username,
                 'ts'        => $lock->getLockedAt()->format('Y-m-d H:i:s'),
                 'eid'       => $lock->getElement()->getEid(),
                 'lock_type' => $lock->getType(),
-            );
+            ];
         }
 
-        return new JsonResponse(array('locks' => $data));
+        return new JsonResponse(['locks' => $data]);
     }
 
     /**
@@ -91,7 +89,7 @@ class LocksController extends Controller
         $uid = $this->getUser()->getId();
 
         $lockManager = $this->get('phlexible_element.element_lock_manager');
-        $myLocks = $lockManager->findBy(array('userId' => $uid));
+        $myLocks = $lockManager->findBy(['userId' => $uid]);
 
         foreach ($myLocks as $lock) {
             $lockManager->deleteLock($lock);

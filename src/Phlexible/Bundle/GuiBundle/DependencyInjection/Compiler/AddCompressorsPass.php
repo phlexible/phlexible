@@ -24,7 +24,7 @@ class AddCompressorsPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // add css compressor alias to container
-        $cssCompressorPriorities = array();
+        $cssCompressorPriorities = [];
         foreach ($container->findTaggedServiceIds('phlexible_gui.compressor.css') as $id => $attributes) {
             $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
             $cssCompressorPriorities[$priority] = $id;
@@ -33,7 +33,7 @@ class AddCompressorsPass implements CompilerPassInterface
         $container->setAlias('phlexible_gui.compressor.css', current($cssCompressorPriorities));
 
         // add javascript compressor alias to container
-        $javascriptCompressorPriorities = array();
+        $javascriptCompressorPriorities = [];
         foreach ($container->findTaggedServiceIds('phlexible_gui.compressor.javascript') as $id => $attributes) {
             $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
             $javascriptCompressorPriorities[$priority] = $id;

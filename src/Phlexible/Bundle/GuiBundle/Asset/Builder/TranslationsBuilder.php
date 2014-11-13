@@ -72,9 +72,9 @@ class TranslationsBuilder
      */
     public function get($language, $domain = 'gui')
     {
-        $translations = array();
+        $translations = [];
         $catalogue = $this->catalogAccessor->getCatalogues($language);
-        $namespaces = array();
+        $namespaces = [];
         foreach ($catalogue->all($domain) as $key => $value) {
             $parts = explode('.', $key);
             $component = array_shift($parts);
@@ -114,7 +114,7 @@ class TranslationsBuilder
      */
     private function buildTranslations(array $languages)
     {
-        $namespaces = array();
+        $namespaces = [];
 
         $content = '';
         foreach ($languages as $namespace => $page) {

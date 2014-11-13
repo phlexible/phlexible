@@ -39,7 +39,7 @@ class RightsController extends Controller
 
         $site = $this->get('phlexible_media_site.site_manager')->getByFolderId($contentId);
         $folder = $site->findFolder($contentId);
-        $path = array($folder->getId());
+        $path = [$folder->getId()];
         $pathFolder = $folder;
         while ($pathFolder->getParentId()) {
             array_unshift($path, $pathFolder->getParentId());
@@ -51,16 +51,16 @@ class RightsController extends Controller
         $groupManager = $this->get('phlexible_user.group_manager');
 
         $subjects = $contentRightsManager->getRights(
-            array('uid', 'gid'),
+            ['uid', 'gid'],
             $rightType,
             $contentType,
             $contentId,
             $path,
-            array(
+            [
                 'uid' => function (array $ids) use ($userManager) {
-                    $users = $userManager->findBy(array('uid' => $ids));
+                    $users = $userManager->findBy(['uid' => $ids]);
 
-                    $subjects = array();
+                    $subjects = [];
                     foreach ($users as $user) {
                         $subjects['uid__' . $user->getId()] = $user->getFirstname() . ' ' . $user->getLastname();
                     }
@@ -68,9 +68,9 @@ class RightsController extends Controller
                     return $subjects;
                 },
                 'gid' => function (array $ids) use ($groupManager) {
-                    $groups = $groupManager->findBy(array('gid' => $ids));
+                    $groups = $groupManager->findBy(['gid' => $ids]);
 
-                    $subjects = array();
+                    $subjects = [];
 
                     foreach ($groups as $group) {
                         $subjects['gid__' . $group->getId()] = $group->getName();
@@ -78,10 +78,10 @@ class RightsController extends Controller
 
                     return $subjects;
                 }
-            )
+            ]
         );
 
-        return new JsonResponse(array('subjects' => $subjects));
+        return new JsonResponse(['subjects' => $subjects]);
     }
 
     /**
@@ -102,14 +102,14 @@ class RightsController extends Controller
 
         $site = $this->get('phlexible_media_site.site_manager')->getByFolderId($contentId);
         $folder = $site->findFolder($contentId);
-        $path = array($folder->getId());
+        $path = [$folder->getId()];
         $pathFolder = $folder;
         while ($pathFolder->getParentId()) {
             array_unshift($path, $pathFolder->getParentId());
             $pathFolder = $site->findFolder($pathFolder->getParentId());
         };
 
-        $abovePath = array();
+        $abovePath = [];
         if (count($path)) {
             $abovePath = $path;
             array_pop($abovePath);
@@ -117,13 +117,13 @@ class RightsController extends Controller
 
         $permissions = $this->get('phlexible_access_control.permissions');
         $contentRights = array_keys($permissions->getByType("$contentType-$rightType"));
-        $rights = array();
+        $rights = [];
         foreach ($contentRights as $right) {
-            $rights[$right] = array(
+            $rights[$right] = [
                 'right'  => $right,
                 'status' => -1,
                 'info'   => '',
-            );
+            ];
         }
 
         $subject = null;
@@ -131,7 +131,7 @@ class RightsController extends Controller
         if ($objectType === 'uid') {
             $user = $this->get('phlexible_user.user_manager')->find($objectId);
 
-            $subject = array(
+            $subject = [
                 'type'        => 'user',
                 'object_type' => 'uid',
                 'object_id'   => $objectId,
@@ -142,11 +142,11 @@ class RightsController extends Controller
                 'language'    => '_all_',
                 'inherited'   => 0,
                 'restore'     => 0,
-            );
+            ];
         } elseif ($objectType === 'gid') {
             $group = $this->get('phlexible_user.group_manager')->find($objectId);
 
-            $subject = array(
+            $subject = [
                 'type'        => 'group',
                 'object_type' => 'gid',
                 'object_id'   => $objectId,
@@ -157,7 +157,7 @@ class RightsController extends Controller
                 'language'    => '_all_',
                 'inherited'   => 0,
                 'restore'     => 0,
-            );
+            ];
         }
 
         return new JsonResponse($subject);

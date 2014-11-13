@@ -86,7 +86,7 @@ class DataSaver
     /**
      * @var ElementStructure[]
      */
-    private $structures = array();
+    private $structures = [];
 
     /**
      * @param ElementService           $elementService
@@ -198,12 +198,12 @@ class DataSaver
         }
 
         // TODO: available languages
-        $this->saveMeta($elementVersion, $language, $isMaster, array('de'), $data);
+        $this->saveMeta($elementVersion, $language, $isMaster, ['de'], $data);
 
         $event = new SaveElementEvent($element, $language, $oldVersion);
         $this->dispatcher->dispatch(ElementEvents::SAVE_ELEMENT, $event);
 
-        $publishSlaves = array();
+        $publishSlaves = [];
         if ($isPublish) {
             $publishSlaves = $this->checkPublishSlaves($elementVersion, $node, $teaser, $language);
             if ($teaser) {
@@ -213,7 +213,7 @@ class DataSaver
             }
         }
 
-        return array($elementVersion, $node, $teaser, $publishSlaves);
+        return [$elementVersion, $node, $teaser, $publishSlaves];
     }
 
     /**
@@ -261,11 +261,11 @@ class DataSaver
         // save context
 
         if (isset($data['context'])) {
-            $db->delete($db->prefix . 'teaser_context', array('teaser_id = ?' => $teaserId));
+            $db->delete($db->prefix . 'teaser_context', ['teaser_id = ?' => $teaserId]);
 
-            $insertData = array(
+            $insertData = [
                 'teaser_id' => $teaserId
-            );
+            ];
 
             foreach ($data['context'] as $country) {
                 $insertData['context'] = $country;
@@ -363,11 +363,11 @@ class DataSaver
         // save context
 
         if (isset($data['context'])) {
-            $db->delete($db->prefix . 'tree_context', array('tid = ?' => $tid));
+            $db->delete($db->prefix . 'tree_context', ['tid = ?' => $tid]);
 
-            $insertData = array(
+            $insertData = [
                 'tid' => $tid
-            );
+            ];
 
             foreach ($data['context'] as $country) {
                 $insertData['context'] = $country;
@@ -467,7 +467,7 @@ class DataSaver
     private function applyStructure(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values)
     {
         $this->structures[null] = $rootElementStructure;
-        $map = array(null => $rootElementStructure->getDataId());
+        $map = [null => $rootElementStructure->getDataId()];
 
         foreach ($values as $key => $value) {
             $parts = explode('__', $key);
@@ -643,7 +643,7 @@ class DataSaver
      */
     private function checkPublishSlaves(ElementVersion $elementVersion, TreeNodeInterface $node, Teaser $teaser = null, $language)
     {
-        $publishSlaves = array('elements' => array(), 'languages' => array());
+        $publishSlaves = ['elements' => [], 'languages' => []];
 
         if ($elementVersion->getElement()->getMasterLanguage() !== $language) {
             return $publishSlaves;
@@ -659,7 +659,7 @@ class DataSaver
                     if (!$this->teaserManager->isAsync($teaser, $slaveLanguage)) {
                         $publishSlaves['languages'][] = $slaveLanguage;
                     } else {
-                        $publishSlaves['elements'][] = array($teaser->getId(), $slaveLanguage, $elementVersion->getVersion(), 'async', 1);
+                        $publishSlaves['elements'][] = [$teaser->getId(), $slaveLanguage, $elementVersion->getVersion(), 'async', 1];
                     }
                 }
                 // TODO: needed?
@@ -677,7 +677,7 @@ class DataSaver
                     if (!$node->getTree()->isAsync($node, $slaveLanguage)) {
                         $publishSlaves['languages'][] = $slaveLanguage;
                     } else {
-                        $publishSlaves['elements'][] = array($node->getId(), $slaveLanguage, 0, 'async', 1);
+                        $publishSlaves['elements'][] = [$node->getId(), $slaveLanguage, 0, 'async', 1];
                     }
                 }
                 // TODO: needed?
@@ -701,7 +701,7 @@ class DataSaver
      * @param string|null    $comment
      * @param array          $publishSlaves
      */
-    private function publishTeaser(ElementVersion $elementVersion, Teaser $teaser = null, $language, $userId, $comment = null, array $publishSlaves = array())
+    private function publishTeaser(ElementVersion $elementVersion, Teaser $teaser = null, $language, $userId, $comment = null, array $publishSlaves = [])
     {
         $this->teaserManager->publishTeaser(
             $teaser,
@@ -733,7 +733,7 @@ class DataSaver
      * @param string|null       $comment
      * @param array             $publishSlaves
      */
-    private function publishTreeNode(ElementVersion $elementVersion, TreeNodeInterface $treeNode, $language, $userId, $comment = null, array $publishSlaves = array())
+    private function publishTreeNode(ElementVersion $elementVersion, TreeNodeInterface $treeNode, $language, $userId, $comment = null, array $publishSlaves = [])
     {
         $tree = $treeNode->getTree();
 

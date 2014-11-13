@@ -40,15 +40,15 @@ class DebugController extends Controller
         $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId);
 
-        $debug = array(
-            array('key' => 'mimeType', 'value' => $file->getMimeType()),
-            array('key' => 'documentType', 'value' => strtolower($file->getDocumenttype())),
-            array('key' => 'assetType', 'value' => strtolower($file->getAssettype())),
-            array('key' => 'fileId', 'value' => $file->getId()),
-            array('key' => 'folderId', 'value' => $file->getFolderId()),
-        );
+        $debug = [
+            ['key' => 'mimeType', 'value' => $file->getMimeType()],
+            ['key' => 'documentType', 'value' => strtolower($file->getDocumenttype())],
+            ['key' => 'assetType', 'value' => strtolower($file->getAssettype())],
+            ['key' => 'fileId', 'value' => $file->getId()],
+            ['key' => 'folderId', 'value' => $file->getFolderId()],
+        ];
 
-        return new JsonResponse(array('debug' => $debug));
+        return new JsonResponse(['debug' => $debug]);
     }
 
     /**
@@ -69,9 +69,9 @@ class DebugController extends Controller
 
         $site = $siteManager->getByFileId($fileId);
         $file = $site->findFile($fileId);
-        $cacheItems = $cacheManager->findBy(array('file_id' => $fileId));
+        $cacheItems = $cacheManager->findBy(['file_id' => $fileId]);
 
-        $cache = array();
+        $cache = [];
         foreach ($cacheItems as $cacheItem) {
             $template = $templateManager->find($cacheItem->getTemplateKey());
             $storageKey = $template->getStorage();
@@ -79,12 +79,12 @@ class DebugController extends Controller
 
             $urls = $storage->getCacheUrls($file, $cacheItem, $this->_request->getBaseUrl());
 
-            $cache[] = array(
+            $cache[] = [
                 'key'   => $cacheItem->getTemplateKey(),
                 'value' => $urls['media']
-            );
+            ];
         }
 
-        return new JsonResponse(array('cache' => $cache));
+        return new JsonResponse(['cache' => $cache]);
     }
 }

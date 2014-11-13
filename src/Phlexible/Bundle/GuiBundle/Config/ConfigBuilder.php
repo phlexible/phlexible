@@ -12,7 +12,6 @@ use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Phlexible\Bundle\GuiBundle\GuiEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Config builder
@@ -66,9 +65,9 @@ class ConfigBuilder
      */
     public function toArray()
     {
-        $sets = array();
+        $sets = [];
 
-        $languages = array();
+        $languages = [];
         foreach ($this->availableLanguages as $key => $language) {
             $name = \Locale::getDisplayName($language, $this->securityContext->getToken()->getUser()->getInterfaceLanguage('en'));
             $languages[$name] = $language;
@@ -78,24 +77,24 @@ class ConfigBuilder
         ksort($languages);
 
         foreach ($languages as $languageTitle => $language) {
-            $sets['backendLanguages'][] = array(
+            $sets['backendLanguages'][] = [
                 $language,
                 $languageTitle,
                 'p-flags-' . $language . '-icon',
-            );
+            ];
         }
 
-        $sets['themes'] = array(
-            array('default', 'Default Theme', 'theme_default.png'),
-            array('gray', 'Gray Theme', 'theme_gray.png'),
+        $sets['themes'] = [
+            ['default', 'Default Theme', 'theme_default.png'],
+            ['gray', 'Gray Theme', 'theme_gray.png'],
             //            array('slate', 'Slate Theme', 'theme_slate.png'),
             //            array('slickness', 'Slickness Theme', 'theme_slate.png'),
-        );
+        ];
 
-        $sets['dateFormats'] = array(
-            array('Y-m-d H:i:s', date('Y-m-d H:i:s') . ' (Y-m-d H:i:s)'),
-            array('d.m.Y H:i:s', date('d.m.Y H:i:s') . ' (d.m.Y H:i:s)'),
-        );
+        $sets['dateFormats'] = [
+            ['Y-m-d H:i:s', date('Y-m-d H:i:s') . ' (Y-m-d H:i:s)'],
+            ['d.m.Y H:i:s', date('d.m.Y H:i:s') . ' (d.m.Y H:i:s)'],
+        ];
 
         $config = new Config();
         $config

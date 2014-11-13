@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\TreeBundle\Mediator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 

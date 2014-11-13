@@ -8,10 +8,8 @@
 
 namespace Phlexible\Bundle\TaskBundle\Mailer;
 
-use Phlexible\Bundle\TaskBundle\Entity\Comment;
 use Phlexible\Bundle\TaskBundle\Entity\Status;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
-use Phlexible\Bundle\TaskBundle\Entity\Transition;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeInterface;
 use Swift_Mailer;
 use Swift_Message;
@@ -75,13 +73,13 @@ class Mailer
 
         $content = $this->templating->render(
             $template,
-            array(
+            [
                 'createUser' => $createUser,
                 'assignUser' => $assignUser,
                 'task'       => $task,
                 'text'       => $text,
                 'url'        => $url
-            )
+            ]
         );
         $this->sendEmailMessage($content, $from, $assignUser->getEmail());
     }
@@ -105,13 +103,13 @@ class Mailer
 
         $content = $this->templating->render(
             $template,
-            array(
+            [
                 'byUser'        => $byUser,
                 'involvedUsers' => $involvedUsers,
                 'changes'       => $changes,
                 'text'          => $text,
                 'url'           => $url
-            )
+            ]
         );
 
         foreach ($involvedUsers as $involvedUser) {

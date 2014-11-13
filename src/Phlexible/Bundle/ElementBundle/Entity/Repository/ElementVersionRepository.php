@@ -35,7 +35,7 @@ class ElementVersionRepository extends EntityRepository
 
         $statement = $conn->executeQuery($qb->getSQL());
 
-        $versions = array();
+        $versions = [];
         while ($version = $statement->fetchColumn()) {
             $versions[] = (int) $version;
         }

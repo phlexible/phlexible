@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -127,6 +127,6 @@ class PreviewController extends Controller
 
         $mimeType = $this->get('phlexible_media_tool.mime.detector')->detect($filename, 'string');
 
-        return new Response(file_get_contents($filename), 200, array('Content-type' => $mimeType));
+        return new Response(file_get_contents($filename), 200, ['Content-type' => $mimeType]);
     }
 }

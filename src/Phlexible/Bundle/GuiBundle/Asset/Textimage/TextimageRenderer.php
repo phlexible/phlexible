@@ -21,12 +21,12 @@ class TextimageRenderer
     /**
      * @var array
      */
-    private $locationAngles = array(
+    private $locationAngles = [
         'west'  => 270,
         'east'  => 90,
         'north' => 0,
         'south' => 0
-    );
+    ];
 
     /**
      * @var array
@@ -74,11 +74,11 @@ class TextimageRenderer
         $cacheId = md5(
             implode(
                 '__',
-                array(
+                [
                     $text .
                     $loc .
                     $color . $iconPath
-                )
+                ]
             )
         );
 

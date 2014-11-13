@@ -31,12 +31,12 @@ class ImportCommand extends ContainerAwareCommand
         $this
             ->setName('media-manager:import')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('source', InputArgument::REQUIRED, 'Source file'),
                     new InputArgument('targetDir', InputArgument::OPTIONAL, 'Target directory'),
                     new InputOption('targetSite', null, InputOption::VALUE_REQUIRED, 'Target site'),
                     new InputOption('delete', null, InputOption::VALUE_NONE, 'Delete source file after import'),
-                )
+                ]
             )
             ->setDescription('Import file');
     }

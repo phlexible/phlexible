@@ -73,14 +73,14 @@ class LocalStorage extends AbstractStorage
         $cacheFileName = rawurlencode($this->replaceExtension($fileName, $cacheItem->getExtension()));
         $iconFileName  = rawurlencode($this->replaceExtension($fileName, '.gif'));
 
-        $urls = array(
+        $urls = [
             self::MEDIA_PATH_DOWNLOAD => $baseUrl . '/' . self::MEDIA_PATH_DOWNLOAD . '/' . $cacheId . '/' . $cacheFileName,
             self::MEDIA_PATH_MEDIA    => $baseUrl . '/' . self::MEDIA_PATH_MEDIA . '/' . $cacheId . '/' . $cacheFileName,
             self::MEDIA_PATH_ICON     => $baseUrl . '/' . self::MEDIA_PATH_ICON . '/' . $cacheId . '/16/' . $iconFileName,
 
             //@todo remove, only in here for frontentmediamanager field image template compatibility reasons
             self::MEDIA_PATH_IMAGE    => $baseUrl . '/' . self::MEDIA_PATH_MEDIA . '/' . $cacheId . '/' . $cacheFileName,
-        );
+        ];
 
         return $urls;
     }

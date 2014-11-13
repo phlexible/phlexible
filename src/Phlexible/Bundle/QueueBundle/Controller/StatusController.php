@@ -32,16 +32,16 @@ class StatusController extends Controller
     {
         $jobManager = $this->get('phlexible_queue.job_manager');
 
-        $data = array();
+        $data = [];
 
         foreach ($jobManager->findAll() as $job) {
-            $data[] = array(
+            $data[] = [
                 'id'        => $job->getId(),
                 'command'   => $job->getCommand(),
                 'arguments' => implode(' ', $job->getArguments()),
                 'priority'  => $job->getPriority(),
                 'status'    => $job->getStatus(),
-            );
+            ];
         }
 
         $out = '<pre>Current jobs: ' . PHP_EOL;

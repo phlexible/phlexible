@@ -317,12 +317,12 @@ class Problem
      */
     public function toArray()
     {
-        return array(
+        return [
             'severity' => $this->severity,
             'msg'      => $this->msg,
             'hint'     => $this->hint,
             'link'     => !empty($this->link) ? $this->link : null,
             'iconCls'  => $this->iconClass,
-        );
+        ];
     }
 }

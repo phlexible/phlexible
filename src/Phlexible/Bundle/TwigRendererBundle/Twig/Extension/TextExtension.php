@@ -22,10 +22,10 @@ class TextExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('truncate_html', array($this, 'truncateHtml')),
-            new \Twig_SimpleFilter('nl2p', array($this, 'nl2p')),
-        );
+        return [
+            new \Twig_SimpleFilter('truncate_html', [$this, 'truncateHtml']),
+            new \Twig_SimpleFilter('nl2p', [$this, 'nl2p']),
+        ];
     }
 
     /**

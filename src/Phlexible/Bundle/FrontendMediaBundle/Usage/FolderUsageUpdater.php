@@ -84,7 +84,7 @@ class FolderUsageUpdater
         $folderLinks = $qb->getQuery()->getResult();
         /* @var $folderLinks ElementLink[] */
 
-        $flags = array();
+        $flags = [];
 
         foreach ($folderLinks as $folderLink) {
             $folderId = $folderLink->getTarget();
@@ -103,7 +103,7 @@ class FolderUsageUpdater
             }
 
             // add flag STATUS_ONLINE if this link is used in an online teaser version
-            $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
+            $teasers = $this->teaserManager->findBy(['typeId' => $eid, 'type' => 'element']);
             foreach ($teasers as $teaser) {
                 if ($this->teaserManager->getPublishedVersion($teaser, $folderLink->getLanguage()) === $linkVersion) {
                     $flags[$folderId] |= FolderUsage::STATUS_ONLINE;
@@ -135,7 +135,7 @@ class FolderUsageUpdater
             $site = $this->siteManager->getByFolderId($folderId);
             $folder = $site->findFolder($folderId);
 
-            $folderUsage = $folderUsageRepository->findOneBy(array('folder' => $folder, 'usageType' => 'element', 'usageId' => $eid));
+            $folderUsage = $folderUsageRepository->findOneBy(['folder' => $folder, 'usageType' => 'element', 'usageId' => $eid]);
             if (!$folderUsage) {
                 $folderUsage = new FolderUsage($folder, 'element', $eid, $flag);
                 $this->entityManager->persist($folderUsage);

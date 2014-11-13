@@ -128,11 +128,11 @@ class FolderUsage
      */
     public function toArray()
     {
-        return array(
+        return [
             'folderId'  => $this->folder->getId(),
             'usageType' => $this->usageType,
             'usageId'   => $this->usageId,
             'status'    => $this->status,
-        );
+        ];
     }
 }

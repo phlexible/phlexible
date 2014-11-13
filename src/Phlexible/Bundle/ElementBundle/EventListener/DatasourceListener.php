@@ -46,9 +46,9 @@ class DatasourceListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             DataSourceEvents::GARBAGE_COLLECT => 'onGarbageCollect',
-        );
+        ];
     }
 
     /**

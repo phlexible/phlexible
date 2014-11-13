@@ -21,12 +21,12 @@ class WorkerResolver
     /**
      * @var WorkerInterface[]
      */
-    private $workers = array();
+    private $workers = [];
 
     /**
      * @param WorkerInterface[] $workers
      */
-    public function __construct(array $workers = array())
+    public function __construct(array $workers = [])
     {
         foreach ($workers as $worker) {
             $this->addWorker($worker);

@@ -93,7 +93,7 @@ class StateManager implements StateManagerInterface
      */
     public function findByTreeNode(TreeNodeInterface $treeNode)
     {
-        return $this->getTeaserOnlineRepository()->findBy(array('treeNode' => $treeNode->getId()));
+        return $this->getTeaserOnlineRepository()->findBy(['treeNode' => $treeNode->getId()]);
     }
 
     /**
@@ -101,7 +101,7 @@ class StateManager implements StateManagerInterface
      */
     public function findOneByTreeNodeAndLanguage(TreeNodeInterface $treeNode, $language)
     {
-        return $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode->getId(), 'language' => $language));
+        return $this->getTeaserOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);
     }
 
     /**
@@ -117,7 +117,7 @@ class StateManager implements StateManagerInterface
      */
     public function getPublishedLanguages(TreeNodeInterface $treeNode)
     {
-        $language = array();
+        $language = [];
         foreach ($this->findByTreeNode($treeNode) as $treeNodeOnline) {
             $language[] = $treeNodeOnline->getLanguage();
         }
@@ -130,7 +130,7 @@ class StateManager implements StateManagerInterface
      */
     public function getPublishedVersions(TreeNodeInterface $treeNode)
     {
-        $versions = array();
+        $versions = [];
         foreach ($this->findByTreeNode($treeNode) as $treeNodeOnline) {
             $versions[$treeNodeOnline->getLanguage()] = $treeNodeOnline->getVersion();
         }
@@ -191,7 +191,7 @@ class StateManager implements StateManagerInterface
      */
     public function publish(TreeNodeInterface $treeNode, $version, $language, $userId, $comment = null)
     {
-        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode->getId(), 'language' => $language));
+        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);
         if (!$treeNodeOnline) {
             $treeNodeOnline = new TreeNodeOnline();
             $treeNodeOnline
@@ -216,7 +216,7 @@ class StateManager implements StateManagerInterface
      */
     public function setOffline(TreeNodeInterface $treeNode, $language)
     {
-        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(array('treeNode' => $treeNode->getId(), 'language' => $language));
+        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);
 
         if ($treeNodeOnline) {
             $this->entityManager->remove($treeNodeOnline);

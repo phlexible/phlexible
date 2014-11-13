@@ -38,7 +38,7 @@ class TeaserAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleTeaserBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleTeaserBundle/Resources/scripts/ElementLayoutTree.js',
@@ -49,7 +49,7 @@ class TeaserAssetProvider implements AssetProviderInterface
             '@PhlexibleTeaserBundle/Resources/scripts/NewTeaserInstanceWindow.js',
             '@PhlexibleTeaserBundle/Resources/scripts/PublishTeaserWindow.js',
             '@PhlexibleTeaserBundle/Resources/scripts/SetTeaserOfflineWindow.js',
-        );
+        ];
     }
 
     /**

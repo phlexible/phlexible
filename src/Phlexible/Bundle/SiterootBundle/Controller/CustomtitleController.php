@@ -46,12 +46,12 @@ class CustomtitleController extends Controller
         $startHeadTitle = $siteroot->getStartHeadTitle();
 
         // get all siteroot urls
-        $data = array(
+        $data = [
             'head_title'       => $headTitle,
             'example'          => $titleResolver->replaceExample($siteroot, $headTitle, $language),
             'start_head_title' => $startHeadTitle,
             'start_example'    => $titleResolver->replaceExample($siteroot, $startHeadTitle, $language),
-        );
+        ];
 
         return new ResultResponse(true, 'Siteroot customtitles loaded.', $data);
     }
@@ -66,9 +66,9 @@ class CustomtitleController extends Controller
 
         $titleResolver = $this->get('phlexible_siteroot.title.resolver');
 
-        $data = array(
+        $data = [
             'placeholders' => $titleResolver->getPlaceholders($language)
-        );
+        ];
 
         return new JsonResponse($data);
     }
@@ -90,9 +90,9 @@ class CustomtitleController extends Controller
 
         $siteroot = $siterootRepository->find($siterootId);
 
-        $data = array(
+        $data = [
             'example' => $titleResolver->replaceExample($siteroot, $headTitle, $language)
-        );
+        ];
 
         return new ResultResponse(true, 'Siteroot customtitles loaded.', $data);
     }

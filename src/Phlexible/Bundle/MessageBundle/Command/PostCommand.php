@@ -30,14 +30,14 @@ class PostCommand extends ContainerAwareCommand
         $this
             ->setName('message:post')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('subject', InputArgument::OPTIONAL, 'Message subject'),
                     new InputOption('body', null, InputOption::VALUE_REQUIRED, 'Message body'),
                     new InputOption('priority', null, InputOption::VALUE_REQUIRED, 'Message priority', 1),
                     new InputOption('type', null, InputOption::VALUE_REQUIRED, 'Message type', 0),
                     new InputOption('channel', null, InputOption::VALUE_REQUIRED, 'Message channel'),
                     new InputOption('role', null, InputOption::VALUE_REQUIRED, 'Message role'),
-                )
+                ]
             )
             ->setDescription('Post message');
     }
@@ -60,7 +60,7 @@ class PostCommand extends ContainerAwareCommand
         }
 
         $priority = $input->getOption('priority');
-        $priorities = array('low', 'normal', 'high', 'urgent');
+        $priorities = ['low', 'normal', 'high', 'urgent'];
         if (in_array($priority, $priorities)) {
             $priority = array_search($priority, $priorities);
         } elseif (!in_array($priority, array_keys($priorities))) {
@@ -68,7 +68,7 @@ class PostCommand extends ContainerAwareCommand
         }
 
         $type = $input->getOption('type');
-        $types = array('info', 'error');
+        $types = ['info', 'error'];
         if (in_array($type, $types)) {
             $type = array_search($type, $types);
         } elseif (!in_array($type, array_keys($types))) {

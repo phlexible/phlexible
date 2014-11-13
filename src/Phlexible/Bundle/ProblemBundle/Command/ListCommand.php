@@ -50,7 +50,7 @@ class ListCommand extends ContainerAwareCommand
         $output->writeln('');
 
         $table = new Table($output);
-        $table->setHeaders(array('Type', 'Severity', 'Problem', 'Solve'));
+        $table->setHeaders(['Type', 'Severity', 'Problem', 'Solve']);
 
         foreach ($problems as $problem) {
             /*
@@ -70,12 +70,12 @@ class ListCommand extends ContainerAwareCommand
             */
 
             $table->addRow(
-                array(
+                [
                     $problem->isLive() ? 'live' : 'cached',
                     $problem->getSeverity(),
                     $problem->getMessage(),
                     $problem->getHint()
-                )
+                ]
             );
         }
 

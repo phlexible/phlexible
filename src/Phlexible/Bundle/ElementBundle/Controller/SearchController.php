@@ -41,14 +41,14 @@ class SearchController extends Controller
 
         $select = $db->select()
             ->distinct()
-            ->from(array('et' => $db->prefix . 'element_tree'), array('id AS tid'))
-            ->join(array('e' => $db->prefix . 'element'), 'et.eid = e.eid', array('latest_version AS version'))
+            ->from(['et' => $db->prefix . 'element_tree'], ['id AS tid'])
+            ->join(['e' => $db->prefix . 'element'], 'et.eid = e.eid', ['latest_version AS version'])
             ->join(
-                array('evt' => $db->prefix . 'element_version_titles'),
+                ['evt' => $db->prefix . 'element_version_titles'],
                 'evt.eid = et.eid AND evt.version = e.latest_version AND evt.language = ' . $db->quote(
                     $language
                 ) . ' AND evt.backend LIKE ' . $db->quote('%' . $query . '%'),
-                array('backend AS title')
+                ['backend AS title']
             )
             ->where('et.siteroot_id = ?', $siterootId);
 
@@ -62,7 +62,7 @@ class SearchController extends Controller
             $result[$key]['icon'] = $icon;
         }
 
-        return new JsonResponse(array('results' => $result));
+        return new JsonResponse(['results' => $result]);
     }
 
     /**
@@ -77,23 +77,23 @@ class SearchController extends Controller
 
         // TODO: meta search
 
-        $results = array();
+        $results = [];
         foreach ($this->get('phlexible_media_site.site_manager')->getAll() as $site) {
             $files = $site->search($query);
 
             foreach ($files as $file) {
                 /* @var $file FileInterface */
 
-                $results[] = array(
+                $results[] = [
                     'id'        => $file->getId(),
                     'version'   => $file->getVersion(),
                     'name'      => $file->getName(),
                     'folder_id' => $file->getFolderId(),
-                );
+                ];
             }
         }
 
-        return new JsonResponse(array('results' => $results));
+        return new JsonResponse(['results' => $results]);
     }
 
     /**

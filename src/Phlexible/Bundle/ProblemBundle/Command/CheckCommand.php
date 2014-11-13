@@ -40,14 +40,14 @@ class CheckCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $problemsRepository = $em->getRepository('PhlexibleProblemBundle:Problem');
 
-        $problemList = array('add' => array(), 'remove' => array());
+        $problemList = ['add' => [], 'remove' => []];
 
         foreach ($problemCheckers as $problemChecker) {
             $problems = $problemChecker->check();
 
             $existingProblems = $problemsRepository->findByCheckClass(get_class($problemChecker));
 
-            $problemIds = array();
+            $problemIds = [];
             foreach ($problems as $problemKey => $problem) {
                 $problemIds[$problem->getId()] = $problemKey;
             }

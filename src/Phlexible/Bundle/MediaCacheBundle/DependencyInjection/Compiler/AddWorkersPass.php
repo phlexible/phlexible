@@ -24,7 +24,7 @@ class AddWorkersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $ids = array();
+        $ids = [];
         foreach ($container->findTaggedServiceIds('phlexible_media_cache.worker') as $id => $definition) {
             $ids[] = new Reference($id);
         }

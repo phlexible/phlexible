@@ -29,11 +29,11 @@ class CreateCommand extends ContainerAwareCommand
         $this
             ->setName('user:create')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('username', InputArgument::REQUIRED, 'Username'),
                     new InputArgument('password', InputArgument::REQUIRED, 'Password'),
                     new InputArgument('email', InputArgument::REQUIRED, 'Email'),
-                )
+                ]
             )
             ->setDescription('Create user.');
     }

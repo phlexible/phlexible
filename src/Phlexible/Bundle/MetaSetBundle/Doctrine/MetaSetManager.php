@@ -64,7 +64,7 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function findOneByName($name)
     {
-        return $this->metaSetRepository->findOneBy(array('name' => $name));
+        return $this->metaSetRepository->findOneBy(['name' => $name]);
     }
 
     /**

@@ -54,7 +54,7 @@ class ProxyGenerator
         $namespace = 'Phlexible\\ElementProxy\\' . $classname;
         $fqName = $namespace . '\\' . $classname;
 
-        $items = array();
+        $items = [];
         foreach ($data as $item) {
             if (!isset($item['children'])) {
                 $items[] = $item;
@@ -64,12 +64,12 @@ class ProxyGenerator
         $class = $this->generateClass($fqName, $data);
         $classes = $this->generateSubClasses($namespace, $classname, $class, $data);
 
-        $data = array(
+        $data = [
             'namespace' => $namespace,
-            'content'   => array(
+            'content'   => [
                 $classname => '<?php' . PHP_EOL . PHP_EOL . $generator->generate($class),
-            )
-        );
+            ]
+        ];
         foreach ($classes as $classname => $class) {
             $data['content'][$classname] = '<?php' . PHP_EOL . PHP_EOL . $generator->generate($class);
         }
@@ -87,7 +87,7 @@ class ProxyGenerator
      */
     private function generateSubClasses($namespace, $prefix, PhpClass $parentClass, array $items)
     {
-        $classes = array();
+        $classes = [];
         foreach ($items as $item) {
             if (isset($item['children'])) {
                 $name = ucfirst($this->toCamelCase($item['node']->getWorkingTitle()));

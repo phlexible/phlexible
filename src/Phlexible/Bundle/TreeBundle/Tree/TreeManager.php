@@ -25,7 +25,7 @@ class TreeManager
     /**
      * @var TreeInterface[]
      */
-    private $trees = array();
+    private $trees = [];
 
     /**
      * @var SiterootManagerInterface
@@ -96,7 +96,7 @@ class TreeManager
      */
     public function getByTypeId($typeId, $type = null)
     {
-        $trees = array();
+        $trees = [];
         foreach ($this->siterootManager->findAll() as $siteroot) {
             $tree = $this->getBySiteRootId($siteroot->getId());
 
@@ -127,7 +127,7 @@ class TreeManager
      */
     public function getInstanceNodes(TreeNodeInterface $node)
     {
-        $instanceNodes = array();
+        $instanceNodes = [];
         foreach ($this->getAll() as $tree) {
             $instanceNodes = array_merge($instanceNodes, $tree->getInstances($node));
         }

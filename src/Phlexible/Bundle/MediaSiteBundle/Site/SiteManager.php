@@ -20,12 +20,12 @@ class SiteManager
     /**
      * @var Site[]
      */
-    private $sites = array();
+    private $sites = [];
 
     /**
      * @var array
      */
-    private $idToKey = array();
+    private $idToKey = [];
 
     /**
      * @param array $sites

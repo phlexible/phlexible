@@ -58,10 +58,10 @@ class DeleteFileChecker
         }
 
         $fileUsageRepository = $this->entityManager->getRepository('PhlexibleMediaManagerBundle:FileUsage');
-        $fileUsages = $fileUsageRepository->findBy(array('file' => $file));
+        $fileUsages = $fileUsageRepository->findBy(['file' => $file]);
 
         foreach ($fileUsages as $fileUsage) {
-            if (in_array($fileUsage->getStatus(), array(FileUsage::STATUS_ONLINE, FileUsage::STATUS_LATEST))) {
+            if (in_array($fileUsage->getStatus(), [FileUsage::STATUS_ONLINE, FileUsage::STATUS_LATEST])) {
                 return false;
             }
             if ($fileUsage->getStatus() === FileUsage::STATUS_OLD && $this->deletePolicy === 'hide_old') {

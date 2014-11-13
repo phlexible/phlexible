@@ -49,7 +49,7 @@ class MediaController extends Controller
         }
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($outfile, 'image/jpeg', array('absolute_path' => true));
+            ->create($outfile, 'image/jpeg', ['absolute_path' => true]);
     }
 
     /**
@@ -71,7 +71,7 @@ class MediaController extends Controller
         $mimeType = $file->getMimeType();
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($filePath, $mimeType, array('absolute_path' => true, 'inline' => false));
+            ->create($filePath, $mimeType, ['absolute_path' => true, 'inline' => false]);
     }
 
     /**
@@ -93,7 +93,7 @@ class MediaController extends Controller
         $mimeType = $file->getMimeType();
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($filePath, $mimeType, array('absolute_path' => true, 'inline' => true));
+            ->create($filePath, $mimeType, ['absolute_path' => true, 'inline' => true]);
     }
 
     /**
@@ -116,6 +116,6 @@ class MediaController extends Controller
         $icon = $documenttype->getIcon($size);
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($icon, 'image/gif', array('absolute_path' => true));
+            ->create($icon, 'image/gif', ['absolute_path' => true]);
     }
 }

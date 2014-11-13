@@ -38,9 +38,9 @@ class MediaCacheAssetProvider implements AssetProviderInterface
      */
     public function getScriptsCollection()
     {
-        return array(
+        return [
             '@PhlexibleMediaCacheBundle/Resources/scripts/portlet/CacheStatus.js'
-        );
+        ];
     }
 
     /**

@@ -64,7 +64,7 @@ class TaskController extends Controller
         $limit = $request->request->get('limit', 20);
         $start = $request->request->get('start', 0);
 
-        $status = array();
+        $status = [];
         if ($request->request->get('status_open')) {
             $status[] = Task::STATUS_OPEN;
         }
@@ -93,61 +93,61 @@ class TaskController extends Controller
 
         switch ($type) {
             case 'tasks':
-                $tasks = $taskManager->findByCreatedByAndStatus($userId, $status, array($sort => $dir), $limit, $start);
+                $tasks = $taskManager->findByCreatedByAndStatus($userId, $status, [$sort => $dir], $limit, $start);
                 $total = $taskManager->countByCreatedByAndStatus($userId, $status);
                 break;
 
             case 'todos':
-                $tasks = $taskManager->findByAssignedToAndStatus($userId, $status, array($sort => $dir), $limit, $start);
+                $tasks = $taskManager->findByAssignedToAndStatus($userId, $status, [$sort => $dir], $limit, $start);
                 $total = $taskManager->countByAssignedToAndStatus($userId, $status);
                 break;
 
             case 'involved':
-                $tasks = $taskManager->findByInvolvementAndStatus($userId, $status, array($sort => $dir), $limit, $start);
+                $tasks = $taskManager->findByInvolvementAndStatus($userId, $status, [$sort => $dir], $limit, $start);
                 $total = $taskManager->countByInvolvementAndStatus($userId, $status);
                 break;
 
             case 'all':
             default:
-                $tasks = $taskManager->findByStatus($status, array($sort => $dir), $limit, $start);
+                $tasks = $taskManager->findByStatus($status, [$sort => $dir], $limit, $start);
                 $total = $taskManager->countByStatus($status);
                 break;
         }
 
-        $data = array();
+        $data = [];
         foreach ($tasks as $task) {
             /* @var $task Task */
             $assignedUser = $userManager->find($task->getAssignedUserId());
             $createUser = $userManager->find($task->getCreateUserId());
 
-            $transitions = array();
+            $transitions = [];
             foreach ($task->getTransitions() as $transition) {
                 $transitionUser = $userManager->find($transition->getCreateUserId());
-                $transitions[] = array(
+                $transitions[] = [
                     'id'          => $transition->getId(),
                     'name'        => $transition->getName(),
                     'new_state'   => $transition->getNewState(),
                     'old_state'   => $transition->getOldState(),
                     'create_date' => $transition->getCreatedAt()->format('Y-m-d H:i:s'),
                     'create_user' => $transitionUser->getDisplayName(),
-                );
+                ];
             }
 
-            $comments = array();
+            $comments = [];
             foreach ($task->getComments() as $comment) {
                 $commentUser = $userManager->find($comment->getCreateUserId());
-                $comments[] = array(
+                $comments[] = [
                     'id'            => $comment->getId(),
                     'current_state' => $comment->getCurrentState(),
                     'comment'       => $comment->getComment(),
                     'create_date'   => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
                     'create_user'   => $commentUser->getDisplayName(),
-                );
+                ];
             }
 
             $type = $types->get($task->getType());
 
-            $data[] = array(
+            $data[] = [
                 'id'             => $task->getId(),
                 'type'           => $task->getType(),
                 'generic'        => $task->getType() === 'generic',
@@ -164,13 +164,13 @@ class TaskController extends Controller
                 'transitions'    => $transitions,
                 'comments'       => $comments,
                 'states'         => $taskManager->getTransitions($task),
-            );
+            ];
         }
 
-        return new JsonResponse(array(
+        return new JsonResponse([
             'tasks' => $data,
             'total' => $total,
-        ));
+        ]);
     }
 
     /**
@@ -194,20 +194,20 @@ class TaskController extends Controller
 
         $taskTypes = $this->get('phlexible_task.types');
 
-        $types = array();
+        $types = [];
         foreach ($taskTypes->all() as $type) {
             /* @var $type TypeInterface */
             if ($component && $type->getComponent() !== $component) {
                 continue;
             }
 
-            $types[] = array(
+            $types[] = [
                 'id'   => $type->getName(),
                 'name' => $type->getName(),
-            );
+            ];
         }
 
-        return new JsonResponse(array('types' => $types));
+        return new JsonResponse(['types' => $types]);
     }
 
     /**
@@ -237,7 +237,7 @@ class TaskController extends Controller
 
         $type = $types->get($taskType);
 
-        $users = array();
+        $users = [];
         foreach ($userManager->findAll() as $user) {
             if ($user->getId() === $systemUserId) {
                 continue;
@@ -251,16 +251,16 @@ class TaskController extends Controller
                 continue;
             }
 
-            $users[$user->getDisplayName()] = array(
+            $users[$user->getDisplayName()] = [
                 'uid'      => $user->getId(),
                 'username' => $user->getDisplayName(),
-            );
+            ];
         }
 
         ksort($users);
         $users = array_values($users);
 
-        return new JsonResponse(array('users' => $users));
+        return new JsonResponse(['users' => $users]);
     }
 
     /**
@@ -446,33 +446,33 @@ class TaskController extends Controller
         $createUser = $userManager->find($task->getCreateUserId());
         $assignedUser = $userManager->find($task->getAssignedUserId());
 
-        $transitions = array();
+        $transitions = [];
         foreach ($task->getTransitions() as $transition) {
             $transitionUser = $userManager->find($transition->getCreateUserId());
-            $history[] = array(
+            $history[] = [
                 'create_date' => $transition->getCreatedAt()->format('Y-m-d H:i:s'),
                 'name'        => $transitionUser->getDisplayName(),
                 'status'      => $transition->getNewState(),
                 'latest'      => 1,
-            );
+            ];
         }
         $transitions = array_reverse($transitions);
 
-        $comments = array();
+        $comments = [];
         foreach ($task->getComments() as $comment) {
             $commentUser = $userManager->find($comment->getCreateUserId());
-            $history[] = array(
+            $history[] = [
                 'create_date' => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
                 'name'        => $commentUser->getDisplayName(),
                 'status'      => $comment->getCurrentState(),
                 'comment'     => $comment->getComment(),
                 'latest'      => 1,
-            );
+            ];
         }
 
         $type = $types->get($task->getType());
 
-        $data = array(
+        $data = [
             'id'             => $task->getId(),
             'type'           => $task->getType(),
             'title'          => $type->getTitle($task),
@@ -494,7 +494,7 @@ class TaskController extends Controller
             //'latest_id'      => $latestStatus->getId(),
             'transitions'    => $transitions,
             'comments'       => $comments,
-        );
+        ];
 
         return new JsonResponse($data);
     }

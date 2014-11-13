@@ -130,8 +130,8 @@ class TaskManager implements TaskManagerInterface
      */
     public function findByCreatedByAndStatus(
         $userId,
-        array $status = array(),
-        array $sort = array(),
+        array $status = [],
+        array $sort = [],
         $limit = null,
         $start = null)
     {
@@ -156,7 +156,7 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function countByCreatedByAndStatus($userId, array $status = array())
+    public function countByCreatedByAndStatus($userId, array $status = [])
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb
@@ -172,8 +172,8 @@ class TaskManager implements TaskManagerInterface
      */
     public function findByAssignedToAndStatus(
         $userId,
-        array $status = array(),
-        array $sort = array(),
+        array $status = [],
+        array $sort = [],
         $limit = null,
         $start = null)
     {
@@ -201,7 +201,7 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function countByAssignedToAndStatus($userId, array $status = array())
+    public function countByAssignedToAndStatus($userId, array $status = [])
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb
@@ -220,8 +220,8 @@ class TaskManager implements TaskManagerInterface
      */
     public function findByInvolvementAndStatus(
         $userId,
-        array $status = array(),
-        array $sort = array(),
+        array $status = [],
+        array $sort = [],
         $limit = null,
         $start = null)
     {
@@ -246,7 +246,7 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function countByInvolvementAndStatus($userId, array $status = array())
+    public function countByInvolvementAndStatus($userId, array $status = [])
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb
@@ -260,7 +260,7 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByStatus(array $status = array(), array $sort = array(), $limit = null, $start = null)
+    public function findByStatus(array $status = [], array $sort = [], $limit = null, $start = null)
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
 
@@ -284,7 +284,7 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function countByStatus(array $status = array())
+    public function countByStatus(array $status = [])
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
         $qb
@@ -303,7 +303,7 @@ class TaskManager implements TaskManagerInterface
 
         $payload = json_encode($payload);
 
-        return $this->getTaskRepository()->findOneBy(array('payload' => $payload));
+        return $this->getTaskRepository()->findOneBy(['payload' => $payload]);
     }
 
     /**
@@ -357,7 +357,7 @@ class TaskManager implements TaskManagerInterface
      */
     public function updateTask(Task $task, UserInterface $byUser, $transitionName = null, UserInterface $assignUser = null, $comment = null)
     {
-        $changes = array();
+        $changes = [];
 
         if ($transitionName) {
             $oldState = $task->getFiniteState();
@@ -416,7 +416,7 @@ class TaskManager implements TaskManagerInterface
 
         $type = $this->types->get($task->getType());
 
-        $involvedUsers = array();
+        $involvedUsers = [];
         foreach ($task->getInvolvedUserIds() as $involvedUserId) {
             $involvedUser = $this->userManager->find($involvedUserId);
             if ($involvedUser) {

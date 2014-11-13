@@ -84,7 +84,7 @@ class DocumenttypesAssetProvider implements AssetProviderInterface
             file_put_contents($cacheFile, $this->scriptCompiler->compile($this->documenttypeManager->getCollection()));
         }
 
-        return array(
+        return [
             '@PhlexibleDocumenttypeBundle/Resources/scripts/Definitions.js',
 
             '@PhlexibleDocumenttypeBundle/Resources/scripts/DocumenttypesGrid.js',
@@ -96,7 +96,7 @@ class DocumenttypesAssetProvider implements AssetProviderInterface
             '@PhlexibleDocumenttypeBundle/Resources/scripts/menuhandle/DocumenttypesHandle.js',
 
             $cacheFile,
-        );
+        ];
     }
 
     /**
@@ -110,8 +110,8 @@ class DocumenttypesAssetProvider implements AssetProviderInterface
             file_put_contents($cacheFile, $this->cssCompiler->compile($this->documenttypeManager->getCollection()));
         }
 
-        return array(
+        return [
             (string) $cacheFile,
-        );
+        ];
     }
 }

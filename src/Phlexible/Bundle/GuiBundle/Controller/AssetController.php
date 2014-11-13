@@ -32,7 +32,7 @@ class AssetController extends Controller
         $scriptsBuilder = $this->get('phlexible_gui.asset.builder.scripts');
         $content = $scriptsBuilder->get();
 
-        return new Response($content, 200, array('Content-type' => 'text/javascript'));
+        return new Response($content, 200, ['Content-type' => 'text/javascript']);
     }
 
     /**
@@ -48,7 +48,7 @@ class AssetController extends Controller
         $cssBuilder = $this->get('phlexible_gui.asset.builder.css');
         $content = $cssBuilder->get($request->getBaseUrl(), $request->getBasePath());
 
-        return new Response($content, 200, array('Content-type' => 'text/css'));
+        return new Response($content, 200, ['Content-type' => 'text/css']);
     }
 
     /**
@@ -64,7 +64,7 @@ class AssetController extends Controller
         $iconsBuilder = $this->get('phlexible_gui.asset.builder.icons');
         $content = $iconsBuilder->get($request->getBaseUrl(), $request->getBasePath());
 
-        return new Response($content, 200, array('Content-type' => 'text/css'));
+        return new Response($content, 200, ['Content-type' => 'text/css']);
     }
 
     /**
@@ -81,7 +81,7 @@ class AssetController extends Controller
         $translationBuilder = $this->get('phlexible_gui.asset.builder.translations');
         $content = $translationBuilder->get($language);
 
-        return new Response($content, 200, array('Content-type' => 'text/javascript'));
+        return new Response($content, 200, ['Content-type' => 'text/javascript']);
     }
 
     /**
@@ -109,7 +109,7 @@ class AssetController extends Controller
             }
 
             $translator = $this->get('translator');
-            $text = html_entity_decode($translator->trans($key, array(), 'gui', $user->getInterfaceLanguage('en')));
+            $text = html_entity_decode($translator->trans($key, [], 'gui', $user->getInterfaceLanguage('en')));
         }
 
         if (!$color) {
@@ -131,7 +131,7 @@ class AssetController extends Controller
             return new Response('Error creating image.', 500);
         }
 
-        return new Response(file_get_contents($textimageFile), 200, array('Content-type' => 'image/png'));
+        return new Response(file_get_contents($textimageFile), 200, ['Content-type' => 'image/png']);
     }
 }
 

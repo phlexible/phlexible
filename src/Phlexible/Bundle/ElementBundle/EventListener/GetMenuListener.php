@@ -44,10 +44,10 @@ class GetMenuListener
         foreach ($siteroots as $siteroot) {
             $menuItem = new MenuItem('Phlexible.elements.menuhandle.ElementHandle', 'elements');
             $menuItem->setParameters(
-                array(
+                [
                     'siteroot_id' => $siteroot->getId(),
                     'title'       => $siteroot->getTitle(),
-                )
+                ]
             );
 
             $items->set('siteroot_' . $siteroot->getId(), $menuItem);

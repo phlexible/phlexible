@@ -32,7 +32,7 @@ class OnlinePortlet extends Portlet
     {
         $this
             ->setId('online-portlet')
-            ->setTitle($translator->trans('users.who_is_online', array(), 'gui'))
+            ->setTitle($translator->trans('users.who_is_online', [], 'gui'))
             ->setClass('Phlexible.users.portlet.Online')
             ->setIconClass('p-user-portlet-icon');
 
@@ -48,13 +48,13 @@ class OnlinePortlet extends Portlet
     {
         $users = $this->userManager->findLoggedInUsers();
 
-        $data = array();
+        $data = [];
         foreach ($users as $user) {
-            $data[] = array(
+            $data[] = [
                 'uid'      => $user->getId(),
                 'username' => $user->getUsername(),
                 'image'    => '/bundles/users/images/male-black-blonde.png',
-            );
+            ];
         }
 
         return $data;

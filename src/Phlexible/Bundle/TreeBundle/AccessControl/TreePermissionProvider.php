@@ -37,13 +37,13 @@ class TreePermissionProvider implements PermissionProviderInterface
      */
     public function getPermissions()
     {
-        return new PermissionCollection(array(
+        return new PermissionCollection([
             new Permission($this->contentClass, 'VIEW', 1, 'p-element-view-icon'),
             new Permission($this->contentClass, 'EDIT', 2, 'p-element-edit-icon'),
             new Permission($this->contentClass, 'CREATE', 4, 'p-element-add-icon'),
             new Permission($this->contentClass, 'DELETE', 8, 'p-element-delete-icon'),
             new Permission($this->contentClass, 'PUBLISH', 16, 'p-element-publish-icon'),
             new Permission($this->contentClass, 'ACCESS', 32, 'p-element-tab_rights-icon'),
-        ));
+        ]);
     }
 }

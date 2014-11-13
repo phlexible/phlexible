@@ -29,10 +29,10 @@ class DeleteCommand extends ContainerAwareCommand
         $this
             ->setName('user:delete')
             ->setDefinition(
-                array(
+                [
                     new InputArgument('username', InputArgument::REQUIRED, 'Username / User ID to delete'),
                     new InputArgument('successor', null, InputArgument::REQUIRED, 'Username / User ID to set as successor'),
-                )
+                ]
             )
             ->setDescription('Delete user');
     }

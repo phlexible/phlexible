@@ -58,10 +58,10 @@ class DeleteFolderChecker
         }
 
         $folderUsageRepository = $this->entityManager->getRepository('PhlexibleMediaManagerBundle:FolderUsage');
-        $folderUsages = $folderUsageRepository->findBy(array('folder' => $folder));
+        $folderUsages = $folderUsageRepository->findBy(['folder' => $folder]);
 
         foreach ($folderUsages as $folderUsage) {
-            if (in_array($folderUsage->getStatus(), array(FolderUsage::STATUS_ONLINE, FolderUsage::STATUS_LATEST))) {
+            if (in_array($folderUsage->getStatus(), [FolderUsage::STATUS_ONLINE, FolderUsage::STATUS_LATEST])) {
                 return false;
             }
             if ($folderUsage->getStatus() === FolderUsage::STATUS_OLD && $this->deletePolicy === 'hide_old') {

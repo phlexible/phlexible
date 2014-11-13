@@ -41,10 +41,10 @@ class IconController extends Controller
             ->create(
                 $cacheFilename,
                 'image/png',
-                array(
+                [
                     'absolute_path' => true,
                     'inline' => true,
-                )
+                ]
             );
     }
 

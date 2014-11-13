@@ -30,7 +30,7 @@ class ListCommand extends ContainerAwareCommand
         $this
             ->setName('queue:list')
             ->setDefinition(
-                array(
+                [
                     new InputOption('pending', null, InputOption::VALUE_NONE, 'List pending jobs'),
                     new InputOption('running', null, InputOption::VALUE_NONE, 'List running jobs'),
                     new InputOption('finished', null, InputOption::VALUE_NONE, 'List finished jobs'),
@@ -39,7 +39,7 @@ class ListCommand extends ContainerAwareCommand
                     new InputOption('aborted', null, InputOption::VALUE_NONE, 'List aborted jobs'),
                     new InputOption('limit', null, InputOption::VALUE_REQUIRED, 'Limit', 10),
                     new InputOption('offset', null, InputOption::VALUE_REQUIRED, 'Offset', 0),
-                )
+                ]
             )
             ->setDescription('List jobs');
     }
@@ -52,24 +52,24 @@ class ListCommand extends ContainerAwareCommand
         $jobManager = $this->getContainer()->get('phlexible_queue.job_manager');
 
         if ($input->getOption('pending')) {
-            $criteria = array('state' => Job::STATE_PENDING);
+            $criteria = ['state' => Job::STATE_PENDING];
         } elseif ($input->getOption('running')) {
-            $criteria = array('state' => Job::STATE_RUNNING);
+            $criteria = ['state' => Job::STATE_RUNNING];
         } elseif ($input->getOption('finished')) {
-            $criteria = array('state' => Job::STATE_FINISHED);
+            $criteria = ['state' => Job::STATE_FINISHED];
         } elseif ($input->getOption('failed')) {
-            $criteria = array('statue' => Job::STATE_FAILED);
+            $criteria = ['statue' => Job::STATE_FAILED];
         } elseif ($input->getOption('suspended')) {
-            $criteria = array('statue' => Job::STATE_SUSPENDED);
+            $criteria = ['statue' => Job::STATE_SUSPENDED];
         } elseif ($input->getOption('aborted')) {
-            $criteria = array('statue' => Job::STATE_ABORTED);
+            $criteria = ['statue' => Job::STATE_ABORTED];
         } else {
-            $criteria = array();
+            $criteria = [];
         }
 
         $jobs = $jobManager->findBy(
             $criteria,
-            array('createdAt' => 'DESC'),
+            ['createdAt' => 'DESC'],
             $input->getOption('limit'),
             $input->getOption('offset')
         );
@@ -83,18 +83,18 @@ class ListCommand extends ContainerAwareCommand
         $table = new Table($output);
 
         // set header
-        $table->setHeaders(array('ID', 'Command', 'Priority', 'Status', 'Created At', 'Execute After'));
+        $table->setHeaders(['ID', 'Command', 'Priority', 'Status', 'Created At', 'Execute After']);
 
         foreach ($jobs as $job) {
             $table->addRow(
-                array(
+                [
                     $job->getId(),
                     $job->getCommand(),
                     $job->getPriority(),
                     $job->getState(),
                     $job->getCreatedAt()->format('Y-m-d H:i:s'),
                     $job->getExecuteAfter()->format('Y-m-d H:i:s'),
-                )
+                ]
             );
         }
 

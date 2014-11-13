@@ -130,7 +130,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
      * @param Connection       $conn
      * @param bool             $isRoot
      */
-    private function insertStructure(ElementStructure $elementStructure, Connection $conn, $isRoot = false, array $entities = array())
+    private function insertStructure(ElementStructure $elementStructure, Connection $conn, $isRoot = false, array $entities = [])
     {
         $structureRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementStructure');
 
@@ -168,9 +168,9 @@ class ElementStructureManager implements ElementStructureManagerInterface
 
         foreach ($elementStructure->getLanguages() as $language) {
             $valueEntities = $valueRepository->findBy(
-                array(
+                [
                     'structure' => $structureEntity,
-                )
+                ]
             );
             foreach ($valueEntities as $valueEntity) {
                 $this->entityManager->remove($valueEntity);
@@ -245,7 +245,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
      */
     private function extractLinks(ElementStructure $elementStructure)
     {
-        $links = array();
+        $links = [];
 
         foreach ($elementStructure->getLanguages() as $language) {
             foreach ($elementStructure->getValues($language) as $elementStructureValue) {

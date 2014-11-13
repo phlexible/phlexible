@@ -69,33 +69,33 @@ class XmlParser implements ParserInterface
         $modifyUserNodes = $dom->documentElement->getElementsByTagName('modifyUser');
         $modifyUser = $modifyUserNodes->length ? $modifyUserNodes->item(0)->textContent : '';
 
-        $mappings = array();
+        $mappings = [];
         $mappingNodes = $dom->documentElement->evaluate('mappings/mapping');
         if ($mappingNodes->length) {
             foreach ($mappingNodes as $mappingNode) {
                 /* @var $mappingNode Element */
                 $key = $mappingNode->getAttribute('key');
                 $pattern = $mappingNode->getAttribute('pattern');
-                $fields = array();
+                $fields = [];
                 $fieldNodes = $dom->xpath()->evaluate('fields/field', $mappingNode);
                 if ($fieldNodes->length) {
                     foreach ($fieldNodes as $fieldNode) {
                         /* @var $fieldNode Element */
-                        $fields[] = array(
+                        $fields[] = [
                             'dsId'  => $fieldNode->getAttribute('dsId'),
                             'title' => $fieldNode->getAttribute('title'),
                             'index' => (int) $fieldNode->getAttribute('index'),
-                        );
+                        ];
                     }
                 }
-                $mappings[$key] = array(
+                $mappings[$key] = [
                     'pattern' => $pattern,
                     'fields'  => $fields,
-                );
+                ];
             }
         }
 
-        $titles = array();
+        $titles = [];
         $titleNodes = $dom->documentElement->evaluate('titles/title');
         if ($titleNodes->length) {
             foreach ($titleNodes as $titleNode) {

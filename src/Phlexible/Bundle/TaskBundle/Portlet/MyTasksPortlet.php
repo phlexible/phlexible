@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\TaskBundle\Portlet;
 
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
-use Phlexible\Bundle\TaskBundle\Entity\Task;
 use Phlexible\Bundle\TaskBundle\Model\TaskManagerInterface;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeCollection;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
@@ -65,7 +64,7 @@ class MyTasksPortlet extends Portlet
     {
         $this
             ->setId('my-tasks-portlet')
-            ->setTitle($translator->trans('tasks.my_tasks', array(), 'gui'))
+            ->setTitle($translator->trans('tasks.my_tasks', [], 'gui'))
             //->setDescription('Displays your active tasks')
             ->setClass('Phlexible.tasks.portlet.MyTasks')
             ->setIconClass('p-task-portlet-icon')
@@ -89,18 +88,18 @@ class MyTasksPortlet extends Portlet
 
         $tasks = $this->taskManager->findByAssignedToAndStatus(
             $this->securityContext->getToken()->getUser()->getId(),
-            array(),
-            array(),
+            [],
+            [],
             $tasksToShow
         );
 
-        $data = array();
+        $data = [];
 
         foreach ($tasks as $task) {
             $createUser   = $this->userManager->find($task->getCreateUserId());
             $type         = $this->types->get($task->getType());
 
-            $data[] = array(
+            $data[] = [
                 'id'          => $task->getId(),
                 'text'        => $type->getText($task),
                 'type'        => $task->getType(),
@@ -109,7 +108,7 @@ class MyTasksPortlet extends Portlet
                 'create_user' => $createUser->getDisplayName(),
                 'create_uid'  => $task->getCreateUserId(),
                 'create_date' => $task->getCreatedAt()->format('Y-m-d H:i:s'),
-            );
+            ];
         }
 
         return $data;

@@ -58,7 +58,7 @@ class BatchResolver
      *
      * @return Queue
      */
-    public function resolve(Batch $batch, array $flags = array())
+    public function resolve(Batch $batch, array $flags = [])
     {
         $queue = new Queue();
 

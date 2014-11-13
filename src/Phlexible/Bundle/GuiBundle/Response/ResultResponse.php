@@ -31,8 +31,8 @@ class ResultResponse extends JsonResponse
      */
     public function __construct($result = self::RESULT_SUCCESS,
                                 $message = null,
-                                array $data = array(),
-                                array $additional = array())
+                                array $data = [],
+                                array $additional = [])
     {
         parent::__construct();
 
@@ -49,16 +49,16 @@ class ResultResponse extends JsonResponse
      */
     public function setResult($result = self::RESULT_SUCCESS,
                               $message = null,
-                              array $data = array(),
-                              array $additional = array())
+                              array $data = [],
+                              array $additional = [])
     {
         $this->headers->set('X-Phlexible-Response', 'result');
 
-        $values = array(
+        $values = [
             'success' => $result,
             'msg'     => $message,
             'data'    => $data,
-        );
+        ];
 
         if (is_array($additional) && count($additional)) {
             foreach ($additional as $key => $value) {

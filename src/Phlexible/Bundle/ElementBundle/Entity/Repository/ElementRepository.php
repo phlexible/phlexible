@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\ElementBundle\ElementsMessage;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

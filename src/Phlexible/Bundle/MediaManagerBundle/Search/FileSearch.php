@@ -71,7 +71,7 @@ class FileSearch implements SearchProviderInterface
      */
     public function search($query)
     {
-        $files = array();
+        $files = [];
         foreach ($this->siteManager->getAll() as $site) {
             $foundFiles = $site->search($query);
             if ($foundFiles) {
@@ -79,9 +79,9 @@ class FileSearch implements SearchProviderInterface
             }
         }
 
-        $folders = array();
+        $folders = [];
 
-        $results = array();
+        $results = [];
         foreach ($files as $file) {
             /* @var $file FileInterface */
 
@@ -108,13 +108,13 @@ class FileSearch implements SearchProviderInterface
                 $file->getCreatedAt()->format('U'),
                 '/media/' . $file->getId() . '/_mm_small',
                 'Mediamanager File Search',
-                array(
+                [
                     'xtype'      => 'Phlexible.mediamanager.menuhandle.MediaHandle',
-                    'parameters' => array(
+                    'parameters' => [
                         'start_file_id'     => $file->getId(),
                         'start_folder_path' => $folderPath
-                    ),
-                )
+                    ],
+                ]
             );
         }
 

@@ -106,7 +106,7 @@ class GroupManager implements GroupManagerInterface
      */
     public function findByName($name)
     {
-        return $this->groupRepository->findOneBy(array('name' => $name));
+        return $this->groupRepository->findOneBy(['name' => $name]);
     }
 
     /**
@@ -120,7 +120,7 @@ class GroupManager implements GroupManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findOneBy(array $criteria, $order = array())
+    public function findOneBy(array $criteria, $order = [])
     {
         return $this->groupRepository->findOneBy($criteria, $order);
     }
@@ -138,7 +138,7 @@ class GroupManager implements GroupManagerInterface
      */
     public function checkName($name)
     {
-        return $this->findOneBy(array('name' => $name)) ? true : false;
+        return $this->findOneBy(['name' => $name]) ? true : false;
     }
 
     /**

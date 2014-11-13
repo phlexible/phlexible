@@ -14,7 +14,6 @@ use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementsMessage;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Event\ElementSourceEvent;
-use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
 use Phlexible\Bundle\ElementBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementBundle\Exception\UpdateCancelledException;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;

@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
 
 /**

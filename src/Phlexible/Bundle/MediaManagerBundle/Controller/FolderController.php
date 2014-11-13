@@ -65,7 +65,7 @@ class FolderController extends Controller
 
         $user = $this->getUser();
 
-        $children = array();
+        $children = [];
         foreach ($subFolders as $subFolder) {
             /* @var $subFolder FolderInterface */
 
@@ -83,7 +83,7 @@ class FolderController extends Controller
             */
             $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));
 
-            $tmp = array(
+            $tmp = [
                 'id'        => $subFolder->getId(),
                 'text'      => $subFolder->getName(),
                 'leaf'      => false,
@@ -94,13 +94,13 @@ class FolderController extends Controller
                 'allowChildren' => true,
                 'isTarget'  => true,
                 'rights'    => $userRights,
-            );
+            ];
 
             if ($site->countFoldersByParentFolder($subFolder)) {
                 $tmp['children'] = $this->recurseFolders($subFolder);
                 $tmp['expanded'] = false;
             } else {
-                $tmp['children'] = array();
+                $tmp['children'] = [];
                 $tmp['expanded'] = true;
             }
 
@@ -122,7 +122,7 @@ class FolderController extends Controller
     {
         $folderId = $request->get('node', null);
 
-        $data = array();
+        $data = [];
 
         $slots = new Slots();
         $siteManager = $this->get('phlexible_media_site.site_manager');
@@ -153,8 +153,8 @@ class FolderController extends Controller
 
                 $slot = new SiteSlot();
                 $slot->setData(
-                    array(
-                        array(
+                    [
+                        [
                             'id'        => $rootFolder->getId(),
                             'site_id'   => $site->getId(),
                             'text'      => $rootFolder->getName(),
@@ -166,8 +166,8 @@ class FolderController extends Controller
                             'allowDrop' => true,
                             'versions'  => $site->hasFeature('versions'),
                             'rights'    => $userRights,
-                        )
-                    )
+                        ]
+                    ]
                 );
 
                 $slots->append($slot);
@@ -225,7 +225,7 @@ class FolderController extends Controller
                     $usedIn = $folderUsageService->getUsedIn($folder);
                     // TODO: also files in folder!
 
-                    $tmp = array(
+                    $tmp = [
                         'id'        => $subFolder->getId(),
                         'site_id'   => $site->getId(),
                         'text'      => $subFolder->getName(),
@@ -238,12 +238,12 @@ class FolderController extends Controller
                         'rights'    => $userRights,
                         'used_in'   => $usedIn,
                         'used'      => $usage,
-                    );
+                    ];
 
                     if (!$site->countFoldersByParentFolder($subFolder)) {
                         //$tmp['leaf'] = true;
                         $tmp['expanded'] = true;
-                        $tmp['children'] = array();
+                        $tmp['children'] = [];
                     }
 
                     $data[] = $tmp;
@@ -282,14 +282,14 @@ class FolderController extends Controller
         try {
             $folder = $site->createFolder($parentFolder, $name, new AttributeBag(), $this->getUser()->getId());
 
-            return new ResultResponse(true, 'Folder created.', array(
+            return new ResultResponse(true, 'Folder created.', [
                 'folder_id'   => $folder->getId(),
                 'folder_name' => $folder->getName()
-            ));
+            ]);
         } catch (AlreadyExistsException $e) {
-            return new ResultResponse(false, $e->getMessage(), array(
+            return new ResultResponse(false, $e->getMessage(), [
                 'folder_name' => 'Folder already exists.'
-            ));
+            ]);
         } catch (\Exception $e) {
             return new ResultResponse(false, $e->getMessage());
         }
@@ -314,9 +314,9 @@ class FolderController extends Controller
 
         $site->renameFolder($folder, $folderName, $this->getUser()->getId());
 
-        return new ResultResponse(true, 'Folder renamed.', array(
+        return new ResultResponse(true, 'Folder renamed.', [
             'folder_name' => $folderName
-        ));
+        ]);
     }
 
     /**
@@ -341,7 +341,7 @@ class FolderController extends Controller
 
         $site->deleteFolder($folder, $this->getUser()->getId());
 
-        return new ResultResponse(true, 'Folder deleted', array('parent_id' => $folder->getParentId()));
+        return new ResultResponse(true, 'Folder deleted', ['parent_id' => $folder->getParentId()]);
     }
 
     /**
@@ -387,7 +387,7 @@ class FolderController extends Controller
             $calculator = new SizeCalculator();
             $calculatedSize = $calculator->calculate($site, $folder);
 
-            $data = array(
+            $data = [
                 'title'       => $folder->getName(),
                 'type'        => 'folder',
                 'path'        => '/' . $folder->getPath(),
@@ -398,9 +398,9 @@ class FolderController extends Controller
                 'create_user' => $folder->getCreateUserId(),
                 'modify_time' => $folder->getModifiedAt()->format('U') * 1000,
                 'modify_user' => $folder->getModifyUserId(),
-            );
+            ];
         } catch (\Exception $e) {
-            $data = array();
+            $data = [];
         }
 
         return new JsonResponse($data);

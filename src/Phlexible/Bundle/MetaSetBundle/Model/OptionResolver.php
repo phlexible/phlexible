@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Model;
 
-use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
 
 /**
@@ -29,17 +27,17 @@ class OptionResolver
         $type = $field->getType();
 
         if ($type === 'select') {
-            $options = array();
+            $options = [];
             foreach (explode(',', $field->getOptions()) as $value) {
-                $options[] = array($value, $value);
+                $options[] = [$value, $value];
             }
 
             return $options;
         } elseif ($type === 'suggest') {
             $dataSourceId = $field->getOptions();
-            $options = array(
+            $options = [
                 'source_id' => $dataSourceId,
-            );
+            ];
 
             return $options;
         }

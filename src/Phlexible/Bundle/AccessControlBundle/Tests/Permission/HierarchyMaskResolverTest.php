@@ -34,7 +34,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace
             ->setMask(1 | 2);
 
-        $mask = $this->resolver->resolve(array($ace));
+        $mask = $this->resolver->resolve([$ace]);
 
         $this->assertEquals(1 | 2, $mask);
     }
@@ -49,7 +49,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace2
             ->setMask(4);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2));
+        $mask = $this->resolver->resolve([$ace1, $ace2]);
 
         $this->assertEquals(1 | 2 | 4, $mask);
     }
@@ -64,7 +64,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace2
             ->setStopMask(1 | 2);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2));
+        $mask = $this->resolver->resolve([$ace1, $ace2]);
 
         $this->assertEquals(0, $mask);
     }
@@ -80,7 +80,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
             ->setMask(4)
             ->setStopMask(1);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2));
+        $mask = $this->resolver->resolve([$ace1, $ace2]);
 
         $this->assertEquals(2 | 4, $mask);
     }
@@ -96,7 +96,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace2
             ->setMask(4);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2));
+        $mask = $this->resolver->resolve([$ace1, $ace2]);
 
         $this->assertEquals(1 | 4, $mask);
     }
@@ -113,7 +113,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
             ->setStopMask(1)
             ->setMask(8);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2));
+        $mask = $this->resolver->resolve([$ace1, $ace2]);
 
         $this->assertEquals(4 | 8, $mask);
     }
@@ -132,7 +132,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace3
             ->setMask(8);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
+        $mask = $this->resolver->resolve([$ace1, $ace2, $ace3]);
 
         $this->assertEquals(1 | 2 | 4 | 8, $mask);
     }
@@ -151,7 +151,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace3
             ->setStopMask(1 | 2 | 4);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
+        $mask = $this->resolver->resolve([$ace1, $ace2, $ace3]);
 
         $this->assertEquals(0, $mask);
     }
@@ -172,7 +172,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
             ->setMask(8)
             ->setStopMask(4);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
+        $mask = $this->resolver->resolve([$ace1, $ace2, $ace3]);
 
         $this->assertEquals(2 | 8, $mask);
     }
@@ -193,7 +193,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace3
             ->setMask(8);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
+        $mask = $this->resolver->resolve([$ace1, $ace2, $ace3]);
 
         $this->assertEquals(4 | 8, $mask);
     }
@@ -215,7 +215,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace3
             ->setMask(32);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2, $ace3));
+        $mask = $this->resolver->resolve([$ace1, $ace2, $ace3]);
 
         $this->assertEquals(4 | 16 | 32, $mask);
     }

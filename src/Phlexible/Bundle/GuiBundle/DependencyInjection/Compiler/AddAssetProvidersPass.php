@@ -28,13 +28,13 @@ class AddAssetProvidersPass implements CompilerPassInterface
             'extjs', new Reference('phlexible_gui.templating.asset.extjs_package'),
         ]);
 
-        $providers = array();
+        $providers = [];
         foreach ($container->findTaggedServiceIds('phlexible_gui.asset_provider') as $id => $attributes) {
             $priority = isset($attributes[0]['priority']) ? (int) $attributes[0]['priority'] : 0;
             $providers[$priority][] = new Reference($id);
         }
         krsort($providers);
-        $flatProviders = array();
+        $flatProviders = [];
         foreach ($providers as $priorityProviders) {
             foreach ($priorityProviders as $priorityProvider) {
                 $flatProviders[] = $priorityProvider;
@@ -42,7 +42,7 @@ class AddAssetProvidersPass implements CompilerPassInterface
         }
         $providers = $container->findDefinition('phlexible_gui.asset.asset_providers');
         foreach ($flatProviders as $flatProvider) {
-            $providers->addMethodCall('addAssetProvider', array(new Reference($flatProvider)));
+            $providers->addMethodCall('addAssetProvider', [new Reference($flatProvider)]);
         }
     }
 }

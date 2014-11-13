@@ -74,7 +74,7 @@ class AccessManager implements AccessManagerInterface
     {
         $this->loadEntries();
 
-        $rights = array();
+        $rights = [];
         foreach ($this->entries as $entry) {
             foreach ($criteria as $key => $value) {
                 $isArray = is_array($value);
@@ -97,7 +97,7 @@ class AccessManager implements AccessManagerInterface
     {
         $this->loadEntries();
 
-        $entries = array();
+        $entries = [];
         foreach ($this->entries as $entry) {
             foreach ($securityTypes as $securityType) {
                 foreach ($contentIdPath as $contentId) {
@@ -202,12 +202,12 @@ class AccessManager implements AccessManagerInterface
      */
     public function removeRight($type, $contentType, $contentId, $securityType = null, $securityId = null, $permission = null, $language = null)
     {
-        $criteria = array(
+        $criteria = [
             'right_type'       => $type,
             'content_type'     => $contentType,
             'content_id'       => $contentId,
             'content_language' => null,
-        );
+        ];
 
         if ($securityType !== null) {
             $criteria['object_type'] = $securityType;

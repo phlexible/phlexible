@@ -33,7 +33,7 @@ class RenderConfigurator
     /**
      * @var ConfiguratorInterface[]
      */
-    private $configurators = array();
+    private $configurators = [];
 
     /**
      * @param EventDispatcherInterface $dispatcher
