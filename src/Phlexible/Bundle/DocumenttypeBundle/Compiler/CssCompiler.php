@@ -18,19 +18,6 @@ use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeCollection;
 class CssCompiler implements CompilerInterface
 {
     /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @param string $cacheDir
-     */
-    public function __construct($cacheDir)
-    {
-        $this->cacheDir = $cacheDir;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getClassname()

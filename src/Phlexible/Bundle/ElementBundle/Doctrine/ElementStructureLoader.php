@@ -26,11 +26,6 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 class ElementStructureLoader
 {
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
      * @var Connection
      */
     private $connection;
@@ -46,8 +41,8 @@ class ElementStructureLoader
     private $xmlParser;
 
     /**
-     * @param EntityManager      $entityManager
-     * @param FieldRegistry      $fieldRegistry
+     * @param EntityManager $entityManager
+     * @param FieldRegistry $fieldRegistry
      */
     public function __construct(EntityManager $entityManager, FieldRegistry $fieldRegistry)
     {
@@ -174,9 +169,8 @@ class ElementStructureLoader
 
                         if (!isset($structures[$row['parent_id']])) {
                             continue;
-                            echo PHP_EOL.$node->getName()." ".$node->getDsId().PHP_EOL;
-                            die;
                         }
+
                         /* @var $parentStructure ElementStructure */
                         $parentStructure = $structures[$row['parent_id']];
                         $parentStructure->addStructure($structure);

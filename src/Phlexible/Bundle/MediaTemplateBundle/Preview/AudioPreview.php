@@ -88,7 +88,7 @@ class AudioPreview implements PreviewerInterface
 
         $extension = $this->applier->getExtension($template);
         $cacheFilename = $this->cacheDir . 'preview_audio.' . $extension;
-        $audio = $this->applier->apply($template, $filePath, $cacheFilename);
+        $this->applier->apply($template, $filePath, $cacheFilename);
 
         if ($debug) {
             /* @var $logger \Monolog\Logger */

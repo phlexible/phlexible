@@ -5,17 +5,14 @@ services:
     phlexible_documenttype.compiler.php:
         class: Phlexible\Bundle\DocumenttypeBundle\Compiler\PhpCompiler
         public: false
-        arguments: [%phlexible_documenttype.compiler.cache_dir%]
 
     phlexible_documenttype.compiler.script:
         class: Phlexible\Bundle\DocumenttypeBundle\Compiler\ScriptCompiler
         public: false
-        arguments: [%phlexible_documenttype.compiler.cache_dir%]
 
     phlexible_documenttype.compiler.css:
         class: Phlexible\Bundle\DocumenttypeBundle\Compiler\CssCompiler
         public: false
-        arguments: [%phlexible_documenttype.compiler.cache_dir%]
 
     # asset providers
     phlexible_documenttype.asset_provider:

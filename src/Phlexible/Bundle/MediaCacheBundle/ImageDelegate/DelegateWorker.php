@@ -50,11 +50,6 @@ class DelegateWorker
     private $delegateDirWaiting;
 
     /**
-     * @var string
-     */
-    private $delegateDirMissing;
-
-    /**
      * @param TemplateManagerInterface     $templateManager
      * @param DocumenttypeManagerInterface $documenttypeManager
      * @param ImageTemplateApplier         $applier
@@ -71,7 +66,6 @@ class DelegateWorker
 
         $this->delegateDirClean   = $delegateDir . 'clean/';
         $this->delegateDirWaiting = $delegateDir . 'waiting/';
-        $this->delegateDirMissing = $delegateDir . 'missing/';
     }
 
     /**

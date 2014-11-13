@@ -82,7 +82,6 @@ class CheckCommand extends ContainerAwareCommand
 
         $em->flush();
 
-        $message = null;
         $subject = null;
         $total = null;
         $body = 'Changes:';

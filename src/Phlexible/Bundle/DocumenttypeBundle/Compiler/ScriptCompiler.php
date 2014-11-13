@@ -18,19 +18,6 @@ use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeCollection;
 class ScriptCompiler implements CompilerInterface
 {
     /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @param string $cacheDir
-     */
-    public function __construct($cacheDir)
-    {
-        $this->cacheDir = $cacheDir;
-    }
-
-    /**
      * @return string
      */
     public function getClassname()
