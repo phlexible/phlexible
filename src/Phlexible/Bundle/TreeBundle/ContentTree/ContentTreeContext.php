@@ -215,7 +215,7 @@ class ContentTreeContext
      *
      * @return bool
      */
-    public function online($language = null)
+    public function available($language = null)
     {
         return $this->node->getTree()->isPublished($this->node, $language);
     }

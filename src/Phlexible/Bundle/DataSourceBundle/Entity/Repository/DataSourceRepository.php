@@ -25,44 +25,44 @@ class DataSourceRepository extends EntityRepository
      * @param array  $activeKeys
      * @param array  $inactiveKeys
      */
-    protected function _updateValues($dataSourceId, $language, array $activeKeys, array $inactiveKeys)
+    protected function updateValues($dataSourceId, $language, array $activeKeys, array $inactiveKeys)
     {
         $oldKeys = $this->getAllValuesByDataSourceId($dataSourceId, $language);
         $allKeys = array_merge($activeKeys, $inactiveKeys);
 
-        $oldKeysL = $this->_lowerValue($oldKeys);
+        $oldKeysL = $this->lowerValue($oldKeys);
 
         // delete values removed from data source
-        $this->_deleteValues(
+        $this->deleteValues(
             $dataSourceId,
-            array_keys(array_diff($oldKeysL, $this->_lowerValue($allKeys)))
+            array_keys(array_diff($oldKeysL, $this->lowerValue($allKeys)))
         );
 
         // insert values added to data source
-        $this->_insertValues(
+        $this->insertValues(
             $dataSourceId,
             $language,
-            array_diff_key($this->_lowerValueAsKey($activeKeys), $this->_lowerValueAsKey($oldKeys)),
+            array_diff_key($this->lowerValueAsKey($activeKeys), $this->lowerValueAsKey($oldKeys)),
             true
         );
 
-        $this->_insertValues(
+        $this->insertValues(
             $dataSourceId,
             $language,
-            array_diff_key($this->_lowerValueAsKey($inactiveKeys), $this->_lowerValueAsKey($oldKeys)),
+            array_diff_key($this->lowerValueAsKey($inactiveKeys), $this->lowerValueAsKey($oldKeys)),
             false
         );
 
         // fix existing values
-        $this->_fixValues(
+        $this->fixValues(
             $dataSourceId,
-            array_keys(array_intersect($oldKeysL, $this->_lowerValue($activeKeys))),
+            array_keys(array_intersect($oldKeysL, $this->lowerValue($activeKeys))),
             true
         );
 
-        $this->_fixValues(
+        $this->fixValues(
             $dataSourceId,
-            array_keys(array_intersect($oldKeysL, $this->_lowerValue($inactiveKeys))),
+            array_keys(array_intersect($oldKeysL, $this->lowerValue($inactiveKeys))),
             false
         );
 
@@ -75,7 +75,7 @@ class DataSourceRepository extends EntityRepository
      * @param array  $existingIds
      * @param bool   $isActive
      */
-    protected function _fixValues($dataSourceId, array $existingIds, $isActive)
+    protected function fixValues($dataSourceId, array $existingIds, $isActive)
     {
         if (!count($existingIds)) {
             return;
@@ -103,7 +103,7 @@ class DataSourceRepository extends EntityRepository
      *
      * @throws InvalidArgumentException if language not set correctly
      */
-    protected function _insertValues($dataSourceId, $language, array $insertedKeys, $isActive)
+    protected function insertValues($dataSourceId, $language, array $insertedKeys, $isActive)
     {
         if (2 !== strlen($language)) {
             $msg = 'Language not set correctly. Found: ' . $language;
@@ -133,7 +133,7 @@ class DataSourceRepository extends EntityRepository
      * @param string $dataSourceId
      * @param array  $deletedIds
      */
-    protected function _deleteValues($dataSourceId, array $deletedIds = null)
+    protected function deleteValues($dataSourceId, array $deletedIds = null)
     {
         if (null === $deletedIds) {
             // delete all
@@ -154,7 +154,7 @@ class DataSourceRepository extends EntityRepository
         }
     }
 
-    protected function _lowerValueAsKey(array $values)
+    protected function lowerValueAsKey(array $values)
     {
         $result = array();
 
@@ -165,7 +165,7 @@ class DataSourceRepository extends EntityRepository
         return $result;
     }
 
-    protected function _lowerValue(array $values)
+    protected function lowerValue(array $values)
     {
         foreach ($values as $key => $value) {
             $values[$key] = mb_strtolower($value, 'UTF-8');

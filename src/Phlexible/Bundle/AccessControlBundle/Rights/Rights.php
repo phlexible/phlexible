@@ -69,7 +69,7 @@ class Rights
         $x = $resolver->resolve($entries);
         ldd($x);
 
-        $sort = array();
+        $sort = [];
         foreach ($entries as $idx => $entry) {
             $sort[$idx] = array_search((int) $entry->getContentId(), $contentIdPath);
 
@@ -83,8 +83,8 @@ class Rights
 
         array_multisort($sort, $entries);
 
-        $userIds  = array();
-        $groupIds = array();
+        $userIds  = [];
+        $groupIds = [];
 
         foreach ($entries as $entry) {
             if ($entry->getSecurityType() === 'uid' && !array_key_exists($entry->getSecurityId(), $userIds)) {
@@ -94,12 +94,12 @@ class Rights
             }
         }
 
-        $userSubjects = array();
+        $userSubjects = [];
         if (count($userIds)) {
             $userSubjects = $securityFetchers['uid']($userIds);
         }
 
-        $groupSubjects = array();
+        $groupSubjects = [];
         if (count($groupIds)) {
             $groupSubjects = $securityFetchers['gid']($groupIds);
         }
@@ -109,7 +109,7 @@ class Rights
         $type = "$rightType-$contentType";
         $permissions = array_keys($this->permissions->getByType($type));
 
-        return $this->_getRightsForSubjects(
+        return $this->getRightsForSubjects(
             $contentId,
             $subjectsData,
             $permissions,
@@ -117,17 +117,17 @@ class Rights
         );
     }
 
-    private function _getRightsForSubjects($contentId, array $subjectsData, array $allRights, array $rightsData)
+    private function getRightsForSubjects($contentId, array $subjectsData, array $allRights, array $rightsData)
     {
-        $subjects = array();
+        $subjects = [];
 
         $allRights = array_flip($allRights);
         foreach ($allRights as $right => $rightsRow) {
-            $allRights[$right] = array(
+            $allRights[$right] = [
                 'right'  => $right,
                 'status' => self::RIGHT_STATUS_UNSET,
                 'info'   => 'not_set',
-            );
+            ];
         }
 
         foreach ($rightsData as $rightsRow) {
@@ -143,7 +143,7 @@ class Rights
             $key         = $objectType.'__'.$objectId.'__'.$language;
 
             if (empty($subjects[$key])) {
-                $subjects[$key] = array(
+                $subjects[$key] = [
                     'type'        => $objectType === 'uid' ? 'user' : 'group',
                     'object_type' => $objectType,
                     'object_id'   => $objectId,
@@ -155,7 +155,7 @@ class Rights
                     'inherited'   => 0,
                     'set_here'    => 1,
                     'restore'     => 0,
-                );
+                ];
             }
 
             $subjects[$key]['rights'][$right]['status'] = $status;

@@ -6,19 +6,6 @@ services:
         tags:
             - {name: phlexible_gui.asset_provider}
 
-    # dwoo plugins
-    phlexible_frontend_media.dwoo.plugin.documentlist:
-        class: Phlexible\Bundle\FrontendMediaBundle\Plugin\Documentlist
-        public: false
-        tags:
-            - {name: phlexible_dwoo.plugin, alias: mwDocumentlist}
-
-    phlexible_frontend_media.dwoo.plugin.gallery:
-        class: Phlexible\Bundle\FrontendMediaBundle\Plugin\Gallery
-        public: false
-        tags:
-            - {name: phlexible_dwoo.plugin, alias: mwGallery}
-
     # event listeners
     phlexible_frontend_media.listener.render:
         class: Phlexible\Bundle\FrontendMediaBundle\EventListener\RenderListener
