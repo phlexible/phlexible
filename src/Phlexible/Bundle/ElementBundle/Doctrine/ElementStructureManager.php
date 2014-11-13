@@ -18,8 +18,6 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
-use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Element structure manager
@@ -49,37 +47,21 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private $linkExtractor;
 
     /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
-     * @var MessagePoster
-     */
-    private $messagePoster;
-
-    /**
      * @param EntityManager                 $entityManager
      * @param ElementStructureLoader        $elementStructureLoader
      * @param FieldRegistry                 $fieldRegistry
      * @param LinkExtractor                 $linkExtractor
-     * @param EventDispatcherInterface      $dispatcher
-     * @param MessagePoster                 $messagePoster
      */
     public function __construct(
         EntityManager $entityManager,
         ElementStructureLoader $elementStructureLoader,
         FieldRegistry $fieldRegistry,
-        LinkExtractor $linkExtractor,
-        EventDispatcherInterface $dispatcher,
-        MessagePoster $messagePoster)
+        LinkExtractor $linkExtractor)
     {
         $this->entityManager = $entityManager;
         $this->elementStructureLoader = $elementStructureLoader;
         $this->fieldRegistry = $fieldRegistry;
         $this->linkExtractor = $linkExtractor;
-        $this->dispatcher = $dispatcher;
-        $this->messagePoster = $messagePoster;
     }
 
     /**

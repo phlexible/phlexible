@@ -66,7 +66,6 @@ services:
         class: Phlexible\Bundle\ElementBundle\Controller\Data\DataSaver
         arguments:
             - @phlexible_element.element_service
-            - @phlexible_element.field_mapper
             - @phlexible_elementtype.field.registry
             - @phlexible_tree.tree_manager
             - @phlexible_teaser.teaser_manager

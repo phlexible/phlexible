@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\ElementBundle\Controller\Data;
 
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
@@ -42,11 +41,6 @@ class DataSaver
      * @var ElementService
      */
     private $elementService;
-
-    /**
-     * @var FieldMapper
-     */
-    private $fieldMapper;
 
     /**
      * @var FieldRegistry
@@ -90,7 +84,6 @@ class DataSaver
 
     /**
      * @param ElementService           $elementService
-     * @param FieldMapper              $fieldMapper
      * @param FieldRegistry            $fieldRegistry
      * @param TreeManager              $treeManager
      * @param TeaserManagerInterface   $teaserManager
@@ -101,7 +94,6 @@ class DataSaver
      */
     public function __construct(
         ElementService $elementService,
-        FieldMapper $fieldMapper,
         FieldRegistry $fieldRegistry,
         TreeManager $treeManager,
         TeaserManagerInterface $teaserManager,
@@ -111,7 +103,6 @@ class DataSaver
         $availableLanguages)
     {
         $this->elementService = $elementService;
-        $this->fieldMapper = $fieldMapper;
         $this->fieldRegistry = $fieldRegistry;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
