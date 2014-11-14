@@ -28,10 +28,12 @@ class AssetController extends Controller
      */
     public function scriptsAction()
     {
-        $content = '';
-        $content .= file_get_contents(__DIR__ . '/../Resources/scripts/security/LoginWindow.js');
-        $content .= file_get_contents(__DIR__ . '/../Resources/scripts/security/SendEmailWindow.js');
-        $content .= file_get_contents(__DIR__ . '/../Resources/scripts/security/ResetWindow.js');
+        $locator = $this->get('file_locator');
+
+        $content =
+            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/security/LoginWindow.js')) .
+            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/security/SendEmailWindow.js')) .
+            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/security/ResetWindow.js'));
 
         return new Response($content, 200, ['Content-type' => 'text/javascript']);
     }

@@ -10,12 +10,14 @@ namespace Phlexible\Bundle\MediaCacheBundle\ImageDelegate;
 
 use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
 use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
+use Phlexible\Bundle\DocumenttypeBundle\Model\IconResolver;
 use Phlexible\Bundle\MediaCacheBundle\Exception\CreateDelegateFailed;
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Delegate worker
@@ -40,6 +42,11 @@ class DelegateWorker
     private $applier;
 
     /**
+     * @var FileLocator
+     */
+    private $locator;
+
+    /**
      * @var string
      */
     private $delegateDirClean;
@@ -53,16 +60,20 @@ class DelegateWorker
      * @param TemplateManagerInterface     $templateManager
      * @param DocumenttypeManagerInterface $documenttypeManager
      * @param ImageTemplateApplier         $applier
+     * @param FileLocator                  $locator
      * @param string                       $delegateDir
      */
-    public function __construct(TemplateManagerInterface $templateManager,
-                                DocumenttypeManagerInterface $documenttypeManager,
-                                ImageTemplateApplier $applier,
-                                $delegateDir)
-    {
+    public function __construct(
+        TemplateManagerInterface $templateManager,
+        DocumenttypeManagerInterface $documenttypeManager,
+        ImageTemplateApplier $applier,
+        FileLocator $locator,
+        $delegateDir
+    ) {
         $this->templateManager = $templateManager;
         $this->documenttypeManager = $documenttypeManager;
         $this->applier = $applier;
+        $this->locator = $locator;
 
         $this->delegateDirClean   = $delegateDir . 'clean/';
         $this->delegateDirWaiting = $delegateDir . 'waiting/';
@@ -161,9 +172,10 @@ class DelegateWorker
         if (!$templateWidth) {
             $templateWidth = 256;
         }
-        $icon = $documentType->getIcon($templateWidth);
+        $iconResolver = new IconResolver();
+        $icon = $iconResolver->resolve($templateWidth);
 
-        if (!file_exists($icon)) {
+        if (!$icon || !file_exists($icon)) {
             return;
         }
 
@@ -204,7 +216,9 @@ class DelegateWorker
             $transparent = imagecolorallocatealpha($target, 255, 255, 255, 127);
             imagefilledrectangle($target, 0, 0, $sx, $sy, $transparent);
             imagecopy($target, $source, 0, 0, 0, 0, $sx, $sy);
-            $waiting = imagecreatefrompng(dirname(dirname(__FILE__)) . '/Resources/public/icons/waiting.png');
+            $waiting = imagecreatefrompng(
+                $this->locator->locate('@PhlexibleMediaCacheBundle/Resources/public/icons/waiting.png')
+            );
             $sx -= 16;
             $sy -= 16;
             imagecopy($target, $waiting, $sx, $sy, 0, 0, 16, 16);

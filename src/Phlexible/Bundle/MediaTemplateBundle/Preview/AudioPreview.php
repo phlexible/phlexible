@@ -55,9 +55,9 @@ class AudioPreview implements PreviewerInterface
      */
     public function create(array $params)
     {
-        $assetPath = dirname(__DIR__) . '/Resources/public/audio/';
+        $assetPath    = dirname(__DIR__) . '/Resources/public/audio/';
         $previewAudio = 'test.mp3';
-        $filePath      = $assetPath . $previewAudio;
+        $filePath     = $assetPath . $previewAudio;
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {

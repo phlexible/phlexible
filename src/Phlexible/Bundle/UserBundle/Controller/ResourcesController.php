@@ -25,10 +25,12 @@ class ResourcesController extends Controller
      */
     public function scriptsAction()
     {
-        $content = '';
-        $content .= file_get_contents(__DIR__ . '/../Resources/scripts/ChangePasswordWindow.js');
-        $content .= file_get_contents(__DIR__ . '/../Resources/scripts/ValidateWindow.js');
-        $content .= file_get_contents(__DIR__ . '/../Resources/scripts/SetPasswordWindow.js');
+        $locator = $this->get('file_locator');
+
+        $content =
+            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/ChangePasswordWindow.js')) .
+            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/ValidateWindow.js')) .
+            file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/SetPasswordWindow.js'));
 
         return new Response($content, 200, ['Content-Type' => 'text/javascript']);
     }
@@ -40,7 +42,7 @@ class ResourcesController extends Controller
      */
     public function stylesAction()
     {
-        $content = file_get_contents(__DIR__ . '/../Resources/styles/users.css');
+        $content = file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/styles/users.css'));
 
         return new Response($content, 200, ['Content-Type' => 'text/css']);
     }

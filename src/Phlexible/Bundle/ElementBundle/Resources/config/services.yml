@@ -40,7 +40,7 @@ services:
 
     phlexible_element.icon_builder:
         class: Phlexible\Bundle\ElementBundle\Icon\IconBuilder
-        arguments: [%phlexible_element.overlay.cache_dir%]
+        arguments: [@file_locator, %phlexible_element.overlay.cache_dir%]
 
     phlexible_element.icon_resolver:
         class: Phlexible\Bundle\ElementBundle\Icon\IconResolver
