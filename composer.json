@@ -58,7 +58,12 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://packages.brainbits.net/phlexible-bundles/"
+            "url": "https://packages.brainbits.net/phlexible-bundles/",
+            "options": {
+                "ssl": {
+                    "allow_self_signed": "true"
+                }
+            }
         }
     ],
     "minimum-stability": "stable"
