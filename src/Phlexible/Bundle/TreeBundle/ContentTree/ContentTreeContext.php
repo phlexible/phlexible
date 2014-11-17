@@ -87,7 +87,10 @@ class ContentTreeContext
                 continue;
             }
             if ($keep) {
-                $children[] = new self($childNode, $this->referenceNode, $this->maxDepth, $this->depth + 1);
+                $child = new self($childNode, $this->referenceNode, $this->maxDepth, $this->depth + 1);
+                if ($child->available()) {
+                    $children[] = $child;
+                }
             }
         }
 
@@ -110,7 +113,10 @@ class ContentTreeContext
                 continue;
             }
             if ($keep) {
-                $children[] = new self($childNode, $this->referenceNode, $this->maxDepth, $this->depth + 1);
+                $child = new self($childNode, $this->referenceNode, $this->maxDepth, $this->depth + 1);
+                if ($child->available()) {
+                    $children[] = $child;
+                }
             }
         }
 
@@ -174,7 +180,10 @@ class ContentTreeContext
 
         $children = [];
         foreach ($tree->getChildren($this->getNode()) as $childNode) {
-            $children[] = new self($childNode, $this->referenceNode, $this->maxDepth, $this->depth + 1);
+            $child = new self($childNode, $this->referenceNode, $this->maxDepth, $this->depth + 1);
+            if ($child->available()) {
+                $children[] = $child;
+            }
         }
 
         return $children;
@@ -189,7 +198,7 @@ class ContentTreeContext
         $current = $this;
         do {
             $path[] = $current;
-        } while($current = $current->parent());
+        } while ($current = $current->parent());
 
         return array_reverse($path);
     }

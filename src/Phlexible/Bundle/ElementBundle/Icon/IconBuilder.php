@@ -69,12 +69,12 @@ class IconBuilder
             $overlay['sort'] = $params['sort'];
         }
 
-        $fallback = $this->locator->locate('@ElementtypeBundle/Resources/public/elementtypes/icon_notfound.gif');
+        $fallback = $this->locator->locate('@PhlexibleElementtypeBundle/Resources/public/elementtypes/icon_notfound.gif');
 
         if ($icon === null) {
             $filename = $fallback;
         } else {
-            $prefix = '@ElementtypeBundle/Resources/public/elementtypes/';
+            $prefix = '@PhlexibleElementtypeBundle/Resources/public/elementtypes/';
             $filename = $this->locator->locate($prefix. $icon);
 
             if (!file_exists($filename)) {
@@ -93,7 +93,7 @@ class IconBuilder
             imagecopy($target, $iconSource, 0, 0, 0, 0, 18, 18);
             imagedestroy($iconSource);
 
-            $overlayDir = '@ElementBundle/Resources/public/overlays/';
+            $overlayDir = '@PhlexibleElementBundle/Resources/public/overlays/';
 
             if (!empty($overlay['status'])) {
                 // apply status overlay

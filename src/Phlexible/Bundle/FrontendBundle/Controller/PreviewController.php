@@ -43,6 +43,7 @@ class PreviewController extends Controller
         $siteroot->setContentChannels([1 => 1]);
         $siterootUrl = $siteroot->getDefaultUrl();
 
+        $request->attributes->set('_locale', $language);
         $request->attributes->set('language', $language);
         $request->attributes->set('routeDocument', $node);
         $request->attributes->set('contentDocument', $node);

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\DocumenttypeBundle\Controller;
 
+use Phlexible\Bundle\DocumenttypeBundle\Model\IconResolver;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,9 +34,10 @@ class ListController extends Controller
      */
     public function listAction(Request $request)
     {
-        $repository = $this->get('phlexible_documenttype.documenttype_manager');
+        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $iconResolver = new IconResolver();
 
-        $allDocumenttypes = $repository->findAll();
+        $allDocumenttypes = $documenttypeManager->findAll();
 
         $documenttypes = [];
         foreach ($allDocumenttypes as $documenttype) {
@@ -47,10 +49,10 @@ class ListController extends Controller
                 'de'        => $documenttype->getTitle('de'),
                 'en'        => $documenttype->getTitle('en'),
                 'mimetypes' => $documenttype->getMimetypes(),
-                'icon16'    => $documenttype->hasIcon(16),
-                'icon32'    => $documenttype->hasIcon(32),
-                'icon48'    => $documenttype->hasIcon(48),
-                'icon256'   => $documenttype->hasIcon(256),
+                'icon16'    => (bool) $iconResolver->resolve($documenttype, 16),
+                'icon32'    => (bool) $iconResolver->resolve($documenttype, 32),
+                'icon48'    => (bool) $iconResolver->resolve($documenttype, 48),
+                'icon256'   => (bool) $iconResolver->resolve($documenttype, 256),
             ];
         }
 

@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -16,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ContentTreeNode extends TreeNode
+class ContentTreeNode extends TreeNode implements RouteObjectInterface
 {
     /**
      * @var array
@@ -123,5 +124,21 @@ class ContentTreeNode extends TreeNode
     public function getPublishedAt($language = null)
     {
         return $this->getTree()->getPublishedAt($this, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteKey()
+    {
+        return $this->getId();
     }
 }

@@ -24,6 +24,7 @@ Phlexible.elements.UrlPanel = Ext.extend(Ext.Panel, {
         },{
             xtype: 'panel',
             bodyStyle: 'margin: 5px',
+            border: false,
             items: [{
                 xtype: 'grid',
                 title: '_old_urls',
@@ -54,12 +55,12 @@ Phlexible.elements.UrlPanel = Ext.extend(Ext.Panel, {
     onLoadElement: function (element) {
         if (element.properties.et_type !== 'full') {
             this.disable();
-            this.hide();
+            //this.hide();
             return;
         }
 
         this.enable();
-        this.show();
+        //this.show();
 
         if (!this.hidden) {
             this.onRealLoad();

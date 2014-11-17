@@ -182,8 +182,9 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
 
     saveRootProperties: function () {
         var valid = true;
+
         valid = (this.getRootPropertyPanel().hidden || this.getRootPropertyPanel().isValid()) && valid;
-        valid = (this.getRootMappingsPanel().hidden || this.getRootMappingsPanel().isValid()) && valid;
+        valid = (this.getTabEl(this.getRootMappingsPanel()).hidden || this.getRootMappingsPanel().isValid()) && valid;
 
         if (!valid) {
             this.node.ui.removeClass('valid');

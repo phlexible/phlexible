@@ -406,4 +406,12 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     {
         return $this->mediator->isViewable($node);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent(TreeNodeInterface $node)
+    {
+        return $this->mediator->getContentDocument($node);
+    }
 }

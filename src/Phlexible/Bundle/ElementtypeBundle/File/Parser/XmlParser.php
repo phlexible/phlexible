@@ -55,7 +55,10 @@ class XmlParser implements ParserInterface
         $metasetId = $metasetIdNodes->length ? $metasetIdNodes->item(0)->textContent : '';
 
         $defaultContentTabNodes = $dom->documentElement->getElementsByTagName('defaultContentTab');
-        $defaultContentTab = $defaultContentTabNodes->length ? $defaultContentTabNodes->item(0)->textContent : '';
+        $defaultContentTab = $defaultContentTabNodes->length ? $defaultContentTabNodes->item(0)->textContent : null;
+        if ($defaultContentTab === '') {
+            $defaultContentTab = null;
+        }
 
         $createdAtNodes = $dom->documentElement->getElementsByTagName('createdAt');
         $createdAt = $createdAtNodes->length ? $createdAtNodes->item(0)->textContent : '';

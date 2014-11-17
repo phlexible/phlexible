@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
-use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
@@ -54,21 +53,14 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $requestContext;
 
     /**
-     * @var ElementService
-     */
-    private $elementService;
-
-    /**
      * @param LoggerInterface             $logger
      * @param ContentTreeManagerInterface $treeManager
-     * @param ElementService              $elementService
      * @param string                      $languages
      * @param string                      $defaultLanguage
      */
     public function __construct(
         LoggerInterface $logger,
         ContentTreeManagerInterface $treeManager,
-        ElementService $elementService,
         $languages,
         $defaultLanguage)
     {
@@ -76,7 +68,6 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         $this->contentTreeManager = $treeManager;
         $this->languages = explode(',', $languages);
         $this->defaultLanguage = $defaultLanguage;
-        $this->elementService = $elementService;
     }
 
     /**

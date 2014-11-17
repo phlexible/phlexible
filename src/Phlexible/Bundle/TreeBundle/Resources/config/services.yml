@@ -17,7 +17,6 @@ services:
         arguments:
             - @logger
             - @phlexible_tree.content_tree_manager
-            - @phlexible_element.element_service
             - %phlexible_cms.languages.available%
             - %phlexible_cms.languages.default%
         tags:
