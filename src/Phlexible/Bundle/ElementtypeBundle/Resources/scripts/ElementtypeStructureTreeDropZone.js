@@ -132,6 +132,8 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
                 return false;
             }
 
+            // TODO: only disallow for siblings
+            /*
             var searchDsId = sourceNode.childNodes[0].attributes.ds_id;
             var found = false;
             targetNode.ownerTree.root.cascade(function (node) {
@@ -145,6 +147,7 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
                 if (this.debug) Phlexible.console.warn('sourceType is referenceroot && ds_id already present => false');
                 return false;
             }
+            */
 
             sourceType = sourceNode.childNodes[0].attributes.type;
         }

@@ -141,10 +141,13 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
             Ext.apply(properties[panel.key], panel.getSaveValues());
         });
 
+        // TODO: only disallow for siblings
+        /*
         var root = this.node.getOwnerTree().getRootNode();
         if (this.node.getOwnerTree().findWorkingTitle(root, this.node.id, properties.field.working_title)) {
             valid = false;
         }
+        */
 
         if (this.fireEvent('beforeSaveField', this.node, properties, valid) === false) {
             return false;
