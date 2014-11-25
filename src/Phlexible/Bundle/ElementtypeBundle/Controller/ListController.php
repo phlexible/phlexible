@@ -68,62 +68,6 @@ class ListController extends Controller
     }
 
     /**
-     * List elementtypes for type
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/fortype", name="elementtypes_list_fortype")
-     */
-    public function fortypeAction(Request $request)
-    {
-        $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-
-        $for = $request->get('type', Elementtype::TYPE_FULL);
-
-        $elementtypes = $elementtypeService->findAllElementtypes();
-
-        $allowedForFull = $allowedForStructure = $allowedForArea = [
-            Elementtype::TYPE_FULL,
-            Elementtype::TYPE_STRUCTURE
-        ];
-        $allowedForContainer = $allowedForPart = [
-            Elementtype::TYPE_LAYOUTAREA,
-            Elementtype::TYPE_LAYOUTCONTAINER
-        ];
-
-        $list = [];
-        foreach ($elementtypes as $elementtype) {
-            $type = $elementtype->getType();
-
-            if ($for == Elementtype::TYPE_FULL && !in_array($type, $allowedForFull)) {
-                continue;
-            } elseif ($for == Elementtype::TYPE_STRUCTURE && !in_array($type, $allowedForStructure)) {
-                continue;
-            } elseif ($for == Elementtype::TYPE_REFERENCE) {
-                continue;
-            } elseif ($for == Elementtype::TYPE_LAYOUTAREA && !in_array($type, $allowedForArea)) {
-                continue;
-            } elseif ($for == Elementtype::TYPE_LAYOUTCONTAINER && !in_array($type, $allowedForContainer)) {
-                continue;
-            } elseif ($for == Elementtype::TYPE_PART && !in_array($type, $allowedForPart)) {
-                continue;
-            }
-
-            $list[] = [
-                'id'      => $elementtype->getId(),
-                'type'    => $elementtype->getType(),
-                'title'   => $elementtype->getTitle(),
-                'icon'    => $elementtype->getIcon(),
-                'version' => $elementtype->getRevision()
-            ];
-
-        }
-
-        return new JsonResponse(['elementtypes' => $list, 'total' => count($list)]);
-    }
-
-    /**
      * Create an elementtype
      *
      * @param Request $request
