@@ -49,26 +49,6 @@ class DumpCommand extends ContainerAwareCommand
         $xmlDir = $this->getContainer()->getParameter('phlexible_tree.content.xml_dir');
         $dumper->dump($tree, $siteroot, $xmlDir . $siteroot->getId() . '.xml');
 
-        die;
-
-        $loadedTree = new XmlContentTree('/tmp/test.xml');
-        print_r($loadedTree->getSpecialTids());
-        print_r($loadedTree->getUrls());
-        die;
-        $root = $loadedTree->getRoot();
-        echo $root->getId() . PHP_EOL;
-        foreach ($loadedTree->getChildren($root) as $node) {
-            echo ' ' . $node->getId() . PHP_EOL;
-            foreach ($loadedTree->getChildren($node) as $subNode) {
-                echo '  ' . $subNode->getId() . PHP_EOL;
-            }
-        }
-        echo $loadedTree->isParentOf(1086, 1088) . PHP_EOL;
-        echo $loadedTree->isParentOf(1088, 1086) . PHP_EOL;
-        echo $loadedTree->isChildOf(1088, 1086) . PHP_EOL;
-        echo $loadedTree->isChildOf(1086, 1088) . PHP_EOL;
-        echo $loadedTree->isParentOf(1, 1088) . PHP_EOL;
-
         return 0;
     }
 }

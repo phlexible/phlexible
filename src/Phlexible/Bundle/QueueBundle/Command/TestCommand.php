@@ -33,8 +33,7 @@ class TestCommand extends ContainerAwareCommand
                     new InputOption('queue', null, InputOption::VALUE_NONE, 'Queue test job.'),
                     new InputOption('error', null, InputOption::VALUE_NONE, 'Triggers an error.'),
                     new InputOption('exception', null, InputOption::VALUE_NONE, 'Throws an exception.'),
-                    new InputOption('exit', null, InputOption::VALUE_NONE, 'Calls exit(1).'),
-                    new InputOption('exitCode', null, InputOption::VALUE_NONE, 'Returns exit code 1.'),
+                    new InputOption('exit', null, InputOption::VALUE_NONE, 'Returns exit code 1.'),
                     new InputOption('sleep5', null, InputOption::VALUE_NONE, 'Sleeps for 5 seconds.'),
                     new InputOption('sleep30', null, InputOption::VALUE_NONE, 'Sleeps 6 times for 30 seconds.'),
                     new InputOption('noop', null, InputOption::VALUE_NONE, 'Does nothing.'),
@@ -56,8 +55,6 @@ class TestCommand extends ContainerAwareCommand
             $target = 'exception';
         } elseif ($input->getOption('exit')) {
             $target = 'exit';
-        } elseif ($input->getOption('exitCode')) {
-            $target = 'exitCode';
         } elseif ($input->getOption('sleep5')) {
             $target = 'sleep5';
         } elseif ($input->getOption('sleep30')) {
@@ -66,7 +63,7 @@ class TestCommand extends ContainerAwareCommand
             $target = 'noop';
         } else {
             $output->writeln(
-                'Your have to pass one of --error, --execption, --die, --exit, --exitCode, --sleep5 or --sleep30'
+                'Your have to pass one of --error, --execption, --die, --exit, --sleep5 or --sleep30'
             );
 
             return 1;
@@ -91,12 +88,8 @@ class TestCommand extends ContainerAwareCommand
                     break;
 
                 case 'exit':
-                    $output->writeln('Exit(1)');
-                    exit(1);
-
-                case 'exitCode':
-                    $output->writeln('Exiting faulty.');
-
+                    $output->writeln('Return with exit code 1');
+                    
                     return 1;
 
                 case 'sleep5':
