@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
