@@ -42,6 +42,10 @@ class PhpCompiler implements CompilerInterface
                 $documenttype->getMimetypes(),
                 true
             ) : 'array()';
+            $icons = count($documenttype->getIcons()) ? var_export(
+                $documenttype->getIcons(),
+                true
+            ) : 'array()';
 
             $constructorBody .= <<<EOF
 \$this->add(
@@ -50,7 +54,9 @@ class PhpCompiler implements CompilerInterface
         ->setType("{$documenttype->getType()}")
         ->setTitles({$titles})
         ->setMimetypes({$mimetypes})
+        ->setIcons({$icons})
 );
+
 EOF;
         }
 

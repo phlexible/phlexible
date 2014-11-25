@@ -40,6 +40,7 @@ services:
             - @phlexible_media_template.template_manager
             - @phlexible_documenttype.documenttype_manager
             - @phlexible_media_template.applier.image
+            - @phlexible_documenttype.icon_resolver
             - @file_locator
             - %phlexible_media_cache.cache_dir%
 

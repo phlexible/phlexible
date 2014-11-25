@@ -8,4 +8,10 @@
     <mimetypes>
         <mimetype>text/xml</mimetype>
     </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/xml.gif</icon>
+        <icon size="32">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes32/xml.gif</icon>
+        <icon size="48">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes48/xml.gif</icon>
+        <icon size="256">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes256/xml.gif</icon>
+    </icons>
 </documenttype>

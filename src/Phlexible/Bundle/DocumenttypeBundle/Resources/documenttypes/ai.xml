@@ -7,4 +7,10 @@
     </titles>
     <mimetypes>
     </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/ai.gif</icon>
+        <icon size="32">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes32/ai.gif</icon>
+        <icon size="48">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes48/ai.gif</icon>
+        <icon size="256">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes256/ai.gif</icon>
+    </icons>
 </documenttype>

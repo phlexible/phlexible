@@ -28,12 +28,17 @@ class Documenttype
     /**
      * @var array
      */
-    private $titles = array();
+    private $titles = [];
 
     /**
      * @var array
      */
-    private $mimetypes = array();
+    private $mimetypes = [];
+
+    /**
+     * @var array
+     */
+    private $icons = [];
 
     /**
      * @return string
@@ -139,7 +144,7 @@ class Documenttype
      *
      * @return $this
      */
-    public function setMimetypes($mimetypes)
+    public function setMimetypes(array $mimetypes)
     {
         $this->mimetypes = $mimetypes;
 
@@ -152,5 +157,34 @@ class Documenttype
     public function addMimetype($mimetype)
     {
         $this->mimetypes[] = $mimetype;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIcons()
+    {
+        return $this->icons;
+    }
+
+    /**
+     * @param array $icons
+     *
+     * @return $this
+     */
+    public function setIcons(array $icons)
+    {
+        $this->icons = $icons;
+
+        return $this;
+    }
+
+    /**
+     * @param int    $size
+     * @param string $icon
+     */
+    public function setIcon($size, $icon)
+    {
+        $this->icons[$size] = $icon;
     }
 }

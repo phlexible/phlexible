@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\DocumenttypeBundle\Controller;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\IconResolver;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,7 +34,7 @@ class ListController extends Controller
     public function listAction(Request $request)
     {
         $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
-        $iconResolver = new IconResolver();
+        $iconResolver = $this->get('phlexible_documenttype.icon_resolver');
 
         $allDocumenttypes = $documenttypeManager->findAll();
 

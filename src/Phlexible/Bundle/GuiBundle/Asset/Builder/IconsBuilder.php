@@ -86,7 +86,8 @@ class IconsBuilder
         $configCache = new ConfigCache($cacheFilename, $this->debug);
         if (!$configCache->isFresh()) {
             $resources = new \ArrayObject();
-            $resources[] = new FileResource(__FILE__);
+            $r = new \ReflectionClass($this);
+            $resources[] = new FileResource($r->getFileName());
             $content = $this->buildIcons($this->bundles, $baseUrl, $basePath, $resources);
 
             $configCache->write($content, (array) $resources);

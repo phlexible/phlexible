@@ -87,8 +87,11 @@ class DocumenttypeLoader
         $configCache = new ConfigCache($this->getFilename(), $this->debug);
 
         if (!$configCache->isFresh()) {
-
             $resources = [];
+            $r = new \ReflectionClass($this);
+            $resources[] = new FileResource($r->getFileName());
+            $r = new \ReflectionClass($this->compiler);
+            $resources[] = new FileResource($r->getFileName());
             foreach ($this->loaders as $extension => $loader) {
                 $files = $this->locator->locate("*.$extension", 'documenttypes', false);
 

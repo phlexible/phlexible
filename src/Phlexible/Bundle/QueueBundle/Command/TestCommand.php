@@ -89,7 +89,7 @@ class TestCommand extends ContainerAwareCommand
 
                 case 'exit':
                     $output->writeln('Return with exit code 1');
-                    
+
                     return 1;
 
                 case 'sleep5':

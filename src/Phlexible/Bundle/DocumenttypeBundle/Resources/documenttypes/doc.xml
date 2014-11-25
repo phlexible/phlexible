@@ -10,4 +10,10 @@
         <mimetype>application/msword</mimetype>
         <mimetype>application/vnd.msword</mimetype>
     </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/doc.gif</icon>
+        <icon size="32">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes32/doc.gif</icon>
+        <icon size="48">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes48/doc.gif</icon>
+        <icon size="256">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes256/doc.gif</icon>
+    </icons>
 </documenttype>

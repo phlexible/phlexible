@@ -8,4 +8,10 @@
     <mimetypes>
         <mimetype>font/ttf</mimetype>
     </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/ttf.gif</icon>
+        <icon size="32">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes32/ttf.gif</icon>
+        <icon size="48">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes48/ttf.gif</icon>
+        <icon size="256">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes256/ttf.gif</icon>
+    </icons>
 </documenttype>

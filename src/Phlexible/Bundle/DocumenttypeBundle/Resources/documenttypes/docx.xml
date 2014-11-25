@@ -8,4 +8,10 @@
     <mimetypes>
         <mimetype>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mimetype>
     </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/docx.gif</icon>
+        <icon size="32">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes32/docx.gif</icon>
+        <icon size="48">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes48/docx.gif</icon>
+        <icon size="256">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes256/docx.gif</icon>
+    </icons>
 </documenttype>

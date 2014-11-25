@@ -122,7 +122,7 @@ Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.GridPanel, {
                     title: String.format(this.strings.icons_for, r.get('en')),
                     width: 420,
                     height: 320,
-                    bodyStyle: 'background: white; padding: 5px;',
+                    bodyStyle: 'background: white; background: linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, lightgray; background-size: 30px 30px; padding: 5px;',
                     modal: true,
                     html: '<table><tr>' +
                         '<td align="center" valign="bottom">' +

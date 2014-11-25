@@ -12,6 +12,7 @@ use Monolog\Handler\TestHandler;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\AudioTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Audio preview
@@ -21,23 +22,30 @@ use Symfony\Component\Filesystem\Filesystem;
 class AudioPreview implements PreviewerInterface
 {
     /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
      * @var AudioTemplateApplier
      */
     private $applier;
 
     /**
+     * @var FileLocator
+     */
+    private $locator;
+
+    /**
+     * @var string
+     */
+    private $cacheDir;
+
+    /**
      * @param AudioTemplateApplier $applier
+     * @param FileLocator          $locator
      * @param string               $cacheDir
      */
-    public function __construct(AudioTemplateApplier $applier, $cacheDir)
+    public function __construct(AudioTemplateApplier $applier, FileLocator $locator, $cacheDir)
     {
-        $this->cacheDir = $cacheDir;
         $this->applier = $applier;
+        $this->locator = $locator;
+        $this->cacheDir = $cacheDir;
     }
 
     /**
@@ -55,9 +63,7 @@ class AudioPreview implements PreviewerInterface
      */
     public function create(array $params)
     {
-        $assetPath    = dirname(__DIR__) . '/Resources/public/audio/';
-        $previewAudio = 'test.mp3';
-        $filePath     = $assetPath . $previewAudio;
+        $filePath = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/audio/test.mp3', null, true);
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {

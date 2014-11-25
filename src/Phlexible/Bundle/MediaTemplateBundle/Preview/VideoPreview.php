@@ -12,6 +12,7 @@ use Monolog\Handler\TestHandler;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\VideoTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\VideoTemplate;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Video preview
@@ -21,23 +22,30 @@ use Symfony\Component\Filesystem\Filesystem;
 class VideoPreview implements PreviewerInterface
 {
     /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
      * @var VideoTemplateApplier
      */
     private $applier;
 
     /**
+     * @var FileLocator
+     */
+    private $locator;
+
+    /**
+     * @var string
+     */
+    private $cacheDir;
+
+    /**
      * @param VideoTemplateApplier $applier
+     * @param FileLocator          $locator
      * @param string               $cacheDir
      */
-    public function __construct(VideoTemplateApplier $applier, $cacheDir)
+    public function __construct(VideoTemplateApplier $applier, FileLocator $locator, $cacheDir)
     {
-        $this->cacheDir = $cacheDir;
         $this->applier = $applier;
+        $this->locator = $locator;
+        $this->cacheDir = $cacheDir;
     }
 
     /**
@@ -55,9 +63,7 @@ class VideoPreview implements PreviewerInterface
      */
     public function create(array $params)
     {
-        $assetPath = dirname(__DIR__) . '/Resources/public/video/';
-        $previewVideo = 'test.mpg';
-        $filePath = $assetPath . $previewVideo;
+        $filePath = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/video/test.mpg', null, true);
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {

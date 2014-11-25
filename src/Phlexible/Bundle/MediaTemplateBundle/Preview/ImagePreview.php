@@ -13,6 +13,7 @@ use Phlexible\Bundle\MediaSiteBundle\Model\File;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Image preview
@@ -27,17 +28,24 @@ class ImagePreview implements PreviewerInterface
     private $applier;
 
     /**
+     * @var FileLocator
+     */
+    private $locator;
+
+    /**
      * @var string
      */
     private $cacheDir;
 
     /**
      * @param ImageTemplateApplier $applier
+     * @param FileLocator          $locator
      * @param string               $cacheDir
      */
-    public function __construct(ImageTemplateApplier $applier, $cacheDir)
+    public function __construct(ImageTemplateApplier $applier, FileLocator $locator, $cacheDir)
     {
         $this->applier = $applier;
+        $this->locator = $locator;
         $this->cacheDir = $cacheDir;
     }
 
@@ -56,17 +64,16 @@ class ImagePreview implements PreviewerInterface
      */
     public function create(array $params)
     {
-        $assetPath = dirname(__DIR__) . '/Resources/public/images/';
-        $previewImage = 'test_' . $params['preview_image'];
+        $filePrefix = "@PhlexibleMediaTemplateBundle/Resources/public/images/test_{$params['preview_image']}";
         unset($params['preview_image']);
 
-        if (file_exists($assetPath . $previewImage . '.png')) {
-            $previewImage .= '.png';
-        } else {
-            $previewImage .= '.jpg';
+        $filePath = $this->locator->locate("$filePrefix.png", null, true);
+        if (!$filePath) {
+            $filePath = $this->locator->locate("$filePrefix.jpg", null, true);
+            if (!$filePath) {
+                throw new \LogicException("Preview image not found");
+            }
         }
-
-        $filePath = $assetPath . $previewImage;
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {

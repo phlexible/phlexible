@@ -12,6 +12,7 @@ use Monolog\Handler\TestHandler;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\PdfTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * PDF preview
@@ -21,23 +22,30 @@ use Symfony\Component\Filesystem\Filesystem;
 class PdfPreview implements PreviewerInterface
 {
     /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
      * @var PdfTemplateApplier
      */
     private $applier;
 
     /**
+     * @var FileLocator
+     */
+    private $locator;
+
+    /**
+     * @var string
+     */
+    private $cacheDir;
+
+    /**
      * @param PdfTemplateApplier $applier
+     * @param FileLocator        $locator
      * @param string             $cacheDir
      */
-    public function __construct(PdfTemplateApplier $applier, $cacheDir)
+    public function __construct(PdfTemplateApplier $applier, FileLocator $locator, $cacheDir)
     {
-        $this->cacheDir = $cacheDir;
         $this->applier = $applier;
+        $this->locator = $locator;
+        $this->cacheDir = $cacheDir;
     }
 
     /**
@@ -55,9 +63,7 @@ class PdfPreview implements PreviewerInterface
      */
     public function create(array $params)
     {
-        $assetPath = dirname(__DIR__) . '/Resources/public/pdf/';
-        $previewPdf = 'test.pdf';
-        $filePath = $assetPath . $previewPdf;
+        $filePath = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/pdf/test.pdf', null, true);
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
@@ -81,7 +87,7 @@ class PdfPreview implements PreviewerInterface
             $template->setParameter($key, $value);
         }
 
-        $viewer = dirname(dirname(__FILE__)) . '/Resources/public/swf/SimpleViewer.swf';
+        $viewer = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/swf/SimpleViewer.swf', null, true);
         $template->setParameter('viewer', $viewer);
 
         if ($debug) {

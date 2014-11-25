@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\DocumenttypeBundle\Model;
 
+use Symfony\Component\HttpKernel\Config\FileLocator;
+
 /**
  * Documenttype icon resolver
  *
@@ -16,48 +18,33 @@ namespace Phlexible\Bundle\DocumenttypeBundle\Model;
 class IconResolver
 {
     /**
+     * @var FileLocator
+     */
+    private $locator;
+
+    /**
+     * @param FileLocator $locator
+     */
+    public function __construct(FileLocator $locator)
+    {
+        $this->locator = $locator;
+    }
+
+    /**
      * Resolve icon
      *
      * @param Documenttype $documenttype
-     * @param int          $neededSize
+     * @param int          $requestedSize
      *
      * @return string
      */
-    public function resolve(Documenttype $documenttype, $neededSize = 16)
+    public function resolve(Documenttype $documenttype, $requestedSize = null)
     {
-        $documentTypeKey = $documenttype->getKey();
-
-        $sizes = array(-1, 16, 32, 48, 256);
-        $imgDir = __DIR__ . '/../Resources/public/mimetypes';
-
-        if ($documentTypeKey !== null) {
-            $imgFile = $documentTypeKey . '.gif';
-        } else {
-            $imgFile = '_fallback.gif';
+        $icons = $documenttype->getIcons();
+        if (!isset($icons[$requestedSize])) {
+            return null;
         }
 
-        $i = count($sizes) - 1;
-        $size = $sizes[$i];
-
-        if (!is_null($neededSize)) {
-            while (!empty($sizes[$i - 1]) &&
-                ($sizes[$i] > $neededSize || !file_exists($imgDir . $sizes[$i] . '/' . $imgFile))) {
-                $size = $sizes[--$i];
-            }
-        }
-
-        if ($size == -1) {
-            $i = count($sizes) - 1;
-            $size = $sizes[$i];
-
-            while (!empty($sizes[$i - 1]) &&
-                ($sizes[$i] > $neededSize || !file_exists($imgDir . $sizes[$i] . '/_fallback.gif'))) {
-                $size = $sizes[--$i];
-            }
-
-            return $imgDir . $size . '/_fallback.gif';
-        }
-
-        return $imgDir . $size . '/' . $imgFile;
+        return $this->locator->locate($icons[$requestedSize], null, true);
     }
 }

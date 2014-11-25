@@ -63,6 +63,19 @@ class XmlLoader implements LoaderInterface
             }
         }
 
+        if ($xml->icons->count()) {
+            if ($xml->icons->icon->count()) {
+                foreach ($xml->icons->icon as $iconNode) {
+                    $iconAttributes = $iconNode->attributes();
+                    $size = (int) $iconAttributes['size'];
+                    $icon = (string) $iconNode;
+                    if ($icon) {
+                        $documentType->setIcon($size, $icon);
+                    }
+                }
+            }
+        }
+
         return $documentType;
     }
 

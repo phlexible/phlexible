@@ -42,6 +42,11 @@ class DelegateWorker
     private $applier;
 
     /**
+     * @var IconResolver
+     */
+    private $iconResolver;
+
+    /**
      * @var FileLocator
      */
     private $locator;
@@ -60,6 +65,7 @@ class DelegateWorker
      * @param TemplateManagerInterface     $templateManager
      * @param DocumenttypeManagerInterface $documenttypeManager
      * @param ImageTemplateApplier         $applier
+     * @param IconResolver                 $iconResolver
      * @param FileLocator                  $locator
      * @param string                       $delegateDir
      */
@@ -67,12 +73,14 @@ class DelegateWorker
         TemplateManagerInterface $templateManager,
         DocumenttypeManagerInterface $documenttypeManager,
         ImageTemplateApplier $applier,
+        IconResolver $iconResolver,
         FileLocator $locator,
         $delegateDir
     ) {
         $this->templateManager = $templateManager;
         $this->documenttypeManager = $documenttypeManager;
         $this->applier = $applier;
+        $this->iconResolver = $iconResolver;
         $this->locator = $locator;
 
         $this->delegateDirClean   = $delegateDir . 'clean/';
@@ -158,13 +166,13 @@ class DelegateWorker
     }
 
     /**
-     * @param Documenttype  $documentType
+     * @param Documenttype  $documenttype
      * @param ImageTemplate $template
      * @param bool          $force
      *
      * @throws CreateDelegateFailed
      */
-    public function write(Documenttype $documentType, ImageTemplate $template, $force = false)
+    public function write(Documenttype $documenttype, ImageTemplate $template, $force = false)
     {
         $templateModifyTime = $template->getModifiedAt()->format('U');
 
@@ -172,15 +180,14 @@ class DelegateWorker
         if (!$templateWidth) {
             $templateWidth = 256;
         }
-        $iconResolver = new IconResolver();
-        $icon = $iconResolver->resolve($templateWidth);
+        $icon = $this->iconResolver->resolve($documenttype, $templateWidth);
 
         if (!$icon || !file_exists($icon)) {
             return;
         }
 
-        $filePathClean   = $this->getCleanFilename($template, $documentType);
-        $filePathWaiting = $this->getWaitingFilename($template, $documentType);
+        $filePathClean   = $this->getCleanFilename($template, $documenttype);
+        $filePathWaiting = $this->getWaitingFilename($template, $documenttype);
 
         $dirClean   = dirname($filePathClean);
         $dirWaiting = dirname($filePathWaiting);

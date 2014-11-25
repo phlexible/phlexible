@@ -2,6 +2,10 @@ parameters:
     phlexible_documenttype.compiler.cache_dir: %kernel.cache_dir%/documenttypes/
 
 services:
+    phlexible_documenttype.icon_resolver:
+        class: Phlexible\Bundle\DocumenttypeBundle\Model\IconResolver
+        arguments: [@file_locator]
+
     phlexible_documenttype.compiler.php:
         class: Phlexible\Bundle\DocumenttypeBundle\Compiler\PhpCompiler
         public: false
