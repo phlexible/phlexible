@@ -192,108 +192,104 @@ class RightsController extends Controller
         array $allRights,
         array $rightsData)
     {
-        try {
-            $subjects = [];
+        $subjects = [];
 
-            $t9n = $this->getContainer()->t9n->elements;
+        $t9n = $this->getContainer()->t9n->elements;
 
-            $allRights = array_flip($allRights);
-            foreach ($allRights as $right => $rightsRow) {
-                $allRights[$right] = [
-                    'right'  => $right,
-                    'status' => Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_UNSET,
-                    'info'   => $t9n->not_set,
+        $allRights = array_flip($allRights);
+        foreach ($allRights as $right => $rightsRow) {
+            $allRights[$right] = [
+                'right'  => $right,
+                'status' => Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_UNSET,
+                'info'   => $t9n->not_set,
+            ];
+        }
+
+        foreach ($rightsData as $rightsRow) {
+            $objectType = $rightsRow['object_type'];
+            $objectId = $rightsRow['object_id'];
+            if (empty($subjectsData[$objectType . '__' . $objectId])) {
+                continue;
+            }
+            $objectLabel = $subjectsData[$objectType . '__' . $objectId];
+            $language = $rightsRow['content_language'] ? $rightsRow['content_language'] : '_all_';
+            $right = $rightsRow['right'];
+            $status = $rightsRow['status'];
+            $key = $objectType . '__' . $objectId . '__' . $language;
+
+            if (empty($subjects[$key])) {
+                $subjects[$key] = [
+                    'type'        => $objectType === 'uid' ? 'user' : 'group',
+                    'object_type' => $objectType,
+                    'object_id'   => $objectId,
+                    'label'       => $objectLabel,
+                    'language'    => $language,
+                    'rights'      => $allRights,
+                    'original'    => null,
+                    'above'       => $allRights,
+                    'inherited'   => 0,
+                    'set_here'    => 1,
+                    'restore'     => 0,
                 ];
             }
 
-            foreach ($rightsData as $rightsRow) {
-                $objectType = $rightsRow['object_type'];
-                $objectId = $rightsRow['object_id'];
-                if (empty($subjectsData[$objectType . '__' . $objectId])) {
-                    continue;
-                }
-                $objectLabel = $subjectsData[$objectType . '__' . $objectId];
-                $language = $rightsRow['content_language'] ? $rightsRow['content_language'] : '_all_';
-                $right = $rightsRow['right'];
-                $status = $rightsRow['status'];
-                $key = $objectType . '__' . $objectId . '__' . $language;
+            $subjects[$key]['rights'][$right]['status'] = $status;
+            if ($rightsRow['content_id'] != $contentId) {
+                $subjects[$key]['rights'][$right]['above'] = $status;
+            }
 
-                if (empty($subjects[$key])) {
-                    $subjects[$key] = [
-                        'type'        => $objectType === 'uid' ? 'user' : 'group',
-                        'object_type' => $objectType,
-                        'object_id'   => $objectId,
-                        'label'       => $objectLabel,
-                        'language'    => $language,
-                        'rights'      => $allRights,
-                        'original'    => null,
-                        'above'       => $allRights,
-                        'inherited'   => 0,
-                        'set_here'    => 1,
-                        'restore'     => 0,
-                    ];
-                }
+            if ($contentId !== $rightsRow['content_id']) {
+                $subjects[$key]['set_here'] = 0;
+                $subjects[$key]['inherited'] = 1;
+            }
 
-                $subjects[$key]['rights'][$right]['status'] = $status;
-                if ($rightsRow['content_id'] != $contentId) {
-                    $subjects[$key]['rights'][$right]['above'] = $status;
-                }
+            /*
+            if ($rightsRow['inherited'])
+            {
+                $subjects[$key]['set_here'] = 0;
 
-                if ($contentId !== $rightsRow['content_id']) {
-                    $subjects[$key]['set_here'] = 0;
+                if ($rightsRow['inherited'] > 1)
+                {
                     $subjects[$key]['inherited'] = 1;
                 }
+            }
+            */
 
-                /*
-                if ($rightsRow['inherited'])
-                {
-                    $subjects[$key]['set_here'] = 0;
-
-                    if ($rightsRow['inherited'] > 1)
-                    {
-                        $subjects[$key]['inherited'] = 1;
-                    }
+            if ($status == Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_INHERITABLE) {
+                if ($rightsRow['content_id'] != $contentId) {
+                    $subjects[$key]['rights'][$right]['info'] = $t9n->from_tid($rightsRow['content_id']);
+                    $subjects[$key]['rights'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_INHERITED;
+                    $subjects[$key]['above'][$right]['info'] = $t9n->from_tid($rightsRow['content_id']);
+                    $subjects[$key]['above'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_INHERITED;
+                } else {
+                    $subjects[$key]['rights'][$right]['info'] = $t9n->defined_here;
                 }
-                */
-
-                if ($status == Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_INHERITABLE) {
-                    if ($rightsRow['content_id'] != $contentId) {
-                        $subjects[$key]['rights'][$right]['info'] = $t9n->from_tid($rightsRow['content_id']);
-                        $subjects[$key]['rights'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_INHERITED;
-                        $subjects[$key]['above'][$right]['info'] = $t9n->from_tid($rightsRow['content_id']);
-                        $subjects[$key]['above'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_INHERITED;
-                    } else {
-                        $subjects[$key]['rights'][$right]['info'] = $t9n->defined_here;
-                    }
-                } elseif ($status == Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_SINGLE) {
+            } elseif ($status == Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_SINGLE) {
+                $subjects[$key]['rights'][$right]['info'] = $t9n->stopped_below;
+                if ($rightsRow['content_id'] != $contentId) {
                     $subjects[$key]['rights'][$right]['info'] = $t9n->stopped_below;
-                    if ($rightsRow['content_id'] != $contentId) {
-                        $subjects[$key]['rights'][$right]['info'] = $t9n->stopped_below;
-                        $subjects[$key]['rights'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET;
-                        $subjects[$key]['above'][$right]['info'] = $t9n->stopped_below;
-                        $subjects[$key]['above'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET;
-                    }
-                } elseif ($status == Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED) {
+                    $subjects[$key]['rights'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET;
+                    $subjects[$key]['above'][$right]['info'] = $t9n->stopped_below;
+                    $subjects[$key]['above'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET;
+                }
+            } elseif ($status == Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED) {
+                $subjects[$key]['rights'][$right]['info'] = $t9n->stopped_here;
+                if ($rightsRow['content_id'] != $contentId) {
                     $subjects[$key]['rights'][$right]['info'] = $t9n->stopped_here;
-                    if ($rightsRow['content_id'] != $contentId) {
-                        $subjects[$key]['rights'][$right]['info'] = $t9n->stopped_here;
-                        $subjects[$key]['rights'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET;
-                        $subjects[$key]['above'][$right]['info'] = $t9n->stopped_here;
-                        $subjects[$key]['above'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET;
-                    }
-                } elseif ($status == Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET) {
-                    $subjects[$key]['rights'][$right]['info'] = $t9n->stopped_above;
-                    if ($rightsRow['content_id'] != $contentId) {
-                        $subjects[$key]['above'][$right]['info'] = $t9n->stopped_above;
-                    }
+                    $subjects[$key]['rights'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET;
+                    $subjects[$key]['above'][$right]['info'] = $t9n->stopped_here;
+                    $subjects[$key]['above'][$right]['status'] = Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET;
+                }
+            } elseif ($status == Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_STOPPED_UNSET) {
+                $subjects[$key]['rights'][$right]['info'] = $t9n->stopped_above;
+                if ($rightsRow['content_id'] != $contentId) {
+                    $subjects[$key]['above'][$right]['info'] = $t9n->stopped_above;
                 }
             }
+        }
 
-            foreach ($subjects as $key => $subjectRow) {
-                $subjects[$key]['original'] = $subjects[$key]['rights'];
-            }
-        } catch (\Exception $e) {
-            die("repair me");
+        foreach ($subjects as $key => $subjectRow) {
+            $subjects[$key]['original'] = $subjects[$key]['rights'];
         }
 
 

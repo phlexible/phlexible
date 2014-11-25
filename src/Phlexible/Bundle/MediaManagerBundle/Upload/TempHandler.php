@@ -94,7 +94,7 @@ class TempHandler
                 break;
 
             case self::ACTION_VERSION:
-                die('fix me');
+                throw new \LogicException('fix me');
                 /*
                 try {
                     $fileId = $tempFile['original_id'];

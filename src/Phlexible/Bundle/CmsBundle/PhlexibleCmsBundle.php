@@ -26,10 +26,7 @@ class PhlexibleCmsBundle extends Bundle
     public function __construct()
     {
         if (extension_loaded('suhosin')) {
-            echo 'The suhosin php extension is enabled.<br />';
-            echo 'Currently there are unresolved issues with phlexible.cms and suhosins "suhosin.post.max_array_index_length" configuration setting.<br />';
-            echo 'Exiting now.';
-            exit(1);
+            throw new \LogicException("Please deactivate the suhosin extension.");
         }
     }
 }

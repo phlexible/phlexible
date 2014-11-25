@@ -79,7 +79,7 @@ class FieldMapper
         $elementtype = $this->elementSourceManager->findElementtype($elementVersion->getElement()->getElementtypeId());
 
         if (!$elementtype) {
-            echo $elementVersion->getElement()->getElementtypeId();die;
+            throw new \LogicException("No elementtype found.");
         }
 
         $titles = [];
