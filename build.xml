@@ -8,15 +8,15 @@
     <target name="clean">
         <delete dir="${builddir}/logs"/>
         <delete dir="${builddir}/coverage"/>
-        <delete dir="${builddir}/phpdoc"/>
-        <delete dir="${builddir}/phpdox"/>
+        <delete dir="${builddir}/sami"/>
+        <delete dir="${builddir}/cache"/>
         <delete dir="${builddir}/pdepend"/>
         <delete dir="${builddir}/phpmetrics"/>
 
         <mkdir dir="${builddir}/logs"/>
         <mkdir dir="${builddir}/coverage"/>
-        <mkdir dir="${builddir}/phpdoc"/>
-        <mkdir dir="${builddir}/phpdox"/>
+        <mkdir dir="${builddir}/sami"/>
+        <mkdir dir="${builddir}/cache"/>
         <mkdir dir="${builddir}/pdepend"/>
         <mkdir dir="${builddir}/phpmetrics"/>
     </target>
@@ -95,18 +95,12 @@
         </exec>
     </target>
 
-    <target name="phpdoc">
-        <exec executable="phpdoc">
-            <arg line="--directory ${source}
-                       --target ${builddir}/phpdoc
-                       --cache-folder ${builddir}/build/phpdoc" />
+    <target name="sami">
+        <exec executable="sami.php">
+            <arg line="update sami.php" />
         </exec>
     </target>
 
-    <target name="phpdox">
-        <exec executable="phpdox" checkreturn="true" />
-    </target>
-
-    <target name="build" depends="lint, clean, phpunit, pdepend, phpmd, phpmetrics, phpcpd, phpcs, phploc, phpdox" />
+    <target name="build" depends="lint, clean, phpunit, pdepend, phpmd, phpmetrics, phpcpd, phpcs, phploc, sami" />
 
 </project>
