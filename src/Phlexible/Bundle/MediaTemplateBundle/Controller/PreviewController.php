@@ -48,7 +48,7 @@ class PreviewController extends Controller
             $params['xmethod'] = 'fit';
         }
 
-        $previewer = $this->get('phlexible_media_template.preview.image');
+        $previewer = $this->get('phlexible_media_template.previewer.image');
         $data = $previewer->create($params);
 
         return new ResultResponse(true, 'Preview created', $data);
@@ -68,7 +68,7 @@ class PreviewController extends Controller
         unset($params['controller']);
         unset($params['action']);
 
-        $previewer = $this->get('phlexible_media_template.preview.audio');
+        $previewer = $this->get('phlexible_media_template.previewer.audio');
         $data = $previewer->create($params);
 
         return new ResultResponse(true, 'Preview created', $data);
@@ -88,7 +88,7 @@ class PreviewController extends Controller
         unset($params['controller']);
         unset($params['action']);
 
-        $previewer = $this->get('phlexible_media_template.preview.video');
+        $previewer = $this->get('phlexible_media_template.previewer.video');
         $data = $previewer->create($params);
 
         return new ResultResponse(true, 'Preview created', $data);
@@ -108,7 +108,7 @@ class PreviewController extends Controller
         unset($params['controller']);
         unset($params['action']);
 
-        $previewer = $this->get('phlexible_media_template.preview.pdf');
+        $previewer = $this->get('phlexible_media_template.previewer.pdf');
         $data = $previewer->create($params);
 
         return new ResultResponse(true, 'Preview created', $data);
@@ -123,7 +123,7 @@ class PreviewController extends Controller
     public function getAction(Request $request)
     {
         $filename = $request->get('file');
-        $filename = $this->container->getParameter('phlexible_media_template.preview.temp_dir') . basename($filename);
+        $filename = $this->container->getParameter('phlexible_media_template.previewer.temp_dir') . basename($filename);
 
         $mimeType = $this->get('phlexible_media_tool.mime.detector')->detect($filename, 'string');
 

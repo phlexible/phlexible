@@ -9,20 +9,20 @@
 namespace Phlexible\Bundle\MediaTemplateBundle\Preview;
 
 use Monolog\Handler\TestHandler;
-use Phlexible\Bundle\MediaTemplateBundle\Applier\PdfTemplateApplier;
-use Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate;
+use Phlexible\Bundle\MediaTemplateBundle\Applier\AudioTemplateApplier;
+use Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
- * PDF preview
+ * Audio preview
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class PdfPreview implements PreviewerInterface
+class AudioPreviewer implements PreviewerInterface
 {
     /**
-     * @var PdfTemplateApplier
+     * @var AudioTemplateApplier
      */
     private $applier;
 
@@ -37,11 +37,11 @@ class PdfPreview implements PreviewerInterface
     private $cacheDir;
 
     /**
-     * @param PdfTemplateApplier $applier
-     * @param FileLocator        $locator
-     * @param string             $cacheDir
+     * @param AudioTemplateApplier $applier
+     * @param FileLocator          $locator
+     * @param string               $cacheDir
      */
-    public function __construct(PdfTemplateApplier $applier, FileLocator $locator, $cacheDir)
+    public function __construct(AudioTemplateApplier $applier, FileLocator $locator, $cacheDir)
     {
         $this->applier = $applier;
         $this->locator = $locator;
@@ -63,14 +63,14 @@ class PdfPreview implements PreviewerInterface
      */
     public function create(array $params)
     {
-        $filePath = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/pdf/test.pdf', null, true);
+        $filePath = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/audio/test.mp3', null, true);
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
             $filesystem->mkdir($this->cacheDir);
         }
 
-        $template = new PdfTemplate();
+        $template = new AudioTemplate();
         $templateKey = 'unknown';
         $debug = false;
         foreach ($params as $key => $value) {
@@ -87,16 +87,13 @@ class PdfPreview implements PreviewerInterface
             $template->setParameter($key, $value);
         }
 
-        $viewer = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/swf/SimpleViewer.swf', null, true);
-        $template->setParameter('viewer', $viewer);
-
         if ($debug) {
             $logger = $this->applier->getLogger();
             $logger->pushHandler(new TestHandler());
         }
 
         $extension = $this->applier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_pdf.' . $extension;
+        $cacheFilename = $this->cacheDir . 'preview_audio.' . $extension;
         $this->applier->apply($template, $filePath, $cacheFilename);
 
         if ($debug) {
@@ -112,12 +109,12 @@ class PdfPreview implements PreviewerInterface
         }
 
         $data = [
-            'file' => basename($cacheFilename),
-            'size' => filesize($cacheFilename),
+            'file'     => basename($cacheFilename),
+            'size'     => filesize($cacheFilename),
             'template' => $templateKey,
-            'format' => $extension,
+            'format'   => $extension,
             'mimetype' => $this->applier->getMimetype($template),
-            'debug' => $debug,
+            'debug'    => $debug,
         ];
 
         return $data;

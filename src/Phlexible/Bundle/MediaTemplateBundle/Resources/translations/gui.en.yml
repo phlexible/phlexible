@@ -148,6 +148,20 @@ mediatemplates:
     white: White
     black: Black
     random: Random
+    framerate: 'framerate'
+    help_framerate: 'help_framerate'
+    resolution: 'resolution'
+    help_resolution: 'help_resolution'
+    jpeg_quality: 'jpeg_quality'
+    help_jpeg_quality: 'help_jpeg_quality'
+    links: 'Links'
+    disable: 'disable'
+    new_window: 'new_window'
+    help_links_disable: 'help_links_disable'
+    help_links_new_window: 'help_links_new_window'
+    zlib: 'zlib'
+    enable: 'enable'
+    help_zlib_enable: 'help_zlib_enable'
 
     filter: Filter
     no_filter: No filter

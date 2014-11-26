@@ -22,20 +22,51 @@ Phlexible.mediatemplates.pdf2swf.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     {
                         xtype: 'numberfield',
                         width: 280,
-                        name: 'quality',
-                        fieldLabel: this.strings.quality,
-                        helpText: this.strings.help_quality,
-                        minValue: 1,
-                        maxValue: 100
+                        name: 'resolution',
+                        fieldLabel: this.strings.resolution,
+                        helpText: this.strings.help_resolution,
+                        minValue: 1
                     },
                     {
                         xtype: 'numberfield',
                         width: 280,
-                        name: 'flash_version',
-                        fieldLabel: this.strings.flash_version,
-                        helpText: this.strings.help_flash_version,
+                        name: 'framerate',
+                        fieldLabel: this.strings.framerate,
+                        helpText: this.strings.help_framerate,
+                        minValue: 1
+                    },
+                    {
+                        xtype: 'numberfield',
+                        width: 280,
+                        name: 'jpeg_quality',
+                        fieldLabel: this.strings.quality,
+                        helpText: this.strings.help_quality,
                         minValue: 0,
                         maxValue: 100
+                    },
+                    {
+                        xtype: 'checkbox',
+                        width: 280,
+                        name: 'links_disable',
+                        fieldLabel: this.strings.links,
+                        boxLabel: this.strings.disable,
+                        helpText: this.strings.help_links_disable
+                    },
+                    {
+                        xtype: 'checkbox',
+                        width: 280,
+                        name: 'links_new_window',
+                        fieldLabel: this.strings.links,
+                        boxLabel: this.strings.new_window,
+                        helpText: this.strings.help_links_new_window
+                    },
+                    {
+                        xtype: 'checkbox',
+                        width: 280,
+                        name: 'zlib_enable',
+                        fieldLabel: this.strings.zlib,
+                        boxLabel: this.strings.enable,
+                        helpText: this.strings.help_zlib_enable
                     }
                 ]
             }

@@ -15,11 +15,11 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
- * Video preview
+ * Video previewer
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class VideoPreview implements PreviewerInterface
+class VideoPreviewer implements PreviewerInterface
 {
     /**
      * @var VideoTemplateApplier

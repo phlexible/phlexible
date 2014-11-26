@@ -39,15 +39,15 @@ class PdfTemplate extends AbstractTemplate
     public function getAllowedParameters()
     {
         return array(
-            'stop',
-            'quality',
-            'same_window',
-            'flash_version',
-            'page_range',
-            'fonts',
-            'flatten',
+            'jpeg_quality',
+            'pages',
+            'zlib_enable',
+            'simpleviewer_enable',
+            'links_new_window',
+            'links_disable',
+            'resolution',
+            'framerate',
             'viewer',
-            'default_viewer',
         );
     }
 }

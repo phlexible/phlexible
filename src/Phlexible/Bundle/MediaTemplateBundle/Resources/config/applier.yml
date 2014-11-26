@@ -9,7 +9,7 @@ services:
 
     phlexible_media_template.applier.pdf:
         class: Phlexible\Bundle\MediaTemplateBundle\Applier\PdfTemplateApplier
-        arguments: [@phlexible_media_tool.pdf2swf]
+        arguments: [@phlexible_media_tool.swftools.pdf2swf]
 
     phlexible_media_template.applier.video:
         class: Phlexible\Bundle\MediaTemplateBundle\Applier\VideoTemplateApplier

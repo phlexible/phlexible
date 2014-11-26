@@ -93,7 +93,6 @@ mediatemplates:
     help_no_info: 'Keine zusätzlichen Informationen anzeigen'
     help_no_timestamp: 'Zeitmarke nicht anzeigen'
     help_text: 'Text der am oberen Rand des Bildes angezeigt wird'
-    help_flash_version: 'Version der generierten Flashdatei'
     method_width: 'Feste Breite'
     method_height: 'Feste Höhe'
     method_exact: 'Exaktes Einpassen ohne Auffüllen'
@@ -148,6 +147,20 @@ mediatemplates:
     white: Weiss
     black: Schwarz
     random: Zufällig
+    framerate: 'framerate'
+    help_framerate: 'help_framerate'
+    resolution: 'resolution'
+    help_resolution: 'help_resolution'
+    jpeg_quality: 'jpeg_quality'
+    help_jpeg_quality: 'help_jpeg_quality'
+    links: 'Links'
+    disable: 'disable'
+    new_window: 'new_window'
+    help_links_disable: 'help_links_disable'
+    help_links_new_window: 'help_links_new_window'
+    zlib: 'zlib'
+    enable: 'enable'
+    help_zlib_enable: 'help_zlib_enable'
 
     filter: Filter
     no_filter: Kein Filter

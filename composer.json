@@ -34,7 +34,7 @@
         "twig/twig": "~1.15",
         "brainbits/mime": "~1.0",
         "brainbits/pdftotext": "~1.0",
-        "brainbits/swftools": "~1.0",
+        "swftools/swftools": "~0.3",
         "brainbits/image-analyzer": "~1.0",
         "brainbits/image-converter": "~1.0",
         "rhumsaa/uuid": "~2.7",

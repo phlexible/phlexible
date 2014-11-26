@@ -1,30 +1,40 @@
-parameters:
-    phlexible_media_tool.swftools.pdf2swf: pdf2swf
-    phlexible_media_tool.swftools.swfdump: swfdump
-    phlexible_media_tool.swftools.swfcombine: swfcombine
-
 services:
-    phlexible_media_tool.pdf2swf:
-        class: Brainbits\SwfTools\Pdf2swf
-        factory_class: Brainbits\SwfTools\Pdf2swf
-        factory_method: load
-        arguments: [[%phlexible_media_tool.swftools.pdf2swf%], @logger]
+    phlexible_media_tool.swftools.driver_container:
+        class: SwfTools\Binary\DriverContainer
+        arguments:
+            - %phlexible_media_tool.swftools.configuration%
+            - @logger
         tags:
             - {name: monolog.logger, channel: media_tools}
 
-    phlexible_media_tool.swfdump:
-        class: Brainbits\SwfTools\SwfDump
-        factory_class: Brainbits\SwfTools\SwfDump
-        factory_method: load
-        arguments: [[%phlexible_media_tool.swftools.swfdump%], @logger]
+    phlexible_media_tool.swftools.pdf2swf:
+        class: SwfTools\Binary\Pdf2swf
+        factory_class: SwfTools\Binary\Pdf2swf
+        factory_method: create
+        arguments: [%phlexible_media_tool.swftools.configuration%, @logger]
         tags:
             - {name: monolog.logger, channel: media_tools}
 
-    phlexible_media_tool.swfcombine:
-        class: Brainbits\SwfTools\SwfCombine
-        factory_class: Brainbits\SwfTools\SwfCombine
-        factory_method: load
-        arguments: [[%phlexible_media_tool.swftools.swfcombine%], @logger]
+    phlexible_media_tool.swftools.swfrender:
+        class: SwfTools\Binary\Swfrender
+        factory_class: SwfTools\Binary\Swfrender
+        factory_method: create
+        arguments: [%phlexible_media_tool.swftools.configuration%, @logger]
         tags:
             - {name: monolog.logger, channel: media_tools}
 
+    phlexible_media_tool.swftools.swfextract:
+        class: SwfTools\Binary\Swfextract
+        factory_class: SwfTools\Binary\Swfextract
+        factory_method: create
+        arguments: [%phlexible_media_tool.swftools.configuration%, @logger]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+
+    phlexible_media_tool.swftools.pdf_file:
+        class: SwfTools\Processor\PDFFile
+        arguments: [@phlexible_media_tool.swftools.driver_container]
+
+    phlexible_media_tool.swftools.flash_file:
+        class: SwfTools\Processor\FlashFile
+        arguments: [@phlexible_media_tool.swftools.driver_container]

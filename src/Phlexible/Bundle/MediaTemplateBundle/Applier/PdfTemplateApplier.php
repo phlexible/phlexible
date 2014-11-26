@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Applier;
 
-use Brainbits\SwfTools\Pdf2swf;
 use Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate;
 use Psr\Log\LoggerInterface;
+use SwfTools\Binary\Pdf2swf;
 
 /**
  * PDF template applier
@@ -20,14 +20,14 @@ use Psr\Log\LoggerInterface;
 class PdfTemplateApplier
 {
     /**
-     * @var Pdf2Swf
+     * @var Pdf2swf
      */
     private $pdf2swf;
 
     /**
-     * @param Pdf2Swf $pdf2swf
+     * @param Pdf2swf $pdf2swf
      */
-    public function __construct(Pdf2Swf $pdf2swf)
+    public function __construct(Pdf2swf $pdf2swf)
     {
         $this->pdf2swf = $pdf2swf;
     }
@@ -77,88 +77,44 @@ class PdfTemplateApplier
      */
     public function apply(PdfTemplate $template, $inFilename, $outFilename)
     {
-        $options = $this->pdf2swf->options();
+        $options = array();
 
-        $options->setParam('storeallcharacters');
-
-        if ($template->hasParameter('pages')) {
-            $options->setPages($template->getParameter('pages'));
+        $pageRange = '1-';
+        if ($template->getParameter('pages')) {
+            $pageRange = $template->getParameter('pages');
         }
 
-        if ($template->hasParameter('password')) {
-            $options->setPassword($template->getParameter('password'));
+        if ($template->getParameter('zlib_enable')) {
+            $options[] = Pdf2swf::OPTION_ZLIB_ENABLE;
         }
 
-        if ($template->hasParameter('zlib')) {
-            $options->setZlib($template->getParameter('zlib'));
+        if ($template->getParameter('simpleviewer_enable')) {
+            $options[] = Pdf2swf::OPTION_ENABLE_SIMPLEVIEWER;
         }
 
-        if ($template->hasParameter('ignore')) {
-            $options->setIgnore($template->getParameter('ignore'));
+        $jpegQuality = 75;
+        if ($template->getParameter('jpeg_quality')) {
+            $jpegQuality = $template->getParameter('jpeg_quality');
         }
 
-        if ($template->hasParameter('quality')) {
-            $options->setJpegQuality($template->getParameter('quality'));
+        if ($template->getParameter('links_new_window')) {
+            $options[] = Pdf2swf::OPTION_LINKS_OPENNEWWINDOW;
         }
 
-        if ($template->hasParameter('same_window')) {
-            $options->setSameWindow($template->getParameter('same_window'));
+        if ($template->getParameter('links_disable')) {
+            $options[] = Pdf2swf::OPTION_LINKS_DISABLE;
         }
 
-        if ($template->hasParameter('stop')) {
-            $options->setStop($template->getParameter('stop'));
-        } else {
-            $options->setStop(true);
+        $resolution = 72;
+        if ($template->getParameter('resolution')) {
+            $resolution = $template->getParameter('resolution');
         }
 
-        if ($template->hasParameter('flash_version')) {
-            $options->setFlashVersion($template->getParameter('flash_version'));
-        } else {
-            $options->setFlashVersion(9);
+        $frameRate = 15;
+        if ($template->getParameter('framerate')) {
+            $frameRate = $template->getParameter('framerate');
         }
 
-        if ($template->hasParameter('font_dir')) {
-            $options->setFontDir($template->getParameter('font_dir'));
-        }
-
-        if ($template->hasParameter('default_viewer')) {
-            $options->setDefaultViewer($template->getParameter('default_viewer'));
-        }
-
-        if ($template->hasParameter('default_loader')) {
-            $options->setDefaultLoader($template->getParameter('default_loader'));
-        }
-
-        if ($template->hasParameter('viewer')) {
-            $options->setViewer($template->getParameter('viewer'));
-        }
-
-        if ($template->hasParameter('preloader')) {
-            $options->setPreLoader($template->getParameter('preloader'));
-        }
-
-        if ($template->hasParameter('shapes')) {
-            $options->setShapes($template->getParameter('shapes'));
-        }
-
-        if ($template->hasParameter('fonts')) {
-            $options->setFonts($template->getParameter('fonts'));
-        } else {
-            $options->setFonts(true);
-        }
-
-        if ($template->hasParameter('flatten')) {
-            $options->setFlatten($template->getParameter('flatten'));
-        } else {
-            $options->setFlatten(true);
-        }
-
-        if ($template->hasParameter('max_time')) {
-            $options->setMaxTime($template->getParameter('max_time'));
-        }
-
-        $options->setOutput($outFilename);
-
-        $this->pdf2swf->write($inFilename, $options->getOptions());
+        $this->pdf2swf->toSwf($inFilename, $outFilename, $options, Pdf2swf::CONVERT_POLY2BITMAP, $resolution, $pageRange, $frameRate, $jpegQuality);
     }
 }
