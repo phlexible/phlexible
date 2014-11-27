@@ -8,8 +8,7 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
-use Brainbits\PdfToText\PdfToText;
-use Brainbits\PdfToText\PdfToTextOptions;
+use Brainbits\PdfToText\Processor\PdfFile;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**
@@ -20,16 +19,16 @@ use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 class PdfToTextExtractor implements ContentExtractorInterface
 {
     /**
-     * @var PdfToText
+     * @var PdfFile
      */
-    private $pdfToText;
+    private $pdfFile;
 
     /**
-     * @param PdfToText $pdfToText
+     * @param PdfFile $pdfFile
      */
-    public function __construct(PdfToText $pdfToText)
+    public function __construct(PdfFile $pdfFile)
     {
-        $this->pdfToText = $pdfToText;
+        $this->pdfFile = $pdfFile;
     }
 
     /**
@@ -37,7 +36,7 @@ class PdfToTextExtractor implements ContentExtractorInterface
      */
     public function isAvailable()
     {
-        return $this->pdfToText->isAvailable();
+        return true;
     }
 
     /**
@@ -53,9 +52,7 @@ class PdfToTextExtractor implements ContentExtractorInterface
      */
     public function extract(FileInterface $file)
     {
-        $pdfToTextOptions = new PdfToTextOptions();
-        $pdfToTextOptions->encoding('UTF-8');
-        $output = $this->pdfToText->write($file->getPhysicalPath(), $pdfToTextOptions->getOptions());
+        $output = $this->pdfFile->toText($file->getPhysicalPath());
 
         // set pdftotext output as content
         // strip UTF-8 control characters

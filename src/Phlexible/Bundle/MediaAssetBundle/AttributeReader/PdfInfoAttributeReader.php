@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Brainbits\PdfToText\PdfInfo;
+use Brainbits\PdfToText\Processor\PdfFile;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 
@@ -20,16 +20,16 @@ use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 class PdfInfoAttributeReader implements AttributeReaderInterface
 {
     /**
-     * @var PdfInfo
+     * @var PdfFile
      */
-    private $pdfinfo;
+    private $pdfFile;
 
     /**
-     * @param PdfInfo $pdfinfo
+     * @param PdfFile $pdfFile
      */
-    public function __construct(PdfInfo $pdfinfo)
+    public function __construct(PdfFile $pdfFile)
     {
-        $this->pdfinfo = $pdfinfo;
+        $this->pdfFile = $pdfFile;
     }
 
     /**
@@ -56,7 +56,7 @@ class PdfInfoAttributeReader implements AttributeReaderInterface
         $filename = $fileSource->getPath();
 
         try {
-            $infos = $this->pdfinfo->getInfo($filename);
+            $infos = $this->pdfFile->getInfo($filename);
 
             foreach ($infos as $key => $value) {
                 $attributes->set(strtolower("pdf.$key"), $value);

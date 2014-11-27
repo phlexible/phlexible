@@ -1,0 +1,32 @@
+services:
+    phlexible_media_tool.poppler.pdfinfo:
+        class: Poppler\Driver\Pdfinfo
+        factory_class: Poppler\Driver\Pdfinfo
+        factory_method: create
+        arguments: [@logger, [%phlexible_media_tool.poppler.configuration%]]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+
+    phlexible_media_tool.poppler.pdftotext:
+        class: Poppler\Driver\Pdftotext
+        factory_class: Poppler\Driver\Pdftotext
+        factory_method: create
+        arguments: [@logger, [%phlexible_media_tool.poppler.configuration%]]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+
+    phlexible_media_tool.poppler.pdftohtml:
+        class: Poppler\Driver\Pdftohtml
+        factory_class: Poppler\Driver\Pdftohtml
+        factory_method: create
+        arguments: [@logger, [%phlexible_media_tool.poppler.configuration%]]
+        tags:
+            - {name: monolog.logger, channel: media_tools}
+
+    phlexible_media_tool.poppler.pdf_file:
+        class: Brainbits\PdfToText\Processor\PdfFile
+        arguments:
+            - @phlexible_media_tool.poppler.pdfinfo
+            - @phlexible_media_tool.poppler.pdftotext
+            - @phlexible_media_tool.poppler.pdftohtml
+

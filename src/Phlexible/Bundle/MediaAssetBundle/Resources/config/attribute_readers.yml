@@ -21,7 +21,7 @@ services:
     phlexible_media_asset.reader.attribute.pdfinfo:
         class: Phlexible\Bundle\MediaAssetBundle\AttributeReader\PdfInfoAttributeReader
         public: false
-        arguments: [@phlexible_media_tool.pdfinfo]
+        arguments: [@phlexible_media_tool.poppler.pdf_file]
         tags:
             - {name: phlexible_media_asset.attribute_reader}
 

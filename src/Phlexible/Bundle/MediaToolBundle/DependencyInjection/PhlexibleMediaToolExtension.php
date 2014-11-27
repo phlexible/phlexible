@@ -30,7 +30,7 @@ class PhlexibleMediaToolExtension extends Extension
         $loader->load('ffmpeg.yml');
         $loader->load('imagemagick.yml');
         $loader->load('swftools.yml');
-        $loader->load('pdftotext.yml');
+        $loader->load('poppler.yml');
         $loader->load('imageanalyzer.yml');
         $loader->load('imageconverter.yml');
 
@@ -43,8 +43,12 @@ class PhlexibleMediaToolExtension extends Extension
             'swfextract.binaries' => $config['swftools']['swfextract'],
             'timeout'             => $config['swftools']['timeout']
         ));
-        $container->setParameter('phlexible_media_tool.pdftotext.pdftotext', $config['pdftotext']['pdftotext']);
-        $container->setParameter('phlexible_media_tool.pdftotext.pdfinfo', $config['pdftotext']['pdfinfo']);
+        $container->setParameter('phlexible_media_tool.poppler.configuration', array(
+            'pdfinfo.binaries'   => $config['poppler']['pdfinfo'],
+            'pdftotext.binaries' => $config['poppler']['pdftotext'],
+            'pdftohtml.binaries' => $config['poppler']['pdftohtml'],
+            'timeout'            => $config['poppler']['timeout'],
+        ));
         $container->setParameter('phlexible_media_tool.imagemagick.identify', $config['imagemagick']['identify']);
         $container->setParameter('phlexible_media_tool.imagemagick.convert', $config['imagemagick']['convert']);
         $container->setParameter('phlexible_media_tool.imagemagick.mogrify', $config['imagemagick']['mogrify']);

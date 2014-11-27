@@ -2,7 +2,7 @@ services:
     phlexible_media_extractor.extractor.content.pdftotext:
         class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\PdfToTextExtractor
         public: false
-        arguments: [@phlexible_media_tool.pdftotext]
+        arguments: [@phlexible_media_tool.poppler.pdf_file]
         tags:
             - {name: phlexible_media_asset.content_extractor}
 
