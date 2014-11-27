@@ -6,23 +6,24 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaTemplateBundle\Preview;
+namespace Phlexible\Bundle\MediaTemplateBundle\Previewer;
 
 use Monolog\Handler\TestHandler;
-use Phlexible\Bundle\MediaTemplateBundle\Applier\AudioTemplateApplier;
-use Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate;
+use Phlexible\Bundle\MediaSiteBundle\Model\File;
+use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
+use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
- * Audio preview
+ * Image previewer
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class AudioPreviewer implements PreviewerInterface
+class ImagePreviewer implements PreviewerInterface
 {
     /**
-     * @var AudioTemplateApplier
+     * @var ImageTemplateApplier
      */
     private $applier;
 
@@ -37,11 +38,11 @@ class AudioPreviewer implements PreviewerInterface
     private $cacheDir;
 
     /**
-     * @param AudioTemplateApplier $applier
+     * @param ImageTemplateApplier $applier
      * @param FileLocator          $locator
      * @param string               $cacheDir
      */
-    public function __construct(AudioTemplateApplier $applier, FileLocator $locator, $cacheDir)
+    public function __construct(ImageTemplateApplier $applier, FileLocator $locator, $cacheDir)
     {
         $this->applier = $applier;
         $this->locator = $locator;
@@ -63,18 +64,25 @@ class AudioPreviewer implements PreviewerInterface
      */
     public function create(array $params)
     {
-        $filePath = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/audio/test.mp3', null, true);
+        $filePrefix = "@PhlexibleMediaTemplateBundle/Resources/public/images/test_{$params['preview_image']}";
+        unset($params['preview_image']);
+
+        $filePath = $this->locator->locate("$filePrefix.jpg", null, true);
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
             $filesystem->mkdir($this->cacheDir);
         }
 
-        $template = new AudioTemplate();
+        $template = new ImageTemplate();
         $templateKey = 'unknown';
         $debug = false;
         foreach ($params as $key => $value) {
-            if ($key === 'template') {
+            if ($key === 'xmethod') {
+                $key = 'method';
+            } elseif ($key === 'backgroundcolor' && !preg_match('/^\#[0-9A-Za-z]{6}$/', $value)) {
+                $value = '';
+            } elseif ($key === 'template') {
                 $templateKey = $value;
                 continue;
             } elseif ($key === '_dc') {
@@ -86,32 +94,20 @@ class AudioPreviewer implements PreviewerInterface
 
             $template->setParameter($key, $value);
         }
-
-        if ($debug) {
-            $logger = $this->applier->getLogger();
-            $logger->pushHandler(new TestHandler());
-        }
+        //$template->setNoCache();
 
         $extension = $this->applier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_audio.' . $extension;
-        $this->applier->apply($template, $filePath, $cacheFilename);
+        $cacheFilename = $this->cacheDir . 'preview_image.' . $extension;
+        $image = $this->applier->apply($template, new File(), $filePath, $cacheFilename);
 
-        if ($debug) {
-            /* @var $logger \Monolog\Logger */
-            $handler = $this->applier->getLogger()->popHandler();
-
-            $debug = '';
-            foreach ($handler->getRecords() as $record) {
-                $debug .= $record['message'] . PHP_EOL;
-            }
-        } else {
-            $debug = '';
-        }
+        $debug = json_encode($template->getParameters());
 
         $data = [
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
             'template' => $templateKey,
+            'width'    => $image->getSize()->getWidth(),
+            'height'   => $image->getSize()->getHeight(),
             'format'   => $extension,
             'mimetype' => $this->applier->getMimetype($template),
             'debug'    => $debug,

@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaTemplateBundle\Preview;
+namespace Phlexible\Bundle\MediaTemplateBundle\Previewer;
 
 /**
  * Previewer interface

@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaTemplateBundle\Preview;
+namespace Phlexible\Bundle\MediaTemplateBundle\Previewer;
 
 use Monolog\Handler\TestHandler;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\VideoTemplateApplier;

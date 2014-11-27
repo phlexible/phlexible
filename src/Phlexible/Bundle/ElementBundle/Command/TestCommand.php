@@ -64,6 +64,12 @@ class TestCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $imagine = new \Imagine\Imagick\Imagine();
+        $im = $imagine->open('/Users/swentz/Pictures/test-drive-unlimited-20050518034855099.jpg');
+        $m = $im->show();
+        print_r($m->toArray());
+
+        $output->writeln('x');
         return 0;
     }
 }

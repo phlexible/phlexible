@@ -1,0 +1,4 @@
+services:
+    phlexible_media_tool.imagine:
+        class: Imagine\Imagick\Imagine
+

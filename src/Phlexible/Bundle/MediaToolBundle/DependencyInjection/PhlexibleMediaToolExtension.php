@@ -28,11 +28,10 @@ class PhlexibleMediaToolExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('mime.yml');
         $loader->load('ffmpeg.yml');
-        $loader->load('imagemagick.yml');
         $loader->load('swftools.yml');
         $loader->load('poppler.yml');
         $loader->load('imageanalyzer.yml');
-        $loader->load('imageconverter.yml');
+        $loader->load('imagine.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
@@ -43,24 +42,24 @@ class PhlexibleMediaToolExtension extends Extension
             'swfextract.binaries' => $config['swftools']['swfextract'],
             'timeout'             => $config['swftools']['timeout']
         ));
+
         $container->setParameter('phlexible_media_tool.poppler.configuration', array(
             'pdfinfo.binaries'   => $config['poppler']['pdfinfo'],
             'pdftotext.binaries' => $config['poppler']['pdftotext'],
             'pdftohtml.binaries' => $config['poppler']['pdftohtml'],
             'timeout'            => $config['poppler']['timeout'],
         ));
-        $container->setParameter('phlexible_media_tool.imagemagick.identify', $config['imagemagick']['identify']);
-        $container->setParameter('phlexible_media_tool.imagemagick.convert', $config['imagemagick']['convert']);
-        $container->setParameter('phlexible_media_tool.imagemagick.mogrify', $config['imagemagick']['mogrify']);
+
         $container->setParameter('phlexible_media_tool.ffmpeg.configuration', array(
             'ffprobe' => $config['ffmpeg']['ffprobe'],
             'ffmpeg'  => $config['ffmpeg']['ffmpeg'],
         ));
+
         $container->setParameter('phlexible_media_tool.mime.file', $config['mime']['file']);
         $container->setParameter('phlexible_media_tool.mime.magicfile', $config['mime']['magicfile']);
 
         $container->setAlias('phlexible_media_tool.image_analyzer.driver', $config['image_analyzer']['driver']);
-        $container->setAlias('phlexible_media_tool.image_converter.driver', $config['image_converter']['driver']);
+
         $container->setAlias('phlexible_media_tool.mime.adapter', $config['mime_detector']['adapter']);
     }
 }

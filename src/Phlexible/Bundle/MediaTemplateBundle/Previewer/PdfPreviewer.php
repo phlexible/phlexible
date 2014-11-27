@@ -6,24 +6,23 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaTemplateBundle\Preview;
+namespace Phlexible\Bundle\MediaTemplateBundle\Previewer;
 
 use Monolog\Handler\TestHandler;
-use Phlexible\Bundle\MediaSiteBundle\Model\File;
-use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
-use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
+use Phlexible\Bundle\MediaTemplateBundle\Applier\PdfTemplateApplier;
+use Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
- * Image previewer
+ * PDF previewer
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ImagePreviewer implements PreviewerInterface
+class PdfPreviewer implements PreviewerInterface
 {
     /**
-     * @var ImageTemplateApplier
+     * @var PdfTemplateApplier
      */
     private $applier;
 
@@ -38,11 +37,11 @@ class ImagePreviewer implements PreviewerInterface
     private $cacheDir;
 
     /**
-     * @param ImageTemplateApplier $applier
-     * @param FileLocator          $locator
-     * @param string               $cacheDir
+     * @param PdfTemplateApplier $applier
+     * @param FileLocator        $locator
+     * @param string             $cacheDir
      */
-    public function __construct(ImageTemplateApplier $applier, FileLocator $locator, $cacheDir)
+    public function __construct(PdfTemplateApplier $applier, FileLocator $locator, $cacheDir)
     {
         $this->applier = $applier;
         $this->locator = $locator;
@@ -64,31 +63,18 @@ class ImagePreviewer implements PreviewerInterface
      */
     public function create(array $params)
     {
-        $filePrefix = "@PhlexibleMediaTemplateBundle/Resources/public/images/test_{$params['preview_image']}";
-        unset($params['preview_image']);
-
-        $filePath = $this->locator->locate("$filePrefix.png", null, true);
-        if (!$filePath) {
-            $filePath = $this->locator->locate("$filePrefix.jpg", null, true);
-            if (!$filePath) {
-                throw new \LogicException("Preview image not found");
-            }
-        }
+        $filePath = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/pdf/test.pdf', null, true);
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
             $filesystem->mkdir($this->cacheDir);
         }
 
-        $template = new ImageTemplate();
+        $template = new PdfTemplate();
         $templateKey = 'unknown';
         $debug = false;
         foreach ($params as $key => $value) {
-            if ($key === 'xmethod') {
-                $key = 'method';
-            } elseif ($key === 'backgroundcolor' && !preg_match('/^\#[0-9A-Za-z]{6}$/', $value)) {
-                $value = '';
-            } elseif ($key === 'template') {
+            if ($key === 'template') {
                 $templateKey = $value;
                 continue;
             } elseif ($key === '_dc') {
@@ -100,7 +86,8 @@ class ImagePreviewer implements PreviewerInterface
 
             $template->setParameter($key, $value);
         }
-        //$template->setNoCache();
+
+        $template->setParameter('simpleviewer_enable', 1);
 
         if ($debug) {
             $logger = $this->applier->getLogger();
@@ -108,8 +95,8 @@ class ImagePreviewer implements PreviewerInterface
         }
 
         $extension = $this->applier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_image.' . $extension;
-        $image = $this->applier->apply($template, new File(), $filePath, $cacheFilename);
+        $cacheFilename = $this->cacheDir . 'preview_pdf.' . $extension;
+        $this->applier->apply($template, $filePath, $cacheFilename);
 
         if ($debug) {
             /* @var $logger \Monolog\Logger */
@@ -124,14 +111,12 @@ class ImagePreviewer implements PreviewerInterface
         }
 
         $data = [
-            'file'     => basename($cacheFilename),
-            'size'     => filesize($cacheFilename),
+            'file' => basename($cacheFilename),
+            'size' => filesize($cacheFilename),
             'template' => $templateKey,
-            'width'    => $image->getWidth(),
-            'height'   => $image->getHeight(),
-            'format'   => $extension,
+            'format' => $extension,
             'mimetype' => $this->applier->getMimetype($template),
-            'debug'    => $debug,
+            'debug' => $debug,
         ];
 
         return $data;

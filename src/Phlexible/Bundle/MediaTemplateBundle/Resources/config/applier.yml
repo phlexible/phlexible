@@ -5,7 +5,7 @@ services:
 
     phlexible_media_template.applier.image:
         class: Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier
-        arguments: [@phlexible_media_tool.image_converter]
+        arguments: [@phlexible_media_tool.imagine]
 
     phlexible_media_template.applier.pdf:
         class: Phlexible\Bundle\MediaTemplateBundle\Applier\PdfTemplateApplier

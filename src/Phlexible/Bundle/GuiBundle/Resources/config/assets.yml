@@ -31,7 +31,3 @@ services:
     phlexible_gui.asset.builder.translations:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\TranslationsBuilder
         arguments: [@phlexible_gui.catalog_accessor, @phlexible_gui.compressor.javascript, %asset.cache_dir%]
-
-    phlexible_gui.asset.textimage.renderer:
-        class: Phlexible\Bundle\GuiBundle\Asset\Textimage\TextimageRenderer
-        arguments: [%kernel.bundles%, @phlexible_media_tool.convert, %asset.cache_dir%]

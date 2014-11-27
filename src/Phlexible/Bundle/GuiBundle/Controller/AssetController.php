@@ -83,55 +83,5 @@ class AssetController extends Controller
 
         return new Response($content, 200, ['Content-type' => 'text/javascript']);
     }
-
-    /**
-     * Create and deliver an image based on a translation string
-     *
-     * @param Request $request
-     *
-     * @return Response
-     * @Route("/textimage", name="asset_textimage")
-     */
-    public function textimageAction(Request $request)
-    {
-        $key = $request->query->get('key', null);
-        $text = $request->query->get('text', null);
-        $color = $request->query->get('color', null);
-        $location = $request->query->get('location', 'west');
-        $component = $request->query->get('component', null);
-        $icon = $request->query->get('icon', null);
-
-        $user = $this->getUser();
-
-        if (!$text) {
-            if (!$key) {
-                $this->createNotFoundException('Neither key nor text given.');
-            }
-
-            $translator = $this->get('translator');
-            $text = html_entity_decode($translator->trans($key, [], 'gui', $user->getInterfaceLanguage('en')));
-        }
-
-        if (!$color) {
-            $color = '7fa1cc';
-        }
-        $color = '#' . ltrim($color, '#');
-
-        $iconPath = null;
-        if ($component && $icon) {
-            $class = $this->container->getParameter('kernel.bundles')[ucfirst($component) . 'Bundle'];
-            $reflection = new \ReflectionClass($class);
-            $iconPath = dirname($reflection->getFileName()) . '/Resources/public/icons/' . $icon . '.png';
-        }
-
-        $textimage = $this->get('phlexible_gui.asset.textimage.renderer');
-        $textimageFile = $textimage->get($text, $color, $location, $iconPath);
-
-        if (!$textimageFile) {
-            return new Response('Error creating image.', 500);
-        }
-
-        return new Response(file_get_contents($textimageFile), 200, ['Content-type' => 'image/png']);
-    }
 }
 

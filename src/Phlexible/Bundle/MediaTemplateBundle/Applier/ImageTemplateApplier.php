@@ -8,9 +8,14 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Applier;
 
-use Brainbits\ImageConverter\Driver\DriverInterface;
-use Brainbits\ImageConverter\Image\Point;
-use Brainbits\ImageConverter\ImageConverter;
+use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
+use Imagine\Image\Palette\CMYK;
+use Imagine\Image\Palette\Grayscale;
+use Imagine\Image\Palette\RGB;
+use Imagine\Image\Point;
+use Imagine\Image\Point\Center;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Psr\Log\LoggerInterface;
@@ -23,16 +28,16 @@ use Psr\Log\LoggerInterface;
 class ImageTemplateApplier
 {
     /**
-     * @var ImageConverter
+     * @var ImagineInterface
      */
-    private $converter;
+    private $imagine;
 
     /**
-     * @param ImageConverter $converter
+     * @param ImagineInterface $imagine
      */
-    public function __construct(ImageConverter $converter)
+    public function __construct(ImagineInterface $imagine)
     {
-        $this->converter = $converter;
+        $this->imagine = $imagine;
     }
 
     /**
@@ -50,7 +55,7 @@ class ImageTemplateApplier
      */
     public function getLogger()
     {
-        return $this->converter->getDriver()->getConvertDriver()->getProcessRunner()->getLogger();
+        return null;
     }
 
     /**
@@ -87,73 +92,122 @@ class ImageTemplateApplier
      * @param string        $filename
      * @param string        $outFilename
      *
-     * @return DriverInterface
+     * @return ImageInterface
      */
     public function apply(ImageTemplate $template, FileInterface $file, $filename, $outFilename)
     {
-        $image = $this->converter->load($filename, 0);
+        $image = $this->imagine->open($filename);
 
-        if ($focalpoint = $file->getAttribute('focalpoint') && !empty($focalpoint['active'])) {
-            $image->setCenter(new Point($focalpoint['x'], $focalpoint['y']));
-        }
+        $options = array();
 
         if ($template->hasParameter('format', true)) {
-            $image->setFormat($template->getParameter('format'));
+            $options['format'] = $template->getParameter('format');
         }
 
         if ($template->hasParameter('quality', true)) {
-            $image->setQuality($template->getParameter('quality'));
-        }
-
-        if ($template->hasParameter('for_web', true) && $template->getParameter('for_web')) {
-            $image->stripProfiles();
-
-            if ($template->hasParameter('colorspace')) {
-                $colorspace = $template->getParameter('colorspace');
-                if ($colorspace == 'cmyk') {
-                    $colorspace = 'rgb';
-                }
-                $image->setColorspace($colorspace);
-            }
-        } elseif ($template->hasParameter('colorspace', true)) {
-            $image->setColorspace($template->getParameter('colorspace'));
-        }
-
-        if ($template->hasParameter('depth', true)) {
-            $image->setColorDepth($template->getParameter('depth'));
+            $options['jpeg_quality'] = $template->getParameter('quality');
+            $options['png_compression_level'] = $template->getParameter('quality');
+            $options['png_compression_filter'] = $template->getParameter('quality');
         }
 
         if ($template->hasParameter('tiffcompression', true)) {
-            $image->setTiffCompression($template->getParameter('tiffcompression'));
+            //$image->setTiffCompression($template->getParameter('tiffcompression'));
         }
 
-        $backgroundColor = null;
-        if ($template->hasParameter('backgroundcolor', true)) {
-            //$backgroundColor = $template->getParameter('backgroundcolor');
-            $image->setBackgroundColor($template->getParameter('backgroundcolor'));
+        if ($template->hasParameter('for_web', true) && $template->getParameter('for_web')) {
+            $image->strip();
+
+            if ($template->hasParameter('colorspace')) {
+                $colorspace = $template->getParameter('colorspace');
+                if ($colorspace === 'grayscale') {
+                    $image->usePalette(new Grayscale());
+                } else {
+                    $image->usePalette(new RGB());
+                }
+            }
+        } elseif ($template->hasParameter('colorspace', true)) {
+            $colorspace = $template->getParameter('colorspace');
+            if ($colorspace === 'grayscale') {
+                $image->usePalette(new Grayscale());
+            } elseif ($colorspace === 'cmyk') {
+                $image->usePalette(new CMYK());
+            } else {
+                $image->usePalette(new RGB());
+            }
         }
 
-        $scale = DriverInterface::SCALE_NONE;
         if ($template->hasParameter('scale', true)) {
             if ($template->getParameter('scale') === 'up') {
-                $scale = DriverInterface::SCALE_UP;
+                // only scale up
             } elseif ($template->getParameter('scale') === 'down') {
-                $scale = DriverInterface::SCALE_DOWN;
+                // only scale down
             }
         }
 
         $method = $template->getParameter('method');
 
-        $image->resizeMethod(
-            $method,
-            $template->getParameter('width'),
-            $template->getParameter('height'),
-            $scale,
-            $backgroundColor
-        );
+        if ($method === 'width') {
+            $size = $image->getSize()->widen($template->getParameter('width'));
+            $image->resize($size);
+        } elseif ($method === 'height') {
+            $size = $image->getSize()->heighten($template->getParameter('height'));
+            $image->resize($size);
+        } elseif ($method === 'exact') {
+            $size = new Box($template->getParameter('width'), $template->getParameter('height'));
+            $image->resize($size);
+        } elseif ($method === 'fit') {
+            $size = new Box($template->getParameter('width'), $template->getParameter('height'));
+            $image = $image->thumbnail($size, ImageInterface::THUMBNAIL_INSET);
+        } elseif ($method === 'exactFit') {
+            $size = new Box($template->getParameter('width'), $template->getParameter('height'));
+            $layer = $image->thumbnail($size, ImageInterface::THUMBNAIL_INSET);
+            $layerSize = $layer->getSize();
 
-        $image->write($outFilename);
+            $palette = new RGB();
+            if ($template->hasParameter('backgroundcolor', true)) {
+                $color = $palette->color($template->getParameter('backgroundcolor'), 100);
+            } else {
+                $color = $palette->color('#fff', 0);
+            }
+            $image = $this->imagine->create($size, $color);
+            $image->paste($layer, new Point(
+                floor(($size->getWidth() - $layerSize->getWidth()) / 2),
+                floor(($size->getHeight() - $layerSize->getHeight()) / 2)
+            ));
+        } elseif ($method === 'crop') {
+            $size = new Box($template->getParameter('width'), $template->getParameter('height'));
+            $imageSize = $image->getSize();
 
-        return $this->converter->load($outFilename, 0);
+            if (!$size->contains($imageSize)) {
+                $ratios = array(
+                    $size->getWidth() / $imageSize->getWidth(),
+                    $size->getHeight() / $imageSize->getHeight()
+                );
+                $ratio = max($ratios);
+                if (!$imageSize->contains($size)) {
+                    $imageSize = new Box(
+                        min($imageSize->getWidth(), $size->getWidth()),
+                        min($imageSize->getHeight(), $size->getHeight())
+                    );
+                } else {
+                    $imageSize = $imageSize->scale($ratio);
+                    $image->resize($imageSize);
+                }
+
+                if ($focalpoint = $file->getAttribute('focalpoint') && !empty($focalpoint['active'])) {
+                    // TODO: correct?
+                    $point = new Point($focalpoint['x'], $focalpoint['y']);
+                } else {
+                    $point = new Point(
+                        max(0, round(($imageSize->getWidth() - $size->getWidth()) / 2)),
+                        max(0, round(($imageSize->getHeight() - $size->getHeight()) / 2))
+                    );
+                }
+
+                $image->crop($point, $size);
+            }
+        }
+
+        return $image->save($outFilename, $options);
     }
 }
