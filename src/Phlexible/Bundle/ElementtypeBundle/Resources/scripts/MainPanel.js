@@ -294,7 +294,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     getPreviewWrap: function () {
-        return this.getMainTabPanel().getComponent(4);
+        return this.getMainTabPanel().getComponent(3);
     },
 
     getPreviewPanel: function () {

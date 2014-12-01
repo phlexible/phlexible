@@ -23,6 +23,7 @@ Phlexible.elementtypes.ElementtypeStructureTreeNodeUI = Ext.extend(Ext.tree.Tree
 
                 isOptional = !minRepeat;
                 isRepeatable = minRepeat != maxRepeat && maxRepeat > 1 ? true : false;
+                console.log(n.attributes.properties.configuration.group_single_line);
                 isSingleLine = (n.attributes.properties.configuration.group_single_line ? true : false);
             }
 

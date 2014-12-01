@@ -72,7 +72,7 @@ Phlexible.elementtypes.configuration.FieldConfigurationGroup = Ext.extend(Ext.fo
         this.getComponent(1).setValue(fieldData.repeat_max);
         this.getComponent(2).setValue(fieldData.repeat_default);
         this.getComponent(3).setValue(fieldData.group_show_border);
-        this.getComponent(4).setValue(fieldData.group_single_row);
+        this.getComponent(4).setValue(fieldData.group_single_line);
         this.getComponent(5).setValue(fieldData.label_width);
 
         this.isValid();
@@ -84,7 +84,7 @@ Phlexible.elementtypes.configuration.FieldConfigurationGroup = Ext.extend(Ext.fo
             repeat_max: this.getComponent(1).getValue() || '',
             repeat_default: this.getComponent(2).getValue() || '',
             group_show_border: this.getComponent(3).getValue(),
-            group_single_row: this.getComponent(4).getValue(),
+            group_single_line: this.getComponent(4).getValue(),
             label_width: this.getComponent(5).getValue() || ''
         };
     },
