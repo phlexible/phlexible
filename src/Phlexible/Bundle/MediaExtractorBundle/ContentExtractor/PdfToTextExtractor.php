@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
-use Brainbits\PdfToText\Processor\PdfFile;
+use Poppler\Processor\PdfFile;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 
 /**

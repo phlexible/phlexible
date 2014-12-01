@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Brainbits\PdfToText\Processor\PdfFile;
+use Poppler\Processor\PdfFile;
 use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 

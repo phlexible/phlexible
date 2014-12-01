@@ -24,7 +24,7 @@ services:
             - {name: monolog.logger, channel: media_tools}
 
     phlexible_media_tool.poppler.pdf_file:
-        class: Brainbits\PdfToText\Processor\PdfFile
+        class: Poppler\Processor\PdfFile
         arguments:
             - @phlexible_media_tool.poppler.pdfinfo
             - @phlexible_media_tool.poppler.pdftotext
