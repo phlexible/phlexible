@@ -19,12 +19,16 @@ transitions:
     reject:
         from: [open, reopened]
         to: rejected
+        guard: ~
     reopen:
         from: [rejected, finished]
         to: reopened
+        guard: ~
     finish:
         from: [open, reopened]
         to: finished
+        guard: ~
     close:
         from: [open, rejected, reopened, finished]
         to: closed
+        guard: ~

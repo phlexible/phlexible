@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Translator;
 
+use Symfony\Component\Translation\LoggingTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -40,29 +41,25 @@ class CatalogAccessor
      */
     public function getCatalogues($locale)
     {
-        $this->loadCatalogue($locale);
-        $reflectionClass = new \ReflectionClass($this->translator);
+        if ($this->translator instanceof LoggingTranslator) {
+            $reflectionClass = new \ReflectionClass($this->translator);
+            $property = $reflectionClass->getProperty('translator');
+            $property->setAccessible(true);
+            $translator = $property->getValue($this->translator);
+        } else {
+            $translator = $this->translator;
+        }
+
+        $reflectionClass = new \ReflectionClass($translator);
+        $method = $reflectionClass->getMethod('loadCatalogue');
+        $method->setAccessible(true);
+        $method->invoke($translator, $locale);
+
         $property = $reflectionClass->getProperty('catalogues');
         $property->setAccessible(true);
 
-        $catalogues = $property->getValue($this->translator);
+        $catalogues = $property->getValue($translator);
 
         return $catalogues[$locale];
-    }
-
-    /**
-     * Load catalogue
-     *
-     * @param string $locale
-     *
-     * @return MessageCatalogueInterface
-     */
-    private function loadCatalogue($locale)
-    {
-        $reflection = new \ReflectionClass($this->translator);
-        $method = $reflection->getMethod('loadCatalogue');
-        $method->setAccessible(true);
-
-        return $method->invoke($this->translator, $locale);
     }
 }
