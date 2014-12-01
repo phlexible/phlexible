@@ -3,7 +3,7 @@
 }
 
 .p-messages-main-panel .x-layout-collapsed-west {
-    background-image: url(/BASEURL/admin/gui/asset/textimage?key=messages.filter&icon=filter);
+    background-image: url(/COMPONENTSPATH/phlexiblemessage/images/panel_filter.png);
     background-repeat: no-repeat;
     background-position: center;
 }

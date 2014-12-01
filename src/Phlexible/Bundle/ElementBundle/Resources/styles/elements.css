@@ -12,21 +12,21 @@
 }
 
 .p-elements-main-panel .x-layout-collapsed-west {
-    background-image: url(/BASEURL/admin/gui/asset/textimage?key=elements.elements);
+    background-image: url(/COMPONENTSPATH/phlexibleelement/images/panel_elements.png);
     background-repeat: no-repeat;
     background-position: center;
 }
 
 /*
 .p-elements-main-panel .x-layout-collapsed-east{
-    background-image:url(/BASEURL/admin/gui/asset/textimage?key=elements.properties&location=east);
+    background-image: url(/COMPONENTSPATH/phlexibleelement/images/panel_properties.png);
     background-repeat:no-repeat;
     background-position:center;
 }
 */
 
 .p-elements-main-panel .x-layout-collapsed-south {
-    background-image: url(/BASEURL/admin/gui/asset/textimage?key=elements.layout&location=south);
+    background-image: url(/COMPONENTSPATH/phlexibleelement/images/panel_layout_areas.png);
     background-position: center center;
     background-repeat: no-repeat;
 }

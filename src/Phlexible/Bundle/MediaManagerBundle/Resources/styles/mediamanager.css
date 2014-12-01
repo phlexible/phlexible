@@ -11,7 +11,7 @@
 }
 
 .p-mediamanager-main-panel .x-layout-collapsed-east {
-    background-image: url(/BASEURL/admin/gui/asset/textimage?key=mediamanager.properties&location=east);
+    background-image: url(/COMPONENTSPATH/phlexiblemediamanager/images/panel_properties.png);
     background-repeat: no-repeat;
     background-position: center;
 }

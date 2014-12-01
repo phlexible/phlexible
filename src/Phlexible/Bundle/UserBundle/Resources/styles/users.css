@@ -1,5 +1,5 @@
 .p-users-main-panel .x-layout-collapsed-west {
-    background-image: url(/BASEURL/admin/gui/asset/textimage?key=users.search&icon=filter);
+    background-image: url(/COMPONENTSPATH/phlexibleuser/images/panel_filter.png);
     background-repeat: no-repeat;
     background-position: center;
 }

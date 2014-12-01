@@ -1,5 +1,5 @@
 .p-dashboard-main-panel .x-layout-collapsed-west {
-    background-image: url(/BASEURL/admin/gui/asset/textimage?key=dashboard.available_portlets);
+    background-image: url(/COMPONENTSPATH/phlexibledashboard/images/panel_portlets.png);
     background-repeat: no-repeat;
     background-position: center;
 }

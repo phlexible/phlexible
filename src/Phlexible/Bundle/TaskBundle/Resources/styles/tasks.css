@@ -1,5 +1,5 @@
 .p-tasks-main-panel .x-layout-collapsed-west {
-    background-image: url(/BASEURL/admin/gui/asset/textimage?key=filter.tasks&icon=filter);
+    background-image: url(/COMPONENTSPATH/phlexibletask/images/panel_tasks.png);
     background-repeat: no-repeat;
     background-position: center;
 }

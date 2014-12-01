@@ -144,13 +144,13 @@
 }
 
 .p-elementtypes-panel .x-layout-collapsed-west {
-    background-image: url(/BASEURL/admin/gui/assets/textimage?key=elementtypes.elementtypes);
+    background-image: url(/COMPONENTSPATH/phlexibleelementtype/images/panel_elementtypes.png);
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .p-elementtypes-2-panel .x-layout-collapsed-west {
-    background-image: url(/BASEURL/admin/gui/asset/textimage?key=elementtypes.template_elementtype);
+    background-image: url(/COMPONENTSPATH/phlexibleelementtype/images/panel_template.png);
     background-repeat: no-repeat;
     background-position: center;
 }
