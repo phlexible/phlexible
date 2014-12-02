@@ -57,9 +57,10 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
                 field: 'title',
                 direction: 'ASC'
             },
-
             listeners: {
                 load: function (store) {
+                    this.fireEvent('changes', !!store.reader.jsonData.changes);
+
                     if (this.params.elementtype_id && this.params.version) {
                         var r = store.getById(this.params.elementtype_id);
                         if (!r) return;

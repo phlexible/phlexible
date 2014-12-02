@@ -42,11 +42,7 @@ class ChangesCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $checker = new Checker(
-            $this->getContainer()->get('phlexible_elementtype.elementtype_service'),
-            $this->getContainer()->get('phlexible_element.element_service'),
-            $this->getContainer()->get('phlexible_element.element_source_manager')
-        );
+        $checker = $this->getContainer()->get('phlexible_element.checker');
         $synchronizer = $this->getContainer()->get('phlexible_element.synchronizer');
 
         $changes = $checker->check();
