@@ -38,6 +38,32 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     private $parentMap = [];
 
     /**
+     * @var array
+     */
+    private $referenceIds = [];
+
+    /**
+     * @param string $referenceId
+     *
+     * @return $this
+     */
+    public function addReferenceId($referenceId)
+    {
+        $this->referenceIds[] = $referenceId;
+        $this->referenceIds = array_unique($this->referenceIds);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getReferenceIds()
+    {
+        return $this->referenceIds;
+    }
+
+    /**
      * @param ElementtypeStructureNode $node
      *
      * @throws InvalidArgumentException

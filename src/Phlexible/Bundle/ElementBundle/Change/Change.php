@@ -29,6 +29,11 @@ class Change
     private $needImport = false;
 
     /**
+     * @var string
+     */
+    private $reason;
+
+    /**
      * @var Elementtype
      */
     private $elementtype;
@@ -36,12 +41,14 @@ class Change
     /**
      * @param Elementtype     $elementtype
      * @param bool            $needImport
+     * @param string          $reason
      * @param ElementSource[] $outdatedElementSources
      */
-    public function __construct(Elementtype $elementtype, $needImport = false, array $outdatedElementSources = [])
+    public function __construct(Elementtype $elementtype, $needImport, $reason, array $outdatedElementSources = [])
     {
         $this->elementtype = $elementtype;
         $this->needImport = $needImport;
+        $this->reason = $reason;
 
         foreach ($outdatedElementSources as $outdatedElementSource) {
             $this->addOutdatedElementSource($outdatedElementSource);
@@ -62,6 +69,14 @@ class Change
     public function getNeedImport()
     {
         return $this->needImport;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReason()
+    {
+        return $this->reason;
     }
 
     /**

@@ -56,13 +56,66 @@ class Checker
     {
         $changes = [];
 
-        foreach ($this->elementtypeService->findAllElementtypes() as $elementtype) {
-            $needImport = true;
-            if ($this->elementSourceManager->findByElementtype($elementtype)) {
-                $needImport = false;
+        $allElementtypes = $this->elementtypeService->findAllElementtypes();
+
+        $referenceElementtypeIds = [];
+        foreach ($allElementtypes as $elementtype) {
+            if ($elementtype->getType() !== 'reference') {
+                continue;
             }
-            $outdatedElementSources = $this->elementService->findOutdatedElementSources($elementtype);
-            $changes[] = new Change($elementtype, $needImport, $outdatedElementSources);
+            $reason = '';
+            $needImport = false;
+            $outdatedElementSources = [];
+            $oldElementSources = $this->elementSourceManager->findByElementtype($elementtype);
+            if (!$oldElementSources) {
+                $needImport = true;
+                $reason = 'New Elementtype';
+            } else {
+                foreach ($oldElementSources as $oldElementSource) {
+                    if ($oldElementSource->getElementtypeRevision() < $elementtype->getRevision()) {
+                        $needImport = true;
+                        $outdatedElementSources[] = $oldElementSource;
+                        $reason = 'Higher revision';
+                    }
+                }
+            }
+            if ($needImport) {
+                $referenceElementtypeIds[] = $elementtype->getId();
+            }
+            //$outdatedElementSources = $this->elementService->findOutdatedElementSources($elementtype);
+            $changes[] = new Change($elementtype, $needImport, $reason, $outdatedElementSources);
+        }
+
+        foreach ($allElementtypes as $elementtype) {
+            if ($elementtype->getType() === 'reference') {
+                continue;
+            }
+            $reason = '';
+            $needImport = false;
+            $outdatedElementSources = [];
+            $oldElementSources = $this->elementSourceManager->findByElementtype($elementtype);
+            if (!$oldElementSources) {
+                $needImport = true;
+                $reason = 'New Elementtype';
+            } else {
+                foreach ($oldElementSources as $oldElementSource) {
+                    if ($oldElementSource->getElementtypeRevision() < $elementtype->getRevision()) {
+                        $needImport = true;
+                        $outdatedElementSources[] = $oldElementSource;
+                        $reason = 'Higher revision';
+                    }
+                }
+
+                if (array_intersect($elementtype->getStructure()->getReferenceIds(), $referenceElementtypeIds)) {
+                    foreach ($oldElementSources as $oldElementSource) {
+                        $needImport = true;
+                        $outdatedElementSources[] = $oldElementSource;
+                    }
+                    $reason = 'Reference outdated';
+                }
+            }
+            //$outdatedElementSources = $this->elementService->findOutdatedElementSources($elementtype);
+            $changes[] = new Change($elementtype, $needImport, $reason, $outdatedElementSources);
         }
 
         return $changes;

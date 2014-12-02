@@ -166,6 +166,10 @@ class XmlParser implements ParserInterface
         $name = $node->getAttribute('name');
         $referenceElementtypeId = $node->hasAttribute('referenceElementtypeId') ? $node->getAttribute('referenceElementtypeId') : null;
 
+        if ($referenceElementtypeId) {
+            $elementtypeStructure->addReferenceId($referenceElementtypeId);
+        }
+
         $labels = [];
         $labelNodes = $node->evaluate('labels/label');
         if ($labelNodes->length) {

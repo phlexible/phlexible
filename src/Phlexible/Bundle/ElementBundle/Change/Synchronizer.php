@@ -20,7 +20,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @TODO   : elementSourceManager
+ * @TODO elementSourceManager
  */
 class Synchronizer
 {
@@ -67,10 +67,11 @@ class Synchronizer
     public function synchronize(Change $change, $force = false)
     {
         $elementtype = $change->getElementtype();
-        $elementSource = $this->elementSourceManager->findByElementtype($elementtype);
-        if (!$elementSource || $force) {
+        if ($change->getNeedImport()) {
             $elementSource = new ElementSource();
             $this->applyElementtypeToElementSource($elementtype, $elementSource);
+        } else {
+            $elementSource = $this->elementSourceManager->findOneByElementtypeAndRevision($elementtype);
         }
 
         foreach ($change->getOutdatedElementSources() as $outdatedElementSource) {

@@ -63,9 +63,16 @@ interface ElementSourceManagerInterface
     /**
      * @param Elementtype $elementtype
      *
-     * @return ElementSource
+     * @return ElementSource[]
      */
     public function findByElementtype(Elementtype $elementtype);
+
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return ElementSource
+     */
+    public function findOneByElementtypeAndRevision(Elementtype $elementtype);
 
     /**
      * @param ElementSource $elementSource

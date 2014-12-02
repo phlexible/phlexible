@@ -147,7 +147,7 @@ class ElementSourceManager implements ElementSourceManagerInterface
         $qb = $this->getElementSourceRepository()->createQueryBuilder('es');
         $qb
             ->where($qb->expr()->eq('es.elementtypeId', $qb->expr()->literal($elementtype->getId())))
-            ->andWhere($qb->expr()->neq('es.elementtypeRevision', $elementtype->getRevision()));
+            ->andWhere($qb->expr()->lt('es.elementtypeRevision', $elementtype->getRevision()));
 
         return $qb->getQuery()->getResult();
     }
@@ -156,6 +156,18 @@ class ElementSourceManager implements ElementSourceManagerInterface
      * {@inheritdoc}
      */
     public function findByElementtype(Elementtype $elementtype)
+    {
+        return $this->getElementSourceRepository()->findBy(
+            [
+                'elementtypeId' => $elementtype->getId(),
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneByElementtypeAndRevision(Elementtype $elementtype)
     {
         return $this->getElementSourceRepository()->findOneBy(
             [
