@@ -202,13 +202,15 @@ class MediaExtension extends \Twig_Extension
         $metasets = $this->metaSetResolver->resolve($file);
         foreach ($metasets as $metaset) {
             $metadata = $this->metaDataManager->findByMetaSetAndFile($metaset, $file);
-            if ($metadata) {
-                $data = [];
-                foreach ($metaset->getFields() as $field) {
-                    $data[$field->getName()] = $metadata->get($field->getName(), 'de');
+            $data = [];
+            foreach ($metaset->getFields() as $field) {
+                $value = '';
+                if ($metadata) {
+                    $value = $metadata->get($field->getName(), 'de');
                 }
-                $info['meta'][$metaset->getName()] = $data;
+                $data[$field->getName()] = $value;
             }
+            $info['meta'][$metaset->getName()] = $data;
         }
 
         return $info;

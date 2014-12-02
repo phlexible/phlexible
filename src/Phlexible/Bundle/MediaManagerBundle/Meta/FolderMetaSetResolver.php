@@ -41,7 +41,10 @@ class FolderMetaSetResolver
     {
         $metaSets = [];
         foreach ($folder->getMetasets() as $metaSetId) {
-            $metaSets[] = $this->metaSetManager->find($metaSetId);
+            $metaSet = $this->metaSetManager->find($metaSetId);
+            if ($metaSet) {
+                $metaSets[] = $metaSet;
+            }
         }
 
         return $metaSets;
