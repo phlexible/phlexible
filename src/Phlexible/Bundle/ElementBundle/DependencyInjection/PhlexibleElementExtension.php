@@ -31,6 +31,7 @@ class PhlexibleElementExtension extends Extension
         $loader->load('field_mappers.yml');
         $loader->load('link_extractors.yml');
         $loader->load('content.yml');
+        $loader->load('configurators.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);

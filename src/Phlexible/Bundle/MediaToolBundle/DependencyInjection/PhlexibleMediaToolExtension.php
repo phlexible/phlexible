@@ -51,8 +51,8 @@ class PhlexibleMediaToolExtension extends Extension
         ));
 
         $container->setParameter('phlexible_media_tool.ffmpeg.configuration', array(
-            'ffprobe' => $config['ffmpeg']['ffprobe'],
-            'ffmpeg'  => $config['ffmpeg']['ffmpeg'],
+            'ffprobe.binaries' => $config['ffmpeg']['ffprobe'],
+            'ffmpeg.binaries'  => $config['ffmpeg']['ffmpeg'],
         ));
 
         $container->setParameter('phlexible_media_tool.mime.file', $config['mime']['file']);

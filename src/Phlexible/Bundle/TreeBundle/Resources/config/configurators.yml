@@ -1,0 +1,17 @@
+services:
+    phlexible_tree.configurator.treenode:
+        class: Phlexible\Bundle\TreeBundle\Configurator\TreeNodeConfigurator
+        public: false
+        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service, @security.context]
+        tags:
+            - {name: phlexible_element_renderer.configurator, priority: 700}
+            - {name: monolog.logger, channel: element_renderer}
+
+
+    phlexible_tree.configurator.navigation:
+        class: Phlexible\Bundle\TreeBundle\Configurator\NavigationConfigurator
+        public: false
+        arguments: [@event_dispatcher, @logger, @phlexible_tree.tree_manager]
+        tags:
+            - {name: phlexible_element_renderer.configurator, priority: -300}
+            - {name: monolog.logger, channel: element_renderer}

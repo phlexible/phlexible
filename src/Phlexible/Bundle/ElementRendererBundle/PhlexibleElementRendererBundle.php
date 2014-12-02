@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle;
 
+use Phlexible\Bundle\ElementRendererBundle\DependencyInjection\Compiler\AddConfiguratorsPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -17,4 +19,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleElementRendererBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new AddConfiguratorsPass());
+    }
 }

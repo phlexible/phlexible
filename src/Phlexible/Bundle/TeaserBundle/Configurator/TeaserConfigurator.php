@@ -6,13 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
+namespace Phlexible\Bundle\TeaserBundle\Configurator;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
+use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -80,7 +81,7 @@ class TeaserConfigurator implements ConfiguratorInterface
 
         $renderConfiguration
             ->addFeature('teaser')
-            ->set('teaser', $teaser)
+            ->setVariable('teaser', $teaser)
             ->addFeature('eid')
             ->set('eid', $teaser->getTypeId())
             ->set('version', $version)

@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
+namespace Phlexible\Bundle\ElementBundle\Configurator;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
@@ -15,6 +15,7 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
+use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -95,18 +96,19 @@ class ElementConfigurator implements ConfiguratorInterface
 
         $renderConfiguration
             ->addFeature('element')
-            ->set('contentElement', $contentElement);
+            ->setVariable('contentElement', $contentElement)
+            ->setVariable('content', $contentElement->getStructure());
 
         if (!$renderConfiguration->hasFeature('template')) {
             if ($contentElement->getElementtypeTemplate()) {
                 $template = $contentElement->getElementtypeTemplate();
             } else {
-                $template = $contentElement->getElementtypeUniqueId();
+                $template = '::' . $contentElement->getElementtypeUniqueId() . '.html.twig';
             }
 
             $renderConfiguration
                 ->addFeature('template')
-                ->set('template', $template);
+                ->setVariable('template', $template);
         }
 
         $event = new ConfigureEvent($renderConfiguration);
@@ -192,9 +194,15 @@ class ElementConfigurator implements ConfiguratorInterface
 
         $renderConfiguration
             ->addFeature('element')
-            ->set('contentElement', $contentElement)
-            ->addFeature('template')
-            ->set('template', $template);
+            ->setVariable('contentElement', $contentElement)
+            ->setVariable('content', $data->contentElement->getStructure())
+            ->setVariable('contentLanguages', ['de']);
+
+        if (!$renderConfiguration->hasFeature('template')) {
+            $renderConfiguration
+                ->addFeature('template')
+                ->setVariable('template', $template);
+        }
 
         $event = new ConfigureEvent($renderConfiguration);
         $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_ELEMENT, $event);

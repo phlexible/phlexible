@@ -38,11 +38,15 @@ class RenderConfigurator
     /**
      * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface          $logger
+     * @param ConfiguratorInterface[]  $configurators
      */
-    public function __construct(EventDispatcherInterface $dispatcher, LoggerInterface $logger)
+    public function __construct(EventDispatcherInterface $dispatcher, LoggerInterface $logger, array $configurators = array())
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
+        foreach ($configurators as $configurator) {
+            $this->addConfigurator($configurator);
+        }
     }
 
     /**
@@ -78,6 +82,10 @@ class RenderConfigurator
 
         foreach ($this->configurators as $configurator) {
             $configurator->configure($request, $renderConfiguration);
+
+            if ($renderConfiguration->hasResponse()) {
+                return $renderConfiguration->getResponse();
+            }
         }
 
         // Init Event

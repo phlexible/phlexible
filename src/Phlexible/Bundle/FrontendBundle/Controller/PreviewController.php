@@ -25,25 +25,25 @@ class PreviewController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("", name="frontend_preview")
+     * @Route("/{_locale}/{treeId}", name="frontend_preview")
      */
-    public function previewAction(Request $request)
+    public function previewAction(Request $request, $treeId)
     {
-        $language = $request->get('language');
+        $language = $request->get('_locale');
         $tid = $request->get('id');
 
         $contentTreeManager = $this->get('phlexible_tree.content_tree_manager.delegating');
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $tree = $contentTreeManager->findByTreeId($tid);
+        $tree = $contentTreeManager->findByTreeId($treeId);
         $tree->setLanguage($language);
-        $node = $tree->get($tid);
+        $node = $tree->get($treeId);
 
         $siteroot = $siterootManager->find($node->getTree()->getSiterootId());
         $siteroot->setContentChannels([1 => 1]);
         $siterootUrl = $siteroot->getDefaultUrl();
 
-        $request->attributes->set('_locale', $language);
+        //$request->attributes->set('_locale', $language);
         $request->attributes->set('language', $language);
         $request->attributes->set('routeDocument', $node);
         $request->attributes->set('contentDocument', $node);
@@ -52,8 +52,8 @@ class PreviewController extends Controller
 
         $this->get('router.request_context')->setParameter('preview', true);
 
-        $dataProvider = $this->get('phlexible_element_renderer.data_provider');
-        $data = $dataProvider->provide($request);
+        $configurator = $this->get('phlexible_element_renderer.configurator');
+        $data = $configurator->configure($request)->getVariables();
 
         return $this->render($data['template'], (array) $data);
     }

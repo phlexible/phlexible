@@ -1,8 +1,6 @@
 services:
-    phlexible_element_renderer.data_provider:
-        class: Phlexible\Bundle\ElementRendererBundle\DataProvider\DataProvider
-        arguments:
-            - @phlexible_element_renderer.configurator
-            - @event_dispatcher
-            -
-                twig: @phlexible_twig_renderer.data_provider
+    phlexible_element_renderer.configurator:
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator
+        arguments: [@event_dispatcher, @logger, []]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}

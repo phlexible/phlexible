@@ -3,7 +3,7 @@ services:
         class: Poppler\Driver\Pdfinfo
         factory_class: Poppler\Driver\Pdfinfo
         factory_method: create
-        arguments: [@logger, [%phlexible_media_tool.poppler.configuration%]]
+        arguments: [@logger, %phlexible_media_tool.poppler.configuration%]
         tags:
             - {name: monolog.logger, channel: media_tools}
 
@@ -11,7 +11,7 @@ services:
         class: Poppler\Driver\Pdftotext
         factory_class: Poppler\Driver\Pdftotext
         factory_method: create
-        arguments: [@logger, [%phlexible_media_tool.poppler.configuration%]]
+        arguments: [@logger, %phlexible_media_tool.poppler.configuration%]
         tags:
             - {name: monolog.logger, channel: media_tools}
 
@@ -19,7 +19,7 @@ services:
         class: Poppler\Driver\Pdftohtml
         factory_class: Poppler\Driver\Pdftohtml
         factory_method: create
-        arguments: [@logger, [%phlexible_media_tool.poppler.configuration%]]
+        arguments: [@logger, %phlexible_media_tool.poppler.configuration%]
         tags:
             - {name: monolog.logger, channel: media_tools}
 

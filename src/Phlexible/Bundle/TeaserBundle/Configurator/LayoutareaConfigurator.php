@@ -6,13 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
+namespace Phlexible\Bundle\TeaserBundle\Configurator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
+use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -133,7 +134,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
 
         $renderConfiguration
             ->addFeature('layoutarea')
-            ->set('layoutareas', $areas);
+            ->set('teasers', $areas);
 
         $event = new ConfigureEvent($renderConfiguration);
         $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_LAYOUTAREA, $event);

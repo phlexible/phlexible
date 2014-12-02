@@ -6,11 +6,12 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
+namespace Phlexible\Bundle\TreeBundle\Configurator;
 
 use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
+use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Psr\Log\LoggerInterface;
@@ -74,7 +75,7 @@ class NavigationConfigurator implements ConfiguratorInterface
 
         $renderConfiguration
             ->addFeature('navigation')
-            ->set('navigations', $navigations);
+            ->setVariable('navigation', $navigations);
 
         $event = new ConfigureEvent($renderConfiguration);
         $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_NAVIGATION, $event);

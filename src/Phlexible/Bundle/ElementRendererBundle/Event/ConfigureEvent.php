@@ -19,12 +19,12 @@ use Symfony\Component\EventDispatcher\Event;
 class ConfigureEvent extends Event
 {
     /**
-     * @var \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration
+     * @var RenderConfiguration
      */
     private $configuration;
 
     /**
-     * @param \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration $configuration
+     * @param RenderConfiguration $configuration
      */
     public function __construct(RenderConfiguration $configuration)
     {
@@ -32,7 +32,7 @@ class ConfigureEvent extends Event
     }
 
     /**
-     * @return \Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration
+     * @return RenderConfiguration
      */
     public function getConfiguration()
     {

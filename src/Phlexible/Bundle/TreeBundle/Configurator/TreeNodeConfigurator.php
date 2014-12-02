@@ -6,13 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementRendererBundle\RenderConfigurator;
+namespace Phlexible\Bundle\TreeBundle\Configurator;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
+use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -89,100 +90,6 @@ class TreeNodeConfigurator implements ConfiguratorInterface
             }
         }
 
-        /*
-        // SSL redirect
-        $forceProtocol         = $container->getParameter('frontend.request.protocol');
-        $protocolBusinesslogic = $container->getParameter('frontend.request.protocol_businesslogic');
-        $protocolStayssl       = $container->getParameter('frontend.request.stayssl');
-
-        if ($forceProtocol === 'http')
-        {
-            $sslNeeded      = false;
-            $protocolSwitch = false;
-
-        }
-        else if ($forceProtocol === 'https')
-        {
-            $sslNeeded      = false;
-            $protocolSwitch = false;
-
-            $this->_request->setSsl(true);
-        }
-        else
-        {
-            $sslNeeded = $elementNode->isHttps($elementVersion->getVersion());
-
-            // set protocol for businesslogic processes
-            if ($protocolBusinesslogic === 'https' || $protocolBusinesslogic === 'http')
-            {
-                $elementUniqueId    = $elementType->getUniqueId();
-                if ($elementUniqueId === 'businesslogic' || $elementUniqueId === 'customformlogic')
-                {
-                    if ($protocolBusinesslogic == 'https')
-                    {
-                        $sslNeeded = true;
-                    }
-                    else
-                    {
-                        $sslNeeded = false;
-                    }
-                }
-            }
-
-            // set protocol if stayssl is requested
-            if ($protocolStayssl === 'true')
-            {
-                $sslRequest = $this->_request->isSsl();
-                $cookieSsl  = isset($_COOKIE['stayssl']) ? $_COOKIE['stayssl'] : null;
-
-                if (!$sslRequest && $cookieSsl)
-                {
-                    // switch to ssl
-                    $sslNeeded = true;
-                }
-                else if (($sslRequest || $sslNeeded) && !$cookieSsl)
-                {
-                    //set cookie for ssl
-                    setcookie('stayssl', true, time()+3600, '/');
-                    $_COOKIE['stayssl'] = true;
-                }
-                else
-                {
-                    $sslNeeded = $sslRequest; // no protocolswitch
-                }
-            }
-            $protocolSwitch = $sslNeeded !== $this->_request->isSsl();
-        }
-
-        if ($protocolSwitch)
-        {
-            $this->_debugLine('Need protocol switch', 'notice');
-            $this->_request->setSsl($sslNeeded);
-
-            // create redirect link
-            $redirectLink = Makeweb_Navigations_Link::create(	$this->_request,
-                $this->_request->getTid(),
-                $this->_request->getLanguage(),
-                $this->_request->getParams()
-            );
-            // change protocol if needed
-            if($sslNeeded)
-            {
-                $redirectLink = str_replace('http://', 'https://', $redirectLink);
-            }
-            else
-            {
-                $redirectLink = str_replace('https://', 'http://', $redirectLink);
-            }
-
-            $this->_response
-                ->setHttpResponseCode(301)
-                ->setHeader('Location', $redirectLink);
-
-            return false;
-        }
-        */
-
         if ($treeNode !== $originalTreeNode) {
             $this->logger->debug('Switching to TID ' . $treeNode->getId());
 
@@ -197,8 +104,8 @@ class TreeNodeConfigurator implements ConfiguratorInterface
 
         $renderConfiguration
             ->addFeature('treeNode')
-            ->set('treeNode', $treeNode)
-            ->set('treeContext', new ContentTreeContext($treeNode))
+            ->setVariable('treeNode', $treeNode)
+            ->setVariable('treeContext', new ContentTreeContext($treeNode))
             ->addFeature('eid')
             ->set('eid', $treeNode->getTypeId())
             ->set('version', 1)//$tree->getPublishedVersion($treeNode, 'de'))
@@ -207,12 +114,48 @@ class TreeNodeConfigurator implements ConfiguratorInterface
         if ($treeNode->getTemplate()) {
             $renderConfiguration
                 ->addFeature('template')
-                ->set('template', $treeNode->getTemplate());
+                ->setVariable('template', $treeNode->getTemplate());
         }
+
+        $renderConfiguration
+            ->setVariable('siteroot', $request->attributes->get('siterootUrl')->getSiteroot())
+            ->setVariable('specialTids', $this->createSpecialTids($renderConfiguration));
 
         $event = new ConfigureEvent($renderConfiguration);
         $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_TREE_NODE, $event);
 
         return true;
+    }
+
+    /**
+     * @param RenderConfiguration $renderConfiguration
+     * @param string              $language
+     *
+     * @return array
+     */
+    private function createSpecialTids(RenderConfiguration $renderConfiguration)
+    {
+        $language = $renderConfiguration->get('language');
+
+        // TODO: mit antonia klären
+        $specialTids = [
+            'default_start_eid'       => -1,
+            'default_pw_aendern'      => -1,
+            'glossar_eid'             => -1,
+            'default_copyright_eid'   => -1,
+            'schnellsuche_eid'        => -1,
+            'default_quicksearch_eid' => -1,
+            'sitemap_eid'             => -1,
+        ];
+
+        foreach ($renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids(null) as $specialTid) {
+            $specialTids[$specialTid['name']] = $specialTid['treeId'];
+        }
+
+        foreach ($renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids($language) as $specialTid) {
+            $specialTids[$specialTid['name']] = $specialTid['treeId'];
+        }
+
+        return $specialTids;
     }
 }

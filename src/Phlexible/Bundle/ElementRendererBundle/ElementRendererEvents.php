@@ -49,14 +49,4 @@ class ElementRendererEvents
      * Fired after configuring tree node
      */
     const CONFIGURE_TREE_NODE = 'phlexible_element_renderer.configure_tree_node';
-
-    /**
-     * Fired after providing data
-     */
-    const PROVIDE = 'phlexible_element_renderer.provide';
-
-    /**
-     * Fired after rendering
-     */
-    const RENDER = 'phlexible_element_renderer.render';
 }

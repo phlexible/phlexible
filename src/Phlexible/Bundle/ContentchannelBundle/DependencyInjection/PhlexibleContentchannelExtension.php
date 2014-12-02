@@ -27,8 +27,9 @@ class PhlexibleContentchannelExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
-
         $loader->load('file.yml');
+        //$loader->load('configurators.yml');
+
         $container->setAlias(
             'phlexible_contentchannel.contentchannel_manager',
             'phlexible_contentchannel.file.contentchannel_manager'
