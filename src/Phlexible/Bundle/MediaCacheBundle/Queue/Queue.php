@@ -60,6 +60,14 @@ class Queue implements \Countable
     }
 
     /**
+     * @return CacheItem
+     */
+    public function first()
+    {
+        return $this->items->first();
+    }
+
+    /**
      * @return CacheItem[]
      */
     public function all()

@@ -67,6 +67,8 @@ class BatchBuilder
                 ->addFile($file)
                 ->addTemplate($template);
         }
+
+        return $batch;
     }
 
     /**

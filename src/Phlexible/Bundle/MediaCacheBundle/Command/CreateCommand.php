@@ -115,6 +115,7 @@ class CreateCommand extends ContainerAwareCommand
 
         if ($input->getOption('show')) {
             // only show
+
             $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
             $table = new Table($output);
             $table->setHeaders(['Idx', 'Template', 'Path', 'File ID']);

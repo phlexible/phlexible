@@ -177,7 +177,7 @@ class FileController extends Controller
             $cacheItems = $this->get('phlexible_media_cache.cache_manager')->findByFile($file->getID(), $version);
             $cache = [];
             foreach ($cacheItems as $cacheItem) {
-                if ($cacheItem->getStatus() === CacheItem::STATUS_OK) {
+                if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                     $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media', [
                         'file_id'      => $file->getId(),
                         'file_version' => $file->getVersion(),

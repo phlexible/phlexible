@@ -48,10 +48,6 @@ class MediaController extends Controller
 
         try {
             $cacheItem = $cacheManager->findByTemplateAndFile($templateKey, $fileId, $fileVersion);
-            if ($cacheItem && $cacheItem->getTemplateKey() !== $templateKey) {
-                //throw new InvalidArgumentException('Requested template key <=> cache item template key mismatch.');
-                $cacheItem = null;
-            }
         } catch (\Exception $e) {
             $cacheItem = null;
         }
@@ -59,23 +55,30 @@ class MediaController extends Controller
         $template = $templateManager->find($templateKey);
 
         if ($cacheItem) {
-            if ($cacheItem && $cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
+            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_WAITING) {
+                $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
+                $queueProcessor->processItem($cacheItem);
+            }
+
+            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                 $storageKey = $template->getStorage();
                 $storage = $storageManager->get($storageKey);
                 $filePath = $storage->getLocalPath($cacheItem);
             }
 
-            if ($cacheItem && $cacheItem->getCacheStatus() === CacheItem::STATUS_WAITING) {
-                if (!$template instanceof ImageTemplate) {
-                    return new Response('Cache item waiting.', 202);
-                }
+            $mimeType = $cacheItem->getMimeType();
+        } else {
+            $batchBuilder = $this->get('phlexible_media_cache.batch_builder');
+            $batchResolver = $this->get('phlexible_media_cache.batch_resolver');
+            $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
 
-                $file = $siteManager->getByFileId($fileId)->findFile($fileId);
-                $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
-                $filePath = $delegateService->getWaiting($template, $documenttype);
-            }
+            $file = $siteManager->getByFileId($fileId)->findFile($fileId);
+            $batch = $batchBuilder->createForTemplateAndFile($template, $file);
+            $queue = $batchResolver->resolve($batch);
 
-            $fileSize = $cacheItem->getFileSize();
+            $cacheItem = $queue->first();
+            $queueProcessor->processItem($cacheItem);
+
             $mimeType = $cacheItem->getMimeType();
         }
 
@@ -84,23 +87,10 @@ class MediaController extends Controller
                 return new Response('Not found', 404);
             }
 
-            $applier = $this->get('phlexible_media_template.applier.image');
             $file = $siteManager->getByFileId($fileId)->findFile($fileId);
-            $filePath = '/tmp/test.' . $template->getParameter('format');
-            try {
-                $i = $applier->apply($template, $file, $file->getPhysicalPath(), $filePath);
-                $mimeType = 'image/' . $template->getParameter('format');
-            } catch (\Exception $e) {
-                $filePath = null;
-            }
-
-            if (empty($filePath)) {
-                $file = $siteManager->getByFileId($fileId)->findFile($fileId);
-                $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
-                $filePath = $delegateService->getClean($template, $documenttype);
-                $fileSize = filesize($filePath);
-                $mimeType = 'image/gif';
-            }
+            $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
+            $filePath = $delegateService->getClean($template, $documenttype);
+            $mimeType = 'image/gif';
         }
 
         return $this->get('igorw_file_serve.response_factory')
