@@ -51,6 +51,5 @@ class PhlexibleMediaCacheExtension extends Extension
 
         $loader->load('doctrine.yml');
         $container->setAlias('phlexible_media_cache.cache_manager', 'phlexible_media_cache.doctrine.cache_manager');
-        $container->setAlias('phlexible_media_cache.queue_manager', 'phlexible_media_cache.doctrine.queue_manager');
     }
 }

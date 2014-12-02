@@ -9,7 +9,8 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Portlet;
 
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
-use Phlexible\Bundle\MediaCacheBundle\Model\QueueManagerInterface;
+use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -20,15 +21,15 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CacheStatusPortlet extends Portlet
 {
     /**
-     * @var QueueManagerInterface
+     * @var CacheManagerInterface
      */
-    private $queueManager;
+    private $cacheManager;
 
     /**
      * @param TranslatorInterface   $translator
-     * @param QueueManagerInterface $queueManager
+     * @param CacheManagerInterface $cacheManager
      */
-    public function __construct(TranslatorInterface $translator, QueueManagerInterface $queueManager)
+    public function __construct(TranslatorInterface $translator, CacheManagerInterface $cacheManager)
     {
         $this
             ->setId('cachestatus-portlet')
@@ -37,7 +38,7 @@ class CacheStatusPortlet extends Portlet
             ->setIconClass('p-mediacache-component-icon')
             ->setRole('ROLE_MEDIA_CACHE');
 
-        $this->queueManager = $queueManager;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
@@ -47,6 +48,6 @@ class CacheStatusPortlet extends Portlet
      */
     public function getData()
     {
-        return $this->queueManager->countAll();
+        return $this->cacheManager->countBy(array('queueStatus' => CacheItem::QUEUE_WAITING));
     }
 }

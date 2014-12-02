@@ -28,7 +28,6 @@ services:
         class: Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver
         arguments:
             - @phlexible_media_cache.cache_manager
-            - @phlexible_media_cache.queue_manager
             - @phlexible_media_cache.id_strategy.default
 
     phlexible_media_cache.id_strategy.default:
@@ -63,7 +62,6 @@ services:
             - @phlexible_media_cache.queue_processor
             - @phlexible_media_cache.batch_resolver
             - @phlexible_media_cache.cache_manager
-            - @phlexible_media_cache.queue_manager
             - %phlexible_media_cache.immediately_cache_system_templates%
         tags:
             - {name: kernel.event_subscriber}
@@ -78,7 +76,7 @@ services:
     phlexible_media_cache.portlet.cache_status:
         class: Phlexible\Bundle\MediaCacheBundle\Portlet\CacheStatusPortlet
         public: false
-        arguments: [@translator, @phlexible_media_cache.queue_manager]
+        arguments: [@translator, @phlexible_media_cache.cache_manager]
         tags:
             - {name: phlexible_dashboard.portlet}
 

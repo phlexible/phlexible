@@ -69,13 +69,13 @@ class CacheItem
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(name="cache_status", type="string", length=20)
      */
     private $cacheStatus;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(name="queue_status", type="string", length=20)
      */
     private $queueStatus;
 
@@ -135,7 +135,7 @@ class CacheItem
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="queued_at", type="datetime")
+     * @ORM\Column(name="finished_at", type="datetime")
      */
     private $finishedAt;
 

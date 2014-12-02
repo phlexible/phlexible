@@ -120,6 +120,22 @@ class CacheManager implements CacheManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function countBy(array $criteria)
+    {
+        return $this->getCacheRepository()->countBy($criteria);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function countAll()
+    {
+        return $this->getCacheRepository()->countAll();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function updateCacheItem(CacheItem $cacheItem)
     {
         $this->entityManager->persist($cacheItem);

@@ -73,6 +73,18 @@ interface CacheManagerInterface
     public function findOutdatedTemplates(TemplateInterface $template);
 
     /**
+     * @param array $criteria
+     *
+     * @return int
+     */
+    public function countBy(array $criteria);
+
+    /**
+     * @return int
+     */
+    public function countAll();
+
+    /**
      * @param CacheItem $cacheItem
      */
     public function updateCacheItem(CacheItem $cacheItem);
