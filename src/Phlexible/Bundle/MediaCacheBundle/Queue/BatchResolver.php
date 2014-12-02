@@ -10,9 +10,7 @@ namespace Phlexible\Bundle\MediaCacheBundle\Queue;
 
 use Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaCacheBundle\Entity\QueueItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
-use Phlexible\Bundle\MediaCacheBundle\Model\QueueManagerInterface;
 
 /**
  * Resolves batch into queue
@@ -27,26 +25,17 @@ class BatchResolver
     private $cacheManager;
 
     /**
-     * @var QueueManagerInterface
-     */
-    private $queueManager;
-
-    /**
      * @var CacheIdStrategyInterface
      */
     private $cacheIdStrategy;
 
     /**
      * @param CacheManagerInterface    $cacheManager
-     * @param QueueManagerInterface    $queueManager
      * @param CacheIdStrategyInterface $cacheIdStrategy
      */
-    public function __construct(CacheManagerInterface $cacheManager,
-                                QueueManagerInterface $queueManager,
-                                CacheIdStrategyInterface $cacheIdStrategy)
+    public function __construct(CacheManagerInterface $cacheManager, CacheIdStrategyInterface $cacheIdStrategy)
     {
         $this->cacheManager = $cacheManager;
-        $this->queueManager = $queueManager;
         $this->cacheIdStrategy = $cacheIdStrategy;
     }
 
@@ -71,42 +60,39 @@ class BatchResolver
                     continue;
                 }
 
+                $cacheItem = $this->cacheManager->findByTemplateAndFile($template->getKey(), $fileId, $fileVersion);
+
                 if (count($flags)) {
-                    $cacheItem = $this->cacheManager->findByTemplateAndFile($template->getKey(), $fileId, $fileVersion);
 
-                    if (isset($flags['error']) && !$this->isCacheStatusError($cacheItem)) {
+                    if (isset($flags['error']) && !$this->isError($cacheItem)) {
                         continue;
                     }
 
-                    if (isset($flags['missing']) && !$this->isCacheStatusMissing($cacheItem)) {
+                    if (isset($flags['missing']) && !$this->isMissing($cacheItem)) {
                         continue;
                     }
 
-                    if (isset($flags['uncached'])) {
-                        $queueItem = $this->queueManager->findByTemplateAndFile($template->getKey(), $fileId, $fileVersion);
-
-                        if ($this->isItemCached($cacheItem, $queueItem)) {
-                            continue;
-                        }
+                    if (isset($flags['uncached']) && $this->isCached($cacheItem)) {
+                        continue;
                     }
                 }
 
-                $id = $this->cacheIdStrategy->createCacheId($template, $file);
 
-                $queueItem = $this->queueManager->find($id);
-                if (!$queueItem) {
-                    $queueItem = new QueueItem();
-                    $queueItem->setId($id);
+                if (!$cacheItem) {
+                    $cacheItem = new CacheItem();
+                    $cacheItem
+                        ->setId($this->cacheIdStrategy->createCacheId($template, $file))
+                        ->setSiteId($file->getSite()->getId())
+                        ->setFileId($file->getId())
+                        ->setTemplateKey($template->getKey())
+                        ->setCreatedAt(new \DateTime())
+                        ->setFileVersion($file->getVersion());
                 }
 
-                $queueItem
-                    ->setSiteId($file->getSite()->getId())
-                    ->setFileId($file->getId())
-                    ->setFileVersion($file->getVersion())
-                    ->setTemplateKey($template->getKey())
-                    ->setCreatedAt(new \DateTime());
+                $cacheItem
+                    ->setQueuedAt(new \DateTime());
 
-                $queue->add($queueItem);
+                $queue->add($cacheItem);
             }
         }
 
@@ -115,14 +101,13 @@ class BatchResolver
 
     /**
      * @param CacheItem $cacheItem
-     * @param QueueItem $queueItem
      *
      * @return bool
      */
-    private function isItemCached(CacheItem $cacheItem, QueueItem $queueItem)
+    private function isCached(CacheItem $cacheItem)
     {
-        return $this->isCacheItemWaiting($queueItem)
-            || $this->isCacheItemExisting($cacheItem);
+        return $this->isWaiting($cacheItem)
+            || $this->isExisting($cacheItem);
     }
 
     /**
@@ -130,9 +115,9 @@ class BatchResolver
      *
      * @return bool
      */
-    private function isCacheStatusError(CacheItem $cacheItem)
+    private function isError(CacheItem $cacheItem)
     {
-        return $cacheItem->getStatus() === CacheItem::STATUS_ERROR;
+        return $cacheItem->getCacheStatus() === CacheItem::STATUS_ERROR || $cacheItem->getQueueStatus() === CacheItem::QUEUE_ERROR;
     }
 
     /**
@@ -140,9 +125,9 @@ class BatchResolver
      *
      * @return bool
      */
-    private function isCacheStatusMissing(CacheItem $cacheItem)
+    private function isMissing(CacheItem $cacheItem)
     {
-        return $cacheItem->getStatus() === CacheItem::STATUS_MISSING;
+        return $cacheItem->getCacheStatus() === CacheItem::STATUS_MISSING;
     }
 
     /**
@@ -150,18 +135,18 @@ class BatchResolver
      *
      * @return bool
      */
-    private function isCacheItemExisting(CacheItem $cacheItem)
+    private function isExisting(CacheItem $cacheItem)
     {
         return (bool) $cacheItem;
     }
 
     /**
-     * @param QueueItem $queueItem
+     * @param CacheItem $queueItem
      *
      * @return bool
      */
-    private function isCacheItemWaiting(QueueItem $queueItem)
+    private function isWaiting(CacheItem $queueItem)
     {
-        return (bool) $queueItem;
+        return $queueItem->getQueueStatus() === CacheItem::QUEUE_WAITING;
     }
 }

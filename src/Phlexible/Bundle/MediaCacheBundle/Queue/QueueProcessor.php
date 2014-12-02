@@ -10,20 +10,19 @@ namespace Phlexible\Bundle\MediaCacheBundle\Queue;
 
 use Phlexible\Bundle\GuiBundle\Properties\Properties;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaCacheBundle\Entity\QueueItem;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
 use Phlexible\Bundle\MediaCacheBundle\Queue as BaseQueue;
 use Phlexible\Bundle\MediaCacheBundle\Worker\WorkerResolver;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
-use Phlexible\Component\Util\FileLock;
+use Symfony\Component\Filesystem\LockHandler;
 
 /**
- * Queue worker
+ * Queue processor
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Worker
+class QueueProcessor
 {
     /**
      * @var WorkerResolver
@@ -72,28 +71,43 @@ class Worker
     }
 
     /**
-     * @param QueueItem $queueItem
+     * @param Queue    $queue
+     * @param callable $callback
+     *
+     * @return CacheItem
+     */
+    public function processQueue(Queue $queue, callable $callback = null)
+    {
+        $lock = $this->lock();
+        foreach ($queue->all() as $cacheItem) {
+            $this->doProcess($cacheItem, $callback);
+        }
+        $lock->release();
+    }
+
+    /**
+     * @param CacheItem $cacheItem
      * @param callable  $callback
      *
      * @return CacheItem
      */
-    public function process(QueueItem $queueItem, callable $callback = null)
+    public function processItem(CacheItem $cacheItem, callable $callback = null)
     {
         $lock = $this->lock();
-        $cacheItem = $this->doProcess($queueItem, $callback);
+        $cacheItem = $this->doProcess($cacheItem, $callback);
         $lock->release();
 
         return $cacheItem;
     }
 
     /**
-     * @return FileLock
+     * @return LockHandler
      * @throws AlreadyRunningException
      */
     private function lock()
     {
-        $lock = new FileLock('mediacache_lock', $this->lockDir);
-        if (!$lock->acquire()) {
+        $lock = new LockHandler('mediacache_lock', $this->lockDir);
+        if (!$lock->lock(false)) {
             throw new AlreadyRunningException('Another cache worker process running.');
         }
 
@@ -101,38 +115,34 @@ class Worker
     }
 
     /**
-     * @param QueueItem $queueItem
+     * @param CacheItem $cacheItem
      * @param callable  $callback
      *
      * @return CacheItem
      */
-    private function doProcess(QueueItem $queueItem, callable $callback = null)
+    private function doProcess(CacheItem $cacheItem, callable $callback = null)
     {
-        $site = $this->siteManager->getSiteById($queueItem->getSiteId());
-        $file = $site->findFile($queueItem->getFileId(), $queueItem->getFileVersion());
+        $site = $this->siteManager->getSiteById($cacheItem->getSiteId());
+        $file = $site->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
 
-        $template = $this->templateManager->find($queueItem->getTemplateKey());
+        $template = $this->templateManager->find($cacheItem->getTemplateKey());
 
         $worker = $this->workerResolver->resolve($template, $file);
         if (!$worker) {
             if ($callback) {
-                call_user_func($callback, 'no_worker', null, $queueItem, null);
+                call_user_func($callback, 'no_worker', null, $cacheItem);
             }
 
             return null;
-        }
-
-        if ($callback) {
-            call_user_func($callback, 'processing', $worker, $queueItem, null);
         }
 
         $cacheItem = $worker->process($template, $file);
 
         if ($callback) {
             if (!$cacheItem) {
-                call_user_func($callback, 'no_cacheitem', $worker, $queueItem, null);
+                call_user_func($callback, 'no_cacheitem', $worker, $cacheItem);
             } else {
-                call_user_func($callback, $cacheItem->getStatus(), $worker, $queueItem, $cacheItem);
+                call_user_func($callback, $cacheItem->getCacheStatus(), $worker, $cacheItem);
             }
         }
 

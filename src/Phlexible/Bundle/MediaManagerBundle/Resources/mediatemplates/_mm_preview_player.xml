@@ -6,7 +6,7 @@
     <parameter key="method">fit</parameter>
     <parameter key="scale">down</parameter>
     <parameter key="optimize_for_web">1</parameter>
-    <parameter key="format">png</parameter>
-    <parameter key="quality">90</parameter>
+    <parameter key="format">jpg</parameter>
+    <parameter key="quality">80</parameter>
     <parameter key="backgroundcolor">#000000</parameter>
 </mediaTemplate>

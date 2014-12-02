@@ -13,7 +13,7 @@ use Phlexible\Bundle\MediaCacheBundle\Model\QueueManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchBuilder;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Queue;
-use Phlexible\Bundle\MediaCacheBundle\Queue\Worker;
+use Phlexible\Bundle\MediaCacheBundle\Queue\Processor;
 use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
 
@@ -55,7 +55,7 @@ class TemplateChanges
     private $queueManager;
 
     /**
-     * @var Worker
+     * @var Processor
      */
     private $queueWorker;
 
@@ -66,7 +66,7 @@ class TemplateChanges
      * @param BatchBuilder             $batchBuilder
      * @param BatchResolver            $batchResolver
      * @param QueueManagerInterface    $queueManager
-     * @param Worker                   $queueWorker
+     * @param Processor                   $queueWorker
      */
     public function __construct(TemplateManagerInterface $templateManager,
                                 CacheManagerInterface $cacheManager,
@@ -74,7 +74,7 @@ class TemplateChanges
                                 BatchBuilder $batchBuilder,
                                 BatchResolver $batchResolver,
                                 QueueManagerInterface $queueManager,
-                                Worker $queueWorker)
+                                Processor $queueWorker)
     {
         $this->templateManager = $templateManager;
         $this->cacheManager = $cacheManager;

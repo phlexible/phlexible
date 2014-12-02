@@ -12,7 +12,7 @@ use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Model\QueueManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Batch;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
-use Phlexible\Bundle\MediaCacheBundle\Queue\Worker;
+use Phlexible\Bundle\MediaCacheBundle\Queue\Processor;
 use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
@@ -32,7 +32,7 @@ class FileListener implements EventSubscriberInterface
     private $templateManager;
 
     /**
-     * @var Worker
+     * @var Processor
      */
     private $queueWorker;
 
@@ -58,14 +58,14 @@ class FileListener implements EventSubscriberInterface
 
     /**
      * @param TemplateManagerInterface $templateManager
-     * @param Worker                   $queueWorker
+     * @param Processor                   $queueWorker
      * @param BatchResolver            $batchResolver
      * @param CacheManagerInterface    $cacheManager
      * @param QueueManagerInterface    $queueManager
      * @param bool                     $immediatelyCacheSystemTemplates
      */
     public function __construct(TemplateManagerInterface $templateManager,
-                                Worker $queueWorker,
+                                Processor $queueWorker,
                                 BatchResolver $batchResolver,
                                 CacheManagerInterface $cacheManager,
                                 QueueManagerInterface $queueManager,

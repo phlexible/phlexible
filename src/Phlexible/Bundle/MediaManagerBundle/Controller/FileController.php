@@ -76,7 +76,7 @@ class FileController extends Controller
 
         $folder = $site->findFolder($folderId);
 
-        if ($securityContext->isGranted('FILE_READ', $folder)) {
+        if ($securityContext->isGranted('ROLE_SUPER_ADMIN') || $securityContext->isGranted('FILE_READ', $folder)) {
             if ($sort === 'create_time') {
                 $sort = 'created_at';
             } elseif ($sort === 'document_type_key') {
@@ -119,18 +119,18 @@ class FileController extends Controller
 
         foreach ($files as $file) {
             try {
-                $createUser = $userManager->find($file->getCreateUserID());
-                $createUserName = $createUser->getFirstname() . ' ' . $createUser->getLastname();
+                $createUser = $userManager->find($file->getCreateUserId());
+                $createUserName = $createUser->getDisplayName();
             } catch (\Exception $e) {
                 $createUserName = 'Unknown';
             }
 
             try {
-                if ($file->getModifyUserID()) {
-                    $modifyUser = $userManager->find($file->getModifyUserID());
-                    $modifyUserName = $modifyUser->getFirstname() . ' ' . $modifyUser->getLastname();
+                if ($file->getModifyUserId()) {
+                    $modifyUser = $userManager->find($file->getModifyUserId());
+                    $modifyUserName = $modifyUser->getDisplayName();
                 } else {
-                    $modifyUserName = '';
+                    $modifyUserName = 'Unknown';
                 }
             } catch (\Exception $e) {
                 $modifyUserName = 'Unknown';

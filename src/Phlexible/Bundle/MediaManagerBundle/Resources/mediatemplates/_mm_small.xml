@@ -4,6 +4,5 @@
     <parameter key="width">32</parameter>
     <parameter key="height">32</parameter>
     <parameter key="method">exactFit</parameter>
-    <parameter key="format">png</parameter>
-    <parameter key="quality">90</parameter>
+    <parameter key="format">gif</parameter>
 </mediaTemplate>

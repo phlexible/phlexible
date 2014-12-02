@@ -113,7 +113,7 @@ class LatestFilesPortlet extends Portlet
                 $cacheStatus = [];
                 foreach ($cacheItems as $cacheItem) {
                     $cacheStatus[$cacheItem->getTemplateKey()] =
-                        $cacheItem->getStatus() . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
+                        $cacheItem->getCacheStatus() . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
                 }
 
                 $data[] = [

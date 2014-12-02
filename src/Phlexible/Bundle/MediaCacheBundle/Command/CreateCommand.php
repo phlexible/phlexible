@@ -118,16 +118,16 @@ class CreateCommand extends ContainerAwareCommand
             $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
             $table = new Table($output);
             $table->setHeaders(['Idx', 'Template', 'Path', 'File ID']);
-            foreach ($queue->all() as $idx => $queueItem) {
-                $site = $siteManager->getByFileId($queueItem->getFileId());
-                $file = $site->findFile($queueItem->getFileId(), $queueItem->getFileVersion());
+            foreach ($queue->all() as $idx => $cacheItem) {
+                $site = $siteManager->getByFileId($cacheItem->getFileId());
+                $file = $site->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
                 $folder = $site->findFolder($file->getFolderId());
                 $table->addRow(
                     [
                         $idx,
-                        $queueItem->getTemplateKey(),
+                        $cacheItem->getTemplateKey(),
                         $folder->getPath() . $file->getName(),
-                        $queueItem->getFileId()
+                        $cacheItem->getFileId()
                     ]
                 );
             }
@@ -137,23 +137,22 @@ class CreateCommand extends ContainerAwareCommand
         } elseif ($input->getOption('queue')) {
             // via queue
 
-            $queueManager = $this->getContainer()->get('phlexible_media_cache.queue_manager');
+            $cacheManager = $this->getContainer()->get('phlexible_media_cache.cache_manager');
 
-            foreach ($queue->all() as $queueItem) {
-                $queueManager->updateQueueItem($queueItem);
+            foreach ($queue->all() as $cacheItem) {
+                $cacheManager->updateCacheItem($cacheItem);
             }
 
             $output->writeln(count($queue) . ' items queued.');
         } else {
             // create immediately
 
-            $worker = $this->getContainer()->get('phlexible_media_cache.queue.worker');
+            $queueProcessor = $this->getContainer()->get('phlexible_media_cache.queue.processor');
             $progress = new ProgressBar($output, count($queue));
             $progress->start();
-            foreach ($queue->all() as $queueItem) {
-                $worker->process($queueItem);
+            $queueProcessor->processQueue($queue, function() use ($progress) {
                 $progress->advance();
-            }
+            });
             $progress->finish();
 
             $output->writeln('');

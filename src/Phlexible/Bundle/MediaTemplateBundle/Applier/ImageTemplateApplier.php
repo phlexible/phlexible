@@ -105,9 +105,12 @@ class ImageTemplateApplier
         }
 
         if ($template->hasParameter('quality', true)) {
-            $options['jpeg_quality'] = $template->getParameter('quality');
-            $options['png_compression_level'] = $template->getParameter('quality');
-            $options['png_compression_filter'] = $template->getParameter('quality');
+            if (!empty($options['format']) && $options['format'] === 'png') {
+                $options['png_compression_level'] = floor($template->getParameter('quality') / 10);
+                $options['png_compression_filter'] = $template->getParameter('quality') % 10;
+            } elseif (!empty($options['format']) && $options['format'] === 'jpg') {
+                $options['jpeg_quality'] = $template->getParameter('quality');
+            }
         }
 
         if ($template->hasParameter('tiffcompression', true)) {

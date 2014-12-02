@@ -50,7 +50,7 @@ abstract class AbstractWorker implements WorkerInterface
             . 'File document type: ' . strtolower($file->getDocumenttype());
 
         $cacheItem
-            ->setStatus($status)
+            ->setCacheStatus($status)
             ->setError($error);
     }
 }

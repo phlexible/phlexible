@@ -26,6 +26,10 @@ class CacheItem
     const STATUS_ERROR    = 'error';
     const STATUS_MISSING  = 'missing';
 
+    const QUEUE_WAITING = 'waiting';
+    const QUEUE_ERROR   = 'error';
+    const QUEUE_DONE    = 'done';
+
     /**
      * @var string
      * @ORM\Id
@@ -67,7 +71,13 @@ class CacheItem
      * @var string
      * @ORM\Column(type="string", length=20)
      */
-    private $status;
+    private $cacheStatus;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=20)
+     */
+    private $queueStatus;
 
     /**
      * @var string
@@ -116,6 +126,18 @@ class CacheItem
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="queued_at", type="datetime")
+     */
+    private $queuedAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="queued_at", type="datetime")
+     */
+    private $finishedAt;
 
     /**
      * @return string
@@ -240,9 +262,9 @@ class CacheItem
     /**
      * @return string
      */
-    public function getStatus()
+    public function getCacheStatus()
     {
-        return $this->status;
+        return $this->cacheStatus;
     }
 
     /**
@@ -250,9 +272,9 @@ class CacheItem
      *
      * @return $this
      */
-    public function setStatus($status)
+    public function setCacheStatus($status)
     {
-        $this->status = $status;
+        $this->cacheStatus = $status;
 
         return $this;
     }
@@ -413,6 +435,66 @@ class CacheItem
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQueueStatus()
+    {
+        return $this->queueStatus;
+    }
+
+    /**
+     * @param string $queueStatus
+     *
+     * @return $this
+     */
+    public function setQueueStatus($queueStatus)
+    {
+        $this->queueStatus = $queueStatus;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getQueuedAt()
+    {
+        return $this->queuedAt;
+    }
+
+    /**
+     * @param \DateTime $queuedAt
+     *
+     * @return $this
+     */
+    public function setQueuedAt(\DateTime $queuedAt = null)
+    {
+        $this->queuedAt = $queuedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFinishedAt()
+    {
+        return $this->finishedAt;
+    }
+
+    /**
+     * @param \DateTime $finishedAt
+     *
+     * @return $this
+     */
+    public function setFinishedAt(\DateTime $finishedAt = null)
+    {
+        $this->finishedAt = $finishedAt;
 
         return $this;
     }

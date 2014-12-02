@@ -146,7 +146,7 @@ class AudioWorker extends AbstractWorker
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())
             ->setTemplateRevision($template->getRevision())
-            ->setStatus(CacheItem::STATUS_DELEGATE)
+            ->setCacheStatus(CacheItem::STATUS_DELEGATE)
             ->setMimeType($file->getMimeType())
             ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
             ->setExtension('')
@@ -190,18 +190,18 @@ class AudioWorker extends AbstractWorker
                 $documentType = $this->documenttypeManager->findByMimetype($fileInfo->getMimeType());
 
                 $cacheItem
-                    ->setStatus(CacheItem::STATUS_OK)
+                    ->setCacheStatus(CacheItem::STATUS_OK)
                     ->setMimeType($fileInfo->getMimeType())
                     ->setDocumentTypeKey($documentType->getKey())
                     ->setExtension($fileInfo->getExtension())
                     ->setFilesize($fileInfo->getSize());
             } catch (\Exception $e) {
                 $cacheItem
-                    ->setStatus(CacheItem::STATUS_ERROR)
+                    ->setCacheStatus(CacheItem::STATUS_ERROR)
                     ->setError($e);
             }
 
-            if ($cacheItem->getStatus() === CacheItem::STATUS_OK) {
+            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                 $storage = $this->storageManager->get($template->getStorage());
                 $storage->store($cacheItem, $tempFilename);
             }

@@ -41,10 +41,10 @@ class WriteCommand extends ContainerAwareCommand
     {
         $breakOnError = $input->getOption('break-on-error');
 
-        $queueManager = $this->getContainer()->get('phlexible_media_cache.queue_manager');
-        $queueWorker = $this->getContainer()->get('phlexible_media_cache.queue.worker');
+        $cacheManager = $this->getContainer()->get('phlexible_media_cache.cache_manager');
+        $queueProcessor = $this->getContainer()->get('phlexible_media_cache.queue.processor');
 
-        $total = $queueManager->countAll();
+        $total = $cacheManager->countBy(array('queueStatus' => CacheItem::QUEUE_WAITING));
 
         if (!$total) {
             return 0;
@@ -57,18 +57,18 @@ class WriteCommand extends ContainerAwareCommand
         }
 
         $current = 0;
-        foreach ($queueManager->findAll() as $queueItem) {
+        foreach ($cacheManager->findBy(array('queue_status' => CacheItem::QUEUE_WAITING)) as $cacheItem) {
             $current++;
             if ($progress) {
                 $progress->advance();
             }
 
-            $cacheItem = $queueWorker->process(
-                $queueItem,
-                function ($status, $worker, QueueItem $queueItem, CacheItem $cacheItem) use ($output, $breakOnError, $current, $total) {
+            $queueProcessor->processItem(
+                $cacheItem,
+                function ($status, $worker, CacheItem $cacheItem) use ($output, $breakOnError, $current, $total) {
                     $worker = ($worker ? get_class($worker) : '-');
-                    $fileId = $queueItem->getFileId();
-                    $templateKey = $queueItem->getTemplateKey();
+                    $fileId = $cacheItem->getFileId();
+                    $templateKey = $cacheItem->getTemplateKey();
                     if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
                         if ($status === 'no_worker' || $status === 'no_cacheitem') {
                             $output->writeln(
@@ -102,7 +102,7 @@ class WriteCommand extends ContainerAwareCommand
                             );
                         }
                     }
-                    if ($status === 'error' && $cacheItem && $cacheItem->getStatus() === CacheItem::STATUS_ERROR) {
+                    if ($status === 'error' && $cacheItem && $cacheItem->getCacheStatus() === CacheItem::STATUS_ERROR) {
                         $output->writeln('<error>' . $cacheItem->getError() . '<error>');
                         if ($breakOnError) {
                             return 1;
@@ -110,8 +110,6 @@ class WriteCommand extends ContainerAwareCommand
                     }
                 }
             );
-
-            $queueManager->deleteQueueItem($queueItem);
         }
 
         if ($progress) {

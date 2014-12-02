@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -58,13 +59,17 @@ class MediaController extends Controller
         $template = $templateManager->find($templateKey);
 
         if ($cacheItem) {
-            if ($cacheItem && $cacheItem->getStatus() === CacheItem::STATUS_OK) {
+            if ($cacheItem && $cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                 $storageKey = $template->getStorage();
                 $storage = $storageManager->get($storageKey);
                 $filePath = $storage->getLocalPath($cacheItem);
             }
 
-            if ($cacheItem && $cacheItem->getStatus() === CacheItem::STATUS_WAITING) {
+            if ($cacheItem && $cacheItem->getCacheStatus() === CacheItem::STATUS_WAITING) {
+                if (!$template instanceof ImageTemplate) {
+                    return new Response('Cache item waiting.', 202);
+                }
+
                 $file = $siteManager->getByFileId($fileId)->findFile($fileId);
                 $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
                 $filePath = $delegateService->getWaiting($template, $documenttype);
@@ -74,12 +79,28 @@ class MediaController extends Controller
             $mimeType = $cacheItem->getMimeType();
         }
 
-        if (empty($filePath) || !file_exists($filePath)) {
+        if (empty($filePath)) {
+            if (!$template instanceof ImageTemplate) {
+                return new Response('Not found', 404);
+            }
+
+            $applier = $this->get('phlexible_media_template.applier.image');
             $file = $siteManager->getByFileId($fileId)->findFile($fileId);
-            $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
-            $filePath = $delegateService->getClean($template, $documenttype);
-            $fileSize = filesize($filePath);
-            $mimeType = 'image/gif';
+            $filePath = '/tmp/test.' . $template->getParameter('format');
+            try {
+                $i = $applier->apply($template, $file, $file->getPhysicalPath(), $filePath);
+                $mimeType = 'image/' . $template->getParameter('format');
+            } catch (\Exception $e) {
+                $filePath = null;
+            }
+
+            if (empty($filePath)) {
+                $file = $siteManager->getByFileId($fileId)->findFile($fileId);
+                $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
+                $filePath = $delegateService->getClean($template, $documenttype);
+                $fileSize = filesize($filePath);
+                $mimeType = 'image/gif';
+            }
         }
 
         return $this->get('igorw_file_serve.response_factory')

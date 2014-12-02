@@ -88,7 +88,7 @@ class TempHandler
                 $site->replaceFile($file, $tempFile, new AttributeBag(), $tempFile->getUserId());
                 break;
 
-            case self::ACTION_KEEP_BOtH:
+            case self::ACTION_KEEP_BOTH:
                 $tempFile->setAlternativeName($this->createAlternateFilename($tempFile));
                 $site->createFile($folder, $tempFile, new AttributeBag(), $tempFile->getUserId());
                 break;
