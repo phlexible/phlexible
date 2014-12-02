@@ -136,7 +136,7 @@ class FolderController extends Controller
             foreach ($siteManager->getAll() as $site) {
                 $rootFolder = $site->findRootFolder();
 
-                if (!$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
                     continue;
                 }
 
@@ -201,12 +201,12 @@ class FolderController extends Controller
                 $site = $siteManager->getByFolderId($folderId);
                 $folder = $site->findFolder($folderId);
 
-                if (!$securityContext->isGranted('FOLDER_READ', $folder)) {
-                    return;
+                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                    return new JsonResponse([]);
                 }
 
                 foreach ($site->findFoldersByParentFolder($folder) as $subFolder) {
-                    if (!$securityContext->isGranted('FOLDER_READ', $subFolder)) {
+                    if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
                         continue;
                     }
 
