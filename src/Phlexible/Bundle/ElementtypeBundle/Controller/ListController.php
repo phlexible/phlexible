@@ -61,9 +61,20 @@ class ListController extends Controller
         ksort($elementtypes);
         $elementtypes = array_values($elementtypes);
 
+        $checker = $this->get('phlexible_element.checker');
+        $changes = $checker->check();
+        $hasChanges = false;
+        foreach ($changes as $change) {
+            if ($change->getNeedImport()) {
+                $hasChanges = true;
+                break;
+            }
+        }
+
         return new JsonResponse([
             'elementtypes' => $elementtypes,
-            'total'        => count($elementtypes)
+            'total'        => count($elementtypes),
+            'changes'      => $hasChanges,
         ]);
     }
 

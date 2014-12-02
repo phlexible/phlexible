@@ -14,6 +14,13 @@ services:
             - @phlexible_elementtype.viability_manager
             - @phlexible_element.field_mapper
 
+    phlexible_element.checker:
+        class: Phlexible\Bundle\ElementBundle\Change\Checker
+        arguments:
+            - @phlexible_elementtype.elementtype_service
+            - @phlexible_element.element_service
+            - @phlexible_element.element_source_manager
+
     phlexible_element.synchronizer:
         class: Phlexible\Bundle\ElementBundle\Change\Synchronizer
         arguments:

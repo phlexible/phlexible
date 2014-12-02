@@ -26,6 +26,10 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                 collapsible: true,
                 params: this.params,
                 listeners: {
+                    changes: function(hasChanges) {
+                        this.getComponent(2).setVisible(hasChanges);
+                        this.doLayout();
+                    },
                     beforeElementtypeChange: function (id, title, fn) {
                         if (this.dirty) {
                             Ext.MessageBox.show({
@@ -247,6 +251,13 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                         }
                     }
                 ]
+            },{
+                region: 'north',
+                height: 30,
+                html: 'Committable elementtype changes detected.',
+                plain: true,
+                hidden: true,
+                bodyStyle: 'padding-top: 7px; background-color: #EE2C2C; color: white; text-align: center; font-weight: bolder;'
             }
         ];
 
