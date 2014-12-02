@@ -69,7 +69,7 @@ class CreateCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $batchBuilder = $this->getContainer()->get('phlexible_media_cache.queue.batch_builder');
+        $batchBuilder = $this->getContainer()->get('phlexible_media_cache.batch_builder');
 
         $all = $input->getOption('all');
         if ($all) {
@@ -110,7 +110,7 @@ class CreateCommand extends ContainerAwareCommand
             $flags[] = 'missing';
         }
 
-        $batchResolver = $this->getContainer()->get('phlexible_media_cache.queue.batch_resolver');
+        $batchResolver = $this->getContainer()->get('phlexible_media_cache.batch_resolver');
         $queue = $batchResolver->resolve($batch, $flags);
 
         if ($input->getOption('show')) {
@@ -147,7 +147,7 @@ class CreateCommand extends ContainerAwareCommand
         } else {
             // create immediately
 
-            $queueProcessor = $this->getContainer()->get('phlexible_media_cache.queue.processor');
+            $queueProcessor = $this->getContainer()->get('phlexible_media_cache.queue_processor');
             $progress = new ProgressBar($output, count($queue));
             $progress->start();
             $queueProcessor->processQueue($queue, function() use ($progress) {

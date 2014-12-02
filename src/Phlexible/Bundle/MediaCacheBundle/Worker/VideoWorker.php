@@ -155,12 +155,12 @@ class VideoWorker extends AbstractWorker
             ->setTemplateKey($template->getKey())
             ->setTemplateRevision($template->getRevision())
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
+            ->setQueueStatus(CacheItem::QUEUE_DONE)
             ->setMimeType($file->getMimeType())
             ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
             ->setExtension('')
             ->setFileSize(0)
-            ->setError(null)
-            ->setCreatedAt(new \DateTime());
+            ->setError(null);
 
         if (!file_exists($inputFilename)) {
             $this->applyError($cacheItem, CacheItem::STATUS_MISSING, 'Input file not found.', $inputFilename, $template, $file);
@@ -194,16 +194,20 @@ class VideoWorker extends AbstractWorker
 
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_OK)
+                    ->setQueueStatus(CacheItem::QUEUE_DONE)
                     ->setMimeType($fileInfo->getMimeType())
                     ->setDocumentTypeKey($documentType->getKey())
                     ->setExtension($fileInfo->getExtension())
                     ->setFilesize($fileInfo->getSize())
                     ->setWidth($width)
-                    ->setHeight($height);
+                    ->setHeight($height)
+                    ->setFinishedAt(new \DateTime());
             } catch (\Exception $e) {
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_ERROR)
-                    ->setError($e);
+                    ->setQueueStatus(CacheItem::QUEUE_ERROR)
+                    ->setError($e)
+                    ->setFinishedAt(new \DateTime());
             }
 
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {

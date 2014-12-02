@@ -9,10 +9,9 @@
 namespace Phlexible\Bundle\MediaCacheBundle\EventListener;
 
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
-use Phlexible\Bundle\MediaCacheBundle\Model\QueueManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Batch;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
-use Phlexible\Bundle\MediaCacheBundle\Queue\Processor;
+use Phlexible\Bundle\MediaCacheBundle\Queue\QueueProcessor;
 use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
 use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
@@ -32,9 +31,9 @@ class FileListener implements EventSubscriberInterface
     private $templateManager;
 
     /**
-     * @var Processor
+     * @var QueueProcessor
      */
-    private $queueWorker;
+    private $queueProcessor;
 
     /**
      * @var BatchResolver
@@ -47,35 +46,27 @@ class FileListener implements EventSubscriberInterface
     private $cacheManager;
 
     /**
-     * @var QueueManagerInterface
-     */
-    private $queueManager;
-
-    /**
      * @var bool
      */
     private $immediatelyCacheSystemTemplates;
 
     /**
      * @param TemplateManagerInterface $templateManager
-     * @param Processor                   $queueWorker
+     * @param QueueProcessor           $queueProcessor
      * @param BatchResolver            $batchResolver
      * @param CacheManagerInterface    $cacheManager
-     * @param QueueManagerInterface    $queueManager
      * @param bool                     $immediatelyCacheSystemTemplates
      */
     public function __construct(TemplateManagerInterface $templateManager,
-                                Processor $queueWorker,
+                                QueueProcessor $queueProcessor,
                                 BatchResolver $batchResolver,
                                 CacheManagerInterface $cacheManager,
-                                QueueManagerInterface $queueManager,
                                 $immediatelyCacheSystemTemplates)
     {
         $this->templateManager = $templateManager;
-        $this->queueWorker = $queueWorker;
+        $this->queueProcessor = $queueProcessor;
         $this->batchResolver = $batchResolver;
         $this->cacheManager = $cacheManager;
-        $this->queueManager = $queueManager;
         $this->immediatelyCacheSystemTemplates = $immediatelyCacheSystemTemplates;
     }
 
@@ -117,10 +108,6 @@ class FileListener implements EventSubscriberInterface
         foreach ($this->cacheManager->findBy(['fileId' => $fileId]) as $cacheItem) {
             $this->cacheManager->deleteCacheItem($cacheItem);
         }
-
-        foreach ($this->queueManager->findBy(['fileId' => $fileId]) as $queueItem) {
-            $this->queueManager->deleteQueueItem($queueItem);
-        }
     }
 
     /**
@@ -146,9 +133,7 @@ class FileListener implements EventSubscriberInterface
 
             $queue = $this->batchResolver->resolve($batch);
 
-            foreach ($queue->all() as $queueItem) {
-                $this->queueWorker->process($queueItem);
-            }
+            $this->queueProcessor->processQueue($queue);
         }
 
         $batch
@@ -157,8 +142,8 @@ class FileListener implements EventSubscriberInterface
 
         $queue = $this->batchResolver->resolve($batch);
 
-        foreach ($queue->all() as $queueItem) {
-            $this->queueManager->updateQueueItem($queueItem);
+        foreach ($queue->all() as $cacheItem) {
+            $this->cacheManager->updateCacheItem($cacheItem);
         }
     }
 }

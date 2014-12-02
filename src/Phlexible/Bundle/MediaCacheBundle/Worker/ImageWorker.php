@@ -160,12 +160,12 @@ class ImageWorker extends AbstractWorker
             ->setTemplateKey($template->getKey())
             ->setTemplateRevision($template->getRevision())
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
+            ->setQueueStatus(CacheItem::QUEUE_DONE)
             ->setMimeType($file->getMimeType())
             ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
             ->setExtension(isset($pathinfo['extension']) ? $pathinfo['extension'] : '')
             ->setFileSize(0)
-            ->setError(null)
-            ->setCreatedAt(new \DateTime());
+            ->setError(null);
 
         if ($missing) {
             $this->applyError(
@@ -204,7 +204,7 @@ class ImageWorker extends AbstractWorker
             }
 
             try {
-                $result = $this->applier->apply($template, $file, $inputFilename, $tempFilename);
+                $image = $this->applier->apply($template, $file, $inputFilename, $tempFilename);
 
                 $filesystem->chmod($tempFilename, 0777);
 
@@ -213,16 +213,20 @@ class ImageWorker extends AbstractWorker
 
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_OK)
+                    ->setQueueStatus(CacheItem::QUEUE_DONE)
                     ->setMimeType($fileInfo->getMimeType())
                     ->setDocumentTypeKey($documentType->getKey())
                     ->setExtension($fileInfo->getExtension())
                     ->setFilesize($fileInfo->getSize())
-                    ->setWidth($result->getWidth())
-                    ->setHeight($result->getHeight());
+                    ->setWidth($image->getSize()->getWidth())
+                    ->setHeight($image->getSize()->getHeight())
+                    ->setFinishedAt(new \DateTime());
             } catch (\Exception $e) {
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_ERROR)
-                    ->setError($e);
+                    ->setQueueStatus(CacheItem::QUEUE_ERROR)
+                    ->setError($e)
+                    ->setFinishedAt(new \DateTime());
             }
 
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {

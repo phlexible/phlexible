@@ -129,15 +129,23 @@ class CacheItem
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="queued_at", type="datetime")
+     * @ORM\Column(name="queued_at", type="datetime", nullable=true)
      */
     private $queuedAt;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="finished_at", type="datetime")
+     * @ORM\Column(name="finished_at", type="datetime", nullable=true)
      */
     private $finishedAt;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     /**
      * @return string

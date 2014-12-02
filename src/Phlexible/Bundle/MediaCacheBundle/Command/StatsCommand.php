@@ -37,17 +37,14 @@ class StatsCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
 
-        $entityManager = $container->get('doctrine.orm.entity_manager');
-        $cacheRepository = $entityManager->getRepository('PhlexibleMediaCacheBundle:CacheItem');
-        $queueRepository = $entityManager->getRepository('PhlexibleMediaCacheBundle:QueueItem');
+        $cacheManager = $container->get('phlexible_media_cache.cache_manager');
 
-        $cntCache = $cacheRepository->countAll();
-        $cntWaiting = $queueRepository->countAll();
-
-        $cntMissing = $cacheRepository->countBy(['status' => CacheItem::STATUS_MISSING]);
-        $cntError = $cacheRepository->countBy(['status' => CacheItem::STATUS_ERROR]);
-        $cntOk = $cacheRepository->countBy(['status' => CacheItem::STATUS_OK]);
-        $cntDelegate = $cacheRepository->countBy(['status' => CacheItem::STATUS_DELEGATE]);
+        $cntCache = $cacheManager->countAll();
+        $cntWaiting = $cacheManager->countBy(['queueStatus' => CacheItem::QUEUE_WAITING]);
+        $cntMissing = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_MISSING]);
+        $cntError = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_ERROR]);
+        $cntOk = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_OK]);
+        $cntDelegate = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_DELEGATE]);
 
         $output->writeln($cntCache . ' cached items.');
         $output->writeln($cntWaiting . ' waiting items.');
