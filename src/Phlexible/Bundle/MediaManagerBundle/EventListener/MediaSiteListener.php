@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
 use Phlexible\Bundle\MediaManagerBundle\Site\DeleteFileChecker;
 use Phlexible\Bundle\MediaManagerBundle\Site\DeleteFolderChecker;
+use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\FolderEvent;
@@ -104,10 +105,10 @@ class MediaSiteListener implements EventSubscriberInterface
     }
 
     /**
-     * @param FileInterface       $file
-     * @param PathSourceInterface $fileSource
+     * @param ExtendedFileInterface $file
+     * @param PathSourceInterface   $fileSource
      */
-    private function processFile(FileInterface $file, PathSourceInterface $fileSource)
+    private function processFile(ExtendedFileInterface $file, PathSourceInterface $fileSource)
     {
         try {
             $documenttype = $this->documenttypeManager->findByMimetype($fileSource->getMimeType());
@@ -121,11 +122,7 @@ class MediaSiteListener implements EventSubscriberInterface
         try {
             $fileMetaSet = $this->metaSetManager->findOneByName('file');
             if ($fileMetaSet) {
-                $metasets = $file->getAttributes()->get('metasets', []);
-                if (!in_array($fileMetaSet->getId(), $metasets)) {
-                    $metasets[] = $fileMetaSet->getId();
-                    $file->getAttributes()->set('metasets', $metasets);
-                }
+                $file->addMetaSet($fileMetaSet);
             }
         } catch (\Exception $e) {
         }
@@ -136,16 +133,12 @@ class MediaSiteListener implements EventSubscriberInterface
      */
     public function onBeforeCreateFolder(FolderEvent $event)
     {
-        $attributes = $event->getFolder()->getAttributes();
+        $folder = $event->getFolder();
 
         try {
             $folderMetaSet = $this->metaSetManager->findOneByName('folder');
             if ($folderMetaSet) {
-                $metasets = $attributes->get('metasets', []);
-                if (!in_array($folderMetaSet->getId(), $metasets)) {
-                    $metasets[] = $folderMetaSet->getId();
-                    $attributes->set('metasets', $metasets);
-                }
+                $folder->addMetaset($folderMetaSet);
             }
         } catch (\Exception $e) {
         }

@@ -37,14 +37,13 @@ class FolderMetaController extends Controller
 
         $folder = $this->get('phlexible_media_site.site_manager')->getByFolderId($folderId)->findFolder($folderId);
 
-        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
         $meta = [];
 
-        foreach ($folder->getAttribute('metasets', []) as $metaSetId) {
-            $metaSet = $metaSetManager->find($metaSetId);
+        foreach ($folderMetaSetResolver->resolve($folder) as $metaSet) {
             $metaData = $folderMetaDataManager->findByMetaSetAndFolder($metaSet, $folder);
 
             $fieldDatas = [];
@@ -71,7 +70,7 @@ class FolderMetaController extends Controller
             }
 
             $meta[] = [
-                'set_id' => $metaSetId,
+                'set_id' => $metaSet->getId(),
                 'title'  => $metaSet->getName(),
                 'fields' => $fieldDatas
             ];

@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaAssetBundle\EventListener;
 
 use Phlexible\Bundle\MediaAssetBundle\AttributeReader\AttributeReaderInterface;
+use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\BeforeReplaceFileEvent;
 use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
@@ -73,10 +74,10 @@ class MediaSiteListener implements EventSubscriberInterface
     }
 
     /**
-     * @param FileInterface       $file
-     * @param PathSourceInterface $fileSource
+     * @param ExtendedFileInterface $file
+     * @param PathSourceInterface   $fileSource
      */
-    private function processAttributes(FileInterface $file, PathSourceInterface $fileSource)
+    private function processAttributes(ExtendedFileInterface $file, PathSourceInterface $fileSource)
     {
         $attributes = new AttributeBag();
 

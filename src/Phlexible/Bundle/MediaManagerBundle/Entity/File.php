@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\File as BaseFile;
 
 /**
@@ -19,7 +20,7 @@ use Phlexible\Bundle\MediaSiteBundle\Model\File as BaseFile;
  * @ORM\Entity
  * @ORM\Table(name="media_file")
  */
-class File extends BaseFile
+class File extends BaseFile implements ExtendedFileInterface
 {
     /**
      * @var string
@@ -32,6 +33,12 @@ class File extends BaseFile
      * @ORM\Column(name="documenttype", type="string")
      */
     private $documenttype;
+
+    /**
+     * @var array
+     * @ORM\Column(name="metasets", type="simple_array", nullable=true)
+     */
+    private $metasets = [];
 
     /**
      * @param string $assetType
@@ -71,5 +78,53 @@ class File extends BaseFile
     public function getDocumenttype()
     {
         return $this->documenttype;
+    }
+
+    /**
+     * @param string $metaSetId
+     *
+     * @return $this
+     */
+    public function addMetaSet($metaSetId)
+    {
+        if (!in_array($metaSetId, $this->metasets)) {
+            $this->metasets[] = $metaSetId;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $metaSetId
+     *
+     * @return $this
+     */
+    public function removeMetaSet($metaSetId)
+    {
+        if (in_array($metaSetId, $this->metasets)) {
+            unset($this->metasets[array_search($metaSetId, $this->metasets)]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $metasets
+     *
+     * @return $this
+     */
+    public function setMetaSets(array $metasets)
+    {
+        $this->metasets = $metasets;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetaSets()
+    {
+        return $this->metasets;
     }
 }

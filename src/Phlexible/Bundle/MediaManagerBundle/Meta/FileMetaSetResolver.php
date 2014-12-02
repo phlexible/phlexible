@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFileInterface;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 
@@ -33,15 +33,14 @@ class FileMetaSetResolver
     }
 
     /**
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return MetaSet[]
      */
-    public function resolve(FileInterface $file)
+    public function resolve(ExtendedFileInterface $file)
     {
         $metaSets = [];
-        $metaSetIds = $file->getAttribute('metasets', []);
-        foreach ($metaSetIds as $metaSetId) {
+        foreach ($file->getMetasets() as $metaSetId) {
             $metaSets[] = $this->metaSetManager->find($metaSetId);
         }
 

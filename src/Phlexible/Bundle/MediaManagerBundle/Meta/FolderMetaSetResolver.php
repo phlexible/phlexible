@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
+use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFolderInterface;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 
@@ -33,15 +33,14 @@ class FolderMetaSetResolver
     }
 
     /**
-     * @param FolderInterface $folder
+     * @param ExtendedFolderInterface $folder
      *
      * @return MetaSet[]
      */
-    public function resolve(FolderInterface $folder)
+    public function resolve(ExtendedFolderInterface $folder)
     {
         $metaSets = [];
-        $metaSetIds = $folder->getAttribute('metasets', []);
-        foreach ($metaSetIds as $metaSetId) {
+        foreach ($folder->getMetasets() as $metaSetId) {
             $metaSets[] = $this->metaSetManager->find($metaSetId);
         }
 

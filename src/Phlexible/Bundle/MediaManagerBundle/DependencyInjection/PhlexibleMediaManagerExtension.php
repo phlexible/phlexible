@@ -40,7 +40,7 @@ class PhlexibleMediaManagerExtension extends Extension
         foreach ($config['sites'] as $name => $siteConfig) {
             $driverId = $siteConfig['driver'];
 
-            $siteDefinition = new Definition('Phlexible\Bundle\MediaSiteBundle\Site\Site', [
+            $siteDefinition = new Definition('Phlexible\Bundle\MediaManagerBundle\Site\ExtendedSite', [
                 $siteConfig['id'],
                 $siteConfig['root_dir'],
                 $siteConfig['quota'],

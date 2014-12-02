@@ -13,6 +13,7 @@ use Phlexible\Bundle\MediaSiteBundle\FileSource\FileSourceInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Media site interface
@@ -41,6 +42,11 @@ interface SiteInterface
      * @return DriverInterface
      */
     public function getDriver();
+
+    /**
+     * @return EventDispatcherInterface
+     */
+    public function getEventDispatcher();
 
     /**
      * @return FolderInterface

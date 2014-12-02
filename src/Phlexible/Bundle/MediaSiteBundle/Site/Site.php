@@ -121,6 +121,14 @@ class Site implements SiteInterface, \IteratorAggregate
     }
 
     /**
+     * @return EventDispatcherInterface
+     */
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function hasFeature($feature)
