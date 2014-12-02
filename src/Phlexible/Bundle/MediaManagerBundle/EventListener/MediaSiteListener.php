@@ -122,7 +122,7 @@ class MediaSiteListener implements EventSubscriberInterface
         try {
             $fileMetaSet = $this->metaSetManager->findOneByName('file');
             if ($fileMetaSet) {
-                $file->addMetaSet($fileMetaSet);
+                $file->addMetaSet($fileMetaSet->getId());
             }
         } catch (\Exception $e) {
         }
@@ -138,7 +138,7 @@ class MediaSiteListener implements EventSubscriberInterface
         try {
             $folderMetaSet = $this->metaSetManager->findOneByName('folder');
             if ($folderMetaSet) {
-                $folder->addMetaset($folderMetaSet);
+                $folder->addMetaset($folderMetaSet->getId());
             }
         } catch (\Exception $e) {
         }
