@@ -191,11 +191,14 @@ class MediaExtension extends \Twig_Extension
         $file = $site->findFile($fileId, $fileVersion);
 
         $info = [
+            'name'         => $file->getName(),
             'mimetype'     => $file->getMimeType(),
             'assettype'    => $file->getAssettype(),
             'documenttype' => $file->getDocumenttype(),
             'size'         => $file->getSize(),
             'attributes'   => $file->getAttribute('attributes'),
+            'createdAt'    => $file->getCreatedAt(),
+            'modifiedAt'   => $file->getModifiedAt(),
             'meta'         => [],
         ];
 
