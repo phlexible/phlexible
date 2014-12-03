@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\VideoExtractor;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 
 /**
  * Video extractor interface
@@ -27,18 +27,18 @@ interface VideoExtractorInterface
     /**
      * Check if extractor supports the given asset
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return bool
      */
-    public function supports(FileInterface $file);
+    public function supports(ExtendedFileInterface $file);
 
     /**
      * Extract video from file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function extract(FileInterface $file);
+    public function extract(ExtendedFileInterface $file);
 }

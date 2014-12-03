@@ -8,12 +8,11 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Search;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Phlexible\Component\Database\ConnectionManager;
+use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -24,9 +23,9 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class FileSearch implements SearchProviderInterface
 {
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
      * @var UserManagerInterface
@@ -39,13 +38,13 @@ class FileSearch implements SearchProviderInterface
     private $securityContext;
 
     /**
-     * @param SiteManager              $siteManager
+     * @param VolumeManager            $volumeManager
      * @param UserManagerInterface     $userManager
      * @param SecurityContextInterface $securityContext
      */
-    public function __construct(SiteManager $siteManager, UserManagerInterface $userManager, SecurityContextInterface $securityContext)
+    public function __construct(VolumeManager $volumeManager, UserManagerInterface $userManager, SecurityContextInterface $securityContext)
     {
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
         $this->userManager = $userManager;
         $this->securityContext = $securityContext;
     }
@@ -72,8 +71,8 @@ class FileSearch implements SearchProviderInterface
     public function search($query)
     {
         $files = [];
-        foreach ($this->siteManager->getAll() as $site) {
-            $foundFiles = $site->search($query);
+        foreach ($this->volumeManager->all() as $volume) {
+            $foundFiles = $volume->search($query);
             if ($foundFiles) {
                 $files += $foundFiles;
             }
@@ -83,10 +82,10 @@ class FileSearch implements SearchProviderInterface
 
         $results = [];
         foreach ($files as $file) {
-            /* @var $file FileInterface */
+            /* @var $file ExtendedFileInterface */
 
             if (empty($folders[$file->getFolderId()])) {
-                $folders[$file->getFolderId()] = $file->getSite()->findFolder($file->getFolderId());
+                $folders[$file->getFolderId()] = $file->getVolume()->findFolder($file->getFolderId());
             }
 
             if (!$this->securityContext->isGranted($folders[$file->getFolderId()], 'FILE_READ')) {

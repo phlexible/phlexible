@@ -9,10 +9,9 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
 use Brainbits\Mime\MimeDetector;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\UploadedFileSource;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\Volume\FileSource\UploadedFileSource;
+use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -23,9 +22,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class UploadHandler
 {
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
      * @var TempStorage
@@ -38,13 +37,13 @@ class UploadHandler
     private $mimeDetector;
 
     /**
-     * @param SiteManager  $siteManager
-     * @param TempStorage  $tempStorage
-     * @param MimeDetector $mimeDetector
+     * @param VolumeManager  $volumeManager
+     * @param TempStorage    $tempStorage
+     * @param MimeDetector   $mimeDetector
      */
-    public function __construct(SiteManager $siteManager, TempStorage $tempStorage, MimeDetector $mimeDetector)
+    public function __construct(VolumeManager $volumeManager, TempStorage $tempStorage, MimeDetector $mimeDetector)
     {
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
         $this->tempStorage = $tempStorage;
         $this->mimeDetector = $mimeDetector;
     }
@@ -64,16 +63,16 @@ class UploadHandler
      * @param string       $folderId
      * @param string       $userId
      *
-     * @return TempFile|FileInterface
+     * @return TempFile|ExtendedFileInterface
      */
     public function handle(UploadedFile $uploadedFile, $folderId, $userId)
     {
         $mimetype = $this->mimeDetector->detect($uploadedFile->getPathname(), MimeDetector::RETURN_STRING);
         $uploadFileSource = new UploadedFileSource($uploadedFile, $mimetype);
 
-        $site = $this->siteManager->getByFolderId($folderId);
-        $folder = $site->findFolder($folderId);
-        $file = $site->findFileByPath($folder->getPath() . '/' . $uploadFileSource->getName());
+        $volume = $this->volumeManager->getByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
+        $file = $volume->findFileByPath($folder->getPath() . '/' . $uploadFileSource->getName());
         $originalFileId = null;
 
         if ($file) {
@@ -92,7 +91,7 @@ class UploadHandler
             );
         }
 
-        $file = $site->createFile($folder, $uploadFileSource, new AttributeBag(), $userId);
+        $file = $volume->createFile($folder, $uploadFileSource, array(), $userId);
 
         return $file;
     }

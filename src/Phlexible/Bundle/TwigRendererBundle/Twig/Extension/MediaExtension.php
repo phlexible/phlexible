@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\TwigRendererBundle\Twig\Extension;
 
 use Phlexible\Bundle\MediaManagerBundle\Meta\FileMetaDataManager;
 use Phlexible\Bundle\MediaManagerBundle\Meta\FileMetaSetResolver;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -26,9 +26,9 @@ class MediaExtension extends \Twig_Extension
     private $router;
 
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
      * @var FileMetaSetResolver
@@ -42,14 +42,14 @@ class MediaExtension extends \Twig_Extension
 
     /**
      * @param RouterInterface     $router
-     * @param SiteManager         $siteManager
+     * @param VolumeManager       $volumeManager
      * @param FileMetaSetResolver $metaSetResolver
      * @param FileMetaDataManager $metaDataManager
      */
-    public function __construct(RouterInterface $router, SiteManager $siteManager, FileMetaSetResolver $metaSetResolver, FileMetaDataManager $metaDataManager)
+    public function __construct(RouterInterface $router, VolumeManager $volumeManager, FileMetaSetResolver $metaSetResolver, FileMetaDataManager $metaDataManager)
     {
         $this->router = $router;
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
         $this->metaSetResolver = $metaSetResolver;
         $this->metaDataManager = $metaDataManager;
     }
@@ -187,8 +187,8 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $site = $this->siteManager->getByFileId($fileId, $fileVersion);
-        $file = $site->findFile($fileId, $fileVersion);
+        $volume = $this->volumeManager->getByFileId($fileId, $fileVersion);
+        $file = $volume->findFile($fileId, $fileVersion);
 
         $info = [
             'name'         => $file->getName(),

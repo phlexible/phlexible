@@ -8,8 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Component\Volume\VolumeManager;
 
 /**
  * Upload temp storage
@@ -30,18 +29,18 @@ class TempHandler
     private $tempStorage;
 
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
-     * @param TempStorage $tempStorage
-     * @param SiteManager $siteManager
+     * @param TempStorage   $tempStorage
+     * @param VolumeManager $volumeManager
      */
-    public function __construct(TempStorage $tempStorage, SiteManager $siteManager)
+    public function __construct(TempStorage $tempStorage, VolumeManager $volumeManager)
     {
         $this->tempStorage = $tempStorage;
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
     }
 
     /**
@@ -75,22 +74,22 @@ class TempHandler
      */
     private function handleTempFile($action, TempFile $tempFile)
     {
-        $site = $this->siteManager->getByFolderId($tempFile->getFolderId());
-        $folder = $site->findFolder($tempFile->getFolderId());
+        $volume = $this->volumeManager->getByFolderId($tempFile->getFolderId());
+        $folder = $volume->findFolder($tempFile->getFolderId());
 
         switch ($action) {
             case self::ACTION_SAVE:
-                $site->createFile($folder, $tempFile, new AttributeBag(), $tempFile->getUserId());
+                $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_REPLACE:
-                $file = $site->findFile($tempFile->getFileId());
-                $site->replaceFile($file, $tempFile, new AttributeBag(), $tempFile->getUserId());
+                $file = $volume->findFile($tempFile->getFileId());
+                $volume->replaceFile($file, $tempFile, array(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_KEEP_BOTH:
                 $tempFile->setAlternativeName($this->createAlternateFilename($tempFile));
-                $site->createFile($folder, $tempFile, new AttributeBag(), $tempFile->getUserId());
+                $volume->createFile($folder, $tempFile, array(), $tempFile->getUserId());
                 break;
 
             case self::ACTION_VERSION:
@@ -129,8 +128,8 @@ class TempHandler
      */
     public function createAlternateFilename(TempFile $tempFile)
     {
-        $site = $this->siteManager->getByFolderId($tempFile->getFolderId());
-        $folder = $site->findFolder($tempFile->getFolderId());
+        $volume = $this->volumeManager->getByFolderId($tempFile->getFolderId());
+        $folder = $volume->findFolder($tempFile->getFolderId());
 
         $newNameParts = pathinfo($tempFile->getName());
         $newNameFormat = basename($newNameParts['basename'], '.' . $newNameParts['extension']);
@@ -142,7 +141,7 @@ class TempHandler
             $i++;
             $newName = sprintf($newNameFormat, $i);
             $testFilename = $folder->getPath() . '/' . $newName;
-        } while ($site->findFileByPath($testFilename));
+        } while ($volume->findFileByPath($testFilename));
 
         return $newName;
     }

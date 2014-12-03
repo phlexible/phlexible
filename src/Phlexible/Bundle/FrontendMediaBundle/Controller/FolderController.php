@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Controller;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
+use Phlexible\Component\Volume\VolumeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,8 +34,8 @@ class FolderController extends Controller
 
         $securityContext = $this->get('security.context');
 
-        foreach ($this->get('phlexible_media_site.site_manager')->getAll() as $site) {
-            $rootFolder = $site->findRootFolder();
+        foreach ($this->get('phlexible_media_manager.volume_manager')->all() as $volume) {
+            $rootFolder = $volume->findRootFolder();
 
             if (!$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
                 // TODO: uncomment
@@ -44,13 +44,13 @@ class FolderController extends Controller
 
             $data[] = [
                 'id'        => $rootFolder->getId(),
-                'site_id'   => $site->getId(),
+                'site_id'   => $volume->getId(),
                 'text'      => $rootFolder->getName(),
-                'leaf'      => !$site->countFoldersByParentFolder($rootFolder),
+                'leaf'      => !$volume->countFoldersByParentFolder($rootFolder),
                 'draggable' => false,
                 'expanded'  => true,
                 'allowDrop' => true,
-                'children'  => $this->recurseFolders($site, $rootFolder),
+                'children'  => $this->recurseFolders($volume, $rootFolder),
             ];
         }
 
@@ -58,18 +58,18 @@ class FolderController extends Controller
     }
 
     /**
-     * @param SiteInterface   $site
-     * @param FolderInterface $folder
+     * @param VolumeInterface         $volume
+     * @param ExtendedFolderInterface $folder
      *
      * @return array
      */
-    private function recurseFolders(SiteInterface $site, FolderInterface $folder)
+    private function recurseFolders(VolumeInterface $volume, ExtendedFolderInterface $folder)
     {
         $data = [];
 
         $securityContext = $this->get('security.context');
 
-        foreach ($site->findFoldersByParentFolder($folder) as $subFolder) {
+        foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
             if (!$securityContext->isGranted('FOLDER_READ', $subFolder)) {
                 // TODO: uncomment
                 //continue;
@@ -77,12 +77,12 @@ class FolderController extends Controller
 
             $tmp = [
                 'id'        => $subFolder->getId(),
-                'site_id'   => $site->getId(),
+                'site_id'   => $volume->getId(),
                 'text'      => $subFolder->getName(),
                 'leaf'      => false, //!$subFolder->hasSubFolders(),
-                'numChilds' => $site->countFoldersByParentFolder($subFolder),
+                'numChilds' => $volume->countFoldersByParentFolder($subFolder),
                 'allowDrop' => true,
-                'children'  => $this->recurseFolders($site, $subFolder),
+                'children'  => $this->recurseFolders($volume, $subFolder),
             ];
 
             if (!$tmp['numChilds']) {

@@ -9,15 +9,12 @@
 namespace Phlexible\Bundle\MediaAssetBundle\EventListener;
 
 use Phlexible\Bundle\MediaAssetBundle\AttributeReader\AttributeReaderInterface;
-use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\BeforeReplaceFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\Volume\Event\CreateFileEvent;
+use Phlexible\Component\Volume\Event\ReplaceFileEvent;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
+use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -46,8 +43,8 @@ class MediaSiteListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            MediaSiteEvents::BEFORE_CREATE_FILE => 'onBeforeCreateFile',
-            MediaSiteEvents::BEFORE_REPLACE_FILE => 'onBeforeReplaceFile',
+            VolumeEvents::BEFORE_CREATE_FILE => 'onBeforeCreateFile',
+            VolumeEvents::BEFORE_REPLACE_FILE => 'onBeforeReplaceFile',
         ];
     }
 
@@ -79,7 +76,7 @@ class MediaSiteListener implements EventSubscriberInterface
      */
     private function processAttributes(ExtendedFileInterface $file, PathSourceInterface $fileSource)
     {
-        $attributes = new AttributeBag();
+        $attributes = new AttributeBag($file->getAttributes());
 
         $assettype = $file->getAssettype();
         $documenttype = $file->getDocumenttype();
@@ -88,6 +85,6 @@ class MediaSiteListener implements EventSubscriberInterface
             $this->attributeReader->read($fileSource, $documenttype, $assettype, $attributes);
         }
 
-        $file->getAttributes()->set('attributes', $attributes->all());
+        $file->setAttributes($attributes->all());
     }
 }

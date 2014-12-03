@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\ImageExtractor;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 
 /**
  * Image extractor interface
@@ -27,18 +27,18 @@ interface ImageExtractorInterface
     /**
      * Check if extractor supports the given asset
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return bool
      */
-    public function supports(FileInterface $file);
+    public function supports(ExtendedFileInterface $file);
 
     /**
      * Extract image from file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function extract(FileInterface $file);
+    public function extract(ExtendedFileInterface $file);
 }

@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use GetId3\GetId3Core;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
  * GetId3 attribute reader

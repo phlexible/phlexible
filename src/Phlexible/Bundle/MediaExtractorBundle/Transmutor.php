@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 
 /**
  * Extractor service
@@ -54,11 +54,11 @@ class Transmutor
     /**
      * Transmute asset to image file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function transmuteToImage(FileInterface $file)
+    public function transmuteToImage(ExtendedFileInterface $file)
     {
         foreach ($this->imageTransmutors as $transmutor) {
             if ($transmutor->isAvailable() && $transmutor->supports($file)) {
@@ -72,11 +72,11 @@ class Transmutor
     /**
      * Transmute asset to audio file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function transmuteToAudio(FileInterface $file)
+    public function transmuteToAudio(ExtendedFileInterface $file)
     {
         foreach ($this->audioTransmutors as $transmutor) {
             if ($transmutor->isAvailable() && $transmutor->supports($file)) {
@@ -90,11 +90,11 @@ class Transmutor
     /**
      * Transmute asset to video file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function transmuteToVideo(FileInterface $file)
+    public function transmuteToVideo(ExtendedFileInterface $file)
     {
         foreach ($this->videoTransmutors as $transmutor) {
             if ($transmutor->isAvailable() && $transmutor->supports($file)) {
@@ -108,11 +108,11 @@ class Transmutor
     /**
      * Transmute asset to flash file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function transmuteToFlash(FileInterface $file)
+    public function transmuteToFlash(ExtendedFileInterface $file)
     {
         foreach ($this->flashTransmutors as $transmutor) {
             if ($transmutor->isAvailable() && $transmutor->supports($file)) {

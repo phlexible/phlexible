@@ -14,7 +14,7 @@ use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
 use Phlexible\Bundle\MediaExtractorBundle\Transmutor;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
@@ -101,7 +101,7 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, FileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file)
     {
         return $template instanceof ImageTemplate;
     }
@@ -109,7 +109,7 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, FileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file)
     {
         $imageFile = $this->transmutor->transmuteToImage($file);
 
@@ -127,18 +127,18 @@ class ImageWorker extends AbstractWorker
     /**
      * Apply template to filename
      *
-     * @param ImageTemplate $template
-     * @param FileInterface $file
-     * @param string        $inputFilename
-     * @param bool          $missing
+     * @param ImageTemplate         $template
+     * @param ExtendedFileInterface $file
+     * @param string                $inputFilename
+     * @param bool                  $missing
      *
      * @return CacheItem
      */
-    private function work(ImageTemplate $template, FileInterface $file, $inputFilename = null, $missing = false)
+    private function work(ImageTemplate $template, ExtendedFileInterface $file, $inputFilename = null, $missing = false)
     {
         $cacheFilename = null;
 
-        $site = $file->getSite();
+        $volume = $file->getVolume();
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
@@ -154,7 +154,7 @@ class ImageWorker extends AbstractWorker
 
         $cacheItem
             ->setId($cacheId)
-            ->setSiteId($site->getId())
+            ->setSiteId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())

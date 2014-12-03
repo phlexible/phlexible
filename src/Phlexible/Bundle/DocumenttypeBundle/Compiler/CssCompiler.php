@@ -35,7 +35,7 @@ class CssCompiler implements CompilerInterface
         $classname = $this->getClassname();
 
         $style = '';
-        foreach ($documenttypes->getAll() as $documenttype) {
+        foreach ($documenttypes->all() as $documenttype) {
             $key = $documenttype->getKey();
 
             foreach ($sizes as $size => $sizeTitle) {

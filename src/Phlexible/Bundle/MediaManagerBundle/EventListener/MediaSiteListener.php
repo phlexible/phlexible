@@ -9,17 +9,16 @@
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
 use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
-use Phlexible\Bundle\MediaManagerBundle\Site\DeleteFileChecker;
-use Phlexible\Bundle\MediaManagerBundle\Site\DeleteFolderChecker;
-use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\FolderEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFileChecker;
+use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFolderChecker;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
+use Phlexible\Component\Volume\Event\CreateFileEvent;
+use Phlexible\Component\Volume\Event\FileEvent;
+use Phlexible\Component\Volume\Event\FolderEvent;
+use Phlexible\Component\Volume\Event\ReplaceFileEvent;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
+use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -74,11 +73,11 @@ class MediaSiteListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            MediaSiteEvents::BEFORE_CREATE_FILE   => ['onBeforeCreateFile', 500],
-            MediaSiteEvents::BEFORE_CREATE_FOLDER => ['onBeforeCreateFolder', 500],
-            MediaSiteEvents::BEFORE_REPLACE_FILE   => ['onBeforeReplaceFile', 500],
-            MediaSiteEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
-            MediaSiteEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
+            VolumeEvents::BEFORE_CREATE_FILE   => ['onBeforeCreateFile', 500],
+            VolumeEvents::BEFORE_CREATE_FOLDER => ['onBeforeCreateFolder', 500],
+            VolumeEvents::BEFORE_REPLACE_FILE   => ['onBeforeReplaceFile', 500],
+            VolumeEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
+            VolumeEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
         ];
     }
 

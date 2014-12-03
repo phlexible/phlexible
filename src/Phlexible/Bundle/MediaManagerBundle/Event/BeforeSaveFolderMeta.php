@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Event;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -19,20 +19,20 @@ use Symfony\Component\EventDispatcher\Event;
 class BeforeSaveFolderMetaEvent extends Event
 {
     /**
-     * @var FolderInterface
+     * @var ExtendedFolderInterface
      */
     private $folder;
 
     /**
-     * @param FolderInterface $folder
+     * @param ExtendedFolderInterface $folder
      */
-    public function __construct(FolderInterface $folder)
+    public function __construct(ExtendedFolderInterface $folder)
     {
         $this->folder = $folder;
     }
 
     /**
-     * @return FolderInterface
+     * @return ExtendedFolderInterface
      */
     public function getFolder()
     {

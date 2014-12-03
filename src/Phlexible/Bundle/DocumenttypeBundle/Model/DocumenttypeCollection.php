@@ -52,7 +52,7 @@ class DocumenttypeCollection
      */
     public function merge(DocumenttypeCollection $collection)
     {
-        foreach ($collection->getAll() as $documenttype) {
+        foreach ($collection->all() as $documenttype) {
             $this->add($documenttype);
         }
 
@@ -90,7 +90,7 @@ class DocumenttypeCollection
     /**
      * @return Documenttype[]
      */
-    public function getAll()
+    public function all()
     {
         return $this->documenttypes;
     }

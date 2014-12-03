@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('sites')
+                ->arrayNode('volumes')
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()

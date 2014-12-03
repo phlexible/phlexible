@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
  * Temp file

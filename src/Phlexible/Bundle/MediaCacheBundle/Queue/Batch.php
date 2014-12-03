@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Queue;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 
 /**
@@ -21,7 +21,7 @@ use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 class Batch
 {
     /**
-     * @var FileInterface[]|ArrayCollection
+     * @var ExtendedFileInterface[]|ArrayCollection
      */
     private $files;
 
@@ -42,11 +42,11 @@ class Batch
     /**
      * Add file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return $this
      */
-    public function addFile(FileInterface $file)
+    public function addFile(ExtendedFileInterface $file)
     {
         if (!$this->files->contains($file)) {
             $this->files->add($file);
@@ -58,7 +58,7 @@ class Batch
     /**
      * Add files
      *
-     * @param FileInterface[] $files
+     * @param ExtendedFileInterface[] $files
      *
      * @return $this
      */
@@ -74,11 +74,11 @@ class Batch
     /**
      * Remove file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return $this
      */
-    public function removeFile(FileInterface $file)
+    public function removeFile(ExtendedFileInterface $file)
     {
         if ($this->files->contains($file)) {
             $this->files->removeElement($file);
@@ -90,7 +90,7 @@ class Batch
     /**
      * Remove files
      *
-     * @param FileInterface[] $files
+     * @param ExtendedFileInterface[] $files
      *
      * @return $this
      */
@@ -164,7 +164,7 @@ class Batch
     }
 
     /**
-     * @return FileInterface[]
+     * @return ExtendedFileInterface[]
      */
     public function getFiles()
     {

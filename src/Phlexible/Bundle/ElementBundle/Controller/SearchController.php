@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -78,11 +78,11 @@ class SearchController extends Controller
         // TODO: meta search
 
         $results = [];
-        foreach ($this->get('phlexible_media_site.site_manager')->getAll() as $site) {
-            $files = $site->search($query);
+        foreach ($this->get('phlexible_media_manager.volume_manager')->all() as $volume) {
+            $files = $volume->search($query);
 
             foreach ($files as $file) {
-                /* @var $file FileInterface */
+                /* @var $file ExtendedFileInterface */
 
                 $results[] = [
                     'id'        => $file->getId(),
@@ -106,9 +106,9 @@ class SearchController extends Controller
     {
         $fileId = $request->get('file_id');
 
-        $site = $this->get('phlexible_media_site.site_manager')->getByFileId($fileId);
-        $file = $site->findFile($fileId);
-        $urls = $site->getStorageDriver()->getUrls($file);
+        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
+        $urls = $volume->getStorageDriver()->getUrls($file);
 
         return new JsonResponse($urls);
     }

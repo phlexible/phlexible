@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFolderInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\Folder as BaseFolder;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
+use Phlexible\Component\Volume\Model\Folder as BaseFolder;
 
 /**
  * Folder
@@ -35,7 +35,7 @@ class Folder extends BaseFolder implements ExtendedFolderInterface
      */
     public function addMetaSet($metaSetId)
     {
-        if (!in_array($metaSetId, $this->metasets)) {
+        if ($metaSetId && !in_array($metaSetId, $this->metasets)) {
             $this->metasets[] = $metaSetId;
         }
 

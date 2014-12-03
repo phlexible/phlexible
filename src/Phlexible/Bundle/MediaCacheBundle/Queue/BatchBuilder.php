@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Queue;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\Volume\VolumeManager;
 
 /**
  * Queue batch
@@ -21,9 +21,9 @@ use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
 class BatchBuilder
 {
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
      * @var TemplateManagerInterface
@@ -31,12 +31,12 @@ class BatchBuilder
     private $templateManager;
 
     /**
-     * @param SiteManager              $siteManager
+     * @param VolumeManager            $volumeManager
      * @param TemplateManagerInterface $templateManager
      */
-    public function __construct(SiteManager $siteManager, TemplateManagerInterface $templateManager)
+    public function __construct(VolumeManager $volumeManager, TemplateManagerInterface $templateManager)
     {
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
         $this->templateManager = $templateManager;
     }
 
@@ -53,12 +53,12 @@ class BatchBuilder
     /**
      * Create a new batch with given template and file
      *
-     * @param TemplateInterface $template
-     * @param FileInterface     $file
+     * @param TemplateInterface     $template
+     * @param ExtendedFileInterface $file
      *
      * @return Batch
      */
-    public function createForTemplateAndFile(TemplateInterface $template, FileInterface $file)
+    public function createForTemplateAndFile(TemplateInterface $template, ExtendedFileInterface $file)
     {
         $batch = $this->create();
 
@@ -139,11 +139,11 @@ class BatchBuilder
      */
     private function addAllFiles(Batch $batch)
     {
-        foreach ($this->siteManager->getAll() as $site) {
-            $rii = new \RecursiveIteratorIterator($site->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($this->volumeManager->getAll() as $volume) {
+            $rii = new \RecursiveIteratorIterator($volume->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
 
             foreach ($rii as $folder) {
-                foreach ($site->findFilesByFolder($folder) as $file) {
+                foreach ($volume->findFilesByFolder($folder) as $file) {
                     $batch->addFile($file);
                 }
             }

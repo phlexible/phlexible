@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
+use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 use Poppler\Processor\PdfFile;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 
 /**
  * pdfinfo attribute reader

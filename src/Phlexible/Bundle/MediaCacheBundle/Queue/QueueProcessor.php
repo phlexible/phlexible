@@ -13,8 +13,8 @@ use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
 use Phlexible\Bundle\MediaCacheBundle\Queue as BaseQueue;
 use Phlexible\Bundle\MediaCacheBundle\Worker\WorkerResolver;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Filesystem\LockHandler;
 
 /**
@@ -30,9 +30,9 @@ class QueueProcessor
     private $workerResolver;
 
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
      * @var TemplateManagerInterface
@@ -51,20 +51,20 @@ class QueueProcessor
 
     /**
      * @param WorkerResolver           $workerResolver
-     * @param SiteManager              $siteManager
+     * @param VolumeManager            $volumeManager
      * @param TemplateManagerInterface $templateManager
      * @param Properties               $properties
      * @param string                   $lockDir
      */
     public function __construct(
         WorkerResolver $workerResolver,
-        SiteManager $siteManager,
+        VolumeManager $volumeManager,
         TemplateManagerInterface $templateManager,
         Properties $properties,
         $lockDir)
     {
         $this->workerResolver = $workerResolver;
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
         $this->templateManager = $templateManager;
         $this->properties = $properties;
         $this->lockDir = $lockDir;
@@ -122,8 +122,8 @@ class QueueProcessor
      */
     private function doProcess(CacheItem $cacheItem, callable $callback = null)
     {
-        $site = $this->siteManager->getSiteById($cacheItem->getSiteId());
-        $file = $site->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
+        $volume = $this->volumeManager->getById($cacheItem->getVolumeId());
+        $file = $volume->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
 
         $template = $this->templateManager->find($cacheItem->getTemplateKey());
 

@@ -36,7 +36,7 @@ class PhpCompiler implements CompilerInterface
         $className = $this->getClassname();
 
         $constructorBody = '';
-        foreach ($documenttypes->getAll() as $documenttype) {
+        foreach ($documenttypes->all() as $documenttype) {
             $titles = count($documenttype->getTitles()) ? var_export($documenttype->getTitles(), true) : 'array()';
             $mimetypes = count($documenttype->getMimetypes()) ? var_export(
                 $documenttype->getMimetypes(),

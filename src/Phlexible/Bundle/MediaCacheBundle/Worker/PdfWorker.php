@@ -13,7 +13,7 @@ use Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\PdfTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
@@ -92,7 +92,7 @@ class PdfWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, FileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file)
     {
         return $template instanceof PdfTemplate && strtolower($file->getDocumenttype()) === 'pdf';
     }
@@ -100,7 +100,7 @@ class PdfWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, FileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file)
     {
         return $this->work($template, $file, $file->getPhysicalPath());
     }
@@ -108,15 +108,15 @@ class PdfWorker extends AbstractWorker
     /**
      * Apply template to filename
      *
-     * @param PdfTemplate   $template
-     * @param FileInterface $file
-     * @param string        $inputFilename
+     * @param PdfTemplate           $template
+     * @param ExtendedFileInterface $file
+     * @param string                $inputFilename
      *
      * @return CacheItem
      */
-    private function work(PdfTemplate $template, FileInterface $file, $inputFilename)
+    private function work(PdfTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
-        $site = $file->getSite();
+        $volume = $file->getVolume();
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
@@ -130,7 +130,7 @@ class PdfWorker extends AbstractWorker
         }
 
         $cacheItem
-            ->setSiteId($site->getId())
+            ->setSiteId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())

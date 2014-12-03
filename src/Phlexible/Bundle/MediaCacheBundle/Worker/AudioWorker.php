@@ -14,7 +14,7 @@ use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
 use Phlexible\Bundle\MediaExtractorBundle\Transmutor;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\AudioTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
@@ -101,7 +101,7 @@ class AudioWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, FileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file)
     {
         return $template instanceof AudioTemplate && strtolower($file->getAssettype()) === 'audio';
     }
@@ -109,7 +109,7 @@ class AudioWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, FileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file)
     {
         $audioFile = $this->transmutor->transmuteToAudio($file);
 
@@ -119,15 +119,15 @@ class AudioWorker extends AbstractWorker
     /**
      * Apply template to filename
      *
-     * @param AudioTemplate $template
-     * @param FileInterface $file
-     * @param string        $inputFilename
+     * @param AudioTemplate         $template
+     * @param ExtendedFileInterface $file
+     * @param string                $inputFilename
      *
      * @return CacheItem
      */
-    private function work(AudioTemplate $template, FileInterface $file, $inputFilename)
+    private function work(AudioTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
-        $site = $file->getSite();
+        $volume = $file->getVolume();
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
@@ -141,7 +141,7 @@ class AudioWorker extends AbstractWorker
         }
 
         $cacheItem
-            ->setSiteId($site->getId())
+            ->setVolumeId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Storage;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 
 /**
  * Storage interface
@@ -25,21 +25,21 @@ interface StorageInterface
     public function store(CacheItem $cacheItem, $filename);
 
     /**
-     * @param FileInterface $file
-     * @param string        $baseUrl
+     * @param ExtendedFileInterface $file
+     * @param string                $baseUrl
      *
      * @return array
      */
-    public function getUrls(FileInterface $file, $baseUrl);
+    public function getUrls(ExtendedFileInterface $file, $baseUrl);
 
     /**
-     * @param FileInterface $file
-     * @param CacheItem     $cacheItem
-     * @param string        $baseUrl
+     * @param ExtendedFileInterface $file
+     * @param CacheItem             $cacheItem
+     * @param string                $baseUrl
      *
      * @return array
      */
-    public function getCacheUrls(FileInterface $file, CacheItem $cacheItem, $baseUrl);
+    public function getCacheUrls(ExtendedFileInterface $file, CacheItem $cacheItem, $baseUrl);
 
     /**
      * @param CacheItem $cacheItem

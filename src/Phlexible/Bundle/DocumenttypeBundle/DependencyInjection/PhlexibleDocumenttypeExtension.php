@@ -27,8 +27,8 @@ class PhlexibleDocumenttypeExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-
         $loader->load('file.yml');
+
         $container->setAlias('phlexible_documenttype.documenttype_manager', 'phlexible_documenttype.file.documenttype_manager');
     }
 }

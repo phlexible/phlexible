@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,7 +29,7 @@ class InitCommand extends ContainerAwareCommand
             ->setName('media-manager:init')
             ->setDefinition(
                 [
-                    new InputArgument('siteName', InputArgument::REQUIRED, 'Site name'),
+                    new InputArgument('name', InputArgument::REQUIRED, 'Volume name'),
                 ]
             )
             ->setDescription('Initialise filesystem');
@@ -41,14 +40,14 @@ class InitCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $siteName = $input->getArgument('siteName');
+        $name = $input->getArgument('name');
 
-        $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
         $userManager = $this->getContainer()->get('phlexible_user.user_manager');
 
-        $site = $siteManager->get($siteName);
+        $volume = $volumeManager->get($name);
 
-        $site->createFolder(null, 'root', new AttributeBag(), $userManager->getSystemUserId());
+        $volume->createFolder(null, 'root', array(), $userManager->getSystemUserId());
 
         return 0;
     }

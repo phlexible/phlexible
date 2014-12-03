@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaExtractorBundle\ImageExtractor;
 
 use FFMpeg\FFMpeg;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 
 /**
  * Video converter extractor
@@ -49,7 +49,7 @@ class VideoConverterImageExtractor implements ImageExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file)
+    public function supports(ExtendedFileInterface $file)
     {
         return strtolower($file->getAssettype()) === 'video';
     }
@@ -57,7 +57,7 @@ class VideoConverterImageExtractor implements ImageExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extract(FileInterface $file)
+    public function extract(ExtendedFileInterface $file)
     {
         $filename = $file->getPhysicalPath();
 

@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 
 /**
@@ -21,7 +21,7 @@ class DefaultCacheIdStrategy implements CacheIdStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function createCacheId(TemplateInterface $template, FileInterface $file)
+    public function createCacheId(TemplateInterface $template, ExtendedFileInterface $file)
     {
         $identifiers = [$template->getKey(), $file->getId(), $file->getVersion(), $file->getHash()];
 

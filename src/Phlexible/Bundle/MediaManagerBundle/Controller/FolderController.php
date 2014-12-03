@@ -13,12 +13,10 @@ use Phlexible\Bundle\MediaManagerBundle\Event\GetSlotsEvent;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
 use Phlexible\Bundle\MediaManagerBundle\Slot\SiteSlot;
 use Phlexible\Bundle\MediaManagerBundle\Slot\Slots;
-use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
-use Phlexible\Bundle\MediaSiteBundle\Folder\SizeCalculator;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
+use Phlexible\Component\Volume\Exception\AlreadyExistsException;
+use Phlexible\Component\Volume\Folder\SizeCalculator;
+use Phlexible\Component\Volume\VolumeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,30 +33,30 @@ use Symfony\Component\HttpFoundation\Request;
 class FolderController extends Controller
 {
     /**
-     * @param string $siteId
+     * @param string $volumeId
      *
-     * @return SiteInterface
+     * @return VolumeInterface
      */
-    private function getSite($siteId = null)
+    private function getVolume($volumeId = null)
     {
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        if ($siteId) {
-            return $siteManager->getSiteById($siteId);
+        if ($volumeId) {
+            return $volumeManager->getById($volumeId);
         }
 
-        return current($siteManager->getAll());
+        return current($volumeManager->all());
     }
 
     /**
-     * @param FolderInterface $folder
+     * @param ExtendedFolderInterface $folder
      *
      * @return array
      */
-    private function recurseFolders(FolderInterface $folder)
+    private function recurseFolders(ExtendedFolderInterface $folder)
     {
-        $site = $folder->getSite();
-        $subFolders = $site->findFoldersByParentFolder($folder);
+        $volume = $folder->getVolume();
+        $subFolders = $volume->findFoldersByParentFolder($folder);
 
         $securityContext = $this->get('security.context');
         $permissions = $this->get('phlexible_access_control.permissions');
@@ -67,7 +65,7 @@ class FolderController extends Controller
 
         $children = [];
         foreach ($subFolders as $subFolder) {
-            /* @var $subFolder FolderInterface */
+            /* @var $subFolder ExtendedFolderInterface */
 
             if (!$securityContext->isGranted('FOLDER_READ', $folder)) {
                 continue;
@@ -87,7 +85,7 @@ class FolderController extends Controller
                 'id'        => $subFolder->getId(),
                 'text'      => $subFolder->getName(),
                 'leaf'      => false,
-                'numChilds' => $site->countFilesByFolder($subFolder),
+                'numChilds' => $volume->countFilesByFolder($subFolder),
                 'draggable' => true,
                 'expanded'  => true,
                 'allowDrop' => true,
@@ -96,7 +94,7 @@ class FolderController extends Controller
                 'rights'    => $userRights,
             ];
 
-            if ($site->countFoldersByParentFolder($subFolder)) {
+            if ($volume->countFoldersByParentFolder($subFolder)) {
                 $tmp['children'] = $this->recurseFolders($subFolder);
                 $tmp['expanded'] = false;
             } else {
@@ -125,7 +123,7 @@ class FolderController extends Controller
         $data = [];
 
         $slots = new Slots();
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $dispatcher = $this->get('event_dispatcher');
         $securityContext = $this->get('security.context');
         $permissions = $this->get('phlexible_access_control.permissions');
@@ -133,8 +131,8 @@ class FolderController extends Controller
         $user = $this->getUser();
 
         if (!$folderId || $folderId === 'root') {
-            foreach ($siteManager->getAll() as $site) {
-                $rootFolder = $site->findRootFolder();
+            foreach ($volumeManager->all() as $volume) {
+                $rootFolder = $volume->findRootFolder();
 
                 if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
                     continue;
@@ -156,15 +154,15 @@ class FolderController extends Controller
                     [
                         [
                             'id'        => $rootFolder->getId(),
-                            'site_id'   => $site->getId(),
+                            'site_id'   => $volume->getId(),
                             'text'      => $rootFolder->getName(),
                             'cls'       => 't-mediamanager-root',
-                            'leaf'      => !$site->countFoldersByParentFolder($rootFolder),
-                            'numChilds' => $site->countFilesByFolder($rootFolder),
+                            'leaf'      => !$volume->countFoldersByParentFolder($rootFolder),
+                            'numChilds' => $volume->countFilesByFolder($rootFolder),
                             'draggable' => false,
                             'expanded'  => true,
                             'allowDrop' => true,
-                            'versions'  => $site->hasFeature('versions'),
+                            'versions'  => $volume->hasFeature('versions'),
                             'rights'    => $userRights,
                         ]
                     ]
@@ -198,14 +196,14 @@ class FolderController extends Controller
         } else {
             $slotKey = $request->get('slot', null);
             if (!$slotKey) {
-                $site = $siteManager->getByFolderId($folderId);
-                $folder = $site->findFolder($folderId);
+                $volume = $volumeManager->getByFolderId($folderId);
+                $folder = $volume->findFolder($folderId);
 
                 if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
                     return new JsonResponse([]);
                 }
 
-                foreach ($site->findFoldersByParentFolder($folder) as $subFolder) {
+                foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
                     if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
                         continue;
                     }
@@ -227,20 +225,20 @@ class FolderController extends Controller
 
                     $tmp = [
                         'id'        => $subFolder->getId(),
-                        'site_id'   => $site->getId(),
+                        'site_id'   => $volume->getId(),
                         'text'      => $subFolder->getName(),
                         'leaf'      => false,
-                        'numChilds' => $site->countFilesByFolder($subFolder),
+                        'numChilds' => $volume->countFilesByFolder($subFolder),
                         'allowDrop' => true,
                         'allowChildren' => true,
                         'isTarget' => true,
-                        'versions'  => $site->hasFeature('versions'),
+                        'versions'  => $volume->hasFeature('versions'),
                         'rights'    => $userRights,
                         'used_in'   => $usedIn,
                         'used'      => $usage,
                     ];
 
-                    if (!$site->countFoldersByParentFolder($subFolder)) {
+                    if (!$volume->countFoldersByParentFolder($subFolder)) {
                         //$tmp['leaf'] = true;
                         $tmp['expanded'] = true;
                         $tmp['children'] = [];
@@ -276,11 +274,11 @@ class FolderController extends Controller
         $parentId = $request->get('parent_id');
         $name = $request->get('folder_name');
 
-        $site = $this->get('phlexible_media_site.site_manager')->getByFolderId($parentId);
-        $parentFolder = $site->findFolder($parentId);
+        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($parentId);
+        $parentFolder = $volume->findFolder($parentId);
 
         try {
-            $folder = $site->createFolder($parentFolder, $name, new AttributeBag(), $this->getUser()->getId());
+            $folder = $volume->createFolder($parentFolder, $name, array(), $this->getUser()->getId());
 
             return new ResultResponse(true, 'Folder created.', [
                 'folder_id'   => $folder->getId(),
@@ -305,14 +303,14 @@ class FolderController extends Controller
      */
     public function renameAction(Request $request)
     {
-        $siteId = $request->get('site_id');
+        $volumeId = $request->get('site_id');
         $folderId = $request->get('folder_id');
         $folderName = $request->get('folder_name');
 
-        $site = $this->getSite($siteId);
-        $folder = $site->findFolder($folderId);
+        $volume = $this->getVolume($volumeId);
+        $folder = $volume->findFolder($folderId);
 
-        $site->renameFolder($folder, $folderName, $this->getUser()->getId());
+        $volume->renameFolder($folder, $folderName, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Folder renamed.', [
             'folder_name' => $folderName
@@ -329,17 +327,17 @@ class FolderController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $siteId = $request->get('site_id');
+        $volumeId = $request->get('site_id');
         $folderId = $request->get('folder_id');
 
-        $site = $this->getSite($siteId);
-        $folder = $site->findFolder($folderId);
+        $volume = $this->getVolume($volumeId);
+        $folder = $volume->findFolder($folderId);
 
         if ($folder->isRoot()) {
             return new ResultResponse(false, "Can't delete the root folder.");
         }
 
-        $site->deleteFolder($folder, $this->getUser()->getId());
+        $volume->deleteFolder($folder, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Folder deleted', ['parent_id' => $folder->getParentId()]);
     }
@@ -354,15 +352,15 @@ class FolderController extends Controller
      */
     public function moveAction(Request $request)
     {
-        $siteId = $request->get('site_id');
+        $volumeId = $request->get('site_id');
         $targetId = $request->get('target_id');
         $sourceId = $request->get('source_id');
 
-        $site = $this->getSite($siteId);
-        $folder = $site->findFolder($sourceId);
-        $targetFolder = $site->findFolder($targetId);
+        $volume = $this->getVolume($volumeId);
+        $folder = $volume->findFolder($sourceId);
+        $targetFolder = $volume->findFolder($targetId);
 
-        $site->moveFolder($folder, $targetFolder, $this->getUser()->getId());
+        $volume->moveFolder($folder, $targetFolder, $this->getUser()->getId());
 
         return new ResultResponse(true);
     }
@@ -378,14 +376,14 @@ class FolderController extends Controller
     public function propertiesAction(Request $request)
     {
         $folderId = $request->get('folder_id');
-        $siteManager = $this->get('phlexible_media_site.site_manager');
-        $site = $siteManager->getByFolderId($folderId);
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+        $volume = $volumeManager->getByFolderId($folderId);
 
         try {
-            $folder = $site->findFolder($folderId);
+            $folder = $volume->findFolder($folderId);
 
             $calculator = new SizeCalculator();
-            $calculatedSize = $calculator->calculate($site, $folder);
+            $calculatedSize = $calculator->calculate($volume, $folder);
 
             $data = [
                 'title'       => $folder->getName(),

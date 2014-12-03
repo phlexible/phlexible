@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
 use Phlexible\Bundle\MetaSetBundle\Doctrine\MetaDataManager;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaData;
@@ -22,12 +22,12 @@ use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
 class FolderMetaDataManager extends MetaDataManager
 {
     /**
-     * @param MetaSet         $metaSet
-     * @param FolderInterface $folder
+     * @param MetaSet                 $metaSet
+     * @param ExtendedFolderInterface $folder
      *
      * @return MetaData|MetaDataInterface
      */
-    public function createFolderMetaData(MetaSet $metaSet, FolderInterface $folder)
+    public function createFolderMetaData(MetaSet $metaSet, ExtendedFolderInterface $folder)
     {
         $metaData = $this->createMetaData($metaSet);
         $metaData
@@ -37,22 +37,22 @@ class FolderMetaDataManager extends MetaDataManager
     }
 
     /**
-     * @param MetaSet         $metaSet
-     * @param FolderInterface $folder
+     * @param MetaSet                 $metaSet
+     * @param ExtendedFolderInterface $folder
      *
      * @return null|MetaDataInterface
      */
-    public function findByMetaSetAndFolder(MetaSet $metaSet, FolderInterface $folder)
+    public function findByMetaSetAndFolder(MetaSet $metaSet, ExtendedFolderInterface $folder)
     {
         return $this->findByMetaSetAndIdentifiers($metaSet, $this->getIdentifiersFromFolder($folder));
     }
 
     /**
-     * @param FolderInterface $folder
+     * @param ExtendedFolderInterface $folder
      *
      * @return array
      */
-    private function getIdentifiersFromFolder(FolderInterface $folder)
+    private function getIdentifiersFromFolder(ExtendedFolderInterface $folder)
     {
         return [
             'folder_id' => $folder->getId(),

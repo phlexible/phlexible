@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Portlet;
 
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -22,9 +22,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 class LatestFilesPortlet extends Portlet
 {
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
      * @var CacheManagerInterface
@@ -48,7 +48,7 @@ class LatestFilesPortlet extends Portlet
 
     /**
      * @param TranslatorInterface      $translator
-     * @param SiteManager              $siteManager
+     * @param VolumeManager            $volumeManager
      * @param CacheManagerInterface    $cacheManager
      * @param SecurityContextInterface $securityContext
      * @param string                   $style
@@ -56,7 +56,7 @@ class LatestFilesPortlet extends Portlet
      */
     public function __construct(
         TranslatorInterface $translator,
-        SiteManager $siteManager,
+        VolumeManager $volumeManager,
         CacheManagerInterface $cacheManager,
         SecurityContextInterface $securityContext,
         $style,
@@ -69,7 +69,7 @@ class LatestFilesPortlet extends Portlet
             ->setIconClass('p-mediamanager-portlet-icon')
             ->setRole('ROLE_MEDIA');
 
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
         $this->cacheManager = $cacheManager;
         $this->securityContext = $securityContext;
         $this->style = $style;
@@ -98,12 +98,12 @@ class LatestFilesPortlet extends Portlet
         $data = [];
 
         try {
-            $sites = $this->siteManager->getAll();
-            $site = current($sites);
-            $files = $site->findLatestFiles($this->numItems);
+            $volumes = $this->volumeManager->all();
+            $volume = current($volumes);
+            $files = $volume->findLatestFiles($this->numItems);
 
             foreach ($files as $file) {
-                $folder = $site->findFolder($file->getFolderId());
+                $folder = $volume->findFolder($file->getFolderId());
 
                 if (!$this->securityContext->isGranted('FILE_READ', $folder)) {
                     continue;

@@ -44,7 +44,7 @@ class MediaController extends Controller
         $templateManager = $this->get('phlexible_media_template.template_manager');
         $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
         $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
         try {
             $cacheItem = $cacheManager->findByTemplateAndFile($templateKey, $fileId, $fileVersion);
@@ -72,7 +72,7 @@ class MediaController extends Controller
             $batchResolver = $this->get('phlexible_media_cache.batch_resolver');
             $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
 
-            $file = $siteManager->getByFileId($fileId)->findFile($fileId);
+            $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
             $batch = $batchBuilder->createForTemplateAndFile($template, $file);
             $queue = $batchResolver->resolve($batch);
 
@@ -87,7 +87,7 @@ class MediaController extends Controller
                 return new Response('Not found', 404);
             }
 
-            $file = $siteManager->getByFileId($fileId)->findFile($fileId);
+            $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
             $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
             $filePath = $delegateService->getClean($template, $documenttype);
             $mimeType = 'image/gif';

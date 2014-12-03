@@ -15,7 +15,7 @@ use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
 use Phlexible\Bundle\MediaExtractorBundle\Transmutor;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\VideoTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\VideoTemplate;
@@ -109,7 +109,7 @@ class VideoWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, FileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file)
     {
         return $template instanceof VideoTemplate && strtolower($file->getAssettype()) === 'video';
     }
@@ -117,7 +117,7 @@ class VideoWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, FileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file)
     {
         $videoFile = $this->transmutor->transmuteToVideo($file);
 
@@ -127,15 +127,15 @@ class VideoWorker extends AbstractWorker
     /**
      * Apply template to filename
      *
-     * @param VideoTemplate $template
-     * @param FileInterface $file
-     * @param string        $inputFilename
+     * @param VideoTemplate         $template
+     * @param ExtendedFileInterface $file
+     * @param string                $inputFilename
      *
      * @return CacheItem
      */
-    private function work(VideoTemplate $template, FileInterface $file, $inputFilename)
+    private function work(VideoTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
-        $site        = $file->getSite();
+        $volume      = $file->getVolume();
         $fileId      = $file->getID();
         $fileVersion = $file->getVersion();
 
@@ -149,7 +149,7 @@ class VideoWorker extends AbstractWorker
         }
 
         $cacheItem
-            ->setSiteId($site->getId())
+            ->setSiteId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())

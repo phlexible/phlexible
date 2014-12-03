@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 
 /**
@@ -48,12 +48,12 @@ class WorkerResolver
     /**
      * Determine and return worker classname
      *
-     * @param TemplateInterface $template
-     * @param FileInterface     $file
+     * @param TemplateInterface     $template
+     * @param ExtendedFileInterface $file
      *
      * @return WorkerInterface
      */
-    public function resolve(TemplateInterface $template, FileInterface $file)
+    public function resolve(TemplateInterface $template, ExtendedFileInterface $file)
     {
         foreach ($this->workers as $worker) {
             if ($worker->accept($template, $file)) {

@@ -92,7 +92,7 @@ class DocumenttypeManager implements DocumenttypeManagerInterface
      */
     public function findAll()
     {
-        return $this->getCollection()->getAll();
+        return $this->getCollection()->all();
     }
 
     /**

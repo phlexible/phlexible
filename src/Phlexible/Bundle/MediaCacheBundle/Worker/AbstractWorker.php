@@ -9,9 +9,8 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Abstract worker
@@ -23,12 +22,12 @@ abstract class AbstractWorker implements WorkerInterface
     /**
      * Apply error to cache item
      *
-     * @param CacheItem         $cacheItem
-     * @param string            $status
-     * @param string            $message
-     * @param string            $inputFilename
-     * @param TemplateInterface $template
-     * @param FileInterface     $file
+     * @param CacheItem             $cacheItem
+     * @param string                $status
+     * @param string                $message
+     * @param string                $inputFilename
+     * @param TemplateInterface     $template
+     * @param ExtendedFileInterface $file
      */
     protected function applyError(
         CacheItem $cacheItem,
@@ -36,7 +35,7 @@ abstract class AbstractWorker implements WorkerInterface
         $message,
         $inputFilename,
         TemplateInterface $template,
-        FileInterface $file)
+        ExtendedFileInterface $file)
     {
         $error = $message . PHP_EOL
             . PHP_EOL

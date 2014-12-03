@@ -42,9 +42,9 @@ class UploadController extends Controller
         $folderId = $request->get('folder_id', null);
 
         try {
-            $siteManager = $this->get('phlexible_media_site.site_manager');
-            $site = $siteManager->getByFolderId($folderId);
-            $folder = $site->findFolder($folderId);
+            $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+            $volume = $volumeManager->getByFolderId($folderId);
+            $folder = $volume->findFolder($folderId);
 
             if (empty($folder)) {
                 return new ResultResponse(
@@ -119,15 +119,15 @@ class UploadController extends Controller
     {
         $tempHandler = $this->get('phlexible_media_manager.upload.temp_handler');
         $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
 
         $data = [];
 
         if ($tempStorage->count()) {
             $tempFile = $tempStorage->next();
-            $site = $siteManager->getByFolderId($tempFile->getFolderId());
-            $supportsVersions = $site->hasFeature('versions');
+            $volume = $volumeManager->getByFolderId($tempFile->getFolderId());
+            $supportsVersions = $volume->hasFeature('versions');
             $newName = basename($tempFile->getName());
             $mimetype = $this->get('phlexible_media_tool.mime.detector')->detect($tempFile->getPath(), MimeDetector::RETURN_STRING);
             if (trim($mimetype)) {
@@ -149,9 +149,9 @@ class UploadController extends Controller
             ];
 
             if ($tempFile->getFileId()) {
-                $oldFile = $site->findFile($tempFile->getFileId());
+                $oldFile = $volume->findFile($tempFile->getFileId());
 
-                $alternativeName = $tempHandler->createAlternateFilename($tempFile, $site);
+                $alternativeName = $tempHandler->createAlternateFilename($tempFile, $volume);
 
                 $data['old_name'] = $tempFile->getName();
                 $data['old_id']   = $tempFile->getFileId();

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 
 /**
  * File usage
@@ -53,7 +53,7 @@ class FileUsage
     private $status;
 
     /**
-     * @var FileInterface
+     * @var ExtendedFileInterface
      * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaManagerBundle\Entity\File")
      * @ORM\JoinColumns(
      *   @ORM\JoinColumn(name="file_id", referencedColumnName="id"),
@@ -63,12 +63,12 @@ class FileUsage
     private $file;
 
     /**
-     * @param FileInterface $file
-     * @param string        $usageType
-     * @param string        $usageId
-     * @param int           $status
+     * @param ExtendedFileInterface $file
+     * @param string                $usageType
+     * @param string                $usageId
+     * @param int                   $status
      */
-    public function __construct(FileInterface $file, $usageType, $usageId, $status)
+    public function __construct(ExtendedFileInterface $file, $usageType, $usageId, $status)
     {
         $this->file = $file;
         $this->usageType = $usageType;
@@ -85,7 +85,7 @@ class FileUsage
     }
 
     /**
-     * @return FileInterface
+     * @return ExtendedFileInterface
      */
     public function getFile()
     {

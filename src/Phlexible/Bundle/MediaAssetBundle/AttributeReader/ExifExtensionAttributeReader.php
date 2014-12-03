@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
  * Exif extension attribute reader

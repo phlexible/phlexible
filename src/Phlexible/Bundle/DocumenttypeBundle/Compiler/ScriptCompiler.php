@@ -31,7 +31,7 @@ class ScriptCompiler implements CompilerInterface
     public function compile(DocumenttypeCollection $documenttypes)
     {
         $classMap = [];
-        foreach ($documenttypes->getAll() as $documenttype) {
+        foreach ($documenttypes->all() as $documenttype) {
             $classMapItem = [
                 'cls' => 'p-documenttype-' . $documenttype->getKey()
             ];

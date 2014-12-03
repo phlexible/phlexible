@@ -7,6 +7,7 @@
     </titles>
     <mimetypes>
         <mimetype>application/x-empty</mimetype>
+        <mimetype>inode/x-empty</mimetype>
     </mimetypes>
     <icons>
         <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/_empty.gif</icon>

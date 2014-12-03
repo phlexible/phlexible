@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 
 /**
  * Content extractor interface
@@ -27,18 +27,18 @@ interface ContentExtractorInterface
     /**
      * Check if reader supports the given asset
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return bool
      */
-    public function supports(FileInterface $file);
+    public function supports(ExtendedFileInterface $file);
 
     /**
      * Extract content from asset
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return Content
      */
-    public function extract(FileInterface $file);
+    public function extract(ExtendedFileInterface $file);
 }

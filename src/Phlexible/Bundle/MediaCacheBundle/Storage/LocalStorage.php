@@ -10,8 +10,7 @@ namespace Phlexible\Bundle\MediaCacheBundle\Storage;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
-use Phlexible\Bundle\MediaSiteBundle\File;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -66,7 +65,7 @@ class LocalStorage extends AbstractStorage
     /**
      * {@inheritdoc}
      */
-    public function getCacheUrls(FileInterface $file, CacheItem $cacheItem, $baseUrl)
+    public function getCacheUrls(ExtendedFileInterface $file, CacheItem $cacheItem, $baseUrl)
     {
         $fileName      = $file->getName();
         $cacheId       = $cacheItem->getId();

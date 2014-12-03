@@ -10,8 +10,8 @@ namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use FFMpeg\FFProbe;
 use FFMpeg\FFProbe\DataMapping\Stream;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 use Psr\Log\LoggerInterface;
 
 /**

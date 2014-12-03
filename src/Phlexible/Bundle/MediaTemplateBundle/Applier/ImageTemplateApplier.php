@@ -15,8 +15,7 @@ use Imagine\Image\Palette\CMYK;
 use Imagine\Image\Palette\Grayscale;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
-use Imagine\Image\Point\Center;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Psr\Log\LoggerInterface;
 
@@ -87,14 +86,14 @@ class ImageTemplateApplier
     }
 
     /**
-     * @param ImageTemplate $template
-     * @param FileInterface $file
-     * @param string        $filename
-     * @param string        $outFilename
+     * @param ImageTemplate         $template
+     * @param ExtendedFileInterface $file
+     * @param string                $filename
+     * @param string                $outFilename
      *
      * @return ImageInterface
      */
-    public function apply(ImageTemplate $template, FileInterface $file, $filename, $outFilename)
+    public function apply(ImageTemplate $template, ExtendedFileInterface $file, $filename, $outFilename)
     {
         $image = $this->imagine->open($filename);
 

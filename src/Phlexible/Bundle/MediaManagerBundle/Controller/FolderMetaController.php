@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MediaSiteBundle\Folder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,7 +34,7 @@ class FolderMetaController extends Controller
     {
         $folderId = $request->get('folder_id');
 
-        $folder = $this->get('phlexible_media_site.site_manager')->getByFolderId($folderId)->findFolder($folderId);
+        $folder = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($folderId)->findFolder($folderId);
 
         $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
@@ -96,8 +95,8 @@ class FolderMetaController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
 
-        $site = $this->get('phlexible_media_site.site_manager')->getByFolderId($folderId);
-        $folder = $site->findFolder($folderId);
+        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
 
         /*
         $beforeEvent = new BeforeSaveFolderMeta($folder);
@@ -162,10 +161,10 @@ class FolderMetaController extends Controller
     {
         $folderId = $request->get('folder_id');
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
 
-        $folder = $siteManager->getByFolderId($folderId)->findFolder($folderId);
+        $folder = $volumeManager->getByFolderId($folderId)->findFolder($folderId);
         $metaSets = $folderMetaSetResolver->resolve($folder);
 
         $sets = [];
@@ -195,14 +194,14 @@ class FolderMetaController extends Controller
             $ids = [];
         }
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        $site = $siteManager->getByFolderId($folderId);
-        $folder = $site->findFolder($folderId);
+        $volume = $volumeManager->getByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
 
         $attributes = $folder->getAttributes();
         $attributes->set('metasets', $ids);
-        $site->setFolderAttributes($folder, $attributes, $this->getUser()->getId());
+        $volume->setFolderAttributes($folder, $attributes, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Set added.');
     }

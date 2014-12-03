@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 
-use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFolderInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 

@@ -35,10 +35,10 @@ class DebugController extends Controller
     {
         $fileId = $request->get('file_id');
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId);
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
 
         $debug = [
             ['key' => 'mimeType', 'value' => $file->getMimeType()],
@@ -63,12 +63,12 @@ class DebugController extends Controller
     {
         $fileId = $request->get('file_id');
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $cacheManager = $this->get('phlexible_media_cache.cache_manager');
         $templateManager = $this->get('phlexible_media_template.template_manager');
 
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId);
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
         $cacheItems = $cacheManager->findBy(['file_id' => $fileId]);
 
         $cache = [];

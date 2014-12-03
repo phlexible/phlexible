@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Upload;
 
 use Phlexible\Bundle\MediaManagerBundle\Exception\StoreUploadedFileException;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\UploadedFileSource;
+use Phlexible\Component\Volume\FileSource\UploadedFileSource;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**

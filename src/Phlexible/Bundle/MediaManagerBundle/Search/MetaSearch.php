@@ -9,12 +9,11 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Search;
 
 use Phlexible\Bundle\MediaManagerBundle\Meta\FileMetaDataManager;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Phlexible\Component\Database\ConnectionManager;
+use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -25,9 +24,9 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class MetaSearch implements SearchProviderInterface
 {
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
      * @var FileMetaDataManager
@@ -45,14 +44,14 @@ class MetaSearch implements SearchProviderInterface
     private $securityContext;
 
     /**
-     * @param SiteManager              $siteManager
+     * @param VolumeManager            $volumeManager
      * @param FileMetaDataManager      $metaDataManager
      * @param UserManagerInterface     $userManager
      * @param SecurityContextInterface $securityContext
      */
-    public function __construct(SiteManager $siteManager, FileMetaDataManager $metaDataManager, UserManagerInterface $userManager, SecurityContextInterface $securityContext)
+    public function __construct(VolumeManager $volumeManager, FileMetaDataManager $metaDataManager, UserManagerInterface $userManager, SecurityContextInterface $securityContext)
     {
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
         $this->metaDataManager = $metaDataManager;
         $this->userManager = $userManager;
         $this->securityContext = $securityContext;
@@ -80,8 +79,8 @@ class MetaSearch implements SearchProviderInterface
     public function search($query)
     {
         $files = [];
-        foreach ($this->siteManager->getAll() as $site) {
-            $foundFiles = $site->search($query);
+        foreach ($this->volumeManager->all() as $volume) {
+            $foundFiles = $volume->search($query);
             if ($foundFiles) {
                 $files += $foundFiles;
             }
@@ -89,17 +88,17 @@ class MetaSearch implements SearchProviderInterface
 
         foreach ($this->metaDataManager->findByValue($query) as $metaData) {
             $identifiers = $metaData->getIdentifiers();
-            $file = $site->findFile($identifiers['file_id']);
+            $file = $volume->findFile($identifiers['file_id']);
             $files[$file->getId()] = $file;
         }
 
         $folders = [];
         $results = [];
         foreach ($files as $file) {
-            /* @var $file FileInterface */
+            /* @var $file ExtendedFileInterface */
 
             if (empty($folders[$file->getFolderId()])) {
-                $folders[$file->getFolderId()] = $file->getSite()->findFolder($file->getFolderId());
+                $folders[$file->getFolderId()] = $file->getVolume()->findFolder($file->getFolderId());
             }
 
             if (!$this->securityContext->isGranted($folders[$file->getFolderId()], 'FILE_READ')) {

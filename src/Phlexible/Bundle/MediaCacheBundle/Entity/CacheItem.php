@@ -39,9 +39,9 @@ class CacheItem
 
     /**
      * @var string
-     * @ORM\Column(name="site_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="volume_id", type="string", length=36, options={"fixed"=true})
      */
-    private $siteId;
+    private $volumeId;
 
     /**
      * @var string
@@ -170,19 +170,19 @@ class CacheItem
     /**
      * @return string
      */
-    public function getSiteId()
+    public function getVolumeId()
     {
-        return $this->siteId;
+        return $this->volumeId;
     }
 
     /**
-     * @param string $siteId
+     * @param string $volumeId
      *
      * @return $this
      */
-    public function setSiteId($siteId)
+    public function setVolumeId($volumeId)
     {
-        $this->siteId = $siteId;
+        $this->volumeId = $volumeId;
 
         return $this;
     }

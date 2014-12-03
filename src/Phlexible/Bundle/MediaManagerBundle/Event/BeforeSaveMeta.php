@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Event;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -21,20 +21,20 @@ class BeforeSaveMetaEvent extends Event
     //private $eventName = Events::BEFORE_SAVE_META;
 
     /**
-     * @var FileInterface
+     * @var ExtendedFileInterface
      */
     private $file;
 
     /**
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      */
-    public function __construct(FileInterface $file)
+    public function __construct(ExtendedFileInterface $file)
     {
         $this->file = $file;
     }
 
     /**
-     * @return FileInterface
+     * @return ExtendedFileInterface
      */
     public function getFile()
     {
