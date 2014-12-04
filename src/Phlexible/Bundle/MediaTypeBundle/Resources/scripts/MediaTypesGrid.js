@@ -1,17 +1,17 @@
-Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.GridPanel, {
-    title: Phlexible.documenttypes.Strings.document_types,
-    strings: Phlexible.documenttypes.Strings,
-    iconCls: 'p-documenttype-component-icon',
+Phlexible.mediatype.MediaTypesGrid = Ext.extend(Ext.grid.GridPanel, {
+    title: Phlexible.mediatype.Strings.media_types,
+    strings: Phlexible.mediatype.Strings,
+    iconCls: 'p-mediatype-component-icon',
     loadMask: true,
     stripeRows: true,
 
     initComponent: function () {
         this.store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('mediatypes_list'),
-            root: 'documenttypes',
+            root: 'mediatypes',
             id: 'id',
             totalProperty: 'totalCount',
-            fields: Phlexible.documenttypes.model.Documenttype,
+            fields: Phlexible.mediatype.model.MediaType,
             autoLoad: true,
             sortInfo: {field: 'key', direction: 'ASC'}
         });
@@ -21,7 +21,7 @@ Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.GridPanel, {
             listeners: {
                 selectionchange: function (sm) {
                     var r = sm.getSelected();
-                    this.fireEvent('documenttypeChange', r);
+                    this.fireEvent('mediaTypeChange', r);
                 },
                 scope: this
             }
@@ -126,16 +126,16 @@ Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.GridPanel, {
                     modal: true,
                     html: '<table><tr>' +
                         '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexibledocumenttype/mimetypes16/' + key + '.gif') + '" width="16" height="16" />' +
+                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes16/' + key + '.gif') + '" width="16" height="16" />' +
                         '</td>' +
                         '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexibledocumenttype/mimetypes32/' + key + '.gif') + '" width="32" height="32" />' +
+                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes32/' + key + '.gif') + '" width="32" height="32" />' +
                         '</td>' +
                         '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexibledocumenttype/mimetypes48/' + key + '.gif') + '" width="48" height="48" />' +
+                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes48/' + key + '.gif') + '" width="48" height="48" />' +
                         '</td>' +
                         '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexibledocumenttype/mimetypes256/' + key + '.gif') + '" width="256" height="256" />' +
+                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes256/' + key + '.gif') + '" width="256" height="256" />' +
                         '</td>' +
                         '</tr><tr>' +
                         '<td align="center">16x16</td>' +
@@ -149,13 +149,13 @@ Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.GridPanel, {
             scope: this
         });
 
-        Phlexible.documenttypes.DocumenttypesGrid.superclass.initComponent.call(this);
+        Phlexible.mediatype.MediaTypesGrid.superclass.initComponent.call(this);
     },
 
     iconRenderer: function (k) {
         var icon = k ? 'found' : 'missing';
-        return Phlexible.inlineIcon('p-documenttype-' + icon + '-icon', {alt: k});
+        return Phlexible.inlineIcon('p-mediatype-' + icon + '-icon', {alt: k});
     }
 });
 
-Ext.reg('documenttypes-documenttypesgrid', Phlexible.documenttypes.DocumenttypesGrid);
+Ext.reg('mediatype-mediatypesgrid', Phlexible.mediatype.MediaTypesGrid);

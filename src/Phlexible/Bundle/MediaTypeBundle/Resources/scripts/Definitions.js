@@ -1,4 +1,4 @@
 Ext.namespace(
-    'Phlexible.documenttypes.menuhandle',
-    'Phlexible.documenttypes.model'
+    'Phlexible.mediatype.menuhandle',
+    'Phlexible.mediatype.model'
 );

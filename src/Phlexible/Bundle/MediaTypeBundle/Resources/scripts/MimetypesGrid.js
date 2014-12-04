@@ -1,7 +1,7 @@
-Phlexible.documenttypes.MimetypesGrid = Ext.extend(Ext.grid.EditorGridPanel, {
-    title: Phlexible.documenttypes.Strings.mimetypes,
-    strings: Phlexible.documenttypes.Strings,
-    iconCls: 'p-documenttype-component-icon',
+Phlexible.mediatype.MimetypesGrid = Ext.extend(Ext.grid.EditorGridPanel, {
+    title: Phlexible.mediatype.Strings.mimetypes,
+    strings: Phlexible.mediatype.Strings,
+    iconCls: 'p-mediatype-component-icon',
     loadMask: true,
     viewConfig: {
         forceFit: true
@@ -28,7 +28,7 @@ Phlexible.documenttypes.MimetypesGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             }
         ];
 
-        Phlexible.documenttypes.MimetypesGrid.superclass.initComponent.call(this);
+        Phlexible.mediatype.MimetypesGrid.superclass.initComponent.call(this);
     },
 
     loadMimetypes: function (mimetypes) {
@@ -44,4 +44,4 @@ Phlexible.documenttypes.MimetypesGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     }
 });
 
-Ext.reg('documenttypes-mimetypesgrid', Phlexible.documenttypes.MimetypesGrid);
+Ext.reg('mediatype-mimetypesgrid', Phlexible.mediatype.MimetypesGrid);

@@ -1,4 +1,4 @@
-Phlexible.documenttypes.model.Documenttype = Ext.data.Record.create([
+Phlexible.mediatype.model.MediaType = Ext.data.Record.create([
     {name: 'id', type: 'string'},
     {name: 'key', type: 'string'},
     {name: 'de', type: 'string'},

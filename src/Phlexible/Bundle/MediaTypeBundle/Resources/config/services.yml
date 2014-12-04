@@ -1,5 +1,5 @@
 parameters:
-    phlexible_media_type.compiler.cache_dir: %kernel.cache_dir%/documenttypes/
+    phlexible_media_type.compiler.cache_dir: %kernel.cache_dir%/mediatype/
 
 services:
     phlexible_media_type.icon_resolver:

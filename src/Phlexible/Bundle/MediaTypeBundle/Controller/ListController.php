@@ -54,8 +54,8 @@ class ListController extends Controller
         }
 
         return new JsonResponse([
-            'totalCount'    => count($mediaTypes),
-            'documenttypes' => $mediaTypes
+            'totalCount' => count($mediaTypes),
+            'mediatypes' => $mediaTypes
         ]);
     }
 }

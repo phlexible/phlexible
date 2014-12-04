@@ -1,5 +1,5 @@
-documenttypes:
-    document_types: Dokumenttypen
+mediatype:
+    media_types: Medientypen
     mimetypes: Mimetypen
     mimetype: Mimetyp
     mimetypes_for: 'Mimetypen für "{0}"'

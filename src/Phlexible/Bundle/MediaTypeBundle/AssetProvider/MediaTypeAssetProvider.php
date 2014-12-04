@@ -87,13 +87,13 @@ class MediaTypeAssetProvider implements AssetProviderInterface
         return [
             '@PhlexibleMediaTypeBundle/Resources/scripts/Definitions.js',
 
-            '@PhlexibleMediaTypeBundle/Resources/scripts/DocumenttypesGrid.js',
+            '@PhlexibleMediaTypeBundle/Resources/scripts/MediaTypesGrid.js',
             '@PhlexibleMediaTypeBundle/Resources/scripts/MimetypesGrid.js',
             '@PhlexibleMediaTypeBundle/Resources/scripts/MainPanel.js',
 
-            '@PhlexibleMediaTypeBundle/Resources/scripts/model/Documenttype.js',
+            '@PhlexibleMediaTypeBundle/Resources/scripts/model/MediaType.js',
 
-            '@PhlexibleMediaTypeBundle/Resources/scripts/menuhandle/DocumenttypesHandle.js',
+            '@PhlexibleMediaTypeBundle/Resources/scripts/menuhandle/MediaTypesHandle.js',
 
             $cacheFile,
         ];

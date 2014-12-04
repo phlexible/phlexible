@@ -1,8 +1,8 @@
-documenttypes:
-    document_types: Documenttypes
-    mimetypes: Mimetypes
-    mimetype: Mimetype
-    mimetypes_for: 'Mimetypes for "{0}"'
+mediatype:
+    media_types: Media types
+    mimetypes: Mime types
+    mimetype: Mime type
+    mimetypes_for: 'Mime types for "{0}"'
     icons_for: 'Icons for "{0}"'
     id: ID
     key: Key

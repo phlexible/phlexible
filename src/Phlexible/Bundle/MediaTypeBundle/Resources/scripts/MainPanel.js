@@ -1,16 +1,16 @@
-Phlexible.documenttypes.MainPanel = Ext.extend(Ext.Panel, {
-    title: Phlexible.documenttypes.Strings.document_types,
-    iconCls: 'p-documenttype-component-icon',
+Phlexible.mediatype.MainPanel = Ext.extend(Ext.Panel, {
+    title: Phlexible.mediatype.Strings.media_types,
+    iconCls: 'p-mediatype-component-icon',
     closable: true,
     layout: 'border',
 
     initComponent: function () {
         this.items = [
             {
-                xtype: 'documenttypes-documenttypesgrid',
+                xtype: 'mediatype-mediatypesgrid',
                 region: 'center',
                 listeners: {
-                    documenttypeChange: function (r) {
+                    mediaTypeChange: function (r) {
                         var mimetypes;
                         if (r) {
                             mimetypes = r.get('mimetypes');
@@ -23,13 +23,13 @@ Phlexible.documenttypes.MainPanel = Ext.extend(Ext.Panel, {
                 }
             },
             {
-                xtype: 'documenttypes-mimetypesgrid',
+                xtype: 'mediatype-mimetypesgrid',
                 region: 'east',
                 width: 400
             }
         ];
 
-        Phlexible.documenttypes.MainPanel.superclass.initComponent.call(this);
+        Phlexible.mediatype.MainPanel.superclass.initComponent.call(this);
     },
 
     loadParams: function () {
@@ -37,4 +37,4 @@ Phlexible.documenttypes.MainPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('documenttypes-mainpanel', Phlexible.documenttypes.MainPanel);
+Ext.reg('mediatype-mainpanel', Phlexible.mediatype.MainPanel);

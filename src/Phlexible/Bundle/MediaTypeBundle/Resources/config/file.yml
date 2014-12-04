@@ -1,5 +1,5 @@
 parameters:
-    phlexible_media_type.file_dir: %kernel.root_dir%/Resources/documenttypes/
+    phlexible_media_type.file_dir: %kernel.root_dir%/Resources/mediatype/
 
 services:
     phlexible_media_type.file.loader.xml:
