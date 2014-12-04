@@ -45,11 +45,8 @@ class TeaserController extends Controller
             $renderConfig->set('template', $request->get('template', 'teaser'));
         }
 
-        $dataProvider = $this->get('phlexible_twig_renderer.data_provider');
-        $templating = $this->get('templating');
-        $data = $dataProvider->provide($renderConfig);
-        $template = $renderConfig->get('template');
-
-        return $templating->renderResponse($template, (array) $data);
+        $data = $renderConfig->getVariables();
+        
+        return $this->render($data['template'], (array) $data);
     }
 }
