@@ -37,19 +37,10 @@ interface ExtendedVolumeInterface extends VolumeInterface
 
     /**
      * @param ExtendedFileInterface $file
-     * @param string                $assetType
+     * @param string                $mediaType
      * @param string                $userId
      *
      * @return ExtendedFileInterface
      */
-    public function setFileAssetType(ExtendedFileInterface $file, $assetType, $userId);
-
-    /**
-     * @param ExtendedFileInterface $file
-     * @param string                $documenttype
-     * @param string                $userId
-     *
-     * @return ExtendedFileInterface
-     */
-    public function setFileDocumenttype(ExtendedFileInterface $file, $documenttype, $userId);
+    public function setFileMediaType(ExtendedFileInterface $file, $mediaType, $userId);
 }

@@ -24,15 +24,9 @@ class File extends BaseFile implements ExtendedFileInterface
 {
     /**
      * @var string
-     * @ORM\Column(name="asset_type", type="string")
+     * @ORM\Column(name="media_type", type="string")
      */
-    private $assetType;
-
-    /**
-     * @var string
-     * @ORM\Column(name="documenttype", type="string")
-     */
-    private $documenttype;
+    private $mediaType;
 
     /**
      * @var array
@@ -41,13 +35,13 @@ class File extends BaseFile implements ExtendedFileInterface
     private $metasets = [];
 
     /**
-     * @param string $assetType
+     * @param string $mediaType
      *
      * @return $this
      */
-    public function setAssetType($assetType)
+    public function setMediaType($mediaType)
     {
-        $this->assetType = $assetType;
+        $this->mediaType = $mediaType;
 
         return $this;
     }
@@ -55,29 +49,9 @@ class File extends BaseFile implements ExtendedFileInterface
     /**
      * @return string
      */
-    public function getAssetType()
+    public function getMediaType()
     {
-        return $this->assetType;
-    }
-
-    /**
-     * @param string $documenttype
-     *
-     * @return $this
-     */
-    public function setDocumenttype($documenttype)
-    {
-        $this->documenttype = $documenttype;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDocumenttype()
-    {
-        return $this->documenttype;
+        return $this->mediaType;
     }
 
     /**

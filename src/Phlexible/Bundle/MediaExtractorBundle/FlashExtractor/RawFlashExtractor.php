@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\FlashExtractor;
 
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+
 /**
  * Raw flash extractor
  *
@@ -26,16 +28,16 @@ class RawFlashExtractor implements FlashExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(Asset $asset)
+    public function supports(ExtendedFileInterface $file)
     {
-        return $asset->getDocumenttype()->getKey() === 'swf';
+        return $file->getMediaType() === 'swf';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function extract(Asset $asset)
+    public function extract(ExtendedFileInterface $file)
     {
-        return $asset->getFilename();
+        return $file->getPhysicalPath();
     }
 }

@@ -30,7 +30,7 @@ class ZendLuceneXlsxExtractor implements ContentExtractorInterface
      */
     public function supports(ExtendedFileInterface $file)
     {
-        return strtolower($file->getDocumenttype()) === 'xlsx';
+        return strtolower($file->getMediaType()) === 'xlsx';
     }
 
     /**

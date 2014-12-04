@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use Brainbits\ImageAnalyzer\ImageAnalyzer;
 use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
@@ -43,15 +44,15 @@ class ImageAnalyzerAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(PathSourceInterface $fileSource, $documenttype, $assettype)
+    public function supports(PathSourceInterface $fileSource, MediaType $mediaType)
     {
-        return $assettype === 'image';
+        return $mediaType->getCategory() === 'image';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function read(PathSourceInterface $fileSource, $documenttype, $assettype, AttributeBag $attributes)
+    public function read(PathSourceInterface $fileSource, MediaType $mediaType, AttributeBag $attributes)
     {
         $filename = $fileSource->getPath();
 

@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\DocumenttypeBundle\DependencyInjection;
+namespace Phlexible\Bundle\MediaTypeBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -14,11 +14,11 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Documenttypes extension
+ * Media type extension
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class PhlexibleDocumenttypeExtension extends Extension
+class PhlexibleMediaTypeExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -29,6 +29,6 @@ class PhlexibleDocumenttypeExtension extends Extension
         $loader->load('services.yml');
         $loader->load('file.yml');
 
-        $container->setAlias('phlexible_documenttype.documenttype_manager', 'phlexible_documenttype.file.documenttype_manager');
+        $container->setAlias('phlexible_media_type.media_type_manager', 'phlexible_media_type.file.media_type_manager');
     }
 }

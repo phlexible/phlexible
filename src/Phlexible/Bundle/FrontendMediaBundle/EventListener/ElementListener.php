@@ -42,7 +42,6 @@ class ElementListener implements EventSubscriberInterface
         return [
             ElementEvents::CREATE_ELEMENT_VERSION => 'onCreateElementVersion',
             ElementEvents::UPDATE_ELEMENT_VERSION => 'onUpdateElementVersion',
-            //ElementEvents::SAVE_ELEMENT => 'onSaveElement',
         ];
     }
 
@@ -60,42 +59,5 @@ class ElementListener implements EventSubscriberInterface
     public function onUpdateElementVersion(ElementVersionEvent $event)
     {
         $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
-    }
-
-    /**
-     * @param SaveElementEvent $event
-     */
-    public function onSaveElement(SaveElementEvent $event)
-    {
-        if (!$container->components->has('distributionlists')) {
-            return;
-        }
-
-        $folderRepository = $container->get('frontendmediamanagerChangeFolderRepository');
-
-        $elementVersion = $event->getElementVersion();
-        $eid = $elementVersion->getEid();
-        $elementData = $elementVersion->getData($event->getLanguage());
-        $documentlists = $elementData->getWrap()->all('documentlist');
-
-        // delete old items
-        $folderRepository->deleteByEid($eid);
-
-        foreach ($documentlists as $documentlist) {
-            $listId = (int) $documentlist->first('documentlist_distribution', true);
-
-            if (!strlen($listId)) {
-                continue;
-            }
-
-            $folderId = $documentlist->first('documentlist_folder', true);
-            if (strlen($folderId)) {
-                $folder = $folderRepository->create();
-                $folder->listId = $listId;
-                $folder->folderId = $folderId;
-                $folder->eid = (int) $eid;
-                $folderRepository->save($folder);
-            }
-        }
     }
 }

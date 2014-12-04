@@ -6,14 +6,15 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\DocumenttypeBundle\Exception;
+namespace Phlexible\Bundle\MediaTypeBundle;
+
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Exception interface for documenttype bundle
+ * Media type bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ExceptionInterface
+class PhlexibleMediaTypeBundle extends Bundle
 {
-
 }

@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\FlashExtractor;
 
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+
 /**
  * Flash extractor interface
  *
@@ -25,18 +27,18 @@ interface FlashExtractorInterface
     /**
      * Check if extractor supports the given asset
      *
-     * @param Asset $asset
+     * @param ExtendedFileInterface $file
      *
      * @return bool
      */
-    public function supports(Asset $asset);
+    public function supports(ExtendedFileInterface $file);
 
     /**
      * Extract flash from file
      *
-     * @param Asset $asset
+     * @param ExtendedFileInterface $file
      *
      * @return bool
      */
-    public function extract(Asset $asset);
+    public function extract(ExtendedFileInterface $file);
 }

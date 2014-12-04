@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use GetId3\GetId3Core;
 use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
@@ -30,15 +31,15 @@ class GetId3AttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(PathSourceInterface $fileSource, $documenttype, $assettype)
+    public function supports(PathSourceInterface $fileSource, MediaType $mediaType)
     {
-        return $assettype === 'video' || $assettype === 'audio';
+        return in_array($mediaType->getCategory(), array('video', 'audio'));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function read(PathSourceInterface $fileSource, $documenttype, $assettype, AttributeBag $attributes)
+    public function read(PathSourceInterface $fileSource, MediaType $mediaType, AttributeBag $attributes)
     {
         $filename = $fileSource->getPath();
 
@@ -78,5 +79,4 @@ class GetId3AttributeReader implements AttributeReaderInterface
             $attributes->set('id3.comment', $info['comment']);
         }
     }
-
 }

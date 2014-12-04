@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
 use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFileChecker;
 use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFolderChecker;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Volume\Event\CreateFileEvent;
 use Phlexible\Component\Volume\Event\FileEvent;
 use Phlexible\Component\Volume\Event\FolderEvent;
@@ -29,9 +29,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MediaSiteListener implements EventSubscriberInterface
 {
     /**
-     * @var DocumenttypeManagerInterface
+     * @var MediaTypeManagerInterface
      */
-    private $documenttypeManager;
+    private $mediaTypeManager;
 
     /**
      * @var MetaSetManagerInterface
@@ -49,18 +49,18 @@ class MediaSiteListener implements EventSubscriberInterface
     private $deleteFolderChecker;
 
     /**
-     * @param DocumenttypeManagerInterface $documenttypeManager
-     * @param MetaSetManagerInterface      $metaSetManager
-     * @param DeleteFileChecker            $deleteFileChecker
-     * @param DeleteFolderChecker          $deleteFolderChecker
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param MetaSetManagerInterface   $metaSetManager
+     * @param DeleteFileChecker         $deleteFileChecker
+     * @param DeleteFolderChecker       $deleteFolderChecker
      */
     public function __construct(
-        DocumenttypeManagerInterface $documenttypeManager,
+        MediaTypeManagerInterface $mediaTypeManager,
         MetaSetManagerInterface $metaSetManager,
         DeleteFileChecker $deleteFileChecker,
         DeleteFolderChecker $deleteFolderChecker)
     {
-        $this->documenttypeManager = $documenttypeManager;
+        $this->mediaTypeManager = $mediaTypeManager;
         $this->metaSetManager = $metaSetManager;
         $this->deleteFileChecker = $deleteFileChecker;
         $this->deleteFolderChecker = $deleteFolderChecker;
@@ -110,13 +110,12 @@ class MediaSiteListener implements EventSubscriberInterface
     private function processFile(ExtendedFileInterface $file, PathSourceInterface $fileSource)
     {
         try {
-            $documenttype = $this->documenttypeManager->findByMimetype($fileSource->getMimeType());
+            $mediaType = $this->mediaTypeManager->findByMimetype($fileSource->getMimeType());
         } catch (\Exception $e) {
-            $documenttype = $this->documenttypeManager->find('binary');
+            $mediaType = $this->mediaTypeManager->find('binary');
         }
 
-        $file->setAssettype($documenttype->getType());
-        $file->setDocumenttype($documenttype->getKey());
+        $file->setMediaType($mediaType->getName());
 
         try {
             $fileMetaSet = $this->metaSetManager->findOneByName('file');

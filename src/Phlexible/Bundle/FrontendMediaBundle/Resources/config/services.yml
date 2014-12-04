@@ -7,11 +7,6 @@ services:
             - {name: phlexible_gui.asset_provider}
 
     # event listeners
-    phlexible_frontend_media.listener.render:
-        class: Phlexible\Bundle\FrontendMediaBundle\EventListener\RenderListener
-        tags:
-            - {name: kernel.event_listener, event: elementtype_documentlist, method: onElementtypeDocumentlist}
-
     phlexible_frontend_media.listener.element:
         class: Phlexible\Bundle\FrontendMediaBundle\EventListener\ElementListener
         arguments: [@phlexible_frontend_media.usage_updater]

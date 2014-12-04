@@ -106,14 +106,14 @@ class MediaController extends Controller
     public function iconAction($fileId, $size = 16)
     {
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
 
         $volume = $volumeManager->getByFileId($fileId);
         $file = $volume->findFile($fileId);
         $mimeType = $file->getMimeType();
 
-        $documenttype = $documenttypeManager->findByMimetype($mimeType);
-        $icon = $documenttype->getIcon($size);
+        $mediaType = $mediaTypeManager->findByMimetype($mimeType);
+        $icon = $mediaType->getIcon($size);
 
         return $this->get('igorw_file_serve.response_factory')
             ->create($icon, 'image/gif', ['absolute_path' => true]);

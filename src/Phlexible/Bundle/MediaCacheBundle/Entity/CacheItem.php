@@ -87,9 +87,9 @@ class CacheItem
 
     /**
      * @var string
-     * @ORM\Column(name="document_type_key", type="string", length=100)
+     * @ORM\Column(name="media_type", type="string", length=100)
      */
-    private $documentTypeKey;
+    private $mediaType;
 
     /**
      * @var string
@@ -310,19 +310,19 @@ class CacheItem
     /**
      * @return string
      */
-    public function getDocumentTypeKey()
+    public function getMediaType()
     {
-        return $this->documentTypeKey;
+        return $this->mediaType;
     }
 
     /**
-     * @param string $documentTypeKey
+     * @param string $mediaType
      *
      * @return $this
      */
-    public function setDocumentTypeKey($documentTypeKey)
+    public function setMediaType($mediaType)
     {
-        $this->documentTypeKey = $documentTypeKey;
+        $this->mediaType = $mediaType;
 
         return $this;
     }

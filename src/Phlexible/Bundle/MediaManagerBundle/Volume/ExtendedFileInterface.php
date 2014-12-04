@@ -18,28 +18,16 @@ use Phlexible\Component\Volume\Model\FileInterface;
 interface ExtendedFileInterface extends FileInterface
 {
     /**
-     * @param string $documenttype
+     * @param string $mediaType
      *
      * @return $this
      */
-    public function setDocumenttype($documenttype);
+    public function setMediaType($mediaType);
 
     /**
      * @return string
      */
-    public function getDocumenttype();
-
-    /**
-     * @param string $assetType
-     *
-     * @return $this
-     */
-    public function setAssetType($assetType);
-
-    /**
-     * @return string
-     */
-    public function getAssetType();
+    public function getMediaType();
 
     /**
      * @param array $metasets

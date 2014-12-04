@@ -16,11 +16,11 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
- * Document type loader
+ * Media type loader
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class DocumenttypeLoader
+class MediaTypeLoader
 {
     /**
      * @var PatternResourceLocator
@@ -81,9 +81,9 @@ class DocumenttypeLoader
     /**
      * @return MediaTypeCollection
      */
-    public function loadDocumenttypes()
+    public function loadMediaTypes()
     {
-        $documentTypes = new MediaTypeCollection();
+        $mediaTypes = new MediaTypeCollection();
         $configCache = new ConfigCache($this->getFilename(), $this->debug);
 
         if (!$configCache->isFresh()) {
@@ -96,21 +96,21 @@ class DocumenttypeLoader
                 $files = $this->locator->locate("*.$extension", 'documenttypes', false);
 
                 foreach ($files as $file) {
-                    $documentTypes->add($loader->load($file));
+                    $mediaTypes->add($loader->load($file));
                     $resources[basename($file)] = new FileResource($file);
                 }
             }
 
             $resources = array_values($resources);
 
-            $configCache->write($this->compiler->compile($documentTypes), $resources);
+            $configCache->write($this->compiler->compile($mediaTypes), $resources);
         }
 
         include (string) $configCache;
 
         $classname = $this->compiler->getClassname();
-        $documentTypes = new $classname();
+        $mediaTypes = new $classname();
 
-        return $documentTypes;
+        return $mediaTypes;
     }
 }

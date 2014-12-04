@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
@@ -112,7 +111,7 @@ class FileController extends Controller
     {
         $data = [];
         $userManager = $this->get('phlexible_user.user_manager');
-        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
 
         $hasVersions = $volume->hasFeature('versions');
 
@@ -140,11 +139,10 @@ class FileController extends Controller
                 //'attributesCnt' => 0,
                 'versions' => $hasVersions,
                 'debug'    => [
-                    'mimeType'     => $file->getMimeType(),
-                    'documentType' => strtolower($file->getDocumenttype()),
-                    'assetType'    => strtolower($file->getAssettype()),
-                    'fileId'       => $file->getID(),
-                    'folderId'     => $file->getFolderId(),
+                    'mimeType'  => $file->getMimeType(),
+                    'mediaType' => strtolower($file->getMediaType()),
+                    'fileId'    => $file->getID(),
+                    'folderId'  => $file->getFolderId(),
                 ]
             ];
 
@@ -158,15 +156,15 @@ class FileController extends Controller
             $properties['meta'] = $meta;
             $properties['metaCnt'] = count($properties['meta']);
 
-            $documentType = $documenttypeManager->find(strtolower($file->getDocumenttype()));
+            $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
 
-            if (!$documentType) {
-                $documentType = new Documenttype();
-                $documentType->setKey('unknown');
+            if (!$mediaType) {
+                $mediaType = $mediaTypeManager->create();
+                $mediaType->setName('unknown');
             }
 
             $interfaceLanguage = $this->getUser()->getInterfaceLanguage('en');
-            $documentTypeTitle = $documentType->getTitle($interfaceLanguage);
+            $mediaTypeTitle = $mediaType->getTitle($interfaceLanguage);
 
             $version = 1;
             if ($hasVersions) {
@@ -184,7 +182,7 @@ class FileController extends Controller
                     ]);
                 } else {
                     $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', [
-                        'documenttypeKey' => $file->getDocumenttype(),
+                        'documenttypeKey' => $file->getMediaType(),
                         'templateKey'     => $cacheItem->getTemplateKey(),
                     ]);
                 }
@@ -210,8 +208,8 @@ class FileController extends Controller
                 'folder'            => '/Root/' . $folder->getPath(),
                 'asset_type'        => strtolower($file->getAssettype()),
                 'mime_type'         => $file->getMimetype(),
-                'document_type'     => $documentTypeTitle,
-                'document_type_key' => strtolower($file->getDocumenttype()),
+                'document_type'     => $mediaTypeTitle,
+                'document_type_key' => strtolower($file->getMediaType()),
                 'present'           => file_exists($file->getPhysicalPath()),
                 'size'              => $file->getSize(),
                 'hidden'            => $file->isHidden() ? 1 : 0,
@@ -343,8 +341,8 @@ class FileController extends Controller
         $properties['path'] = '/' . $folder->getPath();
         $properties['name'] = $file->getName();
         $properties['size'] = $file->getSize();
-        $properties['document_type_key'] = strtolower($file->getDocumenttype());
-        $properties['asset_type'] = strtolower($file->getAssettype());
+        $properties['document_type_key'] = strtolower($file->getMediaType());
+        $properties['asset_type'] = strtolower($file->getMediaType());
         $properties['create_user_id'] = $file->getCreateUserId();
         $properties['create_time'] = $file->getCreatedAt()->format('U');
 
@@ -359,8 +357,8 @@ class FileController extends Controller
 
         $properties['debug'] = [
             'mimeType'     => $file->getMimeType(),
-            'documentType' => strtolower($file->getDocumenttype()),
-            'assetType'    => strtolower($file->getAssettype()),
+            'documentType' => strtolower($file->getMediaType()),
+            'assetType'    => strtolower($file->getMediaType()),
             'fileId'       => $fileId,
             'folderId'     => $folder->getId(),
         ];
@@ -371,8 +369,8 @@ class FileController extends Controller
             'name'              => $file->getName(),
             'size'              => $file->getSize(),
             'version'           => $file->getVersion(),
-            'document_type_key' => strtolower($file->getDocumenttype()),
-            'asset_type'        => strtolower($file->getAssettype()),
+            'document_type_key' => strtolower($file->getMediaType()),
+            'asset_type'        => strtolower($file->getMediaType()),
             'create_user_id'    => $file->getCreateUserId(),
             'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
         ];
@@ -421,8 +419,8 @@ class FileController extends Controller
                 'name'              => $file->getName(),
                 'size'              => $file->getSize(),
                 'version'           => $file->getVersion(),
-                'document_type_key' => strtolower($file->getDocumenttype()),
-                'asset_type'        => strtolower($file->getAssettype()),
+                'document_type_key' => strtolower($file->getMediaType()),
+                'asset_type'        => strtolower($file->getMediaType()),
                 'create_user_id'    => $file->getCreateUserId(),
                 'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
             ];

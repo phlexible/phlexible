@@ -120,7 +120,7 @@ class UploadController extends Controller
         $tempHandler = $this->get('phlexible_media_manager.upload.temp_handler');
         $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
 
         $data = [];
 
@@ -131,9 +131,9 @@ class UploadController extends Controller
             $newName = basename($tempFile->getName());
             $mimetype = $this->get('phlexible_media_tool.mime.detector')->detect($tempFile->getPath(), MimeDetector::RETURN_STRING);
             if (trim($mimetype)) {
-                $newType = $documenttypeManager->findByMimetype($mimetype);
+                $newType = $mediaTypeManager->findByMimetype($mimetype);
             } else {
-                $newType = $documenttypeManager->find('binary');
+                $newType = $mediaTypeManager->find('binary');
             }
 
             $data = [
@@ -155,7 +155,7 @@ class UploadController extends Controller
 
                 $data['old_name'] = $tempFile->getName();
                 $data['old_id']   = $tempFile->getFileId();
-                $data['old_type'] = $oldFile->getDocumenttype();
+                $data['old_type'] = $oldFile->getMediaType();
                 $data['old_size'] = $oldFile->getSize();
                 $data['alternative_name'] = $alternativeName;
             }

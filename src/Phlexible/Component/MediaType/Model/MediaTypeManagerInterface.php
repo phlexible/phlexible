@@ -28,7 +28,7 @@ interface MediaTypeManagerInterface
     public function create();
 
     /**
-     * Find document type
+     * Find media type
      *
      * @param string $key
      *
@@ -37,7 +37,7 @@ interface MediaTypeManagerInterface
     public function find($key);
 
     /**
-     * Return document type by filename
+     * Return media type by filename
      *
      * @param string $filename
      *
@@ -46,7 +46,7 @@ interface MediaTypeManagerInterface
     public function findByFilename($filename);
 
     /**
-     * Return document type by mimetype
+     * Return media type by mimetype
      *
      * @param string $mimetype
      *
@@ -55,7 +55,7 @@ interface MediaTypeManagerInterface
     public function findByMimetype($mimetype);
 
     /**
-     * Return all document types
+     * Return all media types
      *
      * @return MediaType[]
      */

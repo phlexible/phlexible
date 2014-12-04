@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\MediaAssetBundle\EventListener;
 use Phlexible\Bundle\MediaAssetBundle\AttributeReader\AttributeReaderInterface;
 use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Volume\Event\CreateFileEvent;
 use Phlexible\Component\Volume\Event\ReplaceFileEvent;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
@@ -30,9 +31,15 @@ class MediaSiteListener implements EventSubscriberInterface
     private $attributeReader;
 
     /**
-     * @param AttributeReaderInterface $attributeReader
+     * @var MediaTypeManagerInterface
      */
-    public function __construct(AttributeReaderInterface $attributeReader)
+    private $mediaTypeManager;
+
+    /**
+     * @param AttributeReaderInterface  $attributeReader
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     */
+    public function __construct(AttributeReaderInterface $attributeReader, MediaTypeManagerInterface $mediaTypeManager)
     {
         $this->attributeReader = $attributeReader;
     }
@@ -78,11 +85,11 @@ class MediaSiteListener implements EventSubscriberInterface
     {
         $attributes = new AttributeBag($file->getAttributes());
 
-        $assettype = $file->getAssettype();
-        $documenttype = $file->getDocumenttype();
+        $mediaTypeName = $file->getMediaType();
+        $mediaType = $this->mediaTypeManager->find($mediaTypeName);
 
-        if ($this->attributeReader->supports($fileSource, $documenttype, $assettype)) {
-            $this->attributeReader->read($fileSource, $documenttype, $assettype, $attributes);
+        if ($this->attributeReader->supports($fileSource, $mediaType)) {
+            $this->attributeReader->read($fileSource, $mediaType, $attributes);
         }
 
         $file->setAttributes($attributes->all());

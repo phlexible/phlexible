@@ -58,7 +58,7 @@ class MediaTypeManager implements MediaTypeManagerInterface
     public function getCollection()
     {
         if ($this->mediaTypes === null) {
-            $this->mediaTypes = $this->mediaTypeLoader->loadMediaType();
+            $this->mediaTypes = $this->mediaTypeLoader->loadMediaTypes();
         }
 
         return $this->mediaTypes;

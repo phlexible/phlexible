@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
@@ -18,6 +17,7 @@ use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -44,9 +44,9 @@ class ImageWorker extends AbstractWorker
     private $cacheManager;
 
     /**
-     * @var DocumenttypeManagerInterface
+     * @var MediaTypeManagerInterface
      */
-    private $documenttypeManager;
+    private $mediaTypeManager;
 
     /**
      * @var CacheIdStrategyInterface
@@ -69,20 +69,20 @@ class ImageWorker extends AbstractWorker
     private $tempDir;
 
     /**
-     * @param StorageManager               $storageManager
-     * @param Transmutor                   $transmutor
-     * @param CacheManagerInterface        $cacheManager
-     * @param DocumenttypeManagerInterface $documenttypeManager
-     * @param CacheIdStrategyInterface     $cacheIdStrategy
-     * @param ImageTemplateApplier         $applier
-     * @param LoggerInterface              $logger
-     * @param string                       $tempDir
+     * @param StorageManager            $storageManager
+     * @param Transmutor                $transmutor
+     * @param CacheManagerInterface     $cacheManager
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param CacheIdStrategyInterface  $cacheIdStrategy
+     * @param ImageTemplateApplier      $applier
+     * @param LoggerInterface           $logger
+     * @param string                    $tempDir
      */
     public function __construct(
         StorageManager $storageManager,
         Transmutor $transmutor,
         CacheManagerInterface $cacheManager,
-        DocumenttypeManagerInterface $documenttypeManager,
+        MediaTypeManagerInterface $mediaTypeManager,
         CacheIdStrategyInterface $cacheIdStrategy,
         ImageTemplateApplier $applier,
         LoggerInterface $logger,
@@ -91,7 +91,7 @@ class ImageWorker extends AbstractWorker
         $this->storageManager = $storageManager;
         $this->transmutor = $transmutor;
         $this->cacheManager = $cacheManager;
-        $this->documenttypeManager = $documenttypeManager;
+        $this->mediaTypeManager = $mediaTypeManager;
         $this->cacheIdStrategy = $cacheIdStrategy;
         $this->applier = $applier;
         $this->logger = $logger;
@@ -154,7 +154,7 @@ class ImageWorker extends AbstractWorker
 
         $cacheItem
             ->setId($cacheId)
-            ->setSiteId($volume->getId())
+            ->setVolumeId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())
@@ -162,7 +162,7 @@ class ImageWorker extends AbstractWorker
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
             ->setQueueStatus(CacheItem::QUEUE_DONE)
             ->setMimeType($file->getMimeType())
-            ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
+            ->setMediaType(strtolower($file->getMediaType()))
             ->setExtension(isset($pathinfo['extension']) ? $pathinfo['extension'] : '')
             ->setFileSize(0)
             ->setError(null);
@@ -208,16 +208,15 @@ class ImageWorker extends AbstractWorker
 
                 $filesystem->chmod($tempFilename, 0777);
 
-                $fileInfo = $this->documenttypeManager->getMimeDetector()->detect($tempFilename);
-                $documentType = $this->documenttypeManager->findByMimetype($fileInfo->getMimeType());
+                $mediaType = $this->mediaTypeManager->findByFilename($tempFilename);
 
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_OK)
                     ->setQueueStatus(CacheItem::QUEUE_DONE)
-                    ->setMimeType($fileInfo->getMimeType())
-                    ->setDocumentTypeKey($documentType->getKey())
-                    ->setExtension($fileInfo->getExtension())
-                    ->setFilesize($fileInfo->getSize())
+                    ->setMimeType($mediaType->getMimetype())
+                    ->setMediaType($mediaType->getName())
+                    ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
+                    ->setFilesize(filesize($tempFilename))
                     ->setWidth($image->getSize()->getWidth())
                     ->setHeight($image->getSize()->getHeight())
                     ->setFinishedAt(new \DateTime());

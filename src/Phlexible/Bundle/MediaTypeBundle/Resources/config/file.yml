@@ -1,0 +1,24 @@
+parameters:
+    phlexible_media_type.file_dir: %kernel.root_dir%/Resources/documenttypes/
+
+services:
+    phlexible_media_type.file.loader.xml:
+        class: Phlexible\Component\MediaType\File\Loader\XmlLoader
+        public: false
+
+    phlexible_media_type.file.loader:
+        class: Phlexible\Component\MediaType\File\MediaTypeLoader
+        public: false
+        arguments:
+            - @pattern_locator
+            - @phlexible_media_type.compiler.php
+            - %phlexible_media_type.file_dir%
+            - %phlexible_media_type.compiler.cache_dir%
+            - %kernel.debug%
+        calls:
+            - [addLoader, [@phlexible_media_type.file.loader.xml]]
+
+    phlexible_media_type.file.media_type_manager:
+        class: Phlexible\Component\MediaType\File\MediaTypeManager
+        public: false
+        arguments: [@phlexible_media_type.file.loader, @phlexible_media_tool.mime.detector]

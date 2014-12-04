@@ -63,7 +63,7 @@ EOF;
         $constructor = PhpMethod::create('__construct');
         $constructor->setBody($constructorBody);
 
-        $getHashBody = 'return "' . $mediaType->getHash() . '";';
+        $getHashBody = 'return "' . $mediaTypes->getHash() . '";';
 
         $getHashMethod = PhpMethod::create('getHash');
         $getHashMethod->setBody($getHashBody);

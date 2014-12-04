@@ -56,7 +56,7 @@ class ExtendedVolume extends Volume implements ExtendedVolumeInterface
 
         $event = new FileEvent($file);
         if ($this->getEventDispatcher()->dispatch(MediaManagerEvents::BEFORE_SET_FILE_METASETS, $event)->isPropagationStopped()) {
-            throw new IOException("Delete file {$file->getName()} cancelled.");
+            throw new IOException("Set file meta sets {$file->getName()} cancelled.");
         }
 
         $this->getDriver()->updateFile($file);
@@ -70,45 +70,22 @@ class ExtendedVolume extends Volume implements ExtendedVolumeInterface
     /**
      * {@inheritdoc}
      */
-    public function setFileAssetType(ExtendedFileInterface $file, $assetType, $userId)
+    public function setFileMediaType(ExtendedFileInterface $file, $mediaType, $userId)
     {
         $file
-            ->setAssetType($assetType)
+            ->setMediaType($mediaType)
             ->setModifiedAt(new \DateTime())
             ->setModifyUserId($userId);
 
         $event = new FileEvent($file);
-        if ($this->getEventDispatcher()->dispatch(MediaManagerEvents::BEFORE_SET_FILE_ASSET_TYPE, $event)->isPropagationStopped()) {
-            throw new IOException("Delete file {$file->getName()} cancelled.");
+        if ($this->getEventDispatcher()->dispatch(MediaManagerEvents::BEFORE_SET_FILE_MEDIA_TYPE, $event)->isPropagationStopped()) {
+            throw new IOException("Set file media type {$file->getName()} cancelled.");
         }
 
         $this->getDriver()->updateFile($file);
 
         $event = new FileEvent($file);
-        $this->getEventDispatcher()->dispatch(MediaManagerEvents::SET_FILE_ASSET_TYPE, $event);
-
-        return $file;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFileDocumenttype(ExtendedFileInterface $file, $documenttype, $userId)
-    {
-        $file
-            ->setDocumenttype($documenttype)
-            ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
-
-        $event = new FileEvent($file);
-        if ($this->getEventDispatcher()->dispatch(MediaManagerEvents::BEFORE_SET_FILE_DOCUMENTTYPE, $event)->isPropagationStopped()) {
-            throw new IOException("Delete file {$file->getName()} cancelled.");
-        }
-
-        $this->getDriver()->updateFile($file);
-
-        $event = new FileEvent($file);
-        $this->getEventDispatcher()->dispatch(MediaManagerEvents::SET_FILE_DOCUMENTTYPE, $event);
+        $this->getEventDispatcher()->dispatch(MediaManagerEvents::SET_FILE_MEDIA_TYPE, $event);
 
         return $file;
     }

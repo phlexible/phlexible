@@ -42,7 +42,7 @@ class MediaController extends Controller
         $cacheManager = $this->get('phlexible_media_cache.cache_manager');
         $storageManager = $this->get('phlexible_media_cache.storage_manager');
         $templateManager = $this->get('phlexible_media_template.template_manager');
-        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
         $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
@@ -88,8 +88,8 @@ class MediaController extends Controller
             }
 
             $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
-            $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
-            $filePath = $delegateService->getClean($template, $documenttype);
+            $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
+            $filePath = $delegateService->getClean($template, $mediaType);
             $mimeType = 'image/gif';
         }
 
@@ -99,21 +99,21 @@ class MediaController extends Controller
 
     /**
      * @param string $templateKey
-     * @param string $documenttypeKey
+     * @param string $mediaTypeName
      *
      * @return Response
      * @Route("/delegate/{templateKey}/{documenttypeKey}", name="mediamanager_media_delegate")
      */
-    public function delegateAction($templateKey, $documenttypeKey)
+    public function delegateAction($templateKey, $mediaTypeName)
     {
-        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
         $templateManager = $this->get('phlexible_media_template.template_manager');
         $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
 
         $template = $templateManager->find($templateKey);
 
-        $documenttype = $documenttypeManager->find(strtolower($documenttypeKey));
-        $filePath = $delegateService->getClean($template, $documenttype);
+        $mediaType = $mediaTypeManager->find(strtolower($mediaTypeName));
+        $filePath = $delegateService->getClean($template, $mediaType);
         $fileSize = filesize($filePath);
         $mimeType = 'image/gif';
 

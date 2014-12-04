@@ -37,7 +37,7 @@ class MediaTypeCollection
         $this->mediaTypes[$mediaType->getName()] = $mediaType;
 
         foreach ($mediaType->getMimetypes() as $mimetype) {
-            $this->mimetypeMap[$mimetype] = $mediaType->getKey();
+            $this->mimetypeMap[$mimetype] = $mediaType->getName();
         }
 
         return $this;
@@ -52,8 +52,8 @@ class MediaTypeCollection
      */
     public function merge(MediaTypeCollection $collection)
     {
-        foreach ($collection->all() as $documenttype) {
-            $this->add($documenttype);
+        foreach ($collection->all() as $mediaType) {
+            $this->add($mediaType);
         }
 
         return $this;
@@ -109,8 +109,8 @@ class MediaTypeCollection
     public function getHash()
     {
         $base = '';
-        foreach ($this->mediaTypes as $documenttype) {
-            $base .= md5(serialize($documenttype));
+        foreach ($this->mediaTypes as $mediaType) {
+            $base .= md5(serialize($mediaType));
         }
 
         return md5($base);

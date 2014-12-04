@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
 use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
@@ -29,21 +30,19 @@ interface AttributeReaderInterface
      * Check if reader supports the given asset
      *
      * @param PathSourceInterface $fileSource
-     * @param string              $documenttype
-     * @param string              $assettype
+     * @param MediaType           $mediaType
      *
      * @return bool
      */
-    public function supports(PathSourceInterface $fileSource, $documenttype, $assettype);
+    public function supports(PathSourceInterface $fileSource, MediaType $mediaType);
 
     /**
      * Read attributes
      *
      * @param PathSourceInterface $fileSource
-     * @param string              $documenttype
-     * @param string              $assettype
-     * @param \Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag        $attributes
+     * @param MediaType           $mediaType
+     * @param AttributeBag        $attributes
      */
-    public function read(PathSourceInterface $fileSource, $documenttype, $assettype, AttributeBag $attributes);
+    public function read(PathSourceInterface $fileSource, MediaType $mediaType, AttributeBag $attributes);
 
 }

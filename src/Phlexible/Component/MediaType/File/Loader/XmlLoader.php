@@ -32,10 +32,10 @@ class XmlLoader implements LoaderInterface
     {
         $xml = simplexml_load_file($filename);
 
-        $documentType = new MediaType();
+        $mediaType = new MediaType();
 
         $attrs = $xml->attributes();
-        $documentType
+        $mediaType
             ->setName((string) $attrs['key'])
             ->setCategory((string) $xml->type);
 
@@ -46,7 +46,7 @@ class XmlLoader implements LoaderInterface
                     $lang = (string) $titleNodeAttrs['lang'];
                     $title = (string) $titleNode;
                     if ($lang && $title) {
-                        $documentType->setTitle($lang, $title);
+                        $mediaType->setTitle($lang, $title);
                     }
                 }
             }
@@ -57,7 +57,7 @@ class XmlLoader implements LoaderInterface
                 foreach ($xml->mimetypes->mimetype as $mimetypeNode) {
                     $mimetype = (string) $mimetypeNode;
                     if ($mimetype) {
-                        $documentType->addMimetype($mimetype);
+                        $mediaType->addMimetype($mimetype);
                     }
                 }
             }
@@ -70,13 +70,13 @@ class XmlLoader implements LoaderInterface
                     $size = (int) $iconAttributes['size'];
                     $icon = (string) $iconNode;
                     if ($icon) {
-                        $documentType->setIcon($size, $icon);
+                        $mediaType->setIcon($size, $icon);
                     }
                 }
             }
         }
 
-        return $documentType;
+        return $mediaType;
     }
 
 }

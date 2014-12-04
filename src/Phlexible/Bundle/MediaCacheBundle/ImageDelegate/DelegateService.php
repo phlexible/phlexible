@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\ImageDelegate;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
  * Delegate worker
@@ -41,14 +41,14 @@ class DelegateService
 
     /**
      * @param TemplateInterface $template
-     * @param Documenttype      $documentType
+     * @param MediaType         $mediaType
      * @param bool              $createOnDemand
      *
      * @return string
      */
-    public function getClean(TemplateInterface $template, Documenttype $documentType, $createOnDemand = true)
+    public function getClean(TemplateInterface $template, MediaType $mediaType, $createOnDemand = true)
     {
-        $filename = $this->worker->getCleanFilename($template, $documentType);
+        $filename = $this->worker->getCleanFilename($template, $mediaType);
 
         if (file_exists($filename)) {
             return $filename;
@@ -58,21 +58,21 @@ class DelegateService
             return null;
         }
 
-        $this->worker->write($documentType, $template);
+        $this->worker->write($mediaType, $template);
 
         return $filename;
     }
 
     /**
      * @param TemplateInterface $template
-     * @param Documenttype      $documentType
+     * @param MediaType         $mediaType
      * @param bool              $createOnDemand
      *
      * @return string
      */
-    public function getWaiting(TemplateInterface $template, Documenttype $documentType, $createOnDemand = true)
+    public function getWaiting(TemplateInterface $template, MediaType $mediaType, $createOnDemand = true)
     {
-        $filename = $this->worker->getWaitingFilename($template, $documentType);
+        $filename = $this->worker->getWaitingFilename($template, $mediaType);
 
         if (file_exists($filename)) {
             return $filename;
@@ -82,7 +82,7 @@ class DelegateService
             return null;
         }
 
-        $this->worker->write($documentType, $template);
+        $this->worker->write($mediaType, $template);
 
         return $filename;
     }

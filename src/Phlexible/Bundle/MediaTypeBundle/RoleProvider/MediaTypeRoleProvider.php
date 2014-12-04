@@ -6,16 +6,16 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\DocumenttypeBundle\RoleProvider;
+namespace Phlexible\Bundle\MediaTypeBundle\RoleProvider;
 
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Documenttype role provider
+ * Media type role provider
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class DocumenttypeRoleProvider extends RoleProvider
+class MediaTypeRoleProvider extends RoleProvider
 {
     /**
      * {@inheritdoc}
@@ -23,7 +23,7 @@ class DocumenttypeRoleProvider extends RoleProvider
     public function provideRoles()
     {
         return [
-            'ROLE_DOCUMENTTYPES',
+            'ROLE_MEDIA_TYPES',
         ];
     }
 

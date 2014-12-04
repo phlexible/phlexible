@@ -97,8 +97,8 @@ class ReadCommand extends ContainerAwareCommand
         $output->writeln('  * ' . $file->getId() . ' ' . $file->getPhysicalPath() . ': ');
         $output->write('    > ');
 
-            $mimeDetector = $this->getContainer()->get('phlexible_media_tool.mime.detector');
-        $documenttypeManager = $this->getContainer()->get('phlexible_documenttype.documenttype_manager');
+        $mimeDetector = $this->getContainer()->get('phlexible_media_tool.mime.detector');
+        $mediaTypeManager = $this->getContainer()->get('phlexible_media_type.media_type_manager');
         $attributeReader = $this->getContainer()->get('phlexible_media_asset.reader.attribute');
 
         if (!file_exists($file->getPhysicalPath())) {
@@ -113,34 +113,29 @@ class ReadCommand extends ContainerAwareCommand
         if (!$mimetype) {
             $output->write("<error>No mimetype</error> ");
             $mimetype = 'application/octet-stream';
-            $documenttypeKey = 'binary';
-            $assettype = 'DOCUMENT';
+            $mediaTypeName = 'binary';
         } else {
-            try {
-                $documenttype = $documenttypeManager->findByMimetype($mimetype);
-
-                $documenttypeKey = $documenttype->getKey();
-                $assettype = $documenttype->getType();
+            $mediaType = $mediaTypeManager->findByMimetype($mimetype);
+            if ($mediaType) {
+                $mediaTypeName = $mediaType->getName();
 
                 $fileSource = new FilesystemFileSource($file->getPhysicalPath(), $mimetype, filesize($file->getPhysicalPath()));
-                if ($attributeReader->supports($fileSource, $documenttypeKey, $assettype)) {
-                    $attributeBag = new AttributeBag();
-                    $attributeReader->read($fileSource, $documenttypeKey, $assettype, $attributeBag);
+                if ($attributeReader->supports($fileSource, $mediaType)) {
+                    $attributeBag = new AttributeBag($file->getAttributes());
+                    $attributeReader->read($fileSource, $mediaType, $attributeBag);
                     $attributes = $attributeBag->all();
                     $volume->setFileAttributes($file, $attributes, null);
                 }
 
-            } catch (\Exception $e) {
-                $output->write("<error>{$e->getMessage()}</error> ");
-                $documenttypeKey = 'binary';
-                $assettype = 'DOCUMENT';
+            } else {
+                $output->write("<error>No media type found</error> ");
+                $mediaTypeName = 'binary';
             }
         }
 
-        $volume->setFileAssetType($file, $assettype, null);
-        $volume->setFileDocumenttype($file, $documenttypeKey, null);
+        $volume->setFileMediaType($file, $mediaTypeName, null);
         //$volume->setFileMimetype($file, $mimetype, null);
 
-        $output->writeln("$mimetype, $assettype, $documenttypeKey, " . json_encode($attributes));
+        $output->writeln("$mimetype, $mediaTypeName, " . json_encode($attributes));
     }
 }

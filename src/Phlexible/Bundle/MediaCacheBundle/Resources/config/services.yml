@@ -37,9 +37,9 @@ services:
         class: Phlexible\Bundle\MediaCacheBundle\ImageDelegate\DelegateWorker
         arguments:
             - @phlexible_media_template.template_manager
-            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_type.media_type_manager
             - @phlexible_media_template.applier.image
-            - @phlexible_documenttype.icon_resolver
+            - @phlexible_media_type.icon_resolver
             - @file_locator
             - %phlexible_media_cache.cache_dir%
 
