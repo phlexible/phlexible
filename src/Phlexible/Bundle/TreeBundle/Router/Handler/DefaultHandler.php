@@ -398,6 +398,6 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
     protected function generatePreviewPath(TreeNodeInterface $node, $language)
     {
-        return '/admin/frontend/preview?id='.$node->getId().'&language='.$language;
+        return "/admin/frontend/preview/$language/{$node->getId()}";
     }
 }
