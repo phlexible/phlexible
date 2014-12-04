@@ -17,6 +17,7 @@ use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\AudioTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -101,15 +102,15 @@ class AudioWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, ExtendedFileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return $template instanceof AudioTemplate && strtolower($file->getAssettype()) === 'audio';
+        return $template instanceof AudioTemplate && $mediaType->getCategory() === 'audio';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, ExtendedFileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         $audioFile = $this->transmutor->transmuteToAudio($file);
 

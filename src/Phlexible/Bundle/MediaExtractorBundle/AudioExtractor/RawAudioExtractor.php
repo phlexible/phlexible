@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaExtractorBundle\AudioExtractor;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
  * Raw audio extractor
@@ -20,23 +21,15 @@ class RawAudioExtractor implements AudioExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function isAvailable()
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return true;
+        return strtolower($mediaType->getCategory()) === 'audio';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file)
-    {
-        return strtolower($file->getAssettype()) === 'audio';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function extract(ExtendedFileInterface $file)
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType)
     {
         return $file->getPhysicalPath();
     }

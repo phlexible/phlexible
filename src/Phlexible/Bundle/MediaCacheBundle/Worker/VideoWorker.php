@@ -18,6 +18,7 @@ use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\VideoTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\VideoTemplate;
+use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -110,15 +111,15 @@ class VideoWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, ExtendedFileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return $template instanceof VideoTemplate && strtolower($file->getAssettype()) === 'video';
+        return $template instanceof VideoTemplate && $mediaType->getCategory() === 'video';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, ExtendedFileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         $videoFile = $this->transmutor->transmuteToVideo($file);
 

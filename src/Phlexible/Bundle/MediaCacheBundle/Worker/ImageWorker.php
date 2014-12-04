@@ -17,6 +17,7 @@ use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -101,7 +102,7 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, ExtendedFileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         return $template instanceof ImageTemplate;
     }
@@ -109,7 +110,7 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, ExtendedFileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         $imageFile = $this->transmutor->transmuteToImage($file);
 
@@ -147,7 +148,11 @@ class ImageWorker extends AbstractWorker
 
         $pathinfo = pathinfo($file->getPhysicalPath());
 
-        $cacheItem = $this->cacheManager->findOneBy(['templateKey' => $template->getKey(), 'fileId' => $fileId, 'fileVersion' => $fileVersion]);
+        $cacheItem = $this->cacheManager->findOneBy([
+            'templateKey' => $template->getKey(),
+            'fileId' => $fileId,
+            'fileVersion' => $fileVersion
+        ]);
         if (!$cacheItem) {
             $cacheItem = new CacheItem();
         }

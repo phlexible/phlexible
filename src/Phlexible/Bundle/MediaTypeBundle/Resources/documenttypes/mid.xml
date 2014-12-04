@@ -9,9 +9,9 @@
         <mimetype>audio/midi</mimetype>
     </mimetypes>
     <icons>
-        <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/mid.gif</icon>
-        <icon size="32">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes32/mid.gif</icon>
-        <icon size="48">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes48/mid.gif</icon>
-        <icon size="256">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes256/mid.gif</icon>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/mid.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/mid.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/mid.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/mid.gif</icon>
     </icons>
 </documenttype>

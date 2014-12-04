@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaExtractorBundle\ImageExtractor;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
  * Image extractor interface
@@ -18,27 +19,22 @@ use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 interface ImageExtractorInterface
 {
     /**
-     * Check if requirements for image extractor are given
-     *
-     * @return bool
-     */
-    public function isAvailable();
-
-    /**
      * Check if extractor supports the given asset
      *
      * @param ExtendedFileInterface $file
+     * @param MediaType             $mediaType
      *
      * @return bool
      */
-    public function supports(ExtendedFileInterface $file);
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType);
 
     /**
      * Extract image from file
      *
      * @param ExtendedFileInterface $file
+     * @param MediaType             $mediaType
      *
      * @return string
      */
-    public function extract(ExtendedFileInterface $file);
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType);
 }

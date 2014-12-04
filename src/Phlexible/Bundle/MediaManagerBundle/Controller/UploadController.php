@@ -142,7 +142,7 @@ class UploadController extends Controller
                 'temp_id'  => $tempFile->getId(),
                 'new_id'   => $tempFile->getFileId(),
                 'new_name' => $newName,
-                'new_type' => $newType->getKey(),
+                'new_type' => $newType->getName(),
                 'new_size' => $tempFile->getSize(),
                 'wizard'   => false,
                 'total'    => $tempStorage->count(),

@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
  * Content extractor resolver
@@ -33,10 +34,10 @@ class ContentExtractorResolver implements ContentExtractorResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(ExtendedFileInterface $file)
+    public function resolve(ExtendedFileInterface $file, MediaType $mediaType)
     {
         foreach ($this->extractors as $reader) {
-            if ($reader->isAvailable() && $reader->supports($file)) {
+            if ($reader->supports($file, $mediaType)) {
                 return $reader;
             }
         }

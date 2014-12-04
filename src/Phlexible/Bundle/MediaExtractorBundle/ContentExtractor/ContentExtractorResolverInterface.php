@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
  * Content extractor resolver interface
@@ -21,8 +22,9 @@ interface ContentExtractorResolverInterface
      * Resolve meta reader for asset
      *
      * @param ExtendedFileInterface $file
+     * @param MediaType             $mediaType
      *
      * @return ContentExtractorInterface
      */
-    public function resolve(ExtendedFileInterface $file);
+    public function resolve(ExtendedFileInterface $file, MediaType $mediaType);
 }

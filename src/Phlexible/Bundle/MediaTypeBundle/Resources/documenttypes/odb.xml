@@ -9,9 +9,9 @@
         <mimetype>application/vnd.oasis.opendocument.database</mimetype>
     </mimetypes>
     <icons>
-        <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/odb.gif</icon>
-        <icon size="32">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes32/odb.gif</icon>
-        <icon size="48">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes48/odb.gif</icon>
-        <icon size="256">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes256/odb.gif</icon>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/odb.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/odb.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/odb.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/odb.gif</icon>
     </icons>
 </documenttype>

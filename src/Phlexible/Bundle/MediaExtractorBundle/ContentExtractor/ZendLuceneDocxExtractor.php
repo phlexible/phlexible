@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
  * Zend lucene docx content extractor
@@ -20,23 +21,15 @@ class ZendLuceneDocxExtractor implements ContentExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function isAvailable()
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return class_exists('Zend_Search_Lucene_Document_Docx');
+        return $mediaType->getName() === 'docx';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file)
-    {
-        return strtolower($file->getMediaType()) === 'docx';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function extract(ExtendedFileInterface $file)
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType)
     {
         $document = \Zend_Search_Lucene_Document_Docx::loadDocxFile($file->getPhysicalPath());
 

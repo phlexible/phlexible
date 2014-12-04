@@ -9,9 +9,9 @@
         <mimetype>application/vnd.oasis.opendocument.spreadsheet-template</mimetype>
     </mimetypes>
     <icons>
-        <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/ots.gif</icon>
-        <icon size="32">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes32/ots.gif</icon>
-        <icon size="48">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes48/ots.gif</icon>
-        <icon size="256">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes256/ots.gif</icon>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/ots.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/ots.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/ots.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/ots.gif</icon>
     </icons>
 </documenttype>

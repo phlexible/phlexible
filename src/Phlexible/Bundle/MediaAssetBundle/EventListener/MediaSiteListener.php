@@ -42,6 +42,7 @@ class MediaSiteListener implements EventSubscriberInterface
     public function __construct(AttributeReaderInterface $attributeReader, MediaTypeManagerInterface $mediaTypeManager)
     {
         $this->attributeReader = $attributeReader;
+        $this->mediaTypeManager = $mediaTypeManager;
     }
 
     /**

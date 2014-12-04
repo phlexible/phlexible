@@ -206,7 +206,7 @@ class FileController extends Controller
                 'site_id'           => $volume->getId(),
                 'folder_id'         => $file->getFolderID(),
                 'folder'            => '/Root/' . $folder->getPath(),
-                'asset_type'        => strtolower($file->getAssettype()),
+                'asset_type'        => strtolower($file->getMediaType()),
                 'mime_type'         => $file->getMimetype(),
                 'document_type'     => $mediaTypeTitle,
                 'document_type_key' => strtolower($file->getMediaType()),

@@ -160,6 +160,18 @@ class MediaType
     }
 
     /**
+     * @return string
+     */
+    public function getMimetype()
+    {
+        if (count($this->mimetypes)) {
+            return current($this->mimetypes);
+        }
+
+        return 'application/octet-stream';
+    }
+
+    /**
      * @return array
      */
     public function getIcons()

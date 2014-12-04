@@ -9,9 +9,9 @@
         <mimetype>application/vnd.openxmlformats-officedocument.wordprocessingml.template</mimetype>
     </mimetypes>
     <icons>
-        <icon size="16">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes16/dotx.gif</icon>
-        <icon size="32">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes32/dotx.gif</icon>
-        <icon size="48">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes48/dotx.gif</icon>
-        <icon size="256">@PhlexibleDocumenttypeBundle/Resources/public/mimetypes256/dotx.gif</icon>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/dotx.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/dotx.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/dotx.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/dotx.gif</icon>
     </icons>
 </documenttype>
