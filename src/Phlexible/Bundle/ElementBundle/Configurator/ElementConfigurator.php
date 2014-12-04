@@ -12,10 +12,10 @@ use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,7 +72,7 @@ class ElementConfigurator implements ConfiguratorInterface
     /**
      * {@inheritdoc}
      */
-    public function configure(Request $request, RenderConfiguration $renderConfiguration)
+    public function configure(Request $request, Configuration $renderConfiguration)
     {
         if (!$renderConfiguration->hasFeature('eid')) {
             return;

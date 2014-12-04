@@ -10,10 +10,10 @@ namespace Phlexible\Bundle\TreeBundle\Configurator;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -69,7 +69,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
     /**
      * {@inheritdoc}
      */
-    public function configure(Request $request, RenderConfiguration $renderConfiguration)
+    public function configure(Request $request, Configuration $renderConfiguration)
     {
         if (!$request->attributes->has('contentDocument') || !$request->attributes->get('contentDocument') instanceof TreeNodeInterface) {
             return;
@@ -128,12 +128,12 @@ class TreeNodeConfigurator implements ConfiguratorInterface
     }
 
     /**
-     * @param RenderConfiguration $renderConfiguration
+     * @param Configuration $renderConfiguration
      * @param string              $language
      *
      * @return array
      */
-    private function createSpecialTids(RenderConfiguration $renderConfiguration)
+    private function createSpecialTids(Configuration $renderConfiguration)
     {
         $language = $renderConfiguration->get('language');
 

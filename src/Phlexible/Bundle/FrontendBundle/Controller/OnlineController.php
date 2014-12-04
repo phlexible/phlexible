@@ -29,7 +29,11 @@ class OnlineController extends Controller
     public function indexAction(Request $request)
     {
         $configurator = $this->get('phlexible_element_renderer.configurator');
-        $data = $configurator->configure($request)->getVariables();
+        $configuration = $configurator->configure($request);
+        if ($configuration->hasResponse()) {
+            return $configuration->getResponse();
+        }
+        $data = $configuration->getVariables();
 
         return $this->render($data['template'], (array) $data);
     }

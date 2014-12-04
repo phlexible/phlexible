@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class RenderConfiguration
+class Configuration
 {
     /**
      * @var array
@@ -137,6 +137,14 @@ class RenderConfiguration
     public function hasFeature($name)
     {
         return in_array($name, $this->features);
+    }
+
+    /**
+     * @return array
+     */
+    public function getFeatures()
+    {
+        return $this->features;
     }
 
     /**

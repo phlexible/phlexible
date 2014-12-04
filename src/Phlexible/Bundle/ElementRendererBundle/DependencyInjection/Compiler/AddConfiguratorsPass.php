@@ -37,6 +37,6 @@ class AddConfiguratorsPass implements CompilerPassInterface
             $flatConfigurators = array_merge($flatConfigurators, $configurator);
         }
 
-        $container->findDefinition('phlexible_element_renderer.configurator')->replaceArgument(2, $flatConfigurators);
+        $container->findDefinition('phlexible_element_renderer.configurator')->replaceArgument(0, $flatConfigurators);
     }
 }

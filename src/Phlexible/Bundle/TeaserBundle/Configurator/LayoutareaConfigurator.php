@@ -10,10 +10,10 @@ namespace Phlexible\Bundle\TeaserBundle\Configurator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
@@ -76,7 +76,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
     /**
      * {@inheritdoc}
      */
-    public function configure(Request $request, RenderConfiguration $renderConfiguration)
+    public function configure(Request $request, Configuration $renderConfiguration)
     {
         if (!$renderConfiguration->hasFeature('treeNode')) {
             return;

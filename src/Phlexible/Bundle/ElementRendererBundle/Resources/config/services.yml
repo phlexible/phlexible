@@ -1,6 +1,6 @@
 services:
     phlexible_element_renderer.configurator:
-        class: Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfigurator
-        arguments: [@event_dispatcher, @logger, []]
+        class: Phlexible\Bundle\ElementRendererBundle\Configurator\ChainConfigurator
+        arguments: [[]]
         tags:
             - {name: monolog.logger, channel: element_renderer}

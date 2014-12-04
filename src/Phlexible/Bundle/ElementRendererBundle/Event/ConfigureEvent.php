@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle\Event;
 
-use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -19,20 +19,20 @@ use Symfony\Component\EventDispatcher\Event;
 class ConfigureEvent extends Event
 {
     /**
-     * @var RenderConfiguration
+     * @var Configuration
      */
     private $configuration;
 
     /**
-     * @param RenderConfiguration $configuration
+     * @param Configuration $configuration
      */
-    public function __construct(RenderConfiguration $configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
 
     /**
-     * @return RenderConfiguration
+     * @return Configuration
      */
     public function getConfiguration()
     {

@@ -10,10 +10,10 @@ namespace Phlexible\Bundle\TeaserBundle\Configurator;
 
 use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -68,7 +68,7 @@ class TeaserConfigurator implements ConfiguratorInterface
     /**
      * {@inheritdoc}
      */
-    public function configure(Request $request, RenderConfiguration $renderConfiguration)
+    public function configure(Request $request, Configuration $renderConfiguration)
     {
         if (!$request->attributes->has('contentDocument') || !$request->attributes->get('contentDocument') instanceof Teaser) {
             return;

@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle\Configurator;
 
-use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,32 +17,18 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class RenderConfigurator
+class ChainConfigurator implements ConfiguratorInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     /**
      * @var ConfiguratorInterface[]
      */
     private $configurators = [];
 
     /**
-     * @param EventDispatcherInterface $dispatcher
-     * @param LoggerInterface          $logger
      * @param ConfiguratorInterface[]  $configurators
      */
-    public function __construct(EventDispatcherInterface $dispatcher, LoggerInterface $logger, array $configurators = array())
+    public function __construct(array $configurators = array())
     {
-        $this->dispatcher = $dispatcher;
-        $this->logger = $logger;
         foreach ($configurators as $configurator) {
             $this->addConfigurator($configurator);
         }
@@ -62,39 +47,21 @@ class RenderConfigurator
     }
 
     /**
-     * @param Request $request
-     *
-     * @return RenderConfiguration
+     * {@inheritdoc}
      */
-    public function configure(Request $request)
+    public function configure(Request $request, Configuration $renderConfiguration = null)
     {
-        $renderConfiguration = new RenderConfiguration();
+        $renderConfiguration = new Configuration();
         $renderConfiguration->set('request', $request);
-
-        // Before Init Event
-        /*
-        $beforeEvent = new \Makeweb_Renderers_Event_BeforeInit($this);
-        if ($this->dispatcher->dispatch($beforeEvent)->isPropagationStopped())
-        {
-            return $renderConfiguration;
-        }
-        */
 
         foreach ($this->configurators as $configurator) {
             $configurator->configure($request, $renderConfiguration);
 
             if ($renderConfiguration->hasResponse()) {
-                return $renderConfiguration->getResponse();
+                return $renderConfiguration;
             }
         }
 
-        // Init Event
-        /*
-        $event = new \Makeweb_Renderers_Event_Init($this);
-        $this->dispatcher->dispatch($event);
-        */
-
         return $renderConfiguration;
     }
-
 }

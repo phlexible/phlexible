@@ -53,7 +53,12 @@ class PreviewController extends Controller
         $this->get('router.request_context')->setParameter('preview', true);
 
         $configurator = $this->get('phlexible_element_renderer.configurator');
-        $data = $configurator->configure($request)->getVariables();
+        $configuration = $configurator->configure($request);
+        if ($configuration->hasResponse()) {
+            return $configuration->getResponse();
+        }
+
+        $data = $configuration->getVariables();
 
         return $this->render($data['template'], (array) $data);
     }

@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\TreeBundle\Configurator;
 
-use Phlexible\Bundle\ElementRendererBundle\Configurator\RenderConfiguration;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\ElementRendererBundle\RenderConfigurator\ConfiguratorInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Psr\Log\LoggerInterface;
@@ -48,7 +48,7 @@ class NavigationConfigurator implements ConfiguratorInterface
     /**
      * {@inheritdoc}
      */
-    public function configure(Request $request, RenderConfiguration $renderConfiguration)
+    public function configure(Request $request, Configuration $renderConfiguration)
     {
         if (!$renderConfiguration->hasFeature('treeNode')) {
             return;
