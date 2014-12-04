@@ -62,6 +62,7 @@ class PhlexibleMediaManagerExtension extends Extension
         $container->setParameter('phlexible_media_manager.upload.enable_upload_sort', $config['upload']['enable_upload_sort']);
         $container->setParameter('phlexible_media_manager.upload.disable_flash', $config['upload']['disable_flash']);
         $container->setParameter('phlexible_media_manager.delete_policy', $config['delete_policy']);
+        $container->setParameter('phlexible_media_manager.metaset_mapping', $config['metaset_mapping']);
 
         $container->setAlias('phlexible_media_manager.folder_usage_manager', 'phlexible_media_manager.doctrine.folder_usage_manager');
         $container->setAlias('phlexible_media_manager.file_usage_manager', 'phlexible_media_manager.doctrine.file_usage_manager');

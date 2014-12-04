@@ -81,25 +81,25 @@ class CacheItem
 
     /**
      * @var string
-     * @ORM\Column(name="mime_type", type="string", length=100)
+     * @ORM\Column(name="mime_type", type="string", length=100, nullable=true)
      */
     private $mimeType;
 
     /**
      * @var string
-     * @ORM\Column(name="media_type", type="string", length=100)
+     * @ORM\Column(name="media_type", type="string", length=100, nullable=true)
      */
     private $mediaType;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $extension;
 
     /**
      * @var int
-     * @ORM\Column(name="file_size", type="integer")
+     * @ORM\Column(name="file_size", type="integer", nullable=true)
      */
     private $fileSize;
 

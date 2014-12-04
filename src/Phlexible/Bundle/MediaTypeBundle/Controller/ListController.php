@@ -33,8 +33,8 @@ class ListController extends Controller
      */
     public function listAction(Request $request)
     {
-        $mediaTypeManager = $this->get('phlexible_media_types.media_type_manager');
-        $iconResolver = $this->get('phlexible_media_types.icon_resolver');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $iconResolver = $this->get('phlexible_media_type.icon_resolver');
 
         $mediaTypes = [];
         foreach ($mediaTypeManager->findAll() as $mediaType) {

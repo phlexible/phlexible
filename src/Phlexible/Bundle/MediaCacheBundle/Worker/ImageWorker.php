@@ -239,7 +239,11 @@ class ImageWorker extends AbstractWorker
             }
         }
 
+        try {
         $this->cacheManager->updateCacheItem($cacheItem);
+        } catch (\Exception $e) {
+            echo 'bla';
+        }
 
         if ($cacheItem->getError()) {
             $this->logger->error($cacheItem->getError());

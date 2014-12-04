@@ -12,6 +12,7 @@ use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFileChecker;
 use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFolderChecker;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Volume\Event\CreateFileEvent;
 use Phlexible\Component\Volume\Event\FileEvent;
@@ -49,21 +50,29 @@ class MediaSiteListener implements EventSubscriberInterface
     private $deleteFolderChecker;
 
     /**
+     * @var array
+     */
+    private $metasetMapping;
+
+    /**
      * @param MediaTypeManagerInterface $mediaTypeManager
      * @param MetaSetManagerInterface   $metaSetManager
      * @param DeleteFileChecker         $deleteFileChecker
      * @param DeleteFolderChecker       $deleteFolderChecker
+     * @param array                     $metasetMapping
      */
     public function __construct(
         MediaTypeManagerInterface $mediaTypeManager,
         MetaSetManagerInterface $metaSetManager,
         DeleteFileChecker $deleteFileChecker,
-        DeleteFolderChecker $deleteFolderChecker)
+        DeleteFolderChecker $deleteFolderChecker,
+        array $metasetMapping)
     {
         $this->mediaTypeManager = $mediaTypeManager;
         $this->metaSetManager = $metaSetManager;
         $this->deleteFileChecker = $deleteFileChecker;
         $this->deleteFolderChecker = $deleteFolderChecker;
+        $this->metasetMapping = $metasetMapping;
     }
 
 
@@ -117,13 +126,37 @@ class MediaSiteListener implements EventSubscriberInterface
 
         $file->setMediaType($mediaType->getName());
 
-        try {
-            $fileMetaSet = $this->metaSetManager->findOneByName('file');
-            if ($fileMetaSet) {
-                $file->addMetaSet($fileMetaSet->getId());
+        foreach ($this->metasetMapping as $metasetName => $mapping) {
+            if ($this->matches($mediaType, $mapping)) {
+                $metaSet = $this->metaSetManager->findOneByName($metasetName);
+                if ($metaSet) {
+                    $file->addMetaSet($metaSet->getId());
+                }
             }
-        } catch (\Exception $e) {
         }
+    }
+
+    /**
+     * @param MediaType $mediaType
+     * @param array     $mapping
+     *
+     * @return bool
+     */
+    private function matches(MediaType $mediaType, array $mapping)
+    {
+        if (empty($mapping)) {
+            return true;
+        }
+
+        $match = false;
+        if (!empty($mapping['name'])) {
+            $match = $mediaType->getName() === $mapping['name'];
+        }
+        if (!empty($mapping['category'])) {
+            $match = $mediaType->getCategory() === $mapping['category'];
+        }
+
+        return $match;
     }
 
     /**

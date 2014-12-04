@@ -7,7 +7,7 @@ Phlexible.documenttypes.DocumenttypesGrid = Ext.extend(Ext.grid.GridPanel, {
 
     initComponent: function () {
         this.store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('documenttypes_list'),
+            url: Phlexible.Router.generate('mediatypes_list'),
             root: 'documenttypes',
             id: 'id',
             totalProperty: 'totalCount',

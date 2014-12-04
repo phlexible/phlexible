@@ -328,7 +328,7 @@ class FileController extends Controller
         $file = $volume->findFile($fileId, $fileVersion);
         $folder = $volume->findFolder($file->getFolderId());
 
-        $attributes = $file->getAttribute('attributes', []);
+        $attributes = $file->getAttributes();
 
         $versions = [];
         if ($volume->hasFeature('versions')) {
