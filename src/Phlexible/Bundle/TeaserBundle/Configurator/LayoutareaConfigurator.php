@@ -134,7 +134,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
 
         $renderConfiguration
             ->addFeature('layoutarea')
-            ->set('teasers', $areas);
+            ->setVariable('teasers', $areas);
 
         $event = new ConfigureEvent($renderConfiguration);
         $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_LAYOUTAREA, $event);
