@@ -129,7 +129,6 @@ class TreeNodeConfigurator implements ConfiguratorInterface
 
     /**
      * @param Configuration $renderConfiguration
-     * @param string              $language
      *
      * @return array
      */
