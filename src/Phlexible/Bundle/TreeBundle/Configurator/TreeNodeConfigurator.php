@@ -137,16 +137,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
     {
         $language = $renderConfiguration->get('language');
 
-        // TODO: mit antonia klären
-        $specialTids = [
-            'default_start_eid'       => -1,
-            'default_pw_aendern'      => -1,
-            'glossar_eid'             => -1,
-            'default_copyright_eid'   => -1,
-            'schnellsuche_eid'        => -1,
-            'default_quicksearch_eid' => -1,
-            'sitemap_eid'             => -1,
-        ];
+        $specialTids = [];
 
         foreach ($renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids(null) as $specialTid) {
             $specialTids[$specialTid['name']] = $specialTid['treeId'];
