@@ -9,13 +9,12 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Change;
 
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
-use Phlexible\Bundle\MediaCacheBundle\Model\QueueManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchBuilder;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Queue;
-use Phlexible\Bundle\MediaCacheBundle\Queue\Processor;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
+use Phlexible\Bundle\MediaCacheBundle\Queue\QueueProcessor;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\Volume\VolumeManager;
 
 /**
  * Template changes
@@ -35,9 +34,9 @@ class TemplateChanges
     private $cacheManager;
 
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
      * @var BatchBuilder
@@ -50,39 +49,31 @@ class TemplateChanges
     private $batchResolver;
 
     /**
-     * @var QueueManagerInterface
+     * @var QueueProcessor
      */
-    private $queueManager;
-
-    /**
-     * @var Processor
-     */
-    private $queueWorker;
+    private $queueProcessor;
 
     /**
      * @param TemplateManagerInterface $templateManager
      * @param CacheManagerInterface    $cacheManager
-     * @param SiteManager              $siteManager
+     * @param VolumeManager            $volumeManager
      * @param BatchBuilder             $batchBuilder
      * @param BatchResolver            $batchResolver
-     * @param QueueManagerInterface    $queueManager
-     * @param Processor                   $queueWorker
+     * @param QueueProcessor           $queueProcessor
      */
     public function __construct(TemplateManagerInterface $templateManager,
                                 CacheManagerInterface $cacheManager,
-                                SiteManager $siteManager,
+                                VolumeManager $volumeManager,
                                 BatchBuilder $batchBuilder,
                                 BatchResolver $batchResolver,
-                                QueueManagerInterface $queueManager,
-                                Processor $queueWorker)
+                                QueueProcessor $queueProcessor)
     {
         $this->templateManager = $templateManager;
         $this->cacheManager = $cacheManager;
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
         $this->batchBuilder = $batchBuilder;
         $this->batchResolver = $batchResolver;
-        $this->queueManager = $queueManager;
-        $this->queueWorker = $queueWorker;
+        $this->queueProcessor = $queueProcessor;
     }
 
     /**
@@ -96,8 +87,8 @@ class TemplateChanges
             $cacheItems = $this->cacheManager->findOutdatedTemplates($template);
 
             foreach ($cacheItems as $cacheItem) {
-                $site = $this->siteManager->getByFileId($cacheItem->getFileId());
-                $file = $site->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
+                $volume = $this->volumeManager->getByFileId($cacheItem->getFileId());
+                $file = $volume->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
                 $template = $this->templateManager->find($cacheItem->getTemplateKey());
                 $change = new Change($file, $template, $cacheItem->getTemplateRevision());
 
@@ -124,9 +115,9 @@ class TemplateChanges
 
         foreach ($queue->all() as $queueItem) {
             if ($viaQueue) {
-                $this->queueManager->updateQueueItem($queueItem);
+                $this->cacheManager->updateCacheItem($queueItem);
             } else {
-                $this->queueWorker->process($queueItem);
+                $this->queueProcessor->processItem($queueItem);
             }
         }
     }

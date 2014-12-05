@@ -12,7 +12,7 @@ services:
             - @phlexible_media_cache.storage_manager
             - @phlexible_media_extractor.transmutor
             - @phlexible_media_cache.cache_manager
-            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_type.media_type_manager
             - @phlexible_media_cache.id_strategy.default
             - @phlexible_media_template.applier.audio
             - @logger
@@ -28,7 +28,7 @@ services:
             - @phlexible_media_cache.storage_manager
             - @phlexible_media_extractor.transmutor
             - @phlexible_media_cache.cache_manager
-            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_type.media_type_manager
             - @phlexible_media_cache.id_strategy.default
             - @phlexible_media_template.applier.image
             - @logger
@@ -43,7 +43,7 @@ services:
         arguments:
             - @phlexible_media_cache.storage_manager
             - @phlexible_media_cache.cache_manager
-            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_type.media_type_manager
             - @phlexible_media_cache.id_strategy.default
             - @phlexible_media_template.applier.pdf
             - @logger
@@ -59,7 +59,7 @@ services:
             - @phlexible_media_cache.storage_manager
             - @phlexible_media_extractor.transmutor
             - @phlexible_media_cache.cache_manager
-            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_type.media_type_manager
             - @phlexible_media_cache.id_strategy.default
             - @phlexible_media_template.applier.video
             - @phlexible_media_tool.ffprobe

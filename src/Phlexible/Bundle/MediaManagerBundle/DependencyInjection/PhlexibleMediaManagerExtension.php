@@ -37,23 +37,23 @@ class PhlexibleMediaManagerExtension extends Extension
         $config = $this->processConfiguration($configuration, $config);
 
         $ids = [];
-        foreach ($config['sites'] as $name => $siteConfig) {
-            $driverId = $siteConfig['driver'];
+        foreach ($config['volumes'] as $name => $volumeConfig) {
+            $driverId = $volumeConfig['driver'];
 
-            $siteDefinition = new Definition('Phlexible\Bundle\MediaManagerBundle\Site\ExtendedSite', [
-                $siteConfig['id'],
-                $siteConfig['root_dir'],
-                $siteConfig['quota'],
+            $volumeDefinition = new Definition('Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedVolume', [
+                $volumeConfig['id'],
+                $volumeConfig['root_dir'],
+                $volumeConfig['quota'],
                 new Reference($driverId, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false),
                 new Reference('event_dispatcher'),
             ]);
-            $id = 'phlexible_media_manager.site.' . strtolower($name);
-            $container->setDefinition($id, $siteDefinition);
+            $id = 'phlexible_media_manager.volume.' . strtolower($name);
+            $container->setDefinition($id, $volumeDefinition);
 
             $ids[$name] = new Reference($id);
         }
 
-        $container->getDefinition('phlexible_media_site.site_manager')->replaceArgument(0, $ids);
+        $container->getDefinition('phlexible_media_manager.volume_manager')->replaceArgument(0, $ids);
 
         $container->setParameter('phlexible_media_manager.portlet.style', $config['portlet']['style']);
         $container->setParameter('phlexible_media_manager.portlet.num_items', $config['portlet']['num_items']);
@@ -62,6 +62,7 @@ class PhlexibleMediaManagerExtension extends Extension
         $container->setParameter('phlexible_media_manager.upload.enable_upload_sort', $config['upload']['enable_upload_sort']);
         $container->setParameter('phlexible_media_manager.upload.disable_flash', $config['upload']['disable_flash']);
         $container->setParameter('phlexible_media_manager.delete_policy', $config['delete_policy']);
+        $container->setParameter('phlexible_media_manager.metaset_mapping', $config['metaset_mapping']);
 
         $container->setAlias('phlexible_media_manager.folder_usage_manager', 'phlexible_media_manager.doctrine.folder_usage_manager');
         $container->setAlias('phlexible_media_manager.file_usage_manager', 'phlexible_media_manager.doctrine.file_usage_manager');

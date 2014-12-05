@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="xls">
+    <type>document</type>
+    <titles>
+        <title lang="de">Excel Arbeitsmappe Vorlage</title>
+        <title lang="en">Excel Spreadsheet Template</title>
+    </titles>
+    <mimetypes>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/xlt.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/xlt.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/xlt.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/xlt.gif</icon>
+    </icons>
+</documenttype>

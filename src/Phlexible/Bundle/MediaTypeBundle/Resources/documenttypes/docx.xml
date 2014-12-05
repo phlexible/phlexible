@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="docx">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Text Dokument</title>
+        <title lang="en">OpenXML Text Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/docx.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/docx.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/docx.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/docx.gif</icon>
+    </icons>
+</documenttype>

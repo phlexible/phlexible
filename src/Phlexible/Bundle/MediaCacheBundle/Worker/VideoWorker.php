@@ -9,16 +9,17 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
 use FFMpeg\FFProbe;
-use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
 use Phlexible\Bundle\MediaExtractorBundle\Transmutor;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\VideoTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\VideoTemplate;
+use Phlexible\Component\MediaType\Model\MediaType;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -45,9 +46,9 @@ class VideoWorker extends AbstractWorker
     private $cacheManager;
 
     /**
-     * @var DocumenttypeManagerInterface
+     * @var MediaTypeManagerInterface
      */
-    private $documenttypeManager;
+    private $mediaTypeManager;
 
     /**
      * @var CacheIdStrategyInterface
@@ -75,30 +76,31 @@ class VideoWorker extends AbstractWorker
     private $tempDir;
 
     /**
-     * @param StorageManager               $storageManager
-     * @param Transmutor                   $transmutor
-     * @param CacheManagerInterface        $cacheManager
-     * @param DocumenttypeManagerInterface $documenttypeManager
-     * @param CacheIdStrategyInterface     $cacheIdStrategy
-     * @param VideoTemplateApplier         $applier
-     * @param FFProbe                      $analyzer
-     * @param LoggerInterface              $logger
-     * @param string                       $tempDir
+     * @param StorageManager            $storageManager
+     * @param Transmutor                $transmutor
+     * @param CacheManagerInterface     $cacheManager
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param CacheIdStrategyInterface  $cacheIdStrategy
+     * @param VideoTemplateApplier      $applier
+     * @param FFProbe                   $analyzer
+     * @param LoggerInterface           $logger
+     * @param string                    $tempDir
      */
-    public function __construct(StorageManager $storageManager,
-                                Transmutor $transmutor,
-                                CacheManagerInterface $cacheManager,
-                                DocumenttypeManagerInterface $documenttypeManager,
-                                CacheIdStrategyInterface $cacheIdStrategy,
-                                VideoTemplateApplier $applier,
-                                FFProbe $analyzer,
-                                LoggerInterface $logger,
-                                $tempDir)
+    public function __construct(
+        StorageManager $storageManager,
+        Transmutor $transmutor,
+        CacheManagerInterface $cacheManager,
+        MediaTypeManagerInterface $mediaTypeManager,
+        CacheIdStrategyInterface $cacheIdStrategy,
+        VideoTemplateApplier $applier,
+        FFProbe $analyzer,
+        LoggerInterface $logger,
+        $tempDir)
     {
         $this->storageManager = $storageManager;
         $this->transmutor = $transmutor;
         $this->cacheManager = $cacheManager;
-        $this->documenttypeManager = $documenttypeManager;
+        $this->mediaTypeManager = $mediaTypeManager;
         $this->cacheIdStrategy = $cacheIdStrategy;
         $this->applier = $applier;
         $this->analyzer = $analyzer;
@@ -109,15 +111,15 @@ class VideoWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, FileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return $template instanceof VideoTemplate && strtolower($file->getAssettype()) === 'video';
+        return $template instanceof VideoTemplate && $mediaType->getCategory() === 'video';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, FileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         $videoFile = $this->transmutor->transmuteToVideo($file);
 
@@ -127,15 +129,15 @@ class VideoWorker extends AbstractWorker
     /**
      * Apply template to filename
      *
-     * @param VideoTemplate $template
-     * @param FileInterface $file
-     * @param string        $inputFilename
+     * @param VideoTemplate         $template
+     * @param ExtendedFileInterface $file
+     * @param string                $inputFilename
      *
      * @return CacheItem
      */
-    private function work(VideoTemplate $template, FileInterface $file, $inputFilename)
+    private function work(VideoTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
-        $site        = $file->getSite();
+        $volume      = $file->getVolume();
         $fileId      = $file->getID();
         $fileVersion = $file->getVersion();
 
@@ -149,7 +151,7 @@ class VideoWorker extends AbstractWorker
         }
 
         $cacheItem
-            ->setSiteId($site->getId())
+            ->setSiteId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())
@@ -157,7 +159,7 @@ class VideoWorker extends AbstractWorker
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
             ->setQueueStatus(CacheItem::QUEUE_DONE)
             ->setMimeType($file->getMimeType())
-            ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
+            ->setMediaType(strtolower($file->getMediaType()))
             ->setExtension('')
             ->setFileSize(0)
             ->setError(null);
@@ -177,7 +179,7 @@ class VideoWorker extends AbstractWorker
 
             try {
                 $matchFormat = $template->hasParameter('match_format') ? $template->getParameter('match_format') : false;
-                if ($matchFormat && strtolower($file->getDocumenttype()) === strtolower($template->getParameter('format'))) {
+                if ($matchFormat && strtolower($file->getMediaType()) === strtolower($template->getParameter('format'))) {
                     $tempFilename = $inputFilename;
                 } else {
                     $this->applier->apply($template, $inputFilename, $tempFilename);
@@ -189,16 +191,15 @@ class VideoWorker extends AbstractWorker
 
                 $filesystem->chmod($tempFilename, 0777);
 
-                $fileInfo = $this->documenttypeManager->getMimeDetector()->detect($tempFilename);
-                $documentType = $this->documenttypeManager->findByMimetype($fileInfo->getMimeType());
+                $mediaType = $this->mediaTypeManager->findByFilename($tempFilename);
 
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_OK)
                     ->setQueueStatus(CacheItem::QUEUE_DONE)
-                    ->setMimeType($fileInfo->getMimeType())
-                    ->setDocumentTypeKey($documentType->getKey())
-                    ->setExtension($fileInfo->getExtension())
-                    ->setFilesize($fileInfo->getSize())
+                    ->setMimeType($mediaType->getMimeType())
+                    ->setMediaType($mediaType->getKey())
+                    ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
+                    ->setFilesize(filesize($tempFilename))
                     ->setWidth($width)
                     ->setHeight($height)
                     ->setFinishedAt(new \DateTime());

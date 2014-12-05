@@ -5,6 +5,6 @@ services:
     # event listeners
     phlexible_media_asset.listener.media_site:
         class: Phlexible\Bundle\MediaAssetBundle\EventListener\MediaSiteListener
-        arguments: [@phlexible_media_asset.reader.attribute]
+        arguments: [@phlexible_media_asset.reader.attribute, @phlexible_media_type.media_type_manager]
         tags:
             - {name: kernel.event_subscriber}

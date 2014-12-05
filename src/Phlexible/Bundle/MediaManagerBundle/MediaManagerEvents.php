@@ -44,8 +44,6 @@ class MediaManagerEvents
     const SET_FOLDER_METASETS = 'phlexible_media_manager.set_folder_metasets';
     const BEFORE_SET_FILE_METASETS = 'phlexible_media_manager.before_set_file_metasets';
     const SET_FILE_METASETS = 'phlexible_media_manager.set_file_metasets';
-    const BEFORE_SET_FILE_ASSET_TYPE = 'phlexible_media_manager.before_set_file_asset_type';
-    const SET_FILE_ASSET_TYPE = 'phlexible_media_manager.set_file_asset_type';
-    const BEFORE_SET_FILE_DOCUMENTTYPE = 'phlexible_media_manager.before_set_file_documenttypetype';
-    const SET_FILE_DOCUMENTTYPE = 'phlexible_media_manager.set_file_documenttypetype';
+    const BEFORE_SET_FILE_MEDIA_TYPE = 'phlexible_media_manager.before_set_file_media_type';
+    const SET_FILE_MEDIA_TYPE = 'phlexible_media_manager.set_file_media_type';
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="m4a">
+    <type>audio</type>
+    <titles>
+        <title lang="de">MP4 Audio</title>
+        <title lang="en">MP4 Audio</title>
+    </titles>
+    <mimetypes>
+        <mimetype>audio/mp4</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/m4a.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/m4a.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/m4a.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/m4a.gif</icon>
+    </icons>
+</documenttype>

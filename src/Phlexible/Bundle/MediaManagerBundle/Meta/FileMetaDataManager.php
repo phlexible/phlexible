@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MetaSetBundle\Doctrine\MetaDataManager;
 use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaData;
@@ -22,12 +22,12 @@ use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
 class FileMetaDataManager extends MetaDataManager
 {
     /**
-     * @param MetaSet       $metaSet
-     * @param FileInterface $file
+     * @param MetaSet               $metaSet
+     * @param ExtendedFileInterface $file
      *
      * @return MetaData|MetaDataInterface
      */
-    public function createFileMetaData(MetaSet $metaSet, FileInterface $file)
+    public function createFileMetaData(MetaSet $metaSet, ExtendedFileInterface $file)
     {
         $metaData = $this->createMetaData($metaSet);
         $metaData
@@ -37,12 +37,12 @@ class FileMetaDataManager extends MetaDataManager
     }
 
     /**
-     * @param MetaSet       $metaSet
-     * @param FileInterface $file
+     * @param MetaSet               $metaSet
+     * @param ExtendedFileInterface $file
      *
      * @return null|MetaDataInterface
      */
-    public function findByMetaSetAndFile(MetaSet $metaSet, FileInterface $file)
+    public function findByMetaSetAndFile(MetaSet $metaSet, ExtendedFileInterface $file)
     {
         return $this->findByMetaSetAndIdentifiers($metaSet, $this->getIdentifiersFromFile($file));
     }
@@ -95,11 +95,11 @@ class FileMetaDataManager extends MetaDataManager
     }
 
     /**
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return array
      */
-    private function getIdentifiersFromFile(FileInterface $file)
+    private function getIdentifiersFromFile(ExtendedFileInterface $file)
     {
         return [
             'file_id'      => $file->getId(),

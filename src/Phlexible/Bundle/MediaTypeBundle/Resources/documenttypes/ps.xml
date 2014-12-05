@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="ps">
+    <type>image</type>
+    <titles>
+        <title lang="de">PostScript Dokument</title>
+        <title lang="en">PostScript Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/postscript</mimetype>
+        <mimetype>application/postscript-ps</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/ps.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/ps.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/ps.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/ps.gif</icon>
+    </icons>
+</documenttype>

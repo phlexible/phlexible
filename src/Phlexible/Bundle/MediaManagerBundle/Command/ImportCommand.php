@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
-use Phlexible\Bundle\MediaSiteBundle\Folder;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,8 +32,8 @@ class ImportCommand extends ContainerAwareCommand
             ->setDefinition(
                 [
                     new InputArgument('source', InputArgument::REQUIRED, 'Source file'),
-                    new InputArgument('targetDir', InputArgument::OPTIONAL, 'Target directory'),
-                    new InputOption('targetSite', null, InputOption::VALUE_REQUIRED, 'Target site'),
+                    new InputArgument('dir', InputArgument::OPTIONAL, 'Target directory'),
+                    new InputOption('volume', null, InputOption::VALUE_REQUIRED, 'Target volume'),
                     new InputOption('delete', null, InputOption::VALUE_NONE, 'Delete source file after import'),
                 ]
             )
@@ -49,30 +48,30 @@ class ImportCommand extends ContainerAwareCommand
         $source = $input->getArgument('source');
         $delete = $input->getArgument('delete');
 
-        $site = $input->getOption('targetSite');
-        $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
+        $volume = $input->getOption('volume');
+        $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
 
-        if ($site) {
-            $site = $siteManager->get($site);
+        if ($volume) {
+            $volume = $volumeManager->get($volume);
         } else {
-            $site = $siteManager->get('mediamanager');
+            $volume = $volumeManager->get('mediamanager');
         }
 
-        $targetDir = $input->getArgument('targetDir');
+        $targetDir = $input->getArgument('dir');
         if ($targetDir) {
             if (substr($targetDir, -1) != '/') {
                 $targetDir .= '/';
             }
 
             try {
-                $targetFolder = $site->getFolderPeer()->getByPath($targetDir);
+                $targetFolder = $volume->getFolderPeer()->getByPath($targetDir);
             } catch (\Exception $e) {
                 $output->writeln('Folder "' . $targetDir . '" not found.');
 
                 return 1;
             }
         } else {
-            $targetFolder = $site->getFolderPeer()->getRoot();
+            $targetFolder = $volume->getFolderPeer()->getRoot();
         }
 
         MWF_Env::setUser(MWF_Core_Users_User_Peer::getSystemUser());

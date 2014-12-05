@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
 
 /**
  * Folder usage
@@ -53,19 +53,19 @@ class FolderUsage
     private $status;
 
     /**
-     * @var FolderInterface
+     * @var ExtendedFolderInterface
      * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MediaManagerBundle\Entity\Folder")
      * @ORM\JoinColumn(name="folder_id", referencedColumnName="id")
      */
     private $folder;
 
     /**
-     * @param FolderInterface $folder
-     * @param string          $usageType
-     * @param string          $usageId
-     * @param int             $status
+     * @param ExtendedFolderInterface $folder
+     * @param string                  $usageType
+     * @param string                  $usageId
+     * @param int                     $status
      */
-    public function __construct(FolderInterface $folder, $usageType, $usageId, $status)
+    public function __construct(ExtendedFolderInterface $folder, $usageType, $usageId, $status)
     {
         $this->folder = $folder;
         $this->usageType = $usageType;

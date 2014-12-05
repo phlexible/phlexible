@@ -31,12 +31,12 @@ class ExportCommand extends ContainerAwareCommand
             ->setName('media-manager:export')
             ->setDefinition(
                 [
-                    new InputArgument('site', InputArgument::REQUIRED, 'Site to export.'),
+                    new InputArgument('volume', InputArgument::REQUIRED, 'Volume to export.'),
                     new InputArgument('target', InputArgument::REQUIRED, 'Target directory.'),
                     new InputOption('symlink', null, InputOption::VALUE_NONE, 'Symlink'),
                 ]
             )
-            ->setDescription('Export site');
+            ->setDescription('Export volume');
     }
 
     /**
@@ -44,7 +44,7 @@ class ExportCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $site = $input->getArgument('site');
+        $volume = $input->getArgument('volume');
         $target = $input->getArgument('target');
         $symlink = $input->getOption('symlink');
 
@@ -58,18 +58,18 @@ class ExportCommand extends ContainerAwareCommand
         }
         $target = rtrim($target, '/') . '/';
 
-        $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
-        $site = $siteManager->getSiteById($site);
+        $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
+        $volume = $volumeManager->getById($volume);
 
         $filesystem = new Filesystem();
 
-        $rii = new \RecursiveIteratorIterator($site->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+        $rii = new \RecursiveIteratorIterator($volume->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $folder) {
             $folderPath = $folder->getPath();
 
             $filesystem->mkdir($target . $folderPath);
 
-            foreach ($site->findFilesByFolder($folder) as $file) {
+            foreach ($volume->findFilesByFolder($folder) as $file) {
                 $fileName = $file->getName();
                 $filePath = $file->getPhysicalPath();
 

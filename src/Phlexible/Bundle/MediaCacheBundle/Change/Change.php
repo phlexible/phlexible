@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Change;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 
 /**
@@ -19,7 +19,7 @@ use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 class Change
 {
     /**
-     * @var FileInterface
+     * @var ExtendedFileInterface
      */
     private $file;
 
@@ -34,11 +34,11 @@ class Change
     private $revision;
 
     /**
-     * @param FileInterface     $file
-     * @param TemplateInterface $template
-     * @param string            $revision
+     * @param ExtendedFileInterface $file
+     * @param TemplateInterface     $template
+     * @param string                $revision
      */
-    public function __construct(FileInterface $file, TemplateInterface $template, $revision)
+    public function __construct(ExtendedFileInterface $file, TemplateInterface $template, $revision)
     {
         $this->file = $file;
         $this->template = $template;
@@ -46,7 +46,7 @@ class Change
     }
 
     /**
-     * @return FileInterface
+     * @return ExtendedFileInterface
      */
     public function getFile()
     {

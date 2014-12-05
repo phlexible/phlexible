@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="wav">
+    <type>audio</type>
+    <titles>
+        <title lang="de">Wave Datei</title>
+        <title lang="en">Wave File</title>
+    </titles>
+    <mimetypes>
+        <mimetype>audio/x-wav</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/wav.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/wav.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/wav.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/wav.gif</icon>
+    </icons>
+</documenttype>

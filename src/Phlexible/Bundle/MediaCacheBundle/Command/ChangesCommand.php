@@ -45,11 +45,11 @@ class ChangesCommand extends ContainerAwareCommand
         $committer = new TemplateChanges(
             $this->getContainer()->get('phlexible_media_template.template_manager'),
             $this->getContainer()->get('phlexible_media_cache.cache_manager'),
-            $this->getContainer()->get('phlexible_media_site.site_manager'),
-            $this->getContainer()->get('phlexible_media_cache.queue.batch_builder'),
-            $this->getContainer()->get('phlexible_media_cache.queue.batch_resolver'),
-            $this->getContainer()->get('phlexible_media_cache.queue_manager'),
-            $this->getContainer()->get('phlexible_media_cache.queue.worker')
+            $this->getContainer()->get('phlexible_media_manager.volume_manager'),
+            $this->getContainer()->get('phlexible_media_cache.batch_builder'),
+            $this->getContainer()->get('phlexible_media_cache.batch_resolver'),
+            $this->getContainer()->get('phlexible_media_cache.cache_manager'),
+            $this->getContainer()->get('phlexible_media_cache.queue_processor')
         );
 
         $changes = $committer->changes();

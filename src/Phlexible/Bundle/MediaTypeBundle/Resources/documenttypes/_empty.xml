@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="_empty">
+    <type>document</type>
+    <titles>
+        <title lang="de">Leere Datei</title>
+        <title lang="en">Empty File</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/x-empty</mimetype>
+        <mimetype>inode/x-empty</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/_empty.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/_empty.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/_empty.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/_empty.gif</icon>
+    </icons>
+</documenttype>

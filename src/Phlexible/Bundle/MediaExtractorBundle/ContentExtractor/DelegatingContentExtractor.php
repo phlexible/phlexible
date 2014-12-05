@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
  * Delegating content extractor
@@ -31,32 +32,24 @@ class DelegatingContentExtractor implements ContentExtractorInterface
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isAvailable()
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return true;
+        return null !== $this->resolver->resolve($file, $mediaType);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file)
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return null === $this->resolver->resolve($file) ? false : true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function extract(FileInterface $file)
-    {
-        $extractor = $this->resolver->resolve($file);
+        $extractor = $this->resolver->resolve($file, $mediaType);
 
         if (!$extractor) {
             return null;
         }
 
-        return $extractor->extract($file);
+        return $extractor->extract($file, $mediaType);
     }
 }

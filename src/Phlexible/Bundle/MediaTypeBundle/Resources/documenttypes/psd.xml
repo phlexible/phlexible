@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="psd">
+    <type>image</type>
+    <titles>
+        <title lang="de">Photoshop Dokument</title>
+        <title lang="en">Photoshop Document</title>
+    </titles>
+    <mimetypes>
+        <mimetype>image/x-photoshop</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/psd.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/psd.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/psd.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/psd.gif</icon>
+    </icons>
+</documenttype>

@@ -76,7 +76,7 @@ class CreateCommand extends ContainerAwareCommand
             $batch = $batchBuilder->createWithAllTemplatesAndFiles();
         } else {
             $templateManager = $this->getContainer()->get('phlexible_media_template.template_manager');
-            $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
+            $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
 
             $template = $input->getOption('template');
             if ($template) {
@@ -85,7 +85,7 @@ class CreateCommand extends ContainerAwareCommand
 
             $file = $input->getOption('file');
             if ($file) {
-                $file = $siteManager->getByFileId($file)->findFile($file);
+                $file = $volumeManager->getByFileId($file)->findFile($file);
             }
 
             if ($template && $file) {
@@ -116,13 +116,13 @@ class CreateCommand extends ContainerAwareCommand
         if ($input->getOption('show')) {
             // only show
 
-            $siteManager = $this->getContainer()->get('phlexible_media_site.site_manager');
+            $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
             $table = new Table($output);
             $table->setHeaders(['Idx', 'Template', 'Path', 'File ID']);
             foreach ($queue->all() as $idx => $cacheItem) {
-                $site = $siteManager->getByFileId($cacheItem->getFileId());
-                $file = $site->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
-                $folder = $site->findFolder($file->getFolderId());
+                $volume = $volumeManager->getByFileId($cacheItem->getFileId());
+                $file = $volume->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
+                $folder = $volume->findFolder($file->getFolderId());
                 $table->addRow(
                     [
                         $idx,

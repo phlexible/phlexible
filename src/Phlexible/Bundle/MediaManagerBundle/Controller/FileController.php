@@ -8,13 +8,11 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaSiteBundle\Exception\AlreadyExistsException;
-use Phlexible\Bundle\MediaSiteBundle\Exception\NotFoundException;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\Volume\Exception\NotFoundException;
+use Phlexible\Component\Volume\VolumeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,13 +31,13 @@ class FileController extends Controller
     /**
      * @param string $folderId
      *
-     * @return SiteInterface
+     * @return VolumeInterface
      */
-    private function getSiteByFolderId($folderId)
+    private function getVolumeByFolderId($folderId)
     {
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        return $siteManager->getByFolderId($folderId);
+        return $volumeManager->getByFolderId($folderId);
     }
 
     /**
@@ -71,10 +69,10 @@ class FileController extends Controller
         $data = [];
         $total = 0;
 
-        $site = $this->getSiteByFolderId($folderId);
+        $volume = $this->getVolumeByFolderId($folderId);
         $securityContext = $this->get('security.context');
 
-        $folder = $site->findFolder($folderId);
+        $folder = $volume->findFolder($folderId);
 
         if ($securityContext->isGranted('ROLE_SUPER_ADMIN') || $securityContext->isGranted('FILE_READ', $folder)) {
             if ($sort === 'create_time') {
@@ -88,14 +86,14 @@ class FileController extends Controller
                 if (!$showHidden) {
                     $filter['hidden'] = false;
                 }
-                $files = $site->findFiles($filter, [$sort => $dir], $limit, $start);
-                $total = $site->countFiles($filter);
+                $files = $volume->findFiles($filter, [$sort => $dir], $limit, $start);
+                $total = $volume->countFiles($filter);
             } else {
-                $files = $site->findFilesByFolder($folder, [$sort => $dir], $limit, $start, $showHidden);
-                $total = $site->countFilesByFolder($folder, $showHidden);
+                $files = $volume->findFilesByFolder($folder, [$sort => $dir], $limit, $start, $showHidden);
+                $total = $volume->countFilesByFolder($folder, $showHidden);
             }
 
-            $data = $this->filesToArray($site, $files);
+            $data = $this->filesToArray($volume, $files);
         }
 
         return new JsonResponse(['files' => $data, 'totalCount' => $total]);
@@ -104,18 +102,18 @@ class FileController extends Controller
     /**
      * Build file list
      *
-     * @param SiteInterface   $site
-     * @param FileInterface[] $files
+     * @param VolumeInterface         $volume
+     * @param ExtendedFileInterface[] $files
      *
      * @return array
      */
-    private function filesToArray(SiteInterface $site, array $files)
+    private function filesToArray(VolumeInterface $volume, array $files)
     {
         $data = [];
         $userManager = $this->get('phlexible_user.user_manager');
-        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
 
-        $hasVersions = $site->hasFeature('versions');
+        $hasVersions = $volume->hasFeature('versions');
 
         foreach ($files as $file) {
             try {
@@ -141,11 +139,10 @@ class FileController extends Controller
                 //'attributesCnt' => 0,
                 'versions' => $hasVersions,
                 'debug'    => [
-                    'mimeType'     => $file->getMimeType(),
-                    'documentType' => strtolower($file->getDocumenttype()),
-                    'assetType'    => strtolower($file->getAssettype()),
-                    'fileId'       => $file->getID(),
-                    'folderId'     => $file->getFolderId(),
+                    'mimeType'  => $file->getMimeType(),
+                    'mediaType' => strtolower($file->getMediaType()),
+                    'fileId'    => $file->getID(),
+                    'folderId'  => $file->getFolderId(),
                 ]
             ];
 
@@ -159,15 +156,15 @@ class FileController extends Controller
             $properties['meta'] = $meta;
             $properties['metaCnt'] = count($properties['meta']);
 
-            $documentType = $documenttypeManager->find(strtolower($file->getDocumenttype()));
+            $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
 
-            if (!$documentType) {
-                $documentType = new Documenttype();
-                $documentType->setKey('unknown');
+            if (!$mediaType) {
+                $mediaType = $mediaTypeManager->create();
+                $mediaType->setName('unknown');
             }
 
             $interfaceLanguage = $this->getUser()->getInterfaceLanguage('en');
-            $documentTypeTitle = $documentType->getTitle($interfaceLanguage);
+            $mediaTypeTitle = $mediaType->getTitle($interfaceLanguage);
 
             $version = 1;
             if ($hasVersions) {
@@ -185,7 +182,7 @@ class FileController extends Controller
                     ]);
                 } else {
                     $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', [
-                        'documenttypeKey' => $file->getDocumenttype(),
+                        'documenttypeKey' => $file->getMediaType(),
                         'templateKey'     => $cacheItem->getTemplateKey(),
                     ]);
                 }
@@ -200,19 +197,19 @@ class FileController extends Controller
                 $focal = 1;
             }
 
-            $attributes = $file->getAttribute('attributes', []);
+            $attributes = $file->getAttributes();
 
-            $folder = $site->findFolder($file->getFolderId());
+            $folder = $volume->findFolder($file->getFolderId());
             $data[] = [
                 'id'                => $file->getID(),
                 'name'              => $file->getName(),
-                'site_id'           => $site->getId(),
+                'site_id'           => $volume->getId(),
                 'folder_id'         => $file->getFolderID(),
                 'folder'            => '/Root/' . $folder->getPath(),
-                'asset_type'        => strtolower($file->getAssettype()),
+                'asset_type'        => strtolower($file->getMediaType()),
                 'mime_type'         => $file->getMimetype(),
-                'document_type'     => $documentTypeTitle,
-                'document_type_key' => strtolower($file->getDocumenttype()),
+                'document_type'     => $mediaTypeTitle,
+                'document_type_key' => strtolower($file->getMediaType()),
                 'present'           => file_exists($file->getPhysicalPath()),
                 'size'              => $file->getSize(),
                 'hidden'            => $file->isHidden() ? 1 : 0,
@@ -248,14 +245,14 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
         foreach ($fileIds as $fileId) {
             try {
-                $site = $siteManager->getByFileId($fileId);
-                $file = $site->findFile($fileId);
+                $volume = $volumeManager->getByFileId($fileId);
+                $file = $volume->findFile($fileId);
                 if ($file) {
-                    $site->deleteFile($file, $this->getUser()->getId());
+                    $volume->deleteFile($file, $this->getUser()->getId());
                 }
             } catch (NotFoundException $e) {
             }
@@ -277,12 +274,12 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
         foreach ($fileIds as $fileId) {
-            $site = $siteManager->getByFileId($fileId);
-            $file = $site->findFile($fileId);
-            $site->hide();
+            $volume = $volumeManager->getByFileId($fileId);
+            $file = $volume->findFile($fileId);
+            $volume->hide();
         }
 
         return new ResultResponse(true, count($fileIds) . ' file(s) hidden.');
@@ -301,12 +298,12 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
         foreach ($fileIds as $fileId) {
-            $site = $siteManager->getByFileId($fileId);
-            $file = $site->findFile($fileId);
-            $site->hide($file);
+            $volume = $volumeManager->getByFileId($fileId);
+            $file = $volume->findFile($fileId);
+            $volume->hide($file);
         }
 
         return new ResultResponse(true, count($fileIds) . ' file(s) shown.');
@@ -325,17 +322,17 @@ class FileController extends Controller
         $fileId = $request->get('id');
         $fileVersion = $request->get('version', 1);
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId, $fileVersion);
-        $folder = $site->findFolder($file->getFolderId());
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId, $fileVersion);
+        $folder = $volume->findFolder($file->getFolderId());
 
-        $attributes = $file->getAttribute('attributes', []);
+        $attributes = $file->getAttributes();
 
         $versions = [];
-        if ($site->hasFeature('versions')) {
-            $versions = $site->findFileVersions($file);
+        if ($volume->hasFeature('versions')) {
+            $versions = $volume->findFileVersions($file);
         }
 
         $properties = [];
@@ -344,8 +341,8 @@ class FileController extends Controller
         $properties['path'] = '/' . $folder->getPath();
         $properties['name'] = $file->getName();
         $properties['size'] = $file->getSize();
-        $properties['document_type_key'] = strtolower($file->getDocumenttype());
-        $properties['asset_type'] = strtolower($file->getAssettype());
+        $properties['document_type_key'] = strtolower($file->getMediaType());
+        $properties['asset_type'] = strtolower($file->getMediaType());
         $properties['create_user_id'] = $file->getCreateUserId();
         $properties['create_time'] = $file->getCreatedAt()->format('U');
 
@@ -360,8 +357,8 @@ class FileController extends Controller
 
         $properties['debug'] = [
             'mimeType'     => $file->getMimeType(),
-            'documentType' => strtolower($file->getDocumenttype()),
-            'assetType'    => strtolower($file->getAssettype()),
+            'documentType' => strtolower($file->getMediaType()),
+            'assetType'    => strtolower($file->getMediaType()),
             'fileId'       => $fileId,
             'folderId'     => $folder->getId(),
         ];
@@ -372,8 +369,8 @@ class FileController extends Controller
             'name'              => $file->getName(),
             'size'              => $file->getSize(),
             'version'           => $file->getVersion(),
-            'document_type_key' => strtolower($file->getDocumenttype()),
-            'asset_type'        => strtolower($file->getAssettype()),
+            'document_type_key' => strtolower($file->getMediaType()),
+            'asset_type'        => strtolower($file->getMediaType()),
             'create_user_id'    => $file->getCreateUserId(),
             'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
         ];
@@ -412,18 +409,18 @@ class FileController extends Controller
     {
         $id = $request->get('id');
 
-        $site = $this->get('phlexible_media_site.site_manager')->getByFileId($id);
+        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($id);
 
         $detail = [];
-        foreach ($site->findFileVersions($id) as $file) {
+        foreach ($volume->findFileVersions($id) as $file) {
             $detail[] = [
                 'id'                => $file->getId(),
                 'folder_id'         => $file->getFolderId(),
                 'name'              => $file->getName(),
                 'size'              => $file->getSize(),
                 'version'           => $file->getVersion(),
-                'document_type_key' => strtolower($file->getDocumenttype()),
-                'asset_type'        => strtolower($file->getAssettype()),
+                'document_type_key' => strtolower($file->getMediaType()),
+                'asset_type'        => strtolower($file->getMediaType()),
                 'create_user_id'    => $file->getCreateUserId(),
                 'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
             ];
@@ -449,12 +446,12 @@ class FileController extends Controller
         $folderId = $request->get('folderID');
         $fileIDs = json_decode($request->get('fileIDs'));
 
-        $site = $this->getSiteByFolderId($folderId);
-        $folder = $site->findFolder($folderId);
+        $volume = $this->getVolumeByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
 
         foreach ($fileIDs as $fileID) {
-            $file = $site->findFile($fileID);
-            $site->copy($file, $folder, $this->getUser()->getId());
+            $file = $volume->findFile($fileID);
+            $volume->copyFile($file, $folder, $this->getUser()->getId());
         }
 
         return new ResultResponse(true, 'File(s) copied.');
@@ -473,15 +470,15 @@ class FileController extends Controller
         $folderId = $request->get('folderID');
         $fileIds = json_decode($request->get('fileIDs'));
 
-        $site = $this->getSiteByFolderId($folderId);
-        $folder = $site->findFolder($folderId);
+        $volume = $this->getVolumeByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
 
         $skippedFiles = [];
 
         foreach ($fileIds as $fileId) {
-            $file = $site->findFile($fileId);
+            $file = $volume->findFile($fileId);
             try {
-                $site->moveFile($file, $folder, $this->getUser()->getId());
+                $volume->moveFile($file, $folder, $this->getUser()->getId());
             } catch (AlreadyExistsException $e) {
                 $skippedFiles[] = $file->getName();
             }
@@ -503,10 +500,10 @@ class FileController extends Controller
         $fileId = $request->get('file_id');
         $name = $request->get('file_name');
 
-        $site = $this->get('phlexible_media_site.site_manager')->getByFileId($fileId);
+        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId);
 
-        $file = $site->findFile($fileId);
-        $site->renameFile($file, $name, $this->getUser()->getId());
+        $file = $volume->findFile($fileId);
+        $volume->renameFile($file, $name, $this->getUser()->getId());
 
         return new ResultResponse(true, 'File(s) renamed.');
     }

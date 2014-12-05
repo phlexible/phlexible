@@ -42,9 +42,9 @@ class MediaController extends Controller
         $cacheManager = $this->get('phlexible_media_cache.cache_manager');
         $storageManager = $this->get('phlexible_media_cache.storage_manager');
         $templateManager = $this->get('phlexible_media_template.template_manager');
-        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
         $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
         try {
             $cacheItem = $cacheManager->findByTemplateAndFile($templateKey, $fileId, $fileVersion);
@@ -72,7 +72,7 @@ class MediaController extends Controller
             $batchResolver = $this->get('phlexible_media_cache.batch_resolver');
             $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
 
-            $file = $siteManager->getByFileId($fileId)->findFile($fileId);
+            $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
             $batch = $batchBuilder->createForTemplateAndFile($template, $file);
             $queue = $batchResolver->resolve($batch);
 
@@ -87,9 +87,9 @@ class MediaController extends Controller
                 return new Response('Not found', 404);
             }
 
-            $file = $siteManager->getByFileId($fileId)->findFile($fileId);
-            $documenttype = $documenttypeManager->find(strtolower($file->getDocumenttype()));
-            $filePath = $delegateService->getClean($template, $documenttype);
+            $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
+            $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
+            $filePath = $delegateService->getClean($template, $mediaType);
             $mimeType = 'image/gif';
         }
 
@@ -99,21 +99,21 @@ class MediaController extends Controller
 
     /**
      * @param string $templateKey
-     * @param string $documenttypeKey
+     * @param string $mediaTypeName
      *
      * @return Response
      * @Route("/delegate/{templateKey}/{documenttypeKey}", name="mediamanager_media_delegate")
      */
-    public function delegateAction($templateKey, $documenttypeKey)
+    public function delegateAction($templateKey, $mediaTypeName)
     {
-        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
         $templateManager = $this->get('phlexible_media_template.template_manager');
         $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
 
         $template = $templateManager->find($templateKey);
 
-        $documenttype = $documenttypeManager->find(strtolower($documenttypeKey));
-        $filePath = $delegateService->getClean($template, $documenttype);
+        $mediaType = $mediaTypeManager->find(strtolower($mediaTypeName));
+        $filePath = $delegateService->getClean($template, $mediaType);
         $fileSize = filesize($filePath);
         $mimeType = 'image/gif';
 

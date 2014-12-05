@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="odg">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenDocument Zeichnung</title>
+        <title lang="en">OpenDocument Drawing</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.oasis.opendocument.graphics</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/odg.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/odg.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/odg.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/odg.gif</icon>
+    </icons>
+</documenttype>

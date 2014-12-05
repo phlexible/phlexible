@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="dot">
+    <type>document</type>
+    <titles>
+        <title lang="de">Word Vorlage</title>
+        <title lang="en">Word Template</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/x-dot</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/dot.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/dot.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/dot.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/dot.gif</icon>
+    </icons>
+</documenttype>

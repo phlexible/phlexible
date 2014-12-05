@@ -1,0 +1,38 @@
+parameters:
+    phlexible_media_type.compiler.cache_dir: %kernel.cache_dir%/mediatype/
+
+services:
+    phlexible_media_type.icon_resolver:
+        class: Phlexible\Component\MediaType\Model\IconResolver
+        arguments: [@file_locator]
+
+    phlexible_media_type.compiler.php:
+        class: Phlexible\Component\MediaType\Compiler\PhpCompiler
+        public: false
+
+    phlexible_media_type.compiler.script:
+        class: Phlexible\Component\MediaType\Compiler\ScriptCompiler
+        public: false
+
+    phlexible_media_type.compiler.css:
+        class: Phlexible\Component\MediaType\Compiler\CssCompiler
+        public: false
+
+    # asset providers
+    phlexible_media_type.asset_provider:
+        class: Phlexible\Bundle\MediaTypeBundle\AssetProvider\MediaTypeAssetProvider
+        public: false
+        arguments:
+            - @phlexible_media_type.media_type_manager
+            - @phlexible_media_type.compiler.script
+            - @phlexible_media_type.compiler.css
+            - %phlexible_media_type.compiler.cache_dir%
+        tags:
+            - {name: phlexible_gui.asset_provider, priority: 600}
+
+    # role provider
+    phlexible_media_type.role_provider:
+        class: Phlexible\Bundle\MediaTypeBundle\RoleProvider\MediaTypeRoleProvider
+        public: false
+        tags:
+            - {name: phlexible_gui.role_provider}

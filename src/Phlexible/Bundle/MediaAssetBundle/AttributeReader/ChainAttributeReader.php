@@ -8,8 +8,9 @@
 
 namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Component\MediaType\Model\MediaType;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
 /**
  * Chain attribute reader
@@ -42,10 +43,10 @@ class ChainAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(PathSourceInterface $fileSource, $documenttype, $assettype)
+    public function supports(PathSourceInterface $fileSource, MediaType $mediaType)
     {
         foreach ($this->readers as $reader) {
-            if ($reader->isAvailable() && $reader->supports($fileSource, $documenttype, $assettype)) {
+            if ($reader->isAvailable() && $reader->supports($fileSource, $mediaType)) {
                 return true;
             }
         }
@@ -54,11 +55,11 @@ class ChainAttributeReader implements AttributeReaderInterface
     /**
      * {@inheritdoc}
      */
-    public function read(PathSourceInterface $fileSource, $documenttype, $assettype, AttributeBag $attributes)
+    public function read(PathSourceInterface $fileSource, MediaType $mediaType, AttributeBag $attributes)
     {
         foreach ($this->readers as $reader) {
-            if ($reader->isAvailable() && $reader->supports($fileSource, $documenttype, $assettype)) {
-                $reader->read($fileSource, $documenttype, $assettype, $attributes);
+            if ($reader->isAvailable() && $reader->supports($fileSource, $mediaType)) {
+                $reader->read($fileSource, $mediaType, $attributes);
             }
         }
     }

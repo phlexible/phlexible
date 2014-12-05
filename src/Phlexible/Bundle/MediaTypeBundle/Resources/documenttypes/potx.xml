@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="potx">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Arbeitsmappe Vorlage</title>
+        <title lang="en">OpenXML Spreadsheet Template</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.openxmlformats-officedocument.presentationml.template</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/potx.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/potx.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/potx.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/potx.gif</icon>
+    </icons>
+</documenttype>

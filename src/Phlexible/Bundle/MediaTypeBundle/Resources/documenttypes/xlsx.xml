@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="xlsx">
+    <type>document</type>
+    <titles>
+        <title lang="de">OpenXML Arbeitsmappe</title>
+        <title lang="en">OpenXML Spreadsheet</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/xlsx.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/xlsx.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/xlsx.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/xlsx.gif</icon>
+    </icons>
+</documenttype>

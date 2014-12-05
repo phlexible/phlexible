@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="ai">
+    <type>document</type>
+    <titles>
+        <title lang="de">Illustrator Dokument</title>
+        <title lang="en">Illustrator Document</title>
+    </titles>
+    <mimetypes>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/ai.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/ai.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/ai.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/ai.gif</icon>
+    </icons>
+</documenttype>

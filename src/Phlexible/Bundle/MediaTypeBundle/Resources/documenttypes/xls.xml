@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="xls">
+    <type>document</type>
+    <titles>
+        <title lang="de">Excel Arbeitsmappe</title>
+        <title lang="en">Excel Spreadsheet</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.ms-excel</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/xls.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/xls.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/xls.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/xls.gif</icon>
+    </icons>
+</documenttype>

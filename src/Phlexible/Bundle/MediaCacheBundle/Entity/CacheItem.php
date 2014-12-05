@@ -39,9 +39,9 @@ class CacheItem
 
     /**
      * @var string
-     * @ORM\Column(name="site_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="volume_id", type="string", length=36, options={"fixed"=true})
      */
-    private $siteId;
+    private $volumeId;
 
     /**
      * @var string
@@ -81,25 +81,25 @@ class CacheItem
 
     /**
      * @var string
-     * @ORM\Column(name="mime_type", type="string", length=100)
+     * @ORM\Column(name="mime_type", type="string", length=100, nullable=true)
      */
     private $mimeType;
 
     /**
      * @var string
-     * @ORM\Column(name="document_type_key", type="string", length=100)
+     * @ORM\Column(name="media_type", type="string", length=100, nullable=true)
      */
-    private $documentTypeKey;
+    private $mediaType;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $extension;
 
     /**
      * @var int
-     * @ORM\Column(name="file_size", type="integer")
+     * @ORM\Column(name="file_size", type="integer", nullable=true)
      */
     private $fileSize;
 
@@ -170,19 +170,19 @@ class CacheItem
     /**
      * @return string
      */
-    public function getSiteId()
+    public function getVolumeId()
     {
-        return $this->siteId;
+        return $this->volumeId;
     }
 
     /**
-     * @param string $siteId
+     * @param string $volumeId
      *
      * @return $this
      */
-    public function setSiteId($siteId)
+    public function setVolumeId($volumeId)
     {
-        $this->siteId = $siteId;
+        $this->volumeId = $volumeId;
 
         return $this;
     }
@@ -310,19 +310,19 @@ class CacheItem
     /**
      * @return string
      */
-    public function getDocumentTypeKey()
+    public function getMediaType()
     {
-        return $this->documentTypeKey;
+        return $this->mediaType;
     }
 
     /**
-     * @param string $documentTypeKey
+     * @param string $mediaType
      *
      * @return $this
      */
-    public function setDocumentTypeKey($documentTypeKey)
+    public function setMediaType($mediaType)
     {
-        $this->documentTypeKey = $documentTypeKey;
+        $this->mediaType = $mediaType;
 
         return $this;
     }

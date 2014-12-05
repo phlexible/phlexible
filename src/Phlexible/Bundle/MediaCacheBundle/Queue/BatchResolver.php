@@ -82,11 +82,14 @@ class BatchResolver
                     $cacheItem = new CacheItem();
                     $cacheItem
                         ->setId($this->cacheIdStrategy->createCacheId($template, $file))
-                        ->setSiteId($file->getSite()->getId())
+                        ->setVolumeId($file->getVolume()->getId())
                         ->setFileId($file->getId())
+                        ->setFileVersion($file->getVersion())
                         ->setTemplateKey($template->getKey())
-                        ->setCreatedAt(new \DateTime())
-                        ->setFileVersion($file->getVersion());
+                        ->setTemplateRevision($template->getRevision())
+                        ->setCacheStatus(CacheItem::STATUS_WAITING)
+                        ->setQueueStatus(CacheItem::QUEUE_WAITING)
+                        ->setCreatedAt(new \DateTime());
                 }
 
                 $cacheItem

@@ -8,7 +8,12 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaExtractorBundle\AudioExtractor\AudioExtractorInterface;
+use Phlexible\Bundle\MediaExtractorBundle\FlashExtractor\FlashExtractorInterface;
+use Phlexible\Bundle\MediaExtractorBundle\ImageExtractor\ImageExtractorInterface;
+use Phlexible\Bundle\MediaExtractorBundle\VideoExtractor\VideoExtractorInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 
 /**
  * Extractor service
@@ -18,33 +23,46 @@ use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 class Transmutor
 {
     /**
-     * @var array
+     * @var MediaTypeManagerInterface
+     */
+    private $mediaTypeManager;
+
+    /**
+     * @var ImageExtractorInterface[]
      */
     private $imageTransmutors;
 
     /**
-     * @var array
+     * @var VideoExtractorInterface[]
      */
     private $videoTransmutors;
 
     /**
-     * @var array
+     * @var AudioExtractorInterface[]
      */
     private $audioTransmutors;
 
     /**
-     * @var array
+     * @var FlashExtractorInterface[]
      */
     private $flashTransmutors;
 
     /**
-     * @param array $imageTransmutors
-     * @param array $videoTransmutors
-     * @param array $audioTransmutors
-     * @param array $flashTransmutors
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param ImageExtractorInterface[] $imageTransmutors
+     * @param VideoExtractorInterface[] $videoTransmutors
+     * @param AudioExtractorInterface[] $audioTransmutors
+     * @param FlashExtractorInterface[] $flashTransmutors
      */
-    public function __construct(array $imageTransmutors = [], array $videoTransmutors = [], array $audioTransmutors = [], array $flashTransmutors = [])
+    public function __construct(
+        MediaTypeManagerInterface $mediaTypeManager,
+        array $imageTransmutors = [],
+        array $videoTransmutors = [],
+        array $audioTransmutors = [],
+        array $flashTransmutors = []
+    )
     {
+        $this->mediaTypeManager = $mediaTypeManager;
         $this->imageTransmutors = $imageTransmutors;
         $this->audioTransmutors = $audioTransmutors;
         $this->videoTransmutors = $videoTransmutors;
@@ -54,15 +72,17 @@ class Transmutor
     /**
      * Transmute asset to image file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function transmuteToImage(FileInterface $file)
+    public function transmuteToImage(ExtendedFileInterface $file)
     {
+        $mediaType = $this->mediaTypeManager->find($file->getMediaType());
+
         foreach ($this->imageTransmutors as $transmutor) {
-            if ($transmutor->isAvailable() && $transmutor->supports($file)) {
-                return $transmutor->extract($file);
+            if ($transmutor->supports($file, $mediaType)) {
+                return $transmutor->extract($file, $mediaType);
             }
         }
 
@@ -72,15 +92,17 @@ class Transmutor
     /**
      * Transmute asset to audio file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function transmuteToAudio(FileInterface $file)
+    public function transmuteToAudio(ExtendedFileInterface $file)
     {
+        $mediaType = $this->mediaTypeManager->find($file->getMediaType());
+
         foreach ($this->audioTransmutors as $transmutor) {
-            if ($transmutor->isAvailable() && $transmutor->supports($file)) {
-                return $transmutor->extract($file);
+            if ($transmutor->supports($file, $mediaType)) {
+                return $transmutor->extract($file, $mediaType);
             }
         }
 
@@ -90,15 +112,17 @@ class Transmutor
     /**
      * Transmute asset to video file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function transmuteToVideo(FileInterface $file)
+    public function transmuteToVideo(ExtendedFileInterface $file)
     {
+        $mediaType = $this->mediaTypeManager->find($file->getMediaType());
+
         foreach ($this->videoTransmutors as $transmutor) {
-            if ($transmutor->isAvailable() && $transmutor->supports($file)) {
-                return $transmutor->extract($file);
+            if ($transmutor->supports($file, $mediaType)) {
+                return $transmutor->extract($file, $mediaType);
             }
         }
 
@@ -108,15 +132,17 @@ class Transmutor
     /**
      * Transmute asset to flash file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function transmuteToFlash(FileInterface $file)
+    public function transmuteToFlash(ExtendedFileInterface $file)
     {
+        $mediaType = $this->mediaTypeManager->find($file->getMediaType());
+
         foreach ($this->flashTransmutors as $transmutor) {
-            if ($transmutor->isAvailable() && $transmutor->supports($file)) {
-                return $transmutor->extract($file);
+            if ($transmutor->supports($file, $mediaType)) {
+                return $transmutor->extract($file, $mediaType);
             }
         }
 

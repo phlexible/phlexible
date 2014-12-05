@@ -15,7 +15,6 @@ use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Criteria\Criterium;
 use Phlexible\Bundle\MessageBundle\Entity\Filter;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Message repository

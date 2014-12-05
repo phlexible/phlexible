@@ -35,7 +35,7 @@ class FileMetaController extends Controller
         $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
-        $file = $this->get('phlexible_media_site.site_manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
+        $file = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
 
         $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
@@ -97,8 +97,8 @@ class FileMetaController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
 
-        $site = $this->get('phlexible_media_site.site_manager')->getByFileId($fileId);
-        $file = $site->findFile($fileId, $fileVersion);
+        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId);
+        $file = $volume->findFile($fileId, $fileVersion);
 
         /*
         $beforeEvent = new BeforeSaveFileMeta($file);
@@ -164,10 +164,10 @@ class FileMetaController extends Controller
         $fileId = $request->get('file_id');
         $fileVersion = $request->get('file_version', 1);
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
 
-        $file = $siteManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
+        $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
         $metaSets = $fileMetaSetResolver->resolve($file);
 
         $sets = [];
@@ -198,11 +198,11 @@ class FileMetaController extends Controller
             $ids = [];
         }
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId, $fileVersion);
-        $site->setFileMetasets($file, $ids, $this->getUser()->getId());
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId, $fileVersion);
+        $volume->setFileMetasets($file, $ids, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Set added.');
     }

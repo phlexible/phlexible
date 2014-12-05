@@ -8,16 +8,17 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
 use Phlexible\Bundle\MediaExtractorBundle\Transmutor;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -44,9 +45,9 @@ class ImageWorker extends AbstractWorker
     private $cacheManager;
 
     /**
-     * @var DocumenttypeManagerInterface
+     * @var MediaTypeManagerInterface
      */
-    private $documenttypeManager;
+    private $mediaTypeManager;
 
     /**
      * @var CacheIdStrategyInterface
@@ -69,20 +70,20 @@ class ImageWorker extends AbstractWorker
     private $tempDir;
 
     /**
-     * @param StorageManager               $storageManager
-     * @param Transmutor                   $transmutor
-     * @param CacheManagerInterface        $cacheManager
-     * @param DocumenttypeManagerInterface $documenttypeManager
-     * @param CacheIdStrategyInterface     $cacheIdStrategy
-     * @param ImageTemplateApplier         $applier
-     * @param LoggerInterface              $logger
-     * @param string                       $tempDir
+     * @param StorageManager            $storageManager
+     * @param Transmutor                $transmutor
+     * @param CacheManagerInterface     $cacheManager
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param CacheIdStrategyInterface  $cacheIdStrategy
+     * @param ImageTemplateApplier      $applier
+     * @param LoggerInterface           $logger
+     * @param string                    $tempDir
      */
     public function __construct(
         StorageManager $storageManager,
         Transmutor $transmutor,
         CacheManagerInterface $cacheManager,
-        DocumenttypeManagerInterface $documenttypeManager,
+        MediaTypeManagerInterface $mediaTypeManager,
         CacheIdStrategyInterface $cacheIdStrategy,
         ImageTemplateApplier $applier,
         LoggerInterface $logger,
@@ -91,7 +92,7 @@ class ImageWorker extends AbstractWorker
         $this->storageManager = $storageManager;
         $this->transmutor = $transmutor;
         $this->cacheManager = $cacheManager;
-        $this->documenttypeManager = $documenttypeManager;
+        $this->mediaTypeManager = $mediaTypeManager;
         $this->cacheIdStrategy = $cacheIdStrategy;
         $this->applier = $applier;
         $this->logger = $logger;
@@ -101,7 +102,7 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, FileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         return $template instanceof ImageTemplate;
     }
@@ -109,7 +110,7 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, FileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         $imageFile = $this->transmutor->transmuteToImage($file);
 
@@ -127,18 +128,18 @@ class ImageWorker extends AbstractWorker
     /**
      * Apply template to filename
      *
-     * @param ImageTemplate $template
-     * @param FileInterface $file
-     * @param string        $inputFilename
-     * @param bool          $missing
+     * @param ImageTemplate         $template
+     * @param ExtendedFileInterface $file
+     * @param string                $inputFilename
+     * @param bool                  $missing
      *
      * @return CacheItem
      */
-    private function work(ImageTemplate $template, FileInterface $file, $inputFilename = null, $missing = false)
+    private function work(ImageTemplate $template, ExtendedFileInterface $file, $inputFilename = null, $missing = false)
     {
         $cacheFilename = null;
 
-        $site = $file->getSite();
+        $volume = $file->getVolume();
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
@@ -147,14 +148,18 @@ class ImageWorker extends AbstractWorker
 
         $pathinfo = pathinfo($file->getPhysicalPath());
 
-        $cacheItem = $this->cacheManager->findOneBy(['templateKey' => $template->getKey(), 'fileId' => $fileId, 'fileVersion' => $fileVersion]);
+        $cacheItem = $this->cacheManager->findOneBy([
+            'templateKey' => $template->getKey(),
+            'fileId' => $fileId,
+            'fileVersion' => $fileVersion
+        ]);
         if (!$cacheItem) {
             $cacheItem = new CacheItem();
         }
 
         $cacheItem
             ->setId($cacheId)
-            ->setSiteId($site->getId())
+            ->setVolumeId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())
@@ -162,7 +167,7 @@ class ImageWorker extends AbstractWorker
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
             ->setQueueStatus(CacheItem::QUEUE_DONE)
             ->setMimeType($file->getMimeType())
-            ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
+            ->setMediaType(strtolower($file->getMediaType()))
             ->setExtension(isset($pathinfo['extension']) ? $pathinfo['extension'] : '')
             ->setFileSize(0)
             ->setError(null);
@@ -208,16 +213,15 @@ class ImageWorker extends AbstractWorker
 
                 $filesystem->chmod($tempFilename, 0777);
 
-                $fileInfo = $this->documenttypeManager->getMimeDetector()->detect($tempFilename);
-                $documentType = $this->documenttypeManager->findByMimetype($fileInfo->getMimeType());
+                $mediaType = $this->mediaTypeManager->findByFilename($tempFilename);
 
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_OK)
                     ->setQueueStatus(CacheItem::QUEUE_DONE)
-                    ->setMimeType($fileInfo->getMimeType())
-                    ->setDocumentTypeKey($documentType->getKey())
-                    ->setExtension($fileInfo->getExtension())
-                    ->setFilesize($fileInfo->getSize())
+                    ->setMimeType($mediaType->getMimetype())
+                    ->setMediaType($mediaType->getName())
+                    ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
+                    ->setFilesize(filesize($tempFilename))
                     ->setWidth($image->getSize()->getWidth())
                     ->setHeight($image->getSize()->getHeight())
                     ->setFinishedAt(new \DateTime());
@@ -235,7 +239,11 @@ class ImageWorker extends AbstractWorker
             }
         }
 
+        try {
         $this->cacheManager->updateCacheItem($cacheItem);
+        } catch (\Exception $e) {
+            echo 'bla';
+        }
 
         if ($cacheItem->getError()) {
             $this->logger->error($cacheItem->getError());

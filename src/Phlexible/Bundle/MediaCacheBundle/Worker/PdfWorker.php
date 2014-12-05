@@ -8,15 +8,16 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\PdfTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\PdfTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -38,9 +39,9 @@ class PdfWorker extends AbstractWorker
     private $cacheManager;
 
     /**
-     * @var DocumenttypeManagerInterface
+     * @var MediaTypeManagerInterface
      */
-    private $documenttypeManager;
+    private $mediaTypeManager;
 
     /**
      * @var CacheIdStrategyInterface
@@ -63,18 +64,18 @@ class PdfWorker extends AbstractWorker
     private $tempDir;
 
     /**
-     * @param StorageManager               $storageManager
-     * @param CacheManagerInterface        $cacheManager
-     * @param DocumenttypeManagerInterface $documenttypeManager
-     * @param CacheIdStrategyInterface     $cacheIdStrategy
-     * @param PdfTemplateApplier           $applier
-     * @param LoggerInterface              $logger
-     * @param string                       $tempDir
+     * @param StorageManager            $storageManager
+     * @param CacheManagerInterface     $cacheManager
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param CacheIdStrategyInterface  $cacheIdStrategy
+     * @param PdfTemplateApplier        $applier
+     * @param LoggerInterface           $logger
+     * @param string                    $tempDir
      */
     public function __construct(
         StorageManager $storageManager,
         CacheManagerInterface $cacheManager,
-        DocumenttypeManagerInterface $documenttypeManager,
+        MediaTypeManagerInterface $mediaTypeManager,
         CacheIdStrategyInterface $cacheIdStrategy,
         PdfTemplateApplier $applier,
         LoggerInterface $logger,
@@ -82,7 +83,7 @@ class PdfWorker extends AbstractWorker
     {
         $this->storageManager = $storageManager;
         $this->cacheManager = $cacheManager;
-        $this->documenttypeManager = $documenttypeManager;
+        $this->mediaTypeManager = $mediaTypeManager;
         $this->cacheIdStrategy = $cacheIdStrategy;
         $this->applier = $applier;
         $this->logger = $logger;
@@ -92,15 +93,15 @@ class PdfWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, FileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return $template instanceof PdfTemplate && strtolower($file->getDocumenttype()) === 'pdf';
+        return $template instanceof PdfTemplate && $mediaType->getName() === 'pdf';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, FileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         return $this->work($template, $file, $file->getPhysicalPath());
     }
@@ -108,15 +109,15 @@ class PdfWorker extends AbstractWorker
     /**
      * Apply template to filename
      *
-     * @param PdfTemplate   $template
-     * @param FileInterface $file
-     * @param string        $inputFilename
+     * @param PdfTemplate           $template
+     * @param ExtendedFileInterface $file
+     * @param string                $inputFilename
      *
      * @return CacheItem
      */
-    private function work(PdfTemplate $template, FileInterface $file, $inputFilename)
+    private function work(PdfTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
-        $site = $file->getSite();
+        $volume = $file->getVolume();
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
@@ -130,7 +131,7 @@ class PdfWorker extends AbstractWorker
         }
 
         $cacheItem
-            ->setSiteId($site->getId())
+            ->setVolumeId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())
@@ -138,7 +139,7 @@ class PdfWorker extends AbstractWorker
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
             ->setQueueStatus(CacheItem::QUEUE_DONE)
             ->setMimeType($file->getMimeType())
-            ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
+            ->setMediaType(strtolower($file->getMediaType()))
             ->setExtension('')
             ->setFileSize(0)
             ->setError(null);
@@ -193,16 +194,15 @@ class PdfWorker extends AbstractWorker
 
                 $filesystem->chmod($tempFilename, 0777);
 
-                $fileInfo = $this->documenttypeManager->getMimeDetector()->detect($tempFilename);
-                $documentType = $this->documenttypeManager->findByMimetype($fileInfo->getMimeType());
+                $mediaType = $this->mediaTypeManager->findByFilename($tempFilename);
 
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_OK)
                     ->setQueueStatus(CacheItem::QUEUE_DONE)
-                    ->setMimeType($fileInfo->getMimeType())
-                    ->setDocumentTypeKey($documentType->getKey())
-                    ->setExtension($fileInfo->getExtension())
-                    ->setFilesize($fileInfo->getSize())
+                    ->setMimeType($mediaType->getMimeType())
+                    ->setMediaType($mediaType->getName())
+                    ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
+                    ->setFilesize(filesize($tempFilename))
                     ->setFinishedAt(new \DateTime());
             } catch (\Exception $e) {
                 $cacheItem

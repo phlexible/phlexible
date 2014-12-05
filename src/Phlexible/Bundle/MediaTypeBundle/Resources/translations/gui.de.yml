@@ -1,0 +1,13 @@
+mediatype:
+    media_types: Medientypen
+    mimetypes: Mimetypen
+    mimetype: Mimetyp
+    mimetypes_for: 'Mimetypen für "{0}"'
+    icons_for: 'Icons für "{0}"'
+    id: ID
+    key: Schlüssel
+    reload: Neu laden
+    add: Hinzufügen
+    save: Speichern
+    save_and_close: 'Speichern und schliessen'
+    delete: Löschen

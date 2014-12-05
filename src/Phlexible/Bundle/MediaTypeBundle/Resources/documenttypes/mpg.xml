@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="mpg">
+    <type>video</type>
+    <titles>
+        <title lang="de">MPEG Video</title>
+        <title lang="en">MPEG Video</title>
+    </titles>
+    <mimetypes>
+        <mimetype>video/mpeg</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/mpg.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/mpg.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/mpg.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/mpg.gif</icon>
+    </icons>
+</documenttype>

@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Alchemy\Zippy\Zippy;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderIterator;
+use Phlexible\Component\Volume\Model\FolderIterator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,13 +38,13 @@ class DownloadController extends Controller
         $fileId = $request->get('id');
         $fileVersion = $request->get('version', null);
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
-        $site = $siteManager->getByFileId($fileId);
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+        $volume = $volumeManager->getByFileId($fileId);
 
         if ($fileVersion) {
-            $file = $site->findFile($fileId, $fileVersion);
+            $file = $volume->findFile($fileId, $fileVersion);
         } else {
-            $file = $site->findFile($fileId);
+            $file = $volume->findFile($fileId);
         }
 
         $filepath = $file->getPhysicalPath();
@@ -68,14 +68,14 @@ class DownloadController extends Controller
     {
         $folderId = $request->get('folder_id');
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $path = $this->container->getParameter('phlexible_media_manager.temp_dir');
 
         $filesystem = new Filesystem();
         $filesystem->mkdir($path);
 
-        $site = $siteManager->getByFolderId($folderId);
-        $folder = $site->findFolder($folderId);
+        $volume = $volumeManager->getByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
 
         $prefix = $folder->getPath();
         $prefixLength = 0;
@@ -98,7 +98,7 @@ class DownloadController extends Controller
         $files = [];
         foreach ($rii as $folder) {
             $folderPath = $folder->getPath() . '/';
-            foreach ($site->findFilesByFolder($folder) as $file) {
+            foreach ($volume->findFilesByFolder($folder) as $file) {
                 $displayName = $prefix . $folderPath . $file->getName();
                 $displayName = substr($displayName, $prefixLength);
                 $files[$displayName] = $file->getPhysicalPath();
@@ -122,22 +122,22 @@ class DownloadController extends Controller
         $fileIds = $request->get('data');
         $fileIds = json_decode($fileIds);
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $path = $this->container->getParameter('phlexible_media_manager.temp_dir');
 
         $filesystem = new Filesystem();
         $filesystem->mkdir($path);
 
         $firstFileId = current($fileIds);
-        $site = $siteManager->getByFileId($firstFileId);
-        $firstFile = $site->findFile($firstFileId);
-        $folder = $site->findFolder($firstFile->getFolderId());
+        $volume = $volumeManager->getByFileId($firstFileId);
+        $firstFile = $volume->findFile($firstFileId);
+        $folder = $volume->findFolder($firstFile->getFolderId());
 
         $filename = $path . 'files_' . $folder->getName() . '_' . date('YmdHis') . '.zip';
 
         $files = [];
         foreach ($fileIds as $fileId) {
-            $file = $site->findFile($fileId);
+            $file = $volume->findFile($fileId);
 
             $files[$folder->getName() . '/' . $file->getName()] = $file->getPhysicalPath();
         }

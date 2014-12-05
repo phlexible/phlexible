@@ -28,7 +28,16 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('sites')
+                ->arrayNode('metaset_mapping')
+                    ->useAttributeAsKey('metaset')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('category')->end()
+                            ->scalarNode('name')->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('volumes')
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()

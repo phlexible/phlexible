@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 
 /**
@@ -19,10 +19,10 @@ use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
 interface CacheIdStrategyInterface
 {
     /**
-     * @param TemplateInterface $template
-     * @param FileInterface     $file
+     * @param TemplateInterface     $template
+     * @param ExtendedFileInterface $file
      *
      * @return string
      */
-    public function createCacheId(TemplateInterface $template, FileInterface $file);
+    public function createCacheId(TemplateInterface $template, ExtendedFileInterface $file);
 }

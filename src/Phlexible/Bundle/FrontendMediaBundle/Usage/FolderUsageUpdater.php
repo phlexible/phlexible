@@ -12,9 +12,9 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FolderUsage;
-use Phlexible\Bundle\MediaSiteBundle\Site\SiteManager;
 use Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Component\Volume\VolumeManager;
 
 /**
  * File usage
@@ -39,26 +39,26 @@ class FolderUsageUpdater
     private $teaserManager;
 
     /**
-     * @var SiteManager
+     * @var VolumeManager
      */
-    private $siteManager;
+    private $volumeManager;
 
     /**
      * @param EntityManager  $entityManager
      * @param TreeManager    $treeManager
      * @param TeaserManager  $teaserManager
-     * @param SiteManager    $siteManager
+     * @param VolumeManager  $volumeManager
      */
     public function __construct(
         EntityManager $entityManager,
         TreeManager $treeManager,
         TeaserManager $teaserManager,
-        SiteManager $siteManager)
+        VolumeManager $volumeManager)
     {
         $this->entityManager = $entityManager;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
-        $this->siteManager = $siteManager;
+        $this->volumeManager = $volumeManager;
     }
 
     /**
@@ -132,8 +132,8 @@ class FolderUsageUpdater
         }
 
         foreach ($flags as $folderId => $flag) {
-            $site = $this->siteManager->getByFolderId($folderId);
-            $folder = $site->findFolder($folderId);
+            $volume = $this->volumeManager->getByFolderId($folderId);
+            $folder = $volume->findFolder($folderId);
 
             $folderUsage = $folderUsageRepository->findOneBy(['folder' => $folder, 'usageType' => 'element', 'usageId' => $eid]);
             if (!$folderUsage) {

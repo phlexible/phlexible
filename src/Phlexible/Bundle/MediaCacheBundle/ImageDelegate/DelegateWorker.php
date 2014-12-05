@@ -8,14 +8,14 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\ImageDelegate;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\Documenttype;
-use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
-use Phlexible\Bundle\DocumenttypeBundle\Model\IconResolver;
 use Phlexible\Bundle\MediaCacheBundle\Exception\CreateDelegateFailed;
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\MediaType\Model\IconResolver;
+use Phlexible\Component\MediaType\Model\MediaType;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 
@@ -32,9 +32,9 @@ class DelegateWorker
     private $templateManager;
 
     /**
-     * @var DocumenttypeManagerInterface
+     * @var MediaTypeManagerInterface
      */
-    private $documenttypeManager;
+    private $mediaTypeManager;
 
     /**
      * @var ImageTemplateApplier
@@ -62,23 +62,24 @@ class DelegateWorker
     private $delegateDirWaiting;
 
     /**
-     * @param TemplateManagerInterface     $templateManager
-     * @param DocumenttypeManagerInterface $documenttypeManager
-     * @param ImageTemplateApplier         $applier
-     * @param IconResolver                 $iconResolver
-     * @param FileLocator                  $locator
-     * @param string                       $delegateDir
+     * @param TemplateManagerInterface  $templateManager
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param ImageTemplateApplier      $applier
+     * @param IconResolver              $iconResolver
+     * @param FileLocator               $locator
+     * @param string                    $delegateDir
      */
     public function __construct(
         TemplateManagerInterface $templateManager,
-        DocumenttypeManagerInterface $documenttypeManager,
+        MediaTypeManagerInterface $mediaTypeManager,
         ImageTemplateApplier $applier,
         IconResolver $iconResolver,
         FileLocator $locator,
         $delegateDir
-    ) {
+    )
+    {
         $this->templateManager = $templateManager;
-        $this->documenttypeManager = $documenttypeManager;
+        $this->mediaTypeManager = $mediaTypeManager;
         $this->applier = $applier;
         $this->iconResolver = $iconResolver;
         $this->locator = $locator;
@@ -94,20 +95,20 @@ class DelegateWorker
     public function writeAll($force = false, callable $callback = null)
     {
         $templates  = $this->templateManager->findBy(['type' => 'image']);
-        $documentTypes = $this->documenttypeManager->findAll();
+        $mediaTypes = $this->mediaTypeManager->findAll();
 
-        $cnt = count($templates) * count($documentTypes);
+        $cnt = count($templates) * count($mediaTypes);
 
         if (is_callable($callback)) {
             call_user_func($callback, 'count', $cnt);
         }
 
         foreach ($templates as $template) {
-            foreach ($documentTypes as $documentType) {
-                $this->write($documentType, $template, $force);
+            foreach ($mediaTypes as $mediaType) {
+                $this->write($mediaType, $template, $force);
 
                 if (is_callable($callback)) {
-                    call_user_func($callback, 'update', $template->getKey(), $documentType->getKey());
+                    call_user_func($callback, 'update', $template->getKey(), $mediaType->getName());
                 }
             }
         }
@@ -135,44 +136,44 @@ class DelegateWorker
 
     /**
      * @param ImageTemplate $template
-     * @param Documenttype  $documenttype
+     * @param MediaType     $mediaType
      *
      * @return string
      */
-    public function getCleanFilename(ImageTemplate $template, Documenttype $documenttype)
+    public function getCleanFilename(ImageTemplate $template, MediaType $mediaType)
     {
-        return $this->getCleanDir($template) . $documenttype->getKey() . '.gif';
+        return $this->getCleanDir($template) . $mediaType->getName() . '.gif';
     }
 
     /**
      * @param ImageTemplate $template
-     * @param Documenttype  $documenttype
+     * @param MediaType     $mediaType
      *
      * @return string
      */
-    public function getWaitingFilename(ImageTemplate $template, Documenttype $documenttype)
+    public function getWaitingFilename(ImageTemplate $template, MediaType $mediaType)
     {
-        return $this->getWaitingDir($template) . $documenttype->getKey() . '.gif';
+        return $this->getWaitingDir($template) . $mediaType->getName() . '.gif';
     }
 
     /**
-     * @param Documenttype $documenttype
+     * @param MediaType $mediaType
      *
      * @return string
      */
-    public function getFilename(Documenttype $documenttype)
+    public function getFilename(MediaType $mediaType)
     {
-        return $documenttype->getKey() . '.gif';
+        return $mediaType->getName() . '.gif';
     }
 
     /**
-     * @param Documenttype  $documenttype
+     * @param MediaType     $mediaType
      * @param ImageTemplate $template
      * @param bool          $force
      *
      * @throws CreateDelegateFailed
      */
-    public function write(Documenttype $documenttype, ImageTemplate $template, $force = false)
+    public function write(MediaType $mediaType, ImageTemplate $template, $force = false)
     {
         $templateModifyTime = $template->getModifiedAt()->format('U');
 
@@ -180,14 +181,14 @@ class DelegateWorker
         if (!$templateWidth) {
             $templateWidth = 256;
         }
-        $icon = $this->iconResolver->resolve($documenttype, $templateWidth);
+        $icon = $this->iconResolver->resolve($mediaType, $templateWidth);
 
         if (!$icon || !file_exists($icon)) {
             return;
         }
 
-        $filePathClean   = $this->getCleanFilename($template, $documenttype);
-        $filePathWaiting = $this->getWaitingFilename($template, $documenttype);
+        $filePathClean   = $this->getCleanFilename($template, $mediaType);
+        $filePathWaiting = $this->getWaitingFilename($template, $mediaType);
 
         $dirClean   = dirname($filePathClean);
         $dirWaiting = dirname($filePathWaiting);

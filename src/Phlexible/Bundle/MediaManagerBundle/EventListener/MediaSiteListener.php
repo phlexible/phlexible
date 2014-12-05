@@ -8,18 +8,18 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
-use Phlexible\Bundle\MediaManagerBundle\Site\DeleteFileChecker;
-use Phlexible\Bundle\MediaManagerBundle\Site\DeleteFolderChecker;
-use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\FolderEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFileChecker;
+use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFolderChecker;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
+use Phlexible\Component\Volume\Event\CreateFileEvent;
+use Phlexible\Component\Volume\Event\FileEvent;
+use Phlexible\Component\Volume\Event\FolderEvent;
+use Phlexible\Component\Volume\Event\ReplaceFileEvent;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
+use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -30,9 +30,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MediaSiteListener implements EventSubscriberInterface
 {
     /**
-     * @var DocumenttypeManagerInterface
+     * @var MediaTypeManagerInterface
      */
-    private $documenttypeManager;
+    private $mediaTypeManager;
 
     /**
      * @var MetaSetManagerInterface
@@ -50,21 +50,29 @@ class MediaSiteListener implements EventSubscriberInterface
     private $deleteFolderChecker;
 
     /**
-     * @param DocumenttypeManagerInterface $documenttypeManager
-     * @param MetaSetManagerInterface      $metaSetManager
-     * @param DeleteFileChecker            $deleteFileChecker
-     * @param DeleteFolderChecker          $deleteFolderChecker
+     * @var array
+     */
+    private $metasetMapping;
+
+    /**
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param MetaSetManagerInterface   $metaSetManager
+     * @param DeleteFileChecker         $deleteFileChecker
+     * @param DeleteFolderChecker       $deleteFolderChecker
+     * @param array                     $metasetMapping
      */
     public function __construct(
-        DocumenttypeManagerInterface $documenttypeManager,
+        MediaTypeManagerInterface $mediaTypeManager,
         MetaSetManagerInterface $metaSetManager,
         DeleteFileChecker $deleteFileChecker,
-        DeleteFolderChecker $deleteFolderChecker)
+        DeleteFolderChecker $deleteFolderChecker,
+        array $metasetMapping)
     {
-        $this->documenttypeManager = $documenttypeManager;
+        $this->mediaTypeManager = $mediaTypeManager;
         $this->metaSetManager = $metaSetManager;
         $this->deleteFileChecker = $deleteFileChecker;
         $this->deleteFolderChecker = $deleteFolderChecker;
+        $this->metasetMapping = $metasetMapping;
     }
 
 
@@ -74,11 +82,11 @@ class MediaSiteListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            MediaSiteEvents::BEFORE_CREATE_FILE   => ['onBeforeCreateFile', 500],
-            MediaSiteEvents::BEFORE_CREATE_FOLDER => ['onBeforeCreateFolder', 500],
-            MediaSiteEvents::BEFORE_REPLACE_FILE   => ['onBeforeReplaceFile', 500],
-            MediaSiteEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
-            MediaSiteEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
+            VolumeEvents::BEFORE_CREATE_FILE   => ['onBeforeCreateFile', 500],
+            VolumeEvents::BEFORE_CREATE_FOLDER => ['onBeforeCreateFolder', 500],
+            VolumeEvents::BEFORE_REPLACE_FILE   => ['onBeforeReplaceFile', 500],
+            VolumeEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
+            VolumeEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
         ];
     }
 
@@ -111,21 +119,44 @@ class MediaSiteListener implements EventSubscriberInterface
     private function processFile(ExtendedFileInterface $file, PathSourceInterface $fileSource)
     {
         try {
-            $documenttype = $this->documenttypeManager->findByMimetype($fileSource->getMimeType());
+            $mediaType = $this->mediaTypeManager->findByMimetype($fileSource->getMimeType());
         } catch (\Exception $e) {
-            $documenttype = $this->documenttypeManager->find('binary');
+            $mediaType = $this->mediaTypeManager->find('binary');
         }
 
-        $file->setAssettype($documenttype->getType());
-        $file->setDocumenttype($documenttype->getKey());
+        $file->setMediaType($mediaType->getName());
 
-        try {
-            $fileMetaSet = $this->metaSetManager->findOneByName('file');
-            if ($fileMetaSet) {
-                $file->addMetaSet($fileMetaSet->getId());
+        foreach ($this->metasetMapping as $metasetName => $mapping) {
+            if ($this->matches($mediaType, $mapping)) {
+                $metaSet = $this->metaSetManager->findOneByName($metasetName);
+                if ($metaSet) {
+                    $file->addMetaSet($metaSet->getId());
+                }
             }
-        } catch (\Exception $e) {
         }
+    }
+
+    /**
+     * @param MediaType $mediaType
+     * @param array     $mapping
+     *
+     * @return bool
+     */
+    private function matches(MediaType $mediaType, array $mapping)
+    {
+        if (empty($mapping)) {
+            return true;
+        }
+
+        $match = false;
+        if (!empty($mapping['name'])) {
+            $match = $mediaType->getName() === $mapping['name'];
+        }
+        if (!empty($mapping['category'])) {
+            $match = $mediaType->getCategory() === $mapping['category'];
+        }
+
+        return $match;
     }
 
     /**

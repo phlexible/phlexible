@@ -9,15 +9,13 @@
 namespace Phlexible\Bundle\MediaAssetBundle\EventListener;
 
 use Phlexible\Bundle\MediaAssetBundle\AttributeReader\AttributeReaderInterface;
-use Phlexible\Bundle\MediaManagerBundle\Site\ExtendedFileInterface;
-use Phlexible\Bundle\MediaSiteBundle\Event\BeforeCreateFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\BeforeReplaceFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\CreateFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\Event\ReplaceFileEvent;
-use Phlexible\Bundle\MediaSiteBundle\FileSource\PathSourceInterface;
-use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
-use Phlexible\Bundle\MediaSiteBundle\Model\AttributeBag;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
+use Phlexible\Component\Volume\Event\CreateFileEvent;
+use Phlexible\Component\Volume\Event\ReplaceFileEvent;
+use Phlexible\Component\Volume\FileSource\PathSourceInterface;
+use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -33,11 +31,18 @@ class MediaSiteListener implements EventSubscriberInterface
     private $attributeReader;
 
     /**
-     * @param AttributeReaderInterface $attributeReader
+     * @var MediaTypeManagerInterface
      */
-    public function __construct(AttributeReaderInterface $attributeReader)
+    private $mediaTypeManager;
+
+    /**
+     * @param AttributeReaderInterface  $attributeReader
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     */
+    public function __construct(AttributeReaderInterface $attributeReader, MediaTypeManagerInterface $mediaTypeManager)
     {
         $this->attributeReader = $attributeReader;
+        $this->mediaTypeManager = $mediaTypeManager;
     }
 
     /**
@@ -46,8 +51,8 @@ class MediaSiteListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            MediaSiteEvents::BEFORE_CREATE_FILE => 'onBeforeCreateFile',
-            MediaSiteEvents::BEFORE_REPLACE_FILE => 'onBeforeReplaceFile',
+            VolumeEvents::BEFORE_CREATE_FILE => 'onBeforeCreateFile',
+            VolumeEvents::BEFORE_REPLACE_FILE => 'onBeforeReplaceFile',
         ];
     }
 
@@ -79,15 +84,15 @@ class MediaSiteListener implements EventSubscriberInterface
      */
     private function processAttributes(ExtendedFileInterface $file, PathSourceInterface $fileSource)
     {
-        $attributes = new AttributeBag();
+        $attributes = new AttributeBag($file->getAttributes());
 
-        $assettype = $file->getAssettype();
-        $documenttype = $file->getDocumenttype();
+        $mediaTypeName = $file->getMediaType();
+        $mediaType = $this->mediaTypeManager->find($mediaTypeName);
 
-        if ($this->attributeReader->supports($fileSource, $documenttype, $assettype)) {
-            $this->attributeReader->read($fileSource, $documenttype, $assettype, $attributes);
+        if ($this->attributeReader->supports($fileSource, $mediaType)) {
+            $this->attributeReader->read($fileSource, $mediaType, $attributes);
         }
 
-        $file->getAttributes()->set('attributes', $attributes->all());
+        $file->setAttributes($attributes->all());
     }
 }

@@ -8,16 +8,17 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Worker;
 
-use Phlexible\Bundle\DocumenttypeBundle\Model\DocumenttypeManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager;
 use Phlexible\Bundle\MediaExtractorBundle\Transmutor;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\AudioTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\AudioTemplate;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -44,9 +45,9 @@ class AudioWorker extends AbstractWorker
     private $cacheManager;
 
     /**
-     * @var DocumenttypeManagerInterface
+     * @var MediaTypeManagerInterface
      */
-    private $documenttypeManager;
+    private $mediaTypeManager;
 
     /**
      * @var CacheIdStrategyInterface
@@ -69,20 +70,20 @@ class AudioWorker extends AbstractWorker
     private $tempDir;
 
     /**
-     * @param StorageManager               $storageManager
-     * @param Transmutor                   $transmutor
-     * @param CacheManagerInterface        $cacheManager
-     * @param DocumenttypeManagerInterface $documenttypeManager
-     * @param CacheIdStrategyInterface     $cacheIdStrategy
-     * @param AudioTemplateApplier         $applier
-     * @param LoggerInterface              $logger
-     * @param string                       $tempDir
+     * @param StorageManager            $storageManager
+     * @param Transmutor                $transmutor
+     * @param CacheManagerInterface     $cacheManager
+     * @param MediaTypeManagerInterface $mediaTypeManager
+     * @param CacheIdStrategyInterface  $cacheIdStrategy
+     * @param AudioTemplateApplier      $applier
+     * @param LoggerInterface           $logger
+     * @param string                    $tempDir
      */
     public function __construct(
         StorageManager $storageManager,
         Transmutor $transmutor,
         CacheManagerInterface $cacheManager,
-        DocumenttypeManagerInterface $documenttypeManager,
+        MediaTypeManagerInterface $mediaTypeManager,
         CacheIdStrategyInterface $cacheIdStrategy,
         AudioTemplateApplier $applier,
         LoggerInterface $logger,
@@ -91,7 +92,7 @@ class AudioWorker extends AbstractWorker
         $this->storageManager = $storageManager;
         $this->transmutor = $transmutor;
         $this->cacheManager = $cacheManager;
-        $this->documenttypeManager = $documenttypeManager;
+        $this->mediaTypeManager = $mediaTypeManager;
         $this->cacheIdStrategy = $cacheIdStrategy;
         $this->applier = $applier;
         $this->logger = $logger;
@@ -101,15 +102,15 @@ class AudioWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function accept(TemplateInterface $template, FileInterface $file)
+    public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return $template instanceof AudioTemplate && strtolower($file->getAssettype()) === 'audio';
+        return $template instanceof AudioTemplate && $mediaType->getCategory() === 'audio';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, FileInterface $file)
+    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         $audioFile = $this->transmutor->transmuteToAudio($file);
 
@@ -119,15 +120,15 @@ class AudioWorker extends AbstractWorker
     /**
      * Apply template to filename
      *
-     * @param AudioTemplate $template
-     * @param FileInterface $file
-     * @param string        $inputFilename
+     * @param AudioTemplate         $template
+     * @param ExtendedFileInterface $file
+     * @param string                $inputFilename
      *
      * @return CacheItem
      */
-    private function work(AudioTemplate $template, FileInterface $file, $inputFilename)
+    private function work(AudioTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
-        $site = $file->getSite();
+        $volume = $file->getVolume();
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
@@ -141,7 +142,7 @@ class AudioWorker extends AbstractWorker
         }
 
         $cacheItem
-            ->setSiteId($site->getId())
+            ->setVolumeId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())
@@ -149,7 +150,7 @@ class AudioWorker extends AbstractWorker
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
             ->setQueueStatus(CacheItem::QUEUE_DONE)
             ->setMimeType($file->getMimeType())
-            ->setDocumentTypeKey(strtolower($file->getDocumenttype()))
+            ->setMediaType(strtolower($file->getMediaType()))
             ->setExtension('')
             ->setFileSize(0)
             ->setError(null);
@@ -186,16 +187,15 @@ class AudioWorker extends AbstractWorker
 
                 $filesystem->chmod($tempFilename, 0777);
 
-                $fileInfo = $this->documenttypeManager->getMimeDetector()->detect($tempFilename);
-                $documentType = $this->documenttypeManager->findByMimetype($fileInfo->getMimeType());
+                $mediaType = $this->mediaTypeManager->findByFilename($tempFilename);
 
                 $cacheItem
                     ->setCacheStatus(CacheItem::STATUS_OK)
                     ->setQueueStatus(CacheItem::QUEUE_DONE)
-                    ->setMimeType($fileInfo->getMimeType())
-                    ->setDocumentTypeKey($documentType->getKey())
-                    ->setExtension($fileInfo->getExtension())
-                    ->setFilesize($fileInfo->getSize())
+                    ->setMimeType($mediaType->getMimetype())
+                    ->setMediaType($mediaType->getName())
+                    ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
+                    ->setFilesize(filesize($tempFilename))
                     ->setFinishedAt(new \DateTime());
             } catch (\Exception $e) {
                 $cacheItem

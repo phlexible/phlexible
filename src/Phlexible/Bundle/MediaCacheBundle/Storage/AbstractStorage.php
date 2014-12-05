@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Storage;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 
 /**
  * Abstract storage
@@ -46,9 +46,9 @@ abstract class AbstractStorage implements  StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getUrls(FileInterface $file, $baseUrl)
+    public function getUrls(ExtendedFileInterface $file, $baseUrl)
     {
-        $fileId        = $file->getID();
+        $fileId        = $file->getId();
         $fileName      = rawurlencode($file->getName());
         $iconFileName  = rawurlencode($this->replaceExtension($file->getName(), '.gif'));
 

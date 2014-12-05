@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="ppt">
+    <type>document</type>
+    <titles>
+        <title lang="de">Powerpoint Präsentation</title>
+        <title lang="en">Powerpoint Presentation</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/vnd.ms-powerpoint</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/ppt.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/ppt.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/ppt.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/ppt.gif</icon>
+    </icons>
+</documenttype>

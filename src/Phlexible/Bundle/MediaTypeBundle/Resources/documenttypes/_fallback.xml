@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="_fallback">
+    <type>document</type>
+    <titles>
+        <title lang="de">Unbekannt</title>
+        <title lang="en">Unknown</title>
+    </titles>
+    <mimetypes>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/_fallback.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/_fallback.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/_fallback.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/_fallback.gif</icon>
+    </icons>
+</documenttype>

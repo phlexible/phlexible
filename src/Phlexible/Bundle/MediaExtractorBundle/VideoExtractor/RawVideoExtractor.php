@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\VideoExtractor;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
  * Raw video extractor
@@ -20,23 +21,15 @@ class RawVideoExtractor implements VideoExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function isAvailable()
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType)
     {
-        return true;
+        return $mediaType->getCategory() === 'video';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports(FileInterface $file)
-    {
-        return strtolower($file->getAssettype()) === 'video';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function extract(FileInterface $file)
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType)
     {
         return $file->getPhysicalPath();
     }

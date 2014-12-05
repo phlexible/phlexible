@@ -11,25 +11,6 @@ services:
         class: Phlexible\Bundle\MediaCacheBundle\Storage\StorageManager
         arguments: [[]]
 
-    phlexible_media_cache.queue_processor:
-        class: Phlexible\Bundle\MediaCacheBundle\Queue\QueueProcessor
-        arguments:
-            - @phlexible_media_cache.worker.resolver
-            - @phlexible_media_site.site_manager
-            - @phlexible_media_template.template_manager
-            - @properties
-            - %app.lock_dir%
-
-    phlexible_media_cache.batch_builder:
-        class: Phlexible\Bundle\MediaCacheBundle\Queue\BatchBuilder
-        arguments: [@phlexible_media_site.site_manager, @phlexible_media_template.template_manager]
-
-    phlexible_media_cache.batch_resolver:
-        class: Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver
-        arguments:
-            - @phlexible_media_cache.cache_manager
-            - @phlexible_media_cache.id_strategy.default
-
     phlexible_media_cache.id_strategy.default:
         class: Phlexible\Bundle\MediaCacheBundle\CacheIdStrategy\DefaultCacheIdStrategy
 
@@ -37,9 +18,9 @@ services:
         class: Phlexible\Bundle\MediaCacheBundle\ImageDelegate\DelegateWorker
         arguments:
             - @phlexible_media_template.template_manager
-            - @phlexible_documenttype.documenttype_manager
+            - @phlexible_media_type.media_type_manager
             - @phlexible_media_template.applier.image
-            - @phlexible_documenttype.icon_resolver
+            - @phlexible_media_type.icon_resolver
             - @file_locator
             - %phlexible_media_cache.cache_dir%
 

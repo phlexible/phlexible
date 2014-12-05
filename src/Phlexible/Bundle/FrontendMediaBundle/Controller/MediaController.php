@@ -33,11 +33,11 @@ class MediaController extends Controller
     {
         $templateKey = str_replace('.jpg', '', $template);
 
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $templateManager = $this->get('phlexible_media_template.template_manager');
 
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId);
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
         $template = $templateManager->find($templateKey);
 
         $outfile = $this->container->getParameter('app.web_dir') . '/media/' . $fileId . '/' . $templateKey . '.jpg';
@@ -62,10 +62,10 @@ class MediaController extends Controller
      */
     public function downloadAction($fileId)
     {
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId);
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
         $mimeType = $file->getMimeType();
@@ -84,10 +84,10 @@ class MediaController extends Controller
      */
     public function inlineAction($fileId)
     {
-        $siteManager = $this->get('phlexible_media_site.site_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId);
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
         $mimeType = $file->getMimeType();
@@ -105,15 +105,15 @@ class MediaController extends Controller
      */
     public function iconAction($fileId, $size = 16)
     {
-        $siteManager = $this->get('phlexible_media_site.site_manager');
-        $documenttypeManager = $this->get('phlexible_documenttype.documenttype_manager');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
 
-        $site = $siteManager->getByFileId($fileId);
-        $file = $site->findFile($fileId);
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId);
         $mimeType = $file->getMimeType();
 
-        $documenttype = $documenttypeManager->findByMimetype($mimeType);
-        $icon = $documenttype->getIcon($size);
+        $mediaType = $mediaTypeManager->findByMimetype($mimeType);
+        $icon = $mediaType->getIcon($size);
 
         return $this->get('igorw_file_serve.response_factory')
             ->create($icon, 'image/gif', ['absolute_path' => true]);

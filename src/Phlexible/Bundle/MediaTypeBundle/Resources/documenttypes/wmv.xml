@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="wmv">
+    <type>video</type>
+    <titles>
+        <title lang="de">Windows Media Video</title>
+        <title lang="en">Windows Media Video</title>
+    </titles>
+    <mimetypes>
+        <mimetype>video/x-ms-wmv</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/wmv.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/wmv.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/wmv.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/wmv.gif</icon>
+    </icons>
+</documenttype>

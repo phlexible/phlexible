@@ -1,4 +1,0 @@
-documenttypes:
-    parent: config
-    xtype: Phlexible.documenttypes.menuhandle.DocumenttypesHandle
-    roles: [ROLE_DOCUMENTTYPES]

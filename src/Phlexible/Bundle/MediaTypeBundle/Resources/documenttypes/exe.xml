@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documenttype key="exe">
+    <type>document</type>
+    <titles>
+        <title lang="de">Ausführbare Datei</title>
+        <title lang="en">Executable File</title>
+    </titles>
+    <mimetypes>
+        <mimetype>application/x-dosexec</mimetype>
+        <mimetype>application/x-msdos-program</mimetype>
+    </mimetypes>
+    <icons>
+        <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/exe.gif</icon>
+        <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/exe.gif</icon>
+        <icon size="48">@PhlexibleMediaTypeBundle/Resources/public/mimetypes48/exe.gif</icon>
+        <icon size="256">@PhlexibleMediaTypeBundle/Resources/public/mimetypes256/exe.gif</icon>
+    </icons>
+</documenttype>

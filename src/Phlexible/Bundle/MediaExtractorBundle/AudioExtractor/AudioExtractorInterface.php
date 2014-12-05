@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\AudioExtractor;
 
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
  * Audio extractor interface
@@ -18,27 +19,22 @@ use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
 interface AudioExtractorInterface
 {
     /**
-     * Check if requirements for audio extractor are given
-     *
-     * @return bool
-     */
-    public function isAvailable();
-
-    /**
      * Check if extractor supports the given asset
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
+     * @param MediaType             $mediaType
      *
      * @return bool
      */
-    public function supports(FileInterface $file);
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType);
 
     /**
      * Extract audio from file
      *
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
+     * @param MediaType             $mediaType
      *
      * @return string
      */
-    public function extract(FileInterface $file);
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType);
 }

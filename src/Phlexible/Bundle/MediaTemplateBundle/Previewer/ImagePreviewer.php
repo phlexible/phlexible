@@ -8,8 +8,7 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Previewer;
 
-use Monolog\Handler\TestHandler;
-use Phlexible\Bundle\MediaSiteBundle\Model\File;
+use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
 use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Symfony\Component\Filesystem\Filesystem;

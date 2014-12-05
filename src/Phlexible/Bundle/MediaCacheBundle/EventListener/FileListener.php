@@ -12,10 +12,10 @@ use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Batch;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
 use Phlexible\Bundle\MediaCacheBundle\Queue\QueueProcessor;
-use Phlexible\Bundle\MediaSiteBundle\Event\FileEvent;
-use Phlexible\Bundle\MediaSiteBundle\MediaSiteEvents;
-use Phlexible\Bundle\MediaSiteBundle\Model\FileInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\Volume\Event\FileEvent;
+use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -76,9 +76,9 @@ class FileListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            MediaSiteEvents::CREATE_FILE => 'onCreateFile',
-            MediaSiteEvents::REPLACE_FILE => 'onReplaceFile',
-            MediaSiteEvents::DELETE_FILE => 'onDeleteFile',
+            VolumeEvents::CREATE_FILE => 'onCreateFile',
+            VolumeEvents::REPLACE_FILE => 'onReplaceFile',
+            VolumeEvents::DELETE_FILE => 'onDeleteFile',
         ];
     }
 
@@ -111,9 +111,9 @@ class FileListener implements EventSubscriberInterface
     }
 
     /**
-     * @param FileInterface $file
+     * @param ExtendedFileInterface $file
      */
-    private function processFile(FileInterface $file)
+    private function processFile(ExtendedFileInterface $file)
     {
         $systemTemplates = $this->templateManager->findBy(['system' => true, 'cache' => true]);
         $otherTemplates = $this->templateManager->findBy(['system' => false, 'cache' => true]);

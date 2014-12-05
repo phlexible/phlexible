@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Usage;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\MediaSiteBundle\Model\FolderInterface;
+use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
 
 /**
  * Folder usage manager
@@ -41,11 +41,11 @@ class FolderUsageManager
     /**
      * Return aggregated status
      *
-     * @param FolderInterface $folder
+     * @param ExtendedFolderInterface $folder
      *
      * @return int
      */
-    public function getStatus(FolderInterface $folder)
+    public function getStatus(ExtendedFolderInterface $folder)
     {
         $status = 0;
         foreach ($this->findStatusByFolder($folder) as $status) {
@@ -58,11 +58,11 @@ class FolderUsageManager
     /**
      * Return highest aggregated status
      *
-     * @param FolderInterface $folder
+     * @param ExtendedFolderInterface $folder
      *
      * @return int
      */
-    public function getHighestStatus(FolderInterface $folder)
+    public function getHighestStatus(ExtendedFolderInterface $folder)
     {
         $status = $this->getStatus($folder);
 
@@ -82,11 +82,11 @@ class FolderUsageManager
     /**
      * Return aggregated status
      *
-     * @param FolderInterface $folder
+     * @param ExtendedFolderInterface $folder
      *
      * @return array
      */
-    public function getUsedIn(FolderInterface $folder)
+    public function getUsedIn(ExtendedFolderInterface $folder)
     {
         $qb = $this->folderUsageRepository->createQueryBuilder('u');
         $qb
@@ -107,11 +107,11 @@ class FolderUsageManager
     }
 
     /**
-     * @param FolderInterface $folder
+     * @param ExtendedFolderInterface $folder
      *
      * @return array
      */
-    private function findStatusByFolder(FolderInterface $folder)
+    private function findStatusByFolder(ExtendedFolderInterface $folder)
     {
         $qb = $this->folderUsageRepository->createQueryBuilder('u');
         $qb
