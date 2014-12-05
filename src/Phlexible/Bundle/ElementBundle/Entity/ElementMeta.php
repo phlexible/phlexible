@@ -49,7 +49,7 @@ class ElementMeta
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="field_id", type="string", length=36, options={"fixed"=true})
      */
     private $fieldId;
 
