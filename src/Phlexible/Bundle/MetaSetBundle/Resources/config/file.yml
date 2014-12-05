@@ -1,0 +1,27 @@
+parameters:
+    phlexible_meta_set.file_dir: %kernel.root_dir%/Resources/metasets/
+
+services:
+    phlexible_meta_set.file.loader.xml:
+        class: Phlexible\Bundle\MetaSetBundle\File\Loader\XmlLoader
+        public: false
+
+    phlexible_meta_set.file.dumper.xml:
+        class: Phlexible\Bundle\MetaSetBundle\File\Dumper\XmlDumper
+        public: false
+
+    phlexible_meta_set.file.loader:
+        class: Phlexible\Bundle\MetaSetBundle\File\MetaSetLoader
+        public: false
+        arguments: [@pattern_locator]
+        calls:
+            - [addLoader, [@phlexible_meta_set.file.loader.xml]]
+
+    phlexible_meta_set.file.dumper:
+        class: Phlexible\Bundle\MetaSetBundle\File\MetaSetDumper
+        public: false
+        arguments: [@phlexible_meta_set.file.dumper.xml, %phlexible_meta_set.file_dir%]
+
+    phlexible_meta_set.file.meta_set_manager:
+        class: Phlexible\Bundle\MetaSetBundle\File\MetaSetManager
+        arguments: [@phlexible_meta_set.file.loader, @phlexible_meta_set.file.dumper]

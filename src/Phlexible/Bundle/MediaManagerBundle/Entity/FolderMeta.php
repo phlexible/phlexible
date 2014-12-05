@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
 
 /**
  * Folder meta
@@ -48,11 +47,10 @@ class FolderMeta
     private $value;
 
     /**
-     * @var MetaSetField
-     * @ORM\OneToOne(targetEntity="Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField")
-     * @ORM\JoinColumn(name="field_id", referencedColumnName="id")
+     * @var string
+     * @ORM\Column(name="field_id", type="string", length=36, options={"fixed"=true})
      */
-    private $field;
+    private $fieldId;
 
     /**
      * @var Folder

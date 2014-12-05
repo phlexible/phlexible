@@ -62,6 +62,10 @@ class PatternResourceLocator extends FileLocator
             }
         }
 
+        if (!count($paths)) {
+            return array();
+        }
+
         $finder = new Finder();
         $files = [];
         foreach ($finder->in($paths)->files()->name($name) as $file) {

@@ -10,9 +10,9 @@ namespace Phlexible\Bundle\ElementBundle\Meta;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\MetaSetBundle\Doctrine\MetaDataManager;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaData;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSet;
 
 /**
  * Element meta data manager

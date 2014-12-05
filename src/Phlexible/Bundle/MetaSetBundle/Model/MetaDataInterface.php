@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Model;
 
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
-
 /**
  * Meta data interface
  *

@@ -8,9 +8,6 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Model;
 
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
-
 /**
  * Meta set manager interface
  *
@@ -21,49 +18,34 @@ interface MetaSetManagerInterface
     /**
      * @param string $id
      *
-     * @return MetaSet
+     * @return MetaSetInterface
      */
     public function find($id);
 
     /**
-     * @param array      $criteria
-     * @param null|array $orderBy
-     * @param null|int   $limit
-     * @param null|int   $offset
-     *
-     * @return MetaSet[]
-     */
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
-
-    /**
      * @param string $name
      *
-     * @return MetaSet
+     * @return MetaSetInterface
      */
     public function findOneByName($name);
 
     /**
-     * @return MetaSet[]
+     * @return MetaSetInterface[]
      */
     public function findAll();
 
     /**
-     * @return MetaSet
+     * @return MetaSetInterface
      */
     public function createMetaSet();
 
     /**
-     * @return MetaSetField
+     * @return MetaSetFieldInterface
      */
     public function createMetaSetField();
 
     /**
-     * @param MetaSet $metaSet
+     * @param MetaSetInterface $metaSet
      */
-    public function updateMetaSet(MetaSet $metaSet);
-
-    /**
-     * @param MetaSetField $metaSetField
-     */
-    public function deleteMetaSetField(MetaSetField $metaSetField);
+    public function updateMetaSet(MetaSetInterface $metaSet);
 }

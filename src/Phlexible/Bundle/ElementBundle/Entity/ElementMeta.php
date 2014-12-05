@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSetField;
 
 /**
  * Element meta
@@ -48,10 +48,10 @@ class ElementMeta
     private $value;
 
     /**
-     * @var MetaSetField
-     * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField")
+     * @var string
+     * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
-    private $field;
+    private $fieldId;
 
     /**
      * @var Element

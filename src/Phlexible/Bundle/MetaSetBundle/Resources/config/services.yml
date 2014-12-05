@@ -1,5 +1,4 @@
 parameters:
-    phlexible_meta_set.file_dir: %kernel.root_dir%/meta_sets
     phlexible_meta_set.languages.default: en
     phlexible_meta_set.languages.available: en,de
     phlexible_meta_set.suggest.seperator: ,

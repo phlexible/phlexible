@@ -12,10 +12,10 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaData;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaDataManagerInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSet;
 
 /**
  * Meta data manager

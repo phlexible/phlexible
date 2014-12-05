@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\Meta;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 
 /**

@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\ElementBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaDataManagerInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSetField;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
 
 /**

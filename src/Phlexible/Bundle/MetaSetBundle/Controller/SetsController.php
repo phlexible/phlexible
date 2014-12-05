@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MetaSetBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -97,13 +97,14 @@ class SetsController extends Controller
             return new ResultResponse(false, 'Name already in use.');
         }
 
-        $metaSet = new MetaSet();
+        $metaSet = $metaSetManager->createMetaSet();
         $metaSet
-            ->setCreateUserId($this->getUser()->getId())
+            ->setId(Uuid::generate())
+            ->setName($name)
+            ->setCreateUser($this->getUser()->getDisplayName())
             ->setCreatedAt(new \DateTime())
-            ->setModifyUserId($this->getUser()->getId())
-            ->setModifiedAt(new \DateTime())
-            ->setName($name);
+            ->setModifyUser($this->getUser()->getDisplayName())
+            ->setModifiedAt(new \DateTime());
 
         $metaSetManager->updateMetaSet($metaSet);
 
@@ -155,6 +156,8 @@ class SetsController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSet = $metaSetManager->find($id);
 
+        $metaSet->setRevision($metaSet->getRevision() + 1);
+
         $fields = [];
         foreach ($metaSet->getFields() as $field) {
             $fields[$field->getId()] = $field;
@@ -177,6 +180,7 @@ class SetsController extends Controller
             }
 
             $field
+                ->setId(Uuid::generate())
                 ->setName($item['key'])
                 ->setMetaSet($metaSet)
                 ->setType($item['type'])
@@ -188,13 +192,13 @@ class SetsController extends Controller
             $metaSet->addField($field);
         }
 
-        foreach ($fields as $field) {
-            $metaSetManager->deleteMetaSetField($field);
-        }
-
         $metaSet
-            ->setModifyUserId($this->getUser()->getId())
+            ->setModifyUser($this->getUser()->getDisplayName())
             ->setModifiedAt(new \DateTime());
+
+        foreach ($fields as $field) {
+            $metaSet->removeField($field);
+        }
 
         $metaSetManager->updateMetaSet($metaSet);
 

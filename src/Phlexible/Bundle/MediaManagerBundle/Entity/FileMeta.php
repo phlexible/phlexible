@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSetField;
 
 /**
  * File meta
@@ -49,9 +49,9 @@ class FileMeta
 
     /**
      * @var MetaSetField
-     * @ORM\ManyToOne(targetEntity="Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField")
+     * @ORM\Column(name="field_id", type="string", length=36, options={"fixed"=true})
      */
-    private $field;
+    private $fieldId;
 
     /**
      * @var File

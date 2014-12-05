@@ -6,64 +6,56 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MetaSetBundle\Entity;
+namespace Phlexible\Bundle\MetaSetBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Meta set
  *
  * @author Stephan Wentz <sw@brainbits.net>
- *
- * @ORM\Entity(repositoryClass="Phlexible\Bundle\MetaSetBundle\Entity\Repository\MetaSetRepository")
- * @ORM\Table(name="meta_set")
  */
-class MetaSet
+class MetaSet implements MetaSetInterface
 {
     /**
      * @var string
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
      */
     private $name;
 
     /**
-     * @var string
-     * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
+     * @var int
      */
-    private $createUserId;
+    private $revision;
+
+    /**
+     * @var MetaSetFieldInterface[]|ArrayCollection
+     */
+    private $fields;
+
+    /**
+     * @var string
+     */
+    private $createUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
 
     /**
      * @var string
-     * @ORM\Column(name="modify_user_id", type="string", length=36, options={"fixed"=true})
      */
-    private $modifyUserId;
+    private $modifyUser;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="modified_at", type="datetime")
      */
     private $modifiedAt;
-
-    /**
-     * @var MetaSetField[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="MetaSetField", mappedBy="metaSet", indexBy="name")
-     */
-    private $fields;
 
     /**
      * Constructor.
@@ -74,7 +66,7 @@ class MetaSet
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -82,9 +74,7 @@ class MetaSet
     }
 
     /**
-     * @param string $id
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setId($id)
     {
@@ -94,7 +84,7 @@ class MetaSet
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -102,9 +92,7 @@ class MetaSet
     }
 
     /**
-     * @param string $name
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setName($name)
     {
@@ -114,7 +102,25 @@ class MetaSet
     }
 
     /**
-     * @return MetaSetField[]
+     * {@inheritdoc}
+     */
+    public function getRevision()
+    {
+        return $this->revision;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setRevision($revision)
+    {
+        $this->revision = $revision;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getFields()
     {
@@ -122,11 +128,9 @@ class MetaSet
     }
 
     /**
-     * @param MetaSetField $field
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function addField(MetaSetField $field)
+    public function addField(MetaSetFieldInterface $field)
     {
         $this->fields->set($field->getName(), $field);
         $field->setMetaSet($this);
@@ -135,9 +139,7 @@ class MetaSet
     }
 
     /**
-     * @param string $name
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function hasField($name)
     {
@@ -145,9 +147,7 @@ class MetaSet
     }
 
     /**
-     * @param string $name
-     *
-     * @return MetaSetField
+     * {@inheritdoc}
      */
     public function getField($name)
     {
@@ -155,14 +155,12 @@ class MetaSet
     }
 
     /**
-     * @param int $id
-     *
-     * @return MetaSetField
+     * {@inheritdoc}
      */
     public function getFieldById($id)
     {
         foreach ($this->fields as $field) {
-            if ($field->getId() === (int) $id) {
+            if ((string) $field->getId() === (string) $id) {
                 return $field;
             }
         }
@@ -171,11 +169,9 @@ class MetaSet
     }
 
     /**
-     * @param MetaSetField $field
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function removeField(MetaSetField $field)
+    public function removeField(MetaSetFieldInterface $field)
     {
         if ($this->fields->contains($field)) {
             $this->fields->removeElement($field);
@@ -185,27 +181,25 @@ class MetaSet
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getCreateUserId()
+    public function getCreateUser()
     {
-        return $this->createUserId;
+        return $this->createUser;
     }
 
     /**
-     * @param string $createUserId
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setCreateUserId($createUserId)
+    public function setCreateUser($createUser)
     {
-        $this->createUserId = $createUserId;
+        $this->createUser = $createUser;
 
         return $this;
     }
 
     /**
-     * @return \DateTime
+     * {@inheritdoc}
      */
     public function getCreatedAt()
     {
@@ -213,9 +207,7 @@ class MetaSet
     }
 
     /**
-     * @param \DateTime $createdAt
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setCreatedAt($createdAt)
     {
@@ -225,27 +217,25 @@ class MetaSet
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getModifyUserId()
+    public function getModifyUser()
     {
-        return $this->modifyUserId;
+        return $this->modifyUser;
     }
 
     /**
-     * @param string $modifyUserId
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setModifyUserId($modifyUserId)
+    public function setModifyUser($modifyUser)
     {
-        $this->modifyUserId = $modifyUserId;
+        $this->modifyUser = $modifyUser;
 
         return $this;
     }
 
     /**
-     * @return \DateTime
+     * {@inheritdoc}
      */
     public function getModifiedAt()
     {
@@ -253,9 +243,7 @@ class MetaSet
     }
 
     /**
-     * @param \DateTime $modifiedAt
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setModifiedAt($modifiedAt)
     {

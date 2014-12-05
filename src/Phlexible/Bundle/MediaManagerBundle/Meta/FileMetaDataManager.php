@@ -10,9 +10,9 @@ namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MetaSetBundle\Doctrine\MetaDataManager;
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSet;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaData;
 use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSet;
 
 /**
  * File meta data manager

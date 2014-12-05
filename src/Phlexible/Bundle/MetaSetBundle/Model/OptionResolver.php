@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Model;
 
-use Phlexible\Bundle\MetaSetBundle\Entity\MetaSetField;
+use Phlexible\Bundle\MetaSetBundle\Model\MetaSetField;
 
 /**
  * Option resolver

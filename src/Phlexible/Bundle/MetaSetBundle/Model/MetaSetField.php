@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MetaSetBundle\Entity;
+namespace Phlexible\Bundle\MetaSetBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,65 +14,51 @@ use Doctrine\ORM\Mapping as ORM;
  * Meta set field
  *
  * @author Stephan Wentz <sw@brainbits.net>
- *
- * @ORM\Entity
- * @ORM\Table(name="meta_set_field")
  */
-class MetaSetField
+class MetaSetField implements MetaSetFieldInterface
 {
     /**
      * @var int
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100)
      */
     private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=50)
      */
     private $type;
 
     /**
      * @var string
-     * @ORM\Column(type="text", nullable=true)
      */
     private $options;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean")
      */
     private $synchronized = false;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean")
      */
     private $readonly = false;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean")
      */
     private $required = false;
 
     /**
      * @var MetaSet
-     * @ORM\ManyToOne(targetEntity="MetaSet", inversedBy="fields")
-     * @ORM\JoinColumn(name="metaset_id", referencedColumnName="id")
      */
     private $metaSet;
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -80,9 +66,7 @@ class MetaSetField
     }
 
     /**
-     * @param int $id
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setId($id)
     {
@@ -92,7 +76,7 @@ class MetaSetField
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -100,9 +84,7 @@ class MetaSetField
     }
 
     /**
-     * @param string $name
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setName($name)
     {
@@ -112,7 +94,7 @@ class MetaSetField
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -120,9 +102,7 @@ class MetaSetField
     }
 
     /**
-     * @param string $type
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setType($type)
     {
@@ -132,7 +112,7 @@ class MetaSetField
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getOptions()
     {
@@ -140,9 +120,7 @@ class MetaSetField
     }
 
     /**
-     * @param string $options
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setOptions($options)
     {
@@ -152,7 +130,7 @@ class MetaSetField
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function isRequired()
     {
@@ -160,9 +138,7 @@ class MetaSetField
     }
 
     /**
-     * @param bool $required
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setRequired($required = true)
     {
@@ -172,7 +148,7 @@ class MetaSetField
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function isReadonly()
     {
@@ -180,9 +156,7 @@ class MetaSetField
     }
 
     /**
-     * @param bool $readonly
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setReadonly($readonly = true)
     {
@@ -192,7 +166,7 @@ class MetaSetField
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function isSynchronized()
     {
@@ -200,9 +174,7 @@ class MetaSetField
     }
 
     /**
-     * @param bool $synchronized
-     *
-     * @return $this
+     * {@inheritdoc}
      */
     public function setSynchronized($synchronized = true)
     {
@@ -212,7 +184,7 @@ class MetaSetField
     }
 
     /**
-     * @return MetaSet
+     * {@inheritdoc}
      */
     public function getMetaSet()
     {
@@ -220,11 +192,9 @@ class MetaSetField
     }
 
     /**
-     * @param MetaSet $metaSet
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setMetaSet($metaSet)
+    public function setMetaSet(MetaSetInterface $metaSet = null)
     {
         $this->metaSet = $metaSet;
 

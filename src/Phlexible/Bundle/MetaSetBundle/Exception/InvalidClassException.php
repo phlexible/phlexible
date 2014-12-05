@@ -6,15 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MetaSetBundle\Entity\Repository;
-
-use Doctrine\ORM\EntityRepository;
+namespace Phlexible\Bundle\MetaSetBundle\Exception;
 
 /**
- * Meta set repository
+ * Invalid class exception for meta set bundle
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MetaSetRepository extends EntityRepository
+class InvalidClassException extends InvalidArgumentException
 {
+
 }
