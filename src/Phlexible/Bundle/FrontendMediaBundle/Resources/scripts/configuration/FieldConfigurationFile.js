@@ -39,7 +39,7 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
                 listWidth: 200,
                 store: new Ext.data.JsonStore({
                     fields: ['key', 'upperkey'],
-                    url: Phlexible.Router.generate('documenttypes_list'),
+                    url: Phlexible.Router.generate('media_types_list'),
                     root: 'documenttypes',
                     id: 'key',
                     sortInfo: {

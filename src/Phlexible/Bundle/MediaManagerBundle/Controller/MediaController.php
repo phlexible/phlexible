@@ -64,6 +64,19 @@ class MediaController extends Controller
                 $storageKey = $template->getStorage();
                 $storage = $storageManager->get($storageKey);
                 $filePath = $storage->getLocalPath($cacheItem);
+
+                if (!file_exists($filePath)) {
+                    $filePath = null;
+
+                    $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
+                    $queueProcessor->processItem($cacheItem);
+
+                    if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
+                        $storageKey = $template->getStorage();
+                        $storage = $storageManager->get($storageKey);
+                        $filePath = $storage->getLocalPath($cacheItem);
+                    }
+                }
             }
 
             $mimeType = $cacheItem->getMimeType();
@@ -102,7 +115,7 @@ class MediaController extends Controller
      * @param string $mediaTypeName
      *
      * @return Response
-     * @Route("/delegate/{templateKey}/{documenttypeKey}", name="mediamanager_media_delegate")
+     * @Route("/delegate/{templateKey}/{mediaTypeName}", name="mediamanager_media_delegate")
      */
     public function delegateAction($templateKey, $mediaTypeName)
     {

@@ -182,8 +182,8 @@ class FileController extends Controller
                     ]);
                 } else {
                     $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', [
-                        'documenttypeKey' => $file->getMediaType(),
-                        'templateKey'     => $cacheItem->getTemplateKey(),
+                        'mediaTypeName' => $file->getMediaType(),
+                        'templateKey'   => $cacheItem->getTemplateKey(),
                     ]);
                 }
             }
