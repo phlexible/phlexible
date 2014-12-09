@@ -6,11 +6,10 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\Controller;
+namespace Phlexible\Bundle\TreeBundle\Controller;
 
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -22,8 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  * List controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/elements/list")
- * @Security("is_granted('ROLE_ELEMENTS')")
+ * @Route("/tree/list")
  */
 class ListController extends Controller
 {
@@ -33,7 +31,7 @@ class ListController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("", name="elements_list")
+     * @Route("", name="tree_list")
      */
     public function listAction(Request $request)
     {
@@ -52,7 +50,6 @@ class ListController extends Controller
 
         $data = [];
 
-        $dispatcher = $this->get('event_dispatcher');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $securityContext = $this->get('security.context');
@@ -150,7 +147,7 @@ class ListController extends Controller
                 $userRights = $userAdminRights;
             }
 
-            $childElement = $elementService->findElement($node->getTypeId());
+            $childElement = $elementService->findElement($childNode->getTypeId());
             $childElementVersion = $elementService->findLatestElementVersion($childElement);
             $childTitle = $childElementVersion->getBackendTitle($language, $childElement->getMasterLanguage());
             $childElementtype = $elementService->findElementtype($childElement);
@@ -198,7 +195,7 @@ class ListController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/sort", name="elements_list_sort")
+     * @Route("/sort", name="tree_list_sort")
      */
     public function sortAction(Request $request)
     {

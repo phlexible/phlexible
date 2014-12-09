@@ -20,7 +20,7 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
             scope: this
         });
 
-        var url = Phlexible.Router.generate('elements_list');
+        var url = Phlexible.Router.generate('tree_list');
         if (this.mode == 'teaser') {
             url = Phlexible.Router.generate('teasers_layout_list');
         }
@@ -758,7 +758,7 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
         var records = this.store.getRange();
         var sortIds = [];
 
-        var url = Phlexible.Router.generate('elements_list_sort');
+        var url = Phlexible.Router.generate('tree_list_sort');
         var id_field = 'tid';
         if (this.element.properties.et_type == 'area') {
             url = Phlexible.Router.generate('teasers_layout_sort');
