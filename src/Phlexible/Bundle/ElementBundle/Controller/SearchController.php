@@ -36,30 +36,28 @@ class SearchController extends Controller
         $language = $request->get('language');
         $query = $request->get('query');
 
-        $elementService = $this->get('phlexible_element.element_service');
         $treeManager = $this->get('phlexible_tree.tree_manager');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $conn = $this->get('database_connection');
 
-        $select = $db->select()
-            ->distinct()
-            ->from(['et' => $db->prefix . 'element_tree'], ['id AS tid'])
-            ->join(['e' => $db->prefix . 'element'], 'et.eid = e.eid', ['latest_version AS version'])
-            ->join(
-                ['evt' => $db->prefix . 'element_version_titles'],
-                'evt.eid = et.eid AND evt.version = e.latest_version AND evt.language = ' . $db->quote(
-                    $language
-                ) . ' AND evt.backend LIKE ' . $db->quote('%' . $query . '%'),
-                ['backend AS title']
-            )
-            ->where('et.siteroot_id = ?', $siterootId);
+        $tree = $treeManager->getBySiteRootId($siterootId);
 
-        $result = $db->fetchAll($select);
+        $qb = $conn->createQueryBuilder();
+        $qb
+            ->select('t.id AS tid', 'e.latest_version AS version', 'evmf.backend AS title')
+            ->from('tree', 't')
+            ->join('t', 'element', 'e', 't.type_id = e.eid')
+            ->join('e', 'element_version', 'ev', 'ev.eid = e.eid AND ev.version = e.latest_version')
+            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id')
+            ->where($qb->expr()->eq('evmf.language', $qb->expr()->literal($language)))
+            ->andWhere($qb->expr()->eq('t.siteroot_id', $qb->expr()->literal($siterootId)))
+            ->andWhere($qb->expr()->like('evmf.backend', $qb->expr()->literal("%$query%")));
+
+        $result = $conn->fetchAll($qb->getSQL());
 
         foreach ($result as $key => $row) {
-            $node = $treeManager->getNodeByNodeId($row['tid']);
-            $element = $elementService->findElement($row['eid']);
-            $elementVersion = $elementService->findLatestElementVersion($element);
-            $icon = '';//$elementVersion->getIconUrl($node->getIconParams($language));
-            $result[$key]['icon'] = $icon;
+            $treeNode = $tree->get($row['tid']);
+            $result[$key]['icon'] = $iconResolver->resolveTreeNode($treeNode, $language);
         }
 
         return new JsonResponse(['results' => $result]);

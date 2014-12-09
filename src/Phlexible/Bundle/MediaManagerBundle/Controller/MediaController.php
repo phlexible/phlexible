@@ -92,6 +92,11 @@ class MediaController extends Controller
             $cacheItem = $queue->first();
             $queueProcessor->processItem($cacheItem);
 
+            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
+                $storageKey = $template->getStorage();
+                $storage = $storageManager->get($storageKey);
+                $filePath = $storage->getLocalPath($cacheItem);
+            }
             $mimeType = $cacheItem->getMimeType();
         }
 
@@ -102,7 +107,7 @@ class MediaController extends Controller
 
             $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
             $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
-            $filePath = $delegateService->getClean($template, $mediaType);
+            $filePath = $delegateService->getClean($template, $mediaType, true);
             $mimeType = 'image/gif';
         }
 

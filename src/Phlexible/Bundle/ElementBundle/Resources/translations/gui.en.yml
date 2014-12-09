@@ -231,7 +231,7 @@ elements:
     tree: Tree
     element_search: 'Element search'
     media_search: 'Media search'
-    no_results: 'No reults'
+    no_results: 'No results'
     depth: Tiefe
     publish_slave_header: 'Publish cross-language content'
     publish_slave_text: "The element contains cross-language information. Normally all language versions of this elements will be published simultaneously to update the cross-language information in all language versions.<br /><br />\nThe system recognized, that the following language-versions may contain changes that have not been published yet. So they were not automatically published. However, if you want to publish the affected language-versions select them in the following list. Be aware that changes may be published that are not yet intended for publication.<br /><br />\nIf you are unsure, do not check any item in the list and check and publish the affected language versions manually.<br /><br />\nThe following elements have not been published automatically:"

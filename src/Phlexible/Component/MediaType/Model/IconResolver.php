@@ -41,10 +41,21 @@ class IconResolver
     public function resolve(MediaType $mediaType, $requestedSize = null)
     {
         $icons = $mediaType->getIcons();
-        if (!isset($icons[$requestedSize])) {
-            return null;
+        if (isset($icons[$requestedSize])) {
+            $icon = $icons[$requestedSize];
+        } else {
+            $icon = null;
+            foreach ($icons as $size => $dummyIcon) {
+                if ($size > $requestedSize) {
+                    $icon = $dummyIcon;
+                    break;
+                }
+            }
+            if (!$icon) {
+                return null;
+            }
         }
 
-        return $this->locator->locate($icons[$requestedSize], null, true);
+        return $this->locator->locate($icon, null, true);
     }
 }
