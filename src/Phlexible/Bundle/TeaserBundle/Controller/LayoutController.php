@@ -209,7 +209,7 @@ class LayoutController extends Controller
             'element_type'    => $layoutarea->getTitle(),
             'icon'            => $iconResolver->resolveElementtype($layoutarea),
             'author'          => 'author',
-            'version'         => $layoutarea->getLatestVersion(),
+            'version'         => $layoutarea->getRevision(),
             'create_time'     => $layoutarea->getCreatedAt(),
             //            'change_time'     => '2007-01-01 01:01:01',
             'publish_time'    => null,
@@ -217,11 +217,11 @@ class LayoutController extends Controller
             'sort'            => 0,
             'sort_mode'       => 'free',
             'sort_dir'        => 'asc',
-            'version_latest'  => (int) $layoutarea->getLatestVersion(),
-            'version_online'  => (int) $layoutarea->getLatestVersion(),
+            'version_latest'  => (int) $layoutarea->getRevision(),
+            'version_online'  => (int) $layoutarea->getRevision(),
             'status'          => ' o_O ',
             'qtip'            =>
-                $layoutarea->getTitle() . ', Version ' . $layoutarea->getLatestVersion() . '<br>' .
+                $layoutarea->getTitle() . ', Version ' . $layoutarea->getRevision() . '<br>' .
                 37 . ' Versions<br>'
         ];
 
