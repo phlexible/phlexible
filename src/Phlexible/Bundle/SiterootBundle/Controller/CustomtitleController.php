@@ -38,7 +38,7 @@ class CustomtitleController extends Controller
         $language = 'en';
 
         $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
-        $titleResolver = $this->get('phlexible_siteroot.title.resolver');
+        $titleResolver = $this->get('phlexible_siteroot.title_resolver');
 
         $siteroot = $siterootRepository->find($siterootId);
 
@@ -48,9 +48,9 @@ class CustomtitleController extends Controller
         // get all siteroot urls
         $data = [
             'head_title'       => $headTitle,
-            'example'          => $titleResolver->replaceExample($siteroot, $headTitle, $language),
+            'example'          => $titleResolver->replaceExample($siteroot, $language, $headTitle),
             'start_head_title' => $startHeadTitle,
-            'start_example'    => $titleResolver->replaceExample($siteroot, $startHeadTitle, $language),
+            'start_example'    => $titleResolver->replaceExample($siteroot, $language, $startHeadTitle),
         ];
 
         return new ResultResponse(true, 'Siteroot customtitles loaded.', $data);
@@ -64,7 +64,7 @@ class CustomtitleController extends Controller
     {
         $language = 'en';
 
-        $titleResolver = $this->get('phlexible_siteroot.title.resolver');
+        $titleResolver = $this->get('phlexible_siteroot.title_resolver');
 
         $data = [
             'placeholders' => $titleResolver->getPlaceholders($language)
@@ -86,12 +86,12 @@ class CustomtitleController extends Controller
         $language = 'en';
 
         $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
-        $titleResolver = $this->get('phlexible_siteroot.title.resolver');
+        $titleResolver = $this->get('phlexible_siteroot.title_resolver');
 
         $siteroot = $siterootRepository->find($siterootId);
 
         $data = [
-            'example' => $titleResolver->replaceExample($siteroot, $headTitle, $language)
+            'example' => $titleResolver->replaceExample($siteroot, $language, $headTitle)
         ];
 
         return new ResultResponse(true, 'Siteroot customtitles loaded.', $data);

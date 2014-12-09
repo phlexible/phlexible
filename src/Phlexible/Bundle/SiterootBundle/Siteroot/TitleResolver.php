@@ -42,20 +42,19 @@ class TitleResolver
     /**
      * Return siteroot title
      *
-     * @param string         $headTitle
-     * @param string         $language
      * @param Siteroot       $siteroot
      * @param ElementVersion $elementVersion
+     * @param string         $language
+     * @param string         $headTitle
      *
      * @return string
      */
-    public function replace(
-        $headTitle,
-        $language,
-        Siteroot $siteroot,
-        ElementVersion $elementVersion
-    )
+    public function replace(Siteroot $siteroot, ElementVersion $elementVersion, $language, $headTitle = null)
     {
+        if (!$headTitle) {
+            $headTitle = $siteroot->getHeadTitle();
+        }
+
         $replace = [
             '%s' => $siteroot->getTitle(),
             '%b' => $elementVersion->getBackendTitle($language),
@@ -69,12 +68,12 @@ class TitleResolver
 
     /**
      * @param Siteroot $siteroot
-     * @param string   $headTitle
      * @param string   $language
+     * @param string   $headTitle
      *
      * @return string
      */
-    public function replaceExample(Siteroot $siteroot, $headTitle, $language)
+    public function replaceExample(Siteroot $siteroot, $language, $headTitle = null)
     {
         $replace = [
             '%s' => $siteroot->getTitle(),

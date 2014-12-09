@@ -3,11 +3,7 @@ services:
         class: Phlexible\Bundle\SiterootBundle\Controller\Siteroot\SiterootSaver
         arguments: [@phlexible_siteroot.siteroot_manager]
 
-    phlexible_siteroot.matcher.url:
-        class: Phlexible\Bundle\SiterootBundle\Siteroot\UrlMatcher
-        arguments: [@phlexible_siteroot.siteroot_manager]
-
-    phlexible_siteroot.title.resolver:
+    phlexible_siteroot.title_resolver:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\TitleResolver
         arguments: [@translator, %phlexible_gui.project.title%]
 
