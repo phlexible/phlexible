@@ -391,7 +391,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             this.extendedMenuIndex.add('task_sep', '-');
             this.extendedMenuIndex.add('task', {
                 text: Phlexible.tasks.Strings.new_task,
-                iconCls: 'p-tasks-component-icon',
+                iconCls: 'p-task-component-icon',
                 disabled: true,
                 handler: function () {
                     var payload = {

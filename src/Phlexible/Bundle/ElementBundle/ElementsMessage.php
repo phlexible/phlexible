@@ -22,9 +22,8 @@ class ElementsMessage extends Message
      */
     public static function getDefaultChannel()
     {
-        return 'elements';
+        return 'element';
     }
-
 
     /**
      * {@inheritdoc}

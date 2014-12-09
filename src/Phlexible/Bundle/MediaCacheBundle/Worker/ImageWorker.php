@@ -121,7 +121,7 @@ class ImageWorker extends AbstractWorker
             // file is completely missing
             return $this->work($template, $file, $file->getPhysicalPath(), true);
         } elseif ($imageFile === null) {
-            return $this->work($template, $file, null, false);
+            return $this->work($template, $file);
         }
 
         return null;
@@ -177,7 +177,7 @@ class ImageWorker extends AbstractWorker
         if ($missing) {
             $this->applyError(
                 $cacheItem,
-                CacheItem::STATUS_DELEGATE,
+                CacheItem::STATUS_MISSING,
                 'Input file not found.',
                 $inputFilename,
                 $template,
@@ -195,7 +195,7 @@ class ImageWorker extends AbstractWorker
         } elseif (!$this->applier->isAvailable($inputFilename)) {
             $this->applyError(
                 $cacheItem,
-                CacheItem::STATUS_DELEGATE,
+                CacheItem::STATUS_MISSING,
                 'No suitable image template applier found.',
                 $inputFilename,
                 $template,

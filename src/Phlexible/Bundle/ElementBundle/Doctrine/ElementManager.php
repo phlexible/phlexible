@@ -109,7 +109,7 @@ class ElementManager implements ElementManagerInterface
             $this->dispatcher->dispatch(ElementEvents::CREATE_ELEMENT, $event);
 
             // post message
-            $message = ElementsMessage::create('Element "' . $element->getEid() . ' created.');
+            $message = ElementsMessage::create("Element {$element->getEid()} created.");
             $this->messagePoster->post($message);
         } else {
             $event = new ElementEvent($element);
@@ -126,7 +126,7 @@ class ElementManager implements ElementManagerInterface
             $this->dispatcher->dispatch(ElementEvents::UPDATE_ELEMENT, $event);
 
             // post message
-            $message = ElementsMessage::create('Element "' . $element->getEid() . ' updated.');
+            $message = ElementsMessage::create("Element {$element->getEid()} updated.");
             $this->messagePoster->post($message);
         }
 

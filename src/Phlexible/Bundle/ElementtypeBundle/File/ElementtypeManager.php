@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementtypeBundle\File;
 
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeEvents;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypesMessage;
 use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeEvent;
 use Phlexible\Bundle\ElementtypeBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementtypeBundle\Exception\DeleteCancelledException;
@@ -19,7 +18,6 @@ use Phlexible\Bundle\ElementtypeBundle\File\Writer\WriterInterface;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeManagerInterface;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -47,11 +45,6 @@ class ElementtypeManager implements ElementtypeManagerInterface
     private $validator;
 
     /**
-     * @var MessagePoster
-     */
-    private $messageService;
-
-    /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
@@ -61,20 +54,17 @@ class ElementtypeManager implements ElementtypeManagerInterface
      * @param WriterInterface          $writer
      * @param ValidatorInterface       $validator
      * @param EventDispatcherInterface $dispatcher
-     * @param MessagePoster            $messageService
      */
     public function __construct(
         LoaderInterface $loader,
         WriterInterface $writer,
         ValidatorInterface $validator,
-        EventDispatcherInterface $dispatcher,
-        MessagePoster $messageService)
+        EventDispatcherInterface $dispatcher)
     {
         $this->loader = $loader;
         $this->writer = $writer;
         $this->validator = $validator;
         $this->dispatcher = $dispatcher;
-        $this->messageService = $messageService;
     }
 
     /**
@@ -126,10 +116,6 @@ class ElementtypeManager implements ElementtypeManagerInterface
 
             $event = new ElementtypeEvent($elementtype);
             $this->dispatcher->dispatch(ElementtypeEvents::CREATE, $event);
-
-            // post message
-            $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . ' created.');
-            $this->messageService->post($message);
         } else {
             $event = new ElementtypeEvent($elementtype);
             if ($this->dispatcher->dispatch(ElementtypeEvents::BEFORE_UPDATE, $event)->isPropagationStopped()) {
@@ -141,10 +127,6 @@ class ElementtypeManager implements ElementtypeManagerInterface
 
             $event = new ElementtypeEvent($elementtype);
             $this->dispatcher->dispatch(ElementtypeEvents::UPDATE, $event);
-
-            // post message
-            $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . ' updated.');
-            $this->messageService->post($message);
         }
 
         return $this;
@@ -163,10 +145,6 @@ class ElementtypeManager implements ElementtypeManagerInterface
 
         $elementtype->setDeleted(true);
         $this->updateElementtype($elementtype);
-
-        // send message
-        $message = ElementtypesMessage::create('Element type "' . $elementtype->getId() . '" soft deleted.');
-        $this->messageService->post($message);
 
         // post event
         $event = new ElementtypeEvent($elementtype);

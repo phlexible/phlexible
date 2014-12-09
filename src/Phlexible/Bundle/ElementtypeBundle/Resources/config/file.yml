@@ -6,7 +6,6 @@ services:
             - @phlexible_elementtype.file.writer.xml
             - @validator
             - @event_dispatcher
-            - @phlexible_message.message_poster
         public: false
 
     phlexible_elementtype.file.loader.xml:
