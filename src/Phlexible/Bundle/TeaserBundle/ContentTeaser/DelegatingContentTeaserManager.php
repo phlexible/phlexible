@@ -70,9 +70,9 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath)
+    public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath, $includeLocalHidden = true)
     {
-        return $this->createContentTeasersFromTeasers($this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath));
+        return $this->createContentTeasersFromTeasers($this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath, $includeLocalHidden));
     }
 
     /**

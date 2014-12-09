@@ -9,8 +9,6 @@
 namespace Phlexible\Bundle\TeaserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\TeaserBundle\Teaser\TeaserIdentifier;
-use Phlexible\Component\Identifier\IdentifiableInterface;
 
 /**
  * Teaser
@@ -20,14 +18,8 @@ use Phlexible\Component\Identifier\IdentifiableInterface;
  * @ORM\Entity
  * @ORM\Table(name="teaser")
  */
-class Teaser implements IdentifiableInterface
+class Teaser
 {
-    const TYPE_TEASER    = 'teaser';
-    const TYPE_CATCH     = 'catch';
-    const TYPE_INHERITED = 'inherited';
-    const TYPE_STOP      = 'stop';
-    const TYPE_HIDE      = 'hide';
-
     /**
      * Node Type: element
      */
@@ -96,12 +88,14 @@ class Teaser implements IdentifiableInterface
     private $createdAt;
 
     /**
-     * @return TeaserIdentifier
+     * @var bool
      */
-    public function getIdentifier()
-    {
-        return new TeaserIdentifier($this->id);
-    }
+    private $hidden = false;
+
+    /**
+     * @var bool
+     */
+    private $stopped = false;
 
     /**
      * @return int
@@ -336,39 +330,133 @@ class Teaser implements IdentifiableInterface
     }
 
     /**
-     * @return boolean
+     * @return array
      */
-    public function getStopInherit()
+    public function getStopIds()
     {
-        return $this->getAttribute('stopInherit', false);
+        return $this->getAttribute('stopIds', array());
     }
 
     /**
-     * @param boolean $stopInherit
+     * @param array $stopIds
      *
      * @return $this
      */
-    public function setStopInherit($stopInherit)
+    public function setStopIds($stopIds = array())
     {
-        return $this->setAttribute('stopInherit', $stopInherit);
+        $this->setAttribute('stopIds', $stopIds);
+
+        return $this;
     }
 
     /**
-     * @return boolean
-     */
-    public function getNoDisplay()
-    {
-        return $this->getAttribute('noDisplay', false);
-    }
-
-    /**
-     * @param boolean $noDisplay
+     * @param int $stopId
      *
      * @return $this
      */
-    public function setNoDisplay($noDisplay)
+    public function addStopId($stopId)
     {
-        return $this->setAttribute('noDisplay', $noDisplay);
+        $stopIds = $this->getStopIds();
+
+        if (!in_array($stopId, $stopIds)) {
+            $stopIds[] = $stopId;
+            $this->setStopIds($stopIds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $stopId
+     *
+     * @return $this
+     */
+    public function removeStopId($stopId)
+    {
+        $stopIds = $this->getStopIds();
+
+        if (in_array($stopId, $stopIds)) {
+            unset($stopIds[array_search($stopId, $stopIds)]);
+            $this->setStopIds($stopIds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $stopId
+     *
+     * @return bool
+     */
+    public function hasStopId($stopId)
+    {
+        $stopIds = $this->getStopIds();
+
+        return in_array($stopId, $stopIds);
+    }
+
+    /**
+     * @return array
+     */
+    public function getHideIds()
+    {
+        return $this->getAttribute('hideIds', array());
+    }
+
+    /**
+     * @param array $hideIds
+     *
+     * @return $this
+     */
+    public function setHideIds($hideIds)
+    {
+        return $this->setAttribute('hideIds', $hideIds);
+    }
+
+    /**
+     * @param int $hideId
+     *
+     * @return $this
+     */
+    public function addHideId($hideId)
+    {
+        $hideIds = $this->getHideIds();
+
+        if (!in_array($hideId, $hideIds)) {
+            $hideIds[] = $hideId;
+            $this->setHideIds($hideIds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $hideId
+     *
+     * @return $this
+     */
+    public function removeHideId($hideId)
+    {
+        $hideIds = $this->getHideIds();
+
+        if (in_array($hideId, $hideIds)) {
+            unset($hideIds[array_search($hideId, $hideIds)]);
+            $this->setHideIds($hideIds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $hideId
+     *
+     * @return bool
+     */
+    public function hasHideId($hideId)
+    {
+        $hideIds = $this->getHideIds();
+
+        return in_array($hideId, $hideIds);
     }
 
     /**
@@ -421,5 +509,45 @@ class Teaser implements IdentifiableInterface
     public function setTemplate($template)
     {
         return $this->setAttribute('template', $template);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param boolean $hidden
+     *
+     * @return $this
+     */
+    public function setHidden($hidden = true)
+    {
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isStopped()
+    {
+        return $this->stopped;
+    }
+
+    /**
+     * @param boolean $stopped
+     *
+     * @return $this
+     */
+    public function setStopped($stopped = true)
+    {
+        $this->stopped = $stopped;
+
+        return $this;
     }
 }

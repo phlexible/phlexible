@@ -19,7 +19,8 @@ teasers:
     new_teaser_header: 'Create new Teaser'
     new_teaser_description: 'Please enter the required information for the new Teaser.'
     delete_teaser: 'Delete Teaser'
-    inherited_teaser: Inherited
-    stopped_inherited_teaser: 'Stopped inheritation'
-    not_shown_teaser: 'Not shown here'
+    inherit: Inherited
+    stop: 'Stopped inheritation'
+    show: 'Shown here'
+    hide: 'Not shown here'
     inherited: Inherited

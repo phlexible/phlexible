@@ -10,8 +10,6 @@ namespace Phlexible\Bundle\TeaserBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Phlexible\Bundle\TeaserBundle\Event\BeforeHideInheritedTeaserEvent;
-use Phlexible\Bundle\TeaserBundle\Event\BeforeStopInheritInheritedTeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Exception\RuntimeException;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
@@ -111,102 +109,16 @@ class LayoutController extends Controller
                     'type'          => $teaser->getType(),
                     'inherited'     => false,
                     'inherit'       => false,
-                    'stop_inherit'  => false,
                     'leaf'          => true,
+                    'hide'          => false,
                     'expanded'      => false,
                     'cls'           => '',
                     'children'      => [],
                     'allowDrag'     => false,
                     'allowDrop'     => false,
-                    'no_display'    => false,
                 ];
 
                 switch ($teaser->getType()) {
-                    case 'catch':
-                        // TODO: via events
-                        $catchManager = $this->get('phlexible_element_finder.element_finder_manager');
-                        $catch = $catchManager->findCatch($teaser->getTypeId());
-
-                        $teaserData = array_merge(
-                            $teaserData,
-                            [
-                                'iconCls'        => 'p-teaser-catch-icon',
-                                'text'        => $catch->getTitle(),
-                                'leaf'        => false,
-                                'expanded'    => true,
-                                'allowDrag'   => true,
-                                'catchConfig' => [
-                                    'id'                      => $catch->getId(),
-                                    'title'                   => $catch->getTitle(),
-                                    'for_tree_id'             => $catch->getTreeId(),
-                                    'for_tree_id_hidden'      => $catch->getTreeId(),
-                                    'catch_element_type_id'   => implode(',', $catch->getElementtypeIds()),
-                                    'catch_in_navigation'     => $catch->inNavigation(),
-                                    'catch_max_depth'         => $catch->getMaxDepth() >= 0
-                                        ? $catch->getMaxDepth() + 1
-                                        : '',
-                                    'catch_max_elements'      => $catch->getMaxResults(),
-                                    'catch_rotation'          => $catch->hasRotation(),
-                                    'catch_pool_size'         => $catch->getPoolSize(),
-                                    'catch_sort_field'        => $catch->getSortField(),
-                                    'catch_sort_order'        => $catch->getSortOrder(),
-                                    'catch_filter'            => $catch->getFilter(),
-                                    'catch_paginator'         => $catch->getResultsPerPage() !== PHP_INT_MAX,
-                                    'catch_elements_per_page' => $catch->getResultsPerPage() === PHP_INT_MAX
-                                        ? ''
-                                        : $catch->getResultsPerPage(),
-                                ],
-                            ]
-                        );
-
-                        if ($catch->getMetaSearch()) {
-                            $i = 1;
-                            foreach ($catch->getMetaSearch() as $key => $value) {
-                                $teaserData['catchConfig']['catch_meta_key_' . $i] = $key;
-                                $teaserData['catchConfig']['catch_meta_keywords_' . $i] = $value;
-                                $i++;
-                            }
-                        }
-
-                        $catcher = $this->get('phlexible_teaser.catcher');
-                        $catchResult = $catcher->catchElements($catch, $availableLanguages, true);
-
-                        $catchItemCount = count($catchResult->getItems());
-                        $textPostfix = $catchItemCount;
-                        $itemsPerPage = 5;
-                        if ($catchItemCount > $itemsPerPage) {
-                            $textPostfix = $translator->trans('teasers.catch_showing', [$itemsPerPage, $catchItemCount], 'gui');
-                        } else {
-                            $textPostfix = $catchItemCount;
-                        }
-                        $teaserData['text'] .= ' (' . $textPostfix . ')';
-
-                        foreach (array_slice($catchResult->getItems(), 0, $itemsPerPage) as $catchItem) {
-                            $catchNode           = $treeManager->getByNodeId($catchItem['tid'])->get($catchItem['tid']);
-                            $catchElement        = $elementService->findElement($catchItem['eid']);
-                            $catchElementVersion = $elementService->findElementVersion($catchElement, $catchItem['version']);
-
-                            $teaserData['children'][] = [
-                                'eid'           => $catchElement->getEid(),
-                                'layoutarea_id' => $layoutarea->getId(),
-                                'parent_tid'    => $treeId,
-                                'parent_eid'    => $element->getEid(),
-                                'icon'          => $iconResolver->resolveTreeNode($catchNode, $language),
-                                'text'          => $catchElementVersion->getBackendTitle($language, $elementMasterLanguage) . ' [' . $catchNode->getId() . ']',
-                                'version'       => $catchElementVersion->getVersion(),
-                                'type'          => 'catched',
-                                'inherited'     => false,
-                                'inherit'       => false,
-                                'stop_inherit'  => false,
-                                'expanded'      => false,
-                                'leaf'          => true,
-                                'allowDrag'     => true,
-                                'allowDrop'     => false,
-                            ];
-                        }
-
-                        break;
-
                     case 'inherited':
                     case 'teaser':
                     case 'element':
@@ -214,10 +126,10 @@ class LayoutController extends Controller
                         $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
 
                         $cls = '';
-                        if (!$teaser->getStopInherit()) {
+                        if (!$teaser->isStopped()) {
                             $cls .= 'inherit ';
                         }
-                        if ($teaser->getNoDisplay()) {
+                        if ($teaser->isHidden()) {
                             $cls .= 'dont-show ';
                         }
                         if ($teaser->getTreeId() !== $treeId) {
@@ -227,14 +139,13 @@ class LayoutController extends Controller
                         $teaserData = array_merge(
                             $teaserData,
                             [
-                                'text'         => $teaserElementVersion->getBackendTitle($language),
-                                'icon'         => $iconResolver->resolveTeaser($teaser, $language),
-                                'eid'          => $teaserElement->getEid(),
-                                'inherited'    => $teaser->getTreeId() !== $treeId,
-                                'inherit'      => !$teaser->getStopInherit(),
-                                'stop_inherit' => false,
-                                'cls'          => trim($cls),
-                                'no_display'   => $teaser->getNoDisplay() ? true : false,
+                                'text'      => $teaserElementVersion->getBackendTitle($language),
+                                'icon'      => $iconResolver->resolveTeaser($teaser, $language),
+                                'eid'       => $teaserElement->getEid(),
+                                'inherited' => $teaser->getTreeId() !== $treeId,
+                                'inherit'   => !$teaser->isStopped(),
+                                'cls'       => trim($cls),
+                                'hide'      => $teaser->isHidden(),
                             ]
                         );
                         break;
@@ -401,30 +312,6 @@ class LayoutController extends Controller
                     'qtip'            => $teaserElementVersion->getBackendTitle($language) . ', Version ' . $teaserElementVersion->getElementtypeVersion() . '<br>' .
                         'Version ' . $teaserElementVersion->getVersion() . '<br>',
                 ];
-            } elseif ('catch' === $teaser->getType()) {
-                $catch = $this->get('phlexible_teaser.element_finder_manager')->findCatch($teaser->getTypeId());
-
-                $data[] = [
-                    'teaser_id'       => (int) $teaser->getId(),
-                    'eid'             => null,
-                    '_type'           => $teaser->getType(),
-                    'title'           => $catch->getTitle(),
-                    'element_type_id' => 0,
-                    'element_type'    => '',
-                    'navigation'      => 0,
-                    'restricted'      => 0,
-                    'icon'            => $iconResolver->resolveTeaser($teaser, $language),
-                    'author'          => 'author',
-                    'version'         => 0,
-                    'create_time'     => '',
-                    'publish_time'    => null,
-                    'language'        => $language,
-                    'sort'            => $teaser->getSort(),
-                    'version_latest'  => 0,
-                    'version_online'  => 0,
-                    'status'          => '>o>',
-                    'qtip'            => $catch->getTitle(),
-                ];
             } elseif ('inherited' == $teaser->getType()) {
                 $data[] = [
                     'teaser_id'       => (int) $teaser->getId(),
@@ -559,7 +446,7 @@ class LayoutController extends Controller
         $elementtypeId = $request->get('element_type_id');
         $prevId = $request->get('prev_id', 0);
         $inherit = $request->get('inherit') == 'on' ? true : false;
-        $noDisplay = $request->get('no_display') == 'on' ? true : false;
+        $noDisplay = $request->get('hide') == 'on' ? true : false;
         $masterLanguage = $request->get('masterlanguage', null);
 
         if (!$masterLanguage) {
@@ -701,67 +588,60 @@ class LayoutController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/inheritinherited", name="teasers_layout_inheritinherited")
+     * @Route("/inherit", name="teasers_layout_inherit")
      */
-    public function toggleInheritInheritedAction(Request $request)
+    public function inheritAction(Request $request)
     {
-        $layoutAreaId = $request->get('layoutarea_id');
-        $treeId = $request->get('tree_id');
-        $eid = $request->get('eid');
-        $teaserEid = $request->get('teaser_eid');
-        $teaserId = $request->get('teaser_id');
+        $treeId = (int) $request->get('tree_id');
+        $teaserId = (int) $request->get('teaser_id');
 
         $dispatcher = $this->get('event_dispatcher');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
 
-        $stopTeaser = $teaserManager->findOneBy(
-            [
-                'type'   => 'stop',
-                'treeId' => $treeId,
-                'eid'    => $eid,
-                'typeId' => $teaserId
-            ]
-        );
+        $teaser = $teaserManager->find($teaserId);
+        $teaser->removeStopId($treeId);
 
-        if ($stopTeaser) {
-            $event = new TeaserEvent($stopTeaser);
-            if ($dispatcher->dispatch(TeaserEvents::BEFORE_INHERIT_INHERITED_TEASER, $event)->isPropagationStopped()) {
-                throw new RuntimeException('Stop inherit cancelled by event');
-            }
-
-            $teaserManager->deleteTeaser($stopTeaser, $this->getUser()->getId());
-
-            $msg = 'Inheritance stop removed';
-
-            $event = new TeaserEvent($stopTeaser);
-            $dispatcher->dispatch(TeaserEvents::INHERIT_INHERITED_TEASER, $event);
-        } else {
-            $event = new BeforeStopInheritInheritedTeaserEvent($treeId, $eid, $teaserId, $layoutAreaId);
-            if ($dispatcher->dispatch(TeaserEvents::BEFORE_STOP_INHERIT_INHERITED_TEASER, $event)->isPropagationStopped()) {
-                throw new RuntimeException('Stop inherit cancelled by event');
-            }
-
-            $stopTeaser = $teaserManager->createTeaser(
-                $treeId,
-                $eid,
-                $layoutAreaId,
-                'stop',
-                $teaserId,
-                0,
-                false,
-                false,
-                'en',
-                $this->getUser()->getId()
-            );
-
-            $msg = 'Inheritance stopped';
-
-            $event = new TeaserEvent($stopTeaser);
-            $dispatcher->dispatch(TeaserEvents::STOP_INHERIT_INHERITED_TEASER, $event);
+        $event = new TeaserEvent($teaser, $treeId);
+        if ($dispatcher->dispatch(TeaserEvents::BEFORE_INHERIT_TEASER, $event)->isPropagationStopped()) {
+            throw new RuntimeException('Inherit cancelled by event');
         }
 
+        $teaserManager->updateTeaser($teaser);
 
-        return new ResultResponse(true, $msg);
+        $event = new TeaserEvent($teaser, $treeId);
+        $dispatcher->dispatch(TeaserEvents::INHERIT_TEASER, $event);
+
+        return new ResultResponse(true, 'Inheritance stop removed');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/stop", name="teasers_layout_stop")
+     */
+    public function stopAction(Request $request)
+    {
+        $treeId = (int) $request->get('tree_id');
+        $teaserId = (int) $request->get('teaser_id');
+
+        $dispatcher = $this->get('event_dispatcher');
+        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+
+        $teaser = $teaserManager->find($teaserId);
+        $teaser->addStopId($treeId);
+
+        $event = new TeaserEvent($teaser, $treeId);
+        if ($dispatcher->dispatch(TeaserEvents::BEFORE_STOP_TEASER, $event)->isPropagationStopped()) {
+            throw new RuntimeException('Stop inherit cancelled by event');
+        }
+
+        $teaserManager->updateTeaser($teaser);
+
+        $event = new TeaserEvent($teaser, $treeId);
+        $dispatcher->dispatch(TeaserEvents::STOP_TEASER, $event);
+
+        return new ResultResponse(true, 'Inheritance stopped');
     }
 
     /**
@@ -772,22 +652,23 @@ class LayoutController extends Controller
      */
     public function showAction(Request $request)
     {
+        $treeId = (int) $request->get('tree_id');
         $teaserId = (int) $request->get('teaser_id');
 
         $dispatcher = $this->get('event_dispatcher');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
 
         $teaser = $teaserManager->find($teaserId);
-        $teaser->setNoDisplay(false);
+        $teaser->removeHideId($treeId);
 
-        $beforeEvent = new TeaserEvent($teaser);
+        $beforeEvent = new TeaserEvent($teaser, $treeId);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_SHOW_TEASER, $beforeEvent)->isPropagationStopped()) {
             throw new RuntimeException('Show cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser);
+        $event = new TeaserEvent($teaser, $treeId);
         $dispatcher->dispatch(TeaserEvents::SHOW_TEASER, $event);
 
         return new ResultResponse(true, 'Teaser will be displayed.');
@@ -801,115 +682,24 @@ class LayoutController extends Controller
      */
     public function hideAction(Request $request)
     {
+        $treeId = (int) $request->get('tree_id');
         $teaserId = (int) $request->get('teaser_id');
 
         $dispatcher = $this->get('event_dispatcher');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
 
         $teaser = $teaserManager->find($teaserId);
-        $teaser->setNoDisplay(true);
+        $teaser->addHideId($treeId);
 
-        $beforeEvent = new TeaserEvent($teaser);
+        $beforeEvent = new TeaserEvent($teaser, $treeId);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_HIDE_TEASER, $beforeEvent)->isPropagationStopped()) {
             throw new RuntimeException('Show cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser);
+        $event = new TeaserEvent($teaser, $treeId);
         $dispatcher->dispatch(TeaserEvents::HIDE_TEASER, $event);
-
-        return new ResultResponse(true, 'Teaser will not be displayed.');
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/showinherited", name="teasers_layout_showinherited")
-     */
-    public function showInheritedAction(Request $request)
-    {
-        $layoutAreaId = (int) $request->get('layoutarea_id');
-        $treeId = (int) $request->get('tree_id');
-        $eid = (int) $request->get('eid');
-        $teaserEid = (int) $request->get('teaser_eid');
-        $teaserId = (int) $request->get('teaser_id');
-
-        $dispatcher = $this->get('event_dispatcher');
-        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
-
-        $hideTeaser = $teaserManager->findOneBy(
-            [
-                'treeId'       => $treeId,
-                'layoutareaId' => $layoutAreaId,
-                'type'         => 'hide',
-                'typeId'       => $teaserId
-            ]
-        );
-
-        if ($hideTeaser) {
-            $event = new TeaserEvent($hideTeaser);
-            if ($dispatcher->dispatch(TeaserEvents::BEFORE_SHOW_INHERITED_TEASER, $event)->isPropagationStopped()) {
-                throw new RuntimeException('Show cancelled by event');
-            }
-
-            $teaserManager->deleteTeaser($hideTeaser, $this->getUser()->getId());
-
-            $event = new TeaserEvent($hideTeaser);
-            $dispatcher->dispatch($event);
-        }
-
-        return new ResultResponse(true, 'Teaser will be displayed.');
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/hideinherited", name="teasers_layout_hideinherited")
-     */
-    public function hideInheritedAction(Request $request)
-    {
-        $layoutAreaId = (int) $request->get('layoutarea_id');
-        $treeId = (int) $request->get('tree_id');
-        $eid = (int) $request->get('eid');
-        $teaserEid = (int) $request->get('teaser_eid');
-        $teaserId = (int) $request->get('teaser_id');
-
-        $dispatcher = $this->get('event_dispatcher');
-        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
-
-        $hideTeaser = $teaserManager->findOneBy(
-            [
-                'treeId' => $treeId,
-                'type'   => 'hide',
-                'typeId' => $teaserId
-            ]
-        );
-
-        if (!$hideTeaser) {
-            $event = new BeforeHideInheritedTeaserEvent($treeId, $eid, $teaserId, $layoutAreaId);
-            if ($dispatcher->dispatch(TeaserEvents::BEFORE_HIDE_INHERITED_TEASER, $event)->isPropagationStopped()) {
-                throw new RuntimeException('Hide cancelled by event');
-            }
-
-            $hideTeaser = $teaserManager->createTeaser(
-                $treeId,
-                $eid,
-                $layoutAreaId,
-                'hide',
-                $teaserId,
-                0,
-                false,
-                true,
-                'en',
-                $this->getUser()->getId()
-            );
-
-            $event = new TeaserEvent($hideTeaser);
-            $dispatcher->dispatch(TeaserEvents::HIDE_INHERITED_TEASER, $event);
-        }
 
         return new ResultResponse(true, 'Teaser will not be displayed.');
     }

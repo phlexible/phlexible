@@ -120,7 +120,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
             //$this->_debugTime('initTeasers - Layoutarea');
             //$this->_debugLine('Layoutarea: ' . $layoutElementTypeVersion->getTitle(), 'notice');
 
-            $teasers = $this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
+            $teasers = $this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath, false);
 
             $areas[$layoutarea->getUniqueId()] = [
                 'title'    => $layoutarea->getTitle(),

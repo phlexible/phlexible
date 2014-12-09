@@ -86,15 +86,15 @@ Phlexible.teasers.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 name: 'inherit',
                 fieldLabel: '',
                 labelSeparator: '',
-                boxLabel: Phlexible.teasers.Strings.inherited_teaser,
+                boxLabel: Phlexible.teasers.Strings.inherit,
                 checked: true
             },
             {
                 xtype: 'checkbox',
-                name: 'no_display',
+                name: 'hide',
                 fieldLabel: '',
                 labelSeparator: '',
-                boxLabel: Phlexible.teasers.Strings.not_shown_teaser
+                boxLabel: Phlexible.teasers.Strings.hide
             }
         ];
 

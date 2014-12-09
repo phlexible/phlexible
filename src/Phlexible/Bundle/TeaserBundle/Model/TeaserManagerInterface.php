@@ -54,10 +54,11 @@ interface TeaserManagerInterface
     /**
      * @param mixed               $layoutarea
      * @param TreeNodeInterface[] $treeNodePath
+     * @param bool                $includeLocalHidden
      *
      * @return Teaser[]
      */
-    public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath);
+    public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath, $includeLocalHidden = true);
 
     /**
      * @param Teaser $teaser

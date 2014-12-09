@@ -19,7 +19,8 @@ teasers:
     new_teaser_header: 'Neuen Teaser anlegen'
     new_teaser_description: 'Bitte geben Sie die benötigten Daten für den neuen Teaser ein.'
     delete_teaser: 'Teaser löschen'
-    inherited_teaser: Vererbt
-    stopped_inherited_teaser: 'Vererbung gestoppt'
-    not_shown_teaser: 'Hier nicht anzeigen'
+    inherit: Vererbt
+    stop: 'Vererbung gestoppt'
+    show: 'Hier anzeigen'
+    hide: 'Hier nicht anzeigen'
     inherited: Vererbt

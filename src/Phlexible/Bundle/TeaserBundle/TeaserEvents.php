@@ -16,198 +16,102 @@ namespace Phlexible\Bundle\TeaserBundle;
 class TeaserEvents
 {
     /**
-     * Before Create Teaser Event
-     *
      * Fired before a teaser is created.
      */
     const BEFORE_CREATE_TEASER = 'phlexible_teaser.before_create_teaser';
 
     /**
-     * Create Teaser Event
-     *
      * Fired after a teaser has been created.
      */
     const CREATE_TEASER = 'phlexible_teaser.create_teaser';
 
     /**
-     * Before Create Teaser Instance Event
-     *
      * Fired before a teaser instance is created.
      */
     const BEFORE_CREATE_TEASER_INSTANCE = 'phlexible_teaser.before_create_teaser_instance';
 
     /**
-     * Create Teaser Instance Event
-     *
      * Fired after a teaser instance has been created.
      */
     const CREATE_TEASER_INSTANCE = 'phlexible_teaser.create_teaser_instance';
 
     /**
-     * Before Delete Teaser Event
-     *
      * Fired before a teaser is deleted.
      */
     const BEFORE_DELETE_TEASER = 'phlexible_teaser.before_delete_teaser';
 
     /**
-     * Delete Teaser Event
-     *
      * Fired after a teaser has been deleted.
      */
     const DELETE_TEASER = 'phlexible_teaser.delete_teaser';
 
     /**
-     * Before Update Teaser Event
-     *
      * Fired before a teaser is updated.
      */
     const BEFORE_UPDATE_TEASER = 'phlexible_teasers.before_update_teaser';
 
     /**
-     * Update Teaser Event
-     *
      * Fired after a teaser has been updated.
      */
     const UPDATE_TEASER = 'phlexible_teaser.update_teaser';
 
     /**
-     * Before Publish Teaser Event
-     *
      * Fired before a teaser is published.
      */
     const BEFORE_PUBLISH_TEASER = 'phlexible_teaser.before_publish_teaser';
 
     /**
-     * Publish Teaser Event
-     *
-     * Fired after a teaser is published.
+     * Fired after a teaser has been published.
      */
     const PUBLISH_TEASER = 'phlexible_teaser.publish_teaser';
 
     /**
-     * Before Set Teaser Offline Event
-     *
      * Fired before a teaser is set offline.
      */
     const BEFORE_SET_TEASER_OFFLINE = 'phlexible_teaser.before_set_teaser_offline';
 
     /**
-     * Set Teaser Offline Event
-     *
-     * Fired after a teaser is set offline.
+     * Fired after a teaser has been set offline.
      */
     const SET_TEASER_OFFLINE = 'phlexible_teaser.set_teaser_offline';
 
     /**
-     * Before Show Teaser Event
-     *
      * Fired before a teaser is shown.
      */
     const BEFORE_SHOW_TEASER = 'phlexible_teaser.before_show_teaser';
 
     /**
-     * Show Teaser Event
-     *
-     * Fired after a teaser is shown.
+     * Fired after a teaser has been shown.
      */
     const SHOW_TEASER = 'phlexible_teaser.show_teaser';
 
     /**
-     * Before Hide Teaser Event
-     *
      * Fired before a teaser is hidden.
      */
     const BEFORE_HIDE_TEASER = 'phlexible_teaser.before_hide_teaser';
 
     /**
-     * Hide Teaser Event
-     *
-     * Fired after a teaser is published.
+     * Fired after a teaser has been hidden.
      */
     const HIDE_TEASER = 'phlexible_teaser.hide_teaser';
 
     /**
-     * Before Inherit Teaser Event
-     *
      * Fired before a teaser is inherited.
      */
     const BEFORE_INHERIT_TEASER = 'phlexible_teaser.before_inherit_teaser';
 
     /**
-     * Inherit Teaser Event
-     *
-     * Fired after a teaser is inherited.
+     * Fired after a teaser has been inherited.
      */
     const INHERIT_TEASER = 'phlexible_teaser.inherit_teaser';
 
     /**
-     * Before Stop Inherit Teaser Event
-     *
      * Fired before a teaser is stopped from inherit.
      */
-    const BEFORE_STOP_INHERIT_TEASER = 'phlexible_teaser.before_stop_inherit_teaser';
+    const BEFORE_STOP_TEASER = 'phlexible_teaser.before_stop_teaser';
 
     /**
-     * Stop Inherit Teaser Event
-     *
-     * Fired after a teaser is stopped from inherit.
+     * Fired after a teaser has been stopped.
      */
-    const STOP_INHERIT_TEASER = 'phlexible_teaser.stop_inherit_teaser';
-
-    /**
-     * Before Show Inherited Teaser Event
-     *
-     * Fired before an inherited teaser is shown.
-     */
-    const BEFORE_SHOW_INHERITED_TEASER = 'phlexible_teaser.before_show_inherited_teaser';
-
-    /**
-     * Show Inherited Teaser Event
-     *
-     * Fired after an inherited teaser is shown.
-     */
-    const SHOW_INHERITED_TEASER = 'phlexible_teaser.show_inherited_teaser';
-
-    /**
-     * Before Hide Inherited Teaser Event
-     *
-     * Fired before an inherited teaser is hidden.
-     */
-    const BEFORE_HIDE_INHERITED_TEASER = 'phlexible_teaser.before_hide_inherited_teaser';
-
-    /**
-     * Hide Inherited Teaser Event
-     *
-     * Fired after an inherited teaser is published.
-     */
-    const HIDE_INHERITED_TEASER = 'phlexible_teaser.hide_inherited_teaser';
-
-    /**
-     * Before Inherit Inherited Teaser Event
-     *
-     * Fired before an inherited teaser is inherited.
-     */
-    const BEFORE_INHERIT_INHERITED_TEASER = 'phlexible_teaser.before_inherit_inherited_teaser';
-
-    /**
-     * Inherit Inherited Teaser Event
-     *
-     * Fired after an inherited teaser is inherited.
-     */
-    const INHERIT_INHERITED_TEASER = 'phlexible_teaser.inherit_inherited_teaser';
-
-    /**
-     * Before Stop Inherit Inherited Teaser Event
-     *
-     * Fired before an inherited teaser is stopped from inherit.
-     */
-    const BEFORE_STOP_INHERIT_INHERITED_TEASER = 'phlexible_teaser.before_stop_inherit_inherited_teaser';
-
-    /**
-     * Stop Inherit Inherited Teaser Event
-     *
-     * Fired after an inherited teaser is stopped from inherit.
-     */
-    const STOP_INHERIT_INHERITED_TEASER = 'phlexible_teaser.stop_inherit_inherited_teaser';
+    const STOP_TEASER = 'phlexible_teaser.stop_teaser';
 }
