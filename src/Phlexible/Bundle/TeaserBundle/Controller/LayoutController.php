@@ -782,4 +782,134 @@ class LayoutController extends Controller
 
         $this->getResponse()->setAjaxPayload($result);
     }
+
+    /**
+     * Return the Element data tree
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @Route("/reference", name="teasers_layout_reference")
+     */
+    public function referenceAction(Request $request)
+    {
+        // TODO: switch to master language of element
+        $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
+
+        $siterootId = $request->get('siteroot_id');
+        $tid = $request->get('node');
+        $language = $request->get('language');
+
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $elementService = $this->get('phlexible_element.element_service');
+        $translator = $this->get('translator');
+        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+        $elementSourceManager = $this->get('phlexible_element.element_source_manager');
+        $nodeSerializer = $this->get('phlexible_tree.node_serializer');
+        $iconResolver = $this->get('phlexible_element.icon_resolver');
+
+        $tree = $treeManager->getBySiteRootId($siterootId);
+
+        $treeNode = $tree->get($tid);
+        $rootNode = $tree->getRoot();
+
+        $data = [];
+        if ($rootNode !== null) {
+            if ($tid === null || $tid < 1) {
+                $data = [$nodeSerializer->serializeNode($rootNode, $language)];
+
+                return new JsonResponse($data);
+            }
+
+            $node = $tree->get($tid);
+
+            // check if children of this node should be shown
+            $element = $elementService->findElement($node->getTypeId());
+            $elementtype = $elementService->findElementtype($element);
+
+            $nodes = $tree->getChildren($node);
+            if (!empty($nodes) && !$elementtype->getHideChildren()) {
+                $data = $nodeSerializer->serializeNodes($nodes, $language);
+            }
+
+            foreach ($data as $key => $row) {
+                if ($row['leaf']) {
+                    unset($data[$key]);
+                    continue;
+                }
+                $data[$key]['cls'] = (!empty($data[$key]['cls']) ? $data[$key]['cls'] . ' ' : '') . 'node-disabled';
+            }
+        }
+
+        $currentTreeId = $tid;
+
+        $element = $elementService->findElement($treeNode->getTypeId());
+        $elementMasterLanguage = $element->getMasterLanguage();
+        $elementtype = $elementService->findElementtype($element);
+
+        $layouts = [];
+        $layoutareas = [];
+        // TODO: repair
+        foreach ($elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
+            if (in_array($elementtype, $elementService->findAllowedParents($layoutarea))) {
+                $layoutareas[] = $layoutarea;
+            }
+        }
+
+        foreach ($layoutareas as $layoutarea) {
+            $areaRoot = [
+                'id'         => 'area_' . $layoutarea->getId(),
+                'area_id'    => $layoutarea->getId(),
+                'parent_tid' => $currentTreeId,
+                'parent_eid' => $element->getEid(),
+                'icon'       => $iconResolver->resolveElementtype($layoutarea),
+                'text'       => $layoutarea->getTitle(),
+                'type'       => 'area',
+                'inherited'  => null, //true,
+                'leaf'       => false,
+                'expanded'   => true,
+                'allowDrag'  => false,
+                'allowDrop'  => false,
+                'children'   => [],
+                'qtip'       => $translator->trans('elements.doubleclick_to_sort', [], 'gui'),
+            ];
+
+            $teasers = $teaserManager->findForLayoutAreaAndTreeNode($layoutarea, $treeNode);
+
+            foreach ($teasers as $teaser) {
+                switch ($teaser->getType()) {
+                    case 'element':
+                        $teaserElement = $elementService->findElement($teaser->getTypeId());
+                        $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
+
+                        $areaRoot['children'][] = [
+                            'id'            => $teaser->getId(),
+                            'parent_tid'    => $currentTreeId,
+                            'parent_eid'    => $element->getEid(),
+                            'layoutarea_id' => $layoutarea->getId(),
+                            'icon'          => $iconResolver->resolveTeaser($teaser, $language),
+                            'text'          => $teaserElementVersion->getBackendTitle($language),
+                            // . ' [' . $teaser->getEid() . ']',
+                            'eid'           => $teaser->getTypeId(),
+                            'type'          => 'teaser',
+                            'expanded'      => false,
+                            'leaf'          => true,
+                            'allowDrag'     => false,
+                            'allowDrop'     => false,
+                            'children'      => []
+                        ];
+
+                        break;
+                }
+            }
+
+            if (count($areaRoot['children'])) {
+                $data[] = $areaRoot;
+            }
+        }
+
+        $data = array_values($data);
+
+        return new JsonResponse($data);
+    }
 }

@@ -462,11 +462,11 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
 
                         this.items.items[6].show();
                         if (node.attributes.hide) {
-                            this.items.items[6].setChecked(true);
+                            this.items.items[6].setChecked(false);
                             this.items.items[6].setText(Phlexible.teasers.Strings.hide);
                         }
                         else {
-                            this.items.items[6].setChecked(false);
+                            this.items.items[6].setChecked(true);
                             this.items.items[6].setText(Phlexible.teasers.Strings.show);
                         }
 

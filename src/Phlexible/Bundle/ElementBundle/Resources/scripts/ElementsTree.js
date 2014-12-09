@@ -15,7 +15,9 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
     containerScroll: true,
 
     initComponent: function () {
-        this.dataUrl = Phlexible.Router.generate('tree_tree');
+        if (!this.dataUrl) {
+            this.dataUrl = Phlexible.Router.generate('tree_tree');
+        }
 
         this.element.on({
             createElement: function (element, data, node) {

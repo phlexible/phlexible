@@ -18,19 +18,17 @@ Phlexible.teasers.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
             element: this.element,
             enableDD: false,
             noClickHandling: true,
-            dataUrl: Phlexible.Router.generate('tree_teaser_reference'),
+            dataUrl: Phlexible.Router.generate('teasers_layout_reference'),
             listeners: {
-                click: {
-                    fn: function (node) {
-                        if (node.attributes.type == 'teaser') {
-                            this.buttons[0].enable();
-                        }
-                        else {
-                            this.buttons[0].disable();
-                        }
-                    },
-                    scope: this
-                }
+                click: function (node) {
+                    if (node.attributes.type == 'teaser') {
+                        this.buttons[0].enable();
+                    }
+                    else {
+                        this.buttons[0].disable();
+                    }
+                },
+                scope: this
             }
         });
 
@@ -55,7 +53,7 @@ Phlexible.teasers.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
         this.buttons = [
             {
                 text: this.strings.add_teaser_reference,
-                iconCls: 'p-teasers-teaser_reference-icon',
+                iconCls: 'p-teaser-teaser_reference-icon',
                 disabled: true,
                 handler: function () {
                     var node = this.treePanel.getSelectionModel().getSelectedNode();
@@ -80,12 +78,10 @@ Phlexible.teasers.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
         ];
 
         this.addListener({
-            render: {
-                fn: function () {
-//                    this.getComponent(0).load(this.elementData);
-                },
-                scope: this
-            }
+            render: function () {
+                // this.getComponent(0).load(this.elementData);
+            },
+            scope: this
         });
 
         Phlexible.teasers.NewTeaserInstanceWindow.superclass.initComponent.call(this);

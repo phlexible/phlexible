@@ -24,3 +24,4 @@ teasers:
     show: 'Shown here'
     hide: 'Not shown here'
     inherited: Inherited
+    cancel: Cancel
