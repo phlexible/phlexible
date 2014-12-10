@@ -53,6 +53,7 @@
         "mikey179/vfsStream": "~1.4"
     },
     "suggest": {
+        "puli/composer-plugin": "This package contains Puli resources. Require the plugin to use them.",
         "phlexible/compressor-minify-bundle": "Compress javascript and css files."
     },
     "repositories": [

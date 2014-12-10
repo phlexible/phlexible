@@ -56,10 +56,10 @@ class MenuLoader
             $reflection = new \ReflectionClass($class);
             $path = dirname($reflection->getFileName());
 
-            $configDir = $path . '/Resources/config/';
+            $configDir = $path . '/Resources/menu/';
             if (file_exists($configDir)) {
                 $finder = new Finder();
-                foreach ($finder->in($configDir)->name('menuhandles.*') as $file) {
+                foreach ($finder->in($configDir)->name('*.*') as $file) {
                     $filename = $file->getPathName();
                     $loadedItems = $loader->load($filename);
                     $items->merge($loadedItems);
