@@ -24,6 +24,12 @@ class File extends BaseFile implements ExtendedFileInterface
 {
     /**
      * @var string
+     * @ORM\Column(name="media_category", type="string")
+     */
+    private $mediaCategory;
+
+    /**
+     * @var string
      * @ORM\Column(name="media_type", type="string")
      */
     private $mediaType;
@@ -33,6 +39,26 @@ class File extends BaseFile implements ExtendedFileInterface
      * @ORM\Column(name="metasets", type="simple_array", nullable=true)
      */
     private $metasets = [];
+
+    /**
+     * @param string $mediaCategory
+     *
+     * @return $this
+     */
+    public function setMediaCategory($mediaCategory)
+    {
+        $this->mediaCategory = $mediaCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMediaCategory()
+    {
+        return $this->mediaCategory;
+    }
 
     /**
      * @param string $mediaType

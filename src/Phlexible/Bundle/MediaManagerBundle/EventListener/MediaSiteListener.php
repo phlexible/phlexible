@@ -124,6 +124,7 @@ class MediaSiteListener implements EventSubscriberInterface
             $mediaType = $this->mediaTypeManager->find('binary');
         }
 
+        $file->setMediaCategory($mediaType->getCategory());
         $file->setMediaType($mediaType->getName());
 
         foreach ($this->metasetMapping as $metasetName => $mapping) {
