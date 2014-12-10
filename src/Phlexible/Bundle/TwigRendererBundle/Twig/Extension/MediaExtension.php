@@ -191,15 +191,15 @@ class MediaExtension extends \Twig_Extension
         $file = $volume->findFile($fileId, $fileVersion);
 
         $info = [
-            'name'         => $file->getName(),
-            'mimetype'     => $file->getMimeType(),
-            'assettype'    => $file->getMediaType(),
-            'documenttype' => $file->getMediaType(),
-            'size'         => $file->getSize(),
-            'attributes'   => $file->getAttributes(),
-            'createdAt'    => $file->getCreatedAt(),
-            'modifiedAt'   => $file->getModifiedAt(),
-            'meta'         => [],
+            'name'          => $file->getName(),
+            'mimetype'      => $file->getMimeType(),
+            'mediaCategory' => $file->getMediaCategory(),
+            'mediaType'     => $file->getMediaType(),
+            'size'          => $file->getSize(),
+            'attributes'    => $file->getAttributes(),
+            'createdAt'     => $file->getCreatedAt(),
+            'modifiedAt'    => $file->getModifiedAt(),
+            'meta'          => [],
         ];
 
         $metasets = $this->metaSetResolver->resolve($file);
