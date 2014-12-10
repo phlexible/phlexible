@@ -551,54 +551,6 @@ class LayoutController extends Controller
      * @return ResultResponse
      * @Route("/inherit", name="teasers_layout_inherit")
      */
-    public function toggleInheritAction(Request $request)
-    {
-        $teaserId = $request->get('teaser_id');
-
-        $dispatcher = $this->get('event_dispatcher');
-        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
-
-        $teaser = $teaserManager->find($teaserId);
-
-        if ($teaser->getStopInherit()) {
-            $event = new TeaserEvent($teaser);
-            if ($dispatcher->dispatch(TeaserEvents::BEFORE_INHERIT_TEASER, $event)->isPropagationStopped()) {
-                throw new RuntimeException('Toggle inherit stopped.');
-            }
-
-            $teaser->setStopInherit(false);
-
-            $teaserManager->updateTeaser($teaser);
-
-            $event = new TeaserEvent($teaser);
-            $dispatcher->dispatch(TeaserEvents::BEFORE_INHERIT_TEASER, $event);
-
-            $msg = 'Inheritance stopped.';
-        } else {
-            $event = new TeaserEvent($teaser);
-            if ($dispatcher->dispatch(TeaserEvents::BEFORE_STOP_INHERIT_TEASER, $event)->isPropagationStopped()) {
-                throw new RuntimeException('Toggle inherit stopped.');
-            }
-
-            $teaser->setStopInherit(true);
-
-            $teaserManager->updateTeaser($teaser);
-
-            $event = new TeaserEvent($teaser);
-            $dispatcher->dispatch(TeaserEvents::BEFORE_STOP_INHERIT_TEASER, $event);
-
-            $msg = 'Inheritance stop removed.';
-        }
-
-        return new ResultResponse(true, $msg);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/inherit", name="teasers_layout_inherit")
-     */
     public function inheritAction(Request $request)
     {
         $treeId = (int) $request->get('tree_id');

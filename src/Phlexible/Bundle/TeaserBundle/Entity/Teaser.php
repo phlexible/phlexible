@@ -46,8 +46,8 @@ class Teaser
     private $eid;
 
     /**
-     * @var int
-     * @ORM\Column(name="layoutarea_id", type="integer")
+     * @var string
+     * @ORM\Column(name="layoutarea_id", type="string", length=36, options={"fixed"=true})
      */
     private $layoutareaId;
 
@@ -158,7 +158,7 @@ class Teaser
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getLayoutareaId()
     {
@@ -166,7 +166,7 @@ class Teaser
     }
 
     /**
-     * @param int $layoutareaId
+     * @param string $layoutareaId
      *
      * @return $this
      */
