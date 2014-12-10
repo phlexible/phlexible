@@ -273,8 +273,8 @@ class TeaserManager implements TeaserManagerInterface
         $type,
         $typeId,
         $prevId = 0,
-        $inherit = true,
-        $noDisplay = false,
+        array $stopIds = null,
+        array $hideIds = null,
         $masterLanguage = 'en',
         $userId
     )
@@ -286,11 +286,17 @@ class TeaserManager implements TeaserManagerInterface
             ->setLayoutareaId($layoutareaId)
             ->setType($type)
             ->setTypeId($typeId)
-            ->setNoDisplay($noDisplay)
-            ->setStopInherit(!$inherit)
             ->setSort(0)
             ->setCreatedAt(new \DateTime())
             ->setCreateUserId($userId);
+
+        if ($stopIds) {
+            $teaser->setStopIds($stopIds);
+        }
+
+        if ($hideIds) {
+            $teaser->setHideIds($hideIds);
+        }
 
         $event = new TeaserEvent($teaser);
         if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_CREATE_TEASER, $event)->isPropagationStopped()) {

@@ -143,8 +143,8 @@ interface TeaserManagerInterface
      * @param string $type
      * @param int    $typeId
      * @param int    $prevId
-     * @param bool   $inherit
-     * @param bool   $noDisplay
+     * @param array  $stopIds
+     * @param array  $hideIds
      * @param string $masterLanguage
      * @param string $userId
      *
@@ -157,8 +157,8 @@ interface TeaserManagerInterface
         $type,
         $typeId,
         $prevId = 0,
-        $inherit = true,
-        $noDisplay = false,
+        array $stopIds = null,
+        array $hideIds = null,
         $masterLanguage = 'en',
         $userId);
 

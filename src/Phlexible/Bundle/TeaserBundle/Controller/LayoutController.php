@@ -446,7 +446,7 @@ class LayoutController extends Controller
         $elementtypeId = $request->get('element_type_id');
         $prevId = $request->get('prev_id', 0);
         $inherit = $request->get('inherit') == 'on' ? true : false;
-        $noDisplay = $request->get('hide') == 'on' ? true : false;
+        $hide = $request->get('hide') == 'on' ? true : false;
         $masterLanguage = $request->get('masterlanguage', null);
 
         if (!$masterLanguage) {
@@ -457,10 +457,19 @@ class LayoutController extends Controller
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
 
         $elementSource = $elementService->findElementSource($elementtypeId);
-
         $userId = $this->getUser()->getId();
 
         $element = $elementService->createElement($elementSource, $masterLanguage, $userId);
+
+        $stopIds = array();
+        if (!$inherit) {
+            $stopIds[] = $treeId;
+        }
+
+        $hideIds = array();
+        if ($hide) {
+            $hideIds[] = $treeId;
+        }
 
         $teaser = $teaserManager->createTeaser(
             $treeId,
@@ -469,8 +478,8 @@ class LayoutController extends Controller
             'element',
             $element->getEid(),
             $prevId,
-            $inherit,
-            $noDisplay,
+            $stopIds,
+            $hideIds,
             $masterLanguage,
             $userId
         );
