@@ -6,39 +6,24 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
+namespace Phlexible\Bundle\MediaManagerBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
-use Poppler\Processor\PdfFile;
 
 /**
- * pdfinfo attribute reader
+ * Exif extension attribute reader
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class PdfInfoAttributeReader implements AttributeReaderInterface
+class ExifExtensionAttributeReader implements AttributeReaderInterface
 {
-    /**
-     * @var PdfFile
-     */
-    private $pdfFile;
-
-    /**
-     * @param PdfFile $pdfFile
-     */
-    public function __construct(PdfFile $pdfFile)
-    {
-        $this->pdfFile = $pdfFile;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function isAvailable()
     {
-       return true;
+        return extension_loaded('exif') && function_exists('exif_read_data');
     }
 
     /**
@@ -46,7 +31,8 @@ class PdfInfoAttributeReader implements AttributeReaderInterface
      */
     public function supports(PathSourceInterface $fileSource, MediaType $mediaType)
     {
-        return $mediaType->getName() === 'pdf';
+        return $mediaType->getCategory() === 'image'
+            && \exif_imagetype($fileSource->getPath()) === IMAGETYPE_JPEG;
     }
 
     /**
@@ -56,13 +42,12 @@ class PdfInfoAttributeReader implements AttributeReaderInterface
     {
         $filename = $fileSource->getPath();
 
-        try {
-            $infos = $this->pdfFile->getInfo($filename);
+        $result = \exif_read_data($filename, '', true);
 
-            foreach ($infos as $key => $value) {
-                $attributes->set(strtolower("pdf.$key"), $value);
+        if (!empty($result['IFD0'])) {
+            foreach ($result['IFD0'] as $key => $value) {
+                $attributes->set("exif.$key", $value);
             }
-        } catch (\Exception $e) {
         }
     }
 }

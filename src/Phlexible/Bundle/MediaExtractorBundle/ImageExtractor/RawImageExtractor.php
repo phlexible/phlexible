@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\ImageExtractor;
 
+use Phlexible\Bundle\MediaExtractorBundle\Extractor\ExtractorInterface;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
@@ -16,20 +17,20 @@ use Phlexible\Component\MediaType\Model\MediaType;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class RawImageExtractor implements ImageExtractorInterface
+class RawImageExtractor implements ExtractorInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType)
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
-        return $mediaType->getCategory() === 'image' || $mediaType->getName() === 'pdf';
+        return $targetFormat === 'image' && ($mediaType->getCategory() === 'image' || $mediaType->getName() === 'pdf');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType)
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
         return $file->getPhysicalPath();
     }

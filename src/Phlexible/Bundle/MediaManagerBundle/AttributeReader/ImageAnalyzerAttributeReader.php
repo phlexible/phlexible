@@ -6,10 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
+namespace Phlexible\Bundle\MediaManagerBundle\AttributeReader;
 
 use Brainbits\ImageAnalyzer\ImageAnalyzer;
-use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 

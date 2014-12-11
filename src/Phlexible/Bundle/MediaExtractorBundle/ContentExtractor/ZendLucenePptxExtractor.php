@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
+use Phlexible\Bundle\MediaExtractorBundle\Extractor\ExtractorInterface;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
@@ -16,14 +17,14 @@ use Phlexible\Component\MediaType\Model\MediaType;
  *
  * @author Phillip Look <plook@brainbits.net>
  */
-class ZendLucenePptxExtractor implements ContentExtractorInterface
+class ZendLucenePptxExtractor implements ExtractorInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType)
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
-        return $mediaType->getName() === 'pptx';
+        return $targetFormat === 'text' && $mediaType->getName() === 'pptx';
     }
 
     /**

@@ -6,25 +6,25 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
+namespace Phlexible\Bundle\MediaExtractorBundle\Extractor;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Content extractor resolver
+ * Extractor resolver
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ContentExtractorResolver implements ContentExtractorResolverInterface
+class ExtractorResolver implements ExtractorResolverInterface
 {
     /**
-     * @var ContentExtractorInterface[]
+     * @var ExtractorInterface[]
      */
     private $extractors;
 
     /**
-     * @param ContentExtractorInterface[] $extractors
+     * @param ExtractorInterface[] $extractors
      */
     public function __construct(array $extractors = [])
     {
@@ -34,11 +34,11 @@ class ContentExtractorResolver implements ContentExtractorResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(ExtendedFileInterface $file, MediaType $mediaType)
+    public function resolve(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
-        foreach ($this->extractors as $reader) {
-            if ($reader->supports($file, $mediaType)) {
-                return $reader;
+        foreach ($this->extractors as $extractor) {
+            if ($extractor->supports($file, $mediaType, $targetFormat)) {
+                return $extractor;
             }
         }
 

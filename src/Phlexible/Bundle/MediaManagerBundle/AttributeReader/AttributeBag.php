@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaAssetBundle\Model;
+namespace Phlexible\Bundle\MediaManagerBundle\AttributeReader;
 
 /**
  * Attribute bag

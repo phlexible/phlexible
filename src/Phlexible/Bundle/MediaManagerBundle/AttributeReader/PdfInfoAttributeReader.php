@@ -6,25 +6,38 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
+namespace Phlexible\Bundle\MediaManagerBundle\AttributeReader;
 
-use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
+use Poppler\Processor\PdfFile;
 
 /**
- * Exif extension attribute reader
+ * pdfinfo attribute reader
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ExifExtensionAttributeReader implements AttributeReaderInterface
+class PdfInfoAttributeReader implements AttributeReaderInterface
 {
+    /**
+     * @var PdfFile
+     */
+    private $pdfFile;
+
+    /**
+     * @param PdfFile $pdfFile
+     */
+    public function __construct(PdfFile $pdfFile)
+    {
+        $this->pdfFile = $pdfFile;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function isAvailable()
     {
-        return extension_loaded('exif') && function_exists('exif_read_data');
+       return true;
     }
 
     /**
@@ -32,8 +45,7 @@ class ExifExtensionAttributeReader implements AttributeReaderInterface
      */
     public function supports(PathSourceInterface $fileSource, MediaType $mediaType)
     {
-        return $mediaType->getCategory() === 'image'
-            && \exif_imagetype($fileSource->getPath()) === IMAGETYPE_JPEG;
+        return $mediaType->getName() === 'pdf';
     }
 
     /**
@@ -43,12 +55,13 @@ class ExifExtensionAttributeReader implements AttributeReaderInterface
     {
         $filename = $fileSource->getPath();
 
-        $result = \exif_read_data($filename, '', true);
+        try {
+            $infos = $this->pdfFile->getInfo($filename);
 
-        if (!empty($result['IFD0'])) {
-            foreach ($result['IFD0'] as $key => $value) {
-                $attributes->set("exif.$key", $value);
+            foreach ($infos as $key => $value) {
+                $attributes->set(strtolower("pdf.$key"), $value);
             }
+        } catch (\Exception $e) {
         }
     }
 }

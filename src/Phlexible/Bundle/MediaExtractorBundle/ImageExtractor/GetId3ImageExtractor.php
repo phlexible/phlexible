@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaExtractorBundle\ImageExtractor;
 
 use GetId3\GetId3Core;
+use Phlexible\Bundle\MediaExtractorBundle\Extractor\ExtractorInterface;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Psr\Log\LoggerInterface;
@@ -18,7 +19,7 @@ use Psr\Log\LoggerInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class GetId3ImageExtractor implements ImageExtractorInterface
+class GetId3ImageExtractor implements ExtractorInterface
 {
     /**
      * @var string
@@ -43,15 +44,15 @@ class GetId3ImageExtractor implements ImageExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType)
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
-        return $mediaType->getCategory() === 'audio';
+        return $targetFormat === 'image' && $mediaType->getCategory() === 'audio';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType)
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
         $filename = $file->getPhysicalPath();
         $imageFile = null;

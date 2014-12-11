@@ -6,11 +6,10 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaAssetBundle\AttributeReader;
+namespace Phlexible\Bundle\MediaManagerBundle\AttributeReader;
 
 use FFMpeg\FFProbe;
 use FFMpeg\FFProbe\DataMapping\Stream;
-use Phlexible\Bundle\MediaAssetBundle\Model\AttributeBag;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 use Psr\Log\LoggerInterface;

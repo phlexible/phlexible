@@ -6,35 +6,37 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaExtractorBundle\FlashExtractor;
+namespace Phlexible\Bundle\MediaExtractorBundle\Extractor;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Flash extractor interface
+ * Extractor interface
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface FlashExtractorInterface
+interface ExtractorInterface
 {
     /**
      * Check if extractor supports the given asset
      *
      * @param ExtendedFileInterface $file
      * @param MediaType             $mediaType
+     * @param string                $targetFormat
      *
      * @return bool
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType);
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat);
 
     /**
-     * Extract flash from file
+     * Extract from file
      *
      * @param ExtendedFileInterface $file
      * @param MediaType             $mediaType
+     * @param string                $targetFormat
      *
-     * @return bool
+     * @return string
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType);
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat);
 }

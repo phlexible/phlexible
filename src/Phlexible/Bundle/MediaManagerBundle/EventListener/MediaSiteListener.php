@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
+use Phlexible\Bundle\MediaManagerBundle\AttributeReader\AttributeBag;
+use Phlexible\Bundle\MediaManagerBundle\AttributeReader\AttributeReaderInterface;
 use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFileChecker;
 use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFolderChecker;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
@@ -40,6 +42,11 @@ class MediaSiteListener implements EventSubscriberInterface
     private $metaSetManager;
 
     /**
+     * @var AttributeReaderInterface
+     */
+    private $attributeReader;
+
+    /**
      * @var DeleteFileChecker
      */
     private $deleteFileChecker;
@@ -57,6 +64,7 @@ class MediaSiteListener implements EventSubscriberInterface
     /**
      * @param MediaTypeManagerInterface $mediaTypeManager
      * @param MetaSetManagerInterface   $metaSetManager
+     * @param AttributeReaderInterface  $attributeReader
      * @param DeleteFileChecker         $deleteFileChecker
      * @param DeleteFolderChecker       $deleteFolderChecker
      * @param array                     $metasetMapping
@@ -64,12 +72,14 @@ class MediaSiteListener implements EventSubscriberInterface
     public function __construct(
         MediaTypeManagerInterface $mediaTypeManager,
         MetaSetManagerInterface $metaSetManager,
+        AttributeReaderInterface $attributeReader,
         DeleteFileChecker $deleteFileChecker,
         DeleteFolderChecker $deleteFolderChecker,
         array $metasetMapping)
     {
         $this->mediaTypeManager = $mediaTypeManager;
         $this->metaSetManager = $metaSetManager;
+        $this->attributeReader = $attributeReader;
         $this->deleteFileChecker = $deleteFileChecker;
         $this->deleteFolderChecker = $deleteFolderChecker;
         $this->metasetMapping = $metasetMapping;
@@ -84,7 +94,7 @@ class MediaSiteListener implements EventSubscriberInterface
         return [
             VolumeEvents::BEFORE_CREATE_FILE   => ['onBeforeCreateFile', 500],
             VolumeEvents::BEFORE_CREATE_FOLDER => ['onBeforeCreateFolder', 500],
-            VolumeEvents::BEFORE_REPLACE_FILE   => ['onBeforeReplaceFile', 500],
+            VolumeEvents::BEFORE_REPLACE_FILE  => ['onBeforeReplaceFile', 500],
             VolumeEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
             VolumeEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
         ];
@@ -135,6 +145,17 @@ class MediaSiteListener implements EventSubscriberInterface
                 }
             }
         }
+
+        $attributes = new AttributeBag($file->getAttributes());
+
+        $mediaTypeName = $file->getMediaType();
+        $mediaType = $this->mediaTypeManager->find($mediaTypeName);
+
+        if ($this->attributeReader->supports($fileSource, $mediaType)) {
+            $this->attributeReader->read($fileSource, $mediaType, $attributes);
+        }
+
+        $file->setAttributes($attributes->all());
     }
 
     /**
