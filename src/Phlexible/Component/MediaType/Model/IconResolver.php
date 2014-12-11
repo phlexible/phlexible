@@ -41,10 +41,14 @@ class IconResolver
     public function resolve(MediaType $mediaType, $requestedSize = null)
     {
         $icons = $mediaType->getIcons();
+        if (!count($icons)) {
+            return null;
+        }
+        ksort($icons);
+
         if (isset($icons[$requestedSize])) {
             $icon = $icons[$requestedSize];
         } else {
-            $icon = null;
             foreach ($icons as $size => $dummyIcon) {
                 if ($size > $requestedSize) {
                     $icon = $dummyIcon;
@@ -52,7 +56,8 @@ class IconResolver
                 }
             }
             if (!$icon) {
-                return null;
+                $icon = end($icons);
+                //return null;
             }
         }
 

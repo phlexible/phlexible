@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TwigRendererBundle\Twig\Extension;
+namespace Phlexible\Bundle\TreeBundle\Twig\Extension;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
