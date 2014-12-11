@@ -16,14 +16,10 @@ namespace Phlexible\Component\MediaTemplate\Previewer;
 interface PreviewerInterface
 {
     /**
-     * @return string
-     */
-    public function getPreviewDir();
-
-    /**
-     * @param array $params
+     * @param string $filePath
+     * @param array  $params
      *
      * @return array
      */
-    public function create(array $params);
+    public function create($filePath, array $params);
 }

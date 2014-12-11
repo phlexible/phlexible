@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaTemplate\Exception;
 
 /**
- * Exception interface for media template bundle
+ * Exception interface for media template
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

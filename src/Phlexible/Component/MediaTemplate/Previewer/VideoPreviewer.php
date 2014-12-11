@@ -27,44 +27,25 @@ class VideoPreviewer implements PreviewerInterface
     private $applier;
 
     /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
      * @var string
      */
     private $cacheDir;
 
     /**
      * @param VideoTemplateApplier $applier
-     * @param FileLocator          $locator
      * @param string               $cacheDir
      */
-    public function __construct(VideoTemplateApplier $applier, FileLocator $locator, $cacheDir)
+    public function __construct(VideoTemplateApplier $applier, $cacheDir)
     {
         $this->applier = $applier;
-        $this->locator = $locator;
         $this->cacheDir = $cacheDir;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getPreviewDir()
+    public function create($filePath, array $params)
     {
-        return $this->cacheDir;
-    }
-
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
-    public function create(array $params)
-    {
-        $filePath = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/video/test.mpg', null, true);
-
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
             $filesystem->mkdir($this->cacheDir);

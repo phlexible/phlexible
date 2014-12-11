@@ -27,44 +27,25 @@ class AudioPreviewer implements PreviewerInterface
     private $applier;
 
     /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
      * @var string
      */
     private $cacheDir;
 
     /**
      * @param AudioTemplateApplier $applier
-     * @param FileLocator          $locator
      * @param string               $cacheDir
      */
-    public function __construct(AudioTemplateApplier $applier, FileLocator $locator, $cacheDir)
+    public function __construct(AudioTemplateApplier $applier, $cacheDir)
     {
         $this->applier = $applier;
-        $this->locator = $locator;
         $this->cacheDir = $cacheDir;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getPreviewDir()
+    public function create($filePath, array $params)
     {
-        return $this->cacheDir;
-    }
-
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
-    public function create(array $params)
-    {
-        $filePath = $this->locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/audio/test.mp3', null, true);
-
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
             $filesystem->mkdir($this->cacheDir);

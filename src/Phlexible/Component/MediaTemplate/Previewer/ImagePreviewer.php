@@ -27,47 +27,25 @@ class ImagePreviewer implements PreviewerInterface
     private $applier;
 
     /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
      * @var string
      */
     private $cacheDir;
 
     /**
      * @param ImageTemplateApplier $applier
-     * @param FileLocator          $locator
      * @param string               $cacheDir
      */
-    public function __construct(ImageTemplateApplier $applier, FileLocator $locator, $cacheDir)
+    public function __construct(ImageTemplateApplier $applier, $cacheDir)
     {
         $this->applier = $applier;
-        $this->locator = $locator;
         $this->cacheDir = $cacheDir;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getPreviewDir()
+    public function create($filePath,  array $params)
     {
-        return $this->cacheDir;
-    }
-
-    /**
-     * @param array $params
-     *
-     * @return array
-     */
-    public function create(array $params)
-    {
-        $filePrefix = "@PhlexibleMediaTemplateBundle/Resources/public/images/test_{$params['preview_image']}";
-        unset($params['preview_image']);
-
-        $filePath = $this->locator->locate("$filePrefix.jpg", null, true);
-
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
             $filesystem->mkdir($this->cacheDir);

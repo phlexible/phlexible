@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaTemplate\Exception;
 
 /**
- * Invalid argument exception for media template bundle
+ * Invalid argument exception for media template
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
