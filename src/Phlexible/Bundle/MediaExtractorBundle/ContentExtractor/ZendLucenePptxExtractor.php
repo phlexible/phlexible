@@ -30,7 +30,7 @@ class ZendLucenePptxExtractor implements ExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType)
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
         $document = \Zend_Search_Lucene_Document_Pptx::loadPptxFile($file->getPhysicalPath());
 
