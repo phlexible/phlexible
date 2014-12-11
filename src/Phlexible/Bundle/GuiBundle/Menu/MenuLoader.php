@@ -14,6 +14,7 @@ use Phlexible\Bundle\GuiBundle\Menu\Loader\DelegatingLoader;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderResolver;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
 use Phlexible\Component\ComponentCollection;
+use Puli\Repository\ResourceRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Finder;
 
@@ -38,11 +39,11 @@ class MenuLoader
     }
 
     /**
-     * @param array $bundles
+     * @param ResourceRepositoryInterface $repository
      *
      * @return MenuItemCollection
      */
-    public function load(array $bundles)
+    public function load(ResourceRepositoryInterface $repository)
     {
         $loader = new DelegatingLoader(
             new LoaderResolver(
@@ -52,26 +53,11 @@ class MenuLoader
             )
         );
         $items = new MenuItemCollection();
-        foreach ($bundles as $class) {
-            $reflection = new \ReflectionClass($class);
-            $path = dirname($reflection->getFileName());
+        foreach ($repository->find('/phlexible/menu/*/*') as $resource) {
+            /* @var $resource \Puli\Repository\Filesystem\Resource\LocalFileResource */
 
-            $configDir = $path . '/Resources/menu/';
-            if (file_exists($configDir)) {
-                $finder = new Finder();
-                foreach ($finder->in($configDir)->name('*.*') as $file) {
-                    $filename = $file->getPathName();
-                    $loadedItems = $loader->load($filename);
-                    $items->merge($loadedItems);
-                }
-            }
-            /*
-            elseif (method_exists($component, 'getMainViews')) {
-                $componentRoutes = $component->getRoutes();
-                $resources[] = $component->getFileResource();
-                $routes = array_merge($routes, $componentRoutes);
-            }
-            */
+            $loadedItems = $loader->load($resource->getLocalPath());
+            $items->merge($loadedItems);
         }
 
         $event = new GetMenuEvent($items);

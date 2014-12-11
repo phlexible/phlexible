@@ -14,6 +14,7 @@ use Assetic\FilterManager;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\FilenameFilter;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
+use Puli\Repository\ResourceRepositoryInterface;
 use Symfony\Bundle\AsseticBundle\Factory\AssetFactory;
 
 /**
@@ -72,9 +73,11 @@ class ScriptsBuilder
     /**
      * Get all javascripts for the given section
      *
+     * @param ResourceRepositoryInterface $repo
+     *
      * @return string
      */
-    public function get()
+    public function get(ResourceRepositoryInterface $repo)
     {
         $fm = new FilterManager();
         $fm->set('compressor', $this->javascriptCompressor);
@@ -92,6 +95,16 @@ class ScriptsBuilder
 
         $input = [];
 
+        foreach ($repo->find('/phlexible/scripts-ux/*/*.js') as $resource) {
+            $input[] = $resource->getLocalPath();
+        }
+
+        foreach ($repo->find('/phlexible/scripts/*/*.js') as $resource) {
+            $input[] = $resource->getLocalPath();
+        }
+
+        echo '<pre>';print_r($input);die;
+        /*
         foreach ($this->assetProviders->getAssetProviders() as $assetProvider) {
             $collection = $assetProvider->getUxScriptsCollection();
             if ($collection === null) {
@@ -113,6 +126,7 @@ class ScriptsBuilder
             }
             $input = array_merge($input, $collection);
         }
+        */
 
         $this->assetFactory->setFilterManager($fm);
         $asset = $this->assetFactory->createAsset($input, $filters);

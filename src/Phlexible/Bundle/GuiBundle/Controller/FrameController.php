@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Puli\Repository\Filesystem\PhpCacheRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -77,8 +78,10 @@ class FrameController extends Controller
      */
     public function menuAction()
     {
+        $repo = new PhpCacheRepository($this->container->getParameter('kernel.root_dir') . '/../.puli/dump');
+
         $loader = $this->get('phlexible_gui.menu.loader');
-        $items = $loader->load($this->container->getParameter('kernel.bundles'));
+        $items = $loader->load($repo);
         $data = $items->toArray();
 
         return new JsonResponse($data);

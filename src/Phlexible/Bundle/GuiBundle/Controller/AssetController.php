@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
+use Puli\Repository\Filesystem\PhpCacheRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,8 +30,10 @@ class AssetController extends Controller
      */
     public function scriptsAction()
     {
+        $repo = new PhpCacheRepository($this->container->getParameter('kernel.root_dir') . '/../.puli/dump');
+
         $scriptsBuilder = $this->get('phlexible_gui.asset.builder.scripts');
-        $content = $scriptsBuilder->get();
+        $content = $scriptsBuilder->get($repo);
 
         return new Response($content, 200, ['Content-type' => 'text/javascript']);
     }
@@ -45,8 +48,10 @@ class AssetController extends Controller
      */
     public function cssAction(Request $request)
     {
+        $repo = new PhpCacheRepository($this->container->getParameter('kernel.root_dir') . '/../.puli/dump');
+
         $cssBuilder = $this->get('phlexible_gui.asset.builder.css');
-        $content = $cssBuilder->get($request->getBaseUrl(), $request->getBasePath());
+        $content = $cssBuilder->get($request->getBaseUrl(), $request->getBasePath(), $repo);
 
         return new Response($content, 200, ['Content-type' => 'text/css']);
     }

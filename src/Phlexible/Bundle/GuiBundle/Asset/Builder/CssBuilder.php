@@ -9,12 +9,15 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Assetic\Asset\AssetCache;
+use Assetic\Asset\AssetCollection;
+use Assetic\Asset\FileAsset;
 use Assetic\Cache\FilesystemCache;
 use Assetic\FilterManager;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\FilenameFilter;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\CssCompressorInterface;
+use Puli\Repository\ResourceRepositoryInterface;
 use Symfony\Bundle\AsseticBundle\Factory\AssetFactory;
 
 /**
@@ -73,12 +76,13 @@ class CssBuilder
     /**
      * Build stream
      *
-     * @param string $baseUrl
-     * @param string $basePath
+     * @param string                      $baseUrl
+     * @param string                      $basePath
+     * @param ResourceRepositoryInterface $repo
      *
      * @return string
      */
-    public function get($baseUrl, $basePath)
+    public function get($baseUrl, $basePath, ResourceRepositoryInterface $repo)
     {
         $fm = new FilterManager();
         $fm->set('baseurl', new BaseUrlFilter($baseUrl, $basePath));
@@ -98,6 +102,11 @@ class CssBuilder
 
         $input = [];
 
+        foreach ($repo->find('/phlexible/styles/*/*.css') as $resource) {
+            $input[] = $resource->getLocalPath();
+        }
+
+        /*
         foreach ($this->assetProviders->getAssetProviders() as $assetProvider) {
             $collection = $assetProvider->getUxCssCollection();
             if ($collection === null) {
@@ -119,6 +128,7 @@ class CssBuilder
             }
             $input = array_merge($input, $collection);
         }
+        */
 
         $this->assetFactory->setFilterManager($fm);
         $asset = $this->assetFactory->createAsset($input, $filters);
