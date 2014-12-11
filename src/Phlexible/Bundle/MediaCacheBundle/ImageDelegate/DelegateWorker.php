@@ -10,9 +10,9 @@ namespace Phlexible\Bundle\MediaCacheBundle\ImageDelegate;
 
 use Phlexible\Bundle\MediaCacheBundle\Exception\CreateDelegateFailed;
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
-use Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier;
-use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier;
+use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\MediaType\Model\IconResolver;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;

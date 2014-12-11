@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Entity\Repository\CacheItemRepository;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
  * Doctrine cache manager

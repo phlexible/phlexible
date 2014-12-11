@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\ImageDelegate;
 
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**

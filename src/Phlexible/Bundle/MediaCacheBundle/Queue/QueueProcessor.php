@@ -13,7 +13,7 @@ use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
 use Phlexible\Bundle\MediaCacheBundle\Queue as BaseQueue;
 use Phlexible\Bundle\MediaCacheBundle\Worker\WorkerResolver;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Filesystem\LockHandler;

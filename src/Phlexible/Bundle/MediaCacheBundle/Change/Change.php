@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Change;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
  * Template change

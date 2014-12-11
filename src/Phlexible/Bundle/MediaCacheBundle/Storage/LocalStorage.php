@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Storage;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Bundle\MediaCacheBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
-use Phlexible\Bundle\MediaTemplateBundle\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**

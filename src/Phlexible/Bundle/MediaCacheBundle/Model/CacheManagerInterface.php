@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Model;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
  * Cache manager interface

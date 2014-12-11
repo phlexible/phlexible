@@ -13,7 +13,7 @@ use Phlexible\Bundle\MediaCacheBundle\Queue\BatchBuilder;
 use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
 use Phlexible\Bundle\MediaCacheBundle\Queue\Queue;
 use Phlexible\Bundle\MediaCacheBundle\Queue\QueueProcessor;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**

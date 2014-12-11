@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaCacheBundle\Queue;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateInterface;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
  * A batch represents a file/template cross combination.

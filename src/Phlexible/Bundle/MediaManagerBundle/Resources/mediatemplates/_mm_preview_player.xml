@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mediaTemplate key="_mm_preview_player" type="image" class="Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate"
+<mediaTemplate key="_mm_preview_player" type="image" class="Phlexible\Component\MediaTemplate\Model\ImageTemplate"
                cache="1" system="1" revision="1">
     <parameter key="width">256</parameter>
     <parameter key="height">224</parameter>

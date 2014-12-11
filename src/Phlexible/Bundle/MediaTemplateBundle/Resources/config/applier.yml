@@ -1,16 +1,16 @@
 services:
     phlexible_media_template.applier.audio:
-        class: Phlexible\Bundle\MediaTemplateBundle\Applier\AudioTemplateApplier
+        class: Phlexible\Component\MediaTemplate\Applier\AudioTemplateApplier
         arguments: [@phlexible_media_tool.ffmpeg]
 
     phlexible_media_template.applier.image:
-        class: Phlexible\Bundle\MediaTemplateBundle\Applier\ImageTemplateApplier
+        class: Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier
         arguments: [@phlexible_media_tool.imagine]
 
     phlexible_media_template.applier.pdf:
-        class: Phlexible\Bundle\MediaTemplateBundle\Applier\PdfTemplateApplier
+        class: Phlexible\Component\MediaTemplate\Applier\PdfTemplateApplier
         arguments: [@phlexible_media_tool.swftools.pdf2swf]
 
     phlexible_media_template.applier.video:
-        class: Phlexible\Bundle\MediaTemplateBundle\Applier\VideoTemplateApplier
+        class: Phlexible\Component\MediaTemplate\Applier\VideoTemplateApplier
         arguments: [@phlexible_media_tool.ffmpeg]

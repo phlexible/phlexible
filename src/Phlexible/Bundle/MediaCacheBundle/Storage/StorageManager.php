@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Storage;
 
-use Phlexible\Bundle\MediaTemplateBundle\Exception\InvalidArgumentException;
+use Phlexible\Bundle\MediaCacheBundle\Exception\InvalidArgumentException;
 
 /**
  * Storage manager

@@ -4,26 +4,26 @@ parameters:
 
 services:
     phlexible_media_template.file.loader.xml:
-        class: Phlexible\Bundle\MediaTemplateBundle\File\Loader\XmlLoader
+        class: Phlexible\Component\MediaTemplate\File\Loader\XmlLoader
         public: false
 
     phlexible_media_template.file.dumper.xml:
-        class: Phlexible\Bundle\MediaTemplateBundle\File\Dumper\XmlDumper
+        class: Phlexible\Component\MediaTemplate\File\Dumper\XmlDumper
         public: false
 
     phlexible_media_template.file.loader:
-        class: Phlexible\Bundle\MediaTemplateBundle\File\TemplateLoader
+        class: Phlexible\Component\MediaTemplate\File\TemplateLoader
         public: false
         arguments: [@pattern_locator]
         calls:
             - [addLoader, [@phlexible_media_template.file.loader.xml]]
 
     phlexible_media_template.file.dumper:
-        class: Phlexible\Bundle\MediaTemplateBundle\File\TemplateDumper
+        class: Phlexible\Component\MediaTemplate\File\TemplateDumper
         public: false
         arguments: [@phlexible_media_template.file.dumper.xml, %phlexible_media_template.file_dir%]
 
     phlexible_media_template.file.template_manager:
-        class: Phlexible\Bundle\MediaTemplateBundle\File\TemplateManager
+        class: Phlexible\Component\MediaTemplate\File\TemplateManager
         public: false
         arguments: [@phlexible_media_template.file.loader, @phlexible_media_template.file.dumper]
