@@ -23,10 +23,9 @@ class DashboardAssetProvider implements AssetProviderInterface
     public function getUxScriptsCollection()
     {
         return [
-            '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portal.js',
-            '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portal.DropZone.js',
-            '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.PortalColumn.js',
-            '@PhlexibleDashboardBundle/Resources/scripts/ux/Ext.ux.Portlet.js',
+            '@PhlexibleDashboardBundle/Resources/scripts-ux/Ext.ux.Portal.js',
+            '@PhlexibleDashboardBundle/Resources/scripts-ux/Ext.ux.PortalColumn.js',
+            '@PhlexibleDashboardBundle/Resources/scripts-ux/Ext.ux.Portlet.js',
         ];
     }
 

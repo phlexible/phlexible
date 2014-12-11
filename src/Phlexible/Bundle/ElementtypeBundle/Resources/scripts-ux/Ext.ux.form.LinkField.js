@@ -1,3 +1,5 @@
+Ext.namespace('Ext.ux.form');
+
 Ext.ux.form.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
     minChars: 2,
     //hideTrigger: true,

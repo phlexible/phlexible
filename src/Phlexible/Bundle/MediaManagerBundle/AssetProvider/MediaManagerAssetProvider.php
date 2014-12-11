@@ -24,13 +24,13 @@ class MediaManagerAssetProvider implements AssetProviderInterface
     public function getUxScriptsCollection()
     {
         return [
-            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.js',
-            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/moxie.js',
-            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.dev.js',
-            '@PhlexibleMediaManagerBundle/Resources/scripts/ux/plupload.full.min.js',
-            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/SwfUpload.js',
-            //'@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.SwfUploadPanel.js',
-            '@PhlexibleMediaManagerBundle/Resources/scripts/ux/Ext.ux.LocationBar.js',
+            //'@PhlexibleMediaManagerBundle/Resources/scripts-ux/plupload.js',
+            //'@PhlexibleMediaManagerBundle/Resources/scripts-ux/moxie.js',
+            //'@PhlexibleMediaManagerBundle/Resources/scripts-ux/plupload.dev.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts-ux/plupload.full.min.js',
+            //'@PhlexibleMediaManagerBundle/Resources/scripts-ux/SwfUpload.js',
+            //'@PhlexibleMediaManagerBundle/Resources/scripts-ux/Ext.ux.SwfUploadPanel.js',
+            '@PhlexibleMediaManagerBundle/Resources/scripts-ux/Ext.ux.LocationBar.js',
         ];
     }
 

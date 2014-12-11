@@ -23,10 +23,10 @@ class CmsAssetProvider implements AssetProviderInterface
     public function getUxScriptsCollection()
     {
         return [
-            '@PhlexibleCmsBundle/Resources/scripts/ux/Ext.form.FileUploadField.js',
-            '@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.DDView.js',
-            '@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.Multiselect.js',
-            '@PhlexibleCmsBundle/Resources/scripts/ux/Ext.ux.TreeSelector.js',
+            '@PhlexibleCmsBundle/Resources/scripts-ux/Ext.form.FileUploadField.js',
+            '@PhlexibleCmsBundle/Resources/scripts-ux/Ext.ux.DDView.js',
+            '@PhlexibleCmsBundle/Resources/scripts-ux/Ext.ux.Multiselect.js',
+            '@PhlexibleCmsBundle/Resources/scripts-ux/Ext.ux.TreeSelector.js',
         ];
     }
 

@@ -23,8 +23,8 @@ class FrontendMediaAssetProvider implements AssetProviderInterface
     public function getUxScriptsCollection()
     {
         return [
-            '@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FileField.js',
-            '@PhlexibleFrontendMediaBundle/Resources/scripts/ux/Ext.ux.form.FolderField.js',
+            '@PhlexibleFrontendMediaBundle/Resources/scripts-ux/Ext.ux.form.FileField.js',
+            '@PhlexibleFrontendMediaBundle/Resources/scripts-ux/Ext.ux.form.FolderField.js',
         ];
     }
 

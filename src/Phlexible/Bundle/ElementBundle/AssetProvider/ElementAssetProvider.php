@@ -23,7 +23,7 @@ class ElementAssetProvider implements AssetProviderInterface
     public function getUxScriptsCollection()
     {
         return [
-            '@PhlexibleElementBundle/Resources/scripts/ux/Ext.ux.layout.RowFitLayout.js',
+            '@PhlexibleElementBundle/Resources/scripts-ux/Ext.ux.layout.RowFitLayout.js',
         ];
     }
 

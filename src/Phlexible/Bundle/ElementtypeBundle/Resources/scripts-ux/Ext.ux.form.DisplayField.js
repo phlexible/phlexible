@@ -4,6 +4,9 @@
  * licensing@extjs.com
  * http://www.extjs.com/license
  */
+
+Ext.namespace('Ext.ux.form');
+
 /**
  * @class Ext.ux.form.DisplayField
  * @extends Ext.form.Field

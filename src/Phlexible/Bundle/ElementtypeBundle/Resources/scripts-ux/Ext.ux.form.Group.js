@@ -1,3 +1,5 @@
+Ext.namespace('Ext.ux.form');
+
 Ext.ux.form.Group = Ext.extend(Ext.Panel, {
     autoHeight: true,
     collapsible: false,

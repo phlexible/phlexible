@@ -1,3 +1,5 @@
+Ext.namespace('Ext.ux.form');
+
 Ext.ux.form.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
     width: 400,
     height: 200,

@@ -23,12 +23,12 @@ class ElementtypeAssetProvider implements AssetProviderInterface
     public function getUxScriptsCollection()
     {
         $input = [
-            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.Accordion.js',
-            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.DisplayField.js',
-            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.Group.js',
-            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.LinkField.js',
-            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.form.TableField.js',
-            '@PhlexibleElementtypeBundle/Resources/scripts/ux/Ext.ux.InputTextMask.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts-ux/Ext.ux.form.Accordion.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts-ux/Ext.ux.form.DisplayField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts-ux/Ext.ux.form.Group.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts-ux/Ext.ux.form.LinkField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts-ux/Ext.ux.form.TableField.js',
+            '@PhlexibleElementtypeBundle/Resources/scripts-ux/Ext.ux.InputTextMask.js',
         ];
 
         return $input;

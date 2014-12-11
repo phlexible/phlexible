@@ -17,6 +17,14 @@
         "/phlexible/menu/task": "src/Phlexible/Bundle/TaskBundle/Resources/menu",
         "/phlexible/menu/user": "src/Phlexible/Bundle/UserBundle/Resources/menu",
 
+        "/phlexible/scripts-ux/cms": "src/Phlexible/Bundle/CmsBundle/Resources/scripts-ux",
+        "/phlexible/scripts-ux/dashboard": "src/Phlexible/Bundle/DashboardBundle/Resources/scripts-ux",
+        "/phlexible/scripts-ux/element": "src/Phlexible/Bundle/ElementBundle/Resources/scripts-ux",
+        "/phlexible/scripts-ux/elementtype": "src/Phlexible/Bundle/ElementTypeBundle/Resources/scripts-ux",
+        "/phlexible/scripts-ux/frontend-media": "src/Phlexible/Bundle/FrontendMediaBundle/Resources/scripts-ux",
+        "/phlexible/scripts-ux/gui": "src/Phlexible/Bundle/GuiBundle/Resources/scripts-ux",
+        "/phlexible/scripts-ux/media-manager": "src/Phlexible/Bundle/MediaManagerBundle/Resources/scripts-ux",
+
         "/phlexible/scripts/access-control": "src/Phlexible/Bundle/AccessControlBundle/Resources/scripts",
         "/phlexible/scripts/cms": "src/Phlexible/Bundle/CmsBundle/Resources/scripts",
         "/phlexible/scripts/contentchannel": "src/Phlexible/Bundle/ContentchannelBundle/Resources/scripts",
