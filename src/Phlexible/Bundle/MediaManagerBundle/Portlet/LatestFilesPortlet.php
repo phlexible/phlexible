@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Portlet;
 
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
-use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
+use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;

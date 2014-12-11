@@ -8,8 +8,10 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Exception;
 
+use Phlexible\Component\MediaCache\Exception\RuntimeException;
+
 /**
- * Already running exception
+ * Already running exception for media cache
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

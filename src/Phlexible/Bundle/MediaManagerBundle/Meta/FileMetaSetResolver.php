@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Meta;
 
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
-use Phlexible\Bundle\MetaSetBundle\Model\MetaSet;
-use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
+use Phlexible\Component\MetaSet\Model\MetaSet;
+use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
  * File meta set resolver
