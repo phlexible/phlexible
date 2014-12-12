@@ -14,12 +14,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Teaser controller
+ * Render controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/_teaser")
  */
-class TeaserController extends Controller
+class RenderController extends Controller
 {
     /**
      * Render action
@@ -28,7 +28,7 @@ class TeaserController extends Controller
      * @param int     $teaserId
      *
      * @return Response
-     * @Route("/render/{teaserId}", name="teasers_teaser_render")
+     * @Route("/render/{teaserId}", name="teaser_render")
      */
     public function renderAction(Request $request, $teaserId)
     {
@@ -46,7 +46,7 @@ class TeaserController extends Controller
         }
 
         $data = $renderConfig->getVariables();
-        
+
         return $this->render($data['template'], (array) $data);
     }
 }
