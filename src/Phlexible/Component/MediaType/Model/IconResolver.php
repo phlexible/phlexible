@@ -49,6 +49,7 @@ class IconResolver
         if (isset($icons[$requestedSize])) {
             $icon = $icons[$requestedSize];
         } else {
+            $icon = null;
             foreach ($icons as $size => $dummyIcon) {
                 if ($size > $requestedSize) {
                     $icon = $dummyIcon;
