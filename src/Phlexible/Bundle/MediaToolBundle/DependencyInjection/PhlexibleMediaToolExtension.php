@@ -61,5 +61,7 @@ class PhlexibleMediaToolExtension extends Extension
         $container->setAlias('phlexible_media_tool.image_analyzer.driver', $config['image_analyzer']['driver']);
 
         $container->setAlias('phlexible_media_tool.mime.adapter', $config['mime_detector']['adapter']);
+
+        $container->setAlias('phlexible_media_tool.imagine', $config['imagine']['driver']);
     }
 }
