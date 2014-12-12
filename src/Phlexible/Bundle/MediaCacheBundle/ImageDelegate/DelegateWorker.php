@@ -214,8 +214,15 @@ class DelegateWorker
 
         if ($force || !$filesystem->exists($filePathWaiting)
                 || !filesize($filePathWaiting)
-            || filemtime($filePathWaiting) < $templateModifyTime) {
-            $source = imagecreatefromgif($filePathClean);
+                || filemtime($filePathWaiting) < $templateModifyTime) {
+            if (substr($filePathClean, 0, 3) === 'jpg') {
+                $source = imagecreatefromjpeg($filePathClean);
+            } elseif (substr($filePathClean, 0, 3) === 'png') {
+                $source = imagecreatefrompng($filePathClean);
+            } else {
+                $source = imagecreatefromgif($filePathClean);
+            }
+
             $sx = imagesx($source);
             $sy = imagesy($source);
             $target = imagecreatetruecolor($sx, $sy);
