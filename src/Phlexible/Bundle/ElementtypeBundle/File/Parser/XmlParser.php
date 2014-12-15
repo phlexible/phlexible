@@ -84,11 +84,17 @@ class XmlParser implements ParserInterface
                 if ($fieldNodes->length) {
                     foreach ($fieldNodes as $fieldNode) {
                         /* @var $fieldNode Element */
-                        $fields[] = [
-                            'dsId'  => $fieldNode->getAttribute('dsId'),
-                            'title' => $fieldNode->getAttribute('title'),
-                            'index' => (int) $fieldNode->getAttribute('index'),
+                        $field = [
+                            'dsId'  => (string) $fieldNode->getAttribute('dsId'),
+                            'title' => (string) $fieldNode->getAttribute('title'),
                         ];
+                        if ($fieldNode->hasAttribute('index')) {
+                            $field['index'] = (int) $fieldNode->getAttribute('index');
+                        }
+                        if ($fieldNode->hasAttribute('type')) {
+                            $field['type'] = (string) $fieldNode->getAttribute('type');
+                        }
+                        $fields[] = $field;
                     }
                 }
                 $mappings[$key] = [

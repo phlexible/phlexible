@@ -30,7 +30,7 @@ class RenderController extends Controller
      * @return Response
      * @Route("/render/{teaserId}", name="teaser_render")
      */
-    public function renderAction(Request $request, $teaserId)
+    public function htmlAction(Request $request, $teaserId)
     {
         $teaser = $this->get('phlexible_teaser.teaser_service')->find($teaserId);
         $language = $request->get('language', 'de');
