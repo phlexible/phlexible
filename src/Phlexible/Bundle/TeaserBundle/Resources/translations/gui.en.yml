@@ -20,8 +20,6 @@ teasers:
     new_teaser_description: 'Please enter the required information for the new Teaser.'
     delete_teaser: 'Delete Teaser'
     inherit: Inherited
-    stop: 'Stopped inheritation'
-    show: 'Shown here'
-    hide: 'Not shown here'
-    inherited: Inherited
+    shown_here: Shown here
+    inherited: Inherited from here
     cancel: Cancel

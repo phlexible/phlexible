@@ -189,7 +189,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 '-',
                 {
                     // 5
-                    text: this.strings.inherited_teaser,
+                    text: this.strings.inherited,
                     checked: true,
                     handler: function (item) {
                         var node = item.parentMenu.node;
@@ -239,7 +239,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 },
                 {
                     // 6
-                    text: this.strings.not_shown_teaser,
+                    text: this.strings.shown_here,
                     checked: true,
                     handler: function (item) {
                         var node = item.parentMenu.node;
@@ -454,20 +454,16 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         this.items.items[5].show();
                         if (node.attributes.inherit) {
                             this.items.items[5].setChecked(true);
-                            this.items.items[5].setText(Phlexible.teasers.Strings.inherit);
                         } else {
                             this.items.items[5].setChecked(false);
-                            this.items.items[5].setText(Phlexible.teasers.Strings.stop);
                         }
 
                         this.items.items[6].show();
                         if (node.attributes.hide) {
                             this.items.items[6].setChecked(false);
-                            this.items.items[6].setText(Phlexible.teasers.Strings.hide);
                         }
                         else {
                             this.items.items[6].setChecked(true);
-                            this.items.items[6].setText(Phlexible.teasers.Strings.show);
                         }
 
                         if (node.attributes.inherited) {
