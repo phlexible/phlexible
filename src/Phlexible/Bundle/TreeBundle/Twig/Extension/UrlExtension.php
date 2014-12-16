@@ -78,6 +78,11 @@ class UrlExtension extends \Twig_Extension
                     return 'mailto:' . $link['recipient'];
                 }
             }
+        } elseif (is_int($name)) {
+            $tree = $this->contentTreeManager->findByTreeId($name);
+            $node = $tree->get($name);
+
+            return $this->router->generate($node, $parameters);
         } elseif (is_string($name)) {
             return $this->router->generate($name, $parameters);
         }
