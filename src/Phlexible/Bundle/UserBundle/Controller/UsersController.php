@@ -211,7 +211,7 @@ class UsersController extends Controller
             throw new \Exception('Email "' . $request->get('email') . '" already exists.');
         }
 
-        $user = $userManager->create();
+        $user = $userManager->createUser();
 
         $this->requestToUser($request, $user);
 
