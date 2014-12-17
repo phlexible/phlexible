@@ -23,6 +23,7 @@ class PreviewController extends Controller
 {
     /**
      * @param Request $request
+     * @param int     $treeId
      *
      * @return Response
      * @Route("/{_locale}/{treeId}", name="frontend_preview")
@@ -43,6 +44,8 @@ class PreviewController extends Controller
         $siteroot->setContentChannels([1 => 1]);
         $siterootUrl = $siteroot->getDefaultUrl();
 
+        $request->setLocale($language);
+        $request->setDefaultLocale($language);
         //$request->attributes->set('_locale', $language);
         $request->attributes->set('language', $language);
         $request->attributes->set('routeDocument', $node);
