@@ -45,7 +45,6 @@ class PreviewController extends Controller
         $siterootUrl = $siteroot->getDefaultUrl();
 
         $request->setLocale($language);
-        $request->setDefaultLocale($language);
         //$request->attributes->set('_locale', $language);
         $request->attributes->set('language', $language);
         $request->attributes->set('routeDocument', $node);

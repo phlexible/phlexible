@@ -35,6 +35,8 @@ class RenderController extends Controller
         $teaser = $this->get('phlexible_teaser.teaser_service')->find($teaserId);
         $language = $request->get('language', 'de');
 
+        $request->setLocale($language);
+        $request->attributes->set('_locale', $language);
         $request->attributes->set('language', $language);
         $request->attributes->set('contentDocument', $teaser);
 
