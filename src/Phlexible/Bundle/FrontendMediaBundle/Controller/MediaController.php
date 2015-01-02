@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Controller;
 
+use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,15 +42,29 @@ class MediaController extends Controller
         $template = $templateManager->find($templateKey);
 
         $outfile = $this->container->getParameter('app.web_dir') . '/media/' . $fileId . '/' . $templateKey . '.jpg';
+        $mimeType = 'image/jpeg';
         if (!file_exists($outfile)) {
-            if (!file_exists(dirname($outfile))) {
-                mkdir(dirname($outfile), 0777, true);
+            if (file_exists($file->getPhysicalPath())) {
+                if (!file_exists(dirname($outfile))) {
+                    mkdir(dirname($outfile), 0777, true);
+                }
+                $this->get('phlexible_media_template.applier.image')->apply($template, $file, $file->getPhysicalPath(), $outfile);
+            } else {
+                if (!$template instanceof ImageTemplate) {
+                    return new Response('Not found', 404);
+                }
+
+                $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+                $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
+
+                $mediaType = $mediaTypeManager->find($file->getMediaType());
+                $outfile = $delegateService->getClean($template, $mediaType, true);
+                $mimeType = 'image/gif';
             }
-            $this->get('phlexible_media_template.applier.image')->apply($template, $file, $file->getPhysicalPath(), $outfile);
         }
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($outfile, 'image/jpeg', ['absolute_path' => true]);
+            ->create($outfile, $mimeType, ['absolute_path' => true]);
     }
 
     /**

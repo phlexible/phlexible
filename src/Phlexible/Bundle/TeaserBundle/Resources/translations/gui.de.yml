@@ -20,8 +20,6 @@ teasers:
     new_teaser_description: 'Bitte geben Sie die benötigten Daten für den neuen Teaser ein.'
     delete_teaser: 'Teaser löschen'
     inherit: Vererbt
-    stop: 'Vererbung gestoppt'
-    show: 'Hier anzeigen'
-    hide: 'Hier nicht anzeigen'
-    inherited: Vererbt
+    shown_here: 'Wird hier angezeigt'
+    inherited: Wird vererbt
     cancel: Abbrechen

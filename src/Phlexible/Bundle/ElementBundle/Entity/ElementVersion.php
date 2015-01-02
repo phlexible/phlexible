@@ -365,8 +365,6 @@ class ElementVersion
     {
         $date = $this->getMappedField('date', $language, $fallbackLanguage);
 
-        $date = new \DateTime($date);
-
         return $date;
     }
 
@@ -425,8 +423,8 @@ class ElementVersion
             return $mappedField->getBackend();
         }
 
-        if ($field === 'customDate' && $mappedField->getCustomDate()) {
-            return $mappedField->getCustomDate();
+        if ($field === 'date' && $mappedField->getDate()) {
+            return $mappedField->getDate();
         }
 
         if ($field === 'forward' && $mappedField->getForward()) {

@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TwigRendererBundle\Twig\Extension;
+namespace Phlexible\Bundle\TreeBundle\Twig\Extension;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
@@ -78,6 +78,11 @@ class UrlExtension extends \Twig_Extension
                     return 'mailto:' . $link['recipient'];
                 }
             }
+        } elseif (is_int($name)) {
+            $tree = $this->contentTreeManager->findByTreeId($name);
+            $node = $tree->get($name);
+
+            return $this->router->generate($node, $parameters);
         } elseif (is_string($name)) {
             return $this->router->generate($name, $parameters);
         }

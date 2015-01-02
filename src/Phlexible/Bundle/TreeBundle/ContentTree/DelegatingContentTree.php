@@ -380,7 +380,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function getVersion(TreeNodeInterface $node, $language)
     {
-        return $this->mediator->getVersionedObject($node)->getVersion();
+        return $this->mediator->getContentDocument($node)->getVersion();
     }
 
     /**

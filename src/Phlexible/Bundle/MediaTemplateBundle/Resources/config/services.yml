@@ -12,3 +12,12 @@ services:
         public: false
         tags:
             - {name: phlexible_gui.role_provider}
+
+    # twig extensions
+    phlexible_media_template.twig.extension.media_template:
+        class: Phlexible\Bundle\MediaTemplateBundle\Twig\Extension\MediaTemplateExtension
+        public: false
+        arguments:
+            - @phlexible_media_template.template_manager
+        tags:
+            - {name: twig.extension}

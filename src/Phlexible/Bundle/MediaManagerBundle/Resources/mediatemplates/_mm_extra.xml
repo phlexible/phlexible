@@ -6,4 +6,5 @@
     <parameter key="method">exactFit</parameter>
     <parameter key="format">jpeg</parameter>
     <parameter key="quality">75</parameter>
+    <parameter key="backgroundcolor">#FFFFFF</parameter>
 </mediaTemplate>

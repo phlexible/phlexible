@@ -51,3 +51,18 @@ services:
         arguments: [@doctrine.dbal.default_connection]
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    # twig extensions
+    phlexible_tree.twig.tree_extension:
+        class: Phlexible\Bundle\TreeBundle\Twig\Extension\TreeExtension
+        public: false
+        arguments: [@phlexible_tree.content_tree_manager]
+        tags:
+            - {name: twig.extension}
+
+    phlexible_tree.twig.url_extension:
+        class: Phlexible\Bundle\TreeBundle\Twig\Extension\UrlExtension
+        public: false
+        arguments: [@router, @phlexible_tree.content_tree_manager.delegating]
+        tags:
+            - {name: twig.extension}

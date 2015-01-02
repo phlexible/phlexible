@@ -70,6 +70,7 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
                 iconCls: 'p-elementtype-clear-icon',
                 handler: function () {
                     this.store.removeAll();
+                    this.fireChange();
                 },
                 scope: this
             }
@@ -143,6 +144,7 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
 
                     //Phlexible.console.log('ADD');
                     this.store.add(r);
+                    this.fireChange();
 
                     //this.layout();
 
@@ -165,6 +167,14 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
         });
 
         Phlexible.elementtypes.RootMappedDateGrid.superclass.initComponent.call(this);
+    },
+
+    fireChange: function() {
+        var fields = [];
+        Ext.each(this.store.getRange(), function (r) {
+            fields.push({dsId: r.get('dsId'), title: r.get('title'), type: r.get('type')});
+        });
+        this.fireEvent('change', fields);
     }
 });
 

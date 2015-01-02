@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TwigRendererBundle\Twig\Extension;
+namespace Phlexible\Bundle\MediaTemplateBundle\Twig\Extension;
 
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 

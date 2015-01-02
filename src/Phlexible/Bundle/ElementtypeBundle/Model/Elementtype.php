@@ -63,9 +63,9 @@ class Elementtype implements IdentifiableInterface
     private $icon;
 
     /**
-     * @var int
+     * @var string
      */
-    private $defaultTab = 0;
+    private $defaultTab = 'data';
 
     /**
      * @var bool
@@ -301,7 +301,7 @@ class Elementtype implements IdentifiableInterface
      */
     public function setDefaultTab($defaultTab)
     {
-        $this->defaultTab = isset($defaultTab) ? (int) $defaultTab : null;
+        $this->defaultTab = $defaultTab ?: null;
 
         return $this;
     }
