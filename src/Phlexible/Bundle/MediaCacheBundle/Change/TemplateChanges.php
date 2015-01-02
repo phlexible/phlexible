@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Change;
 
-use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
-use Phlexible\Bundle\MediaCacheBundle\Queue\BatchBuilder;
-use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
-use Phlexible\Bundle\MediaCacheBundle\Queue\Queue;
-use Phlexible\Bundle\MediaCacheBundle\Queue\QueueProcessor;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
+use Phlexible\Component\MediaCache\Queue\BatchBuilder;
+use Phlexible\Component\MediaCache\Queue\BatchResolver;
+use Phlexible\Component\MediaCache\Queue\Queue;
+use Phlexible\Component\MediaCache\Queue\QueueProcessor;
+use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**

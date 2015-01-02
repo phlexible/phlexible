@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\EventListener;
 
-use Phlexible\Bundle\MediaCacheBundle\Model\CacheManagerInterface;
-use Phlexible\Bundle\MediaCacheBundle\Queue\Batch;
-use Phlexible\Bundle\MediaCacheBundle\Queue\BatchResolver;
-use Phlexible\Bundle\MediaCacheBundle\Queue\QueueProcessor;
+use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
+use Phlexible\Component\MediaCache\Queue\Batch;
+use Phlexible\Component\MediaCache\Queue\BatchResolver;
+use Phlexible\Component\MediaCache\Queue\QueueProcessor;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\Event\FileEvent;
 use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

@@ -3,4 +3,4 @@ services:
         class: Phlexible\Bundle\MediaExtractorBundle\FlashExtractor\RawFlashExtractor
         public: false
         tags:
-            - {name: phlexible_media_extractor.flash_extractor}
+            - {name: phlexible_media_extractor.extractor}

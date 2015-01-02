@@ -3,29 +3,25 @@ parameters:
 
 services:
     phlexible_media_template.previewer.audio:
-        class: Phlexible\Bundle\MediaTemplateBundle\Previewer\AudioPreviewer
+        class: Phlexible\Component\MediaTemplate\Previewer\AudioPreviewer
         arguments:
             - @phlexible_media_template.applier.audio
-            - @file_locator
             - %phlexible_media_template.previewer.temp_dir%
 
     phlexible_media_template.previewer.image:
-        class: Phlexible\Bundle\MediaTemplateBundle\Previewer\ImagePreviewer
+        class: Phlexible\Component\MediaTemplate\Previewer\ImagePreviewer
         arguments:
             - @phlexible_media_template.applier.image
-            - @file_locator
             - %phlexible_media_template.previewer.temp_dir%
 
     phlexible_media_template.previewer.pdf:
-        class: Phlexible\Bundle\MediaTemplateBundle\Previewer\PdfPreviewer
+        class: Phlexible\Component\MediaTemplate\Previewer\PdfPreviewer
         arguments:
             - @phlexible_media_template.applier.pdf
-            - @file_locator
             - %phlexible_media_template.previewer.temp_dir%
 
     phlexible_media_template.previewer.video:
-        class: Phlexible\Bundle\MediaTemplateBundle\Previewer\VideoPreviewer
+        class: Phlexible\Component\MediaTemplate\Previewer\VideoPreviewer
         arguments:
             - @phlexible_media_template.applier.video
-            - @file_locator
             - %phlexible_media_template.previewer.temp_dir%

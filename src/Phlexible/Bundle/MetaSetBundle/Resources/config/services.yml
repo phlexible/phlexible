@@ -5,7 +5,7 @@ parameters:
 
 services:
     phlexible_meta_set.option_resolver:
-        class: Phlexible\Bundle\MetaSetBundle\Model\OptionResolver
+        class: Phlexible\Component\MetaSet\Model\OptionResolver
 
     # asset providers
     phlexible_meta_set.asset_provider:

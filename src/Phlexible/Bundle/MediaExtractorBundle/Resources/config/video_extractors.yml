@@ -3,4 +3,4 @@ services:
         class: Phlexible\Bundle\MediaExtractorBundle\VideoExtractor\RawVideoExtractor
         public: false
         tags:
-            - {name: phlexible_media_asset.video_extractor}
+            - {name: phlexible_media_extractor.extractor}

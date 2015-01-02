@@ -3,4 +3,4 @@ services:
         class: Phlexible\Bundle\MediaExtractorBundle\AudioExtractor\RawAudioExtractor
         public: false
         tags:
-            - {name: phlexible_media_asset.audio_extractor}
+            - {name: phlexible_media_extractor.extractor}

@@ -3,25 +3,25 @@ parameters:
 
 services:
     phlexible_meta_set.file.loader.xml:
-        class: Phlexible\Bundle\MetaSetBundle\File\Loader\XmlLoader
+        class: Phlexible\Component\MetaSet\File\Loader\XmlLoader
         public: false
 
     phlexible_meta_set.file.dumper.xml:
-        class: Phlexible\Bundle\MetaSetBundle\File\Dumper\XmlDumper
+        class: Phlexible\Component\MetaSet\File\Dumper\XmlDumper
         public: false
 
     phlexible_meta_set.file.loader:
-        class: Phlexible\Bundle\MetaSetBundle\File\MetaSetLoader
+        class: Phlexible\Component\MetaSet\File\MetaSetLoader
         public: false
         arguments: [@pattern_locator]
         calls:
             - [addLoader, [@phlexible_meta_set.file.loader.xml]]
 
     phlexible_meta_set.file.dumper:
-        class: Phlexible\Bundle\MetaSetBundle\File\MetaSetDumper
+        class: Phlexible\Component\MetaSet\File\MetaSetDumper
         public: false
         arguments: [@phlexible_meta_set.file.dumper.xml, %phlexible_meta_set.file_dir%]
 
     phlexible_meta_set.file.meta_set_manager:
-        class: Phlexible\Bundle\MetaSetBundle\File\MetaSetManager
+        class: Phlexible\Component\MetaSet\File\MetaSetManager
         arguments: [@phlexible_meta_set.file.loader, @phlexible_meta_set.file.dumper]

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaExtractorBundle\ContentExtractor;
 
+use Phlexible\Bundle\MediaExtractorBundle\Extractor\ExtractorInterface;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
@@ -16,7 +17,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
  *
  * @author Phillip Look <plook@brainbits.net>
  */
-class RawTextExtractor implements ContentExtractorInterface
+class RawTextExtractor implements ExtractorInterface
 {
     /**
      * @var string
@@ -34,15 +35,15 @@ class RawTextExtractor implements ContentExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(ExtendedFileInterface $file, MediaType $mediaType)
+    public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
-        return $mediaType->getCategory() === 'text';
+        return $targetFormat === 'text' && $mediaType->getCategory() === 'text';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function extract(ExtendedFileInterface $file, MediaType $mediaType)
+    public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
         // fetch text from file
         $contents = file_get_contents($file->getPhysicalPath());

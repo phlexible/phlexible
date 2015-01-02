@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Twig\Extension;
 
-use Phlexible\Bundle\MediaTemplateBundle\Model\TemplateManagerInterface;
+use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 
 /**
  * Twig media template extension

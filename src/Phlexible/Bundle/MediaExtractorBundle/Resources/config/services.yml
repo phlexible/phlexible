@@ -6,10 +6,14 @@ services:
         class: Phlexible\Bundle\MediaExtractorBundle\Transmutor
         arguments:
             - @phlexible_media_type.media_type_manager
-            -
-                - @phlexible_media_extractor.extractor.image.video_converter
-                - @phlexible_media_extractor.extractor.image.getid3
-                - @phlexible_media_extractor.extractor.image.raw
-            - [@phlexible_media_extractor.extractor.video.raw]
-            - [@phlexible_media_extractor.extractor.audio.raw]
-            - [@phlexible_media_extractor.extractor.flash.raw]
+            - @phlexible_media_extractor.extractor
+
+    phlexible_media_extractor.extractor.resolver:
+        class: Phlexible\Bundle\MediaExtractorBundle\Extractor\ExtractorResolver
+        public: false
+        arguments: [[]]
+
+    phlexible_media_extractor.extractor:
+        class: Phlexible\Bundle\MediaExtractorBundle\Extractor\DelegatingExtractor
+        arguments:
+            - @phlexible_media_extractor.extractor.resolver

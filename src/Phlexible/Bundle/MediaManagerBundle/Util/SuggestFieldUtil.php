@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Bundle\MetaSetBundle\Model\MetaSetField;
-use Phlexible\Bundle\MetaSetBundle\Model\MetaDataInterface;
-use Phlexible\Bundle\MetaSetBundle\Model\MetaDataManagerInterface;
-use Phlexible\Bundle\MetaSetBundle\Model\MetaSetManagerInterface;
+use Phlexible\Component\MetaSet\Model\MetaSetField;
+use Phlexible\Component\MetaSet\Model\MetaDataInterface;
+use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
+use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
  * Utility class for suggest fields.

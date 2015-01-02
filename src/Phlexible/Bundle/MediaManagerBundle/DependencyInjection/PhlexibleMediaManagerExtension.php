@@ -32,6 +32,7 @@ class PhlexibleMediaManagerExtension extends Extension
         $loader->load('services.yml');
         $loader->load('meta.yml');
         $loader->load('usage.yml');
+        $loader->load('attribute_readers.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);

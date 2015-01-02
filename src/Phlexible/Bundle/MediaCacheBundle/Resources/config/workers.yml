@@ -1,12 +1,12 @@
 services:
     phlexible_media_cache.worker.resolver:
-        class: Phlexible\Bundle\MediaCacheBundle\Worker\WorkerResolver
+        class: Phlexible\Component\MediaCache\Worker\WorkerResolver
         public: false
         arguments: [[]]
 
     # workers
     phlexible_media_cache.worker.audio:
-        class: Phlexible\Bundle\MediaCacheBundle\Worker\AudioWorker
+        class: Phlexible\Component\MediaCache\Worker\AudioWorker
         public: false
         arguments:
             - @phlexible_media_cache.storage_manager
@@ -22,7 +22,7 @@ services:
             - {name: monolog.logger, channel:media_cache}
 
     phlexible_media_cache.worker.image:
-        class: Phlexible\Bundle\MediaCacheBundle\Worker\ImageWorker
+        class: Phlexible\Component\MediaCache\Worker\ImageWorker
         public: false
         arguments:
             - @phlexible_media_cache.storage_manager
@@ -38,7 +38,7 @@ services:
             - {name: monolog.logger, channel:media_cache}
 
     phlexible_media_cache.worker.pdf:
-        class: Phlexible\Bundle\MediaCacheBundle\Worker\PdfWorker
+        class: Phlexible\Component\MediaCache\Worker\PdfWorker
         public: false
         arguments:
             - @phlexible_media_cache.storage_manager
@@ -53,7 +53,7 @@ services:
             - {name: monolog.logger, channel:media_cache}
 
     phlexible_media_cache.worker.video:
-        class: Phlexible\Bundle\MediaCacheBundle\Worker\VideoWorker
+        class: Phlexible\Component\MediaCache\Worker\VideoWorker
         public: false
         arguments:
             - @phlexible_media_cache.storage_manager

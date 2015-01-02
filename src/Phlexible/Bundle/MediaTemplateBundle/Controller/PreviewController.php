@@ -41,15 +41,31 @@ class PreviewController extends Controller
         unset($params['action']);
 
         if (empty($params['width'])) {
-            $params['width']  = 100;
-        } if (empty($params['height'])) {
+            $params['width'] = 100;
+        }
+        if (empty($params['height'])) {
             $params['height'] = 100;
-        } if (empty($params['xmethod'])) {
+        }
+        if (empty($params['xmethod'])) {
             $params['xmethod'] = 'fit';
         }
 
         $previewer = $this->get('phlexible_media_template.previewer.image');
-        $data = $previewer->create($params);
+        $locator = $this->get('file_locator');
+
+        $previewImage = 'test_1000_600.jpg';
+        if (isset($params['preview_image'])) {
+            $previewImage = $params['preview_image'];
+            unset($params['preview_image']);
+            if ($previewImage === '800_600') {
+                $previewImage = "test_$previewImage.png";
+            } else {
+                $previewImage = "test_$previewImage.jpg";
+            }
+        }
+
+        $filePath = $locator->locate("@PhlexibleMediaTemplateBundle/Resources/public/images/$previewImage", null, true);
+        $data = $previewer->create($filePath, $params);
 
         return new ResultResponse(true, 'Preview created', $data);
     }
@@ -69,7 +85,10 @@ class PreviewController extends Controller
         unset($params['action']);
 
         $previewer = $this->get('phlexible_media_template.previewer.audio');
-        $data = $previewer->create($params);
+        $locator = $this->get('file_locator');
+
+        $filePath = $locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/audio/test.mp3', null, true);
+        $data = $previewer->create($filePath, $params);
 
         return new ResultResponse(true, 'Preview created', $data);
     }
@@ -89,7 +108,10 @@ class PreviewController extends Controller
         unset($params['action']);
 
         $previewer = $this->get('phlexible_media_template.previewer.video');
-        $data = $previewer->create($params);
+        $locator = $this->get('file_locator');
+
+        $filePath = $locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/video/test.mpg', null, true);
+        $data = $previewer->create($filePath, $params);
 
         return new ResultResponse(true, 'Preview created', $data);
     }
@@ -109,7 +131,10 @@ class PreviewController extends Controller
         unset($params['action']);
 
         $previewer = $this->get('phlexible_media_template.previewer.pdf');
-        $data = $previewer->create($params);
+        $locator = $this->get('file_locator');
+
+        $filePath = $locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/pdf/test.pdf', null, true);
+        $data = $previewer->create($filePath, $params);
 
         return new ResultResponse(true, 'Preview created', $data);
     }
