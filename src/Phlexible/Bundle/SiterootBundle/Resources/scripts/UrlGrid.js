@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.url_mappings,
     strings: Phlexible.siteroots.Strings,
@@ -55,7 +57,7 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         ];
 
         this.store = new Ext.data.JsonStore({
-            fields: Phlexible.siteroots.UrlRecord
+            fields: Phlexible.siteroots.model.Url
         });
 
         this.columns = [
@@ -163,7 +165,7 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     onAddUrl: function () {
 
         // create new empty record
-        var newRecord = new Phlexible.siteroots.UrlRecord({
+        var newRecord = new Phlexible.siteroots.model.Url({
             id: '',
             hostname: '',
             language: '',

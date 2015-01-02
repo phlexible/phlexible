@@ -1,14 +1,15 @@
+Ext.ns('Phlexible.gui.menuhandle.handle');
+
 Phlexible.gui.menuhandle.handle.Group = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
     createConfig: function (data) {
         var btns = [];
 
         if (data.menu && Ext.isArray(data.menu)) {
             Ext.each(data.menu, function (menuItem) {
-                var handlerCls = Phlexible.evalClassString(menuItem.xtype),
-                    handler;
+                var handleFactory, handler;
 
-                if (!handlerCls) {
-                    console.error('Invalid handler classname', menuItem);
+                if (!Phlexible.Handles.has(menuItem.handle)) {
+                    console.error('Invalid handle in:', menuItem);
                     return;
                 }
 
@@ -25,7 +26,8 @@ Phlexible.gui.menuhandle.handle.Group = Ext.extend(Phlexible.gui.menuhandle.hand
                     }
                 }
 
-                handler = new handlerCls();
+                handleFactory = Phlexible.Handles.get(menuItem.handle);
+                handler = handleFactory();
 
                 if (menuItem.parameters) {
                     handler.setParameters(menuItem.parameters);

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.fields');
+
 Phlexible.fields.Prototypes = function () {
 };
 Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {

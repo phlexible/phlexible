@@ -58,13 +58,13 @@ class YamlFileLoader implements LoaderInterface
 
         foreach ($fileData as $name => $handlerData) {
             if (isset($handlerData['parent']) && !is_string($handlerData['parent'])) {
-                throw new LoaderException('Data at index parent has to be a string.' . $name);
+                throw new LoaderException("Data type of parent has to be string, $name given.");
             }
-            if (!isset($handlerData['xtype']) || !is_string($handlerData['xtype'])) {
-                throw new LoaderException('Data at index xtype has to be a string.' . $name);
+            if (!isset($handlerData['handle']) || !is_string($handlerData['handle'])) {
+                throw new LoaderException("Data type of handle has to be string, $name given.");
             }
             if (isset($handlerData['roles']) && !is_array($handlerData['roles'])) {
-                throw new LoaderException('Data at index roles has to be an array.');
+                throw new LoaderException("Data type of roles has to be array.");
             }
 
             if (!isset($handlerData['parent'])) {
@@ -74,7 +74,7 @@ class YamlFileLoader implements LoaderInterface
                 $handlerData['roles'] = [];
             }
 
-            $handlers->set($name, new MenuItem($handlerData['xtype'], $handlerData['parent'], $handlerData['roles']));
+            $handlers->set($name, new MenuItem($handlerData['handle'], $handlerData['parent'], $handlerData['roles']));
         }
 
         return $handlers;

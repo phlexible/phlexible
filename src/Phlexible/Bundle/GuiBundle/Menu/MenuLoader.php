@@ -14,6 +14,8 @@ use Phlexible\Bundle\GuiBundle\Menu\Loader\DelegatingLoader;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderResolver;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
 use Phlexible\Component\ComponentCollection;
+use Puli\Repository\FilesystemRepository;
+use Puli\Repository\Resource\FileResource;
 use Puli\Repository\ResourceRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Finder;
@@ -39,11 +41,11 @@ class MenuLoader
     }
 
     /**
-     * @param ResourceRepositoryInterface $repository
+     * @param FilesystemRepository $repository
      *
      * @return MenuItemCollection
      */
-    public function load(ResourceRepositoryInterface $repository)
+    public function load(FilesystemRepository $repository)
     {
         $loader = new DelegatingLoader(
             new LoaderResolver(
@@ -54,9 +56,9 @@ class MenuLoader
         );
         $items = new MenuItemCollection();
         foreach ($repository->find('/phlexible/menu/*/*') as $resource) {
-            /* @var $resource \Puli\Repository\Filesystem\Resource\LocalFileResource */
+            /* @var $resource FileResource */
 
-            $loadedItems = $loader->load($resource->getLocalPath());
+            $loadedItems = $loader->load($resource->getFilesystemPath());
             $items->merge($loadedItems);
         }
 

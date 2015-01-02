@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.frontendmedia.configuration');
+
 Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.form.FieldSet, {
     strings: Phlexible.frontendmedia.Strings,
     title: Phlexible.frontendmedia.Strings.file,

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.NavigationFlagsWindow = Ext.extend(Ext.Window, {
     title: Phlexible.siteroots.Strings.flags,
     strings: Phlexible.siteroots.Strings,

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui');
+
 Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.gui.Strings,
     loadMask: true,
@@ -21,19 +23,17 @@ Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
             // the return will be XML, so lets set up a reader
             reader: new Ext.data.JsonReader({
                 id: 'id'
-            }, Phlexible.gui.ComponentRecord),
+            }, Phlexible.gui.model.Bundle),
 
             autoLoad: true,
             sortInfo: {field: 'id', direction: 'ASC'},
             listeners: {
-                load: {
-                    fn: function () {
-                        if (this.filterData) {
-                            this.setFilterData(this.filterData);
-                        }
-                    },
-                    scope: this
-                }
+                load: function () {
+                    if (this.filterData) {
+                        this.setFilterData(this.filterData);
+                    }
+                },
+                scope: this
             }
         });
 

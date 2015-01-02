@@ -1,7 +1,7 @@
 searchbox:
     parent: tray
-    xtype: Phlexible.search.menuhandle.SearchBoxHandle
+    handle: searchbox
 
-searchboxsep:
+searchboxseparator:
     parent: tray
-    xtype: Phlexible.search.menuhandle.SearchBoxSeparatorHandle
+    handle: searchboxseparator

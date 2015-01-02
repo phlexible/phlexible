@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.fields');
+
 Phlexible.fields.FieldTypes = {
     addField: function (field, fieldConfig) {
         Phlexible.fields.FieldTypes[field] = fieldConfig;

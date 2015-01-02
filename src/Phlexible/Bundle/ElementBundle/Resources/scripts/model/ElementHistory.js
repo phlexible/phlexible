@@ -1,4 +1,6 @@
-Phlexible.elements.ElementHistoryRecord = Ext.data.Record.create([
+Ext.ns('Phlexible.elements.model');
+
+Phlexible.elements.model.ElementHistory = Ext.data.Record.create([
     {name: 'type', type: 'string'},
     {name: 'id', type: 'string'},
     {name: 'tid', type: 'string'},

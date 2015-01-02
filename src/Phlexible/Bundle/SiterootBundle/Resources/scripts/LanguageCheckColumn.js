@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.LanguageCheckColumn = function (config) {
     Ext.apply(this, config);
     if (!this.id) {

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.queue');
+
 Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
     title: Phlexible.queue.Strings.queue,
     strings: Phlexible.queue.Strings,

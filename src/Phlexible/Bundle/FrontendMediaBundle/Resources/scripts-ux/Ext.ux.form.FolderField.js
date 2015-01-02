@@ -1,3 +1,5 @@
+Ext.ns('Ext.ux.form');
+
 Ext.ux.form.FolderField = Ext.extend(Ext.ux.TreeSelector, {
     maxHeight: 300,
     listenForLoad: false,

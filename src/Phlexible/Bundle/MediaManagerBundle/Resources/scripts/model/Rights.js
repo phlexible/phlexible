@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager.model');
+
 /**
  * TODO: not used?
  */

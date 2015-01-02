@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.ElementtypeUsage = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.usage,

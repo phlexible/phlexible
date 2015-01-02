@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatemplates.audio');
+
 Phlexible.mediatemplates.audio.FormPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.mediatemplates.Strings.audio_template,
     strings: Phlexible.mediatemplates.Strings,

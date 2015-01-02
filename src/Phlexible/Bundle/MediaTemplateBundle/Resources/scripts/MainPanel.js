@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatemplates');
+
 Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.mediatemplates,
     strings: Phlexible.mediatemplates.Strings,

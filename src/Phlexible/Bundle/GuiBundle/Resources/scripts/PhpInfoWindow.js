@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui');
+
 Phlexible.gui.PhpInfoWindow = Ext.extend(Ext.Window, {
     title: 'PHP Info',
     iconCls: 'p-gui-php-icon',

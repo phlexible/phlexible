@@ -84,8 +84,8 @@ class MenuItemCollection implements \Countable
 
         foreach ($this->items as $name => $item) {
             $itemData = array(
-                'name'  => $name,
-                'xtype' => $item->getXtype(),
+                'name'   => $name,
+                'handle' => $item->getHandle(),
             );
 
             if (count($item->getItems())) {

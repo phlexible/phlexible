@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementsTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
     processDrop: function (targetNode, data, point, dd, e, dropNode) {
         //Phlexible.console.info(targetNode);

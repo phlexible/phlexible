@@ -1,0 +1,9 @@
+require:
+    - ElementLayoutPanel
+    - ElementLayoutTree
+    - ElementLayoutTreeLoader
+    - ElementLayoutTreeNodeUI
+    - NewTeaserInstanceWindow
+    - NewTeaserWindow
+    - PublishTeaserWindow
+    - SetTeaserOfflineWindow

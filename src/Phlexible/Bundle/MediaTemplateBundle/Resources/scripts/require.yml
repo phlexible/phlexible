@@ -1,0 +1,18 @@
+require:
+    - menuhandle/handles
+    - data
+    - BasePreviewPanel
+    - audio/FormPanel
+    - audio/MainPanel
+    - audio/PreviewPanel
+    - image/FormPanel
+    - image/MainPanel
+    - image/PreviewPanel
+    - pdf2swf/FormPanel
+    - pdf2swf/MainPanel
+    - pdf2swf/PreviewPanel
+    - video/FormPanel
+    - video/MainPanel
+    - video/PreviewPanel
+    - TemplatesGrid
+    - MainPanel

@@ -1,0 +1,4 @@
+require:
+    - Ext.ux.Portlet
+    - Ext.ux.PortalColumn
+    - Ext.ux.Portal

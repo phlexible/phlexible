@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.FolderTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
 
     // private

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.SetTreeNodeOfflineWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.elements.Strings.set_treenode_offline,
     width: 530,

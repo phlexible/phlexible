@@ -1,0 +1,43 @@
+priority: 900
+require:
+    - dev
+    - overrides
+    - prototypes
+    - grid/TypeColumnModel
+    - menuhandle/handle/Handle
+    - menuhandle/handle/Menu
+    - menuhandle/handle/BubbleMenu
+    - menuhandle/handle/FunctionHandle
+    - menuhandle/handle/Group
+    - menuhandle/handle/HrefHandle
+    - menuhandle/handle/IframeHandle
+    - menuhandle/handle/PanelHandle
+    - menuhandle/handle/WindowHandle
+    - menuhandle/handle/XtypeHandle
+    - util/Config
+    - util/Console
+    - util/Dialog
+    - util/EntryManager
+    - util/Frame
+    - util/ImageSelectWindow
+    - util/PluginRegistry
+    - util/Router
+    - util/SystemMessage
+    - util/User
+    - model/Bundle
+    - functions
+    - bundle/BundlesFilterPanel
+    - bundle/BundlesGrid
+    - bundle/BundlesMainPanel
+    - portlet/Load
+    - Actions
+    - Help
+    - MainTabPanel
+    - Menu
+    - Phlexible.Cookie
+    - Phlexible.Format
+    - Phlexible.Handles
+    - Phlexible.LoadHandler
+    - PhpInfoWindow
+    # - PropertiesPanel
+    - menuhandle/handles

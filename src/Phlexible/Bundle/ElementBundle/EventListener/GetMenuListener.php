@@ -42,7 +42,7 @@ class GetMenuListener
         $siteroots = $this->entityManager->getRepository('PhlexibleSiterootBundle:Siteroot')->findAll();
 
         foreach ($siteroots as $siteroot) {
-            $menuItem = new MenuItem('Phlexible.elements.menuhandle.ElementHandle', 'elements');
+            $menuItem = new MenuItem('element', 'elements');
             $menuItem->setParameters(
                 [
                     'siteroot_id' => $siteroot->getId(),

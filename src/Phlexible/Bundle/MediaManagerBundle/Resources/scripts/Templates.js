@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.templates.StartGroup = new Ext.XTemplate(
     '<div id="{groupId}" class="x-grid-group {cls}">',
     '<div id="{groupId}-hd" class="x-grid-group-hd" style="{style}"><div>{text}</div></div>',

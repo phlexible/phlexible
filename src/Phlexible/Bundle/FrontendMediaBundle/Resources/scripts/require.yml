@@ -1,0 +1,6 @@
+require:
+    - fields/File
+    - fields/Folder
+    - configuration/FieldConfigurationFile
+    - FieldHelper
+    - sequences

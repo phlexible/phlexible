@@ -1,15 +1,17 @@
+Ext.ns('Phlexible.gui.menuhandle.handle');
+
 Phlexible.gui.menuhandle.handle.BubbleMenu = Ext.extend(Phlexible.gui.menuhandle.handle.Menu, {
     createConfig: function (data) {
         if (data.menu && Ext.isArray(data.menu) && data.menu.length === 1) {
-            var handlerCls = Phlexible.evalClassString(data.menu[0].xtype),
-                handler;
+            var handleFactory, handler;
 
-            if (!handlerCls) {
-                console.warn('Invalid handler classname', data.menu[0]);
+            if (!Phlexible.Handles.has(data.menu[0].handle)) {
+                console.error('Invalid handle in:', data.menu[0]);
                 return;
             }
 
-            handler = new handlerCls();
+            handleFactory = Phlexible.Handles.get(data.menu[0].handle);
+            handler = handleFactory();
 
             if (data.menu[0].parameters) {
                 handler.setParameters(data.menu[0].parameters);

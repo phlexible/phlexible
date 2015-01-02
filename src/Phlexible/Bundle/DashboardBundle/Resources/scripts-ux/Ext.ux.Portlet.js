@@ -1,3 +1,5 @@
+Ext.ns('Ext.ux');
+
 Ext.ux.Portlet = Ext.extend(Ext.Panel, {
     anchor: '100%',
     frame: true,

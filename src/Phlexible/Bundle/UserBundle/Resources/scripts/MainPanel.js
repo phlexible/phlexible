@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.users');
+
 /**
  * Input params:
  * - uid (optional)

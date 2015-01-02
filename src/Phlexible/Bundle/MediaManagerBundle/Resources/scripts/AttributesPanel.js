@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager', 'Phlexible.mediamanager.templates');
+
 Phlexible.mediamanager.templates.Details = new Ext.XTemplate(
     '<div style="padding: 4px;">',
     '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.version]}:</div> {[values.version]}</div>',

@@ -1,4 +1,10 @@
-Phlexible.gui.menuhandle.handle.Handle = Ext.extend(Ext.util.Observable, {
+Ext.ns('Phlexible.gui.menuhandle.handle');
+
+Phlexible.gui.menuhandle.handle.Handle = function(config) {
+    Ext.apply(this, config);
+};
+
+Ext.extend(Phlexible.gui.menuhandle.handle.Handle, Ext.util.Observable, {
     /**
      * @cfg {String} text Display text
      */
@@ -69,11 +75,9 @@ Phlexible.gui.menuhandle.handle.Handle = Ext.extend(Ext.util.Observable, {
      * @return {Object}
      */
     createBasicConfig: function () {
-        var btnConfig = {
+        return btnConfig = {
             text: this.getText(),
             iconCls: this.getIconCls()
         };
-
-        return btnConfig;
     }
 });

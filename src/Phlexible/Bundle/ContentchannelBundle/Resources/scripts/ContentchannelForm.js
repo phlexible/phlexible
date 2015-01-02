@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.contentchannels');
+
 Phlexible.contentchannels.ContentchannelForm = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.contentchannels.Strings,
     title: Phlexible.contentchannels.Strings.serverForm,

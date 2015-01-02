@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.frontendmedia');
+
 Phlexible.frontendmedia.FieldHelper = {
 
     diffFn: function (diff, panel) {

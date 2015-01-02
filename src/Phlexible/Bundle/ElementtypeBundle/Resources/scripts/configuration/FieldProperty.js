@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.elementtypes.configuration');
+
 Phlexible.elementtypes.configuration.FieldProperty = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.properties,

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.elementtypes');
+
 Phlexible.elementtypes.NewElementtypeWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.elementtypes.Strings.create_element_type,
     width: 400,

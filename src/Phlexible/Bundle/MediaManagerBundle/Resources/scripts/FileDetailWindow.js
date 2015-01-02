@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.FileDetailAttributesTemplate = new Ext.XTemplate(
     '<div style="padding: 4px 4px 8px 4px;">',
     '<div>',

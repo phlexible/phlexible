@@ -1,0 +1,19 @@
+require:
+    - menuhandle/handles
+    - model/Contentchannel
+    - model/Navigation
+    - model/Siteroot
+    - model/SpecialTid
+    - model/Url
+    - ContentChannelGrid
+    - LanguageCheckColumn
+    - MainPanel
+    - NavigationFlagsWindow
+    - NavigationGrid
+    - PropertyGrid
+    - SingleCheckColumn
+    - SiterootGrid
+    - SiterootNavigationWindow
+    - SpecialTidGrid
+    - TitleForm
+    - UrlGrid

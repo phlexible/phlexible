@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.tasks');
+
 Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.tasks.Strings.filter,
     strings: Phlexible.tasks.Strings,

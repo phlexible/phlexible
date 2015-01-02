@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.FileReplaceWindowTemplate = new Ext.XTemplate(
     '<tpl for=".">',
     '<div class="p-filereplace-wrap">',

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.gui');
+
 /**
  * @class Phlexible.gui.MenuBar
  * @extends Ext.util.Observable
@@ -124,12 +126,10 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
         var items = [];
 
         Ext.each(data, function (dataItem) {
-            var handlerCls, handler, config;
+            var handleFactory, handler, config;
 
-            handlerCls = Phlexible.evalClassString(dataItem.xtype);
-
-            if (!handlerCls) {
-                console.error('Invalid handler classname', dataItem);
+            if (!Phlexible.Handles.has(dataItem.handle)) {
+                console.error('Invalid handle in: ', dataItem);
                 return;
             }
 
@@ -146,7 +146,8 @@ Ext.extend(Phlexible.gui.Menu, Ext.util.Observable, {
                 }
             }
 
-            handler = new handlerCls();
+            handleFactory = Phlexible.Handles.get(dataItem.handle);
+            handler = handleFactory();
 
             if (dataItem.parameters) {
                 dataItem.setParameters(dataItem.parameters);

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.metasets');
+
 Phlexible.metasets.SelectConfigurationWindow = Ext.extend(Ext.Window, {
     title: Phlexible.metasets.Strings.configure_select,
     strings: Phlexible.metasets.Strings,

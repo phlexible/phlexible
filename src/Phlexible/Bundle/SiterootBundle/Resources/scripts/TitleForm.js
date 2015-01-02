@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.CustomTitleTpl = new Ext.XTemplate(
     '<tpl for=".">',
     '<span style="padding-right: 15px;"><b>{placeholder}</b> {title}</span>',

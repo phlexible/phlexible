@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui.menuhandle.handle');
+
 Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
     menu: [],
 
@@ -12,11 +14,10 @@ Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handl
             subMenu = [];
 
             Ext.each(data.menu, function (menuItem) {
-                var handlerCls = Phlexible.evalClassString(menuItem.xtype),
-                    handler;
+                var handleFactory, handler;
 
-                if (!handlerCls) {
-                    console.warn('Invalid handler classname', menuItem);
+                if (!Phlexible.Handles.has(menuItem.handle)) {
+                    console.warn('Invalid handle in:', menuItem);
                     return;
                 }
 
@@ -33,7 +34,8 @@ Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handl
                     }
                 }
 
-                handler = new handlerCls();
+                handleFactory = Phlexible.Handles.get(menuItem.handle);
+                handler = handleFactory();
 
                 if (menuItem.parameters) {
                     handler.setParameters(menuItem.parameters);

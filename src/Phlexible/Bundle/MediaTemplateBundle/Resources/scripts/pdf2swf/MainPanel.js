@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatemplates.pdf2swf');
+
 Phlexible.mediatemplates.pdf2swf.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.pdf2swf_template,
     strings: Phlexible.mediatemplates.Strings,

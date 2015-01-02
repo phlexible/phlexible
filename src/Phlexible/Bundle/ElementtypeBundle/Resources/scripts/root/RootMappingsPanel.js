@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elementtypes.Strings,
     border: false,

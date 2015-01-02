@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 /*Phlexible.elements.xElementDataTabs = Ext.extend(Ext.TabPanel, {
  // private
  xadjustBodyWidth : function(w){

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.file_meta,

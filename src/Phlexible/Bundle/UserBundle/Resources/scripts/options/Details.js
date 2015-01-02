@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.users.options');
+
 Phlexible.users.options.Details = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,
     title: Phlexible.users.Strings.personal_details,
@@ -76,3 +78,10 @@ Phlexible.users.options.Details = Ext.extend(Ext.form.FormPanel, {
 });
 
 Ext.reg('usersoptionsdetails', Phlexible.users.options.Details);
+
+Phlexible.PluginRegistry.prepend('userOptionCards', {
+    xtype: 'usersoptionsdetails',
+    title: Phlexible.users.Strings.personal_details,
+    description: Phlexible.users.Strings.personal_details_description,
+    iconCls: 'p-user-user-icon'
+});

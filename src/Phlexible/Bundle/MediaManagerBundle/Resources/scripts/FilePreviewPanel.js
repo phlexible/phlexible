@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.preview,

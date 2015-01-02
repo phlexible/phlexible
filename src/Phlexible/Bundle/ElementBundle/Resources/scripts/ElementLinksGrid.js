@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.elements.Strings.links,
     strings: Phlexible.elements.Strings,

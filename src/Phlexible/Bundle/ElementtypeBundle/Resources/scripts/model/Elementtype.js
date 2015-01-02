@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes.model');
+
 Phlexible.elementtypes.model.Elementtype = Ext.data.Record.create([
     {name: 'id', type: 'string'},
     {name: 'icon', type: 'string'},

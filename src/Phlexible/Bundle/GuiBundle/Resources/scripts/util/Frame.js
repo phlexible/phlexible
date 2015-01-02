@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui.util');
+
 Phlexible.gui.util.Frame = function () {
     this.addEvents({
         frameready: true

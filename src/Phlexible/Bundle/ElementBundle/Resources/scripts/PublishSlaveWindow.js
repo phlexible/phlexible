@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.PublishSlaveWindow = Ext.extend(Ext.Window, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.publish_slave_header,

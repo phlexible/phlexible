@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.metasets');
+
 Phlexible.metasets.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
     title: Phlexible.metasets.Strings.configure_suggest,
     strings: Phlexible.metasets.Strings,

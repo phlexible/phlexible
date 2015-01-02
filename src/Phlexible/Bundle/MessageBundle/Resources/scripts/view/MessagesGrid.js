@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.messages.view');
+
 Phlexible.messages.view.MessagesGrid = Ext.extend(Ext.grid.GridPanel, {
 //    title: Phlexible.messages.Strings.messages,
     strings: Phlexible.messages.Strings,

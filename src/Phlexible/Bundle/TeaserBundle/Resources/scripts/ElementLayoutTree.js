@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.teasers');
+
 Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
     title: Phlexible.teasers.Strings.layout,
     strings: Phlexible.teasers.Strings,

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements.accordion');
+
 Phlexible.elements.accordion.Diff = Ext.extend(Ext.Panel, {
     title: Phlexible.elements.Strings.differences,
     cls: 'p-elements-diff-accordion',

@@ -1,0 +1,17 @@
+require:
+    - menuhandle/handles
+    - model/Criterium
+    - model/Filter
+    - model/Message
+    - model/Subscription
+    - data
+    - filter/CriteriaForm
+    - filter/ListGrid
+    - filter/MainPanel
+    - filter/PreviewPanel
+    - portlet/Messages
+    - subscription/MainPanel
+    - view/FilterPanel
+    - view/MainPanel
+    - view/MessagesGrid
+    - MainPanel

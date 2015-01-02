@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementHistoryGrid = Ext.extend(Phlexible.elements.HistoryGrid, {
     initComponent: function () {
         Phlexible.elements.ElementHistoryGrid.superclass.initComponent.call(this);

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatemplates.image');
+
 Phlexible.mediatemplates.image.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.image_template,
     strings: Phlexible.mediatemplates.Strings,

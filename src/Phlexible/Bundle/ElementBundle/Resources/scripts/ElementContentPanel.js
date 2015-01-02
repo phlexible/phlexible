@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     cls: 'p-elements-content-panel',

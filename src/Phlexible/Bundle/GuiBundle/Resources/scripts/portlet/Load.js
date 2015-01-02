@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.gui.portlet');
+Ext.ns('Phlexible.gui.portlet');
 
 Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
     title: Phlexible.gui.Strings.server_load,

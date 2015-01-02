@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements.accordion');
+
 Phlexible.elements.accordion.AllowedChildren = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.allowed_child_elements,

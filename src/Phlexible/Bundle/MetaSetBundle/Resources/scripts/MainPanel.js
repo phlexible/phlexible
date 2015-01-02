@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.metasets');
+
 Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.metasets.Strings.metasets,
     strings: Phlexible.metasets.Strings,

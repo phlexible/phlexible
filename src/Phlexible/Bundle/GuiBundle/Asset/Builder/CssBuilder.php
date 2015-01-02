@@ -17,6 +17,8 @@ use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\FilenameFilter;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\CssCompressorInterface;
+use Puli\Repository\FilesystemRepository;
+use Puli\Repository\Resource\FileResource;
 use Puli\Repository\ResourceRepositoryInterface;
 use Symfony\Bundle\AsseticBundle\Factory\AssetFactory;
 
@@ -76,13 +78,13 @@ class CssBuilder
     /**
      * Build stream
      *
-     * @param string                      $baseUrl
-     * @param string                      $basePath
-     * @param ResourceRepositoryInterface $repo
+     * @param string               $baseUrl
+     * @param string               $basePath
+     * @param FilesystemRepository $repo
      *
      * @return string
      */
-    public function get($baseUrl, $basePath, ResourceRepositoryInterface $repo)
+    public function get($baseUrl, $basePath, FilesystemRepository $repo)
     {
         $fm = new FilterManager();
         $fm->set('baseurl', new BaseUrlFilter($baseUrl, $basePath));
@@ -103,7 +105,8 @@ class CssBuilder
         $input = [];
 
         foreach ($repo->find('/phlexible/styles/*/*.css') as $resource) {
-            $input[] = $resource->getLocalPath();
+            /* @var $resource FileResource */
+            $input[] = $resource->getFilesystemPath();
         }
 
         /*

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     strings: Phlexible.elementtypes.Strings,
     border: true,

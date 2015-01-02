@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.teasers');
+
 Phlexible.teasers.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.teasers.Strings.new_teaser,
     width: 450,

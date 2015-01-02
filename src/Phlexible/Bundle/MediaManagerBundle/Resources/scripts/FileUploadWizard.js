@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
     title: 'Wizard',
     iconCls: 'p-mediamanager-wizard-icon',

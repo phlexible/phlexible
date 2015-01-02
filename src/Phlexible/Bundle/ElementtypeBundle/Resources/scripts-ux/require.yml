@@ -1,0 +1,7 @@
+require:
+    - Ext.ux.form.Accordion
+    - Ext.ux.form.DisplayField
+    - Ext.ux.form.Group
+    - Ext.ux.form.LinkField
+    - Ext.ux.form.TableField
+    - Ext.ux.netbox.InputTextMask

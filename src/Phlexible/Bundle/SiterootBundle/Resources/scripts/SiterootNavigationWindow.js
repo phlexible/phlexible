@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.SiterootNavigationWindow = Ext.extend(Ext.Window, {
     title: Phlexible.siteroots.Strings.siteroot_navigation,
     strings: Phlexible.siteroots.Strings,

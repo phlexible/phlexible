@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui.util');
+
 Phlexible.gui.util.Config = function (values) {
     this.values = values;
 };

@@ -1,5 +1,6 @@
-Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
+Ext.ns('Phlexible.elements');
 
+Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
     languageEnabled: false,
     element: null,
 

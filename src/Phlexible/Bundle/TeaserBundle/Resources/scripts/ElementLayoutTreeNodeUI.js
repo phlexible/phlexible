@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.teasers');
+
 Phlexible.teasers.ElementLayoutTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
     // private
     renderElements: function (n, a, targetNode, bulkRender) {

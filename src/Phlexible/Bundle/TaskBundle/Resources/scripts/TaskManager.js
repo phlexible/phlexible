@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.tasks');
+
 Phlexible.tasks.TaskManager = {
     comment: function (task_id, comment, callback, scope) {
         Ext.Ajax.request({

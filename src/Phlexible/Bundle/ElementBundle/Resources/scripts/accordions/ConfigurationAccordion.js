@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements.accordion');
+
 Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elements.Strings.configuration,
     title: Phlexible.elements.Strings.configuration.configuration,

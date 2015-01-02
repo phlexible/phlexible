@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
     title: Phlexible.elements.Strings.publish_element_advanced,
     strings: Phlexible.elements.Strings,

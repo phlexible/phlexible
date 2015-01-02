@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.elementtypes');
+
 Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.elementtypes,

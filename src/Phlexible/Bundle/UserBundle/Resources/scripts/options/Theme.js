@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.users.options');
+
 Phlexible.users.options.Theme = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,
     title: Phlexible.users.Strings.theme,
@@ -101,3 +103,10 @@ Phlexible.users.options.Theme = Ext.extend(Ext.form.FormPanel, {
 });
 
 Ext.reg('usersoptionstheme', Phlexible.users.options.Theme);
+
+Phlexible.PluginRegistry.prepend('userOptionCards', {
+    xtype: 'usersoptionstheme',
+    title: Phlexible.users.Strings.theme,
+    description: Phlexible.users.Strings.theme_description,
+    iconCls: 'p-user-theme-icon'
+});

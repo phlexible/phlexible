@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
     height: 26,
 

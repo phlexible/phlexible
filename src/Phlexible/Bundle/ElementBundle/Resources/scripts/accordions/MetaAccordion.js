@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements.accordion');
+
 Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.meta,

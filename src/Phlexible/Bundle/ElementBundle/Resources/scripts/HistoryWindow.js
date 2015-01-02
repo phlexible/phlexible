@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.HistoryWindow = Ext.extend(Ext.Window, {
     title: Phlexible.elements.Strings.history,
     iconCls: 'p-element-tab_history-icon',

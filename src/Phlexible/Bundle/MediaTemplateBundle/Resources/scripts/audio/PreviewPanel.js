@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatemplates.audio');
+
 Phlexible.mediatemplates.audio.PreviewPanel = Ext.extend(Phlexible.mediatemplates.BasePreviewPanel, {
     getCreateUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_audio');

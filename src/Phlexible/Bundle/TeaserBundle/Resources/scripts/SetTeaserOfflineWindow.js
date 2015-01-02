@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.teasers');
+
 Phlexible.teasers.SetTeaserOfflineWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.teasers.Strings.set_teaser_offline,
     width: 530,

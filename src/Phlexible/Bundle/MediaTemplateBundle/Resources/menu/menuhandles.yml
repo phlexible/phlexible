@@ -1,5 +1,5 @@
 mediatemplates:
     parent: config
-    xtype: Phlexible.mediatemplates.menuhandle.MediaTemplatesHandle
+    handle: mediatemplates
     roles: [ROLE_MEDIA_TEMPLATES]
 

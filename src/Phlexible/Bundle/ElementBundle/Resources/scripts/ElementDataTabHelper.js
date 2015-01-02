@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementDataTabHelper = {
     /**
      * Fix structure, removes all root, reference root and reference nodes

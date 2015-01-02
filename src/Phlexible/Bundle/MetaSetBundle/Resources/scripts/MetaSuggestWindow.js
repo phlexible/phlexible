@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.metasets');
+
 Phlexible.metasets.MetaSuggestWindow = Ext.extend(Ext.Window, {
     width: 400,
     height: 350,

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.users');
+
 Phlexible.users.SuccessorWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.users.Strings.successor,
     width: 400,

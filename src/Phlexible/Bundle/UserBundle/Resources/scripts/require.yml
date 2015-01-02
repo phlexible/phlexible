@@ -1,0 +1,23 @@
+require:
+    - menuhandle/handles
+    - model/Group
+    - model/User
+    - model/UserGroup
+    - model/UserRole
+    - options/Details
+    - options/Password
+    - options/Preferences
+    - options/Theme
+    - portlet/Online
+    - security/LoginWindow
+    - security/ResetWindow
+    - security/SendEmailWindow
+    - GroupsMainPanel
+    - MainPanel
+    - OptionsWindow
+    - SuccessorWindow
+    - User
+    - UserFilterPanel
+    - UserGrid
+    - UsersMainPanel
+    - UserWindow

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatype.model');
+
 Phlexible.mediatype.model.MediaType = Ext.data.Record.create([
     {name: 'id', type: 'string'},
     {name: 'key', type: 'string'},

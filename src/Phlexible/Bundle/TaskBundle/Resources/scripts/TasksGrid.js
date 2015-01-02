@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.tasks');
+
 Phlexible.tasks.TasksGrid = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.tasks.Strings,
     cls: 'p-tasks-task-grid',

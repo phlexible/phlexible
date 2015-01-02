@@ -34,8 +34,8 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
                         this.onSave();
                     },
                     portletClose: function (panel, record) {
-                        Phlexible.dashboard.ListStore.add(record);
-                        Phlexible.dashboard.ListStore.sort('title', 'ASC');
+                        Phlexible.dashboard.store.List.add(record);
+                        Phlexible.dashboard.store.List.sort('title', 'ASC');
                         panel.ownerCt.remove(panel, true);
                         panel.destroy();
 
@@ -109,14 +109,14 @@ Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
                 matrix[row.col].insert(row.pos, row);
             }
             else {
-                r = new Phlexible.dashboard.PortletRecord(row, row.id);
-                Phlexible.dashboard.ListStore.add(r);
+                r = new Phlexible.dashboard.model.Portlet(row, row.id);
+                Phlexible.dashboard.store.List.add(r);
             }
         }
 
         for (i = 0; i < cols; i++) {
             matrix[i].each(function (item) {
-                r = new Phlexible.dashboard.PortletRecord(item, item.id);
+                r = new Phlexible.dashboard.model.Portlet(item, item.id);
                 this.getPortletPanel().addRecordPanel(r, true);
             }, this);
         }

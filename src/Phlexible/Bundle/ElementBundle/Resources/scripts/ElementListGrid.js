@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.list,
@@ -31,7 +33,7 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
             root: 'list',
             totalProperty: 'total',
             id: 'id',
-            fields: Phlexible.elements.ElementListRecord,
+            fields: Phlexible.elements.model.ElementList,
             remoteSort: true,
             sortInfo: {field: 'title', direction: 'desc'},
             baseParams: {

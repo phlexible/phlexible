@@ -1,5 +1,5 @@
 Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
-    store: Phlexible.dashboard.PortletStore,
+    store: Phlexible.dashboard.store.Portlet,
     cls: 'p-dashboard-portal-panel',
     border: false,
     cols: 3,

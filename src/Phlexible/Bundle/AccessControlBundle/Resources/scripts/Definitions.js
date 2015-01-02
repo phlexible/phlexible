@@ -1,2 +1,0 @@
-Ext.namespace('Phlexible.contentrights');
-

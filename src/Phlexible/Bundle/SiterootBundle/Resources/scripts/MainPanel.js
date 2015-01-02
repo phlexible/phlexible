@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.siteroots.Strings,
     title: Phlexible.siteroots.Strings.siteroots,

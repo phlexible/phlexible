@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     title: 'Element',

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.gui');
+
 Phlexible.gui.MainTabPanel = Ext.extend(Ext.TabPanel, {
     plain: false,
     border: false,

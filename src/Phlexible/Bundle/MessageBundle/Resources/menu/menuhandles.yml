@@ -1,4 +1,4 @@
 messages:
     parent: admin
-    xtype: Phlexible.messages.menuhandle.MessagesHandle
+    handle: messages
     roles: [ROLE_MESSAGES]

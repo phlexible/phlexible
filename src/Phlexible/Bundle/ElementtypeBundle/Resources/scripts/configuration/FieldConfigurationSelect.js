@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.elementtypes.configuration');
+
 Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.form.FieldSet, {
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.select,

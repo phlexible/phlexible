@@ -56,6 +56,7 @@ Ext.menu.TreeMenu = Ext.extend(Ext.menu.Menu, {
     }
 });
 
+Ext.namespace("Ext.ux");
 
 // custom form field for displaying a tree, similar to select or combo
 Ext.ux.TreeSelector = Ext.extend(Ext.form.TriggerField, {

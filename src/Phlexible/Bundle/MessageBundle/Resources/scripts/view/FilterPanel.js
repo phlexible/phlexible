@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.messages.view');
+
 Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.messages.Strings.filter,
     strings: Phlexible.messages.Strings,

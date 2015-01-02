@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.UploadChecker = function(config) {
     config = config || {};
 

@@ -1,0 +1,5 @@
+require:
+    - Ext.form.FileUploadField
+    - Ext.ux.DDView
+    - Ext.ux.Multiselect
+    - Ext.ux.TreeSelector

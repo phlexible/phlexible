@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
     title: Phlexible.elementtypes.Strings.properties,
     strings: Phlexible.elementtypes.Strings,

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatemplates.video');
+
 Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.mediatemplates.Strings.video_template,
     strings: Phlexible.mediatemplates.Strings,

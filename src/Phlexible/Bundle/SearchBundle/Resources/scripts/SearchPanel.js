@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.search');
+
 Phlexible.search.SearchPanel = Ext.extend(Ext.Panel, {
     title: 'Search',
     cls: 'p-searchpanel',
@@ -57,7 +59,7 @@ Phlexible.search.SearchPanel = Ext.extend(Ext.Panel, {
                     root: 'results',
                     totalProperty: 'totalCount',
                     //                id: 'id'
-                    fields: Phlexible.search.SearchRecord,
+                    fields: Phlexible.search.model.Result,
                     listeners: {
                         xload: {
                             fn: function () {

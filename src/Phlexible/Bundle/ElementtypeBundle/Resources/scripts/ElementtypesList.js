@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.ElementtypesGridView = Ext.extend(Ext.grid.GridView, {
     getRowClass: function (record, index, rowParams, store) {
 

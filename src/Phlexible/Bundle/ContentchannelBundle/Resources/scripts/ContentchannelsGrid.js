@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.contentchannels');
+
 Phlexible.contentchannels.ContentchannelsGrid = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.contentchannels.Strings,
     title: Phlexible.contentchannels.Strings.component_name,

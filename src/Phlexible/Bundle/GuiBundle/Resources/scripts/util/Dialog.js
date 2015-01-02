@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui.util');
+
 Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
     title: 'Dialog',
     width: 400,

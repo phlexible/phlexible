@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.ContentChannelGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.contentchannels,
     strings: Phlexible.siteroots.Strings,
@@ -7,7 +9,7 @@ Phlexible.siteroots.ContentChannelGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     initComponent: function () {
 
         this.store = new Ext.data.SimpleStore({
-            fields: Phlexible.siteroots.ContentChannelRecord,
+            fields: Phlexible.siteroots.model.ContentChannel,
         });
 
         this.columns = [

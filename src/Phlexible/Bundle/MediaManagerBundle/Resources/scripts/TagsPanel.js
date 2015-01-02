@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.TagsPanel = Ext.extend(Ext.Panel, {
     strings: {},//Phlexible.tags.Strings,
     title: 'Tags', //Phlexible.tags.Strings.tags,

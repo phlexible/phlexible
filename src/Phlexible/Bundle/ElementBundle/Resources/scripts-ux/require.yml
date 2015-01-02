@@ -1,0 +1,2 @@
+require:
+    - Ext.ux.layout.RowFitLayout

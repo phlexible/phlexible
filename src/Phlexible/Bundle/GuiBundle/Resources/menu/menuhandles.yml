@@ -1,45 +1,45 @@
 main:
-    xtype: Phlexible.gui.menuhandle.MainGroup
+    handle: main
 
 menus:
-    xtype: Phlexible.gui.menuhandle.MenusGroup
+    handle: menus
 
 config:
     parent: menus
-    xtype: Phlexible.gui.menuhandle.ConfigurationMenu
+    handle: configuration
 
 admin:
     parent: menus
-    xtype: Phlexible.gui.menuhandle.AdministrationMenu
+    handle: administration
 
 debug:
     parent: menus
-    xtype: Phlexible.gui.menuhandle.DebugMenu
+    handle: debug
 
 fill:
-    xtype: Phlexible.gui.menuhandle.Fill
+    handle: fill
 
 account:
-    xtype: Phlexible.gui.menuhandle.AccountGroup
+    handle: account
 
 tray:
-    xtype: Phlexible.gui.menuhandle.TrayGroup
+    handle: tray
 
 help:
     parent: account
-    xtype: Phlexible.gui.menuhandle.HelpHandle
+    handle: help
 
 phpinfo:
     parent: debug
-    xtype: Phlexible.gui.menuhandle.PhpInfoHandle
+    handle: phpinfo
     roles: [ROLE_DEBUG]
 
 #properties:
 #    parent: debug
-#    xtype: Phlexible.gui.menuhandle.PropertiesHandle
+#    handle: properties
 #    roles: [ROLE_DEBUG]
 
-components:
+bundles:
     parent: admin
-    xtype: Phlexible.gui.menuhandle.BundlesHandle
+    handle: bundles
     roles: [ROLE_BUNDLES]

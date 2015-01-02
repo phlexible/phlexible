@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.ElementtypeStructureRootTreeNodeUI = Ext.extend(Ext.tree.RootTreeNodeUI, {
     // private
     render: function () {

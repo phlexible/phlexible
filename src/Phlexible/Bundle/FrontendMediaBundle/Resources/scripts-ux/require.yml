@@ -1,0 +1,3 @@
+require:
+    - Ext.ux.form.FileField
+    - Ext.ux.form.FolderField

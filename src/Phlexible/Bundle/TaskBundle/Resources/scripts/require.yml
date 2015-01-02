@@ -1,0 +1,14 @@
+require:
+    - menuhandle/handles
+    - model/Comment
+    - model/Task
+    - model/Transition
+    - portlet/MyTasks
+    - FilterPanel
+    - MainPanel
+    - Task
+    - TaskManager
+    - TasksGrid
+    - window/AssignWindow
+    - window/CommentWindow
+    - window/NewTaskWindow

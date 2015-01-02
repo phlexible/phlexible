@@ -1,4 +1,6 @@
-Phlexible.siteroots.NavigationRecord = Ext.data.Record.create([
+Ext.namespace('Phlexible.siteroots.model');
+
+Phlexible.siteroots.model.Navigation = Ext.data.Record.create([
     {name: 'id'},
     {name: 'title'},
     {name: 'handler'},

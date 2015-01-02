@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.MediaResourceTemplate = new Ext.XTemplate(
     '<tpl for=".">',
     '<div class="p-elements-result-wrap" id="result-wrap-{id}" style="text-align: center">',

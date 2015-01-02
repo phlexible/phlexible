@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements.portlet');
+
 Phlexible.elements.portlet.LatestElementsRecord = Ext.data.Record.create([
     {name: 'ident', type: 'string'},
     {name: 'eid', type: 'string'},

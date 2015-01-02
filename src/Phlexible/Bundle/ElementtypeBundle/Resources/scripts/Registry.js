@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.fields');
+
 Phlexible.fields.Registry = {
     factories: {},
 

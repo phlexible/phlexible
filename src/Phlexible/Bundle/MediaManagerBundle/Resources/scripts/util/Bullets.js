@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager.util');
+
 Phlexible.mediamanager.util.Bullets = function () {
     bullets = '';
 }

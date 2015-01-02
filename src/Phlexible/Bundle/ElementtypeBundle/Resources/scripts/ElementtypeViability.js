@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.elementtypes.Strings.viability,
     strings: Phlexible.elementtypes.Strings,

@@ -27,7 +27,7 @@ Phlexible.dashboard.ListPanel = Ext.extend(Ext.Panel, {
 
         this.items = [{
             xtype: 'dataview',
-            store: Phlexible.dashboard.ListStore,
+            store: Phlexible.dashboard.store.List,
             tpl: Phlexible.dashboard.StartListTemplate,
             style: 'margin: 4px 4px 0 4px;',
             emptyText: this.strings.no_available_portlets,

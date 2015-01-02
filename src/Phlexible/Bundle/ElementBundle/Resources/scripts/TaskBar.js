@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.TaskBar = Ext.extend(Ext.Toolbar, {
     strings: Phlexible.tasks.Strings,
     cls: 'p-tasks-toolbar',

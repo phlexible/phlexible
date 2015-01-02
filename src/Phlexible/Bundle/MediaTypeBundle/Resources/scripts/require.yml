@@ -1,0 +1,6 @@
+require:
+    - menuhandle/handles
+    - model/MediaType
+    - MainPanel
+    - MediaTypesGrid
+    - MimetypesGrid

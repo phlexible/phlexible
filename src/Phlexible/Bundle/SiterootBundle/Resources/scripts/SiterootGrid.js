@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.siteroots.Strings.siteroot,
     strings: Phlexible.siteroots.Strings,
@@ -54,7 +56,7 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
             root: 'siteroots',
             id: 'id',
             totalProperty: 'count',
-            fields: Phlexible.siteroots.SiterootRecord,
+            fields: Phlexible.siteroots.model.Siteroot,
             url: Phlexible.Router.generate('siteroots_siteroot_list'),
             sortInfo: {
                 field: 'title',

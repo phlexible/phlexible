@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementPreviewPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.elements.Strings.preview.preview,
     strings: Phlexible.elements.Strings.preview,

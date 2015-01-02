@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatype');
+
 Phlexible.mediatype.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatype.Strings.media_types,
     iconCls: 'p-mediatype-component-icon',

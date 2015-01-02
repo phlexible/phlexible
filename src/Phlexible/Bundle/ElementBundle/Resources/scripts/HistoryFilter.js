@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.HistoryFilter = Ext.extend(Ext.form.FormPanel, {
     title: '_Filter',//Phlexible.elements.Strings.filter,
     strings: Phlexible.elements.Strings,

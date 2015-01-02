@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.navigations,
     strings: Phlexible.siteroots.Strings,
@@ -10,7 +12,7 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     initComponent: function () {
         this.store = new Ext.data.JsonStore({
-            fields: Phlexible.siteroots.NavigationRecord
+            fields: Phlexible.siteroots.model.Navigation
         });
 
         // Create RowActions Plugin
@@ -146,7 +148,7 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     onAddNavigation: function () {
         // create new empty record
-        var newRecord = new Phlexible.siteroots.NavigationRecord({
+        var newRecord = new Phlexible.siteroots.model.Navigation({
             id: '',
             siteroot_id: this.siterootId,
             title: '',

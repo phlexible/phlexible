@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.NewElementWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.elements.Strings.new_element,
     width: 550,

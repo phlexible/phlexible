@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatemplates.audio');
+
 Phlexible.mediatemplates.audio.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.audio_template,
     strings: Phlexible.mediatemplates.Strings,

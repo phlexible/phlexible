@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.gui');
+
 Phlexible.gui.Help = Ext.extend(Ext.ux.ManagedIframePanel, {
     title: Phlexible.gui.Strings.help,
     iconCls: 'p-gui-help-icon',

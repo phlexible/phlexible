@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.MediamanagerWindow = Ext.extend(Ext.Window, {
     title: 'Mediamanager',
     iconCls: 'p-mediamanager-component-icon',

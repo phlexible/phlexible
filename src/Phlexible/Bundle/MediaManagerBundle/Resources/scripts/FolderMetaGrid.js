@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.FolderMetaGrid = Ext.extend(Phlexible.mediamanager.FileMetaGrid, {
     title: Phlexible.metasets.Strings.folder_meta,
 

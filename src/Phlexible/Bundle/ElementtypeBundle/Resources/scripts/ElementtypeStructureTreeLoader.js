@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.ElementtypeStructureTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
     createNode: function (attr) {
         // apply baseAttrs, nice idea Corey!

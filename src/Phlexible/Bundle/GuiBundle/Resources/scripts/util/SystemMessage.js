@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui.util');
+
 /**
  * @class Phlexible.gui.util.SystemMessage
  * @extends Ext.util.Observable

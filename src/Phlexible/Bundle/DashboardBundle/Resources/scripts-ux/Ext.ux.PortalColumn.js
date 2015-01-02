@@ -1,3 +1,5 @@
+Ext.ns('Ext.ux');
+
 Ext.ux.PortalColumn = Ext.extend(Ext.Container, {
     layout: 'anchor',
     autoEl: 'div',

@@ -5,6 +5,8 @@
  * http://www.brainbits.net/
  */
 
+Ext.ns('Ext.ux');
+
 /**
  * LocationBar class
  * Version:  0.1

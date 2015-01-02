@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.Clipboard = function () {
     this.text = null;
     this.item = null;

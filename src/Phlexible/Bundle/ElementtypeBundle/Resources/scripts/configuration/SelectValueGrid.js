@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.elementtypes.configuration');
+
 Phlexible.elementtypes.configuration.SelectValueGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.elementtypes.Strings.options,
     strings: Phlexible.elementtypes.Strings,

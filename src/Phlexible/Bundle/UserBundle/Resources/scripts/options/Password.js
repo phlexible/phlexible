@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.users.options');
+
 Phlexible.users.options.Password = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,
     title: Phlexible.users.Strings.password,
@@ -79,3 +81,13 @@ Phlexible.users.options.Password = Ext.extend(Ext.form.FormPanel, {
 });
 
 Ext.reg('usersoptionspassword', Phlexible.users.options.Password);
+
+Phlexible.PluginRegistry.prepend('userOptionCards', {
+    xtype: 'usersoptionspassword',
+    title: Phlexible.users.Strings.password,
+    description: Phlexible.users.Strings.password_description,
+    iconCls: 'p-user-user_password-icon',
+    available: function() {
+        return !Phlexible.Config.get('user.property.noPasswordChange', false);
+    }
+});

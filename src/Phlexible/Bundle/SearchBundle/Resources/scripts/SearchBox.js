@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.search');
+
 Phlexible.search.SearchBox = Ext.extend(Ext.form.ComboBox, {
     displayField: 'title',
     cls: 'p-searchbox',
@@ -51,7 +53,7 @@ Phlexible.search.SearchBox = Ext.extend(Ext.form.ComboBox, {
             root: 'results',
             totalProperty: 'totalCount',
 //                id: 'id'
-            fields: Phlexible.search.SearchRecord
+            fields: Phlexible.search.model.Result
         });
 
         // Custom rendering Template

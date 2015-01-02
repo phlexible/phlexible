@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.teasers');
+
 Phlexible.teasers.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
     title: Phlexible.teasers.Strings.add_teaser_reference,
     strings: Phlexible.teasers.Strings,

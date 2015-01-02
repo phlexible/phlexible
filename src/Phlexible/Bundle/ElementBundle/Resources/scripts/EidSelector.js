@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.EidNodeUi = Ext.extend(Ext.tree.TreeNodeUI, {
     // private
     onClick: function (e) {

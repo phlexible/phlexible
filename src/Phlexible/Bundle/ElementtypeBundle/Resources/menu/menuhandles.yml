@@ -1,5 +1,5 @@
 elementtypes:
     parent: config
-    xtype: Phlexible.elementtypes.menuhandle.ElementtypesHandle
+    handle: elementtypes
     roles: [ROLE_ELEMENTTYPES]
 

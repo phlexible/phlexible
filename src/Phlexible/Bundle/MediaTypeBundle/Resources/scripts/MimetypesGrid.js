@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatype');
+
 Phlexible.mediatype.MimetypesGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.mediatype.Strings.mimetypes,
     strings: Phlexible.mediatype.Strings,

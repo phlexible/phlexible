@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.users');
+
 Phlexible.users.OptionsWindowThemeTemplate = new Ext.XTemplate(
     '<tpl for=".">',
     '<div class="thumb-wrap" id="{id}">',

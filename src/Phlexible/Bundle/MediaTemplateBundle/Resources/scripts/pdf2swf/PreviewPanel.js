@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatemplates.pdf2swf');
+
 Phlexible.mediatemplates.pdf2swf.PreviewPanel = Ext.extend(Phlexible.mediatemplates.BasePreviewPanel, {
     getCreateUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_pdf');

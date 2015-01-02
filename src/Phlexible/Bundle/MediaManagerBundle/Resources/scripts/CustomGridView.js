@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.CustomGridView = function (config) {
     Ext.apply(this, config);
 

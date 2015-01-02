@@ -1,4 +1,4 @@
 elements:
     parent: main
-    xtype: Phlexible.elements.menuhandle.ElementsHandle
+    handle: elements
     roles: [ROLE_ELEMENTS]

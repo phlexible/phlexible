@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements.accordion');
+
 Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.instances,

@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.special_tids,
     strings: Phlexible.siteroots.Strings,
@@ -45,7 +47,7 @@ Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         });
 
         this.store = new Ext.data.JsonStore({
-            fields: Phlexible.siteroots.SpecialTidRecord,
+            fields: Phlexible.siteroots.model.SpecialTid,
             sortInfo: {
                 field: 'key',
                 dir: 'asc'
@@ -117,7 +119,7 @@ Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     onAddSpecialTid: function () {
 
         // create new empty record
-        var newRecord = new Phlexible.siteroots.SpecialTidRecord({
+        var newRecord = new Phlexible.siteroots.model.SpecialTid({
             id: '',
             siteroot_id: this.siterootId,
             key: '',

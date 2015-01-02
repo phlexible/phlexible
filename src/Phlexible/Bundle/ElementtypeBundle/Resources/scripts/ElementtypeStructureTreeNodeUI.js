@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.ElementtypeStructureTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
     // private
     renderElements: function (n, a, targetNode, bulkRender) {

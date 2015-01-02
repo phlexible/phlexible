@@ -1,1 +1,0 @@
-Ext.ns('Phlexible.teasers');

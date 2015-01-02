@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui');
+
 Phlexible.gui.BundlesMainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.gui.Strings.bundles,
     strings: Phlexible.gui.Strings,

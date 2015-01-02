@@ -1,12 +1,12 @@
 users:
     parent: admin
-    xtype: Phlexible.users.menuhandle.UsersHandle
+    handle: users
     roles: [ROLE_USERS]
 
 options:
     parent: account
-    xtype: Phlexible.users.menuhandle.OptionsHandle
+    handle: options
 
 logout:
     parent: account
-    xtype: Phlexible.users.menuhandle.LogoutHandle
+    handle: logout

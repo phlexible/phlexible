@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.users.options');
+
 Phlexible.users.options.Preferences = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,
     title: Phlexible.users.Strings.preferences,
@@ -86,3 +88,10 @@ Phlexible.users.options.Preferences = Ext.extend(Ext.form.FormPanel, {
 });
 
 Ext.reg('usersoptionspreferences', Phlexible.users.options.Preferences);
+
+Phlexible.PluginRegistry.prepend('userOptionCards', {
+    xtype: 'usersoptionspreferences',
+    title: Phlexible.users.Strings.preferences,
+    description: Phlexible.users.Strings.preferences_description,
+    iconCls: 'p-user-preferences-icon'
+});

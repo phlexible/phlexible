@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.messages.filter');
+
 Phlexible.messages.filter.PreviewPanel = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.messages.Strings.preview,
     strings: Phlexible.messages.Strings,

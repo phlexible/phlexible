@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.LocksWindow = Ext.extend(Ext.Window, {
     title: Phlexible.elements.Strings.lock.locks,
     strings: Phlexible.elements.Strings.lock,

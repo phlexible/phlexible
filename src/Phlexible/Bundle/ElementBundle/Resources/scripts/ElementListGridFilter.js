@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementsListGridFilter = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elements.Strings,
     bodyStyle: 'background-color: #DFE8F6; padding: 5px;',

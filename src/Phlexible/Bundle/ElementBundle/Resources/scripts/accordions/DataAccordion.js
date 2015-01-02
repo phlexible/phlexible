@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements.accordion');
+
 Phlexible.elements.accordion.DataTemplate = new Ext.XTemplate(
     '<tpl for=".">',
     '<div class="data-wrap">',

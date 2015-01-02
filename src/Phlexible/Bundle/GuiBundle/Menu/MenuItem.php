@@ -18,7 +18,7 @@ class MenuItem
     /**
      * @var string
      */
-    private $xtype;
+    private $handle;
 
     /**
      * @var string
@@ -41,13 +41,13 @@ class MenuItem
     private $items = array();
 
     /**
-     * @param string $xtype
+     * @param string $handle
      * @param null   $parent
      * @param array  $roles
      */
-    public function __construct($xtype, $parent = null, array $roles = array())
+    public function __construct($handle, $parent = null, array $roles = array())
     {
-        $this->xtype = $xtype;
+        $this->handle = $handle;
         $this->parent = $parent;
         $this->roles = $roles;
     }
@@ -55,9 +55,9 @@ class MenuItem
     /**
      * @return string
      */
-    public function getXtype()
+    public function getHandle()
     {
-        return $this->xtype;
+        return $this->handle;
     }
 
     /**

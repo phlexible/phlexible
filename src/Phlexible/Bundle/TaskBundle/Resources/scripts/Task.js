@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.tasks');
+
 Phlexible.tasks.Task = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.tasks.Strings,
     cls: 'p-tasks-task-grid',
@@ -289,5 +291,3 @@ Phlexible.tasks.Task = Ext.extend(Ext.grid.GridPanel, {
         });
     }
 });
-
-Ext.reg('tasks-tasksgrid', Phlexible.tasks.TasksGrid);

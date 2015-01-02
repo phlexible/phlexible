@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.DeleteInstancesWindow = Ext.extend(Ext.Window, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.delete_instances_header,

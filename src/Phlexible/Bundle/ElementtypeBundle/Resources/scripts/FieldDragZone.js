@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.FieldDragZone = Ext.extend(Ext.tree.TreeDragZone, {
     xgetDragData: function (e) {
         var target = Ext.get(e.getTarget());

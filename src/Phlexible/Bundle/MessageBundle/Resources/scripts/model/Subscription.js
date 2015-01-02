@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.messages.model');
+
 Phlexible.messages.model.Subscription = Ext.data.Record.create([
     {name: 'id'},
     {name: 'filter'},

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.fields');
+
 Phlexible.fields.FieldHelper = {
     /**
      *

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.FolderPropertiesTemplate = new Ext.XTemplate(
     '<div style="padding: 10px;">',
     '<table border="0" cellpadding="0" cellspacing="7">',

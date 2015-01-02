@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.metasets');
+
 Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
     title: Phlexible.metasets.Strings.metasets,
     strings: Phlexible.metasets.Strings,

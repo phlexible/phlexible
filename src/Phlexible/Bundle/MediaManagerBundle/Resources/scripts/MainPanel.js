@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
     layout: 'border',
     closable: true,

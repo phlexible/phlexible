@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui.util');
+
 Phlexible.gui.util.ImageSelectWindowTemplate = new Ext.XTemplate(
     '<tpl for=".">',
     '<div class="thumb-wrap" id="image_select_{title}">',

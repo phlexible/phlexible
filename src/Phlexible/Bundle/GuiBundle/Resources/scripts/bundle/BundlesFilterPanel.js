@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui');
+
 Phlexible.gui.BundlesFilterPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.gui.Strings.filter,
     strings: Phlexible.gui.Strings,

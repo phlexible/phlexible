@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatype');
+
 Phlexible.mediatype.MediaTypesGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.mediatype.Strings.media_types,
     strings: Phlexible.mediatype.Strings,

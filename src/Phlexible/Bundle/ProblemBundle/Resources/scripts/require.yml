@@ -1,0 +1,5 @@
+require:
+    - menuhandle/handles
+    - model/Problem
+    - portlet/Problems
+    - ProblemsGrid

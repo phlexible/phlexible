@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.siteroots');
+
 Phlexible.siteroots.SingleCheckColumn = function (config) {
     Ext.apply(this, config);
     if (!this.id) {

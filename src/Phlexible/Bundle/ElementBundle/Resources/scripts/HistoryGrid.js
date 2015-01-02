@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.elements.Strings.history,
     strings: Phlexible.elements.Strings,
@@ -13,7 +15,7 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
             root: 'history',
             totalProperty: 'total',
             id: 'id',
-            fields: Phlexible.elements.ElementHistoryRecord,
+            fields: Phlexible.elements.model.ElementHistory,
             remoteSort: true,
             sortInfo: {field: 'create_time', direction: 'DESC'}
         });

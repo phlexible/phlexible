@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
     title: Phlexible.elements.Strings.link_window.link,
     strings: Phlexible.elements.Strings.link_window,

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.ToolbarHidePlugin = Ext.extend(Object, {
     init: function (panel) {
         this.panel = panel;

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.JavaUploadWindow = Ext.extend(Ext.Window, {
     strings: Phlexible.mediamanager.Strings,
     iconCls: 'p-mediamanager-file_upload-icon',

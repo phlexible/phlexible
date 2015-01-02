@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.gui.util');
+
 /*
  * Phlexible
  * Copyright(c) 2006-2010, brainbits GmbH

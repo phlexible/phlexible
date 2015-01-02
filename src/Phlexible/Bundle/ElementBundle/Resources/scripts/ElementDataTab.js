@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementDataTab = Ext.extend(Ext.Panel, {
     cls: 'p-elements-data-tab',
     header: false,

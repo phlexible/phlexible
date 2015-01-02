@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.users');
+
 Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
     title: Phlexible.users.Strings.user,
     strings: Phlexible.users.Strings,

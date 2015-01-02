@@ -1,6 +1,8 @@
 /*jsl:ignoreall*/
 //version 3.0
 
+Ext.namespace("Ext.ux");
+
 Ext.ux.Multiselect = Ext.extend(Ext.form.Field, {
     store: null,
     dataFields: [],

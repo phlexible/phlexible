@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
 //    title: Phlexible.elements.Strings.properties,
 //    header: true,

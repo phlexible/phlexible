@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 /**
  * Create a DragZone instance for our JsonView
  */

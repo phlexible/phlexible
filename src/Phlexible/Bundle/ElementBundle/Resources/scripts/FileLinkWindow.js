@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.FileLinkWindow = Ext.extend(Ext.Window, {
     title: 'File Links',
     width: 700,

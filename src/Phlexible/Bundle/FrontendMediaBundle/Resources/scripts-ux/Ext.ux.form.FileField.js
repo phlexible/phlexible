@@ -1,3 +1,5 @@
+Ext.ns('Ext.ux.form');
+
 /**
  * @class Ext.ux.form.FileField
  * @extends Ext.form.Field

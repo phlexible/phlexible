@@ -1,4 +1,4 @@
 mediatypes:
     parent: config
-    xtype: Phlexible.mediatype.menuhandle.MediaTypesHandle
+    handle: mediatypes
     roles: [ROLE_MEDIA_TYPES]

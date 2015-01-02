@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.contentchannels');
+
 Phlexible.contentchannels.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.contentchannels.Strings.contentchannels,
     strings: Phlexible.contentchannels.Strings,

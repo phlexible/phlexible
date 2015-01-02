@@ -14,8 +14,11 @@ use Assetic\FilterManager;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\FilenameFilter;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
+use Puli\Repository\FilesystemRepository;
+use Puli\Repository\Resource\FileResource;
 use Puli\Repository\ResourceRepositoryInterface;
 use Symfony\Bundle\AsseticBundle\Factory\AssetFactory;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Scripts builder
@@ -73,11 +76,11 @@ class ScriptsBuilder
     /**
      * Get all javascripts for the given section
      *
-     * @param ResourceRepositoryInterface $repo
+     * @param FilesystemRepository $repo
      *
      * @return string
      */
-    public function get(ResourceRepositoryInterface $repo)
+    public function get(FilesystemRepository $repo)
     {
         $fm = new FilterManager();
         $fm->set('compressor', $this->javascriptCompressor);
@@ -93,17 +96,66 @@ class ScriptsBuilder
             //$filters[] = new Assetic\Filter\JsMinFilter();
         }
 
+        $requires = [];
         $input = [];
+        $parser = new Yaml();
 
-        foreach ($repo->find('/phlexible/scripts-ux/*/*.js') as $resource) {
-            $input[] = $resource->getLocalPath();
+        foreach ($repo->find('/phlexible/scripts-ux/*/require.yml') as $resource) {
+            /* @var $resource FileResource */
+
+            $body = $resource->getBody();
+            $config = $parser->parse($body);
+            $priority = isset($config['priority']) ? (int) $config['priority'] : 0;
+            $priority += 1000;
+
+            if (!isset($config['require'])) {
+                die('gna');
+            }
+
+            $requires[$priority][] = array(
+                'path'     => dirname($resource->getPath()),
+                'priority' => $priority,
+                'requires' => $config['require'],
+            );
         }
 
-        foreach ($repo->find('/phlexible/scripts/*/*.js') as $resource) {
-            $input[] = $resource->getLocalPath();
+        foreach ($repo->find('/phlexible/scripts/*/require.yml') as $resource) {
+            /* @var $resource FileResource */
+
+            $body = $resource->getBody();
+            $config = $parser->parse($body);
+            $priority = isset($config['priority']) ? (int) $config['priority'] : 0;
+
+            if (!isset($config['require'])) {
+                die('gna');
+            }
+
+            $requires[$priority][] = array(
+                'path'     => dirname($resource->getPath()),
+                'priority' => $priority,
+                'requires' => $config['require'],
+            );
         }
 
-        echo '<pre>';print_r($input);die;
+        krsort($requires);
+        $sortedRequires = [];
+        foreach ($requires as $priority => $priorityRequires) {
+            $sortedRequires = array_merge($sortedRequires, $priorityRequires);
+        }
+
+        foreach ($sortedRequires as $require) {
+            /* @var $require FileResource */
+
+            $path = $require['path'];
+
+            if (!isset($require['requires']) || !is_array($require['requires'])) {
+                print_r($require);die;
+            }
+            foreach ($require['requires'] as $file) {
+                $input[] = $repo->get("$path/$file.js")->getFilesystemPath();
+            }
+        }
+
         /*
         foreach ($this->assetProviders->getAssetProviders() as $assetProvider) {
             $collection = $assetProvider->getUxScriptsCollection();

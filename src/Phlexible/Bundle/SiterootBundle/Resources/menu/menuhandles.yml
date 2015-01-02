@@ -1,4 +1,4 @@
 siteroots:
     parent: config
-    xtype: Phlexible.siteroots.menuhandle.SiterootsHandle
+    handle: siteroots
     roles: [ROLE_SITEROOTS]

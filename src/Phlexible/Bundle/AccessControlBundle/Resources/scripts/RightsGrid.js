@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.accesscontrol');
+
 Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.accesscontrol.Strings.access,
     strings: Phlexible.accesscontrol.Strings,

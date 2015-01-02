@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.users');
+
 Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.users.Strings.users,
     strings: Phlexible.users.Strings,

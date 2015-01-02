@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.tasks');
+
 Phlexible.tasks.CommentWindow = Ext.extend(Ext.Window, {
     title: Phlexible.tasks.Strings.comment,
     strings: Phlexible.tasks.Strings,

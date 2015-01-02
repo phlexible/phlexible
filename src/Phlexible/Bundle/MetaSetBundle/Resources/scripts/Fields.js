@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.metasets');
+
 Phlexible.metasets.Fields = function (config) {
     this.initFields();
     this.initEditors();

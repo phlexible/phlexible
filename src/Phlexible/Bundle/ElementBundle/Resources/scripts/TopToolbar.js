@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 /**
  *
  */

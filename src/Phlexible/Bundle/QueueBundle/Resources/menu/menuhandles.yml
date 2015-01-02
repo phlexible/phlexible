@@ -1,4 +1,4 @@
 queuestats:
     parent: debug
-    xtype: Phlexible.queue.menuhandle.QueueStatsHandle
+    handle: queue
     roles: [ROLE_DEBUG]

@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements');
+
 Phlexible.elements.UrlPanel = Ext.extend(Ext.Panel, {
     title: '_urls',
     iconCls: 'p-element-url-icon',

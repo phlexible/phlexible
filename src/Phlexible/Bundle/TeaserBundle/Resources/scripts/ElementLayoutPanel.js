@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.teasers');
+
 Phlexible.teasers.ElementLayoutPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.teasers.Strings.layout,
     strings: Phlexible.teasers.Strings,

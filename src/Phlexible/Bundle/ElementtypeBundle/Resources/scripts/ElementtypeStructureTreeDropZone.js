@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elementtypes');
+
 Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
     debug: true,
 

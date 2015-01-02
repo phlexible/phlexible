@@ -1,3 +1,5 @@
+Ext.ns('Ext.ux');
+
 Ext.ux.Portal = Ext.extend(Ext.Panel, {
     layout: 'column',
     autoScroll: true,

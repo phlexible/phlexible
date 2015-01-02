@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.mediamanager');
+
 Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.meta,

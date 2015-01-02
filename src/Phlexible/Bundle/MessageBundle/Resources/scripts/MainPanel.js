@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.messages');
+
 Phlexible.messages.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.messages.Strings.messages,
     iconCls: 'p-message-component-icon',

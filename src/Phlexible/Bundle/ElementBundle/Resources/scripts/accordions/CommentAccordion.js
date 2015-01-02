@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.elements.accordion');
+
 Phlexible.elements.accordion.Comment = Ext.extend(Ext.FormPanel, {
     title: Phlexible.elements.Strings.comment,
     cls: 'p-elements-comment-accordion',

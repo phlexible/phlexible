@@ -1,3 +1,5 @@
+Ext.namespace('Phlexible.mediatemplates');
+
 Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.mediatemplates.Strings.mediatemplates,
     strings: Phlexible.mediatemplates.Strings,

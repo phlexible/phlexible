@@ -1,3 +1,5 @@
+Ext.ns('Phlexible.messages.filter');
+
 Phlexible.messages.filter.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.messages.Strings.filters,
     strings: Phlexible.messages.Strings,

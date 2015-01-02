@@ -9,7 +9,10 @@
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Puli\PuliFactory;
 use Puli\Repository\Filesystem\PhpCacheRepository;
+use Puli\RepositoryManager\Config\Config;
+use Puli\RepositoryManager\ManagerFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -18,6 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route as RoutingRoute;
+use Webmozart\PathUtil\Path;
 
 /**
  * Frame controller
@@ -67,6 +71,23 @@ class FrameController extends Controller
     }
 
     /**
+     * @return PuliFactory
+     */
+    private function createPuliFactory()
+    {
+        $rootDir = $this->container->getParameter('kernel.root_dir') . '/..';
+
+        $environment = ManagerFactory::createProjectEnvironment($rootDir);
+        $config = $environment->getConfig();
+        $factoryPath = Path::makeAbsolute($config->get(Config::FACTORY_FILE), $rootDir);
+        $factoryClass = $config->get(Config::FACTORY_CLASS);
+
+        require_once $factoryPath;
+
+        return new $factoryClass();
+    }
+
+    /**
      * Return menu
      *
      * @return JsonResponse
@@ -78,7 +99,7 @@ class FrameController extends Controller
      */
     public function menuAction()
     {
-        $repo = new PhpCacheRepository($this->container->getParameter('kernel.root_dir') . '/../.puli/dump');
+        $repo = $this->createPuliFactory()->createRepository();
 
         $loader = $this->get('phlexible_gui.menu.loader');
         $items = $loader->load($repo);
