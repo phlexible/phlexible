@@ -59,10 +59,13 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
                 store: new Ext.data.SimpleStore({
                     fields: ['id', 'title'],
                     data: [
-                        ['0', 'List'],
-                        ['1', 'Data'],
-                        ['4', 'Links'],
-                        ['5', 'History']
+                        ['list', 'List'],
+                        ['data', 'Data'],
+                        ['preview', 'Preview'],
+                        ['rights', 'Rights'],
+                        ['links', 'Links'],
+                        ['history', 'History'],
+                        ['urls', 'Urls']
                     ]
                 }),
                 displayField: 'title',

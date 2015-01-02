@@ -116,10 +116,13 @@ class ElementVersionMappedField
      */
     public function setMapping(array $fields = [])
     {
-        $allowedFields = ['backend', 'page', 'navigation', 'customDate', 'forward', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5'];
+        $allowedFields = ['backend', 'page', 'navigation', 'date', 'forward', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5'];
         foreach ($fields as $field => $value) {
             if (!$value || !in_array($field, $allowedFields)) {
                 continue;
+            }
+            if ($field === 'date' && is_string($value)) {
+                $value = new \DateTime($value);
             }
             $this->$field = $value;
         }
@@ -261,7 +264,7 @@ class ElementVersionMappedField
      *
      * @return $this
      */
-    public function setDate($date)
+    public function setDate(\DateTime $date)
     {
         $this->date = $date;
 

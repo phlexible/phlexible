@@ -282,6 +282,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             $attributes['_controller'] = 'PhlexibleFrontendBundle:Online:index';
         }
 
+        $request->setLocale($language);
         $request->attributes->set('_locale', $language);
 
         return $attributes;

@@ -1,4 +1,12 @@
 services:
-    phlexible_media_tool.imagine:
+    phlexible_media_tool.imagine.imagick:
         class: Imagine\Imagick\Imagine
+
+
+    phlexible_media_tool.imagine.gmagick:
+        class: Imagine\Gmagick\Imagine
+
+
+    phlexible_media_tool.imagine.gd:
+        class: Imagine\Gd\Imagine
 

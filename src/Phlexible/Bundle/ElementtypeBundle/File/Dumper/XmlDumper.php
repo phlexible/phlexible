@@ -34,13 +34,14 @@ class XmlDumper implements DumperInterface
             'elementtype',
             '',
             [
-                'id'         => $elementtype->getId(),
-                'uniqueId'   => $elementtype->getUniqueId(),
-                'revision'   => $elementtype->getRevision(),
-                'type'       => $elementtype->getType(),
-                'icon'       => $elementtype->getIcon(),
-                'defaultTab' => $elementtype->getDefaultTab(),
-                'deleted'    => $elementtype->getDeleted() ? '1' : '0',
+                'id'           => $elementtype->getId(),
+                'uniqueId'     => $elementtype->getUniqueId(),
+                'revision'     => $elementtype->getRevision(),
+                'type'         => $elementtype->getType(),
+                'icon'         => $elementtype->getIcon(),
+                'defaultTab'   => $elementtype->getDefaultTab(),
+                'hideChildren' => $elementtype->getHideChildren() ? '1' : '0',
+                'deleted'      => $elementtype->getDeleted() ? '1' : '0',
             ]
         );
 
@@ -64,12 +65,7 @@ class XmlDumper implements DumperInterface
                 $mappingElement = $mappingsElement->appendElement('mapping', '', ['key' => $key, 'pattern' => $mapping['pattern']]);
                 $fieldsElement = $mappingElement->appendElement('fields');
                 foreach ($mapping['fields'] as $field) {
-                    $attributes = [
-                        'dsId'  => $field['dsId'],
-                        'title' => $field['title'],
-                        'index' => $field['index'],
-                    ];
-                    $fieldsElement->appendElement('field', '', $attributes);
+                    $fieldsElement->appendElement('field', '', $field);
                 }
             }
         }

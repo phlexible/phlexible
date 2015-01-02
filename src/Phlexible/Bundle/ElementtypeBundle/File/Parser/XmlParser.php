@@ -42,8 +42,9 @@ class XmlParser implements ParserInterface
         $revision = (int) $dom->documentElement->getAttribute('revision');
         $type = $dom->documentElement->getAttribute('type');
         $icon = $dom->documentElement->getAttribute('icon');
-        $defaultTab = (int) $dom->documentElement->getAttribute('defaultTab');
+        $defaultTab = (string) $dom->documentElement->getAttribute('defaultTab');
         $deleted = (bool) $dom->documentElement->getAttribute('deleted');
+        $hideChildren = (bool) $dom->documentElement->getAttribute('hideChildren');
 
         $commentNodes = $dom->documentElement->getElementsByTagName('comment');
         $comment = $commentNodes->length ? $commentNodes->item(0)->textContent : '';
@@ -84,11 +85,17 @@ class XmlParser implements ParserInterface
                 if ($fieldNodes->length) {
                     foreach ($fieldNodes as $fieldNode) {
                         /* @var $fieldNode Element */
-                        $fields[] = [
-                            'dsId'  => $fieldNode->getAttribute('dsId'),
-                            'title' => $fieldNode->getAttribute('title'),
-                            'index' => (int) $fieldNode->getAttribute('index'),
+                        $field = [
+                            'dsId'  => (string) $fieldNode->getAttribute('dsId'),
+                            'title' => (string) $fieldNode->getAttribute('title'),
                         ];
+                        if ($fieldNode->hasAttribute('index')) {
+                            $field['index'] = (int) $fieldNode->getAttribute('index');
+                        }
+                        if ($fieldNode->hasAttribute('type')) {
+                            $field['type'] = (string) $fieldNode->getAttribute('type');
+                        }
+                        $fields[] = $field;
                     }
                 }
                 $mappings[$key] = [
@@ -124,6 +131,7 @@ class XmlParser implements ParserInterface
             ->setRevision($revision)
             ->setDefaultTab($defaultTab)
             ->setDefaultContentTab($defaultContentTab)
+            ->setHideChildren($hideChildren)
             ->setDeleted($deleted)
             ->setStructure($elementtypeStructure)
             ->setCreatedAt(new \DateTime($createdAt))

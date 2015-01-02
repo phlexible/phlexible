@@ -38,12 +38,12 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
     onAfterLoadElement: function (element) {
         // set active tab to default value
         this.items.each(function (item) {
+            console.log('xxx', element.data.default_tab, item.tabKey);
             if (element.data.default_tab === item.tabKey) {
                 this.setActiveTab(item);
                 return false;
             }
         }, this);
-        //this.setActiveTab(element.data.default_tab);
 
         // if current tab is disabled, select list tab (because it's always active)
         if (this.activeTab.disabled) {
@@ -63,6 +63,7 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
         this.items = [
             {
                 xtype: 'elements-elementlistgrid',
+                tabKey: 'list',
                 element: this.element,
                 listeners: {
                     listLoadTeaser: function (teaser_id) {
@@ -79,15 +80,18 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
             },
             {
                 xtype: 'elements-elementdatapanel',
+                tabKey: 'data',
                 element: this.element,
                 accordionCollapsed: this.accordionCollapsed
             },
             {
                 xtype: 'elements-elementpreviewpanel',
+                tabKey: 'preview',
                 element: this.element
             },
             {
                 xtype: 'elements-rightsgrid',
+                tabKey: 'rights',
                 iconCls: 'p-element-tab_rights-icon',
                 element: this.element,
                 title: Phlexible.elements.Strings.access,
@@ -106,14 +110,17 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
             },
             {
                 xtype: 'elements-elementlinksgrid',
+                tabKey: 'links',
                 element: this.element
             },
             {
                 xtype: 'elements-elementhistorygrid',
+                tabKey: 'history',
                 element: this.element
             },
             {
                 xtype: 'elements-urlpanel',
+                tabKey: 'urls',
                 element: this.element
             }
         ];

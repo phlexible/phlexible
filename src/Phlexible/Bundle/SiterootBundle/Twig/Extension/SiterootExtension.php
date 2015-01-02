@@ -6,13 +6,12 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\TwigRendererBundle\Twig\Extension;
+namespace Phlexible\Bundle\SiterootBundle\Twig\Extension;
 
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\SiterootBundle\Siteroot\TitleResolver;
 use Phlexible\Bundle\TreeBundle\Model\TreeContext;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Twig siteroot extension
