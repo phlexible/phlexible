@@ -16,12 +16,13 @@ use Assetic\Filter\FilterInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class BaseUrlFilter implements FilterInterface
+class BaseUrlFilter
 {
     /**
      * @var string
      */
     private $baseUrl;
+
     /**
      * @var string
      */
@@ -40,21 +41,12 @@ class BaseUrlFilter implements FilterInterface
     /**
      * {@inheritdoc}
      */
-    public function filterLoad(AssetInterface $asset)
+    public function filter($content)
     {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function filterDump(AssetInterface $asset)
-    {
-        $asset->setContent(
-            str_replace(
-                ['/makeweb/', '/BASEPATH/', '/BASEURL/', '/COMPONENTSPATH/'],
-                [$this->basePath, $this->basePath, $this->baseUrl, $this->basePath . 'bundles/'],
-                $asset->getContent()
-            )
+        return str_replace(
+            ['/makeweb/', '/BASEPATH/', '/BASEURL/', '/COMPONENTSPATH/'],
+            [$this->basePath, $this->basePath, $this->baseUrl, $this->basePath . 'bundles/'],
+            $content
         );
     }
 }
