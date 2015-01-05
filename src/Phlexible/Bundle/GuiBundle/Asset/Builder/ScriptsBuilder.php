@@ -16,7 +16,6 @@ use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
 use Puli\Repository\FilesystemRepository;
 use Puli\Repository\Resource\FileResource;
-use Puli\Repository\ResourceRepositoryInterface;
 use Symfony\Bundle\AsseticBundle\Factory\AssetFactory;
 use Symfony\Component\Yaml\Yaml;
 

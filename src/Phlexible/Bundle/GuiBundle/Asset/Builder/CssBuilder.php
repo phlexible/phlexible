@@ -9,8 +9,6 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Assetic\Asset\AssetCache;
-use Assetic\Asset\AssetCollection;
-use Assetic\Asset\FileAsset;
 use Assetic\Cache\FilesystemCache;
 use Assetic\FilterManager;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
@@ -19,7 +17,6 @@ use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\CssCompressorInterface;
 use Puli\Repository\FilesystemRepository;
 use Puli\Repository\Resource\FileResource;
-use Puli\Repository\ResourceRepositoryInterface;
 use Symfony\Bundle\AsseticBundle\Factory\AssetFactory;
 
 /**

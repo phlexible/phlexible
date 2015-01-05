@@ -30,6 +30,13 @@ services:
         tags:
             - {name: phlexible_gui.asset_provider, priority: 600}
 
+    # event listeners
+    phlexible_media_type.listener.view_frame:
+        class: Phlexible\Bundle\MediaTypeBundle\EventListener\ViewFrameListener
+        arguments: [@router]
+        tags:
+            - {name: kernel.event_listener, event: phlexible_gui.view_frame, method: onViewFrame}
+
     # role provider
     phlexible_media_type.role_provider:
         class: Phlexible\Bundle\MediaTypeBundle\RoleProvider\MediaTypeRoleProvider
