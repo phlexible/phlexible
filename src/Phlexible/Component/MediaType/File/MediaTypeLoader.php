@@ -8,10 +8,10 @@
 
 namespace Phlexible\Component\MediaType\File;
 
-use Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator;
 use Phlexible\Component\MediaType\Compiler\CompilerInterface;
 use Phlexible\Component\MediaType\File\Loader\LoaderInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
+use Puli\PuliFactory;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
@@ -23,9 +23,9 @@ use Symfony\Component\Config\Resource\FileResource;
 class MediaTypeLoader
 {
     /**
-     * @var PatternResourceLocator
+     * @var PuliFactory
      */
-    private $locator;
+    private $puliFactory;
 
     /**
      * @var CompilerInterface
@@ -43,15 +43,15 @@ class MediaTypeLoader
     private $loaders = [];
 
     /**
-     * @param PatternResourceLocator $locator
-     * @param CompilerInterface      $compiler
-     * @param string                 $fileDir
-     * @param string                 $cacheDir
-     * @param bool                   $debug
+     * @param PuliFactory       $puliFactory
+     * @param CompilerInterface $compiler
+     * @param string            $fileDir
+     * @param string            $cacheDir
+     * @param bool              $debug
      */
-    public function __construct(PatternResourceLocator $locator, CompilerInterface $compiler, $fileDir, $cacheDir, $debug)
+    public function __construct(PuliFactory $puliFactory, CompilerInterface $compiler, $fileDir, $cacheDir, $debug)
     {
-        $this->locator = $locator;
+        $this->puliFactory = $puliFactory;
         $this->compiler = $compiler;
         $this->fileDir = $fileDir;
         $this->cacheDir = $cacheDir;
@@ -87,15 +87,17 @@ class MediaTypeLoader
         $configCache = new ConfigCache($this->getFilename(), $this->debug);
 
         if (!$configCache->isFresh()) {
+            $repo = $this->puliFactory->createRepository();
+
             $resources = [];
             $r = new \ReflectionClass($this);
             $resources[] = new FileResource($r->getFileName());
             $r = new \ReflectionClass($this->compiler);
             $resources[] = new FileResource($r->getFileName());
             foreach ($this->loaders as $extension => $loader) {
-                $files = $this->locator->locate("*.$extension", 'documenttypes', false);
-
-                foreach ($files as $file) {
+                foreach ($repo->find("/phlexible/mediatypes/*/*.$extension") as $resource) {
+                    /* @var $resource \Puli\Repository\Resource\FileResource */
+                    $file = $resource->getFilesystemPath();
                     $mediaTypes->add($loader->load($file));
                     $resources[basename($file)] = new FileResource($file);
                 }

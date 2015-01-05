@@ -1,5 +1,7 @@
 {
     "resources": {
+        "/phlexible/mediatypes/mediatype": "src/Phlexible/Bundle/MediaTypeBundle/Resources/mediatypes",
+
         "/phlexible/menu/cms": "src/Phlexible/Bundle/CmsBundle/Resources/menu",
         "/phlexible/menu/contentchannel": "src/Phlexible/Bundle/ContentchannelBundle/Resources/menu",
         "/phlexible/menu/element": "src/Phlexible/Bundle/ElementBundle/Resources/menu",
