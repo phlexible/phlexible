@@ -444,12 +444,10 @@ class Siteroot
      */
     public function getSpecialTid($language, $key)
     {
-        if (!empty($this->specialTids[$language][$key])) {
-            return $this->specialTids[$language][$key];
-        }
+        $languageSpecialTids = $this->getSpecialTidsForLanguage($language);
 
-        if (!empty($this->specialTids[null][$key])) {
-            return $this->specialTids[null][$key];
+        if (!empty($languageSpecialTids[$key])) {
+            return $languageSpecialTids[$key];
         }
 
         return null;
