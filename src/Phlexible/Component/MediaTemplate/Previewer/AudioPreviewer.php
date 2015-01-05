@@ -12,7 +12,6 @@ use Monolog\Handler\TestHandler;
 use Phlexible\Component\MediaTemplate\Applier\AudioTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Audio preview

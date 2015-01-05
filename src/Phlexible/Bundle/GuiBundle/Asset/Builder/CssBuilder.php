@@ -15,6 +15,7 @@ use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\FilenameFilter;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\CssCompressorInterface;
+use Puli\PuliFactory;
 use Puli\Repository\FilesystemRepository;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Bundle\AsseticBundle\Factory\AssetFactory;
@@ -32,9 +33,9 @@ class CssBuilder
     private $assetFactory;
 
     /**
-     * @var AssetProviderCollection
+     * @var PuliFactory
      */
-    private $assetProviders;
+    private $puliFactory;
 
     /**
      * @var CssCompressorInterface
@@ -52,21 +53,21 @@ class CssBuilder
     private $debug;
 
     /**
-     * @param AssetFactory            $assetFactory
-     * @param AssetProviderCollection $assetProviders
-     * @param CssCompressorInterface  $cssCompressor
-     * @param string                  $cacheDir
-     * @param bool                    $debug
+     * @param AssetFactory           $assetFactory
+     * @param PuliFactory            $puliFactory
+     * @param CssCompressorInterface $cssCompressor
+     * @param string                 $cacheDir
+     * @param bool                   $debug
      */
     public function __construct(
         AssetFactory $assetFactory,
-        AssetProviderCollection $assetProviders,
+        PuliFactory $puliFactory,
         CssCompressorInterface $cssCompressor,
         $cacheDir,
         $debug)
     {
         $this->assetFactory = $assetFactory;
-        $this->assetProviders = $assetProviders;
+        $this->puliFactory = $puliFactory;
         $this->cssCompressor = $cssCompressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -75,13 +76,12 @@ class CssBuilder
     /**
      * Build stream
      *
-     * @param string               $baseUrl
-     * @param string               $basePath
-     * @param FilesystemRepository $repo
+     * @param string $baseUrl
+     * @param string $basePath
      *
      * @return string
      */
-    public function get($baseUrl, $basePath, FilesystemRepository $repo)
+    public function get($baseUrl, $basePath)
     {
         $fm = new FilterManager();
         $fm->set('baseurl', new BaseUrlFilter($baseUrl, $basePath));
@@ -100,6 +100,8 @@ class CssBuilder
         }
 
         $input = [];
+
+        $repo = $this->puliFactory->createRepository();
 
         foreach ($repo->find('/phlexible/styles/*/*.css') as $resource) {
             /* @var $resource FileResource */

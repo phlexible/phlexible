@@ -12,7 +12,6 @@ use Monolog\Handler\TestHandler;
 use Phlexible\Component\MediaTemplate\Applier\PdfTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\PdfTemplate;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * PDF previewer

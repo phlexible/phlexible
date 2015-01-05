@@ -8,15 +8,10 @@
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
-use Puli\PuliFactory;
-use Puli\Repository\Filesystem\PhpCacheRepository;
-use Puli\RepositoryManager\Config\Config;
-use Puli\RepositoryManager\ManagerFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Webmozart\PathUtil\Path;
 
 /**
  * Asset controller
@@ -27,23 +22,6 @@ use Webmozart\PathUtil\Path;
 class AssetController extends Controller
 {
     /**
-     * @return PuliFactory
-     */
-    private function createPuliFactory()
-    {
-        $rootDir = $this->container->getParameter('kernel.root_dir') . '/..';
-
-        $environment = ManagerFactory::createProjectEnvironment($rootDir);
-        $config = $environment->getConfig();
-        $factoryPath = Path::makeAbsolute($config->get(Config::FACTORY_FILE), $rootDir);
-        $factoryClass = $config->get(Config::FACTORY_CLASS);
-
-        require_once $factoryPath;
-
-        return new $factoryClass();
-    }
-
-    /**
      * Output scripts
      *
      * @return Response
@@ -51,10 +29,8 @@ class AssetController extends Controller
      */
     public function scriptsAction()
     {
-        $repo = $this->createPuliFactory()->createRepository();
-
         $scriptsBuilder = $this->get('phlexible_gui.asset.builder.scripts');
-        $content = $scriptsBuilder->get($repo);
+        $content = $scriptsBuilder->get();
 
         return new Response($content, 200, ['Content-type' => 'text/javascript']);
     }
@@ -69,10 +45,8 @@ class AssetController extends Controller
      */
     public function cssAction(Request $request)
     {
-        $repo = $this->createPuliFactory()->createRepository();
-
         $cssBuilder = $this->get('phlexible_gui.asset.builder.css');
-        $content = $cssBuilder->get($request->getBaseUrl(), $request->getBasePath(), $repo);
+        $content = $cssBuilder->get($request->getBaseUrl(), $request->getBasePath());
 
         return new Response($content, 200, ['Content-type' => 'text/css']);
     }

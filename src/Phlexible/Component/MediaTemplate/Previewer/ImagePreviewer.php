@@ -12,7 +12,6 @@ use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Image previewer

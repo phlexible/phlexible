@@ -16,8 +16,8 @@ use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\MediaType\Model\IconResolver;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
+use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Delegate worker
@@ -47,7 +47,7 @@ class DelegateWorker
     private $iconResolver;
 
     /**
-     * @var FileLocator
+     * @var FileLocatorInterface
      */
     private $locator;
 
@@ -66,7 +66,7 @@ class DelegateWorker
      * @param MediaTypeManagerInterface $mediaTypeManager
      * @param ImageTemplateApplier      $applier
      * @param IconResolver              $iconResolver
-     * @param FileLocator               $locator
+     * @param FileLocatorInterface      $locator
      * @param string                    $delegateDir
      */
     public function __construct(
@@ -74,7 +74,7 @@ class DelegateWorker
         MediaTypeManagerInterface $mediaTypeManager,
         ImageTemplateApplier $applier,
         IconResolver $iconResolver,
-        FileLocator $locator,
+        FileLocatorInterface $locator,
         $delegateDir
     )
     {

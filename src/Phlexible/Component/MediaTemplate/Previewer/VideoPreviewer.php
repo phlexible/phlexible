@@ -12,7 +12,6 @@ use Monolog\Handler\TestHandler;
 use Phlexible\Component\MediaTemplate\Applier\VideoTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Video previewer

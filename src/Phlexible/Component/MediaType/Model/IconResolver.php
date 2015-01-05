@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaType\Model;
 
-use Symfony\Component\HttpKernel\Config\FileLocator;
+use Symfony\Component\Config\FileLocatorInterface;
 
 /**
  * Media type icon resolver
@@ -18,14 +18,14 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 class IconResolver
 {
     /**
-     * @var FileLocator
+     * @var FileLocatorInterface
      */
     private $locator;
 
     /**
-     * @param FileLocator $locator
+     * @param FileLocatorInterface $locator
      */
-    public function __construct(FileLocator $locator)
+    public function __construct(FileLocatorInterface $locator)
     {
         $this->locator = $locator;
     }

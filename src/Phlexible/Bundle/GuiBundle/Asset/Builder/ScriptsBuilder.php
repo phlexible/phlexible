@@ -14,6 +14,7 @@ use Assetic\FilterManager;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\FilenameFilter;
 use Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
+use Puli\PuliFactory;
 use Puli\Repository\FilesystemRepository;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Bundle\AsseticBundle\Factory\AssetFactory;
@@ -32,9 +33,9 @@ class ScriptsBuilder
     private $assetFactory;
 
     /**
-     * @var AssetProviderCollection
+     * @var PuliFactory
      */
-    private $assetProviders;
+    private $puliFactory;
 
     /**
      * @var JavascriptCompressorInterface
@@ -53,20 +54,20 @@ class ScriptsBuilder
 
     /**
      * @param AssetFactory                  $assetFactory
-     * @param AssetProviderCollection       $assetProviders
+     * @param PuliFactory                   $puliFactory
      * @param JavascriptCompressorInterface $javascriptCompressor
      * @param string                        $cacheDir
      * @param bool                          $debug
      */
     public function __construct(
         AssetFactory $assetFactory,
-        AssetProviderCollection $assetProviders,
+        PuliFactory $puliFactory,
         JavascriptCompressorInterface $javascriptCompressor,
         $cacheDir,
         $debug)
     {
         $this->assetFactory = $assetFactory;
-        $this->assetProviders = $assetProviders;
+        $this->puliFactory = $puliFactory;
         $this->javascriptCompressor = $javascriptCompressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -75,11 +76,9 @@ class ScriptsBuilder
     /**
      * Get all javascripts for the given section
      *
-     * @param FilesystemRepository $repo
-     *
      * @return string
      */
-    public function get(FilesystemRepository $repo)
+    public function get()
     {
         $fm = new FilterManager();
         $fm->set('compressor', $this->javascriptCompressor);
@@ -98,6 +97,8 @@ class ScriptsBuilder
         $requires = [];
         $input = [];
         $parser = new Yaml();
+
+        $repo = $this->puliFactory->createRepository();
 
         foreach ($repo->find('/phlexible/scripts-ux/*/require.yml') as $resource) {
             /* @var $resource FileResource */

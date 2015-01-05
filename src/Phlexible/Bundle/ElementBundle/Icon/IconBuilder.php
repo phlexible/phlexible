@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Icon;
 
-use Symfony\Component\HttpKernel\Config\FileLocator;
+use Symfony\Component\Config\FileLocatorInterface;
 
 /**
  * Icon builder
@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 class IconBuilder
 {
     /**
-     * @var FileLocator
+     * @var FileLocatorInterface
      */
     private $locator;
 
@@ -28,10 +28,10 @@ class IconBuilder
     private $cacheDir;
 
     /**
-     * @param FileLocator $locator
-     * @param string      $cacheDir
+     * @param FileLocatorInterface $locator
+     * @param string               $cacheDir
      */
-    public function __construct(FileLocator $locator, $cacheDir)
+    public function __construct(FileLocatorInterface $locator, $cacheDir)
     {
         $this->locator = $locator;
         $this->cacheDir = $cacheDir;
