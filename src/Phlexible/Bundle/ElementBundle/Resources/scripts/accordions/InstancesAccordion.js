@@ -15,7 +15,7 @@ Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
     },
 
     initComponent: function () {
-        this.store = new Ext.data.ObjectStore({
+        this.store = new Ext.data.JsonStore({
             fields: [
                 {name: 'id', type: 'int'},
                 {name: 'instance_master', type: 'int'},

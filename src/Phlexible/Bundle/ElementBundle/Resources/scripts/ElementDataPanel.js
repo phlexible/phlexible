@@ -187,7 +187,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
                 width: 140,
                 value: this.element.language,
                 emptyText: this.strings.diff.language,
-                store: new Ext.data.ObjectStore({
+                store: new Ext.data.JsonStore({
                     fields: ['langKey', 'text', 'iconCls'],
                     data: this.element.languages
                 }),

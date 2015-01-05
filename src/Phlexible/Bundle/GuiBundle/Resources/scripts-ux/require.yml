@@ -5,7 +5,6 @@ require:
     # - editor/htmleditorimage
     # - editor/imagebrowser
     # - editor/statictextfield
-    - Ext.data.ObjectStore
     - Ext.grid.CheckboxColumn
     - Ext.grid.CheckColumn
     - Ext.grid.RowExpander

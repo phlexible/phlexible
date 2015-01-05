@@ -191,7 +191,7 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
             //autoExpandColumn: 'value',
             hidden: true,
             collapsed: true,
-            store: new Ext.data.ObjectStore({
+            store: new Ext.data.JsonStore({
                 fields: ['usage_type', 'usage_id', 'status', 'link']
             }),
             columns: [
@@ -237,7 +237,7 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
             //autoExpandColumn: 'value',
             hidden: true,
             collapsed: true,
-            store: new Ext.data.ObjectStore({
+            store: new Ext.data.JsonStore({
                 fields: ['usage_type', 'usage_id', 'status', 'link']
             }),
             columns: [
