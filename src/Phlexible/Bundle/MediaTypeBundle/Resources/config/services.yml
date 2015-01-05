@@ -18,18 +18,6 @@ services:
         class: Phlexible\Component\MediaType\Compiler\CssCompiler
         public: false
 
-    # asset providers
-    phlexible_media_type.asset_provider:
-        class: Phlexible\Bundle\MediaTypeBundle\AssetProvider\MediaTypeAssetProvider
-        public: false
-        arguments:
-            - @phlexible_media_type.media_type_manager
-            - @phlexible_media_type.compiler.script
-            - @phlexible_media_type.compiler.css
-            - %phlexible_media_type.compiler.cache_dir%
-        tags:
-            - {name: phlexible_gui.asset_provider, priority: 600}
-
     # event listeners
     phlexible_media_type.listener.view_frame:
         class: Phlexible\Bundle\MediaTypeBundle\EventListener\ViewFrameListener

@@ -7,13 +7,6 @@ services:
     phlexible_meta_set.option_resolver:
         class: Phlexible\Component\MetaSet\Model\OptionResolver
 
-    # asset providers
-    phlexible_meta_set.asset_provider:
-        class: Phlexible\Bundle\MetaSetBundle\AssetProvider\MetaSetAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider}
-
     # event listeners
     phlexible_meta_set.listener.get_config:
         class: Phlexible\Bundle\MetaSetBundle\EventListener\GetConfigListener

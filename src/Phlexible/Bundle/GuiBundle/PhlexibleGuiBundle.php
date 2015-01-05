@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle;
 
-use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddAssetProvidersPass;
+use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddHelperAssetsPass;
 use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddCompressorsPass;
 use Phlexible\Bundle\GuiBundle\DependencyInjection\Compiler\AddRoleProvidersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,7 +29,7 @@ class PhlexibleGuiBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container
-            ->addCompilerPass(new AddAssetProvidersPass())
+            ->addCompilerPass(new AddHelperAssetsPass())
             ->addCompilerPass(new AddCompressorsPass())
             ->addCompilerPass(new AddRoleProvidersPass());
     }

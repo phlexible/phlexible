@@ -16,13 +16,6 @@ services:
                     template: %phlexible_task.mailer.update.template%
                     from_email: %phlexible_task.mailer.from_email%
 
-    # asset providers
-    phlexible_task.asset_provider:
-        class: Phlexible\Bundle\TaskBundle\AssetProvider\TaskAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider}
-
     # event listeners
     phlexible_task.listener.apply_successor:
         class: Phlexible\Bundle\TaskBundle\EventListener\ApplySuccessorListener

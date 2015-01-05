@@ -2,13 +2,6 @@ parameters:
     phlexible_contentchannel.file_dir: %kernel.root_dir%/Resources/contentchannels/
 
 services:
-    # asset providers
-    phlexible_contentchannel.asset_provider:
-        class: Phlexible\Bundle\ContentchannelBundle\AssetProvider\ContentchannelAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider}
-
     # role providers
     phlexible_contentchannel.role_provider:
         class: Phlexible\Bundle\ContentchannelBundle\RoleProvider\ContentchannelRoleProvider

@@ -6,10 +6,3 @@ services:
     phlexible_search.search:
         class: Phlexible\Bundle\SearchBundle\Search\Search
         arguments: [@phlexible_search.search_providers, @security.context]
-
-    # asset providers
-    phlexible_search.asset_provider:
-        class: Phlexible\Bundle\SearchBundle\AssetProvider\SearchAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider}

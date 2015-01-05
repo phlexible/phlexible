@@ -18,13 +18,6 @@ services:
         class: Phlexible\Bundle\ElementtypeBundle\Usage\UsageManager
         arguments: [@event_dispatcher]
 
-    # asset providers
-    phlexible_elementtype.asset_provider:
-        class: Phlexible\Bundle\ElementtypeBundle\AssetProvider\ElementtypeAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider, priority: 100}
-
     # event listeners
     phlexible_elementtype.listener.apply_successor:
         class: Phlexible\Bundle\ElementtypeBundle\EventListener\ApplySuccessorListener

@@ -3,13 +3,6 @@ services:
         class: Phlexible\Bundle\DashboardBundle\Portlet\PortletCollection
         arguments: [[]]
 
-    # asset providers
-    phlexible_dashboard.asset_provider:
-        class: Phlexible\Bundle\DashboardBundle\AssetProvider\DashboardAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider, priority: 700}
-
     # event listeners
     phlexible_dashboard.listener.get_config:
         class: Phlexible\Bundle\DashboardBundle\EventListener\GetConfigListener

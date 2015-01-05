@@ -61,13 +61,6 @@ services:
         tags:
             - {name: phlexible_access_control.permission}
 
-    # asset providers
-    phlexible_media_manager.asset_provider:
-        class: Phlexible\Bundle\MediaManagerBundle\AssetProvider\MediaManagerAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider, priority: 300}
-
     # event listeners
     phlexible_media_manager.listener.media_site:
         class: Phlexible\Bundle\MediaManagerBundle\EventListener\MediaSiteListener

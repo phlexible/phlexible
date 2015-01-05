@@ -20,13 +20,6 @@ services:
                 new_account: {template: %phlexible_user.mailer.new_account.template%, from: %phlexible_user.mailer.new_account.from%}
                 new_password: {template: %phlexible_user.mailer.new_password.template%, from: %phlexible_user.mailer.new_password.from%}
 
-    # asset providers
-    phlexible_user.asset_provider:
-        class: Phlexible\Bundle\UserBundle\AssetProvider\UserAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider}
-
     # event listeners
     phlexible_user.listener.apply_successor:
         class: Phlexible\Bundle\UserBundle\EventListener\ApplySuccessorListener

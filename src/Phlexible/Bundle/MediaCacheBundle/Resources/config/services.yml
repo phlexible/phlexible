@@ -28,13 +28,6 @@ services:
         class: Phlexible\Component\MediaCache\ImageDelegate\DelegateService
         arguments: [@phlexible_media_cache.image_delegate.worker]
 
-    # asset providers
-    phlexible_media_cache.asset_provider:
-        class: Phlexible\Bundle\MediaCacheBundle\AssetProvider\MediaCacheAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider}
-
     # event listeners
     phlexible_media_cache.listener.file:
         class: Phlexible\Bundle\MediaCacheBundle\EventListener\FileListener

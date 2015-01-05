@@ -55,13 +55,6 @@ services:
         public: false
         arguments: [@phlexible_message.message_manager]
 
-    # asset providers
-    phlexible_message.asset_provder:
-        class: Phlexible\Bundle\MessageBundle\AssetProvider\MessageAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider}
-
     # data collectors
     phlexible_message.data_collector.messages:
         class: Phlexible\Bundle\MessageBundle\DataCollector\MessagesDataCollector

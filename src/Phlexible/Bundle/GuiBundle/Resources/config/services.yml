@@ -49,13 +49,6 @@ services:
         tags:
             - {name: security.voter, priority: 245}
 
-    # asset providers
-    phlexible_gui.asset_provider:
-        class: Phlexible\Bundle\GuiBundle\AssetProvider\GuiAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider, priority: 700}
-
     # compressors
     phlexible_gui.compressor.javascript.simple:
         class: Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\SimpleJavascriptCompressor

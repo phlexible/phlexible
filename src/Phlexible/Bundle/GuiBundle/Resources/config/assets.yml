@@ -2,10 +2,6 @@ parameters:
     asset.cache_dir: %kernel.cache_dir%/assets/
 
 services:
-    phlexible_gui.asset.asset_providers:
-        class: Phlexible\Bundle\GuiBundle\AssetProvider\AssetProviderCollection
-        arguments: []
-
     phlexible_gui.asset.builder.scripts:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\ScriptsBuilder
         arguments:

@@ -1,11 +1,4 @@
 services:
-    # asset providers
-    phlexible_frontend_media.asset_provider:
-        class: Phlexible\Bundle\FrontendMediaBundle\AssetProvider\FrontendMediaAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider}
-
     # event listeners
     phlexible_frontend_media.listener.element:
         class: Phlexible\Bundle\FrontendMediaBundle\EventListener\ElementListener

@@ -1,11 +1,4 @@
 services:
-    # asset providers
-    phlexible_queue.asset_provider:
-        class: Phlexible\Bundle\QueueBundle\AssetProvider\QueueAssetProvider
-        public: false
-        tags:
-            - {name: phlexible_gui.asset_provider}
-
     # event listeners
     phlexible_queue.listener.collect_problems:
         class: Phlexible\Bundle\QueueBundle\EventListener\CollectProblemsListener
