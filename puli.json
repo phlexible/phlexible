@@ -33,7 +33,7 @@
         "/phlexible/scripts/media-type": "src/Phlexible/Bundle/MediaTypeBundle/Resources/scripts",
         "/phlexible/scripts/message": "src/Phlexible/Bundle/MessageBundle/Resources/scripts",
         "/phlexible/scripts/meta-set": "src/Phlexible/Bundle/MetaSetBundle/Resources/scripts",
-        "/phlexible/scripts/problem": "src/Phlexible/Bundle/problemBundle/Resources/scripts",
+        "/phlexible/scripts/problem": "src/Phlexible/Bundle/ProblemBundle/Resources/scripts",
         "/phlexible/scripts/queue": "src/Phlexible/Bundle/queueBundle/Resources/scripts",
         "/phlexible/scripts/search": "src/Phlexible/Bundle/searchBundle/Resources/scripts",
         "/phlexible/scripts/siteroot": "src/Phlexible/Bundle/SiterootBundle/Resources/scripts",
