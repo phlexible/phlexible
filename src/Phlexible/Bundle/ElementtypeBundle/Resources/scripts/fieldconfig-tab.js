@@ -1,5 +1,6 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
+Ext.require('Phlexible.elements.ElementDataTabHelper');
 
 Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueStructure, element) {
     var config = {

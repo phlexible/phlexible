@@ -5,6 +5,7 @@ Ext.require('Phlexible.metasets.MetaSetsWindow');
 Ext.require('Phlexible.metasets.MetaSuggestWindow');
 Ext.require('Phlexible.metasets.SelectConfigurationWindow');
 Ext.require('Phlexible.metasets.SuggestConfigurationWindow');
+Ext.require('Ext.ux.dd.GridReorderDropTarget');
 
 Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.metasets.Strings.metasets,

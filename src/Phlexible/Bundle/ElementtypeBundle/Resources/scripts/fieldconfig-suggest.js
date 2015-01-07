@@ -1,15 +1,6 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
 
-Phlexible.fields.Suggest = Ext.extend(Ext.ux.form.SuperBoxSelect, {
-    onResize: function (w, h, rw, rh) {
-        Phlexible.fields.Suggest.superclass.onResize.call(this, w, h, rw, rh);
-
-        this.wrap.setWidth(this.width + 20);
-    }
-});
-Ext.reg('elementtypes-field-suggest', Phlexible.fields.Suggest);
-
 Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeMode = 'local';
 

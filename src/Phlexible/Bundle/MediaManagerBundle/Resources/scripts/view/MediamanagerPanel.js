@@ -1,5 +1,12 @@
 Ext.provide('Phlexible.mediamanager.MediamanagerPanel');
 
+Ext.require('Ext.ux.LocationBar');
+Ext.require('Phlexible.mediamanager.UploadStatusBar');
+Ext.require('Phlexible.mediamanager.FolderTree');
+Ext.require('Phlexible.mediamanager.AttributesPanel');
+Ext.require('Phlexible.mediamanager.FilesGrid');
+Ext.require('plupload');
+
 Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
     layout: 'border',
     closable: true,

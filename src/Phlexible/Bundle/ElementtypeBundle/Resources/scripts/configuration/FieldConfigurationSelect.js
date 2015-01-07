@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.elementtypes.configuration.FieldConfigurationSelect');
 
+Ext.require('Phlexible.elementtypes.configuration.SelectValueGrid');
+
 Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.form.FieldSet, {
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.select,

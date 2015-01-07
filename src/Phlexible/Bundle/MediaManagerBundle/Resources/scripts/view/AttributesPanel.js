@@ -1,6 +1,11 @@
 Ext.provide('Phlexible.mediamanager.templates.Details');
 Ext.provide('Phlexible.mediamanager.AttributesPanel');
 
+Ext.require('Phlexible.mediamanager.FilePreviewPanel');
+Ext.require('Phlexible.mediamanager.FileVersionsPanel');
+Ext.require('Phlexible.mediamanager.FileMeta');
+Ext.require('Phlexible.mediamanager.FolderMeta');
+
 Phlexible.mediamanager.templates.Details = new Ext.XTemplate(
     '<div style="padding: 4px;">',
     '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.version]}:</div> {[values.version]}</div>',

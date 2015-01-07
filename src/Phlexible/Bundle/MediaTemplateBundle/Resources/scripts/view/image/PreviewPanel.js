@@ -1,6 +1,7 @@
 Ext.provide('Phlexible.mediatemplates.image.PreviewPanel');
 
 Ext.require('Phlexible.mediatemplates.BasePreviewPanel');
+Ext.require('Ext.ux.form.ColorField');
 
 Phlexible.mediatemplates.image.PreviewPanel = Ext.extend(Phlexible.mediatemplates.BasePreviewPanel, {
     getCreateUrl: function () {

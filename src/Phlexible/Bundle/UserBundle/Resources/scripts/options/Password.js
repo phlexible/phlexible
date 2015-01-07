@@ -1,6 +1,7 @@
 Ext.provide('Phlexible.users.options.Password');
 
 Ext.require('Phlexible.PluginRegistry');
+Ext.require('Ext.ux.PasswordField');
 
 Phlexible.users.options.Password = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,

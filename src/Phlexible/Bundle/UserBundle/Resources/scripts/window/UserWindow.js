@@ -1,5 +1,8 @@
 Ext.provide('Phlexible.users.UserWindow');
 
+Ext.require('Ext.grid.CheckColumn');
+Ext.require('Ext.ux.TabPanel');
+
 Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
     title: Phlexible.users.Strings.user,
     strings: Phlexible.users.Strings,

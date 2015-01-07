@@ -2,6 +2,8 @@ Ext.provide('Phlexible.elementtypes.ElementtypesGridView');
 Ext.provide('Phlexible.elementtypes.ElementtypesList');
 
 Ext.require('Phlexible.elementtypes.model.Elementtype');
+Ext.require('Phlexible.elementtypes.Format');
+Ext.require('Phlexible.elementtypes.NewElementtypeWindow');
 
 Phlexible.elementtypes.ElementtypesGridView = Ext.extend(Ext.grid.GridView, {
     getRowClass: function (record, index, rowParams, store) {

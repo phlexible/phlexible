@@ -2,6 +2,7 @@ Ext.provide('Phlexible.dashboard.MainPanel');
 
 Ext.require('Phlexible.dashboard.ListPanel');
 Ext.require('Phlexible.dashboard.PortalPanel');
+Ext.require('Phlexible.dashboard.store.List');
 
 Phlexible.dashboard.MainPanel = Ext.extend(Ext.Panel, {
     title: 'Start',

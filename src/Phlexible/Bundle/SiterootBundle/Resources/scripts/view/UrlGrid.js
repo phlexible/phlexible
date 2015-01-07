@@ -2,6 +2,7 @@ Ext.provide('Phlexible.siteroots.UrlGrid');
 
 Ext.require('Phlexible.siteroots.model.Url');
 Ext.require('Phlexible.siteroots.grid.LanguageCheckColumn');
+Ext.require('Phlexible.elements.EidSelector');
 
 Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.url_mappings,

@@ -1,6 +1,8 @@
 Ext.provide('Phlexible.mediamanager.FileDetailAttributesTemplate');
 Ext.provide('Phlexible.mediamanager.FileDetailWindow');
 
+Ext.require('Phlexible.mediamanager.FileVersionsPanel');
+
 Phlexible.mediamanager.FileDetailAttributesTemplate = new Ext.XTemplate(
     '<div style="padding: 4px 4px 8px 4px;">',
     '<div>',

@@ -1,6 +1,7 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
 Ext.require('Phlexible.elementtypes.field.Accordion');
+Ext.require('Phlexible.elements.ElementDataTabHelper');
 
 Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, valueStructure, element) {
     var config = {

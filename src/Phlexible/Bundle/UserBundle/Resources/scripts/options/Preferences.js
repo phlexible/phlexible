@@ -1,6 +1,7 @@
 Ext.provide('Phlexible.users.options.Preferences');
 
 Ext.require('Phlexible.PluginRegistry');
+Ext.require('Ext.ux.IconCombo');
 
 Phlexible.users.options.Preferences = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,

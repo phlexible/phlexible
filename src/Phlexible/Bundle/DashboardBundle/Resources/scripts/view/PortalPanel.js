@@ -1,6 +1,7 @@
 Ext.provide('Phlexible.dashboard.PortalPanel');
 
 Ext.require('Ext.ux.Portal');
+Ext.require('Phlexible.dashboard.store.Portlet');
 
 Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
     store: Phlexible.dashboard.store.Portlet,

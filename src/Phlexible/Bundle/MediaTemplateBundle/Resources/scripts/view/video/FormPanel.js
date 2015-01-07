@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.mediatemplates.video.FormPanel');
 
+Ext.require('Ext.ux.form.XCheckbox');
+
 Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.mediatemplates.Strings.video_template,
     strings: Phlexible.mediatemplates.Strings,

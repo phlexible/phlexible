@@ -1,5 +1,8 @@
 Ext.provide('Phlexible.mediatemplates.image.FormPanel');
 
+Ext.require('Ext.ux.form.XCheckbox');
+Ext.require('Ext.ux.form.ColorField');
+
 Phlexible.mediatemplates.image.FormPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.mediatemplates.Strings.image_template,
     strings: Phlexible.mediatemplates.Strings,

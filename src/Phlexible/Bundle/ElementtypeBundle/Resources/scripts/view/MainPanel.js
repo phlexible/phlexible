@@ -6,6 +6,9 @@ Ext.require('Phlexible.elementtypes.ElementtypeField');
 Ext.require('Phlexible.elementtypes.ElementtypeRoot');
 Ext.require('Phlexible.elementtypes.ElementtypeUsage');
 Ext.require('Phlexible.elementtypes.ElementtypeViability');
+Ext.require('Phlexible.elements.Element');
+Ext.require('Phlexible.elements.ElementContentPanel');
+Ext.require('Phlexible.elements.ElementDataTabHelper');
 
 Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elementtypes.Strings,

@@ -1,6 +1,7 @@
 Ext.provide('Phlexible.queue.QueueStatsWindow');
 
 Ext.require('Phlexible.queue.model.Job');
+Ext.require('Ext.grid.RowExpander');
 
 Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
     title: Phlexible.queue.Strings.queue,

@@ -4,6 +4,7 @@ Ext.require('Phlexible.gui.util.Config');
 Ext.require('Phlexible.gui.util.User');
 Ext.require('Phlexible.gui.util.Menu');
 Ext.require('Phlexible.gui.util.SystemMessage');
+Ext.require('Phlexible.dashboard.MainPanel');
 
 Phlexible.gui.util.Frame = function () {
     this.addEvents({

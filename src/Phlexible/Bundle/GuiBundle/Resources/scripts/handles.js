@@ -9,6 +9,7 @@ Ext.require('Phlexible.gui.menuhandle.handle.XtypeHandle');
 Ext.require('Phlexible.gui.menuhandle.handle.WindowHandle');
 Ext.require('Phlexible.gui.BundlesMainPanel');
 Ext.require('Phlexible.gui.PhpInfoWindow');
+Ext.require('Phlexible.gui.Help');
 
 Phlexible.Handles.add('main', function() {
     return new Phlexible.gui.menuhandle.handle.Group();

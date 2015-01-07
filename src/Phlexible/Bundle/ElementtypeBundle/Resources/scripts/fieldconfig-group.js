@@ -1,6 +1,7 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
 Ext.require('Phlexible.elementtypes.field.Group');
+Ext.require('Phlexible.elements.ElementDataTabHelper');
 
 Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valueStructure, element, repeatableId) {
     var minRepeat = parseInt(item.configuration.repeat_min, 10) || 0,

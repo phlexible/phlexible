@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.mediamanager.FileMeta');
 
+Ext.require('Phlexible.mediamanager.FileMetaGrid');
+
 Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.file_meta,

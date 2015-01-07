@@ -5,7 +5,6 @@ Ext.require('Ext.ux.ManagedIframePanel');
 Phlexible.gui.Help = Ext.extend(Ext.ux.ManagedIframePanel, {
     title: Phlexible.gui.Strings.help,
     iconCls: 'p-gui-help-icon',
-    xtype: 'iframepanel',
     closable: false,
 
     initComponent: function() {

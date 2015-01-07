@@ -1,6 +1,8 @@
 Ext.provide('Phlexible.mediamanager.FolderTreeLoader');
 Ext.provide('Phlexible.mediamanager.FolderTree');
 
+Ext.require('Phlexible.mediamanager.NewFolderWindow');
+
 Phlexible.mediamanager.FolderTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
     /**
      * Override this function for custom TreeNode node implementation

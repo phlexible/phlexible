@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.gui.BundlesGrid');
 
+Ext.require('Phlexible.gui.model.Bundle');
+
 Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.gui.Strings,
     loadMask: true,

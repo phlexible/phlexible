@@ -1,6 +1,8 @@
 Ext.provide('Phlexible.elements.Element');
 Ext.provide('Phlexible.elements.Teaser');
 
+Ext.require('Phlexible.fields.Prototypes');
+
 Phlexible.elements.Element = function (config) {
     this.addEvents(
         'beforeLoad',

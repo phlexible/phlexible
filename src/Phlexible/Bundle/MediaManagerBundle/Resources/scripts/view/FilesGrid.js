@@ -1,6 +1,11 @@
 Ext.provide('Phlexible.mediamanager.ToolbarHidePlugin');
 Ext.provide('Phlexible.mediamanager.FilesGrid');
 
+Ext.require('Phlexible.mediamanager.model.File');
+Ext.require('Phlexible.Format');
+Ext.require('Phlexible.mediamanager.CustomGridView');
+Ext.require('Ext.ux.SliderTip');
+
 Phlexible.mediamanager.ToolbarHidePlugin = Ext.extend(Object, {
     init: function (panel) {
         this.panel = panel;

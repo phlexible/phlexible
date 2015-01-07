@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.mediamanager.FolderDetailWindow');
 
+Ext.require('Phlexible.mediamanager.FolderMeta');
+
 Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
     title: 'Folder Details',
     iconCls: 'p-mediamanager-folder-icon',

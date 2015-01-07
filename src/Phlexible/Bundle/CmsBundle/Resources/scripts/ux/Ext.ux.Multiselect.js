@@ -5,6 +5,8 @@ Ext.namespace("Ext.ux");
 
 Ext.provide('Ext.ux.Multiselect');
 
+Ext.require('Ext.ux.DDView');
+
 Ext.ux.Multiselect = Ext.extend(Ext.form.Field, {
     store: null,
     dataFields: [],
