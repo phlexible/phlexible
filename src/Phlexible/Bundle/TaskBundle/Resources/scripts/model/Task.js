@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.tasks.model');
+Ext.provide('Phlexible.tasks.model.Task');
 
 Phlexible.tasks.model.Task = Ext.data.Record.create([
     {name: 'id'},

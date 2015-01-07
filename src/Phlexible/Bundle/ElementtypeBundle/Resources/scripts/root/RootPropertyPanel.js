@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.elementtypes');
+Ext.provide('Phlexible.elementtypes.RootPropertyPanel');
 
 Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elementtypes.Strings,

@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.gui.util');
+Ext.provide('Phlexible.gui.util.SystemMessage');
 
 /**
  * @class Phlexible.gui.util.SystemMessage

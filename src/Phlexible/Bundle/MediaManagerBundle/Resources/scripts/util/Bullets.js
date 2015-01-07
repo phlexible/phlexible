@@ -1,4 +1,5 @@
-Ext.ns('Phlexible.mediamanager.util');
+Ext.provide('Phlexible.mediamanager.util.Bullets');
+Ext.provide('Phlexible.mediamanager.Bullets');
 
 Phlexible.mediamanager.util.Bullets = function () {
     bullets = '';
@@ -41,4 +42,3 @@ Ext.extend(Phlexible.mediamanager.util.Bullets, Ext.util.Observable, {
         return bullets;
     }
 });
-Phlexible.mediamanager.Bullets = new Phlexible.mediamanager.util.Bullets();

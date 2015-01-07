@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.users.model');
+Ext.provide('Phlexible.users.model.User');
 
 Phlexible.users.model.User = Ext.data.Record.create([
     {name: 'uid'},

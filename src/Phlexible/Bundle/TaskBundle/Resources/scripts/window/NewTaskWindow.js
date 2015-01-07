@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.tasks');
+Ext.provide('Phlexible.tasks.NewTaskWindow');
 
 Phlexible.tasks.NewTaskWindow = Ext.extend(Ext.Window, {
     title: Phlexible.tasks.Strings.new_task,

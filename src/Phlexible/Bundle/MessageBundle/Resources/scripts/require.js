@@ -1,0 +1,1 @@
+Ext.require('Phlexible.messages.portlet.Messages');

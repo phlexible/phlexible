@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.tasks.model');
+Ext.provide('Phlexible.tasks.model.Comment');
 
 Phlexible.tasks.model.Comment = Ext.data.Record.create([
     {name: 'id'},

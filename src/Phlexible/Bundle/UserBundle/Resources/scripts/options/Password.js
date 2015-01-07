@@ -1,10 +1,12 @@
-Ext.ns('Phlexible.users.options');
+Ext.provide('Phlexible.users.options.Password');
+
+Ext.require('Phlexible.PluginRegistry');
 
 Phlexible.users.options.Password = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,
     title: Phlexible.users.Strings.password,
     bodyStyle: 'padding: 15px',
-    border: false,
+    border: true,
     hideMode: 'offsets',
     labelWidth: 150,
     defaultType: 'textfield',
@@ -13,6 +15,7 @@ Phlexible.users.options.Password = Ext.extend(Ext.form.FormPanel, {
     },
     labelAlign: 'top',
     monitorValid: true,
+    header: false,
 
     initComponent: function () {
         this.items = [
@@ -57,7 +60,7 @@ Phlexible.users.options.Password = Ext.extend(Ext.form.FormPanel, {
                         url: Phlexible.Router.generate('users_options_savepassword'),
                         success: function (form, result) {
                             if (result.success) {
-                                this.fireEvent('cancel');
+                                this.fireEvent('back');
                             } else {
                                 Ext.Msg.alert('Failure', result.msg);
                             }
@@ -70,7 +73,7 @@ Phlexible.users.options.Password = Ext.extend(Ext.form.FormPanel, {
             {
                 text: this.strings.cancel,
                 handler: function () {
-                    this.fireEvent('cancel');
+                    this.fireEvent('back');
                 },
                 scope: this
             }
@@ -82,7 +85,7 @@ Phlexible.users.options.Password = Ext.extend(Ext.form.FormPanel, {
 
 Ext.reg('usersoptionspassword', Phlexible.users.options.Password);
 
-Phlexible.PluginRegistry.prepend('userOptionCards', {
+Phlexible.PluginRegistry.append('userOptionCards', {
     xtype: 'usersoptionspassword',
     title: Phlexible.users.Strings.password,
     description: Phlexible.users.Strings.password_description,

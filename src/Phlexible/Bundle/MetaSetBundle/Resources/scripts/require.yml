@@ -1,8 +1,0 @@
-require:
-    - menuhandle/handles
-    - Fields
-    - MainPanel
-    - MetaSetsWindow
-    - MetaSuggestWindow
-    - SelectConfigurationWindow
-    - SuggestConfigurationWindow

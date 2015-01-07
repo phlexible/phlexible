@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.siteroots.model');
+Ext.provide('Phlexible.siteroots.model.Url');
 
 Phlexible.siteroots.model.Url = Ext.data.Record.create([
     {name: 'id'},

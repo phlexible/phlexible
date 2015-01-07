@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.tasks.model');
+Ext.provide('Phlexible.tasks.model.Transition');
 
 Phlexible.tasks.model.Transition = Ext.data.Record.create([
     {name: 'id'},

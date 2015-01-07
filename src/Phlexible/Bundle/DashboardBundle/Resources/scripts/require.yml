@@ -1,8 +1,0 @@
-require:
-    - model/Portlet
-    - store/List
-    - store/Portlet
-    - ListPanel
-    - MainPanel
-    - PortalPanel
-    - StartMessage

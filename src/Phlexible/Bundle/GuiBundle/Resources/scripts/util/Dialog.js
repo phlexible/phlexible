@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.gui.util');
+Ext.provide('Phlexible.gui.util.Dialog');
 
 Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
     title: 'Dialog',

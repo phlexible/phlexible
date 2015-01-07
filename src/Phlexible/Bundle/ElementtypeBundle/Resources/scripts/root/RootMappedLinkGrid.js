@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.elementtypes');
+Ext.provide('Phlexible.elementtypes.RootMappedLinkGrid');
 
 Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     strings: Phlexible.elementtypes.Strings,

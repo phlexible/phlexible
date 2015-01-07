@@ -1,3 +1,0 @@
-require:
-    - Ext.ux.LocationBar
-    - plupload.full.min

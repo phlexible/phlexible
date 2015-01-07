@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.search.model');
+Ext.provide('Phlexible.search.model.Result');
 
 Phlexible.search.model.Result = Ext.data.Record.create([
     'id',

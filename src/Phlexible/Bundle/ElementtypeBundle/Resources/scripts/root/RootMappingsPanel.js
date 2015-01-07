@@ -1,4 +1,8 @@
-Ext.ns('Phlexible.elementtypes');
+Ext.provide('Phlexible.elementtypes.RootMappingsPanel');
+
+Ext.require('Phlexible.elementtypes.RootMappedDateGrid');
+Ext.require('Phlexible.elementtypes.RootMappedLinkGrid');
+Ext.require('Phlexible.elementtypes.RootMappedTitleGrid');
 
 Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elementtypes.Strings,

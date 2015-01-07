@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.mediamanager.model');
+Ext.provide('Phlexible.mediamanager.model.File');
 
 Phlexible.mediamanager.model.File = Ext.data.Record.create([
     {name: 'id', type: 'string'},

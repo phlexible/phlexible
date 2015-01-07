@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.siteroots.model');
+Ext.provide('Phlexible.siteroots.model.SpecialTid');
 
 Phlexible.siteroots.model.SpecialTid = Ext.data.Record.create([
     {name: 'key'},

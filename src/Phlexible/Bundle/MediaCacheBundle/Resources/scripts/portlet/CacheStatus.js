@@ -1,4 +1,6 @@
-Ext.namespace('Phlexible.mediacache.portlet');
+Ext.provide('Phlexible.mediacache.portlet.CacheStatus');
+
+Ext.require('Ext.ux.Portlet');
 
 Phlexible.mediacache.portlet.CacheStatus = Ext.extend(Ext.ux.Portlet, {
     title: Phlexible.mediacache.Strings.cache_status,

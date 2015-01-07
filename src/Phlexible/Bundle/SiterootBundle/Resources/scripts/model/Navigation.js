@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.siteroots.model');
+Ext.provide('Phlexible.siteroots.model.Navigation');
 
 Phlexible.siteroots.model.Navigation = Ext.data.Record.create([
     {name: 'id'},

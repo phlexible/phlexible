@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.messages.model');
+Ext.provide('Phlexible.messages.model.Message');
 
 Phlexible.messages.model.Message = Ext.data.Record.create([
     {name: 'id'},

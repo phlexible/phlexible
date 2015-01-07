@@ -1,4 +1,13 @@
-Ext.namespace('Phlexible.elementtypes.configuration');
+Ext.provide('Phlexible.elementtypes.configuration.FieldConfiguration');
+
+Ext.require('Phlexible.elementtypes.configuration.FieldConfigurationAccordion');
+Ext.require('Phlexible.elementtypes.configuration.FieldConfigurationDefaultValue');
+Ext.require('Phlexible.elementtypes.configuration.FieldConfigurationGroup');
+Ext.require('Phlexible.elementtypes.configuration.FieldConfigurationLabel');
+Ext.require('Phlexible.elementtypes.configuration.FieldConfigurationLink');
+Ext.require('Phlexible.elementtypes.configuration.FieldConfigurationSelect');
+Ext.require('Phlexible.elementtypes.configuration.FieldConfigurationSuggest');
+Ext.require('Phlexible.elementtypes.configuration.FieldConfigurationTable');
 
 Phlexible.elementtypes.configuration.FieldConfiguration = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elementtypes.Strings,

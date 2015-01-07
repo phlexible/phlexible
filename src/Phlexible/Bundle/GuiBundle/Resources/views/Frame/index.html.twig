@@ -62,6 +62,17 @@
     //<![CDATA[
     Ext.BLANK_IMAGE_URL = "{{ asset("bundles/phlexiblegui/images/blank.gif") }}";
     Ext.QuickTips.init();
+    Ext.require = function(require) {};
+    Ext.provide = function(provide) {
+        var provides = provide.split('.');
+        if (provides.length < 2) {
+            return;
+        }
+        provides.pop();
+        provide = provides.join('.');
+        Ext.namespace(provide);
+    };
+
     var Phlexible = {
         title: "{{ project.title }}",
         version: "{{ project.version }}",

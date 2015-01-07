@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.messages.model');
+Ext.provide('Phlexible.messages.model.Subscription');
 
 Phlexible.messages.model.Subscription = Ext.data.Record.create([
     {name: 'id'},

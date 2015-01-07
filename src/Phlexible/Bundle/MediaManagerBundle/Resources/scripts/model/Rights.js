@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.mediamanager.model');
+Ext.provide('Phlexible.mediamanager.model.Rights');
 
 /**
  * TODO: not used?

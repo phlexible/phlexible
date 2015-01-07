@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.elementtypes.configuration');
+Ext.provide('Phlexible.elementtypes.configuration.FieldValidation');
 
 Phlexible.elementtypes.configuration.FieldValidation = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elementtypes.Strings,

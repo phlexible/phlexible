@@ -1,4 +1,7 @@
-Ext.namespace('Phlexible.messages.portlet');
+Ext.provide('Phlexible.messages.portlet.Messages');
+Ext.provide('Phlexible.messages.portlet.MessagesRecord');
+
+Ext.require('Ext.ux.Portlet');
 
 Phlexible.messages.portlet.MessagesRecord = Ext.data.Record.create([
     {name: 'id', type: 'string'},

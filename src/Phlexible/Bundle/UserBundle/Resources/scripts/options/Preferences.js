@@ -1,16 +1,19 @@
-Ext.ns('Phlexible.users.options');
+Ext.provide('Phlexible.users.options.Preferences');
+
+Ext.require('Phlexible.PluginRegistry');
 
 Phlexible.users.options.Preferences = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,
     title: Phlexible.users.Strings.preferences,
     bodyStyle: 'padding: 15px',
-    border: false,
+    border: true,
     labelWidth: 150,
     defaultType: 'textfield',
     defaults: {
         msgTarget: 'under'
     },
     labelAlign: 'top',
+    header: false,
 
     initComponent: function () {
         this.items = [
@@ -89,7 +92,7 @@ Phlexible.users.options.Preferences = Ext.extend(Ext.form.FormPanel, {
 
 Ext.reg('usersoptionspreferences', Phlexible.users.options.Preferences);
 
-Phlexible.PluginRegistry.prepend('userOptionCards', {
+Phlexible.PluginRegistry.append('userOptionCards', {
     xtype: 'usersoptionspreferences',
     title: Phlexible.users.Strings.preferences,
     description: Phlexible.users.Strings.preferences_description,

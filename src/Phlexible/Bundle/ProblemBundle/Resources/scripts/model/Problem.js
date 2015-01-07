@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.problems.model');
+Ext.provide('Phlexible.problems.model.Problem');
 
 Phlexible.problems.model.Problem = Ext.data.Record.create([
     'id',

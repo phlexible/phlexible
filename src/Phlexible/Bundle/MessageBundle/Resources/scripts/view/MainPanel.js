@@ -1,45 +1,49 @@
-Ext.ns('Phlexible.messages.view');
+Ext.provide('Phlexible.messages.MainPanel');
 
-Phlexible.messages.view.MainPanel = Ext.extend(Ext.Panel, {
-    title: Phlexible.messages.Strings.view,
-    strings: Phlexible.messages.Strings,
-    cls: 'p-messages-main-panel',
-    iconCls: 'p-message-view-icon',
-    layout: 'border',
+Ext.require('Phlexible.messages.view.MainPanel');
+Ext.require('Phlexible.messages.filter.MainPanel');
+Ext.require('Phlexible.messages.subscription.MainPanel');
+
+Phlexible.messages.MainPanel = Ext.extend(Ext.Panel, {
+    title: Phlexible.messages.Strings.messages,
+    iconCls: 'p-message-component-icon',
+    layout: 'fit',
 
     initComponent: function () {
-        this.items = [
+        var mainItems = [
             {
-                xtype: 'messages-view-filterpanel',
-                region: 'west',
-                width: 200,
-                collapsible: true,
+                xtype: 'messages-view-mainpanel'
+            }
+        ];
+
+        if (Phlexible.User.isGranted('ROLE_MESSAGE_FILTERS')) {
+            mainItems.push({
+                xtype: 'messages-filter-mainpanel',
                 listeners: {
-                    updateFilter: function (values) {
-                        this.getComponent(1).store.baseParams.filter = Ext.encode(values);
-                        this.getComponent(1).store.reload();
-                        var toolBarObject = this.getComponent(1).getBottomToolbar();
-                        if ((toolBarObject !== 'undefined') && (typeof toolBarObject.changePage === 'function')) {
-                            toolBarObject.changePage(1);
+                    filterDeleted: function () {
+                        if (Phlexible.User.isGranted('ROLE_MESSAGE_SUBSCRIPTIONS')) {
+                            this.getComponent(0).getComponent(2).reloadSubscriptions();
                         }
                     },
                     scope: this
                 }
-            },
-            {
-                xtype: 'messages-view-messagesgrid',
-                region: 'center',
-                listeners: {
-                    messages: function (data) {
-                        this.getComponent(0).updateFacets(data.facets);
-                    },
-                    scope: this
-                }
-            }
-        ];
+            });
+        }
+        if (Phlexible.User.isGranted('ROLE_MESSAGE_SUBSCRIPTIONS')) {
+            mainItems.push({
+                xtype: 'messages-subscription-mainpanel'
+            });
+        }
 
-        Phlexible.messages.view.MainPanel.superclass.initComponent.call(this);
+        this.items = {
+            xtype: 'tabpanel',
+            deferredRender: true,
+            activeItem: 0,
+            border: false,
+            items: mainItems
+        };
+
+        Phlexible.messages.MainPanel.superclass.initComponent.call(this);
     }
 });
-
-Ext.reg('messages-view-mainpanel', Phlexible.messages.view.MainPanel);
+Ext.reg('messages-mainpanel', Phlexible.messages.MainPanel);

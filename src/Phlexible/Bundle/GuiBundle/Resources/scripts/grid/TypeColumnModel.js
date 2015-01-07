@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.gui.grid');
+Ext.provide('Phlexible.gui.grid.TypeColumnModel');
 
 Phlexible.gui.grid.TypeColumnModel = function (config) {
 

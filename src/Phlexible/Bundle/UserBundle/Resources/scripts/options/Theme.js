@@ -1,10 +1,13 @@
-Ext.ns('Phlexible.users.options');
+Ext.provide('Phlexible.users.options.Theme');
+
+Ext.require('Phlexible.PluginRegistry');
 
 Phlexible.users.options.Theme = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,
     title: Phlexible.users.Strings.theme,
     bodyStyle: 'padding: 15px',
-    border: false,
+    border: true,
+    header: false,
 
     initComponent: function () {
         this.items = new Ext.DataView({
@@ -53,7 +56,7 @@ Phlexible.users.options.Theme = Ext.extend(Ext.form.FormPanel, {
                                     if (data.success) {
                                         Phlexible.Config.set('user.property.theme', this.getComponent(0).getSelectedRecords()[0].id);
 
-                                        this.fireEvent('cancel');
+                                        this.fireEvent('save');
                                     }
                                     else {
                                         Ext.MessageBox.alert('Failure', data.msg);
@@ -104,7 +107,7 @@ Phlexible.users.options.Theme = Ext.extend(Ext.form.FormPanel, {
 
 Ext.reg('usersoptionstheme', Phlexible.users.options.Theme);
 
-Phlexible.PluginRegistry.prepend('userOptionCards', {
+Phlexible.PluginRegistry.append('userOptionCards', {
     xtype: 'usersoptionstheme',
     title: Phlexible.users.Strings.theme,
     description: Phlexible.users.Strings.theme_description,

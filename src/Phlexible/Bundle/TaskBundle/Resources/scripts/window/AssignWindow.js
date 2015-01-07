@@ -1,4 +1,6 @@
-Ext.namespace('Phlexible.tasks');
+Ext.provide('Phlexible.tasks.AssignWindow');
+
+Ext.require('Phlexible.tasks.util.TaskManager');
 
 Phlexible.tasks.AssignWindow = Ext.extend(Ext.Window, {
     title: Phlexible.tasks.Strings.assign,
@@ -98,7 +100,7 @@ Phlexible.tasks.AssignWindow = Ext.extend(Ext.Window, {
         }
 
         var values = this.getComponent(0).getForm().getValues();
-        Phlexible.tasks.TaskManager.assign(this.taskId, values.recipient, values.comment, function(success, result) {
+        Phlexible.tasks.util.TaskManager.assign(this.taskId, values.recipient, values.comment, function(success, result) {
             if (success && result.success) {
                 this.fireEvent('success');
                 this.close();

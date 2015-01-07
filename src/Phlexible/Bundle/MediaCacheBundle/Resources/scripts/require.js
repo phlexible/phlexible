@@ -1,0 +1,1 @@
+Ext.require('Phlexible.mediacache.portlet.CacheStatus');

@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.gui.util');
+Ext.provide('Phlexible.gui.util.PluginRegistry');
 
 Phlexible.gui.util.PluginRegistry = function () {
     this.plugins = {};

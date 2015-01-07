@@ -1,4 +1,7 @@
-Ext.namespace('Phlexible.users.portlet');
+Ext.provide('Phlexible.users.portlet.OnlineRecord');
+Ext.provide('Phlexible.users.portlet.Online');
+
+Ext.require('Ext.ux.Portlet');
 
 Phlexible.users.portlet.OnlineRecord = Ext.data.Record.create([
     {name: 'uid', type: 'string'},

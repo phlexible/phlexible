@@ -1,10 +1,12 @@
-Ext.ns('Phlexible.users.options');
+Ext.provide('Phlexible.users.options.Details');
+
+Ext.require('Phlexible.PluginRegistry');
 
 Phlexible.users.options.Details = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.users.Strings,
     title: Phlexible.users.Strings.personal_details,
     bodyStyle: 'padding: 15px',
-    border: false,
+    border: true,
     hideMode: 'offsets',
     labelWidth: 150,
     defaultType: 'textfield',
@@ -13,6 +15,7 @@ Phlexible.users.options.Details = Ext.extend(Ext.form.FormPanel, {
     },
     labelAlign: 'top',
     monitorValid: true,
+    header: false,
 
     initComponent: function () {
         this.items = [
@@ -53,7 +56,7 @@ Phlexible.users.options.Details = Ext.extend(Ext.form.FormPanel, {
                                 Phlexible.User.setLastname(values.lastname);
                                 Phlexible.User.setEmail(values.email);
 
-                                this.fireEvent('cancel');
+                                this.fireEvent('save');
                             } else {
                                 Ext.Msg.alert('Failure', result.msg);
                             }
@@ -79,7 +82,7 @@ Phlexible.users.options.Details = Ext.extend(Ext.form.FormPanel, {
 
 Ext.reg('usersoptionsdetails', Phlexible.users.options.Details);
 
-Phlexible.PluginRegistry.prepend('userOptionCards', {
+Phlexible.PluginRegistry.append('userOptionCards', {
     xtype: 'usersoptionsdetails',
     title: Phlexible.users.Strings.personal_details,
     description: Phlexible.users.Strings.personal_details_description,

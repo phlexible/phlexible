@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.gui.util');
+Ext.provide('Phlexible.gui.util.User');
 
 Phlexible.gui.util.User = function (id, username, email, firstname, lastname, properties, roles) {
     this.id = id;

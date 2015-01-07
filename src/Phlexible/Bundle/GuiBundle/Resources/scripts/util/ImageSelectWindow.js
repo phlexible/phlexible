@@ -1,4 +1,5 @@
-Ext.ns('Phlexible.gui.util');
+Ext.provide('Phlexible.gui.util.ImageSelectWindowTemplate');
+Ext.provide('Phlexible.gui.util.ImageSelectWindow');
 
 Phlexible.gui.util.ImageSelectWindowTemplate = new Ext.XTemplate(
     '<tpl for=".">',

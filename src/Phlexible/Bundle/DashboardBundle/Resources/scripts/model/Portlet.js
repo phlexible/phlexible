@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.dashboard.model');
+Ext.provide('Phlexible.dashboard.model.Portlet');
 
 Phlexible.dashboard.model.Portlet = Ext.data.Record.create([
     {name: 'id', type: 'string'},

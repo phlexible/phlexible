@@ -1,5 +1,0 @@
-require:
-    - menuhandle/handles
-    - model/Result
-    - SearchBox
-    - SearchPanel

@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.elementtypes.model');
+Ext.provide('Phlexible.elementtypes.model.Elementtype');
 
 Phlexible.elementtypes.model.Elementtype = Ext.data.Record.create([
     {name: 'id', type: 'string'},

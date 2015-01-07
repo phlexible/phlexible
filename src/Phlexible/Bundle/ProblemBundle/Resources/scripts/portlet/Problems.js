@@ -1,4 +1,5 @@
-Ext.namespace('Phlexible.problems.portlet');
+Ext.provide('Phlexible.problems.portlet.Problems');
+Ext.provide('Phlexible.problems.portlet.ProblemRecord');
 
 Phlexible.problems.portlet.ProblemRecord = Ext.data.Record.create([
     {name: 'id', type: 'string'},

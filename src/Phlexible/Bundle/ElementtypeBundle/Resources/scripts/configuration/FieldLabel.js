@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.elementtypes.configuration');
+Ext.provide('Phlexible.elementtypes.configuration.FieldLabel');
 
 Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elementtypes.Strings,

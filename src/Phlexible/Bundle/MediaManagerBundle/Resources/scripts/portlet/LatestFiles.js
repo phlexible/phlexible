@@ -1,4 +1,8 @@
-Ext.namespace('Phlexible.mediamanager.portlet');
+Ext.provide('Phlexible.mediamanager.portlet.LatestFilesRecord');
+Ext.provide('Phlexible.mediamanager.portlet.LatestFilesBigTemplate');
+Ext.provide('Phlexible.mediamanager.portlet.LatestFilesSmallTemplate');
+Ext.provide('Phlexible.mediamanager.portlet.LatestFilesListTemplate');
+Ext.provide('Phlexible.mediamanager.portlet.LatestFiles');
 
 Phlexible.mediamanager.portlet.LatestFilesRecord = Ext.data.Record.create([
     {name: 'id', type: 'string'},

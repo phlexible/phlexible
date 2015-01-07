@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.queue.model');
+Ext.provide('Phlexible.queue.model.Job');
 
 Phlexible.queue.model.Job = Ext.data.Record.create([
     'id',

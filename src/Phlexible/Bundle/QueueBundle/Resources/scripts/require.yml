@@ -1,4 +1,0 @@
-require:
-    - menuhandle/handles
-    - model/Job
-    - QueueStatsWindow

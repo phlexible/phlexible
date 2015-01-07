@@ -10,8 +10,9 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
 use Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\CssCompressorInterface;
-use Puli\PuliFactory;
+use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\FileResource;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * CSS builder
@@ -21,14 +22,14 @@ use Puli\Repository\Resource\FileResource;
 class CssBuilder
 {
     /**
-     * @var PuliFactory
+     * @var ResourceRepository
      */
-    private $puliFactory;
+    private $puliRepository;
 
     /**
      * @var CssCompressorInterface
      */
-    private $cssCompressor;
+    private $compressor;
 
     /**
      * @var string
@@ -41,19 +42,19 @@ class CssBuilder
     private $debug;
 
     /**
-     * @param PuliFactory            $puliFactory
-     * @param CssCompressorInterface $cssCompressor
+     * @param ResourceRepository     $puliRepository
+     * @param CssCompressorInterface $compressor
      * @param string                 $cacheDir
      * @param bool                   $debug
      */
     public function __construct(
-        PuliFactory $puliFactory,
-        CssCompressorInterface $cssCompressor,
+        ResourceRepository $puliRepository,
+        CssCompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
-        $this->puliFactory = $puliFactory;
-        $this->cssCompressor = $cssCompressor;
+        $this->puliRepository = $puliRepository;
+        $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
     }
@@ -68,31 +69,35 @@ class CssBuilder
      */
     public function get($baseUrl, $basePath)
     {
-        /*
-        if (!$this->debug) {
-            $filters[] = 'compressor';
-            //$filters[] = new Assetic\Filter\Yui\JsCompressorFilter('/Users/swentz/Sites/ofcs/hoffmann/app/Resources/java/yuicompressor-2.4.7.jar');
-            //$filters[] = new Assetic\Filter\CssMinFilter();
+        $cacheFilename = $this->cacheDir . '/gui.css';
+        $filesystem = new Filesystem();
+        if ($filesystem->exists($cacheFilename) && !$this->debug) {
+            return file_get_contents($cacheFilename);
         }
-        */
 
         $input = [];
 
-        $repo = $this->puliFactory->createRepository();
-
-        foreach ($repo->find('/phlexible/styles/*/*.css') as $resource) {
+        foreach ($this->puliRepository->find('/phlexible/styles/*/*.css') as $resource) {
             /* @var $resource FileResource */
             $input[] = $resource->getFilesystemPath();
         }
 
-        $css = '';
+        $css = '/* Created: ' . date('Y-m-d H:i:s') . ' */';
         foreach ($input as $file) {
-            $css .= "/* $file */";
+            if ($this->debug) {
+                $css .= PHP_EOL . "/* File: $file */" . PHP_EOL;
+            }
             $css .= file_get_contents($file);
         }
 
         $filter = new BaseUrlFilter($baseUrl, $basePath);
         $css = $filter->filter($css);
+
+        $filesystem->dumpFile($cacheFilename, $css);
+
+        if (!$this->debug) {
+            $this->compressor->compressFile($cacheFilename);
+        }
 
         return $css;
     }

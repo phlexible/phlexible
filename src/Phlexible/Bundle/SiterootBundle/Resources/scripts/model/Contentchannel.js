@@ -1,6 +1,6 @@
-Ext.namespace('Phlexible.siteroots.model');
+Ext.provide('Phlexible.siteroots.model.Contentchannel');
 
-Phlexible.siteroots.model.ContentChannel = Ext.data.Record.create([
+Phlexible.siteroots.model.Contentchannel = Ext.data.Record.create([
     {name: 'contentchannel_id'},
     {name: 'contentchannel'},
     {name: 'used'},

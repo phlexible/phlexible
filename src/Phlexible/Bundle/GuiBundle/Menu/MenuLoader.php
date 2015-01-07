@@ -13,8 +13,7 @@ use Phlexible\Bundle\GuiBundle\GuiEvents;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\DelegatingLoader;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderResolver;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
-use Puli\PuliFactory;
-use Puli\Repository\FilesystemRepository;
+use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -26,9 +25,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class MenuLoader
 {
     /**
-     * @var PuliFactory
+     * @var ResourceRepository
      */
-    private $puliFactory;
+    private $puliRepository;
 
     /**
      * @var EventDispatcherInterface
@@ -36,12 +35,12 @@ class MenuLoader
     private $dispatcher;
 
     /**
-     * @param PuliFactory              $puliFactory
+     * @param ResourceRepository       $puliRepository
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(PuliFactory $puliFactory, EventDispatcherInterface $dispatcher)
+    public function __construct(ResourceRepository $puliRepository, EventDispatcherInterface $dispatcher)
     {
-        $this->puliFactory = $puliFactory;
+        $this->puliRepository = $puliRepository;
         $this->dispatcher = $dispatcher;
     }
 
@@ -50,8 +49,6 @@ class MenuLoader
      */
     public function load()
     {
-        $repo = $this->puliFactory->createRepository();
-
         $loader = new DelegatingLoader(
             new LoaderResolver(
                 [
@@ -60,7 +57,7 @@ class MenuLoader
             )
         );
         $items = new MenuItemCollection();
-        foreach ($repo->find('/phlexible/menu/*/*') as $resource) {
+        foreach ($this->puliRepository->find('/phlexible/menu/*/*') as $resource) {
             /* @var $resource FileResource */
 
             $loadedItems = $loader->load($resource->getFilesystemPath());

@@ -1,4 +1,6 @@
-Ext.namespace('Phlexible.tasks.portlet');
+Ext.provide('Phlexible.tasks.portlet.TaskRecord');
+Ext.provide('Phlexible.tasks.portlet.MyTasksTemplate');
+Ext.provide('Phlexible.tasks.portlet.MyTasks');
 
 Phlexible.tasks.portlet.TaskRecord = Ext.data.Record.create([
     {name: 'id', type: 'string'},

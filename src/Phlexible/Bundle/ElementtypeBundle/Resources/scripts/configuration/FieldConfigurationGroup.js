@@ -1,4 +1,7 @@
-Ext.namespace('Phlexible.elementtypes.configuration');
+Ext.provide('Phlexible.elementtypes.configuration.FieldConfigurationGroup');
+
+Ext.require('Ext.ux.form.Spinner');
+Ext.require('Ext.ux.form.Spinner.NumberStrategy');
 
 Phlexible.elementtypes.configuration.FieldConfigurationGroup = Ext.extend(Ext.form.FieldSet, {
     strings: Phlexible.elementtypes.Strings,

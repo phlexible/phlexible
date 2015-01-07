@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.gui.util');
+Ext.provide('Phlexible.gui.util.Console');
 
 /*
  * Phlexible
@@ -129,4 +129,3 @@ Phlexible.gui.util.Console = function () {
     };
 };
 
-Phlexible.console = new Phlexible.gui.util.Console();

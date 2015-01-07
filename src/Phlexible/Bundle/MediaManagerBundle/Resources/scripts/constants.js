@@ -20,3 +20,9 @@ Phlexible.mediamanager.Rights = {
     FILE_DELETE: 'FILE_DELETE',
     FILE_DOWNLOAD: 'FILE_DOWNLOAD'
 };
+
+Phlexible.mediamanager.DeletePolicy = {
+    DELETE_ALL: 'delete_all',
+    DELETE_OLD: 'delete_old',
+    HIDE_OLD: 'hide_old'
+};

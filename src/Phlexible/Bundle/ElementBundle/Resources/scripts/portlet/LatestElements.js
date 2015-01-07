@@ -1,4 +1,8 @@
-Ext.ns('Phlexible.elements.portlet');
+Ext.provide('Phlexible.elements.portlet.LatestElementsRecord');
+Ext.provide('Phlexible.elements.portlet.LatestElementsPortlet');
+Ext.provide('Phlexible.elements.portlet.LatestElements');
+
+Ext.require('Ext.ux.Portlet');
 
 Phlexible.elements.portlet.LatestElementsRecord = Ext.data.Record.create([
     {name: 'ident', type: 'string'},

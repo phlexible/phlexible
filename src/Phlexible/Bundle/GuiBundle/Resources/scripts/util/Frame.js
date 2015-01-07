@@ -1,4 +1,9 @@
-Ext.ns('Phlexible.gui.util');
+Ext.provide('Phlexible.gui.util.Frame');
+
+Ext.require('Phlexible.gui.util.Config');
+Ext.require('Phlexible.gui.util.User');
+Ext.require('Phlexible.gui.util.Menu');
+Ext.require('Phlexible.gui.util.SystemMessage');
 
 Phlexible.gui.util.Frame = function () {
     this.addEvents({
@@ -191,7 +196,7 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
      * @private
      */
     initMenu: function () {
-        this.menu = new Phlexible.gui.Menu({
+        this.menu = new Phlexible.gui.util.Menu({
             listeners: {
                 load: function (menu, items) {
                     this.getToolbar().items.each(function(item) {

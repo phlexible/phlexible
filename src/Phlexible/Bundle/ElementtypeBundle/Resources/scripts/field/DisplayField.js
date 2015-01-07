@@ -1,91 +1,101 @@
-Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
-    // labels
-    var hideLabel,
-        label,
-        labelSeparator = ':',
-        contextHelp = item.labels.contextHelp || {},
-        prefix = item.labels.prefix || {},
-        suffix = item.labels.suffix || {};
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
 
-    if (parentConfig.singleLineLabel) {
-        label = parentConfig.singleLineLabel;
-        parentConfig.singleLineLabel = '';
-        hideLabel = false;
-    } else if (parentConfig.singleLine) {
-        hideLabel = true;
-        label = item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')];
-    } else if (item.configuration.hide_label) {
-        hideLabel = false;
-        label = '';
-        labelSeparator = '';
-    } else {
-        hideLabel = false;
-        label = item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')];
-    }
+Ext.provide('Phlexible.elementtypes.field.DisplayField');
 
-    var field_prefix = 'field_' + item.dsId + '_';
-    if (item.data_id) {
-        field_prefix += 'id-' + item.data_id;
-    } else {
-        field_prefix += Ext.id(null, 'new');
-    }
+/**
+ * @class Phlexible.elementtypes.field.DisplayField
+ * @extends Ext.form.Field
+ * A display-only text field which is not validated and not submitted.
+ * @constructor
+ * Creates a new DisplayField.
+ * @param {Object} config Configuration options
+ * @xtype displayfield
+ */
+Phlexible.elementtypes.field.DisplayField = Ext.extend(Ext.form.Field, {
+    validationEvent: false,
+    validateOnBlur: false,
+    defaultAutoCreate: {tag: "div"},
+    /**
+     * @cfg {String} fieldClass The default CSS class for the field (defaults to <tt>"x-form-display-field"</tt>)
+     */
+    fieldClass: "x-form-display-field",
+    /**
+     * @cfg {Boolean} htmlEncode <tt>false</tt> to skip HTML-encoding the text when rendering it (defaults to
+     * <tt>false</tt>). This might be useful if you want to include tags in the field's innerHTML rather than
+     * rendering them as string literals per the default logic.
+     */
+    htmlEncode: false,
 
-    var config = {
-        xtype: 'displayfield',
-        name: field_prefix + (repeatableId ? '#' + repeatableId : ''),
-        dsId: item.dsId,
+    // private
+    initEvents: Ext.emptyFn,
 
-        fieldLabel: label,
-        helpText: contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
-        prefix: prefix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
-        suffix: suffix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
-        labelSeparator: labelSeparator,
-        hideLabel: hideLabel,
-        value: item.content,
-        width: item.configuration.width || 100,
-        element: element,
-
-        supportsPrefix: true,
-        supportsSuffix: true
-    };
-
-    Ext.each(valueStructure.values, function (value) {
-        if (value.dsId === item.dsId) {
-            config.value = value.content;
-        }
-    });
-
-    return config;
-});
-
-Phlexible.fields.FieldTypes.addField('displayfield', {
-    titles: {
-        de: 'Anzeigefeld',
-        en: 'Displayfield'
+    isValid: function () {
+        return true;
     },
-    iconCls: 'p-elementtype-field_display-icon',
-    allowedIn: [
-        'tab',
-        'accordion',
-        'group',
-        'referenceroot'
-    ],
-    config: {
-        labels: {
-            field: 1,
-            box: 0,
-            prefix: 0,
-            suffix: 0,
-            help: 1
-        },
-        configuration: {
-            required: 0,
-            sync: 0,
-            width: 1,
-            height: 0,
-            readonly: 0,
-            hide_label: 1,
-            sortable: 0
+
+    validate: function () {
+        return true;
+    },
+
+    getRawValue: function () {
+        var v = this.rendered ? this.el.dom.innerHTML : Ext.value(this.value, '');
+        if (v === this.emptyText) {
+            v = '';
         }
+        if (this.htmlEncode) {
+            v = Ext.util.Format.htmlDecode(v);
+        }
+        return v;
+    },
+
+    getValue: function () {
+        return this.getRawValue();
+    },
+
+    getName: function () {
+        return this.name;
+    },
+
+    setRawValue: function (v) {
+        if (this.htmlEncode) {
+            v = Ext.util.Format.htmlEncode(v);
+        }
+        return this.rendered ? (this.el.dom.innerHTML = (Ext.isEmpty(v) ? '' : v)) : (this.value = v);
+    },
+
+    setValue: function (v) {
+        this.setRawValue(v);
+        return this;
     }
+    /**
+     * @cfg {String} inputType
+     * @hide
+     */
+    /**
+     * @cfg {Boolean} disabled
+     * @hide
+     */
+    /**
+     * @cfg {Boolean} readOnly
+     * @hide
+     */
+    /**
+     * @cfg {Boolean} validateOnBlur
+     * @hide
+     */
+    /**
+     * @cfg {Number} validationDelay
+     * @hide
+     */
+    /**
+     * @cfg {String/Boolean} validationEvent
+     * @hide
+     */
 });
+
+Ext.reg('displayfield', Phlexible.elementtypes.field.DisplayField);

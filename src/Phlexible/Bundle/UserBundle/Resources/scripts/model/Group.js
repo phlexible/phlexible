@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.users.model');
+Ext.provide('Phlexible.users.model.Group');
 
 Phlexible.users.model.Group = Ext.data.Record.create([
     {name: 'gid'},

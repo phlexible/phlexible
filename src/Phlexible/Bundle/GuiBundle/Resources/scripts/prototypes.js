@@ -1,3 +1,17 @@
+Ext.require = function(require) {
+
+}
+
+Ext.provide = function(provide) {
+    var provides = provide.split('.');
+    if (provides.length < 2) {
+        return;
+    }
+    provides.pop();
+    provide = provides.join('.');
+    Ext.namespace(provide);
+}
+
 String.prototype.ellipse = function (maxLength) {
     if (this.length > maxLength) {
         return this.substr(0, maxLength - 3) + '...';

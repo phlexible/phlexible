@@ -1,4 +1,4 @@
-Ext.namespace('Phlexible.gui.model');
+Ext.provide('Phlexible.gui.model.Bundle');
 
 Phlexible.gui.model.Bundle = Ext.data.Record.create([
     {name: 'id', type: 'string'},

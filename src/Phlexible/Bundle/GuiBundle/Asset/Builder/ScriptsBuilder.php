@@ -9,9 +9,10 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
-use Puli\PuliFactory;
+use Puli\Repository\Api\ResourceRepository;
+use Puli\Repository\Resource\DirectoryResource;
 use Puli\Repository\Resource\FileResource;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Scripts builder
@@ -21,14 +22,14 @@ use Symfony\Component\Yaml\Yaml;
 class ScriptsBuilder
 {
     /**
-     * @var PuliFactory
+     * @var ResourceRepository
      */
-    private $puliFactory;
+    private $puliRepository;
 
     /**
      * @var JavascriptCompressorInterface
      */
-    private $javascriptCompressor;
+    private $compressor;
 
     /**
      * @var string
@@ -41,19 +42,19 @@ class ScriptsBuilder
     private $debug;
 
     /**
-     * @param PuliFactory                   $puliFactory
-     * @param JavascriptCompressorInterface $javascriptCompressor
+     * @param ResourceRepository            $puliRepository
+     * @param JavascriptCompressorInterface $compressor
      * @param string                        $cacheDir
      * @param bool                          $debug
      */
     public function __construct(
-        PuliFactory $puliFactory,
-        JavascriptCompressorInterface $javascriptCompressor,
+        ResourceRepository $puliRepository,
+        JavascriptCompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
-        $this->puliFactory = $puliFactory;
-        $this->javascriptCompressor = $javascriptCompressor;
+        $this->puliRepository = $puliRepository;
+        $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
     }
@@ -65,72 +66,95 @@ class ScriptsBuilder
      */
     public function get()
     {
-        $requires = [];
-        $input = [];
-        $parser = new Yaml();
+        $cacheFilename = $this->cacheDir . '/gui.js';
+        $filesystem = new Filesystem();
+        if ($filesystem->exists($cacheFilename) && !$this->debug) {
+            return file_get_contents($cacheFilename);
+        }
 
-        $repo = $this->puliFactory->createRepository();
+        $entryPoints = array();
 
-        foreach ($repo->find('/phlexible/scripts-ux/*/require.yml') as $resource) {
+        $dir = $this->puliRepository->get('/phlexible/scripts');
+        /* @var $dir DirectoryResource */
+        foreach ($dir->listChildren() as $dir) {
+            foreach ($dir->listChildren() as $file) {
+                if ($file instanceof FileResource && substr($file->getName(), -3) === '.js') {
+                    $entryPoints[] = $file->getPath();
+                }
+            }
+        }
+
+        $files = array();
+        foreach ($this->puliRepository->find('/phlexible/scripts/*/*.js') as $resource) {
             /* @var $resource FileResource */
 
             $body = $resource->getBody();
-            $config = $parser->parse($body);
-            $priority = isset($config['priority']) ? (int) $config['priority'] : 0;
-            $priority += 1000;
 
-            if (!isset($config['require'])) {
-                die('gna');
+            $file = new \stdClass();
+            $file->file = $resource->getFilesystemPath();
+            $file->requires = array();
+            $file->provides = array();
+
+            preg_match_all('/Ext\.provide\(["\'](.+)["\']\)/', $body, $matches);
+            foreach ($matches[1] as $provide) {
+                $file->provides[] = $provide;
             }
 
-            $requires[$priority][] = array(
-                'path'     => dirname($resource->getPath()),
-                'priority' => $priority,
-                'requires' => $config['require'],
-            );
-        }
-
-        foreach ($repo->find('/phlexible/scripts/*/require.yml') as $resource) {
-            /* @var $resource FileResource */
-
-            $body = $resource->getBody();
-            $config = $parser->parse($body);
-            $priority = isset($config['priority']) ? (int) $config['priority'] : 0;
-
-            if (!isset($config['require'])) {
-                die('gna');
+            preg_match_all('/Ext\.require\(["\'](.+)["\']\)/', $body, $matches);
+            foreach ($matches[1] as $require) {
+                $file->requires[] = $require;
             }
 
-            $requires[$priority][] = array(
-                'path'     => dirname($resource->getPath()),
-                'priority' => $priority,
-                'requires' => $config['require'],
-            );
+            $files[] = $file;
         }
 
-        krsort($requires);
-        $sortedRequires = [];
-        foreach ($requires as $priority => $priorityRequires) {
-            $sortedRequires = array_merge($sortedRequires, $priorityRequires);
-        }
-
-        foreach ($sortedRequires as $require) {
-            /* @var $require FileResource */
-
-            $path = $require['path'];
-
-            if (!isset($require['requires']) || !is_array($require['requires'])) {
-                print_r($require);die;
-            }
-            foreach ($require['requires'] as $file) {
-                $input[] = $repo->get("$path/$file.js")->getFilesystemPath();
+        $symbols = array();
+        foreach ($files as $file) {
+            foreach ($file->provides as $provide) {
+                $symbols[$provide] = $file;
             }
         }
 
-        $scripts = '';
-        foreach ($input as $file) {
-            $scripts .= "/* File: $file */" . PHP_EOL;
+        $results = new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS);
+
+        function addToResult($file, $results, $symbols)
+        {
+            if (!empty($file->added)) {
+                return;
+            }
+
+            $file->added = true;
+
+            if (!empty($file->requires)) {
+                foreach ($file->requires as $require) {
+                    if (!isset($symbols[$require])) {
+                        throw new \Exception("Symbol '$require' not found for file {$file->file}.");
+                    }
+                    addToResult($symbols[$require], $results, $symbols);
+                }
+            }
+
+            $results[] = $file->file;
+        };
+
+        foreach ($files as $file) {
+            addToResult($file, $results, $symbols);
+        }
+
+        $results = (array) $results;
+
+        $scripts = '/* Created: ' . date('Y-m-d H:i:s') . ' */';
+        foreach ($results as $file) {
+            if ($this->debug) {
+                $scripts .= PHP_EOL . "/* File: $file */" . PHP_EOL;
+            }
             $scripts .= file_get_contents($file);
+        }
+
+        $filesystem->dumpFile($cacheFilename, $scripts);
+
+        if (!$this->debug) {
+            $this->compressor->compressFile($cacheFilename);
         }
 
         return $scripts;

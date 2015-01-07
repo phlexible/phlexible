@@ -1,4 +1,4 @@
-Ext.ns('Phlexible.elements.model');
+Ext.provide('Phlexible.elements.model.ElementList');
 
 Phlexible.elements.model.ElementList = Ext.data.Record.create([
     {name: 'tid', type: 'int'},
