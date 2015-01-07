@@ -212,4 +212,4 @@ Phlexible.tasks.MainPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('tasks-mainpanel', Phlexible.tasks.MainPanel)
+Ext.reg('tasks-mainpanel', Phlexible.tasks.MainPanel);

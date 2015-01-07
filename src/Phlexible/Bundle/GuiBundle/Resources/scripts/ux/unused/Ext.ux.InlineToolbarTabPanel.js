@@ -81,4 +81,4 @@ Ext.extend(Ext.ux.InlineToolbarTabPanel, Ext.TabPanel, {
         }
     }
 });
-Ext.reg('inlinetoolbartabpanel', Ext.ux.InlineToolbarTabPanel)
+Ext.reg('inlinetoolbartabpanel', Ext.ux.InlineToolbarTabPanel);
