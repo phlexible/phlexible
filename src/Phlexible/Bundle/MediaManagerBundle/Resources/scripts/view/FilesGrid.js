@@ -4,6 +4,7 @@ Ext.provide('Phlexible.mediamanager.FilesGrid');
 Ext.require('Phlexible.mediamanager.model.File');
 Ext.require('Phlexible.Format');
 Ext.require('Phlexible.mediamanager.CustomGridView');
+Ext.require('Phlexible.mediamanager.RenameFileWindow');
 Ext.require('Ext.ux.SliderTip');
 
 Phlexible.mediamanager.ToolbarHidePlugin = Ext.extend(Object, {

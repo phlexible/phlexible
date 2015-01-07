@@ -1,5 +1,8 @@
 Ext.provide('Phlexible.mediamanager.FileMetaGrid');
 
+Ext.require('Phlexible.metasets.util.Fields');
+Ext.require('Phlexible.gui.grid.TypeColumnModel');
+
 Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.meta,
@@ -79,7 +82,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         this.sm = new Ext.grid.CellSelectionModel();
 
-        var metaFields = new Phlexible.metasets.Fields();
+        var metaFields = new Phlexible.metasets.util.Fields();
 
         this.cm = new Phlexible.gui.grid.TypeColumnModel({
             columns: columns,

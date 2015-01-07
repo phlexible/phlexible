@@ -5,6 +5,7 @@ Ext.require('Phlexible.mediamanager.UploadStatusBar');
 Ext.require('Phlexible.mediamanager.FolderTree');
 Ext.require('Phlexible.mediamanager.AttributesPanel');
 Ext.require('Phlexible.mediamanager.FilesGrid');
+Ext.require('Phlexible.mediamanager.FileDetailWindow');
 Ext.require('plupload');
 
 Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {

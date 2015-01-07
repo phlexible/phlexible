@@ -1,5 +1,6 @@
 Ext.provide('Phlexible.mediamanager.FolderMeta');
 
+Ext.require('Phlexible.mediamanager.FileMeta');
 Ext.require('Phlexible.mediamanager.FolderMetaGrid');
 
 Phlexible.mediamanager.FolderMeta = Ext.extend(Phlexible.mediamanager.FileMeta, {

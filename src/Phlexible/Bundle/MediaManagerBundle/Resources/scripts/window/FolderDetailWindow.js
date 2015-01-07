@@ -1,6 +1,8 @@
 Ext.provide('Phlexible.mediamanager.FolderDetailWindow');
 
 Ext.require('Phlexible.mediamanager.FolderMeta');
+Ext.require('Phlexible.mediamanager.FolderPropertiesPanel');
+Ext.require('Phlexible.accesscontrol.RightsGrid');
 
 Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
     title: 'Folder Details',

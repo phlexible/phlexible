@@ -2,6 +2,8 @@ Ext.provide('Phlexible.mediamanager.FolderTreeLoader');
 Ext.provide('Phlexible.mediamanager.FolderTree');
 
 Ext.require('Phlexible.mediamanager.NewFolderWindow');
+Ext.require('Phlexible.mediamanager.FolderDetailWindow');
+Ext.require('Phlexible.mediamanager.RenameFolderWindow');
 
 Phlexible.mediamanager.FolderTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
     /**
