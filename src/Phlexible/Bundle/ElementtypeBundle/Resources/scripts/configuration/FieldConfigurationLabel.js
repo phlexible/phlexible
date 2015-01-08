@@ -11,13 +11,13 @@ Phlexible.elementtypes.configuration.FieldConfigurationLabel = Ext.extend(Ext.fo
         this.items = [
             {
                 xtype: 'textarea',
-                fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                fieldLabel: Phlexible.inlineIcon('p-gui-de-icon') + ' ' + this.strings.values_german,
                 name: 'text_de',
                 width: 200
             },
             {
                 xtype: 'textarea',
-                fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                fieldLabel: Phlexible.inlineIcon('p-gui-en-icon') + ' ' + this.strings.values_english,
                 name: 'text_en',
                 width: 200
             }

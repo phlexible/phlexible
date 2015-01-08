@@ -8,11 +8,10 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
+use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\CssCompressorInterface;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
+use Puli\Repository\Api\ResourceCollection;
+use Puli\Repository\Api\ResourceRepository;
 
 /**
  * Icons builder
@@ -22,14 +21,14 @@ use Symfony\Component\Finder\SplFileInfo;
 class IconsBuilder
 {
     /**
-     * @var array
+     * @var ResourceRepository
      */
-    private $bundles;
+    private $puliRepository;
 
     /**
      * @var CssCompressorInterface
      */
-    private $cssCompressor;
+    private $compressor;
 
     /**
      * @var string
@@ -42,33 +41,21 @@ class IconsBuilder
     private $debug;
 
     /**
-     * @param array                  $bundles
-     * @param CssCompressorInterface $cssCompressor
+     * @param ResourceRepository     $puliRepository
+     * @param CssCompressorInterface $compressor
      * @param string                 $cacheDir
      * @param bool                   $debug
      */
     public function __construct(
-        array $bundles,
-        CssCompressorInterface $cssCompressor,
+        ResourceRepository $puliRepository,
+        CssCompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
-        $this->bundles = $bundles;
-        $this->cssCompressor = $cssCompressor;
+        $this->puliRepository = $puliRepository;
+        $this->compressor = $compressor;
         $this->cacheDir = rtrim($cacheDir, '/') . '/';
         $this->debug = $debug;
-    }
-
-    /**
-     * Generate a cache file name
-     *
-     * @return string
-     */
-    public function getCacheFilename()
-    {
-        $cacheFilename = $this->cacheDir . 'icons.css';
-
-        return $cacheFilename;
     }
 
     /**
@@ -81,133 +68,85 @@ class IconsBuilder
      */
     public function get($baseUrl, $basePath)
     {
-        $cacheFilename = $this->getCacheFilename();
+        $cache = new ResourceCollectionCache($this->cacheDir . '/icons.css', $this->debug);
 
-        $configCache = new ConfigCache($cacheFilename, $this->debug);
-        if (!$configCache->isFresh()) {
-            $resources = new \ArrayObject();
-            $r = new \ReflectionClass($this);
-            $resources[] = new FileResource($r->getFileName());
-            $content = $this->buildIcons($this->bundles, $baseUrl, $basePath, $resources);
+        $resources = $this->find();
 
-            $configCache->write($content, (array) $resources);
-        } else {
-            $content = file_get_contents($configCache);
+        if (!$cache->isFresh($resources)) {
+            $content = $this->build($resources, $baseUrl, $basePath);
+
+            $cache->write($content);
+
+            if (!$this->debug) {
+                $this->compressor->compressFile((string) $cache);
+            }
+
         }
 
-        return $content;
+        return file_get_contents((string) $cache);
     }
 
     /**
-     * Glue together all styles and return file/memory stream
-     *
-     * @param array        $bundles
-     * @param string       $baseUrl
-     * @param string       $basePath
-     * @param \ArrayObject $resources
-     *
-     * @return string
+     * @return ResourceCollection
      */
-    private function buildIcons(array $bundles, $baseUrl, $basePath, \ArrayObject $resources)
+    private function find()
     {
-        $content = '';
-        $content .= $this->buildIconsForDir($bundles, 'icons', $basePath, $resources);
-        $content .= $this->buildIconsForDir($bundles, 'flags', $basePath, $resources);
-
-        if (!$this->debug) {
-            $content = $this->compress($content);
-        }
-
-        $content = str_replace('/makeweb/', $baseUrl . '/', $content);
-        $content = str_replace('/BASEURL/', $baseUrl . '/', $content);
-        $content = str_replace('/BASEPATH/', $basePath . '/', $content);
-
-        return $content;
+        return $this->puliRepository->find('/phlexible/icons/*/*.*');
     }
 
     /**
-     * @param array        $bundles
-     * @param string       $assetDir
-     * @param string       $baseUrl
-     * @param \ArrayObject $resources
+     * @param ResourceCollection $resources
+     * @param string             $baseUrl
+     * @param string             $basePath
      *
      * @return string
      */
-    private function buildIconsForDir(array $bundles, $assetDir, $baseUrl, \ArrayObject $resources)
+    private function build(ResourceCollection $resources, $baseUrl, $basePath)
     {
         $data = [];
 
-        foreach ($bundles as $id => $class) {
-            $reflection = new \ReflectionClass($class);
-            $path = dirname($reflection->getFileName());
-
-            $id = str_replace('bundle', '', strtolower($id));
-            $key = $assetDir === 'icons' ? str_replace('phlexible', '', $id) : $assetDir;
-
-            $path = $path . '/Resources/public/' . $assetDir . '/';
-            if (!file_exists($path)) {
+        foreach ($resources as $resource) {
+            if (!preg_match("#^/phlexible/icons/(.+?)/(.*\.(png|gif))$#", $resource->getPath(), $match)) {
                 continue;
             }
 
-            $resources[] = new FileResource($path);
+            $bundle = $match[1];
+            $path = $match[2];
+            $extension = $match[3];
 
-            $finder = new Finder();
-            foreach ($finder->in($path)->name('*') as $iconFile) {
-                /* @var $iconFile SplFileInfo */
+            $filesystemPath = $resource->getFilesystemPath();
+            $file = basename($filesystemPath);
+            $name = basename($filesystemPath, ".$extension");
 
-                $ext = $iconFile->getExtension();
-                if ($ext != 'png' && $ext != 'gif' && $ext != 'jpg') {
-                    continue;
-                }
-
-                $icon = $iconFile->getPathname();
-
-                $size = getimagesize($icon);
-                if ($size[0] != 16 || $size[1] != 16) {
-                    continue;
-                }
-
-                $name = $iconFile->getFilename();
-
-                $selector = sprintf('.%s-%s-%s-icon', substr('p', 0, 1), $key, basename($icon, '.' . $ext));
-
-                $data[] = [
-                    'component' => $id,
-                    'file'      => $icon,
-                    'name'      => $name,
-                    'selector'  => $selector,
-                    'ext'       => $ext,
-                ];
+            $size = getimagesize($filesystemPath);
+            if ($size[0] != 16 || $size[1] != 16) {
+                continue;
             }
+
+            $selector = sprintf('.p-%s-%s-icon', $bundle, $name);
+
+            $data[] = [
+                'bundle'    => "phlexible$bundle",
+                'path'      => $path,
+                'file'      => $file,
+                'name'      => $name,
+                'selector'  => $selector,
+                'extension' => $extension,
+            ];
         }
 
-        $urlTemplate = $baseUrl . '/bundles/%component%/%dir%/%name%';
+        $urlTemplate = $basePath . '/bundles/%s/icons/%s';
 
-        $content = '';
+        $icons = '/* Created: ' . date('Y-m-d H:i:s') . ' */' . PHP_EOL;
+        
         foreach ($data as $row) {
-            $url = str_replace(
-                ['%component%', '%name%', '%dir%'],
-                [$row['component'], $row['name'], $assetDir],
-                $urlTemplate
-            );
+            $url = sprintf($urlTemplate, $row['bundle'], $row['path']);
 
             $style = $row['selector'] . ' {background-image: url(' . $url . ') !important;}' . PHP_EOL;
 
-            $content .= $style;
+            $icons .= $style;
         }
 
-        return $content;
-    }
-
-    /**
-     * CSS-aware compress the input string
-     *
-     * @param string $style
-     *
-     * @return string
-     */
-    private function compress($style)
-    {
-        return $this->cssCompressor->compressString($style);
+        return $icons;
     }
 }

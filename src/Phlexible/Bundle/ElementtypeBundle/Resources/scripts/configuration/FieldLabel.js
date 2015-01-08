@@ -20,14 +20,14 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
                 items: [
                     {
                         xtype: 'textfield',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-de-icon') + ' ' + this.strings.values_german,
                         name: 'fieldlabel_de',
                         allowBlank: false,
                         width: 200
                     },
                     {
                         xtype: 'textfield',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-en-icon') + ' ' + this.strings.values_english,
                         name: 'fieldlabel_en',
                         allowBlank: false,
                         width: 200
@@ -42,13 +42,13 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
                 items: [
                     {
                         xtype: 'textfield',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-de-icon') + ' ' + this.strings.values_german,
                         name: 'boxlabel_de',
                         width: 200
                     },
                     {
                         xtype: 'textfield',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-en-icon') + ' ' + this.strings.values_english,
                         name: 'boxlabel_en',
                         width: 200
                     }
@@ -64,13 +64,13 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
                 items: [
                     {
                         xtype: 'textfield',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-de-icon') + ' ' + this.strings.values_german,
                         name: 'prefix_de',
                         width: 200
                     },
                     {
                         xtype: 'textfield',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-en-icon') + ' ' + this.strings.values_english,
                         name: 'prefix_en',
                         width: 200
                     }
@@ -86,13 +86,13 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
                 items: [
                     {
                         xtype: 'textfield',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-de-icon') + ' ' + this.strings.values_german,
                         name: 'suffix_de',
                         width: 200
                     },
                     {
                         xtype: 'textfield',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-en-icon') + ' ' + this.strings.values_english,
                         name: 'suffix_en',
                         width: 200
                     }
@@ -106,13 +106,13 @@ Phlexible.elementtypes.configuration.FieldLabel = Ext.extend(Ext.form.FormPanel,
                 items: [
                     {
                         xtype: 'textarea',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-de-icon') + ' ' + this.strings.values_german,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-de-icon') + ' ' + this.strings.values_german,
                         name: 'context_help_de',
                         width: 200
                     },
                     {
                         xtype: 'textarea',
-                        fieldLabel: Phlexible.inlineIcon('p-flags-en-icon') + ' ' + this.strings.values_english,
+                        fieldLabel: Phlexible.inlineIcon('p-gui-en-icon') + ' ' + this.strings.values_english,
                         name: 'context_help_en',
                         width: 200
                     }

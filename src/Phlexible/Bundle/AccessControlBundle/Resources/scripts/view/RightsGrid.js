@@ -276,7 +276,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
              width: 50,
              sortable: true,
              renderer: function(v) {
-             return Phlexible.inlineIcon('p-flags-de-icon');
+             return Phlexible.inlineIcon('p-gui-de-icon');
              }
              }*/
         ];

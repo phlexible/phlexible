@@ -37,7 +37,7 @@ Phlexible.elements.portlet.LatestElementsPortlet = new Ext.XTemplate(
     '<tr class="elements-wrap" id="elements_last_{ident}">',
     '<td class="elements-portlet-icon"><img src="{[Phlexible.baseUrl]}{icon}" title="{title}" width="18" height="18"/></td>',
     '<td class="elements-portlet-title">{title}</td>',
-    '<td class="elements-portlet-language">{[Phlexible.inlineIcon("p-flags-" + values.language + "-icon")]}</td>',
+    '<td class="elements-portlet-language">{[Phlexible.inlineIcon("p-gui-" + values.language + "-icon")]}</td>',
     '<td class="elements-portlet-version">{version}</td>',
     '<td class="elements-portlet-author">{author}</td>',
     '<td class="elements-portlet-date">{time:date("Y-m-d H:i:s")}</td>',

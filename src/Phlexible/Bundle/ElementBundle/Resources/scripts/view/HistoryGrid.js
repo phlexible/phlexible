@@ -108,7 +108,7 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
                 s = Phlexible.Config.get('set.language.frontend')[i][1];
             }
         }
-        return Phlexible.inlineIcon('p-flags-' + v + '-icon') + ' ' + s;
+        return Phlexible.inlineIcon('p-gui-' + v + '-icon') + ' ' + s;
     },
 
     renderAction: function (v) {

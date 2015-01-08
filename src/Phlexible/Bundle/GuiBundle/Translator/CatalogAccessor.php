@@ -2,8 +2,8 @@
 /**
  * phlexible
  *
- * @copyright 2007 brainbits GmbH (http://www.brainbits.net)
- * @license   http://www.makeweb.de/LICENCE     Dummy Licence
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
 
 namespace Phlexible\Bundle\GuiBundle\Translator;

@@ -12,7 +12,7 @@ Phlexible.elements.accordion.DataTemplate = new Ext.XTemplate(
     '<tpl if="unique_id && unique_id != \'null\'">',
     '<tr><th>{[Phlexible.elements.Strings.unique_id]}:</th><td>{unique_id}</td></tr>',
     '</tpl>',
-    '<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td>{[Phlexible.inlineIcon("p-flags-"+values.masterlanguage+"-icon")]} {masterlanguage}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td>{[Phlexible.inlineIcon("p-gui-"+values.masterlanguage+"-icon")]} {masterlanguage}</td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{author}</td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.created]}:</th><td>{create_date}</td></tr>',
 

@@ -80,7 +80,7 @@ class ConfigBuilder
             $sets['backendLanguages'][] = [
                 $language,
                 $languageTitle,
-                'p-flags-' . $language . '-icon',
+                'p-gui-' . $language . '-icon',
             ];
         }
 

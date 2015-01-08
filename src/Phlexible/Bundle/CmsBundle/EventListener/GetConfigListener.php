@@ -57,7 +57,7 @@ class GetConfigListener
             $frontendLanguages[] = [
                 $language,
                 $languageTitle,
-                'p-flags-' . $language . '-icon',
+                'p-gui-' . $language . '-icon',
             ];
         }
 

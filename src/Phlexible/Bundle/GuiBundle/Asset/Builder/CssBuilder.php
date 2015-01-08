@@ -8,8 +8,10 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
+use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
 use Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\CssCompressorInterface;
+use Puli\Repository\Api\ResourceCollection;
 use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Component\Filesystem\Filesystem;
@@ -69,15 +71,43 @@ class CssBuilder
      */
     public function get($baseUrl, $basePath)
     {
-        $cacheFilename = $this->cacheDir . '/gui.css';
-        $filesystem = new Filesystem();
-        if ($filesystem->exists($cacheFilename) && !$this->debug) {
-            return file_get_contents($cacheFilename);
+        $cache = new ResourceCollectionCache($this->cacheDir . '/gui.css', $this->debug);
+
+        $resources = $this->find();
+
+        if (!$cache->isFresh($resources)) {
+            $content = $this->build($resources);
+
+            $filter = new BaseUrlFilter($baseUrl, $basePath);
+            $content = $filter->filter($content);
+
+            $cache->write($content);
+
+            if (!$this->debug) {
+                $this->compressor->compressFile((string) $cache);
+            }
+
         }
 
+        return file_get_contents((string) $cache);
+    }
+
+    /**
+     * @return ResourceCollection
+     */
+    private function find()
+    {
+        return $this->puliRepository->find('/phlexible/styles/*/*.css');
+    }
+
+    /**
+     * @return string
+     */
+    private function build(ResourceCollection $resources)
+    {
         $input = [];
 
-        foreach ($this->puliRepository->find('/phlexible/styles/*/*.css') as $resource) {
+        foreach ($resources as $resource) {
             /* @var $resource FileResource */
             $input[] = $resource->getFilesystemPath();
         }
@@ -88,15 +118,6 @@ class CssBuilder
                 $css .= PHP_EOL . "/* File: $file */" . PHP_EOL;
             }
             $css .= file_get_contents($file);
-        }
-
-        $filter = new BaseUrlFilter($baseUrl, $basePath);
-        $css = $filter->filter($css);
-
-        $filesystem->dumpFile($cacheFilename, $css);
-
-        if (!$this->debug) {
-            $this->compressor->compressFile($cacheFilename);
         }
 
         return $css;

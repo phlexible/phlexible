@@ -24,7 +24,7 @@ Phlexible.elements.accordion.QuickInfoTemplate = new Ext.XTemplate(
     '<tpl if="status && status == Phlexible.elements.STATUS_ASYNC"><td style="color: red">{[Phlexible.elements.Strings.published_async]}</td></tpl>',
     '</tr>',
     '<tpl if="values.masterlanguage != values.language">',
-    '<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td style="color: red;">{[Phlexible.inlineIcon("p-flags-"+values.masterlanguage+"-icon")]} {[Phlexible.gui.Strings[values.masterlanguage]]}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td style="color: red;">{[Phlexible.inlineIcon("p-gui-"+values.masterlanguage+"-icon")]} {[Phlexible.gui.Strings[values.masterlanguage]]}</td></tr>',
     '</tpl>',
 
     '</table>',

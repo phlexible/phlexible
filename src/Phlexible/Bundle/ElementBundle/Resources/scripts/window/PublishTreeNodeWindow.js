@@ -297,7 +297,7 @@ Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
                         width: 50,
                         sortable: true,
                         renderer: function (v) {
-                            return Phlexible.inlineIcon('p-flags-' + v + '-icon');
+                            return Phlexible.inlineIcon('p-gui-' + v + '-icon');
                         }
                     }, {
                         header: this.strings.depth,

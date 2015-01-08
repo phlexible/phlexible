@@ -9,7 +9,9 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
+use Puli\Repository\Api\ResourceCollection;
 use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\DirectoryResource;
 use Puli\Repository\Resource\FileResource;
@@ -67,12 +69,39 @@ class ScriptsBuilder
      */
     public function get()
     {
-        $cacheFilename = $this->cacheDir . '/gui.js';
-        $filesystem = new Filesystem();
-        if ($filesystem->exists($cacheFilename) && !$this->debug) {
-            return file_get_contents($cacheFilename);
+        $cache = new ResourceCollectionCache($this->cacheDir . '/gui.js', $this->debug);
+
+        $resources = $this->find();
+
+        if (!$cache->isFresh($resources)) {
+            $content = $this->build($resources);
+
+            $cache->write($content);
+
+            if (!$this->debug) {
+                $this->compressor->compressFile((string) $cache);
+            }
+
         }
 
+        return file_get_contents((string) $cache);
+    }
+
+    /**
+     * @return ResourceCollection
+     */
+    private function find()
+    {
+        return $this->puliRepository->find('/phlexible/scripts/*/*.js');
+    }
+
+    /**
+     * @param ResourceCollection $resources
+     *
+     * @return string
+     */
+    private function build(ResourceCollection $resources)
+    {
         $entryPoints = array();
 
         $dir = $this->puliRepository->get('/phlexible/scripts');
@@ -86,7 +115,7 @@ class ScriptsBuilder
         }
 
         $files = array();
-        foreach ($this->puliRepository->find('/phlexible/scripts/*/*.js') as $resource) {
+        foreach ($resources as $resource) {
             /* @var $resource FileResource */
 
             $body = $resource->getBody();
@@ -154,19 +183,16 @@ class ScriptsBuilder
         }
 
         $scripts = '/* Created: ' . date('Y-m-d H:i:s');
-        $scripts .= PHP_EOL . ' * ' . PHP_EOL . ' * Unused paths:' . PHP_EOL . ' * ' . implode(PHP_EOL . ' * ', $unusedPaths) . PHP_EOL;
+        if ($this->debug) {
+            $scripts .= PHP_EOL . ' * ' . PHP_EOL . ' * Unused paths:' . PHP_EOL . ' * ' .
+                implode(PHP_EOL . ' * ', $unusedPaths) . PHP_EOL;
+        }
         $scripts .= ' */';
         foreach ($results as $path => $file) {
             if ($this->debug) {
                 $scripts .= PHP_EOL . "/* Resource: $path */" . PHP_EOL;
             }
             $scripts .= file_get_contents($file);
-        }
-
-        $filesystem->dumpFile($cacheFilename, $scripts);
-
-        if (!$this->debug) {
-            $this->compressor->compressFile($cacheFilename);
         }
 
         return $scripts;
