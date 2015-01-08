@@ -112,8 +112,23 @@ class ElementtypeService
      */
     public function findElementtypesUsingReferenceElementtype(Elementtype $referenceElementtype)
     {
-        // TODO: references
-        return [];//$this->elementtypeStructureManager->findElementtypesUsingReferenceElementtype($referenceElementtype);
+        $elementtypes = array();
+        foreach ($this->elementtypeManager->findAll() as $elementtype) {
+            if (!$elementtype->getStructure()->getRootNode()) {
+                continue;
+            }
+            $rii = new \RecursiveIteratorIterator($elementtype->getStructure()->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+            foreach ($rii as $node) {
+                /* @var $node ElementtypeStructureNode */
+                if ($node->getReferenceElementtypeId() === $referenceElementtype->getId()) {
+                    $elementtypes[] = $elementtype;
+                    break;
+                }
+            }
+
+        }
+
+        return $elementtypes;
     }
 
     /**
@@ -130,7 +145,15 @@ class ElementtypeService
      *
      * @return Elementtype
      */
-    public function createElementtype($type, $uniqueId, $name, $icon, ElementtypeStructure $elementtypeStructure = null, array $mappings = null, $user, $flush = true)
+    public function createElementtype(
+        $type,
+        $uniqueId,
+        $name,
+        $icon,
+        ElementtypeStructure $elementtypeStructure = null,
+        array $mappings = null,
+        $user,
+        $flush = true)
     {
         if (!$icon) {
             $icons = [

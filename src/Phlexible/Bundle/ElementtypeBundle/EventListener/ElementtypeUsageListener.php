@@ -47,17 +47,19 @@ class ElementtypeUsageListener
     {
         $elementtype = $event->getElementtype();
 
-        $elementtypes = $this->elementtypeService->findElementtypesUsingReferenceElementtype($elementtype);
-        foreach ($elementtypes as $elementtype) {
-            $event->addUsage(
-                new Usage(
-                    $elementtype->getType() . ' elementtype',
-                    'reference',
-                    $elementtype->getId(),
-                    $elementtype->getTitle(),
-                    $elementtype->getRevision()
-                )
-            );
+        if ($elementtype->getType() === 'reference') {
+            $elementtypes = $this->elementtypeService->findElementtypesUsingReferenceElementtype($elementtype);
+            foreach ($elementtypes as $elementtype) {
+                $event->addUsage(
+                    new Usage(
+                        $elementtype->getType() . ' elementtype',
+                        'reference',
+                        $elementtype->getId(),
+                        $elementtype->getTitle(),
+                        $elementtype->getRevision()
+                    )
+                );
+            }
         }
 
         if ($elementtype->getType() === 'layout') {
