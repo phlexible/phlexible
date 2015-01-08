@@ -6,17 +6,17 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor;
+namespace Phlexible\Bundle\GuiBundle\Compressor;
 
 use Phlexible\Bundle\GuiBundle\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Abstract javascript compressor
+ * Abstract string compressor
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-abstract class AbstractJavascriptCompressor implements JavascriptCompressorInterface
+abstract class AbstractStringCompressor implements CompressorInterface
 {
     /**
      * {@inheritdoc}

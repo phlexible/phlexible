@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
-use Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
+use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
 use Phlexible\Bundle\GuiBundle\Translator\CatalogAccessor;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -25,7 +25,7 @@ class TranslationsBuilder
     private $catalogAccessor;
 
     /**
-     * @var JavascriptCompressorInterface
+     * @var CompressorInterface
      */
     private $javascriptCompressor;
 
@@ -35,13 +35,14 @@ class TranslationsBuilder
     private $cacheDir;
 
     /**
-     * @param CatalogAccessor               $catalogAccessor
-     * @param JavascriptCompressorInterface $javascriptCompressor
-     * @param string                        $cacheDir
+     * @param CatalogAccessor     $catalogAccessor
+     * @param CompressorInterface $javascriptCompressor
+     * @param string              $cacheDir
      */
-    public function __construct(CatalogAccessor $catalogAccessor,
-                                JavascriptCompressorInterface $javascriptCompressor,
-                                $cacheDir)
+    public function __construct(
+        CatalogAccessor $catalogAccessor,
+        CompressorInterface $javascriptCompressor,
+        $cacheDir)
     {
         $this->catalogAccessor = $catalogAccessor;
         $this->javascriptCompressor = $javascriptCompressor;

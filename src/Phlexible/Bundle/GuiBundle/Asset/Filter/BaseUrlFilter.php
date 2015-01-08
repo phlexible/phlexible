@@ -8,9 +8,6 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Filter;
 
-use Assetic\Asset\AssetInterface;
-use Assetic\Filter\FilterInterface;
-
 /**
  * Filter phlexible baseurl and basepath
  *

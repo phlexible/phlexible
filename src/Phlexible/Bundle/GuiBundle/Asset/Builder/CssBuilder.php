@@ -10,11 +10,10 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
-use Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\CssCompressorInterface;
+use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
 use Puli\Repository\Api\ResourceCollection;
 use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\FileResource;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * CSS builder
@@ -29,7 +28,7 @@ class CssBuilder
     private $puliRepository;
 
     /**
-     * @var CssCompressorInterface
+     * @var CompressorInterface
      */
     private $compressor;
 
@@ -44,14 +43,14 @@ class CssBuilder
     private $debug;
 
     /**
-     * @param ResourceRepository     $puliRepository
-     * @param CssCompressorInterface $compressor
-     * @param string                 $cacheDir
-     * @param bool                   $debug
+     * @param ResourceRepository  $puliRepository
+     * @param CompressorInterface $compressor
+     * @param string              $cacheDir
+     * @param bool                $debug
      */
     public function __construct(
         ResourceRepository $puliRepository,
-        CssCompressorInterface $compressor,
+        CompressorInterface $compressor,
         $cacheDir,
         $debug)
     {

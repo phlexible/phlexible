@@ -51,13 +51,13 @@ services:
 
     # compressors
     phlexible_gui.compressor.javascript.simple:
-        class: Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\SimpleJavascriptCompressor
+        class: Phlexible\Bundle\GuiBundle\Compressor\SimpleJavascriptCompressor
         public: false
         tags:
             - {name: phlexible_gui.compressor.javascript, priority: -100}
 
     phlexible_gui.compressor.css.simple:
-        class: Phlexible\Bundle\GuiBundle\Compressor\CssCompressor\SimpleCssCompressor
+        class: Phlexible\Bundle\GuiBundle\Compressor\SimpleCssCompressor
         public: false
         tags:
             - {name: phlexible_gui.compressor.css, priority: -100}

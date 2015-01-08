@@ -10,12 +10,11 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
-use Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
+use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
 use Puli\Repository\Api\ResourceCollection;
 use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\DirectoryResource;
 use Puli\Repository\Resource\FileResource;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Scripts builder
@@ -30,7 +29,7 @@ class ScriptsBuilder
     private $puliRepository;
 
     /**
-     * @var JavascriptCompressorInterface
+     * @var CompressorInterface
      */
     private $compressor;
 
@@ -45,14 +44,14 @@ class ScriptsBuilder
     private $debug;
 
     /**
-     * @param ResourceRepository            $puliRepository
-     * @param JavascriptCompressorInterface $compressor
-     * @param string                        $cacheDir
-     * @param bool                          $debug
+     * @param ResourceRepository  $puliRepository
+     * @param CompressorInterface $compressor
+     * @param string              $cacheDir
+     * @param bool                $debug
      */
     public function __construct(
         ResourceRepository $puliRepository,
-        JavascriptCompressorInterface $compressor,
+        CompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
