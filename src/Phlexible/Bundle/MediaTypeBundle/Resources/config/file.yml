@@ -10,7 +10,7 @@ services:
         class: Phlexible\Component\MediaType\File\MediaTypeLoader
         public: false
         arguments:
-            - @puli.factory
+            - @puli.repository
             - @phlexible_media_type.compiler.php
             - %phlexible_media_type.file_dir%
             - %phlexible_media_type.compiler.cache_dir%
