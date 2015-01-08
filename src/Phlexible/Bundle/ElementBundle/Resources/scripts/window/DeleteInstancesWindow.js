@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.elements.DeleteInstancesWindow');
 
+Ext.require('Ext.grid.CheckboxColumn');
+
 Phlexible.elements.DeleteInstancesWindow = Ext.extend(Ext.Window, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.delete_instances_header,

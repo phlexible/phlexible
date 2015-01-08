@@ -1,5 +1,8 @@
 Ext.provide('Phlexible.elements.ElementPanel');
 
+Ext.require('Phlexible.elements.ElementTabPanel');
+// xt.provide('Phlexible.elements.TaskBar');
+
 Phlexible.elements.ElementPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     title: 'Element',

@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.users.UserWindow');
 
+Ext.require('Phlexible.users.model.UserRole');
+Ext.require('Phlexible.users.model.UserGroup');
 Ext.require('Ext.grid.CheckColumn');
 Ext.require('Ext.ux.TabPanel');
 

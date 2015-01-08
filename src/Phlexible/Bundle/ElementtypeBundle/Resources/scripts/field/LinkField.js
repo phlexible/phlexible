@@ -1,6 +1,7 @@
 Ext.provide('Phlexible.elementtypes.field.LinkField');
 
 Ext.require('Ext.ux.TwinComboBox');
+Ext.require('Phlexible.elements.LinkWindow');
 
 Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
     minChars: 2,

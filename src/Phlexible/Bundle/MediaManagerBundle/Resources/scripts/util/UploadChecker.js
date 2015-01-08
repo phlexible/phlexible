@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.mediamanager.UploadChecker');
 
+Ext.require('Phlexible.mediamanager.FileReplaceWindow');
+
 Phlexible.mediamanager.UploadChecker = function(config) {
     config = config || {};
 

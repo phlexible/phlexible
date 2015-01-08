@@ -1,5 +1,14 @@
 Ext.provide('Phlexible.elements.ElementAccordion');
 
+Ext.require('Phlexible.elements.accordion.AllowedChildren');
+Ext.require('Phlexible.elements.accordion.Comment');
+Ext.require('Phlexible.elements.accordion.Configuration');
+Ext.require('Phlexible.elements.accordion.Data');
+Ext.require('Phlexible.elements.accordion.Diff');
+Ext.require('Phlexible.elements.accordion.Instances');
+Ext.require('Phlexible.elements.accordion.Meta');
+Ext.require('Phlexible.elements.accordion.Versions');
+
 Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
 //    title: Phlexible.elements.Strings.properties,
 //    header: true,

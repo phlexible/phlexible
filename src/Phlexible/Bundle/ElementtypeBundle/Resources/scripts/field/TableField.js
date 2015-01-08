@@ -1,4 +1,5 @@
 Ext.provide('Phlexible.elementtypes.field.TableField');
+Ext.require('Phlexible.fields.FieldHelper');
 
 Phlexible.elementtypes.field.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
     width: 400,

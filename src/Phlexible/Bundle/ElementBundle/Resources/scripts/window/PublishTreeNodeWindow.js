@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.elements.PublishTreeNodeWindow');
 
+Ext.require('Ext.grid.CheckboxColumn');
+
 Phlexible.elements.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
     title: Phlexible.elements.Strings.publish_element_advanced,
     strings: Phlexible.elements.Strings,

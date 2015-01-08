@@ -6,6 +6,7 @@ Ext.require('Phlexible.teasers.ElementLayoutTree');
 Ext.require('Phlexible.elements.ElementPanel');
 Ext.require('Phlexible.elements.ElementListGrid');
 Ext.require('Phlexible.elements.TopToolbar');
+Ext.require('Phlexible.elements.FileLinkWindow');
 
 Phlexible.elements.MediaResourceTemplate = new Ext.XTemplate(
     '<tpl for=".">',

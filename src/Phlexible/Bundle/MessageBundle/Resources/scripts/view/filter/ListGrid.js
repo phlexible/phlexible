@@ -1,5 +1,6 @@
 Ext.provide('Phlexible.messages.filter.ListGrid');
 
+Ext.require('Phlexible.messages.model.Filter');
 Ext.require('Ext.ux.grid.RowActions');
 
 Phlexible.messages.filter.ListGrid = Ext.extend(Ext.grid.GridPanel, {

@@ -1,5 +1,6 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
+Ext.require('Phlexible.fields.FieldHelper');
 
 /*
  if (this.growHeight) {

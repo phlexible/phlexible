@@ -1,5 +1,13 @@
 Ext.provide('Phlexible.elements.ElementTabPanel');
 
+Ext.require('Phlexible.elements.ElementDataPanel');
+Ext.require('Phlexible.elements.ElementListGrid');
+Ext.require('Phlexible.elements.ElementPreviewPanel');
+Ext.require('Phlexible.elements.RightsGrid');
+Ext.require('Phlexible.elements.ElementLinksGrid');
+Ext.require('Phlexible.elements.ElementHistoryGrid');
+Ext.require('Phlexible.elements.UrlPanel');
+
 Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
     title: 'Element',
     cls: 'p-elements-tabs',

@@ -4,6 +4,7 @@ Ext.require('Phlexible.elementtypes.ElementtypeStructureTreeDropZone');
 Ext.require('Phlexible.elementtypes.ElementtypeStructureTreeLoader');
 Ext.require('Phlexible.elementtypes.ElementtypeStructureTreeNodeUI');
 Ext.require('Phlexible.elementtypes.ElementtypeStructureRootTreeNodeUI');
+Ext.require('Phlexible.elementtypes.FieldMap');
 
 Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel, {
     strings: Phlexible.elementtypes.Strings,

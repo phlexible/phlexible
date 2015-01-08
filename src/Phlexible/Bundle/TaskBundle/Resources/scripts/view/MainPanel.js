@@ -5,6 +5,8 @@ Ext.provide('Phlexible.tasks.MainPanel');
 
 Ext.require('Phlexible.tasks.FilterPanel');
 Ext.require('Phlexible.tasks.TasksGrid');
+Ext.require('Phlexible.tasks.AssignWindow');
+Ext.require('Phlexible.tasks.CommentWindow');
 
 Phlexible.tasks.ViewTemplate = new Ext.XTemplate(
     '<div class="p-tasks-view">',

@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.elementtypes.RootPropertyPanel');
 
+Ext.require('Phlexible.gui.util.ImageSelectWindow');
+
 Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elementtypes.Strings,
     title: Phlexible.elementtypes.Strings.properties,

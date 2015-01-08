@@ -1,6 +1,7 @@
 Ext.provide('Phlexible.frontendmedia.field.FileField');
 
 Ext.require('Phlexible.frontendmedia.FieldHelper');
+Ext.require('Phlexible.mediamanager.MediamanagerWindow');
 
 /**
  * @class Ext.ux.form.FileField

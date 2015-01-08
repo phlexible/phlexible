@@ -1,6 +1,8 @@
 Ext.provide('Phlexible.users.GroupsRowTemplate');
 Ext.provide('Phlexible.users.GroupsMainPanel');
 
+Ext.require('Phlexible.users.model.Group');
+
 Phlexible.users.GroupsRowTemplate = new Ext.XTemplate(
     '<div style="padding: 10px;">',
     '<div style="font-weight: bold; padding-bottom: 10px;">' + Phlexible.users.Strings.members + ':</div>',

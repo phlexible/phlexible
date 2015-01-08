@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\GuiBundle\Compressor\JavascriptCompressor\JavascriptCompressorInterface;
 use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\DirectoryResource;
@@ -77,9 +78,9 @@ class ScriptsBuilder
         $dir = $this->puliRepository->get('/phlexible/scripts');
         /* @var $dir DirectoryResource */
         foreach ($dir->listChildren() as $dir) {
-            foreach ($dir->listChildren() as $file) {
-                if ($file instanceof FileResource && substr($file->getName(), -3) === '.js') {
-                    $entryPoints[] = $file->getPath();
+            foreach ($dir->listChildren() as $resource) {
+                if ($resource instanceof FileResource && substr($resource->getName(), -3) === '.js') {
+                    $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();
                 }
             }
         }
@@ -91,6 +92,7 @@ class ScriptsBuilder
             $body = $resource->getBody();
 
             $file = new \stdClass();
+            $file->path = $resource->getPath();
             $file->file = $resource->getFilesystemPath();
             $file->requires = array();
             $file->provides = array();
@@ -105,8 +107,10 @@ class ScriptsBuilder
                 $file->requires[] = $require;
             }
 
-            $files[] = $file;
+            $files[$resource->getPath()] = $file;
         }
+
+        $entryPointFiles = array_intersect_key($files, $entryPoints);
 
         $symbols = array();
         foreach ($files as $file) {
@@ -115,9 +119,9 @@ class ScriptsBuilder
             }
         }
 
-        $results = new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS);
+        $results = new ArrayCollection();
 
-        function addToResult($file, $results, $symbols)
+        function addToResult($file, ArrayCollection $results, array $symbols)
         {
             if (!empty($file->added)) {
                 return;
@@ -134,19 +138,27 @@ class ScriptsBuilder
                 }
             }
 
-            $results[] = $file->file;
+            $results->set($file->path, $file->file);
         };
 
-        foreach ($files as $file) {
+        foreach ($entryPointFiles as $file) {
+        //foreach ($files as $file) {
             addToResult($file, $results, $symbols);
         }
 
-        $results = (array) $results;
+        $unusedPaths = array();
+        foreach ($files as $path => $file) {
+            if (empty($file->added)) {
+                $unusedPaths[] = $path;
+            }
+        }
 
-        $scripts = '/* Created: ' . date('Y-m-d H:i:s') . ' */';
-        foreach ($results as $file) {
+        $scripts = '/* Created: ' . date('Y-m-d H:i:s');
+        $scripts .= PHP_EOL . ' * ' . PHP_EOL . ' * Unused paths:' . PHP_EOL . ' * ' . implode(PHP_EOL . ' * ', $unusedPaths) . PHP_EOL;
+        $scripts .= ' */';
+        foreach ($results as $path => $file) {
             if ($this->debug) {
-                $scripts .= PHP_EOL . "/* File: $file */" . PHP_EOL;
+                $scripts .= PHP_EOL . "/* Resource: $path */" . PHP_EOL;
             }
             $scripts .= file_get_contents($file);
         }

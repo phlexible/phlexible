@@ -1,5 +1,6 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
+Ext.require('Phlexible.fields.FieldHelper');
 
 Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeData, storeMode = 'remote', displayField = 'value';

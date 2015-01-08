@@ -1,5 +1,13 @@
 Ext.provide('Phlexible.elements.TopToolbar');
 
+Ext.require('Phlexible.teasers.PublishTeaserWindow');
+Ext.require('Phlexible.teasers.SetTeaserOfflineWindow');
+Ext.require('Phlexible.tasks.NewTaskWindow');
+Ext.require('Phlexible.elements.HistoryWindow');
+Ext.require('Phlexible.elements.LocksWindow');
+Ext.require('Phlexible.elements.PublishTreeNodeWindow');
+Ext.require('Phlexible.elements.SetTreeNodeOfflineWindow');
+
 /**
  *
  */

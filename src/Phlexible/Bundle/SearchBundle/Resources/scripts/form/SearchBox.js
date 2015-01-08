@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.search.field.SearchBox');
 
+Ext.require('Phlexible.search.model.Result');
+
 Phlexible.search.field.SearchBox = Ext.extend(Ext.form.ComboBox, {
     displayField: 'title',
     cls: 'p-searchbox',

@@ -1,5 +1,7 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
+Ext.require('Phlexible.fields.FieldHelper');
+Ext.require('Phlexible.elementtypes.field.TableField');
 
 Ext.Editor.prototype.beforeDestroy = function () {
     if (this.field) this.field.destroy();

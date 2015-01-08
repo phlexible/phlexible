@@ -1,5 +1,9 @@
 Ext.provide('Phlexible.elements.ElementListGrid');
 
+Ext.require('Phlexible.elements.model.ElementList');
+Ext.require('Phlexible.elements.ElementsListGridFilter');
+Ext.require('Phlexible.elements.DeleteInstancesWindow');
+
 Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.list,

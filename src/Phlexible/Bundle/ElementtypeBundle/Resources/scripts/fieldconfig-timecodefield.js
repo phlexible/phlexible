@@ -1,5 +1,6 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
+Ext.require('Phlexible.fields.FieldHelper');
 Ext.require('Ext.ux.netbox.InputTextMask');
 
 Phlexible.fields.Registry.addFactory('timecodefield', function (parentConfig, item, valueStructure, element, repeatableId) {

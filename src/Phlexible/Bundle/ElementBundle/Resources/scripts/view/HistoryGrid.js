@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.elements.HistoryGrid');
 
+Ext.require('Phlexible.elements.model.ElementHistory');
+
 Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.elements.Strings.history,
     strings: Phlexible.elements.Strings,

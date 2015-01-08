@@ -1,5 +1,10 @@
 Ext.provide('Phlexible.elements.ElementsTree');
 
+Ext.require('Phlexible.elements.ElementsTreeDropZone');
+Ext.require('Phlexible.elements.ElementsTreeLoader');
+Ext.require('Phlexible.elements.ElementsTreeNodeUI');
+Ext.require('Phlexible.elements.DeleteInstancesWindow');
+
 Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.elements,

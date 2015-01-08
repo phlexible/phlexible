@@ -1,6 +1,11 @@
 Ext.provide('Phlexible.elements.DiffVersionComboTemplate');
 Ext.provide('Phlexible.elements.ElementDataPanel');
 
+Ext.require('Phlexible.elements.ElementAccordion');
+Ext.require('Phlexible.elements.ElementContentPanel');
+Ext.require('Phlexible.elements.accordion.QuickInfo');
+Ext.require('Phlexible.elements.PublishSlaveWindow');
+
 /*Phlexible.elements.xElementDataTabs = Ext.extend(Ext.TabPanel, {
  // private
  xadjustBodyWidth : function(w){

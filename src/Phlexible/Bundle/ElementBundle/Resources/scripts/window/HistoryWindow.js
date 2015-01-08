@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.elements.HistoryWindow');
 
+Ext.require('Phlexible.elements.HistoryFilter');
+
 Phlexible.elements.HistoryWindow = Ext.extend(Ext.Window, {
     title: Phlexible.elements.Strings.history,
     iconCls: 'p-element-tab_history-icon',

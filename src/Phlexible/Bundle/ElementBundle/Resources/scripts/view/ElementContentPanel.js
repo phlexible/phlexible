@@ -1,5 +1,9 @@
 Ext.provide('Phlexible.elements.ElementContentPanel');
 
+Ext.require('Phlexible.elements.ElementContentTabPanel');
+Ext.require('Phlexible.elements.ElementDataTabHelper');
+//xt.require('Phlexible.elements.ElementDataTab');
+
 Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     cls: 'p-elements-content-panel',

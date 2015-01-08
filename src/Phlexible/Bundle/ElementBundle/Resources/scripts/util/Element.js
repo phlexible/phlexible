@@ -2,6 +2,8 @@ Ext.provide('Phlexible.elements.Element');
 Ext.provide('Phlexible.elements.Teaser');
 
 Ext.require('Phlexible.fields.Prototypes');
+Ext.require('Phlexible.elements.NewElementInstanceWindow');
+Ext.require('Phlexible.elements.NewElementWindow');
 
 Phlexible.elements.Element = function (config) {
     this.addEvents(

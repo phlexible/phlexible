@@ -1,5 +1,6 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
+Ext.require('Phlexible.fields.FieldHelper');
 Ext.require('Ext.ux.form.LovCombo');
 
 Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item, valueStructure, element, repeatableId) {
