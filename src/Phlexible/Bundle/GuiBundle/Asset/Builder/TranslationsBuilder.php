@@ -49,20 +49,6 @@ class TranslationsBuilder
     }
 
     /**
-     * Generate a cache file name
-     *
-     * @param string $language
-     *
-     * @return string
-     */
-    public function getCacheFilename($language)
-    {
-        $cacheFilename = $this->cacheDir . '/translations-' . $language . '.js';
-
-        return $cacheFilename;
-    }
-
-    /**
      * Get all Translations for the given section
      *
      * @param string $language
@@ -70,7 +56,7 @@ class TranslationsBuilder
      *
      * @return string
      */
-    public function get($language, $domain = 'gui')
+    public function build($language, $domain = 'gui')
     {
         $translations = [];
         $catalogue = $this->catalogAccessor->getCatalogues($language);
@@ -92,7 +78,7 @@ class TranslationsBuilder
             $translations[$namespace] = $keys;
         }
 
-        $cacheFilename = $this->getCacheFilename($language);
+        $cacheFilename = $this->cacheDir . '/translations-' . $language . '.js';
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists(dirname($cacheFilename))) {

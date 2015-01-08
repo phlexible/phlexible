@@ -69,14 +69,14 @@ class CssBuilder
      *
      * @return string
      */
-    public function get($baseUrl, $basePath)
+    public function build($baseUrl, $basePath)
     {
         $cache = new ResourceCollectionCache($this->cacheDir . '/gui.css', $this->debug);
 
         $resources = $this->find();
 
         if (!$cache->isFresh($resources)) {
-            $content = $this->build($resources);
+            $content = $this->buildCss($resources);
 
             $filter = new BaseUrlFilter($baseUrl, $basePath);
             $content = $filter->filter($content);
@@ -103,7 +103,7 @@ class CssBuilder
     /**
      * @return string
      */
-    private function build(ResourceCollection $resources)
+    private function buildCss(ResourceCollection $resources)
     {
         $input = [];
 

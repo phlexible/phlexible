@@ -30,7 +30,7 @@ class AssetController extends Controller
     public function scriptsAction()
     {
         $scriptsBuilder = $this->get('phlexible_gui.asset.builder.scripts');
-        $content = $scriptsBuilder->get();
+        $content = $scriptsBuilder->build();
 
         return new Response($content, 200, ['Content-type' => 'text/javascript']);
     }
@@ -46,7 +46,7 @@ class AssetController extends Controller
     public function cssAction(Request $request)
     {
         $cssBuilder = $this->get('phlexible_gui.asset.builder.css');
-        $content = $cssBuilder->get($request->getBaseUrl(), $request->getBasePath());
+        $content = $cssBuilder->build($request->getBaseUrl(), $request->getBasePath());
 
         return new Response($content, 200, ['Content-type' => 'text/css']);
     }
@@ -62,7 +62,7 @@ class AssetController extends Controller
     public function iconsAction(Request $request)
     {
         $iconsBuilder = $this->get('phlexible_gui.asset.builder.icons');
-        $content = $iconsBuilder->get($request->getBaseUrl(), $request->getBasePath());
+        $content = $iconsBuilder->build($request->getBaseUrl(), $request->getBasePath());
 
         return new Response($content, 200, ['Content-type' => 'text/css']);
     }
@@ -79,7 +79,7 @@ class AssetController extends Controller
     public function translationsAction(Request $request, $language)
     {
         $translationBuilder = $this->get('phlexible_gui.asset.builder.translations');
-        $content = $translationBuilder->get($language);
+        $content = $translationBuilder->build($language);
 
         return new Response($content, 200, ['Content-type' => 'text/javascript']);
     }

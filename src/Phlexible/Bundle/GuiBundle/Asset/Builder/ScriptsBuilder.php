@@ -67,14 +67,14 @@ class ScriptsBuilder
      *
      * @return string
      */
-    public function get()
+    public function build()
     {
         $cache = new ResourceCollectionCache($this->cacheDir . '/gui.js', $this->debug);
 
         $resources = $this->find();
 
         if (!$cache->isFresh($resources)) {
-            $content = $this->build($resources);
+            $content = $this->buildScripts($resources);
 
             $cache->write($content);
 
@@ -100,7 +100,7 @@ class ScriptsBuilder
      *
      * @return string
      */
-    private function build(ResourceCollection $resources)
+    private function buildScripts(ResourceCollection $resources)
     {
         $entryPoints = array();
 

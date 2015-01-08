@@ -66,14 +66,14 @@ class IconsBuilder
      *
      * @return string
      */
-    public function get($baseUrl, $basePath)
+    public function build($baseUrl, $basePath)
     {
         $cache = new ResourceCollectionCache($this->cacheDir . '/icons.css', $this->debug);
 
         $resources = $this->find();
 
         if (!$cache->isFresh($resources)) {
-            $content = $this->build($resources, $baseUrl, $basePath);
+            $content = $this->buildIcons($resources, $baseUrl, $basePath);
 
             $cache->write($content);
 
@@ -101,7 +101,7 @@ class IconsBuilder
      *
      * @return string
      */
-    private function build(ResourceCollection $resources, $baseUrl, $basePath)
+    private function buildIcons(ResourceCollection $resources, $baseUrl, $basePath)
     {
         $data = [];
 
@@ -138,7 +138,7 @@ class IconsBuilder
         $urlTemplate = $basePath . '/bundles/%s/icons/%s';
 
         $icons = '/* Created: ' . date('Y-m-d H:i:s') . ' */' . PHP_EOL;
-        
+
         foreach ($data as $row) {
             $url = sprintf($urlTemplate, $row['bundle'], $row['path']);
 
