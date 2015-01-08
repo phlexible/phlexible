@@ -1,63 +1,10 @@
-xonerror = function (msg, url, l, x) {
-    // workaround for FF3.5
-//    if(msg == "Permission denied to access property 'dom' from a non-chrome context") return;
-    var stackTraceOutput;
-    try {
-        var stackTrace = Phlexible.getStackTrace();
-        stackTraceOutput = 'Stacktrace:<br /><ol>';
-        for (var i = 0; i < stackTrace.length; i++) {
-            stackTraceOutput += '<li>' + stackTrace[i] + '</li>';
-        }
-        stackTraceOutput += '</ol>';
-    } catch (e) {
-        stackTraceOutput = 'No stacktrace.';
-    }
-    var w = new Ext.Window({
-        title: Phlexible.gui.Strings.error_occured,
-        width: 500,
-        height: 300,
-        modal: true,
-        layout: 'border',
-        items: [
-            {
-                xtype: 'panel',
-                region: 'north',
-                height: 80,
-                bodyStyle: 'padding: 5px;',
-                html: 'Error: <b>' + msg + '</b><br />' +
-                '<br />' +
-                'File: ' + url + ' (' + l + ')'
-            },
-            {
-                xtype: 'panel',
-                region: 'center',
-                bodyStyle: 'padding: 5px;',
-                autoScroll: true,
-                html: stackTraceOutput
-            }
-        ]
-    });
-    w.show();
-};
-
-Ext.require('Phlexible.gui.util.Console');
-Phlexible.console = new Phlexible.gui.util.Console();
-
-Ext.provide('Phlexible.Handles');
-Ext.require('Phlexible.gui.util.Handles');
-Phlexible.Handles = new Phlexible.gui.util.Handles();
-
-Ext.provide('Phlexible.Cookie');
-Ext.require('Phlexible.gui.util.Cookie');
-Phlexible.Cookie = new Phlexible.gui.util.Cookie();
-
 /**
  * @param {String} path
  * @returns {String}
  */
 Phlexible.url = function (path) {
     return Phlexible.baseUrl + path;
-}
+};
 
 /**
  * @param {String} path
@@ -65,7 +12,7 @@ Phlexible.url = function (path) {
  */
 Phlexible.path = function (path) {
     return Phlexible.basePath + path;
-}
+};
 
 /**
  * @param {String} path
@@ -73,11 +20,14 @@ Phlexible.path = function (path) {
  */
 Phlexible.bundleAsset = function (path) {
     return Phlexible.bundlePath + path;
-}
+};
 
 /**
  * Return an arbitrary value as a string representation
- * @param {Mixed} arr Value
+ *
+ * @param {*}     arr            Value
+ * @param {Array} skipFunctions  Functions to skip
+ * @param {Array} skipObjectKeys Object keys to skip
  */
 Phlexible.dump = function (arr, skipFunctions, skipObjectKeys) {
     if (!skipObjectKeys) {
@@ -86,8 +36,11 @@ Phlexible.dump = function (arr, skipFunctions, skipObjectKeys) {
     return Phlexible.dumpRep(arr, 0, '', skipFunctions, skipObjectKeys, false);
 };
 /**
- * Reutrn an arbitrary value as a string representation
- * @param {Mixed} arr Value
+ * Return an arbitrary value as a html representation
+ *
+ * @param {*}     arr            Value
+ * @param {Array} skipFunctions  Functions to skip
+ * @param {Array} skipObjectKeys Object keys to skip
  */
 Phlexible.dumpHtml = function (arr, skipFunctions, skipObjectKeys) {
     if (!skipObjectKeys) {
@@ -98,7 +51,12 @@ Phlexible.dumpHtml = function (arr, skipFunctions, skipObjectKeys) {
 
 /**
  * Reutrn an arbitrary value as a string representation
- * @param {Mixed} arr Value
+ * @param {*}       v              Value
+ * @param {Number}  level          Level
+ * @param {String}  lastPadding    Last padding
+ * @param {Array}   skipFunctions  Functions to skip
+ * @param {Array}   skipObjectKeys Object keys to skip
+ * @param {Boolean} html           As Html?
  */
 Phlexible.dumpRep = function (v, level, lastPadding, skipFunctions, skipObjectKeys, html) {
     var dump = '';
@@ -115,6 +73,9 @@ Phlexible.dumpRep = function (v, level, lastPadding, skipFunctions, skipObjectKe
         case 'object':
             var sub1 = '', sub2, value;
             for (var key in v) {
+                if (!v.hasOwnProperty(key)) {
+                    continue;
+                }
                 if (skipObjectKeys.indexOf(key) === -1) {
                     value = v[key];
                     sub2 = Phlexible.dumpRep(value, level + 1, levelPadding, skipFunctions, skipObjectKeys, html);
@@ -194,10 +155,14 @@ Phlexible.dumpRep = function (v, level, lastPadding, skipFunctions, skipObjectKe
     return dump;
 };
 
+Ext.require('Ext.ux.Notification');
+
 /**
  * Display a message onscreen
- * @param {String} title Title of the message
- * @param {String} text Text of the message
+ *
+ * @param {String} title       Title of the message
+ * @param {String} text        Text of the message
+ * @param {Object} extraParams Extra parameters
  */
 Phlexible.msg = function (title, text, extraParams) {
     var params = Ext.apply({
@@ -208,17 +173,20 @@ Phlexible.msg = function (title, text, extraParams) {
         hideDelay: 5000
     }, extraParams);
     new Ext.ux.Notification(params).show(document);
-    return;
 };
+
 /**
  * Shortcut for success messages
+ *
  * @param {String} text
  */
 Phlexible.success = function (text) {
-    Phlexible.msg(Phlexible.gui.Strings.success, text);
+    Phlexible.msg(Phlexible.gui.Strings.success, text, {});
 };
+
 /**
  * Shortcut for failure messages
+ *
  * @param {String} text
  */
 Phlexible.failure = function (text) {
@@ -233,6 +201,9 @@ Phlexible.failure = function (text) {
     });
 };
 
+/**
+ * Output error
+ */
 Phlexible.error = function () {
     var response = null, result = null;
     Ext.each(arguments, function (obj) {
@@ -318,11 +289,12 @@ Phlexible.getStackTrace = function (delimiter) {
     var callstack = [];
     var isCallstackPopulated = false;
     try {
-        i.dont.exist += 0; //doesn't exist- that's the point
+        yea.i.dont.exist += 0; // doesn't exist - that's the point
     } catch (e) {
+        var lines, i, len;
         if (e.stack) { //Firefox
-            var lines = e.stack.split("\n");
-            for (var i = 0, len = lines.length; i < len; i++) {
+            lines = e.stack.split("\n");
+            for (i = 0, len = lines.length; i < len; i++) {
 //        if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
                 callstack.push(lines[i]);
 //        }
@@ -332,8 +304,8 @@ Phlexible.getStackTrace = function (delimiter) {
             isCallstackPopulated = true;
         }
         else if (window.opera && e.message) { //Opera
-            var lines = e.message.split("\n");
-            for (var i = 0, len = lines.length; i < len; i++) {
+            lines = e.message.split("\n");
+            for (i = 0, len = lines.length; i < len; i++) {
                 if (lines[i].match(/^\s*[A-Za-z0-9\-_\$]+\(/)) {
                     var entry = lines[i];
                     //Append next line also since it has the file info
@@ -364,32 +336,49 @@ Phlexible.getStackTrace = function (delimiter) {
     return callstack;
 };
 
-Phlexible.clone = function (myObj) {
-    if (Ext.type(myObj) == 'object') {
-        if (myObj === null)
-            return myObj;
+/**
+ * Clone object
+ *
+ * @param {*} obj
+ * @returns {*}
+ */
+Phlexible.clone = function (obj) {
+    var myNewObj, i;
 
-        var myNewObj = {};
+    if (Ext.type(obj) == 'object') {
+        if (obj === null)
+            return obj;
 
-        for (var i in myObj) {
-            myNewObj[i] = Phlexible.clone(myObj[i]);
+        myNewObj = {};
+
+        for (i in obj) {
+            if (!obj.hasOwnProperty(i)) {
+                continue;
+            }
+            myNewObj[i] = Phlexible.clone(obj[i]);
         }
-    } else if (Ext.type(myObj) == 'array') {
-        if (myObj === null)
-            return myObj;
+    } else if (Ext.type(obj) == 'array') {
+        if (obj === null)
+            return obj;
 
-        var myNewObj = [];
+        myNewObj = [];
 
-        for (var i = 0; i < myObj.length; i++) {
-            myNewObj.push(Phlexible.clone(myObj[i]));
+        for (i = 0; i < obj.length; i++) {
+            myNewObj.push(Phlexible.clone(obj[i]));
         }
     } else {
-        return myObj;
+        return obj;
     }
 
     return myNewObj;
 };
 
+/**
+ * Evaluate string to reference
+ *
+ * @param {String} s
+ * @returns {*}
+ */
 Phlexible.evalClassString = function (s) {
     var a = s.split('.');
     var n = window;
@@ -401,40 +390,13 @@ Phlexible.evalClassString = function (s) {
     return n;
 };
 
-Phlexible.globalKeyMap = new Ext.KeyMap(document);
-
-Phlexible.globalKeyMap.accessKey = function (key, handler, scope) {
-    var h = function (keyCode, e) {
-        if (Ext.isIE) {
-            // IE6 doesn't allow cancellation of the F5 key,
-            // so trick it into thinking some other key was pressed (backspace in this case)
-            e.browserEvent.keyCode = 8;
-        }
-        e.preventDefault();
-        handler.call(scope || this, keyCode, e);
-        e.stopEvent();
-        return false;
-    };
-    this.on(key, h, scope);
-};
-
-Ext.require('Phlexible.gui.Actions');
-Phlexible.globalKeyMap.accessKey({key: 'y', alt: true}, function () {
-    Phlexible.gui.Actions.show();
-});
-
-Ext.provide('Phlexible.EntryManager');
-Ext.require('Phlexible.gui.util.EntryManager');
-Phlexible.EntryManager = new Phlexible.gui.util.EntryManager();
-
-Ext.provide('Phlexible.PluginRegistry');
-Ext.require('Phlexible.gui.util.PluginRegistry');
-Phlexible.PluginRegistry = new Phlexible.gui.util.PluginRegistry();
-
-Ext.provide('Phlexible.Router');
-Ext.require('Phlexible.gui.util.Router');
-Phlexible.Router = new Phlexible.gui.util.Router();
-
+/**
+ * Create inline icon
+ *
+ * @param {String} iconCls
+ * @param {Object} attr
+ * @returns {string}
+ */
 Phlexible.inlineIcon = function (iconCls, attr) {
     if (!attr) attr = {};
 
@@ -447,6 +409,9 @@ Phlexible.inlineIcon = function (iconCls, attr) {
 
     var s = '<img';
     for (var i in attr) {
+        if (!attr.hasOwnProperty(i)) {
+            continue;
+        }
         s += ' ' + i + '="' + attr[i] + '"';
     }
 
