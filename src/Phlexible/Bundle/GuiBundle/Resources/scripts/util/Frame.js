@@ -4,7 +4,6 @@ Ext.require('Phlexible.gui.util.Config');
 Ext.require('Phlexible.gui.util.User');
 Ext.require('Phlexible.gui.util.Menu');
 Ext.require('Phlexible.gui.util.SystemMessage');
-Ext.require('Phlexible.dashboard.MainPanel');
 
 Phlexible.gui.util.Frame = function () {
     this.addEvents({
@@ -138,8 +137,14 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         // initialize system message
         this.initSystemMessage();
 
+        // initialize start items
+        this.initStartItems();
+
         // generate viewport
         this.initViewport();
+
+        // initialize listeners
+        this.initListeners();
 
         // do browser check
         this.checkBrowser();
@@ -257,29 +262,14 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         Phlexible.globalKeyMap.accessKey({key: 'j', alt: true}, this.systemMessage.poll, this.systemMessage);
     },
 
+    initStartItems: function() {
+        this.startItems = [];
+    },
+
     /**
      * @private
      */
     initViewport: function () {
-        var mainItems = [{
-            xtype: 'dashboard-main-panel',
-            id: 'Phlexible_dashboard_MainPanel',
-            header: false
-        }];
-
-        if (Phlexible.entry) {
-            var e = Phlexible.EntryManager.get(Phlexible.entry.e);
-            if (e) {
-                var i = e(Phlexible.entry.p);
-                mainItems.push({
-                    id: i.identifier,
-                    xtype: i.handleTarget,
-                    header: false,
-                    params: i.params || {}
-                })
-            }
-        }
-
         this.viewport = new Ext.Viewport({
             layout: 'border',
             items: [
@@ -301,11 +291,13 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                     region: 'center',
                     border: false,
                     tabPosition: 'bottom',
-                    items: mainItems,
+                    items: this.startItems,
                     activeTab: 0
                 }
             ]
         });
+
+        delete this.startItems;
 
         this.menu.addTrayItem({
             trayId: 'load',
@@ -313,6 +305,25 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
             iconCls: 'p-gui-msg_inactive-icon'
         });
 
+        if (Phlexible.entry) {
+            alert("todo");
+            var e = Phlexible.EntryManager.get(Phlexible.entry.e);
+            if (e) {
+                var i = e(Phlexible.entry.p);
+                mainItems.push({
+                    id: i.identifier,
+                    xtype: i.handleTarget,
+                    header: false,
+                    params: i.params || {}
+                })
+            }
+        }
+    },
+
+    /**
+     * @private
+     */
+    initListeners: function () {
         Ext.Ajax.on("requestcomplete", function (conn, response) {
             this.getTrayButton('load').setIconClass('p-gui-conn_wait-icon');
         }, this);

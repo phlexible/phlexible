@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.gui.portlet.Load');
 
+Ext.require('Ext.ux.Portlet');
+
 Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
     title: Phlexible.gui.Strings.server_load,
     strings: Phlexible.gui.Strings,

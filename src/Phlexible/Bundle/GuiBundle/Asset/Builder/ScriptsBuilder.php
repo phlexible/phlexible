@@ -15,6 +15,7 @@ use Puli\Repository\Api\ResourceCollection;
 use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\DirectoryResource;
 use Puli\Repository\Resource\FileResource;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Scripts builder
@@ -23,6 +24,11 @@ use Puli\Repository\Resource\FileResource;
  */
 class ScriptsBuilder
 {
+    /**
+     * @var KernelInterface
+     */
+    private $kernel;
+
     /**
      * @var ResourceRepository
      */
@@ -106,6 +112,7 @@ class ScriptsBuilder
         $dir = $this->puliRepository->get('/phlexible/scripts');
         /* @var $dir DirectoryResource */
         foreach ($dir->listChildren() as $dir) {
+            //if ($dir->getName() !== 'phlexiblegui') continue;
             foreach ($dir->listChildren() as $resource) {
                 if ($resource instanceof FileResource && substr($resource->getName(), -3) === '.js') {
                     $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();

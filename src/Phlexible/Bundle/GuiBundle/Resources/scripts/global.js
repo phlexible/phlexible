@@ -33,10 +33,6 @@ Phlexible.globalKeyMap.accessKey({key: 'y', alt: true}, function () {
     Phlexible.gui.Actions.show();
 });
 
-Ext.provide('Phlexible.EntryManager');
-Ext.require('Phlexible.gui.util.EntryManager');
-Phlexible.EntryManager = new Phlexible.gui.util.EntryManager();
-
 Ext.provide('Phlexible.PluginRegistry');
 Ext.require('Phlexible.gui.util.PluginRegistry');
 Phlexible.PluginRegistry = new Phlexible.gui.util.PluginRegistry();
@@ -44,3 +40,9 @@ Phlexible.PluginRegistry = new Phlexible.gui.util.PluginRegistry();
 Ext.provide('Phlexible.Router');
 Ext.require('Phlexible.gui.util.Router');
 Phlexible.Router = new Phlexible.gui.util.Router();
+
+Ext.onReady(function () {
+    Ext.require('Phlexible.gui.util.Frame');
+    Phlexible.Frame = new Phlexible.gui.util.Frame();
+    Phlexible.Frame.initFrame();
+});

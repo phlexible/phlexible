@@ -126,7 +126,7 @@ class IconsBuilder
             $selector = sprintf('.p-%s-%s-icon', $bundle, $name);
 
             $data[] = [
-                'bundle'    => "phlexible$bundle",
+                'bundle'    => $bundle,
                 'path'      => $path,
                 'file'      => $file,
                 'name'      => $name,
