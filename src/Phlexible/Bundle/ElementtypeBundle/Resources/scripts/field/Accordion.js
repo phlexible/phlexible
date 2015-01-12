@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.elementtypes.field.Accordion');
 
+Ext.require('Ext.ux.Sortable');
+
 Phlexible.elementtypes.field.Accordion = Ext.extend(Ext.Panel, {
     autoHeight: true,
     collapsible: true,
