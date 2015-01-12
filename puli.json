@@ -1,4 +1,5 @@
 {
+    "version": "1.0",
     "resources": {
         "/phlexible/icons/phlexiblephlexibleaccesscontrol": "src/Phlexible/Bundle/AccessControlBundle/Resources/public/icons",
         "/phlexible/icons/phlexiblephlexiblecms": "src/Phlexible/Bundle/CmsBundle/Resources/public/icons",
