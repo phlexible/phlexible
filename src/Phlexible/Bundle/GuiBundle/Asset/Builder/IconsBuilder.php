@@ -123,7 +123,7 @@ class IconsBuilder
                 continue;
             }
 
-            $selector = sprintf('.p-%s-%s-icon', $bundle, $name);
+            $selector = sprintf('.p-%s-%s-icon', str_replace('phlexible', '', $bundle), $name);
 
             $data[] = [
                 'bundle'    => $bundle,
