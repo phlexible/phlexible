@@ -1,6 +1,8 @@
 Ext.provide('Phlexible.mediamanager.JavaUploadWindow');
 Ext.provide('Phlexible.mediamanager.FileUploadWindow');
 
+Ext.require('Ext.ux.GUID');
+
 Phlexible.mediamanager.JavaUploadWindow = Ext.extend(Ext.Window, {
     strings: Phlexible.mediamanager.Strings,
     iconCls: 'p-mediamanager-file_upload-icon',
