@@ -144,7 +144,21 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
             data.configuration.route = data.configuration.routes[data.properties.language];
         }
 
-        this.getForm().setValues(data.configuration);
+        this.getForm().setValues({
+            navigation: data.configuration.navigation || false,
+            needAuthentication: data.configuration.needAuthentication || false,
+            https: data.configuration.https || false,
+            route: data.configuration.route || '',
+            controller: data.configuration.controller || '',
+            template: data.configuration.template || '',
+            robotsNoIndex: data.configuration.robotsNoIndex || false,
+            robotsNoFollow: data.configuration.robotsNoFollow || false,
+            searchNoIndex: data.configuration.searchNoIndex || false,
+            noCache: data.configuration.noCache || false,
+            cachePrivate: data.configuration.cachePrivate || false,
+            cacheMaxAge: data.configuration.cacheMaxAge || '',
+            cacheSharedMaxAge: data.configuration.cacheSharedMaxAge || ''
+        });
 
         if (data.properties.et_type === 'part') {
             this.getComponent(0).hide();
