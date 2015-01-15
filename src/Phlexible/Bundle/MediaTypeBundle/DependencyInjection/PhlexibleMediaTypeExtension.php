@@ -27,6 +27,7 @@ class PhlexibleMediaTypeExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('loaders.yml');
         $loader->load('file.yml');
 
         $container->setAlias('phlexible_media_type.media_type_manager', 'phlexible_media_type.file.media_type_manager');
