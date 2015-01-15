@@ -57,7 +57,7 @@ class SiterootExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('pageTitle', [$this, 'pageTitle']),
+            new \Twig_SimpleFunction('page_title', [$this, 'pageTitle']),
         ];
     }
 
