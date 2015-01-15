@@ -52,7 +52,7 @@ class SiterootSaver
             ->applyTitles($siteroot, $data)
             ->applyContentchannels($siteroot, $data)
             ->applyProperties($siteroot, $data)
-            ->applyCustomTitles($siteroot, $data)
+            ->applyPatterns($siteroot, $data)
             ->applyNamedTids($siteroot, $data)
             ->applyNavigations($siteroot, $data)
             ->applyUrls($siteroot, $data);
@@ -135,17 +135,14 @@ class SiterootSaver
      *
      * @return $this
      */
-    private function applyCustomTitles(Siteroot $siteroot, array $data)
+    private function applyPatterns(Siteroot $siteroot, array $data)
     {
-        if (!array_key_exists('customtitles', $data)) {
+        if (!array_key_exists('patterns', $data)) {
             // noting to save
             return $this;
         }
 
-        $customTitlesData = $data['customtitles'];
-
-        $siteroot->setHeadTitle($customTitlesData['head_title']);
-        $siteroot->setStartHeadTitle($customTitlesData['start_head_title']);
+        $siteroot->setPatterns($data['patterns']);
 
         return $this;
     }

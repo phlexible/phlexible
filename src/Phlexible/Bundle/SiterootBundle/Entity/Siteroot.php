@@ -36,16 +36,10 @@ class Siteroot
     private $default = false;
 
     /**
-     * @var string
-     * @ORM\Column(name="head_title", type="string", length=255, nullable=true)
+     * @var array
+     * @ORM\Column(type="json_array")
      */
-    private $headTitle;
-
-    /**
-     * @var string
-     * @ORM\Column(name="start_head_title", type="string", length=255, nullable=true)
-     */
-    private $startHeadTitle;
+    private $patterns = array();
 
     /**
      * @var \DateTime
@@ -157,43 +151,52 @@ class Siteroot
     }
 
     /**
-     * @param string $headTitle
+     * @param array $patterns
      *
      * @return $this
      */
-    public function setHeadTitle($headTitle)
+    public function setPatterns(array $patterns = array())
     {
-        $this->headTitle = $headTitle;
+        foreach ($patterns as $name => $pattern) {
+            $this->setPattern($name, $pattern);
+        }
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getHeadTitle()
+    public function getPatterns()
     {
-        return $this->headTitle;
+        return $this->patterns;
     }
 
     /**
-     * @param string $startHeadTitle
+     * @param string $name
+     * @param string $pattern
      *
      * @return $this
      */
-    public function setStartHeadTitle($startHeadTitle)
+    public function setPattern($name, $pattern)
     {
-        $this->startHeadTitle = $startHeadTitle;
+        $this->patterns[$name] = $pattern;
 
         return $this;
     }
 
     /**
+     * @param string $name
+     *
      * @return string
      */
-    public function getStartHeadTitle()
+    public function getPattern($name)
     {
-        return $this->startHeadTitle;
+        if (!isset($this->patterns[$name])) {
+            throw new \InvalidArgumentException("Siteroot pattern $name not found.");
+        }
+
+        return $this->patterns[$name];
     }
 
     /**

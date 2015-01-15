@@ -288,6 +288,12 @@ elements:
         done: 'Aufgabe wurde durch Aktion automatisch erledigt.'
         delete: 'Aufgabe wurde durch Löschen des Ziels automatisch erledigt.'
 
+    routing:
+        routing: Routing
+        url: URL
+        slug: Slug
+        old_urls: Alte URLs
+
     configuration:
         configuration: Konfiguration
         in_navigation: 'In Navigation'

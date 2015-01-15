@@ -288,6 +288,12 @@ elements:
         done: 'Automatically set task finished through action.'
         delete: 'Automatically set task finished through deletion of target.'
 
+    routing:
+        routing: Routing
+        url: URL
+        slug: Slug
+        old_urls: Old URLs
+
     configuration:
         configuration: Configuration
         in_navigation: 'in Navigation'

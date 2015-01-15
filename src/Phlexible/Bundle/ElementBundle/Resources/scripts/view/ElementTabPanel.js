@@ -6,7 +6,7 @@ Ext.require('Phlexible.elements.ElementPreviewPanel');
 Ext.require('Phlexible.elements.RightsGrid');
 Ext.require('Phlexible.elements.ElementLinksGrid');
 Ext.require('Phlexible.elements.ElementHistoryGrid');
-Ext.require('Phlexible.elements.UrlPanel');
+Ext.require('Phlexible.elements.RoutingPanel');
 
 Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
     title: 'Element',
@@ -129,8 +129,8 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
                 element: this.element
             },
             {
-                xtype: 'elements-urlpanel',
-                tabKey: 'urls',
+                xtype: 'elements-routing',
+                tabKey: 'routing',
                 element: this.element
             }
         ];

@@ -21,125 +21,60 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
             {
                 xtype: 'form',
                 border: false,
-                bodyStyle: 'padding: 5px;',
                 xlabelAlign: 'top',
                 items: []
             },
             {
-                xtype: 'form',
-                border: false,
+                xtype: 'editorgrid',
+                title: this.strings.custom_titles,
+                style: 'padding-top: 5px;',
+                store: new Ext.data.JsonStore({
+                    fields: ['name', 'pattern', 'example'],
+                    data: [{name: 'bla', pattern: 'bla', example:'bla'}]
+                }),
+                columns: [{
+                    header: this.strings.name,
+                    dataIndex: 'name',
+                    width: 50,
+                    editor: new Ext.form.TextField()
+                },{
+                    header: this.strings.pattern,
+                    dataIndex: 'pattern',
+                    width: 300,
+                    editor: new Ext.form.TextField()
+                },{
+                    header: this.strings.example,
+                    dataIndex: 'example',
+                    width: 300
+                }],
+                listeners: {
+                    afteredit: function(e) {
+                        if (e.column === 1 && e.value !== e.originalValue) {
+                            this.updatePreview(e.record);
+                        }
+                    },
+                    scope: this
+                }
+            },
+            {
+                xtype: 'panel',
+                title: this.strings.legend,
                 bodyStyle: 'padding: 5px;',
-                labelAlign: 'top',
+                style: 'padding-top: 5px;',
                 items: [
                     {
-                        xtype: 'panel',
-                        title: this.strings.default_custom_title,
-                        layout: 'form',
-                        autoScroll: true,
-                        bodyStyle: 'padding: 5px;',
-                        style: 'padding-bottom: 5px;',
-                        items: [
-                            {
-                                fieldLabel: this.strings.title,
-                                name: 'head_title',
-                                xtype: 'textfield',
-                                anchor: '-50',
-                                emptyText: this.strings.no_customized_title,
-                                enableKeyEvents: true,
-                                listeners: {
-                                    keyup: function (field, event) {
-                                        if (event.getKey() == event.ENTER) {
-                                            this.task1.cancel();
-                                            this.updateDefaultPreview();
-                                            return;
-                                        }
-
-                                        this.task1.delay(500);
-                                    },
-                                    scope: this
-                                }
-                            },
-                            {
-                                fieldLabel: this.strings.example,
-                                name: 'example',
-                                xtype: 'textfield',
-                                anchor: '-50',
-                                readOnly: true,
-                                append: [
-                                    {
-                                        xtype: 'button',
-                                        iconCls: 'p-siteroot-reload-icon',
-                                        handler: this.updateDefaultPreview,
-                                        scope: this
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        xtype: 'panel',
-                        title: this.strings.start_custom_title,
-                        layout: 'form',
-                        bodyStyle: 'padding: 5px;',
-                        style: 'padding-bottom: 5px;',
-                        items: [
-                            {
-                                fieldLabel: this.strings.title,
-                                name: 'start_head_title',
-                                xtype: 'textfield',
-                                anchor: '-50',
-                                emptyText: this.strings.no_customized_start_title,
-                                enableKeyEvents: true,
-                                listeners: {
-                                    keyup: function (field, event) {
-                                        if (event.getKey() == event.ENTER) {
-                                            this.task2.cancel();
-                                            this.updateHomePreview();
-                                            return;
-                                        }
-
-                                        this.task2.delay(500);
-                                    },
-                                    scope: this
-                                }
-                            },
-                            {
-                                fieldLabel: this.strings.example,
-                                name: 'start_example',
-                                xtype: 'textfield',
-                                anchor: '-50',
-                                readOnly: true,
-                                append: [
-                                    {
-                                        xtype: 'button',
-                                        iconCls: 'p-siteroot-reload-icon',
-                                        handler: this.updateHomePreview,
-                                        scope: this
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        xtype: 'panel',
-                        title: this.strings.legend,
-                        bodyStyle: 'padding: 5px;',
-                        items: [
-                            {
-                                xtype: 'dataview',
-                                store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('siteroots_customtitle_placeholders'),
-                                    root: 'placeholders',
-                                    fields: ['placeholder', 'title'],
-                                    autoLoad: true
-                                }),
-                                tpl: Phlexible.siteroots.CustomTitleTpl,
-                                autoHeight: true,
-                                singleSelect: true,
-                                overClass: 'xxx',
-                                itemSelector: 'div'
-                            }
-                        ]
+                        xtype: 'dataview',
+                        store: new Ext.data.JsonStore({
+                            url: Phlexible.Router.generate('siteroots_customtitle_placeholders'),
+                            root: 'placeholders',
+                            fields: ['placeholder', 'title'],
+                            autoLoad: true
+                        }),
+                        tpl: Phlexible.siteroots.CustomTitleTpl,
+                        autoHeight: true,
+                        singleSelect: true,
+                        overClass: 'xxx',
+                        itemSelector: 'div'
                     }
                 ]
             }
@@ -150,7 +85,7 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
                 fieldLabel: Phlexible.inlineIcon(Phlexible.Config.get('set.language.frontend')[i][2]) + ' ' + Phlexible.Config.get('set.language.frontend')[i][1],
                 name: Phlexible.Config.get('set.language.frontend')[i][0],
                 xtype: 'textfield',
-                width: 300,
+                width: 500,
                 allowBlank: false
             });
         }
@@ -172,15 +107,12 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
         this.getComponent(0).getForm().reset();
         this.getComponent(0).getForm().setValues(data.titles);
 
-        this.getComponent(1).getForm().reset();
-        this.getComponent(1).getForm().setValues(data.customtitles);
-
-        this.updateDefaultPreview();
-        this.updateHomePreview();
+        this.getComponent(1).getStore().removeAll();
+        this.getComponent(1).getStore().loadData(data.patterns);
     },
 
     isValid: function () {
-        var valid = this.getComponent(0).getForm().isValid() && this.getComponent(1).getForm().isValid();
+        var valid = this.getComponent(0).getForm().isValid();
 
         if (valid) {
             this.header.child('span').removeClass('error');
@@ -195,67 +127,37 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
      * Get the data to be saved.
      */
     getSaveData: function () {
+        var patterns = {};
+        this.getComponent(1).getStore().each(function(r) {
+            patterns[r.get('name')] = r.get('pattern');
+        });
+
         return {
-            'titles': this.getComponent(0).getForm().getValues(),
-            'customtitles': {
-                head_title: this.getComponent(1).getComponent(0).getComponent(0).getValue(),
-                start_head_title: this.getComponent(1).getComponent(1).getComponent(0).getValue()
-            }
+            titles: this.getComponent(0).getForm().getValues(),
+            patterns: patterns
         };
     },
 
 
-    updateDefaultPreview: function () {
-        var title = this.getComponent(1).getComponent(0).getComponent(0).getValue();
-        if (!title) {
-            this.getComponent(1).getComponent(0).getComponent(1).reset();
+    updatePreview: function (record) {
+        var pattern = record.get('pattern');
+        if (!pattern) {
+            record.set('example');
             return;
         }
-
-        this.getComponent(1).getComponent(0).getComponent(1).append[0].setIconClass('p-siteroot-loading-icon');
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('siteroots_customtitle_example'),
             params: {
                 siteroot_id: this.siterootId,
-                head_title: title
+                pattern: pattern
             },
             success: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 if (data.success) {
-                    this.getComponent(1).getComponent(0).getComponent(1).setValue(data.data.example);
+                    record.set('example', data.msg);
                 }
-
-                this.getComponent(1).getComponent(0).getComponent(1).append[0].setIconClass('p-siteroot-reload-icon');
-            },
-            scope: this
-        });
-    },
-
-    updateHomePreview: function () {
-        var title = this.getComponent(1).getComponent(1).getComponent(0).getValue();
-        if (!title) {
-            this.getComponent(1).getComponent(1).getComponent(1).reset();
-            return;
-        }
-
-        this.getComponent(1).getComponent(1).getComponent(1).append[0].setIconClass('p-siteroot-loading-icon');
-
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('siteroots_customtitle_example'),
-            params: {
-                siteroot_id: this.siterootId,
-                head_title: title
-            },
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                if (data.success) {
-                    this.getComponent(1).getComponent(1).getComponent(1).setValue(data.data.example);
-                }
-
-                this.getComponent(1).getComponent(1).getComponent(1).append[0].setIconClass('p-siteroot-reload-icon');
             },
             scope: this
         });

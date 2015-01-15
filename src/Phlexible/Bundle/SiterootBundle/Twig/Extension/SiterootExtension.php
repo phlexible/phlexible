@@ -9,9 +9,10 @@
 namespace Phlexible\Bundle\SiterootBundle\Twig\Extension;
 
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use Phlexible\Bundle\SiterootBundle\Siteroot\PatternResolver;
 use Phlexible\Bundle\SiterootBundle\Siteroot\TitleResolver;
-use Phlexible\Bundle\TreeBundle\Model\TreeContext;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Twig siteroot extension
@@ -21,23 +22,33 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 class SiterootExtension extends \Twig_Extension
 {
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var SiterootManagerInterface
      */
     private $siterootManager;
 
     /**
-     * @var TitleResolver
+     * @var PatternResolver
      */
-    private $titleResolver;
+    private $patternResolver;
 
     /**
+     * @param RequestStack             $requestStack
      * @param SiterootManagerInterface $siterootManager
-     * @param TitleResolver            $titleResolver
+     * @param PatternResolver          $patternResolver
      */
-    public function __construct(SiterootManagerInterface $siterootManager, TitleResolver $titleResolver)
+    public function __construct(
+        RequestStack $requestStack,
+        SiterootManagerInterface $siterootManager,
+        PatternResolver $patternResolver)
     {
+        $this->requestStack = $requestStack;
         $this->siterootManager = $siterootManager;
-        $this->titleResolver = $titleResolver;
+        $this->patternResolver = $patternResolver;
     }
 
     /**
@@ -52,16 +63,29 @@ class SiterootExtension extends \Twig_Extension
 
     /**
      * @param TreeNodeInterface $treeNode
+     * @param string            $name
+     * @param string            $language
      *
      * @return string
      */
-    public function pageTitle(TreeNodeInterface $treeNode)
+    public function pageTitle(TreeNodeInterface $treeNode = null, $name = 'default', $language = null)
     {
+        $request = $this->requestStack->getMasterRequest();
+
+        if ($treeNode === null) {
+            $treeNode = $request->get('contentDocument');
+        }
+
+        if ($language === null) {
+            $language = $request->getLocale();
+        }
+
         $siteroot = $this->siterootManager->find($treeNode->getTree()->getSiterootId());
+        $pattern = $siteroot->getPattern($name);
 
-        $title = $this->titleResolver->replace($siteroot, $treeNode->getTree()->getContentDocument(), 'de');
+        $title = $this->patternResolver->replace($siteroot, $treeNode->getTree()->getContent($treeNode), $language, $pattern);
 
-        return new TreeContext($treeNode);
+        return $title;
     }
 
     /**
@@ -69,6 +93,6 @@ class SiterootExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'phlexible_tree';
+        return 'phlexible_siteroot';
     }
 }

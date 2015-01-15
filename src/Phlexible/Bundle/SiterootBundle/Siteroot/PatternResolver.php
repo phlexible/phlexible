@@ -13,11 +13,11 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Title resolver
+ * Pattern resolver
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class TitleResolver
+class PatternResolver
 {
     /**
      * @var string
@@ -45,16 +45,12 @@ class TitleResolver
      * @param Siteroot       $siteroot
      * @param ElementVersion $elementVersion
      * @param string         $language
-     * @param string         $headTitle
+     * @param string         $pattern
      *
      * @return string
      */
-    public function replace(Siteroot $siteroot, ElementVersion $elementVersion, $language, $headTitle = null)
+    public function replace(Siteroot $siteroot, ElementVersion $elementVersion, $language, $pattern)
     {
-        if (!$headTitle) {
-            $headTitle = $siteroot->getHeadTitle();
-        }
-
         $replace = [
             '%s' => $siteroot->getTitle(),
             '%b' => $elementVersion->getBackendTitle($language),
@@ -63,17 +59,17 @@ class TitleResolver
             '%r' => $this->projectTitle,
         ];
 
-        return str_replace(array_keys($replace), array_values($replace), $headTitle);
+        return str_replace(array_keys($replace), array_values($replace), $pattern);
     }
 
     /**
      * @param Siteroot $siteroot
      * @param string   $language
-     * @param string   $headTitle
+     * @param string   $pattern
      *
      * @return string
      */
-    public function replaceExample(Siteroot $siteroot, $language, $headTitle = null)
+    public function replaceExample(Siteroot $siteroot, $language, $pattern = null)
     {
         $replace = [
             '%s' => $siteroot->getTitle(),
@@ -83,7 +79,7 @@ class TitleResolver
             '%r' => $this->projectTitle,
         ];
 
-        return str_replace(array_keys($replace), array_values($replace), $headTitle);
+        return str_replace(array_keys($replace), array_values($replace), $pattern);
     }
 
     /**

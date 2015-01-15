@@ -110,17 +110,21 @@ class SiterootController extends Controller
 
         $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
         $contentChannelRepository = $this->get('phlexible_contentchannel.contentchannel_manager');
+        $patternResolver = $this->get('phlexible_siteroot.pattern_resolver');
 
         $siteroot = $siterootRepository->find($siterootId);
 
         $usedContentChannelIds = $siteroot->getContentChannelIds();
         $defaultContentChannelId = $siteroot->getDefaultContentChannelId();
 
+        $language = 'de';
+
         $data = [
+            'titles'          => $siteroot->getTitles(),
+            'patterns'        => [],
             'contentchannels' => [],
             'navigations'     => [],
             'properties'      => [],
-            'titles'          => [],
             'specialtids'     => [],
             'urls'            => [],
         ];
@@ -164,13 +168,6 @@ class SiterootController extends Controller
             ];
         }
 
-        $data['titles'] = $siteroot->getTitles();
-
-        $data['customtitles'] = [
-            'head_title'       => $siteroot->getHeadTitle(),
-            'start_head_title' => $siteroot->getStartHeadTitle(),
-        ];
-
         foreach ($siteroot->getUrls() as $url) {
             $data['urls'][] = [
                 'id'             => $url->getId(),
@@ -179,6 +176,16 @@ class SiterootController extends Controller
                 'hostname'       => $url->getHostname(),
                 'language'       => $url->getLanguage(),
                 'target'         => $url->getTarget(),
+            ];
+        }
+
+        foreach ($siteroot->getPatterns() as $name => $pattern) {
+            $example = $patternResolver->replaceExample($siteroot, $language, $pattern);
+
+            $data['patterns'][] = [
+                'name' => $name,
+                'pattern' => $pattern,
+                'example' => $example,
             ];
         }
 

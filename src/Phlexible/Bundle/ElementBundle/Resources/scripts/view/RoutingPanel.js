@@ -1,13 +1,14 @@
-Ext.provide('Phlexible.elements.UrlPanel');
+Ext.provide('Phlexible.elements.RoutingPanel');
 
-Phlexible.elements.UrlPanel = Ext.extend(Ext.Panel, {
-    title: '_urls',
-    iconCls: 'p-element-url-icon',
+Phlexible.elements.RoutingPanel = Ext.extend(Ext.Panel, {
+    title: Phlexible.elements.Strings.routing.routing,
+    iconCls: 'p-element-routing-icon',
+    strings: Phlexible.elements.Strings.routing,
 
     initComponent: function () {
         this.store = new Ext.data.JsonStore({
-            fields: ['bla'],
-            data: [['bla']]
+            fields: ['url'],
+            data: [{url: 'http://www.test.de'}]
         });
 
         this.items = [{
@@ -16,12 +17,12 @@ Phlexible.elements.UrlPanel = Ext.extend(Ext.Panel, {
             bodyStyle: 'padding: 5px',
             items: [{
                 xtype: 'textfield',
-                fieldLabel: 'url',
-                width: 200
+                fieldLabel: this.strings.url,
+                width: 300
             },{
                 xtype: 'textfield',
-                fieldLabel: 'slug',
-                width: 200
+                fieldLabel: this.strings.slug,
+                width: 300
             }]
         },{
             xtype: 'panel',
@@ -29,16 +30,21 @@ Phlexible.elements.UrlPanel = Ext.extend(Ext.Panel, {
             border: false,
             items: [{
                 xtype: 'grid',
-                title: '_old_urls',
+                title: this.strings.old_urls,
                 store: this.store,
+                width: 500,
+                viewConfig: {
+                    forceFit: true
+                },
                 columns: [{
-                    header: 'bla',
-                    dataIndex: 'bla'
+                    header: this.strings.url,
+                    dataIndex: 'url',
+                    width: 500
                 }]
             }]
         }];
 
-        Phlexible.elements.UrlPanel.superclass.initComponent.call(this);
+        Phlexible.elements.RoutingPanel.superclass.initComponent.call(this);
 
         this.element.on('load', this.onLoadElement, this);
 
@@ -76,4 +82,4 @@ Phlexible.elements.UrlPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-urlpanel', Phlexible.elements.UrlPanel);
+Ext.reg('elements-routing', Phlexible.elements.RoutingPanel);
