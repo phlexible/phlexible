@@ -1,0 +1,17 @@
+parameters:
+    phlexible_media_type.file_dir: %kernel.root_dir%/Resources/mediatype/
+
+services:
+    phlexible_media_type.loader.xml:
+        class: Phlexible\Component\MediaType\Loader\XmlLoader
+        public: false
+
+    phlexible_media_type.loader.resolver:
+        class: Phlexible\Component\MediaType\Loader\LoaderResolver
+        arguments: [@phlexible_media_type.loader.xml]
+        public: false
+
+    phlexible_media_type.loader.delagating:
+        class: Phlexible\Component\MediaType\Loader\DelegatingLoader
+        arguments: [@phlexible_media_type.loader.resolver]
+        public: false

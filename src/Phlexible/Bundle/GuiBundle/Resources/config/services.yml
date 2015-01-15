@@ -25,7 +25,7 @@ services:
 
     phlexible_gui.menu.loader:
         class: Phlexible\Bundle\GuiBundle\Menu\MenuLoader
-        arguments: [@puli.repository, @event_dispatcher]
+        arguments: [@puli.discovery, @event_dispatcher]
 
     phlexible_gui.catalog_accessor:
         class: Phlexible\Bundle\GuiBundle\Translator\CatalogAccessor

@@ -9,23 +9,28 @@
 namespace Phlexible\Component\MediaType\File;
 
 use Phlexible\Component\MediaType\Compiler\CompilerInterface;
-use Phlexible\Component\MediaType\File\Loader\LoaderInterface;
+use Phlexible\Component\MediaType\Loader\LoaderInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
-use Puli\Repository\Api\ResourceRepository;
+use Puli\Discovery\Api\ResourceDiscovery;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
 /**
- * Media type loader
+ * Puli media type loader
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MediaTypeLoader
+class PuliLoader
 {
     /**
-     * @var ResourceRepository
+     * @var ResourceDiscovery
      */
-    private $puliRepository;
+    private $puliDiscovery;
+
+    /**
+     * @var LoaderInterface
+     */
+    private $loader;
 
     /**
      * @var CompilerInterface
@@ -38,36 +43,27 @@ class MediaTypeLoader
     private $fileDir;
 
     /**
-     * @var array
-     */
-    private $loaders = [];
-
-    /**
-     * @param ResourceRepository $puliRepository
+     * @param ResourceDiscovery  $puliDiscovery
+     * @param LoaderInterface    $loader
      * @param CompilerInterface  $compiler
      * @param string             $fileDir
      * @param string             $cacheDir
      * @param bool               $debug
      */
-    public function __construct(ResourceRepository $puliRepository, CompilerInterface $compiler, $fileDir, $cacheDir, $debug)
-    {
-        $this->puliRepository = $puliRepository;
+    public function __construct(
+        ResourceDiscovery $puliDiscovery,
+        LoaderInterface $loader,
+        CompilerInterface $compiler,
+        $fileDir,
+        $cacheDir,
+        $debug
+    ) {
+        $this->puliDiscovery = $puliDiscovery;
+        $this->loader = $loader;
         $this->compiler = $compiler;
         $this->fileDir = $fileDir;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
-    }
-
-    /**
-     * @param LoaderInterface $loader
-     *
-     * @return $this
-     */
-    public function addLoader(LoaderInterface $loader)
-    {
-        $this->loaders[$loader->getExtension()] = $loader;
-
-        return $this;
     }
 
     /**
@@ -92,13 +88,11 @@ class MediaTypeLoader
             $resources[] = new FileResource($r->getFileName());
             $r = new \ReflectionClass($this->compiler);
             $resources[] = new FileResource($r->getFileName());
-            foreach ($this->loaders as $extension => $loader) {
-                foreach ($this->puliRepository->find("/phlexible/mediatypes/*/*.$extension") as $resource) {
-                    /* @var $resource \Puli\Repository\Resource\FileResource */
-                    $file = $resource->getFilesystemPath();
-                    $mediaTypes->add($loader->load($file));
-                    $resources[basename($file)] = new FileResource($file);
-                }
+            foreach ($this->puliDiscovery->find("phlexible/mediatypes") as $resource) {
+                /* @var $resource \Puli\Repository\Resource\FileResource */
+                $file = $resource->getFilesystemPath();
+                $mediaTypes->add($this->loader->load($file));
+                $resources[basename($file)] = new FileResource($file);
             }
 
             $resources = array_values($resources);

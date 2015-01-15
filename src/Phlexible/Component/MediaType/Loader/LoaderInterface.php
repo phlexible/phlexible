@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaType\File\Loader;
+namespace Phlexible\Component\MediaType\Loader;
 
 use Phlexible\Component\MediaType\Model\MediaType;
 
@@ -18,9 +18,13 @@ use Phlexible\Component\MediaType\Model\MediaType;
 interface LoaderInterface
 {
     /**
-     * @return string
+     * Returns whether this class supports the given resource.
+     *
+     * @param string $file
+     *
+     * @return bool True if this class supports the given resource, false otherwise
      */
-    public function getExtension();
+    public function supports($file);
 
     /**
      * @param string $filename

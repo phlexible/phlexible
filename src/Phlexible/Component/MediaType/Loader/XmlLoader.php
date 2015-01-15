@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaType\File\Loader;
+namespace Phlexible\Component\MediaType\Loader;
 
 use Phlexible\Component\MediaType\Model\MediaType;
 
@@ -20,9 +20,9 @@ class XmlLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getExtension()
+    public function supports($file)
     {
-        return 'xml';
+        return true;
     }
 
     /**

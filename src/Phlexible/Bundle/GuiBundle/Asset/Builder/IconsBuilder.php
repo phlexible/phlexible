@@ -10,8 +10,8 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
+use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\ResourceCollection;
-use Puli\Repository\Api\ResourceRepository;
 
 /**
  * Icons builder
@@ -21,9 +21,9 @@ use Puli\Repository\Api\ResourceRepository;
 class IconsBuilder
 {
     /**
-     * @var ResourceRepository
+     * @var ResourceDiscovery
      */
-    private $puliRepository;
+    private $puliDiscovery;
 
     /**
      * @var CompressorInterface
@@ -41,18 +41,18 @@ class IconsBuilder
     private $debug;
 
     /**
-     * @param ResourceRepository  $puliRepository
+     * @param ResourceDiscovery   $puliDiscovery
      * @param CompressorInterface $compressor
      * @param string              $cacheDir
      * @param bool                $debug
      */
     public function __construct(
-        ResourceRepository $puliRepository,
+        ResourceDiscovery $puliDiscovery,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
-        $this->puliRepository = $puliRepository;
+        $this->puliDiscovery = $puliDiscovery;
         $this->compressor = $compressor;
         $this->cacheDir = rtrim($cacheDir, '/') . '/';
         $this->debug = $debug;
@@ -91,7 +91,7 @@ class IconsBuilder
      */
     private function find()
     {
-        return $this->puliRepository->find('/phlexible/icons/*/*.*');
+        return $this->puliDiscovery->find('phlexible/icons');
     }
 
     /**

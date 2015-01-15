@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
+use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\ResourceCollection;
 use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\DirectoryResource;
@@ -30,9 +31,9 @@ class ScriptsBuilder
     private $kernel;
 
     /**
-     * @var ResourceRepository
+     * @var ResourceDiscovery
      */
-    private $puliRepository;
+    private $puliDiscovery;
 
     /**
      * @var CompressorInterface
@@ -50,18 +51,18 @@ class ScriptsBuilder
     private $debug;
 
     /**
-     * @param ResourceRepository  $puliRepository
+     * @param ResourceDiscovery   $puliDiscovery
      * @param CompressorInterface $compressor
      * @param string              $cacheDir
      * @param bool                $debug
      */
     public function __construct(
-        ResourceRepository $puliRepository,
+        ResourceDiscovery $puliDiscovery,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
-        $this->puliRepository = $puliRepository;
+        $this->puliDiscovery = $puliDiscovery;
         $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -97,7 +98,7 @@ class ScriptsBuilder
      */
     private function find()
     {
-        return $this->puliRepository->find('/phlexible/scripts/*/*.js');
+        return $this->puliDiscovery->find('phlexible/scripts');
     }
 
     /**
@@ -109,16 +110,22 @@ class ScriptsBuilder
     {
         $entryPoints = array();
 
-        $dir = $this->puliRepository->get('/phlexible/scripts');
-        /* @var $dir DirectoryResource */
-        foreach ($dir->listChildren() as $dir) {
-            //if ($dir->getName() !== 'phlexiblegui') continue;
-            foreach ($dir->listChildren() as $resource) {
-                if ($resource instanceof FileResource && substr($resource->getName(), -3) === '.js') {
-                    $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();
-                }
+        foreach ($resources as $resource) {
+            if ($resource instanceof FileResource && preg_match('#^/phlexible/[a-z0-9-_.]+/scripts/[a-z0-9-_.]\.js$#', $resource->getPath())) {
+                $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();
             }
         }
+
+        #$dir = $this->puliRepository->get('/phlexible/scripts');
+        #/* @var $dir DirectoryResource */
+        #foreach ($dir->listChildren() as $dir) {
+        #    //if ($dir->getName() !== 'phlexiblegui') continue;
+        #    foreach ($dir->listChildren() as $resource) {
+        #        if ($resource instanceof FileResource && substr($resource->getName(), -3) === '.js') {
+        #            $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();
+        #        }
+        #    }
+        #}
 
         $files = array();
         foreach ($resources as $resource) {
