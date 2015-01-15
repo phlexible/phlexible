@@ -1,5 +1,8 @@
 Ext.provide('Phlexible.elements.LinkWindow');
 
+Ext.require('Ext.ux.TwinIconCombo');
+Ext.require('Phlexible.elements.EidSelector');
+
 Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
     title: Phlexible.elements.Strings.link_window.link,
     strings: Phlexible.elements.Strings.link_window,

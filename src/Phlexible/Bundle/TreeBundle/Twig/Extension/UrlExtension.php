@@ -69,20 +69,24 @@ class UrlExtension extends \Twig_Extension
                 $link = $name->getValue();
                 if ($link['type'] === 'internal' || $link['type'] === 'intrasiteroot') {
                     $tree = $this->contentTreeManager->findByTreeId($link['tid']);
-                    $node = $tree->get($link['tid']);
+                    if ($tree) {
+                        $node = $tree->get($link['tid']);
 
-                    return $this->router->generate($node, $parameters);
+                        return $this->router->generate($node, $parameters);
+                    }
                 } elseif ($link['type'] === 'external') {
                     return $link['url'];
                 } elseif ($link['type'] === 'mailto') {
                     return 'mailto:' . $link['recipient'];
                 }
             }
-        } elseif (is_int($name)) {
-            $tree = $this->contentTreeManager->findByTreeId($name);
-            $node = $tree->get($name);
+        } elseif (strlen($name) && (is_int($name) || (int) $name)) {
+            $tree = $this->contentTreeManager->findByTreeId((int) $name);
+            if ($tree) {
+                $node = $tree->get((int) $name);
 
-            return $this->router->generate($node, $parameters);
+                return $this->router->generate($node, $parameters);
+            }
         } elseif (is_string($name)) {
             return $this->router->generate($name, $parameters);
         }
@@ -107,14 +111,23 @@ class UrlExtension extends \Twig_Extension
                 $link = $name->getValue();
                 if ($link['type'] === 'internal' || $link['type'] === 'intrasiteroot') {
                     $tree = $this->contentTreeManager->findByTreeId($link['tid']);
-                    $node = $tree->get($link['tid']);
+                    if ($tree) {
+                        $node = $tree->get($link['tid']);
 
-                    return $this->router->generate($node, $parameters, RouterInterface::ABSOLUTE_URL);
+                        return $this->router->generate($node, $parameters, RouterInterface::ABSOLUTE_URL);
+                    }
                 } elseif ($link['type'] === 'external') {
                     return $link['url'];
                 } elseif ($link['type'] === 'mailto') {
                     return 'mailto:' . $link['recipient'];
                 }
+            }
+        } elseif (strlen($name) && (is_int($name) || (int) $name)) {
+            $tree = $this->contentTreeManager->findByTreeId((int) $name);
+            if ($tree) {
+                $node = $tree->get((int) $name);
+
+                return $this->router->generate($node, $parameters);
             }
         } elseif (is_string($name)) {
             return $this->router->generate($name, $parameters, RouterInterface::ABSOLUTE_URL);

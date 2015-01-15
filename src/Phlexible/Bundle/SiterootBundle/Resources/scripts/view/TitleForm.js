@@ -65,7 +65,7 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
                     {
                         xtype: 'dataview',
                         store: new Ext.data.JsonStore({
-                            url: Phlexible.Router.generate('siteroots_customtitle_placeholders'),
+                            url: Phlexible.Router.generate('siteroots_pattern_placeholders'),
                             root: 'placeholders',
                             fields: ['placeholder', 'title'],
                             autoLoad: true
@@ -147,7 +147,7 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('siteroots_customtitle_example'),
+            url: Phlexible.Router.generate('siteroots_pattern_example'),
             params: {
                 siteroot_id: this.siterootId,
                 pattern: pattern
