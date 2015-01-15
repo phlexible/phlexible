@@ -20,9 +20,9 @@ use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 class MediaTypeManager implements MediaTypeManagerInterface
 {
     /**
-     * @var MediaTypeLoader
+     * @var PuliLoader
      */
-    private $mediaTypeLoader;
+    private $loader;
 
     /**
      * @var MimeDetector
@@ -35,12 +35,12 @@ class MediaTypeManager implements MediaTypeManagerInterface
     private $mediaTypes;
 
     /**
-     * @param MediaTypeLoader $mediaTypeLoader
-     * @param MimeDetector    $mimeDetector
+     * @param PuliLoader   $loader
+     * @param MimeDetector $mimeDetector
      */
-    public function __construct(MediaTypeLoader $mediaTypeLoader, MimeDetector $mimeDetector)
+    public function __construct(PuliLoader $loader, MimeDetector $mimeDetector)
     {
-        $this->mediaTypeLoader = $mediaTypeLoader;
+        $this->loader = $loader;
         $this->mimeDetector = $mimeDetector;
     }
 
@@ -58,7 +58,7 @@ class MediaTypeManager implements MediaTypeManagerInterface
     public function getCollection()
     {
         if ($this->mediaTypes === null) {
-            $this->mediaTypes = $this->mediaTypeLoader->loadMediaTypes();
+            $this->mediaTypes = $this->loader->loadMediaTypes();
         }
 
         return $this->mediaTypes;

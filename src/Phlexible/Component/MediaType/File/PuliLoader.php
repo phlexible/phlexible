@@ -43,12 +43,12 @@ class PuliLoader
     private $fileDir;
 
     /**
-     * @param ResourceDiscovery  $puliDiscovery
-     * @param LoaderInterface    $loader
-     * @param CompilerInterface  $compiler
-     * @param string             $fileDir
-     * @param string             $cacheDir
-     * @param bool               $debug
+     * @param ResourceDiscovery $puliDiscovery
+     * @param LoaderInterface   $loader
+     * @param CompilerInterface $compiler
+     * @param string            $fileDir
+     * @param string            $cacheDir
+     * @param bool              $debug
      */
     public function __construct(
         ResourceDiscovery $puliDiscovery,
@@ -88,11 +88,13 @@ class PuliLoader
             $resources[] = new FileResource($r->getFileName());
             $r = new \ReflectionClass($this->compiler);
             $resources[] = new FileResource($r->getFileName());
-            foreach ($this->puliDiscovery->find("phlexible/mediatypes") as $resource) {
-                /* @var $resource \Puli\Repository\Resource\FileResource */
-                $file = $resource->getFilesystemPath();
-                $mediaTypes->add($this->loader->load($file));
-                $resources[basename($file)] = new FileResource($file);
+            foreach ($this->puliDiscovery->find("phlexible/mediatypes") as $binding) {
+                foreach ($binding->getResources() as $resource) {
+                    /* @var $resource \Puli\Repository\Resource\FileResource */
+                    $file = $resource->getFilesystemPath();
+                    $mediaTypes->add($this->loader->load($file));
+                    $resources[basename($file)] = new FileResource($file);
+                }
             }
 
             $resources = array_values($resources);

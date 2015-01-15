@@ -16,8 +16,6 @@ services:
             - %phlexible_media_type.file_dir%
             - %phlexible_media_type.compiler.cache_dir%
             - %kernel.debug%
-        calls:
-            - [addLoader, [@phlexible_media_type.file.loader.xml]]
 
     phlexible_media_type.file.media_type_manager:
         class: Phlexible\Component\MediaType\File\MediaTypeManager
