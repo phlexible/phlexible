@@ -3,6 +3,8 @@ Ext.provide('Phlexible.elements.EidLoader');
 Ext.provide('Phlexible.elements.EidSelectorMenu');
 Ext.provide('Phlexible.elements.EidSelector');
 
+Ext.require('Ext.ux.TreeSelector');
+
 Phlexible.elements.EidNodeUi = Ext.extend(Ext.tree.TreeNodeUI, {
     // private
     onClick: function (e) {
