@@ -400,11 +400,32 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     }
 
     /**
+     * @var bool
+     */
+    private $preview = false;
+
+    /**
+     * @param bool $preview
+     *
+     * @return $this
+     */
+    public function setPreview($preview = true)
+    {
+        $this->preview = $preview;
+
+        return $this;
+    }
+    /**
      * {@inheritdoc}
      */
-    public function isViewable(TreeNodeInterface $node)
+    public function isViewable(TreeNodeInterface $node, $language = null)
     {
-        return $this->mediator->isViewable($node);
+        $isPublished = true;
+        if (1) {
+            $isPublished = $node->getTree()->isPublished($node, $language ?: $this->language);
+        }
+
+        return $this->mediator->isViewable($node) && $node->getInNavigation() && $isPublished;
     }
 
     /**

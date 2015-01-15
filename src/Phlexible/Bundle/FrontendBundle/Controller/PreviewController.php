@@ -52,6 +52,7 @@ class PreviewController extends Controller
         $request->attributes->set('siterootUrl', $siterootUrl);
         $request->attributes->set('preview', true);
 
+        $node->getTree()->setPreview(true);
         $this->get('router.request_context')->setParameter('preview', true);
 
         $configurator = $this->get('phlexible_element_renderer.configurator');
