@@ -11,9 +11,9 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
+use Puli\Discovery\Api\Binding\ResourceBinding;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\ResourceCollection;
-use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\FileResource;
 
 /**
@@ -73,7 +73,7 @@ class CssBuilder
     {
         $cache = new ResourceCollectionCache($this->cacheDir . '/gui.css', $this->debug);
 
-        $resources = $this->find();
+        $resources = $this->findBindings();
 
         if (!$cache->isFresh($resources)) {
             $content = $this->buildCss($resources);
@@ -93,23 +93,26 @@ class CssBuilder
     }
 
     /**
-     * @return ResourceCollection
+     * @return ResourceBinding[]
      */
-    private function find()
+    private function findBindings()
     {
         return $this->puliDiscovery->find('phlexible/styles');
     }
 
     /**
+     * @param ResourceBinding[] $bindings
      * @return string
      */
-    private function buildCss(ResourceCollection $resources)
+    private function buildCss(array $bindings)
     {
         $input = [];
 
-        foreach ($resources as $resource) {
-            /* @var $resource FileResource */
-            $input[] = $resource->getFilesystemPath();
+        foreach ($bindings as $binding) {
+            foreach ($binding->getResources() as $resource) {
+                /* @var $resource FileResource */
+                $input[] = $resource->getFilesystemPath();
+            }
         }
 
         $css = '/* Created: ' . date('Y-m-d H:i:s') . ' */';

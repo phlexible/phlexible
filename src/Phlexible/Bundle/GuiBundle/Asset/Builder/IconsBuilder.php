@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
+use Puli\Discovery\Api\Binding\ResourceBinding;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\ResourceCollection;
 
@@ -70,10 +71,10 @@ class IconsBuilder
     {
         $cache = new ResourceCollectionCache($this->cacheDir . '/icons.css', $this->debug);
 
-        $resources = $this->find();
+        $bindings = $this->findBindings();
 
-        if (!$cache->isFresh($resources)) {
-            $content = $this->buildIcons($resources, $baseUrl, $basePath);
+        if (!$cache->isFresh($bindings)) {
+            $content = $this->buildIcons($bindings, $baseUrl, $basePath);
 
             $cache->write($content);
 
@@ -87,52 +88,54 @@ class IconsBuilder
     }
 
     /**
-     * @return ResourceCollection
+     * @return ResourceBinding[]
      */
-    private function find()
+    private function findBindings()
     {
         return $this->puliDiscovery->find('phlexible/icons');
     }
 
     /**
-     * @param ResourceCollection $resources
-     * @param string             $baseUrl
-     * @param string             $basePath
+     * @param ResourceBinding[] $bindings
+     * @param string            $baseUrl
+     * @param string            $basePath
      *
      * @return string
      */
-    private function buildIcons(ResourceCollection $resources, $baseUrl, $basePath)
+    private function buildIcons(array $bindings, $baseUrl, $basePath)
     {
         $data = [];
 
-        foreach ($resources as $resource) {
-            if (!preg_match("#^/phlexible/icons/(.+?)/(.*\.(png|gif))$#", $resource->getPath(), $match)) {
-                continue;
+        foreach ($bindings as $binding) {
+            foreach ($binding->getResources() as $resource) {
+                if (!preg_match("#^/phlexible/(.+?)/icons/(.*\.(png|gif))$#", $resource->getPath(), $match)) {
+                    continue;
+                }
+
+                $bundle = $match[1];
+                $path = $match[2];
+                $extension = $match[3];
+
+                $filesystemPath = $resource->getFilesystemPath();
+                $file = basename($filesystemPath);
+                $name = basename($filesystemPath, ".$extension");
+
+                $size = getimagesize($filesystemPath);
+                if ($size[0] != 16 || $size[1] != 16) {
+                    continue;
+                }
+
+                $selector = sprintf('.p-%s-%s-icon', str_replace('phlexible', '', $bundle), $name);
+
+                $data[] = [
+                    'bundle'    => $bundle,
+                    'path'      => $path,
+                    'file'      => $file,
+                    'name'      => $name,
+                    'selector'  => $selector,
+                    'extension' => $extension,
+                ];
             }
-
-            $bundle = $match[1];
-            $path = $match[2];
-            $extension = $match[3];
-
-            $filesystemPath = $resource->getFilesystemPath();
-            $file = basename($filesystemPath);
-            $name = basename($filesystemPath, ".$extension");
-
-            $size = getimagesize($filesystemPath);
-            if ($size[0] != 16 || $size[1] != 16) {
-                continue;
-            }
-
-            $selector = sprintf('.p-%s-%s-icon', str_replace('phlexible', '', $bundle), $name);
-
-            $data[] = [
-                'bundle'    => $bundle,
-                'path'      => $path,
-                'file'      => $file,
-                'name'      => $name,
-                'selector'  => $selector,
-                'extension' => $extension,
-            ];
         }
 
         $urlTemplate = $basePath . '/bundles/%s/icons/%s';

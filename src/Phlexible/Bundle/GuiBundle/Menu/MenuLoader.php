@@ -58,11 +58,13 @@ class MenuLoader
             )
         );
         $items = new MenuItemCollection();
-        foreach ($this->puliDiscovery->find('phlexible/menu') as $resource) {
-            /* @var $resource FileResource */
+        foreach ($this->puliDiscovery->find('phlexible/menu') as $binding) {
+            foreach ($binding->getResources() as $resource) {
+                /* @var $resource FileResource */
 
-            $loadedItems = $loader->load($resource->getFilesystemPath());
-            $items->merge($loadedItems);
+                $loadedItems = $loader->load($resource->getFilesystemPath());
+                $items->merge($loadedItems);
+            }
         }
 
         $event = new GetMenuEvent($items);
