@@ -345,7 +345,12 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         }
 
         if (!count($parts)) {
-            return '';
+            if (!count($pathNodes)) {
+                return '';
+            }
+
+            $current = $pathNodes[0];
+            $parts[] = $current->getSlug($language);
         }
 
         $path = '/' . implode('/', array_reverse($parts));
