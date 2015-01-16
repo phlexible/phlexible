@@ -415,6 +415,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
 
         return $this;
     }
+
     /**
      * {@inheritdoc}
      */
@@ -426,6 +427,20 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
         }
 
         return $this->mediator->isViewable($node) && $node->getInNavigation() && $isPublished;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasViewableChildren(TreeNodeInterface $node, $language = null)
+    {
+        foreach ($this->getChildren($node) as $childNode) {
+            if ($this->isViewable($childNode, $language)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

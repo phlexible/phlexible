@@ -236,4 +236,12 @@ class ContentTreeContext
     {
         return $this->node->getTree()->isViewable($this->node);
     }
+
+    /**
+     * @return bool
+     */
+    public function viewableChildren()
+    {
+        return $this->node->getTree()->hasViewableChildren($this->node);
+    }
 }
