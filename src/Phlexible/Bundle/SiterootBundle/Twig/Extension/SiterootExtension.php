@@ -62,13 +62,13 @@ class SiterootExtension extends \Twig_Extension
     }
 
     /**
-     * @param TreeNodeInterface $treeNode
      * @param string            $name
      * @param string            $language
+     * @param TreeNodeInterface $treeNode
      *
      * @return string
      */
-    public function pageTitle(TreeNodeInterface $treeNode = null, $name = 'default', $language = null)
+    public function pageTitle($name = 'default', $language = null, TreeNodeInterface $treeNode = null)
     {
         $request = $this->requestStack->getMasterRequest();
 
