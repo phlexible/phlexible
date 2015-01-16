@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Twig\Extension;
 use Phlexible\Bundle\MediaManagerBundle\Meta\FileMetaDataManager;
 use Phlexible\Bundle\MediaManagerBundle\Meta\FileMetaSetResolver;
 use Phlexible\Component\Volume\VolumeManager;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -60,10 +61,18 @@ class MediaExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('image', [$this, 'image']),
-            new \Twig_SimpleFunction('icon', [$this, 'icon']),
-            new \Twig_SimpleFunction('thumbnail', [$this, 'thumbnail']),
-            new \Twig_SimpleFunction('download', [$this, 'download']),
+            new \Twig_SimpleFunction('image', [$this, 'imageUrl']),
+            new \Twig_SimpleFunction('imageUrl', [$this, 'imageUrl']),
+            new \Twig_SimpleFunction('imagePath', [$this, 'imagePath']),
+            new \Twig_SimpleFunction('icon', [$this, 'iconUrl']),
+            new \Twig_SimpleFunction('iconUrl', [$this, 'iconUrl']),
+            new \Twig_SimpleFunction('iconPath', [$this, 'iconPath']),
+            new \Twig_SimpleFunction('thumbnail', [$this, 'thumbnailUrl']),
+            new \Twig_SimpleFunction('thumbnailUrl', [$this, 'thumbnailUrl']),
+            new \Twig_SimpleFunction('thumbnailPath', [$this, 'thumbnailPath']),
+            new \Twig_SimpleFunction('download', [$this, 'downloadUrl']),
+            new \Twig_SimpleFunction('downloadUrl', [$this, 'downloadUrl']),
+            new \Twig_SimpleFunction('downloadPath', [$this, 'downloadPath']),
             new \Twig_SimpleFunction('fileinfo', [$this, 'fileinfo']),
         ];
     }
@@ -73,7 +82,7 @@ class MediaExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function image($image)
+    public function imageUrl($image)
     {
         if (!$image) {
             return '';
@@ -87,18 +96,17 @@ class MediaExtension extends \Twig_Extension
         }
 
         // deliver original file
-        $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId]);
+        $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $src;
     }
 
     /**
      * @param string $image
-     * @param int    $size
      *
      * @return string
      */
-    public function icon($image, $size = 16)
+    public function imagePath($image)
     {
         if (!$image) {
             return '';
@@ -111,20 +119,21 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => $size]);
+        // deliver original file
+        $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_PATH);
 
         return $src;
     }
 
     /**
      * @param string $image
-     * @param string $template
+     * @param int    $size
      *
      * @return string
      */
-    public function thumbnail($image, $template = null)
+    public function iconUrl($image, $size = 16)
     {
-        if (!$image && !$template) {
+        if (!$image) {
             return '';
         }
 
@@ -135,13 +144,79 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        if ($template === null) {
-            // deliver original file
-            $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId]);
-        } else {
-            // deliver thumbnail
-            $src = $this->router->generate('frontendmedia_thumbnail', ['fileId' => $fileId, 'template' => $template]);
+        $src = $this->router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => $size], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $src;
+    }
+
+    /**
+     * @param string $image
+     * @param int    $size
+     *
+     * @return string
+     */
+    public function iconPath($image, $size = 16)
+    {
+        if (!$image) {
+            return '';
         }
+
+        $parts = explode(';', $image);
+        $fileId = $parts[0];
+        $fileVersion = 1;
+        if (isset($parts[1])) {
+            $fileVersion = $parts[1];
+        }
+
+        $src = $this->router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => $size], UrlGeneratorInterface::ABSOLUTE_PATH);
+
+        return $src;
+    }
+
+    /**
+     * @param string $image
+     * @param string $template
+     *
+     * @return string
+     */
+    public function thumbnailUrl($image, $template)
+    {
+        if (!$image || !$template) {
+            return '';
+        }
+
+        $parts = explode(';', $image);
+        $fileId = $parts[0];
+        $fileVersion = 1;
+        if (isset($parts[1])) {
+            $fileVersion = $parts[1];
+        }
+
+        $src = $this->router->generate('frontendmedia_thumbnail', ['fileId' => $fileId, 'template' => $template], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $src;
+    }
+
+    /**
+     * @param string $image
+     * @param string $template
+     *
+     * @return string
+     */
+    public function thumbnailPath($image, $template)
+    {
+        if (!$image || !$template) {
+            return '';
+        }
+
+        $parts = explode(';', $image);
+        $fileId = $parts[0];
+        $fileVersion = 1;
+        if (isset($parts[1])) {
+            $fileVersion = $parts[1];
+        }
+
+        $src = $this->router->generate('frontendmedia_thumbnail', ['fileId' => $fileId, 'template' => $template], UrlGeneratorInterface::ABSOLUTE_PATH);
 
         return $src;
     }
@@ -151,7 +226,7 @@ class MediaExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function download($file)
+    public function downloadUrl($file)
     {
         if (!$file) {
             return '';
@@ -164,7 +239,30 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_download', ['fileId' => $fileId]);
+        $src = $this->router->generate('frontendmedia_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $src;
+    }
+
+    /**
+     * @param string $file
+     *
+     * @return string
+     */
+    public function downloadPath($file)
+    {
+        if (!$file) {
+            return '';
+        }
+
+        $parts = explode(';', $file);
+        $fileId = $parts[0];
+        $fileVersion = 1;
+        if (isset($parts[1])) {
+            $fileVersion = $parts[1];
+        }
+
+        $src = $this->router->generate('frontendmedia_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_PATH);
 
         return $src;
     }
