@@ -39,7 +39,7 @@ class CssCompiler implements CompilerInterface
             $name = $mediaType->getName();
 
             foreach ($sizes as $size => $sizeTitle) {
-                $styles[] = sprintf('.p-%s-%s-small {background-image:url(/BASEPATH/bundles/phlexiblemediatype/mimetypes16/%s.gif) !important;}', $classname, $name, $name);
+                $styles[] = sprintf('.p-%s-%s-small {background-image:url(//COMPONENTSPATH/phlexiblemediatype/mimetypes16/%s.gif) !important;}', $classname, $name, $name);
             }
         }
 
