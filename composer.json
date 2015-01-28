@@ -28,7 +28,6 @@
         "zf1/zend-search-lucene": "~1.12",
         "doctrine/dbal": "~2.4",
         "doctrine/collections": "~1.1",
-        "jms/cg": "dev-master",
         "fluentdom/fluentdom": "~5.1",
         "friendsofsymfony/user-bundle": "~1.3",
         "symfony/symfony": "~2.4",

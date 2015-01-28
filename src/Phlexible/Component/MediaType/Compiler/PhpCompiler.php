@@ -8,9 +8,6 @@
 
 namespace Phlexible\Component\MediaType\Compiler;
 
-use CG\Core\DefaultGeneratorStrategy;
-use CG\Generator\PhpClass;
-use CG\Generator\PhpMethod;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
 
 /**
@@ -33,7 +30,9 @@ class PhpCompiler implements CompilerInterface
      */
     public function compile(MediaTypeCollection $mediaTypes)
     {
-        $className = $this->getClassname();
+        $parts = explode('\\', $this->getClassname());
+        $className = array_pop($parts);
+        $namespace = implode('\\', $parts);
 
         $constructorBody = '';
         foreach ($mediaTypes->all() as $mediaType) {
@@ -48,34 +47,61 @@ class PhpCompiler implements CompilerInterface
             ) : 'array()';
 
             $constructorBody .= <<<EOF
-\$this->add(
-    \$this->create()
-        ->setName("{$mediaType->getName()}")
-        ->setCategory("{$mediaType->getCategory()}")
-        ->setTitles({$titles})
-        ->setMimetypes({$mimetypes})
-        ->setIcons({$icons})
-);
+        \$this->add(
+            \$this->create()
+                ->setName("{$mediaType->getName()}")
+                ->setCategory("{$mediaType->getCategory()}")
+                ->setTitles({$titles})
+                ->setMimetypes({$mimetypes})
+                ->setIcons({$icons})
+        );
 
 EOF;
         }
 
-        $constructor = PhpMethod::create('__construct');
-        $constructor->setBody($constructorBody);
+        $constructor = <<<EOF
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+$constructorBody
+    }
+EOF;
 
-        $getHashBody = 'return "' . $mediaTypes->getHash() . '";';
+        $getHash = <<<EOF
+    /**
+     * Return hash
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        return "{$mediaTypes->getHash()}";
+    }
+EOF;
+        $parentClassName = '\Phlexible\Component\MediaType\Model\MediaTypeCollection';
 
-        $getHashMethod = PhpMethod::create('getHash');
-        $getHashMethod->setBody($getHashBody);
+        $class = <<<EOF
+/**
+ * Compiled MediaTypes
+ */
+final class $className extends $parentClassName
+{
+$constructor
 
-        $class = PhpClass::create($className)
-            ->setFinal(true)
-            ->setParentClassName('Phlexible\Component\MediaType\Model\MediaTypeCollection')
-            ->setMethod($constructor)
-            ->setMethod($getHashMethod);
+$getHash
+}
+EOF;
 
-        $generator = new DefaultGeneratorStrategy();
+        $file = <<<EOF
+<?php
 
-        return "<?php\n\n" . $generator->generate($class);
+namespace $namespace;
+
+$class
+EOF;
+
+        return $file;
     }
 }
