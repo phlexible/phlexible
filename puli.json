@@ -188,147 +188,147 @@
             "type": "phlexible/mediatypes"
         },
         "d8f515b6-d461-5835-852a-6b3e350e539c": {
-            "query": "/phlexible/phlexibleaccesscontrol/scripts/*.js",
+            "query": "/phlexible/phlexibleaccesscontrol/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "4081faff-9596-50ac-b357-7e4e954049d1": {
-            "query": "/phlexible/phlexiblecms/scripts/*.js",
+            "query": "/phlexible/phlexiblecms/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "76c06cbf-3a4d-5c83-83d8-9f74942fd449": {
-            "query": "/phlexible/phlexiblecontentchannel/scripts/*.js",
+            "query": "/phlexible/phlexiblecontentchannel/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "18aa998c-6dc3-5367-ac0b-2823440d623d": {
-            "query": "/phlexible/phlexibledashboard/scripts/*.js",
+            "query": "/phlexible/phlexibledashboard/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "ce977efd-2297-552a-9b80-fefe0f26ad6e": {
-            "query": "/phlexible/phlexibleelement/scripts/*.js",
+            "query": "/phlexible/phlexibleelement/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "997e7153-0a1c-5562-95d8-df0a37463e40": {
-            "query": "/phlexible/phlexibleelementtype/scripts/*.js",
+            "query": "/phlexible/phlexibleelementtype/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "b2d4128b-ca98-55b8-846e-e859adcf23a9": {
-            "query": "/phlexible/phlexiblefrontendmedia/scripts/*.js",
+            "query": "/phlexible/phlexiblefrontendmedia/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "f9f7ada2-dd12-571f-95c4-e5931a2e1f4a": {
-            "query": "/phlexible/phlexiblegui/scripts/*.js",
+            "query": "/phlexible/phlexiblegui/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "1a26dab5-9ab4-56a9-8e48-f308b305c88c": {
-            "query": "/phlexible/phlexiblemediacache/scripts/*.js",
+            "query": "/phlexible/phlexiblemediacache/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "b1a07433-4802-5203-9aa5-3ff68de552f0": {
-            "query": "/phlexible/phlexiblemediamanager/scripts/*.js",
+            "query": "/phlexible/phlexiblemediamanager/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "48e5ff67-324b-56e0-a75c-6a4492432063": {
-            "query": "/phlexible/phlexiblemediatemplate/scripts/*.js",
+            "query": "/phlexible/phlexiblemediatemplate/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "c27a5af0-5a03-564d-a529-20e91a7543b4": {
-            "query": "/phlexible/phlexiblemediatype/scripts/*.js",
+            "query": "/phlexible/phlexiblemediatype/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "6142a6e6-222b-5258-8d57-17e14837696b": {
-            "query": "/phlexible/phlexiblemessage/scripts/*.js",
+            "query": "/phlexible/phlexiblemessage/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "1655bba3-d229-5537-868d-663148150ab7": {
-            "query": "/phlexible/phlexiblemetaset/scripts/*.js",
+            "query": "/phlexible/phlexiblemetaset/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "00dec2a9-c081-576c-8234-ac78afa6530c": {
-            "query": "/phlexible/phlexibleproblem/scripts/*.js",
+            "query": "/phlexible/phlexibleproblem/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "ca47c1f0-77b3-50b1-8f25-f76dd788e356": {
-            "query": "/phlexible/phlexiblequeue/scripts/*.js",
+            "query": "/phlexible/phlexiblequeue/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "96a4756b-b806-5ad2-9425-5c81a81e4e28": {
-            "query": "/phlexible/phlexiblesearch/scripts/*.js",
+            "query": "/phlexible/phlexiblesearch/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "b8391ee9-1b76-54f3-a4cd-ce149ba0a7c8": {
-            "query": "/phlexible/phlexiblesiteroot/scripts/*.js",
+            "query": "/phlexible/phlexiblesiteroot/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "0537382f-e1af-5e26-bc88-6eda5741fdf3": {
-            "query": "/phlexible/phlexibletask/scripts/*.js",
+            "query": "/phlexible/phlexibletask/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "12016c15-1fab-5ec7-bdc4-4551f2fcaea6": {
-            "query": "/phlexible/phlexibleteaser/scripts/*.js",
+            "query": "/phlexible/phlexibleteaser/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "be349132-be9f-519a-87be-bcb003bfc1e9": {
-            "query": "/phlexible/phlexibleuser/scripts/*.js",
+            "query": "/phlexible/phlexibleuser/scripts/**.js",
             "type": "phlexible/scripts"
         },
         "85d31772-1be8-52a9-9c78-c973e5e058e8": {
-            "query": "/phlexible/phlexibleaccesscontrol/styles/*.css",
+            "query": "/phlexible/phlexibleaccesscontrol/styles/**.css",
             "type": "phlexible/styles"
         },
         "7cdf0875-c25c-544e-8ba3-942991cb783e": {
-            "query": "/phlexible/phlexiblecms/styles/*.css",
+            "query": "/phlexible/phlexiblecms/styles/**.css",
             "type": "phlexible/styles"
         },
         "275795b7-4d09-52ab-8895-e3b35bedfc97": {
-            "query": "/phlexible/phlexibledashboard/styles/*.css",
+            "query": "/phlexible/phlexibledashboard/styles/**.css",
             "type": "phlexible/styles"
         },
         "4a429cc8-7160-57b8-a5dd-288675714103": {
-            "query": "/phlexible/phlexibleelement/styles/*.css",
+            "query": "/phlexible/phlexibleelement/styles/**.css",
             "type": "phlexible/styles"
         },
         "43a612f4-1059-5375-bace-94816dc79db8": {
-            "query": "/phlexible/phlexibleelementtype/styles/*.css",
+            "query": "/phlexible/phlexibleelementtype/styles/**.css",
             "type": "phlexible/styles"
         },
         "a80bd044-07cc-5ed2-88f2-12756caf0e1c": {
-            "query": "/phlexible/phlexiblefrontendmedia/styles/*.css",
+            "query": "/phlexible/phlexiblefrontendmedia/styles/**.css",
             "type": "phlexible/styles"
         },
         "e48dfe29-6164-5df2-89ca-8b32ab717083": {
-            "query": "/phlexible/phlexiblegui/styles/*.css",
+            "query": "/phlexible/phlexiblegui/styles/**.css",
             "type": "phlexible/styles"
         },
         "b0a91a6d-eceb-5b10-990f-51ba26135c63": {
-            "query": "/phlexible/phlexiblemediamanager/styles/*.css",
+            "query": "/phlexible/phlexiblemediamanager/styles/**.css",
             "type": "phlexible/styles"
         },
         "926ce685-3ecf-52d0-9b95-1898371c41e0": {
-            "query": "/phlexible/phlexiblemediatemplate/styles/*.css",
+            "query": "/phlexible/phlexiblemediatemplate/styles/**.css",
             "type": "phlexible/styles"
         },
         "42ad3a40-538a-5743-9373-99b7a16578a9": {
-            "query": "/phlexible/phlexiblemessage/styles/*.css",
+            "query": "/phlexible/phlexiblemessage/styles/**.css",
             "type": "phlexible/styles"
         },
         "9554765c-b587-5408-b348-664a8b302336": {
-            "query": "/phlexible/phlexibleproblem/styles/*.css",
+            "query": "/phlexible/phlexibleproblem/styles/**.css",
             "type": "phlexible/styles"
         },
         "d6b01ef5-48f8-5a70-85c3-e60ccd125420": {
-            "query": "/phlexible/phlexiblesearch/styles/*.css",
+            "query": "/phlexible/phlexiblesearch/styles/**.css",
             "type": "phlexible/styles"
         },
         "2bf3ea39-6ddf-517d-977a-eb532937616d": {
-            "query": "/phlexible/phlexiblesiteroot/styles/*.css",
+            "query": "/phlexible/phlexiblesiteroot/styles/**.css",
             "type": "phlexible/styles"
         },
         "4f1ab77a-fb01-5410-95cf-477147e83d53": {
-            "query": "/phlexible/phlexibletask/styles/*.css",
+            "query": "/phlexible/phlexibletask/styles/**.css",
             "type": "phlexible/styles"
         },
         "21d5bc59-f1a3-5f15-a1b2-15c0d0d080b0": {
-            "query": "/phlexible/phlexibleuser/styles/*.css",
+            "query": "/phlexible/phlexibleuser/styles/**.css",
             "type": "phlexible/styles"
         },
         "8516f780-b085-5682-9a83-a5858d170eb2": {

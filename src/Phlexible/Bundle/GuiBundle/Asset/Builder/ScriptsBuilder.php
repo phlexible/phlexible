@@ -13,9 +13,6 @@ use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
 use Puli\Discovery\Api\Binding\ResourceBinding;
 use Puli\Discovery\Api\ResourceDiscovery;
-use Puli\Repository\Api\ResourceCollection;
-use Puli\Repository\Api\ResourceRepository;
-use Puli\Repository\Resource\DirectoryResource;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Component\HttpKernel\KernelInterface;
 
