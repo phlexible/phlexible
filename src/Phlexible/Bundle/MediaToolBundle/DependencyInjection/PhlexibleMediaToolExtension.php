@@ -32,6 +32,7 @@ class PhlexibleMediaToolExtension extends Extension
         $loader->load('poppler.yml');
         $loader->load('imageanalyzer.yml');
         $loader->load('imagine.yml');
+        $loader->load('exiftool.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);

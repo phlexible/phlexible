@@ -44,8 +44,8 @@
         "igorw/file-serve-bundle": "~1",
         "alchemy/zippy": "~0.2",
         "cocur/slugify": "~0.8",
-        "phansys/getid3": "v2.0.0-BETA1",
-        "cogpowered/finediff": ">=0.3.0",
+        "phpexiftool/phpexiftool": "~0.4",
+        "cogpowered/finediff": "~0.3",
         "nelmio/api-doc-bundle": "~2.5",
         "yohang/finite": "~1.0"
     },

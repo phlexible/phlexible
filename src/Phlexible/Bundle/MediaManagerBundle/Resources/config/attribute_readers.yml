@@ -5,9 +5,10 @@ services:
         tags:
             - {name: phlexible_media_manager.attribute_reader}
 
-    phlexible_media_manager.attribute_reader.getid3:
-        class: Phlexible\Bundle\MediaManagerBundle\AttributeReader\GetId3AttributeReader
+    phlexible_media_manager.attribute_reader.exiftool:
+        class: Phlexible\Bundle\MediaManagerBundle\AttributeReader\ExiftoolAttributeReader
         public: false
+        arguments: [@phlexible_media_tool.exiftool]
         tags:
             - {name: phlexible_media_manager.attribute_reader}
 

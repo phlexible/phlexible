@@ -59,7 +59,7 @@ class PdfInfoAttributeReader implements AttributeReaderInterface
             $infos = $this->pdfFile->getInfo($filename);
 
             foreach ($infos as $key => $value) {
-                $attributes->set(strtolower("pdf.$key"), $value);
+                $attributes->set(strtolower("pdfinfo.$key"), $value);
             }
         } catch (\Exception $e) {
         }

@@ -98,7 +98,7 @@ class ReadCommand extends ContainerAwareCommand
 
         $mimeDetector = $this->getContainer()->get('phlexible_media_tool.mime.detector');
         $mediaTypeManager = $this->getContainer()->get('phlexible_media_type.media_type_manager');
-        $attributeReader = $this->getContainer()->get('phlexible_media_asset.reader.attribute');
+        $attributeReader = $this->getContainer()->get('phlexible_media_manager.attribute_reader');
 
         if (!file_exists($file->getPhysicalPath())) {
             $output->writeln("<error>File not found</error>");
