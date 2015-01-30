@@ -52,6 +52,12 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
+    phlexible_tree.listener.exception:
+        class: Phlexible\Bundle\TreeBundle\EventListener\ExceptionListener
+        arguments: [@twig, @phlexible_element_renderer.configurator, @phlexible_tree.content_tree_manager, @logger, %kernel.debug%]
+        tags:
+            - {name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 999}
+
     # twig extensions
     phlexible_tree.twig.tree_extension:
         class: Phlexible\Bundle\TreeBundle\Twig\Extension\TreeExtension
