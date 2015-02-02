@@ -86,14 +86,17 @@ class ExceptionListener
 
         $request = $event->getRequest();
 
+        // Only for debug
         if ($this->debug) {
-            //return;
+            return;
         }
 
+        // Not for xml http requests
         if ($request->isXmlHttpRequest()) {
             return;
         }
 
+        // Only for phlexible tree nodes
         if (!$request->attributes->has('siterootUrl')) {
             return;
         }
