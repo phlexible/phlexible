@@ -86,7 +86,7 @@ class ExceptionListener
         $request = $event->getRequest();
 
         if ($this->debug) {
-//            return;
+            return;
         }
 
         if ($request->isXmlHttpRequest()) {
