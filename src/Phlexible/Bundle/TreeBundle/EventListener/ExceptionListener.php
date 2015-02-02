@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
 use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\DistributionBundle\Configurator\Configurator;
@@ -35,7 +36,7 @@ class ExceptionListener
     /**
      * @var ContentTreeManagerInterface
      */
-    private $tree;
+    private $treeManager;
 
     /**
      * @var LoggerInterface
@@ -63,9 +64,9 @@ class ExceptionListener
     {
         $this->twig = $twig;
         $this->configurator = $configurator;
+        $this->treeManager = $treeManager;
         $this->logger = $logger;
         $this->debug = $debug;
-        $this->treeManager = $treeManager;
     }
 
     /**
@@ -86,7 +87,7 @@ class ExceptionListener
         $request = $event->getRequest();
 
         if ($this->debug) {
-            return;
+            //return;
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -97,7 +98,17 @@ class ExceptionListener
             return;
         }
 
-        $tid = 75;
+        $code = $event->getException()->getCode();
+        if (!in_array($code, array(403, 404, 500))) {
+            $code = 500;
+        }
+
+        $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
+        $tid = $siteroot->getSpecialTid($request->getLocale(), "error_$code");
+        if (!$tid) {
+            return;
+        }
+
         $treeNode = $this->treeManager->findByTreeId($tid)->get($tid);
 
         $request->attributes->set('tid', $tid);
@@ -113,7 +124,7 @@ class ExceptionListener
 
         $data = $configuration->getVariables();
 
-        $content = $this->twig->render('::error.html.twig', $data);
+        $content = $this->twig->render("::error_$code.html.twig", $data);
         $response = new Response($content, 500);
 
         $event->setResponse($response);

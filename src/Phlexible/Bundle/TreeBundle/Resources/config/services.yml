@@ -54,7 +54,12 @@ services:
 
     phlexible_tree.listener.exception:
         class: Phlexible\Bundle\TreeBundle\EventListener\ExceptionListener
-        arguments: [@twig, @phlexible_element_renderer.configurator, @phlexible_tree.content_tree_manager, @logger, %kernel.debug%]
+        arguments:
+            - @twig
+            - @phlexible_element_renderer.configurator
+            - @phlexible_tree.content_tree_manager
+            - @logger
+            - %kernel.debug%
         tags:
             - {name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 999}
 

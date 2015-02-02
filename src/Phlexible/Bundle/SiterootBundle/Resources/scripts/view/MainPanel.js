@@ -79,6 +79,10 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
     loadParams: function () {
     },
 
+    getSiterootGrid: function() {
+        return this.getComponent(0);
+    },
+
     /**
      * After the siteroot selection changes load the siteroot data.
      *
