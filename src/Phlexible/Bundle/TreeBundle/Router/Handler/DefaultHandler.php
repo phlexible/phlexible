@@ -14,6 +14,7 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NoSiterootUrlFoundException;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -170,13 +171,18 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         //$request->attributes->set('siterootUrl', $siterootUrl);
 
-        return $parameters;
+        if (isset($parameters['_route_object'])) {
+            $treeNode = $parameters['_route_object'];
+            /* @var $treeNode TreeNodeInterface */
+            if ($treeNode->getNeedAuthentication()) {
+                $configuration = new Security(array());
+                $configuration->setValue('is_granted("bla")');
 
-        return [
-            'siterootUrl' => $siterootUrl,
-            'identifiers' => $identifiers,
-            'parameters'  => $parameters,
-        ];
+                $request->attributes->set('_security', $configuration);
+            }
+        }
+
+        return $parameters;
     }
 
     /**

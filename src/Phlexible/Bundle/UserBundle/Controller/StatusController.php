@@ -32,7 +32,7 @@ class StatusController extends Controller
     public function indexAction()
     {
         $body = '';
-        $body .= '<a href="' . $this->generateUrl('phlexible_status_user_context') . '">Context</a>';
+        $body .= '<a href="' . $this->generateUrl('phlexible_status_user_context') . '">Context</a><br />';
         $body .= '<a href="' . $this->generateUrl('phlexible_status_user_session') . '">Session</a>';
 
         return new Response($body);
@@ -46,16 +46,23 @@ class StatusController extends Controller
      */
     public function contextAction()
     {
-        $securityContext = $this->get('security.context');
+        $tokenStorage = $this->get('security.token_storage');
 
-        $token = $securityContext->getToken();
+        $token = $tokenStorage->getToken();
         $user = $token->getUser();
 
         $output = '<pre>';
         $output .= 'Token class: ' . get_class($token) . PHP_EOL;
         $output .= 'User class:  ' . (is_object($user) ? get_class($user) : $user) . PHP_EOL;
         $output .= PHP_EOL;
-        $output .= 'Token content:'.PHP_EOL.print_r($securityContext->getToken(), 1);
+        $output .= 'Token username: ';
+        $output .= print_r($token->getUsername(), 1).PHP_EOL;
+        $output .= 'Token attributes: ';
+        $output .= print_r($token->getAttributes(), 1).PHP_EOL;
+        $output .= 'Token credentials: ';
+        $output .= print_r($token->getCredentials(), 1).PHP_EOL;
+        $output .= 'Token roles: ';
+        $output .= print_r($token->getRoles(), 1).PHP_EOL;
 
         return new Response($output);
     }
@@ -80,6 +87,9 @@ class StatusController extends Controller
                 $o = 'array ' . count($value);
             } else {
                 $o = $value;
+                if (@unserialize($o)) {
+                    $o = unserialize($o);
+                }
             }
             $output .= '<li>'.$key . ': ' . $o . '</li>';
         }
