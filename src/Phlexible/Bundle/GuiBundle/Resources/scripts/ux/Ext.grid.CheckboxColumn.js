@@ -58,4 +58,4 @@ Ext.grid.CheckboxColumn = function (config) {
             return '<div class="x-grid3-check-col-inner"> </div>';
         }
     });
-}
+};

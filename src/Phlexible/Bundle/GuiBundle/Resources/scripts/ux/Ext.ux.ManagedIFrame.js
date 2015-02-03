@@ -2580,4 +2580,4 @@ Ext.provide('Ext.ux.ManagedIframePanel');
 /** @sourceURL=<miframe.js> */
 if (Ext.provide) {
     Ext.provide('miframe');
-}
+};

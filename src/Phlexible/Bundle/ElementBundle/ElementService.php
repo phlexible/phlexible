@@ -18,6 +18,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\File\Dumper\XmlDumper;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
 
@@ -353,6 +354,29 @@ class ElementService
         );
 
         return $elementVersion;
+    }
+
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return ElementSource
+     */
+    public function createElementSource(Elementtype $elementtype)
+    {
+        $xmlDumper = new XmlDumper();
+
+        $elementSource = new ElementSource();
+        $elementSource
+            ->setElementtypeId($elementtype->getId())
+            ->setElementtypeRevision($elementtype->getRevision())
+            ->setType($elementtype->getType())
+            ->setXml($xmlDumper->dump($elementtype))
+            ->setImportedAt(new \DateTime());
+
+        $this->elementSourceManager->updateElementSource($elementSource);
+
+        return $elementSource;
+
     }
 
     /**
