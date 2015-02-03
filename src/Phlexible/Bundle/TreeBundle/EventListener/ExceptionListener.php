@@ -9,10 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
 use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\DistributionBundle\Configurator\Configurator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
@@ -127,7 +125,7 @@ class ExceptionListener
 
         $data = $configuration->getVariables();
 
-        $content = $this->twig->render("::error_$code.html.twig", $data);
+        $content = $this->twig->render("::error/$code.html.twig", $data);
         $response = new Response($content, 500);
 
         $event->setResponse($response);
