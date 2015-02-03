@@ -176,7 +176,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             /* @var $treeNode TreeNodeInterface */
             if ($treeNode->getNeedAuthentication()) {
                 $configuration = new Security(array());
-                $configuration->setValue('is_granted("bla")');
+                $configuration->setValue('is_granted("ROLE_USER")');
 
                 $request->attributes->set('_security', $configuration);
             }
