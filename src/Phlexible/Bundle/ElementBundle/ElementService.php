@@ -376,7 +376,6 @@ class ElementService
         $this->elementSourceManager->updateElementSource($elementSource);
 
         return $elementSource;
-
     }
 
     /**
