@@ -327,7 +327,7 @@ class UsersController extends Controller
         if ($request->request->get('expires')) {
             $user->setExpiresAt(new \DateTime($request->get('expires')));
         } else {
-            $user->setExpiresAt(null);
+            $user->setExpiresAt(new \DateTime());
         }
 
         // properties
