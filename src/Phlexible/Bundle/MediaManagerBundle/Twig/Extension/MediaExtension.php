@@ -61,18 +61,14 @@ class MediaExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('image', [$this, 'imageUrl']),
-            new \Twig_SimpleFunction('imageUrl', [$this, 'imageUrl']),
-            new \Twig_SimpleFunction('imagePath', [$this, 'imagePath']),
-            new \Twig_SimpleFunction('icon', [$this, 'iconUrl']),
-            new \Twig_SimpleFunction('iconUrl', [$this, 'iconUrl']),
-            new \Twig_SimpleFunction('iconPath', [$this, 'iconPath']),
-            new \Twig_SimpleFunction('thumbnail', [$this, 'thumbnailUrl']),
-            new \Twig_SimpleFunction('thumbnailUrl', [$this, 'thumbnailUrl']),
-            new \Twig_SimpleFunction('thumbnailPath', [$this, 'thumbnailPath']),
-            new \Twig_SimpleFunction('download', [$this, 'downloadUrl']),
-            new \Twig_SimpleFunction('downloadUrl', [$this, 'downloadUrl']),
-            new \Twig_SimpleFunction('downloadPath', [$this, 'downloadPath']),
+            new \Twig_SimpleFunction('image_url', [$this, 'imageUrl']),
+            new \Twig_SimpleFunction('image_path', [$this, 'imagePath']),
+            new \Twig_SimpleFunction('icon_url', [$this, 'iconUrl']),
+            new \Twig_SimpleFunction('icon_path', [$this, 'iconPath']),
+            new \Twig_SimpleFunction('thumbnail_url', [$this, 'thumbnailUrl']),
+            new \Twig_SimpleFunction('thumbnail_path', [$this, 'thumbnailPath']),
+            new \Twig_SimpleFunction('download_url', [$this, 'downloadUrl']),
+            new \Twig_SimpleFunction('download_path', [$this, 'downloadPath']),
             new \Twig_SimpleFunction('fileinfo', [$this, 'fileinfo']),
         ];
     }
