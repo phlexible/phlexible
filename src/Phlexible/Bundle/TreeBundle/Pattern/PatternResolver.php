@@ -42,7 +42,7 @@ class PatternResolver
     }
 
     /**
-     * Return siteroot title
+     * Resolved page title by configured pattern
      *
      * @param string         $patternName
      * @param Siteroot       $siteroot
@@ -53,8 +53,27 @@ class PatternResolver
      */
     public function replace($patternName, Siteroot $siteroot, ElementVersion $elementVersion, $language)
     {
-        $pattern = $this->patterns[$patternName];
+        if (!isset($this->patterns[$patternName])) {
+            $pattern = '%p';
+        } else {
+            $pattern = $this->patterns[$patternName];
+        }
 
+        return $this->replacePattern($pattern, $siteroot, $elementVersion, $language);
+    }
+
+    /**
+     * Resolve page title by pattern
+     *
+     * @param string         $pattern
+     * @param Siteroot       $siteroot
+     * @param ElementVersion $elementVersion
+     * @param string         $language
+     *
+     * @return string
+     */
+    public function replacePattern($pattern, Siteroot $siteroot, ElementVersion $elementVersion, $language)
+    {
         $replace = [
             '%s' => $siteroot->getTitle(),
             '%b' => $elementVersion->getBackendTitle($language),

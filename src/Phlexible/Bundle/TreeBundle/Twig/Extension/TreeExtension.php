@@ -62,6 +62,7 @@ class TreeExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('tree_node', [$this, 'treeNode']),
             new \Twig_SimpleFunction('page_title', [$this, 'pageTitle']),
+            new \Twig_SimpleFunction('page_title_pattern', [$this, 'pageTitlePattern']),
         ];
     }
 
@@ -103,6 +104,35 @@ class TreeExtension extends \Twig_Extension
         }
 
         $title = $this->patternResolver->replace($name, $siteroot, $treeNode->getTree()->getContent($treeNode), $language);
+
+        return $title;
+    }
+
+    /**
+     * @param string            $pattern
+     * @param string            $language
+     * @param TreeNodeInterface $treeNode
+     * @param Siteroot          $siteroot
+     *
+     * @return string
+     */
+    public function pageTitlePattern($pattern, $language = null, TreeNodeInterface $treeNode = null, Siteroot $siteroot = null)
+    {
+        $request = $this->requestStack->getMasterRequest();
+
+        if ($siteroot === null) {
+            $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
+        }
+
+        if ($treeNode === null) {
+            $treeNode = $request->get('contentDocument');
+        }
+
+        if ($language === null) {
+            $language = $request->getLocale();
+        }
+
+        $title = $this->patternResolver->replacePattern($pattern, $siteroot, $treeNode->getTree()->getContent($treeNode), $language);
 
         return $title;
     }
