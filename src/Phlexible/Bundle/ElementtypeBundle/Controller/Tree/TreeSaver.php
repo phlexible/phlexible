@@ -196,7 +196,8 @@ class TreeSaver
                     'Reference ' . $firstChild['properties']['field']['working_title'],
                     '_fallback.gif',
                     $referenceElementtypeStructure,
-                    $user->getId(),
+                    array(),
+                    $user->getDisplayName(),
                     false
                 );
 
