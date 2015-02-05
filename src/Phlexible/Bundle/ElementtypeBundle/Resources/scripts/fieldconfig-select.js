@@ -116,23 +116,6 @@ Phlexible.fields.FieldTypes.addField('select', {
             readonly: 1,
             hide_label: 1,
             sortable: 0
-        },
-        values: {
-            default_text: 0,
-            default_number: 0,
-            default_textarea: 0,
-            default_date: 0,
-            default_time: 0,
-            default_select: 1,
-            default_link: 0,
-            default_checkbox: 0,
-            default_table: 0,
-            source: 1,
-            source_multi: 1,
-            source_values: 1,
-            source_function: 1,
-            source_datasource: 0,
-            text: 0
         }
     }
 });

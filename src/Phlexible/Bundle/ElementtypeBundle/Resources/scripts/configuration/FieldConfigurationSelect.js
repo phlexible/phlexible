@@ -44,13 +44,7 @@ Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.f
             },
             {
                 xtype: 'elementtypes-configuration-select-value-grid',
-                hidden: true,
-                listeners: {
-                    defaultchange: function (key) {
-                        this.getComponent(0).setValue(key);
-                    },
-                    scope: this
-                }
+                hidden: true
             },
             {
                 xtype: 'combo',
@@ -137,7 +131,8 @@ Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.f
         var data = {
             select_source: this.getComponent(0).getValue(),
             select_function: this.getComponent(2).getValue(),
-            select_list: null
+            select_list: null,
+            default_value: null
         };
 
         if (this.getValueGrid().isVisible()) {
@@ -157,6 +152,7 @@ Phlexible.elementtypes.configuration.FieldConfigurationSelect = Ext.extend(Ext.f
             this.getValueGrid().store.commitChanges();
 
             data.select_list = list;
+            data.default_value = this.getValueGrid().getDefaultValue();
         }
 
         return data;

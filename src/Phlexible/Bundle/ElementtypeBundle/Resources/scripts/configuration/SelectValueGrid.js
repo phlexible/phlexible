@@ -10,22 +10,12 @@ Phlexible.elementtypes.configuration.SelectValueGrid = Ext.extend(Ext.grid.Edito
     autoHeight: true,
     cls: 'p-elementtypes-value-grid',
 
-    default_value: '',
+    defaultValue: null,
 
     enableDragDrop: true,
     ddGroup: 'fieldvalue',
 
     initComponent: function () {
-
-        this.addEvents(
-            /**
-             * @event defaultchange
-             * Fires when new default value is to be set
-             * @param {String} key The new default key
-             */
-            'defaultchange'
-        );
-
         this.store = new Ext.data.SimpleStore({
             fields: ['key', 'value_de', 'value_en']
         });
@@ -98,9 +88,8 @@ Phlexible.elementtypes.configuration.SelectValueGrid = Ext.extend(Ext.grid.Edito
                         return;
                     }
                     var key = recordToBeRemoved.get('key');
-                    if (this.default_value == key) {
-                        this.default_value = '';
-                        this.fireEvent('defaultchange', this.default_value);
+                    if (this.defaultValue == key) {
+                        this.defaultValue = null;
                     }
 
                     this.store.remove(recordToBeRemoved);
@@ -119,18 +108,16 @@ Phlexible.elementtypes.configuration.SelectValueGrid = Ext.extend(Ext.grid.Edito
 
                     var key = record.data.key;
 
-                    var defaultIndex = this.store.find('key', this.default_value);
+                    var defaultIndex = this.store.find('key', this.defaultValue);
                     if (defaultIndex != -1) {
                         var row = Ext.get(this.view.getRow(defaultIndex));
                         row.removeClass('p-elementtype-value-grid-default');
                     }
 
-                    this.default_value = key;
+                    this.defaultValue = key;
                     var selectedIndex = this.store.indexOf(record);
                     var row = Ext.get(this.view.getRow(selectedIndex));
                     row.addClass('p-elementtype-value-grid-default');
-
-                    this.fireEvent('defaultchange', this.default_value);
                 },
                 scope: this
             }
@@ -146,14 +133,14 @@ Phlexible.elementtypes.configuration.SelectValueGrid = Ext.extend(Ext.grid.Edito
                         return;
                     }
 
-                    if (this.default_value == validationobject.originalValue) {
-                        this.default_value = validationobject.value;
-                        this.fireEvent('defaultchange', this.default_value);
+                    if (this.defaultValue == validationobject.originalValue) {
+                        this.defaultValue = validationobject.value;
+                        this.fireEvent('defaultchange', this.defaultValue);
                     }
                 }
             },
             afteredit: function (validationobject) {
-                var defaultIndex = this.store.find('key', this.default_value);
+                var defaultIndex = this.store.find('key', this.defaultValue);
                 if (defaultIndex != -1) {
                     var row = Ext.get(this.view.getRow(defaultIndex)); //validationobject.row));
                     row.addClass('p-elementtype-value-grid-default');
@@ -194,7 +181,7 @@ Phlexible.elementtypes.configuration.SelectValueGrid = Ext.extend(Ext.grid.Edito
             row.addClass('p-elementtype-value-grid-default');
         }
 
-        this.default_value = defaultValue;
+        this.defaultValue = defaultValue;
     },
 
     isValid: function() {
@@ -206,6 +193,10 @@ Phlexible.elementtypes.configuration.SelectValueGrid = Ext.extend(Ext.grid.Edito
             }
         });
         return valid;
+    },
+
+    getDefaultValue: function() {
+        return this.defaultValue;
     }
 });
 Ext.reg('elementtypes-configuration-select-value-grid', Phlexible.elementtypes.configuration.SelectValueGrid);
