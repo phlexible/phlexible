@@ -54,7 +54,6 @@ siteroots:
     err_title_existing: 'Sie müssen einen Titel angeben.'
     custom_titles: 'Angepasste Titel'
     name: Name
-    pattern: Muster
     example: Beispiel
     legend: 'Verfügbare Platzhalter'
     siteroot_title: Siteroottitel

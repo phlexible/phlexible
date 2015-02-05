@@ -32,6 +32,11 @@ class PhlexibleTreeExtension extends Extension
         $loader->load('content.yml');
         $loader->load('configurators.yml');
 
+        $configuration = $this->getConfiguration($config, $container);
+        $config = $this->processConfiguration($configuration, $config);
+
+        $container->setParameter('phlexible_tree.patterns', $config['patterns']);
+
         $container->setAlias('phlexible_tree.tree_factory', 'phlexible_tree.doctrine.tree_factory');
         $container->setAlias('phlexible_tree.state_manager', 'phlexible_tree.doctrine.state_manager');
 

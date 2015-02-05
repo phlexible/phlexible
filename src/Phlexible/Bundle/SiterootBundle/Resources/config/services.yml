@@ -3,10 +3,6 @@ services:
         class: Phlexible\Bundle\SiterootBundle\Controller\Siteroot\SiterootSaver
         arguments: [@phlexible_siteroot.siteroot_manager]
 
-    phlexible_siteroot.pattern_resolver:
-        class: Phlexible\Bundle\SiterootBundle\Siteroot\PatternResolver
-        arguments: [@translator, %phlexible_gui.project.title%]
-
     # event listeners
     phlexible_siteroot.listener.apply_successor:
         class: Phlexible\Bundle\SiterootBundle\EventListener\ApplySuccessorListener
@@ -28,11 +24,3 @@ services:
         public: false
         tags:
             - {name: phlexible_gui.role_provider}
-
-    # twig extensions
-    phlexible_siteroot.twig.siteroot_extension:
-        class: Phlexible\Bundle\SiterootBundle\Twig\Extension\SiterootExtension
-        public: false
-        arguments: [@request_stack, @phlexible_siteroot.siteroot_manager, @phlexible_siteroot.pattern_resolver]
-        tags:
-            - {name: twig.extension}

@@ -1,4 +1,8 @@
 services:
+    phlexible_tree.pattern_resolver:
+        class: Phlexible\Bundle\TreeBundle\Pattern\PatternResolver
+        arguments: [@translator, %phlexible_tree.patterns%, %phlexible_gui.project.title%]
+
     phlexible_tree.tree_manager:
         class: Phlexible\Bundle\TreeBundle\Tree\TreeManager
         arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.tree_factory]
@@ -67,7 +71,10 @@ services:
     phlexible_tree.twig.tree_extension:
         class: Phlexible\Bundle\TreeBundle\Twig\Extension\TreeExtension
         public: false
-        arguments: [@phlexible_tree.content_tree_manager]
+        arguments:
+            - @phlexible_tree.content_tree_manager
+            - @phlexible_tree.pattern_resolver
+            - @request_stack
         tags:
             - {name: twig.extension}
 

@@ -8,8 +8,13 @@
 
 namespace Phlexible\Bundle\TreeBundle\Twig\Extension;
 
+use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Pattern\PatternResolver;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Twig tree extension
@@ -24,11 +29,29 @@ class TreeExtension extends \Twig_Extension
     private $contentTreeManager;
 
     /**
-     * @param ContentTreeManagerInterface $contentTreeManager
+     * @var PatternResolver
      */
-    public function __construct(ContentTreeManagerInterface $contentTreeManager)
+    private $patternResolver;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @param ContentTreeManagerInterface $contentTreeManager
+     * @param PatternResolver             $patternResolver
+     * @param RequestStack                $requestStack
+     */
+    public function __construct(
+        ContentTreeManagerInterface $contentTreeManager,
+        PatternResolver $patternResolver,
+        RequestStack $requestStack
+    )
     {
         $this->contentTreeManager = $contentTreeManager;
+        $this->patternResolver = $patternResolver;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -38,6 +61,7 @@ class TreeExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('tree_node', [$this, 'treeNode']),
+            new \Twig_SimpleFunction('page_title', [$this, 'pageTitle']),
         ];
     }
 
@@ -52,6 +76,35 @@ class TreeExtension extends \Twig_Extension
         $treeNode = $tree->get($treeId);
 
         return new ContentTreeContext($treeNode);
+    }
+
+    /**
+     * @param string            $name
+     * @param string            $language
+     * @param TreeNodeInterface $treeNode
+     * @param Siteroot          $siteroot
+     *
+     * @return string
+     */
+    public function pageTitle($name = 'default', $language = null, TreeNodeInterface $treeNode = null, Siteroot $siteroot = null)
+    {
+        $request = $this->requestStack->getMasterRequest();
+
+        if ($siteroot === null) {
+            $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
+        }
+
+        if ($treeNode === null) {
+            $treeNode = $request->get('contentDocument');
+        }
+
+        if ($language === null) {
+            $language = $request->getLocale();
+        }
+
+        $title = $this->patternResolver->replace($name, $siteroot, $treeNode->getTree()->getContent($treeNode), $language);
+
+        return $title;
     }
 
     /**

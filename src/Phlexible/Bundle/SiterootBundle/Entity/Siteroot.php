@@ -36,12 +36,6 @@ class Siteroot
     private $default = false;
 
     /**
-     * @var array
-     * @ORM\Column(type="json_array")
-     */
-    private $patterns = array();
-
-    /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
      */
@@ -148,55 +142,6 @@ class Siteroot
     public function isDefault()
     {
         return $this->default;
-    }
-
-    /**
-     * @param array $patterns
-     *
-     * @return $this
-     */
-    public function setPatterns(array $patterns = array())
-    {
-        foreach ($patterns as $name => $pattern) {
-            $this->setPattern($name, $pattern);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPatterns()
-    {
-        return $this->patterns;
-    }
-
-    /**
-     * @param string $name
-     * @param string $pattern
-     *
-     * @return $this
-     */
-    public function setPattern($name, $pattern)
-    {
-        $this->patterns[$name] = $pattern;
-
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    public function getPattern($name)
-    {
-        if (!isset($this->patterns[$name])) {
-            throw new \InvalidArgumentException("Siteroot pattern $name not found.");
-        }
-
-        return $this->patterns[$name];
     }
 
     /**

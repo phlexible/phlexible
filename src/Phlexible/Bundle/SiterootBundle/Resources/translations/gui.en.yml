@@ -54,7 +54,6 @@ siteroots:
     err_title_existing: 'You have to specify a title.'
     custom_titles: 'Custom titles'
     name: Name
-    pattern: Pattern
     example: Example
     legend: 'Available placeholders'
     siteroot_title: 'Siteroot title'

@@ -52,7 +52,6 @@ class SiterootSaver
             ->applyTitles($siteroot, $data)
             ->applyContentchannels($siteroot, $data)
             ->applyProperties($siteroot, $data)
-            ->applyPatterns($siteroot, $data)
             ->applyNamedTids($siteroot, $data)
             ->applyNavigations($siteroot, $data)
             ->applyUrls($siteroot, $data);
@@ -128,25 +127,6 @@ class SiterootSaver
 
         return $this;
     }
-
-    /**
-     * @param Siteroot $siteroot
-     * @param array    $data
-     *
-     * @return $this
-     */
-    private function applyPatterns(Siteroot $siteroot, array $data)
-    {
-        if (!array_key_exists('patterns', $data)) {
-            // noting to save
-            return $this;
-        }
-
-        $siteroot->setPatterns($data['patterns']);
-
-        return $this;
-    }
-
 
     /**
      * @param Siteroot $siteroot
@@ -251,8 +231,8 @@ class SiterootSaver
             $url = new Url();
             $url
                 ->setSiteroot($siteroot)
-                ->setDefault(false)
-                ->setGlobalDefault(false)
+                ->setDefault($row['default'])
+                ->setGlobalDefault($row['global_default'])
                 ->setHostname($row['hostname'])
                 ->setLanguage($row['language'])
                 ->setTarget($row['target']);
@@ -265,8 +245,8 @@ class SiterootSaver
                 if ($url->getId() === $row['id']) {
                     $url
                         ->setSiteroot($siteroot)
-                        ->setDefault(false)
-                        ->setGlobalDefault(false)
+                        ->setDefault($row['default'])
+                        ->setGlobalDefault($row['global_default'])
                         ->setHostname($row['hostname'])
                         ->setLanguage($row['language'])
                         ->setTarget($row['target']);
