@@ -12,11 +12,11 @@ use Phlexible\Bundle\QueueBundle\Entity\Job;
 use Phlexible\Bundle\QueueBundle\Model\JobManagerInterface;
 use Phlexible\Bundle\QueueBundle\Model\RunningJob;
 use Phlexible\Bundle\QueueBundle\QueueMessage;
-use Phlexible\Component\Util\FileLock;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\LockHandler;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
@@ -63,8 +63,8 @@ class RunCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $lock = new FileLock('queue_lock', $this->getContainer()->getParameter('app.lock_dir'));
-        if (!$lock->acquire()) {
+        $lock = new LockHandler('queue_lock', $this->getContainer()->getParameter('app.lock_dir'));
+        if (!$lock->lock()) {
             $output->writeln('Another job running.');
 
             return 1;

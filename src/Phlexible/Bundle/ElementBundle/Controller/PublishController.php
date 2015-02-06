@@ -7,14 +7,15 @@
  */
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
+
 use Phlexible\Bundle\ElementBundle\Element\Publish\Selection;
 use Phlexible\Bundle\ElementBundle\Exception\RuntimeException;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Phlexible\Component\Util\FileLock;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Filesystem\LockHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -181,8 +182,8 @@ class PublishController extends Controller
         $data     = $request->get('data');
         $data     = json_decode($data, true);
 
-        $lock = new FileLock($this->container->getParameter('app.lock_dir') . 'elements_publish_lock');
-        if (!$lock->acquire()) {
+        $lock = new LockHandler('elements_publish_lock', $this->container->getParameter('app.lock_dir'));
+        if (!$lock->lock()) {
             throw new RuntimeException('Another advanced publish running.');
         }
 
