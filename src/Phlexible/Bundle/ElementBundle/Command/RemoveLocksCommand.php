@@ -36,7 +36,7 @@ class RemoveLocksCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
 
-        $lockManager = $container->get('phlexible_lock.lock_manager');
+        $lockManager = $container->get('phlexible_element.element_lock_manager');
         foreach ($lockManager->findAll() as $lock) {
             $lockManager->deleteLock($lock);
         }

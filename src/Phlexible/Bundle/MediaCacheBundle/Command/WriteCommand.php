@@ -42,7 +42,7 @@ class WriteCommand extends ContainerAwareCommand
         $breakOnError = $input->getOption('break-on-error');
 
         $cacheManager = $this->getContainer()->get('phlexible_media_cache.cache_manager');
-        $queueProcessor = $this->getContainer()->get('phlexible_media_cache.queue.processor');
+        $queueProcessor = $this->getContainer()->get('phlexible_media_cache.queue_processor');
 
         $total = $cacheManager->countBy(array('queueStatus' => CacheItem::QUEUE_WAITING));
 
@@ -103,7 +103,7 @@ class WriteCommand extends ContainerAwareCommand
                         }
                     }
                     if ($status === 'error' && $cacheItem && $cacheItem->getCacheStatus() === CacheItem::STATUS_ERROR) {
-                        $output->writeln('<error>' . $cacheItem->getError() . '<error>');
+                        $output->writeln("<error>{$cacheItem->getError()}<error>");
                         if ($breakOnError) {
                             return 1;
                         }

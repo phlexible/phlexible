@@ -48,7 +48,6 @@ class ChangesCommand extends ContainerAwareCommand
             $this->getContainer()->get('phlexible_media_manager.volume_manager'),
             $this->getContainer()->get('phlexible_media_cache.batch_builder'),
             $this->getContainer()->get('phlexible_media_cache.batch_resolver'),
-            $this->getContainer()->get('phlexible_media_cache.cache_manager'),
             $this->getContainer()->get('phlexible_media_cache.queue_processor')
         );
 

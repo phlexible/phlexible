@@ -41,9 +41,9 @@ class GarbageCollectCommand extends ContainerAwareCommand
         $pretend = !$input->getOption('run');
         $stats = $gc->run($pretend);
 
-        $cntActivated   = $stats['activated'];
-        $cntDeactivated = $stats['deactivated'];
-        $cntRemoved     = $stats['removed'];
+        $cntActivated   = !empty($stats['activated']) ? $stats['activated'] : 0;
+        $cntDeactivated = !empty($stats['deactivated']) ? $stats['deactivated'] : 0;
+        $cntRemoved     = !empty($stats['removed']) ? $stats['removed'] : 0;
 
         if ($pretend) {
             $output->writeln(
