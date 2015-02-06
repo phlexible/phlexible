@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ProblemBundle\Command;
 
 use Phlexible\Bundle\ProblemBundle\ProblemsMessage;
-use Phlexible\Security\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,7 +26,7 @@ class CheckCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('problems:check')
+            ->setName('problem:check')
             ->setDescription('Run cached problem checks.');
     }
 

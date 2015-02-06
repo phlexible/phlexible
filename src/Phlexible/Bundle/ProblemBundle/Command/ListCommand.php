@@ -27,7 +27,7 @@ class ListCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('problems:list')
+            ->setName('problem:list')
             ->setDescription('List problems.');
     }
 

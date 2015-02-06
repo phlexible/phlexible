@@ -25,7 +25,7 @@ class ShowCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('siteroots:show')
+            ->setName('siteroot:show')
             ->setDescription('Show siteroot infos.');
     }
 
@@ -51,8 +51,10 @@ class ShowCommand extends ContainerAwareCommand
 
                 if ($siteroot->getSpecialTids()) {
                     $output->writeln('  Special TIDs:');
-                    foreach ($siteroot->getSpecialTids() as $name => $tid) {
-                        $output->writeln('    ' . $name . ' => ' . $tid);
+                    foreach ($siteroot->getSpecialTids() as $specialTid) {
+                        $name = $specialTid['name'];
+                        $value = ($specialTid['language'] ? $specialTid['language'] . ':' : '') . $specialTid['treeId'];
+                        $output->writeln("    $name => $value");
                     }
                 }
             } else {

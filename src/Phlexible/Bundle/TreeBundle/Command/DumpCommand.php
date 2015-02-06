@@ -43,7 +43,18 @@ class DumpCommand extends ContainerAwareCommand
         $dumper = $this->getContainer()->get('phlexible_tree.content_tree_dumper');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
+        if (!$tree) {
+            $output->writeln("<error>Tree for siteroot ID $siterootId not found.</error>");
+
+            return 1;
+        }
+
         $siteroot = $siterootManager->find($siterootId);
+        if (!$siteroot) {
+            $output->writeln("<error>Siteroot with ID $siterootId not found.</error>");
+
+            return 1;
+        }
 
         $xmlDir = $this->getContainer()->getParameter('phlexible_tree.content.xml_dir');
         $dumper->dump($tree, $siteroot, $xmlDir . $siteroot->getId() . '.xml');
