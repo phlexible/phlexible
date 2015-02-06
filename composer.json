@@ -48,6 +48,9 @@
         "nelmio/api-doc-bundle": "~2.5",
         "yohang/finite": "~1.0"
     },
+     "replace": {
+        "phlexible/queue-bundle": "self.version",
+    }
     "require-dev": {
         "phpunit/phpunit": "~4.5"
     },
