@@ -50,7 +50,7 @@
     },
      "replace": {
         "phlexible/queue-bundle": "self.version"
-    }
+    },
     "require-dev": {
         "phpunit/phpunit": "~4.5"
     },
