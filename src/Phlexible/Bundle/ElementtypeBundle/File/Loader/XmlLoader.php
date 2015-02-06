@@ -31,11 +31,6 @@ class XmlLoader implements LoaderInterface
     private $parser;
 
     /**
-     * @var array
-     */
-    private $idMap;
-
-    /**
      * @param PatternResourceLocator $locator
      */
     public function __construct(PatternResourceLocator $locator)
@@ -45,41 +40,21 @@ class XmlLoader implements LoaderInterface
         $this->parser = new XmlParser($this);
     }
 
-    private function createMap()
-    {
-        if ($this->idMap !== null) {
-            return;
-        }
-
-        $files = [];
-        foreach ($this->locator->locate('*.xml', 'elementtypes', false) as $file) {
-            $name = basename($file);
-            if (!isset($files[$name])) {
-                $files[$name] = $file;
-            }
-        }
-
-        $idMap = [];
-        foreach ($files as $file) {
-            $xml = simplexml_load_file($file);
-            $rootAttributes = $xml->attributes();
-            $id = (string) $rootAttributes['id'];
-
-            $idMap[$id] = $file;
-        }
-
-        $this->idMap = $idMap;
-    }
-
     /**
      * {@inheritdoc}
      */
     public function loadAll()
     {
-        $this->createMap();
+        $files = [];
+        foreach ($this->locator->locate('*.xml', 'elementtypes', false) as $file) {
+            $id = basename($file, '.xml');
+            if (!isset($files[$id])) {
+                $files[$id] = $file;
+            }
+        }
 
         $elementtypes = [];
-        foreach ($this->idMap as $id => $file) {
+        foreach ($files as $id => $file) {
             $elementtypes[] = $this->parse($this->loadFile($file));
         }
 
@@ -101,9 +76,7 @@ class XmlLoader implements LoaderInterface
      */
     private function loadElementtype($elementtypeId)
     {
-        $this->createMap();
-
-        $filename = $this->idMap[$elementtypeId];
+        $filename = $this->locator->locate("$elementtypeId.xml", 'elementtypes', true);
 
         return $this->loadFile($filename);
     }
