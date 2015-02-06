@@ -44,7 +44,7 @@ class XmlWriter implements WriterInterface
      */
     public function write(Elementtype $elementtype)
     {
-        $filename = $this->resourceDir . '/' . $elementtype->getUniqueId() . '.xml';
+        $filename = $this->resourceDir . '/' . $elementtype->getId() . '.xml';
         $content = $this->dumper->dump($elementtype);
 
         $filesystem = new Filesystem();
