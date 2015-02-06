@@ -5,9 +5,8 @@
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {
-        "psr-0": {
-            "Phlexible\\": "src/",
-            "Zend_": "src/"
+        "psr-4": {
+            "Phlexible\\": "src/"
         }
     },
     "require": {
