@@ -11,12 +11,11 @@ namespace Phlexible\Bundle\DataSourceBundle\Tests;
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Bundle\DataSourceBundle\Event\CollectionEvent;
 use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
 use Phlexible\Bundle\DataSourceBundle\GarbageCollector\GarbageCollector;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use Symfony\Component\EventDispatcher\Event;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -33,14 +32,14 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
     private $garbageCollector;
 
     /**
-     * @var DataSourceManagerInterface|MockObject
+     * @var DataSourceManagerInterface|ObjectProphecy
      */
-    private $managerMock;
+    private $manager;
 
     /**
-     * @var EventDispatcherInterface|MockObject
+     * @var EventDispatcherInterface|ObjectProphecy
      */
-    private $dispatcherMock;
+    private $eventDispatcher;
 
     /**
      * @var DataSource
@@ -50,37 +49,35 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
 
-        $this->dispatcherMock = new EventDispatcher();
-        $this->managerMock = $this->getMockBuilder('Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface')->getMock();
-        $this->garbageCollector = new GarbageCollector($this->managerMock, $this->dispatcherMock);
+        $this->eventDispatcher = new EventDispatcher();
+        $this->manager = $this->prophesize('Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface');
+        $this->garbageCollector = new GarbageCollector($this->manager->reveal(), $this->eventDispatcher);
 
         $this->datasource = new DataSource();
         $this->datasource->setTitle('testDatasource');
         $values = new DataSourceValueBag();
         $values->setLanguage('de');
         $this->datasource->addValueBag($values);
-
-        $this->managerMock
-            ->expects($this->any())
-            ->method('findBy')
-            ->will($this->returnValue([$this->datasource]));
     }
 
     public function testEvents()
     {
         $fired = 0;
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function() use (&$fired) {
                 $fired++;
             }
         );
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::GARBAGE_COLLECT,
             function() use (&$fired) {
                 $fired++;
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $this->garbageCollector->run();
 
@@ -89,6 +86,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function testRunWithNoValues()
     {
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
+
         $result = $this->garbageCollector->run();
 
         $this->assertCount(0, $result['testDatasource']['de']['remove']);
@@ -100,6 +100,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->datasource->addValueForLanguage('de', 'value1');
         $this->datasource->addValueForLanguage('de', 'value2');
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
 
@@ -120,6 +123,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1');
         $this->datasource->addValueForLanguage('de', 'value2');
 
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
+
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
 
         $this->assertArrayHasKey('testDatasource', $result);
@@ -138,6 +144,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->datasource->addValueForLanguage('de', 'value1');
         $this->datasource->addValueForLanguage('de', 'value2');
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
 
@@ -158,12 +167,15 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1', false);
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
 
@@ -184,12 +196,15 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1', false);
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
 
@@ -210,12 +225,15 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1', false);
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
 
@@ -236,12 +254,15 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1', false);
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markInactive(['value1', 'value2']);
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
 
@@ -262,12 +283,15 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1', false);
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markInactive(['value1', 'value2']);
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
 
@@ -288,12 +312,15 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1', false);
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markInactive(['value1', 'value2']);
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
 
@@ -318,13 +345,16 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value5');
         $this->datasource->addValueForLanguage('de', 'value6');
 
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
                 $event->markInactive(['value3', 'value4']);
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
 
@@ -349,13 +379,16 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value5');
         $this->datasource->addValueForLanguage('de', 'value6');
 
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
                 $event->markInactive(['value3', 'value4']);
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
 
@@ -380,13 +413,16 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value5');
         $this->datasource->addValueForLanguage('de', 'value6');
 
-        $this->dispatcherMock->addListener(
+        $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
                 $event->markInactive(['value3', 'value4']);
             }
         );
+
+        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
 
