@@ -6,7 +6,7 @@
     "keywords": ["phlexible"],
     "autoload": {
         "psr-4": {
-            "Phlexible\\": "src/"
+            "Phlexible\\": "src/Phlexible/"
         }
     },
     "require": {
