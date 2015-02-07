@@ -1,7 +1,6 @@
 Ext.provide('Phlexible.elementtypes.ElementtypeField');
 
 Ext.require('Phlexible.elementtypes.configuration.FieldConfiguration');
-Ext.require('Phlexible.elementtypes.configuration.FieldContentchannel');
 Ext.require('Phlexible.elementtypes.configuration.FieldLabel');
 Ext.require('Phlexible.elementtypes.configuration.FieldProperty');
 Ext.require('Phlexible.elementtypes.configuration.FieldValidation');
@@ -71,10 +70,6 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
             {
                 xtype: 'elementtypes-configuration-field-validation',
                 key: 'validation'
-            },
-            {
-                xtype: 'elementtypes-configuration-field-contentchannel',
-                key: 'content_channels'
             }
         ];
     },
@@ -141,8 +136,7 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
             configuration: {},
             validation: {},
             labels: {},
-            options: {},
-            content_channels: {}
+            options: {}
         };
 
         this.items.each(function (panel) {

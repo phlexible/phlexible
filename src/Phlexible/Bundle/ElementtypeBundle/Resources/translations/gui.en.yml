@@ -161,11 +161,9 @@ elementtypes:
     editable_list: 'Editable list'
     editable_value: 'Editable value'
     component_function: 'Select field provider'
-    content_channels: 'Content channels'
     available: available
     specific: specific
     default_collapsed: 'default collapsed'
-    contentchannel: 'Content Channel'
     new_elementtype_header: 'Create a new Element Type'
     new_elementtype_description: 'Please enter a title for the new Element Type.'
     navigation_default_title: 'Drag text fields here to create a compound navigation title.'

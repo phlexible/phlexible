@@ -50,7 +50,6 @@ class SiterootSaver
 
         $this
             ->applyTitles($siteroot, $data)
-            ->applyContentchannels($siteroot, $data)
             ->applyProperties($siteroot, $data)
             ->applyNamedTids($siteroot, $data)
             ->applyNavigations($siteroot, $data)
@@ -75,35 +74,6 @@ class SiterootSaver
         }
 
         $siteroot->setTitles($data['titles']);
-
-        return $this;
-    }
-
-    /**
-     * @param Siteroot $siteroot
-     * @param array    $data
-     *
-     * @return $this
-     */
-    private function applyContentchannels(Siteroot $siteroot, array $data)
-    {
-        if (!array_key_exists('contentchannels', $data)) {
-            // noting to save
-            return $this;
-        }
-
-        $contentchannelsData = $data['contentchannels'];
-
-        $contentchannels = [];
-        foreach ($contentchannelsData as $row) {
-            if (!$row['used']) {
-                continue;
-            }
-
-            $contentchannels[$row['contentchannel_id']] = $row['default'] ? true : false;
-        }
-
-        $siteroot->setContentChannels($contentchannels);
 
         return $this;
     }

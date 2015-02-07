@@ -109,31 +109,16 @@ class SiterootController extends Controller
         $siterootId = $request->get('id');
 
         $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
-        $contentChannelRepository = $this->get('phlexible_contentchannel.contentchannel_manager');
 
         $siteroot = $siterootRepository->find($siterootId);
 
-        $usedContentChannelIds = $siteroot->getContentChannelIds();
-        $defaultContentChannelId = $siteroot->getDefaultContentChannelId();
-
-        $language = 'de';
-
         $data = [
             'titles'          => $siteroot->getTitles(),
-            'contentchannels' => [],
             'navigations'     => [],
             'properties'      => [],
             'specialtids'     => [],
             'urls'            => [],
         ];
-        foreach ($contentChannelRepository->findAll() as $contentchannel) {
-            $data['contentchannels'][] = [
-                'contentchannel_id' => $contentchannel->getId(),
-                'contentchannel'    => $contentchannel->getTitle(),
-                'used'              => in_array($contentchannel->getId(), $usedContentChannelIds),
-                'default'           => $contentchannel->getId() === $defaultContentChannelId,
-            ];
-        }
 
         // get all siteroot navigations
         foreach ($siteroot->getNavigations() as $navigation) {

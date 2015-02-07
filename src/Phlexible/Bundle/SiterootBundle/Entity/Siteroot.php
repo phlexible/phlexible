@@ -78,12 +78,6 @@ class Siteroot
     private $properties = [];
 
     /**
-     * @var array
-     * @ORM\Column(name="content_channels", type="json_array")
-     */
-    private $contentChannels = [];
-
-    /**
      * @var Navigation[]|ArrayCollection
      * @ORM\OneToMany(targetEntity="Navigation", mappedBy="siteroot")
      */
@@ -504,47 +498,5 @@ class Siteroot
         }
 
         return $this->properties[$key];
-    }
-
-    /**
-     * @param array $contentChannels
-     *
-     * @return $this
-     */
-    public function setContentChannels(array $contentChannels)
-    {
-        $this->contentChannels = $contentChannels;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getContentChannelIds()
-    {
-        if (null === $this->contentChannels) {
-            return [];
-        }
-
-        return array_keys($this->contentChannels);
-    }
-
-    /**
-     * @return int|null|string
-     */
-    public function getDefaultContentChannelId()
-    {
-        if (null === $this->contentChannels) {
-            return null;
-        }
-
-        foreach ($this->contentChannels as $contentChannelId => $default) {
-            if ($default) {
-                return $contentChannelId;
-            }
-        }
-
-        return null;
     }
 }

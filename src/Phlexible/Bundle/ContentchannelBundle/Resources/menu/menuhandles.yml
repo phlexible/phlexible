@@ -1,5 +1,0 @@
-contentchannels:
-    parent: config
-    handle: contentchannels
-    roles: [ROLE_CONTENTCHANNELS]
-

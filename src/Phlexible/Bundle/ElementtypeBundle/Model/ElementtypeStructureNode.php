@@ -61,11 +61,6 @@ class ElementtypeStructureNode
     /**
      * @var string
      */
-    private $contentChannels;
-
-    /**
-     * @var string
-     */
     private $comment;
 
     /**
@@ -308,41 +303,6 @@ class ElementtypeStructureNode
         }
 
         return $this->labels[$key][$language];
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getContentChannels()
-    {
-        return $this->contentChannels;
-    }
-
-    /**
-     * @param array|null $contentChannels
-     *
-     * @return $this
-     */
-    public function setContentChannels(array $contentChannels = null)
-    {
-        $this->contentChannels = $contentChannels;
-
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @param string $default
-     *
-     * @return mixed
-     */
-    public function getContentChannelsValue($key, $default = null)
-    {
-        if (is_array($this->contentChannels) && array_key_exists($key, $this->contentChannels)) {
-            return $this->contentChannels[$key];
-        }
-
-        return $default;
     }
 
     /**

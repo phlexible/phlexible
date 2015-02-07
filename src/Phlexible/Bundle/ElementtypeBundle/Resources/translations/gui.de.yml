@@ -161,11 +161,9 @@ elementtypes:
     editable_list: 'Editierbare Liste'
     editable_value: 'Editierbarer Wert'
     component_function: 'Select field provider'
-    content_channels: 'Content Channels'
     available: verfügbar
     specific: spezifisch
     default_collapsed: 'standardmässig eingeklappt'
-    contentchannel: Contentchannel
     new_elementtype_header: 'Neuen Elementtypen anlegen'
     new_elementtype_description: 'Bitte geben Sie einen Namen für den neuen Elementtypen ein.'
     navigation_default_title: 'Ziehen Sie Textfelder hierher um einen zusammengesetzten Navigationstitel zu erstellen.'

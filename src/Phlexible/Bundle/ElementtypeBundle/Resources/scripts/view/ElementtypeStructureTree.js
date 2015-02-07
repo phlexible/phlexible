@@ -530,8 +530,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
                 configuration: {},
                 labels: {},
                 options: {},
-                validation: {},
-                content_channels: {}
+                validation: {}
             }
         });
 

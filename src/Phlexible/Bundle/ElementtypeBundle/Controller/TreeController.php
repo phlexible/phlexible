@@ -162,8 +162,7 @@ class TreeController extends Controller
                     ],
                     'configuration'    => $node->getConfiguration(),
                     'labels'           => $node->getLabels(),
-                    'validation'       => $node->getValidation(),
-                    'content_channels' => $node->getContentChannels(),
+                    'validation'       => $node->getValidation()
                 ]
             ];
 

@@ -70,9 +70,6 @@ siteroots:
     new_siteroot: 'New siteroot'
     properties: Properties
     no_properties: 'No properties'
-    contentchannels: Contentchannels
-    contentchannel: Contentchannel
-    contentchannel_id: 'Contentchannel ID'
     actions: Actions
     active: Active
     cancel: Cancel

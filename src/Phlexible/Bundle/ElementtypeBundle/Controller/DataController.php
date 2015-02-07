@@ -24,28 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 class DataController extends Controller
 {
     /**
-     * Return available content channels
-     *
-     * @return JsonResponse
-     * @Route("/contentchannels", name="elementtypes_data_contentchannels")
-     */
-    public function contentchannelsAction()
-    {
-        $allContentChannels = $this->get('phlexible_contentchannel.contentchannel_manager')->findAll();
-
-        $contentChannels = [];
-        foreach ($allContentChannels as $contentChannelID => $contentChannel) {
-            $contentChannels[] = [
-                'id'        => $contentChannelID,
-                'title'     => $contentChannel->getTitle(),
-                'available' => false
-            ];
-        }
-
-        return new JsonResponse(['contentChannels' => $contentChannels]);
-    }
-
-    /**
      * @param Request $request
      *
      * @return JsonResponse

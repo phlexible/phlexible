@@ -32,10 +32,5 @@ Phlexible.elementtypes.FieldMap = {
         }
     },
     options: {
-    },
-    content_channels: {
-        allow_deactivation: false,
-        allow_unlink: false,
-        list: []
     }
 };

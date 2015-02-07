@@ -1,8 +1,0 @@
-services:
-    phlexible_contentchannel.configurator.contentchannel:
-        class: Phlexible\Bundle\ContentchannelBundle\RenderConfigurator\ContentchannelConfigurator
-        public: false
-        arguments: [@event_dispatcher, @logger, @phlexible_contentchannel.contentchannel_manager]
-        tags:
-            - {name: phlexible_element_renderer.configurator, priority: 1}
-            - {name: monolog.logger, channel: element_renderer}

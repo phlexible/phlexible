@@ -1,7 +1,6 @@
 Ext.provide('Phlexible.siteroots.MainPanel');
 
 Ext.require('Phlexible.siteroots.SiterootGrid');
-Ext.require('Phlexible.siteroots.ContentChannelGrid');
 Ext.require('Phlexible.siteroots.NavigationGrid');
 Ext.require('Phlexible.siteroots.PropertyGrid');
 Ext.require('Phlexible.siteroots.SpecialTidGrid');

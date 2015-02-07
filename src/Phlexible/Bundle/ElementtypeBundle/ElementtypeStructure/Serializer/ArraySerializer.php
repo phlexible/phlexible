@@ -39,7 +39,6 @@ class ArraySerializer implements SerializerInterface
                 [
                     'comment'          => $node->getComment(),
                     'configuration'    => $node->getConfiguration(),
-                    'contentchannels'  => $node->getContentChannels(),
                     'dsId'             => $node->getDsId(),
                     'id'               => md5(serialize($node)),
                     'labels'           => $this->normalizeLabels($node),

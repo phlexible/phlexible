@@ -229,10 +229,7 @@ class TreeSaver
                     ->setComment(trim($properties['field']['comment']) ?: null)
                     ->setConfiguration(!empty($properties['configuration']) ? $properties['configuration'] : null)
                     ->setValidation(!empty($properties['validation']) ? $properties['validation'] : null)
-                    ->setLabels(!empty($properties['labels']) ? $properties['labels'] : null)
-                    ->setContentChannels(
-                        !empty($properties['content_channels']) ? $properties['content_channels'] : null
-                    );
+                    ->setLabels(!empty($properties['labels']) ? $properties['labels'] : null);
 
                 $elementtypeStructure->addNode($node);
 

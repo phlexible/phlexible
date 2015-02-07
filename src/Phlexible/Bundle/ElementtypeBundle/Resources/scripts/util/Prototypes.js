@@ -82,7 +82,6 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
             type: item.type,
             configuration: item.configuration,
             validation: item.validation,
-            contentchannels: item.contentchannels,
             comment: item.comment,
             options: item.options,
             'function': item['function'],
@@ -137,7 +136,6 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
             configuration: item.configuration,
             validation: item.validation,
             labels: item.labels,
-            contentchannels: item.contentchannels,
             comment: item.comment,
             children: children
         };
