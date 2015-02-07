@@ -1,0 +1,34 @@
+{
+    "name": "phlexible/gui-bundle",
+    "description": "phlexible",
+    "license": "proprietary",
+    "type": "symfony-bundle",
+    "keywords": ["phlexible"],
+    "autoload": {
+        "psr-4": {
+            "Phlexible\\Bundle\\GuiBundle\\": ""
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "doctrine/orm": "~2.2,>=2.2.3",
+        "nelmio/api-doc-bundle": "~2.5",
+        "puli/cli": "1.0.0-beta2",
+        "puli/twig-extension": "1.0.0-beta",
+        "puli/symfony-bundle": "1.0.0-beta2",
+        "rhumsaa/uuid": "~2.7",
+        "sensio/framework-extra-bundle": "~2.3",
+        "symfony/framework-bundle": "~2.3"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.brainbits.net/phlexible-bundles/",
+            "options": {
+                "ssl": {
+                    "allow_self_signed": "true"
+                }
+            }
+        }
+    ]
+}

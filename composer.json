@@ -47,6 +47,7 @@
         "yohang/finite": "~1.0"
     },
      "replace": {
+        "phlexible/gui-bundle": "self.version",
         "phlexible/queue-bundle": "self.version"
     },
     "require-dev": {
