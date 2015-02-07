@@ -79,25 +79,57 @@
         "/phlexible/phlexibleuser/styles": "src/Phlexible/Bundle/UserBundle/Resources/styles"
     },
     "bindings": {
-        "47bfe98b-d3ec-5655-a57d-cfef98ba3d11": {
-            "query": "/phlexible/phlexibleuser/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "7ca6b7f3-2afe-560b-8d50-593ed57592df": {
             "query": "/phlexible/phlexibleaccesscontrol/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "d8f515b6-d461-5835-852a-6b3e350e539c": {
+            "query": "/phlexible/phlexibleaccesscontrol/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "85d31772-1be8-52a9-9c78-c973e5e058e8": {
+            "query": "/phlexible/phlexibleaccesscontrol/styles/**.css",
+            "type": "phlexible/styles"
         },
         "93c75aed-535f-51a2-9cbc-e65bb30def84": {
             "query": "/phlexible/phlexiblecms/icons/*.png",
             "type": "phlexible/icons"
         },
+        "8516f780-b085-5682-9a83-a5858d170eb2": {
+            "query": "/phlexible/phlexiblecms/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "4081faff-9596-50ac-b357-7e4e954049d1": {
+            "query": "/phlexible/phlexiblecms/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "7cdf0875-c25c-544e-8ba3-942991cb783e": {
+            "query": "/phlexible/phlexiblecms/styles/**.css",
+            "type": "phlexible/styles"
+        },
         "7a7553b4-2af1-58f5-a81e-c70b973c2642": {
             "query": "/phlexible/phlexiblecontentchannel/icons/*.png",
             "type": "phlexible/icons"
         },
+        "56a21981-fee8-51bd-b699-92a874e4a75e": {
+            "query": "/phlexible/phlexiblecontentchannel/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "76c06cbf-3a4d-5c83-83d8-9f74942fd449": {
+            "query": "/phlexible/phlexiblecontentchannel/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
         "935e8365-ba99-51d4-b705-5b2bf925ee5b": {
             "query": "/phlexible/phlexibledashboard/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "18aa998c-6dc3-5367-ac0b-2823440d623d": {
+            "query": "/phlexible/phlexibledashboard/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "275795b7-4d09-52ab-8895-e3b35bedfc97": {
+            "query": "/phlexible/phlexibledashboard/styles/**.css",
+            "type": "phlexible/styles"
         },
         "9f12b4e8-fe37-560b-b969-4fc54c0b41b7": {
             "query": "/phlexible/phlexibledatasource/icons/*.png",
@@ -111,6 +143,18 @@
             "query": "/phlexible/phlexibleelement/icons/*.png",
             "type": "phlexible/icons"
         },
+        "f5ee43fe-44b1-593e-8c79-1cc51b4dd5dc": {
+            "query": "/phlexible/phlexibleelement/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "ce977efd-2297-552a-9b80-fefe0f26ad6e": {
+            "query": "/phlexible/phlexibleelement/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "4a429cc8-7160-57b8-a5dd-288675714103": {
+            "query": "/phlexible/phlexibleelement/styles/**.css",
+            "type": "phlexible/styles"
+        },
         "287e862e-6a6a-541f-aab4-bc4d5498b4c0": {
             "query": "/phlexible/phlexibleelementtype/icons/*.gif",
             "type": "phlexible/icons"
@@ -119,9 +163,29 @@
             "query": "/phlexible/phlexibleelementtype/icons/*.png",
             "type": "phlexible/icons"
         },
+        "f5544b71-d3fb-5c0e-b5c5-cd89c074a24c": {
+            "query": "/phlexible/phlexibleelementtype/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "997e7153-0a1c-5562-95d8-df0a37463e40": {
+            "query": "/phlexible/phlexibleelementtype/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "43a612f4-1059-5375-bace-94816dc79db8": {
+            "query": "/phlexible/phlexibleelementtype/styles/**.css",
+            "type": "phlexible/styles"
+        },
         "105703e0-db92-515c-be33-7c409edf96c4": {
             "query": "/phlexible/phlexiblefrontendmedia/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "b2d4128b-ca98-55b8-846e-e859adcf23a9": {
+            "query": "/phlexible/phlexiblefrontendmedia/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "a80bd044-07cc-5ed2-88f2-12756caf0e1c": {
+            "query": "/phlexible/phlexiblefrontendmedia/styles/**.css",
+            "type": "phlexible/styles"
         },
         "f4f815d8-eb5c-5b2a-90ef-ef53de03e382": {
             "query": "/phlexible/phlexiblegui/icons/*.gif",
@@ -131,41 +195,145 @@
             "query": "/phlexible/phlexiblegui/icons/*.png",
             "type": "phlexible/icons"
         },
+        "f8dedc99-e83b-5926-8eed-0aa7f0673429": {
+            "query": "/phlexible/phlexiblegui/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "f9f7ada2-dd12-571f-95c4-e5931a2e1f4a": {
+            "query": "/phlexible/phlexiblegui/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "e48dfe29-6164-5df2-89ca-8b32ab717083": {
+            "query": "/phlexible/phlexiblegui/styles/**.css",
+            "type": "phlexible/styles"
+        },
         "f4b8fd3d-ad59-5f2c-91a5-e91daf73725f": {
             "query": "/phlexible/phlexiblemediacache/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "1a26dab5-9ab4-56a9-8e48-f308b305c88c": {
+            "query": "/phlexible/phlexiblemediacache/scripts/**.js",
+            "type": "phlexible/scripts"
         },
         "6dea1ab9-8838-5ba0-ba87-c0e2aef42f2e": {
             "query": "/phlexible/phlexiblemediamanager/icons/*.png",
             "type": "phlexible/icons"
         },
+        "97555c52-a360-57e8-892a-6ee99ad0b94c": {
+            "query": "/phlexible/phlexiblemediamanager/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "b1a07433-4802-5203-9aa5-3ff68de552f0": {
+            "query": "/phlexible/phlexiblemediamanager/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "b0a91a6d-eceb-5b10-990f-51ba26135c63": {
+            "query": "/phlexible/phlexiblemediamanager/styles/**.css",
+            "type": "phlexible/styles"
+        },
         "f71c9bfa-27ad-5341-a8f9-cf8f8dbab7fe": {
             "query": "/phlexible/phlexiblemediatemplate/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "31c65700-6b94-5257-ad16-7fa0841d2357": {
+            "query": "/phlexible/phlexiblemediatemplate/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "48e5ff67-324b-56e0-a75c-6a4492432063": {
+            "query": "/phlexible/phlexiblemediatemplate/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "926ce685-3ecf-52d0-9b95-1898371c41e0": {
+            "query": "/phlexible/phlexiblemediatemplate/styles/**.css",
+            "type": "phlexible/styles"
         },
         "ae19343e-1e69-5b49-80e1-1c524e852d26": {
             "query": "/phlexible/phlexiblemediatype/icons/*.png",
             "type": "phlexible/icons"
         },
+        "a9a07bc5-8d14-577a-9d2d-9dec96229d5e": {
+            "query": "/phlexible/phlexiblemediatype/mediatypes/*.xml",
+            "type": "phlexible/mediatypes"
+        },
+        "c0c41cd8-59c7-55d2-9670-f7005b47e43b": {
+            "query": "/phlexible/phlexiblemediatype/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "c27a5af0-5a03-564d-a529-20e91a7543b4": {
+            "query": "/phlexible/phlexiblemediatype/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
         "a0ec4b1d-a33a-5451-9692-f040cb083ef1": {
             "query": "/phlexible/phlexiblemessage/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "8f166b00-fb9d-5dd5-8fba-619658dbdca2": {
+            "query": "/phlexible/phlexiblemessage/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "6142a6e6-222b-5258-8d57-17e14837696b": {
+            "query": "/phlexible/phlexiblemessage/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "42ad3a40-538a-5743-9373-99b7a16578a9": {
+            "query": "/phlexible/phlexiblemessage/styles/**.css",
+            "type": "phlexible/styles"
         },
         "5f8c2227-cb46-561c-8735-e9f38e2743c5": {
             "query": "/phlexible/phlexiblemetaset/icons/*.png",
             "type": "phlexible/icons"
         },
+        "2edd03a2-a5a3-5d16-b13c-43e72841e082": {
+            "query": "/phlexible/phlexiblemetaset/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "1655bba3-d229-5537-868d-663148150ab7": {
+            "query": "/phlexible/phlexiblemetaset/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
         "f0d6111a-791e-506e-930d-12b875e9a3c3": {
             "query": "/phlexible/phlexibleproblem/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "55fdf06c-4a18-5764-952b-5386bca000f9": {
+            "query": "/phlexible/phlexibleproblem/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "00dec2a9-c081-576c-8234-ac78afa6530c": {
+            "query": "/phlexible/phlexibleproblem/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "9554765c-b587-5408-b348-664a8b302336": {
+            "query": "/phlexible/phlexibleproblem/styles/**.css",
+            "type": "phlexible/styles"
         },
         "53f8a617-37a1-5ea0-894c-cc5df42d7490": {
             "query": "/phlexible/phlexiblequeue/icons/*.png",
             "type": "phlexible/icons"
         },
+        "12dca705-3701-5b44-8d03-81c7ebaf29b5": {
+            "query": "/phlexible/phlexiblequeue/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "ca47c1f0-77b3-50b1-8f25-f76dd788e356": {
+            "query": "/phlexible/phlexiblequeue/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
         "425f8f59-d98a-5917-9a98-84e8da326ad3": {
             "query": "/phlexible/phlexiblesearch/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "a040e763-9ed1-582c-8185-d89ff8122ee2": {
+            "query": "/phlexible/phlexiblesearch/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "96a4756b-b806-5ad2-9425-5c81a81e4e28": {
+            "query": "/phlexible/phlexiblesearch/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "d6b01ef5-48f8-5a70-85c3-e60ccd125420": {
+            "query": "/phlexible/phlexiblesearch/styles/**.css",
+            "type": "phlexible/styles"
         },
         "1294986c-12df-5ac9-9e40-bd14845ba7a9": {
             "query": "/phlexible/phlexiblesiteroot/icons/*.gif",
@@ -175,233 +343,62 @@
             "query": "/phlexible/phlexiblesiteroot/icons/*.png",
             "type": "phlexible/icons"
         },
-        "0204d4db-1e07-5d44-9faa-d763972b1cc0": {
-            "query": "/phlexible/phlexibletask/icons/*.png",
-            "type": "phlexible/icons"
-        },
-        "ddd7eb5a-5e9d-583a-aa29-44cb040150d6": {
-            "query": "/phlexible/phlexibleteaser/icons/*.png",
-            "type": "phlexible/icons"
-        },
-        "a9a07bc5-8d14-577a-9d2d-9dec96229d5e": {
-            "query": "/phlexible/phlexiblemediatype/mediatypes/*.xml",
-            "type": "phlexible/mediatypes"
-        },
-        "d8f515b6-d461-5835-852a-6b3e350e539c": {
-            "query": "/phlexible/phlexibleaccesscontrol/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "4081faff-9596-50ac-b357-7e4e954049d1": {
-            "query": "/phlexible/phlexiblecms/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "76c06cbf-3a4d-5c83-83d8-9f74942fd449": {
-            "query": "/phlexible/phlexiblecontentchannel/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "18aa998c-6dc3-5367-ac0b-2823440d623d": {
-            "query": "/phlexible/phlexibledashboard/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "ce977efd-2297-552a-9b80-fefe0f26ad6e": {
-            "query": "/phlexible/phlexibleelement/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "997e7153-0a1c-5562-95d8-df0a37463e40": {
-            "query": "/phlexible/phlexibleelementtype/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "b2d4128b-ca98-55b8-846e-e859adcf23a9": {
-            "query": "/phlexible/phlexiblefrontendmedia/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "f9f7ada2-dd12-571f-95c4-e5931a2e1f4a": {
-            "query": "/phlexible/phlexiblegui/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "1a26dab5-9ab4-56a9-8e48-f308b305c88c": {
-            "query": "/phlexible/phlexiblemediacache/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "b1a07433-4802-5203-9aa5-3ff68de552f0": {
-            "query": "/phlexible/phlexiblemediamanager/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "48e5ff67-324b-56e0-a75c-6a4492432063": {
-            "query": "/phlexible/phlexiblemediatemplate/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "c27a5af0-5a03-564d-a529-20e91a7543b4": {
-            "query": "/phlexible/phlexiblemediatype/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "6142a6e6-222b-5258-8d57-17e14837696b": {
-            "query": "/phlexible/phlexiblemessage/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "1655bba3-d229-5537-868d-663148150ab7": {
-            "query": "/phlexible/phlexiblemetaset/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "00dec2a9-c081-576c-8234-ac78afa6530c": {
-            "query": "/phlexible/phlexibleproblem/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "ca47c1f0-77b3-50b1-8f25-f76dd788e356": {
-            "query": "/phlexible/phlexiblequeue/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "96a4756b-b806-5ad2-9425-5c81a81e4e28": {
-            "query": "/phlexible/phlexiblesearch/scripts/**.js",
-            "type": "phlexible/scripts"
+        "00f8801e-75dd-5eab-b938-c9431bb16b94": {
+            "query": "/phlexible/phlexiblesiteroot/menu/*.yml",
+            "type": "phlexible/menu"
         },
         "b8391ee9-1b76-54f3-a4cd-ce149ba0a7c8": {
             "query": "/phlexible/phlexiblesiteroot/scripts/**.js",
             "type": "phlexible/scripts"
         },
-        "0537382f-e1af-5e26-bc88-6eda5741fdf3": {
-            "query": "/phlexible/phlexibletask/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "12016c15-1fab-5ec7-bdc4-4551f2fcaea6": {
-            "query": "/phlexible/phlexibleteaser/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "be349132-be9f-519a-87be-bcb003bfc1e9": {
-            "query": "/phlexible/phlexibleuser/scripts/**.js",
-            "type": "phlexible/scripts"
-        },
-        "85d31772-1be8-52a9-9c78-c973e5e058e8": {
-            "query": "/phlexible/phlexibleaccesscontrol/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "7cdf0875-c25c-544e-8ba3-942991cb783e": {
-            "query": "/phlexible/phlexiblecms/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "275795b7-4d09-52ab-8895-e3b35bedfc97": {
-            "query": "/phlexible/phlexibledashboard/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "4a429cc8-7160-57b8-a5dd-288675714103": {
-            "query": "/phlexible/phlexibleelement/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "43a612f4-1059-5375-bace-94816dc79db8": {
-            "query": "/phlexible/phlexibleelementtype/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "a80bd044-07cc-5ed2-88f2-12756caf0e1c": {
-            "query": "/phlexible/phlexiblefrontendmedia/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "e48dfe29-6164-5df2-89ca-8b32ab717083": {
-            "query": "/phlexible/phlexiblegui/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "b0a91a6d-eceb-5b10-990f-51ba26135c63": {
-            "query": "/phlexible/phlexiblemediamanager/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "926ce685-3ecf-52d0-9b95-1898371c41e0": {
-            "query": "/phlexible/phlexiblemediatemplate/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "42ad3a40-538a-5743-9373-99b7a16578a9": {
-            "query": "/phlexible/phlexiblemessage/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "9554765c-b587-5408-b348-664a8b302336": {
-            "query": "/phlexible/phlexibleproblem/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "d6b01ef5-48f8-5a70-85c3-e60ccd125420": {
-            "query": "/phlexible/phlexiblesearch/styles/**.css",
-            "type": "phlexible/styles"
-        },
         "2bf3ea39-6ddf-517d-977a-eb532937616d": {
             "query": "/phlexible/phlexiblesiteroot/styles/**.css",
             "type": "phlexible/styles"
         },
-        "4f1ab77a-fb01-5410-95cf-477147e83d53": {
-            "query": "/phlexible/phlexibletask/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "21d5bc59-f1a3-5f15-a1b2-15c0d0d080b0": {
-            "query": "/phlexible/phlexibleuser/styles/**.css",
-            "type": "phlexible/styles"
-        },
-        "8516f780-b085-5682-9a83-a5858d170eb2": {
-            "query": "/phlexible/phlexiblecms/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "56a21981-fee8-51bd-b699-92a874e4a75e": {
-            "query": "/phlexible/phlexiblecontentchannel/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "f5ee43fe-44b1-593e-8c79-1cc51b4dd5dc": {
-            "query": "/phlexible/phlexibleelement/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "f5544b71-d3fb-5c0e-b5c5-cd89c074a24c": {
-            "query": "/phlexible/phlexibleelementtype/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "f8dedc99-e83b-5926-8eed-0aa7f0673429": {
-            "query": "/phlexible/phlexiblegui/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "97555c52-a360-57e8-892a-6ee99ad0b94c": {
-            "query": "/phlexible/phlexiblemediamanager/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "31c65700-6b94-5257-ad16-7fa0841d2357": {
-            "query": "/phlexible/phlexiblemediatemplate/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "c0c41cd8-59c7-55d2-9670-f7005b47e43b": {
-            "query": "/phlexible/phlexiblemediatype/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "8f166b00-fb9d-5dd5-8fba-619658dbdca2": {
-            "query": "/phlexible/phlexiblemessage/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "2edd03a2-a5a3-5d16-b13c-43e72841e082": {
-            "query": "/phlexible/phlexiblemetaset/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "55fdf06c-4a18-5764-952b-5386bca000f9": {
-            "query": "/phlexible/phlexibleproblem/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "12dca705-3701-5b44-8d03-81c7ebaf29b5": {
-            "query": "/phlexible/phlexiblequeue/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "a040e763-9ed1-582c-8185-d89ff8122ee2": {
-            "query": "/phlexible/phlexiblesearch/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "00f8801e-75dd-5eab-b938-c9431bb16b94": {
-            "query": "/phlexible/phlexiblesiteroot/menu/*.yml",
-            "type": "phlexible/menu"
+        "0204d4db-1e07-5d44-9faa-d763972b1cc0": {
+            "query": "/phlexible/phlexibletask/icons/*.png",
+            "type": "phlexible/icons"
         },
         "3c16a1d5-c0e4-58e1-a418-282bd820f0de": {
             "query": "/phlexible/phlexibletask/menu/*.yml",
             "type": "phlexible/menu"
         },
+        "0537382f-e1af-5e26-bc88-6eda5741fdf3": {
+            "query": "/phlexible/phlexibletask/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "4f1ab77a-fb01-5410-95cf-477147e83d53": {
+            "query": "/phlexible/phlexibletask/styles/**.css",
+            "type": "phlexible/styles"
+        },
+        "ddd7eb5a-5e9d-583a-aa29-44cb040150d6": {
+            "query": "/phlexible/phlexibleteaser/icons/*.png",
+            "type": "phlexible/icons"
+        },
+        "12016c15-1fab-5ec7-bdc4-4551f2fcaea6": {
+            "query": "/phlexible/phlexibleteaser/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "47bfe98b-d3ec-5655-a57d-cfef98ba3d11": {
+            "query": "/phlexible/phlexibleuser/icons/*.png",
+            "type": "phlexible/icons"
+        },
         "91e252eb-6da1-59c4-aef8-e6688ffac9a8": {
             "query": "/phlexible/phlexibleuser/menu/*.yml",
             "type": "phlexible/menu"
+        },
+        "be349132-be9f-519a-87be-bcb003bfc1e9": {
+            "query": "/phlexible/phlexibleuser/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "21d5bc59-f1a3-5f15-a1b2-15c0d0d080b0": {
+            "query": "/phlexible/phlexibleuser/styles/**.css",
+            "type": "phlexible/styles"
         }
     },
     "binding-types": {
-        "phlexible/scripts": {
-            "description": "phlexible gui scripts"
-        },
-        "phlexible/styles": {
-            "description": "phlexible gui styles"
+        "phlexible/icons": {
+            "description": "phlexible gui icons"
         },
         "phlexible/mediatypes": {
             "description": "phlexible mediatypes"
@@ -409,21 +406,16 @@
         "phlexible/menu": {
             "description": "phlexible gui menu definitions"
         },
-        "phlexible/icons": {
-            "description": "phlexible gui icons"
+        "phlexible/scripts": {
+            "description": "phlexible gui scripts"
+        },
+        "phlexible/styles": {
+            "description": "phlexible gui styles"
         }
     },
     "packages": {
         "alchemy/binary-driver": {
             "install-path": "vendor/alchemy/binary-driver",
-            "installer": "composer"
-        },
-        "alchemy/zippy": {
-            "install-path": "vendor/alchemy/zippy",
-            "installer": "composer"
-        },
-        "beberlei/assert": {
-            "install-path": "vendor/beberlei/assert",
             "installer": "composer"
         },
         "brainbits/image-analyzer": {
@@ -486,10 +478,6 @@
             "install-path": "vendor/friendsofsymfony/user-bundle/FOS/UserBundle",
             "installer": "composer"
         },
-        "guzzle/guzzle": {
-            "install-path": "vendor/guzzle/guzzle",
-            "installer": "composer"
-        },
         "igorw/file-serve-bundle": {
             "install-path": "vendor/igorw/file-serve-bundle/Igorw/FileServeBundle",
             "installer": "composer"
@@ -498,20 +486,12 @@
             "install-path": "vendor/imagine/imagine",
             "installer": "composer"
         },
-        "jms/cg": {
-            "install-path": "vendor/jms/cg",
-            "installer": "composer"
-        },
         "justinrainbow/json-schema": {
             "install-path": "vendor/justinrainbow/json-schema",
             "installer": "composer"
         },
         "michelf/php-markdown": {
             "install-path": "vendor/michelf/php-markdown",
-            "installer": "composer"
-        },
-        "mikey179/vfsstream": {
-            "install-path": "vendor/mikey179/vfsStream",
             "installer": "composer"
         },
         "monolog/monolog": {
@@ -526,8 +506,8 @@
             "install-path": "vendor/neutron/temporary-filesystem",
             "installer": "composer"
         },
-        "phansys/getid3": {
-            "install-path": "vendor/phansys/getid3/GetId3",
+        "nikic/php-parser": {
+            "install-path": "vendor/nikic/php-parser",
             "installer": "composer"
         },
         "php-ffmpeg/extras": {
@@ -540,6 +520,22 @@
         },
         "php-poppler/php-poppler": {
             "install-path": "vendor/php-poppler/php-poppler",
+            "installer": "composer"
+        },
+        "phpdocumentor/reflection-docblock": {
+            "install-path": "vendor/phpdocumentor/reflection-docblock",
+            "installer": "composer"
+        },
+        "phpexiftool/exiftool": {
+            "install-path": "vendor/phpexiftool/exiftool",
+            "installer": "composer"
+        },
+        "phpexiftool/phpexiftool": {
+            "install-path": "vendor/phpexiftool/phpexiftool",
+            "installer": "composer"
+        },
+        "phpspec/prophecy": {
+            "install-path": "vendor/phpspec/prophecy",
             "installer": "composer"
         },
         "phpunit/php-code-coverage": {
@@ -618,6 +614,10 @@
             "install-path": "vendor/rhumsaa/uuid",
             "installer": "composer"
         },
+        "sami/sami": {
+            "install-path": "vendor/sami/sami",
+            "installer": "composer"
+        },
         "sebastian/comparator": {
             "install-path": "vendor/sebastian/comparator",
             "installer": "composer"
@@ -638,16 +638,16 @@
             "install-path": "vendor/sebastian/global-state",
             "installer": "composer"
         },
+        "sebastian/recursion-context": {
+            "install-path": "vendor/sebastian/recursion-context",
+            "installer": "composer"
+        },
         "sebastian/version": {
             "install-path": "vendor/sebastian/version",
             "installer": "composer"
         },
         "seld/jsonlint": {
             "install-path": "vendor/seld/jsonlint",
-            "installer": "composer"
-        },
-        "swftools/swftools": {
-            "install-path": "vendor/swftools/swftools",
             "installer": "composer"
         },
         "symfony-cmf/routing": {

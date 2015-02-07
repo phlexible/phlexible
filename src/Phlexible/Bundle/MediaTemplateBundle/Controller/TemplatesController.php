@@ -12,7 +12,6 @@ use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Component\MediaTemplate\Exception\InvalidArgumentException;
 use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
-use Phlexible\Component\MediaTemplate\Model\PdfTemplate;
 use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -83,10 +82,6 @@ class TemplatesController extends Controller
                 break;
             case 'audio':
                 $template = new AudioTemplate();
-                $template->setCache(true);
-                break;
-            case 'pdf':
-                $template = new PdfTemplate();
                 $template->setCache(true);
                 break;
             default:

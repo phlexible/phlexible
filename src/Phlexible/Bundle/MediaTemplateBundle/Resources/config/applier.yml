@@ -7,10 +7,6 @@ services:
         class: Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier
         arguments: [@phlexible_media_tool.imagine]
 
-    phlexible_media_template.applier.pdf:
-        class: Phlexible\Component\MediaTemplate\Applier\PdfTemplateApplier
-        arguments: [@phlexible_media_tool.swftools.pdf2swf]
-
     phlexible_media_template.applier.video:
         class: Phlexible\Component\MediaTemplate\Applier\VideoTemplateApplier
         arguments: [@phlexible_media_tool.ffmpeg]

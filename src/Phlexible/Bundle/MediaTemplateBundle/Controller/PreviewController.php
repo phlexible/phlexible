@@ -119,29 +119,6 @@ class PreviewController extends Controller
     /**
      * @param Request $request
      *
-     * @return ResultResponse
-     * @Route("/pdf", name="mediatemplates_preview_pdf")
-     */
-    public function pdfAction(Request $request)
-    {
-        $params = $request->request->all();
-
-        unset($params['module']);
-        unset($params['controller']);
-        unset($params['action']);
-
-        $previewer = $this->get('phlexible_media_template.previewer.pdf');
-        $locator = $this->get('file_locator');
-
-        $filePath = $locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/pdf/test.pdf', null, true);
-        $data = $previewer->create($filePath, $params);
-
-        return new ResultResponse(true, 'Preview created', $data);
-    }
-
-    /**
-     * @param Request $request
-     *
      * @return Response
      * @Route("/get", name="mediatemplates_preview_get")
      */

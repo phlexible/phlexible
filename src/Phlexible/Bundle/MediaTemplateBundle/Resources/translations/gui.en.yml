@@ -8,16 +8,10 @@ mediatemplates:
     video_template_title: 'Video template "{0}"'
     audio_template: 'Audio template'
     audio_template_title: 'Audio template "{0}"'
-    filmstrip_template: 'Filmstrip template'
-    filmstrip_template_title: 'Filmstrip template "{0}"'
-    pdf2swf_template: 'PDF to SWF template'
-    pdf2swf_template_title: 'PDF to SWF template "{0}"'
     base: Base
     image: Image
     video: Video
     audio: Audio
-    filmstrip: 'Film Strip'
-    pdf2swf: 'PDF to SWF'
     add: Add
     save: Save
     save_hint: 'Please note that saving will result in regenerating all images stored in the media manager based on this media template. This can result in heavy server load. If you want to test your settings use the preview button. Saving is not necessary for previewing.'

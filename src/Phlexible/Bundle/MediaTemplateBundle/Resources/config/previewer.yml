@@ -14,12 +14,6 @@ services:
             - @phlexible_media_template.applier.image
             - %phlexible_media_template.previewer.temp_dir%
 
-    phlexible_media_template.previewer.pdf:
-        class: Phlexible\Component\MediaTemplate\Previewer\PdfPreviewer
-        arguments:
-            - @phlexible_media_template.applier.pdf
-            - %phlexible_media_template.previewer.temp_dir%
-
     phlexible_media_template.previewer.video:
         class: Phlexible\Component\MediaTemplate\Previewer\VideoPreviewer
         arguments:

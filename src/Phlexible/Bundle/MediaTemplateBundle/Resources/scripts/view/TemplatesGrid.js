@@ -61,12 +61,6 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
                         handler: this.newAudioTemplate,
                         scope: this
                     },
-                    {
-                        text: this.strings.pdf2swf,
-                        iconCls: 'p-mediatemplate-type_pdf-icon',
-                        handler: this.newPdfTemplate,
-                        scope: this
-                    }
                 ]
             },
             '->',
@@ -106,13 +100,6 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
                         text: this.strings.audio,
                         iconCls: 'p-mediatemplate-type_audio-icon',
                         filter: 'audio',
-                        handler: this.toggleFilter,
-                        scope: this
-                    },
-                    {
-                        text: this.strings.pdf2swf,
-                        iconCls: 'p-mediatemplate-type_pdf-icon',
-                        filter: 'pdf',
                         handler: this.toggleFilter,
                         scope: this
                     }
@@ -156,12 +143,8 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
         this.newTemplate('audio');
     },
 
-    newPdfTemplate: function () {
-        this.newTemplate('pdf');
-    },
-
     newTemplate: function (type) {
-        if (!type || (type != 'image' && type != 'video' && type != 'audio' && type != 'pdf')) {
+        if (!type || (type != 'image' && type != 'video' && type != 'audio')) {
             return;
         }
 

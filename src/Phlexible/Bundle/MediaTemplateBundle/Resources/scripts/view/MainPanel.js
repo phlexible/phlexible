@@ -4,7 +4,6 @@ Ext.require('Phlexible.mediatemplates.TemplatesGrid');
 Ext.require('Phlexible.mediatemplates.image.MainPanel');
 Ext.require('Phlexible.mediatemplates.audio.MainPanel');
 Ext.require('Phlexible.mediatemplates.video.MainPanel');
-Ext.require('Phlexible.mediatemplates.pdf2swf.MainPanel');
 
 Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.mediatemplates,
@@ -38,11 +37,6 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
                             this.audioFormPanel.loadParameters(r.get('key'));
                             break;
 
-                        case 'pdf':
-                            this.cardPanel.getLayout().setActiveItem(3);
-                            this.pdfFormPanel.loadParameters(r.get('key'));
-                            break;
-
                         default:
                             Ext.MessageBox.alert('Warning', 'Unknown template');
                     }
@@ -63,11 +57,6 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
                         case 'audio':
                             this.audioFormPanel.loadParameters(template_id, template_title);
                             this.cardPanel.getLayout().setActiveItem(2);
-                            break;
-
-                        case 'pdf':
-                            this.pdfFormPanel.loadParameters(template_id, template_title);
-                            this.cardPanel.getLayout().setActiveItem(3);
                             break;
 
                         default:
@@ -114,18 +103,6 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
             }
         });
 
-        this.pdfFormPanel = new Phlexible.mediatemplates.pdf2swf.MainPanel({
-            listeners: {
-                paramsload: function () {
-
-                },
-                paramssave: function () {
-                    this.templatesGrid.getStore().reload();
-                },
-                scope: this
-            }
-        });
-
         this.cardPanel = new Ext.Panel({
             region: 'center',
             layout: 'card',
@@ -134,8 +111,7 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
             items: [
                 this.imagePanel,
                 this.videoFormPanel,
-                this.audioFormPanel,
-                this.pdfFormPanel
+                this.audioFormPanel
             ]
         });
 
