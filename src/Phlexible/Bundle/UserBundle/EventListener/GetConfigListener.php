@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\UserBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
@@ -18,6 +19,11 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
  */
 class GetConfigListener
 {
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
     /**
      * @var RoleHierarchyInterface
      */
@@ -34,12 +40,18 @@ class GetConfigListener
     private $passwordMinLength;
 
     /**
+     * @param TokenStorageInterface  $tokenStorage
      * @param RoleHierarchyInterface $roleHierarchy
      * @param array                  $defaults
      * @param int                    $passwordMinLength
      */
-    public function __construct(RoleHierarchyInterface $roleHierarchy, array $defaults, $passwordMinLength)
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        RoleHierarchyInterface $roleHierarchy,
+        array $defaults,
+        $passwordMinLength)
     {
+        $this->tokenStorage = $tokenStorage;
         $this->roleHierarchy = $roleHierarchy;
         $this->defaults = $defaults;
         $this->passwordMinLength = $passwordMinLength;
@@ -50,8 +62,7 @@ class GetConfigListener
      */
     public function onGetConfig(GetConfigEvent $event)
     {
-        $securityContext = $event->getSecurityContext();
-        $token = $securityContext->getToken();
+        $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
         $roles = [];
         foreach ($this->roleHierarchy->getReachableRoles($token->getRoles()) as $role) {

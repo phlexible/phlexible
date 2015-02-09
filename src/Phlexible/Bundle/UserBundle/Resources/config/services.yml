@@ -30,6 +30,7 @@ services:
     phlexible_user.listener.get_config:
         class: Phlexible\Bundle\UserBundle\EventListener\GetConfigListener
         arguments:
+            - @security.token_storage
             - @security.role_hierarchy
             -
                 language: %phlexible_user.defaults.language%

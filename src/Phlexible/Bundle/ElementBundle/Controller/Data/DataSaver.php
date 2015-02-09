@@ -284,6 +284,7 @@ class DataSaver
             } else {
                 $node->setInNavigation(false);
             }
+            /*
             if (!empty($data['configuration']['needAuthentication'])) {
                 $node->setNeedAuthentication(true);
             } else {
@@ -307,6 +308,7 @@ class DataSaver
             } else {
                 $node->setController(null);
             }
+            */
             if (!empty($data['configuration']['template'])) {
                 $node->setTemplate($data['configuration']['template']);
             } else {
@@ -326,26 +328,6 @@ class DataSaver
                 $node->setAttribute('searchNoIndex', true);
             } else {
                 $node->removeAttribute('searchNoIndex');
-            }
-            if (!empty($data['configuration']['noCache'])) {
-                $node->setAttribute('noCache', true);
-            } else {
-                $node->removeAttribute('noCache');
-            }
-            if (!empty($data['configuration']['cachePrivate'])) {
-                $node->setAttribute('cachePrivate', true);
-            } else {
-                $node->removeAttribute('cachePrivate');
-            }
-            if (!empty($data['configuration']['cacheMaxAge'])) {
-                $node->setAttribute('cacheMaxAge', (int) $data['configuration']['cacheMaxAge']);
-            } else {
-                $node->removeAttribute('cacheMaxAge');
-            }
-            if (!empty($data['configuration']['cacheSharedMaxAge'])) {
-                $node->setAttribute('cacheSharedMaxAge', (int) $data['configuration']['cacheSharedMaxAge']);
-            } else {
-                $node->removeAttribute('cacheSharedMaxAge');
             }
 
             $node->getTree()->updateNode($node);

@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\CmsBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Get config listener
@@ -28,11 +29,13 @@ class GetConfigListener
     private $availableLanguages;
 
     /**
-     * @param string $defaultLanguage
-     * @param string $availableLanguages
+     * @param TokenStorageInterface $tokenStorage
+     * @param string                $defaultLanguage
+     * @param string                $availableLanguages
      */
-    public function __construct($defaultLanguage, $availableLanguages)
+    public function __construct(TokenStorageInterface $tokenStorage, $defaultLanguage, $availableLanguages)
     {
+        $this->tokenStorage = $tokenStorage;
         $this->defaultLanguage = $defaultLanguage;
         $this->availableLanguages = explode(',', $availableLanguages);
     }
@@ -44,9 +47,12 @@ class GetConfigListener
     {
         $config = $event->getConfig();
 
+        $user = $this->tokenStorage->getToken()->getUser();
+        $guiLanguage = $user->getInterfaceLanguage('en');
+
         $languages = [];
         foreach ($this->availableLanguages as $language) {
-            $name = \Locale::getDisplayName($language, $event->getSecurityContext()->getToken()->getUser()->getInterfaceLanguage('en'));
+            $name = \Locale::getDisplayName($language, $guiLanguage);
             $languages[$name] = $language;
         }
 

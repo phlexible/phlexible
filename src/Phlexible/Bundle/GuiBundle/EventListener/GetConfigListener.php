@@ -9,10 +9,7 @@
 namespace Phlexible\Bundle\GuiBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Get config listener
@@ -38,8 +35,8 @@ class GetConfigListener
 
     /**
      * @param TokenStorageInterface $tokenStorage
-     * @param string $availableLanguages
-     * @param string $defaultLanguage
+     * @param string                $availableLanguages
+     * @param string                $defaultLanguage
      */
     public function __construct(TokenStorageInterface $tokenStorage, $availableLanguages, $defaultLanguage)
     {

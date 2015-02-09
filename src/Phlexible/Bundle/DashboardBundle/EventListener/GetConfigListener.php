@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\DashboardBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Get config listener
@@ -18,11 +19,24 @@ use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 class GetConfigListener
 {
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @param TokenStorageInterface $tokenStorage
+     */
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    /**
      * @param GetConfigEvent $event
      */
     public function onGetConfig(GetConfigEvent $event)
     {
-        $user = $event->getSecurityContext()->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $config = $event->getConfig();
 
         $defaultPortlets = [

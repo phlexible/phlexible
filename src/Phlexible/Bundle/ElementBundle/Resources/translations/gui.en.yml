@@ -295,9 +295,10 @@ elements:
         path: Pfad
         defaults: Defaults
         method: Method
+        scheme: Scheme
         https: HTTPS
         controller: Controller
-        templte: Template
+        template: Template
         security: Security
         cache: Cache
         expires: Expires

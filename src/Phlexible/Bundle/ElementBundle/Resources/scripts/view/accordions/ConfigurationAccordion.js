@@ -9,7 +9,7 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
     autoHeight: true,
     labelWidth: 100,
     bodyStyle: 'padding: 5px',
-    //labelAlign: 'top',
+    labelAlign: 'top',
 
     key: 'configuration',
 
@@ -35,35 +35,23 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
             },
             {
                 // 2
-                xtype: 'label',
-                text: this.strings.robots,
-                style: 'font-weight: bold;'
-            },
-            {
-                // 3
                 xtype: 'checkbox',
                 name: 'robotsNoIndex',
-                hideLabel: true,
+                fieldLabel: this.strings.robots,
                 boxLabel: this.strings.robots_no_index
             },
             {
-                // 4
+                // 3
                 xtype: 'checkbox',
                 name: 'robotsNoFollow',
                 hideLabel: true,
                 boxLabel: this.strings.robots_no_follow
             },
             {
-                // 5
-                xtype: 'label',
-                text: this.strings.internal_search,
-                style: 'font-weight: bold;'
-            },
-            {
-                // 6
+                // 4
                 xtype: 'checkbox',
                 name: 'searchNoIndex',
-                hideLabel: true,
+                fieldLabel: this.strings.internal_search,
                 boxLabel: this.strings.search_no_index
             }
         ];
@@ -77,7 +65,7 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
 
         this.getForm().setValues({
             navigation: data.configuration.navigation || false,
-            template: data.configuration.template || false,
+            template: data.configuration.template || '',
             robotsNoIndex: data.configuration.robotsNoIndex || false,
             robotsNoFollow: data.configuration.robotsNoFollow || false,
             searchNoIndex: data.configuration.searchNoIndex || false
@@ -89,16 +77,12 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
             this.getComponent(2).hide();
             this.getComponent(3).hide();
             this.getComponent(4).hide();
-            this.getComponent(5).hide();
-            this.getComponent(6).hide();
         } else {
             this.getComponent(0).show();
             this.getComponent(1).show();
             this.getComponent(2).show();
             this.getComponent(3).show();
             this.getComponent(4).show();
-            this.getComponent(5).show();
-            this.getComponent(6).show();
         }
 
         this.show();
