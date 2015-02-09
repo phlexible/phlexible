@@ -14,7 +14,7 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Tree interface
@@ -44,29 +44,29 @@ class NodeSerializer
     private $permissions;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
-     * @param ElementService           $elementService
-     * @param IconResolver             $iconResolver
-     * @param StateManagerInterface    $stateManager
-     * @param PermissionCollection     $permissions
-     * @param SecurityContextInterface $securityContext
+     * @param ElementService                $elementService
+     * @param IconResolver                  $iconResolver
+     * @param StateManagerInterface         $stateManager
+     * @param PermissionCollection          $permissions
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         ElementService $elementService,
         IconResolver $iconResolver,
         StateManagerInterface $stateManager,
         PermissionCollection $permissions,
-        SecurityContextInterface $securityContext)
+        AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->elementService = $elementService;
         $this->iconResolver = $iconResolver;
         $this->stateManager = $stateManager;
         $this->permissions = $permissions;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -104,8 +104,8 @@ class NodeSerializer
     {
         $userRights = [];
         if ($node instanceof ContentObjectInterface) {
-            if (!$this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-                if ($this->securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+            if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
+                if ($this->authorizationChecker->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
                     return null;
                 }
 

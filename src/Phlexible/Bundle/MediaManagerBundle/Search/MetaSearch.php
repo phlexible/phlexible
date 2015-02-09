@@ -14,7 +14,7 @@ use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Meta search
@@ -39,22 +39,26 @@ class MetaSearch implements SearchProviderInterface
     private $userManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
-     * @param VolumeManager            $volumeManager
-     * @param FileMetaDataManager      $metaDataManager
-     * @param UserManagerInterface     $userManager
-     * @param SecurityContextInterface $securityContext
+     * @param VolumeManager                 $volumeManager
+     * @param FileMetaDataManager           $metaDataManager
+     * @param UserManagerInterface          $userManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
-    public function __construct(VolumeManager $volumeManager, FileMetaDataManager $metaDataManager, UserManagerInterface $userManager, SecurityContextInterface $securityContext)
+    public function __construct(
+        VolumeManager $volumeManager,
+        FileMetaDataManager $metaDataManager,
+        UserManagerInterface $userManager,
+        AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->volumeManager = $volumeManager;
         $this->metaDataManager = $metaDataManager;
         $this->userManager = $userManager;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -101,7 +105,7 @@ class MetaSearch implements SearchProviderInterface
                 $folders[$file->getFolderId()] = $file->getVolume()->findFolder($file->getFolderId());
             }
 
-            if (!$this->securityContext->isGranted($folders[$file->getFolderId()], 'FILE_READ')) {
+            if (!$this->authorizationChecker->isGranted($folders[$file->getFolderId()], 'FILE_READ')) {
                 continue;
             }
 

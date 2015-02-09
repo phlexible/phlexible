@@ -14,7 +14,7 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Selector
@@ -44,29 +44,29 @@ class Selector
     private $teaserManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
-     * @param ElementService           $elementService
-     * @param ElementtypeService       $elementtypeService
-     * @param TreeManager              $treeManager
-     * @param TeaserManagerInterface   $teaserManager
-     * @param SecurityContextInterface $securityContext
+     * @param ElementService                $elementService
+     * @param ElementtypeService            $elementtypeService
+     * @param TreeManager                   $treeManager
+     * @param TeaserManagerInterface        $teaserManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         ElementService $elementService,
         ElementtypeService $elementtypeService,
         TreeManager $treeManager,
         TeaserManagerInterface $teaserManager,
-        SecurityContextInterface $securityContext)
+        AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->elementService = $elementService;
         $this->elementtypeService = $elementtypeService;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -237,8 +237,8 @@ class Selector
                 $include = true;
             }
         }
-        if (!$this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-            if (!$this->securityContext->isGranted($treeNode, ['right' => 'PUBLISH', 'language' => $language])) {
+        if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
+            if (!$this->authorizationChecker->isGranted($treeNode, ['right' => 'PUBLISH', 'language' => $language])) {
                 $include = false;
             }
         }

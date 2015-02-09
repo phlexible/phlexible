@@ -5,4 +5,4 @@ services:
 
     phlexible_search.search:
         class: Phlexible\Bundle\SearchBundle\Search\Search
-        arguments: [@phlexible_search.search_providers, @security.context]
+        arguments: [@phlexible_search.search_providers, @security.authorization_checker]

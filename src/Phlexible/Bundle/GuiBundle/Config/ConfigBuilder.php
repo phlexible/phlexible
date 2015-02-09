@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\GuiBundle\Config;
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Phlexible\Bundle\GuiBundle\GuiEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Config builder

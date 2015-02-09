@@ -39,10 +39,8 @@ class FrameController extends Controller
     {
         $viewIndex = $this->get('phlexible_gui.view.index');
 
-        $securityContext = $this->get('security.context');
-
         return [
-            'scripts'  => $viewIndex->get($request, $securityContext),
+            'scripts'  => $viewIndex->get($request),
             'noScript' => $viewIndex->getNoScript(),
         ];
     }

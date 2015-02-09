@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\GuiBundle\View;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Abstract view
@@ -92,25 +91,23 @@ abstract class AbstractView
     }
 
     /**
-     * @param Request                  $request
-     * @param SecurityContextInterface $securityContext
+     * @param Request $request
      *
      * @return string
      */
-    public function get(Request $request, SecurityContextInterface $securityContext)
+    public function get(Request $request)
     {
-        $this->collect($request, $securityContext);
+        $this->collect($request);
 
         return implode(PHP_EOL, $this->parts);
     }
 
     /**
-     * @param Request                  $request
-     * @param SecurityContextInterface $securityContext
+     * @param Request $request
      *
      * @return $this
      */
-    abstract public function collect(Request $request, SecurityContextInterface $securityContext);
+    abstract public function collect(Request $request);
 
     /**
      * @return string

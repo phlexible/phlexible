@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\TaskBundle\Task\Type;
 
 use Phlexible\Bundle\TaskBundle\Entity\Task;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -19,26 +18,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class GenericType implements TypeInterface
 {
-    /**
-     * @var SecurityContextInterface
-     */
-    //private $securityContext;
-
-    /**
-     * @var TranslatorInterface
-     */
-    //private $translator;
-
-    /**
-     * @param SecurityContextInterface $securityContext
-     * @param TranslatorInterface      $translator
-     */
-    /*public function __construct(SecurityContextInterface $securityContext, TranslatorInterface $translator)
-    {
-        $this->securityContext = $securityContext;
-        $this->translator = $translator;
-    }*/
-
     /**
      * {@inheritdoc}
      */

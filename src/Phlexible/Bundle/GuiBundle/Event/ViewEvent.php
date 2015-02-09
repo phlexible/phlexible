@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\GuiBundle\Event;
 use Phlexible\Bundle\GuiBundle\View\AbstractView;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * View frame event
@@ -31,23 +30,13 @@ class ViewEvent extends Event
     private $request;
 
     /**
-     * @var SecurityContextInterface
+     * @param Request      $request
+     * @param AbstractView $view
      */
-    private $securityContext;
-
-    /**
-     * @param Request                  $request
-     * @param AbstractView             $view
-     * @param SecurityContextInterface $securityContext
-     */
-    public function __construct(
-        Request $request,
-        AbstractView $view,
-        SecurityContextInterface $securityContext)
+    public function __construct(Request $request, AbstractView $view)
     {
         $this->request = $request;
         $this->view = $view;
-        $this->securityContext = $securityContext;
     }
 
     /**
@@ -64,13 +53,5 @@ class ViewEvent extends Event
     public function getRequest()
     {
         return $this->request;
-    }
-
-    /**
-     * @return SecurityContextInterface
-     */
-    public function getSecurityContext()
-    {
-        return $this->securityContext;
     }
 }

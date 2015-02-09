@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Volume;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FileUsage;
 use Phlexible\Component\Volume\Model\FileInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Delete file checker
@@ -26,19 +26,27 @@ class DeleteFileChecker
     private $entityManager;
 
     /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
      * @var string
      */
     private $deletePolicy;
 
     /**
-     * @param EntityManager            $entityManager
-     * @param SecurityContextInterface $securityContext
-     * @param string                   $deletePolicy
+     * @param EntityManager                 $entityManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param string                        $deletePolicy
      */
-    public function __construct(EntityManager $entityManager, SecurityContextInterface $securityContext, $deletePolicy)
+    public function __construct(
+        EntityManager $entityManager,
+        AuthorizationCheckerInterface $authorizationChecker,
+        $deletePolicy)
     {
         $this->entityManager = $entityManager;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
         $this->deletePolicy = $deletePolicy;
     }
 
@@ -49,7 +57,7 @@ class DeleteFileChecker
      */
     public function isDeleteAllowed(FileInterface $file)
     {
-        if (!$this->securityContext->isGranted('FILE_DELETE', $file)) {
+        if (!$this->authorizationChecker->isGranted('FILE_DELETE', $file)) {
             return false;
         }
 

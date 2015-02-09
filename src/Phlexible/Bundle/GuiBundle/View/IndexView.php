@@ -12,7 +12,6 @@ use Phlexible\Bundle\GuiBundle\Event\ViewEvent;
 use Phlexible\Bundle\GuiBundle\GuiEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Index view
@@ -37,9 +36,9 @@ class IndexView extends AbstractView
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, SecurityContextInterface $securityContext)
+    public function collect(Request $request)
     {
-        $event = new ViewEvent($request, $this, $securityContext);
+        $event = new ViewEvent($request, $this);
         $this->dispatcher->dispatch(GuiEvents::VIEW_FRAME, $event);
 
         return $this;

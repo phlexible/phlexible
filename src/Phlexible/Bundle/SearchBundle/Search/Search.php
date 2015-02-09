@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\SearchBundle\Search;
 
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderCollection;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Search
@@ -25,18 +25,20 @@ class Search
     private $searchProviders;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
-     * @param SearchProviderCollection $searchProviders
-     * @param SecurityContextInterface $securityContext
+     * @param SearchProviderCollection      $searchProviders
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
-    public function __construct(SearchProviderCollection $searchProviders, SecurityContextInterface $securityContext)
+    public function __construct(
+        SearchProviderCollection $searchProviders,
+        AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->searchProviders = $searchProviders;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -56,7 +58,7 @@ class Search
             }
 
             $role = $searchProvider->getRole();
-            if ($role && !$this->securityContext->isGranted($role)) {
+            if ($role && !$this->authorizationChecker->isGranted($role)) {
                 continue;
             }
 

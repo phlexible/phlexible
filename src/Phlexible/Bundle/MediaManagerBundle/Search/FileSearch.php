@@ -13,7 +13,7 @@ use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * File search
@@ -33,20 +33,23 @@ class FileSearch implements SearchProviderInterface
     private $userManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
-     * @param VolumeManager            $volumeManager
-     * @param UserManagerInterface     $userManager
-     * @param SecurityContextInterface $securityContext
+     * @param VolumeManager                 $volumeManager
+     * @param UserManagerInterface          $userManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
-    public function __construct(VolumeManager $volumeManager, UserManagerInterface $userManager, SecurityContextInterface $securityContext)
+    public function __construct(
+        VolumeManager $volumeManager,
+        UserManagerInterface $userManager,
+        AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->volumeManager = $volumeManager;
         $this->userManager = $userManager;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -88,7 +91,7 @@ class FileSearch implements SearchProviderInterface
                 $folders[$file->getFolderId()] = $file->getVolume()->findFolder($file->getFolderId());
             }
 
-            if (!$this->securityContext->isGranted($folders[$file->getFolderId()], 'FILE_READ')) {
+            if (!$this->authorizationChecker->isGranted($folders[$file->getFolderId()], 'FILE_READ')) {
                 continue;
             }
 

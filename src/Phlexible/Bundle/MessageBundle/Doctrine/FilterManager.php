@@ -12,8 +12,6 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\MessageBundle\Entity\Filter;
 use Phlexible\Bundle\MessageBundle\Entity\Repository\FilterRepository;
 use Phlexible\Bundle\MessageBundle\Model\FilterManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Doctrine filter manager

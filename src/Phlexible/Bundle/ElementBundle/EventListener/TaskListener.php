@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Task listener
@@ -30,18 +30,18 @@ class TaskListener implements EventSubscriberInterface
     private $taskManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
-     * @param TaskManagerInterface     $taskManager
-     * @param SecurityContextInterface $securityContext
+     * @param TaskManagerInterface  $taskManager
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(TaskManagerInterface $taskManager, SecurityContextInterface $securityContext)
+    public function __construct(TaskManagerInterface $taskManager, TokenStorageInterface $tokenStorage)
     {
         $this->taskManager = $taskManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -75,7 +75,7 @@ class TaskListener implements EventSubscriberInterface
                 'language' => $language
             ],
             'element.publish',
-            $this->securityContext->getToken()->getUser()->getId()
+            $this->tokenStorage->getToken()->getUser()->getId()
         );
     }
 
@@ -98,7 +98,7 @@ class TaskListener implements EventSubscriberInterface
                 'language' => $language
             ],
             'element.set_offline',
-            $this->securityContext->getToken()->getUser()->getId()
+            $this->tokenStorage->getToken()->getUser()->getId()
         );
     }
 
@@ -120,7 +120,7 @@ class TaskListener implements EventSubscriberInterface
                 'type_id' => $node->getId()
             ],
             'element.delete',
-            $this->securityContext->getToken()->getUser()->getId()
+            $this->tokenStorage->getToken()->getUser()->getId()
         );
     }
 

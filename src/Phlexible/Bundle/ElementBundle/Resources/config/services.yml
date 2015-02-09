@@ -34,7 +34,7 @@ services:
             - @phlexible_element.element_service
             - @phlexible_tree.tree_manager
             - @phlexible_teaser.teaser_manager
-            - @security.context
+            - @security.authorization_checker
 
     phlexible_element.publish.selector:
         class: Phlexible\Bundle\ElementBundle\Element\Publish\Selector
@@ -43,7 +43,7 @@ services:
             - @phlexible_elementtype.elementtype_service
             - @phlexible_tree.tree_manager
             - @phlexible_teaser.teaser_manager
-            - @security.context
+            - @security.authorization_checker
 
     phlexible_element.icon_builder:
         class: Phlexible\Bundle\ElementBundle\Icon\IconBuilder
@@ -88,7 +88,7 @@ services:
     # event listeners
     phlexible_element.listener.task:
         class: Phlexible\Bundle\ElementBundle\EventListener\TaskListener
-        arguments: [@phlexible_task.task_manager, @security.context]
+        arguments: [@phlexible_task.task_manager, @security.token_storage]
         tags:
             - {name: kernel.event_subscriber}
 
@@ -114,7 +114,7 @@ services:
         arguments:
             - @phlexible_siteroot.siteroot_manager
             - @phlexible_tree.tree_manager
-            - @security.context
+            - @security.authorization_checker
             - %phlexible_element.publish.comment_required%
             - %phlexible_element.publish.confirm_required%
             - %phlexible_element.create.use_multilanguage%
@@ -137,7 +137,7 @@ services:
 
     phlexible_element.listener.elementtype_usage:
         class: Phlexible\Bundle\ElementBundle\EventListener\ElementtypeUsageListener
-        arguments: [@doctrine.dbal.default_connection, @security.context]
+        arguments: [@doctrine.dbal.default_connection, @security.token_storage]
         tags:
             - {name: kernel.event_listener, event: phlexible_elementtype.usage, method: onElementtypeUsage}
 

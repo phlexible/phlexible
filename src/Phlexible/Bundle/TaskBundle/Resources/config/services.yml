@@ -25,7 +25,7 @@ services:
 
     phlexible_task.listener.load_data:
         class: Phlexible\Bundle\TaskBundle\EventListener\LoadDataListener
-        arguments: [@phlexible_task.task_manager, @phlexible_user.user_manager, @security.context]
+        arguments: [@phlexible_task.task_manager, @phlexible_user.user_manager, @security.token_storage]
         tags:
             - {name: kernel.event_listener, event: phlexible_element.load_data, method: onLoadData}
 
@@ -37,7 +37,7 @@ services:
             - @translator
             - @phlexible_task.task_manager
             - @phlexible_task.types
-            - @security.context
+            - @security.token_storage
             - @phlexible_user.user_manager
             - %phlexible_task.portlet.num_items%]
         tags:

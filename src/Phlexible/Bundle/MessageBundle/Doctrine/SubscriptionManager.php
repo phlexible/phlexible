@@ -12,8 +12,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\MessageBundle\Entity\Subscription;
 use Phlexible\Bundle\MessageBundle\Model\SubscriptionManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Doctrine subscription manager

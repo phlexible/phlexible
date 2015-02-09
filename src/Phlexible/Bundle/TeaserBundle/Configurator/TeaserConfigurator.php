@@ -18,7 +18,6 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Teaser configurator
@@ -43,26 +42,18 @@ class TeaserConfigurator implements ConfiguratorInterface
     private $elementService;
 
     /**
-     * @var SecurityContextInterface
-     */
-    private $securityContext;
-
-    /**
      * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface          $logger
      * @param ElementService           $elementService
-     * @param SecurityContextInterface $securityContext
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
-        ElementService $elementService,
-        SecurityContextInterface $securityContext)
+        ElementService $elementService)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
         $this->elementService = $elementService;
-        $this->securityContext = $securityContext;
     }
 
     /**

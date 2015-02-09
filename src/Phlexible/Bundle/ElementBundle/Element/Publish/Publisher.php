@@ -9,12 +9,11 @@
 namespace Phlexible\Bundle\ElementBundle\Element\Publish;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Publisher
@@ -39,26 +38,26 @@ class Publisher
     private $teaserManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
-     * @param ElementService           $elementService
-     * @param TreeManager              $treeManager
-     * @param TeaserManagerInterface   $teaserManager
-     * @param SecurityContextInterface $securityContext
+     * @param ElementService                $elementService
+     * @param TreeManager                   $treeManager
+     * @param TeaserManagerInterface        $teaserManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         ElementService $elementService,
         TreeManager $treeManager,
         TeaserManagerInterface $teaserManager,
-        SecurityContextInterface $securityContext)
+        AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->elementService = $elementService;
         $this->treeManager = $treeManager;
         $this->teaserManager = $teaserManager;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
 
         /*
         $this->_versionSelect = $db->select()
@@ -251,8 +250,8 @@ class Publisher
                 $include = true;
             }
         }
-        if (!$this->securityContext->isGranted('ROLE_SUPER_ADMIN', $treeNode)) {
-            if (!$this->securityContext->isGranted($treeNode, ['right' => 'PUBLISH', 'language' => $language])) {
+        if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN', $treeNode)) {
+            if (!$this->authorizationChecker->isGranted($treeNode, ['right' => 'PUBLISH', 'language' => $language])) {
                 $include = false;
             }
         }

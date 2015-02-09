@@ -9,10 +9,9 @@
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Get config listener
@@ -32,9 +31,9 @@ class GetConfigListener
     private $treeManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
      * @var bool
@@ -62,19 +61,19 @@ class GetConfigListener
     private $availableLanguages;
 
     /**
-     * @param SiterootManagerInterface $siterootManager
-     * @param TreeManager              $treeManager
-     * @param SecurityContextInterface $securityContext
-     * @param bool                     $publishCommentRequired
-     * @param bool                     $publishConfirmRequired
-     * @param bool                     $createUseMultilanguage
-     * @param bool                     $createRestricted
-     * @param string                   $availableLanguages
+     * @param SiterootManagerInterface      $siterootManager
+     * @param TreeManager                   $treeManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param bool                          $publishCommentRequired
+     * @param bool                          $publishConfirmRequired
+     * @param bool                          $createUseMultilanguage
+     * @param bool                          $createRestricted
+     * @param string                        $availableLanguages
      */
     public function __construct(
         SiterootManagerInterface $siterootManager,
         TreeManager $treeManager,
-        SecurityContextInterface $securityContext,
+        AuthorizationCheckerInterface $authorizationChecker,
         $publishCommentRequired,
         $publishConfirmRequired,
         $createUseMultilanguage,
@@ -84,7 +83,7 @@ class GetConfigListener
     {
         $this->siterootManager = $siterootManager;
         $this->treeManager = $treeManager;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
         $this->publishCommentRequired = $publishCommentRequired;
         $this->publishConfirmRequired = $publishConfirmRequired;
         $this->createUseMultilanguage = $createUseMultilanguage;
@@ -113,7 +112,7 @@ class GetConfigListener
         foreach ($siteroots as $siteroot) {
             $siterootId = $siteroot->getId();
 
-            if ($this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            if ($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
                 $siterootLanguages[$siterootId] = $allLanguages;
             } else {
                 $siterootLanguages[$siterootId] = [];
@@ -122,7 +121,7 @@ class GetConfigListener
                     $tree = $this->treeManager->getBySiterootId($siterootId);
                     $root = $tree->getRoot();
 
-                    if (!$this->securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $root)) {
+                    if (!$this->authorizationChecker->isGranted(['right' => 'VIEW', 'language' => $language], $root)) {
                         continue;
                     }
 

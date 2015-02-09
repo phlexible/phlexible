@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\GuiBundle\Event;
 
 use Phlexible\Bundle\GuiBundle\Config\Config;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Get config event

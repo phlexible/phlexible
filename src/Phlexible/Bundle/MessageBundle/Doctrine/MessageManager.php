@@ -14,8 +14,6 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Entity\Repository\MessageRepository;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Doctrine message manager

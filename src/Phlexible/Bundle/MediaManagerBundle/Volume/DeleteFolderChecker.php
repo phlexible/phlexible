@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Volume;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FolderUsage;
 use Phlexible\Component\Volume\Model\FolderInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Delete folder checker
@@ -26,19 +26,27 @@ class DeleteFolderChecker
     private $entityManager;
 
     /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
      * @var string
      */
     private $deletePolicy;
 
     /**
-     * @param EntityManager            $entityManager
-     * @param SecurityContextInterface $securityContext
-     * @param string                   $deletePolicy
+     * @param EntityManager                 $entityManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param string                        $deletePolicy
      */
-    public function __construct(EntityManager $entityManager, SecurityContextInterface $securityContext, $deletePolicy)
+    public function __construct(
+        EntityManager $entityManager,
+        AuthorizationCheckerInterface $authorizationChecker,
+        $deletePolicy)
     {
         $this->entityManager = $entityManager;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
         $this->deletePolicy = $deletePolicy;
     }
 
@@ -49,7 +57,7 @@ class DeleteFolderChecker
      */
     public function isDeleteAllowed(FolderInterface $folder)
     {
-        if (!$this->securityContext->isGranted('FOLDER_DELETE', $folder)) {
+        if (!$this->authorizationChecker->isGranted('FOLDER_DELETE', $folder)) {
             return false;
         }
 

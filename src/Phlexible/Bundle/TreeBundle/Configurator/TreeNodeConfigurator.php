@@ -19,7 +19,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Element configurator
@@ -44,26 +44,26 @@ class TreeNodeConfigurator implements ConfiguratorInterface
     private $elementService;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
-     * @param EventDispatcherInterface $dispatcher
-     * @param LoggerInterface          $logger
-     * @param ElementService           $elementService
-     * @param SecurityContextInterface $securityContext
+     * @param EventDispatcherInterface      $dispatcher
+     * @param LoggerInterface               $logger
+     * @param ElementService                $elementService
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
         ElementService $elementService,
-        SecurityContextInterface $securityContext)
+        AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
         $this->elementService = $elementService;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -83,7 +83,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
 
         if (0) {
             // || $renderRequest->getVersionStrategy() === 'latest')
-            if (!$this->securityContext->isGranted('VIEW', $treeNode)) {
+            if (!$this->authorizationChecker->isGranted('VIEW', $treeNode)) {
                 $this->logger->debug('403 Forbidden du to missing VIEW content right');
 
                 throw new \Makeweb_Renderers_Exception('Forbidden', 403);

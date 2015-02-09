@@ -12,7 +12,7 @@ use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
 use Phlexible\Bundle\TaskBundle\Model\TaskManagerInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Load data listener
@@ -32,24 +32,24 @@ class LoadDataListener
     private $userManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
-     * @param TaskManagerInterface     $taskManager
-     * @param UserManagerInterface     $userManager
-     * @param SecurityContextInterface $securityContext
+     * @param TaskManagerInterface  $taskManager
+     * @param UserManagerInterface  $userManager
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         TaskManagerInterface $taskManager,
         UserManagerInterface $userManager,
-        SecurityContextInterface $securityContext
+        TokenStorageInterface $tokenStorage
     )
     {
         $this->taskManager = $taskManager;
         $this->userManager = $userManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -95,7 +95,7 @@ class LoadDataListener
 
         $createUserId = $task->getCreateUserId();
         $assignedUserId = $task->getAssignedUserId();
-        $currentUserId = $this->securityContext->getToken()->getUser()->getId();
+        $currentUserId = $this->tokenStorage->getToken()->getUser()->getId();
 
         $type = '';
         if ($task->getAssignedUserId() === $currentUserId) {
