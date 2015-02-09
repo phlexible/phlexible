@@ -89,7 +89,7 @@ class CssBuilder
 
         }
 
-        return file_get_contents((string) $cache);
+        return (string) $cache;
     }
 
     /**

@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\GuiBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,9 +31,9 @@ class AssetController extends Controller
     public function scriptsAction()
     {
         $scriptsBuilder = $this->get('phlexible_gui.asset.builder.scripts');
-        $content = $scriptsBuilder->build();
+        $file = $scriptsBuilder->build();
 
-        return new Response($content, 200, ['Content-type' => 'text/javascript']);
+        return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/javascript'));
     }
 
     /**
@@ -46,9 +47,9 @@ class AssetController extends Controller
     public function cssAction(Request $request)
     {
         $cssBuilder = $this->get('phlexible_gui.asset.builder.css');
-        $content = $cssBuilder->build($request->getBaseUrl(), $request->getBasePath());
+        $file = $cssBuilder->build($request->getBaseUrl(), $request->getBasePath());
 
-        return new Response($content, 200, ['Content-type' => 'text/css']);
+        return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/css;charset=UTF-8'));
     }
 
     /**
@@ -62,9 +63,9 @@ class AssetController extends Controller
     public function iconsAction(Request $request)
     {
         $iconsBuilder = $this->get('phlexible_gui.asset.builder.icons');
-        $content = $iconsBuilder->build($request->getBaseUrl(), $request->getBasePath());
+        $file = $iconsBuilder->build($request->getBaseUrl(), $request->getBasePath());
 
-        return new Response($content, 200, ['Content-type' => 'text/css']);
+        return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/css;charset=UTF-8'));
     }
 
     /**
@@ -79,9 +80,9 @@ class AssetController extends Controller
     public function translationsAction(Request $request, $language)
     {
         $translationBuilder = $this->get('phlexible_gui.asset.builder.translations');
-        $content = $translationBuilder->build($language);
+        $file = $translationBuilder->build($language);
 
-        return new Response($content, 200, ['Content-type' => 'text/javascript']);
+        return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/javascript;charset=UTF-8'));
     }
 }
 

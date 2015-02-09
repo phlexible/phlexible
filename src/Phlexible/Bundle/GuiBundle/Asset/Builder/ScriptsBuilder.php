@@ -88,7 +88,7 @@ class ScriptsBuilder
 
         }
 
-        return file_get_contents((string) $cache);
+        return (string) $cache;
     }
 
     /**

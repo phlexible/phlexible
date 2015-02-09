@@ -89,7 +89,7 @@ class TranslationsBuilder
         $content = $this->buildTranslations($translations);
         file_put_contents($cacheFilename, $content);
 
-        return $content;
+        return $cacheFilename;
     }
 
     /**
