@@ -1,6 +1,6 @@
 Ext.provide('Phlexible.elements.RoutingPanel');
 
-Phlexible.elements.RoutingPanel = Ext.extend(Ext.Panel, {
+Phlexible.elements.RoutingPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.elements.Strings.routing.routing,
     iconCls: 'p-element-routing-icon',
     strings: Phlexible.elements.Strings.routing,
@@ -153,7 +153,9 @@ Phlexible.elements.RoutingPanel = Ext.extend(Ext.Panel, {
     onRealLoad: function () {
         //this.store.load();
         //this.getComponent(0).getComponent(0).setValue(this.element.urls.preview);
-        this.getComponent(0).getComponent(1).setValue(this.element.properties.page_title);
+        this.getForm().setValues({
+            path: this.element.data.urls.online || this.element.data.urls.preview
+        });
     }
 });
 
