@@ -160,7 +160,6 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         $specialTidElements = $element->getElementsByTagName('specialTid');
 
         $siteroot = new Siteroot();
-        $siteroot->setContentChannels([1 => true]);
 
         foreach ($urlElements as $urlElement) {
             /* @var $urlElement \DOMElement */

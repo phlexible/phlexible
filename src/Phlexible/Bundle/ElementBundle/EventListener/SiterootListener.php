@@ -94,7 +94,6 @@ class SiterootListener
             ->setType('tab')
             ->setLabels(['fieldLabel' => ['de' => 'Daten', 'en' => 'Data']])
             ->setConfiguration([])
-            ->setContentChannels([])
             ->setValidation([]);
 
         $textfield = new ElementtypeStructureNode();
@@ -106,7 +105,6 @@ class SiterootListener
             ->setType('textfield')
             ->setLabels(['fieldLabel' => ['de' => 'Titel', 'en' => 'Title']])
             ->setConfiguration(['required' => 'always'])
-            ->setContentChannels([])
             ->setValidation([]);
 
         $elementtypeStructure

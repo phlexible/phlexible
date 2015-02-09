@@ -41,7 +41,6 @@ class PreviewController extends Controller
         $node = $tree->get($treeId);
 
         $siteroot = $siterootManager->find($node->getTree()->getSiterootId());
-        $siteroot->setContentChannels([1 => 1]);
         $siterootUrl = $siteroot->getDefaultUrl();
 
         $request->setLocale($language);
