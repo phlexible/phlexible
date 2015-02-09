@@ -49,17 +49,41 @@ class Config
      */
     public function get($key)
     {
-        if (!isset($this->values[$key])) {
-            throw new InvalidArgumentException("Key $key not set.");
+        if (!$this->has($key)) {
+            throw new InvalidArgumentException("Config key $key not set.");
         }
 
         return $this->values[$key];
     }
 
     /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        return isset($this->values[$key]);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function remove($key)
+    {
+        if ($this->has($key)) {
+            unset($this->values[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
-    public function getAll()
+    public function all()
     {
         ksort($this->values);
 

@@ -479,6 +479,10 @@
             "install-path": "vendor/michelf/php-markdown",
             "installer": "composer"
         },
+        "mikey179/vfsstream": {
+            "install-path": "vendor/mikey179/vfsStream",
+            "installer": "composer"
+        },
         "monolog/monolog": {
             "install-path": "vendor/monolog/monolog",
             "installer": "composer"

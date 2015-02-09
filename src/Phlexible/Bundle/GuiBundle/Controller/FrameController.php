@@ -59,10 +59,10 @@ class FrameController extends Controller
      */
     public function configAction()
     {
-        $configBuilder = $this->get('phlexible_gui.builder.config');
-        $config = $configBuilder->toArray();
+        $configBuilder = $this->get('phlexible_gui.config_builder');
+        $config = $configBuilder->build();
 
-        return new JsonResponse($config->getAll());
+        return new JsonResponse($config->all());
     }
 
     /**

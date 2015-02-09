@@ -18,11 +18,11 @@ interface CompressorInterface
     /**
      * Compress given string
      *
-     * @param string $string
+     * @param string $buffer
      *
      * @return string
      */
-    public function compressString($string);
+    public function compressString($buffer);
 
     /**
      * Compress given file

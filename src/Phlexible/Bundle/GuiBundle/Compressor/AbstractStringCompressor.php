@@ -26,8 +26,7 @@ abstract class AbstractStringCompressor implements CompressorInterface
         $string = file_get_contents($filename);
         $compressedString = $this->compressString($string);
 
-        $filesystem = new Filesystem();
-        $filesystem->dumpFile($filename, $compressedString);
+        file_put_contents($filename, $compressedString);
 
         return $filename;
     }
@@ -48,6 +47,7 @@ abstract class AbstractStringCompressor implements CompressorInterface
         $compressedString = $this->compressString($string);
         $stream = fopen('php://memory', 'b+');
         fwrite($stream, $compressedString);
+        rewind($stream);
 
         return $stream;
     }

@@ -18,8 +18,14 @@ class SimpleCssCompressor extends AbstractStringCompressor
     /**
      * {@inheritdoc}
      */
-    public function compressString($string)
+    public function compressString($buffer)
     {
-        return $string;
+        $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
+        $buffer = str_replace(["\r\n","\r","\n","\t",'  ','    ','     '], '', $buffer);
+        $buffer = preg_replace(['(( )+{)','({( )+)'], '{', $buffer);
+        $buffer = preg_replace(['(( )+})','(}( )+)','(;( )*})'], '}', $buffer);
+        $buffer = preg_replace(['(;( )+)','(( )+;)'], ';', $buffer);
+
+        return $buffer;
     }
 }
