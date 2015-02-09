@@ -328,8 +328,7 @@ class UsersController extends Controller
             $user->setExpiresAt(new \DateTime($request->get('expires')));
         } else {
             /**
-             * @todo fix with FosUserBundle 2.0
-             *
+             * @TODO fix with FosUserBundle 2.0
              */
             $reflectedUser      = new \ReflectionClass(get_class($user));
             $reflectionProperty = $reflectedUser->getProperty('expiresAt');
