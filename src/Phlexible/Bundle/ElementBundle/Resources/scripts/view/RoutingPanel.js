@@ -12,17 +12,79 @@ Phlexible.elements.RoutingPanel = Ext.extend(Ext.Panel, {
         });
 
         this.items = [{
-            xtype: 'form',
-            border: false,
-            bodyStyle: 'padding: 5px',
+            xtype: 'fieldset',
+            title: this.strings.route,
             items: [{
                 xtype: 'textfield',
-                fieldLabel: this.strings.url,
+                name: 'name',
+                fieldLabel: this.strings.name,
                 width: 300
             },{
                 xtype: 'textfield',
-                fieldLabel: this.strings.slug,
+                name: 'path',
+                fieldLabel: this.strings.path,
                 width: 300
+            },{
+                xtype: 'textfield',
+                name: 'defaults',
+                fieldLabel: this.strings.defaults,
+                width: 300
+            },{
+                xtype: 'textfield',
+                name: 'method',
+                fieldLabel: this.strings.method,
+                width: 300
+            }]
+        }, {
+            xtype: 'fieldset',
+            title: this.strings.route,
+            items: [{
+                xtype: 'checkbox',
+                name: 'https',
+                hideLabel: true,
+                boxLabel: this.strings.https
+            }, {
+                xtype: 'textfield',
+                name: 'controller',
+                fieldLabel: this.strings.controller
+            }, {
+                xtype: 'textfield',
+                name: 'template',
+                fieldLabel: this.strings.template
+            }]
+        },{
+            xtype: 'fieldset',
+            title: this.strings.security,
+            items: [{
+                xtype: 'textfield',
+                name: this.strings.security,
+                fieldLabel: this.strings.security,
+                width: 300
+            }]
+        },{
+            xtype: 'fieldset',
+            title: 'cache',
+            items: [{
+                xtype: 'textfield',
+                name: 'expires',
+                fieldLabel: this.strings.expires
+            },{
+                xtype: 'checkbox',
+                name: 'public',
+                hideLabel: true,
+                boxLabel: this.strings.public
+            },{
+                xtype: 'numberfield',
+                name: 'maxage',
+                fieldLabel: this.strings.maxage
+            },{
+                xtype: 'numberfield',
+                name: 'smaxage',
+                fieldLabel: this.strings.smaxage
+            },{
+                xtype: 'textfield',
+                name: 'vary',
+                fieldLabel: this.strings.vary
             }]
         },{
             xtype: 'panel',

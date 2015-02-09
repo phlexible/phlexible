@@ -290,28 +290,32 @@ elements:
 
     routing:
         routing: Routing
-        url: URL
-        slug: Slug
+        route: Route
+        name: Name
+        path: Pfad
+        defaults: Defaults
+        method: Method
+        https: HTTPS
+        controller: Controller
+        templte: Template
+        security: Security
+        cache: Cache
+        expires: Expires
+        public: Public
+        maxage: Maxage
+        smaxage: Shared Maxage
+        vary: Vary
         old_urls: Old URLs
 
     configuration:
         configuration: Configuration
         in_navigation: 'in Navigation'
-        need_authentication: Need Authentication
-        use_https: 'use HTTPS'
-        route: Route
-        controller: Controller
         template: Template
         robots: Robots
         robots_no_follow: No Follow
         robots_no_index: No Index
         internal_search: Internal Search
         search_no_index: Don't index
-        caching: Caching
-        no_cache: Don't cache
-        private: Private
-        max_age: Max Age
-        shared_max_age: Shared Max Age
 
     preview:
         preview: Preview
