@@ -1,0 +1,28 @@
+{
+    "version": "1.0",
+    "name": "phlexible/user-bundle",
+    "resources": {
+        "/phlexible/phlexibleuser/icons": "src/Phlexible/Bundle/UserBundle/Resources/public/icons",
+        "/phlexible/phlexibleuser/menu": "src/Phlexible/Bundle/UserBundle/Resources/menu",
+        "/phlexible/phlexibleuser/scripts": "src/Phlexible/Bundle/UserBundle/Resources/scripts",
+        "/phlexible/phlexibleuser/styles": "src/Phlexible/Bundle/UserBundle/Resources/styles"
+    },
+    "bindings": {
+        "47bfe98b-d3ec-5655-a57d-cfef98ba3d11": {
+            "query": "/phlexible/phlexibleuser/icons/*.png",
+            "type": "phlexible/icons"
+        },
+        "91e252eb-6da1-59c4-aef8-e6688ffac9a8": {
+            "query": "/phlexible/phlexibleuser/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "be349132-be9f-519a-87be-bcb003bfc1e9": {
+            "query": "/phlexible/phlexibleuser/scripts/**.js",
+            "type": "phlexible/scripts"
+        },
+        "21d5bc59-f1a3-5f15-a1b2-15c0d0d080b0": {
+            "query": "/phlexible/phlexibleuser/styles/**.css",
+            "type": "phlexible/styles"
+        }
+    }
+}

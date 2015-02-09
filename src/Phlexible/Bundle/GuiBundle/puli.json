@@ -1,6 +1,6 @@
 {
     "version": "1.0",
-    "name": "phlexible/phlexible",
+    "name": "phlexible/gui-bundle",
     "resources": {
         "/phlexible/phlexiblegui/icons": "src/Phlexible/Bundle/GuiBundle/Resources/public/icons",
         "/phlexible/phlexiblegui/menu": "src/Phlexible/Bundle/GuiBundle/Resources/menu",

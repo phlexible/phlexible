@@ -1,0 +1,38 @@
+{
+    "name": "phlexible/user-bundle",
+    "description": "phlexible",
+    "license": "proprietary",
+    "type": "symfony-bundle",
+    "keywords": ["phlexible"],
+    "autoload": {
+        "psr-4": {
+            "Phlexible\\Bundle\\UserBundle\\": ""
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "friendsofsymfony/user-bundle": "~1.3",
+        "symfony/framework-bundle": "~2.3"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.brainbits.net/phlexible-bundles/",
+            "options": {
+                "ssl": {
+                    "allow_self_signed": "true"
+                }
+            }
+        }
+    ],
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

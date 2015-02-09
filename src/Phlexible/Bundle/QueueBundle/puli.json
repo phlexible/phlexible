@@ -1,6 +1,6 @@
 {
     "version": "1.0",
-    "name": "phlexible/phlexible",
+    "name": "phlexible/queue-bundle",
     "resources": {
         "/phlexible/phlexiblequeue/icons": "src/Phlexible/Bundle/QueueBundle/Resources/public/icons",
         "/phlexible/phlexiblequeue/menu": "src/Phlexible/Bundle/QueueBundle/Resources/menu",
