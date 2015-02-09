@@ -201,8 +201,8 @@ class SiterootSaver
             $url = new Url();
             $url
                 ->setSiteroot($siteroot)
-                ->setDefault($row['default'])
-                ->setGlobalDefault($row['global_default'])
+                ->setDefault(!empty($row['default']))
+                ->setGlobalDefault(!empty($row['global_default']))
                 ->setHostname($row['hostname'])
                 ->setLanguage($row['language'])
                 ->setTarget($row['target']);
@@ -215,8 +215,8 @@ class SiterootSaver
                 if ($url->getId() === $row['id']) {
                     $url
                         ->setSiteroot($siteroot)
-                        ->setDefault($row['default'])
-                        ->setGlobalDefault($row['global_default'])
+                        ->setDefault(!empty($row['default']))
+                        ->setGlobalDefault(!empty($row['global_default']))
                         ->setHostname($row['hostname'])
                         ->setLanguage($row['language'])
                         ->setTarget($row['target']);
