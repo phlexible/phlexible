@@ -1,2 +1,2 @@
-Phlexible User Bundle
-=====================
+Phlexible Dashboard Bundle
+==========================
