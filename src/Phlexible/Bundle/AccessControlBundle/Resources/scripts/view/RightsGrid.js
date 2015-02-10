@@ -1,4 +1,6 @@
 Ext.provide('Phlexible.accesscontrol.RightsGrid');
+
+Ext.require('Phlexible.accesscontrol.model.AccessControlEntry');
 Ext.require('Ext.ux.IconCombo');
 Ext.require('Ext.ux.grid.RowActions');
 
@@ -52,7 +54,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 var fields = [
                     {
                         header: this.strings.id,
-                        dataIndex: 'object_id',
+                        dataIndex: 'objectId',
                         width: 100,
                         hidden: true,
                         sortable: true
@@ -115,8 +117,8 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                                     var subjectRecord = this.selModel.getSelected();
                                     this.store.each(function (record) {
                                         if (subjectRecord.id !== record.id &&
-                                            subjectRecord.data.object_type == record.data.object_type &&
-                                            subjectRecord.data.object_id == record.data.object_id) {
+                                            subjectRecord.data.objectType == record.data.objectType &&
+                                            subjectRecord.data.objectId == record.data.objectId) {
                                             if ((index < 1 && record.data.language != '_all_') ||
                                                 (index >= 1 && (
                                                     record.data.language == '_all_' ||
@@ -211,7 +213,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             width: 70,
             actions: [
                 {
-                    showIndex: 'set_here',
+                    showIndex: 'setHere',
                     iconCls: 'p-accesscontrol-delete-icon',
                     tooltip: this.strings['delete'],
                     callback: this.deleteAction
@@ -234,23 +236,10 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         this.store = new Ext.data.JsonStore({
             url: this.urls.subjects,
             root: 'subjects',
-            fields: [
-                'type',
-                'object_type',
-                'object_id',
-                'label',
-                'language',
-                'rights',
-                'original',
-                'above',
-                'inherited',
-                'set_here',
-                'restore',
-                'new'
-            ],
+            fields: Phlexible.accesscontrol.model.AccessControlEntry,
             baseParams: {
                 contentClass: this.contentClass,
-                content_id: null
+                contentId: null
             }
         });
 
@@ -258,7 +247,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             //this.expander,
             {
                 header: this.strings.id,
-                dataIndex: 'object_id',
+                dataIndex: 'objectId',
                 width: 30,
                 hidden: true,
                 sortable: true
@@ -304,19 +293,19 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 store: new Ext.data.JsonStore({
                     url: this.urls.users,
                     root: 'data',
-                    id: 'object_id',
+                    id: 'objectId',
                     totalProperty: 'total',
                     fields: [
                         'type',
-                        'object_type',
-                        'object_id',
+                        'objectType',
+                        'objectId',
                         'label'
                     ],
                     autoLoad: false
                 }),
                 pageSize: 20,
                 displayField: 'label',
-                valueField: 'object_id',
+                valueField: 'objectId',
                 emptyText: this.strings.users,
                 selectOnFocus: true,
                 mode: 'remote',
@@ -340,17 +329,17 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 store: new Ext.data.JsonStore({
                     url: this.urls.groups,
                     root: 'data',
-                    id: 'object_id',
+                    id: 'objectId',
                     fields: [
                         'type',
-                        'object_type',
-                        'object_id',
+                        'objectType',
+                        'objectId',
                         'label'
                     ],
                     autoLoad: false
                 }),
                 displayField: 'label',
-                valueField: 'object_id',
+                valueField: 'objectId',
                 emptyText: this.strings.groups,
                 selectOnFocus: true,
                 mode: 'remote',
@@ -482,7 +471,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 record.set('label', 'xxx');
                 record.set('label', dummy);
                 record.set('restore', 1);
-                record.set('inherited', !record.get('set_here'));
+                record.set('inherited', !record.get('setHere'));
                 record.endEdit();
             },
             scope: this
@@ -491,10 +480,10 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         Phlexible.accesscontrol.RightsGrid.superclass.initComponent.call(this);
     },
 
-    doLoad: function (content_type, content_id) {
-        if (this.content_type !== content_type || this.content_id !== content_id) {
-            this.content_type = content_type;
-            this.content_id = content_id;
+    doLoad: function (contentType, contentId) {
+        if (this.contentType !== contentType || this.contentId !== contentId) {
+            this.contentType = contentType;
+            this.contentId = contentId;
 
             this.store.removeAll();
 
@@ -502,7 +491,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
             this.store.baseParams = {
                 contentClass: this.contentClass,
-                content_id: content_id
+                contentId: contentId
             };
             this.store.load();
         }
@@ -518,10 +507,10 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         grid.store.remove(record);
 
         grid.deletedSubjects.push({
-            content_type: grid.content_type,
-            content_id: grid.content_id,
-            object_type: record.data.object_type,
-            object_id: record.data.object_id,
+            contentType: grid.contentType,
+            contentId: grid.contentId,
+            objectType: record.data.objectType,
+            objectId: record.data.objectId,
             language: record.data.language
         });
     },
@@ -577,7 +566,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         record.set('rights', false);
         record.set('rights', rights);
         record.set('restore', 0);
-        record.set('inherited', !record.get('set_here'));
+        record.set('inherited', !record.get('setHere'));
         var dummy = record.data.label;
         record.set('label', 'xxx');
         record.set('label', dummy);
@@ -598,24 +587,24 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             url: this.urls.add,
             params: {
                 contentClass: this.contentClass,
-                content_id: this.content_id,
-                object_type: r.data.object_type,
-                object_id: r.data.object_id
+                contentId: this.contentId,
+                objectType: r.data.objectType,
+                objectId: r.data.objectId
             },
             success: function (response) {
                 var data = Ext.decode(response.responseText);
 
                 var newRecord = new Ext.data.Record({
                     type: data.type,
-                    object_type: data.object_type,
-                    object_id: data.object_id,
+                    objectType: data.objectType,
+                    objectId: data.objectId,
                     label: data.label,
                     rights: data.rights,
                     original: data.original,
                     above: data.above,
                     language: language,
                     inherited: 0,
-                    set_here: 1,
+                    setHere: 1,
                     restore: 0,
                     'new': 1
                 });
@@ -635,8 +624,8 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         for (var i = 0; i < mr.length; i++) {
             var skip = false;
             for (var j = 0; j < deleted.length; j++) {
-                if (deleted[j].object_type == mr[i].data.object_type &&
-                    deleted[j].object_id == mr[i].data.object_id) {
+                if (deleted[j].objectType == mr[i].data.objectType &&
+                    deleted[j].objectId == mr[i].data.objectId) {
                     skip = true;
                     break;
                 }
@@ -647,10 +636,10 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             }
 
             modified.push({
-                object_type: mr[i].data.object_type,
-                object_id: mr[i].data.object_id,
-                content_type: this.content_type,
-                content_id: this.content_id,
+                objectType: mr[i].data.objectType,
+                objectId: mr[i].data.objectId,
+                contentType: this.contentType,
+                contentId: this.contentId,
                 language: mr[i].data.language,
                 rights: mr[i].data.rights
             });

@@ -42,7 +42,7 @@ class UserProvider implements ProviderInterface
     {
         $user = $this->userManager->find($objectId);
 
-        return $user->getFirstname() . ' ' . $user->getLastname();
+        return $user->getDisplayName();
     }
 
     /**
@@ -61,13 +61,13 @@ class UserProvider implements ProviderInterface
 
         $data = [];
         foreach ($users as $user) {
-            $name = $user->getFirstname() . ' ' . $user->getLastname();
+            $name = $user->getDisplayName();
 
             $data[] = [
-                'type'        => 'user',
-                'object_type' => 'uid',
-                'object_id'   => $user->getId(),
-                'label'       => $name
+                'type'       => 'user',
+                'objectType' => 'uid',
+                'objectId'   => $user->getId(),
+                'label'      => $name
             ];
         }
 

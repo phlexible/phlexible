@@ -38,19 +38,19 @@ Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
         }
     },
 
-    lazyLoad: function (tid, teaser_id) {
-        var content_type, content_id;
+    lazyLoad: function (tid, teaserId) {
+        var contentType, contentId;
 
-        if (teaser_id && teaser_id !== undefined) {
-            content_type = 'teaser';
-            content_id = teaser_id;
+        if (teaserId && teaserId !== undefined) {
+            contentType = 'teaser';
+            contentId = teaserId;
         }
         else {
-            content_type = 'treenode';
-            content_id = tid;
+            contentType = 'treenode';
+            contentId = tid;
         }
 
-        this.doLoad(content_type, content_id);
+        this.doLoad(contentType, contentId);
     },
 
     onGetLock: function (element) {

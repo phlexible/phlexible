@@ -60,10 +60,10 @@ class GroupProvider implements ProviderInterface
         $data = [];
         foreach ($groups as $group) {
             $data[] = [
-                'type'        => 'group',
-                'object_type' => 'gid',
-                'object_id'   => $group->getId(),
-                'label'       => $group->getName(),
+                'type'       => 'group',
+                'objectType' => 'gid',
+                'objectId'   => $group->getId(),
+                'label'      => $group->getName(),
             ];
         }
 

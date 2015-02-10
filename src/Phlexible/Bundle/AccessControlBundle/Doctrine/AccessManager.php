@@ -66,7 +66,7 @@ class AccessManager implements AccessManagerInterface
     }
 
     /**
-     * @param array  $criteria
+     * @param array $criteria
      *
      * @return array
      */

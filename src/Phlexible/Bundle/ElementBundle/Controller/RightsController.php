@@ -31,14 +31,13 @@ class RightsController extends Controller
      */
     public function addAction(Request $request)
     {
-        $rightType = $request->get('right_type', null);
-        $contentType = $request->get('content_type', null);
-        $contentId = $request->get('content_id', null);
-        $objectType = $request->get('object_type', null);
-        $objectId = $request->get('object_id', null);
+        $contentClass = $request->get('contentClass', null);
+        $contentId = $request->get('contentId', null);
+        $objectType = $request->get('objectType', null);
+        $objectId = $request->get('objectId', null);
 
         $abovePath = [];
-        if ($contentType === 'teaser') {
+        if ($contentClass === 'teaser') {
             $path = [$contentId];
         } else {
             $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($contentId);
@@ -51,12 +50,11 @@ class RightsController extends Controller
             }
         }
 
-        $contentRightsHelper = $container->contentRightsHelper;
-        $contentRights = array_keys($contentRightsHelper->getRights($rightType, $contentType));
+        $permissions = $this->get('phlexible_access_control.permissions');
         $rights = [];
-        foreach ($contentRights as $right) {
-            $rights[$right] = [
-                'right'  => $right,
+        foreach ($permissions->getByContentClass($contentClass) as $permission) {
+            $rights[$permission->getName()] = [
+                'right'  => $permission->getName(),
                 'status' => -1,
                 'info'   => '',
             ];
@@ -69,32 +67,32 @@ class RightsController extends Controller
             $name = $userProvider->getName($objectType, $objectId);
 
             $subject = [
-                'type'        => 'user',
-                'object_type' => 'uid',
-                'object_id'   => $objectId,
-                'label'       => $name,
-                'rights'      => $rights,
-                'original'    => $rights,
-                'above'       => $rights,
-                'language'    => '_all_',
-                'inherited'   => 0,
-                'restore'     => 0,
+                'type'       => 'user',
+                'objectType' => 'uid',
+                'objectId'   => $objectId,
+                'label'      => $name,
+                'rights'     => $rights,
+                'original'   => $rights,
+                'above'      => $rights,
+                'language'   => '_all_',
+                'inherited'  => 0,
+                'restore'    => 0,
             ];
         } elseif ($objectType === 'gid') {
             $groupProvider = $this->get('phlexible_access_control.provider.group');
             $name = $groupProvider->getName($objectType, $objectId);
 
             $subject = [
-                'type'        => 'group',
-                'object_type' => 'gid',
-                'object_id'   => $objectId,
-                'label'       => $name,
-                'rights'      => $rights,
-                'original'    => $rights,
-                'above'       => $rights,
-                'language'    => '_all_',
-                'inherited'   => 0,
-                'restore'     => 0,
+                'type'       => 'group',
+                'objectType' => 'gid',
+                'objectId'   => $objectId,
+                'label'      => $name,
+                'rights'     => $rights,
+                'original'   => $rights,
+                'above'      => $rights,
+                'language'   => '_all_',
+                'inherited'  => 0,
+                'restore'    => 0,
             ];
         }
 
@@ -110,7 +108,7 @@ class RightsController extends Controller
     public function subjectsAction(Request $request)
     {
         $contentClass = $request->get('contentClass');
-        $contentId = $request->get('content_id', null);
+        $contentId = $request->get('contentId', null);
 
         $subjects = [];
 
@@ -123,9 +121,17 @@ class RightsController extends Controller
         }
 
         $userManager = $this->get('phlexible_user.user_manager');
-        $contentRightsManager = $this->getContainer()->contentRightsManager;
-        $contentRightsHelper = $this->getContainer()->contentRightsHelper;
+        $accessManager = $this->get('phlexible_access_control.access_manager');
+        $permissions = $this->get('phlexible_access_control.permissions');
+        $contentRights = [];
+        foreach ($permissions->getByContentClass($contentClass) as $permission) {
+            $contentRights[] = $permission->getName();
+        }
 
+        $rightsData = $accessManager->findBy(array('contentClass' => $contentClass, 'contentId' => $contentId));
+        return new JsonResponse(['subjects' => $rightsData]);
+        dump($rightsData);
+        die;
         $rightsData = $contentRightsManager->getRightsData(['uid', 'gid'], $rightType, $contentType, $path);
 
         $contentRights = array_keys($contentRightsHelper->getRights($rightType, $contentType));
