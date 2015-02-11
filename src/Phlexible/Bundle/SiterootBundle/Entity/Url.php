@@ -61,7 +61,7 @@ class Url
     /**
      * @var Siteroot
      * @ORM\ManyToOne(targetEntity="Siteroot", inversedBy="urls")
-     * @ORM\JoinColumn(name="siteroot_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="siteroot_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $siteroot;
 
