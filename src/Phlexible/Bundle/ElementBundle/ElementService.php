@@ -207,7 +207,7 @@ class ElementService
     /**
      * @param string $elementtypeId
      *
-     * @return Elementtype
+     * @return ElementSource
      */
     public function findElementSource($elementtypeId)
     {
