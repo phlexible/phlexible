@@ -131,6 +131,10 @@ class MediaSiteListener implements EventSubscriberInterface
         try {
             $mediaType = $this->mediaTypeManager->findByMimetype($fileSource->getMimeType());
         } catch (\Exception $e) {
+            $mediaType = null;
+        }
+
+        if (!$mediaType) {
             $mediaType = $this->mediaTypeManager->find('binary');
         }
 
