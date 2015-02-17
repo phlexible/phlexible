@@ -32,11 +32,12 @@ class TitleSearch extends AbstractSearch
         $qb
             ->select('t.id', 't.siteroot_id')
             ->from('element_version_mapped_field', 'evmf')
-            ->join('evmf', 'element', 'e', 'evmf.eid = e.eid AND evmf.version = e.latest_version AND evmf.language = ' . $qb->expr()->literal($this->getDefaultLanguage()))
-            ->join('evmf', 'tree', 't', 'evmf.eid = t.eid')
-            ->where($qb->expr()->like('evmf.backend', $qb->expr()->literal("%query%")))
-            ->andWhere('evmf.language = ?', $this->getDefaultLanguage())
-            ->orderBy('evmf.backend ASC');
+            ->join('evmf', 'element_version', 'ev', 'evmf.element_version_id = ev.id AND evmf.language = ' . $qb->expr()->literal($this->getDefaultLanguage()))
+            ->join('ev', 'element', 'e', 'ev.eid = e.eid AND ev.version = e.latest_version')
+            ->join('e', 'tree', 't', 'e.eid = t.type_id')
+            ->where($qb->expr()->like('evmf.backend', $qb->expr()->literal("%$query%")))
+            ->andWhere($qb->expr()->eq('evmf.language', $qb->expr()->literal($this->getDefaultLanguage())))
+            ->orderBy('evmf.backend');
 
         $rows = $this->getConnection()->fetchAll($qb->getSQL());
 

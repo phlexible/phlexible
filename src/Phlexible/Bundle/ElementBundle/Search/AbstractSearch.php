@@ -10,7 +10,12 @@ namespace Phlexible\Bundle\ElementBundle\Search;
 
 use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
+use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
+use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Abstract element search
@@ -30,19 +35,54 @@ abstract class AbstractSearch implements SearchProviderInterface
     private $elementService;
 
     /**
+     * @var TreeManager
+     */
+    private $treeManager;
+
+    /**
+     * @var SiterootManagerInterface
+     */
+    private $siterootManager;
+
+    /**
+     * @var IconResolver
+     */
+    private $iconResolver;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
      * @var string
      */
     private $defaultLanguage;
 
     /**
-     * @param Connection     $connection
-     * @param ElementService $elementService
-     * @param string         $defaultLanguage
+     * @param Connection                    $connection
+     * @param ElementService                $elementService
+     * @param TreeManager                   $treeManager
+     * @param SiterootManagerInterface      $siterootManager
+     * @param IconResolver                  $iconResolver
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param string                        $defaultLanguage
      */
-    public function __construct(Connection $connection, ElementService $elementService, $defaultLanguage)
+    public function __construct(
+        Connection $connection,
+        ElementService $elementService,
+        TreeManager $treeManager,
+        SiterootManagerInterface $siterootManager,
+        IconResolver $iconResolver,
+        AuthorizationCheckerInterface $authorizationChecker,
+        $defaultLanguage)
     {
         $this->connection = $connection;
         $this->elementService = $elementService;
+        $this->treeManager = $treeManager;
+        $this->siterootManager = $siterootManager;
+        $this->iconResolver = $iconResolver;
+        $this->authorizationChecker = $authorizationChecker;
         $this->defaultLanguage = $defaultLanguage;
     }
 
@@ -85,63 +125,44 @@ abstract class AbstractSearch implements SearchProviderInterface
             $language = $this->defaultLanguage;
         }
 
-        $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
-        $siteRootManager = Makeweb_Siteroots_Siteroot_Manager::getInstance();
-        $treeManager = Makeweb_Elements_Tree_Manager::getInstance();
-
-        $rightsIdentifiers = [
-            ['uid' => MWF_Env::getUid()]
-        ];
-        foreach (MWF_Env::getUser()->getGroups() as $group) {
-            $rightsIdentifiers[] = ['gid' => $group->getId()];
-        }
-
-        $contentRightsManager = MWF_Registry::getContainer()->contentRightsManager;
-
         $results = [];
         foreach ($rows as $row) {
-            $node = $treeManager->getNodeByNodeId($row['id']);
+            $node = $this->treeManager->getByNodeId($row['id'])->get($row['id']);
 
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-                $contentRightsManager->calculateRights('internal', $node, $rightsIdentifiers);
-
-                if (true !== $contentRightsManager->hasRight('VIEW', $language)) {
-                    continue;
-                }
+            if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('VIEW', $node)) {
+                continue;
             }
 
-            $elementVersion = $elementVersionManager->getLatest($node->getEid(), $language);
-            $siteRoot = $siteRootManager->getByID($node->getTree()->getSiteRootId());
+            $element = $this->elementService->findElement($node->getTypeId());
+            $elementVersion = $this->elementService->findLatestElementVersion($element);
+            $siteroot = $this->siterootManager->find($node->getTree()->getSiterootId());
 
-            $menuItem = new MWF_Core_Menu_Item_Panel();
-            $menuItem->setPanel('Makeweb.elements.MainPanel')
-                ->setIdentifier('Makeweb_elements_MainPanel_' . $siteRoot->getTitle($language))
-                ->setParam('id', $node->getId())
-                ->setParam('siteroot_id', $siteRoot->getId())
-                ->setParam('title', $siteRoot->getTitle())
-                ->setParam('start_tid_path', '/' . implode('/', $node->getPath()));
+            $handlerData = array(
+                'handler' => 'element',
+                'parameters' => array(
+                    'id' => $node->getId(),
+                    'siteroot_id' => $node->getTree()->getSiterootId(),
+                    'title' => $siteroot->getTitle($language),
+                    'start_tid_path' => '/' . implode('/', $node->getTree()->getIdPath($node)),
+                )
+            );
 
             try {
-                $createUser = MWF_Core_Users_User_Peer::getByUserID($elementVersion->getCreateUserID());
-            } catch (Exception $e) {
-                $createUser = MWF_Core_Users_User_Peer::getSystemUser();
+                $createUser = $elementVersion->getCreateUserId();
+            } catch (\Exception $e) {
+                $createUser = 'Unknown';
             }
 
-            $iconParams = [
-                'status' => $node->isAsync($language) ? 'async' : ($node->isPublished($language) ? 'online' : null),
-                'instance' => ($node->isInstance() ? ($node->isInstanceMaster() ? 'master' : 'slave') : false),
-            ];
+            $icon = $this->iconResolver->resolveTreeNode($node, $language);
 
-            $results[] = new MWF_Core_Search_Result(
+            $results[] = new SearchResult(
                 $node->getId(),
-                $siteRoot->getTitle($language) . ' :: ' . $elementVersion->getBackendTitle(
-                    $language
-                ) . ' (' . $language . ', ' . $node->getId() . ')',
-                $createUser->getFirstname() . ' ' . $createUser->getLastname(),
-                strtotime($elementVersion->getCreateTime()),
-                $elementVersion->getIconUrl($iconParams),
+                $siteroot->getTitle($language) . ' :: ' . $elementVersion->getBackendTitle($language) . ' (' . $language . ', ' . $node->getId() . ')',
+                $createUser,
+                $elementVersion->getCreatedAt(),
+                $icon,
                 $title,
-                $menuItem
+                $handlerData
             );
         }
 

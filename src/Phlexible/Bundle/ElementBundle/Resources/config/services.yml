@@ -164,33 +164,38 @@ services:
             - {name: phlexible_gui.role_provider}
 
     # searches
+    phlexible_element.search.abstract:
+        abstract: true
+        public: false
+        arguments:
+            - @doctrine.dbal.default_connection
+            - @phlexible_element.element_service
+            - @phlexible_tree.tree_manager
+            - @phlexible_siteroot.siteroot_manager
+            - @phlexible_element.icon_resolver
+            - @security.authorization_checker
+            - %phlexible_cms.languages.default%
+
     phlexible_element.search.eid:
         class: Phlexible\Bundle\ElementBundle\Search\EidSearch
         public: false
-        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
+        parent: phlexible_element.search.abstract
         tags:
-            - {name: phlexible_search.handler}
+            - {name: phlexible_search.provider}
 
     phlexible_element.search.tid:
         class: Phlexible\Bundle\ElementBundle\Search\TidSearch
         public: false
-        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
+        parent: phlexible_element.search.abstract
         tags:
-            - {name: phlexible_search.handler}
+            - {name: phlexible_search.provider}
 
     phlexible_element.search.title:
         class: Phlexible\Bundle\ElementBundle\Search\TitleSearch
         public: false
-        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
+        parent: phlexible_element.search.abstract
         tags:
-            - {name: phlexible_search.handler}
-
-    phlexible_element.search.unique_id:
-        class: Phlexible\Bundle\ElementBundle\Search\UniqueIdSearch
-        public: false
-        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
-        tags:
-            - {name: phlexible_search.handler}
+            - {name: phlexible_search.provider}
 
     # twig extensions
     phlexible_element.twig.element_extension:

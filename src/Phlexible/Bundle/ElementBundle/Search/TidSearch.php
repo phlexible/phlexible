@@ -32,7 +32,7 @@ class TidSearch extends AbstractSearch
         $qb
             ->select('t.id')
             ->from('tree', 't')
-            ->join('t', 'element', 'e', 'e.eid = t.eid')
+            ->join('t', 'element', 'e', 'e.eid = t.type_id')
             ->where($qb->expr()->eq('t.id', $qb->expr()->literal($query)));
 
         $rows = $this->getConnection()->fetchAll($qb->getSQL());
