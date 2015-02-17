@@ -95,10 +95,11 @@ Phlexible.teasers.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
             },
             {
                 xtype: 'checkbox',
-                name: 'hide',
+                name: 'shown_here',
                 fieldLabel: '',
                 labelSeparator: '',
-                boxLabel: Phlexible.teasers.Strings.hide
+                boxLabel: Phlexible.teasers.Strings.shown_here,
+                checked: true
             }
         ];
 

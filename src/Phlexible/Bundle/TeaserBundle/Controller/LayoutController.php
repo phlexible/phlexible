@@ -446,7 +446,7 @@ class LayoutController extends Controller
         $elementtypeId = $request->get('element_type_id');
         $prevId = $request->get('prev_id', 0);
         $inherit = $request->get('inherit') == 'on' ? true : false;
-        $hide = $request->get('hide') == 'on' ? true : false;
+        $show = $request->get('shown_here') == 'on' ? true : false;
         $masterLanguage = $request->get('masterlanguage', null);
 
         if (!$masterLanguage) {
@@ -467,7 +467,7 @@ class LayoutController extends Controller
         }
 
         $hideIds = array();
-        if ($hide) {
+        if (!$show) {
             $hideIds[] = $treeId;
         }
 
