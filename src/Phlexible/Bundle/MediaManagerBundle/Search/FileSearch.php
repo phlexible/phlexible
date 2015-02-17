@@ -91,7 +91,7 @@ class FileSearch implements SearchProviderInterface
                 $folders[$file->getFolderId()] = $file->getVolume()->findFolder($file->getFolderId());
             }
 
-            if (!$this->authorizationChecker->isGranted('FILE_READ', $folders[$file->getFolderId()])) {
+            if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('FILE_READ', $folders[$file->getFolderId()])) {
                 continue;
             }
 
@@ -107,14 +107,14 @@ class FileSearch implements SearchProviderInterface
                 $file->getId(),
                 $file->getName(),
                 $createUser->getDisplayname(),
-                $file->getCreatedAt()->format('U'),
+                $file->getCreatedAt(),
                 '/media/' . $file->getId() . '/_mm_small',
                 'Mediamanager File Search',
                 [
-                    'xtype'      => 'Phlexible.mediamanager.menuhandle.MediaHandle',
+                    'handler'    => 'media',
                     'parameters' => [
                         'start_file_id'     => $file->getId(),
-                        'start_folder_path' => $folderPath
+                        'start_folder_path' => '/' . implode('/', $folderPath)
                     ],
                 ]
             );

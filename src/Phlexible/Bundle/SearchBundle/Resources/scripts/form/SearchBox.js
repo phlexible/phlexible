@@ -29,14 +29,13 @@ Phlexible.search.field.SearchBox = Ext.extend(Ext.form.ComboBox, {
             }
         },
         beforeselect: function (combo, record) {
-            var menu = record.get('menu');
+            var handlerData = record.get('handler');
 
-            if (menu && menu.xtype) {
-                var xtype = Phlexible.evalClassString(menu.xtype),
-                    handler = new xtype();
+            if (handlerData && handlerData.handler) {
+                var handler = Phlexible.Handles.get(handlerData.handler)();
 
-                if (menu.parameters) {
-                    handler.setParameters(menu.parameters);
+                if (handlerData.parameters) {
+                    handler.setParameters(handlerData.parameters);
                 }
 
                 handler.handle();

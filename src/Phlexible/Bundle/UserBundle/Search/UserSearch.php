@@ -65,11 +65,11 @@ class UserSearch implements SearchProviderInterface
                 $user->getId(),
                 $user->getDisplayName(),
                 $createUser->getDisplayName(),
-                $user->getCreatedAt()->format('U'),
+                $user->getCreatedAt(),
                 '/bundles/phlexibleuser/icons/user.png',
                 'Users Search',
                 [
-                    'xtype'      => 'Phlexible.users.menuhandle.UsersHandle',
+                    'handler'    => 'users',
                     'parameters' => [
                         'userId' => $user->getId(),
                         'query'  => $user->getUsername()

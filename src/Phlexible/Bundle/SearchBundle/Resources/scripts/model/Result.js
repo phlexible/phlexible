@@ -7,5 +7,5 @@ Phlexible.search.model.Result = Ext.data.Record.create([
     'author',
     {name: 'date', type: 'date', dateFormat: 'timestamp'},
     'component',
-    'menu'
+    'handler'
 ]);
