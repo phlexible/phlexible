@@ -90,7 +90,7 @@ class SiterootManager implements SiterootManagerInterface
      */
     public function updateSiteroot(Siteroot $siteroot)
     {
-        if ($siteroot->getId()) {
+        if ($this->entityManager->contains($siteroot)) {
             $event = new SiterootEvent($siteroot);
             if ($this->dispatcher->dispatch(SiterootEvents::BEFORE_UPDATE_SITEROOT, $event)->isPropagationStopped()) {
                 return;
@@ -107,7 +107,7 @@ class SiterootManager implements SiterootManagerInterface
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::UPDATE_SITEROOT, $event);
 
-            $message = SiterootsMessage::create('Siteroot created.', '', null, null, 'siteroot');
+            $message = SiterootsMessage::create('Siteroot updated.', '', null, null, 'siteroot');
             $this->messagePoster->post($message);
         } else {
             $event = new SiterootEvent($siteroot);
@@ -127,7 +127,7 @@ class SiterootManager implements SiterootManagerInterface
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::CREATE_SITEROOT, $event);
 
-            $message = SiterootsMessage::create('Siteroot updated.', '', null, null, 'siteroot');
+            $message = SiterootsMessage::create('Siteroot created.', '', null, null, 'siteroot');
             $this->messagePoster->post($message);
         }
     }
