@@ -224,16 +224,17 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                             if (item === ' ') {
                                 item = new Ext.Toolbar.Spacer();
                             }
-                            if (item.bla) {
-                                var tb = this.getToolbar(),
-                                    td = document.createElement("td");
+                            var tb = this.getToolbar();
+                            if (!(item instanceof Ext.Toolbar.Button) && item instanceof Ext.form.Field) {
+                                console.log(item);
+                                var td = document.createElement("td");
                                 tb.tr.insertBefore(td, tb.tr.childNodes[edge]);
+                                //tb.initMenuTracking(item);
                                 item.render(td);
-                                tb.items.insert(edge, item);
-                                edge++;
-                                return;
+                                tb.items.insert(edge++, item);
+                            } else {
+                                tb.insertButton(edge++, item);
                             }
-                            this.getToolbar().insertButton(edge++, item);
                         }
                     }, this);
                 },

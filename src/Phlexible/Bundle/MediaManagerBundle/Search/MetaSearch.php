@@ -105,7 +105,7 @@ class MetaSearch implements SearchProviderInterface
                 $folders[$file->getFolderId()] = $file->getVolume()->findFolder($file->getFolderId());
             }
 
-            if (!$this->authorizationChecker->isGranted($folders[$file->getFolderId()], 'FILE_READ')) {
+            if (!$this->authorizationChecker->isGranted('FILE_READ', $folders[$file->getFolderId()])) {
                 continue;
             }
 
