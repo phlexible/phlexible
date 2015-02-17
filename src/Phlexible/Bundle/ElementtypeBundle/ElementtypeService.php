@@ -232,20 +232,25 @@ class ElementtypeService
           $elementtype->setTitle($language, $title . ' - copy - ' . $uniqId);
         }
 
+        $elementtypeStructure = new ElementtypeStructure();
+
         $elementtype
             ->setId(null)
             ->setUniqueId($elementtype->getUniqueId() . '-' . $uniqId)
             ->setRevision(1)
+            ->setStructure($elementtypeStructure)
             ->setCreatedAt(new \DateTime())
             ->setCreateUser($user);
-
-        $elementtypeStructure = new ElementtypeStructure();
 
         $rii = new \RecursiveIteratorIterator($sourceElementtype->getStructure(), \RecursiveIteratorIterator::SELF_FIRST);
 
         $dsIdMap = [];
         foreach ($rii as $sourceNode) {
             /* @var $sourceNode ElementtypeStructureNode */
+            if ($sourceNode->isReferenced()) {
+                continue;
+            }
+
             $node = clone $sourceNode;
 
             $dsIdMap[$sourceNode->getDsId()] = $dsId = Uuid::generate();
