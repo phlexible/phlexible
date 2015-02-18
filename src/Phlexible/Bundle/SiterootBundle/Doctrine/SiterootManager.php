@@ -10,13 +10,13 @@ namespace Phlexible\Bundle\SiterootBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\SiterootBundle\SiterootEvents;
 use Phlexible\Bundle\SiterootBundle\SiterootsMessage;
-use Rhumsaa\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -168,6 +168,6 @@ class SiterootManager implements SiterootManagerInterface
 
         $reflectionProperty = new \ReflectionProperty($reflectionClass, 'id');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($siteroot, Uuid::uuid4());
+        $reflectionProperty->setValue($siteroot, Uuid::generate());
     }
 }
