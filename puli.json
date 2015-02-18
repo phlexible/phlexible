@@ -451,6 +451,10 @@
             "install-path": "vendor/doctrine/lexer",
             "installer": "composer"
         },
+        "doctrine/orm": {
+            "install-path": "vendor/doctrine/orm",
+            "installer": "composer"
+        },
         "evenement/evenement": {
             "install-path": "vendor/evenement/evenement",
             "installer": "composer"
