@@ -78,13 +78,13 @@ class Siteroot
 
     /**
      * @var Navigation[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="Navigation", mappedBy="siteroot")
+     * @ORM\OneToMany(targetEntity="Navigation", mappedBy="siteroot", cascade={"persist", "remove"})
      */
     private $navigations;
 
     /**
      * @var Url[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="Url", mappedBy="siteroot")
+     * @ORM\OneToMany(targetEntity="Url", mappedBy="siteroot", cascade={"persist", "remove"})
      */
     private $urls;
 
