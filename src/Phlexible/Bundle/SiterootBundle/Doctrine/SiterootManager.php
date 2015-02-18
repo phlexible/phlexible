@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\SiterootBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
@@ -115,6 +116,10 @@ class SiterootManager implements SiterootManagerInterface
                 return;
             }
 
+            if (null === $siteroot->getId()) {
+                $this->applyIdentifier($siteroot);
+            }
+
             foreach ($siteroot->getNavigations() as $navigation) {
                 $this->entityManager->persist($navigation);
             }
@@ -150,5 +155,19 @@ class SiterootManager implements SiterootManagerInterface
 
         $message = SiterootsMessage::create('Siteroot deleted.', '', null, null, 'siteroot');
         $this->messagePoster->post($message);
+    }
+
+    /**
+     * Apply UUID as identifier when entity doesn't have one yet.
+     *
+     * @param Siteroot $siteroot
+     */
+    private function applyIdentifier(Siteroot $siteroot)
+    {
+        $reflectionClass = new \ReflectionClass(get_class($siteroot));
+
+        $reflectionProperty = new \ReflectionProperty($reflectionClass, 'id');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($siteroot, Uuid::generate());
     }
 }

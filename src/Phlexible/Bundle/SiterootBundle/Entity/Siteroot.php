@@ -24,7 +24,6 @@ class Siteroot
     /**
      * @var string
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
     private $id;
@@ -91,23 +90,17 @@ class Siteroot
 
     /**
      * Constructor.
+     *
+     * @param string $uuid
      */
-    public function __construct()
+    public function __construct($uuid = null)
     {
+        if (null !== $uuid) {
+            $this->id = $uuid;
+        }
+
         $this->navigations = new ArrayCollection();
         $this->urls = new ArrayCollection();
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**
