@@ -97,12 +97,6 @@ class SiterootManager implements SiterootManagerInterface
                 return;
             }
 
-            foreach ($siteroot->getNavigations() as $navigation) {
-                $this->entityManager->persist($navigation);
-            }
-            foreach ($siteroot->getUrls() as $url) {
-                $this->entityManager->persist($url);
-            }
             $this->entityManager->flush();
 
             $event = new SiterootEvent($siteroot);
@@ -120,12 +114,6 @@ class SiterootManager implements SiterootManagerInterface
                 $this->applyIdentifier($siteroot);
             }
 
-            foreach ($siteroot->getNavigations() as $navigation) {
-                $this->entityManager->persist($navigation);
-            }
-            foreach ($siteroot->getUrls() as $url) {
-                $this->entityManager->persist($url);
-            }
             $this->entityManager->persist($siteroot);
             $this->entityManager->flush();
 
