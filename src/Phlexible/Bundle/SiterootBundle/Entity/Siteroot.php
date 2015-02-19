@@ -24,7 +24,6 @@ class Siteroot
     /**
      * @var string
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
     private $id;
@@ -79,35 +78,29 @@ class Siteroot
 
     /**
      * @var Navigation[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="Navigation", mappedBy="siteroot")
+     * @ORM\OneToMany(targetEntity="Navigation", mappedBy="siteroot", cascade={"persist", "remove"})
      */
     private $navigations;
 
     /**
      * @var Url[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="Url", mappedBy="siteroot")
+     * @ORM\OneToMany(targetEntity="Url", mappedBy="siteroot", cascade={"persist", "remove"})
      */
     private $urls;
 
     /**
      * Constructor.
+     *
+     * @param string $uuid
      */
-    public function __construct()
+    public function __construct($uuid = null)
     {
+        if (null !== $uuid) {
+            $this->id = $uuid;
+        }
+
         $this->navigations = new ArrayCollection();
         $this->urls = new ArrayCollection();
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**
