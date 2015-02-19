@@ -32,7 +32,7 @@ class Url
      * @var bool
      * @ORM\Column(name="is_global_default", type="boolean")
      */
-    private $globalDefault;
+    private $globalDefault = false;
 
     /**
      * @var bool
@@ -118,7 +118,7 @@ class Url
      *
      * @return $this
      */
-    public function setGlobalDefault($globalDefault)
+    public function setGlobalDefault($globalDefault = true)
     {
         $this->globalDefault = (bool) $globalDefault;
 
