@@ -490,4 +490,4 @@ Phlexible.elementtypes.field.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
         return config;
     }
 });
-Ext.reg('tablefield', Phlexible.elementtypes.field);
+Ext.reg('tablefield', Phlexible.elementtypes.field.TableField);
