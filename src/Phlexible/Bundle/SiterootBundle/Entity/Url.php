@@ -118,7 +118,7 @@ class Url
      *
      * @return $this
      */
-    public function setGlobalDefault($globalDefault = false)
+    public function setGlobalDefault($globalDefault = true)
     {
         $this->globalDefault = (bool) $globalDefault;
 
