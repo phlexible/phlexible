@@ -4,7 +4,7 @@ Ext.provide('Phlexible.elements.MainPanel');
 Ext.require('Phlexible.elements.ElementsTree');
 Ext.require('Phlexible.teasers.ElementLayoutTree');
 Ext.require('Phlexible.elements.ElementPanel');
-Ext.require('Phlexible.elements.ElementListGrid');
+Ext.require('Phlexible.elements.tab.List');
 Ext.require('Phlexible.elements.TopToolbar');
 Ext.require('Phlexible.elements.FileLinkWindow');
 
@@ -485,7 +485,7 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
                     scope: this
                 }
             },{
-                xtype: 'elements-elementlistgrid',
+                xtype: 'elements-tab-list',
                 element: dummyElement,
                 mode: 'teaser',
                 listeners: {

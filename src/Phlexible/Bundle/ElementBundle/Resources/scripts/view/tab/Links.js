@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.ElementLinksGrid');
+Ext.provide('Phlexible.elements.tab.Links');
 
-Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
+Phlexible.elements.tab.Links = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.elements.Strings.links,
     strings: Phlexible.elements.Strings,
     iconCls: 'p-element-tab_link-icon',
@@ -118,7 +118,7 @@ Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
             }
         });
 
-        Phlexible.elements.ElementLinksGrid.superclass.initComponent.call(this);
+        Phlexible.elements.tab.Links.superclass.initComponent.call(this);
     },
 
     onLoadElement: function (element) {
@@ -147,4 +147,4 @@ Phlexible.elements.ElementLinksGrid = Ext.extend(Ext.grid.GridPanel, {
     }
 });
 
-Ext.reg('elements-elementlinksgrid', Phlexible.elements.ElementLinksGrid);
+Ext.reg('elements-tab-links', Phlexible.elements.tab.Links);

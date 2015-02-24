@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\Event;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Save teaser data event
@@ -29,20 +30,20 @@ class SaveTeaserDataEvent extends Event
     private $language;
 
     /**
-     * @var array
+     * @var Request
      */
-    private $data;
+    private $request;
 
     /**
-     * @param Teaser $teaser
-     * @param string $language
-     * @param array  $data
+     * @param Teaser  $teaser
+     * @param string  $language
+     * @param Request $request
      */
-    public function __construct(Teaser $teaser, $language, array $data)
+    public function __construct(Teaser $teaser, $language, Request $request)
     {
         $this->teaser = $teaser;
         $this->language = $language;
-        $this->data = $data;
+        $this->request = $request;
     }
 
     /**
@@ -62,10 +63,10 @@ class SaveTeaserDataEvent extends Event
     }
 
     /**
-     * @return array
+     * @return Request
      */
-    public function getData()
+    public function getRequest()
     {
-        return $this->data;
+        return $this->request;
     }
 }

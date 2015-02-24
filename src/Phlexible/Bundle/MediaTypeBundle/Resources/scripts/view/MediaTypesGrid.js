@@ -112,47 +112,6 @@ Phlexible.mediatype.MediaTypesGrid = Ext.extend(Ext.grid.GridPanel, {
             }
         ];
 
-        this.addListener({
-            rowdblclick: function (grid, index) {
-                var r = grid.getStore().getAt(index);
-
-                if (!r) {
-                    return;
-                }
-
-                var key = r.get('key');
-
-                var w = new Ext.Window({
-                    title: String.format(this.strings.icons_for, r.get('en')),
-                    width: 420,
-                    height: 320,
-                    bodyStyle: 'background: white; background: linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, lightgray; background-size: 30px 30px; padding: 5px;',
-                    modal: true,
-                    html: '<table><tr>' +
-                        '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes16/' + key + '.gif') + '" width="16" height="16" />' +
-                        '</td>' +
-                        '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes32/' + key + '.gif') + '" width="32" height="32" />' +
-                        '</td>' +
-                        '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes48/' + key + '.gif') + '" width="48" height="48" />' +
-                        '</td>' +
-                        '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes256/' + key + '.gif') + '" width="256" height="256" />' +
-                        '</td>' +
-                        '</tr><tr>' +
-                        '<td align="center">16x16</td>' +
-                        '<td align="center">32x32</td>' +
-                        '<td align="center">48x48</td>' +
-                        '<td align="center">256x256</td>' +
-                        '</tr></table>'
-                });
-                w.show();
-            },
-            scope: this
-        });
-
         Phlexible.mediatype.MediaTypesGrid.superclass.initComponent.call(this);
     },
 

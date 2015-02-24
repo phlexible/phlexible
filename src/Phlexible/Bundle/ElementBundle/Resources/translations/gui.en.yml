@@ -209,7 +209,7 @@ elements:
     no_country_context: 'No country context'
     country: Country
     active: Active
-    access: Access
+    access_control: Access control
     user: User
     users: Users
     add_user: 'Add user'
@@ -294,19 +294,29 @@ elements:
         name: Name
         path: Pfad
         defaults: Defaults
-        method: Method
+        methods: Methods
         scheme: Scheme
         https: HTTPS
         controller: Controller
         template: Template
+        old_urls: Old URLs
+
+    security:
         security: Security
+        authentication_required: User has to be authenticated
+        required_roles: Required roles
+        check_acl: Query access control
+        expression: Expression
+
+    cache:
         cache: Cache
         expires: Expires
         public: Public
         maxage: Maxage
         smaxage: Shared Maxage
         vary: Vary
-        old_urls: Old URLs
+        last_modified: Last Modified
+        etag: ETag
 
     configuration:
         configuration: Configuration

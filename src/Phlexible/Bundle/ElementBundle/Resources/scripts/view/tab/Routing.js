@@ -1,12 +1,18 @@
-Ext.provide('Phlexible.elements.RoutingPanel');
+Ext.provide('Phlexible.elements.tab.Routing');
 
-Phlexible.elements.RoutingPanel = Ext.extend(Ext.form.FormPanel, {
+Phlexible.elements.tab.Routing = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.elements.Strings.routing.routing,
     iconCls: 'p-element-routing-icon',
     strings: Phlexible.elements.Strings.routing,
     bodyStyle: 'margin: 5px',
 
     initComponent: function () {
+        this.element.on({
+            load: this.onLoadElement,
+            internalSave: this.onInternalSave,
+            scope: this
+        });
+
         this.store = new Ext.data.JsonStore({
             fields: ['path', 'type', 'created', 'superseded'],
             data: [
@@ -36,8 +42,8 @@ Phlexible.elements.RoutingPanel = Ext.extend(Ext.form.FormPanel, {
                 width: 300
             },{
                 xtype: 'textfield',
-                name: 'method',
-                fieldLabel: this.strings.method,
+                name: 'methods',
+                fieldLabel: this.strings.methods,
                 width: 300
             },{
                 xtype: 'checkbox',
@@ -53,47 +59,6 @@ Phlexible.elements.RoutingPanel = Ext.extend(Ext.form.FormPanel, {
                 xtype: 'textfield',
                 name: 'template',
                 fieldLabel: this.strings.template,
-                width: 300
-            }]
-        },{
-            xtype: 'fieldset',
-            title: this.strings.security,
-            autoHeight: true,
-            items: [{
-                xtype: 'textfield',
-                name: this.strings.security,
-                fieldLabel: this.strings.security,
-                width: 300
-            }]
-        },{
-            xtype: 'fieldset',
-            title: this.strings.cache,
-            autoHeight: true,
-            items: [{
-                xtype: 'textfield',
-                name: 'expires',
-                fieldLabel: this.strings.expires,
-                width: 300
-            },{
-                xtype: 'checkbox',
-                name: 'public',
-                labelSeparator: '',
-                fieldLabel: '',
-                boxLabel: this.strings.public
-            },{
-                xtype: 'numberfield',
-                name: 'maxage',
-                fieldLabel: this.strings.maxage,
-                width: 300
-            },{
-                xtype: 'numberfield',
-                name: 'smaxage',
-                fieldLabel: this.strings.smaxage,
-                width: 300
-            },{
-                xtype: 'textfield',
-                name: 'vary',
-                fieldLabel: this.strings.vary,
                 width: 300
             }]
         },{
@@ -119,44 +84,46 @@ Phlexible.elements.RoutingPanel = Ext.extend(Ext.form.FormPanel, {
             }]
         }];
 
-        Phlexible.elements.RoutingPanel.superclass.initComponent.call(this);
-
-        this.element.on('load', this.onLoadElement, this);
+        Phlexible.elements.tab.Routing.superclass.initComponent.call(this);
 
         this.store.baseParams = {
             filter_tid: null,
             filter_teaser_id: null
         };
-
-        this.on('show', function () {
-            if ((this.store.baseParams.tid != this.element.tid) || (this.store.baseParams.teaser_id != this.element.properties.teaser_id)) {
-                this.onRealLoad();
-            }
-        }, this);
     },
 
     onLoadElement: function (element) {
         if (element.properties.et_type !== 'full') {
             this.disable();
             //this.hide();
+
+            this.getForm().reset();
+
             return;
         }
 
         this.enable();
         //this.show();
 
-        if (!this.hidden) {
-            this.onRealLoad();
-        }
+        this.getForm().reset();
+
+        this.getForm().setValues(this.element.data.configuration.security || {});
     },
 
     onRealLoad: function () {
-        //this.store.load();
-        //this.getComponent(0).getComponent(0).setValue(this.element.urls.preview);
         this.getForm().setValues({
             path: this.element.data.urls.online || this.element.data.urls.preview
         });
+    },
+
+    onInternalSave: function (parameters, errors) {
+        if (!this.getForm().isValid()) {
+            errors.push('Required fields are missing.');
+            return false;
+        }
+
+        parameters.routing = Ext.encode(this.getForm().getValues());
     }
 });
 
-Ext.reg('elements-routing', Phlexible.elements.RoutingPanel);
+Ext.reg('elements-tab-routing', Phlexible.elements.tab.Routing);

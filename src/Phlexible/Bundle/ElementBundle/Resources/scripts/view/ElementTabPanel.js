@@ -1,12 +1,14 @@
 Ext.provide('Phlexible.elements.ElementTabPanel');
 
-Ext.require('Phlexible.elements.ElementDataPanel');
-Ext.require('Phlexible.elements.ElementListGrid');
-Ext.require('Phlexible.elements.ElementPreviewPanel');
-Ext.require('Phlexible.elements.RightsGrid');
-Ext.require('Phlexible.elements.ElementLinksGrid');
-Ext.require('Phlexible.elements.ElementHistoryGrid');
-Ext.require('Phlexible.elements.RoutingPanel');
+Ext.require('Phlexible.elements.tab.Data');
+Ext.require('Phlexible.elements.tab.List');
+Ext.require('Phlexible.elements.tab.Preview');
+Ext.require('Phlexible.elements.tab.Links');
+Ext.require('Phlexible.elements.tab.History');
+Ext.require('Phlexible.elements.tab.AccessControl');
+Ext.require('Phlexible.elements.tab.Routing');
+Ext.require('Phlexible.elements.tab.Security');
+Ext.require('Phlexible.elements.tab.Cache');
 
 Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
     title: 'Element',
@@ -72,7 +74,7 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
     populateItems: function () {
         this.items = [
             {
-                xtype: 'elements-elementlistgrid',
+                xtype: 'elements-tab-list',
                 tabKey: 'list',
                 element: this.element,
                 listeners: {
@@ -89,48 +91,44 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
                 }
             },
             {
-                xtype: 'elements-elementdatapanel',
+                xtype: 'elements-tab-data',
                 tabKey: 'data',
                 element: this.element,
                 accordionCollapsed: this.accordionCollapsed
             },
             {
-                xtype: 'elements-elementpreviewpanel',
+                xtype: 'elements-tab-preview',
                 tabKey: 'preview',
                 element: this.element
             },
             {
-                xtype: 'elements-rightsgrid',
-                tabKey: 'rights',
-                iconCls: 'p-element-tab_rights-icon',
-                element: this.element,
-                title: Phlexible.elements.Strings.access,
-                right: 'ACCESS',
-                contentClass: 'Phlexible\\Bundle\\TreeBundle\\Entity\\TreeNode',
-                strings: {
-                    users: Phlexible.elements.Strings.users,
-                    user: Phlexible.elements.Strings.user,
-                    groups: Phlexible.elements.Strings.groups,
-                    group: Phlexible.elements.Strings.group
-                },
-                urls: {
-                    subjects: Phlexible.Router.generate('elements_rights_subjects'),
-                    add: Phlexible.Router.generate('elements_rights_add')
-                }
+                xtype: 'elements-tab-routing',
+                tabKey: 'routing',
+                element: this.element
             },
             {
-                xtype: 'elements-elementlinksgrid',
+                xtype: 'elements-tab-security',
+                tabKey: 'security',
+                element: this.element
+            },
+            {
+                xtype: 'elements-tab-cache',
+                tabKey: 'cache',
+                element: this.element
+            },
+            {
+                xtype: 'elements-tab-accesscontrol',
+                tabKey: 'rights',
+                element: this.element
+            },
+            {
+                xtype: 'elements-tab-links',
                 tabKey: 'links',
                 element: this.element
             },
             {
-                xtype: 'elements-elementhistorygrid',
+                xtype: 'elements-tab-history',
                 tabKey: 'history',
-                element: this.element
-            },
-            {
-                xtype: 'elements-routing',
-                tabKey: 'routing',
                 element: this.element
             }
         ];

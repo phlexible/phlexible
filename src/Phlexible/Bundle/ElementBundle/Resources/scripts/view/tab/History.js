@@ -1,10 +1,10 @@
-Ext.provide('Phlexible.elements.ElementHistoryGrid');
+Ext.provide('Phlexible.elements.tab.History');
 
 Ext.require('Phlexible.elements.HistoryGrid');
 
-Phlexible.elements.ElementHistoryGrid = Ext.extend(Phlexible.elements.HistoryGrid, {
+Phlexible.elements.tab.History = Ext.extend(Phlexible.elements.HistoryGrid, {
     initComponent: function () {
-        Phlexible.elements.ElementHistoryGrid.superclass.initComponent.call(this);
+        Phlexible.elements.tab.History.superclass.initComponent.call(this);
 
         this.element.on('load', this.onLoadElement, this);
 
@@ -43,4 +43,4 @@ Phlexible.elements.ElementHistoryGrid = Ext.extend(Phlexible.elements.HistoryGri
     }
 });
 
-Ext.reg('elements-elementhistorygrid', Phlexible.elements.ElementHistoryGrid);
+Ext.reg('elements-tab-history', Phlexible.elements.tab.History);

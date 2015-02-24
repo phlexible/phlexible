@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.ElementPreviewPanel');
+Ext.provide('Phlexible.elements.tab.Preview');
 
-Phlexible.elements.ElementPreviewPanel = Ext.extend(Ext.Panel, {
+Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
     title: Phlexible.elements.Strings.preview.preview,
     strings: Phlexible.elements.Strings.preview,
     iconCls: 'p-element-preview-icon',
@@ -164,7 +164,7 @@ Phlexible.elements.ElementPreviewPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        Phlexible.elements.ElementPreviewPanel.superclass.initComponent.call(this);
+        Phlexible.elements.tab.Preview.superclass.initComponent.call(this);
     },
 
     onLoadElement: function (element) {
@@ -385,4 +385,4 @@ Phlexible.elements.ElementPreviewPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-elementpreviewpanel', Phlexible.elements.ElementPreviewPanel);
+Ext.reg('elements-tab-preview', Phlexible.elements.tab.Preview);

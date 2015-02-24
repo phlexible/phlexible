@@ -1,5 +1,5 @@
 Ext.provide('Phlexible.elements.DiffVersionComboTemplate');
-Ext.provide('Phlexible.elements.ElementDataPanel');
+Ext.provide('Phlexible.elements.tab.Data');
 
 Ext.require('Phlexible.elements.ElementAccordion');
 Ext.require('Phlexible.elements.ElementContentPanel');
@@ -31,7 +31,7 @@ Phlexible.elements.DiffVersionComboTemplate = new Ext.XTemplate(
     '</tpl>'
 );
 
-Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
+Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.data,
     iconCls: 'p-element-tab_data-icon',
@@ -58,7 +58,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
             getlock: this.onGetLock,
             islocked: this.onIsLocked,
             removelock: this.onRemoveLock,
-            internalSave: this.onSave,
+            internalSave: this.onInternalSave,
             scope: this
         });
 
@@ -146,12 +146,9 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         this.tbar = [
             {
                 // 0
-                text: this.strings.save_element,
-                iconCls: 'p-element-save-icon',
+                text: '',
                 disabled: true,
-                hidden: true,
-                handler: this.onSave,
-                scope: this
+                hidden: true
             },
             {
                 // 1
@@ -331,7 +328,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
                 key: 's',
                 alt: true,
                 stopEvent: true,
-                fn: this.onSave,
+                fn: this.onInternalSave,
                 scope: this
             }
         ];
@@ -360,7 +357,7 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
             ? this.element.startParams.diff
             : {};
 
-        Phlexible.elements.ElementDataPanel.superclass.initComponent.call(this);
+        Phlexible.elements.tab.Data.superclass.initComponent.call(this);
     },
 
     getFormPanel: function () {
@@ -532,102 +529,43 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
         this.element.reload();
     },
 
-    onSave: function (publishComment, isPublish, sendNotifications) {
-        if (!this.element.tid) {
-            Ext.MessageBox.alert('Failure', 'Save not possible, no element loaded.');
-            return;
-        }
-
+    onInternalSave: function (parameters, errors) {
         if (!this.getAccordionPanel().isValid()) {
-            Ext.MessageBox.alert('Failure', 'Save not possible, required fields inside the marked accordions are missing.');
+            errors.push('Required fields inside the marked accordions are missing.');
             return;
         }
-
-        var data = this.getAccordionPanel().getData();
-
-        this.getContentPanel().syncData(this.getContentPanel());
 
         if (!this.getContentPanel().isValid()) {
-            Ext.MessageBox.alert('Failure', 'Save not possible, required fields are missing.');
+            errors.push('Required fields are missing.');
             return;
         }
 
         if (this.element.fireEvent('beforeSave', this.element) === false) {
+            errors.push('Save cancelled.');
             return;
         }
 
-        var minor = this.getTopToolbar().items.items[1].getValue() ? 1 : 0;
 
+        this.getContentPanel().syncData(this.getContentPanel());
         this.getAccordionPanel().saveData();
 
-        this.getFormPanel().getForm().submit({
-            url: Phlexible.Router.generate('elements_data_save'),
-            params: {
-                tid: this.element.tid,
-                teaser_id: this.element.properties.teaser_id,
-                eid: this.element.eid,
-                language: this.element.language,
-                version: this.element.version,
-                minor: minor,
-                comment: publishComment,
-                publish: isPublish,
-                data: Ext.encode(data),
-                notifications: sendNotifications
-            },
-            success: function (form, action) {
-                var result = action.result;
+        var minor = this.getTopToolbar().items.items[1].getValue() ? 1 : 0;
+        var values = this.getFormPanel().getForm().getValues();
+        var accordions = this.getAccordionPanel().getData();
 
-                if (!result) {
-                    result = {
-                        success: false,
-                        msg: 'An unexpected error occured',
-                        data: {}
-                    };
-                }
+        for (key in accordions) {
+            if (!accordions.hasOwnProperty(key)) {
+                continue;
+            }
+            parameters[key] = typeof accordions[key] === 'object' ? Ext.encode(accordions[key]) : accordions[key];
+        }
 
-                if (result.success) {
-                    Phlexible.success(result.msg);
-                    this.getTopToolbar().items.items[1].setValue(false);
+        parameters.minor = minor;
+        parameters.values = Ext.encode(values);
 
-                    this.fireEvent('save', this);
-                    this.element.fireEvent('save', this.element, result);
-
-                    if (isPublish) {
-                        this.element.fireEvent('publish', this.element, result);
-                    }
-
-                    this.element.reload({
-                        version: null
-                    });
-
-                    if (result.data.publish_other && result.data.publish_other.length) {
-                        var w = new Phlexible.elements.PublishSlaveWindow({
-                            data: result.data.publish_other
-                        });
-                        w.show();
-                    }
-                } else {
-                    Ext.MessageBox.alert('Failure', data.msg);
-                    this.element.fireEvent('saveFailure', this.element, result);
-                }
-            },
-            failure: function (action, result) {
-                Phlexible.console.log('failure');
-                var data = result.result;
-
-                if (!data) {
-                    data = {
-                        success: false,
-                        msg: 'Error occured'
-                    };
-                }
-
-                Ext.MessageBox.alert('Failure', data.msg);
-                this.element.fireEvent('saveFailure', this.element, result);
-            },
-            scope: this
-        });
         return;
+
+        this.getTopToolbar().items.items[1].setValue(false);
     },
 
     onGetLock: function () {
@@ -677,4 +615,4 @@ Phlexible.elements.ElementDataPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-elementdatapanel', Phlexible.elements.ElementDataPanel);
+Ext.reg('elements-tab-data', Phlexible.elements.tab.Data);

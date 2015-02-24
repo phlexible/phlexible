@@ -237,6 +237,90 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         this.setStatusLocked();
     },
 
+    save: function(parameters) {
+        parameters = parameters || {};
+
+        if (!this.tid) {
+            Ext.MessageBox.alert('Failure', 'Save not possible, no element loaded.');
+            return;
+        }
+
+        parameters.tid = this.tid;
+        parameters.teaser_id = this.properties.teaser_id;
+        parameters.eid = this.eid;
+        parameters.language = this.language;
+        parameters.version = this.version;
+
+        var errors = [];
+
+        this.fireEvent('internalSave', parameters, errors);
+
+        console.log(errors);
+        if (errors.length) {
+            Ext.MessageBox.alert('Failure', 'Save not possible. ' + errors.join(' '));
+            return;
+        }
+
+        console.log(parameters);
+
+        Ext.Ajax.request({
+            url: Phlexible.Router.generate('elements_data_save'),
+            params: parameters,
+            success: this.onSaveSuccess,
+            failure: function (response) {
+                var result = Ext.decode(response.responseText);
+
+                if (!result) {
+                    result = {
+                        success: false,
+                        msg: 'Error occured'
+                    };
+                }
+
+                Ext.MessageBox.alert('Failure', result.msg);
+                this.fireEvent('saveFailure', this, result);
+            },
+            scope: this
+        });
+    },
+
+    onSaveSuccess: function(response) {
+        var result = Ext.decode(response.responseText);
+
+        if (!result) {
+            result = {
+                success: false,
+                msg: 'An unexpected error occured',
+                data: {}
+            };
+        }
+
+        if (result.success) {
+            Phlexible.success(result.msg);
+
+            //this.fireEvent('save', this);
+            this.fireEvent('save', this, result);
+
+            if (result.data.publish) {
+                this.fireEvent('publish', this, result);
+            }
+
+            this.reload({
+                version: null
+            });
+
+            if (result.data.publish_other && result.data.publish_other.length) {
+                var w = new Phlexible.elements.PublishSlaveWindow({
+                    data: result.data.publish_other
+                });
+                w.show();
+            }
+        } else {
+            Ext.MessageBox.alert('Failure', data.msg);
+            this.fireEvent('saveFailure', this, result);
+        }
+    },
+
     getLanguage: function () {
         return this.language;
     },

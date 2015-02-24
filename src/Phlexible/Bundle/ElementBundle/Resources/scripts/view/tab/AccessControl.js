@@ -1,12 +1,28 @@
-Ext.provide('Phlexible.elements.RightsGrid');
+Ext.provide('Phlexible.elements.tab.AccessControl');
 
 Ext.require('Phlexible.accesscontrol.RightsGrid');
 
-Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
+Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
     languageEnabled: false,
     element: null,
+    title: Phlexible.elements.Strings.access_control,
+    iconCls: 'p-element-tab_rights-icon',
+    right: 'ACCESS',
+    contentClass: 'Phlexible\\Bundle\\TreeBundle\\Entity\\TreeNode',
+    strings: {
+        users: Phlexible.elements.Strings.users,
+        user: Phlexible.elements.Strings.user,
+        groups: Phlexible.elements.Strings.groups,
+        group: Phlexible.elements.Strings.group
+    },
+
 
     initComponent: function () {
+        this.urls = {
+            subjects: Phlexible.Router.generate('elements_rights_subjects'),
+            add: Phlexible.Router.generate('elements_rights_add')
+        };
+
         this.element.on({
             load: this.onLoadElement,
             getlock: this.onGetLock,
@@ -22,7 +38,7 @@ Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
             scope: this
         });
 
-        Phlexible.elements.RightsGrid.superclass.initComponent.call(this);
+        Phlexible.elements.tab.AccessControl.superclass.initComponent.call(this);
     },
 
     getLanguageData: function () {
@@ -71,4 +87,4 @@ Phlexible.elements.RightsGrid = Ext.extend(Phlexible.accesscontrol.RightsGrid, {
     }
 });
 
-Ext.reg('elements-rightsgrid', Phlexible.elements.RightsGrid);
+Ext.reg('elements-tab-accesscontrol', Phlexible.elements.tab.AccessControl);

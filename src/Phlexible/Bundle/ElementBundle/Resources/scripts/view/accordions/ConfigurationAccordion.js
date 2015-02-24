@@ -93,7 +93,6 @@ Phlexible.elements.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
 
         return form.getValues();
     }
-
 });
 
 Ext.reg('elements-configurationaccordion', Phlexible.elements.accordion.Configuration);

@@ -599,6 +599,7 @@ class DataController extends Controller
             'navigation'    => $teaser ? '' : $treeNode->getInNavigation(),
             'restricted'    => $teaser ? '' : $treeNode->getAttribute('needAuthentication'),
             'publish_other' => $publishSlaves,
+            'publish'       => $request->get('publish'),
         ];
 
         return new ResultResponse(true, $msg, $data);

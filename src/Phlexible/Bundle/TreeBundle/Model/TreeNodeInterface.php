@@ -98,7 +98,7 @@ interface TreeNodeInterface
      *
      * @return array
      */
-    public function getAttribute($key, $default);
+    public function getAttribute($key, $default = null);
 
     /**
      * @param string $key

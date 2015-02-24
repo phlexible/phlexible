@@ -717,7 +717,7 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect, Ext.form.Com
             this._width = w;
             this.outerWrapEl.setWidth(w - reduce);
             if (this.renderFieldBtns) {
-                reduce += (this.buttonWrap.getWidth() + 20);
+                reduce += (this.buttonWrap.getWidth() + 40);
                 this.wrapEl.setWidth(w - reduce);
             }
         }

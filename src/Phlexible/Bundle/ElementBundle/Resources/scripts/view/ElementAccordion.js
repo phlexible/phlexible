@@ -160,6 +160,7 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
     saveData: function () {
         this.items.each(function (acc) {
             if (!acc.hidden && !acc.disabled && acc.saveData && typeof acc.saveData === 'function') {
+                alert('acc.saveData');
                 acc.saveData();
             }
         });

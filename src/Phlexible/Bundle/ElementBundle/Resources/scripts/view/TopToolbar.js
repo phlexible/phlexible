@@ -663,7 +663,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
     },
 
     onSave: function () {
-        this.element.fireEvent('internalSave');
+        this.element.save();
     },
 
     onSaveMinor: function () {
@@ -745,7 +745,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             return;
         }
 
-        this.element.fireEvent('internalSave', comment, true);
+        this.element.save({publishComment: comment, isPublish: true});
     },
 
     onUpdatePublish: function (comment) {
@@ -753,7 +753,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             return;
         }
 
-        this.element.fireEvent('internalSave', comment, true, true);
+        this.element.save({publishComment: comment, publish: true, notifications: true});
     },
 
     onPublishRecursive: function (comment) {

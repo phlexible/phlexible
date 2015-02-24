@@ -1,10 +1,10 @@
-Ext.provide('Phlexible.elements.ElementListGrid');
+Ext.provide('Phlexible.elements.tab.List');
 
 Ext.require('Phlexible.elements.model.ElementList');
 Ext.require('Phlexible.elements.ElementsListGridFilter');
 Ext.require('Phlexible.elements.DeleteInstancesWindow');
 
-Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
+Phlexible.elements.tab.List = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.list,
     iconCls: 'p-element-tab_list-icon',
@@ -586,7 +586,7 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
             scope: this
         });
 
-        Phlexible.elements.ElementListGrid.superclass.initComponent.call(this);
+        Phlexible.elements.tab.List.superclass.initComponent.call(this);
     },
 
     onLoadElement: function (element) {
@@ -1055,4 +1055,4 @@ Phlexible.elements.ElementListGrid = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-elementlistgrid', Phlexible.elements.ElementListGrid);
+Ext.reg('elements-tab-list', Phlexible.elements.tab.List);
