@@ -204,10 +204,10 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             }
 
             if ($security = $treeNode->getAttribute('security')) {
-                $configuration = new Security(array());
+                $expression = null;
 
                 if (!empty($security['expression'])) {
-                    $configuration->setValue($security['expression']);
+                    $expression = $security['expression'];
                 } else {
                     $expressions = array();
                     if (!empty($security['authenticationRequired'])) {
@@ -224,10 +224,13 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
                     }
 
                     $expression = implode(' and ', $expressions);
-                    $configuration->setValue($expression);
                 }
 
-                $request->attributes->set('_security', $configuration);
+                if ($expression) {
+                    $configuration = new Security(array());
+                    $configuration->setValue($expression);
+                    $request->attributes->set('_security', $configuration);
+                }
             }
         }
 
