@@ -14,7 +14,9 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Pattern\PatternResolver;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Twig tree extension
@@ -39,19 +41,27 @@ class TreeExtension extends \Twig_Extension
     private $requestStack;
 
     /**
-     * @param ContentTreeManagerInterface $contentTreeManager
-     * @param PatternResolver             $patternResolver
-     * @param RequestStack                $requestStack
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
+     * @param ContentTreeManagerInterface   $contentTreeManager
+     * @param PatternResolver               $patternResolver
+     * @param RequestStack                  $requestStack
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         ContentTreeManagerInterface $contentTreeManager,
         PatternResolver $patternResolver,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        AuthorizationCheckerInterface $authorizationChecker
     )
     {
         $this->contentTreeManager = $contentTreeManager;
         $this->patternResolver = $patternResolver;
         $this->requestStack = $requestStack;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -61,6 +71,7 @@ class TreeExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('tree_node', [$this, 'treeNode']),
+            new \Twig_SimpleFunction('node_granted', [$this, 'nodeGranted']),
             new \Twig_SimpleFunction('page_title', [$this, 'pageTitle']),
             new \Twig_SimpleFunction('page_title_pattern', [$this, 'pageTitlePattern']),
         ];
@@ -77,6 +88,38 @@ class TreeExtension extends \Twig_Extension
         $treeNode = $tree->get($treeId);
 
         return new ContentTreeContext($treeNode);
+    }
+
+    /**
+     * @param TreeNodeInterface|ContentTreeContext $node
+     *
+     * @return bool
+     */
+    public function nodeGranted($node)
+    {
+        /* @var $nodes TreeNodeInterface[] */
+
+        if ($node instanceof ContentTreeContext) {
+            $nodes = array($node->getNode());
+        } elseif (is_array($node)) {
+            $nodes = $node;
+        } elseif (!$node instanceof TreeNodeInterface) {
+            return false;
+        } else {
+            $nodes = array($node);
+        }
+
+        foreach ($nodes as $node) {
+            if ($node instanceof ContentTreeContext) {
+                $node = $node->getNode();
+            }
+
+            if ($this->authorizationChecker->isGranted(new Expression($node->getSecurityExpression()))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
