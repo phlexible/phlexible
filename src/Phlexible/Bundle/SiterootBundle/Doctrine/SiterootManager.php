@@ -154,7 +154,7 @@ class SiterootManager implements SiterootManagerInterface
     {
         $reflectionClass = new \ReflectionClass(get_class($siteroot));
 
-        $reflectionProperty = new \ReflectionProperty($reflectionClass, 'id');
+        $reflectionProperty = $reflectionClass->getProperty('id');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($siteroot, Uuid::generate());
     }
