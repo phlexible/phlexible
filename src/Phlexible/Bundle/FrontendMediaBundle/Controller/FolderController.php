@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Controller;
 
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Phlexible\Component\Volume\VolumeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

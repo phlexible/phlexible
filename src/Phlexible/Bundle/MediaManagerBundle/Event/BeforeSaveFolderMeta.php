@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Event;
 
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

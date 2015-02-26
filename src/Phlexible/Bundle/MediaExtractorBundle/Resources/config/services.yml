@@ -3,17 +3,17 @@ parameters:
 
 services:
     phlexible_media_extractor.transmutor:
-        class: Phlexible\Bundle\MediaExtractorBundle\Transmutor
+        class: Phlexible\Component\MediaExtractor\Transmutor
         arguments:
             - @phlexible_media_type.media_type_manager
             - @phlexible_media_extractor.extractor
 
     phlexible_media_extractor.extractor.resolver:
-        class: Phlexible\Bundle\MediaExtractorBundle\Extractor\ExtractorResolver
+        class: Phlexible\Component\MediaExtractor\Extractor\ExtractorResolver
         public: false
         arguments: [[]]
 
     phlexible_media_extractor.extractor:
-        class: Phlexible\Bundle\MediaExtractorBundle\Extractor\DelegatingExtractor
+        class: Phlexible\Component\MediaExtractor\Extractor\DelegatingExtractor
         arguments:
             - @phlexible_media_extractor.extractor.resolver

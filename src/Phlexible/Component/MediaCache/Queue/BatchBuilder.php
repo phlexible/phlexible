@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaCache\Queue;
 
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;

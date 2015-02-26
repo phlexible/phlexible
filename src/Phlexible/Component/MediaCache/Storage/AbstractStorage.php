@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaCache\Storage;
 
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 
 /**
  * Abstract storage

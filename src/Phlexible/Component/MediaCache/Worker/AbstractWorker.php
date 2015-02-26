@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaCache\Worker;
 
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 

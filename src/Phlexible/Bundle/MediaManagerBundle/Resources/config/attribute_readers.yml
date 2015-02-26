@@ -1,33 +1,33 @@
 services:
     phlexible_media_manager.attribute_reader.exif_extension:
-        class: Phlexible\Bundle\MediaManagerBundle\AttributeReader\ExifExtensionAttributeReader
+        class: Phlexible\Component\MediaManager\AttributeReader\ExifExtensionAttributeReader
         public: false
         tags:
             - {name: phlexible_media_manager.attribute_reader}
 
     phlexible_media_manager.attribute_reader.exiftool:
-        class: Phlexible\Bundle\MediaManagerBundle\AttributeReader\ExiftoolAttributeReader
+        class: Phlexible\Component\MediaManager\AttributeReader\ExiftoolAttributeReader
         public: false
         arguments: [@phlexible_media_tool.exiftool]
         tags:
             - {name: phlexible_media_manager.attribute_reader}
 
     phlexible_media_manager.attribute_reader.imageanalyzer:
-        class: Phlexible\Bundle\MediaManagerBundle\AttributeReader\ImageAnalyzerAttributeReader
+        class: Phlexible\Component\MediaManager\AttributeReader\ImageAnalyzerAttributeReader
         public: false
         arguments: [@phlexible_media_tool.image_analyzer]
         tags:
             - {name: phlexible_media_manager.attribute_reader}
 
     phlexible_media_manager.attribute_reader.pdfinfo:
-        class: Phlexible\Bundle\MediaManagerBundle\AttributeReader\PdfInfoAttributeReader
+        class: Phlexible\Component\MediaManager\AttributeReader\PdfInfoAttributeReader
         public: false
         arguments: [@phlexible_media_tool.poppler.pdf_file]
         tags:
             - {name: phlexible_media_manager.attribute_reader}
 
     phlexible_media_manager.attribute_reader.videoanalyzer:
-        class: Phlexible\Bundle\MediaManagerBundle\AttributeReader\VideoAnalyzerAttributeReader
+        class: Phlexible\Component\MediaManager\AttributeReader\VideoAnalyzerAttributeReader
         public: false
         arguments: [@phlexible_media_tool.ffprobe, @logger]
         tags:
@@ -35,11 +35,11 @@ services:
             - {name: monolog.logger, channel: media_asset}
 
     phlexible_media_manager.attribute_reader.zipextension:
-        class: Phlexible\Bundle\MediaManagerBundle\AttributeReader\ZipExtensionAttributeReader
+        class: Phlexible\Component\MediaManager\AttributeReader\ZipExtensionAttributeReader
         public: false
         tags:
             - {name: phlexible_media_manager.attribute_reader}
 
     phlexible_media_manager.attribute_reader:
-        class: Phlexible\Bundle\MediaManagerBundle\AttributeReader\ChainAttributeReader
+        class: Phlexible\Component\MediaManager\AttributeReader\ChainAttributeReader
         arguments: [[]]

@@ -1,16 +1,3 @@
-parameters:
-    phlexible_frontend.web_dir: %kernel.root_dir%/../web/
-    phlexible_frontend.response.cache_dir: %kernel.cache_dir%/response/
-    phlexible_frontend.download_rel_nofollow: false
-    phlexible_frontend.request.handler: ~
-    phlexible_frontend.request.preview_handler: ~
-    phlexible_frontend.request.edit_handler: ~
-    phlexible_frontend.request.debug_handler: ~
-    phlexible_frontend.request.stayssl: false
-    phlexible_frontend.request.redirect_to_default_siteroot: false
-    phlexible_frontend.request.protocol_businesslogic: ~
-    phlexible_frontend.request.force_protocol: ~
-
 services:
     # problem checkers
     phlexible_frontend.problem.specialtidcheck:

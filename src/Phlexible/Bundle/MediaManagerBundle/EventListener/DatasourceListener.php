@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
-use Phlexible\Bundle\MediaManagerBundle\Util\SuggestFieldUtil;
+use Phlexible\Component\MediaManager\Util\SuggestFieldUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

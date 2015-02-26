@@ -27,10 +27,5 @@ class PhlexibleFrontendExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
-
-        $configuration = $this->getConfiguration($config, $container);
-        $config = $this->processConfiguration($configuration, $config);
-
-        $container->setParameter('frontend.download_rel_nofollow', $config['download_rel_nofollow']);
     }
 }

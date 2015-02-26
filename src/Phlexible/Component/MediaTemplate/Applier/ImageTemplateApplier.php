@@ -15,7 +15,7 @@ use Imagine\Image\Palette\CMYK;
 use Imagine\Image\Palette\Grayscale;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Psr\Log\LoggerInterface;
 

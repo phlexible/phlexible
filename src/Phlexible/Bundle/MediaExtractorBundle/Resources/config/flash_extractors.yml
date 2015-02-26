@@ -1,6 +1,6 @@
 services:
     phlexible_media_extractor.extractor.flash.raw:
-        class: Phlexible\Bundle\MediaExtractorBundle\FlashExtractor\RawFlashExtractor
+        class: Phlexible\Component\MediaExtractor\FlashExtractor\RawFlashExtractor
         public: false
         tags:
             - {name: phlexible_media_extractor.extractor}

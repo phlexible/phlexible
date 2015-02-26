@@ -1,6 +1,6 @@
 services:
     phlexible_media_extractor.extractor.audio.raw:
-        class: Phlexible\Bundle\MediaExtractorBundle\AudioExtractor\RawAudioExtractor
+        class: Phlexible\Component\MediaExtractor\AudioExtractor\RawAudioExtractor
         public: false
         tags:
             - {name: phlexible_media_extractor.extractor}

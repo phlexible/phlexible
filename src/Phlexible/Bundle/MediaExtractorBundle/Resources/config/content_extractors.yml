@@ -1,27 +1,27 @@
 services:
     phlexible_media_extractor.extractor.content.pdftotext:
-        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\PdfToTextExtractor
+        class: Phlexible\Component\MediaExtractor\ContentExtractor\PdfToTextExtractor
         public: false
         arguments: [@phlexible_media_tool.poppler.pdf_file]
 
     phlexible_media_extractor.extractor.content.rawtext:
-        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\RawTextExtractor
+        class: Phlexible\Component\MediaExtractor\ContentExtractor\RawTextExtractor
         public: false
 
     phlexible_media_extractor.extractor.content.zendlucenedocx:
-        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\ZendLuceneDocxExtractor
+        class: Phlexible\Component\MediaExtractor\ContentExtractor\ZendLuceneDocxExtractor
         public: false
 
     phlexible_media_extractor.extractor.content.zendlucenepptx:
-        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\ZendLucenePptxExtractor
+        class: Phlexible\Component\MediaExtractor\ContentExtractor\ZendLucenePptxExtractor
         public: false
 
     phlexible_media_extractor.extractor.content.zendlucenexlsx:
-        class: Phlexible\Bundle\MediaExtractorBundle\ContentExtractor\ZendLuceneXlsxExtractor
+        class: Phlexible\Component\MediaExtractor\ContentExtractor\ZendLuceneXlsxExtractor
         public: false
 
     phlexible_media_extractor.extractor.content.resolver:
-        class: Phlexible\Bundle\MediaExtractorBundle\Extractor\ExtractorResolver
+        class: Phlexible\Component\MediaExtractor\Extractor\ExtractorResolver
         public: false
         arguments:
             -
@@ -32,7 +32,7 @@ services:
                 - @phlexible_media_extractor.extractor.content.zendlucenexlsx
 
     phlexible_media_extractor.extractor.content:
-        class: Phlexible\Bundle\MediaExtractorBundle\Extractor\DelegatingExtractor
+        class: Phlexible\Component\MediaExtractor\Extractor\DelegatingExtractor
         arguments: [@phlexible_media_extractor.extractor.content.resolver]
         tags:
             - {name: phlexible_media_extractor.extractor}

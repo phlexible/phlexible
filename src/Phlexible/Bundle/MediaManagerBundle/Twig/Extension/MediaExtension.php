@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Twig\Extension;
 
-use Phlexible\Bundle\MediaManagerBundle\Meta\FileMetaDataManager;
-use Phlexible\Bundle\MediaManagerBundle\Meta\FileMetaSetResolver;
+use Phlexible\Component\MediaManager\Meta\FileMetaDataManager;
+use Phlexible\Component\MediaManager\Meta\FileMetaSetResolver;
 use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;

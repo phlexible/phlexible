@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaCache\Queue;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**

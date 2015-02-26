@@ -12,7 +12,7 @@ use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaCache\Queue\Batch;
 use Phlexible\Component\MediaCache\Queue\BatchResolver;
 use Phlexible\Component\MediaCache\Queue\QueueProcessor;
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\Event\FileEvent;
 use Phlexible\Component\Volume\VolumeEvents;

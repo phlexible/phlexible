@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
-use Phlexible\Bundle\MediaManagerBundle\AttributeReader\AttributeBag;
-use Phlexible\Bundle\MediaManagerBundle\AttributeReader\AttributeReaderInterface;
-use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFileChecker;
-use Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFolderChecker;
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\AttributeReader\AttributeBag;
+use Phlexible\Component\MediaManager\AttributeReader\AttributeReaderInterface;
+use Phlexible\Component\MediaManager\Volume\DeleteFileChecker;
+use Phlexible\Component\MediaManager\Volume\DeleteFolderChecker;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;

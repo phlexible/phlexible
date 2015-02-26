@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
 use Brainbits\Mime\MimeDetector;
-use Phlexible\Bundle\MediaManagerBundle\AttributeReader\AttributeBag;
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedVolumeInterface;
+use Phlexible\Component\MediaManager\AttributeReader\AttributeBag;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedVolumeInterface;
 use Phlexible\Component\Volume\FileSource\FilesystemFileSource;
 use Phlexible\Component\Volume\Model\FolderIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

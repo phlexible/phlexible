@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Event;
 
-use Phlexible\Bundle\MediaManagerBundle\Slot\Slots;
+use Phlexible\Component\MediaManager\Slot\Slots;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

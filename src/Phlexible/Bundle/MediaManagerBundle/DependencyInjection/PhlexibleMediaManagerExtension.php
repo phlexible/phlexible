@@ -41,7 +41,7 @@ class PhlexibleMediaManagerExtension extends Extension
         foreach ($config['volumes'] as $name => $volumeConfig) {
             $driverId = $volumeConfig['driver'];
 
-            $volumeDefinition = new Definition('Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedVolume', [
+            $volumeDefinition = new Definition('Phlexible\Component\MediaManager\Volume\ExtendedVolume', [
                 $volumeConfig['id'],
                 $volumeConfig['root_dir'],
                 $volumeConfig['quota'],
