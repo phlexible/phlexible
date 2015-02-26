@@ -203,34 +203,9 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
                 $request->attributes->set('_cache', $configuration);
             }
 
-            if ($security = $treeNode->getAttribute('security')) {
-                $expression = null;
-
-                if (!empty($security['expression'])) {
-                    $expression = $security['expression'];
-                } else {
-                    $expressions = array();
-                    if (!empty($security['authenticationRequired'])) {
-                        $expressions[] = 'is_fully_authenticated()';
-                    }
-                    if (!empty($security['roles'])) {
-                        $security['roles'] = (array) $security['roles'];
-                        foreach ($security['roles'] as $role) {
-                            $expressions[] = "has_role('$role')";
-                        }
-                    }
-                    if (!empty($security['query_acl'])) {
-                        $expressions[] = "is_granted('VIEW', node)";
-                    }
-
-                    $expression = implode(' and ', $expressions);
-                }
-
-                if ($expression) {
-                    $configuration = new Security(array());
-                    $configuration->setValue($expression);
-                    $request->attributes->set('_security', $configuration);
-                }
+            if ($expression = $treeNode->getSecurityExpression()) {
+                $configuration = new Security(array('expression' => $expression));
+                $request->attributes->set('_security', $configuration);
             }
         }
 

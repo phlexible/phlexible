@@ -519,4 +519,37 @@ class TreeNode implements TreeNodeInterface, ContentObjectInterface
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecurityExpression()
+    {
+        $security = $this->getAttribute('security');
+        if (!$security) {
+            return 'true';
+        }
+
+        if (!empty($security['expression'])) {
+            $expression = $security['expression'];
+        } else {
+            $expressions = array();
+            if (!empty($security['authenticationRequired'])) {
+                $expressions[] = 'is_fully_authenticated()';
+            }
+            if (!empty($security['roles'])) {
+                $security['roles'] = (array) $security['roles'];
+                foreach ($security['roles'] as $role) {
+                    $expressions[] = "has_role('$role')";
+                }
+            }
+            if (!empty($security['query_acl'])) {
+                $expressions[] = "is_granted('VIEW', node)";
+            }
+
+            $expression = implode(' and ', $expressions);
+        }
+
+        return $expression ?: 'true';
+    }
 }

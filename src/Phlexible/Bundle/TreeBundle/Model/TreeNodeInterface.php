@@ -246,4 +246,9 @@ interface TreeNodeInterface
      * @return $this
      */
     public function setNeedAuthentication($needsAuthentication);
+
+    /**
+     * @return string
+     */
+    public function getSecurityExpression();
 }
