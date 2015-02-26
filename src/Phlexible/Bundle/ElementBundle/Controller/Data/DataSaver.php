@@ -126,7 +126,7 @@ class DataSaver
         $language = $request->get('language');
         $tid = $request->get('tid');
         $teaserId = $request->get('teaser_id');
-        $isPublish = $request->get('publish');
+        $isPublish = $request->get('isPublish');
         $values = $request->get('values');
         $publishComment = $request->get('publishComment');
 
