@@ -52,7 +52,7 @@ class DelegatingContentTreeManager implements ContentTreeManagerInterface
     }
 
     /**
-     * @return DelegatingContentTree[]
+     * {@inheritdoc}
      */
     public function findAll()
     {
@@ -68,9 +68,26 @@ class DelegatingContentTreeManager implements ContentTreeManagerInterface
     }
 
     /**
-     * @param int $treeId
-     *
-     * @return null|DelegatingContentTree
+     * {@inheritdoc}
+     */
+    public function find($siterootId)
+    {
+        $trees = $this->findAll();
+        if (!$trees) {
+            return null;
+        }
+
+        foreach ($trees as $tree) {
+            if ($tree->getSiterootId() === $siterootId) {
+                return $tree;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function findByTreeId($treeId)
     {

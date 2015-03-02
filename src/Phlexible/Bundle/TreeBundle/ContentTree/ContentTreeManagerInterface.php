@@ -21,6 +21,13 @@ interface ContentTreeManagerInterface
     public function findAll();
 
     /**
+     * @param string $siterootId
+     *
+     * @return ContentTreeInterface
+     */
+    public function find($siterootId);
+
+    /**
      * @param int $treeId
      *
      * @return ContentTreeInterface|null
