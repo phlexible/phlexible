@@ -31,12 +31,12 @@ class PhlexibleSiterootExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        if (!empty($config['overrides'])) {
-            $overrides = [];
-            foreach ($config['overrides'] as $siterootId => $siteroot) {
-                $overrides[str_replace('_', '-', $siterootId)] = $siteroot;
+        if (!empty($config['mappings'])) {
+            $mappings = [];
+            foreach ($config['mappings'] as $mappedUrl => $siterootUrl) {
+                $mappings[$mappedUrl] = $siterootUrl;
             }
-            $container->setParameter('phlexible_siteroot.overrides', $overrides);
+            $container->setParameter('phlexible_siteroot.mappings', $mappings);
         }
 
         $loader->load('doctrine.yml');

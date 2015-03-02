@@ -21,6 +21,7 @@ services:
         arguments:
             - @logger
             - @phlexible_tree.content_tree_manager
+            - %phlexible_siteroot.mappings%
             - %phlexible_cms.languages.available%
             - %phlexible_cms.languages.default%
         tags:

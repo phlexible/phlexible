@@ -19,7 +19,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
@@ -42,6 +41,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * @var array
      */
+    private $urlMappings;
+
+    /**
+     * @var array
+     */
     private $languages;
 
     /**
@@ -57,17 +61,20 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * @param LoggerInterface             $logger
      * @param ContentTreeManagerInterface $treeManager
+     * @param array                       $urlMappings
      * @param string                      $languages
      * @param string                      $defaultLanguage
      */
     public function __construct(
         LoggerInterface $logger,
         ContentTreeManagerInterface $treeManager,
+        array $urlMappings,
         $languages,
         $defaultLanguage)
     {
         $this->logger = $logger;
         $this->contentTreeManager = $treeManager;
+        $this->urlMappings = $urlMappings;
         $this->languages = explode(',', $languages);
         $this->defaultLanguage = $defaultLanguage;
     }
@@ -224,7 +231,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         $default = null;
         foreach ($this->contentTreeManager->findAll() as $tree) {
             foreach ($tree->getUrls() as $siterootUrl) {
-                if ($siterootUrl->getHostname() === $request->getHttpHost()) {
+                $hostname = $siterootUrl->getHostname();
+                if (isset($this->urlMappings[$hostname])) {
+                    $hostname = $this->urlMappings[$hostname];
+                }
+                if ($hostname === $request->getHttpHost()) {
                     $request->attributes->set('siterootUrl', $siterootUrl);
 
                     return $tree;
