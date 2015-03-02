@@ -203,7 +203,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
                 $request->attributes->set('_cache', $configuration);
             }
 
-            if ($expression = $treeNode->getSecurityExpression()) {
+            if ('true' !== $expression = $treeNode->getSecurityExpression()) {
                 $configuration = new Security(array('expression' => $expression));
                 $request->attributes->set('_security', $configuration);
             }
