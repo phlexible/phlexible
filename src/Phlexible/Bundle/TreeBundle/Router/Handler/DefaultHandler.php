@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
+use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NoSiterootUrlFoundException;
@@ -39,9 +40,9 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $contentTreeManager;
 
     /**
-     * @var array
+     * @var SiterootRequestMatcher
      */
-    private $urlMappings;
+    private $siterootRequestMatcher;
 
     /**
      * @var array
@@ -61,20 +62,20 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * @param LoggerInterface             $logger
      * @param ContentTreeManagerInterface $treeManager
-     * @param array                       $urlMappings
+     * @param SiterootRequestMatcher      $siterootRequestMatcher
      * @param string                      $languages
      * @param string                      $defaultLanguage
      */
     public function __construct(
         LoggerInterface $logger,
         ContentTreeManagerInterface $treeManager,
-        array $urlMappings,
+        SiterootRequestMatcher $siterootRequestMatcher,
         $languages,
         $defaultLanguage)
     {
         $this->logger = $logger;
         $this->contentTreeManager = $treeManager;
-        $this->urlMappings = $urlMappings;
+        $this->siterootRequestMatcher = $siterootRequestMatcher;
         $this->languages = explode(',', $languages);
         $this->defaultLanguage = $defaultLanguage;
     }
@@ -228,31 +229,14 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     protected function findTree(Request $request)
     {
-        $default = null;
-        foreach ($this->contentTreeManager->findAll() as $tree) {
-            foreach ($tree->getUrls() as $siterootUrl) {
-                $hostname = $siterootUrl->getHostname();
-                if (isset($this->urlMappings[$hostname])) {
-                    $hostname = $this->urlMappings[$hostname];
-                }
-                if ($hostname === $request->getHttpHost()) {
-                    $request->attributes->set('siterootUrl', $siterootUrl);
-
-                    return $tree;
-                }
-                if ($tree->isDefaultSiteroot()) {
-                    $default = ['tree' => $tree, 'siterootUrl' => $siterootUrl];
-                }
-            }
+        $siteroot = $this->siterootRequestMatcher->matchRequest($request);
+        if (!$siteroot) {
+            return null;
         }
+        $siterootUrl = $siteroot->getDefaultUrl();
+        $request->attributes->set('siterootUrl', $siterootUrl);
 
-        if ($default) {
-            $request->attributes->set('siterootUrl', $default['siterootUrl']);
-
-            return $default['tree'];
-        }
-
-        return null;
+        return $this->contentTreeManager->find($siteroot->getId());
     }
 
     /**

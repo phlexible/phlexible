@@ -51,7 +51,10 @@ class SiterootManager implements SiterootManagerInterface
      * @param EventDispatcherInterface $dispatcher
      * @param MessagePoster            $messagePoster
      */
-    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher, MessagePoster $messagePoster)
+    public function __construct(
+        EntityManager $entityManager,
+        EventDispatcherInterface $dispatcher,
+        MessagePoster $messagePoster)
     {
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;

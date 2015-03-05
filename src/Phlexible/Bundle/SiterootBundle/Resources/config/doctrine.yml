@@ -1,5 +1,8 @@
 services:
     phlexible_siteroot.doctrine.siteroot_manager:
         class: Phlexible\Bundle\SiterootBundle\Doctrine\SiterootManager
-        arguments: [@doctrine.orm.entity_manager, @event_dispatcher, @phlexible_message.message_poster]
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @event_dispatcher
+            - @phlexible_message.message_poster
         public: false

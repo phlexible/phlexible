@@ -3,6 +3,10 @@ services:
         class: Phlexible\Bundle\SiterootBundle\Controller\Siteroot\SiterootSaver
         arguments: [@phlexible_siteroot.siteroot_manager]
 
+    phlexible_siteroot.siteroot_request_matcher:
+        class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher
+        arguments: [@phlexible_siteroot.siteroot_manager, %phlexible_siteroot.mappings%]
+
     # event listeners
     phlexible_siteroot.listener.apply_successor:
         class: Phlexible\Bundle\SiterootBundle\EventListener\ApplySuccessorListener
