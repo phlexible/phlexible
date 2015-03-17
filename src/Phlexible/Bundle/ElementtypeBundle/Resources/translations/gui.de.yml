@@ -16,6 +16,7 @@ elementtypes:
     groups: Gruppen
     status: Status
     publish: Veröffentlichen
+    save: Speichern
     reset_element_type: Zurücksetzen
     save_properties: 'Eigenschaften speichern'
     reset_properties: Zurücksetzen

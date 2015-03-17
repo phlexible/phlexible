@@ -116,6 +116,7 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
                         title: fieldTitle,
                         index: ++index
                     });
+
                     this.store.add(r);
                     this.fireChange();
                 }.createDelegate(this);

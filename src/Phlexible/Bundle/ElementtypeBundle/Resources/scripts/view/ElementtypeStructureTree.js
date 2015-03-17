@@ -113,8 +113,8 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
         if (this.mode == 'edit') {
             this.tbar = [
                 {
-                    text: this.strings.publish,
-                    iconCls: 'p-elementtype-elementtype_publish-icon',
+                    text: this.strings.save,
+                    iconCls: 'p-elementtype-elementtype_save-icon',
                     handler: this.publish,
                     scope: this,
                     disabled: true

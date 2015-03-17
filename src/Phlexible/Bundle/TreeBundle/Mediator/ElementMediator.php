@@ -43,7 +43,7 @@ class ElementMediator implements MediatorInterface
     /**
      * {@inheritdoc}
      */
-    public function getTitle(TreeNodeInterface $node, $field, $language)
+    public function getField(TreeNodeInterface $node, $field, $language)
     {
         $elementVersion = $this->getContentDocument($node);
 

@@ -168,16 +168,6 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
             ->setCreateUserId($treeNode->getCreateUserId())
             ->setAttributes($treeNode->getAttributes());
 
-        $titles = [];
-        $slugs = [];
-        $slugify = new Slugify();
-        foreach (['de', 'en'] as $language) {
-            $titles[$language] = $this->mediator->getTitle($treeNode, 'navigation', $language);
-            $slugs[$language] = $slugify->slugify($titles[$language]);
-        }
-        $contentNode->setTitles($titles);
-        $contentNode->setSlugs($slugs);
-
         return $contentNode;
     }
 
@@ -449,5 +439,13 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     public function getContent(TreeNodeInterface $node)
     {
         return $this->mediator->getContentDocument($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getField(TreeNodeInterface $node, $field, $language = null)
+    {
+        return $this->mediator->getField($node, $field, $language ?: $this->language);
     }
 }

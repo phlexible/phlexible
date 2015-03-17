@@ -219,7 +219,7 @@ class XmlDumper
                 $languageAttr->value = $language;
                 $versionNode->appendChild($languageAttr);
 
-                $title = $this->mediator->getTitle($node, 'navigation', $language);
+                $title = $this->mediator->getField($node, 'navigation', $language);
 
                 $slugNode = $dom->createElement('slug', $this->slugifier->slugify($title));
                 $slugsNode->appendChild($slugNode);

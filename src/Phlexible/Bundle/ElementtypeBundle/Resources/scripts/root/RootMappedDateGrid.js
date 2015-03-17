@@ -147,9 +147,6 @@ Phlexible.elementtypes.RootMappedDateGrid = Ext.extend(Ext.grid.EditorGridPanel,
                     //Phlexible.console.log('ADD');
                     this.store.add(r);
                     this.fireChange();
-
-                    //this.layout();
-
                 }.createDelegate(this);
 
                 this.dropZone.onNodeOver = function (node, dd, e, dragData) {

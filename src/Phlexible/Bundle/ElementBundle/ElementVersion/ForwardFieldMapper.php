@@ -31,19 +31,16 @@ class ForwardFieldMapper implements FieldMapperInterface
      */
     public function map(ElementStructure $elementStructure, $language, array $mapping)
     {
-        $pattern = $mapping['pattern'];
-        $replace = [];
-        foreach ($mapping['fields'] as $field) {
-            $dsId = $field['ds_id'];
-            $replace['$' . $field['index']] = $this->findValue($elementStructure, $dsId, $language);
-        }
-        $title = str_replace(array_keys($replace), array_values($replace), $pattern);
+        $dsId = $mapping['fields'][0]['dsId'];
+        $title = $this->findValue($elementStructure, $dsId, $language);
 
-        if (!$title) {
+        if (!$title || !$title->getValue()) {
             return null;
         }
 
-        return $title;
+        $value = $title->getValue();
+
+        return is_array($value) ? json_encode($value) : $value;
     }
 
     /**

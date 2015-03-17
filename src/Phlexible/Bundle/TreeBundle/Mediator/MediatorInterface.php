@@ -31,7 +31,7 @@ interface MediatorInterface
      *
      * @return string
      */
-    public function getTitle(TreeNodeInterface $node, $field, $language);
+    public function getField(TreeNodeInterface $node, $field, $language);
 
     /**
      * @param TreeNodeInterface $node

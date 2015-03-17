@@ -54,10 +54,10 @@ class Mediator implements MediatorInterface
     /**
      * {@inheritdoc}
      */
-    public function getTitle(TreeNodeInterface $node, $field, $language)
+    public function getField(TreeNodeInterface $node, $field, $language)
     {
         if ($mediator = $this->findMediator($node)) {
-            return $mediator->getTitle($node, $field, $language);
+            return $mediator->getField($node, $field, $language);
         }
 
         return null;

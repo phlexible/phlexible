@@ -352,7 +352,7 @@ class TreeController extends Controller
             $instancesArray = [];
             foreach ($instances as $instanceNode) {
                 $siteroot = $siterootManager->find($instanceNode->getTree()->getSiterootId());
-                $instanceTitle = $treeMeditator->getTitle($instanceNode, 'backend', $language);
+                $instanceTitle = $treeMeditator->getField($instanceNode, 'backend', $language);
 
                 $instancesArray[] = [
                     $instanceNode->getId(),

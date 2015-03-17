@@ -44,7 +44,7 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
             },
             {
                 header: this.strings.field,
-                dataIndex: 'field',
+                dataIndex: 'title',
                 width: 200
             },
             actions
@@ -114,9 +114,7 @@ Phlexible.elementtypes.RootMappedLinkGrid = Ext.extend(Ext.grid.EditorGridPanel,
 
                     this.store.removeAll();
                     this.store.add(r);
-
-                    //this.layout();
-
+                    this.fireChange();
                 }.createDelegate(this);
 
                 this.dropZone.onNodeOver = function (node, dd, e, dragData) {

@@ -428,7 +428,7 @@ class ElementVersion
         }
 
         if ($field === 'forward' && $mappedField->getForward()) {
-            return $mappedField->getForward();
+            return json_decode($mappedField->getForward(), true);
         }
 
         return null;
