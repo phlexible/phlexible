@@ -97,7 +97,7 @@ class CssBuilder
      */
     private function findBindings()
     {
-        return $this->puliDiscovery->find('phlexible/styles');
+        return $this->puliDiscovery->findByType('phlexible/styles');
     }
 
     /**

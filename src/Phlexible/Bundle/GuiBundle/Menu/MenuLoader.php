@@ -58,7 +58,7 @@ class MenuLoader
             )
         );
         $items = new MenuItemCollection();
-        foreach ($this->puliDiscovery->find('phlexible/menu') as $binding) {
+        foreach ($this->puliDiscovery->findByType('phlexible/menu') as $binding) {
             foreach ($binding->getResources() as $resource) {
                 /* @var $resource FileResource */
 

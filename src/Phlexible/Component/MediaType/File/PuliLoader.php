@@ -88,7 +88,7 @@ class PuliLoader
             $resources[] = new FileResource($r->getFileName());
             $r = new \ReflectionClass($this->compiler);
             $resources[] = new FileResource($r->getFileName());
-            foreach ($this->puliDiscovery->find("phlexible/mediatypes") as $binding) {
+            foreach ($this->puliDiscovery->findByType("phlexible/mediatypes") as $binding) {
                 foreach ($binding->getResources() as $resource) {
                     /* @var $resource \Puli\Repository\Resource\FileResource */
                     $file = $resource->getFilesystemPath();

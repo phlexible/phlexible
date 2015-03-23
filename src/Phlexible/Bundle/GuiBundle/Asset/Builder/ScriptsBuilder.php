@@ -96,7 +96,7 @@ class ScriptsBuilder
      */
     private function findBindings()
     {
-        return $this->puliDiscovery->find('phlexible/scripts');
+        return $this->puliDiscovery->findByType('phlexible/scripts');
     }
 
     /**

@@ -92,7 +92,7 @@ class IconsBuilder
      */
     private function findBindings()
     {
-        return $this->puliDiscovery->find('phlexible/icons');
+        return $this->puliDiscovery->findByType('phlexible/icons');
     }
 
     /**
