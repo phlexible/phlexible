@@ -99,8 +99,8 @@ Phlexible.elementtypes.configuration.FieldConfigurationLink = Ext.extend(Ext.for
     getSaveValues: function () {
         return {
             link_allow_internal: this.getComponent(0).items.items[0].getValue(),
-            link_allow_external: this.getComponent(0).items.items[1].getValue(),
-            link_allow_intra: this.getComponent(0).items.items[2].getValue(),
+            link_allow_intra: this.getComponent(0).items.items[1].getValue(),
+            link_allow_external: this.getComponent(0).items.items[2].getValue(),
             link_allow_email: this.getComponent(0).items.items[3].getValue(),
             link_element_types: this.getComponent(1).getValue()
         };

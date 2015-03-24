@@ -23,7 +23,7 @@ class TitleFieldMapper implements FieldMapperInterface
      */
     public function accept($key)
     {
-        return in_array($key, ['backend', 'page', 'navigation']);
+        return in_array($key, ['backend', 'page', 'navigation', 'custom1', 'custom2', 'custom3', 'custom4', 'custom5']);
     }
 
     /**
@@ -35,7 +35,7 @@ class TitleFieldMapper implements FieldMapperInterface
         $replace = [];
         foreach ($mapping['fields'] as $field) {
             $dsId = $field['dsId'];
-            $replace['$' . $field['index']] = $this->findValue($elementStructure, $dsId, $language);
+            $replace['$' . $field['index']] = $this->findValue($elementStructure, $dsId, $language)->getValue();
         }
         $title = str_replace(array_keys($replace), array_values($replace), $pattern);
 

@@ -43,8 +43,6 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                         ['navigation', 'title', 0, null, null],
                         ['date', 'date', 0, null, null],
                         ['forward', 'link', 0, null, null],
-                        ['description', 'field', 0, null, null],
-                        ['keywords', 'field', 0, null, null],
                         ['custom1', 'field', 0, null, null],
                         ['custom2', 'field', 0, null, null],
                         ['custom3', 'field', 0, null, null],
@@ -98,7 +96,7 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                                         grid.getComponent(1).setValue(r.get('pattern'));
                                     }
                                 }
-                                this.updatePreview(name);
+                                this.updateTitlePreview(name);
                             } else if (type === 'date') {
                                 this.getComponent(1).layout.setActiveItem(2);
                                 grid = this.getMappedDateGrid();
@@ -120,9 +118,16 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                                 grid = this.getMappedFieldGrid();
                                 grid.getComponent(0).getView().refresh();
                                 grid.getComponent(0).getStore().removeAll();
-                                if (r.get('state') && r.get('fields')) {
-                                    grid.getComponent(0).getStore().loadData(r.get('fields'));
+                                grid.getComponent(1).setValue('');
+                                if (r.get('state')) {
+                                    if (r.get('fields')) {
+                                        grid.getComponent(0).getStore().loadData(r.get('fields'));
+                                    }
+                                    if (r.get('pattern')) {
+                                        grid.getComponent(1).setValue(r.get('pattern'));
+                                    }
                                 }
+                                this.updateFieldPreview(name);
                             } else {
                                 this.getComponent(1).layout.setActiveItem(0);
                             }
@@ -151,12 +156,18 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                             {
                                 xtype: 'elementtypes-root-mapped-title',
                                 height: 200,
+                                allowedTypes: [
+                                    'textfield',
+                                    'numberfield',
+                                    'date',
+                                    'select'
+                                ],
                                 listeners: {
                                     change: function (fields) {
                                         var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
                                         this.findRecord(name).set('fields', fields);
                                         this.validate(name);
-                                        this.updatePreview(name);
+                                        this.updateTitlePreview(name);
                                     },
                                     scope: this
                                 }
@@ -172,7 +183,7 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                                         var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
                                         this.findRecord(name).set('pattern', pattern);
                                         this.validate(name);
-                                        this.updatePreview(name);
+                                        this.updateTitlePreview(name);
                                     },
                                     scope: this
                                 }
@@ -221,11 +232,23 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                         ]
                     },
                     {
+                        xtype: 'form',
                         border: false,
+                        labelAlign: 'top',
+                        autoScroll: true,
                         items: [
                             {
                                 xtype: 'elementtypes-root-mapped-title',
                                 height: 200,
+                                allowedTypes: [
+                                    'textfield',
+                                    'numberfield',
+                                    'textarea',
+                                    'date',
+                                    'select',
+                                    'multiselect',
+                                    'suggest'
+                                ],
                                 listeners: {
                                     change: function (fields) {
                                         var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
@@ -234,6 +257,29 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                                     },
                                     scope: this
                                 }
+                            },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: this.strings.pattern,
+                                name: 'pattern',
+                                anchor: '-10',
+                                allowBlank: false,
+                                listeners: {
+                                    change: function (field, pattern) {
+                                        var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
+                                        this.findRecord(name).set('pattern', pattern);
+                                        this.validate(name);
+                                        this.updateFieldPreview(name);
+                                    },
+                                    scope: this
+                                }
+                            },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: this.strings.preview,
+                                name: 'preview',
+                                anchor: '-10',
+                                readOnly: true
                             }
                         ]
                     }
@@ -308,11 +354,26 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
         r.set('state', state);
     },
 
-    updatePreview: function (name) {
+    updateTitlePreview: function (name) {
         var r = this.findRecord(name),
             fields = r.get('fields'),
             pattern = Phlexible.clone(r.get('pattern')) || '',
             previewField = this.getMappedTitleGrid().getComponent(2);
+
+        if (fields) {
+            Ext.each(fields, function (field) {
+                pattern = pattern.replace('$' + field.index, field.title);
+            });
+        }
+
+        previewField.setValue(pattern);
+    },
+
+    updateFieldPreview: function (name) {
+        var r = this.findRecord(name),
+            fields = r.get('fields'),
+            pattern = Phlexible.clone(r.get('pattern')) || '',
+            previewField = this.getMappedFieldGrid().getComponent(2);
 
         if (fields) {
             Ext.each(fields, function (field) {

@@ -13,7 +13,11 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
     },
     autoExpandColumn: 2,
 
+    allowedTypes: [],
+
     initComponent: function () {
+        this.allowedTypes = this.allowedTypes || [];
+
         var actions = new Ext.ux.grid.RowActions({
             header: this.strings.actions,
             width: 150,
@@ -90,17 +94,12 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
                 };
 
                 this.dropZone.onNodeDrop = function (node, dd, e, dragData) {
-                    if (dragData.node.attributes.properties.field && this.store.find('id', dragData.node.attributes.id) == -1) {
-                        switch (dragData.node.attributes.properties.field.type) {
-                            case 'textfield':
-                            case 'numberfield':
-                            case 'date':
-                            case 'select':
-                                break;
-
-                            default:
-                                return;
-                        }
+                    if (
+                        !dragData.node.attributes.properties.field ||
+                        this.store.find('id', dragData.node.attributes.id) !== -1 ||
+                        this.allowedTypes.indexOf(dragData.node.attributes.properties.field.type) === -1
+                    ) {
+                        return;
                     }
 
                     var fieldTitle = dragData.node.attributes.properties.field.working_title;
@@ -122,15 +121,12 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
                 }.createDelegate(this);
 
                 this.dropZone.onNodeOver = function (node, dd, e, dragData) {
-                    if (dragData.node.attributes.properties.field && this.store.find('id', dragData.node.attributes.id) == -1) {
-                        switch (dragData.node.attributes.properties.field.type) {
-                            case 'textfield':
-                            case 'numberfield':
-                            case 'date':
-                            case 'select':
-                                return "x-dd-drop-ok";
-                                break;
-                        }
+                    if (
+                        dragData.node.attributes.properties.field &&
+                        this.store.find('id', dragData.node.attributes.id) == -1 &&
+                        this.allowedTypes.indexOf(dragData.node.attributes.properties.field.type) !== -1
+                    ) {
+                        return "x-dd-drop-ok";
                     }
 
                     return "x-dd-drop-nodrop";
