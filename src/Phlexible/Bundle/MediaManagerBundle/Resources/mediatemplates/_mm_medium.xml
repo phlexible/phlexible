@@ -5,5 +5,4 @@
     <parameter key="height">48</parameter>
     <parameter key="method">exactFit</parameter>
     <parameter key="format">png</parameter>
-    <parameter key="quality">75</parameter>
 </mediaTemplate>

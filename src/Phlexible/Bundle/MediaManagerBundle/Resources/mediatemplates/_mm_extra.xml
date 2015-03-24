@@ -4,7 +4,7 @@
     <parameter key="width">256</parameter>
     <parameter key="height">256</parameter>
     <parameter key="method">exactFit</parameter>
-    <parameter key="format">jpeg</parameter>
-    <parameter key="quality">75</parameter>
+    <parameter key="format">jpg</parameter>
+    <parameter key="quality">70</parameter>
     <parameter key="backgroundcolor">#FFFFFF</parameter>
 </mediaTemplate>

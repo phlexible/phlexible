@@ -10,7 +10,7 @@ namespace Phlexible\Component\MediaCache\Queue;
 
 use Phlexible\Bundle\GuiBundle\Properties\Properties;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaCache\Exception\AlreadyRunningException;
+use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
 use Phlexible\Component\MediaCache\Queue as BaseQueue;
 use Phlexible\Component\MediaCache\Worker\WorkerResolver;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
