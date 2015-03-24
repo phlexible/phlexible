@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaManager\Volume;
 
-use Phlexible\Component\MediaManager\MediaManagerEvents;
+use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
 use Phlexible\Component\Volume\Event\FileEvent;
 use Phlexible\Component\Volume\Event\FolderEvent;
 use Phlexible\Component\Volume\Exception\IOException;
