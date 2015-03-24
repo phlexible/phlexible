@@ -57,7 +57,8 @@ class PuliLoader
         $fileDir,
         $cacheDir,
         $debug
-    ) {
+    )
+    {
         $this->puliDiscovery = $puliDiscovery;
         $this->loader = $loader;
         $this->compiler = $compiler;
