@@ -54,7 +54,7 @@ class SiterootRequestMatcher
             foreach ($siteroot->getUrls() as $siterootUrl) {
                 $siterootHostname = $siterootUrl->getHostname();
                 if (in_array($hostname, $this->urlMappings)) {
-                    $siterootHostname = $this->urlMappings[array_search($hostname, $this->urlMappings)];
+                    $siterootHostname = array_search($hostname, $this->urlMappings);
                 }
                 if ($siterootHostname === $hostname) {
                     return $siteroot;
