@@ -10,6 +10,7 @@ namespace Phlexible\Component\MediaManager\AttributeReader;
 
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
+use PHPExiftool\Driver\Metadata\Metadata;
 use PHPExiftool\Driver\Value\ValueInterface;
 use PHPExiftool\Reader;
 
@@ -58,11 +59,12 @@ class ExiftoolAttributeReader implements AttributeReaderInterface
 
         $metadatas = $this->reader->files($filename)->first();
         foreach ($metadatas as $metadata) {
+            /* @var $metadata Metadata */
+
             if (ValueInterface::TYPE_BINARY === $metadata->getValue()->getType()) {
                 continue;
             }
 
-            /* @var $metadata \PHPExiftool\Driver\Metadata\Metadata */
             $groupName = strtolower($metadata->getTag()->getGroupName());
             $name = strtolower($metadata->getTag()->getName());
             $value = (string) $metadata->getValue();

@@ -55,13 +55,18 @@ class VideoConverterImageExtractor implements ExtractorInterface
     {
         $filename = $file->getPhysicalPath();
 
+        if (!file_exists($filename)) {
+            return null;
+        }
+
         $imageFilename = null;
 
         try {
-            $imageFilename = $this->tempDir . '/' . $file->getId() . '.jpg';
+            $imageFilename = $this->tempDir . '/' . uniqid() . '.jpg';
 
-            $video = $this->converter->open($filename);
-            $video->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(5))
+            $this->converter
+                ->open($filename)
+                ->frame(\FFMpeg\Coordinate\TimeCode::fromSeconds(5))
                 ->save($imageFilename);
         } catch (\Exception $e) {
             $imageFile = null;

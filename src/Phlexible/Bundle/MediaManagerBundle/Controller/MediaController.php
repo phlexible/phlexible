@@ -95,8 +95,7 @@ class MediaController extends Controller
             $batch = $batchBuilder->createForTemplateAndFile($template, $file);
             $queue = $batchResolver->resolve($batch);
 
-            $cacheItem = $queue->first();
-            $queueProcessor->processItem($cacheItem);
+            $cacheItem = $queueProcessor->processItem($queue->first());
 
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                 $storageKey = $template->getStorage();
