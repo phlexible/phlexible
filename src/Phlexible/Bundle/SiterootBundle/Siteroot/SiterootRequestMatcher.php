@@ -53,8 +53,8 @@ class SiterootRequestMatcher
         foreach ($this->siterootManager->findAll() as $siteroot) {
             foreach ($siteroot->getUrls() as $siterootUrl) {
                 $siterootHostname = $siterootUrl->getHostname();
-                if (in_array($hostname, $this->urlMappings)) {
-                    $siterootHostname = array_search($hostname, $this->urlMappings);
+                if (isset($this->urlMappings[$siterootHostname])) {
+                    $siterootHostname = $this->urlMappings[$siterootHostname];
                 }
                 if ($siterootHostname === $hostname) {
                     return $siteroot;
