@@ -1,7 +1,7 @@
 {
     "version": "1.0",
     "name": "phlexible/dashboard-bundle",
-    "resources": {
+    "path-mappings": {
         "/phlexible/phlexibledashboard/icons": "src/Phlexible/Bundle/DashboardBundle/Resources/public/icons",
         "/phlexible/phlexibledashboard/scripts": "src/Phlexible/Bundle/DashboardBundle/Resources/scripts",
         "/phlexible/phlexibledashboard/styles": "src/Phlexible/Bundle/DashboardBundle/Resources/styles"

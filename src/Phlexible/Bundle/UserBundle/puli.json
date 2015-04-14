@@ -1,7 +1,7 @@
 {
     "version": "1.0",
     "name": "phlexible/user-bundle",
-    "resources": {
+    "path-mappings": {
         "/phlexible/phlexibleuser/icons": "src/Phlexible/Bundle/UserBundle/Resources/public/icons",
         "/phlexible/phlexibleuser/menu": "src/Phlexible/Bundle/UserBundle/Resources/menu",
         "/phlexible/phlexibleuser/scripts": "src/Phlexible/Bundle/UserBundle/Resources/scripts",

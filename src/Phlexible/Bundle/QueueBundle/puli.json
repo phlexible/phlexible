@@ -1,7 +1,7 @@
 {
     "version": "1.0",
     "name": "phlexible/queue-bundle",
-    "resources": {
+    "path-mappings": {
         "/phlexible/phlexiblequeue/icons": "src/Phlexible/Bundle/QueueBundle/Resources/public/icons",
         "/phlexible/phlexiblequeue/menu": "src/Phlexible/Bundle/QueueBundle/Resources/menu",
         "/phlexible/phlexiblequeue/scripts": "src/Phlexible/Bundle/QueueBundle/Resources/scripts"

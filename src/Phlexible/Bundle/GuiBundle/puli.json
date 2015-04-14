@@ -1,7 +1,7 @@
 {
     "version": "1.0",
     "name": "phlexible/gui-bundle",
-    "resources": {
+    "path-mappings": {
         "/phlexible/phlexiblegui/icons": "src/Phlexible/Bundle/GuiBundle/Resources/public/icons",
         "/phlexible/phlexiblegui/menu": "src/Phlexible/Bundle/GuiBundle/Resources/menu",
         "/phlexible/phlexiblegui/scripts": "src/Phlexible/Bundle/GuiBundle/Resources/scripts",
