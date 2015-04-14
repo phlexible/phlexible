@@ -1,7 +1,7 @@
 {
     "version": "1.0",
     "name": "phlexible/phlexible",
-    "resources": {
+    "path-mappings": {
         "/phlexible/phlexibleaccesscontrol/icons": "src/Phlexible/Bundle/AccessControlBundle/Resources/public/icons",
         "/phlexible/phlexibleaccesscontrol/scripts": "src/Phlexible/Bundle/AccessControlBundle/Resources/scripts",
         "/phlexible/phlexibleaccesscontrol/styles": "src/Phlexible/Bundle/AccessControlBundle/Resources/styles",
