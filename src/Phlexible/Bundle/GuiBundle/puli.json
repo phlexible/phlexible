@@ -21,11 +21,11 @@
             "type": "phlexible/menu"
         },
         "f9f7ada2-dd12-571f-95c4-e5931a2e1f4a": {
-            "query": "/phlexible/phlexiblegui/scripts/**.js",
+            "query": "/phlexible/phlexiblegui/scripts/**/*.js",
             "type": "phlexible/scripts"
         },
         "e48dfe29-6164-5df2-89ca-8b32ab717083": {
-            "query": "/phlexible/phlexiblegui/styles/**.css",
+            "query": "/phlexible/phlexiblegui/styles/**/*.css",
             "type": "phlexible/styles"
         }
     },

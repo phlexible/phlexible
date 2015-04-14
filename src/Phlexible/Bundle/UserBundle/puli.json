@@ -17,11 +17,11 @@
             "type": "phlexible/menu"
         },
         "be349132-be9f-519a-87be-bcb003bfc1e9": {
-            "query": "/phlexible/phlexibleuser/scripts/**.js",
+            "query": "/phlexible/phlexibleuser/scripts/**/*.js",
             "type": "phlexible/scripts"
         },
         "21d5bc59-f1a3-5f15-a1b2-15c0d0d080b0": {
-            "query": "/phlexible/phlexibleuser/styles/**.css",
+            "query": "/phlexible/phlexibleuser/styles/**/*.css",
             "type": "phlexible/styles"
         }
     }

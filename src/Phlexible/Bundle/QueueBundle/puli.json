@@ -16,7 +16,7 @@
             "type": "phlexible/menu"
         },
         "ca47c1f0-77b3-50b1-8f25-f76dd788e356": {
-            "query": "/phlexible/phlexiblequeue/scripts/**.js",
+            "query": "/phlexible/phlexiblequeue/scripts/**/*.js",
             "type": "phlexible/scripts"
         }
     }

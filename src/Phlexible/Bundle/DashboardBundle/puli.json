@@ -12,11 +12,11 @@
             "type": "phlexible/icons"
         },
         "18aa998c-6dc3-5367-ac0b-2823440d623d": {
-            "query": "/phlexible/phlexibledashboard/scripts/**.js",
+            "query": "/phlexible/phlexibledashboard/scripts/**/*.js",
             "type": "phlexible/scripts"
         },
         "275795b7-4d09-52ab-8895-e3b35bedfc97": {
-            "query": "/phlexible/phlexibledashboard/styles/**.css",
+            "query": "/phlexible/phlexibledashboard/styles/**/*.css",
             "type": "phlexible/styles"
         },
     }
