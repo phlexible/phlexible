@@ -85,6 +85,9 @@ class TreeExtension extends \Twig_Extension
     public function treeNode($treeId)
     {
         $tree = $this->contentTreeManager->findByTreeId($treeId);
+        if (!$tree) {
+            return null;
+        }
         $treeNode = $tree->get($treeId);
 
         return new ContentTreeContext($treeNode);
