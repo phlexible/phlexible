@@ -28,3 +28,14 @@ services:
         public: false
         tags:
             - {name: phlexible_gui.role_provider}
+
+    # twig extensions
+    phlexible_siteroot.twig.siteroot_extension:
+        class: Phlexible\Bundle\SiterootBundle\Twig\Extension\SiterootExtension
+        public: false
+        arguments:
+            - @phlexible_siteroot.siteroot_manager
+            - @phlexible_siteroot.siteroot_request_matcher
+            - @request_stack
+        tags:
+            - {name: twig.extension}
