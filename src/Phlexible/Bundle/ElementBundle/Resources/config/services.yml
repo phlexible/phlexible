@@ -203,5 +203,6 @@ services:
         public: false
         arguments:
             - @phlexible_element.content_loader
+            - @request_stack
         tags:
             - {name: twig.extension}

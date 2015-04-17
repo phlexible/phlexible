@@ -12,6 +12,7 @@ use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Twig element extension
@@ -26,11 +27,18 @@ class ElementExtension extends \Twig_Extension
     private $contentElementLoader;
 
     /**
-     * @param ContentElementLoader $contentElementLoader
+     * @var RequestStack
      */
-    public function __construct(ContentElementLoader $contentElementLoader)
+    private $requestStack;
+
+    /**
+     * @param ContentElementLoader $contentElementLoader
+     * @param RequestStack         $requestStack
+     */
+    public function __construct(ContentElementLoader $contentElementLoader, RequestStack $requestStack)
     {
         $this->contentElementLoader = $contentElementLoader;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -51,17 +59,17 @@ class ElementExtension extends \Twig_Extension
     public function element($eid)
     {
         if (is_int($eid)) {
-            $language = 'de';
+            $language = $this->requestStack->getCurrentRequest()->getLocale();
             $version = 1;
         } elseif ($eid instanceof TreeNodeInterface) {
             $node = $eid;
             $eid = $node->getTypeId();
-            $language = 'de';
+            $language = $this->requestStack->getCurrentRequest()->getLocale();
             $version = $node->getTree()->getVersion($node, $language);
         } elseif ($eid instanceof ContentTreeContext) {
             $node = $eid->getNode();
             $eid = $node->getTypeId();
-            $language = 'de';
+            $language = $this->requestStack->getCurrentRequest()->getLocale();
             $version = $node->getTree()->getVersion($node, $language);
         } else {
             return null;
