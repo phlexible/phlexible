@@ -131,6 +131,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
      * @param Configuration $renderConfiguration
      *
      * @return array
+     * @deprecated
      */
     private function createSpecialTids(Configuration $renderConfiguration)
     {
