@@ -135,7 +135,7 @@ class TreeExtension extends \Twig_Extension
      */
     public function pageTitle($name = 'default', $language = null, TreeNodeInterface $treeNode = null, Siteroot $siteroot = null)
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if ($siteroot === null) {
             $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
@@ -164,7 +164,7 @@ class TreeExtension extends \Twig_Extension
      */
     public function pageTitlePattern($pattern, $language = null, TreeNodeInterface $treeNode = null, Siteroot $siteroot = null)
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getCurrentRequest();
 
         if ($siteroot === null) {
             $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
