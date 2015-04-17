@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Render controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/_teaser")
+ * @Route("/_teaser/render")
  */
 class RenderController extends Controller
 {
@@ -28,16 +28,12 @@ class RenderController extends Controller
      * @param int     $teaserId
      *
      * @return Response
-     * @Route("/render/{teaserId}", name="teaser_render")
+     * @Route("/{_locale}/{teaserId}", name="teaser_render")
      */
     public function htmlAction(Request $request, $teaserId)
     {
         $teaser = $this->get('phlexible_teaser.teaser_service')->find($teaserId);
-        $language = $request->get('language', 'de');
 
-        $request->setLocale($language);
-        $request->attributes->set('_locale', $language);
-        $request->attributes->set('language', $language);
         $request->attributes->set('contentDocument', $teaser);
 
         $renderConfigurator = $this->get('phlexible_element_renderer.configurator');

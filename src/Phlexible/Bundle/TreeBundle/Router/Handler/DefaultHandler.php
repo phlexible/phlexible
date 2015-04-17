@@ -174,7 +174,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         $parameters = $this->matchIdentifiers($request, $tree);
 
         if (0 && !$siterootUrl->isDefault()) {
-            $siterootUrl = $siterootUrl->getSiteroot()->getDefaultUrl($request->attributes->get('language'));
+            $siterootUrl = $siterootUrl->getSiteroot()->getDefaultUrl($request->getLocale());
             // forward?
         }
 
