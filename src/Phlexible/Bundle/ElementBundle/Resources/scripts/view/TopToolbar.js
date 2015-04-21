@@ -2,9 +2,9 @@ Ext.provide('Phlexible.elements.TopToolbar');
 
 Ext.require('Phlexible.teasers.PublishTeaserWindow');
 Ext.require('Phlexible.teasers.SetTeaserOfflineWindow');
-Ext.require('Phlexible.tasks.NewTaskWindow');
 Ext.require('Phlexible.elements.HistoryWindow');
 Ext.require('Phlexible.elements.LocksWindow');
+Ext.require('Phlexible.elements.NewTaskWindow');
 Ext.require('Phlexible.elements.PublishTreeNodeWindow');
 Ext.require('Phlexible.elements.SetTreeNodeOfflineWindow');
 
@@ -397,7 +397,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             scope: this
         });
 
-        if (Phlexible.tasks.Strings && Phlexible.User.isGranted('ROLE_ELEMENT_TASKS')) {
+        if (Phlexible.tasks !== undefined && Phlexible.User.isGranted('ROLE_ELEMENT_TASKS')) {
             this.extendedMenuIndex.add('task_sep', '-');
             this.extendedMenuIndex.add('task', {
                 text: Phlexible.tasks.Strings.new_task,
@@ -413,7 +413,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                         payload.teaser_id = this.element.teaser_id;
                     }
 
-                    var w = new Phlexible.tasks.NewTaskWindow({
+                    var w = new Phlexible.elements.NewTaskWindow({
                         payload: payload,
                         component_filter: 'elements',
                         listeners: {
