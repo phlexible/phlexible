@@ -25,20 +25,20 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class TaskListener implements EventSubscriberInterface
 {
     /**
-     * @var TaskManagerInterface
-     */
-    private $taskManager;
-
-    /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
 
     /**
-     * @param TaskManagerInterface  $taskManager
-     * @param TokenStorageInterface $tokenStorage
+     * @var TaskManagerInterface
      */
-    public function __construct(TaskManagerInterface $taskManager, TokenStorageInterface $tokenStorage)
+    private $taskManager;
+
+    /**
+     * @param TokenStorageInterface $tokenStorage
+     * @param TaskManagerInterface  $taskManager
+     */
+    public function __construct(TokenStorageInterface $tokenStorage, TaskManagerInterface $taskManager = null)
     {
         $this->taskManager = $taskManager;
         $this->tokenStorage = $tokenStorage;
@@ -61,6 +61,10 @@ class TaskListener implements EventSubscriberInterface
      */
     public function onPublishNode(PublishNodeEvent $event)
     {
+        if (!$this->taskManager) {
+            return;
+        }
+
         $node = $event->getNode();
         $language = $event->getLanguage();
 
@@ -84,6 +88,10 @@ class TaskListener implements EventSubscriberInterface
      */
     public function onSetNodeOffline(SetNodeOfflineEvent $event)
     {
+        if (!$this->taskManager) {
+            return;
+        }
+
         $node = $event->getNode();
         $language = $event->getLanguage();
 
@@ -107,6 +115,10 @@ class TaskListener implements EventSubscriberInterface
      */
     public function onDeleteNode(NodeEvent $event)
     {
+        if (!$this->taskManager) {
+            return;
+        }
+
         $node = $event->getNode();
         $language = null;
 

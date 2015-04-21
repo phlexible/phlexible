@@ -88,7 +88,7 @@ services:
     # event listeners
     phlexible_element.listener.task:
         class: Phlexible\Bundle\ElementBundle\EventListener\TaskListener
-        arguments: [@phlexible_task.task_manager, @security.token_storage]
+        arguments: [@security.token_storage, @?phlexible_task.task_manager]
         tags:
             - {name: kernel.event_subscriber}
 
