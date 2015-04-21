@@ -42,8 +42,7 @@
         "cocur/slugify": "~0.8",
         "phpexiftool/phpexiftool": "~0.4",
         "cogpowered/finediff": "~0.3",
-        "nelmio/api-doc-bundle": "~2.5",
-        "yohang/finite": "~1.0"
+        "nelmio/api-doc-bundle": "~2.5"
     },
      "replace": {
         "phlexible/dashboard-bundle": "self.version",
