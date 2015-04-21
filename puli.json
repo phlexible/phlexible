@@ -655,10 +655,6 @@
             "install-path": "vendor/webmozart/path-util",
             "installer": "composer"
         },
-        "yohang/finite": {
-            "install-path": "vendor/yohang/finite",
-            "installer": "composer"
-        },
         "zf1/zend-exception": {
             "install-path": "vendor/zf1/zend-exception",
             "installer": "composer"
