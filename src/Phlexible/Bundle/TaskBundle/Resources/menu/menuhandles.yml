@@ -1,4 +1,0 @@
-tasks:
-    parent: main
-    handle: tasks
-    roles: [ROLE_TASKS]

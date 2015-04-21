@@ -64,10 +64,6 @@
         "/phlexible/phlexiblesiteroot/menu": "src/Phlexible/Bundle/SiterootBundle/Resources/menu",
         "/phlexible/phlexiblesiteroot/scripts": "src/Phlexible/Bundle/SiterootBundle/Resources/scripts",
         "/phlexible/phlexiblesiteroot/styles": "src/Phlexible/Bundle/SiterootBundle/Resources/styles",
-        "/phlexible/phlexibletask/icons": "src/Phlexible/Bundle/TaskBundle/Resources/public/icons",
-        "/phlexible/phlexibletask/menu": "src/Phlexible/Bundle/TaskBundle/Resources/menu",
-        "/phlexible/phlexibletask/scripts": "src/Phlexible/Bundle/TaskBundle/Resources/scripts",
-        "/phlexible/phlexibletask/styles": "src/Phlexible/Bundle/TaskBundle/Resources/styles",
         "/phlexible/phlexibleteaser/icons": "src/Phlexible/Bundle/TeaserBundle/Resources/public/icons",
         "/phlexible/phlexibleteaser/scripts": "src/Phlexible/Bundle/TeaserBundle/Resources/scripts",
         "/phlexible/phlexibleuser/icons": "src/Phlexible/Bundle/UserBundle/Resources/public/icons",
@@ -338,22 +334,6 @@
         },
         "2bf3ea39-6ddf-517d-977a-eb532937616d": {
             "query": "/phlexible/phlexiblesiteroot/styles/**/*.css",
-            "type": "phlexible/styles"
-        },
-        "0204d4db-1e07-5d44-9faa-d763972b1cc0": {
-            "query": "/phlexible/phlexibletask/icons/*.png",
-            "type": "phlexible/icons"
-        },
-        "3c16a1d5-c0e4-58e1-a418-282bd820f0de": {
-            "query": "/phlexible/phlexibletask/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "0537382f-e1af-5e26-bc88-6eda5741fdf3": {
-            "query": "/phlexible/phlexibletask/scripts/**/*.js",
-            "type": "phlexible/scripts"
-        },
-        "4f1ab77a-fb01-5410-95cf-477147e83d53": {
-            "query": "/phlexible/phlexibletask/styles/**/*.css",
             "type": "phlexible/styles"
         },
         "ddd7eb5a-5e9d-583a-aa29-44cb040150d6": {
