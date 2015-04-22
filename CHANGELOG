@@ -1,0 +1,2 @@
+2015-04-22
+- removed {{ specialTids }} template variable, use twig function {{ special_tid(name) }} instead

@@ -118,35 +118,11 @@ class TreeNodeConfigurator implements ConfiguratorInterface
         }
 
         $renderConfiguration
-            ->setVariable('siteroot', $request->attributes->get('siterootUrl')->getSiteroot())
-            ->setVariable('specialTids', $this->createSpecialTids($renderConfiguration));
+            ->setVariable('siteroot', $request->attributes->get('siterootUrl')->getSiteroot());
 
         $event = new ConfigureEvent($renderConfiguration);
         $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_TREE_NODE, $event);
 
         return true;
-    }
-
-    /**
-     * @param Configuration $renderConfiguration
-     *
-     * @return array
-     * @deprecated
-     */
-    private function createSpecialTids(Configuration $renderConfiguration)
-    {
-        $language = $renderConfiguration->get('language');
-
-        $specialTids = [];
-
-        foreach ($renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids(null) as $specialTid) {
-            $specialTids[$specialTid['name']] = $specialTid['treeId'];
-        }
-
-        foreach ($renderConfiguration->get('request')->attributes->get('siterootUrl')->getSiteroot()->getSpecialTids($language) as $specialTid) {
-            $specialTids[$specialTid['name']] = $specialTid['treeId'];
-        }
-
-        return $specialTids;
     }
 }
