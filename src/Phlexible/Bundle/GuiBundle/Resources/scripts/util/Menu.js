@@ -109,7 +109,7 @@ Ext.extend(Phlexible.gui.util.Menu, Ext.util.Observable, {
             if (item.trayId === trayId) {
                 return item;
             }
-        })
+        });
         throw new Error('Tray item ' + trayId + ' not found.');
     },
 

@@ -13,4 +13,4 @@ Phlexible.accesscontrol.model.AccessControlEntry = Ext.data.Record.create([
     'setHere',
     'restore',
     'new'
-])
+]);
