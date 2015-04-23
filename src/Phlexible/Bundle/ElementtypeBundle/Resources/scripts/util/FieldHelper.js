@@ -153,7 +153,7 @@ Phlexible.fields.FieldHelper = {
 
     diff: function (styleEl) {
         if (!this.attributes || !this.attributes.diff) {
-            return
+            return;
         }
 
         if (!styleEl) {
