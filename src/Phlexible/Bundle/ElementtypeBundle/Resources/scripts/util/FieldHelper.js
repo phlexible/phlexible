@@ -17,7 +17,7 @@ Phlexible.fields.FieldHelper = {
             labelSeparator = ':',
             language = Phlexible.Config.get('user.property.interfaceLanguage', 'en'),
             contextHelp = item.labels.contextHelp || {},
-            prefix = item.labels.prefix || {}
+            prefix = item.labels.prefix || {},
             suffix = item.labels.suffix || {};
 
         if (parentConfig.singleLineLabel) {
