@@ -106,6 +106,16 @@ class TreeEvents
     const REORDER_NODE = 'phlexible_tree.reorder_node';
 
     /**
+     * Fired before node children are reordered.
+     */
+    const BEFORE_REORDER_CHILD_NODE = 'phlexible_tree.before_reorder_child_nodes';
+
+    /**
+     * Fired after node children have been reordered.
+     */
+    const REORDER_CHILD_NODES = 'phlexible_tree.reorder_child_nodes';
+
+    /**
      * Fired when the tree is filtered
      */
     const TREE_FILTER = 'phlexible_tree.tree_filter';

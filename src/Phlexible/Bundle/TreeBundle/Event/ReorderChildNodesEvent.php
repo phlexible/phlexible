@@ -11,33 +11,33 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 
 /**
- * Reorder node event
+ * Reorder child nodes event
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ReorderNodeEvent extends NodeEvent
+class ReorderChildNodesEvent extends NodeEvent
 {
     /**
-     * @var int
+     * @var array
      */
-    private $sort;
+    private $sortIds;
 
     /**
      * @param TreeNodeInterface $node
-     * @param int               $sort
+     * @param array             $sortIds
      */
-    public function __construct(TreeNodeInterface $node, $sort)
+    public function __construct(TreeNodeInterface $node, array $sortIds)
     {
         parent::__construct($node);
 
-        $this->sort = $sort;
+        $this->sortIds = $sortIds;
     }
 
     /**
-     * @return int
+     * @return array
      */
-    public function getSort()
+    public function getSortIds()
     {
-        return $this->sort;
+        return $this->sortIds;
     }
 }

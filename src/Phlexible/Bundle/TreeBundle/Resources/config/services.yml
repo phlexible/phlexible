@@ -43,6 +43,10 @@ services:
         class: Phlexible\Bundle\TreeBundle\Tree\NodeHasher
         arguments: [@phlexible_element.element_hasher]
 
+    phlexible_tree.node_sorter:
+        class: Phlexible\Bundle\TreeBundle\Tree\NodeSorter
+        arguments: [@doctrine.dbal.default_connection, de]
+
     # access control permission providers
     phlexible_tree.permission_provider:
         class: Phlexible\Bundle\TreeBundle\AccessControl\TreePermissionProvider

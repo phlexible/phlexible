@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\Controller;
 use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
+use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -205,19 +206,21 @@ class ListController extends Controller
         $sortTids = $request->get('sort_ids');
         $sortTids = json_decode($sortTids, true);
 
-        $container = $this->getContainer();
-
-        $treeManager = $container->get('phlexible_tree.tree_manager');
-        $treeSorter = $container->elementsTreeSorter;
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $nodeSorter = $this->get('phlexible_tree.node_sorter');
 
         $tree = $treeManager->getByNodeId($tid);
-        $tree->setSortMode($tid, $mode, $dir);
+        $node = $tree->get($tid);
 
-        if ($mode == Makeweb_Elements_Tree::SORT_MODE_FREE) {
-            $tree->reorder($tid, $sortTids);
-        } else {
-            $node = $tree->getNode($tid);
-            $treeSorter->sortNode($node);
+        $node->setSortMode($mode);
+        $node->setSortDir($dir);
+
+        if ($mode !== TreeInterface::SORT_MODE_FREE) {
+            $sortTids = $nodeSorter->sort($node);
+        }
+
+        if (count($sortTids)) {
+            $tree->reorderChildren($node, $sortTids);
         }
 
         return new ResultResponse(true, 'Tree sort published.');

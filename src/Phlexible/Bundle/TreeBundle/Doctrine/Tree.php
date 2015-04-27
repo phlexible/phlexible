@@ -15,6 +15,7 @@ use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 use Phlexible\Bundle\TreeBundle\Event\MoveNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\ReorderChildNodesEvent;
 use Phlexible\Bundle\TreeBundle\Event\ReorderNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
@@ -554,11 +555,13 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
     }
 
     /**
+     * Reorders node after beforeNode
+     *
      * {@inheritdoc}
      */
-    public function reorder(TreeNodeInterface $node, TreeNodeInterface $targetNode, $before = false)
+    public function reorder(TreeNodeInterface $node, TreeNodeInterface $beforeNode)
     {
-        if ($targetNode->getParentNode()->getId() !== $node->getParentNode()->getId()) {
+        if ($beforeNode->getParentNode()->getId() !== $node->getParentNode()->getId()) {
             throw new InvalidNodeMoveException('Node and targetNode need to have the same parent.');
         }
 
@@ -566,22 +569,19 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
             return;
         }
 
-        $event = new ReorderNodeEvent($node, $targetNode, $before);
+        $sort = $beforeNode->getSort() + 1;
+
+        $event = new ReorderNodeEvent($node, $sort);
         if ($this->dispatcher->dispatch(TreeEvents::BEFORE_REORDER_NODE, $event)->isPropagationStopped()) {
             return;
         }
 
-        if ($before) {
-            $sort = $targetNode->getSort();
-        } else {
-            $sort = $targetNode->getSort() + 1;
-        }
-
         $updatesNodes = [];
 
+        $currentSort = $sort + 1;
         foreach ($this->getChildren($node->getParentNode()) as $childNode) {
             if ($childNode->getSort() <= $sort) {
-                $childNode->setSort($childNode->getSort() + 1);
+                $childNode->setSort($currentSort++);
                 $updatesNodes[] = $childNode;
             }
         }
@@ -593,8 +593,43 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
             $this->updateNode($updateNode);
         }
 
-        $event = new ReorderNodeEvent($node, $targetNode, $before);
+        $event = new NodeEvent($node);
         $this->dispatcher->dispatch(TreeEvents::REORDER_NODE, $event);
+
+        return;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reorderChildren(TreeNodeInterface $node, array $sortIds)
+    {
+        if (count($this->getChildren($node)) !== count($sortIds)) {
+            throw new InvalidNodeMoveException('Children count mismatch.');
+        }
+
+        $childNodes = array();
+        foreach ($sortIds as $sort => $nodeId) {
+            $childNode = $this->get($nodeId);
+            if ($childNode->getParentNode()->getId() !== $node->getId()) {
+                throw new InvalidNodeMoveException('Node and targetNode need to have the same parent.');
+            }
+            $childNodes[$sort] = $childNode;
+        }
+
+        $event = new ReorderChildNodesEvent($node, $sortIds);
+        if ($this->dispatcher->dispatch(TreeEvents::BEFORE_REORDER_CHILD_NODE, $event)->isPropagationStopped()) {
+            return;
+        }
+
+        foreach ($childNodes as $index => $childNode) {
+            $childNode->setSort($index);
+
+            $this->updateNode($childNode);
+        }
+
+        $event = new ReorderChildNodesEvent($node, $sortIds);
+        $this->dispatcher->dispatch(TreeEvents::REORDER_CHILD_NODES, $event);
 
         return;
     }

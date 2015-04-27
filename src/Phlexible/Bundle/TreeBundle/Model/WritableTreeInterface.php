@@ -54,19 +54,32 @@ interface WritableTreeInterface
      *
      * @return TreeNodeInterface
      */
-    public function createInstance(TreeNodeInterface $parentNode, TreeNodeInterface $afterNode = null, TreeNodeInterface $sourceNode, $userId
+    public function createInstance(
+        TreeNodeInterface $parentNode,
+        TreeNodeInterface $afterNode = null,
+        TreeNodeInterface $sourceNode,
+        $userId
     );
 
     /**
      * Reorder node
      *
      * @param TreeNodeInterface $node
-     * @param TreeNodeInterface $targetNode
-     * @param bool              $before
+     * @param TreeNodeInterface $beforeNode
      *
      * @throws InvalidNodeMoveException
      */
-    public function reorder(TreeNodeInterface $node, TreeNodeInterface $targetNode, $before = false);
+    public function reorder(TreeNodeInterface $node, TreeNodeInterface $beforeNode);
+
+    /**
+     * Reorder node
+     *
+     * @param TreeNodeInterface $node
+     * @param array             $sortIds
+     *
+     * @throws InvalidNodeMoveException
+     */
+    public function reorderChildren(TreeNodeInterface $node, array $sortIds);
 
     /**
      * Move node
