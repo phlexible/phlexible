@@ -115,13 +115,15 @@ class SiterootSaver
 
         $specialTids = [];
         foreach ($specialTidsData as $row) {
-            $specialTids[] = [
+            $row['language'] = !empty($row['language']) ? $row['language'] : '';
+
+            $specialTids[$row['key'] . '__' . $row['language']] = [
                 'name'     => $row['key'],
-                'language' => !empty($row['language']) ? $row['language'] : null,
+                'language' => $row['language'] ?: null,
                 'treeId'   => $row['tid'],
             ];
         }
-        $siteroot->setSpecialTids($specialTids);
+        $siteroot->setSpecialTids(array_values($specialTids));
 
         return $this;
     }
