@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\SiterootBundle\Twig\Extension;
 
+use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootsAccessor;
@@ -66,6 +67,7 @@ class SiterootExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('special_tid', [$this, 'specialTid']),
+            new \Twig_SimpleFunction('current_siteroot', [$this, 'currentSiteroot']),
         ];
     }
 
@@ -80,12 +82,9 @@ class SiterootExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $name
-     * @param string $language
-     *
-     * @return int|null
+     * @return Siteroot
      */
-    public function specialTid($name, $language = null)
+    public function currentSiteroot()
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -95,8 +94,21 @@ class SiterootExtension extends \Twig_Extension
             $siteroot = $this->siterootRequestMatcher->matchRequest($request);
         }
 
+        return $siteroot;
+    }
+
+    /**
+     * @param string $name
+     * @param string $language
+     *
+     * @return int|null
+     */
+    public function specialTid($name, $language = null)
+    {
+        $siteroot = $this->currentSiteroot();
+
         if (!$language) {
-            $language = $request->getLocale();
+            $language = $this->requestStack->getCurrentRequest()->getLocale();
         }
 
         return $siteroot->getSpecialTid($language, $name);
