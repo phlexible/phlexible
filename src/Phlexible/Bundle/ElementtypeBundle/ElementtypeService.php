@@ -267,6 +267,16 @@ class ElementtypeService
             $elementtypeStructure->addNode($node);
         }
 
+        $mappings = $elementtype->getMappings();
+        foreach ($mappings as $mappingIndex => $mapping) {
+            foreach ($mapping['fields'] as $mappingFieldIndex => $mapingField) {
+                if (isset($dsIdMap[$mapingField['dsId']])) {
+                    $mappings[$mappingIndex]['fields'][$mappingFieldIndex]['dsId'] = $dsIdMap[$mapingField['dsId']];
+                }
+            }
+        }
+        $elementtype->setMappings($mappings);
+
         $this->elementtypeManager->updateElementtype($elementtype);
 
         return $elementtype;
