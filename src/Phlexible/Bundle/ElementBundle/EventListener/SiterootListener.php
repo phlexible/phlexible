@@ -139,6 +139,6 @@ class SiterootListener
         $element = $this->elementService->createElement($elementSource, $this->masterLanguage, $siteroot->getModifyUserId());
 
         $tree = $this->treeManager->getBySiteRootId($siteroot->getId());
-        $tree->init('element', $element->getEid(), $element->getCreateUserId());
+        $tree->init('element-structure', $element->getEid(), $element->getCreateUserId());
     }
 }
