@@ -11,7 +11,6 @@ namespace Phlexible\Component\AccessControl\Rights;
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Rights
@@ -29,17 +28,17 @@ class Rights
     const RIGHT_STATUS_STOPPED_UNSET =  4;
 
     /**
-     * @var \Phlexible\Component\AccessControl\Model\AccessManagerInterface
+     * @var AccessManagerInterface
      */
     private $accessManager;
 
     /**
-     * @var \Phlexible\Component\AccessControl\Permission\PermissionCollection
+     * @var PermissionCollection
      */
     private $permissions;
 
     /**
-     * @param \Phlexible\Component\AccessControl\Model\AccessManagerInterface $accessManager
+     * @param AccessManagerInterface $accessManager
      * @param PermissionCollection   $permissions
      */
     public function __construct(AccessManagerInterface $accessManager, PermissionCollection $permissions)

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Component\AccessControl\Tests\Permission;
 
+use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionResolver;
 
@@ -32,10 +33,10 @@ class PermissionResolverTest extends \PHPUnit_Framework_TestCase
     {
         $this->permissions = new PermissionCollection(
             [
-                new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'read', 1, 'read-icon'),
-                new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'create', 2, 'create-icon'),
-                new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'update', 4, 'update-icon'),
-                new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'delete', 8, 'delete-icon'),
+                new Permission('contentClass', 'read', 1, 'read-icon'),
+                new Permission('contentClass', 'create', 2, 'create-icon'),
+                new Permission('contentClass', 'update', 4, 'update-icon'),
+                new Permission('contentClass', 'delete', 8, 'delete-icon'),
             ]
         );
         $this->resolver = new PermissionResolver($this->permissions);

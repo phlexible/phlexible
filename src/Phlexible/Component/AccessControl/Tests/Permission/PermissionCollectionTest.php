@@ -21,9 +21,9 @@ class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
     public function testAddPermission()
     {
         $permissions = new PermissionCollection();
-        $permissions->add(new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'testPermission1', 1, 'test-icon'));
-        $permissions->add(new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'testPermission2', 2, 'test-icon'));
-        $permissions->add(new \Phlexible\Component\AccessControl\Permission\Permission('anotherContentClass', 'testPermission3', 4, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'testPermission1', 1, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'testPermission2', 2, 'test-icon'));
+        $permissions->add(new Permission('anotherContentClass', 'testPermission3', 4, 'test-icon'));
 
         $this->assertSame(3, count($permissions->getAll()));
         $this->assertSame(2, count($permissions->getByContentClass('contentClass')));
@@ -35,9 +35,9 @@ class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddDuplicateBitInPermissionThrowsInvalidArgumentException()
     {
-        $permissions = new \Phlexible\Component\AccessControl\Permission\PermissionCollection();
+        $permissions = new PermissionCollection();
         $permissions->add(new Permission('contentClass', 'testPermission', 1, 'test-icon'));
-        $permissions->add(new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'anotherTestPermission', 1, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'anotherTestPermission', 1, 'test-icon'));
     }
 
     /**
@@ -45,19 +45,19 @@ class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddDuplicateNameInPermissionThrowsInvalidArgumentException()
     {
-        $permissions = new \Phlexible\Component\AccessControl\Permission\PermissionCollection();
+        $permissions = new PermissionCollection();
         $permissions->add(new Permission('contentClass', 'testPermission', 1, 'test-icon'));
-        $permissions->add(new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'testPermission', 2, 'test-icon'));
+        $permissions->add(new Permission('contentClass', 'testPermission', 2, 'test-icon'));
     }
 
     public function testAddCollection()
     {
         $addPermissions = new PermissionCollection();
-        $addPermissions->add(new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'testPermission1', 1, 'test-icon'));
-        $addPermissions->add(new \Phlexible\Component\AccessControl\Permission\Permission('contentClass', 'testPermission2', 2, 'test-icon'));
-        $addPermissions->add(new \Phlexible\Component\AccessControl\Permission\Permission('anotherContentClass', 'testPermission3', 4, 'test-icon'));
+        $addPermissions->add(new Permission('contentClass', 'testPermission1', 1, 'test-icon'));
+        $addPermissions->add(new Permission('contentClass', 'testPermission2', 2, 'test-icon'));
+        $addPermissions->add(new Permission('anotherContentClass', 'testPermission3', 4, 'test-icon'));
 
-        $permissions = new \Phlexible\Component\AccessControl\Permission\PermissionCollection();
+        $permissions = new PermissionCollection();
         $permissions->addCollection($addPermissions);
 
         $this->assertSame(3, count($permissions->getAll()));

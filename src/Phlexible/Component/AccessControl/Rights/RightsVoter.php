@@ -31,7 +31,7 @@ class RightsVoter implements VoterInterface
     const RIGHT_STATUS_STOPPED_UNSET = 4;
 
     /**
-     * @var \Phlexible\Component\AccessControl\Model\AccessManagerInterface
+     * @var AccessManagerInterface
      */
     private $accessManager;
 
@@ -41,7 +41,7 @@ class RightsVoter implements VoterInterface
     private $permissions;
 
     /**
-     * @param \Phlexible\Component\AccessControl\Model\AccessManagerInterface $accessManager
+     * @param AccessManagerInterface $accessManager
      * @param PermissionCollection   $permissions
      */
     public function __construct(AccessManagerInterface $accessManager, PermissionCollection $permissions)

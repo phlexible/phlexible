@@ -25,7 +25,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->resolver = new \Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver();
+        $this->resolver = new HierarchyMaskResolver();
     }
 
     public function testSingleMask()
