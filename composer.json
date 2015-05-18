@@ -35,7 +35,7 @@
         "brainbits/image-analyzer": "~1.0",
         "php-poppler/php-poppler": "~1.0",
         "imagine/imagine": "~0.6",
-        "rhumsaa/uuid": "~2.7",
+        "ramsey/uuid": "~2.7",
         "php-ffmpeg/php-ffmpeg": "~0.5",
         "php-ffmpeg/extras": "~0.3",
         "igorw/file-serve-bundle": "~1",
@@ -62,7 +62,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://packages.brainbits.net/phlexible-bundles/",
+            "url": "https://packages.brainbits.net/repo/private/",
             "options": {
                 "ssl": {
                     "allow_self_signed": "true"

@@ -563,12 +563,12 @@
             "install-path": "vendor/puli/factory",
             "installer": "composer"
         },
-        "puli/repository": {
-            "install-path": "vendor/puli/repository",
+        "puli/manager": {
+            "install-path": "vendor/puli/manager",
             "installer": "composer"
         },
-        "puli/repository-manager": {
-            "install-path": "vendor/puli/repository-manager",
+        "puli/repository": {
+            "install-path": "vendor/puli/repository",
             "installer": "composer"
         },
         "puli/symfony-bridge": {
@@ -581,6 +581,10 @@
         },
         "puli/twig-extension": {
             "install-path": "vendor/puli/twig-extension",
+            "installer": "composer"
+        },
+        "ramsey/uuid": {
+            "install-path": "vendor/ramsey/uuid",
             "installer": "composer"
         },
         "rhumsaa/uuid": {
@@ -637,6 +641,18 @@
         },
         "twig/twig": {
             "install-path": "vendor/twig/twig",
+            "installer": "composer"
+        },
+        "webmozart/assert": {
+            "install-path": "vendor/webmozart/assert",
+            "installer": "composer"
+        },
+        "webmozart/console": {
+            "install-path": "vendor/webmozart/console",
+            "installer": "composer"
+        },
+        "webmozart/expression": {
+            "install-path": "vendor/webmozart/expression",
             "installer": "composer"
         },
         "webmozart/glob": {
