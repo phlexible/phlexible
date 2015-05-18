@@ -53,6 +53,12 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
 
         this.mode = null;
 
+        this.initToolbar();
+
+        Phlexible.elements.tab.Preview.superclass.initComponent.call(this);
+    },
+
+    initToolbar: function() {
         var langBtns = [];
         for (var i = 0; i < Phlexible.Config.get('set.language.frontend').length; i++) {
             langBtns.push({
@@ -163,8 +169,6 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
                 scope: this
             }
         ];
-
-        Phlexible.elements.tab.Preview.superclass.initComponent.call(this);
     },
 
     onLoadElement: function (element) {

@@ -443,6 +443,10 @@ class DataSaver
 
         $meta = $request->get('meta');
 
+        if ($meta) {
+            $meta = json_decode($meta);
+        }
+
         foreach ($meta as $field => $value) {
             if (!$metaSet->hasField($field)) {
                 unset($meta[$field]);
