@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\AccessControl;
 
-use Phlexible\Bundle\AccessControlBundle\Permission\Permission;
-use Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection;
-use Phlexible\Bundle\AccessControlBundle\Permission\PermissionProviderInterface;
+use Phlexible\Component\AccessControl\Permission\Permission;
+use Phlexible\Component\AccessControl\Permission\PermissionCollection;
+use Phlexible\Component\AccessControl\Permission\PermissionProviderInterface;
 
 /**
  * Media manager permission provider

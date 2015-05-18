@@ -8,12 +8,11 @@
 
 namespace Phlexible\Bundle\TreeBundle\Controller;
 
-use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
+use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

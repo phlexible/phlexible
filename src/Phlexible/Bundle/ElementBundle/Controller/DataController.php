@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
-use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
@@ -21,6 +20,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
+use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

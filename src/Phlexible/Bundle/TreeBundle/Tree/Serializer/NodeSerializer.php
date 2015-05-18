@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\TreeBundle\Tree\Serializer;
 
-use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
-use Phlexible\Bundle\AccessControlBundle\Permission\PermissionCollection;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
+use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**

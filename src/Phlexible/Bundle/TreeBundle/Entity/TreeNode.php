@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\TreeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\AccessControlBundle\ContentObject\ContentObjectInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
+use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
 
 /**
  * Tree node

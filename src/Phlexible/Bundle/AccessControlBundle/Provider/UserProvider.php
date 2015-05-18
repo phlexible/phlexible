@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\AccessControlBundle\Provider;
 
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
+use Phlexible\Component\AccessControl\Provider\ProviderInterface;
 
 /**
  * User provider

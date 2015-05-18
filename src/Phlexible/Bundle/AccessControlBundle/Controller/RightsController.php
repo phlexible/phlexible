@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\Controller;
 
-use Phlexible\Bundle\AccessControlBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -153,9 +153,9 @@ class RightsController extends Controller
                     );
 
                     if (!in_array($rightRow['status'], [
-                        \Phlexible\Bundle\AccessControlBundle\Rights\Rights::RIGHT_STATUS_INHERITABLE,
-                        \Phlexible\Bundle\AccessControlBundle\Rights\Rights::RIGHT_STATUS_SINGLE,
-                        \Phlexible\Bundle\AccessControlBundle\Rights\Rights::RIGHT_STATUS_STOPPED
+                        \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_INHERITABLE,
+                        \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_SINGLE,
+                        \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_STOPPED
                     ])) {
                         continue;
                     }

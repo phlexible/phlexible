@@ -10,10 +10,10 @@ namespace Phlexible\Bundle\AccessControlBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\AccessControlBundle\AccessControlEvents;
 use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
-use Phlexible\Bundle\AccessControlBundle\Event\AccessControlEntryEvent;
-use Phlexible\Bundle\AccessControlBundle\Model\AccessManagerInterface;
+use Phlexible\Component\AccessControl\AccessControlEvents;
+use Phlexible\Component\AccessControl\Event\AccessControlEntryEvent;
+use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

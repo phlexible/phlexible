@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\AccessControlBundle\Provider;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Phlexible\Component\AccessControl\Provider\ProviderInterface;
 
 /**
  * Group provider
