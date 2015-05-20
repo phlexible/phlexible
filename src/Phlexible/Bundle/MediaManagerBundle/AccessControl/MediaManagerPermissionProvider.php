@@ -22,14 +22,14 @@ class MediaManagerPermissionProvider implements PermissionProviderInterface
     /**
      * @var string
      */
-    private $contentClass;
+    private $objectType;
 
     /**
-     * @param string $contentClass
+     * @param string $objectType
      */
-    public function __construct($contentClass = 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder')
+    public function __construct($objectType = 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder')
     {
-        $this->contentClass = $contentClass;
+        $this->objectType = $objectType;
     }
 
     /**
@@ -37,17 +37,17 @@ class MediaManagerPermissionProvider implements PermissionProviderInterface
      */
     public function getPermissions()
     {
-        return new PermissionCollection([
-            new Permission($this->contentClass, 'FOLDER_READ', 1, 'p-mediamanager-folder_view-icon'),
-            new Permission($this->contentClass, 'FOLDER_CREATE', 2, 'p-mediamanager-folder_add-icon'),
-            new Permission($this->contentClass, 'FOLDER_MODIFY', 4, 'p-mediamanager-folder_edit-icon'),
-            new Permission($this->contentClass, 'FOLDER_DELETE', 8, 'p-mediamanager-folder_delete-icon'),
-            new Permission($this->contentClass, 'FOLDER_RIGHTS', 16, 'p-mediamanager-folder_rights-icon'),
-            new Permission($this->contentClass, 'FILE_READ', 32, 'p-mediamanager-file_view-icon'),
-            new Permission($this->contentClass, 'FILE_CREATE', 64, 'p-mediamanager-file_add-icon'),
-            new Permission($this->contentClass, 'FILE_MODIFY', 128, 'p-mediamanager-file_edit-icon'),
-            new Permission($this->contentClass, 'FILE_DELETE', 256, 'p-mediamanager-file_delete-icon'),
-            new Permission($this->contentClass, 'FILE_DOWNLOAD', 512, 'p-mediamanager-file_download-icon'),
+        return new PermissionCollection($this->objectType, [
+            new Permission('FOLDER_READ', 1),
+            new Permission('FOLDER_CREATE', 2),
+            new Permission('FOLDER_MODIFY', 4),
+            new Permission('FOLDER_DELETE', 8),
+            new Permission('FOLDER_RIGHTS', 16),
+            new Permission('FILE_READ', 32),
+            new Permission('FILE_CREATE', 64),
+            new Permission('FILE_MODIFY', 128),
+            new Permission('FILE_DELETE', 256),
+            new Permission('FILE_DOWNLOAD', 512),
         ]);
     }
 }

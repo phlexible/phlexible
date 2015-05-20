@@ -15,7 +15,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         emptyText: Phlexible.accesscontrol.Strings.no_subjects
     },
 
-    contentClass: null,
+    objectType: null,
     languageEnabled: false,
     deletedSubjects: [],
 
@@ -23,7 +23,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         return {
             users: Phlexible.Router.generate('accesscontrol_users'),
             groups: Phlexible.Router.generate('accesscontrol_groups'),
-            rights: Phlexible.Router.generate('accesscontrol_rights'),
+            permissions: Phlexible.Router.generate('accesscontrol_permissions'),
             save: Phlexible.Router.generate('accesscontrol_save')
         };
     },
@@ -37,18 +37,18 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         Ext.applyIf(this.urls, this.getDefaultUrls());
 
-        if (!this.urls.users || !this.urls.groups || !this.urls.subjects || !this.urls.rights || !this.urls.add || !this.urls.save) {
+        if (!this.urls.users || !this.urls.groups || !this.urls.identities || !this.urls.permissions || !this.urls.add || !this.urls.save) {
             throw 'RightsGrid URL config incomplete.';
         }
 
-        if (!this.contentClass) {
-            throw 'RightsGrid contentClass config incomplete.';
+        if (!this.objectType) {
+            throw 'RightsGrid objectType config incomplete.';
         }
 
         Ext.Ajax.request({
-            url: this.urls.rights,
+            url: this.urls.permissions,
             params: {
-                contentClass: this.contentClass
+                objectType: this.objectType
             },
             success: function (response) {
                 var fields = [
@@ -141,7 +141,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 var data = Ext.decode(response.responseText);
                 var plugins = [];
 
-                Ext.each(data, function(permission) {
+                Ext.each(data.permissions, function(permission) {
                     var name = permission.name;
                     var iconCls = permission.iconCls || 'p-accesscontrol-right-icon';
 
@@ -234,12 +234,12 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         });
 
         this.store = new Ext.data.JsonStore({
-            url: this.urls.subjects,
-            root: 'subjects',
+            url: this.urls.identities,
+            root: 'identities',
             fields: Phlexible.accesscontrol.model.AccessControlEntry,
             baseParams: {
-                contentClass: this.contentClass,
-                contentId: null
+                objectType: this.objectType,
+                objectId: null
             }
         });
 
@@ -480,18 +480,18 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         Phlexible.accesscontrol.RightsGrid.superclass.initComponent.call(this);
     },
 
-    doLoad: function (contentType, contentId) {
-        if (this.contentType !== contentType || this.contentId !== contentId) {
-            this.contentType = contentType;
-            this.contentId = contentId;
+    doLoad: function (objectType, objectId) {
+        if (this.objectType !== objectType || this.objectId !== objectId) {
+            this.objectType = objectType;
+            this.objectId = objectId;
 
             this.store.removeAll();
 
             //this.selModel.clearSelections();
 
             this.store.baseParams = {
-                contentClass: this.contentClass,
-                contentId: contentId
+                objectType: this.objectType,
+                objectId: objectId
             };
             this.store.load();
         }
@@ -507,10 +507,10 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         grid.store.remove(record);
 
         grid.deletedSubjects.push({
-            contentType: grid.contentType,
-            contentId: grid.contentId,
-            objectType: record.data.objectType,
-            objectId: record.data.objectId,
+            objectType: grid.objectType,
+            objectId: grid.objectId,
+            securityType: record.data.securityType,
+            securityId: record.data.securityId,
             language: record.data.language
         });
     },
@@ -586,10 +586,10 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         Ext.Ajax.request({
             url: this.urls.add,
             params: {
-                contentClass: this.contentClass,
-                contentId: this.contentId,
-                objectType: r.data.objectType,
-                objectId: r.data.objectId
+                objectType: this.objectType,
+                objectId: this.objectId,
+                securityType: r.data.securityType,
+                securityId: r.data.securityId
             },
             success: function (response) {
                 var data = Ext.decode(response.responseText);
@@ -636,10 +636,10 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             }
 
             modified.push({
-                objectType: mr[i].data.objectType,
-                objectId: mr[i].data.objectId,
-                contentType: this.contentType,
-                contentId: this.contentId,
+                securityType: mr[i].data.securityType,
+                securityId: mr[i].data.securityId,
+                objectType: this.objectType,
+                objectId: this.objectId,
                 language: mr[i].data.language,
                 rights: mr[i].data.rights
             });
@@ -651,7 +651,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         Ext.Ajax.request({
             url: this.urls.save,
             params: {
-                contentClass: this.contentClass,
+                objectType: this.objectType,
                 modified: Ext.encode(modified),
                 deleted: Ext.encode(deleted)
             },

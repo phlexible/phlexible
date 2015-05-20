@@ -52,7 +52,7 @@ class RightsController extends Controller
 
         $permissions = $this->get('phlexible_access_control.permissions');
         $rights = [];
-        foreach ($permissions->getByContentClass($contentClass) as $permission) {
+        foreach ($permissions->getByObjectType($contentClass) as $permission) {
             $rights[$permission->getName()] = [
                 'right'  => $permission->getName(),
                 'status' => -1,
@@ -124,7 +124,7 @@ class RightsController extends Controller
         $accessManager = $this->get('phlexible_access_control.access_manager');
         $permissions = $this->get('phlexible_access_control.permissions');
         $contentRights = [];
-        foreach ($permissions->getByContentClass($contentClass) as $permission) {
+        foreach ($permissions->getByObjectType($contentClass) as $permission) {
             $contentRights[] = $permission->getName();
         }
 

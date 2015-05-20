@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="access_control", uniqueConstraints={@ORM\UniqueConstraint(columns={"content_type", "content_id", "security_type", "security_id", "content_language"})})
+ * @ORM\Table(name="access_control_entry", uniqueConstraints={@ORM\UniqueConstraint(columns={"content_type", "content_id", "security_type", "security_id", "content_language"})})
  */
 class AccessControlEntry
 {
@@ -30,15 +30,15 @@ class AccessControlEntry
 
     /**
      * @var string
-     * @ORM\Column(name="content_type", type="string", length=100)
+     * @ORM\Column(name="object_type", type="string", length=100)
      */
-    private $contentType;
+    private $objectType;
 
     /**
      * @var string
-     * @ORM\Column(name="content_id", type="string", length=100)
+     * @ORM\Column(name="object_id", type="string", length=100)
      */
-    private $contentId;
+    private $objectId;
 
     /**
      * @var string
@@ -54,15 +54,9 @@ class AccessControlEntry
 
     /**
      * @var string
-     * @ORM\Column(name="content_language", type="string", length=2, nullable=true, options={"fixed"=true})
+     * @ORM\Column(name="object_language", type="string", length=2, nullable=true, options={"fixed"=true})
      */
-    private $contentLanguage;
-
-    /**
-     * @var string
-     * @ORM\Column(name="type", type="string", length=100)
-     */
-    private $type;
+    private $objectLanguage;
 
     /**
      * @var int
@@ -105,19 +99,19 @@ class AccessControlEntry
     /**
      * @return string
      */
-    public function getType()
+    public function getObjectType()
     {
-        return $this->type;
+        return $this->objectType;
     }
 
     /**
-     * @param string $type
+     * @param string $objectType
      *
      * @return $this
      */
-    public function setType($type)
+    public function setObjectType($objectType)
     {
-        $this->type = $type;
+        $this->objectType = $objectType;
 
         return $this;
     }
@@ -125,19 +119,19 @@ class AccessControlEntry
     /**
      * @return string
      */
-    public function getContentType()
+    public function getObjectId()
     {
-        return $this->contentType;
+        return $this->objectId;
     }
 
     /**
-     * @param string $contentType
+     * @param string $objectId
      *
      * @return $this
      */
-    public function setContentType($contentType)
+    public function setObjectId($objectId)
     {
-        $this->contentType = $contentType;
+        $this->objectId = $objectId;
 
         return $this;
     }
@@ -145,39 +139,19 @@ class AccessControlEntry
     /**
      * @return string
      */
-    public function getContentId()
+    public function getObjectLanguage()
     {
-        return $this->contentId;
+        return $this->objectLanguage;
     }
 
     /**
-     * @param string $contentId
+     * @param string $objectLanguage
      *
      * @return $this
      */
-    public function setContentId($contentId)
+    public function setObjectLanguage($objectLanguage)
     {
-        $this->contentId = $contentId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContentLanguage()
-    {
-        return $this->contentLanguage;
-    }
-
-    /**
-     * @param string $contentLanguage
-     *
-     * @return $this
-     */
-    public function setContentLanguage($contentLanguage)
-    {
-        $this->contentLanguage = $contentLanguage;
+        $this->objectLanguage = $objectLanguage;
 
         return $this;
     }

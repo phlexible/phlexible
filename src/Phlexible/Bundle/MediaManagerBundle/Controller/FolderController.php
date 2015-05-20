@@ -126,7 +126,7 @@ class FolderController extends Controller
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $dispatcher = $this->get('event_dispatcher');
         $securityContext = $this->get('security.context');
-        $permissions = $this->get('phlexible_access_control.permissions');
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
 
         $user = $this->getUser();
 
@@ -147,7 +147,10 @@ class FolderController extends Controller
                 }
                 $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
                 */
-                $userRights = array_keys($permissions->getByContentClass(get_class($rootFolder)));
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($rootFolder)) as $permission) {
+                    $userRights[] = $permission->getName();
+                }
 
                 $slot = new SiteSlot();
                 $slot->setData(
@@ -216,7 +219,10 @@ class FolderController extends Controller
                     }
                     $userRights = array();
                     */
-                    $userRights = array_keys($permissions->getByContentClass(get_class($subFolder)));;
+                    $userRights = array();
+                    foreach ($permissionRegistry->get(get_class($subFolder)) as $permission) {
+                        $userRights[] = $permission->getName();
+                    }
 
                     $folderUsageService = $this->get('phlexible_media_manager.folder_usage_manager');
                     $usage = $folderUsageService->getStatus($folder);

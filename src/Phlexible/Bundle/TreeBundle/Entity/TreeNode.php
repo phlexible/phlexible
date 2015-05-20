@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
-use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 
 /**
  * Tree node
@@ -22,7 +22,7 @@ use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
  * @ORM\Entity
  * @ORM\Table(name="tree")
  */
-class TreeNode implements TreeNodeInterface, ContentObjectInterface
+class TreeNode implements TreeNodeInterface, HierarchicalDomainObjectInterface
 {
     /**
      * @var TreeInterface
@@ -116,20 +116,33 @@ class TreeNode implements TreeNodeInterface, ContentObjectInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
-    public function getContentObjectIdentifiers()
+    public function getHierarchicalObjectIdentifiers()
     {
-        return [
-            'type' => 'treenode',
-            'id'   => $this->getId()
-        ];
+        return $this->getTree()->getIdPath($this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectType()
+    {
+        return get_class($this);
     }
 
     /**
      * @return array
      */
-    public function getContentObjectPath()
+    public function getObjectHierarchy()
     {
         return $this->getTree()->getPath($this);
     }

@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\AccessControl\ContentObject;
+namespace Phlexible\Component\AccessControl\Model;
 
 /**
  * Hierarchical domain object interface
@@ -16,9 +16,9 @@ namespace Phlexible\Component\AccessControl\ContentObject;
 interface HierarchicalDomainObjectInterface extends DomainObjectInterface
 {
     /**
-     * Return hierarchical domain identifiers
+     * Return hierarchical domain identifier path
      *
      * @return array
      */
-    public function getHierarchicalDomainIdentifiers();
+    public function getHierarchicalObjectIdentifiers();
 }

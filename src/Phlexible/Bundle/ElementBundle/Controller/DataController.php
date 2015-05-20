@@ -471,7 +471,7 @@ class DataController extends Controller
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
+                    $this->get('phlexible_access_control.permissions')->getByObjectType(get_class($node))
                 );
             }
         }

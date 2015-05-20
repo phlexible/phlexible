@@ -61,7 +61,7 @@ class Rights
     {
         $baseContentId = current($contentIdPath);
 
-        $entries = $this->accessManager->findByContentIdPath($rightType, $contentType, $contentIdPath, $securityTypes);
+        $entries = $this->accessManager->findByObjectIdPath($rightType, $contentType, $contentIdPath, $securityTypes);
         ld($entries);
 
         $resolver = new HierarchyMaskResolver();
@@ -70,12 +70,12 @@ class Rights
 
         $sort = [];
         foreach ($entries as $idx => $entry) {
-            $sort[$idx] = array_search((int) $entry->getContentId(), $contentIdPath);
+            $sort[$idx] = array_search((int) $entry->getObjectId(), $contentIdPath);
 
             $rights[$key]['status'] = $rights[$key]['inherit'];
             unset($rights[$key]['inherit']);
             $rights[$key]['inherited'] = count($contentIdPath) > 1 ? 1 : 0;
-            if ($baseContentId != $entry->getContentId()) {
+            if ($baseContentId != $entry->getObjectId()) {
                 $rights[$key]['inherited'] = 2;
             }
         }
