@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\Icon;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
@@ -63,6 +64,10 @@ class IconResolver
      */
     public function resolveIcon($icon)
     {
+        if (!$icon) {
+            $icon = '_fallback.gif';
+        }
+
         return '/bundles/phlexibleelementtype/elementtypes/' . $icon;
     }
 
@@ -75,9 +80,19 @@ class IconResolver
      */
     public function resolveElementtype(Elementtype $elementtype)
     {
-        $icon = $elementtype->getIcon();
+        return $this->resolveIcon($elementtype->getIcon());
+    }
 
-        return $this->resolveIcon($icon);
+    /**
+     * Resolve element source to icon
+     *
+     * @param ElementSource $elementSource
+     *
+     * @return string
+     */
+    public function resolveElementSource(ElementSource $elementSource)
+    {
+        return $this->resolveIcon($elementSource->getIcon());
     }
 
     /**
@@ -89,9 +104,9 @@ class IconResolver
      */
     public function resolveElement(Element $element)
     {
-        $icon = $this->elementService->findElementSource($element->getElementtypeId());
+        $elementSource = $this->elementService->findElementSource($element->getElementtypeId());
 
-        return $this->resolveIcon($icon);
+        return $this->resolveElementSource($elementSource);
     }
 
     /**
@@ -128,7 +143,7 @@ class IconResolver
             return $this->resolveElement($element);
         }
 
-        $parameters['icon'] = $this->elementService->findElementSource($element->getElementtypeId());
+        $parameters['icon'] = basename($this->resolveElementSource($this->elementService->findElementSource($element->getElementtypeId())));
 
         return $this->router->generate('elements_icon', $parameters);
     }
@@ -159,7 +174,7 @@ class IconResolver
             return $this->resolveElement($element);
         }
 
-        $parameters['icon'] = $this->elementService->findElementSource($element->getElementtypeId());
+        $parameters['icon'] = basename($this->resolveElementSource($this->elementService->findElementSource($element->getElementtypeId())));
 
         return $this->router->generate('elements_icon', $parameters);
     }
