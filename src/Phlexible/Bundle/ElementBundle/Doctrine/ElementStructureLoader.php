@@ -13,9 +13,9 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
-use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
-use Phlexible\Bundle\ElementtypeBundle\File\Parser\XmlParser;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
+use Phlexible\Component\Elementtype\Field\FieldRegistry;
+use Phlexible\Component\Elementtype\File\Parser\XmlParser;
+use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 
 /**
  * Element version data

@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller\Tree;
 
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
-use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Elementtype\ElementtypeService;
+use Phlexible\Component\Elementtype\Exception\InvalidArgumentException;
+use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -25,12 +25,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class TreeSaver
 {
     /**
-     * @var ElementtypeService
+     * @var \Phlexible\Component\Elementtype\ElementtypeService
      */
     private $elementtypeService;
 
     /**
-     * @param ElementtypeService $elementtypeService
+     * @param \Phlexible\Component\Elementtype\ElementtypeService $elementtypeService
      */
     public function __construct(ElementtypeService $elementtypeService)
     {

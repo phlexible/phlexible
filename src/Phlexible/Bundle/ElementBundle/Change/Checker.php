@@ -10,8 +10,8 @@ namespace Phlexible\Bundle\ElementBundle\Change;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\Usage\UsageManager;
+use Phlexible\Component\Elementtype\ElementtypeService;
+use Phlexible\Component\Elementtype\Usage\UsageManager;
 
 /**
  * Elementtype change checker

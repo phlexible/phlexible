@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
-use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
+use Phlexible\Component\Elementtype\Field\AbstractField;
 
 /**
  * Media link extractor

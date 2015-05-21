@@ -8,12 +8,11 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\Tests;
 
-use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
-use Phlexible\Bundle\DataSourceBundle\GarbageCollector\GarbageCollector;
-use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
+use Phlexible\Component\DataSource\DataSourceEvents;
+use Phlexible\Component\DataSource\Event\GarbageCollectEvent;
+use Phlexible\Component\DataSource\GarbageCollector\GarbageCollector;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -32,7 +31,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
     private $garbageCollector;
 
     /**
-     * @var DataSourceManagerInterface|ObjectProphecy
+     * @var \Phlexible\Component\DataSource\Model\DataSourceManagerInterface|ObjectProphecy
      */
     private $manager;
 
@@ -50,7 +49,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
     {
 
         $this->eventDispatcher = new EventDispatcher();
-        $this->manager = $this->prophesize('Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface');
+        $this->manager = $this->prophesize('Phlexible\Component\DataSource\Model\DataSourceManagerInterface');
         $this->garbageCollector = new GarbageCollector($this->manager->reveal(), $this->eventDispatcher);
 
         $this->datasource = new DataSource();

@@ -18,9 +18,9 @@ use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
-use Phlexible\Bundle\ElementtypeBundle\File\Dumper\XmlDumper;
-use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
+use Phlexible\Component\Elementtype\File\Dumper\XmlDumper;
+use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Model\ViabilityManagerInterface;
 
 /**
  * Element service
@@ -137,7 +137,7 @@ class ElementService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
      *
      * @return Element[]
      */
@@ -196,7 +196,7 @@ class ElementService
     /**
      * @param Element $element
      *
-     * @return Elementtype
+     * @return \Phlexible\Component\Elementtype\Model\Elementtype
      */
     public function findElementtype(Element $element)
     {
@@ -224,7 +224,7 @@ class ElementService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
      *
      * @return Elementtype[]
      */
@@ -355,7 +355,7 @@ class ElementService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
      *
      * @return ElementSource
      */

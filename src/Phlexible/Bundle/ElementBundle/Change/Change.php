@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\Change;
 
-use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
+use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**
  * Elementtype change
