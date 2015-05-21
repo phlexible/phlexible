@@ -1,6 +1,6 @@
 services:
     phlexible_data_source.garbage_collector:
-        class: Phlexible\Bundle\DataSourceBundle\GarbageCollector\GarbageCollector
+        class: Phlexible\Component\DataSource\GarbageCollector\GarbageCollector
         arguments: [@phlexible_data_source.data_source_manager, @event_dispatcher]
 
     # event listeners

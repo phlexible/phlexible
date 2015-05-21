@@ -10,8 +10,8 @@ namespace Phlexible\Component\MetaSet\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\DataSource\Model\DataSourceManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaData;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;

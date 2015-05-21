@@ -3,149 +3,149 @@ parameters:
 
 services:
     phlexible_elementtype.field.registry:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry
+        class: Phlexible\Component\Elementtype\Field\FieldRegistry
         arguments: [[]]
 
     phlexible_elementtype.field.checkbox:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\CheckboxField
+        class: Phlexible\Component\Elementtype\Field\CheckboxField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: checkbox}
 
     phlexible_elementtype.field.checkgroup:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\CheckgroupField
+        class: Phlexible\Component\Elementtype\Field\CheckgroupField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: checkgroup}
 
     phlexible_elementtype.field.date:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\DateField
+        class: Phlexible\Component\Elementtype\Field\DateField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: date}
 
     phlexible_elementtype.field.datetime:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\DatetimeField
+        class: Phlexible\Component\Elementtype\Field\DatetimeField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: datetime}
 
     phlexible_elementtype.field.display:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\DisplayField
+        class: Phlexible\Component\Elementtype\Field\DisplayField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: displayfield}
 
     phlexible_elementtype.field.label:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\LabelField
+        class: Phlexible\Component\Elementtype\Field\LabelField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: label}
 
     phlexible_elementtype.field.link:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\LinkField
+        class: Phlexible\Component\Elementtype\Field\LinkField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: link}
 
     phlexible_elementtype.field.multiselect:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\MultiSelectField
+        class: Phlexible\Component\Elementtype\Field\MultiSelectField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: multiselect}
 
     phlexible_elementtype.field.number:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\NumberField
+        class: Phlexible\Component\Elementtype\Field\NumberField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: numberfield}
 
     phlexible_elementtype.field.password:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\PasswordField
+        class: Phlexible\Component\Elementtype\Field\PasswordField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: password}
 
     phlexible_elementtype.field.radio:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\RadioField
+        class: Phlexible\Component\Elementtype\Field\RadioField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: radio}
 
     phlexible_elementtype.field.select:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\SelectField
+        class: Phlexible\Component\Elementtype\Field\SelectField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: select}
 
     phlexible_elementtype.field.suggest:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\SuggestField
+        class: Phlexible\Component\Elementtype\Field\SuggestField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: suggest}
 
     phlexible_elementtype.field.table:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\TableField
+        class: Phlexible\Component\Elementtype\Field\TableField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: table}
 
     phlexible_elementtype.field.textarea:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\TextareaField
+        class: Phlexible\Component\Elementtype\Field\TextareaField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: textarea}
 
     phlexible_elementtype.field.text:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\TextField
+        class: Phlexible\Component\Elementtype\Field\TextField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: textfield}
 
     phlexible_elementtype.field.timecode:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\TimecodeField
+        class: Phlexible\Component\Elementtype\Field\TimecodeField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: timecodefield}
 
     phlexible_elementtype.field.time:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\TimeField
+        class: Phlexible\Component\Elementtype\Field\TimeField
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: time}
 
     phlexible_elementtype.field.container.accordion:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\Container\AccordionContainer
+        class: Phlexible\Component\Elementtype\Field\Container\AccordionContainer
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: accordion}
 
     phlexible_elementtype.field.container.group:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\Container\GroupContainer
+        class: Phlexible\Component\Elementtype\Field\Container\GroupContainer
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: group}
 
     phlexible_elementtype.field.container.tab:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\Container\TabContainer
+        class: Phlexible\Component\Elementtype\Field\Container\TabContainer
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: tab}
 
     phlexible_elementtype.field.container.root:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\Container\RootContainer
+        class: Phlexible\Component\Elementtype\Field\Container\RootContainer
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: root}
 
     phlexible_elementtype.field.container.reference:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\Container\ReferenceContainer
+        class: Phlexible\Component\Elementtype\Field\Container\ReferenceContainer
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: reference}
 
     phlexible_elementtype.field.container.referenceroot:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\Container\ReferencerootContainer
+        class: Phlexible\Component\Elementtype\Field\Container\ReferencerootContainer
         public: false
         tags:
             - {name: phlexible_elementtype.field, alias: referenceroot}

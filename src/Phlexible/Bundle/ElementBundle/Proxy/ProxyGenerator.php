@@ -13,9 +13,9 @@ use CG\Generator\PhpClass;
 use CG\Generator\PhpMethod;
 use CG\Generator\PhpParameter;
 use CG\Generator\PhpProperty;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeVersion\ElementtypeVersion;
-use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
+use Phlexible\Component\Elementtype\ElementtypeService;
+use Phlexible\Component\Elementtype\Field\FieldRegistry;
 
 /**
  * Proxy generator
@@ -25,7 +25,7 @@ use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 class ProxyGenerator
 {
     /**
-     * @var ElementtypeService
+     * @var \Phlexible\Component\Elementtype\ElementtypeService
      */
     private $elementtypeService;
 
@@ -47,7 +47,7 @@ class ProxyGenerator
     {
         $generator = new DefaultGeneratorStrategy();
 
-        $distiller = new \Phlexible\Bundle\ElementtypeBundle\Distiller\Distiller($this->elementtypeService, $fieldRegistry);
+        $distiller = new \Phlexible\Component\Elementtype\Distiller\Distiller($this->elementtypeService, $fieldRegistry);
         $data = $distiller->distill($elementtypeVersion, $fieldRegistry);
 
         $classname = ucfirst(strtolower($elementtypeVersion->getTitle()));

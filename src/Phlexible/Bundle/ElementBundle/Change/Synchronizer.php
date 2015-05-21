@@ -12,8 +12,8 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
-use Phlexible\Bundle\ElementtypeBundle\File\Dumper\XmlDumper;
-use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
+use Phlexible\Component\Elementtype\File\Dumper\XmlDumper;
+use Phlexible\Component\Elementtype\Model\Elementtype;
 
 /**
  * Synchronizer

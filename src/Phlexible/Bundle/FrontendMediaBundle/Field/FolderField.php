@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Field;
 
-use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
+use Phlexible\Component\Elementtype\Field\AbstractField;
 
 /**
  * Folder field

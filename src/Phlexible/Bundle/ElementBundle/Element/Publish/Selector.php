@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\ElementBundle\Element\Publish;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Component\Elementtype\ElementtypeService;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -29,7 +29,7 @@ class Selector
     private $elementService;
 
     /**
-     * @var ElementtypeService
+     * @var \Phlexible\Component\Elementtype\ElementtypeService
      */
     private $elementtypeService;
 
@@ -50,7 +50,7 @@ class Selector
 
     /**
      * @param ElementService                $elementService
-     * @param ElementtypeService            $elementtypeService
+     * @param \Phlexible\Component\Elementtype\ElementtypeService            $elementtypeService
      * @param TreeManager                   $treeManager
      * @param TeaserManagerInterface        $teaserManager
      * @param AuthorizationCheckerInterface $authorizationChecker

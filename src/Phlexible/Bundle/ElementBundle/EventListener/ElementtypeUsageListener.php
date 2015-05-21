@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Doctrine\DBAL\Connection;
-use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
-use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
+use Phlexible\Component\Elementtype\Event\ElementtypeUsageEvent;
+use Phlexible\Component\Elementtype\Usage\Usage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**

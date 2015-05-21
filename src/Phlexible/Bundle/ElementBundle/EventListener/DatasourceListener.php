@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
-use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
-use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
 use Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil;
 use Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil;
+use Phlexible\Component\DataSource\DataSourceEvents;
+use Phlexible\Component\DataSource\Event\GarbageCollectEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

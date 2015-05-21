@@ -9,13 +9,13 @@
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
+use Phlexible\Component\Elementtype\ElementtypeService;
+use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 
 /**
  * Siteroot listener
@@ -30,7 +30,7 @@ class SiterootListener
     private $elementService;
 
     /**
-     * @var ElementtypeService
+     * @var \Phlexible\Component\Elementtype\ElementtypeService
      */
     private $elementtypeService;
 
@@ -51,7 +51,7 @@ class SiterootListener
 
     /**
      * @param ElementService       $elementService
-     * @param ElementtypeService   $elementtypeService
+     * @param \Phlexible\Component\Elementtype\ElementtypeService   $elementtypeService
      * @param TreeManager          $treeManager
      * @param UserManagerInterface $userManager
      * @param string               $masterLanguage
