@@ -26,6 +26,16 @@ interface ElementSourceManagerInterface
     public function findElementSource($elementtypeId);
 
     /**
+     * @param array $criteria
+     * @param array $orderBy
+     * @param int   $limit
+     * @param int   $offset
+     *
+     * @return ElementSource[]
+     */
+    public function findBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null);
+
+    /**
      * @param string $type
      *
      * @return ElementSource[]

@@ -77,11 +77,17 @@ interface ContentTreeInterface extends TreeInterface
      */
     public function isViewable(TreeNodeInterface $node, $language = null);
 
-
     /**
      * @param TreeNodeInterface $node
      *
      * @return null
      */
     public function getContent(TreeNodeInterface $node);
+
+    /**
+     * @param TreeNodeInterface $node
+     *
+     * @return string
+     */
+    public function getTemplate(TreeNodeInterface $node);
 }

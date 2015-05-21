@@ -91,6 +91,14 @@ class ElementManager implements ElementManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findOneBy(array $criteria, $orderBy = null)
+    {
+        return $this->getElementRepository()->findOneBy($criteria, $orderBy);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function updateElement(Element $element, $flush = true)
     {
         if (!$element->getEid()) {

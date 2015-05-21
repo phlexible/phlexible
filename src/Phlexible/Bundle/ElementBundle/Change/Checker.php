@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Change;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
+use Phlexible\Bundle\ElementtypeBundle\Usage\UsageManager;
 
 /**
  * Elementtype change checker
@@ -35,89 +36,113 @@ class Checker
     private $elementSourceManager;
 
     /**
+     * @var UsageManager
+     */
+    private $elementtypeUsageManager;
+
+    /**
      * @param ElementtypeService            $elementtypeService
      * @param ElementService                $elementService
      * @param ElementSourceManagerInterface $elementSourceManager
+     * @param UsageManager                  $elementtypeUsageManager
      */
     public function __construct(
         ElementtypeService $elementtypeService,
         ElementService $elementService,
-        ElementSourceManagerInterface $elementSourceManager)
+        ElementSourceManagerInterface $elementSourceManager,
+        UsageManager $elementtypeUsageManager
+    )
     {
         $this->elementtypeService = $elementtypeService;
         $this->elementService = $elementService;
         $this->elementSourceManager = $elementSourceManager;
+        $this->elementtypeUsageManager = $elementtypeUsageManager;
     }
 
     /**
-     * @return Change[]
+     * @param bool $forceChange
+     *
+     * @return ChangeCollection
      */
-    public function check()
+    public function check($forceChange = false)
     {
         $changes = [];
 
         $allElementtypes = $this->elementtypeService->findAllElementtypes();
 
+        $elementSources = array();
+        foreach ($this->elementSourceManager->findBy() as $elementSource) {
+            $elementSources[$elementSource->getElementtypeId()][] = $elementSource;
+        }
+
         $referenceElementtypeIds = [];
+        // handle references
         foreach ($allElementtypes as $elementtype) {
             if ($elementtype->getType() !== 'reference') {
                 continue;
             }
-            $reason = '';
-            $needImport = false;
-            $outdatedElementSources = [];
+            unset($elementSources[$elementtype->getId()]);
             $oldElementSources = $this->elementSourceManager->findByElementtype($elementtype);
             if (!$oldElementSources) {
-                $needImport = true;
-                $reason = 'New Elementtype';
+                $changes[] = new AddChange($elementtype, true);
             } else {
+                $usage = $this->elementtypeUsageManager->getUsage($elementtype);
+                $outdatedElementSources = [];
                 foreach ($oldElementSources as $oldElementSource) {
-                    if ($oldElementSource->getElementtypeRevision() < $elementtype->getRevision()) {
-                        $needImport = true;
+                    if ($forceChange ||$oldElementSource->getElementtypeRevision() < $elementtype->getRevision()) {
                         $outdatedElementSources[] = $oldElementSource;
-                        $reason = 'Higher revision';
                     }
                 }
+                if (count($outdatedElementSources)) {
+                    $changes[] = new UpdateChange($elementtype, $usage, true, $outdatedElementSources);
+                    $referenceElementtypeIds[$elementtype->getId()] = $elementtype->getRevision();
+                }
             }
-            if ($needImport) {
-                $referenceElementtypeIds[] = $elementtype->getId();
-            }
-            //$outdatedElementSources = $this->elementService->findOutdatedElementSources($elementtype);
-            $changes[] = new Change($elementtype, $needImport, $reason, $outdatedElementSources);
         }
 
+        // handle non-references
         foreach ($allElementtypes as $elementtype) {
             if ($elementtype->getType() === 'reference') {
                 continue;
             }
-            $reason = '';
-            $needImport = false;
-            $outdatedElementSources = [];
+            unset($elementSources[$elementtype->getId()]);
             $oldElementSources = $this->elementSourceManager->findByElementtype($elementtype);
             if (!$oldElementSources) {
-                $needImport = true;
-                $reason = 'New Elementtype';
+                $changes[] = new AddChange($elementtype, true);
             } else {
-                foreach ($oldElementSources as $oldElementSource) {
-                    if ($oldElementSource->getElementtypeRevision() < $elementtype->getRevision()) {
-                        $needImport = true;
-                        $outdatedElementSources[] = $oldElementSource;
-                        $reason = 'Higher revision';
-                    }
-                }
+                $usage = $this->elementtypeUsageManager->getUsage($elementtype);
+                $outdatedElementSources = [];
+                $referenceIds = array_intersect_key(
+                    array_flip($elementtype->getStructure()->getReferences()),
+                    $referenceElementtypeIds
+                );
 
-                if (array_intersect($elementtype->getStructure()->getReferenceIds(), $referenceElementtypeIds)) {
+                if (count($referenceIds)) {
                     foreach ($oldElementSources as $oldElementSource) {
-                        $needImport = true;
                         $outdatedElementSources[] = $oldElementSource;
                     }
-                    $reason = 'Reference outdated';
+                    if (count($outdatedElementSources)) {
+                        $changes[] = new ReferenceChange($elementtype, $usage, true, $outdatedElementSources);
+                    }
+                } else {
+                    foreach ($oldElementSources as $oldElementSource) {
+                        if ($forceChange || $oldElementSource->getElementtypeRevision() < $elementtype->getRevision()) {
+                            $outdatedElementSources[] = $oldElementSource;
+                        }
+                    }
+                    if (count($outdatedElementSources)) {
+                        $changes[] = new UpdateChange($elementtype, $usage, true, $outdatedElementSources);
+                    }
                 }
             }
-            //$outdatedElementSources = $this->elementService->findOutdatedElementSources($elementtype);
-            $changes[] = new Change($elementtype, $needImport, $reason, $outdatedElementSources);
         }
 
-        return $changes;
+        foreach ($elementSources as $elementtypeId => $removedElementSources) {
+            $elementtype = $this->elementSourceManager->findElementtype($elementtypeId);
+            $usage = $this->elementtypeUsageManager->getUsage($elementtype);
+            $changes[] = new RemoveChange($elementtype, $usage, $removedElementSources);
+        }
+
+        return new ChangeCollection($changes);
     }
 }

@@ -45,6 +45,7 @@ class XmlParser implements ParserInterface
         $defaultTab = (string) $dom->documentElement->getAttribute('defaultTab');
         $deleted = (bool) $dom->documentElement->getAttribute('deleted');
         $hideChildren = (bool) $dom->documentElement->getAttribute('hideChildren');
+        $noIndex = (bool) $dom->documentElement->getAttribute('noIndex');
 
         $commentNodes = $dom->documentElement->getElementsByTagName('comment');
         $comment = $commentNodes->length ? $commentNodes->item(0)->textContent : '';
@@ -132,6 +133,7 @@ class XmlParser implements ParserInterface
             ->setDefaultTab($defaultTab)
             ->setDefaultContentTab($defaultContentTab)
             ->setHideChildren($hideChildren)
+            ->setNoIndex($noIndex)
             ->setDeleted($deleted)
             ->setStructure($elementtypeStructure)
             ->setCreatedAt(new \DateTime($createdAt))
@@ -175,7 +177,7 @@ class XmlParser implements ParserInterface
         $referenceElementtypeId = $node->hasAttribute('referenceElementtypeId') ? $node->getAttribute('referenceElementtypeId') : null;
 
         if ($referenceElementtypeId) {
-            $elementtypeStructure->addReferenceId($referenceElementtypeId);
+            $elementtypeStructure->addReference($referenceElementtypeId);
         }
 
         $labels = [];

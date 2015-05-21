@@ -78,6 +78,18 @@ class Mediator implements MediatorInterface
     /**
      * {@inheritdoc}
      */
+    public function getTemplate(TreeNodeInterface $node)
+    {
+        if ($mediator = $this->findMediator($node)) {
+            return $mediator->getTemplate($node);
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isViewable(TreeNodeInterface $node)
     {
         if ($mediator = $this->findMediator($node)) {

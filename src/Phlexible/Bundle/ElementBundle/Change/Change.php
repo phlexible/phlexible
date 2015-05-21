@@ -8,87 +8,34 @@
 
 namespace Phlexible\Bundle\ElementBundle\Change;
 
-use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 
 /**
  * Elementtype change
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Change
+abstract class Change implements ChangeInterface
 {
-    /**
-     * @var ElementSource[]
-     */
-    private $outdatedElementSources = [];
-
-    /**
-     * @var bool
-     */
-    private $needImport = false;
-
-    /**
-     * @var string
-     */
-    private $reason;
-
     /**
      * @var Elementtype
      */
     private $elementtype;
 
     /**
-     * @param Elementtype     $elementtype
-     * @param bool            $needImport
-     * @param string          $reason
-     * @param ElementSource[] $outdatedElementSources
+     * @var Usage[]
      */
-    public function __construct(Elementtype $elementtype, $needImport, $reason, array $outdatedElementSources = [])
+    private $usage;
+
+    /**
+     * @param Elementtype $elementtype
+     * @param Usage[]     $usage
+     */
+    public function __construct(Elementtype $elementtype, array $usage = array())
     {
         $this->elementtype = $elementtype;
-        $this->needImport = $needImport;
-        $this->reason = $reason;
-
-        foreach ($outdatedElementSources as $outdatedElementSource) {
-            $this->addOutdatedElementSource($outdatedElementSource);
-        }
-    }
-
-    /**
-     * @return ElementSource[]
-     */
-    public function getOutdatedElementSources()
-    {
-        return $this->outdatedElementSources;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getNeedImport()
-    {
-        return $this->needImport;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReason()
-    {
-        return $this->reason;
-    }
-
-    /**
-     * @param ElementSource $outdatedElementSource
-     *
-     * @return $this
-     */
-    public function addOutdatedElementSource(ElementSource $outdatedElementSource)
-    {
-        $this->outdatedElementSources[] = $outdatedElementSource;
-
-        return $this;
+        $this->usage = $usage;
     }
 
     /**
@@ -97,5 +44,13 @@ class Change
     public function getElementtype()
     {
         return $this->elementtype;
+    }
+
+    /**
+     * @return Usage[]
+     */
+    public function getUsage()
+    {
+        return $this->usage;
     }
 }

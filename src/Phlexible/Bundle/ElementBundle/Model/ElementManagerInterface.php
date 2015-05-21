@@ -25,9 +25,22 @@ interface ElementManagerInterface
     public function find($id);
 
     /**
-     * {@inheritdoc}
+     * @param array      $criteria
+     * @param array|null $orderBy
+     * @param int|null   $limit
+     * @param int|null   $offset
+     *
+     * @return Element[]
      */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
+
+    /**
+     * @param array      $criteria
+     * @param array|null $orderBy
+     *
+     * @return Element
+     */
+    public function findOneBy(array $criteria, $orderBy = null);
 
     /**
      * Update element
@@ -37,7 +50,7 @@ interface ElementManagerInterface
      *
      * @return $this
      */
-    public function updateElement(Element $element, $flush);
+    public function updateElement(Element $element, $flush = true);
 
     /**
      * Delete element

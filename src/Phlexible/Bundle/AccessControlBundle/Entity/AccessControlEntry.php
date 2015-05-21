@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="access_control_entry", uniqueConstraints={@ORM\UniqueConstraint(columns={"content_type", "content_id", "security_type", "security_id", "content_language"})})
+ * @ORM\Table(name="access_control_entry", uniqueConstraints={@ORM\UniqueConstraint(columns={"object_type", "object_id", "security_type", "security_id", "object_language"})})
  */
 class AccessControlEntry
 {

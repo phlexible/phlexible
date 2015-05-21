@@ -41,6 +41,7 @@ class XmlDumper implements DumperInterface
                 'icon'         => $elementtype->getIcon(),
                 'defaultTab'   => $elementtype->getDefaultTab(),
                 'hideChildren' => $elementtype->getHideChildren() ? '1' : '0',
+                'noIndex'      => $elementtype->getNoIndex() ? '1' : '0',
                 'deleted'      => $elementtype->getDeleted() ? '1' : '0',
             ]
         );

@@ -40,17 +40,16 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     /**
      * @var array
      */
-    private $referenceIds = [];
+    private $references = [];
 
     /**
      * @param string $referenceId
      *
      * @return $this
      */
-    public function addReferenceId($referenceId)
+    public function addReference($referenceId)
     {
-        $this->referenceIds[] = $referenceId;
-        $this->referenceIds = array_unique($this->referenceIds);
+        $this->references[] = $referenceId;
 
         return $this;
     }
@@ -58,9 +57,9 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
     /**
      * @return array
      */
-    public function getReferenceIds()
+    public function getReferences()
     {
-        return $this->referenceIds;
+        return $this->references;
     }
 
     /**

@@ -200,7 +200,6 @@ class ElementService
      */
     public function findElementtype(Element $element)
     {
-        // TODO: from ElementSource?
         return $this->elementSourceManager->findElementtype($element->getElementtypeId());
     }
 
@@ -211,7 +210,6 @@ class ElementService
      */
     public function findElementSource($elementtypeId)
     {
-        // TODO: from ElementSource?
         return $this->elementSourceManager->findElementSource($elementtypeId);
     }
 

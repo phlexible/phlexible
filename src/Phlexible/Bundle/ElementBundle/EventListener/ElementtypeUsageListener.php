@@ -46,7 +46,7 @@ class ElementtypeUsageListener
     public function onElementtypeUsage(ElementtypeUsageEvent $event)
     {
         $elementtypeId = $event->getElementtype()->getId();
-        $language = $this->tokenStorage->getToken()->getUser()->getInterfaceLanguage('de');
+        $language = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser()->getInterfaceLanguage('de') : 'en';
 
         $qb = $this->connection->createQueryBuilder();
         $qb

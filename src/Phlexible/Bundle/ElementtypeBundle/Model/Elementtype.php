@@ -75,6 +75,11 @@ class Elementtype implements IdentifiableInterface
     /**
      * @var bool
      */
+    private $noIndex = false;
+
+    /**
+     * @var bool
+     */
     private $deleted = false;
 
     /**
@@ -265,10 +270,6 @@ class Elementtype implements IdentifiableInterface
      */
     public function getIcon()
     {
-        if (!$this->icon) {
-            return '_fallback.gif';
-        }
-
         return $this->icon;
     }
 
@@ -322,6 +323,26 @@ class Elementtype implements IdentifiableInterface
     public function setHideChildren($hideChildren)
     {
         $this->hideChildren = (bool) $hideChildren;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getNoIndex()
+    {
+        return $this->noIndex;
+    }
+
+    /**
+     * @param bool $noIndex
+     *
+     * @return $this
+     */
+    public function setNoIndex($noIndex)
+    {
+        $this->noIndex = (bool) $noIndex;
 
         return $this;
     }

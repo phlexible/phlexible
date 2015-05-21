@@ -99,6 +99,13 @@ class ElementSourceManager implements ElementSourceManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->getElementSourceRepository()->findBy($criteria, $orderBy, $limit, $offset);
+    }
+    /**
+     * {@inheritdoc}
+     */
     public function findByType($type)
     {
         return $this->getElementSourceRepository()->findBy(['type' => $type]);

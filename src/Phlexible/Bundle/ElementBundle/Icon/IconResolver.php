@@ -89,9 +89,9 @@ class IconResolver
      */
     public function resolveElement(Element $element)
     {
-        $elementtype = $this->elementService->findElementtype($element);
+        $icon = $this->elementService->findElementSource($element->getElementtypeId());
 
-        return $this->resolveElementtype($elementtype);
+        return $this->resolveIcon($icon);
     }
 
     /**
@@ -128,9 +128,7 @@ class IconResolver
             return $this->resolveElement($element);
         }
 
-        $elementtype = $this->elementService->findElementtype($element);
-
-        $parameters['icon'] = $elementtype->getIcon();
+        $parameters['icon'] = $this->elementService->findElementSource($element->getElementtypeId());
 
         return $this->router->generate('elements_icon', $parameters);
     }
@@ -161,9 +159,7 @@ class IconResolver
             return $this->resolveElement($element);
         }
 
-        $elementtype = $this->elementService->findElementtype($element);
-
-        $parameters['icon'] = $elementtype->getIcon();
+        $parameters['icon'] = $this->elementService->findElementSource($element->getElementtypeId());
 
         return $this->router->generate('elements_icon', $parameters);
     }
