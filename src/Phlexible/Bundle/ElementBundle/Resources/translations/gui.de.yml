@@ -109,6 +109,7 @@ elements:
     key: Schlüssel
     value: Wert
     links: Links
+    empty: leer
     include_incoming_links: 'Eingehende Links anzeigen'
     incoming_links: 'Eingehende Links'
     outgoing_links: 'Ausgehende Links'

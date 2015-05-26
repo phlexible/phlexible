@@ -110,6 +110,7 @@ elements:
     key: Key
     value: Value
     links: Links
+    empty: empty
     include_incoming_links: 'Include incoming links'
     incoming_links: 'Incoming links'
     outgoing_links: 'Outgoing links'
