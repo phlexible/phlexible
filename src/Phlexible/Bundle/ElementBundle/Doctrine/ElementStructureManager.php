@@ -17,7 +17,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ValueEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
-use Phlexible\Component\Elementtype\Field\FieldRegistry;
+use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 
 /**
  * Element structure manager

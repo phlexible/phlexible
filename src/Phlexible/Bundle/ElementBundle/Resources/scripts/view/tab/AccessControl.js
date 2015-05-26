@@ -8,7 +8,7 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
     title: Phlexible.elements.Strings.access_control,
     iconCls: 'p-element-tab_rights-icon',
     right: 'ACCESS',
-    objectType: 'Phlexible\\Bundle\\TreeBundle\\Entity\\TreeNode',
+    contentClass: 'Phlexible\\Bundle\\TreeBundle\\Entity\\TreeNode',
     strings: {
         users: Phlexible.elements.Strings.users,
         user: Phlexible.elements.Strings.user,
@@ -19,7 +19,7 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
 
     initComponent: function () {
         this.urls = {
-            identities: Phlexible.Router.generate('elements_rights_subjects'),
+            subjects: Phlexible.Router.generate('elements_rights_subjects'),
             add: Phlexible.Router.generate('elements_rights_add')
         };
 
@@ -55,18 +55,18 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
     },
 
     lazyLoad: function (tid, teaserId) {
-        var objectType, objectId;
+        var contentType, contentId;
 
         if (teaserId && teaserId !== undefined) {
-            objectType = 'teaser';
-            objectId = teaserId;
+            contentType = 'teaser';
+            contentId = teaserId;
         }
         else {
-            objectType = 'treenode';
-            objectId = tid;
+            contentType = 'treenode';
+            contentId = tid;
         }
 
-        this.doLoad(objectType, objectId);
+        this.doLoad(contentType, contentId);
     },
 
     onGetLock: function (element) {

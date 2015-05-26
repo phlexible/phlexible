@@ -22,14 +22,14 @@ class TreePermissionProvider implements PermissionProviderInterface
     /**
      * @var string
      */
-    private $objectType;
+    private $contentClass;
 
     /**
-     * @param string $objectType
+     * @param string $contentClass
      */
-    public function __construct($objectType = 'Phlexible\Bundle\TreeBundle\Entity\TreeNode')
+    public function __construct($contentClass = 'Phlexible\Bundle\TreeBundle\Entity\TreeNode')
     {
-        $this->objectType = $objectType;
+        $this->contentClass = $contentClass;
     }
 
     /**
@@ -37,13 +37,13 @@ class TreePermissionProvider implements PermissionProviderInterface
      */
     public function getPermissions()
     {
-        return new PermissionCollection($this->objectType, [
-            new Permission('VIEW', 1),
-            new Permission('EDIT', 2),
-            new Permission('CREATE', 4),
-            new Permission('DELETE', 8),
-            new Permission('PUBLISH', 16),
-            new Permission('ACCESS', 32),
+        return new PermissionCollection([
+            new Permission($this->contentClass, 'VIEW', 1, 'p-element-view-icon'),
+            new Permission($this->contentClass, 'EDIT', 2, 'p-element-edit-icon'),
+            new Permission($this->contentClass, 'CREATE', 4, 'p-element-add-icon'),
+            new Permission($this->contentClass, 'DELETE', 8, 'p-element-delete-icon'),
+            new Permission($this->contentClass, 'PUBLISH', 16, 'p-element-publish-icon'),
+            new Permission($this->contentClass, 'ACCESS', 32, 'p-element-tab_rights-icon'),
         ]);
     }
 }

@@ -43,13 +43,6 @@ interface MediatorInterface
     /**
      * @param TreeNodeInterface $node
      *
-     * @return string
-     */
-    public function getTemplate(TreeNodeInterface $node);
-
-    /**
-     * @param TreeNodeInterface $node
-     *
      * @return bool
      */
     public function isViewable(TreeNodeInterface $node);

@@ -1,4 +1,4 @@
 services:
     phlexible_access_control.doctrine.access_manager:
-        class: Phlexible\Component\AccessControl\Doctrine\AccessManager
-        arguments: [@phlexible_access_control.permission_registry, @doctrine.orm.entity_manager, @event_dispatcher]
+        class: Phlexible\Bundle\AccessControlBundle\Doctrine\AccessManager
+        arguments: [@doctrine.orm.entity_manager, @event_dispatcher]

@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
-use Phlexible\Bundle\ElementBundle\Change\AddChange;
 use Phlexible\Bundle\ElementBundle\Change\Checker;
-use Phlexible\Bundle\ElementBundle\Change\RemoveChange;
-use Phlexible\Bundle\ElementBundle\Change\UpdateChange;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
@@ -34,9 +31,8 @@ class ChangesCommand extends ContainerAwareCommand
         $this
             ->setName('element:changes')
             ->setDescription('Show element changes.')
-            ->addOption('force', null, InputOption::VALUE_NONE, 'Force update')
-            ->addOption('sync', null, InputOption::VALUE_NONE, 'Synchronize changes.')
-            ->addOption('filter', null, InputOption::VALUE_REQUIRED, 'Filter changes. Specify "add", "update" or "remove".')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Force import')
+            ->addOption('commit', null, InputOption::VALUE_NONE, 'Commit changes')
             ->addOption('queue', null, InputOption::VALUE_NONE, 'Via queue');
     }
 
@@ -49,68 +45,31 @@ class ChangesCommand extends ContainerAwareCommand
         $checker = $this->getContainer()->get('phlexible_element.checker');
         $synchronizer = $this->getContainer()->get('phlexible_element.synchronizer');
 
-        $sync = $input->getOption('sync');
-        $filter = $input->getOption('filter');
-        $force = $input->getOption('force');
-
-        $changes = $checker->check($force);
+        $changes = $checker->check();
 
         if (count($changes)) {
-            if ($filter === 'add') {
-                $changes = $changes->filterAdd();
-            } elseif ($filter === 'update') {
-                $changes = $changes->filterUpdate();
-            } elseif ($filter === 'remove') {
-                $changes = $changes->filterRemove();
-            } elseif ($filter) {
-                $output->writeln("Invalid filter option $filter");
-
-                return 1;
-            }
-
-            if (!$sync) {
+            if (!$input->getOption('commit')) {
                 $table = new Table($output);
                 $table->setHeaders([
                     'Elementtype',
-                    'Type',
                     'New Revision',
                     'Old Revisions',
-                    'Change',
-                    '# Element sources',
-                    '# Element usages',
-                ]);
+                    'Needs import?',
+                    '# Element source updates'
+                    ]);
 
                 foreach ($changes as $change) {
-                    $oldRevisions = array();
-                    $color = 'white';
-                    if ($change instanceof RemoveChange) {
-                        $oldRevisions = [];
-                        foreach ($change->getRemovedElementSources() as $targetElementSource) {
-                            $oldRevisions[] = $targetElementSource->getElementtypeRevision();
-                        }
-                        $color = 'red';
-                    } elseif ($change instanceof UpdateChange) {
-                        $oldRevisions = [];
-                        foreach ($change->getOutdatedElementSources() as $targetElementSource) {
-                            $oldRevisions[] = $targetElementSource->getElementtypeRevision();
-                        }
-                        $color = 'yellow';
-                    } elseif ($change instanceof AddChange) {
-                        $color = 'green';
+                    $oldRevisions = [];
+                    foreach ($change->getOutdatedElementSources() as $outdatedElementSource) {
+                        $oldRevisions[] = $outdatedElementSource->getElementtypeRevision();
                     }
-                    $name = $change->getElementtype()->getUniqueId();
-                    $type = $change->getElementtype()->getType();
-                    $revision = $change->getElementtype()->getRevision();
-
                     $table->addRow(
                         [
-                            $name,
-                            $type,
-                            $revision,
-                            count($oldRevisions) ? implode(',', $oldRevisions) : '-',
-                            "<fg=$color>{$change->getReason()}</fg=$color>",
-                            count($oldRevisions) ?: '-',
-                            count($change->getUsage()) ?: '-'
+                            $change->getElementtype()->getTitle(),
+                            $change->getElementtype()->getRevision(),
+                            implode(',', $oldRevisions),
+                            $change->getNeedImport() ? '<fg=green>' . $change->getReason() . '</fg=green>': '-',
+                            count($change->getOutdatedElementSources()) ?: '-'
                         ]
                     );
                 }
@@ -118,12 +77,9 @@ class ChangesCommand extends ContainerAwareCommand
                 $table->render();
             } else {
                 foreach ($changes as $change) {
-                    $ts = microtime(true);
-                    $output->writeln("Synchronizing change for {$change->getElementtype()->getUniqueId()}... ");
+                    $output->write("{$change->getElementtype()->getTitle()}... ");
                     $synchronizer->synchronize($change, $input->getOption('force'));
-                    $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
-                    $ts = number_format(microtime(true) - $ts, 2);
-                    $output->writeln("<info>... OK ($ts s)</info>");
+                    $output->writeln("<info>ok</info>");
                 }
             }
         } else {

@@ -1,10 +1,15 @@
 services:
-    phlexible_access_control.permission_registry:
-        class: Phlexible\Component\AccessControl\Permission\PermissionRegistry
+    phlexible_access_control.permissions:
+        class: Phlexible\Component\AccessControl\Permission\PermissionCollection
         arguments: [[]]
 
     phlexible_access_control.permission_resolver:
         class: Phlexible\Component\AccessControl\Permission\PermissionResolver
+        arguments: [@phlexible_access_control.permissions]
+
+    phlexible_access_control.rights:
+        class: Phlexible\Component\AccessControl\Rights\Rights
+        arguments: [@phlexible_access_control.access_manager, @phlexible_access_control.permissions]
 
     phlexible_access_control.provider.user:
         class: Phlexible\Bundle\AccessControlBundle\Provider\UserProvider
@@ -16,9 +21,9 @@ services:
 
     # voters
     phlexible_access_control.voter.rights:
-        class: Phlexible\Bundle\AccessControlBundle\Voter\AccessControlVoter
+        class: Phlexible\Component\AccessControl\Rights\RightsVoter
         public: false
-        arguments: [@phlexible_access_control.access_manager, @phlexible_access_control.permission_registry]
+        arguments: [@phlexible_access_control.access_manager, @phlexible_access_control.permissions]
         tags:
             - {name: security.voter}
 

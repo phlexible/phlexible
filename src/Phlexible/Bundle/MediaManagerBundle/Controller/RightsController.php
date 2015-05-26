@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Rights controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/mediamanager/folder/{$folderId}")
+ * @Route("/mediamanager/rights")
  * @Security("is_granted('ROLE_MEDIA')")
  */
 class RightsController extends Controller
@@ -29,19 +29,24 @@ class RightsController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/permissions", name="mediamanager_folder_permissions")
+     * @Route("/subjects", name="mediamanager_rights_subjects")
      */
-    public function permissionsAction(Request $request, $folderId)
+    public function subjectsAction(Request $request)
     {
-        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-        $volume = $volumeManager->getByFolderId($folderId);
-        $folder = $volume->findFolder($folderId);
+        $rightType = $request->get('right_type', null);
+        $contentType = $request->get('content_type', null);
+        $contentId = $request->get('content_id', null);
 
-        $accessManager = $this->get('phlexible_access_control.access_manager');
-        $acl = $accessManager->getAcl($folder);
+        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($contentId);
+        $folder = $volume->findFolder($contentId);
+        $path = [$folder->getId()];
+        $pathFolder = $folder;
+        while ($pathFolder->getParentId()) {
+            array_unshift($path, $pathFolder->getParentId());
+            $pathFolder = $volume->findFolder($pathFolder->getParentId());
+        };
 
-        return new JsonResponse($acl->getPermissions());
-
+        $contentRightsManager = $this->get('phlexible_access_control.rights');
         $userManager = $this->get('phlexible_user.user_manager');
         $groupManager = $this->get('phlexible_user.group_manager');
 

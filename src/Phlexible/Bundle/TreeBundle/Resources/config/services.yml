@@ -13,7 +13,7 @@ services:
             - @phlexible_element.element_service
             - @phlexible_element.icon_resolver
             - @phlexible_tree.state_manager
-            - @phlexible_access_control.permission_registry
+            - @phlexible_access_control.permissions
             - @security.authorization_checker
 
     phlexible_tree.router.handler.default:

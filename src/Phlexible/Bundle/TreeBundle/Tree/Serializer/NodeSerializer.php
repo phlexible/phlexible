@@ -14,7 +14,6 @@ use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
-use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -40,9 +39,9 @@ class NodeSerializer
     private $stateManager;
 
     /**
-     * @var PermissionRegistry
+     * @var PermissionCollection
      */
-    private $permissionRegistry;
+    private $permissions;
 
     /**
      * @var AuthorizationCheckerInterface
@@ -53,20 +52,20 @@ class NodeSerializer
      * @param ElementService                $elementService
      * @param IconResolver                  $iconResolver
      * @param StateManagerInterface         $stateManager
-     * @param PermissionRegistry            $permissionRegistry
+     * @param PermissionCollection          $permissions
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         ElementService $elementService,
         IconResolver $iconResolver,
         StateManagerInterface $stateManager,
-        PermissionRegistry $permissionRegistry,
+        PermissionCollection $permissions,
         AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->elementService = $elementService;
         $this->iconResolver = $iconResolver;
         $this->stateManager = $stateManager;
-        $this->permissionRegistry = $permissionRegistry;
+        $this->permissions = $permissions;
         $this->authorizationChecker = $authorizationChecker;
     }
 
@@ -113,10 +112,9 @@ class NodeSerializer
                 $userRights = []; //$contentRightsManager->getRights($language);
                 $userRights = array_keys($userRights);
             } else {
-                $userRights = array();
-                foreach ($this->permissionRegistry->get(get_class($node))->all() as $permission) {
-                    $userRights[] = $permission->getName();
-                }
+                $userRights = array_keys(
+                    $this->permissions->getByContentClass(get_class($node))
+                );
             }
         }
 

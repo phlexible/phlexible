@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Doctrine\DBAL\Connection;
-use Phlexible\Component\Elementtype\Event\ElementtypeUsageEvent;
-use Phlexible\Component\Elementtype\Usage\Usage;
+use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
+use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -46,7 +46,7 @@ class ElementtypeUsageListener
     public function onElementtypeUsage(ElementtypeUsageEvent $event)
     {
         $elementtypeId = $event->getElementtype()->getId();
-        $language = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser()->getInterfaceLanguage('de') : 'en';
+        $language = $this->tokenStorage->getToken()->getUser()->getInterfaceLanguage('de');
 
         $qb = $this->connection->createQueryBuilder();
         $qb

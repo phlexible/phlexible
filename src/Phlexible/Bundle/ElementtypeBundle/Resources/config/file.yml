@@ -1,6 +1,6 @@
 services:
     phlexible_elementtype.file.elementtype_manager:
-        class: Phlexible\Component\Elementtype\File\ElementtypeManager
+        class: Phlexible\Bundle\ElementtypeBundle\File\ElementtypeManager
         arguments:
             - @phlexible_elementtype.file.loader.xml
             - @phlexible_elementtype.file.writer.xml
@@ -9,12 +9,12 @@ services:
         public: false
 
     phlexible_elementtype.file.loader.xml:
-      class: Phlexible\Component\Elementtype\File\Loader\XmlLoader
+      class: Phlexible\Bundle\ElementtypeBundle\File\Loader\XmlLoader
       arguments: [@pattern_locator]
 
     phlexible_elementtype.file.writer.xml:
-      class: Phlexible\Component\Elementtype\File\Writer\XmlWriter
+      class: Phlexible\Bundle\ElementtypeBundle\File\Writer\XmlWriter
       arguments: [@phlexible_elementtype.file.dumper.xml, "%kernel.root_dir%/Resources/elementtypes"]
 
     phlexible_elementtype.file.dumper.xml:
-      class: Phlexible\Component\Elementtype\File\Dumper\XmlDumper
+      class: Phlexible\Bundle\ElementtypeBundle\File\Dumper\XmlDumper

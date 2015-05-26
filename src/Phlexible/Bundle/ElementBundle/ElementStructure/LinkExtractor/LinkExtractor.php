@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
-use Phlexible\Component\Elementtype\Field\FieldRegistry;
+use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 
 /**
  * Link extractor

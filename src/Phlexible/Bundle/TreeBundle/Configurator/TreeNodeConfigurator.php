@@ -79,7 +79,6 @@ class TreeNodeConfigurator implements ConfiguratorInterface
         $treeNode = $originalTreeNode = $request->attributes->get('contentDocument');
         $tree = $treeNode->getTree();
 
-        /*
         $eid = $treeNode->getTypeId();
 
         if (0) {
@@ -102,7 +101,6 @@ class TreeNodeConfigurator implements ConfiguratorInterface
         if ($request->attributes->has('delegateTreeId')) {
             $delegateTreeNode = $tree->getNode($request->attributes->get('delegateTreeId'));
         }
-        */
 
         $renderConfiguration
             ->addFeature('treeNode')
@@ -113,10 +111,10 @@ class TreeNodeConfigurator implements ConfiguratorInterface
             ->set('version', 1)//$tree->getPublishedVersion($treeNode, 'de'))
             ->set('language', 'de');
 
-        if ($template = $tree->getTemplate($treeNode)) {
+        if ($treeNode->getTemplate()) {
             $renderConfiguration
                 ->addFeature('template')
-                ->setVariable('template', $template);
+                ->setVariable('template', $treeNode->getTemplate());
         }
 
         $renderConfiguration

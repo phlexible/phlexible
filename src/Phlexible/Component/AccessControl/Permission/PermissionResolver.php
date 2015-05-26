@@ -18,19 +18,32 @@ use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 class PermissionResolver
 {
     /**
+     * @var PermissionCollection
+     */
+    private $permissions;
+
+    /**
      * @param PermissionCollection $permissions
-     * @param int                  $mask
+     */
+    public function __construct(PermissionCollection $permissions)
+    {
+        $this->permissions = $permissions;
+    }
+
+    /**
+     * @param string $contentClass
+     * @param int    $mask
      *
      * @throws InvalidArgumentException
      * @return Permission[]
      */
-    public function resolve(PermissionCollection $permissions, $mask)
+    public function resolve($contentClass, $mask)
     {
-        $resolvedPermissions = [];
+        $permissions = [];
 
-        foreach ($permissions->all() as $permission) {
+        foreach ($this->permissions->getByContentClass($contentClass) as $permission) {
             if ($permission->getBit() & $mask) {
-                $resolvedPermissions[] = $permission;
+                $permissions[] = $permission;
                 $mask = $mask ^ $permission->getBit();
             }
         }
@@ -40,6 +53,6 @@ class PermissionResolver
             throw new InvalidArgumentException("Permission for bits $bits not found.");
         }
 
-        return $resolvedPermissions;
+        return $permissions;
     }
 }

@@ -20,16 +20,13 @@ services:
             - @phlexible_elementtype.elementtype_service
             - @phlexible_element.element_service
             - @phlexible_element.element_source_manager
-            - @phlexible_elementtype.usage_manager
 
     phlexible_element.synchronizer:
         class: Phlexible\Bundle\ElementBundle\Change\Synchronizer
         arguments:
-            - @phlexible_element.element_manager
             - @phlexible_element.element_version_manager
             - @phlexible_element.element_source_manager
             - @phlexible_elementtype.file.dumper.xml
-            - @logger
 
     phlexible_element.publish.publisher:
         class: Phlexible\Bundle\ElementBundle\Element\Publish\Publisher

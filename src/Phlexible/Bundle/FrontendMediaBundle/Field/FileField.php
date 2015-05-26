@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Field;
 
-use Phlexible\Component\Elementtype\Field\AbstractField;
+use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
 
 /**
  * Abstract media field

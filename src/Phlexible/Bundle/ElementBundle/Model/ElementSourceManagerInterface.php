@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Model;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
  * Element source manager interface
@@ -24,16 +24,6 @@ interface ElementSourceManagerInterface
      * @return ElementSource
      */
     public function findElementSource($elementtypeId);
-
-    /**
-     * @param array $criteria
-     * @param array $orderBy
-     * @param int   $limit
-     * @param int   $offset
-     *
-     * @return ElementSource[]
-     */
-    public function findBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null);
 
     /**
      * @param string $type
@@ -64,14 +54,14 @@ interface ElementSourceManagerInterface
     public function findElementtypeByElementSource(ElementSource $elementSource);
 
     /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
+     * @param Elementtype $elementtype
      *
      * @return ElementSource[]
      */
     public function findOutdatedElementSources(Elementtype $elementtype);
 
     /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
+     * @param Elementtype $elementtype
      *
      * @return ElementSource[]
      */

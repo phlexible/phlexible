@@ -63,27 +63,6 @@ class ElementMediator implements MediatorInterface
     /**
      * {@inheritdoc}
      */
-    public function getTemplate(TreeNodeInterface $node)
-    {
-        if ($template = $node->getTemplate()) {
-            return $template;
-        }
-
-        $element = $this->elementService->findElement($node->getTypeId());
-        $elementSource = $this->elementService->findElementSource($element->getElementtypeId());
-
-        $template = $elementSource->getTemplate();
-
-        if ($template) {
-            return $template;
-        }
-
-        return '::' . $elementSource->getName() . '.html.twig';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function isViewable(TreeNodeInterface $node)
     {
         return $node->getType() === 'element-full';

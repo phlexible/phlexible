@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\EventListener;
 
-use Phlexible\Component\Elementtype\ElementtypeService;
-use Phlexible\Component\Elementtype\Event\ElementtypeUsageEvent;
-use Phlexible\Component\Elementtype\Model\ViabilityManagerInterface;
-use Phlexible\Component\Elementtype\Usage\Usage;
+use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
+use Phlexible\Bundle\ElementtypeBundle\Event\ElementtypeUsageEvent;
+use Phlexible\Bundle\ElementtypeBundle\Model\ViabilityManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Usage\Usage;
 
 /**
  * Elementtype usage listeners
@@ -21,7 +21,7 @@ use Phlexible\Component\Elementtype\Usage\Usage;
 class ElementtypeUsageListener
 {
     /**
-     * @var \Phlexible\Component\Elementtype\ElementtypeService
+     * @var ElementtypeService
      */
     private $elementtypeService;
 

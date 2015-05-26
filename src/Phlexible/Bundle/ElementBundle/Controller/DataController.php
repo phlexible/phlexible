@@ -15,10 +15,12 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
 use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
 use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
-use Phlexible\Component\Elementtype\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -469,7 +471,7 @@ class DataController extends Controller
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByObjectType(get_class($node))
+                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
                 );
             }
         }

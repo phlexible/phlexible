@@ -79,7 +79,8 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
             iconCls: 'p-mediamanager-folder_rights-icon',
             disabled: this.folder_rights.indexOf(Phlexible.mediamanager.Rights.FOLDER_RIGHTS) === -1,
             hidden: Phlexible.User.isGranted('ROLE_MEDIA_ACCESS_CONTROL'),
-            objectType: 'Phlexible\\Bundle\\MediaManagerBundle\\Entity\\Folder',
+            rightType: 'internal',
+            contentType: 'folder',
             strings: {
                 users: this.strings.select_user,
                 user: '_user',
@@ -87,7 +88,7 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
                 group: '_group'
             },
             urls: {
-                identities: Phlexible.Router.generate('accesscontrol_identities'),
+                subjects: Phlexible.Router.generate('mediamanager_rights_subjects'),
                 add: Phlexible.Router.generate('mediamanager_rights_add')
             },
             listeners: {

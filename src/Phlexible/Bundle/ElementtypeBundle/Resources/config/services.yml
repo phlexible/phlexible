@@ -1,13 +1,13 @@
 services:
     phlexible_elementtype.elementtype_service:
-      class: Phlexible\Component\Elementtype\ElementtypeService
+      class: Phlexible\Bundle\ElementtypeBundle\ElementtypeService
       arguments:
         - @phlexible_elementtype.elementtype_manager
         - @phlexible_elementtype.viability_manager
         - @phlexible_elementtype.usage_manager
 
     phlexible_elementtype.select_field_providers:
-        class: Phlexible\Component\Elementtype\SelectFieldProvider\SelectFieldProviderCollection
+        class: Phlexible\Bundle\ElementtypeBundle\SelectFieldProvider\SelectFieldProviderCollection
         arguments: [[]]
 
     phlexible_elementtype.tree_saver:
@@ -15,7 +15,7 @@ services:
         arguments: [@phlexible_elementtype.elementtype_service]
 
     phlexible_elementtype.usage_manager:
-        class: Phlexible\Component\Elementtype\Usage\UsageManager
+        class: Phlexible\Bundle\ElementtypeBundle\Usage\UsageManager
         arguments: [@event_dispatcher]
 
     # event listeners

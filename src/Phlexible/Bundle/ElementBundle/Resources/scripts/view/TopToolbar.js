@@ -618,9 +618,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
         // task button
         var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
-        if (this.extendedMenuIndex.indexOfKey('task') !== -1) {
-            extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
-        }
+        extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
     },
 
     onRemoveLock: function () {
@@ -645,9 +643,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
         // task button
         var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
-        if (this.extendedMenuIndex.indexOfKey('task') !== -1) {
-            extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
-        }
+        extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
     },
 
     onQuickPublish: function () {

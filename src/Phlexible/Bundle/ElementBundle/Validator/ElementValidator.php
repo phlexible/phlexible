@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\Validator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
