@@ -30,7 +30,7 @@ class PhlexibleMediaToolExtension extends Extension
         $loader->load('ffmpeg.yml');
         $loader->load('swftools.yml');
         $loader->load('poppler.yml');
-        $loader->load('imageanalyzer.yml');
+        $loader->load('image_analyzer.yml');
         $loader->load('imagine.yml');
         $loader->load('exiftool.yml');
 
@@ -59,10 +59,10 @@ class PhlexibleMediaToolExtension extends Extension
         $container->setParameter('phlexible_media_tool.mime.file', $config['mime']['file']);
         $container->setParameter('phlexible_media_tool.mime.magicfile', $config['mime']['magicfile']);
 
-        $container->setAlias('phlexible_media_tool.image_analyzer.driver', $config['image_analyzer']['driver']);
+        $container->setAlias('phlexible_media_tool.image_analyzer.driver', 'phlexible_media_tool.image_analyzer.driver.' . $config['image_analyzer']['driver']);
 
         $container->setAlias('phlexible_media_tool.mime.adapter', $config['mime_detector']['adapter']);
 
-        $container->setAlias('phlexible_media_tool.imagine', $config['imagine']['driver']);
+        $container->setAlias('phlexible_media_tool.imagine', 'phlexible_media_tool.imagine.' . $config['imagine']['driver']);
     }
 }
