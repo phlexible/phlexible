@@ -61,19 +61,19 @@ class MessageManager implements MessageManagerInterface
         $query = new Query();
         $query->setSize(0);
 
-        $priorityFacet = new Filter\Terms('priorities');
+        $priorityFacet = new Facet\Terms('priorities');
         $priorityFacet->setField('priority');
         $query->addFacet($priorityFacet);
 
-        $typeFacet = new Filter\Terms('types');
+        $typeFacet = new Facet\Terms('types');
         $typeFacet->setField('type');
         $query->addFacet($typeFacet);
 
-        $channelFacet = new Filter\Terms('channels');
+        $channelFacet = new Facet\Terms('channels');
         $channelFacet->setField('channel');
         $query->addFacet($channelFacet);
 
-        $roleFacet = new Filter\Terms('roles');
+        $roleFacet = new Facet\Terms('roles');
         $roleFacet->setField('role');
         $query->addFacet($roleFacet);
 
@@ -98,7 +98,51 @@ class MessageManager implements MessageManagerInterface
      */
     public function getFacetsByCriteria(Criteria $criteria)
     {
-        // TODO: Implement getFacetsByCriteria() method.
+
+        $query = new Query();
+        $query->setSize(0);
+
+        $filter = $this->createFilterFromCriteria($criteria);
+
+        $priorityFacet = new Facet\Terms('priorities');
+        $priorityFacet->setField('priority');
+        if ($filter->getFilters()) {
+            $priorityFacet->setFilter($filter);
+        }
+        $query->addFacet($priorityFacet);
+
+        $typeFacet = new Facet\Terms('types');
+        $typeFacet->setField('type');
+        if ($filter->getFilters()) {
+            $typeFacet->setFilter($filter);
+        }
+        $query->addFacet($typeFacet);
+
+        $channelFacet = new Facet\Terms('channels');
+        $channelFacet->setField('channel');
+        if ($filter->getFilters()) {
+            $channelFacet->setFilter($filter);
+        }
+        $query->addFacet($channelFacet);
+
+        $roleFacet = new Facet\Terms('roles');
+        $roleFacet->setField('role');
+        if ($filter->getFilters()) {
+            $roleFacet->setFilter($filter);
+        }
+        $query->addFacet($roleFacet);
+
+        $resultSet = $this->getType()->search($query);
+        $facets = $resultSet->getFacets();
+
+        $filterSets = [
+            'priorities' => array_column($facets['priorities']['terms'], 'term'),
+            'types'      => array_column($facets['types']['terms'], 'term'),
+            'channels'   => array_column($facets['channels']['terms'], 'term'),
+            'roles'      => array_column($facets['roles']['terms'], 'term'),
+        ];
+
+        return $filterSets;
     }
 
     /**
@@ -325,11 +369,23 @@ class MessageManager implements MessageManagerInterface
             return;
         }
 
+        $query->setPostFilter($this->createFilterFromCriteria($criteria));
+    }
+
+    private function createFilterFromCriteria(Criteria $criteria)
+    {
         $andFilter = new Filter\BoolAnd();
 
+        $this->loopCriteria($criteria, $andFilter);
+
+        return $andFilter;
+    }
+
+    private function loopCriteria(Criteria $criteria, Filter\BoolAnd $andFilter)
+    {
         foreach ($criteria as $criterium) {
             if ($criterium instanceof Criteria) {
-                $this->applyCriteriaToQuery($criterium, $query, $prefix);
+                $this->loopCriteria($criterium, $andFilter);
                 continue;
             }
 
@@ -443,7 +499,5 @@ class MessageManager implements MessageManagerInterface
                     break;
             }
         }
-
-        $query->setPostFilter($andFilter);
     }
 }
