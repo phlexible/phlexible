@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->booleanNode('use_log_handler')->defaultValue(false)->end()
+                ->scalarNode('message_manager')->defaultValue('doctrine')->end()
             ->end();
 
         return $treeBuilder;

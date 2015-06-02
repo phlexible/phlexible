@@ -2,4 +2,4 @@ services:
     phlexible_message.elastica.message_manager:
         class: Phlexible\Bundle\MessageBundle\Elastica\MessageManager
         public: false
-        arguments: [@?elasticaClient]
+        arguments: [@phlexible_elastica.default_client]
