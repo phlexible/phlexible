@@ -194,7 +194,20 @@ class MessageManager implements MessageManagerInterface
         $query = new Query();
         $this->applyCriteriaToQuery($criteria, $query);
 
-        // todo: order, limit, offset
+
+        if ($limit !== null && $offset !== null) {
+            $query
+                ->setSize($limit)
+                ->setFrom($offset);
+        }
+
+        if ($order !== null) {
+            $sort = array();
+            foreach ($order as $field => $dir) {
+                $sort[] = array($field => strtolower($dir));
+            }
+            $query->setSort($sort);
+        }
 
         $documents = $this->getType()->search($query);
         $mesages = $this->mapDocuments($documents);
@@ -242,9 +255,7 @@ class MessageManager implements MessageManagerInterface
             $query->setSort($sort);
         }
 
-
         $documents = $this->getType()->search($query);
-
         $mesages = $this->mapDocuments($documents);
 
         return $mesages;
