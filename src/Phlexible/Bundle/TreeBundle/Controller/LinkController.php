@@ -264,7 +264,7 @@ class LinkController extends Controller
                     'text'     => $siteroot->getTitle(),
                     'icon'     => $iconResolver->resolveTreeNode($rootNode, $language),
                     'children' => $children,
-                    'leaf'     => !$rootNode->hasChildren(),
+                    'leaf'     => !$tree->hasChildren($rootNode),
                     'expanded' => false
                 ];
             }
