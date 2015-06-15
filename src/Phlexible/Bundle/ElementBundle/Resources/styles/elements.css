@@ -1,5 +1,5 @@
 .x-tree-node div.siteroot-node {
-    background: #eee url(/COMPONENTSPATH/phlexibleelement/images/cmp-bg.gif) repeat-x;
+    background: #eee url(/BUNDLES_PATH/phlexibleelement/images/cmp-bg.gif) repeat-x;
     margin-top: 1px;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ccc;
@@ -12,44 +12,44 @@
 }
 
 .p-elements-main-panel .x-layout-collapsed-west {
-    background-image: url(/COMPONENTSPATH/phlexibleelement/images/panel_elements.png);
+    background-image: url(/BUNDLES_PATH/phlexibleelement/images/panel_elements.png);
     background-repeat: no-repeat;
     background-position: center;
 }
 
 /*
 .p-elements-main-panel .x-layout-collapsed-east{
-    background-image: url(/COMPONENTSPATH/phlexibleelement/images/panel_properties.png);
+    background-image: url(/BUNDLES_PATH/phlexibleelement/images/panel_properties.png);
     background-repeat:no-repeat;
     background-position:center;
 }
 */
 
 .p-elements-main-panel .x-layout-collapsed-south {
-    background-image: url(/COMPONENTSPATH/phlexibleelement/images/panel_layout_areas.png);
+    background-image: url(/BUNDLES_PATH/phlexibleelement/images/panel_layout_areas.png);
     background-position: center center;
     background-repeat: no-repeat;
 }
 
 .x-form-field-wrap .p-form-link-trigger {
-    background-image: url(/COMPONENTSPATH/phlexibleelement/images/link-trigger.gif);
+    background-image: url(/BUNDLES_PATH/phlexibleelement/images/link-trigger.gif);
     cursor: pointer;
 }
 
 .p-elements-newelement .p-header-image {
-    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 .p-elements-newelementinstance .p-header-image {
-    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 .p-elements-newteaser .p-header-image {
-    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 .p-elements-newteaserinstance .p-header-image {
-    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 /* Tree */
@@ -73,11 +73,11 @@
 /* List Tab */
 
 .p-elements-elements-list .x-grid3-header {
-    background: #f9f9f9 url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/grid3-hrow.gif) repeat-x left top;
+    background: #f9f9f9 url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/grid3-hrow.gif) repeat-x left top;
 }
 
 .p-elements-elements-list .p-parent-row {
-    background: #eee url(/COMPONENTSPATH/phlexibleelement/images/cmp-bg.gif) repeat-x;
+    background: #eee url(/BUNDLES_PATH/phlexibleelement/images/cmp-bg.gif) repeat-x;
     margin-top: 1px;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ccc;
@@ -174,7 +174,7 @@
 }
 
 .p-elements-data-panel .p-handle {
-    background: transparent url(/COMPONENTSPATH/phlexiblegui/images/tool-sprites2.gif) no-repeat scroll 0%;
+    background: transparent url(/BUNDLES_PATH/phlexiblegui/images/tool-sprites2.gif) no-repeat scroll 0%;
     background-position: 0pt -330px;
     z-index: 99;
 }
@@ -275,19 +275,19 @@
 
 .p-elements-content-panel .x-tab-strip-active .x-tab-right,
 .p-elements-content-panel .x-tab-strip-over .x-tab-right {
-    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) no-repeat scroll 0 0 !important;
+    background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) no-repeat scroll 0 0 !important;
     padding-left: 3px;
 }
 
 .p-elements-content-panel .x-tab-strip-active .x-tab-left,
 .p-elements-content-panel .x-tab-strip-over .x-tab-left {
-    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) no-repeat scroll right -21px !important;
+    background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) no-repeat scroll right -21px !important;
     padding-right: 3px;
 }
 
 .p-elements-content-panel .x-tab-strip-active .x-tab-strip-inner,
 .p-elements-content-panel .x-tab-strip-over .x-tab-strip-inner {
-    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) repeat-x scroll 0 -42px !important;
+    background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) repeat-x scroll 0 -42px !important;
 }
 
 /* Navigation Accordion */
@@ -518,14 +518,14 @@
     border-top: none;
     border-left: none;
     border-right: none;
-    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/panel/white-top-bottom.gif) repeat-x 0 -1px
+    background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/panel/white-top-bottom.gif) repeat-x 0 -1px
 }
 
 .p-elements-data-panel .p-elements-content-panel .x-tab-panel-bwrap fieldset fieldset .x-panel-header {
     border-top: none;
     border-left: none;
     border-right: none;
-    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/panel/light-hd.gif) repeat-x 0 -1px
+    background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/panel/light-hd.gif) repeat-x 0 -1px
 }
 
 .p-elements-data-panel .p-elements-content-panel .x-tab-panel-bwrap fieldset fieldset fieldset .x-panel-header {
@@ -697,27 +697,27 @@
 }
 
 .p-tasks-toolbar .x-btn .x-btn-left {
-    background: url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 0 transparent !important;
+    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 0 transparent !important;
 }
 
 .p-tasks-toolbar .x-btn .x-btn-center {
-    background: url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") repeat-x scroll 0 -42px transparent !important;
+    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") repeat-x scroll 0 -42px transparent !important;
 }
 
 .p-tasks-toolbar .x-btn .x-btn-right {
-    background: url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -21px transparent !important;
+    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -21px transparent !important;
 }
 
 .p-tasks-toolbar .x-btn-over .x-btn-left {
-    background: url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -63px transparent !important;
+    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -63px transparent !important;
 }
 
 .p-tasks-toolbar .x-btn-over .x-btn-center {
-    background: url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") repeat-x scroll 0 -105px transparent !important;
+    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") repeat-x scroll 0 -105px transparent !important;
 }
 
 .p-tasks-toolbar .x-btn-over .x-btn-right {
-    background: url("/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -84px transparent !important;
+    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -84px transparent !important;
 }
 
 .p-elements-accordion .x-accordion-hd .error {

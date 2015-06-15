@@ -59,8 +59,8 @@ class AssetController extends Controller
 
         $css = $compiler->compile($mediaTypeManager->getCollection());
         $css = str_replace(
-            ['/makeweb/', '/BASEPATH/', '/BASEURL/', '/COMPONENTSPATH/'],
-            [$basePath, $basePath, $baseUrl, $basePath . 'bundles/'],
+            ['/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/'],
+            [$basePath, $baseUrl, $basePath . 'bundles/'],
             $css
         );
 

@@ -1,5 +1,5 @@
 .p-users-main-panel .x-layout-collapsed-west {
-    background-image: url(/COMPONENTSPATH/phlexibleuser/images/panel_filter.png);
+    background-image: url(/BUNDLES_PATH/phlexibleuser/images/panel_filter.png);
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -67,7 +67,7 @@
 
 .p-users-options-window .x-view-over {
     border: 1px solid #dddddd;
-    background: #efefef url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/row-over.gif) repeat-x left top;
+    background: #efefef url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/row-over.gif) repeat-x left top;
     padding: 4px;
 }
 
@@ -91,7 +91,7 @@
 }
 
 .p-users-expired {
-    background-image: url(/COMPONENTSPATH/phlexibleuser/images/toolbar-bg.gif) !IMPORTANT;
+    background-image: url(/BUNDLES_PATH/phlexibleuser/images/toolbar-bg.gif) !IMPORTANT;
 }
 
 .p-users-filter-panel .x-panel {

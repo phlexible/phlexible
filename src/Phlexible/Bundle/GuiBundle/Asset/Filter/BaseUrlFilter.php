@@ -41,8 +41,8 @@ class BaseUrlFilter
     public function filter($content)
     {
         return str_replace(
-            ['/makeweb/', '/BASEPATH/', '/BASEURL/', '/COMPONENTSPATH/'],
-            [$this->basePath, $this->basePath, $this->baseUrl, $this->basePath . 'bundles/'],
+            ['/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/'],
+            [$this->basePath, $this->baseUrl, $this->basePath . 'bundles/'],
             $content
         );
     }

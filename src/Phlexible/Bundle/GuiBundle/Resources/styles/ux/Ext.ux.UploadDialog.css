@@ -1,35 +1,35 @@
 @CHARSET "UTF-8";
 
 .ext-ux-uploaddialog-addbtn {
-    background: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_file-add.gif') no-repeat left center !important;
+    background: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_file-add.gif') no-repeat left center !important;
 }
 
 .ext-ux-uploaddialog-removebtn {
-    background: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_file-remove.gif') no-repeat left center !important;
+    background: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_file-remove.gif') no-repeat left center !important;
 }
 
 .ext-ux-uploaddialog-resetbtn {
-    background: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_reset.gif') no-repeat left center !important;
+    background: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_reset.gif') no-repeat left center !important;
 }
 
 .ext-ux-uploaddialog-uploadstartbtn {
-    background: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_upload-start.gif') no-repeat left center !important;
+    background: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_upload-start.gif') no-repeat left center !important;
 }
 
 .ext-ux-uploaddialog-uploadstopbtn {
-    background: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_upload-stop.gif') no-repeat left center !important;
+    background: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_upload-stop.gif') no-repeat left center !important;
 }
 
 .ext-ux-uploaddialog-indicator-stoped {
     width: 16px;
     height: 16px;
-    background: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_done.gif') no-repeat center center;
+    background: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_done.gif') no-repeat center center;
 }
 
 .ext-ux-uploaddialog-indicator-processing {
     width: 16px;
     height: 16px;
-    background: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_loading.gif') no-repeat center center;
+    background: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_loading.gif') no-repeat center center;
 }
 
 .ext-ux-uploaddialog-state {
@@ -40,22 +40,22 @@
 
 /* Queued */
 .ext-ux-uploaddialog-state-0 {
-    background-image: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_uncheck.gif');
+    background-image: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_uncheck.gif');
 }
 
 /* Finished */
 .ext-ux-uploaddialog-state-1 {
-    background-image: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_check.gif');
+    background-image: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_check.gif');
 }
 
 /* Failed */
 .ext-ux-uploaddialog-state-2 {
-    background-image: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_failed.gif');
+    background-image: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_failed.gif');
 }
 
 /* Processing */
 .ext-ux-uploaddialog-state-3 {
-    background-image: url('/COMPONENTSPATH/phlexiblegui/icons/uploaddialog_file-uploading.gif');
+    background-image: url('/BUNDLES_PATH/phlexiblegui/icons/uploaddialog_file-uploading.gif');
 }
 
 /* Progress bar fix */

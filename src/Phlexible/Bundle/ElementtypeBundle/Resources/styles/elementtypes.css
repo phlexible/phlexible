@@ -27,7 +27,7 @@
 }
 
 .p-elementtype-tree .p-elementtypes-type-full {
-    background: #DDEEFF url(/COMPONENTSPATH/phlexibleelementtype/images/cmp-bg-full.gif) repeat-x scroll 0%;
+    background: #DDEEFF url(/BUNDLES_PATH/phlexibleelementtype/images/cmp-bg-full.gif) repeat-x scroll 0%;
     border-top: 1px solid #D1E8FF;
     border-bottom: 1px solid #CCE5FF;
     margin-top: 1px;
@@ -41,7 +41,7 @@
 }
 
 .p-elementtype-tree .p-elementtypes-type-part {
-    background: #DDEEFF url(/COMPONENTSPATH/phlexibleelementtype/images/cmp-bg-part.gif) repeat-x scroll 0%;
+    background: #DDEEFF url(/BUNDLES_PATH/phlexibleelementtype/images/cmp-bg-part.gif) repeat-x scroll 0%;
     border-top: 1px solid #D1E8FF;
     border-bottom: 1px solid #CCE5FF;
     margin-top: 1px;
@@ -55,7 +55,7 @@
 }
 
 .p-elementtype-tree .p-elementtypes-type-layout {
-    background: #DDEEFF url(/COMPONENTSPATH/phlexibleelementtype/images/cmp-bg-part.gif) repeat-x scroll 0%;
+    background: #DDEEFF url(/BUNDLES_PATH/phlexibleelementtype/images/cmp-bg-part.gif) repeat-x scroll 0%;
     border-top: 1px solid #D1E8FF;
     border-bottom: 1px solid #CCE5FF;
     margin-top: 1px;
@@ -69,7 +69,7 @@
 }
 
 .p-elementtype-tree .p-elementtypes-type-structure {
-    background: #DDEEFF url(/COMPONENTSPATH/phlexibleelementtype/images/cmp-bg-structure.gif) repeat-x scroll 0%;
+    background: #DDEEFF url(/BUNDLES_PATH/phlexibleelementtype/images/cmp-bg-structure.gif) repeat-x scroll 0%;
     border-top: 1px solid #D1E8FF;
     border-bottom: 1px solid #CCE5FF;
     margin-top: 1px;
@@ -83,7 +83,7 @@
 }
 
 .p-elementtype-tree .p-elementtypes-type-root {
-    background: #DDEEFF url(/COMPONENTSPATH/phlexibleelementtype/images/cmp-bg-root.gif) repeat-x scroll 0%;
+    background: #DDEEFF url(/BUNDLES_PATH/phlexibleelementtype/images/cmp-bg-root.gif) repeat-x scroll 0%;
     border-top: 1px solid #D1E8FF;
     border-bottom: 1px solid #CCE5FF;
     margin-top: 1px;
@@ -97,7 +97,7 @@
 }
 
 .p-elementtype-tree .p-elementtypes-type-referenceroot {
-    background: #FF9999 url(/COMPONENTSPATH/phlexibleelementtype/images/cmp-bg-referenceroot.gif) repeat-x scroll 0%;
+    background: #FF9999 url(/BUNDLES_PATH/phlexibleelementtype/images/cmp-bg-referenceroot.gif) repeat-x scroll 0%;
     border-top: 1px solid #FFADAD;
     border-bottom: 1px solid #FF7A7A;
     margin-top: 1px;
@@ -123,7 +123,7 @@
 }
 
 .p-elementtype-tree .p-elementtypes-type-reference {
-    background: #FF9999 url(/COMPONENTSPATH/phlexibleelementtype/images/cmp-bg-referenceroot.gif) repeat-x scroll 0%;
+    background: #FF9999 url(/BUNDLES_PATH/phlexibleelementtype/images/cmp-bg-referenceroot.gif) repeat-x scroll 0%;
     border-bottom: 1px solid #FF7C7C;
     border-top: 1px solid #FF9999;
     margin-top: 1px;
@@ -140,17 +140,17 @@
 }
 
 .p-elementtypes-newelementtype .p-header-image {
-    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 .p-elementtypes-panel .x-layout-collapsed-west {
-    background-image: url(/COMPONENTSPATH/phlexibleelementtype/images/panel_elementtypes.png);
+    background-image: url(/BUNDLES_PATH/phlexibleelementtype/images/panel_elementtypes.png);
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .p-elementtypes-2-panel .x-layout-collapsed-west {
-    background-image: url(/COMPONENTSPATH/phlexibleelementtype/images/panel_template.png);
+    background-image: url(/BUNDLES_PATH/phlexibleelementtype/images/panel_template.png);
     background-repeat: no-repeat;
     background-position: center;
 }

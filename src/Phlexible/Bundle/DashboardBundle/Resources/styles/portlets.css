@@ -18,6 +18,6 @@
 
 .p-dashboard-list-panel .x-view-over {
     border: 1px solid #dddddd;
-    background: #efefef url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/row-over.gif) repeat-x left top;
+    background: #efefef url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/row-over.gif) repeat-x left top;
     padding: 4px;
 }

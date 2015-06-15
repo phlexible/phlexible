@@ -1,5 +1,5 @@
 .x-grid3-body .x-grid3-td-rowheader {
-    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/grid3-hrow.gif) repeat-x right;
+    background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/grid3-hrow.gif) repeat-x right;
     border-right: 1px solid #D0D0D0;
 }
 
@@ -9,12 +9,12 @@
 
 /*
 .x-grid3-body .x-grid3-cell-selected .x-grid3-col-rowheader {
-    background:transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/grid3-hrow-over.gif) repeat-x right;
+    background:transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/grid/grid3-hrow-over.gif) repeat-x right;
 }
 */
 
 .x-dd-drag-proxy .p-elementtypes-type-referenceroot .x-tree-node-icon {
-    background-image: url(/COMPONENTSPATH/phlexibleelementtype/icons/field_reference.png) !important;
+    background-image: url(/BUNDLES_PATH/phlexibleelementtype/icons/field_reference.png) !important;
 }
 
 .p-field-table {
@@ -101,14 +101,14 @@ img.p-fields-unlink {
     cursor: pointer;
     margin-left: 3px;
     vertical-align: top;
-    background-image: url(/COMPONENTSPATH/phlexibleelementtype/icons/unlink.png) !important;
+    background-image: url(/BUNDLES_PATH/phlexibleelementtype/icons/unlink.png) !important;
 }
 
 img.p-fields-link {
     cursor: pointer;
     margin-left: 3px;
     vertical-align: top;
-    background-image: url(/COMPONENTSPATH/phlexibleelementtype/icons/link.png) !important;
+    background-image: url(/BUNDLES_PATH/phlexibleelementtype/icons/link.png) !important;
 }
 
 /**

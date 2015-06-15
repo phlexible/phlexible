@@ -7,9 +7,9 @@
 }
 
 .ux-lovcombo-icon-checked {
-    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/menu/checked.gif);
+    background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/menu/checked.gif);
 }
 
 .ux-lovcombo-icon-unchecked {
-    background: transparent url(/COMPONENTSPATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/menu/unchecked.gif);
+    background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/menu/unchecked.gif);
 }

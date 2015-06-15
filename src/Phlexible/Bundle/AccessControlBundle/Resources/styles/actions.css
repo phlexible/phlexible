@@ -1,27 +1,27 @@
 .icon-extranet-add-right {
-    background-image: url(/COMPONENTSPATH/accesscontrol/icons/unchecked.gif) ! important;
+    background-image: url(/BUNDLES_PATH/accesscontrol/icons/unchecked.gif) ! important;
 }
 
 .icon-extranet-add-singleright {
-    background-image: url(/COMPONENTSPATH/accesscontrol/icons/checked.gif) ! important;
+    background-image: url(/BUNDLES_PATH/accesscontrol/icons/checked.gif) ! important;
 }
 
 .icon-extranet-remove-right {
-    background-image: url(/COMPONENTSPATH/accesscontrol/icons/single_right.gif) ! important;
+    background-image: url(/BUNDLES_PATH/accesscontrol/icons/single_right.gif) ! important;
 }
 
 .icon-extranet-stop-right {
-    background-image: url(/COMPONENTSPATH/accesscontrol/icons/single_right.gif) ! important;
+    background-image: url(/BUNDLES_PATH/accesscontrol/icons/single_right.gif) ! important;
 }
 
 /*
 .icon-extranet-is-group-right {
-    background-image:url(/COMPONENTSPATH/accesscontrol/icons/group.png) ! important;
+    background-image:url(/BUNDLES_PATH/accesscontrol/icons/group.png) ! important;
 }
 .icon-extranet-is-right {
-    background-image:url(/COMPONENTSPATH/accesscontrol/icons/checked.gif) ! important;
+    background-image:url(/BUNDLES_PATH/accesscontrol/icons/checked.gif) ! important;
 }
 .icon-extranet-is-singleright {
-    background-image:url(/COMPONENTSPATH/accesscontrol/icons/single_right.gif) ! important;
+    background-image:url(/BUNDLES_PATH/accesscontrol/icons/single_right.gif) ! important;
 }
 */

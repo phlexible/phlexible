@@ -38,11 +38,11 @@
 }
 
 .x-superboxselect-btn-clear {
-    background: url(/COMPONENTSPATH/phlexiblegui/images/ux/superboxselect_clear.png) no-repeat scroll left 0px;
+    background: url(/BUNDLES_PATH/phlexiblegui/images/ux/superboxselect_clear.png) no-repeat scroll left 0px;
 }
 
 .x-superboxselect-btn-expand {
-    background: url(/COMPONENTSPATH/phlexiblegui/images/ux/superboxselect_expand.png) no-repeat scroll left 0px;
+    background: url(/BUNDLES_PATH/phlexiblegui/images/ux/superboxselect_expand.png) no-repeat scroll left 0px;
 }
 
 .x-superboxselect-btn-over {
@@ -113,7 +113,7 @@ body.ext-ie6 .x-superboxselect-item {
 }
 
 .x-superboxselect-item-close {
-    background: url(/COMPONENTSPATH/phlexiblegui/images/ux/superboxselect_close.png) no-repeat scroll left 0px;
+    background: url(/BUNDLES_PATH/phlexiblegui/images/ux/superboxselect_close.png) no-repeat scroll left 0px;
     border: none;
     cursor: default;
     font-size: 1px;
