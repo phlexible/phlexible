@@ -45,7 +45,7 @@ EOF;
 
         $compressed = $this->compressor->compressString($js);
 
-        $this->assertEquals('var x = {test: 1,bla: 2,blubb: 3};', $compressed);
+        $this->assertEquals($this->createJs(), $compressed);
     }
 
     public function testCompressStream()
@@ -58,17 +58,17 @@ EOF;
 
         $compressed = stream_get_contents($this->compressor->compressStream($stream));
 
-        $this->assertEquals('var x = {test: 1,bla: 2,blubb: 3};', $compressed);
+        $this->assertEquals($this->createJs(), $compressed);
     }
 
     public function testCompressFile()
     {
         $js = $this->createJs();
 
-        $vfs = vfsStream::setup('root', null, array('test.js' => $js));
+        vfsStream::setup('root', null, array('test.js' => $js));
 
         $compressed = file_get_contents($this->compressor->compressFile(vfsStream::url('root/test.js')));
 
-        $this->assertEquals('var x = {test: 1,bla: 2,blubb: 3};', $compressed);
+        $this->assertEquals($this->createJs(), $compressed);
     }
 }
