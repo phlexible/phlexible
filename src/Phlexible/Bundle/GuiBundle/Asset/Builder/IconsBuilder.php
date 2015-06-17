@@ -73,7 +73,7 @@ class IconsBuilder
 
         $bindings = $this->findBindings();
 
-        if (!$cache->isFresh($bindings)) {
+        if (1 || !$cache->isFresh($bindings)) {
             $content = $this->buildIcons($bindings, $baseUrl, $basePath);
 
             $cache->write($content);

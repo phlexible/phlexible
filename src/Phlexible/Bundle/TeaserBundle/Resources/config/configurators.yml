@@ -2,7 +2,7 @@ services:
     phlexible_teaser.configurator.teaser:
         class: Phlexible\Bundle\TeaserBundle\Configurator\TeaserConfigurator
         public: false
-        arguments: [@event_dispatcher, @logger, @phlexible_element.element_service]
+        arguments: [@event_dispatcher, @logger, @phlexible_teaser.teaser_manager, @phlexible_element.element_service]
         tags:
             - {name: phlexible_element_renderer.configurator, priority: 600}
             - {name: monolog.logger, channel: element_renderer}

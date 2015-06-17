@@ -102,14 +102,23 @@ class TreeNodeConfigurator implements ConfiguratorInterface
             $delegateTreeNode = $tree->getNode($request->attributes->get('delegateTreeId'));
         }
 
+        $version = -1;
+        if (!$request->attributes->get('preview')) {
+            $version = $tree->getPublishedVersion($treeNode, $request->getLocale());
+
+            if (!$version) {
+                throw new \Exception("TreeNode not published.");
+            }
+        }
+
         $renderConfiguration
             ->addFeature('treeNode')
             ->setVariable('treeNode', $treeNode)
             ->setVariable('treeContext', new ContentTreeContext($treeNode))
             ->addFeature('eid')
             ->set('eid', $treeNode->getTypeId())
-            ->set('version', 1)//$tree->getPublishedVersion($treeNode, 'de'))
-            ->set('language', 'de');
+            ->set('version', $version)
+            ->set('language', $request->getLocale());
 
         if ($treeNode->getTemplate()) {
             $renderConfiguration

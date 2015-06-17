@@ -107,7 +107,7 @@ Phlexible.elements.tab.Routing = Ext.extend(Ext.form.FormPanel, {
 
         this.getForm().reset();
 
-        this.getForm().setValues(this.element.data.configuration.security || {});
+        this.getForm().setValues(this.element.data.configuration.routing || {});
     },
 
     onRealLoad: function () {

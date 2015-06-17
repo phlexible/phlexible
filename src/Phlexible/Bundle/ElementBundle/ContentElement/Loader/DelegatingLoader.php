@@ -37,7 +37,16 @@ class DelegatingLoader implements LoaderInterface
     public function load($eid, $version, $language)
     {
         $element = $this->elementService->findElement($eid);
-        $elementVersion = $this->elementService->findLatestElementVersion($element);
+        if ($version === -1) {
+            $elementVersion = $this->elementService->findLatestElementVersion($element);
+        } else {
+            $elementVersion = $this->elementService->findElementVersion($element, $version);
+        }
+
+        if (!$elementVersion) {
+            return null;
+        }
+
         $elementtype = $this->elementService->findElementtype($element);
 
         $eid = $element->getEid();

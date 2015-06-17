@@ -11,11 +11,6 @@ namespace Phlexible\Bundle\TreeBundle\Router;
 use Phlexible\Bundle\TreeBundle\Exception\BadMethodCallException;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
-use Symfony\Component\Routing\RequestContext;
 
 /**
  * Tree router

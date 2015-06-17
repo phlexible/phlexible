@@ -94,6 +94,10 @@ class ElementConfigurator implements ConfiguratorInterface
             $elementLanguage
         );
 
+        if (!$contentElement) {
+            return false;
+        }
+
         $renderConfiguration
             ->addFeature('element')
             ->setVariable('contentElement', $contentElement)

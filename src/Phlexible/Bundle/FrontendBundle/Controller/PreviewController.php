@@ -31,7 +31,6 @@ class PreviewController extends Controller
     public function previewAction(Request $request, $treeId)
     {
         $language = $request->get('_locale');
-        $tid = $request->get('id');
 
         $contentTreeManager = $this->get('phlexible_tree.content_tree_manager.delegating');
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');

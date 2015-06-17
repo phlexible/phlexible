@@ -18,6 +18,7 @@ use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
@@ -173,6 +174,10 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         $parameters = $this->matchIdentifiers($request, $tree);
 
+        if ($parameters === null) {
+            throw new ResourceNotFoundException("bla");
+        }
+
         if (0 && !$siterootUrl->isDefault()) {
             $siterootUrl = $siterootUrl->getSiteroot()->getDefaultUrl($request->getLocale());
             // forward?
@@ -297,6 +302,9 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
             $tree->setLanguage($language);
             $treeNode = $tree->get($tid);
+            if (!$treeNode) {
+                return null;
+            }
             /*
             if ($siterootUrl->getSiteroot()->getId() === $tree->getSiteRootId()) {
                 // only set on valid siteroot

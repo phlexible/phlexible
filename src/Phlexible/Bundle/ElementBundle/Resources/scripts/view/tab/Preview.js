@@ -60,14 +60,14 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
 
     initToolbar: function() {
         var langBtns = [];
-        for (var i = 0; i < Phlexible.Config.get('set.language.frontend').length; i++) {
+        Ext.each(Phlexible.Config.get('set.language.frontend'), function(lang) {
             langBtns.push({
-                text: Phlexible.Config.get('set.language.frontend')[i][1],
-                iconCls: Phlexible.Config.get('set.language.frontend')[i][2],
-                langKey: Phlexible.Config.get('set.language.frontend')[i][0],
-                checked: Phlexible.Config.get('set.language.frontend')[i][0] === this.element.language
+                text: lang[1],
+                iconCls: lang[2],
+                langKey: lang[0],
+                checked: lang[0] === this.element.language
             });
-        }
+        }, this);
 
         this.btnIndex = {
             language: 0,
@@ -97,8 +97,8 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
                                 var data = Ext.decode(response.responseText);
 
                                 if (data.success) {
-                                    this.preview_url = data.data.preview;
-                                    this.online_url = data.data.online;
+                                    this.setPreviewUrl(data.data.preview);
+                                    this.setOnlineUrl(data.data.online);
 
                                     this.updateIframe();
                                 }
@@ -171,14 +171,33 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
         ];
     },
 
+    getQuery: function() {
+    },
+
+    setPreviewUrl: function(url) {
+        this.preview_url = url;
+    },
+
+    getPreviewUrl: function() {
+        return this.preview_url + this.getQuery();
+    },
+
+    setOnlineUrl: function(url) {
+        this.online_url = url;
+    },
+
+    getOnlineUrl: function() {
+        return this.online_url + this.getQuery();
+    },
+
     onLoadElement: function (element) {
         if (element.properties.et_type == Phlexible.elementtypes.TYPE_FULL ||
             element.properties.et_type == Phlexible.elementtypes.TYPE_PART) {
             this.activeTid = this.element.tid;
             this.activeLanguage = this.element.language;
 
-            this.preview_url = this.element.data.urls.preview;
-            this.online_url = this.element.data.urls.online;
+            this.setPreviewUrl(this.element.data.urls.preview);
+            this.setOnlineUrl(this.element.data.urls.online);
 
             var languageBtn = this.getTopToolbar().items.items[this.btnIndex.language];
             languageBtn.menu.items.each(function (item) {
@@ -204,7 +223,7 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
 
             var tb = this.getTopToolbar();
             var newMode = false;
-            if (this.online_url) {
+            if (this.getOnlineUrl()) {
                 tb.items.items[this.btnIndex.online].enable();
                 tb.items.items[this.btnIndex.horizontal].enable();
                 tb.items.items[this.btnIndex.vertical].enable();
@@ -230,10 +249,10 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
     updateSingleSrc: function () {
         var url;
         if (this.mode === 'preview') {
-            url = this.preview_url;
+            url = this.getPreviewUrl();
         }
         else if (this.mode === 'online') {
-            url = this.online_url;
+            url = this.getOnlineUrl();
         }
         else {
             return;
@@ -249,10 +268,10 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
         var c1 = c.getComponent(0);
         var c2 = c.getComponent(1);
 
-        c1.setSrc(this.preview_url);
-        c2.setSrc(this.online_url);
-        this.currentPreviewUrl = this.preview_url;
-        this.currentOnlineUrl = this.online_url;
+        c1.setSrc(this.getPreviewUrl());
+        c2.setSrc(this.getOnlineUrl());
+        this.currentPreviewUrl = this.getPreviewUrl();
+        this.currentOnlineUrl = this.getOnlineUrl();
     },
 
     updateSrc: function (newMode) {
@@ -282,9 +301,13 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
         switch (this.mode) {
             case 'preview':
             case 'online':
+                var url = this.getPreviewUrl();
+                if (this.mode === 'online') {
+                    url = this.getOnlineUrl();
+                }
                 this.singleIframe = this.add({
                     xtype: 'iframepanel',
-                    defaultSrc: this[this.mode + '_url'],
+                    defaultSrc: url,
                     tbar: [
                         {
                             // 0
@@ -315,7 +338,7 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
                             xtype: 'textfield',
                             width: 500,
                             readOnly: true,
-                            value: this.preview_url
+                            value: this.getPreviewUrl()
                         },
                         {
                             // 4
@@ -339,13 +362,13 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
                             region: 'west',
                             width: '50%',
                             title: this.strings.preview,
-                            defaultSrc: this.preview_url
+                            defaultSrc: this.getPreviewUrl()
                         },
                         {
                             xtype: 'iframepanel',
                             region: 'center',
                             title: this.strings.online,
-                            defaultSrc: this.online_url
+                            defaultSrc: this.getOnlineUrl()
                         }
                     ]
                 });
@@ -360,13 +383,13 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
                             xtype: 'iframepanel',
                             height: '50%',
                             title: this.strings.preview,
-                            defaultSrc: this.preview_url
+                            defaultSrc: this.getPreviewUrl()
                         },
                         {
                             xtype: 'iframepanel',
                             height: '50%',
                             title: this.strings.online,
-                            defaultSrc: this.online_url
+                            defaultSrc: this.getOnlineUrl()
                         }
                     ]
                 });

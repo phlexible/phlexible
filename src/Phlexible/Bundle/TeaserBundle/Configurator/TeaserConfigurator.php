@@ -15,6 +15,7 @@ use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
 use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
 use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,6 +38,11 @@ class TeaserConfigurator implements ConfiguratorInterface
     private $logger;
 
     /**
+     * @var TeaserManagerInterface
+     */
+    private $teaserManager;
+
+    /**
      * @var ElementService
      */
     private $elementService;
@@ -44,15 +50,18 @@ class TeaserConfigurator implements ConfiguratorInterface
     /**
      * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface          $logger
+     * @param TeaserManagerInterface  $teaserManager
      * @param ElementService           $elementService
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
+        TeaserManagerInterface $teaserManager,
         ElementService $elementService)
     {
         $this->dispatcher = $dispatcher;
         $this->logger = $logger;
+        $this->teaserManager = $teaserManager;
         $this->elementService = $elementService;
     }
 
@@ -67,8 +76,14 @@ class TeaserConfigurator implements ConfiguratorInterface
 
         $teaser = $request->attributes->get('contentDocument');
 
-        $element = $this->elementService->findElement($teaser->getTypeId());
-        $version = $this->elementService->findLatestElementVersion($element)->getVersion();
+        $version = -1;
+        if (!$request->attributes->get('preview')) {
+            $version = $this->teaserManager->getPublishedVersion($teaser, $request->getLocale());
+
+            if (!$version) {
+                throw new \Exception("Teaser not published.");
+            }
+        }
 
         $renderConfiguration
             ->addFeature('teaser')
@@ -76,7 +91,7 @@ class TeaserConfigurator implements ConfiguratorInterface
             ->addFeature('eid')
             ->set('eid', $teaser->getTypeId())
             ->set('version', $version)
-            ->set('language', 'de');
+            ->set('language', $request->getLocale());
 
         $event = new ConfigureEvent($renderConfiguration);
         $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_TEASER, $event);
