@@ -1,0 +1,8 @@
+myconfig:
+    path:
+        extensions: php
+        exclude: build|vendor|sami.php
+
+    logging:
+        report:
+            html: build/metrics/index.html
