@@ -81,6 +81,7 @@ services:
             - @phlexible_tree.pattern_resolver
             - @request_stack
             - @security.authorization_checker
+            - @security.token_storage
         tags:
             - {name: twig.extension}
 
