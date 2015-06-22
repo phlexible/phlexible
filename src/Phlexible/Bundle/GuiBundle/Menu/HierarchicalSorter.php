@@ -45,7 +45,6 @@ class HierarchicalSorter
                 if (count($subItems)) {
                     $item->setItems($subItems);
                 }
-                $handler['name'] = $name;
                 $filteredItems->set($name, $item);
                 $items->remove($name);
             }
