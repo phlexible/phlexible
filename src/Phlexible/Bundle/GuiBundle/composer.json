@@ -11,12 +11,12 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "doctrine/orm": "~2.2,>=2.2.3",
+        "doctrine/orm": "~2.4",
         "nelmio/api-doc-bundle": "~2.5",
-        "puli/cli": "1.0.0-beta2",
-        "puli/twig-extension": "1.0.0-beta",
-        "puli/symfony-bundle": "1.0.0-beta2",
-        "rhumsaa/uuid": "~2.7",
+        "puli/cli": "~1.0.0",
+        "puli/twig-extension": "~1.0.0",
+        "puli/symfony-bundle": "~1.0.0",
+        "ramsey/uuid": "~2.7",
         "sensio/framework-extra-bundle": "~2.3",
         "symfony/framework-bundle": "~2.3"
     },
