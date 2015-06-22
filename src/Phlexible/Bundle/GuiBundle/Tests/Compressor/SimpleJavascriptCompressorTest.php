@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\GuiBundle\Test\Compressor;
+namespace Phlexible\Bundle\GuiBundle\Tests\Compressor;
 
 use org\bovigo\vfs\vfsStream;
 use Phlexible\Bundle\GuiBundle\Compressor\SimpleJavascriptCompressor;
@@ -16,7 +16,7 @@ use Phlexible\Bundle\GuiBundle\Compressor\SimpleJavascriptCompressor;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class JavascriptCompressorTest extends \PHPUnit_Framework_TestCase
+class SimpleJavascriptCompressorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SimpleJavascriptCompressor

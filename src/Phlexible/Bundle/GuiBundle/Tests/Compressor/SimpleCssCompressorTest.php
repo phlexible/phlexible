@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\GuiBundle\Test\Compressor;
+namespace Phlexible\Bundle\GuiBundle\Tests\Compressor;
 
 use org\bovigo\vfs\vfsStream;
 use Phlexible\Bundle\GuiBundle\Compressor\SimpleCssCompressor;
@@ -16,7 +16,7 @@ use Phlexible\Bundle\GuiBundle\Compressor\SimpleCssCompressor;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CssiptCompressorTest extends \PHPUnit_Framework_TestCase
+class SimpleCssCompressorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SimpleCssCompressor

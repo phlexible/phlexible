@@ -7,6 +7,10 @@ services:
         class: Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator
         arguments: [@kernel, "%kernel.root_dir%/Resources"]
 
+    phlexible_gui.route_extractor:
+        class: Phlexible\Bundle\GuiBundle\Routing\RouteExtractor
+        arguments: [@router]
+
     properties:
         class: Phlexible\Bundle\GuiBundle\Properties\Properties
         arguments: [@doctrine.orm.entity_manager]

@@ -16,7 +16,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Route as RoutingRoute;
 
 /**
  * Frame controller
@@ -96,45 +95,14 @@ class FrameController extends Controller
      */
     public function routesAction(Request $request)
     {
-        $router = $this->get('router');
+        $routeExtractor = $this->get('phlexible_gui.route_extractor');
+        $extractedRoutes = $routeExtractor->extract($request);
 
-        $routes = [];
-        foreach ($router->getRouteCollection() as $id => $route) {
-            /* @var $route RoutingRoute */
-
-            $compiledRoute = $route->compile();
-            $variables = $compiledRoute->getVariables();
-            $placeholders = [];
-            foreach ($variables as $variable) {
-                $placeholders[$variable] = '{' . $variable . '}';
-            }
-
-            $routeDefaults = $route->getDefaults();
-            $defaults = [];
-            foreach ($routeDefaults as $key => $default) {
-                if (!in_array($key, $variables)) {
-                    continue;
-                }
-                $defaults[$key] = $default;
-            }
-
-            try {
-                $routes[$id] = [
-                    'path'      => $request->getBaseUrl() . $route->getPath(),
-                    'variables' => array_values($variables),
-                    'defaults'  => $defaults,
-                ];
-            } catch (\Exception $e) {
-            }
-        }
-
-        $data = [
-            'baseUrl'  => $request->getBaseUrl(),
-            'basePath' => $request->getBasePath(),
-            'routes'   => $routes,
-        ];
-
-        $content = sprintf('Phlexible.Router.setData(%s);', json_encode($data));
+        $content = sprintf('Phlexible.Router.setData(%s);', json_encode(array(
+            'baseUrl' => $extractedRoutes->getBaseUrl(),
+            'basePath' => $extractedRoutes->getBasePath(),
+            'routes' => $extractedRoutes->getRoutes(),
+        )));
 
         return new Response($content, 200, ['Content-type' => 'text/javascript; charset=utf-8']);
     }
