@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\GuiBundle\Compressor;
 
 use Phlexible\Bundle\GuiBundle\Exception\InvalidArgumentException;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Abstract string compressor

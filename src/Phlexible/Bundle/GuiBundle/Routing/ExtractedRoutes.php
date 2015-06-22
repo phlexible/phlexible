@@ -8,10 +8,6 @@
 
 namespace Phlexible\Bundle\GuiBundle\Routing;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouterInterface;
-
 /**
  * Extracted routes
  *

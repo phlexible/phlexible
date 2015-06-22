@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\GuiBundle\View;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,22 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class AbstractView
 {
     /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
      * @var array
      */
     private $parts = [];
-
-    /**
-     * @param EventDispatcherInterface $dispatcher
-     */
-    public function __construct(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
 
     /**
      * @param string $src

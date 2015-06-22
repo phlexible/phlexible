@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\DashboardBundle\Controller;
 
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

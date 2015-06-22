@@ -21,20 +21,18 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class PatternResourceLocator extends FileLocator
 {
     private $kernel;
-    private $path;
 
     /**
      * Constructor.
      *
      * @param KernelInterface $kernel A KernelInterface instance
-     * @param null|string     $path   The path the global resource directory
+     * @param null|string     $path   The path to the global resource directory
      * @param array           $paths  An array of paths where to look for resources
      */
     public function __construct(KernelInterface $kernel, $path = null, array $paths = [])
     {
         $this->kernel = $kernel;
-        if (null !== $path) {
-            $this->path = $path;
+        if (null !== $path && !in_array($path, $paths)) {
             $paths[] = $path;
         }
 
