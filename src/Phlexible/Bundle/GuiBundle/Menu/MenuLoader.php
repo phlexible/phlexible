@@ -14,7 +14,6 @@ use Phlexible\Bundle\GuiBundle\Menu\Loader\DelegatingLoader;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderResolver;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
 use Puli\Discovery\Api\ResourceDiscovery;
-use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

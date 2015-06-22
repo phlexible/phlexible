@@ -19,6 +19,8 @@ interface LoaderInterface
      * Load config file
      *
      * @param string $file
+     *
+     * @return MenuItemCollection
      */
     public function load($file);
 
