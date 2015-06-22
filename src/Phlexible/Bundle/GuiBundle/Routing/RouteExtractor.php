@@ -46,11 +46,6 @@ class RouteExtractor implements RouteExtractorInterface
 
             $compiledRoute = $route->compile();
             $variables = $compiledRoute->getVariables();
-            $placeholders = [];
-            foreach ($variables as $variable) {
-                $placeholders[$variable] = '{' . $variable . '}';
-            }
-
             $routeDefaults = $route->getDefaults();
             $defaults = [];
             foreach ($routeDefaults as $key => $default) {
