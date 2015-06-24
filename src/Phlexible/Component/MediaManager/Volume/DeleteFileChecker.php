@@ -57,7 +57,7 @@ class DeleteFileChecker
      */
     public function isDeleteAllowed(FileInterface $file)
     {
-        if (!$this->authorizationChecker->isGranted('FILE_DELETE', $file)) {
+        if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('FILE_DELETE', $file)) {
             return false;
         }
 

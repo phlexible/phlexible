@@ -57,7 +57,7 @@ class DeleteFolderChecker
      */
     public function isDeleteAllowed(FolderInterface $folder)
     {
-        if (!$this->authorizationChecker->isGranted('FOLDER_DELETE', $folder)) {
+        if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('FOLDER_DELETE', $folder)) {
             return false;
         }
 
