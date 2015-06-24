@@ -100,7 +100,7 @@ class DownloadController extends Controller
             $folderPath = $folder->getPath() . '/';
             foreach ($volume->findFilesByFolder($folder) as $file) {
                 $displayName = $prefix . $folderPath . $file->getName();
-                $displayName = substr($displayName, $prefixLength);
+                $displayName = mb_substr($displayName, $prefixLength, null, 'UTF-8');
                 $files[$displayName] = $file->getPhysicalPath();
             }
         }

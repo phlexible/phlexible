@@ -497,20 +497,23 @@ class DataController extends Controller
             'is_published'     => $isPublished,
             'master'           => $language == $element->getMasterLanguage() ? true : false,
             'status'           => $status,
-            'backend_title'    => substr(
+            'backend_title'    => mb_substr(
                 strip_tags($elementVersion->getBackendTitle($language, $elementMasterLanguage)),
                 0,
-                30
+                30,
+                'UTF-8'
             ),
-            'page_title'       => substr(
+            'page_title'       => mb_substr(
                 strip_tags($elementVersion->getPageTitle($language, $elementMasterLanguage)),
                 0,
-                30
+                30,
+                'UTF-8'
             ),
-            'navigation_title' => substr(
+            'navigation_title' => mb_substr(
                 strip_tags($elementVersion->getNavigationTitle($language, $elementMasterLanguage)),
                 0,
-                30
+                30,
+                'UTF-8'
             ),
             'unique_id'        => $element->getUniqueID(),
             'et_id'            => $elementtype->getId(),

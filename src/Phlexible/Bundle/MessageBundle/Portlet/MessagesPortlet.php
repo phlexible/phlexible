@@ -93,7 +93,7 @@ class MessagesPortlet extends Portlet
 
             $i = 0;
             do {
-                $subject .= ($i ? '<wbr />' : '') . substr($message->getSubject(), $i, $i + 30);
+                $subject .= ($i ? '<wbr />' : '') . mb_substr($message->getSubject(), $i, $i + 30, 'UTF-8');
                 $i += 30;
             } while ($i <= strlen($message->getSubject()));
 

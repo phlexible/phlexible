@@ -117,7 +117,7 @@ class PasswordGenerator
             $retVal .= $c[mt_rand(0, $cCount - 1)] . $v[mt_rand(0, $vCount - 1)];
         }
 
-        return substr($retVal, 0, $length);
+        return mb_substr($retVal, 0, $length, 'UTF-8');
     }
 
     /**
