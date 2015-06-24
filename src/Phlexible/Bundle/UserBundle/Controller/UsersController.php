@@ -221,7 +221,10 @@ class UsersController extends Controller
 
         $optin = (bool) $request->request->get('optin', false);
         if ($optin) {
-            $user->setPasswordToken(Uuid::generate());
+            $user->setPasswordRequestedAt(new \DateTime());
+            $tokenGenerator = $this->container->get('fos_user.util.token_generator');
+            $user->setConfirmationToken($tokenGenerator->generateToken());
+            $user->setPlainPassword($tokenGenerator->generateToken());
 
             $mailer = $this->get('phlexible_user.mailer');
             $mailer->sendNewAccountEmailMessage($user);

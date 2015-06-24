@@ -7,4 +7,4 @@ Username: {{ user.username }}
 
 Unter folgender Adresse können Sie sich ein Passwort setzen:
 
-{{ url("security_reset_view", {token: user.passwordToken}) }}
+{{ url("fos_user_resetting_reset", {token: user.confirmationToken}) }}

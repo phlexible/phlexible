@@ -152,8 +152,8 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
 
                                             var panel = this.getPasswordFormPanel();
                                             if (data.success) {
-                                                panel.getComponent(1).getComponent(0).setValue(data.password);
-                                                panel.getComponent(1).getComponent(2).setValue(data.password);
+                                                panel.getComponent(2).getComponent(0).setValue(data.password);
+                                                panel.getComponent(2).getComponent(2).setValue(data.password);
                                             }
 
                                             btn.setIconClass('p-user-user_password-icon');
