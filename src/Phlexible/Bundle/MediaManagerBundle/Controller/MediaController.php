@@ -116,8 +116,12 @@ class MediaController extends Controller
             $mimeType = 'image/gif';
         }
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create($filePath, $mimeType, ['absolute_path' => true]);
+        $response = $this->get('igorw_file_serve.response_factory')
+            ->create($filePath, $mimeType, ['absolute_path' => true])
+        //    ->setEtag($etag)
+        ;
+
+        return $response;
     }
 
     /**
