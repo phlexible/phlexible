@@ -83,13 +83,6 @@ interface FileInterface
     public function getFolderId();
 
     /**
-     * @param string $folderId
-     *
-     * @return $this
-     */
-    public function setFolderId($folderId);
-
-    /**
      * @return string
      */
     public function getMimeType();

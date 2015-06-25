@@ -198,16 +198,6 @@ class File implements FileInterface
     /**
      * {@inheritdoc}
      */
-    public function setFolderId($folderId)
-    {
-        $this->folderId = $folderId;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return $this->name;
