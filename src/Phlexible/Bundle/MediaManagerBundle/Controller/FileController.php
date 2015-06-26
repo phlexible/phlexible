@@ -304,7 +304,9 @@ class FileController extends Controller
         foreach ($fileIds as $fileId) {
             $volume = $volumeManager->getByFileId($fileId);
             $file = $volume->findFile($fileId);
-            $volume->hide();
+            if ($file) {
+                $volume->hideFile($file, $this->getUser()->getId());
+            }
         }
 
         return new ResultResponse(true, count($fileIds) . ' file(s) hidden.');
@@ -328,7 +330,9 @@ class FileController extends Controller
         foreach ($fileIds as $fileId) {
             $volume = $volumeManager->getByFileId($fileId);
             $file = $volume->findFile($fileId);
-            $volume->hide($file);
+            if ($file) {
+                $volume->showFile($file, $this->getUser()->getId());
+            }
         }
 
         return new ResultResponse(true, count($fileIds) . ' file(s) shown.');

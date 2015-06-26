@@ -569,6 +569,24 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
+    public function hideFile(FileInterface $file)
+    {
+        $file->setHidden(true);
+        $this->updateFile($file);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function showFile(FileInterface $file)
+    {
+        $file->setHidden(false);
+        $this->updateFile($file);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function updateFolder(FolderInterface $folder)
     {
         $this->entityManager->persist($folder);

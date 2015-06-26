@@ -450,6 +450,48 @@ class Volume implements VolumeInterface, \IteratorAggregate
     }
 
     /**
+     * @param FileInterface $file
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function hideFile(FileInterface $file, $userId)
+    {
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_HIDE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Hide file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->hideFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(VolumeEvents::HIDE_FILE, $event);
+
+        return $file;
+    }
+
+    /**
+     * @param FileInterface $file
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function showFile(FileInterface $file, $userId)
+    {
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_SHOW_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Show file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->showFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(VolumeEvents::SHOW_FILE, $event);
+
+        return $file;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setFileAttributes(FileInterface $file, array $attributes, $userId)

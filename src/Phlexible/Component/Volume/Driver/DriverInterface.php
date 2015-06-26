@@ -209,6 +209,20 @@ interface DriverInterface
     public function deleteFile(FileInterface $file);
 
     /**
+     * @param FileInterface $file
+     *
+     * @return FileInterface
+     */
+    public function hideFile(FileInterface $file);
+
+    /**
+     * @param FileInterface $file
+     *
+     * @return FileInterface
+     */
+    public function showFile(FileInterface $file);
+
+    /**
      * @param FolderInterface $folder
      *
      * @throws AlreadyExistsException
