@@ -42,7 +42,7 @@ class MediaController extends Controller
         $file = $volume->findFile($fileId);
         $template = $templateManager->find($templateKey);
 
-        $filePath = $this->container->getParameter('app.web_dir') . '/media/' . $fileId . '/' . $templateKey . '_' . $template->getRevision() . '.jpg';
+        $filePath = $this->container->getParameter('app.web_dir') . '/media/thumbnail/' . $fileId . '/' . $templateKey . '_' . $template->getRevision() . '.jpg';
         $mimeType = 'image/jpeg';
         if (!file_exists($filePath)) {
             if (file_exists($file->getPhysicalPath())) {
