@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaManagerBundle\Twig\Extension;
+namespace Phlexible\Bundle\FrontendMediaBundle\Twig\Extension;
 
 use Phlexible\Component\MediaManager\Meta\FileMetaDataManager;
 use Phlexible\Component\MediaManager\Meta\FileMetaSetResolver;
