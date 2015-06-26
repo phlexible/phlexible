@@ -100,8 +100,16 @@ class ExceptionListener
         }
 
         $code = $event->getException()->getCode();
-        if (!in_array($code, array(403, 404, 500))) {
+        if (!in_array($code, array(401, 403, 404, 500))) {
             $code = 500;
+        }
+
+        if ($this->twig->getLoader()->exists("::error/error-$code.html.twig")) {
+            $template = "::error/error-$code.html.twig";
+        } elseif ($this->twig->getLoader()->exists("::error/error.html.twig")) {
+            $template = "::error/error.html.twig";
+        } else {
+            return;
         }
 
         $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
@@ -124,9 +132,8 @@ class ExceptionListener
         }
 
         $data = $configuration->getVariables();
-
-        $content = $this->twig->render("::error/$code.html.twig", $data);
-        $response = new Response($content, 500);
+        $content = $this->twig->render($template, $data);
+        $response = new Response($content, $code);
 
         $event->setResponse($response);
     }
