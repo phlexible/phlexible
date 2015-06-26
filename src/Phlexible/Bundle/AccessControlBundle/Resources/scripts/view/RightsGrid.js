@@ -645,8 +645,8 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             });
         }
 
-        Phlexible.console.log(modified);
-        Phlexible.console.log(deleted);
+        //Phlexible.console.log(modified);
+        //Phlexible.console.log(deleted);
 
         Ext.Ajax.request({
             url: this.urls.save,

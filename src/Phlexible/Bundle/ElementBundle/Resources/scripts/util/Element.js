@@ -255,13 +255,13 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
 
         this.fireEvent('internalSave', parameters, errors);
 
-        console.log(errors);
         if (errors.length) {
+            Phlexible.console.error(errors);
             Ext.MessageBox.alert('Failure', 'Save not possible. ' + errors.join(' '));
             return;
         }
 
-        console.log(parameters);
+        //Phlexible.console.debug(parameters);
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('elements_data_save'),

@@ -67,7 +67,7 @@ Phlexible.mediamanager.TagsPanel = Ext.extend(Ext.Panel, {
 
                     data.tags = sbs.getValue();
 
-                    Phlexible.console.log(data);
+                    //Phlexible.console.debug(data);
                 },
                 scope: this
             },

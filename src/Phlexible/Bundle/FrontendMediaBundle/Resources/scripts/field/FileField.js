@@ -245,11 +245,11 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
                 return e.getTarget('.x-form-item');
             },
             xonNodeEnter: function (target, dd, e, data) {
-                Phlexible.console.log('onNodeEnter');
+                //Phlexible.console.log('onNodeEnter');
                 //Ext.fly(target).addClass('flower-target-hover');
             },
             xonNodeOut: function (target, dd, e, data) {
-                Phlexible.console.log('onNodeOut');
+                //Phlexible.console.log('onNodeOut');
                 //Ext.fly(target).removeClass('flower-target-hover');
             },
             onNodeOver: function (target, dd, e, data) {

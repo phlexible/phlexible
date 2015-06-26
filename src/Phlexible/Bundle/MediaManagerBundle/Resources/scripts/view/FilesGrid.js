@@ -273,7 +273,7 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
                 var firstGridDropTarget = new Ext.dd.DropTarget(firstGridDropTargetEl, {
                     ddGroup: 'versions',
                     notifyDrop: function (ddSource, e, data) {
-                        Phlexible.console.log(arguments);
+                        //Phlexible.console.debug(arguments);
                         return true;
 //                                var records =  ddSource.dragData.selections;
 //                                Ext.each(records, ddSource.grid.store.remove, ddSource.grid.store);

@@ -12,7 +12,7 @@ Phlexible.gui.util.User = function (id, username, email, firstname, lastname, pr
 Phlexible.gui.util.User.prototype.isGranted = function (role) {
     var isGranted = this.roles.indexOf(role) !== -1;
     if (isGranted) {
-        Phlexible.console.info('isGranted(' + role + ') ===', isGranted);
+        Phlexible.console.debug('isGranted(' + role + ') ===', isGranted);
     } else {
         Phlexible.console.error('isGranted(' + role + ') ===', isGranted);
     }

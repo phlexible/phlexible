@@ -77,8 +77,7 @@ Ext.extend(Phlexible.gui.util.SystemMessage, Ext.util.Observable, {
             scope: this,
             success: this.processResponse,
             failure: function (response, options) {
-                Phlexible.console.log(response);
-                Phlexible.console.log(options);
+                Phlexible.console.debug('Poll error', arguments);
             }
         });
     },

@@ -530,7 +530,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 reload: this.onReload,
                 folderChange: this.onFolderChange,
                 nodedragover: function (e) {
-                    console.log('nodedragover');
+                    //Phlexible.console.debug('nodedragover');
                     if (e.target.id == 'root') {
                         // root node can not be dragged
                         return false;
@@ -538,11 +538,11 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                     if (e.data.node) {
                         // tree -> tree move (folder -> folder)
                         if (e.target.id == 'trash') {
-                            console.warn('id is trash')
+                            //Phlexible.console.warn('id is trash')
                             return false;
                         }
                         if (e.target.id == e.data.node.parentNode.id) {
-                            console.log(e.target.id == e.data.node.parentNode.id, e.target.id, e.data.node.parentNode.id, e.target, e.data.node.parentNode);
+                            //Phlexible.console.debug(e.target.id == e.data.node.parentNode.id, e.target.id, e.data.node.parentNode.id, e.target, e.data.node.parentNode);
                             return false;
                         }
                     }
@@ -556,7 +556,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                             }
                         }
                     }
-                    console.log('true');
+                    //Phlexible.console.debug('true');
                     return true;
                 },
                 beforenodedrop: this.onMove,
@@ -726,7 +726,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         }, this);
 
         uploader.bind('QueueChanged', function (up) {
-            Phlexible.console.debug('uploader::QueueChanged');
+            //Phlexible.console.debug('uploader::QueueChanged');
             if (up.state == plupload.STOPPED) {
                 up.start();
             }
@@ -738,7 +738,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         }, this);
 
         uploader.bind('ChunkUploaded', function (up, file, info) {
-            Phlexible.console.debug('uploader::ChunkUploaded', 'id:' + file.id, 'info:', info);
+            //Phlexible.console.debug('uploader::ChunkUploaded', 'id:' + file.id, 'info:', info);
         }, this);
 
         uploader.bind('FileUploaded', function (up, file, info) {

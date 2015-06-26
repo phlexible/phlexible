@@ -612,8 +612,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
     },
 
     formatField: function (v, md, r, ri, ci, s) {
-
-        Phlexible.console.log(v, md, r, ri, ci, s);
+        //Phlexible.console.debug(v, md, r, ri, ci, s);
 
         var type = r.data.type;
         var isSynchronized = (1 == r.data['synchronized']);

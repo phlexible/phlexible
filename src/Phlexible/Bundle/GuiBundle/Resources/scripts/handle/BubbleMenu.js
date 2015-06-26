@@ -8,7 +8,7 @@ Phlexible.gui.menuhandle.handle.BubbleMenu = Ext.extend(Phlexible.gui.menuhandle
             var handleFactory, handler;
 
             if (!Phlexible.Handles.has(data.menu[0].handle)) {
-                console.error('Invalid handle in:', data.menu[0]);
+                Phlexible.console.error('Invalid handle in:', data.menu[0]);
                 return;
             }
 

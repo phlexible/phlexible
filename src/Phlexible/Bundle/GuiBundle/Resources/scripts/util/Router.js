@@ -41,7 +41,7 @@ Phlexible.gui.util.Router.prototype.dump = function (part) {
     for (var key in this.routes) {
         var route = this.routes[key];
         if (!part || key.match(new RegExp(part))) {
-            Phlexible.console.info(key, route.path);
+            Phlexible.console.debug(key, route.path);
         }
     }
     ;

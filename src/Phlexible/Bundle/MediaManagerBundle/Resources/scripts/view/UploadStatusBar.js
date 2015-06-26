@@ -64,7 +64,7 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
     },
 
     addFile: function (id, name, size, removeFn) {
-        Phlexible.console.log('UploadStatusBar::addFile(' + id + ')');
+        Phlexible.console.debug('UploadStatusBar::addFile(' + id + ')');
         var iconCls = 'm-mediamanager-file-icon';
         var ext = name.split('.').pop();
         if (Phlexible.documenttypes.DocumentTypes.classMap[ext]) {
@@ -90,7 +90,7 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
     },
 
     clear: function () {
-        Phlexible.console.log('UploadStatusBar::clear()');
+        Phlexible.console.debug('UploadStatusBar::clear()');
         this.files.each(function (btn) {
             btn.removeFn(btn.id);
             this.removeButton(btn);
@@ -108,43 +108,43 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
     },
 
     removeFile: function (id) {
-        Phlexible.console.log('UploadStatusBar::removeFile(' + id + ')');
+        Phlexible.console.debug('UploadStatusBar::removeFile(' + id + ')');
         var btn = this.files.get(id);
         this.removeButton(btn);
     },
 
     start: function () {
-        Phlexible.console.log('UploadStatusBar::start()');
+        Phlexible.console.debug('UploadStatusBar::start()');
         this.getComponent(0).setIconClass('m-mediamanager-upload_cancel-icon');
         this.getComponent(0).handler = this.stopFn;
         this.getComponent(4).show();
     },
 
     setActive: function (id) {
-        Phlexible.console.log('UploadStatusBar::setActive(' + id + ')');
+        Phlexible.console.debug('UploadStatusBar::setActive(' + id + ')');
         this.getComponent(4).updateProgress(0, '');
         this.files.get(id).getEl().child('button').setStyle('font-weight', 'bold');
     },
 
     setProgress: function (id, percent) {
-        Phlexible.console.log('UploadStatusBar::setProgress(' + id + ', ' + percent + ')');
+        Phlexible.console.debug('UploadStatusBar::setProgress(' + id + ', ' + percent + ')');
         this.getComponent(4).updateProgress(parseInt(percent / 100, 10), percent + '%');
     },
 
     setFinished: function (id) {
-        Phlexible.console.log('UploadStatusBar::setFinished(' + id + ')');
+        Phlexible.console.debug('UploadStatusBar::setFinished(' + id + ')');
         this.getComponent(4).updateProgress(1, '');
         this.removeFile(id);
     },
 
     setError: function (code, msg, id, name) {
-        Phlexible.console.log('UploadStatusBar::setError(' + id + ', ' + code + ', ' + msg + ', ' + name + ')');
+        Phlexible.console.debug('UploadStatusBar::setError(' + id + ', ' + code + ', ' + msg + ', ' + name + ')');
         this.getComponent(4).updateProgress(1, '');
         this.removeFile(id);
     },
 
     stop: function () {
-        Phlexible.console.log('UploadStatusBar::stop()');
+        Phlexible.console.debug('UploadStatusBar::stop()');
         this.getComponent(4).hide();
         this.getComponent(0).setIconClass('m-mediamanager-upload-icon');
         this.getComponent(0).handler = this.startFn;

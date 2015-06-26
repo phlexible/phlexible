@@ -65,10 +65,10 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                 if (this.value.newWindow) {
                     newWindowValue = true;
                 }
-                Phlexible.console.info('tid: ' + tidValue);
-                Phlexible.console.info('eid: ' + eidValue);
-                Phlexible.console.info('language: ' + targetLanguageValue);
-                Phlexible.console.info('newWindow: ' + newWindowValue);
+                Phlexible.console.debug('tid: ' + tidValue);
+                Phlexible.console.debug('eid: ' + eidValue);
+                Phlexible.console.debug('language: ' + targetLanguageValue);
+                Phlexible.console.debug('newWindow: ' + newWindowValue);
             }
             else if (this.value.type === 'intrasiteroot') {
                 selected = 'intrasiteroot';
@@ -82,10 +82,10 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                 if (this.value.newWindow) {
                     newWindowValue = true;
                 }
-                Phlexible.console.info('intrasiteroot: ' + intrasiterootValue);
-                Phlexible.console.info('eid: ' + eidValue);
-                Phlexible.console.info('language: ' + targetLanguageValue);
-                Phlexible.console.info('newWindow: ' + newWindowValue);
+                Phlexible.console.debug('intrasiteroot: ' + intrasiterootValue);
+                Phlexible.console.debug('eid: ' + eidValue);
+                Phlexible.console.debug('language: ' + targetLanguageValue);
+                Phlexible.console.debug('newWindow: ' + newWindowValue);
             }
             else if (this.value.type === 'external') {
                 selected = 'external';
@@ -96,14 +96,14 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                 if (this.value.language) {
                     targetLanguageValue = this.value.language;
                 }
-                Phlexible.console.info('url: ' + urlValue);
-                Phlexible.console.info('language: ' + targetLanguageValue);
-                Phlexible.console.info('newWindow: ' + newWindowValue);
+                Phlexible.console.debug('url: ' + urlValue);
+                Phlexible.console.debug('language: ' + targetLanguageValue);
+                Phlexible.console.debug('newWindow: ' + newWindowValue);
             }
             else if (this.value.type === 'mailto') {
                 selected = 'mailto';
                 mailtoValue = this.value.recipient;
-                Phlexible.console.info('recipient', mailtoValue);
+                Phlexible.console.debug('recipient', mailtoValue);
             }
         }
 
@@ -379,8 +379,8 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                         return;
                     }
 
-                    Phlexible.console.info('display', display);
-                    Phlexible.console.info('value', value);
+                    Phlexible.console.debug('display', display);
+                    Phlexible.console.debug('value', value);
                     this.fireEvent('set', value, display);
                     this.close();
                 },

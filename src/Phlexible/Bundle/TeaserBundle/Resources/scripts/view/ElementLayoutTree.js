@@ -58,7 +58,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                             }
                         }
                     } else {
-                        Phlexible.console.log('element.teaserNode is undefined');
+                        Phlexible.console.warn('element.teaserNode is undefined');
                     }
                 }
             },
@@ -77,7 +77,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         var targetNode = null;
                         rootNode.cascade(function (currentNode) {
                             if (currentNode.id == this.selectId) {
-                                Phlexible.console.info('loader.select()');
+                                //Phlexible.console.info('loader.select()');
                                 currentNode.select();
                                 targetNode = currentNode;
                                 return false;

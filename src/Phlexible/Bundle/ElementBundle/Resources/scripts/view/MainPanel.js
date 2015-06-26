@@ -300,7 +300,6 @@ Phlexible.elements.MainPanel = Ext.extend(Ext.Panel, {
                                 tpl: Phlexible.elements.MediaResourceTemplate,
                                 listeners: {
                                     render: function (c) {
-                                        Phlexible.console.log('search.onRender');
                                         var v = c;
                                         this.imageDragZone = new Ext.dd.DragZone(v.getEl(), {
                                             ddGroup: 'imageDD',

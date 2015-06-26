@@ -11,7 +11,7 @@ Phlexible.gui.menuhandle.handle.Group = Ext.extend(Phlexible.gui.menuhandle.hand
                 var handleFactory, handler;
 
                 if (!Phlexible.Handles.has(menuItem.handle)) {
-                    console.error('Invalid handle in:', menuItem);
+                    Phlexible.console.error('Invalid handle in:', menuItem);
                     return;
                 }
 

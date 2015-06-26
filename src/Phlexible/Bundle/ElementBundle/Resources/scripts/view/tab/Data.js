@@ -569,7 +569,7 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
     },
 
     onGetLock: function () {
-        Phlexible.console.log('ElementDataPanel: GET LOCK');
+        //Phlexible.console.debug('ElementDataPanel: GET LOCK');
 
         var tb = this.getTopToolbar();
 
@@ -587,7 +587,7 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
     },
 
     onIsLocked: function () {
-        Phlexible.console.log('ElementDataPanel: IS LOCKED');
+        //Phlexible.console.debug('ElementDataPanel: IS LOCKED');
 
         var tb = this.getTopToolbar();
 
@@ -601,7 +601,7 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
     },
 
     onRemoveLock: function () {
-        Phlexible.console.log('ElementDataPanel: DROP LOCK');
+        //Phlexible.console.debug('ElementDataPanel: DROP LOCK');
 
         var tb = this.getTopToolbar();
 

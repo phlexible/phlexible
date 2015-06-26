@@ -157,7 +157,7 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
                     }
                 }
 
-                console.log('nodedragover ok');
+                //Phlexible.console.debug('nodedragover ok');
                 return true;
             },
             scope: this

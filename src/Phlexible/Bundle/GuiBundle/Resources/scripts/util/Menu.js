@@ -129,7 +129,7 @@ Ext.extend(Phlexible.gui.util.Menu, Ext.util.Observable, {
             var handleFactory, handler, config;
 
             if (!Phlexible.Handles.has(dataItem.handle)) {
-                console.error('Invalid handle in: ', dataItem);
+                Phlexible.console.error('Invalid handle in: ', dataItem);
                 return;
             }
 

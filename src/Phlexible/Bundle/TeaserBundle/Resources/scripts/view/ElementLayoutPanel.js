@@ -103,7 +103,7 @@ Phlexible.teasers.ElementLayoutPanel = Ext.extend(Ext.Panel, {
 
     onPublishSort: function () {
         var records = this.store.getRange();
-        Phlexible.console.log(records);
+        //Phlexible.console.log(records);
         var data = [];
         for (var i = 0; i < records.length; i++) {
             if ((records[i].get('_type') == 'teaser' || records[i].get('_type') == 'inherit') && records[i].get('_level') == 2) {

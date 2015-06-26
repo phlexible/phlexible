@@ -158,7 +158,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                                         var r = this.getComponent(1).getSelectionModel().getSelected();
                                         r.set('options', '');
                                     }
-                                    console.log('change', arguments);
+                                    //Phlexible.console.debug('change', arguments);
                                 },
                                 scope: this
                             }

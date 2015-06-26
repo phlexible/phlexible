@@ -386,7 +386,7 @@ Ext.ux.SwfUploadPanel = Ext.extend(Ext.grid.GridPanel, {
      * @param {Object} line
      */
     debugHandler: function (line) {
-        Phlexible.console.log(line);
+        Phlexible.console.debug(line);
     },
 
     /**

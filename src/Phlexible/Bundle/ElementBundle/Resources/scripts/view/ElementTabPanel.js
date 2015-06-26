@@ -50,7 +50,7 @@ Phlexible.elements.ElementTabPanel = Ext.extend(Ext.TabPanel, {
     onAfterLoadElement: function (element) {
         // set active tab to default value
         this.items.each(function (item) {
-            console.log('xxx', element.data.default_tab, item.tabKey);
+            //Phlexible.console.debug('xxx', element.data.default_tab, item.tabKey);
             if (element.data.default_tab === item.tabKey) {
                 this.setActiveTab(item);
                 return false;

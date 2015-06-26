@@ -429,7 +429,7 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
             }
         });
 
-        console.log(mappings);
+        //Phlexible.console.debug(mappings);
 
         return mappings;
     },

@@ -202,7 +202,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     {
                         text: 'Dump element',
                         handler: function () {
-                            Phlexible.console.log(this.element);
+                            Phlexible.console.debug(this.element);
                             var dump = Phlexible.dumpHtml(this.element, true, ['events', 'scope', 'treeNode', 'teaserNode', 'structure']);
                             var w = new Ext.Window({
                                 title: 'Element Debug',
@@ -550,7 +550,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
     },
 
     onGetLock: function () {
-        Phlexible.console.log('TopToolbar: GET LOCK');
+        //Phlexible.console.debug('TopToolbar: GET LOCK');
 
         this.updateLockInfo();
 
@@ -580,7 +580,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                 this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
             }
         } else {
-            Phlexible.console.log('else');
             this.items.items[this.tbarIndex.indexOfKey('publish')].disable();
             this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         }
@@ -606,7 +605,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
     },
 
     onIsLocked: function () {
-        Phlexible.console.log('TopToolbar: IS LOCKED');
+        //Phlexible.console.debug('TopToolbar: IS LOCKED');
 
         this.updateLockInfo();
 
@@ -622,7 +621,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
     },
 
     onRemoveLock: function () {
-        Phlexible.console.log('TopToolbar: REMOVE LOCKED');
+        //Phlexible.console.debug('TopToolbar: REMOVE LOCKED');
 
         this.updateLockInfo();
 
