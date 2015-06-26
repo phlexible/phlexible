@@ -12,6 +12,7 @@ use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Media controller
@@ -41,7 +42,7 @@ class MediaController extends Controller
         $file = $volume->findFile($fileId);
         $template = $templateManager->find($templateKey);
 
-        $filePath = $this->container->getParameter('app.web_dir') . '/media/' . $fileId . '/' . $templateKey . '.jpg';
+        $filePath = $this->container->getParameter('app.web_dir') . '/media/' . $fileId . '/' . $templateKey . '_' . $template->getRevision() . '.jpg';
         $mimeType = 'image/jpeg';
         if (!file_exists($filePath)) {
             if (file_exists($file->getPhysicalPath())) {
@@ -52,7 +53,7 @@ class MediaController extends Controller
                     ->apply($template, $file, $file->getPhysicalPath(), $filePath);
             } else {
                 if (!$template instanceof ImageTemplate) {
-                    return new Response('Not found', 404);
+                    throw new NotFoundHttpException('Not found');
                 }
 
                 $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
