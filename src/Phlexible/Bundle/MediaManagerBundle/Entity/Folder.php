@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Phlexible\Component\Volume\Model\Folder as BaseFolder;
 
@@ -20,7 +21,7 @@ use Phlexible\Component\Volume\Model\Folder as BaseFolder;
  * @ORM\Entity
  * @ORM\Table(name="media_folder")
  */
-class Folder extends BaseFolder implements ExtendedFolderInterface
+class Folder extends BaseFolder implements ExtendedFolderInterface, ContentObjectInterface
 {
     /**
      * @var array

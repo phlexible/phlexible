@@ -67,7 +67,7 @@ class FolderController extends Controller
         foreach ($subFolders as $subFolder) {
             /* @var $subFolder ExtendedFolderInterface */
 
-            if (!$securityContext->isGranted('FOLDER_READ', $folder)) {
+            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $folder)) {
                 continue;
             }
 
@@ -199,12 +199,12 @@ class FolderController extends Controller
                 $volume = $volumeManager->getByFolderId($folderId);
                 $folder = $volume->findFolder($folderId);
 
-                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $folder)) {
                     return new JsonResponse([]);
                 }
 
                 foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
-                    if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                    if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $subFolder)) {
                         continue;
                     }
 
