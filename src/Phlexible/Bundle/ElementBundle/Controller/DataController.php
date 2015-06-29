@@ -463,11 +463,12 @@ class DataController extends Controller
             if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if (!$securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
                     return null;
                 }
 
-                $userRights = []; //$contentRightsManager->getRights($language);
+                // TODO: fix
+                $userRights = $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = array_keys(

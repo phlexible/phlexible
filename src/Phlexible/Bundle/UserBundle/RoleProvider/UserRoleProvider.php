@@ -24,7 +24,6 @@ class UserRoleProvider extends RoleProvider
     {
         return [
             'ROLE_USERS',
-            'ROLE_SWITCH_USER',
             'ROLE_GROUPS',
         ];
     }
