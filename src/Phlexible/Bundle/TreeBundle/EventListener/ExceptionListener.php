@@ -13,6 +13,7 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Exception listener
@@ -99,7 +100,12 @@ class ExceptionListener
             return;
         }
 
-        $code = $event->getException()->getCode();
+        $exception = $event->getException();
+        if ($exception instanceof HttpException) {
+            $code = $exception->getStatusCode();
+        } else {
+            $code = $exception->getCode();
+        }
         if (!in_array($code, array(401, 403, 404, 500))) {
             $code = 500;
         }

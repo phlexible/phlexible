@@ -19,6 +19,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -107,7 +108,7 @@ class TreeNodeConfigurator implements ConfiguratorInterface
             $version = $tree->getPublishedVersion($treeNode, $request->getLocale());
 
             if (!$version) {
-                throw new \Exception("TreeNode not published.");
+                throw new NotFoundHttpException("TreeNode not published.");
             }
         }
 

@@ -266,6 +266,8 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     {
         $match = [];
         $path = $request->getPathInfo();
+        $language = null;
+        $tid = null;
 
         /* @var $siterootUrl Url */
         $siterootUrl = $request->attributes->get('siterootUrl');
@@ -288,11 +290,13 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             $language = $match[1];
             //$path     = $match[2];
             $tid = $match[3];
-        } else {
+        } elseif (in_array($path, array('', '/'))) {
             $language = null;
             $tid = null;
             $language = $siterootUrl->getLanguage();
             $tid = $siterootUrl->getTarget();
+        } else {
+            return null;
         }
 
         if ($language === null) {
