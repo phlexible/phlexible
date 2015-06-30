@@ -7,6 +7,10 @@ services:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher
         arguments: [@phlexible_siteroot.siteroot_manager, %phlexible_siteroot.mappings%]
 
+    phlexible_siteroot.siteroot_hostname_generator:
+        class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator
+        arguments: [%phlexible_siteroot.mappings%]
+
     phlexible_siteroot.siteroots_accessor:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootsAccessor
         arguments: [@phlexible_siteroot.siteroot_manager]

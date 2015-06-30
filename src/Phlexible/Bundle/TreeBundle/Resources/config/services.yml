@@ -22,6 +22,7 @@ services:
             - @logger
             - @phlexible_tree.content_tree_manager
             - @phlexible_siteroot.siteroot_request_matcher
+            - @phlexible_siteroot.siteroot_hostname_generator
             - %phlexible_cms.languages.available%
             - %phlexible_cms.languages.default%
         tags:

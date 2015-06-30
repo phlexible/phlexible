@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
+use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
@@ -46,6 +47,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $siterootRequestMatcher;
 
     /**
+     * @var SiterootHostnameGenerator
+     */
+    private $siterootHostnameGenerator;
+
+    /**
      * @var array
      */
     private $languages;
@@ -64,6 +70,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      * @param LoggerInterface             $logger
      * @param ContentTreeManagerInterface $treeManager
      * @param SiterootRequestMatcher      $siterootRequestMatcher
+     * @param SiterootHostnameGenerator   $siterootHostnameGenerator
      * @param string                      $languages
      * @param string                      $defaultLanguage
      */
@@ -71,12 +78,14 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         LoggerInterface $logger,
         ContentTreeManagerInterface $treeManager,
         SiterootRequestMatcher $siterootRequestMatcher,
+        SiterootHostnameGenerator $siterootHostnameGenerator,
         $languages,
         $defaultLanguage)
     {
         $this->logger = $logger;
         $this->contentTreeManager = $treeManager;
         $this->siterootRequestMatcher = $siterootRequestMatcher;
+        $this->siterootHostnameGenerator = $siterootHostnameGenerator;
         $this->languages = explode(',', $languages);
         $this->defaultLanguage = $defaultLanguage;
     }
@@ -106,7 +115,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     {
         /* @var $treeNode TreeNodeInterface */
         $treeNode = $name;
-        $language = 'de';//$parameters['language'];
+        $language = isset($parameters['language']) ? $parameters['language'] : 'de';
         $encode = false;
         /*
         TreeNode $treeNode,
@@ -117,13 +126,15 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         $url = '';
 
-        if (0 && $referenceType === self::ABSOLUTE_URL) {
+        if ($referenceType === self::ABSOLUTE_URL) {
             $scheme = $this->requestContext->getScheme();
             if (!$scheme || $scheme === 'http') {
                 $scheme = $treeNode->getAttribute('https', 'http');
             }
 
-            $hostname = $this->generateHostname($treeNode, $language);
+            $siteroot = $this->contentTreeManager->findByTreeId($treeNode->getId())->getSiteroot();
+
+            $hostname = $this->siterootHostnameGenerator->generate($siteroot, $language);
 
             $port = '';
             if ($scheme === 'http' && $this->requestContext->getHttpPort() !== 80) {
@@ -335,21 +346,6 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     protected function matchParameters(Request $request)
     {
         return $request->query->all();
-    }
-
-    /**
-     * Generate hostname
-     *
-     * @param TreeNodeInterface $node
-     *
-     * @return string
-     */
-    protected function generateHostname(TreeNodeInterface $node)
-    {
-        $siteroot = $this->siterootRepository->find($node->getSiteRootId());
-        $siterootUrl = $siteroot->getDefaultUrl();
-
-        return $siterootUrl->getHostname();
     }
 
     /**
