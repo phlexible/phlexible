@@ -274,8 +274,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         $attributes = [];
 
-        if (!strlen($path)) {
-            // no path, use siteroot defaults
+        if (!strlen($path) || $path === '/') {
             $language = $siterootUrl->getLanguage();
             $tid = $siterootUrl->getTarget();
 
@@ -283,32 +282,15 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         } elseif (preg_match('#^/(\w\w)/(.+)\.(\d+)\.html#', $path, $match)) {
             // match found
             $language = $match[1];
-            //$path     = $match[2];
             $tid = $match[3];
         } elseif (preg_match('#^/preview/(\w\w)/(.+)\.(\d+)\.html#', $path, $match)) {
             // match found
             $language = $match[1];
-            //$path     = $match[2];
-            $tid = $match[3];
-        } elseif (in_array($path, array('', '/'))) {
-            $language = null;
-            $tid = null;
-            $language = $siterootUrl->getLanguage();
-            $tid = $siterootUrl->getTarget();
-        } else {
-            return null;
+            $tid      = $match[3];
         }
 
         if ($language === null) {
-            if (function_exists('http_negotiate_language')) {
-                array_unshift($this->languages, $this->defaultLanguage);
-
-                $language = http_negotiate_language($this->languages);
-                $this->logger->debug('Using negotiated language: ' . $language);
-            } else {
-                $language = $this->defaultLanguage;
-                $this->logger->debug('Using default language: ' . $language);
-            }
+            $language = $this->findLanguage();
         }
 
         if ($language) {
@@ -316,28 +298,48 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             $request->attributes->set('_locale', $language);
         }
 
-        if ($tid) {
-            $request->attributes->set('tid', $tid);
-
-            $tree->setLanguage($language);
-            $treeNode = $tree->get($tid);
-            if (!$treeNode) {
-                return null;
-            }
-            /*
-            if ($siterootUrl->getSiteroot()->getId() === $tree->getSiteRootId()) {
-                // only set on valid siteroot
-                $treeNode = $tree->get($tid);
-            }
-            */
-
-            $attributes['_route'] = $path;
-            $attributes['_route_object'] = $treeNode;
-            $attributes['_content'] = $treeNode;
-            $attributes['_controller'] = 'PhlexibleFrontendBundle:Online:index';
+        if (!$tid) {
+            return null;
         }
 
+        $request->attributes->set('tid', $tid);
+
+        $tree->setLanguage($language);
+        $treeNode = $tree->get($tid);
+        if (!$treeNode) {
+            return null;
+        }
+        /*
+        if ($siterootUrl->getSiteroot()->getId() === $tree->getSiteRootId()) {
+            // only set on valid siteroot
+            $treeNode = $tree->get($tid);
+        }
+        */
+
+        $attributes['_route'] = $path;
+        $attributes['_route_object'] = $treeNode;
+        $attributes['_content'] = $treeNode;
+        $attributes['_controller'] = 'PhlexibleFrontendBundle:Online:index';
+
         return $attributes;
+    }
+
+    /**
+     * @return string
+     */
+    private function findLanguage()
+    {
+        if (function_exists('http_negotiate_language')) {
+            array_unshift($this->languages, $this->defaultLanguage);
+
+            $language = http_negotiate_language($this->languages);
+            $this->logger->debug('Using negotiated language: ' . $language);
+        } else {
+            $language = $this->defaultLanguage;
+            $this->logger->debug('Using default language: ' . $language);
+        }
+
+        return $language;
     }
 
     /**
