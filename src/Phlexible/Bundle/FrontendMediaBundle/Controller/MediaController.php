@@ -65,6 +65,10 @@ class MediaController extends Controller
             }
         }
 
+        if (!file_exists($filePath)) {
+            return $this->createNotFoundException("File not found.");
+        }
+
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
         return $this->get('igorw_file_serve.response_factory')
@@ -93,6 +97,11 @@ class MediaController extends Controller
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
+
+        if (!file_exists($filePath)) {
+            return $this->createNotFoundException("File not found.");
+        }
+
         $mimeType = $file->getMimeType();
 
         return $this->get('igorw_file_serve.response_factory')
@@ -122,6 +131,11 @@ class MediaController extends Controller
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
+
+        if (!file_exists($filePath)) {
+            return $this->createNotFoundException("File not found.");
+        }
+
         $mimeType = $file->getMimeType();
 
         return $this->get('igorw_file_serve.response_factory')
