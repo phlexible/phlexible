@@ -18,7 +18,6 @@ use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -468,7 +467,7 @@ class DataController extends Controller
                 }
 
                 // TODO: fix
-                $userRights = $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
+                $userRights = $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node));
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = array_keys(
