@@ -515,7 +515,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
             expanded: true,
             type: 'reference',
             iconCls: 'p-elementtype-container_reference-icon',
-            reference: {new: true},
+            reference: {"new": true},
             allowDrag: true,
             allowDrop: false,
             editable: false,
@@ -622,7 +622,7 @@ Phlexible.elementtypes.ElementtypeStructureTree = Ext.extend(Ext.tree.TreePanel,
                     reference: childNode.attributes.reference,
                     properties: childNode.attributes.properties
                 };
-            if (childNode.attributes.type !== 'reference' || childNode.attributes.reference.new) {
+            if (childNode.attributes.type !== 'reference' || childNode.attributes.reference["new"]) {
                 var children = this.processSaveNodes(childNode);
                 if (children.length) {
                     nodeData.children = children;

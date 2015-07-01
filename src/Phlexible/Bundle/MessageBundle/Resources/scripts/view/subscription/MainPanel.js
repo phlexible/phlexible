@@ -17,7 +17,7 @@ Phlexible.messages.subscription.MainPanel = Ext.extend(Ext.Panel, {
             actions: [
                 {
                     iconCls: 'p-message-delete-icon',
-                    tooltip: this.strings.delete,
+                    tooltip: this.strings["delete"],
                     callback: this.deleteSubscription.createDelegate(this),
                     scope: this
                 }

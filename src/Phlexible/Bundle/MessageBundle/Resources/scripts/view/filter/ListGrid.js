@@ -22,7 +22,7 @@ Phlexible.messages.filter.ListGrid = Ext.extend(Ext.grid.GridPanel, {
             actions: [
                 {
                     iconCls: 'p-message-delete-icon',
-                    tooltip: this.strings.delete,
+                    tooltip: this.strings["delete"],
                     callback: this.deleteFilter.createDelegate(this),
                     scope: this
                 }

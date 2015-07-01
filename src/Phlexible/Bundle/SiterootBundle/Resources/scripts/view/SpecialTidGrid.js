@@ -21,7 +21,7 @@ Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             actions: [
                 {
                     iconCls: 'p-siteroot-delete-icon',
-                    tooltip: this.strings.delete,
+                    tooltip: this.strings["delete"],
                     callback: function (grid, record, action, row, col) {
                         var r = grid.store.getAt(row);
 

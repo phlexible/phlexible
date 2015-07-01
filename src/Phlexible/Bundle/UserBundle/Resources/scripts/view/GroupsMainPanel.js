@@ -36,7 +36,7 @@ Phlexible.users.GroupsMainPanel = Ext.extend(Ext.Panel, {
                 },
                 {
                     iconCls: 'p-user-delete-icon',
-                    tooltip: this.strings.delete,
+                    tooltip: this.strings["delete"],
                     callback: this.deleteGroup.createDelegate(this),
                     scope: this
                 }
@@ -175,7 +175,7 @@ Phlexible.users.GroupsMainPanel = Ext.extend(Ext.Panel, {
     },
 
     deleteGroup: function (grid, record) {
-        Ext.MessageBox.confirm(this.strings.delete, String.format(this.strings.delete_group, record.get('name')), function (btn) {
+        Ext.MessageBox.confirm(this.strings["delete"], String.format(this.strings.delete_group, record.get('name')), function (btn) {
             if (btn != 'yes') {
                 return;
             }

@@ -688,7 +688,10 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         });
         */
 
-        var dropper = this.createDropper(this.getFilesGrid());
+        var dropper = null;
+        if (!Ext.isIE) {
+            dropper = this.createDropper(this.getFilesGrid());
+        }
 
         var uploader = new plupload.Uploader({
             runtimes: 'html5,flash,silverlight,html4',
@@ -710,12 +713,12 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         uploader.bind('Init', function (up, params) {
             Phlexible.console.debug('uploader::Init', 'runtime:' + params.runtime, 'features:', up.features, 'caps:', up.caps);
 
-            if (!up.features.dragdrop) {
+            if (dropper && !up.features.dragdrop) {
                 dropper.style.visibility = 'hidden';
             }
 
             if (params.runtime === 'flash') {
-                up.params.multipart_params.sid = sessionID;
+                up.settings.multipart_params.sid = sessionID;
             }
         }, this);
 
