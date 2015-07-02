@@ -130,9 +130,11 @@ class UploadController extends Controller
             $supportsVersions = $volume->hasFeature('versions');
             $newName = basename($tempFile->getName());
             $mimetype = $this->get('phlexible_media_tool.mime.detector')->detect($tempFile->getPath(), MimeDetector::RETURN_STRING);
+            $newType = null;
             if (trim($mimetype)) {
                 $newType = $mediaTypeManager->findByMimetype($mimetype);
-            } else {
+            }
+            if (!$newType) {
                 $newType = $mediaTypeManager->find('binary');
             }
 
