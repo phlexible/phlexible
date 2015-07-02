@@ -74,7 +74,7 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
         if (size) {
             text += ' (' + Phlexible.Format.size(size) + ')';
         }
-        var btn = this.insertButton(5 + this.files.getCount(), {
+        var config = {
             xtype: 'tbtext',
             iconCls: iconCls,
             text: text,
@@ -84,7 +84,13 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
             scope: this,
             fileId: id,
             removeFn: removeFn
-        });
+        };
+        var btn;
+        if (5 + this.files.getCount() <= this.tr.childNodes.length) {
+            btn = this.addButton(config);
+        } else {
+            btn = this.insertButton(5 + this.files.getCount(), config);
+        }
         this.files.add(id, btn);
         this.getComponent(0).show();
     },
