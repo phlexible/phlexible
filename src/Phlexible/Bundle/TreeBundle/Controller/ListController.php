@@ -79,7 +79,9 @@ class ListController extends Controller
                 }
 
                 $userRights = []; //$contentRightsManager->getRights($language);
-                $userRights = array_keys($userRights);
+                $userRights = array_keys(
+                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
+                );
             } else {
                 $userRights = $userAdminRights = array_keys(
                     $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))

@@ -63,7 +63,7 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
                             Ext.MessageBox.alert('Warning', 'Unknown template');
                     }
                 },
-                scope: this,
+                scope: this
             }
         });
 

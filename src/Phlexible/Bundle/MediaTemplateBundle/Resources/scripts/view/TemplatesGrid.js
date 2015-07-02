@@ -60,7 +60,7 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
                         iconCls: 'p-mediatemplate-type_audio-icon',
                         handler: this.newAudioTemplate,
                         scope: this
-                    },
+                    }
                 ]
             },
             '->',
