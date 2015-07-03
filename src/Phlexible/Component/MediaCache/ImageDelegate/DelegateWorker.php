@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaCache\ImageDelegate;
 
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
-use Phlexible\Component\MediaCache\Exception\CreateDelegateFailed;
+use Phlexible\Component\MediaCache\Exception\CreateDelegateFailedException;
 use Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
@@ -171,7 +171,7 @@ class DelegateWorker
      * @param ImageTemplate $template
      * @param bool          $force
      *
-     * @throws CreateDelegateFailed
+     * @throws CreateDelegateFailedException
      */
     public function write(MediaType $mediaType, ImageTemplate $template, $force = false)
     {
@@ -208,7 +208,7 @@ class DelegateWorker
             $this->applier->apply($template, new File(), $icon, $filePathClean);
 
             if (!$filesystem->exists($filePathClean)) {
-                throw new CreateDelegateFailed('"Clean" delegate image not created: ' . $filePathClean);
+                throw new CreateDelegateFailedException('"Clean" delegate image not created: ' . $filePathClean);
             }
         }
 
@@ -245,7 +245,7 @@ class DelegateWorker
             imagedestroy($waiting);
 
             if (!$filesystem->exists($filePathWaiting)) {
-                throw new CreateDelegateFailed('"Waiting" delegate image not created: ' . $filePathWaiting);
+                throw new CreateDelegateFailedException('"Waiting" delegate image not created: ' . $filePathWaiting);
             }
         }
     }
