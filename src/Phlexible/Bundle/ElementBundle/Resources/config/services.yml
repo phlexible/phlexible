@@ -203,6 +203,7 @@ services:
         public: false
         arguments:
             - @phlexible_element.content_loader
+            - @phlexible_teaser.content_teaser_manager.delegating
             - @request_stack
         tags:
             - {name: twig.extension}

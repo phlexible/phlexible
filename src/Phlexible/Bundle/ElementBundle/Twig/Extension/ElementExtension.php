@@ -10,6 +10,10 @@ namespace Phlexible\Bundle\ElementBundle\Twig\Extension;
 
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
+use Phlexible\Bundle\TeaserBundle\ContentTeaser\ContentTeaser;
+use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
+use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -32,12 +36,19 @@ class ElementExtension extends \Twig_Extension
     private $requestStack;
 
     /**
-     * @param ContentElementLoader $contentElementLoader
-     * @param RequestStack         $requestStack
+     * @var DelegatingContentTeaserManager
      */
-    public function __construct(ContentElementLoader $contentElementLoader, RequestStack $requestStack)
+    private $teaserManager;
+
+    /**
+     * @param ContentElementLoader           $contentElementLoader
+     * @param DelegatingContentTeaserManager $teaserManager
+     * @param RequestStack                   $requestStack
+     */
+    public function __construct(ContentElementLoader $contentElementLoader, DelegatingContentTeaserManager $teaserManager, RequestStack $requestStack)
     {
         $this->contentElementLoader = $contentElementLoader;
+        $this->teaserManager = $teaserManager;
         $this->requestStack = $requestStack;
     }
 
@@ -58,18 +69,19 @@ class ElementExtension extends \Twig_Extension
      */
     public function element($eid)
     {
-        if (is_int($eid)) {
-            $language = $this->requestStack->getCurrentRequest()->getLocale();
-            $version = 1;
+        $language = $this->requestStack->getCurrentRequest()->getLocale();
+
+        if ($eid instanceof ContentTeaser) {
+            $teaser = $eid;
+            $eid = $teaser->getTypeId();
+            $version = $this->teaserManager->getPublishedVersion($teaser, $language);
         } elseif ($eid instanceof TreeNodeInterface) {
             $node = $eid;
             $eid = $node->getTypeId();
-            $language = $this->requestStack->getCurrentRequest()->getLocale();
             $version = $node->getTree()->getVersion($node, $language);
         } elseif ($eid instanceof ContentTreeContext) {
             $node = $eid->getNode();
             $eid = $node->getTypeId();
-            $language = $this->requestStack->getCurrentRequest()->getLocale();
             $version = $node->getTree()->getVersion($node, $language);
         } else {
             return null;
