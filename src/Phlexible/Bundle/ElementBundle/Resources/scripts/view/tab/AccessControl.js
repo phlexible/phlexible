@@ -8,7 +8,7 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
     title: Phlexible.elements.Strings.access_control,
     iconCls: 'p-element-tab_rights-icon',
     right: 'ACCESS',
-    contentClass: 'Phlexible\\Bundle\\TreeBundle\\Entity\\TreeNode',
+    objectType: 'Phlexible\\Bundle\\TreeBundle\\Entity\\TreeNode',
     strings: {
         users: Phlexible.elements.Strings.users,
         user: Phlexible.elements.Strings.user,
@@ -16,10 +16,13 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
         group: Phlexible.elements.Strings.group
     },
 
+    createIconCls: function(permission) {
+        return 'p-element-' + permission.name.toLowerCase() + '-icon';
+    },
 
     initComponent: function () {
         this.urls = {
-            subjects: Phlexible.Router.generate('elements_rights_subjects'),
+            identities: Phlexible.Router.generate('elements_rights_identities'),
             add: Phlexible.Router.generate('elements_rights_add')
         };
 
@@ -55,18 +58,18 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
     },
 
     lazyLoad: function (tid, teaserId) {
-        var contentType, contentId;
+        var objectType, objectId;
 
         if (teaserId && teaserId !== undefined) {
-            contentType = 'teaser';
-            contentId = teaserId;
+            objectType = 'teaser';
+            objectId = teaserId;
         }
         else {
-            contentType = 'treenode';
-            contentId = tid;
+            objectType = 'Phlexible\\Bundle\\TreeBundle\\Entity\\TreeNode';
+            objectId = tid;
         }
 
-        this.doLoad(contentType, contentId);
+        this.doLoad(objectType, objectId);
     },
 
     onGetLock: function (element) {

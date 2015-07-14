@@ -25,43 +25,47 @@ class PermissionResolverTest extends \PHPUnit_Framework_TestCase
     private $resolver;
 
     /**
-     * @var \Phlexible\Component\AccessControl\Permission\PermissionCollection
+     * @var PermissionCollection
      */
     private $permissions;
 
-    public function setUp()
+    public function createPermissions()
     {
-        $this->permissions = new PermissionCollection(
-            [
-                new Permission('contentClass', 'read', 1, 'read-icon'),
-                new Permission('contentClass', 'create', 2, 'create-icon'),
-                new Permission('contentClass', 'update', 4, 'update-icon'),
-                new Permission('contentClass', 'delete', 8, 'delete-icon'),
-            ]
+        return new PermissionCollection(
+            'type1',
+            array(
+                new Permission('read', 1),
+                new Permission('create', 2),
+                new Permission('update', 4),
+                new Permission('delete', 8),
+            )
         );
-        $this->resolver = new PermissionResolver($this->permissions);
+
     }
 
     public function testResolve()
     {
-        $permissions = $this->resolver->resolve('contentClass', 1);
-        $this->assertCount(1, $permissions);
-        $this->assertSame(1, $permissions[0]->getBit());
+        $resolver = new PermissionResolver();
+        $permissions = $this->createPermissions();
 
-        $permissions = $this->resolver->resolve('contentClass', 2);
-        $this->assertCount(1, $permissions);
-        $this->assertSame(2, $permissions[0]->getBit());
+        $resolvedPermissions = $resolver->resolve($permissions, 1);
+        $this->assertCount(1, $resolvedPermissions);
+        $this->assertSame(1, $resolvedPermissions[0]->getBit());
 
-        $permissions = $this->resolver->resolve('contentClass', 4 | 8);
-        $this->assertCount(2, $permissions);
-        $this->assertSame(4, $permissions[0]->getBit());
-        $this->assertSame(8, $permissions[1]->getBit());
+        $resolvedPermissions = $resolver->resolve($permissions, 2);
+        $this->assertCount(1, $resolvedPermissions);
+        $this->assertSame(2, $resolvedPermissions[0]->getBit());
 
-        $permissions = $this->resolver->resolve('contentClass', 1 | 2 | 8);
-        $this->assertCount(3, $permissions);
-        $this->assertSame(1, $permissions[0]->getBit());
-        $this->assertSame(2, $permissions[1]->getBit());
-        $this->assertSame(8, $permissions[2]->getBit());
+        $resolvedPermissions = $resolver->resolve($permissions, 4 | 8);
+        $this->assertCount(2, $resolvedPermissions);
+        $this->assertSame(4, $resolvedPermissions[0]->getBit());
+        $this->assertSame(8, $resolvedPermissions[1]->getBit());
+
+        $resolvedPermissions = $resolver->resolve($permissions, 1 | 2 | 8);
+        $this->assertCount(3, $resolvedPermissions);
+        $this->assertSame(1, $resolvedPermissions[0]->getBit());
+        $this->assertSame(2, $resolvedPermissions[1]->getBit());
+        $this->assertSame(8, $resolvedPermissions[2]->getBit());
     }
 
     /**
@@ -69,6 +73,9 @@ class PermissionResolverTest extends \PHPUnit_Framework_TestCase
      */
     public function testResolveThrowsInvalidArgumentExceptionOnUnknownBit()
     {
-        $this->resolver->resolve('test', 16 | 64);
+        $resolver = new PermissionResolver();
+        $permissions = $this->createPermissions();
+
+        $resolver->resolve($permissions, 16 | 64);
     }
 }

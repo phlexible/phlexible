@@ -20,14 +20,18 @@ class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
 {
     public function testAddPermission()
     {
-        $permissions = new PermissionCollection();
-        $permissions->add(new Permission('contentClass', 'testPermission1', 1, 'test-icon'));
-        $permissions->add(new Permission('contentClass', 'testPermission2', 2, 'test-icon'));
-        $permissions->add(new Permission('anotherContentClass', 'testPermission3', 4, 'test-icon'));
+        $permissions = new PermissionCollection('testType');
+        $permissions->add($permission1 = new Permission('foo', 1));
+        $permissions->add($permission2 = new Permission('bar', 2));
+        $permissions->add($permission3 = new Permission('baz', 4));
 
-        $this->assertSame(3, count($permissions->getAll()));
-        $this->assertSame(2, count($permissions->getByContentClass('contentClass')));
-        $this->assertSame(1, count($permissions->getByContentClass('anotherContentClass')));
+        $this->assertCount(3, $permissions->all());
+        $this->assertTrue($permissions->has('foo'));
+        $this->assertTrue($permissions->has('bar'));
+        $this->assertTrue($permissions->has('baz'));
+        $this->assertSame($permission1, $permissions->get('foo'));
+        $this->assertSame($permission2, $permissions->get('bar'));
+        $this->assertSame($permission3, $permissions->get('baz'));
     }
 
     /**
@@ -35,9 +39,9 @@ class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddDuplicateBitInPermissionThrowsInvalidArgumentException()
     {
-        $permissions = new PermissionCollection();
-        $permissions->add(new Permission('contentClass', 'testPermission', 1, 'test-icon'));
-        $permissions->add(new Permission('contentClass', 'anotherTestPermission', 1, 'test-icon'));
+        $permissions = new PermissionCollection('testType');
+        $permissions->add(new Permission('foo', 1));
+        $permissions->add(new Permission('bar', 1));
     }
 
     /**
@@ -45,24 +49,38 @@ class PermissionCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddDuplicateNameInPermissionThrowsInvalidArgumentException()
     {
-        $permissions = new PermissionCollection();
-        $permissions->add(new Permission('contentClass', 'testPermission', 1, 'test-icon'));
-        $permissions->add(new Permission('contentClass', 'testPermission', 2, 'test-icon'));
+        $permissions = new PermissionCollection('testType');
+        $permissions->add(new Permission('foo', 1));
+        $permissions->add(new Permission('foo', 2));
     }
 
     public function testAddCollection()
     {
-        $addPermissions = new PermissionCollection();
-        $addPermissions->add(new Permission('contentClass', 'testPermission1', 1, 'test-icon'));
-        $addPermissions->add(new Permission('contentClass', 'testPermission2', 2, 'test-icon'));
-        $addPermissions->add(new Permission('anotherContentClass', 'testPermission3', 4, 'test-icon'));
+        $addPermissions = new PermissionCollection('testType');
+        $addPermissions->add($permission1 = new Permission('foo', 1));
+        $addPermissions->add($permission2 = new Permission('bar', 2));
+        $addPermissions->add($permission3 = new Permission('baz', 4));
 
-        $permissions = new PermissionCollection();
+        $permissions = new PermissionCollection('testType');
         $permissions->addCollection($addPermissions);
 
-        $this->assertSame(3, count($permissions->getAll()));
-        $this->assertSame(2, count($permissions->getByContentClass('contentClass')));
-        $this->assertSame(1, count($permissions->getByContentClass('anotherContentClass')));
+        $this->assertCount(3, $permissions->all());
+        $this->assertTrue($permissions->has('foo'));
+        $this->assertTrue($permissions->has('bar'));
+        $this->assertTrue($permissions->has('baz'));
+        $this->assertSame($permission1, $permissions->get('foo'));
+        $this->assertSame($permission2, $permissions->get('bar'));
+        $this->assertSame($permission3, $permissions->get('baz'));
     }
 
+    /**
+     * @expectedException \Phlexible\Component\AccessControl\Exception\InvalidArgumentException
+     */
+    public function testAddCollectionWithMismatchingObjectTypeThrowsIvalidArgumentException()
+    {
+        $addPermissions = new PermissionCollection('testType1');
+
+        $permissions = new PermissionCollection('testType2');
+        $permissions->addCollection($addPermissions);
+    }
 }

@@ -28,10 +28,20 @@ class PhlexibleAccessControlExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
+        $configuration = $this->getConfiguration($config, $container);
+        $config = $this->processConfiguration($configuration, $config);
+
+        $container->setParameter(
+            'phlexible_access_control.permissive_on_empty_acl',
+            $config['permissive_on_empty_acl']
+        );
+
         $loader->load('doctrine.yml');
         $container->setAlias(
             'phlexible_access_control.access_manager',
             'phlexible_access_control.doctrine.access_manager'
         );
+
+        $container->setParameter('phlexible_access_control.backend_type_orm', true);
     }
 }

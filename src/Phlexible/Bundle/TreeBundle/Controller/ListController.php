@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
+use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -70,11 +70,11 @@ class ListController extends Controller
 
         $userRights = [];
         $userAdminRights = null;
-        if ($node instanceof ContentObjectInterface) {
+        if ($node instanceof DomainObjectInterface) {
             if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if (!$securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if (!$securityContext->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
                     return new JsonResponse([
                         'parent' => null,
                         'list'   => array(),

@@ -1,29 +1,39 @@
 services:
-    phlexible_access_control.permissions:
-        class: Phlexible\Component\AccessControl\Permission\PermissionCollection
+    phlexible_access_control.permission_registry:
+        class: Phlexible\Component\AccessControl\Permission\PermissionRegistry
         arguments: [[]]
 
     phlexible_access_control.permission_resolver:
         class: Phlexible\Component\AccessControl\Permission\PermissionResolver
-        arguments: [@phlexible_access_control.permissions]
 
-    phlexible_access_control.rights:
-        class: Phlexible\Component\AccessControl\Rights\Rights
-        arguments: [@phlexible_access_control.access_manager, @phlexible_access_control.permissions]
+    phlexible_access_control.security_resolver:
+        class: Phlexible\Component\AccessControl\SecurityProvider\DelegatingSecurityResolver
+        arguments:
+            -
+                - @phlexible_access_control.user_security_provider
+                - @phlexible_access_control.group_security_provider
+                - @phlexible_access_control.role_security_provider
 
-    phlexible_access_control.provider.user:
-        class: Phlexible\Bundle\AccessControlBundle\Provider\UserProvider
+    phlexible_access_control.user_security_provider:
+        class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\UserSecurityProvider
         arguments: [@phlexible_user.user_manager]
 
-    phlexible_access_control.provider.group:
-        class: Phlexible\Bundle\AccessControlBundle\Provider\GroupProvider
-        arguments: [@doctrine.orm.entity_manager]
+    phlexible_access_control.group_security_provider:
+        class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\GroupSecurityProvider
+        arguments: [@phlexible_user.group_manager]
+
+    phlexible_access_control.role_security_provider:
+        class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\RoleSecurityProvider
+        arguments: [@security.role_hierarchy, %security.role_hierarchy.roles%]
 
     # voters
     phlexible_access_control.voter.rights:
-        class: Phlexible\Component\AccessControl\Rights\RightsVoter
+        class: Phlexible\Bundle\AccessControlBundle\Voter\AccessControlVoter
         public: false
-        arguments: [@phlexible_access_control.access_manager, @phlexible_access_control.permissions]
+        arguments:
+            - @phlexible_access_control.access_manager
+            - @phlexible_access_control.permission_registry
+            - %phlexible_access_control.permissive_on_empty_acl%
         tags:
             - {name: security.voter}
 

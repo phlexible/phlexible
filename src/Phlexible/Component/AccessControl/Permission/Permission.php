@@ -20,11 +20,6 @@ class Permission
     /**
      * @var string
      */
-    private $contentClass;
-
-    /**
-     * @var string
-     */
     private $name;
 
     /**
@@ -33,38 +28,21 @@ class Permission
     private $bit;
 
     /**
-     * @var array
-     */
-    private $iconClass;
-
-    /**
-     * @param string $contentClass
      * @param string $name
      * @param int    $bit
-     * @param string $iconClass
      *
-     * @throws \Phlexible\Component\AccessControl\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function __construct($contentClass, $name, $bit, $iconClass)
+    public function __construct($name, $bit)
     {
         // check for single bit (power of 2), see: http://aggregate.org/MAGIC/#Is%20Power%20of%202
         if ($bit & ($bit - 1)) {
             $bin = decbin($bit);
-            throw new InvalidArgumentException("Only a single bit can be set, but got $bin in $contentClass-$securityClass-$name");
+            throw new InvalidArgumentException("Only a single bit can be set, but got $bin in permission $name");
         }
 
-        $this->contentClass = $contentClass;
         $this->name = $name;
         $this->bit = $bit;
-        $this->iconClass = $iconClass;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContentClass()
-    {
-        return $this->contentClass;
     }
 
     /**
@@ -92,14 +70,6 @@ class Permission
      */
     public function test($value)
     {
-        return $this->bit & (int) $value > 0;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIconClass()
-    {
-        return $this->iconClass;
+        return ($this->bit & (int) $value) > 0;
     }
 }

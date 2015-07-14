@@ -12,8 +12,8 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
-use Phlexible\Component\AccessControl\Permission\PermissionCollection;
+use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -39,9 +39,9 @@ class NodeSerializer
     private $stateManager;
 
     /**
-     * @var PermissionCollection
+     * @var PermissionRegistry
      */
-    private $permissions;
+    private $permissionRegistry;
 
     /**
      * @var AuthorizationCheckerInterface
@@ -52,20 +52,20 @@ class NodeSerializer
      * @param ElementService                $elementService
      * @param IconResolver                  $iconResolver
      * @param StateManagerInterface         $stateManager
-     * @param PermissionCollection          $permissions
+     * @param PermissionRegistry            $permissionRegistry
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         ElementService $elementService,
         IconResolver $iconResolver,
         StateManagerInterface $stateManager,
-        PermissionCollection $permissions,
+        PermissionRegistry $permissionRegistry,
         AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->elementService = $elementService;
         $this->iconResolver = $iconResolver;
         $this->stateManager = $stateManager;
-        $this->permissions = $permissions;
+        $this->permissionRegistry = $permissionRegistry;
         $this->authorizationChecker = $authorizationChecker;
     }
 
@@ -103,19 +103,22 @@ class NodeSerializer
     public function serializeNode(TreeNodeInterface $node, $language)
     {
         $userRights = [];
-        if ($node instanceof ContentObjectInterface) {
+        if ($node instanceof DomainObjectInterface) {
             if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-                if (!$this->authorizationChecker->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if (!$this->authorizationChecker->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
                     return null;
                 }
 
                 // TODO: fix
-                $userRights = $this->permissions->getByContentClass(get_class($node));
-                $userRights = array_keys($userRights);
+                $userRights = array();
+                foreach ($this->permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             } else {
-                $userRights = array_keys(
-                    $this->permissions->getByContentClass(get_class($node))
-                );
+                $userRights = array();
+                foreach ($this->permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             }
         }
 

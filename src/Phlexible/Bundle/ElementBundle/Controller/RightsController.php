@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,11 +37,11 @@ class RightsController extends Controller
         $objectType = $request->get('objectType', null);
         $objectId = $request->get('objectId', null);
 
-        $abovePath = [];
+        $abovePath = array();
         if ($contentClass === 'teaser') {
-            $path = [$contentId];
+            $path = array($contentId);
         } else {
-            $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($contentId);
+            $tree = $this->get('phlexible_tree.node_manager')->getByNodeId($contentId);
             $node = $tree->get($contentId);
             $path = $tree->getIdPath($node);
 
@@ -51,13 +52,13 @@ class RightsController extends Controller
         }
 
         $permissions = $this->get('phlexible_access_control.permissions');
-        $rights = [];
-        foreach ($permissions->getByContentClass($contentClass) as $permission) {
-            $rights[$permission->getName()] = [
+        $rights = array();
+        foreach ($permissions->getByObjectType($contentClass) as $permission) {
+            $rights[$permission->getName()] = array(
                 'right'  => $permission->getName(),
                 'status' => -1,
                 'info'   => '',
-            ];
+            );
         }
 
         $subject = null;
@@ -66,7 +67,7 @@ class RightsController extends Controller
             $userProvider = $this->get('phlexible_access_control.provider.user');
             $name = $userProvider->getName($objectType, $objectId);
 
-            $subject = [
+            $subject = array(
                 'type'       => 'user',
                 'objectType' => 'uid',
                 'objectId'   => $objectId,
@@ -77,12 +78,12 @@ class RightsController extends Controller
                 'language'   => '_all_',
                 'inherited'  => 0,
                 'restore'    => 0,
-            ];
+            );
         } elseif ($objectType === 'gid') {
             $groupProvider = $this->get('phlexible_access_control.provider.group');
             $name = $groupProvider->getName($objectType, $objectId);
 
-            $subject = [
+            $subject = array(
                 'type'       => 'group',
                 'objectType' => 'gid',
                 'objectId'   => $objectId,
@@ -93,7 +94,7 @@ class RightsController extends Controller
                 'language'   => '_all_',
                 'inherited'  => 0,
                 'restore'    => 0,
-            ];
+            );
         }
 
         return new JsonResponse($subject);
@@ -103,43 +104,70 @@ class RightsController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/subjects", name="elements_rights_subjects")
+     * @Route("/subjects", name="elements_rights_identities")
      */
-    public function subjectsAction(Request $request)
+    public function identitiesAction(Request $request)
     {
-        $contentClass = $request->get('contentClass');
-        $contentId = $request->get('contentId', null);
+        $objectType = $request->get('objectType');
+        $objectId = $request->get('objectId', null);
 
-        $subjects = [];
+        $subjects = array();
 
-        if ($contentClass === 'teaser') {
-            $path = [$contentId];
+        if ($objectType === 'teaser') {
+            $path = array($objectId);
+        } elseif ($objectType === 'Phlexible\Bundle\TreeBundle\Entity\TreeNode') {
+            $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($objectId);
+            $node = $tree->get($objectId);
+            $identity = HierarchicalObjectIdentity::fromDomainObject($node);
         } else {
-            $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($contentId);
-            $node = $tree->get($contentId);
-            $path = $tree->getIdPath($node);
+            throw new \Exception("Unsupported object type $objectType");
         }
 
-        $userManager = $this->get('phlexible_user.user_manager');
         $accessManager = $this->get('phlexible_access_control.access_manager');
-        $permissions = $this->get('phlexible_access_control.permissions');
-        $contentRights = [];
-        foreach ($permissions->getByContentClass($contentClass) as $permission) {
-            $contentRights[] = $permission->getName();
+
+        /*
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
+        $permissions = array();
+        foreach ($permissionRegistry->get($objectType) as $permissionCollection) {
+            foreach ($permissionCollection->all() as $permission) {
+                $permissions[] = $permission->getName();
+            }
+        }
+        */
+
+        $acl = $accessManager->findAcl($identity);
+
+        $identities = array();
+
+        if ($acl) {
+            $resolver = $this->get('phlexible_access_control.security_resolver');
+
+            foreach ($acl->getEntries() as $ace) {
+                $identities[] = array(
+                    'id'             => $ace->getId(),
+                    'objectType'     => $acl->getObjectIdentity()->getType(),
+                    'objectId'       => $acl->getObjectIdentity()->getIdentifier(),
+                    'mask'           => $ace->getMask(),
+                    'stopMask'       => $ace->getStopMask(),
+                    'noInheritMask'  => $ace->getNoInheritMask(),
+                    'objectLanguage' => null,
+                    'securityType'   => $ace->getSecurityType(),
+                    'securityId'     => $ace->getSecurityIdentifier(),
+                    'securityName'   => $resolver->resolveName($ace->getSecurityType(), $ace->getSecurityIdentifier()),
+                );
+            }
         }
 
-        $rightsData = $accessManager->findBy(array('contentClass' => $contentClass, 'contentId' => $contentId));
-        return new JsonResponse(['subjects' => $rightsData]);
-        dump($rightsData);
-        die;
-        $rightsData = $contentRightsManager->getRightsData(['uid', 'gid'], $rightType, $contentType, $path);
+        return new JsonResponse(array('identities' => $identities));
+
+        $rightsData = $contentRightsManager->getRightsData(array('uid', 'gid'), $rightType, $contentType, $path);
 
         $contentRights = array_keys($contentRightsHelper->getRights($rightType, $contentType));
 
-        $rightsData = [1];
+        $rightsData = array(1);
         if (count($rightsData)) {
-            $userIds = [];
-            $groupIds = [];
+            $userIds = array();
+            $groupIds = array();
 
             foreach ($rightsData as $rightsRow) {
                 if ($rightsRow['object_type'] == 'uid' && !array_key_exists($rightsRow['object_id'], $userIds)) {
@@ -149,16 +177,16 @@ class RightsController extends Controller
                 }
             }
 
-            $subjectsData = [];
+            $subjectsData = array();
             if (count($userIds)) {
-                $users = $userManager->findBy(['id' => $userIds]);
+                $users = $userManager->findBy(array('id' => $userIds));
                 foreach ($users as $user) {
                     $subjectsData["uid__{$user->getId()}"] = $user->getDisplayName();
                 }
             }
 
             if (count($groupIds)) {
-                $groups = $userManager->findBy(['id' => $userIds]);
+                $groups = $userManager->findBy(array('id' => $userIds));
                 foreach ($groups as $group) {
                     $subjectsData["gid__{$group->getId()}"] = $group->getName();
                 }
@@ -168,7 +196,7 @@ class RightsController extends Controller
                 $subjects,
                 $this->getRightsForSubjects(
                     $contentType,
-                    $contentId,
+                    $objectId,
                     $subjectsData,
                     $path,
                     $contentRights,
@@ -177,7 +205,7 @@ class RightsController extends Controller
             );
         }
 
-        return new JsonResponse(['subjects' => $subjects]);
+        return new JsonResponse(array('subjects' => $subjects));
     }
 
     /**
@@ -198,17 +226,17 @@ class RightsController extends Controller
         array $allRights,
         array $rightsData)
     {
-        $subjects = [];
+        $subjects = array();
 
         $t9n = $this->getContainer()->t9n->elements;
 
         $allRights = array_flip($allRights);
         foreach ($allRights as $right => $rightsRow) {
-            $allRights[$right] = [
+            $allRights[$right] = array(
                 'right'  => $right,
                 'status' => Phlexible\Bundle\AccessControlBundle\Rights::RIGHT_STATUS_UNSET,
                 'info'   => $t9n->not_set,
-            ];
+            );
         }
 
         foreach ($rightsData as $rightsRow) {
@@ -224,7 +252,7 @@ class RightsController extends Controller
             $key = $objectType . '__' . $objectId . '__' . $language;
 
             if (empty($subjects[$key])) {
-                $subjects[$key] = [
+                $subjects[$key] = array(
                     'type'        => $objectType === 'uid' ? 'user' : 'group',
                     'object_type' => $objectType,
                     'object_id'   => $objectId,
@@ -236,7 +264,7 @@ class RightsController extends Controller
                     'inherited'   => 0,
                     'set_here'    => 1,
                     'restore'     => 0,
-                ];
+                );
             }
 
             $subjects[$key]['rights'][$right]['status'] = $status;

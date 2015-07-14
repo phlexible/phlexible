@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\AccessControlBundle;
 
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
 use Phlexible\Bundle\AccessControlBundle\DependencyInjection\Compiler\AddPermissionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -27,5 +28,19 @@ class PhlexibleAccessControlBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new AddPermissionsPass());
+
+        $modelDir = realpath(__DIR__.'/Resources/config/doctrine/model');
+        $mappings = array(
+            $modelDir => 'Phlexible\Component\AccessControl\Domain',
+        );
+
+        $container->addCompilerPass(
+            DoctrineOrmMappingsPass::createXmlMappingDriver(
+                $mappings,
+                array(null),
+                'phlexible_access_control.backend_type_orm',
+                array('PhlexibleAccessControlBundle' => 'Phlexible\Component\AccessControl\Domain')
+            )
+        );
     }
 }

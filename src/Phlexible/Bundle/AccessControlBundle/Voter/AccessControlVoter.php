@@ -6,12 +6,18 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\AccessControl\Rights;
+namespace Phlexible\Bundle\AccessControlBundle\Voter;
 
-use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
+use Phlexible\Component\AccessControl\Domain\ObjectIdentity;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
-use Phlexible\Component\AccessControl\Permission\PermissionCollection;
+use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
+use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
+use Phlexible\Component\AccessControl\Model\UserSecurityIdentity;
+use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
+use Phlexible\Component\AccessControl\Rights\CalculatedRights;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -19,9 +25,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  * Rights voter
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @author Marco Fischer <mf@brainbits.net>
  */
-class RightsVoter implements VoterInterface
+class AccessControlVoter implements VoterInterface
 {
     const RIGHT_STATUS_UNSET = -1;
     const RIGHT_STATUS_STOPPED = 0;
@@ -36,47 +41,81 @@ class RightsVoter implements VoterInterface
     private $accessManager;
 
     /**
-     * @var PermissionCollection
+     * @var PermissionRegistry
      */
-    private $permissions;
+    private $permissionRegistry;
+
+    /**
+     * @var PermissionRegistry
+     */
+    private $permissiveOnEmptyAcl;
 
     /**
      * @param AccessManagerInterface $accessManager
-     * @param PermissionCollection   $permissions
+     * @param PermissionRegistry     $permissionRegistry
+     * @param bool                   $permissiveOnEmpty
      */
-    public function __construct(AccessManagerInterface $accessManager, PermissionCollection $permissions)
+    public function __construct(AccessManagerInterface $accessManager, PermissionRegistry $permissionRegistry, $permissiveOnEmptyAcl)
     {
         $this->accessManager = $accessManager;
-        $this->permissions = $permissions;
+        $this->permissionRegistry = $permissionRegistry;
+        $this->permissiveOnEmptyAcl = $permissiveOnEmptyAcl;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function vote(TokenInterface $token, $object, array $attributes)
+    public function vote(TokenInterface $token, $identity, array $attributes)
     {
-        if (!$object instanceof ContentObjectInterface) {
+        if (!$identity instanceof ObjectIdentityInterface) {
+            if ($identity instanceof HierarchicalDomainObjectInterface) {
+                $identity = HierarchicalObjectIdentity::fromDomainObject($identity);
+            } elseif ($identity instanceof DomainObjectInterface) {
+                $identity = ObjectIdentity::fromDomainObject($identity);
+            } else {
+                return self::ACCESS_ABSTAIN;
+            }
+        }
+
+        $permissionName = !empty($attributes['permission']) ? $attributes['permission'] : $attributes[0];
+        $objectLanguage = !empty($attributes['language']) ? $attributes['language'] : null;
+
+        if (!$this->permissionRegistry->has($identity->getType())) {
             return self::ACCESS_ABSTAIN;
         }
 
-        $contentType = current($object->getContentObjectIdentifiers());
-        $rightType = !empty($attributes['rightType']) ? $attributes['rightType'] : 'internal';
-        $right = !empty($attributes['right']) ? $attributes['right'] : $attributes[0];
-        $language = !empty($attributes['language']) ? $attributes['language'] : null;
+        $permissions = $this->permissionRegistry->get($identity->getType());
 
-        // TODO: fix
-        return self::ACCESS_GRANTED;
-        if (!$this->permissions->hasPermission($rightType, $contentType, $right)) {
+        if (!$permissions->has($permissionName)) {
             return self::ACCESS_ABSTAIN;
         }
+
+        $permission = $permissions->get($permissionName);
+
+        $acl = $this->accessManager->findAcl($identity);
+
+        if (!count($acl)) {
+            if ($this->permissiveOnEmptyAcl) {
+                return self::ACCESS_GRANTED;
+            } else {
+                return self::ACCESS_DENIED;
+            }
+        }
+        $securityIdentity = UserSecurityIdentity::fromToken($token);
+
+        if ($acl->check($permission, $securityIdentity, $objectLanguage)) {
+            return self::ACCESS_GRANTED;
+        }
+
+        return self::ACCESS_DENIED;
 
         $user = $token->getUser();
 
-        $rightIdentifiers = [
-            ['type' => 'uid', 'id' => $user->getId()]
-        ];
+        $rightIdentifiers = array(
+            array('type' => 'uid', 'id' => $user->getId())
+        );
         foreach ($user->getGroups() as $groupId) {
-            $rightIdentifiers[] = ['type' => 'gid', 'id' => $groupId];
+            $rightIdentifiers[] = array('type' => 'gid', 'id' => $groupId);
         }
 
         $calculatedRights = $this->calculateRights($rightType, $object, $rightIdentifiers);
@@ -115,7 +154,7 @@ class RightsVoter implements VoterInterface
     public function calculateRights(
         $rightType,
         ContentObjectInterface $contentObject,
-        array $rightIdentifiers = [])
+        array $rightIdentifiers = array())
     {
         $calculatedRights = new CalculatedRights();
 
@@ -170,17 +209,17 @@ class RightsVoter implements VoterInterface
             return null;
         }
 
-        $rights = [];
+        $rights = array();
 
         foreach ($path as $pathId) {
             $result = $this->accessManager->findBy(
-                [
+                array(
                     'right_type'   => $rightType,
                     'content_type' => $contentType,
                     'content_id'   => $pathId,
                     'object_type'  => $objectType,
                     'object_id'    => $objectId
-                ]
+                )
             );
 
             foreach ($result as $row) {
@@ -191,14 +230,14 @@ class RightsVoter implements VoterInterface
                     case self::RIGHT_STATUS_SINGLE:
                     case self::RIGHT_STATUS_INHERITABLE:
                     case self::RIGHT_STATUS_STOPPED:
-                        $rights[$langage][$right] = [
+                        $rights[$langage][$right] = array(
                             'type'        => (int) $row['inherit'],
                             'objectType'  => $objectType,
                             'objectId'    => $objectId,
                             'pathId'      => $pathId,
                             'contentType' => $contentType,
                             'contentId'   => $pathId,
-                        ];
+                        );
                         break;
 
                     default:

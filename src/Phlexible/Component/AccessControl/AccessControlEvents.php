@@ -16,26 +16,12 @@ namespace Phlexible\Component\AccessControl;
 class AccessControlEvents
 {
     /**
-     * Before set right event
-     * Called before setting a right
+     * Called before updating an ACE
      */
-    const BEFORE_SET_RIGHT = 'phlexible_access_control.before_set_right';
+    const BEFORE_UPDATE_ACE = 'phlexible_access_control.before_update_ace';
 
     /**
-     * Set right event
-     * Called after setting a right
+     * Called after update of an ACE
      */
-    const SET_RIGHT = 'phlexible_access_control.set_right';
-
-    /**
-     * Before remove right event
-     * Called before removing a right
-     */
-    const BEFORE_REMOVE_RIGHT = 'phlexible_access_control.before_remove_right';
-
-    /**
-     * Remove right event
-     * Called after removing a right
-     */
-    const REMOVE_RIGHT = 'phlexible_access_control.remove_right';
+    const UPDATE_ACE = 'phlexible_access_control.update_ace';
 }
