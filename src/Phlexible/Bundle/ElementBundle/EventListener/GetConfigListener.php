@@ -121,7 +121,7 @@ class GetConfigListener
                     $tree = $this->treeManager->getBySiterootId($siterootId);
                     $root = $tree->getRoot();
 
-                    if (!$this->authorizationChecker->isGranted(['right' => 'VIEW', 'language' => $language], $root)) {
+                    if (!$this->authorizationChecker->isGranted(['permission' => 'VIEW', 'language' => $language], $root)) {
                         continue;
                     }
 

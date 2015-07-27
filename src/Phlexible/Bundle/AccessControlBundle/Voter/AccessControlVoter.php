@@ -103,7 +103,7 @@ class AccessControlVoter implements VoterInterface
         }
         $securityIdentity = UserSecurityIdentity::fromToken($token);
 
-        if ($acl->check($permission, $securityIdentity, $objectLanguage)) {
+        if ($acl->check($permission, $token, $objectLanguage)) {
             return self::ACCESS_GRANTED;
         }
 

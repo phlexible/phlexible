@@ -8,10 +8,12 @@
 
 namespace Phlexible\Component\AccessControl\Domain;
 
+use FOS\UserBundle\Model\UserInterface;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Access control list
@@ -104,20 +106,29 @@ class AccessControlList implements \Countable
     }
 
     /**
-     * @param Permission                $permission
-     * @param SecurityIdentityInterface $securityIdentity
-     * @param string|null               $objectLanguage
+     * @param Permission     $permission
+     * @param TokenInterface $token
+     * @param string|null    $objectLanguage
      *
      * @return bool
      */
-    public function check(Permission $permission, SecurityIdentityInterface $securityIdentity, $objectLanguage = null)
+    public function check(Permission $permission, TokenInterface $token, $objectLanguage = null)
     {
+        $user = $token->getUser();
+
         foreach ($this->entries as $entry) {
             if (
-                $entry->getSecurityType() === $securityIdentity->getType() &&
-                $entry->getSecurityIdentifier() === $securityIdentity->getIdentifier()
+                $entry->getSecurityType() === 'Phlexible\Bundle\UserBundle\Entity\User' &&
+                $entry->getSecurityIdentifier() === $user->getId()
             ) {
                 return $permission->test($entry->getMask());
+            }
+            if ($entry->getSecurityType() === 'Phlexible\Bundle\UserBundle\Entity\Group') {
+                foreach ($user->getGroups() as $group) {
+                    if ($entry->getSecurityIdentifier() === $group->getId()) {
+                        return $permission->test($entry->getMask());
+                    }
+                }
             }
         }
 
