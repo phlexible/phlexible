@@ -73,9 +73,11 @@ class GetMenuListener
 
             $siterootLanguages = array();
             foreach ($this->availableLanguages as $language) {
-                if ($this->authorizationChecker->isGranted(['permission' => 'VIEW', 'language' => $language], $root)) {
-                    $siterootLanguages[$siteroot->getId()][] = $language;
+                if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted(['permission' => 'VIEW', 'language' => $language], $root)) {
+                    continue;
                 }
+
+                $siterootLanguages[$siteroot->getId()][] = $language;
             }
 
             if (!count($siterootLanguages)) {

@@ -120,7 +120,7 @@ class GetConfigListener
                 $root = $tree->getRoot();
 
                 foreach ($this->availableLanguages as $language) {
-                    if (!$this->authorizationChecker->isGranted(['permission' => 'VIEW', 'language' => $language], $root)) {
+                    if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted(['permission' => 'VIEW', 'language' => $language], $root)) {
                         continue;
                     }
 
