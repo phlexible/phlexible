@@ -125,7 +125,11 @@ services:
 
     phlexible_element.listener.get_menu:
         class: Phlexible\Bundle\ElementBundle\EventListener\GetMenuListener
-        arguments: [@doctrine.orm.entity_manager]
+        arguments:
+            - @phlexible_siteroot.siteroot_manager
+            - @phlexible_tree.tree_manager
+            - @security.authorization_checker
+            - %phlexible_cms.languages.available%
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_menu, method: onGetMenu}
 

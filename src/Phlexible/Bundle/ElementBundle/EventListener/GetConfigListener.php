@@ -56,7 +56,7 @@ class GetConfigListener
     private $createRestricted;
 
     /**
-     * @var string
+     * @var array
      */
     private $availableLanguages;
 
@@ -88,7 +88,7 @@ class GetConfigListener
         $this->publishConfirmRequired = $publishConfirmRequired;
         $this->createUseMultilanguage = $createUseMultilanguage;
         $this->createRestricted = $createRestricted;
-        $this->availableLanguages = $availableLanguages;
+        $this->availableLanguages = explode(',', $availableLanguages);
     }
 
     /**
@@ -104,7 +104,6 @@ class GetConfigListener
         $config->set('elements.create.restricted', (bool) $this->createRestricted);
 
         $siteroots = $this->siterootManager->findAll();
-        $allLanguages = explode(',', $this->availableLanguages);
 
         $siterootLanguages = [];
         $siterootConfig = [];
@@ -113,14 +112,14 @@ class GetConfigListener
             $siterootId = $siteroot->getId();
 
             if ($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-                $siterootLanguages[$siterootId] = $allLanguages;
+                $siterootLanguages[$siterootId] = $this->availableLanguages;
             } else {
                 $siterootLanguages[$siterootId] = [];
 
-                foreach ($allLanguages as $language) {
-                    $tree = $this->treeManager->getBySiterootId($siterootId);
-                    $root = $tree->getRoot();
+                $tree = $this->treeManager->getBySiterootId($siterootId);
+                $root = $tree->getRoot();
 
+                foreach ($this->availableLanguages as $language) {
                     if (!$this->authorizationChecker->isGranted(['permission' => 'VIEW', 'language' => $language], $root)) {
                         continue;
                     }
@@ -134,6 +133,8 @@ class GetConfigListener
                     'id' => $siteroot->getId(),
                     'title' => $siteroot->getTitle(),
                 ];
+            } else {
+                unset($siterootLanguages[$siterootId]);
             }
         }
 
