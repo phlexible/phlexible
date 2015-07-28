@@ -131,6 +131,14 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
             }
         });
 
+        if (!valid) {
+            this.node.ui.removeClass('valid');
+            this.node.ui.addClass('invalid');
+            this.node.attributes.invalid = true;
+            Ext.MessageBox.alert('Error', this.strings.check_input);
+            return;
+        }
+
         var properties = {
             field: {},
             configuration: {},
@@ -153,14 +161,6 @@ Phlexible.elementtypes.ElementtypeField = Ext.extend(Ext.TabPanel, {
 
         if (this.fireEvent('beforeSaveField', this.node, properties, valid) === false) {
             return false;
-        }
-
-        if (!valid) {
-            this.node.ui.removeClass('valid');
-            this.node.ui.addClass('invalid');
-            this.node.attributes.invalid = true;
-            Ext.MessageBox.alert('Error', this.strings.check_input);
-            return;
         }
 
         this.node.ui.removeClass('invalid');
