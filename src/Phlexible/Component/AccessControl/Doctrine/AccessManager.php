@@ -86,7 +86,7 @@ class AccessManager implements AccessManagerInterface
             ->where($qb->expr()->eq('type', $qb->expr()->literal($objectIdentity->getType())))
             ->andWhere($qb->expr()->eq('identifier', $qb->expr()->literal($objectIdentity->getIdentifier())));
 
-        $id = $conn->fetchColumn($qb->getSQL());
+        $id = $qb->execute()->fetchColumn();
 
         if ($id) {
             $this->objectIds->attach($objectIdentity, $id);
@@ -132,7 +132,7 @@ class AccessManager implements AccessManagerInterface
             ->where($qb->expr()->eq('oi.type', $qb->expr()->literal($objectIdentity->getType())))
             ->andWhere($qb->expr()->eq('oi.identifier', $qb->expr()->literal($objectIdentity->getIdentifier())));
 
-        $entries = $conn->fetchAll($qb->getSQL());
+        $entries = $qb->execute()->fetchAll();
 
         $acl = new AccessControlList($this->permissionRegistry->get($objectIdentity->getType()), $objectIdentity);
 
