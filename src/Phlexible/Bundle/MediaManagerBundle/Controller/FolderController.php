@@ -58,40 +58,33 @@ class FolderController extends Controller
         $volume = $folder->getVolume();
         $subFolders = $volume->findFoldersByParentFolder($folder);
 
-        $securityContext = $this->get('security.context');
-        $permissions = $this->get('phlexible_access_control.permissions');
-
-        $user = $this->getUser();
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
 
         $children = [];
         foreach ($subFolders as $subFolder) {
             /* @var $subFolder ExtendedFolderInterface */
 
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $folder)) {
+            if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $folder)) {
                 continue;
             }
 
-            // TODO: rights
-            /*
-            $userRights = $subFolder->getRights(MWF_Env::getUser());
-            if (null === $userRights) {
-                continue;
+            // TODO: fix
+            $userRights = array();
+            foreach ($permissionRegistry->get(get_class($subFolder))->all() as $permission) {
+                $userRights[] = $permission->getName();
             }
-            $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
-            */
-            $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));
 
             $tmp = [
-                'id'        => $subFolder->getId(),
-                'text'      => $subFolder->getName(),
-                'leaf'      => false,
-                'numChilds' => $volume->countFilesByFolder($subFolder),
-                'draggable' => true,
-                'expanded'  => true,
-                'allowDrop' => true,
+                'id'            => $subFolder->getId(),
+                'text'          => $subFolder->getName(),
+                'leaf'          => false,
+                'numChilds'     => $volume->countFilesByFolder($subFolder),
+                'draggable'     => true,
+                'expanded'      => true,
+                'allowDrop'     => true,
                 'allowChildren' => true,
-                'isTarget'  => true,
-                'rights'    => $userRights,
+                'isTarget'      => true,
+                'rights'        => $userRights,
             ];
 
             if ($volume->countFoldersByParentFolder($subFolder)) {
@@ -125,8 +118,7 @@ class FolderController extends Controller
         $slots = new Slots();
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $dispatcher = $this->get('event_dispatcher');
-        $securityContext = $this->get('security.context');
-        $permissions = $this->get('phlexible_access_control.permissions');
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
 
         $user = $this->getUser();
 
@@ -134,20 +126,15 @@ class FolderController extends Controller
             foreach ($volumeManager->all() as $volume) {
                 $rootFolder = $volume->findRootFolder();
 
-                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $rootFolder)) {
                     continue;
                 }
 
-                // TODO: rights
-                /*
-                $userRights = $rootFolder->getRights(MWF_Env::getUser());
-                if (null === $userRights)
-                {
-                    continue;
+                // TODO: fix
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($rootFolder))->all() as $permission) {
+                    $userRights[] = $permission->getName();
                 }
-                $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
-                */
-                $userRights = array_keys($permissions->getByContentClass(get_class($rootFolder)));
 
                 $slot = new SiteSlot();
                 $slot->setData(
@@ -199,24 +186,20 @@ class FolderController extends Controller
                 $volume = $volumeManager->getByFolderId($folderId);
                 $folder = $volume->findFolder($folderId);
 
-                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $folder)) {
+                if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $folder)) {
                     return new JsonResponse([]);
                 }
 
                 foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
-                    if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $subFolder)) {
+                    if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $subFolder)) {
                         continue;
                     }
 
-                    /*
-                    $userRights = $subFolder->getRights(MWF_Env::getUser());
-                    if (null === $userRights)
-                    {
-                        continue;
-                    }
+                    // TODO: fix
                     $userRights = array();
-                    */
-                    $userRights = array_keys($permissions->getByContentClass(get_class($subFolder)));;
+                    foreach ($permissionRegistry->get(get_class($subFolder))->all() as $permission) {
+                        $userRights[] = $permission->getName();
+                    }
 
                     $folderUsageService = $this->get('phlexible_media_manager.folder_usage_manager');
                     $usage = $folderUsageService->getStatus($folder);
