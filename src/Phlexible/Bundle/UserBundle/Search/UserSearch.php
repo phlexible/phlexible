@@ -54,7 +54,7 @@ class UserSearch implements SearchProviderInterface
      */
     public function search($query)
     {
-        $users = $this->userManager->search($query);
+        $users = $this->userManager->search(array('term' => $query));
 
         $createUser = new User();
         $createUser->setUsername('(unknown)');

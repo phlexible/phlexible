@@ -64,73 +64,43 @@ class UsersController extends Controller
         }
 
         $userManager = $this->get('phlexible_user.user_manager');
-        $securityContext = $this->get('security.context');
 
-        $allUsers = $userManager->findAll();
-        $systemUserUid = $userManager->getSystemUserId();
+        $criteria = array();
 
-        $users = [];
-        $sortField = [];
+        if ($search !== null) {
+            foreach ($search as $key => $value) {
+                if (!$value) {
+                    continue;
+                } elseif ($key == 'key') {
+                    $criteria['term'] = $value;
+                    continue;
+                } elseif ($key == 'account_expired') {
+                    $criteria['isExpired'] = true;
+                    continue;
+                } elseif ($key == 'account_has_expire_date') {
+                    $criteria['hasExpireDate'] = true;
+                    continue;
+                } elseif (substr($key, 0, 5) == 'role_') {
+                    $criteria['roles'][] = strtoupper(substr($key, 5));
+                    continue;
+                } elseif (substr($key, 0, 6) == 'group_') {
+                    $criteria['groups'][] = substr($key, 6);
+                    continue;
+                }
+            }
+        }
 
-        foreach ($allUsers as $user) {
+        $users = array();
+
+        foreach ($userManager->search($criteria, array($sort => $dir), $limit, $start) as $user) {
             /* @var $user UserInterface */
 
-            //if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            //if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             //    continue;
             //}
 
-            if ($user->getId() === $systemUserUid && !$securityContext->isGranted('ROLE_SUPER_ADMIN')
-            ) {
+            if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
                 continue;
-            }
-
-            if ($search !== null) {
-                foreach ($search as $key => $value) {
-                    if (!$value) {
-                        continue;
-                    }
-
-                    if ($key == 'key' &&
-                        stripos($user->getUsername(), $value) === false &&
-                        stripos($user->getEmail(), $value) === false &&
-                        stripos($user->getFirstname(), $value) === false &&
-                        stripos($user->getLastname(), $value) === false
-                    ) {
-                        continue 2;
-                    }
-
-                    //                    if ($key == 'account_active')
-                    //                    {
-                    //
-                    //                    }
-
-                    if ($key == 'account_expired') {
-                        if (!$user->getExpiresAt() || $user->getExpiresAt()->format('U') > time()) {
-                            continue 2;
-                        }
-                    }
-
-                    if ($key == 'account_has_expire_date') {
-                        if (!$user->getExpiresAt()) {
-                            continue 2;
-                        }
-                    }
-
-                    if (substr($key, 0, 5) == 'role_') {
-                        $role = strtoupper(substr($key, 5));
-                        if (!in_array($role, $user->getRoles())) {
-                            continue 2;
-                        }
-                    }
-
-                    if (substr($key, 0, 6) == 'group_') {
-                        $groupId = substr($key, 6);
-                        $group = $this->get('phlexible_user.group_manager')->find($groupId);
-                        if (!$user->hasGroup($group)) {
-                            continue 2;
-                        }
-                    }
-                }
             }
 
             $groups = [];
@@ -156,23 +126,12 @@ class UsersController extends Controller
             ];
 
             $users[] = $dummy;
-
-            $sortField[] = strtolower($dummy[$sort]);
         }
-
-        if (strtoupper($dir) == 'ASC') {
-            array_multisort($sortField, SORT_ASC, SORT_STRING, $users);
-        } else {
-            array_multisort($sortField, SORT_DESC, SORT_STRING, $users);
-        }
-
-        $count = count($users);
-        $users = array_slice($users, $start, $limit);
 
         return new JsonResponse(
             [
                 'users' => $users,
-                'count' => $count
+                'count' => $userManager->countSearch($criteria)
             ]
         );
     }
@@ -415,7 +374,6 @@ class UsersController extends Controller
      */
     public function filtervaluesAction()
     {
-        $securityContext = $this->get('security.context');
         $groupManager = $this->get('phlexible_user.group_manager');
 
         $allGroups = $groupManager->findAll();
@@ -435,7 +393,7 @@ class UsersController extends Controller
 
         $roles = [];
         foreach ($this->container->getParameter('security.role_hierarchy.roles') as $role => $subRoles) {
-            if (!$securityContext->isGranted($role)) {
+            if (!$this->isGranted($role)) {
                 continue;
             }
 

@@ -48,12 +48,10 @@ class ListController extends Controller
             $filterValues = [];
         }
 
-        $data = [];
-
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $securityContext = $this->get('security.context');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
 
         $tree = $treeManager->getByNodeID($tid);
         $node = $tree->get($tid);
@@ -71,10 +69,10 @@ class ListController extends Controller
         $userRights = [];
         $userAdminRights = null;
         if ($node instanceof DomainObjectInterface) {
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if (!$securityContext->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
+                if (!$this->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
                     return new JsonResponse([
                         'parent' => null,
                         'list'   => array(),
@@ -82,14 +80,16 @@ class ListController extends Controller
                     ]);
                 }
 
-                $userRights = []; //$contentRightsManager->getRights($language);
-                $userRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
-                );
+                // TODO: fix
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             } else {
-                $userRights = $userAdminRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
-                );
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             }
         }
 
@@ -143,14 +143,20 @@ class ListController extends Controller
             if (!$userAdminRights) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if (!$securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if (!$this->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
                     continue;
                 }
 
-                $userRights = []; //$contentRightsManager->getRights($language);
-                $userRights = array_keys($userRights);
+                // TODO: fix
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             } else {
-                $userRights = $userAdminRights;
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             }
 
             $childElement = $elementService->findElement($childNode->getTypeId());

@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\UserBundle\Doctrine;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
@@ -170,16 +171,82 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function search($term)
+    public function search(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $qb = $this->getUserRepository()->createQueryBuilder('u');
-        $qb
-            ->where($qb->expr()->like('u.username', $qb->expr()->literal("%$term%")))
-            ->orWhere($qb->expr()->like('u.email', $qb->expr()->literal("%$term%")))
-            ->orWhere($qb->expr()->like('u.firstname', $qb->expr()->literal("%$term%")))
-            ->orWhere($qb->expr()->like('u.lastname', $qb->expr()->literal("%$term%")));
+
+        if ($orderBy) {
+            foreach ($orderBy as $field => $order) {
+                $qb->addOrderBy("u.$field", $order);
+            }
+        }
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        $this->applySearch($criteria, $qb);
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function countSearch(array $criteria)
+    {
+        $qb = $this->getUserRepository()->createQueryBuilder('u');
+        $qb->select($qb->expr()->count('u.id'));
+
+        $this->applySearch($criteria, $qb);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @param array        $criteria
+     * @param QueryBuilder $qb
+     */
+    private function applySearch(array $criteria, QueryBuilder $qb)
+    {
+        if (isset($criteria['term'])) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->like('u.username', $qb->expr()->literal("%{$criteria['term']}%")),
+                $qb->expr()->like('u.email', $qb->expr()->literal("%{$criteria['term']}%")),
+                $qb->expr()->like('u.firstname', $qb->expr()->literal("%{$criteria['term']}%")),
+                $qb->expr()->like('u.lastname', $qb->expr()->literal("%{$criteria['term']}%"))
+            ));
+        }
+
+        if (isset($criteria['isExpired'])) {
+            $qb->andWhere($qb->expr()->isNotNull('u.expiresAt'));
+            $qb->andWhere($qb->expr()->lte('u.expiresAt', $qb->expr()->literal(date('Y-m-d H:i:s'))));
+        }
+
+        if (isset($criteria['hasExpireDate'])) {
+            $qb->andWhere($qb->expr()->isNotNull('u.expiresAt'));
+        }
+
+        if (isset($criteria['roles']) and is_array($criteria['roles'])) {
+            $or = $qb->expr()->orX();
+            foreach ($criteria['roles'] as $role) {
+                $or->add($qb->expr()->like('u.roles', $qb->expr()->literal("%$role%")));
+            }
+            $qb->andWhere($or);
+        }
+
+        if (isset($criteria['groups']) and is_array($criteria['groups'])) {
+            $groups = array();
+            foreach ($criteria['groups'] as $group) {
+                $groups[] = $qb->expr()->literal($group);
+            }
+            $qb->join('u.groups', 'g');
+            $qb->andWhere($qb->expr()->in('g.id', $groups));
+        }
     }
 
     /**
