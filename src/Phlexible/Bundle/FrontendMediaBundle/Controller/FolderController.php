@@ -30,19 +30,16 @@ class FolderController extends Controller
      */
     public function treeAction()
     {
-        $data = [];
-
-        $securityContext = $this->get('security.context');
+        $data = array();
 
         foreach ($this->get('phlexible_media_manager.volume_manager')->all() as $volume) {
             $rootFolder = $volume->findRootFolder();
 
-            if (!$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
-                // TODO: uncomment
-                //continue;
+            if (!$this->isGranted('FOLDER_READ', $rootFolder)) {
+                continue;
             }
 
-            $data[] = [
+            $data[] = array(
                 'id'        => $rootFolder->getId(),
                 'site_id'   => $volume->getId(),
                 'text'      => $rootFolder->getName(),
@@ -51,7 +48,7 @@ class FolderController extends Controller
                 'expanded'  => true,
                 'allowDrop' => true,
                 'children'  => $this->recurseFolders($volume, $rootFolder),
-            ];
+            );
         }
 
         return new JsonResponse($data);
@@ -65,17 +62,15 @@ class FolderController extends Controller
      */
     private function recurseFolders(VolumeInterface $volume, ExtendedFolderInterface $folder)
     {
-        $data = [];
-
-        $securityContext = $this->get('security.context');
+        $data = array();
 
         foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
-            if (!$securityContext->isGranted('FOLDER_READ', $subFolder)) {
+            if (!$this->isGranted('FOLDER_READ', $subFolder)) {
                 // TODO: uncomment
                 //continue;
             }
 
-            $tmp = [
+            $tmp = array(
                 'id'        => $subFolder->getId(),
                 'site_id'   => $volume->getId(),
                 'text'      => $subFolder->getName(),
@@ -83,7 +78,7 @@ class FolderController extends Controller
                 'numChilds' => $volume->countFoldersByParentFolder($subFolder),
                 'allowDrop' => true,
                 'children'  => $this->recurseFolders($volume, $subFolder),
-            ];
+            );
 
             if (!$tmp['numChilds']) {
                 $tmp['expanded'] = true;
