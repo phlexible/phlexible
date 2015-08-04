@@ -44,7 +44,7 @@ class MediaController extends Controller
 
         $filePath = $this->container->getParameter('app.web_dir') . '/media/thumbnail/' . $fileId . '/' . $templateKey . '_' . $template->getRevision() . '.jpg';
         $mimeType = 'image/jpeg';
-        if (!file_exists($filePath)) {
+        if (!file_exists($filePath) || filemtime($filePath) < $file->getModifiedAt()->format('U')) {
             if (file_exists($file->getPhysicalPath())) {
                 if (!file_exists(dirname($filePath))) {
                     mkdir(dirname($filePath), 0777, true);
