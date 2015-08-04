@@ -232,17 +232,19 @@ class TreeController extends Controller
     public function createInstanceAction(Request $request)
     {
         $parentId = $request->get('id');
-        $afterId = $request->get('prev_id');
+        $prevId = $request->get('prev_id');
         $sourceId = $request->get('for_tree_id');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
 
-        $tree = $treeManager->getByNodeId($parentId);
-        $parentNode = $tree->get($parentId);
-        $prevNode = $tree->get($afterId);
-        $sourceNode = $tree->get($sourceId);
+        $sourceTree = $treeManager->getByNodeId($sourceId);
+        $sourceNode = $sourceTree->get($sourceId);
 
-        $tree->createInstance($parentNode, $prevNode, $sourceNode, $this->getUser()->getId());
+        $targetTree = $treeManager->getByNodeId($parentId);
+        $parentNode = $targetTree->get($parentId);
+        $prevNode = $targetTree->get($prevId);
+
+        $targetTree->createInstance($parentNode, $prevNode, $sourceNode, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Instance created.');
     }

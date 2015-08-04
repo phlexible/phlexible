@@ -271,37 +271,40 @@ Phlexible.elements.tab.List = Ext.extend(Ext.Panel, {
 
                                 if (allowDuplicate && records.length === 1) {
                                     tb.items.items[4].menu.items.items[0].enable();
-                                }
-                                else {
-                                    tb.items.items[4].menu.items.items[0].disable();
-                                }
-
-                                if (allowPublish) {
                                     tb.items.items[4].menu.items.items[2].enable();
                                 }
                                 else {
+                                    tb.items.items[4].menu.items.items[0].disable();
                                     tb.items.items[4].menu.items.items[2].disable();
                                 }
 
-                                if (allowPublish && records.length === 1) {
-                                    tb.items.items[4].menu.items.items[3].enable();
+                                if (allowPublish) {
+                                    tb.items.items[4].menu.items.items[4].enable();
                                 }
                                 else {
-                                    tb.items.items[4].menu.items.items[3].disable();
+                                    tb.items.items[4].menu.items.items[4].disable();
                                 }
 
-                                if (allowDelete) {
+                                if (allowPublish && records.length === 1) {
                                     tb.items.items[4].menu.items.items[5].enable();
                                 }
                                 else {
                                     tb.items.items[4].menu.items.items[5].disable();
                                 }
+
+                                if (allowDelete) {
+                                    tb.items.items[4].menu.items.items[7].enable();
+                                }
+                                else {
+                                    tb.items.items[4].menu.items.items[7].disable();
+                                }
                             }
                             else {
                                 tb.items.items[4].menu.items.items[0].disable();
                                 tb.items.items[4].menu.items.items[2].disable();
-                                tb.items.items[4].menu.items.items[3].disable();
+                                tb.items.items[4].menu.items.items[4].disable();
                                 tb.items.items[4].menu.items.items[5].disable();
+                                tb.items.items[4].menu.items.items[7].disable();
                             }
                         },
                         scope: this
@@ -530,6 +533,13 @@ Phlexible.elements.tab.List = Ext.extend(Ext.Panel, {
                         iconCls: 'p-element-copy-icon',
                         disabled: true,
                         handler: this.duplicateNode,
+                        scope: this
+                    },
+                    '-',
+                    {
+                        text: this.strings.copy,
+                        iconCls: 'p-element-copy-icon',
+                        handler: this.copyNode,
                         scope: this
                     },
                     '-',
@@ -844,6 +854,16 @@ Phlexible.elements.tab.List = Ext.extend(Ext.Panel, {
             },
             scope: this
         });
+    },
+
+    copyNode: function () {
+        var records = this.getComponent(1).getSelectionModel().getSelections();
+
+        if (!records.length || records.length > 1) {
+            return;
+        }
+
+        Phlexible.Clipboard.set(records[0].data.title, records[0].data.tid, 'element');
     },
 
     publishNode: function () {

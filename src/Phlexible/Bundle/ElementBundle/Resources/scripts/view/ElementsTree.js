@@ -407,7 +407,7 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                 iconCls: 'p-element-copy-icon',
                 handler: function (menu) {
                     var node = menu.parentMenu.node;
-                    Phlexible.Clipboard.set(node.text, node, 'element');
+                    Phlexible.Clipboard.set(node.text, node.id, 'element');
                 }
             },
             {
@@ -428,13 +428,13 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                                 return;
                             }
 
-                            var forNode = Phlexible.Clipboard.getItem();
+                            var forNodeId = Phlexible.Clipboard.getItem();
                             var node = menu.parentMenu.parentMenu.node;
 
                             Ext.Ajax.request({
                                 url: Phlexible.Router.generate('tree_copy'),
                                 params: {
-                                    for_tree_id: forNode.id,
+                                    for_tree_id: forNodeId,
                                     id: node.id
                                 },
                                 success: function (response) {
@@ -460,13 +460,13 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
                                 return;
                             }
 
-                            var forNode = Phlexible.Clipboard.getItem();
+                            var forNodeId = Phlexible.Clipboard.getItem();
                             var node = menu.parentMenu.parentMenu.node;
 
                             Ext.Ajax.request({
                                 url: Phlexible.Router.generate('tree_create_instance'),
                                 params: {
-                                    for_tree_id: forNode.id,
+                                    for_tree_id: forNodeId,
                                     id: node.id
                                 },
                                 success: function (response) {
