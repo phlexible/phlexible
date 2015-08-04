@@ -264,10 +264,12 @@ class TreeController extends Controller
         $elementService = $this->get('phlexible_element.element_service');
         $treeManager = $this->get('phlexible_tree.tree_manager');
 
-        $tree = $treeManager->getByNodeId($sourceId);
-        $sourceNode = $tree->get($sourceId);
-        $parentNode = $tree->get($parentId);
-        $prevNode = $tree->get($prevId);
+        $sourceTree = $treeManager->getByNodeId($sourceId);
+        $sourceNode = $sourceTree->get($sourceId);
+
+        $targetTree = $treeManager->getByNodeId($parentId);
+        $parentNode = $targetTree->get($parentId);
+        $prevNode = $targetTree->get($prevId);
 
         $sourceElement = $elementService->findElement($sourceNode->getTypeId());
         $sourceElementVersion = $elementService->findLatestElementVersion($sourceElement);
@@ -280,7 +282,7 @@ class TreeController extends Controller
         );
 
         // place new element in element_tree
-        $targetNode = $tree->create(
+        $targetNode = $targetTree->create(
             $parentNode,
             $prevNode,
             $sourceNode->getTypeId(),
