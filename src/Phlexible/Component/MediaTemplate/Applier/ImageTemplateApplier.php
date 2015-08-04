@@ -196,9 +196,20 @@ class ImageTemplateApplier
                     $image->resize($imageSize);
                 }
 
-                if ($focalpoint = $file->getAttribute('focalpoint') && !empty($focalpoint['active'])) {
-                    // TODO: correct?
-                    $point = new Point($focalpoint['x'], $focalpoint['y']);
+                if (($focalpoint = $file->getAttribute('focalpoint')) && !empty($focalpoint['active'])) {
+                    $focalX = floor($focalpoint['x'] * $ratio - $size->getWidth() / 2);
+                    $focalY = floor($focalpoint['y'] * $ratio - $size->getHeight() / 2);
+
+                    $focalX = max($focalX, 0);
+                    $focalY = max($focalY, 0);
+
+                    if ($size->getWidth() + $focalX > $image->getSize()->getWidth()) {
+                        $focalX = $image->getSize()->getWidth() - $size->getWidth();
+                    }
+                    if ($size->getHeight() + $focalY > $image->getSize()->getHeight()) {
+                        $focalY = $image->getSize()->getHeight() - $size->getHeight();
+                    }
+                    $point = new Point($focalX, $focalY);
                 } else {
                     $point = new Point(
                         max(0, round(($imageSize->getWidth() - $size->getWidth()) / 2)),
