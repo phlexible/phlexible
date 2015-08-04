@@ -105,7 +105,9 @@ Ext.ux.dd.GridReorderDropTarget = function (grid, config) {
             // If on first row, remove upper line. Prevents negative
             // index error as a result of rindex going negative.
             if (rindex < 0 || rindex === false) {
-                this.currentRowEl.removeClass("grid-row-insert-above");
+                if (this.currentRowEl && typeof this.currentRowEl.removeClass == 'function') {
+                    this.currentRowEl.removeClass("grid-row-insert-above");
+                }
                 return this.dropNotAllowed;
             }
 

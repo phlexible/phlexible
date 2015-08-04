@@ -5,7 +5,7 @@ Phlexible.elements.model.ElementList = Ext.data.Record.create([
     {name: 'teaser_id', type: 'int'},
     {name: '_type', type: 'string'},
     {name: 'element_type', type: 'string'},
-    {name: 'element_type_id', type: 'int'},
+    {name: 'element_type_id', type: 'string'},
     {name: 'navigation', type: 'bool'},
     {name: 'restricted', type: 'bool'},
     {name: 'icon', type: 'string'},
