@@ -287,7 +287,7 @@ class TreeController extends Controller
         $targetNode = $targetTree->create(
             $parentNode,
             $prevNode,
-            $sourceNode->getTypeId(),
+            $sourceNode->getType(),
             $targetElement->getEid(),
             $sourceNode->getAttributes(),
             $this->getUser()->getId(),
