@@ -1,6 +1,6 @@
 mediatemplates:
     mediatemplates: 'Media templates'
-    no_mediatemplates: 'No media templates'
+    no_mediatemplates: 'No media templates defined.'
     vars: 'Extended properties'
     preview: Preview
     image_template: 'Image template'

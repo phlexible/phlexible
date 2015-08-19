@@ -1,7 +1,7 @@
-metasets:
+etasets:
     metasets: 'Meta Sets'
     metaset: 'Meta Set'
-    no_metasets: 'Keine Meta Sets'
+    no_metasets: 'Keine Meta Sets definiert.'
     meta: Meta
     no_meta_values: 'Keine Metadaten'
     key: Schlüssel
@@ -18,7 +18,7 @@ metasets:
     rename_set_desc: Bitte geben Sie einen neuen Titel ein.
     remove: Entfernen
     id: ID
-    no_fields: Keine Felder
+    no_fields: Keine Felder definiert.
     add_field: Feld hinzufügen
     remove_field: Feld entfernen
     save: Speichern

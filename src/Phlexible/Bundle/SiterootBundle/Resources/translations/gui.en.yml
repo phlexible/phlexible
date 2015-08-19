@@ -1,7 +1,7 @@
 siteroots:
     siteroots: Siteroots
     siteroot: Siteroot
-    no_siteroots: 'No siteroots'
+    no_siteroots: 'No siteroots defined.'
     id: ID
     default_title: 'new siteroot'
     default_url: 'new url'

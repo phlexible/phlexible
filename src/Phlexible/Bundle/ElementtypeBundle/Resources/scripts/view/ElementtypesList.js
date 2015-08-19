@@ -22,9 +22,6 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
     loadMask: {
         msg: 'Loading list...'
     },
-    viewConfig: {
-        emptyText: Phlexible.elementtypes.Strings.no_elementtypes
-    },
 
     mode: Phlexible.elementtypes.TYPE_FULL,
 
@@ -128,6 +125,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         });
 
         this.viewConfig = {
+            emptyText: this.strings.no_elementtypes, 
             listeners: {
                 refresh: this.onViewRefresh,
                 scope: this
