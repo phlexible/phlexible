@@ -5,6 +5,9 @@ Phlexible.mediatemplates.TemplatesGrid = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.mediatemplates.Strings,
     border: true,
     autoExpandColumn: 1,
+    viewConfig: {
+        emptyText: Phlexible.mediatemplates.Strings.no_mediatemplates
+    },
 
     initComponent: function () {
         this.store = new Ext.data.JsonStore({

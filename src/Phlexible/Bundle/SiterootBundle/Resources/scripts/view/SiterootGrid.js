@@ -6,6 +6,9 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.siteroots.Strings.siteroot,
     strings: Phlexible.siteroots.Strings,
     autoExpandColumn: 'title',
+    viewConfig: {
+        emptyText: Phlexible.siteroots.Strings.no_siteroots
+    },
 
     initComponent: function () {
 

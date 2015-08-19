@@ -1,6 +1,7 @@
 siteroots:
     siteroots: Siteroots
     siteroot: Siteroot
+    no_siteroots: 'No siteroots'
     id: ID
     default_title: 'new siteroot'
     default_url: 'new url'

@@ -1,5 +1,6 @@
 mediatemplates:
     mediatemplates: Medienvorlagen
+    no_mediatemplates: 'Keine Medienvorlagen'
     vars: 'Weitere Eigenschaften'
     preview: Vorschau
     image_template: Bildvorlage

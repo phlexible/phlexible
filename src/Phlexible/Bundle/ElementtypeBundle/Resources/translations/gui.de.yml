@@ -1,6 +1,7 @@
 elementtypes:
     elementtypes: Elementtypen
     elementtype: Elementtyp
+    no_elementtypes: 'Keine Elementtypen'
     elementtype_tree: 'Elementtyp Baum'
     template_elementtype: Vorlage
     root: Root

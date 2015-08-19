@@ -1,6 +1,7 @@
 metasets:
     metasets: 'Meta Sets'
     metaset: 'Meta Set'
+    no_metasets: 'Keine Meta Sets'
     meta: Meta
     no_meta_values: 'Keine Metadaten'
     key: Schlüssel

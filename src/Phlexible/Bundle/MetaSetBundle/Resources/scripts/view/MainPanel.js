@@ -56,6 +56,9 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                 width: 200,
                 loadMask: true,
                 autoExpandColumn: 1,
+                viewConfig: {
+                    emptyText: Phlexible.metasets.Strings.no_metasets
+                },
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('metasets_sets_list'),
                     root: 'sets',
