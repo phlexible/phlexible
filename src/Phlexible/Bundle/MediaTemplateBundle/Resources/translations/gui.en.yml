@@ -14,6 +14,9 @@ mediatemplates:
     video: Video
     audio: Audio
     add: Add
+    create_image_template: 'Create image template'
+    create_video_template: 'Create video template'
+    create_audio_template: 'Create audio template'
     save: Save
     save_hint: 'Please note that saving will result in regenerating all images stored in the media manager based on this media template. This can result in heavy server load. If you want to test your settings use the preview button. Saving is not necessary for previewing.'
     reset: Reset

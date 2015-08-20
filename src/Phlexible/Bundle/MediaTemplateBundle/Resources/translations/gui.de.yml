@@ -13,7 +13,10 @@ mediatemplates:
     image: Bild
     video: Video
     audio: Audio
-    add: Hinzufügen
+    add: Erstellen
+    create_image_template: 'Bildvorlage erstellen'
+    create_video_template: 'Videovorlage erstellen'
+    create_audio_template: 'Audiovorlage erstellen'
     save: Speichern
     save_hint: 'Bitte beachten Sie, dass nach dem Speichern alle in der Medienverwaltung hinterlegten Bilder auf der Basis dieser Medienvorlage neu berechnet werden. Das kann den Server stark belasten. Wenn Sie Ihre Einstellungen testen möchten, verwenden Sie bitte den Vorschau-Button. Ein Speichern ist hierfür nicht erforderlich.'
     reset: Zurücksetzen
