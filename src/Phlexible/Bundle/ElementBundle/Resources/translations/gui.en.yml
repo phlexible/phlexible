@@ -6,7 +6,6 @@ elements:
     latest_version: 'Latest Version'
     online_version: 'Online Version'
     tree_node: Treenode
-    catch: Catch
     content: Content
     field: Field
     sites: Sites
@@ -19,6 +18,7 @@ elements:
     list: List
     type: Type
     tid: TID
+    teaser_id: Teaser ID
     eid: EID
     id: ID
     version: Version
