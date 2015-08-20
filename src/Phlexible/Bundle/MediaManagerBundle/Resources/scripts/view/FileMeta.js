@@ -106,9 +106,7 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
                 } else {
                     this.add({
                         border: false,
-                        xbodyStyle: 'padding: 5px;',
-                        ctCls: 'x-grid-empty',
-                        html: this.strings.no_meta_values
+                        html: '<div class="x-grid-empty">' + this.strings.no_meta_values + '</div>'
                     });
                 }
 
