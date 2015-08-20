@@ -79,8 +79,7 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
             iconCls: 'p-mediamanager-folder_rights-icon',
             disabled: this.folder_rights.indexOf(Phlexible.mediamanager.Rights.FOLDER_RIGHTS) === -1,
             hidden: Phlexible.User.isGranted('ROLE_MEDIA_ACCESS_CONTROL'),
-            rightType: 'internal',
-            contentType: 'folder',
+            objectType: 'Phlexible\\Bundle\\MediaManagerBundle\\Entity\\Folder',
             strings: {
                 users: this.strings.select_user,
                 user: '_user',
@@ -88,14 +87,17 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
                 group: '_group'
             },
             urls: {
-                subjects: Phlexible.Router.generate('mediamanager_rights_subjects'),
+                identities: Phlexible.Router.generate('mediamanager_rights_identities'),
                 add: Phlexible.Router.generate('mediamanager_rights_add')
             },
             listeners: {
                 render: function (c) {
-                    if (!c.disabled) c.doLoad('folder', this.folder_id);
+                    if (!c.disabled) c.doLoad('Phlexible\\Bundle\\MediaManagerBundle\\Entity\\Folder', this.folder_id);
                 },
                 scope: this
+            },
+            createIconCls: function(permission) {
+                return 'p-mediamanager-permission_' + permission.name.toLowerCase() + '-icon';
             }
         }];
     },

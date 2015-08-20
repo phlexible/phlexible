@@ -139,6 +139,10 @@ class AccessController extends Controller
             $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($objectId);
             $node = $tree->get($objectId);
             $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($node);
+        } elseif ($objectType === 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder') {
+            $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($objectId);
+            $folder = $volume->findFolder($objectId);
+            $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($folder);
         } else {
             throw new \Exception("Unsupported object type $objectType");
         }

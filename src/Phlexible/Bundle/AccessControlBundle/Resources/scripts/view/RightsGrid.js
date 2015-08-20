@@ -41,8 +41,28 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         Ext.applyIf(this.urls, this.getDefaultUrls());
 
-        if (!this.urls.users || !this.urls.groups || !this.urls.identities || !this.urls.permissions || !this.urls.add || !this.urls.save) {
-            throw 'RightsGrid URL config incomplete.';
+        if (!this.urls.users) {
+            throw 'RightsGrid users URL config incomplete.';
+        }
+
+        if (!this.urls.groups) {
+            throw 'RightsGrid groups URL config incomplete.';
+        }
+
+        if (!this.urls.identities) {
+            throw 'RightsGrid identities URL config incomplete.';
+        }
+
+        if (!this.urls.permissions) {
+            throw 'RightsGrid permissions URL config incomplete.';
+        }
+
+        if (!this.urls.add) {
+            throw 'RightsGrid add URL config incomplete.';
+        }
+
+        if (!this.urls.save) {
+            throw 'RightsGrid save URL config incomplete.';
         }
 
         if (!this.objectType) {

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,10 +30,62 @@ class RightsController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/subjects", name="mediamanager_rights_subjects")
+     * @Route("/identities", name="mediamanager_rights_identities")
      */
-    public function subjectsAction(Request $request)
+    public function identitiesAction(Request $request)
     {
+        $objectType = $request->get('objectType');
+        $objectId = $request->get('objectId', null);
+
+        $subjects = array();
+
+        if ($objectType === 'teaser') {
+            $path = array($objectId);
+        } elseif ($objectType === 'Phlexible\Bundle\MediaManagerBundle\Entity\Folder') {
+            $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($objectId);
+            $folder = $volume->findFolder($objectId);
+            $identity = HierarchicalObjectIdentity::fromDomainObject($folder);
+        } else {
+            throw new \Exception("Unsupported object type $objectType");
+        }
+
+        $accessManager = $this->get('phlexible_access_control.access_manager');
+
+        /*
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
+        $permissions = array();
+        foreach ($permissionRegistry->get($objectType) as $permissionCollection) {
+            foreach ($permissionCollection->all() as $permission) {
+                $permissions[] = $permission->getName();
+            }
+        }
+        */
+
+        $acl = $accessManager->findAcl($identity);
+
+        $identities = array();
+
+        if ($acl) {
+            $resolver = $this->get('phlexible_access_control.security_resolver');
+
+            foreach ($acl->getEntries() as $ace) {
+                $identities[] = array(
+                    'id'             => $ace->getId(),
+                    'objectType'     => $acl->getObjectIdentity()->getType(),
+                    'objectId'       => $acl->getObjectIdentity()->getIdentifier(),
+                    'mask'           => $ace->getMask(),
+                    'stopMask'       => $ace->getStopMask(),
+                    'noInheritMask'  => $ace->getNoInheritMask(),
+                    'objectLanguage' => null,
+                    'securityType'   => $ace->getSecurityType(),
+                    'securityId'     => $ace->getSecurityIdentifier(),
+                    'securityName'   => $resolver->resolveName($ace->getSecurityType(), $ace->getSecurityIdentifier()),
+                );
+            }
+        }
+
+        return new JsonResponse(array('identities' => $identities));
+
         $rightType = $request->get('right_type', null);
         $contentType = $request->get('content_type', null);
         $contentId = $request->get('content_id', null);

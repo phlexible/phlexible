@@ -134,14 +134,6 @@ Phlexible.elements.NewElementWindow = Ext.extend(Phlexible.gui.util.Dialog, {
                 labelSeparator: '',
                 boxLabel: Phlexible.elements.Strings.in_navigation,
                 disabled: true
-            },
-            {
-                xtype: 'checkbox',
-                fieldLabel: '',
-                name: 'restricted',
-                labelSeparator: '',
-                boxLabel: Phlexible.elements.Strings.is_restricted,
-                checked: Phlexible.Config.get('elements.create.restricted')
             }
         ];
 
