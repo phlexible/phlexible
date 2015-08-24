@@ -431,6 +431,18 @@ class ElementVersion
             return json_decode($mappedField->getForward(), true);
         }
 
+        if ($field === 'custom1' && $mappedField->getCustom1()) {
+            return $mappedField->getCustom1();
+        } elseif ($field === 'custom2' && $mappedField->getCustom2()) {
+            return $mappedField->getCustom2();
+        } elseif ($field === 'custom3' && $mappedField->getCustom3()) {
+            return $mappedField->getCustom3();
+        } elseif ($field === 'custom4' && $mappedField->getCustom4()) {
+            return $mappedField->getCustom4();
+        } elseif ($field === 'custom5' && $mappedField->getCustom5()) {
+            return $mappedField->getCustom5();
+        }
+
         return null;
     }
 }

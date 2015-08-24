@@ -291,4 +291,43 @@ class ElementVersionMappedField
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getCustom1()
+    {
+        return $this->custom1;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustom2()
+    {
+        return $this->custom2;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustom3()
+    {
+        return $this->custom3;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustom4()
+    {
+        return $this->custom4;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustom5()
+    {
+        return $this->custom5;
+    }
 }
