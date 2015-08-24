@@ -134,13 +134,17 @@ class QueueProcessor
         $volume = $this->volumeManager->getById($cacheItem->getVolumeId());
         $file = $volume->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
 
+        if (!$file) {
+            return null;
+        }
+
         $template = $this->templateManager->find($cacheItem->getTemplateKey());
 
         $mediaType = $this->mediaTypeManager->find($file->getMediaType());
 
         $worker = $this->workerResolver->resolve($template, $file, $mediaType);
         if (!$worker) {
-            if ($callback) {
+            if ($callback && $cacheItem) {
                 call_user_func($callback, 'no_worker', null, $cacheItem);
             }
 
@@ -151,7 +155,7 @@ class QueueProcessor
 
         if ($callback) {
             if (!$cacheItem) {
-                call_user_func($callback, 'no_cacheitem', $worker, $cacheItem);
+                call_user_func($callback, 'no_cacheitem', $worker, null);
             } else {
                 call_user_func($callback, $cacheItem->getCacheStatus(), $worker, $cacheItem);
             }

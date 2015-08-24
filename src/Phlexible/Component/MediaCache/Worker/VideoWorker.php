@@ -151,7 +151,7 @@ class VideoWorker extends AbstractWorker
         }
 
         $cacheItem
-            ->setSiteId($volume->getId())
+            ->setVolumeId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)
             ->setTemplateKey($template->getKey())

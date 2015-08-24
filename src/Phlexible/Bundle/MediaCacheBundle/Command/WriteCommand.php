@@ -57,7 +57,7 @@ class WriteCommand extends ContainerAwareCommand
         }
 
         $current = 0;
-        foreach ($cacheManager->findBy(array('queue_status' => CacheItem::QUEUE_WAITING)) as $cacheItem) {
+        foreach ($cacheManager->findBy(array('queueStatus' => CacheItem::QUEUE_WAITING)) as $cacheItem) {
             $current++;
             if ($progress) {
                 $progress->advance();
@@ -65,7 +65,11 @@ class WriteCommand extends ContainerAwareCommand
 
             $queueProcessor->processItem(
                 $cacheItem,
-                function ($status, $worker, CacheItem $cacheItem) use ($output, $breakOnError, $current, $total) {
+                function ($status, $worker, CacheItem $cacheItem = null) use ($output, $breakOnError, $current, $total) {
+                    if (!$cacheItem) {
+                        $output->writeln('No cache item');
+                        return;
+                    }
                     $worker = ($worker ? get_class($worker) : '-');
                     $fileId = $cacheItem->getFileId();
                     $templateKey = $cacheItem->getTemplateKey();

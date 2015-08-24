@@ -139,7 +139,7 @@ class BatchBuilder
      */
     private function addAllFiles(Batch $batch)
     {
-        foreach ($this->volumeManager->getAll() as $volume) {
+        foreach ($this->volumeManager->all() as $volume) {
             $rii = new \RecursiveIteratorIterator($volume->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
 
             foreach ($rii as $folder) {
