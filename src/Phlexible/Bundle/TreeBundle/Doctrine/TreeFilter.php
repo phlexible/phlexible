@@ -280,7 +280,7 @@ class TreeFilter implements TreeFilterInterface
                 break;
 
             case 'create_time':
-                $qb->orderBy('t.modify_time', $this->sortDir);
+                $qb->orderBy('t.created_at', $this->sortDir);
                 break;
 
             case 'publish_time':
