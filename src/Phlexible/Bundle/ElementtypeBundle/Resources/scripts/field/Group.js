@@ -348,7 +348,7 @@ Phlexible.elementtypes.field.Group = Ext.extend(Ext.Panel, {
 
             //Phlexible.console.log([this.minRepeat, this.maxRepeat, cnt]);
             if (this.minRepeat && this.buttonRemove) {
-                btns = this.buttonRemove.up('.p-elements-data-tab').query('.p-repeat-minus-' + this.ownerCt.id + '_' + this.dsId);
+                btns = this.buttonRemove.up('.p-elements-data-panel').query('.p-repeat-minus-' + this.ownerCt.id + '_' + this.dsId);
                 if (cnt > this.minRepeat) {
                     for (var i = 0; i < btns.length; i++) {
                         Ext.get(btns[i]).show();
@@ -361,7 +361,7 @@ Phlexible.elementtypes.field.Group = Ext.extend(Ext.Panel, {
             }
 
             if (this.maxRepeat && this.buttonRemove) {
-                btns = this.buttonRemove.up('.p-elements-data-tab').query('.p-repeat-plus-' + this.ownerCt.id + '_' + this.dsId);
+                btns = this.buttonRemove.up('.p-elements-data-panel').query('.p-repeat-plus-' + this.ownerCt.id + '_' + this.dsId);
                 if (cnt < this.maxRepeat) {
                     for (var i = 0; i < btns.length; i++) {
                         Ext.get(btns[i]).show();
