@@ -43,7 +43,7 @@ class SaveNodeDataEvent extends Event
     {
         $this->node = $node;
         $this->language = $language;
-        $this->$request = $request;
+        $this->request = $request;
     }
 
     /**
