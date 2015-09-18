@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
  * Preview controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/frontend/preview")
  */
 class PreviewController extends Controller
 {
@@ -26,7 +25,6 @@ class PreviewController extends Controller
      * @param int     $treeId
      *
      * @return Response
-     * @Route("/{_locale}/{treeId}", name="frontend_preview")
      */
     public function previewAction(Request $request, $treeId)
     {
@@ -46,10 +44,10 @@ class PreviewController extends Controller
         $request->attributes->set('routeDocument', $node);
         $request->attributes->set('contentDocument', $node);
         $request->attributes->set('siterootUrl', $siterootUrl);
-        $request->attributes->set('preview', true);
+        $request->attributes->set('_preview', true);
 
         $node->getTree()->setPreview(true);
-        $this->get('router.request_context')->setParameter('preview', true);
+        $this->get('router.request_context')->setParameter('_preview', true);
 
         $configurator = $this->get('phlexible_element_renderer.configurator');
         $configuration = $configurator->configure($request);

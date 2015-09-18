@@ -80,31 +80,8 @@ class TreeNodeConfigurator implements ConfiguratorInterface
         $treeNode = $originalTreeNode = $request->attributes->get('contentDocument');
         $tree = $treeNode->getTree();
 
-        $eid = $treeNode->getTypeId();
-
-        if (0) {
-            // || $renderRequest->getVersionStrategy() === 'latest')
-            if (!$this->authorizationChecker->isGranted('VIEW', $treeNode)) {
-                $this->logger->debug('403 Forbidden du to missing VIEW content right');
-
-                throw new \Makeweb_Renderers_Exception('Forbidden', 403);
-            }
-        }
-
-        if ($treeNode !== $originalTreeNode) {
-            $this->logger->debug('Switching to TID ' . $treeNode->getId());
-
-            $renderRequest->setTreeNode($treeNode);
-            $renderRequest->setVersion($elementVersion->getVersion());
-        }
-
-        // if available use delegation for showing element somewhere else in navigation
-        if ($request->attributes->has('delegateTreeId')) {
-            $delegateTreeNode = $tree->getNode($request->attributes->get('delegateTreeId'));
-        }
-
         $version = -1;
-        if (!$request->attributes->get('preview')) {
+        if (!$request->attributes->get('_preview')) {
             $version = $tree->getPublishedVersion($treeNode, $request->getLocale());
 
             if (!$version) {

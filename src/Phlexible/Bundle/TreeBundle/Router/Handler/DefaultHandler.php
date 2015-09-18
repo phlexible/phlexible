@@ -115,14 +115,9 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     {
         /* @var $treeNode TreeNodeInterface */
         $treeNode = $name;
-        $language = isset($parameters['language']) ? $parameters['language'] : 'de';
         $encode = false;
-        /*
-        TreeNode $treeNode,
-        $language,
-        $fragment = '',
-        $encode = false
-        */
+
+        $mergedParams = array_replace($this->requestContext->getParameters(), $parameters);
 
         $url = '';
 
@@ -134,7 +129,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
             $siteroot = $this->contentTreeManager->findByTreeId($treeNode->getId())->getSiteroot();
 
-            $hostname = $this->siterootHostnameGenerator->generate($siteroot, $language);
+            $hostname = $this->siterootHostnameGenerator->generate($siteroot, $mergedParams['_locale']);
 
             $port = '';
             if ($scheme === 'http' && $this->requestContext->getHttpPort() !== 80) {
@@ -149,16 +144,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         $basePath = $this->requestContext->getBaseUrl();
 
-        $path = $this->generatePath($treeNode, $language);
-
-        $query = '';
-        if (count($parameters)) {
-            $query = '?' . http_build_query($parameters, '', '&');
-        }
-
-        $fragment = '';
-
-        $url .= $basePath . $path . $query . $fragment;
+        $url .= $basePath . $this->generatePath($treeNode, $mergedParams);
 
         return $encode ? htmlspecialchars($url) : $url;
     }
@@ -188,10 +174,12 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             throw new ResourceNotFoundException("bla");
         }
 
+        /*
         if (0 && !$siterootUrl->isDefault()) {
             $siterootUrl = $siterootUrl->getSiteroot()->getDefaultUrl($request->getLocale());
             // forward?
         }
+        */
 
         //$request->attributes->set('siterootUrl', $siterootUrl);
 
@@ -277,16 +265,15 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         if (!strlen($path) || $path === '/') {
             $language = $siterootUrl->getLanguage();
             $tid = $siterootUrl->getTarget();
-
-            $this->logger->debug('Using TID from siteroot url target: ' . $tid . ':' . $language);
         } elseif (preg_match('#^/(\w\w)/(.+)\.(\d+)\.html#', $path, $match)) {
             // match found
             $language = $match[1];
             $tid = $match[3];
-        } elseif (preg_match('#^/preview/(\w\w)/(.+)\.(\d+)\.html#', $path, $match)) {
+        } elseif (preg_match('#^/admin/preview/(\w\w)/(\d+)$#', $path, $match)) {
             // match found
             $language = $match[1];
-            $tid      = $match[3];
+            $tid      = $match[2];
+            $request->attributes->set('_preview', true);
         }
 
         if ($language === null) {
@@ -309,12 +296,6 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         if (!$treeNode) {
             return null;
         }
-        /*
-        if ($siterootUrl->getSiteroot()->getId() === $tree->getSiteRootId()) {
-            // only set on valid siteroot
-            $treeNode = $tree->get($tid);
-        }
-        */
 
         $attributes['_route'] = $path;
         $attributes['_route_object'] = $treeNode;
@@ -327,7 +308,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * @return string
      */
-    private function findLanguage()
+    protected function findLanguage()
     {
         if (function_exists('http_negotiate_language')) {
             array_unshift($this->languages, $this->defaultLanguage);
@@ -358,14 +339,14 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      * Generate path
      *
      * @param TreeNodeInterface $node
-     * @param string            $language
+     * @param array             $parameters
      *
      * @return string
      */
-    protected function generatePath(TreeNodeInterface $node, $language)
+    protected function generatePath(TreeNodeInterface $node, $parameters)
     {
-        if ($this->requestContext->getParameter('preview')) {
-            return $this->generatePreviewPath($node, $language);
+        if ($this->requestContext->getParameter('_preview') || isset($parameters['_preview'])) {
+            return $this->generatePreviewPath($node, $parameters);
         }
 
         $tree = $node->getTree();
@@ -379,7 +360,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         foreach ($pathNodes as $pathNode) {
             if ($tree->isViewable($pathNode)) {
-                $parts[] = $pathNode->getSlug($language);
+                $parts[] = $pathNode->getSlug($parameters['_locale']);
             }
         }
 
@@ -389,60 +370,75 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             }
 
             $current = $pathNodes[0];
-            $parts[] = $current->getSlug($language);
+            $parts[] = $current->getSlug($parameters['_locale']);
         }
 
         $path = '/' . implode('/', array_reverse($parts));
 
-        /*
-        // transliterate to ascii
-        $path = $this->_transliterate($path);
-        // to lowercase
-        $path = mb_strtolower($path, 'UTF-8');
-        // replace non ascii chars with underscore
-        $path = preg_replace('#[^a-z0-9_/]+#', '_', $path);
-        // replace duplicate underscores with single underscore
-        $path = preg_replace('#_{2,}#', '_', $path);
-        // remove leading underscores in path fragments
-        $path = preg_replace('#(.*)/_+(.*)$#', '$1/$2', $path);
-        // remove trailing underscores in path fragments
-        $path = preg_replace('#(.*)_+/(.*)$#', '$1/$2', $path);
-        // remove trailing underscores
-        $path = preg_replace('#_+$#', '', $path);
-        */
+        $path = $this->generatePathPrefix($path, $node, $parameters);
 
-        // add language
-        $path = '/' . $language . $path;
+        $path = $this->generatePathSuffix($path, $node, $parameters);
 
-        /*
-        if ($this->hasContext())
-        {
-            $country = $this->_context->getCountry();
+        $path = $this->generateQuery($path, $node, $parameters);
+        return $path;
+    }
 
-            if (Makeweb_Elements_Context::NO_COUNTRY === $country)
-            {
-                $container = MWF_Registry::getContainer();
+    /**
+     * @param string            $path
+     * @param TreeNodeInterface $node
+     * @param array             $parameters
+     *
+     * @return string
+     */
+    protected function generatePathPrefix($path, TreeNodeInterface $node, $parameters)
+    {
+        return '/' . $parameters['_locale'] . $path;
+    }
 
-                $country = $container->getParam(':phlexible_element.context.default_country');
+    /**
+     * @param string            $path
+     * @param TreeNodeInterface $node
+     * @param array             $parameters
+     *
+     * @return string
+     */
+    protected function generatePathSuffix($path, TreeNodeInterface $node, $parameters)
+    {
+        return $path . '.' . $node->getId() . '.html';
+    }
 
-                if (!strlen($country))
-                {
-                    $country = Makeweb_Elements_Context::GLOBAL_COUNTRY;
-                }
-            }
+    /**
+     * @param string            $path
+     * @param TreeNodeInterface $node
+     * @param array             $parameters
+     *
+     * @return string
+     */
+    protected function generateQuery($path, TreeNodeInterface $node, $parameters)
+    {
+        unset($parameters['_locale']);
+        unset($parameters['_preview']);
 
-            $cleartext = '/' . $country . $cleartext;
+        if (count($parameters)) {
+            $path .= '?' . http_build_query($parameters, '', '&');
         }
-        */
-
-        // add tid and postfix
-        $path .= '.' . $node->getId() . '.html';
 
         return $path;
     }
 
-    protected function generatePreviewPath(TreeNodeInterface $node, $language)
+    /**
+     * @param TreeNodeInterface $node
+     * @param array             $parameters
+     *
+     * @return string
+     */
+    protected function generatePreviewPath(TreeNodeInterface $node, array $parameters)
     {
-        return "/admin/frontend/preview/$language/{$node->getId()}";
+        $locale = $parameters['_locale'];
+        unset($parameters['_locale']);
+
+        unset($parameters['_preview']);
+
+        return "/admin/preview/{$locale}/{$node->getId()}" . http_build_query($parameters);
     }
 }

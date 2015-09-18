@@ -85,6 +85,10 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
                 items: langBtns,
                 listeners: {
                     change: function (cycle, btn) {
+                        if (btn.langKey === this.activeLanguage) {
+                            return;
+                        }
+
                         this.activeLanguage = btn.langKey;
 
                         Ext.Ajax.request({
@@ -172,6 +176,7 @@ Phlexible.elements.tab.Preview = Ext.extend(Ext.Panel, {
     },
 
     getQuery: function() {
+        return '';
     },
 
     setPreviewUrl: function(url) {

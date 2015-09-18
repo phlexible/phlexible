@@ -25,11 +25,17 @@ class ElementMediator implements MediatorInterface
     private $elementService;
 
     /**
+     * @var ViewableVoterInterface
+     */
+    private $viewableVoter;
+
+    /**
      * @param ElementService $elementService
      */
-    public function __construct(ElementService $elementService)
+    public function __construct(ElementService $elementService, ViewableVoterInterface $viewableVoter)
     {
         $this->elementService = $elementService;
+        $this->viewableVoter = $viewableVoter;
     }
 
     /**
@@ -63,8 +69,8 @@ class ElementMediator implements MediatorInterface
     /**
      * {@inheritdoc}
      */
-    public function isViewable(TreeNodeInterface $node)
+    public function isViewable(TreeNodeInterface $node, $language)
     {
-        return $node->getType() === 'element-full';
+        return $this->viewableVoter->isViewable($node, $language);
     }
 }

@@ -32,8 +32,8 @@ services:
         class: Phlexible\Bundle\TreeBundle\Router\TreeRouter
         arguments:
             - @router.request_context
-            - @phlexible_tree.router.handler.default
-            - @phlexible_tree.router.handler.default
+            - @phlexible_tree.router.handler
+            - @phlexible_tree.router.handler
             - ""
             - @event_dispatcher
         tags:
@@ -78,6 +78,14 @@ services:
             - %kernel.debug%
         tags:
             - {name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 999}
+
+    phlexible_tree.listener.preview:
+        class: Phlexible\Bundle\TreeBundle\EventListener\PreviewListener
+        arguments:
+            - @router
+            - @phlexible_tree.mediator.element.viewable_voter
+        tags:
+            - {name: kernel.event_subscriber}
 
     # twig extensions
     phlexible_tree.twig.tree_extension:

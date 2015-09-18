@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
-use Cocur\Slugify\Slugify;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
@@ -415,12 +414,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function isViewable(TreeNodeInterface $node, $language = null)
     {
-        $isPublished = true;
-        if (1) {
-            $isPublished = $node->getTree()->isPublished($node, $language ?: $this->language);
-        }
-
-        return $this->mediator->isViewable($node) && $node->getInNavigation() && $isPublished;
+        return $node->getInNavigation() && $this->mediator->isViewable($node, $language ?: $this->language);
     }
 
     /**

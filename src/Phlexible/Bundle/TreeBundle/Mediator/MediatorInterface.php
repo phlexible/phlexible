@@ -45,5 +45,5 @@ interface MediatorInterface
      *
      * @return bool
      */
-    public function isViewable(TreeNodeInterface $node);
+    public function isViewable(TreeNodeInterface $node, $language);
 }

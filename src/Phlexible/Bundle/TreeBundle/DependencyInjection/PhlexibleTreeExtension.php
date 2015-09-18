@@ -41,6 +41,7 @@ class PhlexibleTreeExtension extends Extension
         $container->setAlias('phlexible_tree.state_manager', 'phlexible_tree.doctrine.state_manager');
 
         $container->setAlias('phlexible_tree.content_tree_manager', 'phlexible_tree.content_tree_manager.delegating');
-        //$container->setAlias('phlexible_tree.content_tree_manager', 'phlexible_tree.content_tree_manager.xml');
+        $container->setAlias('phlexible_tree.router.handler', 'phlexible_tree.router.handler.default');
+        $container->setAlias('phlexible_tree.mediator.element.viewable_voter', 'phlexible_tree.mediator.element.viewable_voter.default');
     }
 }
