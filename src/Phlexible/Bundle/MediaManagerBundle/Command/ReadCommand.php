@@ -107,7 +107,6 @@ class ReadCommand extends ContainerAwareCommand
         }
 
         $mimetype = $mimeDetector->detect($file->getPhysicalPath(), MimeDetector::RETURN_STRING);
-        $attributes = array();
 
         if (!$mimetype) {
             $output->write("<error>No mimetype</error> ");
@@ -122,7 +121,8 @@ class ReadCommand extends ContainerAwareCommand
                 if ($attributeReader->supports($fileSource, $mediaType)) {
                     $attributeBag = new AttributeBag($file->getAttributes());
                     $attributeReader->read($fileSource, $mediaType, $attributeBag);
-                    $attributes = $attributeBag->all();
+                    $attributes = $file->getAttributes();
+                    $attributes['parsed'] = $attributeBag->all();
                     $volume->setFileAttributes($file, $attributes, null);
                 }
 

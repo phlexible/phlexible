@@ -71,8 +71,11 @@ class ExiftoolAttributeReader implements AttributeReaderInterface
             if ($groupName === 'system') {
                 continue;
             }
+            if (!ctype_print($value)) {
+                continue;
+            }
 
-            $path = "exiftool.$groupName.$name = $value";
+            $path = "exiftool.$groupName.$name";
             $attributes->set($path, $value);
         }
     }
