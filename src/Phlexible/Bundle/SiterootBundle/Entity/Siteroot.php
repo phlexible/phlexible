@@ -481,13 +481,14 @@ class Siteroot
 
     /**
      * @param string $key
+     * @param mixed  $defaultValue
      *
      * @return string
      */
-    public function getProperty($key)
+    public function getProperty($key, $defaultValue = null)
     {
         if (empty($this->properties[$key])) {
-            return null;
+            return $defaultValue;
         }
 
         return $this->properties[$key];
