@@ -159,7 +159,7 @@ class MediaSiteListener implements EventSubscriberInterface
             $this->attributeReader->read($fileSource, $mediaType, $attributes);
         }
 
-        $file->setAttribute('parsed', $attributes->all());
+        $file->setAttribute('fileattributes', $attributes->all());
     }
 
     /**

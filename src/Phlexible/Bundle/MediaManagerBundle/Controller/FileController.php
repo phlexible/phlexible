@@ -250,7 +250,7 @@ class FileController extends Controller
                 'used_in'           => $usedIn,
                 'used'              => $usage,
                 'focal'             => $focal,
-                'attributes'        => !empty($attributes['parsed']) ? $attributes['parsed'] : array(),
+                'attributes'        => !empty($attributes['fileattributes']) ? $attributes['fileattributes'] : array(),
             ];
         }
 
@@ -375,8 +375,8 @@ class FileController extends Controller
         $properties['create_user_id'] = $file->getCreateUserId();
         $properties['create_time'] = $file->getCreatedAt()->format('U');
 
-        $properties['attributes'] = !empty($attributes['parsed']) ? $attributes['parsed'] : array();
-        $properties['attributesCnt'] = count(!empty($attributes['parsed']) ? $attributes['parsed'] : array());
+        $properties['attributes'] = !empty($attributes['fileattributes']) ? $attributes['fileattributes'] : array();
+        $properties['attributesCnt'] = count(!empty($attributes['fileattributes']) ? $attributes['fileattributes'] : array());
 
         $properties['versions'] = $versions;
         $properties['versionsCnt'] = count($properties['versions']);

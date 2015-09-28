@@ -122,7 +122,7 @@ class ReadCommand extends ContainerAwareCommand
                     $attributeBag = new AttributeBag($file->getAttributes());
                     $attributeReader->read($fileSource, $mediaType, $attributeBag);
                     $attributes = $file->getAttributes();
-                    $attributes['parsed'] = $attributeBag->all();
+                    $attributes['fileattributes'] = $attributeBag->all();
                     $volume->setFileAttributes($file, $attributes, null);
                 }
 
