@@ -24,7 +24,7 @@ class AddHelperAssetsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $container->getDefinition('templating.helper.assets')->addMethodCall('addPackage', [
+        $container->getDefinition('assets.packages')->addMethodCall('addPackage', [
             'extjs', new Reference('phlexible_gui.templating.asset.extjs_package'),
         ]);
     }

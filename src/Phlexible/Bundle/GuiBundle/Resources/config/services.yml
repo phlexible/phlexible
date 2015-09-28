@@ -28,11 +28,6 @@ services:
         class: Phlexible\Bundle\GuiBundle\Menu\MenuLoader
         arguments: [@puli.discovery, @event_dispatcher]
 
-    phlexible_gui.catalog_accessor:
-        class: Phlexible\Bundle\GuiBundle\Translator\CatalogAccessor
-        arguments: [@translator]
-
-
     phlexible_gui.security.role_hierarchy_factory:
         class: Phlexible\Bundle\GuiBundle\Security\RoleHierarchyFactory
         arguments: [%security.role_hierarchy.roles%]

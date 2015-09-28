@@ -10,8 +10,10 @@ namespace Phlexible\Bundle\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\SecurityController as BaseSecurityController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Security controller
@@ -21,40 +23,50 @@ use Symfony\Component\Security\Core\SecurityContext;
 class SecurityController extends BaseSecurityController
 {
     /**
+     * @param Request $request
+     *
      * @return Response
      * @Route("/login", name="fos_user_security_login")
      */
-    public function loginAction()
+    public function loginAction(Request $request)
     {
-        $request = $this->container->get('request');
-        /* @var $request \Symfony\Component\HttpFoundation\Request */
         $session = $request->getSession();
-        /* @var $session \Symfony\Component\HttpFoundation\Session\Session */
+
+        $authErrorKey = Security::AUTHENTICATION_ERROR;
+        $lastUsernameKey = Security::LAST_USERNAME;
 
         // get the error if any (works with forward and redirect -- see below)
-        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
-        } elseif (null !== $session && $session->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
+        if ($request->attributes->has($authErrorKey)) {
+            $error = $request->attributes->get($authErrorKey);
+        } elseif (null !== $session && $session->has($authErrorKey)) {
+            $error = $session->get($authErrorKey);
+            $session->remove($authErrorKey);
         } else {
-            $error = '';
+            $error = null;
         }
 
-        if ($error) {
-            // TODO: this is a potential security risk (see http://trac.symfony-project.org/ticket/9523)
-            $error = $error->getMessage();
+        if (!$error instanceof AuthenticationException) {
+            $error = null; // The value does not come from the security component.
         }
+
         // last username entered by the user
-        $lastUsername = (null === $session) ? '' : $session->get(SecurityContext::LAST_USERNAME);
+        $lastUsername = (null === $session) ? '' : $session->get($lastUsernameKey);
 
-        $csrfToken = $this->container->get('form.csrf_provider')->generateCsrfToken('authenticate');
+        $csrfToken = $this->get('security.csrf.token_manager')->getToken('authenticate')->getValue();
 
-        return $this->renderLogin([
-                'last_username' => $lastUsername,
-                'error'         => $error,
-                'csrf_token' => $csrfToken,
-            ]);
+        return $this->renderLogin(array(
+            'last_username' => $lastUsername,
+            'error' => $error,
+            'csrf_token' => $csrfToken,
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function renderLogin(array $data)
+    {
+        return $this->render('PhlexibleUserBundle:Security:login.html.twig', $data);
     }
 
     /**
@@ -73,15 +85,5 @@ class SecurityController extends BaseSecurityController
     public function logoutAction()
     {
         throw new \RuntimeException('You must activate the logout in your security firewall configuration.');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function renderLogin(array $data)
-    {
-        $template = sprintf('PhlexibleUserBundle:Security:login.html.%s', $this->container->getParameter('fos_user.template.engine'));
-
-        return $this->container->get('templating')->renderResponse($template, $data);
     }
 }

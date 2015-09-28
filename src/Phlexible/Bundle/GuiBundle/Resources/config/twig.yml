@@ -10,10 +10,13 @@ services:
             - {name: twig.extension}
 
     # packages
-    phlexible_gui.templating.asset.extjs_package:
-        class: Phlexible\Bundle\GuiBundle\Templating\Asset\PathPackage
+    phlexible_gui.templating.asset.extjs_package.version_strategy:
+        class: Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy
         arguments:
-            - @request
-            - "bundles/phlexiblegui/scripts/ext-2.3.0"
-            - "2.3.0"
-        scope: request
+            - 2.3.0
+
+    phlexible_gui.templating.asset.extjs_package:
+        class: Symfony\Component\Asset\PathPackage
+        arguments:
+            - bundles/phlexiblegui/scripts/ext-2.3.0
+            - @phlexible_gui.templating.asset.extjs_package.version_strategy

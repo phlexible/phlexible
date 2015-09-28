@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
 use Phlexible\Bundle\GuiBundle\Translator\CatalogAccessor;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Translation\TranslatorBagInterface;
 
 /**
  * Translations builder
@@ -20,9 +21,9 @@ use Symfony\Component\Filesystem\Filesystem;
 class TranslationsBuilder
 {
     /**
-     * @var CatalogAccessor
+     * @var TranslatorBagInterface
      */
-    private $catalogAccessor;
+    private $translator;
 
     /**
      * @var CompressorInterface
@@ -35,16 +36,16 @@ class TranslationsBuilder
     private $cacheDir;
 
     /**
-     * @param CatalogAccessor     $catalogAccessor
-     * @param CompressorInterface $javascriptCompressor
-     * @param string              $cacheDir
+     * @param TranslatorBagInterface $translator
+     * @param CompressorInterface    $javascriptCompressor
+     * @param string                 $cacheDir
      */
     public function __construct(
-        CatalogAccessor $catalogAccessor,
+        TranslatorBagInterface $translator,
         CompressorInterface $javascriptCompressor,
         $cacheDir)
     {
-        $this->catalogAccessor = $catalogAccessor;
+        $this->translator = $translator;
         $this->javascriptCompressor = $javascriptCompressor;
         $this->cacheDir = $cacheDir;
     }
@@ -60,7 +61,7 @@ class TranslationsBuilder
     public function build($language, $domain = 'gui')
     {
         $translations = [];
-        $catalogue = $this->catalogAccessor->getCatalogues($language);
+        $catalogue = $this->translator->getCatalogue($language);
         $namespaces = [];
         foreach ($catalogue->all($domain) as $key => $value) {
             $parts = explode('.', $key);

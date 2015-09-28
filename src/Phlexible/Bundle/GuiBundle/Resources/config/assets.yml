@@ -24,4 +24,4 @@ services:
 
     phlexible_gui.asset.builder.translations:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\TranslationsBuilder
-        arguments: [@phlexible_gui.catalog_accessor, @phlexible_gui.compressor.javascript, %asset.cache_dir%]
+        arguments: [@translator, @phlexible_gui.compressor.javascript, %asset.cache_dir%]
