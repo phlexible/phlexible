@@ -176,11 +176,11 @@ class SetsController extends Controller
                 $field = $fields[$item['id']];
                 unset($fields[$item['id']]);
             } else {
-                $field = $metaSetManager->createMetaSetField();
+                $field = $metaSetManager->createMetaSetField()
+                    ->setId(Uuid::generate());
             }
 
             $field
-                ->setId(Uuid::generate())
                 ->setName($item['key'])
                 ->setMetaSet($metaSet)
                 ->setType($item['type'])
