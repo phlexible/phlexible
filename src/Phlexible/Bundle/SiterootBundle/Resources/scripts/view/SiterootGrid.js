@@ -68,10 +68,8 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
                 direction: 'ASC'
             },
             listeners: {
-                load: {
-                    fn: this.onLoadStore,
-                    scope: this
-                }
+                load: this.onLoadStore,
+                scope: this
             }
         });
 
@@ -93,22 +91,15 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
         this.sm = new Ext.grid.RowSelectionModel({
             singleSelect: true,
             listeners: {
-                'rowselect': {
-                    fn: this.onSelectSiteroot,
-                    scope: this
-                }
+                rowselect: this.onSelectSiteroot,
+                scope: this
             }
         });
 
         this.addListener({
-            rowcontextmenu: {
-                fn: this.onRowContextMenu,
-                scope: this
-            },
-            siterootDataChange: {
-                fn: this.onSiterootDataChange,
-                scope: this
-            }
+            rowcontextmenu: this.onRowContextMenu,
+            siterootDataChange: this.onSiterootDataChange,
+            scope: this
         });
 
         Phlexible.siteroots.SiterootGrid.superclass.initComponent.call(this);

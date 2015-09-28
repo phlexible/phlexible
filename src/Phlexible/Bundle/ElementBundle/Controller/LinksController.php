@@ -98,20 +98,18 @@ class LinksController extends Controller
             foreach ($elementTypeIds as $key => $elementTypeId) {
                 $elementTypeIds[$key] = $qb->expr()->literal($elementTypeId);
             }
-            $elementTypeIds = implode(',', $elementTypeIds);
         }
 
         $or = null;
         if (!$allowTid || !$allowIntrasiteroot) {
+            $or = $qb->expr()->orX();
             if ($allowTid) {
-                $where[] = $qb->expr()->eq('et.siteroot_id', $qb->expr()->literal($siterootId));
+                $or->add($qb->expr()->eq('t.siteroot_id', $qb->expr()->literal($siterootId)));
             }
 
             if ($allowIntrasiteroot) {
-                $where[] = $qb->expr()->neq('et.siteroot_id', $qb->expr()->literal($siterootId));
+                $or->add($qb->expr()->neq('t.siteroot_id', $qb->expr()->literal($siterootId)));
             }
-
-            $or = $qb->expr()->orX($where);
         }
 
         $qb
@@ -123,12 +121,13 @@ class LinksController extends Controller
             ->where($qb->expr()->eq('t.id', $qb->expr()->literal($query)))
             ->orderBy('title', 'ASC');
 
+
         if ($or) {
             $qb->andWhere($or);
         }
 
         if ($elementTypeIds) {
-            $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')');
+            $qb->andWhere($qb->expr()->in('e.elementtype_id', $elementTypeIds));
         }
 
         $results1 = $conn->fetchAll($qb->getSQL());
@@ -148,7 +147,7 @@ class LinksController extends Controller
         }
 
         if ($elementTypeIds) {
-            $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')');
+            $qb->andWhere($qb->expr()->in('e.elementtype_id', $elementTypeIds));
         }
 
         $results2 = $conn->fetchAll($qb->getSQL());
