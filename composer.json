@@ -27,7 +27,7 @@
         "zf1/zend-search-lucene": "~1.12",
         "doctrine/orm": "~2.4",
         "fluentdom/fluentdom": "~5.1",
-        "friendsofsymfony/user-bundle": "~1.3",
+        "friendsofsymfony/user-bundle": "~2.0",
         "symfony/symfony": "~2.4",
         "symfony-cmf/routing-bundle": "~1.1",
         "twig/twig": "~1.15",
