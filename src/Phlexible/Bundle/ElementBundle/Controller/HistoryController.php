@@ -66,6 +66,8 @@ class HistoryController extends Controller
         }
 
         $historyManager = $this->get('phlexible_element.element_history_manager');
+        $userManager = $this->get('phlexible_user.user_manager');
+
         $entries = $historyManager->findBy($criteria, [$sort => $dir], $limit, $offset);
         $count = $historyManager->countBy($criteria);
 
@@ -80,6 +82,12 @@ class HistoryController extends Controller
                 $type = 'teaser';
             }
 
+            $username = 'unknown';
+            $user = $userManager->find($entry->getCreateUserId());
+            if ($user) {
+                $username = $user->getUsername();
+            }
+
             $elementHistory[] = [
                 'eid'         => $entry->getEid(),
                 'type'        => $type,
@@ -89,7 +97,7 @@ class HistoryController extends Controller
                 'language'    => $entry->getLanguage(),
                 'comment'     => $entry->getComment(),
                 'action'      => $entry->getAction(),
-                'username'    => $entry->getCreateUserId(),
+                'username'    => $username,
                 'create_time' => $entry->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         }

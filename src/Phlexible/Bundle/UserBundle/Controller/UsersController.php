@@ -276,7 +276,7 @@ class UsersController extends Controller
         if ($request->request->get('username')) {
             $user->setUsername($request->get('username'));
         }
-        if ($request->request->get('comment')) {
+        if ($request->request->has('comment')) {
             $user->setComment($request->get('comment'));
         }
 

@@ -183,7 +183,7 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
                 items: [
                     {
                         xtype: 'textarea',
-                        name: 'password',
+                        name: 'comment',
                         hideLabel: true,
                         anchor: '100%',
                         height: 300

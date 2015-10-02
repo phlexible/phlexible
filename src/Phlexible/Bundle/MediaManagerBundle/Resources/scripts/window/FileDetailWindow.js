@@ -4,14 +4,12 @@ Ext.provide('Phlexible.mediamanager.FileDetailWindow');
 Ext.require('Phlexible.mediamanager.FileVersionsPanel');
 
 Phlexible.mediamanager.FileDetailAttributesTemplate = new Ext.XTemplate(
-    '<div style="padding: 4px 4px 8px 4px;">',
-    '<div>',
-    '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.name]}:</div> {[values.name.shorten(80)]}</div>',
-    '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {document_type_key}</div>',
-    '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.size]}:</div> {[Phlexible.Format.size(values.size)]}</div>',
-    '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.created_by]}:</div> {create_user_id}</div>',
-    '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.create_date]}:</div> {[Phlexible.Format.date(values.create_time)]}</div>',
-    '</div>',
+    '<div style="padding: 5px;">',
+    '<div style="padding-bottom: 5px;"><span style="color: grey;">{[Phlexible.mediamanager.Strings.name]}:</span><br/>{[values.name.shorten(60)]}</div>',
+    '<div style="padding-bottom: 5px;"><span style="color: grey;">{[Phlexible.mediamanager.Strings.type]}:</span><br/>{document_type}</div>',
+    '<div style="padding-bottom: 5px;"><span style="color: grey;">{[Phlexible.mediamanager.Strings.size]}:</span><br/>{[Phlexible.Format.size(values.size)]}</div>',
+    '<div style="padding-bottom: 5px;"><span style="color: grey;">{[Phlexible.mediamanager.Strings.created_by]}:</span><br/>{create_user}</div>',
+    '<div style="padding-bottom: 5px;"><span style="color: grey;">{[Phlexible.mediamanager.Strings.create_date]}:</span><br/>{[Phlexible.Format.date(values.create_time)]}</div>',
     '</div>'
 );
 Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
@@ -47,7 +45,7 @@ Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
                     this.strings.folder,
                     {
                         xtype: 'textfield',
-                        value: '/test/bla/',
+                        value: '/',
                         width: 250
                     },
                     ' ',
@@ -55,7 +53,7 @@ Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
                     this.strings.name,
                     {
                         xtype: 'textfield',
-                        value: 'blubb.png',
+                        value: 'name',
                         width: 310
                     },
                     ' ',
@@ -63,7 +61,7 @@ Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
                     this.strings.id,
                     {
                         xtype: 'textfield',
-                        value: '123123abc123123',
+                        value: 'id',
                         width: 220
                     }]
             },

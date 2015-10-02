@@ -83,12 +83,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     scope: this
                 },
                 {
-                    text: this.strings.publish_element_with_notification,
-                    iconCls: 'p-element-publish-icon',
-                    handler: this.onPublishWithNotification,
-                    scope: this
-                },
-                {
                     text: this.strings.publish_element_advanced,
                     iconCls: 'p-element-publish-icon',
                     handler: this.onExtendedPublish,
@@ -655,10 +649,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         } else {
             this.onPublish();
         }
-    },
-
-    onPublishWithNotification: function () {
-        this.onUpdatePublish();
     },
 
     onSave: function () {

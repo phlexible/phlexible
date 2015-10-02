@@ -352,6 +352,8 @@ class FileController extends Controller
         $fileVersion = $request->get('version', 1);
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+        $userManager = $this->get('phlexible_user.user_manager');
+        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
 
         $volume = $volumeManager->getByFileId($fileId);
         $file = $volume->findFile($fileId, $fileVersion);
@@ -362,6 +364,12 @@ class FileController extends Controller
         $versions = [];
         if ($volume->hasFeature('versions')) {
             $versions = $volume->findFileVersions($file);
+        }
+
+        $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
+        if (!$mediaType) {
+            $mediaType = $mediaTypeManager->create();
+            $mediaType->setName('unknown');
         }
 
         $properties = [];
@@ -398,10 +406,12 @@ class FileController extends Controller
             'name'              => $file->getName(),
             'size'              => $file->getSize(),
             'version'           => $file->getVersion(),
+            'document_type'     => $mediaType->getTitle($this->getUser()->getInterfaceLanguage('en')),
             'document_type_key' => strtolower($file->getMediaType()),
             'asset_type'        => strtolower($file->getMediaCategory()),
+            'create_user'       => $userManager->find($file->getCreateUserId())->getUsername(),
             'create_user_id'    => $file->getCreateUserId(),
-            'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
+            'create_time'       => $file->getCreatedAt()->format('Y-m-d H:i:s'),
         ];
 
         /*
@@ -439,6 +449,7 @@ class FileController extends Controller
         $id = $request->get('id');
 
         $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($id);
+        $userManager = $this->get('phlexible_user.user_manager');
 
         $detail = [];
         foreach ($volume->findFileVersions($id) as $file) {
@@ -451,7 +462,8 @@ class FileController extends Controller
                 'document_type_key' => strtolower($file->getMediaType()),
                 'asset_type'        => strtolower($file->getMediaCategory()),
                 'create_user_id'    => $file->getCreateUserId(),
-                'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
+                'create_user'       => $userManager->find($file->getCreateUserId())->getUsername(),
+                'create_time'       => $file->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         }
 

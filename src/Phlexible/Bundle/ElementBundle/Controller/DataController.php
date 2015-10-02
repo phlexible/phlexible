@@ -375,7 +375,7 @@ class DataController extends Controller
         $latestVersion = null;
 
         if (in_array($elementtype->getType(), [Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART])) {
-            if ($type == Elementtype::TYPE_FULL) {
+            if ($type == Elementtype::TYPE_FULL || $type == Elementtype::TYPE_PART) {
                 $contentNode = $this->get('phlexible_tree.content_tree_manager.delegating')->findByTreeId($node->getId())->get($node->getId());
                 $urls['preview'] = $this->generateUrl($contentNode, ['_preview' => true, '_locale' => $language]);
 
