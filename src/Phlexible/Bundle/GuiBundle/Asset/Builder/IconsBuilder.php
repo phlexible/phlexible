@@ -10,9 +10,8 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Puli\Discovery\Api\Binding\ResourceBinding;
-use Puli\Discovery\Api\ResourceDiscovery;
-use Puli\Repository\Api\ResourceCollection;
+use Puli\Discovery\Api\Binding\Binding;
+use Puli\Discovery\Api\EditableDiscovery;
 
 /**
  * Icons builder
@@ -22,7 +21,7 @@ use Puli\Repository\Api\ResourceCollection;
 class IconsBuilder
 {
     /**
-     * @var ResourceDiscovery
+     * @var EditableDiscovery
      */
     private $puliDiscovery;
 
@@ -42,13 +41,13 @@ class IconsBuilder
     private $debug;
 
     /**
-     * @param ResourceDiscovery   $puliDiscovery
+     * @param EditableDiscovery   $puliDiscovery
      * @param CompressorInterface $compressor
      * @param string              $cacheDir
      * @param bool                $debug
      */
     public function __construct(
-        ResourceDiscovery $puliDiscovery,
+        EditableDiscovery $puliDiscovery,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
@@ -88,17 +87,17 @@ class IconsBuilder
     }
 
     /**
-     * @return ResourceBinding[]
+     * @return Binding[]
      */
     private function findBindings()
     {
-        return $this->puliDiscovery->findByType('phlexible/icons');
+        return $this->puliDiscovery->findBindings('phlexible/icons');
     }
 
     /**
-     * @param ResourceBinding[] $bindings
-     * @param string            $baseUrl
-     * @param string            $basePath
+     * @param Binding[] $bindings
+     * @param string    $baseUrl
+     * @param string    $basePath
      *
      * @return string
      */

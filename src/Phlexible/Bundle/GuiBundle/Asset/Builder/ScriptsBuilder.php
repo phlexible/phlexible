@@ -11,8 +11,8 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Puli\Discovery\Api\Binding\ResourceBinding;
-use Puli\Discovery\Api\ResourceDiscovery;
+use Puli\Discovery\Api\Binding\Binding;
+use Puli\Discovery\Api\EditableDiscovery;
 use Puli\Repository\Resource\FileResource;
 
 /**
@@ -23,7 +23,7 @@ use Puli\Repository\Resource\FileResource;
 class ScriptsBuilder
 {
     /**
-     * @var ResourceDiscovery
+     * @var EditableDiscovery
      */
     private $puliDiscovery;
 
@@ -43,13 +43,13 @@ class ScriptsBuilder
     private $debug;
 
     /**
-     * @param ResourceDiscovery   $puliDiscovery
+     * @param EditableDiscovery   $puliDiscovery
      * @param CompressorInterface $compressor
      * @param string              $cacheDir
      * @param bool                $debug
      */
     public function __construct(
-        ResourceDiscovery $puliDiscovery,
+        EditableDiscovery $puliDiscovery,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
@@ -86,15 +86,15 @@ class ScriptsBuilder
     }
 
     /**
-     * @return ResourceBinding[]
+     * @return Binding[]
      */
     private function findBindings()
     {
-        return $this->puliDiscovery->findByType('phlexible/scripts');
+        return $this->puliDiscovery->findBindings('phlexible/scripts');
     }
 
     /**
-     * @param ResourceBinding[] $bindings
+     * @param Binding[] $bindings
      *
      * @return string
      */

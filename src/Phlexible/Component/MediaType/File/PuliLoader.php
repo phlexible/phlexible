@@ -11,7 +11,7 @@ namespace Phlexible\Component\MediaType\File;
 use Phlexible\Component\MediaType\Compiler\CompilerInterface;
 use Phlexible\Component\MediaType\Loader\LoaderInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
-use Puli\Discovery\Api\ResourceDiscovery;
+use Puli\Discovery\Api\EditableDiscovery;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
 
@@ -23,7 +23,7 @@ use Symfony\Component\Config\Resource\FileResource;
 class PuliLoader
 {
     /**
-     * @var ResourceDiscovery
+     * @var EditableDiscovery
      */
     private $puliDiscovery;
 
@@ -43,7 +43,7 @@ class PuliLoader
     private $fileDir;
 
     /**
-     * @param ResourceDiscovery $puliDiscovery
+     * @param EditableDiscovery $puliDiscovery
      * @param LoaderInterface   $loader
      * @param CompilerInterface $compiler
      * @param string            $fileDir
@@ -51,7 +51,7 @@ class PuliLoader
      * @param bool              $debug
      */
     public function __construct(
-        ResourceDiscovery $puliDiscovery,
+        EditableDiscovery $puliDiscovery,
         LoaderInterface $loader,
         CompilerInterface $compiler,
         $fileDir,
@@ -89,7 +89,7 @@ class PuliLoader
             $resources[] = new FileResource($r->getFileName());
             $r = new \ReflectionClass($this->compiler);
             $resources[] = new FileResource($r->getFileName());
-            foreach ($this->puliDiscovery->findByType("phlexible/mediatypes") as $binding) {
+            foreach ($this->puliDiscovery->findBindings("phlexible/mediatypes") as $binding) {
                 foreach ($binding->getResources() as $resource) {
                     /* @var $resource \Puli\Repository\Resource\FileResource */
                     $file = $resource->getFilesystemPath();

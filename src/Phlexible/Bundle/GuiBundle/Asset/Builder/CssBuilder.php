@@ -11,9 +11,8 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Puli\Discovery\Api\Binding\ResourceBinding;
-use Puli\Discovery\Api\ResourceDiscovery;
-use Puli\Repository\Api\ResourceCollection;
+use Puli\Discovery\Api\Binding\Binding;
+use Puli\Discovery\Api\EditableDiscovery;
 use Puli\Repository\Resource\FileResource;
 
 /**
@@ -24,7 +23,7 @@ use Puli\Repository\Resource\FileResource;
 class CssBuilder
 {
     /**
-     * @var ResourceDiscovery
+     * @var EditableDiscovery
      */
     private $puliDiscovery;
 
@@ -44,13 +43,13 @@ class CssBuilder
     private $debug;
 
     /**
-     * @param ResourceDiscovery   $puliDiscovery
+     * @param EditableDiscovery   $puliDiscovery
      * @param CompressorInterface $compressor
      * @param string              $cacheDir
      * @param bool                $debug
      */
     public function __construct(
-        ResourceDiscovery $puliDiscovery,
+        EditableDiscovery $puliDiscovery,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
@@ -93,15 +92,16 @@ class CssBuilder
     }
 
     /**
-     * @return ResourceBinding[]
+     * @return Binding[]
      */
     private function findBindings()
     {
-        return $this->puliDiscovery->findByType('phlexible/styles');
+        return $this->puliDiscovery->findBindings('phlexible/styles');
     }
 
     /**
-     * @param ResourceBinding[] $bindings
+     * @param Binding[] $bindings
+     *
      * @return string
      */
     private function buildCss(array $bindings)
