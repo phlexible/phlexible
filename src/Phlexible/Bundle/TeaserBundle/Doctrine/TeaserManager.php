@@ -407,7 +407,7 @@ class TeaserManager implements TeaserManagerInterface
         }
 
         if ($flush) {
-            $this->entityManager->flush($teaser);
+            $this->entityManager->flush();
         }
     }
 
