@@ -245,6 +245,12 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
                 items: [
                     {
                         xtype: 'checkbox',
+                        boxLabel: this.strings.enabled,
+                        hideLabel: true,
+                        name: 'enabled'
+                    },
+                    {
+                        xtype: 'checkbox',
                         boxLabel: this.strings.cant_change_password,
                         hideLabel: true,
                         name: 'noPasswordChange'
@@ -252,14 +258,14 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
                     {
                         xtype: 'datefield',
                         fieldLabel: this.strings.account_expires_on,
-                        name: 'account_expires_at',
+                        name: 'expiresAt',
                         format: 'Y-m-d',
                         helpText: this.strings.expire_help
                     },
                     {
                         xtype: 'datefield',
                         fieldLabel: this.strings.credentials_expire_on,
-                        name: 'credentials_expire_on',
+                        name: 'credentialsExpireAt',
                         format: 'Y-m-d',
                         helpText: this.strings.expire_help
                     }
@@ -357,6 +363,22 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
                         this.getComponent(0).setActiveTab(4);
                     },
                     scope: this
+                },
+                {
+                    iconCls: 'p-user-user_account-icon',
+                    text: this.strings.credentials_are_expired,
+                    handler: function () {
+                        this.getComponent(0).setActiveTab(4);
+                    },
+                    scope: this
+                },
+                {
+                    iconCls: 'p-user-user_account-icon',
+                    text: this.strings.account_is_disabled,
+                    handler: function () {
+                        this.getComponent(0).setActiveTab(4);
+                    },
+                    scope: this
                 }]
         });
 
@@ -425,7 +447,8 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
         this.getCommentForm().setValues({comment: record.get('comment')});
 
         var properties = {
-            accountExpiresAt: record.get('accountExpiresAt'),
+            enabled: record.get('enabled'),
+            expiresAt: record.get('expiresAt'),
             credentialsExpireAt: record.get('credentialsExpireAt')
         };
         Ext.apply(properties, record.get('properties'));
@@ -439,10 +462,22 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
         //var groupsGrid = this.getComponent(0).getComponent(6);
         //groupsGrid.getStore().proxy.conn.url = Phlexible.Router.generate('users_user_groups', {userId: this.uid});
 
-        if (record.data.expireDate) {
-            var now = new Date();
-            if (record.data.expireDate.format('U') < now.format('U')) {
-                this.getTopToolbar().show();
+        if (record.data.expired || record.data.credentialsExpired || !record.data.enabled) {
+            this.getTopToolbar().show();
+            if (record.data.expired) {
+                this.getTopToolbar().items.items[1].show();
+            } else {
+                this.getTopToolbar().items.items[1].hide();
+            }
+            if (record.data.credentialsExpired) {
+                this.getTopToolbar().items.items[2].show();
+            } else {
+                this.getTopToolbar().items.items[2].hide();
+            }
+            if (!record.data.enabled) {
+                this.getTopToolbar().items.items[3].show();
+            } else {
+                this.getTopToolbar().items.items[3].hide();
             }
         }
     },
@@ -456,8 +491,23 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
             rolesGrid = this.getRolesGrid(),
             groupsGrid = this.getGroupsGrid();
 
-        if (!detailForm.isValid() || !passwordForm.isValid() || !optionsForm.isValid() || !accountForm.isValid()) {
-            Ext.MessageBox.alert('error', 'error');
+        if (!detailForm.isValid()) {
+            Ext.MessageBox.alert('Validation failed', 'Check the detail tab for details.');
+            return;
+        }
+
+        if (!passwordForm.isValid()) {
+            Ext.MessageBox.alert('Validation failed', 'Check the password tab for details.');
+            return;
+        }
+
+        if (!optionsForm.isValid()) {
+            Ext.MessageBox.alert('Validation failed', 'Check the options tab for details.');
+            return;
+        }
+
+        if (!accountForm.isValid()) {
+            Ext.MessageBox.alert('Validation failed', 'Check the account tab for details.');
             return;
         }
 
@@ -494,7 +544,9 @@ Phlexible.users.UserWindow = Ext.extend(Ext.Window, {
         }
 
         var params = {
-            expires: account.expires,
+            enabled: account.enabled ? 1 : 0,
+            expiresAt: account.expiresAt,
+            credentialsExpireAt: account.credentialsExpireAt,
             comment: commentForm.getValues().comment,
             roles: roles.join(','),
             groups: groups.join(',')

@@ -365,6 +365,14 @@ class User extends BaseUser
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getCredentialsExpireAt()
+    {
+        return $this->credentialsExpireAt;
+    }
+
+    /**
      * @param string $defaultLanguage
      *
      * @return string
