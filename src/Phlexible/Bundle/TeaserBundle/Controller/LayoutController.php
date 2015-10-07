@@ -9,7 +9,9 @@
 namespace Phlexible\Bundle\TeaserBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Event\ReorderTeasersEvent;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Exception\RuntimeException;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
@@ -539,14 +541,14 @@ class LayoutController extends Controller
         $teaser = $teaserManager->find($teaserId);
         $teaser->removeStopId($treeId);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_INHERIT_TEASER, $event)->isPropagationStopped()) {
             throw new RuntimeException('Inherit cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         $dispatcher->dispatch(TeaserEvents::INHERIT_TEASER, $event);
 
         return new ResultResponse(true, 'Inheritance stop removed');
@@ -569,14 +571,14 @@ class LayoutController extends Controller
         $teaser = $teaserManager->find($teaserId);
         $teaser->addStopId($treeId);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_STOP_TEASER, $event)->isPropagationStopped()) {
             throw new RuntimeException('Stop inherit cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         $dispatcher->dispatch(TeaserEvents::STOP_TEASER, $event);
 
         return new ResultResponse(true, 'Inheritance stopped');
@@ -599,14 +601,14 @@ class LayoutController extends Controller
         $teaser = $teaserManager->find($teaserId);
         $teaser->removeHideId($treeId);
 
-        $beforeEvent = new TeaserEvent($teaser, $treeId);
+        $beforeEvent = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_SHOW_TEASER, $beforeEvent)->isPropagationStopped()) {
             throw new RuntimeException('Show cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         $dispatcher->dispatch(TeaserEvents::SHOW_TEASER, $event);
 
         return new ResultResponse(true, 'Teaser will be displayed.');
@@ -629,96 +631,57 @@ class LayoutController extends Controller
         $teaser = $teaserManager->find($teaserId);
         $teaser->addHideId($treeId);
 
-        $beforeEvent = new TeaserEvent($teaser, $treeId);
+        $beforeEvent = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_HIDE_TEASER, $beforeEvent)->isPropagationStopped()) {
             throw new RuntimeException('Show cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         $dispatcher->dispatch(TeaserEvents::HIDE_TEASER, $event);
 
         return new ResultResponse(true, 'Teaser will not be displayed.');
     }
 
     /**
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/sort", name="teasers_layout_sort")
      */
-    public function sortAction()
+    public function sortAction(Request $request)
     {
-        // TODO use Brainbits_Filter_Input
-        $treeId = $this->_getParam('tid');
-        $eid = $this->_getParam('eid');
-        $layoutAreaId = $this->_getParam('area_id');
-        $sortIds = $this->_getParam('sort_ids');
+        $treeId = $request->get('tid');
+        $layoutAreaId = $request->get('area_id');
+        $sortIds = $request->get('sort_ids');
         $sortIds = json_decode($sortIds, true);
 
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+        $dispatcher = $this->get('event_dispatcher');
 
-        try {
-            $beforeEvent = new Makeweb_Teasers_Event_BeforeReorderTeasers($treeId, $eid, $layoutAreaId, $sortIds);
-            if (false === $dispatcher->dispatch($beforeEvent)) {
-                throw new RuntimeException('Teaser sort cancelled by event');
-            }
+        $tree = $treeManager->getByNodeId($treeId);
+        $node = $tree->get($treeId);
 
-            $db = $this->getContainer()->dbPool->default;
-
-            $db->beginTransaction();
-
-            $select = $db->select()
-                ->from($db->prefix . 'element_tree_teasers', 'layoutarea_id')
-                ->where('id = :teaserId');
-
-            foreach ($sortIds as $sort => $teaserId) {
-                if (!$teaserId) {
-                    continue;
-                }
-
-                if (-1 == $teaserId) {
-                    $insertData = [
-                        'tree_id'       => $treeId,
-                        'eid'           => $eid,
-                        'layoutarea_id' => $layoutAreaId,
-                        'teaser_eid'    => null,
-                        'type'          => Makeweb_Teasers_Manager::TYPE_INHERITED,
-                        'sort'          => $sort,
-                        'modify_uid'    => MWF_Env::getUid(),
-                        'modify_time'   => $db->fn->now(),
-                    ];
-
-                    $db->insert($db->prefix . 'element_tree_teasers', $insertData);
-
-                    $teaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
-
-                    continue;
-                }
-
-                $exists = $db->fetchOne($select, ['teaserId' => $teaserId]) ? true : false;
-
-                if (!$exists) {
-                    continue;
-                }
-
-                $db->update(
-                    $db->prefix . 'element_tree_teasers',
-                    ['sort' => $sort],
-                    ['id = ?' => $teaserId]
-                );
-            }
-
-            $db->commit();
-            $event = new Makeweb_Teasers_Event_ReorderTeasers($treeId, $eid, $layoutAreaId, $sortIds);
-            $dispatcher->dispatch($event);
-
-            $result = MWF_Ext_Result::encode(true, null, 'Teaser sort published.');
-        } catch (Exception $e) {
-            $db->rollback();
-
-            $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
+        $teasers = array();
+        foreach($sortIds as $sort => $teaserId) {
+            $teaser = $teaserManager->find($teaserId);
+            $teaser->setSort($sort);
+            $teasers[] = $teaser;
         }
 
-        $this->getResponse()->setAjaxPayload($result);
+        $event = new ReorderTeasersEvent($node, $layoutAreaId, $teasers);
+        if ($dispatcher->dispatch(TeaserEvents::REORDER_TEASERS, $event)->isPropagationStopped()) {
+            throw new RuntimeException('Teaser sort cancelled by event');
+        }
+
+        $teaserManager->updateTeasers($teasers);
+
+        $event = new ReorderTeasersEvent($node, $layoutAreaId, $teasers);
+        $dispatcher->dispatch(TeaserEvents::BEFORE_REORDER_TEASERS, $event);
+
+        return new ResultResponse(true, 'Teaser sort published.');
     }
 
     /**
