@@ -69,18 +69,7 @@ class LayoutController extends Controller
         }
 
         foreach ($layoutareas as $layoutarea) {
-            // TODO: switch to generic solution
-            $availableLanguages = [
-                $language,
-                'en',
-                $elementMasterLanguage
-            ];
-
             $teasers = $teaserService->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
-            // $language,
-            // $availableLanguages
-            // preview = true
-
             $areaRoot = [
                 'id'         => 'area_' . $layoutarea->getId(),
                 'area_id'    => $layoutarea->getId(),
@@ -301,7 +290,6 @@ class LayoutController extends Controller
                     'author'          => 'author',
                     'version'         => $teaserElementVersion->getVersion(),
                     'create_time'     => $teaserElementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
-                    //                'change_time'     => $child['modify_time'],
                     'publish_time'    => $teaserOnline ? $teaserOnline->getPublishedAt() : '',
                     'custom_date'     => $teaserElementVersion->getCustomDate($language),
                     'language'        => $language,
@@ -326,7 +314,6 @@ class LayoutController extends Controller
                     'author'          => 'author',
                     'version'         => 0,
                     'create_time'     => '',
-                    //                'change_time'     => $child['modify_time'],
                     'publish_time'    => null,
                     'language'        => $language,
                     'sort'            => $teaser->getSort(),
@@ -358,8 +345,6 @@ class LayoutController extends Controller
      */
     public function childElementtypesAction(Request $request)
     {
-        $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
-
         $id = $request->get('id');
 
         $elementSourceManager = $this->get('phlexible_element.element_source_manager');
@@ -439,7 +424,6 @@ class LayoutController extends Controller
      */
     public function createAction(Request $request)
     {
-        $siterootId = $request->get('siteroot_id');
         $treeId = $request->get('tree_id');
         $eid = $request->get('eid');
         $layoutareaId = $request->get('layoutarea_id');
@@ -519,7 +503,6 @@ class LayoutController extends Controller
     public function deleteAction(Request $request)
     {
         $teaserId = $request->get('teaser_id');
-        $type = $request->get('type');
 
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $elementService = $this->get('phlexible_element.element_service');
@@ -535,12 +518,6 @@ class LayoutController extends Controller
         }
 
         $teaserManager->deleteTeaser($teaser, $this->getUser()->getId());
-
-        // TODO: fix
-        /*
-        $job = new Makeweb_Elements_Job_UpdateUsage();
-        $job->setEid($eid);
-        */
 
         return new ResultResponse(true, "Teaser {$teaser->getId()} deleted.");
     }
@@ -754,9 +731,6 @@ class LayoutController extends Controller
      */
     public function referenceAction(Request $request)
     {
-        // TODO: switch to master language of element
-        $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
-
         $siterootId = $request->get('siteroot_id');
         $tid = $request->get('node');
         $language = $request->get('language');
@@ -805,10 +779,8 @@ class LayoutController extends Controller
         $currentTreeId = $tid;
 
         $element = $elementService->findElement($treeNode->getTypeId());
-        $elementMasterLanguage = $element->getMasterLanguage();
         $elementtype = $elementService->findElementtype($element);
 
-        $layouts = [];
         $layoutareas = [];
         // TODO: repair
         foreach ($elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
@@ -850,7 +822,7 @@ class LayoutController extends Controller
                             'layoutarea_id' => $layoutarea->getId(),
                             'icon'          => $iconResolver->resolveTeaser($teaser, $language),
                             'text'          => $teaserElementVersion->getBackendTitle($language),
-                            // . ' [' . $teaser->getEid() . ']',
+                            'text'          => $teaserElementVersion->getBackendTitle($language),
                             'eid'           => $teaser->getTypeId(),
                             'type'          => 'teaser',
                             'expanded'      => false,
