@@ -92,8 +92,8 @@ users:
     copy: Kopieren
     generated_password: 'Generiertes Passwort'
     generate_password_text: 'Geben Sie ein neues Passwort ein, oder benutzen Sie das Feld unten, um ein Passwort zu generieren.'
-    account_is_expired: 'Zugang ist abelaufen.'
-    credentials_are_expired: 'Zugangsdaten sind Abgelaufen.'
+    account_is_expired: 'Zugang ist abgelaufen.'
+    credentials_are_expired: 'Zugangsdaten sind abgelaufen.'
     account_is_disabled: 'Zugang ist deaktviert.'
     successor: Nachfolger
     successor_header: 'Nachfolger auswählen'
