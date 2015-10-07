@@ -9,7 +9,9 @@
 namespace Phlexible\Bundle\TeaserBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Event\ReorderTeasersEvent;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Exception\RuntimeException;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
@@ -69,18 +71,7 @@ class LayoutController extends Controller
         }
 
         foreach ($layoutareas as $layoutarea) {
-            // TODO: switch to generic solution
-            $availableLanguages = [
-                $language,
-                'en',
-                $elementMasterLanguage
-            ];
-
             $teasers = $teaserService->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
-            // $language,
-            // $availableLanguages
-            // preview = true
-
             $areaRoot = [
                 'id'         => 'area_' . $layoutarea->getId(),
                 'area_id'    => $layoutarea->getId(),
@@ -301,7 +292,6 @@ class LayoutController extends Controller
                     'author'          => 'author',
                     'version'         => $teaserElementVersion->getVersion(),
                     'create_time'     => $teaserElementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
-                    //                'change_time'     => $child['modify_time'],
                     'publish_time'    => $teaserOnline ? $teaserOnline->getPublishedAt() : '',
                     'custom_date'     => $teaserElementVersion->getCustomDate($language),
                     'language'        => $language,
@@ -326,7 +316,6 @@ class LayoutController extends Controller
                     'author'          => 'author',
                     'version'         => 0,
                     'create_time'     => '',
-                    //                'change_time'     => $child['modify_time'],
                     'publish_time'    => null,
                     'language'        => $language,
                     'sort'            => $teaser->getSort(),
@@ -358,8 +347,6 @@ class LayoutController extends Controller
      */
     public function childElementtypesAction(Request $request)
     {
-        $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
-
         $id = $request->get('id');
 
         $elementSourceManager = $this->get('phlexible_element.element_source_manager');
@@ -439,7 +426,6 @@ class LayoutController extends Controller
      */
     public function createAction(Request $request)
     {
-        $siterootId = $request->get('siteroot_id');
         $treeId = $request->get('tree_id');
         $eid = $request->get('eid');
         $layoutareaId = $request->get('layoutarea_id');
@@ -519,7 +505,6 @@ class LayoutController extends Controller
     public function deleteAction(Request $request)
     {
         $teaserId = $request->get('teaser_id');
-        $type = $request->get('type');
 
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $elementService = $this->get('phlexible_element.element_service');
@@ -535,12 +520,6 @@ class LayoutController extends Controller
         }
 
         $teaserManager->deleteTeaser($teaser, $this->getUser()->getId());
-
-        // TODO: fix
-        /*
-        $job = new Makeweb_Elements_Job_UpdateUsage();
-        $job->setEid($eid);
-        */
 
         return new ResultResponse(true, "Teaser {$teaser->getId()} deleted.");
     }
@@ -562,14 +541,14 @@ class LayoutController extends Controller
         $teaser = $teaserManager->find($teaserId);
         $teaser->removeStopId($treeId);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_INHERIT_TEASER, $event)->isPropagationStopped()) {
             throw new RuntimeException('Inherit cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         $dispatcher->dispatch(TeaserEvents::INHERIT_TEASER, $event);
 
         return new ResultResponse(true, 'Inheritance stop removed');
@@ -592,14 +571,14 @@ class LayoutController extends Controller
         $teaser = $teaserManager->find($teaserId);
         $teaser->addStopId($treeId);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_STOP_TEASER, $event)->isPropagationStopped()) {
             throw new RuntimeException('Stop inherit cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         $dispatcher->dispatch(TeaserEvents::STOP_TEASER, $event);
 
         return new ResultResponse(true, 'Inheritance stopped');
@@ -622,14 +601,14 @@ class LayoutController extends Controller
         $teaser = $teaserManager->find($teaserId);
         $teaser->removeHideId($treeId);
 
-        $beforeEvent = new TeaserEvent($teaser, $treeId);
+        $beforeEvent = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_SHOW_TEASER, $beforeEvent)->isPropagationStopped()) {
             throw new RuntimeException('Show cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         $dispatcher->dispatch(TeaserEvents::SHOW_TEASER, $event);
 
         return new ResultResponse(true, 'Teaser will be displayed.');
@@ -652,96 +631,57 @@ class LayoutController extends Controller
         $teaser = $teaserManager->find($teaserId);
         $teaser->addHideId($treeId);
 
-        $beforeEvent = new TeaserEvent($teaser, $treeId);
+        $beforeEvent = new TeaserEvent($teaser);
         if ($dispatcher->dispatch(TeaserEvents::BEFORE_HIDE_TEASER, $beforeEvent)->isPropagationStopped()) {
             throw new RuntimeException('Show cancelled by event');
         }
 
         $teaserManager->updateTeaser($teaser);
 
-        $event = new TeaserEvent($teaser, $treeId);
+        $event = new TeaserEvent($teaser);
         $dispatcher->dispatch(TeaserEvents::HIDE_TEASER, $event);
 
         return new ResultResponse(true, 'Teaser will not be displayed.');
     }
 
     /**
+     * @param Request $request
+     *
+     * @return ResultResponse
      * @Route("/sort", name="teasers_layout_sort")
      */
-    public function sortAction()
+    public function sortAction(Request $request)
     {
-        // TODO use Brainbits_Filter_Input
-        $treeId = $this->_getParam('tid');
-        $eid = $this->_getParam('eid');
-        $layoutAreaId = $this->_getParam('area_id');
-        $sortIds = $this->_getParam('sort_ids');
+        $treeId = $request->get('tid');
+        $layoutAreaId = $request->get('area_id');
+        $sortIds = $request->get('sort_ids');
         $sortIds = json_decode($sortIds, true);
 
-        $dispatcher = $this->getContainer()->get('event_dispatcher');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+        $dispatcher = $this->get('event_dispatcher');
 
-        try {
-            $beforeEvent = new Makeweb_Teasers_Event_BeforeReorderTeasers($treeId, $eid, $layoutAreaId, $sortIds);
-            if (false === $dispatcher->dispatch($beforeEvent)) {
-                throw new RuntimeException('Teaser sort cancelled by event');
-            }
+        $tree = $treeManager->getByNodeId($treeId);
+        $node = $tree->get($treeId);
 
-            $db = $this->getContainer()->dbPool->default;
-
-            $db->beginTransaction();
-
-            $select = $db->select()
-                ->from($db->prefix . 'element_tree_teasers', 'layoutarea_id')
-                ->where('id = :teaserId');
-
-            foreach ($sortIds as $sort => $teaserId) {
-                if (!$teaserId) {
-                    continue;
-                }
-
-                if (-1 == $teaserId) {
-                    $insertData = [
-                        'tree_id'       => $treeId,
-                        'eid'           => $eid,
-                        'layoutarea_id' => $layoutAreaId,
-                        'teaser_eid'    => null,
-                        'type'          => Makeweb_Teasers_Manager::TYPE_INHERITED,
-                        'sort'          => $sort,
-                        'modify_uid'    => MWF_Env::getUid(),
-                        'modify_time'   => $db->fn->now(),
-                    ];
-
-                    $db->insert($db->prefix . 'element_tree_teasers', $insertData);
-
-                    $teaserId = $db->lastInsertId($db->prefix . 'element_tree_teasers');
-
-                    continue;
-                }
-
-                $exists = $db->fetchOne($select, ['teaserId' => $teaserId]) ? true : false;
-
-                if (!$exists) {
-                    continue;
-                }
-
-                $db->update(
-                    $db->prefix . 'element_tree_teasers',
-                    ['sort' => $sort],
-                    ['id = ?' => $teaserId]
-                );
-            }
-
-            $db->commit();
-            $event = new Makeweb_Teasers_Event_ReorderTeasers($treeId, $eid, $layoutAreaId, $sortIds);
-            $dispatcher->dispatch($event);
-
-            $result = MWF_Ext_Result::encode(true, null, 'Teaser sort published.');
-        } catch (Exception $e) {
-            $db->rollback();
-
-            $result = MWF_Ext_Result::encode(false, null, $e->getMessage());
+        $teasers = array();
+        foreach($sortIds as $sort => $teaserId) {
+            $teaser = $teaserManager->find($teaserId);
+            $teaser->setSort($sort);
+            $teasers[] = $teaser;
         }
 
-        $this->getResponse()->setAjaxPayload($result);
+        $event = new ReorderTeasersEvent($node, $layoutAreaId, $teasers);
+        if ($dispatcher->dispatch(TeaserEvents::REORDER_TEASERS, $event)->isPropagationStopped()) {
+            throw new RuntimeException('Teaser sort cancelled by event');
+        }
+
+        $teaserManager->updateTeasers($teasers);
+
+        $event = new ReorderTeasersEvent($node, $layoutAreaId, $teasers);
+        $dispatcher->dispatch(TeaserEvents::BEFORE_REORDER_TEASERS, $event);
+
+        return new ResultResponse(true, 'Teaser sort published.');
     }
 
     /**
@@ -754,9 +694,6 @@ class LayoutController extends Controller
      */
     public function referenceAction(Request $request)
     {
-        // TODO: switch to master language of element
-        $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
-
         $siterootId = $request->get('siteroot_id');
         $tid = $request->get('node');
         $language = $request->get('language');
@@ -805,10 +742,8 @@ class LayoutController extends Controller
         $currentTreeId = $tid;
 
         $element = $elementService->findElement($treeNode->getTypeId());
-        $elementMasterLanguage = $element->getMasterLanguage();
         $elementtype = $elementService->findElementtype($element);
 
-        $layouts = [];
         $layoutareas = [];
         // TODO: repair
         foreach ($elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
@@ -850,7 +785,7 @@ class LayoutController extends Controller
                             'layoutarea_id' => $layoutarea->getId(),
                             'icon'          => $iconResolver->resolveTeaser($teaser, $language),
                             'text'          => $teaserElementVersion->getBackendTitle($language),
-                            // . ' [' . $teaser->getEid() . ']',
+                            'text'          => $teaserElementVersion->getBackendTitle($language),
                             'eid'           => $teaser->getTypeId(),
                             'type'          => 'teaser',
                             'expanded'      => false,

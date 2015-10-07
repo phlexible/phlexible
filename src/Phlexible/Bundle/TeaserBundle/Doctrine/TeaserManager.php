@@ -382,9 +382,32 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function updateTeaser(Teaser $teaser, $flush = true)
     {
+        $event = new TeaserEvent($teaser);
+        if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_UPDATE_TEASER, $event)->isPropagationStopped()) {
+            return;
+        }
+
         $this->entityManager->persist($teaser);
         if ($flush) {
             $this->entityManager->flush($teaser);
+        }
+
+        $event = new TeaserEvent($teaser);
+        $this->dispatcher->dispatch(TeaserEvents::UPDATE_TEASER, $event);
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateTeasers(array $teasers, $flush = true)
+    {
+        foreach ($teasers as $teaser) {
+            $this->updateTeaser($teaser, false);
+        }
+
+        if ($flush) {
+            $this->entityManager->flush();
         }
     }
 

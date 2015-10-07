@@ -181,6 +181,12 @@ interface TeaserManagerInterface
     public function updateTeaser(Teaser $teaser, $flush = true);
 
     /**
+     * @param Teaser[] $teasers
+     * @param bool  $flush
+     */
+    public function updateTeasers(array $teasers, $flush = true);
+
+    /**
      * @param Teaser $teaser
      * @param string $userId
      */

@@ -114,4 +114,14 @@ class TeaserEvents
      * Fired after a teaser has been stopped.
      */
     const STOP_TEASER = 'phlexible_teaser.stop_teaser';
+
+    /**
+     * Fired before teasers are reordered.
+     */
+    const BEFORE_REORDER_TEASERS = 'phlexible_teaser.before_reorder_teasers';
+
+    /**
+     * Fired after teasers have been reordered.
+     */
+    const REORDER_TEASERS = 'phlexible_teaser.reorder_teasers';
 }
