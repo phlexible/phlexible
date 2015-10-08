@@ -80,6 +80,7 @@ users:
     password_are_the_same: 'Current and new passwords are the same.'
     status: Status
     active: Active
+    enabled: Enabled
     expired: Expired
     expire_help: 'The users account expires at 00:00 of the given date.'
     has_expire_date: 'Has expire date'
@@ -91,7 +92,9 @@ users:
     copy: Copy
     generated_password: 'Generated Password'
     generate_password_text: 'Enter a password, or use the field below to generate a password.'
-    account_is_expired: 'The account of this user is expired.'
+    account_is_expired: 'Account is expired.'
+    credentials_are_expired: 'Credentials are expired.'
+    account_is_disabled: 'Account is disabled.'
     successor: Successor
     successor_header: 'Select successor'
     successor_description: 'The selected user will receive all user-related references from the original user.'

@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\UserBundle\Model;
 
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface as BaseUserManagerInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * User manager interface

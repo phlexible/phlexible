@@ -109,20 +109,24 @@ class UsersController extends Controller
             }
 
             $dummy = [
-                'uid'        => $user->getId(),
-                'username'   => $user->getUsername(),
-                'email'      => $user->getEmail(),
-                'firstname'  => $user->getFirstname(),
-                'lastname'   => $user->getLastname(),
-                'comment'    => $user->getComment(),
-                'expireDate' => $user->getExpiresAt() ? $user->getExpiresAt()->format('Y-m-d H:i:s') : null,
-                'roles'      => $user->getRoles(),
-                'groups'     => $groups,
-                'createDate' => $user->getCreatedAt()->format('Y-m-d H:i:s'),
-                'createUser' => '',
-                'modifyDate' => $user->getModifiedAt()->format('Y-m-d H:i:s'),
-                'modifyUser' => '',
-                'properties' => $user->getProperties(),
+                'uid'                 => $user->getId(),
+                'username'            => $user->getUsername(),
+                'email'               => $user->getEmail(),
+                'firstname'           => $user->getFirstname(),
+                'lastname'            => $user->getLastname(),
+                'comment'             => $user->getComment(),
+                'enabled'             => $user->isEnabled(),
+                'expiresAt'           => $user->getExpiresAt() ? $user->getExpiresAt()->format('Y-m-d H:i:s') : null,
+                'credentialsExpireAt' => $user->getCredentialsExpireAt() ? $user->getCredentialsExpireAt()->format('Y-m-d H:i:s') : null,
+                'expired'             => !$user->isAccountNonExpired(),
+                'credentialsExpired'  => !$user->isCredentialsNonExpired(),
+                'roles'               => $user->getRoles(),
+                'groups'              => $groups,
+                'createDate'          => $user->getCreatedAt()->format('Y-m-d H:i:s'),
+                'createUser'          => '',
+                'modifyDate'          => $user->getModifiedAt()->format('Y-m-d H:i:s'),
+                'modifyUser'          => '',
+                'properties'          => $user->getProperties(),
             ];
 
             $users[] = $dummy;
@@ -285,18 +289,25 @@ class UsersController extends Controller
             $user->setPlainPassword($request->request->get('password'));
         }
 
-        // expires
-        if ($request->request->get('expires')) {
-            $user->setExpiresAt(new \DateTime($request->get('expires')));
+        // expiresAt
+        if ($request->request->get('expiresAt')) {
+            $user->setExpiresAt(new \DateTime($request->get('expiresAt')));
         } else {
-            /**
-             * @TODO fix with FosUserBundle 2.0 -
-             * @SEE Issue fix here https://github.com/FriendsOfSymfony/FOSUserBundle/pull/957
-             */
-            $reflectedUser      = new \ReflectionClass(get_class($user));
-            $reflectionProperty = $reflectedUser->getProperty('expiresAt');
-            $reflectionProperty->setAccessible(true);
-            $reflectionProperty->setValue($user, null);
+            $user->setExpiresAt(null);
+        }
+
+        // credentialsExpireAt
+        if ($request->request->get('credentialsExpireAt')) {
+            $user->setCredentialsExpireAt(new \DateTime($request->get('credentialsExpireAt')));
+        } else {
+            $user->setCredentialsExpireAt(null);
+        }
+
+        // enabled
+        if ($request->request->get('enabled')) {
+            $user->setEnabled(true);
+        } else {
+            $user->setEnabled(false);
         }
 
         // properties

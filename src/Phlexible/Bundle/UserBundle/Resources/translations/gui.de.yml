@@ -80,6 +80,7 @@ users:
     password_are_the_same: 'Aktuelles und neues Passwort sind gleich.'
     status: Status
     active: Aktiv
+    enabled: Aktiv
     expired: Abgelaufen
     expire_help: 'Der Zugang des Benutzers läuft um 00:00 Uhr dieses Datums ab.'
     has_expire_date: 'Hat Ablaufdatum'
@@ -91,7 +92,9 @@ users:
     copy: Kopieren
     generated_password: 'Generiertes Passwort'
     generate_password_text: 'Geben Sie ein neues Passwort ein, oder benutzen Sie das Feld unten, um ein Passwort zu generieren.'
-    account_is_expired: 'Der Zugang dieses Benutzers ist abgelaufen.'
+    account_is_expired: 'Zugang ist abgelaufen.'
+    credentials_are_expired: 'Zugangsdaten sind abgelaufen.'
+    account_is_disabled: 'Zugang ist deaktviert.'
     successor: Nachfolger
     successor_header: 'Nachfolger auswählen'
     successor_description: 'Der ausgewählte Benutzer wird alle Benuterbezogenen Referenzen des Originalbenutzers erhalten.'
