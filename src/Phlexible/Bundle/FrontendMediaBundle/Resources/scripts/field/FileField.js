@@ -267,6 +267,26 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
                 return true;
             }.createDelegate(this)
         });
+
+        // if there is helpText create a div and display the text below the field
+        if (this.helpText && typeof this.helpText == 'string') {
+            this.wrap = this.appendWrap || this.wrap || this.el.wrap();
+            if (this.width) {
+                var w = this.width || '100';
+                this.helpEl = this.wrap.createChild({
+                    tag: 'div',
+                    cls: 'x-form-helptext',
+                    style: 'width: ' + w + 'px',
+                    html: this.helpText
+                });
+            } else {
+                this.helpEl = this.wrap.createChild({
+                    tag: 'div',
+                    cls: 'x-form-helptext',
+                    html: this.helpText
+                });
+            }
+        }
     },
 
     // private
