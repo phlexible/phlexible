@@ -237,10 +237,10 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
     },
 
     onFailure: function (form, action) {
-        this.fireEvent('failure', this, action.result);
-        this.fireEvent('submitFailure', this, action.result);
+        this.fireEvent('failure', this, action);
+        this.fireEvent('submitFailure', this, action);
 
-        if (action.result.msg) {
+        if (action.result && action.result.msg) {
             Ext.MessageBox.alert('Failure', action.result.msg);
         }
     }
