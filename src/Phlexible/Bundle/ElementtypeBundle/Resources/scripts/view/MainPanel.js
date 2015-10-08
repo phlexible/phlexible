@@ -427,8 +427,14 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                 et_id: rootNode.firstChild.attributes.element_type_id
             }
         };
+        previewPanel.element.prototypes.clear();
         previewPanel.element.master = this.getPreviewWrap().getTopToolbar().items.items[0].pressed;
         previewPanel.structure = Phlexible.elements.ElementDataTabHelper.fixStructure(this.processPreviewNodes(rootNode));
+        if (previewPanel.structure[0].type === 'group') {
+            if (!previewPanel.structure[0].configuration.repeat_default) {
+                previewPanel.structure[0].configuration.repeat_default = 1;
+            }
+        }
         previewPanel.valueStructure = {
             structures: [],
             values: {}
