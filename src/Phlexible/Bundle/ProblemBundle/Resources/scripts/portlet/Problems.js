@@ -1,6 +1,8 @@
 Ext.provide('Phlexible.problems.portlet.Problems');
 Ext.provide('Phlexible.problems.portlet.ProblemRecord');
 
+Ext.require('Ext.ux.Portlet');
+
 Phlexible.problems.portlet.ProblemRecord = Ext.data.Record.create([
     {name: 'id', type: 'string'},
     {name: 'iconCls', type: 'string'},
