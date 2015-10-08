@@ -133,12 +133,15 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
     },
 
     validateMeta: function() {
+        var valid = true;
         this.items.each(function(p) {
             if (!p.validateMeta()) {
                 Ext.MessageBox.alert(this.strings.error, this.strings.fill_required_fields);
+                valid = false;
                 return false;
             }
         }, this);
+        return valid;
     },
 
     changeLanguage: function(language) {
@@ -170,12 +173,14 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
     },
 
     save: function () {
-        this.validateMeta();
+        if (!this.validateMeta()) {
+            return;
+        }
 
         var sources = {};
         this.items.each(function(p) {
             sources[p.setId] = p.getData();
-        })
+        });
         var params = this.params;
         params.data = Ext.encode(sources);
 

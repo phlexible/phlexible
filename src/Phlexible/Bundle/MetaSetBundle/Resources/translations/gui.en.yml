@@ -7,8 +7,6 @@ metasets:
     key: Key
     value: Value
     save: Save
-    error: Error
-    fill_required_fields: 'Please fill in all required fields'
 
     add: Add
     add_set: Add meta set

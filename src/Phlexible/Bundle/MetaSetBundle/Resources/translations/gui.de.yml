@@ -7,8 +7,6 @@ metasets:
     key: Schlüssel
     value: Wert
     save: Speichern
-    error: Fehler
-    fill_required_fields: 'Bitte füllen Sie alle Pflichtfelder aus.'
 
     add: Hinzufügen
     add_set: Meta Set hinzufügen

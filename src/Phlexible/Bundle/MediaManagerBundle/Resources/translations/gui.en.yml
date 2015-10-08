@@ -7,6 +7,8 @@ mediamanager:
     confirm: Confirm
     x_files: '{0} files'
     keywords: Keywords
+    error: Error
+    fill_required_fields: 'Please fill in all required fields'
     meta: Meta
     metasets: Meta Sets
     file_meta: 'File Meta'
