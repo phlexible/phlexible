@@ -390,6 +390,27 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
     }
 
     /**
+     * @param TreeNodeInterface[] $nodes
+     * @param bool                $flush
+     *
+     * @return $this
+     */
+    public function updateNodes(array $nodes, $flush = true)
+    {
+        foreach ($nodes as $node) {
+            $node->setSiterootId($this->siterootId);
+
+            $this->entityManager->persist($node);
+        }
+
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function init($type, $typeId, $userId)
@@ -476,13 +497,8 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
             return false;
         }
 
-        $this->updateNode($node, false);
-
-        foreach ($sortNodes as $sortNode) {
-            $this->updateNode($sortNode, false);
-        }
-
-        //$this->entityManager->flush();
+        array_unshift($sortNodes, $node);
+        $this->updateNodes($sortNodes);
 
         // history
         $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_NODE, $typeId, $userId, $node->getId());
@@ -537,13 +553,8 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
             return false;
         }
 
-        $this->updateNode($node, false);
-
-        foreach ($sortNodes as $sortNode) {
-            $this->updateNode($sortNode, false);
-        }
-
-        $this->entityManager->flush();
+        array_unshift($sortNodes, $node);
+        $this->updateNodes($sortNodes);
 
         // history
         $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_CREATE_NODE_INSTANCE, $node->getTypeId(), $userId, $node->getId());
@@ -589,9 +600,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
         $node->setSort($sort);
         $updateNodes[] = $node;
 
-        foreach ($updateNodes as $updateNode) {
-            $this->updateNode($updateNode);
-        }
+        $this->updateNodes($updateNodes);
 
         $event = new NodeEvent($node);
         $this->dispatcher->dispatch(TreeEvents::REORDER_NODE, $event);
@@ -624,9 +633,9 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
 
         foreach ($childNodes as $index => $childNode) {
             $childNode->setSort($index);
-
-            $this->updateNode($childNode);
         }
+
+        $this->updateNodes($childNodes);
 
         $event = new ReorderChildNodesEvent($node, $sortIds);
         $this->dispatcher->dispatch(TreeEvents::REORDER_CHILD_NODES, $event);
