@@ -1,6 +1,6 @@
 Ext.require = function(require) {
 
-}
+};
 
 Ext.provide = function(provide) {
     var provides = provide.split('.');
@@ -10,7 +10,7 @@ Ext.provide = function(provide) {
     provides.pop();
     provide = provides.join('.');
     Ext.namespace(provide);
-}
+};
 
 String.prototype.ellipse = function (maxLength) {
     if (this.length > maxLength) {

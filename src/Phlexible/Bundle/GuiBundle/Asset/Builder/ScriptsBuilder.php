@@ -137,6 +137,19 @@ class ScriptsBuilder
             }
         }
 
+        $prototypes = $files['/phlexible/phlexiblegui/scripts/prototypes.js'];
+        $functions = $files['/phlexible/phlexiblegui/scripts/functions.js'];
+        $global = $files['/phlexible/phlexiblegui/scripts/global.js'];
+        unset($files['/phlexible/phlexiblegui/scripts/prototypes.js']);
+        unset($files['/phlexible/phlexiblegui/scripts/functions.js']);
+        unset($files['/phlexible/phlexiblegui/scripts/global.js']);
+
+        $files = array_merge(array(
+            '/phlexible/phlexiblegui/scripts/prototypes.js' => $prototypes,
+            '/phlexible/phlexiblegui/scripts/functions.js' => $functions,
+            '/phlexible/phlexiblegui/scripts/global.js' => $global,
+        ), $files);
+
         $entryPointFiles = array_intersect_key($files, $entryPoints);
 
         $symbols = array();
