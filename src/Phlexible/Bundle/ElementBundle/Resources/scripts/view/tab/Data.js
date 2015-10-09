@@ -24,7 +24,7 @@ Phlexible.elements.DiffVersionComboTemplate = new Ext.XTemplate(
     '<div class="x-combo-list-item">',
     '<tpl if="values.is_published"><b></tpl>',
     '<tpl if="values.was_published"><i></tpl>',
-    '{version} [{date}]',
+    '{version} [{create_date}]',
     '<tpl if="values.was_published"></i></tpl>',
     '<tpl if="values.is_published"></b></tpl>',
     '</div>',

@@ -32,7 +32,8 @@ class DiffCommand extends ContainerAwareCommand
             ->setDescription('Diff element versions.')
             ->addArgument('eid', InputArgument::REQUIRED, 'Element ID')
             ->addOption('baseVersion', null, InputOption::VALUE_REQUIRED, 'Base version')
-            ->addOption('compareVersion', null, InputOption::VALUE_REQUIRED, 'Compare version');
+            ->addOption('compareVersion', null, InputOption::VALUE_REQUIRED, 'Compare version')
+            ->addOption('language', null, InputOption::VALUE_REQUIRED, 'Language', 'de');
     }
 
     /**
@@ -45,6 +46,7 @@ class DiffCommand extends ContainerAwareCommand
         $eid = $input->getArgument('eid');
         $version = $input->getOption('baseVersion');
         $compareVersion = $input->getOption('compareVersion');
+        $language = $input->getOption('language');
 
         $element = $elementService->findElement($eid);
 
@@ -57,8 +59,8 @@ class DiffCommand extends ContainerAwareCommand
 
         $fromElementVersion = $elementService->findElementVersion($element, $version);
         $toElementVersion = $elementService->findElementVersion($element, $compareVersion);
-        $fromElementStructure = $elementService->findElementStructure($fromElementVersion, 'de');
-        $toElementStructure = $elementService->findElementStructure($toElementVersion, 'de');
+        $fromElementStructure = $elementService->findElementStructure($fromElementVersion, $language);
+        $toElementStructure = $elementService->findElementStructure($toElementVersion, $language);
 
         $differ = new Differ();
         $differ->diff($fromElementStructure, $toElementStructure);

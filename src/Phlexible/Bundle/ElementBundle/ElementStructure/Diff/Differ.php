@@ -49,13 +49,13 @@ class Differ
         foreach ($structure->getStructures() as $structureChild) {
             $found = false;
             foreach ($compareStructure->getStructures() as $compareStructureChild) {
-                if ($structureChild->getId() === $compareStructureChild->getId()) {
+                if ($structureChild->getDataId() === $compareStructureChild->getDataId()) {
                     $found = true;
                     $this->diff($structureChild, $compareStructureChild);
                     break;
                 }
             }
-            if ($found) {
+            if (!$found) {
                 $this->applyAdded($structureChild);
             }
         }
@@ -63,7 +63,7 @@ class Differ
         foreach ($compareStructure->getStructures() as $compareStructureChild) {
             $found = false;
             foreach ($structure->getStructures() as $structureChild) {
-                if ($structureChild->getId() === $compareStructureChild->getId()) {
+                if ($structureChild->getDataId() === $compareStructureChild->getDataId()) {
                     $found = true;
                     break;
                 }
@@ -88,7 +88,7 @@ class Differ
         }
 
         foreach ($structure->getStructures() as $childStructure) {
-            $this->applyAdded($structure);
+            $this->applyAdded($childStructure);
         }
     }
 

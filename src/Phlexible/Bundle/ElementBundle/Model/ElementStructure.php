@@ -560,7 +560,7 @@ class ElementStructure implements \IteratorAggregate
         $dump = str_repeat(' ', $depth * 2) . '+'
             . " <fg=green>{$this->getName()}</fg=green>"
             . " " . ($this->getParentName() ? "parentName:<fg=yellow>{$this->getParentName()}</fg=yellow>," : "<fg=yellow>root</fg=yellow>")
-            . " id:<fg=yellow>{$this->getId()}</fg=yellow>";
+            . " id:<fg=yellow>{$this->getDataId()}</fg=yellow>";
         if ($this->hasAttribute('diff')) {
             $dump .= " <fg=red>{$this->getAttribute('diff')}</fg=red>";
         }
@@ -576,13 +576,13 @@ class ElementStructure implements \IteratorAggregate
                         . '='
                         . " <fg=cyan>{$value->getName()}</fg=cyan>"
                         . " language:<fg=magenta>{$value->getLanguage()}</fg=magenta>,"
-                        . " id:<fg=magenta>{$value->getId()}</fg=magenta>,"
+                        //. " id:<fg=magenta>{$value->getId()}</fg=magenta>,"
                         . " content:<fg=magenta>" . (is_array($value->getValue())
                             ? json_encode($value->getValue())
                             : $value->getValue())
                         . "</fg=magenta>";
                     if ($value->hasAttribute('diff')) {
-                        $dump .= " <fg=red>{$value->getAttribute('diff')}</fg=red>";
+                        $dump .= ", <fg=red>{$value->getAttribute('diff')}</fg=red>, was:{$value->getAttribute('oldValue')}</fg=red>";
                     }
                     $dump .= PHP_EOL;
                 }

@@ -209,11 +209,11 @@ class DataController extends Controller
 
         if ($diff && $diffVersionFrom) {
             $fromElementVersion = $elementService->findElementVersion($element, $diffVersionFrom);
-            $fromElementStructure = $elementService->findElementStructure($fromElementVersion);
+            $fromElementStructure = $elementService->findElementStructure($fromElementVersion, $diffLanguage);
 
             if ($diffVersionTo) {
                 $toElementVersion = $elementService->findElementVersion($element, $diffVersionTo);
-                $toElementStructure = $elementService->findElementStructure($toElementVersion);
+                $toElementStructure = $elementService->findElementStructure($toElementVersion, $diffLanguage);
             } else {
                 $toElementStructure = $elementStructure;
             }
