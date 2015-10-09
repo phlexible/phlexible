@@ -130,7 +130,7 @@ class Differ
         }
 
         foreach ($structure->getStructures() as $childStructure) {
-            $this->applyRemoved($structure);
+            $this->applyRemoved($childStructure);
         }
     }
 
