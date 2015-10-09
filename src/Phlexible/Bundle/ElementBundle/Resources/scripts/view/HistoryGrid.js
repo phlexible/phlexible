@@ -28,57 +28,57 @@ Phlexible.elements.HistoryGrid = Ext.extend(Ext.grid.GridPanel, {
                 header: this.strings.type,
                 width: 60,
                 dataIndex: 'type',
-                sortable: true
+                sortable: false
             },
             {
                 header: this.strings.action,
                 width: 170,
                 dataIndex: 'action',
-                sortable: true,
+                sortable: false,
                 renderer: this.renderAction
             },
             {
                 header: this.strings.tid,
                 width: 55,
                 dataIndex: 'tid',
-                sortable: true
+                sortable: false
             },
             {
                 header: this.strings.eid,
                 width: 55,
                 dataIndex: 'eid',
-                sortable: true
+                sortable: false
             },
             {
                 header: this.strings.version,
                 width: 55,
                 dataIndex: 'version',
-                sortable: true
+                sortable: false
             },
             {
                 header: this.strings.language,
                 width: 100,
                 dataIndex: 'language',
-                sortable: true,
+                sortable: false,
                 renderer: this.renderLanguage
             },
             {
                 header: this.strings.comment,
                 width: 200,
                 dataIndex: 'comment',
-                sortable: true
+                sortable: false
             },
             {
                 header: this.strings.username,
                 width: 100,
                 dataIndex: 'username',
-                sortable: true
+                sortable: false
             },
             {
                 header: this.strings.date,
                 width: 130,
                 dataIndex: 'create_time',
-                sortable: true
+                sortable: false
             }
         ];
 

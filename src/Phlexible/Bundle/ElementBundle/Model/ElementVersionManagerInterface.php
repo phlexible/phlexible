@@ -28,18 +28,21 @@ interface ElementVersionManagerInterface
     public function find(Element $element, $version);
 
     /**
+     * @param Element $element
+     * @param array   $orderBy
+     * @param integer $limit
+     * @param integer $offset
+     *
+     * @return ElementVersion[]
+     */
+    public function findAllByElement(Element $element, array $orderBy = null, $limit = null, $offset = null);
+
+    /**
      * @param ElementSource $elementSource
      *
      * @return ElementVersion[]
      */
     public function findByElementSource(ElementSource $elementSource);
-
-    /**
-     * @param Element $element
-     *
-     * @return array
-     */
-    public function getVersions(Element $element);
 
     /**
      * @param ElementVersion $elementVersion

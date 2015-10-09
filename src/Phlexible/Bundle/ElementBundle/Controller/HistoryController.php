@@ -61,9 +61,8 @@ class HistoryController extends Controller
             $criteria['comment'] = $comment;
         }
 
-        if ($sort === 'create_time') {
-            $sort = 'createdAt';
-        }
+        $sort = 'id';
+        $dir = 'DESC';
 
         $historyManager = $this->get('phlexible_element.element_history_manager');
         $userManager = $this->get('phlexible_user.user_manager');

@@ -710,6 +710,9 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
         $event = new PublishNodeEvent($node, $language, $version, false);
         $this->dispatcher->dispatch(TreeEvents::PUBLISH_NODE, $event);
 
+        // history
+        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_PUBLISH_NODE, $node->getTypeId(), $userId, $node->getId(), null, $version, $language);
+
         return $treeNodeOnline;
     }
 
@@ -727,6 +730,9 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
 
         $event = new SetNodeOfflineEvent($node, $language);
         $this->dispatcher->dispatch(TreeEvents::SET_NODE_OFFLINE, $event);
+
+        // history
+        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_SET_NODE_OFFLINE, $node->getTypeId(), $userId, $node->getId(), null, null, $language);
     }
 
     protected function deleteCheck(Makeweb_Elements_Tree_Node $node, array $rightsIdentifiers)
@@ -788,7 +794,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
         $this->dispatcher->dispatch(TreeEvents::DELETE_NODE, $event);
 
         // history
-        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_MOVE_NODE, $node->getTypeId(), $userId, $node->getId(), null, null, null, $comment);
+        $this->historyManager->insert(ElementHistoryManagerInterface::ACTION_DELETE_NODE, $node->getTypeId(), $userId, $node->getId(), null, null, null, $comment);
 
         // TODO: -> elements, listener
         /*

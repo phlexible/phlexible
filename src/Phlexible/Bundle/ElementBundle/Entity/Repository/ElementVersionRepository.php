@@ -18,28 +18,4 @@ use Phlexible\Bundle\ElementBundle\Entity\Element;
  */
 class ElementVersionRepository extends EntityRepository
 {
-    /**
-     * @param Element $element
-     *
-     * @return array
-     */
-    public function getVersions(Element $element)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $qb = $conn->createQueryBuilder();
-        $qb
-            ->select('ev.version')
-            ->from('element_version', 'ev')
-            ->where($qb->expr()->eq('ev.eid', $element->getEid()));
-
-        $statement = $conn->executeQuery($qb->getSQL());
-
-        $versions = [];
-        while ($version = $statement->fetchColumn()) {
-            $versions[] = (int) $version;
-        }
-
-        return $versions;
-    }
 }

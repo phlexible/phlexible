@@ -130,11 +130,11 @@ class DataController extends Controller
         }
 
         $versions = [];
-        foreach (array_reverse($elementService->getVersions($element)) as $version) {
-            $versions[$version] = [
-                'version'       => $version,
+        foreach ($elementService->findElementVersions($element, array('version' => 'DESC')) as $version) {
+            $versions[$version->getVersion()] = [
+                'version'       => $version->getVersion(),
                 'format'        => 2,
-                'create_date'   => date('Y-m-d H:i:s'),
+                'create_date'   => $version->getCreatedAt()->format('Y-m-d H:i:s'),
                 'is_published'  => false,
                 'was_published' => false,
             ];

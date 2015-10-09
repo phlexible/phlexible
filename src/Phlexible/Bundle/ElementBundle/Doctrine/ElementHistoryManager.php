@@ -47,6 +47,8 @@ class ElementHistoryManager implements ElementHistoryManagerInterface
             foreach ($orderBy as $field => $dir) {
                 $qb->addOrderBy("h.$field", $dir);
             }
+        } else {
+            $qb->addOrderBy("h.id", "DESC");
         }
 
         if ($limit) {

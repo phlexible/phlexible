@@ -126,6 +126,19 @@ class ElementService
 
     /**
      * @param Element $element
+     * @param int     $limit
+     *
+     * @return ElementVersion[]
+     */
+    public function findElementVersions(Element $element, $limit = null)
+    {
+        $elementVersions = $this->elementVersionManager->findAllByElement($element, $limit);
+
+        return $elementVersions;
+    }
+
+    /**
+     * @param Element $element
      *
      * @return ElementVersion
      */
@@ -168,16 +181,6 @@ class ElementService
     {
         // TODO: fetch online version
         return $this->findLatestElementVersion($element);
-    }
-
-    /**
-     * @param Element $element
-     *
-     * @return array
-     */
-    public function getVersions(Element $element)
-    {
-        return $this->elementVersionManager->getVersions($element);
     }
 
     /**
