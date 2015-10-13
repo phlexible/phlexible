@@ -1,4 +1,10 @@
 services:
+    phlexible_tree.node_url_generator.language:
+        class: Phlexible\Bundle\TreeBundle\NodeUrlGenerator\LanguageNodeUrlGenerator
+        arguments:
+            - @phlexible_tree.content_tree_manager
+            - @router
+
     phlexible_tree.pattern_resolver:
         class: Phlexible\Bundle\TreeBundle\Pattern\PatternResolver
         arguments: [@translator, %phlexible_tree.patterns%, %phlexible_gui.project.title%]

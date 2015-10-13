@@ -376,11 +376,11 @@ class DataController extends Controller
 
         if (in_array($elementtype->getType(), [Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART])) {
             if ($type == Elementtype::TYPE_FULL || $type == Elementtype::TYPE_PART) {
-                $contentNode = $this->get('phlexible_tree.content_tree_manager.delegating')->findByTreeId($node->getId())->get($node->getId());
-                $urls['preview'] = $this->generateUrl($contentNode, ['_preview' => true, '_locale' => $language]);
+                $nodeUrlGenerator = $this->get('phlexible_tree.node_url_generator');
+                $urls['preview'] = $nodeUrlGenerator->generatePreviewUrl($node, $language);
 
                 if ($isPublished) {
-                    $urls['online'] = $this->generateUrl($contentNode, ['_locale' => $language]);
+                    $urls['online'] = $nodeUrlGenerator->generateOnlineUrl($node, $language);
                 }
             }
 
@@ -860,12 +860,12 @@ class DataController extends Controller
         ];
 
         if ($node) {
-            $contentNode = $this->get('phlexible_tree.content_tree_manager.delegating')->findByTreeId($node->getId())->get($node->getId());
-            $urls['preview'] = $this->generateUrl($contentNode, ['_preview' => true, '_locale' => $language]);
+            $nodeUrlGenerator = $this->get('phlexible_tree.node_url_generator');
+            $urls['preview'] = $nodeUrlGenerator->generatePreviewUrl($node, $language);
 
             if ($stateManager->isPublished($node, $language)) {
                 try {
-                    $urls['online'] = $this->generateUrl($contentNode, ['_locale' => $language]);
+                    $urls['online'] = $nodeUrlGenerator->generateOnlineUrl($node, $language);
                 } catch (\Exception $e) {
 
                 }
