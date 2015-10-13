@@ -100,7 +100,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
 
         $language = $request->getLocale();
         $availableLanguages = $request->attributes->get('availableLanguages');
-        $isPreview = true;
+        $isPreview = $request->attributes->get('_preview', false);
 
         $areas = [];
 
@@ -121,6 +121,12 @@ class LayoutareaConfigurator implements ConfiguratorInterface
             //$this->_debugLine('Layoutarea: ' . $layoutElementTypeVersion->getTitle(), 'notice');
 
             $teasers = $this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath, false);
+
+            foreach ($teasers as $index => $teaser) {
+                if (!$isPreview && !$this->teaserManager->isPublished($teaser, $language)) {
+                    unset ($teasers[$index]);
+                }
+            }
 
             $areas[$layoutarea->getUniqueId()] = [
                 'title'    => $layoutarea->getTitle(),

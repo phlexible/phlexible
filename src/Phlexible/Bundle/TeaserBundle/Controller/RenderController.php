@@ -32,12 +32,20 @@ class RenderController extends Controller
      */
     public function htmlAction(Request $request, $teaserId)
     {
+        if ($request->get('preview')) {
+            $request->attributes->set('_preview', true);
+        }
+
         $teaser = $this->get('phlexible_teaser.teaser_service')->find($teaserId);
 
         $request->attributes->set('contentDocument', $teaser);
 
         $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
         $renderConfig = $renderConfigurator->configure($request);
+
+        if ($renderConfig->getResponse()) {
+            return $renderConfig->getResponse();
+        }
 
         if ($request->get('template')) {
             $renderConfig->set('template', $request->get('template', 'teaser'));

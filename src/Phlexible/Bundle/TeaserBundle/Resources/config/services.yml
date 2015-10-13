@@ -24,3 +24,13 @@ services:
         public: false
         tags:
             - {name: phlexible_gui.role_provider}
+
+    # twig extensions
+    phlexible_teaser.twig.teaser_extension:
+        class: Phlexible\Bundle\TeaserBundle\Twig\Extension\TeaserExtension
+        arguments:
+            - @fragment.handler
+            - @router
+            - @request_stack
+        tags:
+            - {name: twig.extension}

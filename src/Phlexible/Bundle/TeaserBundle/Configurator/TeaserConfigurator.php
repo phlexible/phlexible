@@ -19,6 +19,7 @@ use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Teaser configurator
@@ -77,10 +78,16 @@ class TeaserConfigurator implements ConfiguratorInterface
         $teaser = $request->attributes->get('contentDocument');
 
         $version = -1;
-        if (!$request->attributes->get('_preview')) {
+        if ($request->attributes->get('_preview')) {
+            $element = $this->elementService->findElement($teaser->getTypeId());
+            $version = $this->elementService->findLatestElementVersion($element)->getVersion();
+        } else {
             $version = $this->teaserManager->getPublishedVersion($teaser, $request->getLocale());
 
             if (!$version) {
+                $renderConfiguration->setResponse(new Response(''));
+                return;
+
                 throw new \Exception("Teaser not published.");
             }
         }
