@@ -79,8 +79,8 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
                 start_folder_path: this.folder_path || false,
                 file_view: this.viewMode,
                 hide_properties: true,
-                assetType: this.assetType,
-                documenttypes: this.documenttypes
+                mediaCategory: this.mediaCategory,
+                mediaTypes: this.mediaTypes
             },
             listeners: {
                 fileSelectWindow: this.onFileSelect,

@@ -11,7 +11,7 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
         this.items = [
             {
                 xtype: 'twincombobox',
-                hiddenName: 'assettype',
+                hiddenName: 'mediaCategory',
                 fieldLabel: this.strings.asset_type,
                 width: 200,
                 listWidth: 200,
@@ -35,14 +35,14 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
             },
             {
                 xtype: 'lovcombo',
-                hiddenName: 'documenttypes',
-                fieldLabel: this.strings.documenttypes,
+                hiddenName: 'mediaTypes',
+                fieldLabel: this.strings.mediatypes,
                 width: 200,
                 listWidth: 200,
                 store: new Ext.data.JsonStore({
                     fields: ['key', 'upperkey'],
                     url: Phlexible.Router.generate('mediatypes_list'),
-                    root: 'documenttypes',
+                    root: 'mediatypes',
                     id: 'key',
                     sortInfo: {
                         field: 'key',
@@ -99,12 +99,12 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
     },
 
     loadData: function (fieldData, fieldType) {
-        fieldData.assetType = fieldData.assetType || null;
-        fieldData.documenttypes = fieldData.documenttypes || '';
+        fieldData.mediaCategory = fieldData.mediaCategory || null;
+        fieldData.mediaTypes = fieldData.mediaTypes || '';
         fieldData.viewMode = fieldData.viewMode || '';
 
-        this.getComponent(0).setValue(fieldData.assetType);
-        this.getComponent(1).setValue(fieldData.documenttypes);
+        this.getComponent(0).setValue(fieldData.mediaCategory);
+        this.getComponent(1).setValue(fieldData.mediaTypes);
         this.getComponent(2).setValue(fieldData.viewMode);
 
         this.isValid();
@@ -112,8 +112,8 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
 
     getSaveValues: function () {
         return {
-            assetType: this.getComponent(0).getValue(),
-            documenttypes: this.getComponent(1).getValue(),
+            mediaCategory: this.getComponent(0).getValue(),
+            mediaTypes: this.getComponent(1).getValue(),
             viewMode: this.getComponent(2).getValue()
         };
     },

@@ -102,14 +102,6 @@ class FileController extends Controller
                 if (!$showHidden) {
                     $filter['hidden'] = false;
                 }
-                if (!empty($filter['assetType'])) {
-                    $filter['mediaCategory'] = $filter['assetType'];
-                    unset($filter['assetType']);
-                }
-                if (!empty($filter['documenttypeType'])) {
-                    $filter['mediaType'] = $filter['documenttypeType'];
-                    unset($filter['documenttypeType']);
-                }
                 $files = $volume->findFiles($filter, [$this->toCamelCase($sort) => $dir], $limit, $start);
                 $total = $volume->countFiles($filter);
             } else {
@@ -393,11 +385,11 @@ class FileController extends Controller
         $properties['keywordsCnt'] = count($properties['keywords']);
 
         $properties['debug'] = [
-            'mimeType'     => $file->getMimeType(),
-            'documentType' => strtolower($file->getMediaType()),
-            'assetType'    => strtolower($file->getMediaCategory()),
-            'fileId'       => $fileId,
-            'folderId'     => $folder->getId(),
+            'mimeType'      => $file->getMimeType(),
+            'mediaType'     => strtolower($file->getMediaType()),
+            'mediaCategory' => strtolower($file->getMediaCategory()),
+            'fileId'        => $fileId,
+            'folderId'      => $folder->getId(),
         ];
 
         $properties['detail'] = [

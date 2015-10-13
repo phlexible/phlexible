@@ -249,12 +249,12 @@ class DoctrineDriver extends AbstractDriver
                     $qb->andWhere($qb->expr()->eq('fi.folder', $qb->expr()->literal($value->getId())));
                     break;
 
-                case 'assetType':
-                    $qb->andWhere($qb->expr()->eq('fi.assetType', $qb->expr()->literal($value)));
+                case 'mediaCategory':
+                    $qb->andWhere($qb->expr()->eq('fi.mediaCategory', $qb->expr()->literal($value)));
                     break;
 
-                case 'documenttypes':
-                    $qb->andWhere($qb->expr()->in('fi.documenttype', explode(',', $value)));
+                case 'mediaTypes':
+                    $qb->andWhere($qb->expr()->in('fi.mediaType', explode(',', $value)));
                     break;
 
                 case 'timeCreated':
@@ -320,12 +320,12 @@ class DoctrineDriver extends AbstractDriver
                     $qb->andWhere($qb->expr()->eq('fi.folder', $qb->expr()->literal($value->getId())));
                     break;
 
-                case 'assetType':
-                    $qb->andWhere($qb->expr()->eq('fi.assetType', $qb->expr()->literal($value)));
+                case 'mediaCategory':
+                    $qb->andWhere($qb->expr()->eq('fi.mediaCategory', $qb->expr()->literal($value)));
                     break;
 
-                case 'documenttypes':
-                    $qb->andWhere($qb->expr()->in('fi.documenttype', explode(',', $value)));
+                case 'mediaTypes':
+                    $qb->andWhere($qb->expr()->in('fi.mediaType', explode(',', $value)));
                     break;
 
                 case 'timeCreated':

@@ -81,12 +81,12 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
 
         this.activeFilter = {};
 
-        if (this.assetType) {
-            this.activeFilter['assetType'] = this.assetType;
+        if (this.mediaCategory) {
+            this.activeFilter['mediaCategory'] = this.mediaCategory;
         }
 
-        if (this.documenttypes) {
-            this.activeFilter['documenttypes'] = this.documenttypes;
+        if (this.mediaTypes) {
+            this.activeFilter['mediaTypes'] = this.mediaTypes;
         }
 
         this.store = new Ext.data.GroupingStore({
@@ -414,8 +414,8 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
         this.setTitle(this.strings.search_results);
     },
 
-    setAssetTypeFilter: function(assetType) {
-        this.setFilter('assetType', assetType);
+    setMediaCategoryFilter: function(mediaCategory) {
+        this.setFilter('mediaCategory', mediaCategory);
     },
 
     setUserFilter: function(key, value) {

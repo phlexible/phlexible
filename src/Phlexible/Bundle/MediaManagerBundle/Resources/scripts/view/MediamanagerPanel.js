@@ -57,7 +57,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             }
         }
 
-        if (this.params.assetType || this.params.documenttypes) {
+        if (this.params.mediaCategory || this.params.mediaTypes) {
             this.hideFilter = true;
         }
 
@@ -396,7 +396,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                                         checked: false,
                                         group: 'type',
                                         handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.IMAGE);
+                                            this.getFilesGrid().setMediaCategoryFilter(Phlexible.mediamanager.IMAGE);
                                         },
                                         scope: this
                                     },
@@ -406,7 +406,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                                         checked: false,
                                         group: 'type',
                                         handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.VIDEO);
+                                            this.getFilesGrid().setMediaCategoryFilter(Phlexible.mediamanager.VIDEO);
                                         },
                                         scope: this
                                     },
@@ -416,7 +416,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                                         checked: false,
                                         group: 'type',
                                         handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.AUDIO);
+                                            this.getFilesGrid().setMediaCategoryFilter(Phlexible.mediamanager.AUDIO);
                                         },
                                         scope: this
                                     },
@@ -426,7 +426,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                                         checked: false,
                                         group: 'type',
                                         handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.FLASH);
+                                            this.getFilesGrid().setMediaCategoryFilter(Phlexible.mediamanager.FLASH);
                                         },
                                         scope: this
                                     },
@@ -436,7 +436,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                                         checked: false,
                                         group: 'type',
                                         handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.DOCUMENT);
+                                            this.getFilesGrid().setMediaCategoryFilter(Phlexible.mediamanager.DOCUMENT);
                                         },
                                         scope: this
                                     },
@@ -446,7 +446,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                                         checked: false,
                                         group: 'type',
                                         handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.ARCHIVE);
+                                            this.getFilesGrid().setMediaCategoryFilter(Phlexible.mediamanager.ARCHIVE);
                                         },
                                         scope: this
                                     },
@@ -456,7 +456,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                                         checked: false,
                                         group: 'type',
                                         handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.OTHER);
+                                            this.getFilesGrid().setMediaCategoryFilter(Phlexible.mediamanager.OTHER);
                                         },
                                         scope: this
                                     }
@@ -571,8 +571,8 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             region: 'center',
             border: true,
             viewMode: this.params.file_view || false,
-            assetType: this.params.assetType || false,
-            documenttypes: this.params.documenttypes || false,
+            mediaCategory: this.params.mediaCategory || false,
+            mediaTypes: this.params.mediaTypes || false,
             start_file_id: this.params.start_file_id || false,
             viewConfig: {
                 modeChange: function (e, mode) {
