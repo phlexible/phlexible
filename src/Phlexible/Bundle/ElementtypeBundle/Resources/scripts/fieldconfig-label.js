@@ -4,9 +4,11 @@ Ext.require('Phlexible.fields.FieldTypes');
 Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valueStructure, element) {
     var contextHelp = item.labels.contextHelp || {},
         fieldLabel = item.labels.fieldLabel || {},
+        configuration = item.configuration,
+        language = Phlexible.Config.get('user.property.interfaceLanguage', 'en'),
         config = {
             xtype: 'panel',
-            html: item.content || contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+            html: item.content || configuration['text_' + language] || contextHelp[language] || fieldLabel[language],
             plain: true,
             border: false,
             cls: 'p-fields-label'
