@@ -103,7 +103,7 @@ class PuliLoader
             $configCache->write($this->compiler->compile($mediaTypes), $resources);
         }
 
-        include (string) $configCache;
+        include $configCache->getPath();
 
         $classname = $this->compiler->getClassname();
         $mediaTypes = new $classname();
