@@ -47,6 +47,7 @@ Phlexible.fields.FieldTypes.addField('file', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     config: {
         labels: {
             field: 1,

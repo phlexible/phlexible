@@ -92,6 +92,7 @@ Phlexible.fields.FieldTypes.addField('suggest', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     config: {
         labels: {
             field: 1,

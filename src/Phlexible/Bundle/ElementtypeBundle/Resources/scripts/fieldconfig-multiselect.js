@@ -97,6 +97,7 @@ Phlexible.fields.FieldTypes.addField('multiselect', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     defaultValueField: 'default_value_textfield',
     copyFields: [
         'list'

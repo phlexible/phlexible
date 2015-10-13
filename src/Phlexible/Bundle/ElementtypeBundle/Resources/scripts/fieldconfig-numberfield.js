@@ -33,6 +33,7 @@ Phlexible.fields.FieldTypes.addField('numberfield', {
     },
     iconCls: 'p-elementtype-field_number-icon',
     allowedIn: ['tab', 'accordion', 'group', 'referenceroot'],
+    allowMap: true,
     defaultValueField: 'default_value_numberfield',
     config: {
         labels: {

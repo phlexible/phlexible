@@ -37,6 +37,7 @@ Phlexible.fields.FieldTypes.addField('date', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     defaultValueField: 'default_value_datefield',
     config: {
         labels: {

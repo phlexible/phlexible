@@ -29,6 +29,7 @@ Phlexible.fields.FieldTypes.addField('editor', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     config: {
         labels: {
             field: 1,

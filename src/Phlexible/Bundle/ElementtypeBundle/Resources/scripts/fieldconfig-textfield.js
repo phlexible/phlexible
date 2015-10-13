@@ -35,6 +35,7 @@ Phlexible.fields.FieldTypes.addField('textfield', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     defaultValueField: 'default_value_textfield',
     config: {
         labels: {

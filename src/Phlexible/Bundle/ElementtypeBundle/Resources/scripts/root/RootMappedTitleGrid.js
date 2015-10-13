@@ -94,10 +94,14 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
                 };
 
                 this.dropZone.onNodeDrop = function (node, dd, e, dragData) {
+                    if (!Phlexible.fields.FieldTypes[dragData.node.attributes.properties.field.type]) {
+                        return;
+                    }
+
                     if (
                         !dragData.node.attributes.properties.field ||
                         this.store.find('id', dragData.node.attributes.id) !== -1 ||
-                        this.allowedTypes.indexOf(dragData.node.attributes.properties.field.type) === -1
+                        !Phlexible.fields.FieldTypes[dragData.node.attributes.properties.field.type].allowMap
                     ) {
                         return;
                     }
@@ -121,10 +125,14 @@ Phlexible.elementtypes.RootMappedTitleGrid = Ext.extend(Ext.grid.EditorGridPanel
                 }.createDelegate(this);
 
                 this.dropZone.onNodeOver = function (node, dd, e, dragData) {
+                    if (!Phlexible.fields.FieldTypes[dragData.node.attributes.properties.field.type]) {
+                        return "x-dd-drop-nodrop";
+                    }
+
                     if (
                         dragData.node.attributes.properties.field &&
                         this.store.find('id', dragData.node.attributes.id) == -1 &&
-                        this.allowedTypes.indexOf(dragData.node.attributes.properties.field.type) !== -1
+                        Phlexible.fields.FieldTypes[dragData.node.attributes.properties.field.type].allowMap
                     ) {
                         return "x-dd-drop-ok";
                     }

@@ -32,6 +32,7 @@ Phlexible.fields.FieldTypes.addField('time', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     defaultValueField: 'default_value_timefield',
     config: {
         properties: {

@@ -59,6 +59,7 @@ Phlexible.fields.FieldTypes.addField('link', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     defaultValueField: 'default_value_textfield',
     config: {
         labels: {

@@ -39,6 +39,7 @@ Phlexible.fields.FieldTypes.addField('timecodefield', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     defaultValueField: 'default_value_textfield',
     config: {
         labels: {

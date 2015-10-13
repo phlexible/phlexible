@@ -156,12 +156,6 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                             {
                                 xtype: 'elementtypes-root-mapped-title',
                                 height: 200,
-                                allowedTypes: [
-                                    'textfield',
-                                    'numberfield',
-                                    'date',
-                                    'select'
-                                ],
                                 listeners: {
                                     change: function (fields) {
                                         var name = this.getComponent(0).getSelectionModel().getSelected().get('name');
@@ -240,15 +234,6 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                             {
                                 xtype: 'elementtypes-root-mapped-title',
                                 height: 200,
-                                allowedTypes: [
-                                    'textfield',
-                                    'numberfield',
-                                    'textarea',
-                                    'date',
-                                    'select',
-                                    'multiselect',
-                                    'suggest'
-                                ],
                                 listeners: {
                                     change: function (fields) {
                                         var name = this.getComponent(0).getSelectionModel().getSelected().get('name');

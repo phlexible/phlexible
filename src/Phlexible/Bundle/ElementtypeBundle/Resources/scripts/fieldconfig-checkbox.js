@@ -38,6 +38,7 @@ Phlexible.fields.FieldTypes.addField('checkbox', {
         'group',
         'referenceroot'
     ],
+    allowMap: true,
     defaultValueField: 'default_value_checkbox',
     config: {
         labels: {
