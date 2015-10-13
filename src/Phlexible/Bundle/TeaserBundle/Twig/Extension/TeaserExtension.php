@@ -53,12 +53,13 @@ class TeaserExtension extends \Twig_Extension
      *
      * @param ContentTeaser $teaser
      * @param array         $parameters
+     * @param array         $options
      *
      * @return string The fragment content
      *
      * @see FragmentHandler::render()
      */
-    public function renderTeaser(ContentTeaser $teaser, array $parameters = array())
+    public function renderTeaser(ContentTeaser $teaser, array $parameters = array(), array $options = array())
     {
         $parameters['teaserId'] = $teaser->getId();
 
@@ -68,9 +69,10 @@ class TeaserExtension extends \Twig_Extension
 
         $uri = $this->router->generate('teaser_render', $parameters);
 
-        $options = array();
+        $strategy = isset($options['strategy']) ? $options['strategy'] : 'inline';
+        unset($options['strategy']);
 
-        return $this->handler->render($uri, 'inline', $options);
+        return $this->handler->render($uri, $strategy, $options);
     }
 
     /**
