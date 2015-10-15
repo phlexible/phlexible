@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree;
 use Cocur\Slugify\Slugify;
 use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Content tree node

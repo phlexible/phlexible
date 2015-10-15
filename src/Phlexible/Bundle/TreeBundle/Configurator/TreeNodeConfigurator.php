@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\Configurator;
 
-use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
@@ -23,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Element configurator
+ * TreeNode configurator
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

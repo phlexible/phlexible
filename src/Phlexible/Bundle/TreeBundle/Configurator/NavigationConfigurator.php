@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Template configurator
+ * Navigation configurator
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
