@@ -439,6 +439,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         unset($parameters['_preview']);
 
-        return "/admin/preview/{$locale}/{$node->getId()}" . http_build_query($parameters);
+        $query = '';
+        if (count($parameters)) {
+            $query = '?' . http_build_query($parameters);
+        }
+
+        return "/admin/preview/{$locale}/{$node->getId()}" . $query;
     }
 }
