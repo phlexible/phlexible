@@ -7,6 +7,7 @@
     </titles>
     <mimetypes>
         <mimetype>image/svg</mimetype>
+        <mimetype>image/svg+xml</mimetype>
     </mimetypes>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/svg.gif</icon>
