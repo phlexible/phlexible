@@ -9,7 +9,7 @@
                 resetUrl: "{{ path("fos_user_resetting_request") }}",
                 csrfToken: "{{ csrf_token }}",
                 checkPath: "{{ path("fos_user_security_check") }}",
-                errorMessage: "{{ error|trans({}, 'FOSUserBundle') }}",
+                errorMessage: "{% if error %}{{ error.messageKey|trans(error.messageData, 'security') }}{% endif %}",
                 lastUsername: "{{ last_username }}",
                 usernameText: "{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}",
                 passwordText: "{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}",
