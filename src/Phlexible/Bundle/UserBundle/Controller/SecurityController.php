@@ -23,6 +23,17 @@ use Symfony\Component\Security\Core\Security;
 class SecurityController extends BaseSecurityController
 {
     /**
+     * @param Request $request
+     *
+     * @return Response
+     * @Route("/login", name="fos_user_security_login")
+     */
+    public function loginAction(Request $request)
+    {
+        return parent::loginAction($request);
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function renderLogin(array $data)
