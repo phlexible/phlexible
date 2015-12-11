@@ -96,6 +96,8 @@ class TreeExtension extends \Twig_Extension
         if (!$tree) {
             return null;
         }
+        $request = $this->requestStack->getCurrentRequest();
+        $tree->setLanguage($request->getLocale());
         $treeNode = $tree->get($treeId);
 
         return new ContentTreeContext($treeNode);
