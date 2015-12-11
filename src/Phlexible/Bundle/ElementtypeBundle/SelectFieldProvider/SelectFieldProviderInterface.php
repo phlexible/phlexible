@@ -38,5 +38,5 @@ interface SelectFieldProviderInterface
      *
      * @return array
      */
-    public function getData($language);
+    public function getData($siterootId, $interfaceLanguage, $language);
 }

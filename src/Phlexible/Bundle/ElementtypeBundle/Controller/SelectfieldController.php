@@ -57,10 +57,12 @@ class SelectfieldController extends Controller
         $selectFieldProviders = $this->get('phlexible_elementtype.select_field_providers');
 
         $providerName = $request->get('provider');
-        $language = $this->getUser()->getInterfaceLanguage('en');
+        $siterootId = $request->get('siterootId');
+        $language = $request->get('language');
+        $interfaceLanguage = $this->getUser()->getInterfaceLanguage('en');
 
         $provider = $selectFieldProviders->get($providerName);
-        $data = $provider->getData($language);
+        $data = $provider->getData($siterootId, $interfaceLanguage, $language);
 
         return new JsonResponse(['data' => $data]);
     }

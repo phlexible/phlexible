@@ -9,7 +9,9 @@ Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item
         store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('elementtypes_selectfield_function'),
             baseParams: {
-                provider: item.configuration.select_function
+                provider: item.configuration.select_function,
+                siterootId: element.siteroot_id,
+                language: element.language
             },
             fields: ['key', 'value'],
             sortInfo: {
@@ -17,6 +19,7 @@ Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item
             },
             root: 'data',
             autoLoad: true,
+            idProperty: 'key',
             listeners: {
                 load: function () {
                     //newItem.setValue(item.options.default_value);
@@ -63,6 +66,7 @@ Phlexible.fields.Registry.addFactory('multiselect', function (parentConfig, item
         editable: false,
         triggerAction: 'all',
         selectOnFocus: true,
+        lastQuery: '',
 
         supportsPrefix: true,
         supportsSuffix: true,

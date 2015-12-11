@@ -8,7 +8,9 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
         store = new Ext.data.JsonStore({
             url: Phlexible.Router.generate('elementtypes_selectfield_function'),
             baseParams: {
-                provider: item.configuration.select_function
+                provider: item.configuration.select_function,
+                siterootId: element.siteroot_id,
+                language: element.language
             },
             fields: ['key', 'value'],
             sortInfo: {
@@ -62,6 +64,7 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
         triggerAction: 'all',
         selectOnFocus: true,
         hideMode: 'offsets',
+        lastQuery: '',
 
         supportsPrefix: true,
         supportsSuffix: true,
