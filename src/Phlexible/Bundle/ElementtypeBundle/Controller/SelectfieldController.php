@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Matthias Harmuth <mharmuth@brainbits.net>
  * @Route("/elementtypes/selectfield")
- * @Security("is_granted('ROLE_ELEMENTTYPES')")
  */
 class SelectfieldController extends Controller
 {
@@ -28,6 +27,7 @@ class SelectfieldController extends Controller
      *
      * @return JsonResponse
      * @Route("/select", name="elementtypes_selectfield_providers")
+     * @Security("is_granted('ROLE_ELEMENTTYPES')")
      */
     public function selectAction()
     {
@@ -51,6 +51,7 @@ class SelectfieldController extends Controller
      *
      * @return JsonResponse
      * @Route("/function", name="elementtypes_selectfield_function")
+     * @Security("is_granted('ROLE_ELEMENTS')")
      */
     public function functionAction(Request $request)
     {
@@ -74,6 +75,7 @@ class SelectfieldController extends Controller
      *
      * @return JsonResponse
      * @Route("/suggest", name="elementtypes_selectfield_suggest")
+     * @Security("is_granted('ROLE_ELEMENTS')")
      */
     public function suggestAction(Request $request)
     {
