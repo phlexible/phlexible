@@ -108,11 +108,8 @@ class LocksController extends Controller
     public function flushAction()
     {
         $lockManager = $this->get('phlexible_element.element_lock_manager');
-        $locks = $lockManager->findAll();
 
-        foreach ($locks as $lock) {
-            $lockManager->deleteLock($lock);
-        }
+        $lockManager->deleteAll();
 
         return new ResultResponse(true, 'All locks released.');
     }

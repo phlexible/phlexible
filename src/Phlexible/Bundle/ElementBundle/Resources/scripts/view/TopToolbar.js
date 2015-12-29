@@ -235,11 +235,12 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('locks', {
             iconCls: 'p-element-lock-icon',
             handler: function () {
-                if (Phlexible.User.isGranted('ROLE_ELEMENT_LOCKS')) {
+                if (!Phlexible.User.isGranted('ROLE_ELEMENT_LOCKS')) {
                     return;
                 }
 
-                Phlexible.LoadHandler.handleDialog('Phlexible.elements.LocksWindow');
+                var w = new Phlexible.elements.LocksWindow();
+                w.show();
             }
         });
         this.tbarIndex.add('lock', {
@@ -250,7 +251,7 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
                     return;
                 }
 
-                if (Phlexible.User.isGranted('ROLE_ELEMENT_LOCKS')) {
+                if (!Phlexible.User.isGranted('ROLE_ELEMENT_LOCKS')) {
                     return;
                 }
 
@@ -592,8 +593,8 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         }
 
         // task button
-        var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
         if (this.extendedMenuIndex.indexOfKey('task') !== -1) {
+            var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
             extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].enable();
         }
     },
@@ -610,8 +611,10 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
         // task button
-        var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
-        extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
+        if (this.extendedMenuIndex.indexOfKey('task') !== -1) {
+            var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
+            extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
+        }
     },
 
     onRemoveLock: function () {
@@ -635,8 +638,10 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
         // task button
-        var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
-        extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
+        if (this.extendedMenuIndex.indexOfKey('task') !== -1) {
+            var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
+            extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
+        }
     },
 
     onQuickPublish: function () {

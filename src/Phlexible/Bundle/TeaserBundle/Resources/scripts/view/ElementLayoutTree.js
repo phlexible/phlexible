@@ -563,6 +563,10 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     doLoad: function (element, language) {
+        if (!element.tid) {
+            return;
+        }
+        
         this.disable();
 
         this.loader.baseParams = {

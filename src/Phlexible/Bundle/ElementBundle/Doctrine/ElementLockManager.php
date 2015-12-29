@@ -294,4 +294,14 @@ class ElementLockManager implements ElementLockManagerInterface
         $this->entityManager->remove($lock);
         $this->entityManager->flush();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteAll()
+    {
+        $qb = $this->getLockRepository()->createQueryBuilder('l');
+        $qb->delete();
+        $qb->getQuery()->execute();
+    }
 }
