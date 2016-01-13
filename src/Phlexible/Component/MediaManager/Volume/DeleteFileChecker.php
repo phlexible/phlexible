@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaManager\Volume;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Component\MediaManager\Entity\FileUsage;
+use Phlexible\Bundle\MediaManagerBundle\Entity\FileUsage;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -57,7 +57,7 @@ class DeleteFileChecker
      */
     public function isDeleteAllowed(FileInterface $file)
     {
-        if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('FILE_DELETE', $file)) {
+        if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('FILE_DELETE', $file->getFolder())) {
             return false;
         }
 
