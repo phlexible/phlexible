@@ -265,6 +265,7 @@ elements:
         link: Link
         type: Typ
         no_link: 'Kein Link'
+        element: Element
         tid: 'Element aus diesem Siteroot'
         intrasiteroot: 'Element aus allen Siteroots'
         url: 'Externe URL'

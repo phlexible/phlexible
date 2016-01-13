@@ -264,8 +264,9 @@ elements:
         link: Link
         type: Type
         no_link: 'No Link'
+        element: Element
         tid: 'Element from this siteroot'
-        intrasiteroot: 'Element from all siteroot'
+        intrasiteroot: 'Element from all siteroots'
         url: 'External URL'
         url_help: 'Format: http://www.test.com'
         mailto: Mailto
