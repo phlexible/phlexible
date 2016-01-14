@@ -166,7 +166,8 @@ class TeaserManager implements TeaserManagerInterface
             [
                 'layoutareaId' => $layoutarea->getId(),
                 'treeId'       => $treeNode->getId()
-            ]
+            ],
+            array('sort' => 'ASC')
         );
 
         return $teasers;
