@@ -79,7 +79,7 @@ class FolderUsageUpdater
             ->select('l')
             ->join('l.elementVersion', 'ev')
             ->join('ev.element', 'e')
-            ->where('e.eid = 9')
+            ->where($qb->expr()->eq('e.eid', $eid))
             ->andWhere($qb->expr()->eq('l.type', $qb->expr()->literal('folder')));
         $folderLinks = $qb->getQuery()->getResult();
         /* @var $folderLinks ElementLink[] */
