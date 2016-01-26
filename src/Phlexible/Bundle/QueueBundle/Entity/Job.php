@@ -67,7 +67,7 @@ class Job
      * @var int
      * @ORM\Column(type="integer")
      */
-    private $maxRuntime = PHP_INT_MAX;
+    private $maxRuntime = 0;
 
     /**
      * @var \DateTime
