@@ -65,7 +65,7 @@ Phlexible.fields.FieldHelper = {
             labelSeparator: labelSeparator,
             hideLabel: hideLabel,
 
-            value: itemValue ? itemValue.content : '',
+            value: itemValue ? itemValue.content : (item.configuration['default_value'] ? item.configuration['default_value'] : ''),
             masterValue: '', // TODO
             attributes: itemValue ? itemValue.attributes : {},
 

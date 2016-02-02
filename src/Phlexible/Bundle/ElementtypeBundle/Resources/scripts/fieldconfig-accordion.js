@@ -11,7 +11,7 @@ Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, 
         frame: false,
         border: false,
         collapsible: true,
-        collapsed: item.configuration.default_collapsed == 'on',
+        collapsed: item.configuration.default_collapsed,
         titleCollapse: true,
         animCollapse: false,
 
