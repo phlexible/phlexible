@@ -107,6 +107,10 @@ class SiterootExtension extends \Twig_Extension
     {
         $siteroot = $this->currentSiteroot();
 
+        if (!$siteroot) {
+            throw new \LogicException("Siteroot could not be determined.");
+        }
+
         if (!$language) {
             $language = $this->requestStack->getCurrentRequest()->getLocale();
         }
