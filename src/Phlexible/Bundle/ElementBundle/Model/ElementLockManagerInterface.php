@@ -153,4 +153,6 @@ interface ElementLockManagerInterface
      * @param ElementLock $lock
      */
     public function deleteLock(ElementLock $lock);
+
+    public function deleteAll();
 }

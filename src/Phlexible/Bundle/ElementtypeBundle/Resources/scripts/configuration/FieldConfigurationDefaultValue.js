@@ -153,13 +153,13 @@ Phlexible.elementtypes.configuration.FieldConfigurationDefaultValue = Ext.extend
             else {
                 item.setValue('');
             }
-        });
+        }, this);
 
         this.isValid();
     },
 
     getSaveValues: function () {
-        if (!this.defaultField) {
+        if (!this.defaultValueField) {
             return {};
         }
 

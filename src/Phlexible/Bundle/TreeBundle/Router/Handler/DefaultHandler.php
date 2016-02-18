@@ -348,7 +348,10 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         foreach ($pathNodes as $pathNode) {
             if ($tree->isViewable($pathNode)) {
-                $parts[] = $pathNode->getSlug($parameters['_locale']);
+                $part = $pathNode->getSlug($parameters['_locale']);
+                if ($part) {
+                    $parts[] = $part;
+                }
             }
         }
 
@@ -358,7 +361,10 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             }
 
             $current = $pathNodes[0];
-            $parts[] = $current->getSlug($parameters['_locale']);
+            $part = $current->getSlug($parameters['_locale']);
+            if ($part) {
+                $parts[] = $part;
+            }
         }
 
         $path = '/' . implode('/', array_reverse($parts));

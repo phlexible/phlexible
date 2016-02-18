@@ -179,6 +179,14 @@ class DataSaver
             $this->applyValues($elementStructure, $elementtypeStructure, $values, $language);
         }
 
+        $elementStructure->setId(null);
+
+        $rii = new \RecursiveIteratorIterator($elementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($rii as $structure) {
+            /* @var $structure ElementStructure */
+            $structure->setId(null);
+        }
+
         $elementVersion = $this->elementService->createElementVersion($element, $elementStructure, $language, $user->getId(), $comment);
 
         if ($teaser) {
@@ -547,11 +555,12 @@ class DataSaver
      */
     private function applyOldValues(ElementStructure $rootElementStructure, ElementStructure $oldRootElementStructure, $skipLanguage)
     {
-        foreach ($oldRootElementStructure->getValues() as $value) {
-            if ($value->getLanguage() === $skipLanguage) {
-                continue;
+        $languages = $oldRootElementStructure->getLanguages();
+        unset($languages[$skipLanguage]);
+        foreach ($languages as $language) {
+            foreach ($oldRootElementStructure->getValues($language) as $value) {
+                $rootElementStructure->setValue($value);
             }
-            $rootElementStructure->setValue($value);
         }
 
         $rii = new \RecursiveIteratorIterator($rootElementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
@@ -561,11 +570,12 @@ class DataSaver
             if (!$oldStructure) {
                 continue;
             }
-            foreach ($oldStructure->getValues() as $value) {
-                if ($value->getLanguage() === $skipLanguage) {
-                    continue;
+            $languages = $oldStructure->getLanguages();
+            unset($languages[$skipLanguage]);
+            foreach ($languages as $language) {
+                foreach ($oldStructure->getValues($language) as $value) {
+                    $structure->setValue($value);
                 }
-                $structure->setValue($value);
             }
         }
     }

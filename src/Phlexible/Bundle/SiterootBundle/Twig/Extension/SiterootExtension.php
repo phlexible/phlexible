@@ -87,11 +87,15 @@ class SiterootExtension extends \Twig_Extension
     public function currentSiteroot()
     {
         $request = $this->requestStack->getCurrentRequest();
-
         if ($request->attributes->has('siterootUrl')) {
             $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
         } else {
-            $siteroot = $this->siterootRequestMatcher->matchRequest($request);
+            $masterRequest = $this->requestStack->getMasterRequest();
+            if ($masterRequest !== $request && $masterRequest->attributes->has('siterootUrl')) {
+                $siteroot = $masterRequest->attributes->get('siterootUrl')->getSiteroot();
+            } else {
+                $siteroot = $this->siterootRequestMatcher->matchRequest($request);
+            }
         }
 
         return $siteroot;
@@ -106,6 +110,10 @@ class SiterootExtension extends \Twig_Extension
     public function specialTid($name, $language = null)
     {
         $siteroot = $this->currentSiteroot();
+
+        if (!$siteroot) {
+            throw new \LogicException("Siteroot could not be determined.");
+        }
 
         if (!$language) {
             $language = $this->requestStack->getCurrentRequest()->getLocale();

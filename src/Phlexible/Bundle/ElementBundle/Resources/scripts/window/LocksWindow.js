@@ -91,9 +91,8 @@ Phlexible.elements.LocksWindow = Ext.extend(Ext.Window, {
                     var r = this.getComponent(0).getSelectionModel().getSelected();
 
                     Ext.Ajax.request({
-                        url: Phlexible.Router.generate('locks_delete'),
+                        url: Phlexible.Router.generate('locks_delete', {id: r.id}),
                         params: {
-                            id: r.id,
                             lock_type: r.data.lock_type
                         },
                         success: function (response) {

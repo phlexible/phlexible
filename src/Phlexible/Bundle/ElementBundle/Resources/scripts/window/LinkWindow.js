@@ -7,8 +7,8 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
     title: Phlexible.elements.Strings.link_window.link,
     strings: Phlexible.elements.Strings.link_window,
     iconCls: 'p-element-link_edit-icon',
-    width: 450,
-    height: 200,
+    width: 500,
+    height: 205,
     modal: true,
     layout: 'fit',
     closable: false,
@@ -142,7 +142,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                 xtype: 'form',
                 bodyStyle: 'padding: 10px;',
                 border: false,
-                labelWidth: 100,
+                labelWidth: 120,
                 items: [
                     {
                         xtype: 'combo',
@@ -219,7 +219,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                     {
                         xtype: 'tidselector',
                         name: 'tid',
-                        fieldLabel: this.strings.tid,
+                        fieldLabel: this.strings.element,
                         siteroot_id: this.siteroot_id,
                         hidden: selected !== 'internal',
                         width: 300,
@@ -232,7 +232,7 @@ Phlexible.elements.LinkWindow = Ext.extend(Ext.Window, {
                     {
                         xtype: 'tidselector',
                         name: 'intrasiteroot',
-                        fieldLabel: this.strings.tid,
+                        fieldLabel: this.strings.element,
                         siteroot_id: this.siteroot_id,
                         hidden: selected !== 'intrasiteroot',
                         width: 300,
