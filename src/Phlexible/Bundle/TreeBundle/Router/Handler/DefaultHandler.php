@@ -161,14 +161,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     public function matchRequest(Request $request)
     {
-        $tree = $this->findTree($request);
-
-        if (null === $tree) {
-            $msg = 'No matching siteroot url found, and no fallback siteroot url provided.';
-            throw new NoSiterootUrlFoundException($msg);
-        }
-
-        $parameters = $this->matchIdentifiers($request, $tree);
+        $parameters = $this->matchIdentifiers($request);
 
         if ($parameters === null) {
             throw new ResourceNotFoundException("bla");
@@ -224,56 +217,51 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     }
 
     /**
-     * Match siteroot URL.
+     * Match identifieres (tid, language, ...)
      *
      * @param Request $request
      *
-     * @return int|null
-     */
-    protected function findTree(Request $request)
-    {
-        $siteroot = $this->siterootRequestMatcher->matchRequest($request);
-        if (!$siteroot) {
-            return null;
-        }
-        $siterootUrl = $siteroot->getDefaultUrl();
-        $request->attributes->set('siterootUrl', $siterootUrl);
-
-        return $this->contentTreeManager->find($siteroot->getId());
-    }
-
-    /**
-     * Match identifieres (tid, language, ...)
-     *
-     * @param Request              $request
-     * @param ContentTreeInterface $tree
-     *
      * @return array
      */
-    protected function matchIdentifiers(Request $request, ContentTreeInterface $tree)
+    protected function matchIdentifiers(Request $request)
     {
         $match = [];
         $path = $request->getPathInfo();
         $language = null;
         $tid = null;
 
-        /* @var $siterootUrl Url */
-        $siterootUrl = $request->attributes->get('siterootUrl');
-
         $attributes = [];
 
-        if (!strlen($path) || $path === '/') {
-            $language = $siterootUrl->getLanguage();
-            $tid = $siterootUrl->getTarget();
-        } elseif (preg_match('#^/(\w\w)/(.+)\.(\d+)\.html#', $path, $match)) {
-            // match found
-            $language = $match[1];
-            $tid = $match[3];
-        } elseif (preg_match('#^/admin/preview/(\w\w)/(\d+)$#', $path, $match)) {
+        if (preg_match('#^/admin/preview/(\w\w)/(\d+)$#', $path, $match)) {
             // match found
             $language = $match[1];
             $tid      = $match[2];
             $request->attributes->set('_preview', true);
+
+            $tree = $this->contentTreeManager->findByTreeId($tid);
+            $siterootUrl = $tree->getSiteroot()->getDefaultUrl();
+            $request->attributes->set('siterootUrl', $siterootUrl);
+        } else {
+            $siteroot = $this->siterootRequestMatcher->matchRequest($request);
+            if (!$siteroot) {
+                return null;
+            }
+            $siterootUrl = $siteroot->getDefaultUrl();
+            $request->attributes->set('siterootUrl', $siterootUrl);
+
+            $tree = $this->contentTreeManager->find($siteroot->getId());
+
+            /* @var $siterootUrl Url */
+            $siterootUrl = $request->attributes->get('siterootUrl');
+
+            if (!strlen($path) || $path === '/') {
+                $language = $siterootUrl->getLanguage();
+                $tid = $siterootUrl->getTarget();
+            } elseif (preg_match('#^/(\w\w)/(.+)\.(\d+)\.html#', $path, $match)) {
+                // match found
+                $language = $match[1];
+                $tid = $match[3];
+            }
         }
 
         if ($language === null) {
