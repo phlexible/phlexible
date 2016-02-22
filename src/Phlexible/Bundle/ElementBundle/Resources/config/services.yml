@@ -99,7 +99,7 @@ services:
             - @phlexible_elementtype.elementtype_service
             - @phlexible_tree.tree_manager
             - @phlexible_user.user_manager
-            - %phlexible_cms.languages.default%]
+            - %phlexible_cms.languages.default%
         tags:
             - {name: kernel.event_listener, event: phlexible_siteroot.create_siteroot, method: onCreateSiteroot}
 
