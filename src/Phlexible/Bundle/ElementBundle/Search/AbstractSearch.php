@@ -15,6 +15,7 @@ use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -167,7 +168,7 @@ abstract class AbstractSearch implements SearchProviderInterface
             $results[] = new SearchResult(
                 $node->getId(),
                 $siteroot->getTitle($language) . ' :: ' . $elementVersion->getBackendTitle($language) . ' (' . $language . ', ' . $node->getId() . ')',
-                $createUser->getDisplayname(),
+                $createUser->getDisplayName(),
                 $elementVersion->getCreatedAt(),
                 $icon,
                 $title,
