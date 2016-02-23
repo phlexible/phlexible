@@ -178,6 +178,7 @@ services:
             - @phlexible_siteroot.siteroot_manager
             - @phlexible_element.icon_resolver
             - @security.authorization_checker
+            - @phlexible_user.user_manager
             - %phlexible_cms.languages.default%
 
     phlexible_element.search.eid:

@@ -15,6 +15,7 @@ use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -60,12 +61,18 @@ abstract class AbstractSearch implements SearchProviderInterface
     private $defaultLanguage;
 
     /**
+     * @var UserManagerInterface
+     */
+    private $userManager;
+
+    /**
      * @param Connection                    $connection
      * @param ElementService                $elementService
      * @param TreeManager                   $treeManager
      * @param SiterootManagerInterface      $siterootManager
      * @param IconResolver                  $iconResolver
      * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param UserManagerInterface          $userManager
      * @param string                        $defaultLanguage
      */
     public function __construct(
@@ -75,6 +82,7 @@ abstract class AbstractSearch implements SearchProviderInterface
         SiterootManagerInterface $siterootManager,
         IconResolver $iconResolver,
         AuthorizationCheckerInterface $authorizationChecker,
+        UserManagerInterface $userManager,
         $defaultLanguage)
     {
         $this->connection = $connection;
@@ -83,6 +91,7 @@ abstract class AbstractSearch implements SearchProviderInterface
         $this->siterootManager = $siterootManager;
         $this->iconResolver = $iconResolver;
         $this->authorizationChecker = $authorizationChecker;
+        $this->userManager = $userManager;
         $this->defaultLanguage = $defaultLanguage;
     }
 
@@ -148,9 +157,9 @@ abstract class AbstractSearch implements SearchProviderInterface
             );
 
             try {
-                $createUser = $elementVersion->getCreateUserId();
+                $createUser = $this->userManager->find($elementVersion->getCreateUserId());
             } catch (\Exception $e) {
-                $createUser = 'Unknown';
+                $createUser = $this->userManager->getSystemUser();
             }
 
             $icon = $this->iconResolver->resolveTreeNode($node, $language);
@@ -158,7 +167,7 @@ abstract class AbstractSearch implements SearchProviderInterface
             $results[] = new SearchResult(
                 $node->getId(),
                 $siteroot->getTitle($language) . ' :: ' . $elementVersion->getBackendTitle($language) . ' (' . $language . ', ' . $node->getId() . ')',
-                $createUser,
+                $createUser->getDisplayname(),
                 $elementVersion->getCreatedAt(),
                 $icon,
                 $title,
