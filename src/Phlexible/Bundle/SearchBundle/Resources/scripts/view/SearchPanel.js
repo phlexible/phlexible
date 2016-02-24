@@ -46,7 +46,7 @@ Phlexible.search.SearchPanel = Ext.extend(Ext.Panel, {
                     '<img src="{image}" alt="{title}" />',
                     '</div>',
                     '<div class="search-result-text">',
-                    '<h3><span>{date:date("Y-m-d H:i:s"}<br />by {author}</span>{title}</h3>',
+                    '<h3><span>{date:date("Y-m-d H:i:s")}<br />by {author}</span>{title}</h3>',
                     '{component}<br />&nbsp;',
                     '</div>',
                     '<div class="x-clear"">',

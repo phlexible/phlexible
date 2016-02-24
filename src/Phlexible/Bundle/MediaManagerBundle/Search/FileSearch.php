@@ -106,7 +106,7 @@ class FileSearch implements SearchProviderInterface
             $results[] = new SearchResult(
                 $file->getId(),
                 $file->getName(),
-                $createUser->getDisplayname(),
+                $createUser->getDisplayName(),
                 $file->getCreatedAt(),
                 '/media/' . $file->getId() . '/_mm_small',
                 'Mediamanager File Search',
