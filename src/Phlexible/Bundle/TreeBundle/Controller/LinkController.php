@@ -307,16 +307,23 @@ class LinkController extends Controller
         $elementService = $this->get('phlexible_element.element_service');
 
         $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $db = $this->get('doctrine.dbal.default_connection');
 
-        $select = $db->select()
-            ->distinct()
-            ->from(['et' => $db->prefix . 'element_tree'], ['id'])
-            ->join(['e' => $db->prefix . 'element'], 'et.eid = e.eid', [])
-            ->where('et.siteroot_id = ?', $siteRootId)
-            ->where('e.element_type_id IN (?)', $elementtypeIds)
-            ->order('et.sort');
+        $qb = $db->createQueryBuilder();
 
-        $treeIds = $db->fetchCol($select);
+        $qbElementtypeIds = array_map(function($id) use ($qb) {
+            return $qb->expr()->literal($id);
+        }, $elementtypeIds);
+
+        $qb
+            ->select('t.id')
+            ->from('tree', 't')
+            ->join('t', 'element', 'e', 't.type_id = e.eid')
+            ->where($qb->expr()->eq('t.siteroot_id', $qb->expr()->literal($siteRootId)))
+            ->andWhere($qb->expr()->in('e.elementtype_id', $qbElementtypeIds))
+            ->orderBy('t.sort', 'ASC');
+
+        $treeIds = array_column($db->fetchAll($qb->getSQL()), 'id');
 
         $data = [];
 
@@ -338,7 +345,7 @@ class LinkController extends Controller
                     'children' => [],
                     'leaf'     => true,
                     'expanded' => false,
-                    'disabled' => !in_array($elementVersion->getElementTypeID(), $elementtypeIds),
+                    'disabled' => !in_array($element->getElementtypeId(), $elementtypeIds),
                 ];
             }
 
@@ -362,7 +369,7 @@ class LinkController extends Controller
                         'children' => [],
                         'leaf'     => false,
                         'expanded' => false,
-                        'disabled' => !in_array($elementVersion->getElementTypeID(), $elementtypeIds),
+                        'disabled' => !in_array($element->getElementtypeId(), $elementtypeIds),
                     ];
                 } else {
                     $data[$parentNode->getId()]['leaf'] = false;
@@ -392,24 +399,28 @@ class LinkController extends Controller
     private function stripLinkNodeKeys($data, Connection $connection)
     {
         if (is_array($data['children']) && count($data['children'])) {
-            $sortSelect = $db->select()
-                ->from($db->prefix . 'element_tree', ['id', 'sort'])
-                ->where('parent_id = ?', $data['id'])
-                ->where('id IN (?)', array_keys($data['children']))
-                ->order('sort');
+            /*
+            $qb = $connection->createQueryBuilder();
+            $qb
+                ->select(array('id', 'sort'))
+                ->from('tree', 't')
+                ->where($qb->expr()->eq('t.parent_id', $data['id']))
+                ->where($qb->expr()->in('t.id',array_keys($data['children'])))
+                ->orderBy('t.sort');
 
-            $sortTids = $db->fetchPairs($sortSelect);
+            $sortTids = $connection->fetchAll($qb->getSQL());
             $sortedTids = [];
             foreach (array_keys($data['children']) as $tid) {
                 $sortedTids[$tid] = $sortTids[$tid];
             }
 
             array_multisort($sortedTids, $data['children']);
+            */
 
             $data['children'] = array_values($data['children']);
 
             foreach ($data['children'] as $key => $item) {
-                $data['children'][$key] = $this->stripLinkNodeKeys($item, $db);
+                $data['children'][$key] = $this->stripLinkNodeKeys($item, $connection);
             }
         }
 

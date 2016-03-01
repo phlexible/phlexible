@@ -40,7 +40,7 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
                 siteroot_id: this.siteroot_id,
                 allow_tid: this.allowed.tid ? 1 : 0,
                 allow_intrasiteroot: this.allowed.intrasiteroot ? 1 : 0,
-                element_type_ids: this.elementTypeIds || this.elementTypeIds
+                element_type_ids: this.elementTypeIds || ''
             },
             root: 'results',
             totalProperty: 'totalCount',
@@ -120,8 +120,8 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
         //Phlexible.console.log('hiddenValue: ' + hiddenValue);
 
         if (value && !hiddenValue) {
+            //Phlexible.console.warn('value + !hiddenValue');
             this.markInvalid(this.invalidText);
-            //Phlexible.console.log('value + !hiddenValue');
             return false;
         }
 
@@ -130,6 +130,7 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
                 this.clearInvalid();
                 return true;
             } else {
+                //Phlexible.console.warn('whatever');
                 this.markInvalid(this.blankText);
                 return false;
             }
@@ -159,6 +160,7 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
             tid: record.data.tid,
             eid: record.data.eid
         });
+        this.setValue(this.getValue());
     },
 
     onClear: function () {
@@ -188,9 +190,9 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
                         return;
                     }
 
+                    this.setHiddenValue(value);
                     this.setValue(value);
                     this.setRawValue(display);
-                    this.setHiddenValue(value);
 
                     this.fireEvent('set', value, display);
                 },

@@ -88,7 +88,7 @@ Phlexible.elements.EidSelector = Ext.extend(Ext.ux.TreeSelector, {
                     language: this.language,
                     siteroot_id: this.siteroot_id,
                     //recursive: this.recursive || 0,
-                    element_type_ids: Ext.isArray(this.elementTypeIds) && this.elementTypeIds.length ? this.elementTypeIds : '',
+                    element_type_ids: this.elementTypeIds || '',
                     value: this.value ? this.value : ''
                 },
                 listeners: {
