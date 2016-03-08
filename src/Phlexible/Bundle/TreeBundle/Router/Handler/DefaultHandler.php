@@ -11,9 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
-use Phlexible\Bundle\TreeBundle\Exception\NoSiterootUrlFoundException;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -39,12 +37,12 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * @var ContentTreeManagerInterface
      */
-    private $contentTreeManager;
+    protected $contentTreeManager;
 
     /**
      * @var SiterootRequestMatcher
      */
-    private $siterootRequestMatcher;
+    protected $siterootRequestMatcher;
 
     /**
      * @var SiterootHostnameGenerator
