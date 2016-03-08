@@ -220,6 +220,12 @@ class LinkController extends Controller
 
         if ($id == 'root') {
             $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
+            if (!$siterootIds) {
+                $siterootIds = array();
+                foreach ($siterootManager->findAll() as $siteroot) {
+                    $siterootIds[] = $siteroot->getId();
+                }
+            }
             $data = [];
             foreach ($siterootIds as $siterootId) {
                 $siteroot = $siterootManager->find($siterootId);
