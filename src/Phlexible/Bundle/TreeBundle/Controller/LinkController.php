@@ -114,7 +114,8 @@ class LinkController extends Controller
      */
     public function linkInternalAction(Request $request)
     {
-        $siterootId = $request->get('siteroot_id');
+        $siterootIds = explode(',', $request->get('siteroot_id'));
+        $siterootId = count($siterootIds) ? $siterootIds[0] : null;
         $id = $request->get('node', 'root');
         $language = $request->get('language');
         $targetTid = $request->get('value');
@@ -188,15 +189,13 @@ class LinkController extends Controller
      */
     public function linkIntrasiterootAction(Request $request)
     {
-        $siterootId = $request->get('siteroot_id');
+        $siterootIds = explode(',', $request->get('siteroot_id'));
         $id = $request->get('node', 'root');
-        $recursive = (bool) $request->get('recursive', false);
         $language = $request->get('language');
         $elementtypeIds = $request->get('element_type_ids', []);
         $targetTid = $request->get('value');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
-        $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         // TODO: switch to master language of element
@@ -221,35 +220,19 @@ class LinkController extends Controller
 
         if ($id == 'root') {
             $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
-            $siteroots = $siterootManager->findAll();
-
-            if ($siterootId) {
-                foreach ($siteroots as $index => $siteroot) {
-                    if ($siteroot->getId() === $siterootId) {
-                        unset($siteroots[$index]);
-                        break;
-                    }
-                }
-            }
-
             $data = [];
-            foreach ($siteroots as $siteroot) {
+            foreach ($siterootIds as $siterootId) {
+                $siteroot = $siterootManager->find($siterootId);
                 $tree = $treeManager->getBySiteRootID($siteroot->getId());
                 $rootNode = $tree->getRoot();
-
-                $element = $elementService->findElement($rootNode->getTypeId());
-                $elementVersion = $elementService->findLatestElementVersion($element);
 
                 $children = false;
                 if ($targetTree && $siteroot->getId() === $targetTree->getSiterootId()) {
                     if (!count($elementtypeIds)) {
                         $mode = !$targetTid ? self::MODE_NOET_NOTARGET : self::MODE_NOET_TARGET;
-
                         $nodes = $tree->getChildren($rootNode);
                         $children = $this->recurseLinkNodes($nodes, $language, $mode, $targetNode);
                     } else {
-                        $mode = !$targetTid ? self::MODE_ET_NOTARGET : self::MODE_ET_TARGET;
-
                         $children = $this->findLinkNodes($tree->getSiterootId(), $language, $elementtypeIds);
 
                         if ($elementtypeIds) {
@@ -278,17 +261,12 @@ class LinkController extends Controller
                 $nodes = $tree->getChildren($startNode);
                 $data = $this->recurseLinkNodes($nodes, $language, $mode, $targetNode);
             } else {
-                $mode = !$targetTid ? self::MODE_ET_NOTARGET : self::MODE_ET_TARGET;
-
                 $data = $this->findLinkNodes($tree->getSiterootId(), $language, $elementtypeIds);
 
                 if ($elementtypeIds) {
                     $data = $this->recursiveTreeStrip($data);
                 }
             }
-
-            //$nodes = $startNode->getChildren();
-            //$data = $this->_recurseLinkNodes($nodes, $language, $mode);
         }
 
         return new JsonResponse($data);
@@ -461,10 +439,10 @@ class LinkController extends Controller
                 'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $tid . ']',
                 'icon'     => $iconResolver->resolveTreeNode($node, $language),
                 'children' => !$tree->hasChildren($node)
-                        ? []
-                        : $mode == self::MODE_NOET_TARGET && $tree->isParentOf($node, $targetNode)
-                            ? $this->recurseLinkNodes($children, $language, $mode, $targetNode)
-                            : false,
+                    ? []
+                    : $mode == self::MODE_NOET_TARGET && $tree->isParentOf($node, $targetNode)
+                        ? $this->recurseLinkNodes($children, $language, $mode, $targetNode)
+                        : false,
                 'leaf'     => !$tree->hasChildren($node),
                 'expanded' => false,
             ];
