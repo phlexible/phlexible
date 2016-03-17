@@ -519,7 +519,7 @@ class DataController extends Controller
             'et_version'       => $elementVersion->getElementTypeVersion() . ' [' . $elementtype->getRevision() . ']',
             'et_unique_id'     => $elementtype->getUniqueId(),
             'et_type'          => $elementtype->getType(),
-            'author'           => $createUser->getDisplayName(),
+            'author'           => $createUser ? $createUser->getDisplayName() : 'Unknown',
             'create_date'      => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
             'publish_date'     => $publishDate,
             'publisher'        => $publishUser ? $publishUser->getDisplayName() : null,
