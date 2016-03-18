@@ -36,6 +36,12 @@ services:
         tags:
             - {name: phlexible_elementtype.field, alias: displayfield}
 
+    phlexible_elementtype.field.editor:
+        class: Phlexible\Bundle\ElementtypeBundle\Field\EditorField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: editor}
+
     phlexible_elementtype.field.label:
         class: Phlexible\Bundle\ElementtypeBundle\Field\LabelField
         public: false

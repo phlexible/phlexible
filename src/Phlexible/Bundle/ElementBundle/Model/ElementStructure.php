@@ -416,6 +416,10 @@ class ElementStructure implements \IteratorAggregate
             $language = $this->defaultLanguage;
         }
 
+        if (!isset($this->values[$language])) {
+            return false;
+        }
+
         foreach ($this->values[$language] as $value) {
             if ($value->getDsId() === $dsId) {
                 return true;
