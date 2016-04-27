@@ -44,10 +44,10 @@ class FileUsageUpdater
     private $volumeManager;
 
     /**
-     * @param EntityManager  $entityManager
-     * @param TreeManager    $treeManager
-     * @param TeaserManager  $teaserManager
-     * @param VolumeManager  $volumeManager
+     * @param EntityManager $entityManager
+     * @param TreeManager   $treeManager
+     * @param TeaserManager $teaserManager
+     * @param VolumeManager $volumeManager
      */
     public function __construct(
         EntityManager $entityManager,
