@@ -365,7 +365,7 @@ class UsersController extends Controller
         $successorUser = $userManager->find($successorUserId);
         $user = $userManager->find($userId);
 
-        $userManager->deleteUser($user, $successorUser);
+        $userManager->deleteUserWithSuccessor($user, $successorUser);
 
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" deleted.'));
