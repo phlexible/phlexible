@@ -76,15 +76,11 @@ class ChangesCommand extends ContainerAwareCommand
 
                 $table->render();
             } else {
-                $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
-                $em->getConnection()->getConfiguration()->setSQLLogger(null);
-
                 foreach ($changes as $change) {
                     $output->write("{$change->getElementtype()->getTitle()}... ");
                     $synchronizer->synchronize($change, $input->getOption('force'));
                     $output->writeln("<info>ok</info>");
                 }
-                $em->flush();
             }
         } else {
             $output->writeln('No elementtype changes');

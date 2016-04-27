@@ -78,8 +78,7 @@ class Synchronizer
             $elementVersions = $this->elementVersionManager->findByElementSource($outdatedElementSource);
             foreach ($elementVersions as $elementVersion) {
                 $elementVersion->setElementSource($elementSource);
-                echo $elementVersion->getId()." ".$elementVersion->getVersion().PHP_EOL;
-                $this->elementVersionManager->updateElementVersion($elementVersion, false);
+                $this->elementVersionManager->updateElementVersion($elementVersion, true);
             }
             $this->removeOutdatedElementSource($outdatedElementSource);
         }

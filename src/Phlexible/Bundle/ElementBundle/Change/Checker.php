@@ -76,8 +76,6 @@ class Checker
                         $needImport = true;
                         $outdatedElementSources[] = $oldElementSource;
                         $reason = 'Higher revision';
-                    #} else {
-                    #    throw new \Exception("Version mismatch, to-be-commited version is lower than existing version.");
                     }
                 }
             }
