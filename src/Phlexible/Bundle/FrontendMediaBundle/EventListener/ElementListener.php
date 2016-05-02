@@ -10,8 +10,9 @@ namespace Phlexible\Bundle\FrontendMediaBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
-use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\FrontendMediaBundle\Usage\UsageUpdater;
+use Phlexible\Bundle\QueueBundle\Entity\Job;
+use Phlexible\Bundle\QueueBundle\Model\JobManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -27,11 +28,23 @@ class ElementListener implements EventSubscriberInterface
     private $usageUpdater;
 
     /**
-     * @param UsageUpdater $usageUpdater
+     * @var JobManagerInterface
      */
-    public function __construct(UsageUpdater $usageUpdater)
+    private $jobManager;
+
+    /**
+     * @var bool
+     */
+    private $useJobs = false;
+
+    /**
+     * @param UsageUpdater        $usageUpdater
+     * @param JobManagerInterface $jobManager
+     */
+    public function __construct(UsageUpdater $usageUpdater, JobManagerInterface $jobManager)
     {
         $this->usageUpdater = $usageUpdater;
+        $this->jobManager = $jobManager;
     }
 
     /**
@@ -42,7 +55,13 @@ class ElementListener implements EventSubscriberInterface
         return [
             ElementEvents::CREATE_ELEMENT_VERSION => 'onCreateElementVersion',
             ElementEvents::UPDATE_ELEMENT_VERSION => 'onUpdateElementVersion',
+            ElementEvents::COMMIT_CHANGES => 'onCommitChanges',
         ];
+    }
+
+    public function onCommitChanges()
+    {
+        $this->useJobs = true;
     }
 
     /**
@@ -50,7 +69,12 @@ class ElementListener implements EventSubscriberInterface
      */
     public function onCreateElementVersion(ElementVersionEvent $event)
     {
-        $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
+        if (!$this->useJobs) {
+            $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
+        } else {
+            $job = new Job('frontend-media:update-usage', array($event->getElementVersion()->getElement()->getEid()));
+            $this->jobManager->updateJob($job);
+        }
     }
 
     /**
@@ -58,6 +82,11 @@ class ElementListener implements EventSubscriberInterface
      */
     public function onUpdateElementVersion(ElementVersionEvent $event)
     {
-        $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
+        if (!$this->useJobs) {
+            $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
+        } else {
+            $job = new Job('frontend-media:update-usage', array($event->getElementVersion()->getElement()->getEid()));
+            $this->jobManager->updateJob($job);
+        }
     }
 }

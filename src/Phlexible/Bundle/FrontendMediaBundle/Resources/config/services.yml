@@ -2,7 +2,9 @@ services:
     # event listeners
     phlexible_frontend_media.listener.element:
         class: Phlexible\Bundle\FrontendMediaBundle\EventListener\ElementListener
-        arguments: [@phlexible_frontend_media.usage_updater]
+        arguments:
+            - @phlexible_frontend_media.usage_updater
+            - @phlexible_queue.job_manager
         tags:
             - {name: kernel.event_subscriber}
 

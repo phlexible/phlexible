@@ -218,7 +218,7 @@ class RunCommand extends ContainerAwareCommand
 
         $processBuilder
             ->add('php')
-            ->add($this->getContainer()->getParameter('kernel.root_dir') . '/console')
+            ->add($this->getContainer()->getParameter('kernel.root_dir') . '/../bin/console')
             ->setEnv('phlexibleJobId', $job->getId())
             ->add($job->getCommand());
 

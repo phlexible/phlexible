@@ -84,7 +84,31 @@ class FileUsageUpdater
         $fileLinks = $qb->getQuery()->getResult();
         /* @var $fileLinks ElementLink[] */
 
+
+        $teasers = $this->teaserManager->findBy(['typeId' => $eid]);
+        $trees = $this->treeManager->getByTypeId($eid);
+        $treeNodes = array();
+        foreach ($trees as $tree) {
+            foreach ($tree->getByTypeId($eid) as $treeNode) {
+                $treeNodes[] = $treeNode;
+            }
+        }
+        $teaserOnlineVersions = array();
+        $nodeOnlineVersions = array();
         $flags = [];
+
+        foreach ($fileLinks as $fileLink) {
+            $fileParts = explode(';', $fileLink->getTarget());
+            $fileId = $fileParts[0];
+            $fileVersion = 1;
+            if (isset($fileParts[1])) {
+                $fileVersion = $fileParts[1];
+            }
+
+            if (!isset($flags[$fileId][$fileVersion])) {
+                $flags[$fileId][$fileVersion] = 0;
+            }
+        }
 
         foreach ($fileLinks as $fileLink) {
             $fileParts = explode(';', $fileLink->getTarget());
@@ -108,9 +132,13 @@ class FileUsageUpdater
             }
 
             // add flag STATUS_ONLINE if this link is used in an online teaser version
-            $teasers = $this->teaserManager->findBy(['typeId' => $eid, 'type' => 'element']);
             foreach ($teasers as $teaser) {
-                if ($this->teaserManager->getPublishedVersion($teaser, $fileLink->getLanguage()) === $linkVersion) {
+                $cacheId = $teaser->getId().'_'.$fileLink->getLanguage();
+                if (!isset($teaserOnlineVersions[$cacheId])) {
+                    $teaserOnlineVersions[$cacheId] = $this->teaserManager->getPublishedVersion($teaser, $fileLink->getLanguage());
+                }
+
+                if ($teaserOnlineVersions[$cacheId] === $linkVersion) {
                     $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
                     $old = false;
                     break;
@@ -118,15 +146,16 @@ class FileUsageUpdater
             }
 
             // add flag STATUS_ONLINE if this link is used in an online treeNode version
-            $trees = $this->treeManager->getByTypeId($eid, 'element');
-            foreach ($trees as $tree) {
-                $treeNodes = $tree->getByTypeId($eid, 'element');
-                foreach ($treeNodes as $treeNode) {
-                    if ($tree->getPublishedVersion($treeNode, $fileLink->getLanguage()) === $linkVersion) {
-                        $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
-                        $old = false;
-                        break;
-                    }
+            foreach ($treeNodes as $treeNode) {
+                $cacheId = $treeNode->getId().'_'.$fileLink->getLanguage();
+                if (!isset($nodeOnlineVersions[$cacheId])) {
+                    $nodeOnlineVersions[$cacheId] = $treeNode->getTree()->getPublishedVersion($treeNode, $fileLink->getLanguage());
+                }
+
+                if ($nodeOnlineVersions[$cacheId] === $linkVersion) {
+                    $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
+                    $old = false;
+                    break;
                 }
             }
 

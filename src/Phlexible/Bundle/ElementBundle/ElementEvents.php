@@ -115,4 +115,9 @@ class ElementEvents
      */
     const LOAD_DATA = 'phlexible_element.load_data';
 
+    /**
+     * Fired on element:changes --commit
+     */
+    const COMMIT_CHANGES = 'phlexible_element.commit_changes';
+
 }

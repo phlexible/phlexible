@@ -163,7 +163,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
      */
     public function getByTypeId($typeId, $type = null)
     {
-        $criteria = ['typeId' => $typeId];
+        $criteria = ['typeId' => $typeId, 'siterootId' => $this->siterootId];
         if ($type) {
             $criteria['type'] = $type;
         }

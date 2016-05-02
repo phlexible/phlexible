@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Command;
 
 use Phlexible\Bundle\ElementBundle\Change\Checker;
+use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
@@ -76,6 +77,8 @@ class ChangesCommand extends ContainerAwareCommand
 
                 $table->render();
             } else {
+                $this->getContainer()->get('event_dispatcher')->dispatch(ElementEvents::COMMIT_CHANGES);
+                
                 foreach ($changes as $change) {
                     $output->write("{$change->getElementtype()->getTitle()}... ");
                     $synchronizer->synchronize($change, $input->getOption('force'));
