@@ -42,13 +42,13 @@ class UpdateUsageCommand extends ContainerAwareCommand
 
         $eid = $input->getArgument('eid');
         if ($eid) {
-            $element = array($elementManager->find($eid));
-            $output->write('Updating Element ' . $element->getEid() . ' ... ');
+            $element = $elementManager->find($eid);
+            $output->write('Updating Element '.$element->getEid().' ... ');
             try {
                 $usageUpdate->updateUsage($element);
                 $output->writeln('<info>done</info>');
             } catch (\Exception $e) {
-                $output->writeln('<error>' . $e->getMessage(). '</error>');
+                $output->writeln('<error>'.$e->getMessage().'</error>');
             }
 
         } else {
@@ -57,12 +57,12 @@ class UpdateUsageCommand extends ContainerAwareCommand
             $elements = $elementManager->findBy(array(), null, $limit, $offset);
             do {
                 foreach ($elements as $element) {
-                    $output->write('Updating Element ' . $element->getEid() . ' ... ');
+                    $output->write('Updating Element '.$element->getEid().' ... ');
                     try {
                         $usageUpdate->updateUsage($element);
                         $output->writeln('<info>done</info>');
                     } catch (\Exception $e) {
-                        $output->writeln('<error>' . $e->getMessage(). '</error>');
+                        $output->writeln('<error>'.$e->getMessage().'</error>');
                     }
                 }
                 $offset += $limit;
