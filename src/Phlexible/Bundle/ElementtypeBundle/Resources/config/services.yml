@@ -19,12 +19,6 @@ services:
         arguments: [@event_dispatcher]
 
     # event listeners
-    phlexible_elementtype.listener.apply_successor:
-        class: Phlexible\Bundle\ElementtypeBundle\EventListener\ApplySuccessorListener
-        arguments: [@doctrine.dbal.default_connection]
-        tags:
-            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
-
     phlexible_elementtype.listener.get_config:
         class: Phlexible\Bundle\ElementtypeBundle\EventListener\GetConfigListener
         arguments: [%phlexible_elementtype.field.suggest.seperator%]
