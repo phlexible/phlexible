@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Webmozart\Assert\Assert;
 
 /**
  * Link controller
@@ -186,6 +187,8 @@ class LinkController extends Controller
      *
      * @return JsonResponse
      * @Route("/intrasiteroot", name="tree_link_intrasiteroot")
+     *
+     * @throws \InvalidArgumentException if empty siteroot id given
      */
     public function linkIntrasiterootAction(Request $request)
     {
@@ -214,7 +217,7 @@ class LinkController extends Controller
         $targetTree = null;
         $targetNode = null;
         if ($targetTid) {
-            $targetTree = $treeManager->getByNodeID($targetTid);
+            $targetTree = $treeManager->getByNodeId($targetTid);
             $targetNode = $targetTree->get($targetTid);
         }
 
@@ -228,8 +231,9 @@ class LinkController extends Controller
             }
             $data = [];
             foreach ($siterootIds as $siterootId) {
+                Assert::notEmpty('Empty siteroot id given');
                 $siteroot = $siterootManager->find($siterootId);
-                $tree = $treeManager->getBySiteRootID($siteroot->getId());
+                $tree = $treeManager->getBySiteRootId($siteroot->getId());
                 $rootNode = $tree->getRoot();
 
                 $children = false;
@@ -248,17 +252,17 @@ class LinkController extends Controller
                 }
 
                 $data[] = [
-                    'id'       => $rootNode->getID(),
+                    'id'       => $rootNode->getId(),
                     'eid'      => $rootNode->getTypeId(),
                     'text'     => $siteroot->getTitle(),
                     'icon'     => $iconResolver->resolveTreeNode($rootNode, $language),
                     'children' => $children,
                     'leaf'     => !$tree->hasChildren($rootNode),
-                    'expanded' => false
+                    'expanded' => false,
                 ];
             }
         } else {
-            $tree = $treeManager->getByNodeID($id);
+            $tree = $treeManager->getByNodeId($id);
             $startNode = $tree->get($id);
 
             if (!count($elementtypeIds)) {

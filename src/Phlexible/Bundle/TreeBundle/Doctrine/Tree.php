@@ -28,6 +28,7 @@ use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Database tree
@@ -67,14 +68,17 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
      * @param ElementHistoryManagerInterface $historyManager
      * @param StateManagerInterface          $stateManager
      * @param EventDispatcherInterface       $dispatcher
+     *
+     * @throws \InvalidArgumentException if empty siteroot id given
      */
     public function __construct(
         $siterootId,
         EntityManager $entityManager,
         ElementHistoryManagerInterface $historyManager,
         StateManagerInterface $stateManager,
-        EventDispatcherInterface $dispatcher)
-    {
+        EventDispatcherInterface $dispatcher
+    ) {
+        Assert::notEmpty($siterootId, 'Empty siteroot id given');
         $this->siterootId = $siterootId;
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
