@@ -84,7 +84,7 @@ class PermissionRegistry
             $objectType = get_parent_class($objectType);
         } while ($objectType !== false);
 
-        throw new InvalidArgumentException("No permissions for type $actualObjectType found. Maybe you haven't initialized the MediaManager yet?");
+        throw new InvalidArgumentException("No permissions for type $actualObjectType found.");
 
     }
 

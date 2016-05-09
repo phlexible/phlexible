@@ -103,6 +103,12 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
+    phlexible_media_manager.listener.ensure_mediamanager_initialized:
+            class: Phlexible\Bundle\MediaManagerBundle\EventListener\EnsureMediaManagerInitializedBeforeFilter
+            arguments: ["@phlexible_media_manager.volume_manager"]
+            tags:
+                - {name: kernel.event_listener, event: kernel.controller, method: onKernelController}
+
     # portlets
     phlexible_media_manager.portlet.latest_files:
         class: Phlexible\Bundle\MediaManagerBundle\Portlet\LatestFilesPortlet
