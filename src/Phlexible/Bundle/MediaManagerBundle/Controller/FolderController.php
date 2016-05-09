@@ -32,8 +32,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FolderController extends Controller
 {
-    
-    
     /**
      * @param string $volumeId
      *
