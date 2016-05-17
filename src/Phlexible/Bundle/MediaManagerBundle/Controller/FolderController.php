@@ -120,8 +120,6 @@ class FolderController extends Controller
         $dispatcher = $this->get('event_dispatcher');
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
 
-        $user = $this->getUser();
-
         if (!$folderId || $folderId === 'root') {
             foreach ($volumeManager->all() as $volume) {
                 $rootFolder = $volume->findRootFolder();
