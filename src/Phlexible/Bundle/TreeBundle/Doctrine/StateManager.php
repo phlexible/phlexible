@@ -55,6 +55,8 @@ class StateManager implements StateManagerInterface
      */
     private $treeNodeOnlineRepository;
 
+    private $cache = array();
+
     /**
      * @param EntityManager                  $entityManager
      * @param ElementHistoryManagerInterface $historyManager
@@ -79,7 +81,7 @@ class StateManager implements StateManagerInterface
     /**
      * @return EntityRepository
      */
-    private function getTeaserOnlineRepository()
+    private function getTreeNodeOnlineRepository()
     {
         if (null === $this->treeNodeOnlineRepository) {
             $this->treeNodeOnlineRepository = $this->entityManager->getRepository('PhlexibleTreeBundle:TreeNodeOnline');
@@ -93,7 +95,13 @@ class StateManager implements StateManagerInterface
      */
     public function findByTreeNode(TreeNodeInterface $treeNode)
     {
-        return $this->getTeaserOnlineRepository()->findBy(['treeNode' => $treeNode->getId()]);
+        $id = $treeNode->getId();
+
+        if (!isset($this->cache[$id])) {
+            $this->cache[$id] = $this->getTreeNodeOnlineRepository()->findBy(['treeNode' => $treeNode->getId()]);
+        }
+
+        return $this->cache[$id];
     }
 
     /**
@@ -101,7 +109,13 @@ class StateManager implements StateManagerInterface
      */
     public function findOneByTreeNodeAndLanguage(TreeNodeInterface $treeNode, $language)
     {
-        return $this->getTeaserOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);
+        $id = $treeNode->getId() . '_' . $language;
+
+        if (!isset($this->cache[$id])) {
+            $this->cache[$id] = $this->getTreeNodeOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);
+        }
+
+        return $this->cache[$id];
     }
 
     /**
@@ -191,7 +205,7 @@ class StateManager implements StateManagerInterface
      */
     public function publish(TreeNodeInterface $treeNode, $version, $language, $userId, $comment = null)
     {
-        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);
+        $treeNodeOnline = $this->getTreeNodeOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);
         if (!$treeNodeOnline) {
             $treeNodeOnline = new TreeNodeOnline();
             $treeNodeOnline
@@ -208,6 +222,8 @@ class StateManager implements StateManagerInterface
         $this->entityManager->persist($treeNodeOnline);
         $this->entityManager->flush($treeNodeOnline);
 
+        $this->cache = array();
+
         return $treeNodeOnline;
     }
 
@@ -216,11 +232,13 @@ class StateManager implements StateManagerInterface
      */
     public function setOffline(TreeNodeInterface $treeNode, $language)
     {
-        $treeNodeOnline = $this->getTeaserOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);
+        $treeNodeOnline = $this->getTreeNodeOnlineRepository()->findOneBy(['treeNode' => $treeNode->getId(), 'language' => $language]);
 
         if ($treeNodeOnline) {
             $this->entityManager->remove($treeNodeOnline);
             $this->entityManager->flush();
+
+            $this->cache = array();
         }
     }
 }

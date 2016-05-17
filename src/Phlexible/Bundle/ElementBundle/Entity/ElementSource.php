@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @ORM\Entity
- * @ORM\Table(name="element_source")
+ * @ORM\Table(name="element_source", indexes={@ORM\Index(columns={"elementtype_id"})})
  */
 class ElementSource
 {
