@@ -170,7 +170,7 @@ class ElementSourceManager implements ElementSourceManagerInterface
             $elementtype = $this->parser->parseString($elementSource->getXml());
 
             $elementSource->setElementtype($elementtype);
-            $this->entityManager->flush($elementtype);
+            $this->entityManager->flush($elementSource);
         }
 
         return $elementtype;
