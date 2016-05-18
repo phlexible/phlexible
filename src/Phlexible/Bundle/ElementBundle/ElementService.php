@@ -374,6 +374,7 @@ class ElementService
             ->setElementtypeRevision($elementtype->getRevision())
             ->setType($elementtype->getType())
             ->setXml($xmlDumper->dump($elementtype))
+            ->setElementtype($elementtype)
             ->setImportedAt(new \DateTime());
 
         $this->elementSourceManager->updateElementSource($elementSource);

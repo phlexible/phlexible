@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 
 /**
  * Element source
@@ -51,6 +52,12 @@ class ElementSource
      * @ORM\Column(type="text")
      */
     private $xml;
+
+    /**
+     * @var Elementtype
+     * @ORM\Column(type="object", nullable=true)
+     */
+    private $elementtype;
 
     /**
      * @var \DateTime
@@ -176,5 +183,25 @@ class ElementSource
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * @param Elementtype $elementtype
+     *
+     * @return $this
+     */
+    public function setElementtype(Elementtype $elementtype)
+    {
+        $this->elementtype = $elementtype;
+
+        return $this;
+    }
+
+    /**
+     * @return Elementtype
+     */
+    public function getElementtype()
+    {
+        return $this->elementtype;
     }
 }

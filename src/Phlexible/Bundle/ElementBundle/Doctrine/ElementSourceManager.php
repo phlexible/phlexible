@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Doctrine;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
@@ -86,13 +87,36 @@ class ElementSourceManager implements ElementSourceManagerInterface
     }
 
     /**
+     * @var ArrayCollection|ElementSource[]
+     */
+    private $elementSources;
+
+    /**
+     * @return ArrayCollection|ElementSource[]
+     */
+    private function getAll()
+    {
+        if ($this->elementSources === null) {
+            $elementSources = array();
+            foreach ($this->getElementSourceRepository()->findAll() as $elementSource) {
+                $elementSources[$elementSource->getElementtypeId()] = $elementSource;
+            }
+            $this->elementSources = new ArrayCollection($elementSources);
+        }
+
+        return $this->elementSources;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function findElementSource($elementtypeId)
     {
+        //return $this->getAll()->get($elementtypeId);
+        
         return $this->getElementSourceRepository()->findOneBy(
-            ['elementtypeId' => $elementtypeId],
-            ['elementtypeRevision' => 'DESC']
+            ['elementtypeId' => $elementtypeId]
+            //['elementtypeRevision' => 'DESC']
         );
     }
 
@@ -101,6 +125,10 @@ class ElementSourceManager implements ElementSourceManagerInterface
      */
     public function findByType($type)
     {
+        //return $this->getAll()->filter(function($elementSource) use ($type) {
+        //    return $elementSource->getType() === $type;
+        //});
+        
         return $this->getElementSourceRepository()->findBy(['type' => $type]);
     }
 
@@ -115,7 +143,7 @@ class ElementSourceManager implements ElementSourceManagerInterface
             return null;
         }
 
-        return $this->parser->parseString($elementSource->getXml());
+        return $this->findElementtypeByElementSource($elementSource);
     }
 
     /**
@@ -136,7 +164,16 @@ class ElementSourceManager implements ElementSourceManagerInterface
      */
     public function findElementtypeByElementSource(ElementSource $elementSource)
     {
-        return $this->parser->parseString($elementSource->getXml());
+        $elementtype = $elementSource->getElementtype();
+
+        if (!$elementtype) {
+            $elementtype = $this->parser->parseString($elementSource->getXml());
+
+            $elementSource->setElementtype($elementtype);
+            $this->entityManager->flush($elementtype);
+        }
+
+        return $elementtype;
     }
 
     /**
@@ -157,11 +194,7 @@ class ElementSourceManager implements ElementSourceManagerInterface
      */
     public function findByElementtype(Elementtype $elementtype)
     {
-        return $this->getElementSourceRepository()->findBy(
-            [
-                'elementtypeId' => $elementtype->getId(),
-            ]
-        );
+        return $this->findElementSource($elementtype->getId());
     }
 
     /**

@@ -55,6 +55,8 @@ class StateManager implements StateManagerInterface
      */
     private $teaserOnlineRepository;
 
+    private $cache = array();
+
     /**
      * @param EntityManager                  $entityManager
      * @param ElementHistoryManagerInterface $historyManager
@@ -93,7 +95,13 @@ class StateManager implements StateManagerInterface
      */
     public function findByTeaser(Teaser $teaser)
     {
-        return $this->getTeaserOnlineRepository()->findBy(['teaser' => $teaser->getId()]);
+        $id = $teaser->getId();
+
+        if (!isset($this->cache[$id])) {
+            $this->cache[$id] = $this->getTeaserOnlineRepository()->findBy(['teaser' => $teaser->getId()]);
+        }
+
+        return $this->cache[$id];
     }
 
     /**
@@ -101,7 +109,13 @@ class StateManager implements StateManagerInterface
      */
     public function findOneByTeaserAndLanguage(Teaser $teaser, $language)
     {
-        return $this->getTeaserOnlineRepository()->findOneBy(['teaser' => $teaser->getId(), 'language' => $language]);
+        $id = $teaser->getId() . '_' . $language;
+
+        if (!isset($this->cache[$id])) {
+            $this->cache[$id] = $this->getTeaserOnlineRepository()->findOneBy(['teaser' => $teaser->getId(), 'language' => $language]);
+        }
+
+        return $this->cache[$id];
     }
 
     /**
@@ -195,6 +209,8 @@ class StateManager implements StateManagerInterface
         $this->entityManager->persist($teaserOnline);
         $this->entityManager->flush($teaserOnline);
 
+        $this->cache = array();
+
         return $teaserOnline;
     }
 
@@ -208,6 +224,8 @@ class StateManager implements StateManagerInterface
         if ($teaserOnline) {
             $this->entityManager->remove($teaserOnline);
             $this->entityManager->flush();
+
+            $this->cache = array();
         }
     }
 }

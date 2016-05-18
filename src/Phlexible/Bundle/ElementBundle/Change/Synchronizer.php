@@ -95,6 +95,7 @@ class Synchronizer
             ->setElementtypeRevision($elementtype->getRevision())
             ->setType($elementtype->getType())
             ->setXml($this->xmlDumper->dump($elementtype))
+            ->setElementtype($elementtype)
             ->setImportedAt(new \DateTime());
 
         $this->elementSourceManager->updateElementSource($elementSource);

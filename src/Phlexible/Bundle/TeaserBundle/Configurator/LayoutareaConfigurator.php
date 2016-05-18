@@ -85,7 +85,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
         $elementtypeId = $renderConfiguration->get('contentElement')->getElementtypeId();
         $elementtype = $this->elementSourceManager->findElementtype($elementtypeId);
 
-        $layouts = [];
+        //$layouts = [];
         $layoutareas = [];
         foreach ($this->elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
             if (in_array($elementtype, $this->elementService->findAllowedParents($layoutarea))) {
