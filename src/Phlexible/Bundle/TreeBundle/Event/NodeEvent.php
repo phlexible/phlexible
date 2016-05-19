@@ -19,12 +19,12 @@ use Symfony\Component\EventDispatcher\Event;
 class NodeEvent extends Event
 {
     /**
-     * @var \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
+     * @var TreeNodeInterface
      */
     private $node;
 
     /**
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
+     * @param TreeNodeInterface $node
      */
     public function __construct(TreeNodeInterface $node)
     {

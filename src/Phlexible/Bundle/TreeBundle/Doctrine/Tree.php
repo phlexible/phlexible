@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
+use Phlexible\Bundle\TreeBundle\Event\DeleteNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\MoveNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
@@ -786,7 +787,9 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
             $this->doDelete($childNode, $userId, $comment);
         }
 
-        $event = new NodeEvent($node);
+        $nodeId = $node->getId();
+
+        $event = new DeleteNodeEvent($node, $nodeId, $userId);
         if ($this->dispatcher->dispatch(TreeEvents::BEFORE_DELETE_NODE, $event)->isPropagationStopped()) {
             return;
         }
@@ -794,7 +797,7 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
         $this->entityManager->remove($node);
         $this->entityManager->flush();
 
-        $event = new NodeEvent($node);
+        $event = new DeleteNodeEvent($node, $nodeId, $userId);
         $this->dispatcher->dispatch(TreeEvents::DELETE_NODE, $event);
 
         // history

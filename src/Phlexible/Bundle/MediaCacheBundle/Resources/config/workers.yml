@@ -18,7 +18,7 @@ services:
             - @logger
             - %phlexible_media_cache.temp_dir%
         tags:
-            - {name: phlexible_media_cache.worker}
+            - {name: phlexible_media_cache.worker, priority: 100}
             - {name: monolog.logger, channel:media_cache}
 
     phlexible_media_cache.worker.image:
@@ -34,7 +34,7 @@ services:
             - @logger
             - %phlexible_media_cache.temp_dir%
         tags:
-            - {name: phlexible_media_cache.worker}
+            - {name: phlexible_media_cache.worker, priority: 100}
             - {name: monolog.logger, channel:media_cache}
 
     phlexible_media_cache.worker.video:
@@ -51,5 +51,16 @@ services:
             - @logger
             - %phlexible_media_cache.temp_dir%
         tags:
-            - {name: phlexible_media_cache.worker}
+            - {name: phlexible_media_cache.worker, priority: 100}
+            - {name: monolog.logger, channel:media_cache}
+
+    phlexible_media_cache.worker.null:
+        class: Phlexible\Component\MediaCache\Worker\NullWorker
+        public: false
+        arguments:
+            - @phlexible_media_cache.cache_manager
+            - @phlexible_media_cache.id_strategy.default
+            - @logger
+        tags:
+            - {name: phlexible_media_cache.worker, priority: -900}
             - {name: monolog.logger, channel:media_cache}

@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Event\DeleteTeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Event\PublishTeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Event\SetTeaserOfflineEvent;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
@@ -417,7 +418,9 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function deleteTeaser(Teaser $teaser, $userId)
     {
-        $event = new TeaserEvent($teaser);
+        $teaserId = $teaser->getId();
+
+        $event = new DeleteTeaserEvent($teaser, $teaserId, $userId);
         if ($this->dispatcher->dispatch(TeaserEvents::BEFORE_DELETE_TEASER, $event)->isPropagationStopped()) {
             return;
         }
@@ -435,7 +438,7 @@ class TeaserManager implements TeaserManagerInterface
             );
         }
 
-        $event = new TeaserEvent($teaser);
+        $event = new DeleteTeaserEvent($teaser, $teaserId, $userId);
         $this-> dispatcher->dispatch(TeaserEvents::DELETE_TEASER, $event);
     }
 

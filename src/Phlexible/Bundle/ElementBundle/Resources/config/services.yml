@@ -152,6 +152,20 @@ services:
             - {name: kernel.event_listener, event: phlexible_user.before_delete_user, method: onBeforeDeleteUser}
             - {name: kernel.event_listener, event: security.logout, method: onLogout}
 
+    phlexible_element.listener.teaser:
+        class: Phlexible\Bundle\ElementBundle\EventListener\TeaserListener
+        arguments:
+            - @phlexible_element.element_service
+            - @phlexible_teaser.teaser_manager
+        tags:
+            - {name: kernel.event_subscriber}
+
+    phlexible_element.listener.tree:
+        class: Phlexible\Bundle\ElementBundle\EventListener\TreeListener
+        arguments: [@phlexible_element.element_service]
+        tags:
+            - {name: kernel.event_subscriber}
+
     # portlets
     #phlexible_element.portlet.latest:
     #    class: Phlexible\Bundle\ElementBundle\Portlet\LatestElementsPortlet

@@ -82,7 +82,6 @@ class Checker
             if ($needImport) {
                 $referenceElementtypeIds[] = $elementtype->getId();
             }
-            //$outdatedElementSources = $this->elementService->findOutdatedElementSources($elementtype);
             $changes[] = new Change($elementtype, $needImport, $reason, $outdatedElementSources);
         }
 
@@ -116,7 +115,6 @@ class Checker
                     $reason = 'Reference outdated';
                 }
             }
-            //$outdatedElementSources = $this->elementService->findOutdatedElementSources($elementtype);
             $changes[] = new Change($elementtype, $needImport, $reason, $outdatedElementSources);
         }
 

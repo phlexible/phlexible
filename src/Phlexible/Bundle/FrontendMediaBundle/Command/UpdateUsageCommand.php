@@ -37,21 +37,32 @@ class UpdateUsageCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $usageUpdate = $this->getContainer()->get('phlexible_frontend_media.usage_updater');
+        $usageUpdater = $this->getContainer()->get('phlexible_frontend_media.usage_updater');
         $elementManager = $this->getContainer()->get('phlexible_element.element_manager');
 
         $eid = $input->getArgument('eid');
         if ($eid) {
             $element = $elementManager->find($eid);
+            if (!$element) {
+                $output->write('Removing usage of Element '.$eid.' ... ');
+                try {
+                    $usageUpdater->removeUsage($eid);
+                    $output->writeln('<info>done</info>');
+                } catch (\Exception $e) {
+                    $output->writeln('<error>'.$e->getMessage().'</error>');
+                }
+                return 0;
+            }
             $output->write('Updating Element '.$element->getEid().' ... ');
             try {
-                $usageUpdate->updateUsage($element);
+                $usageUpdater->updateUsage($element);
                 $output->writeln('<info>done</info>');
             } catch (\Exception $e) {
                 $output->writeln('<error>'.$e->getMessage().'</error>');
             }
 
         } else {
+            $usageUpdater->removeObsolete();
             $offset = 0;
             $limit = 100;
             $elements = $elementManager->findBy(array(), null, $limit, $offset);
@@ -59,7 +70,7 @@ class UpdateUsageCommand extends ContainerAwareCommand
                 foreach ($elements as $element) {
                     $output->write('Updating Element '.$element->getEid().' ... ');
                     try {
-                        $usageUpdate->updateUsage($element);
+                        $usageUpdater->updateUsage($element);
                         $output->writeln('<info>done</info>');
                     } catch (\Exception $e) {
                         $output->writeln('<error>'.$e->getMessage().'</error>');

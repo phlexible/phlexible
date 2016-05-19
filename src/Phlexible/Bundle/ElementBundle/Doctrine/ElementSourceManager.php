@@ -113,10 +113,10 @@ class ElementSourceManager implements ElementSourceManagerInterface
     public function findElementSource($elementtypeId)
     {
         //return $this->getAll()->get($elementtypeId);
-        
+
         return $this->getElementSourceRepository()->findOneBy(
-            ['elementtypeId' => $elementtypeId]
-            //['elementtypeRevision' => 'DESC']
+            ['elementtypeId' => $elementtypeId],
+            ['elementtypeRevision' => 'DESC']
         );
     }
 
@@ -128,7 +128,7 @@ class ElementSourceManager implements ElementSourceManagerInterface
         //return $this->getAll()->filter(function($elementSource) use ($type) {
         //    return $elementSource->getType() === $type;
         //});
-        
+
         return $this->getElementSourceRepository()->findBy(['type' => $type]);
     }
 
@@ -194,7 +194,9 @@ class ElementSourceManager implements ElementSourceManagerInterface
      */
     public function findByElementtype(Elementtype $elementtype)
     {
-        return $this->findElementSource($elementtype->getId());
+        return $this->getElementSourceRepository()->findBy(
+            ['elementtypeId' => $elementtype->getId()]
+        );
     }
 
     /**

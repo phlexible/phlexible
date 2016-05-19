@@ -24,10 +24,21 @@ class AddWorkersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $ids = [];
+        $priorityIds = [];
         foreach ($container->findTaggedServiceIds('phlexible_media_cache.worker') as $id => $definition) {
-            $ids[] = new Reference($id);
+            if (!isset($definition[0]['priority'])) {
+                throw new \InvalidArgumentException("Cache Worker priority not set.");
+            }
+            $priority = $definition[0]['priority'];
+            $priorityIds[$priority][] = new Reference($id);
         }
-        $container->findDefinition('phlexible_media_cache.worker.resolver')->replaceArgument(0, $ids);
+        krsort($priorityIds);
+        $sortedIds = array();
+        foreach ($priorityIds as $priority => $ids) {
+            foreach ($ids as $id) {
+                $sortedIds[] = $id;
+            }
+        }
+        $container->findDefinition('phlexible_media_cache.worker.resolver')->replaceArgument(0, $sortedIds);
     }
 }

@@ -9,6 +9,8 @@
 namespace Phlexible\Bundle\FrontendMediaBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementEvents;
+use Phlexible\Bundle\ElementBundle\Event\DeleteElementEvent;
+use Phlexible\Bundle\ElementBundle\Event\ElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
 use Phlexible\Bundle\FrontendMediaBundle\Usage\UsageUpdater;
 use Phlexible\Bundle\QueueBundle\Entity\Job;
@@ -55,6 +57,7 @@ class ElementListener implements EventSubscriberInterface
         return [
             ElementEvents::CREATE_ELEMENT_VERSION => 'onCreateElementVersion',
             ElementEvents::UPDATE_ELEMENT_VERSION => 'onUpdateElementVersion',
+            ElementEvents::DELETE_ELEMENT => 'onDeleteElement',
             ElementEvents::COMMIT_CHANGES => 'onCommitChanges',
         ];
     }
@@ -88,5 +91,13 @@ class ElementListener implements EventSubscriberInterface
             $job = new Job('frontend-media:update-usage', array($event->getElementVersion()->getElement()->getEid()));
             $this->jobManager->updateJob($job);
         }
+    }
+
+    /**
+     * @param DeleteElementEvent $event
+     */
+    public function onDeleteElement(DeleteElementEvent $event)
+    {
+        $this->usageUpdater->removeUsage($event->getEid());
     }
 }

@@ -37,10 +37,23 @@ class UsageUpdater
         $this->folderUsageUpdater = $folderUsageUpdater;
     }
 
+    public function removeObsolete()
+    {
+        $this->fileUsageUpdater->removeObsolete();
+        $this->folderUsageUpdater->removeObsolete();
+    }
+
+    /**
+     * @param int $eid
+     */
+    public function removeUsage($eid)
+    {
+        $this->fileUsageUpdater->removeUsage($eid);
+        $this->folderUsageUpdater->removeUsage($eid);
+    }
+
     /**
      * @param Element $element
-     *
-     * @return array
      */
     public function updateUsage(Element $element)
     {

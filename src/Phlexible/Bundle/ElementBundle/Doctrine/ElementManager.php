@@ -13,6 +13,7 @@ use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementsMessage;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\Repository\ElementRepository;
+use Phlexible\Bundle\ElementBundle\Event\DeleteElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\ElementEvent;
 use Phlexible\Bundle\ElementBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementBundle\Exception\DeleteCancelledException;
@@ -138,7 +139,9 @@ class ElementManager implements ElementManagerInterface
      */
     public function deleteElement(Element $element)
     {
-        $event = new ElementEvent($element);
+        $eid = $element->getEid();
+
+        $event = new DeleteElementEvent($element, $eid);
         if ($this->dispatcher->dispatch(ElementEvents::BEFORE_DELETE_ELEMENT, $event)->isPropagationStopped()) {
             throw new DeleteCancelledException('Delete canceled by listener.');
         }
@@ -146,7 +149,7 @@ class ElementManager implements ElementManagerInterface
         $this->entityManager->remove($element);
         $this->entityManager->flush();
 
-        $event = new ElementEvent($element);
+        $event = new DeleteElementEvent($element, $eid);
         $this->dispatcher->dispatch(ElementEvents::DELETE_ELEMENT, $event);
 
         return $this;

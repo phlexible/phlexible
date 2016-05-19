@@ -61,11 +61,38 @@ class FolderUsageUpdater
         $this->volumeManager = $volumeManager;
     }
 
+    public function removeObsolete()
+    {
+        $fileUsageRepository = $this->entityManager->getRepository('PhlexibleMediaManagerBundle:FolderUsage');
+
+        $qb = $fileUsageRepository->createQueryBuilder('fu');
+        $qb
+            ->delete()
+            ->where($qb->expr()->eq('fu.usageType', $qb->expr()->literal('element')))
+            ->andWhere($qb->expr()->notIn('fu.usageId', 'SELECT e.eid FROM Phlexible\\Bundle\\ElementBundle\\Entity\\Element e'));
+
+        $qb->getQuery()->execute();
+    }
+
+    /**
+     * @param int $eid
+     */
+    public function removeUsage($eid)
+    {
+        $fileUsageRepository = $this->entityManager->getRepository('PhlexibleMediaManagerBundle:FolderUsage');
+
+        $qb = $fileUsageRepository->createQueryBuilder('fu');
+        $qb
+            ->delete()
+            ->where($qb->expr()->eq('fu.usageType', $qb->expr()->literal('element')))
+            ->andWhere($qb->expr()->eq('fu.usageId', $qb->expr()->literal($eid)));
+
+        $qb->getQuery()->execute();
+    }
+
     /**
      * @param Element $element
      * @param bool    $flush
-     *
-     * @return array
      */
     public function updateUsage(Element $element, $flush = true)
     {

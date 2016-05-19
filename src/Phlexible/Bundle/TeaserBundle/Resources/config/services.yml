@@ -18,6 +18,12 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
+    phlexible_teaser.listener.tree:
+        class: Phlexible\Bundle\TeaserBundle\EventListener\TreeListener
+        arguments: [@phlexible_teaser.teaser_manager]
+        tags:
+            - {name: kernel.event_subscriber}
+
     # role providers
     phlexible_teaser.role_provider:
         class: Phlexible\Bundle\TeaserBundle\RoleProvider\TeaserRoleProvider

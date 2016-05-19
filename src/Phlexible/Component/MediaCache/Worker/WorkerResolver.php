@@ -61,6 +61,7 @@ class WorkerResolver
             if ($worker->accept($template, $file, $mediaType)) {
                 return $worker;
             }
+
         }
 
         return null;
