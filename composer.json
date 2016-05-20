@@ -40,7 +40,7 @@
         "php-ffmpeg/extras": "~0.3",
         "igorw/file-serve-bundle": "~1",
         "cocur/slugify": "~0.8",
-        "phpexiftool/phpexiftool": "~0.4",
+        "alchemy/phpexiftool": "~0.5",
         "cogpowered/finediff": "~0.3",
         "nelmio/api-doc-bundle": "~2.5",
         "alchemy/zippy": "^0.3.1"
