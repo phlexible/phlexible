@@ -10,14 +10,17 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
+use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructure as StructureEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ValueEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
+use Phlexible\Bundle\ElementBundle\Event\ElementStructureEvent;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Element structure manager
@@ -47,21 +50,29 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private $linkExtractor;
 
     /**
-     * @param EntityManager                 $entityManager
-     * @param ElementStructureLoader        $elementStructureLoader
-     * @param FieldRegistry                 $fieldRegistry
-     * @param LinkExtractor                 $linkExtractor
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @param EntityManager            $entityManager
+     * @param ElementStructureLoader   $elementStructureLoader
+     * @param FieldRegistry            $fieldRegistry
+     * @param LinkExtractor            $linkExtractor
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         EntityManager $entityManager,
         ElementStructureLoader $elementStructureLoader,
         FieldRegistry $fieldRegistry,
-        LinkExtractor $linkExtractor)
+        LinkExtractor $linkExtractor,
+        EventDispatcherInterface $eventDispatcher)
     {
         $this->entityManager = $entityManager;
         $this->elementStructureLoader = $elementStructureLoader;
         $this->fieldRegistry = $fieldRegistry;
         $this->linkExtractor = $linkExtractor;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -82,9 +93,15 @@ class ElementStructureManager implements ElementStructureManagerInterface
     {
         $conn = $this->entityManager->getConnection();
 
+        $event = new ElementStructureEvent($elementStructure);
+        $this->eventDispatcher->dispatch(ElementEvents::BEFORE_CREATE_ELEMENT_STRUCTURE, $event);
+
         $this->applyStructureSort($elementStructure);
         $this->insertStructure($elementStructure, $conn, true);
         $this->insertLinks($elementStructure);
+
+        $event = new ElementStructureEvent($elementStructure);
+        $this->eventDispatcher->dispatch(ElementEvents::CREATE_ELEMENT_STRUCTURE, $event);
 
         if ($flush) {
             $this->entityManager->flush();
@@ -164,7 +181,7 @@ class ElementStructureManager implements ElementStructureManagerInterface
                 if ($elementStructureValue->getValue()) {
                     $value = $elementStructureValue->getValue();
                     $field = $this->fieldRegistry->getField($elementStructureValue->getType());
-                    $value = trim($field->toRaw($value));
+                    $value = $field->serialize($value);
 
                     $valueEntity = new ValueEntity();
                     $valueEntity

@@ -48,8 +48,10 @@ abstract class AbstractField extends Field
     {
         $type = $this->getDataType();
 
-        if ($type === 'array') {
+        if ($type === 'json') {
             $value = json_decode($value, true);
+        } elseif ($type === 'array') {
+            $value = (array) $value;
         } elseif ($type === 'boolean') {
             $value = (bool) $value;
         } elseif ($type === 'integer') {
@@ -66,10 +68,36 @@ abstract class AbstractField extends Field
      *
      * @return string
      */
-    public function toRaw($value)
+    public function serialize($value)
     {
-        if ($this->getDataType() === 'array') {
+        if ($this->getDataType() === 'json') {
             return json_encode($value);
+        } elseif ($this->getDataType() === 'array') {
+            return json_encode($value);
+        }
+
+        return trim($value);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return mixed
+     */
+    public function unserialize($value)
+    {
+        $type = $this->getDataType();
+
+        if ($type === 'json') {
+            $value = json_decode($value, true);
+        } elseif ($type === 'array') {
+            $value = json_decode($value, true);
+        } elseif ($type === 'boolean') {
+            $value = (bool) $value;
+        } elseif ($type === 'integer') {
+            $value = (int) $value;
+        } elseif ($type === 'float') {
+            $value = (float) $value;
         }
 
         return $value;

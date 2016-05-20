@@ -201,7 +201,7 @@ class ElementStructureLoader
     {
         $field = $this->fieldRegistry->getField($dataRow['type']);
 
-        $value = $field->fromRaw($dataRow['value']);
+        $value = $field->unserialize($dataRow['value']);
 
         return new ElementStructureValue(
             $dataRow['id'],

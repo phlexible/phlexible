@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
+use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil;
 use Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -63,13 +64,13 @@ class DatasourceListener implements EventSubscriberInterface
         $language = $values->getLanguage();
 
         // fetch all data source values used in element online versions
-        $onlineValues = $this->suggestFieldUtil->fetchUsedValues($datasourceId, $language);
+        $onlineValues = $this->suggestFieldUtil->fetchUsedValues($datasource->getValueBags(), $language);
 
         // remove offline values from collection
         $event->markActive($onlineValues);
 
         // fetch all data source values used in element online versions
-        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchUsedValues($datasourceId, $language);
+        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchUsedValues($datasource->getValueBags(), $language);
 
         // remove offline values from collection
         $event->markActive($onlineMetaValues);

@@ -105,9 +105,19 @@ services:
 
     phlexible_element.listener.datasource:
         class: Phlexible\Bundle\ElementBundle\EventListener\DatasourceListener
-        arguments: [@phlexible_element.util.suggest_field, @phlexible_element.util.suggest_meta_field]
+        arguments:
+            - @phlexible_element.util.suggest_field
+            - @phlexible_element.util.suggest_meta_field
         tags:
-            - {name: xkernel.event_subscriber}
+            - {name: kernel.event_subscriber}
+
+    phlexible_element.listener.element_structure:
+        class: Phlexible\Bundle\ElementBundle\EventListener\ElementStructureListener
+        arguments:
+            - @phlexible_data_source.data_source_manager
+            - @phlexible_element.element_service
+        tags:
+            - {name: kernel.event_subscriber}
 
     phlexible_element.listener.get_config:
         class: Phlexible\Bundle\ElementBundle\EventListener\GetConfigListener

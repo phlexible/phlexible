@@ -252,7 +252,7 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect, Ext.form.Com
             this.setupFieldButtons().manageClearBtn();
         }
 
-        this.setupFormInterception();
+        //this.setupFormInterception();
     },
     onStoreLoad: function (store, records, options) {
         //accomodating for bug in Ext 3.0.0 where options.params are empty

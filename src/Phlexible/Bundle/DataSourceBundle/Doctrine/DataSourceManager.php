@@ -59,13 +59,15 @@ class DataSourceManager implements DataSourceManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function updateDataSource(DataSource $dataSource)
+    public function updateDataSource(DataSource $dataSource, $flush = true)
     {
         $this->entityManager->persist($dataSource);
         foreach ($dataSource->getValueBags() as $value) {
             $this->entityManager->persist($value);
         }
-        $this->entityManager->flush();
+        if ($flush) {
+            $this->entityManager->flush($dataSource);
+        }
     }
 
     /**
@@ -74,6 +76,6 @@ class DataSourceManager implements DataSourceManagerInterface
     public function deleteDataSource(DataSource $dataSource)
     {
         $this->entityManager->remove($dataSource);
-        $this->entityManager->flush();
+        $this->entityManager->flush($dataSource);
     }
 }

@@ -36,8 +36,9 @@ interface DataSourceManagerInterface
 
     /**
      * @param DataSource $dataSource
+     * @param bool       $flush
      */
-    public function updateDataSource(DataSource $dataSource);
+    public function updateDataSource(DataSource $dataSource, $flush = true);
 
     /**
      * @param DataSource $dataSource

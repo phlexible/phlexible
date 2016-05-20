@@ -98,14 +98,14 @@ class SelectfieldController extends Controller
 
         foreach ($source->getActiveValuesForLanguage($language) as $key => $value) {
             if (!empty($query)) {
-                if ($filter && !in_array($key, $filter)) {
+                if ($filter && !in_array($value, $filter)) {
                     continue;
-                } elseif (!$filter && mb_stripos($key, $query) === false) {
+                } elseif (!$filter && mb_stripos($value, $query) === false) {
                     continue;
                 }
             }
 
-            $data[] = ['key' => $key, 'value' => $key];
+            $data[] = ['key' => $value, 'value' => $value];
         }
 
         return new JsonResponse(['data' => $data]);

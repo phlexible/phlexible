@@ -601,6 +601,7 @@ class DataSaver
             if (isset($parts[1])) {
                 $repeatableIdentifier = $parts[1];
             }
+            $identifier = rtrim($identifier, '[]');
 
             if (preg_match('/^field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
                 // existing value

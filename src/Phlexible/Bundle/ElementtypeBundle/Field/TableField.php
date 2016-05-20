@@ -28,6 +28,6 @@ class TableField extends AbstractField
      */
     public function getDataType()
     {
-        return 'array';
+        return 'json';
     }
 }

@@ -22,4 +22,12 @@ class SuggestField extends AbstractField
     {
         return 'p-elementtype-field_select-icon';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDataType()
+    {
+        return 'array';
+    }
 }
