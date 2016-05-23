@@ -10,18 +10,12 @@ namespace Phlexible\Component\MediaCache\Worker;
 
 use FFMpeg\FFProbe;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaExtractor\Transmutor;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
-use Phlexible\Component\MediaCache\Storage\StorageManager;
-use Phlexible\Component\MediaTemplate\Applier\VideoTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
-use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
 use Phlexible\Component\MediaType\Model\MediaType;
-use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Null cache worker
@@ -72,15 +66,8 @@ class NullWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
-        $cacheId = $this->cacheIdStrategy->createCacheId($template, $file);
-
-        $cacheItem = $this->cacheManager->find($cacheId);
-        if (!$cacheItem) {
-            return null;
-        }
-
         if ($cacheItem->getCacheStatus() !== CacheItem::STATUS_OK && $cacheItem->getCacheStatus() !== CacheItem::STATUS_DELEGATE) {
             $this->cacheManager->deleteCacheItem($cacheItem);
 

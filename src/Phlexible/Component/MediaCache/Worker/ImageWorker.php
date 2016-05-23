@@ -110,18 +110,18 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         $imageFile = $this->transmutor->transmuteToImage($file);
 
         if ($imageFile !== null && file_exists($imageFile)) {
             // we have a preview image from the asset
-            return $this->work($template, $file, $imageFile);
+            return $this->work($cacheItem, $template, $file, $imageFile);
         } elseif (!file_exists($file->getPhysicalPath())) {
             // file is completely missing
-            return $this->work($template, $file, $file->getPhysicalPath(), true);
+            return $this->work($cacheItem, $template, $file, $file->getPhysicalPath(), true);
         } elseif ($imageFile === null) {
-            return $this->work($template, $file);
+            return $this->work($cacheItem, $template, $file);
         }
 
         return null;
@@ -130,6 +130,7 @@ class ImageWorker extends AbstractWorker
     /**
      * Apply template to filename
      *
+     * @param CacheItem             $cacheItem
      * @param ImageTemplate         $template
      * @param ExtendedFileInterface $file
      * @param string                $inputFilename
@@ -137,7 +138,7 @@ class ImageWorker extends AbstractWorker
      *
      * @return CacheItem
      */
-    private function work(ImageTemplate $template, ExtendedFileInterface $file, $inputFilename = null, $missing = false)
+    private function work(CacheItem $cacheItem, ImageTemplate $template, ExtendedFileInterface $file, $inputFilename = null, $missing = false)
     {
         $cacheFilename = null;
 
@@ -145,22 +146,11 @@ class ImageWorker extends AbstractWorker
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
-        $cacheId = $this->cacheIdStrategy->createCacheId($template, $file);
-        $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $template->getParameter('format');
+        $tempFilename = $this->tempDir . '/' . $cacheItem->getId() . '.' . $template->getParameter('format');
 
         $pathinfo = pathinfo($file->getPhysicalPath());
 
-        $cacheItem = $this->cacheManager->findOneBy([
-            'templateKey' => $template->getKey(),
-            'fileId' => $fileId,
-            'fileVersion' => $fileVersion
-        ]);
-        if (!$cacheItem) {
-            $cacheItem = new CacheItem();
-        }
-
         $cacheItem
-            ->setId($cacheId)
             ->setVolumeId($volume->getId())
             ->setFileId($fileId)
             ->setFileVersion($fileVersion)

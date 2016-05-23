@@ -34,11 +34,10 @@ interface WorkerInterface
     /**
      * Process template and file
      *
+     * @param CacheItem             $cacheItem
      * @param TemplateInterface     $template
      * @param ExtendedFileInterface $file
      * @param MediaType             $mediaType
-     *
-     * @return CacheItem
      */
-    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType);
+    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType);
 }

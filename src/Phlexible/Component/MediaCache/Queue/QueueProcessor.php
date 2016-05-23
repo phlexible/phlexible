@@ -151,7 +151,7 @@ class QueueProcessor
             return null;
         }
 
-        $cacheItem = $worker->process($template, $file, $mediaType);
+        $cacheItem = $worker->process($cacheItem, $template, $file, $mediaType);
 
         if ($callback) {
             if (!$cacheItem) {

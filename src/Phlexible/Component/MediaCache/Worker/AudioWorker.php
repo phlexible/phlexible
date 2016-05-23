@@ -110,36 +110,30 @@ class AudioWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         $audioFile = $this->transmutor->transmuteToAudio($file);
 
-        return $this->work($template, $file, $audioFile);
+        $this->work($cacheItem, $template, $file, $audioFile);
     }
 
     /**
      * Apply template to filename
      *
+     * @param CacheItem             $cacheItem
      * @param AudioTemplate         $template
      * @param ExtendedFileInterface $file
      * @param string                $inputFilename
      *
      * @return CacheItem
      */
-    private function work(AudioTemplate $template, ExtendedFileInterface $file, $inputFilename)
+    private function work(CacheItem $cacheItem, AudioTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
         $volume = $file->getVolume();
         $fileId = $file->getId();
         $fileVersion = $file->getVersion();
 
-        $cacheId = $this->cacheIdStrategy->createCacheId($template, $file);
-        $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $template->getParameter('audio_format');
-
-        $cacheItem = $this->cacheManager->find($cacheId);
-        if (!$cacheItem) {
-            $cacheItem = new CacheItem();
-            $cacheItem->setId($cacheId);
-        }
+        $tempFilename = $this->tempDir . '/' . $cacheItem->getId() . '.' . $template->getParameter('audio_format');
 
         $cacheItem
             ->setVolumeId($volume->getId())

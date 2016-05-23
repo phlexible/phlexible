@@ -149,6 +149,6 @@ class CacheManager implements CacheManagerInterface
     {
         // TODO: remove files
         $this->entityManager->remove($cacheItem);
-        $this->entityManager->flush();
+        $this->entityManager->flush($cacheItem);
     }
 }

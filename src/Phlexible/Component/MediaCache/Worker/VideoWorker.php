@@ -119,36 +119,30 @@ class VideoWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function process(CacheItem $cacheItem, TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         $videoFile = $this->transmutor->transmuteToVideo($file);
 
-        return $this->work($template, $file, $videoFile);
+        return $this->work($cacheItem, $template, $file, $videoFile);
     }
 
     /**
      * Apply template to filename
      *
+     * @param CacheItem             $cacheItem
      * @param VideoTemplate         $template
      * @param ExtendedFileInterface $file
      * @param string                $inputFilename
      *
      * @return CacheItem
      */
-    private function work(VideoTemplate $template, ExtendedFileInterface $file, $inputFilename)
+    private function work(CacheItem $cacheItem, VideoTemplate $template, ExtendedFileInterface $file, $inputFilename)
     {
         $volume      = $file->getVolume();
         $fileId      = $file->getID();
         $fileVersion = $file->getVersion();
 
-        $cacheId      = $this->cacheIdStrategy->createCacheId($template, $file);
-        $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $template->getParameter('video_format', 'flv');
-
-        $cacheItem = $this->cacheManager->find($cacheId);
-        if (!$cacheItem) {
-            $cacheItem = new CacheItem();
-            $cacheItem->setId($cacheId);
-        }
+        $tempFilename = $this->tempDir . '/' . $cacheItem->getId() . '.' . $template->getParameter('video_format', 'flv');
 
         $cacheItem
             ->setVolumeId($volume->getId())
