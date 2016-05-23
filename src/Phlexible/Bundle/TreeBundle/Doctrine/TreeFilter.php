@@ -286,7 +286,7 @@ class TreeFilter implements TreeFilterInterface
             case 'publish_time':
                 $qb
                     ->leftJoin('t', 'tree_online', 'to_sort', 'to_sort.tree_id = t.id AND to_sort.language = ' . $qb->expr()->literal($this->language))
-                    ->orderBy('to_sort.publish_time', $this->sortDir);
+                    ->orderBy('to_sort.published_at', $this->sortDir);
                 break;
 
             case 'custom_date':

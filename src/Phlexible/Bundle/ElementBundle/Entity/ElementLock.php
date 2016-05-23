@@ -40,12 +40,6 @@ class ElementLock
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=2, options={"fixed"=true})
-     */
-    private $language;
-
-    /**
-     * @var string
      * @ORM\Column(name="user_id", type="string", length=36, options={"fixed"=true})
      */
     private $userId;
@@ -104,26 +98,6 @@ class ElementLock
     public function setElement($element)
     {
         $this->element = $element;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->language;
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return $this
-     */
-    public function setLanguage($language)
-    {
-        $this->language = $language;
 
         return $this;
     }

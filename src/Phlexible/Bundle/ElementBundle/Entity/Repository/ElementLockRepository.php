@@ -23,7 +23,7 @@ class ElementLockRepository extends EntityRepository
      * @param Element $element
      * @param string  $userId
      *
-     * @return ElementLock
+     * @return ElementLock[]
      */
     public function findByElementAndUserId(Element $element, $userId)
     {
@@ -34,7 +34,7 @@ class ElementLockRepository extends EntityRepository
      * @param Element $element
      * @param string  $notUserId
      *
-     * @return ElementLock
+     * @return ElementLock[]
      */
     public function findByElementAndNotUserId(Element $element, $notUserId)
     {

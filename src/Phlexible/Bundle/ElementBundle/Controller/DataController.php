@@ -240,7 +240,7 @@ class DataController extends Controller
 
         if ($unlockId !== null) {
             $unlockElement = $elementService->findElement($unlockId);
-            if ($unlockElement && $lockManager->isLockedByUser($unlockElement, $language, $this->getUser()->getId())) {
+            if ($unlockElement && $lockManager->isLockedByUser($unlockElement, $this->getUser()->getId())) {
                 try {
                     $lockManager->unlock($unlockElement, $this->getUser()->getId());
                 } catch (\Exception $e) {
@@ -259,20 +259,13 @@ class DataController extends Controller
 
         $lock = null;
         if ($doLock && !$diff) {
-            if (!$lockManager->isLockedByOtherUser($element, $language, $this->getUser()->getId())) {
-                $lock = $lockManager->lock(
-                    $element,
-                    $this->getUser()->getId(),
-                    $language
-                );
+            if (!$lockManager->isLockedByOtherUser($element, $this->getUser()->getId())) {
+                $lock = $lockManager->lock($element, $this->getUser()->getId());
             }
         }
 
         if (!$lock) {
-            $lock = $lockManager->findMasterLock($element);
-            if (!$lock) {
-                $lock = $lockManager->findSlaveLock($element, $language);
-            }
+            $lock = $lockManager->findLock($element);
         }
 
         $lockInfo = null;
@@ -796,7 +789,7 @@ class DataController extends Controller
         // remove locks
 
         $lockManager = $this->get('phlexible_element.element_lock_manager');
-        $lockManager->unlock($element, $language);
+        $lockManager->unlock($element);
 
         // queue update job
         // TODO: repair

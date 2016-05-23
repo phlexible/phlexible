@@ -23,35 +23,10 @@ interface ElementLockManagerInterface
      * Is element locked by either master or slave?
      *
      * @param Element $element
-     * @param string  $language
      *
      * @return bool
      */
-    public function isLocked(Element $element, $language);
-
-    /**
-     * @param Element $element
-     *
-     * @return bool
-     */
-    public function isMasterLocked(Element $element);
-
-    /**
-     * @param Element $element
-     * @param string  $language
-     *
-     * @return bool
-     */
-    public function isSlaveLocked(Element $element, $language);
-
-    /**
-     * @param Element $element
-     * @param string  $language
-     * @param string  $userId
-     *
-     * @return bool
-     */
-    public function isLockedByUser(Element $element, $language, $userId);
+    public function isLocked(Element $element);
 
     /**
      * @param Element $element
@@ -59,25 +34,7 @@ interface ElementLockManagerInterface
      *
      * @return bool
      */
-    public function isMasterLockedByUser(Element $element, $userId);
-
-    /**
-     * @param Element $element
-     * @param string  $language
-     * @param string  $userId
-     *
-     * @return bool
-     */
-    public function isSlaveLockedByUser(Element $element, $language, $userId);
-
-    /**
-     * @param Element $element
-     * @param string  $language
-     * @param string  $userId
-     *
-     * @return bool
-     */
-    public function isLockedByOtherUser(Element $element, $language, $userId);
+    public function isLockedByUser(Element $element, $userId);
 
     /**
      * @param Element $element
@@ -85,32 +42,21 @@ interface ElementLockManagerInterface
      *
      * @return bool
      */
-    public function isMasterLockedByOtherUser(Element $element, $userId);
-
-    /**
-     * @param Element $element
-     * @param string  $language
-     * @param string  $userId
-     *
-     * @return bool
-     */
-    public function isSlaveLockedByOtherUser(Element $element, $language, $userId);
+    public function isLockedByOtherUser(Element $element, $userId);
 
     /**
      * @param Element $element
      * @param string  $userId
-     * @param string  $language
      * @param string  $type
      *
      * @return ElementLock
      */
-    public function lock(Element $element, $userId, $language = null, $type = ElementLock::TYPE_TEMPORARY);
+    public function lock(Element $element, $userId, $type = ElementLock::TYPE_TEMPORARY);
 
     /**
      * @param Element $element
-     * @param string  $language
      */
-    public function unlock(Element $element, $language = null);
+    public function unlock(Element $element);
 
     /**
      * @param string $id
@@ -118,21 +64,6 @@ interface ElementLockManagerInterface
      * @return ElementLock
      */
     public function find($id);
-
-    /**
-     * @param Element $element
-     *
-     * @return ElementLock|null
-     */
-    public function findMasterLock(Element $element);
-
-    /**
-     * @param Element $element
-     * @param string  $language
-     *
-     * @return ElementLock|null
-     */
-    public function findSlaveLock(Element $element, $language);
 
     /**
      * @return ElementLock[]

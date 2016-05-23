@@ -133,12 +133,12 @@ class LocksController extends Controller
 
         $element = $elementService->findElement($eid);
 
-        if ($lockManager->isLocked($element, $language)) {
+        if ($lockManager->isLocked($element)) {
             return new ResultResponse(false, 'Element already locked.');
         } else {
             try {
                 // try to lock the element
-                $lockManager->lock($element, $this->getUser()->getId(), $language);
+                $lockManager->lock($element, $this->getUser()->getId());
 
                 return new ResultResponse(true, 'Lock aquired.');
             } catch (\Exception $e) {
@@ -165,13 +165,13 @@ class LocksController extends Controller
         $element = $elementService->findElement($unlockId);
         $userId = $this->getUser()->getId();
 
-        if (!$force && !$lockManager->isLockedByUser($element, $language, $userId)) {
+        if (!$force && !$lockManager->isLockedByUser($element, $userId)) {
             return new ResultResponse(false, 'Not locked by you.');
-        } elseif (!$lockManager->isLocked($element, $language)) {
+        } elseif (!$lockManager->isLocked($element)) {
             return new ResultResponse(false, 'Not locked.');
         } else {
             try {
-                $lockManager->unlock($element, $language);
+                $lockManager->unlock($element);
 
                 return new ResultResponse(true, 'Lock removed.');
             } catch (\Exception $e) {
@@ -201,17 +201,7 @@ class LocksController extends Controller
         // get element data object
         $element = $elementService->findElement($eid);
 
-        // get user information for deletion
-        $userId = $this->getUser()->getId();
-
-        if ($element->getMasterLanguage() === $language) {
-            // if master language should be unlocked, all slave languages must be unlocked too
-            $lockManager->unlock($element);
-        } else {
-            // if slave language should be unlocked, only master language must be unlocked too
-            $lockManager->unlock($element, $language);
-            $lockManager->unlock($element);
-        }
+        $lockManager->unlock($element);
 
         return new ResultResponse(true, 'Lock removed.');
     }
