@@ -231,7 +231,7 @@ class LinkController extends Controller
             }
             $data = [];
             foreach ($siterootIds as $siterootId) {
-                Assert::notEmpty('Empty siteroot id given');
+                Assert::notEmpty($siterootId, 'Empty siteroot id given');
                 $siteroot = $siterootManager->find($siterootId);
                 $tree = $treeManager->getBySiteRootId($siteroot->getId());
                 $rootNode = $tree->getRoot();
