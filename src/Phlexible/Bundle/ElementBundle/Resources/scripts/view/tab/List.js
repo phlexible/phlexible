@@ -368,6 +368,9 @@ Phlexible.elements.tab.List = Ext.extend(Ext.Panel, {
                                     fn: function (objThis, oldIndex, newIndex, records) {
                                         if (this.sortMode !== 'free') {
                                             this.changeSort('free', 'asc', true);
+                                        } else {
+                                            var tb = this.getTopToolbar();
+                                            tb.items.items[2].enable();
                                         }
                                     },
                                     scope: this
