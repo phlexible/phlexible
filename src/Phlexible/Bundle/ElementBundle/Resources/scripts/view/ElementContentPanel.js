@@ -216,18 +216,21 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
         this.items.each(function (panel) {
             panel.enable();
         });
+        this.enable();
     },
 
     onIsLocked: function () {
         this.items.each(function (panel) {
             panel.disable();
         });
+        this.disable();
     },
 
     onRemoveLock: function () {
         this.items.each(function (panel) {
             panel.disable();
         });
+        this.disable();
     }
 });
 
