@@ -40,7 +40,8 @@ class TitleFieldMapper implements FieldMapperInterface
             }
             $value = $this->findValue($elementStructure, $dsId, $language);
             if (!$value) {
-                throw new \Exception("Value for dsId '$dsId' not found.");
+                return null;
+                //throw new \Exception("Value for dsId '$dsId' not found.");
             }
             $replace['$' . $field['index']] = $value->getValue();
         }
