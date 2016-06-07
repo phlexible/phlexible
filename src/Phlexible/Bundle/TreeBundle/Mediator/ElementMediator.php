@@ -30,7 +30,8 @@ class ElementMediator implements MediatorInterface
     private $viewableVoter;
 
     /**
-     * @param ElementService $elementService
+     * @param ElementService         $elementService
+     * @param ViewableVoterInterface $viewableVoter
      */
     public function __construct(ElementService $elementService, ViewableVoterInterface $viewableVoter)
     {

@@ -53,7 +53,7 @@ class AccessControlVoter implements VoterInterface
     /**
      * @param AccessManagerInterface $accessManager
      * @param PermissionRegistry     $permissionRegistry
-     * @param bool                   $permissiveOnEmpty
+     * @param bool                   $permissiveOnEmptyAcl
      */
     public function __construct(AccessManagerInterface $accessManager, PermissionRegistry $permissionRegistry, $permissiveOnEmptyAcl)
     {

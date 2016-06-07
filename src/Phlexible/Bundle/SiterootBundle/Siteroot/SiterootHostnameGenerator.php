@@ -32,6 +32,7 @@ class SiterootHostnameGenerator
 
     /**
      * @param Siteroot $siteroot
+     * @param string   $language
      *
      * @return string
      */

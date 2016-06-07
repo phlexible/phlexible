@@ -104,6 +104,7 @@ class ResettingController extends BaseResettingController
      * Reset user password
      *
      * @param Request $request
+     * @param string  $token
      *
      * @return Response
      * @Route("/resetting/reset/{token}", name="fos_user_resetting_reset")

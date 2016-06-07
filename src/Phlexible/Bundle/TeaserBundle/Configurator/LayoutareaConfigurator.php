@@ -55,9 +55,9 @@ class LayoutareaConfigurator implements ConfiguratorInterface
     /**
      * @param ElementService                 $elementService
      * @param ElementSourceManagerInterface  $elementSourceManager
+     * @param DelegatingContentTeaserManager $teaserManager
      * @param EventDispatcherInterface       $dispatcher
      * @param LoggerInterface                $logger
-     * @param DelegatingContentTeaserManager $teaserManager
      */
     public function __construct(
         ElementService $elementService,

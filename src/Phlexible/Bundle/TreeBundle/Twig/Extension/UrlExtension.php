@@ -54,8 +54,9 @@ class UrlExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $name
-     * @param array  $parameters
+     * @param string   $name
+     * @param array    $parameters
+     * @param bool|int $relative
      *
      * @return string
      */
@@ -118,8 +119,9 @@ class UrlExtension extends \Twig_Extension
     }
 
     /**
-     * @param string $name
-     * @param array  $parameters
+     * @param string   $name
+     * @param array    $parameters
+     * @param bool|int $schemeRelative
      *
      * @return string
      */

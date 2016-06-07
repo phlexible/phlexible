@@ -34,6 +34,8 @@ interface SelectFieldProviderInterface
     /**
      * Return associative data for this provider
      *
+     * @param string $siterootId
+     * @param string $interfaceLanguage
      * @param string $language
      *
      * @return array

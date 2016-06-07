@@ -42,6 +42,7 @@ interface MediatorInterface
 
     /**
      * @param TreeNodeInterface $node
+     * @param string            $language
      *
      * @return bool
      */
