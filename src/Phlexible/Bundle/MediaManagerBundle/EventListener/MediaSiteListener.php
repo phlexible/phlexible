@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
+use Phlexible\Bundle\MediaManagerBundle\MetaSet\MetaSetMapper;
 use Phlexible\Component\MediaManager\AttributeReader\AttributeBag;
 use Phlexible\Component\MediaManager\AttributeReader\AttributeReaderInterface;
 use Phlexible\Component\MediaManager\Volume\DeleteFileChecker;
@@ -57,9 +58,9 @@ class MediaSiteListener implements EventSubscriberInterface
     private $deleteFolderChecker;
 
     /**
-     * @var array
+     * @var MetaSetMapper
      */
-    private $metasetMapping;
+    private $metaSetMapper;
 
     /**
      * @param MediaTypeManagerInterface $mediaTypeManager
@@ -67,7 +68,7 @@ class MediaSiteListener implements EventSubscriberInterface
      * @param AttributeReaderInterface  $attributeReader
      * @param DeleteFileChecker         $deleteFileChecker
      * @param DeleteFolderChecker       $deleteFolderChecker
-     * @param array                     $metasetMapping
+     * @param MetaSetMapper             $metaSetMapper
      */
     public function __construct(
         MediaTypeManagerInterface $mediaTypeManager,
@@ -75,14 +76,14 @@ class MediaSiteListener implements EventSubscriberInterface
         AttributeReaderInterface $attributeReader,
         DeleteFileChecker $deleteFileChecker,
         DeleteFolderChecker $deleteFolderChecker,
-        array $metasetMapping)
-    {
+        MetaSetMapper $metaSetMapper
+    ) {
         $this->mediaTypeManager = $mediaTypeManager;
         $this->metaSetManager = $metaSetManager;
         $this->attributeReader = $attributeReader;
         $this->deleteFileChecker = $deleteFileChecker;
         $this->deleteFolderChecker = $deleteFolderChecker;
-        $this->metasetMapping = $metasetMapping;
+        $this->metaSetMapper = $metaSetMapper;
     }
 
 
@@ -141,14 +142,7 @@ class MediaSiteListener implements EventSubscriberInterface
         $file->setMediaCategory($mediaType->getCategory());
         $file->setMediaType($mediaType->getName());
 
-        foreach ($this->metasetMapping as $metasetName => $mapping) {
-            if ($this->matches($mediaType, $mapping)) {
-                $metaSet = $this->metaSetManager->findOneByName($metasetName);
-                if ($metaSet) {
-                    $file->addMetaSet($metaSet->getId());
-                }
-            }
-        }
+        $this->metaSetMapper->map($file, $mediaType);
 
         $attributes = new AttributeBag($file->getAttributes());
 
