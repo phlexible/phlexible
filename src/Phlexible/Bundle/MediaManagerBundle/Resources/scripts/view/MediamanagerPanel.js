@@ -593,37 +593,21 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
     },
 
     createDropper: function (c) {
-        var div = document.createElement('div');
-        div.style.position = 'absolute';
-        div.style.left = '10px';
-        div.style.right = '10px';
-        div.style.bottom = '10px';
-        div.style.height = '30px';
-        div.style.border = '2px dashed lightgrey';
-        div.style.textAlign = 'center';
-        div.style.verticalAlign = 'center';
-        div.style.lineHeight = '30px';
-        div.style.backgroundColor = '#f3f3f3';
-        div.style.color = 'gray';
-        div.style.opacity = 0.8;
-        div.style.padding = '10px';
-        div.id = 'dropper';
-        var text = document.createTextNode('Drop files here for quick upload');
-        div.appendChild(text);
-        this.dropper = c.body.dom.appendChild(div);
+        var div = c.getEl().dom;
 
+        /*
         plupload.addEvent(div, 'dragenter', function (e) {
-            div.style.borderColor = 'lightblue';
         });
         plupload.addEvent(div, 'dragleave', function (e) {
-            div.style.borderColor = 'lightgrey';
+            div.style.backgroundColor = 'lightgrey';
         });
         plupload.addEvent(div, 'drop', function (e) {
-            div.style.borderColor = 'lightgrey';
+            div.style.backgroundColor = 'lightgrey';
         });
         plupload.addEvent(c.body.dom, 'drop', function (e) {
             e.preventDefault();
         });
+        */
 
         return div;
     },
