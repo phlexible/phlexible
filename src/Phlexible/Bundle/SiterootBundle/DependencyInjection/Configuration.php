@@ -30,8 +30,15 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('mappings')
                     ->canBeUnset()
-                    ->useAttributeAsKey('name')
-                    ->prototype('scalar')->end()
+                    ->prototype('array')
+                        ->children()
+                            ->arrayNode('from')
+                                ->beforeNormalization()->ifString()->then(function ($v) { return array($v); })->end()
+                                ->prototype('scalar')->end()
+                            ->end()
+                            ->scalarNode('to')->end()
+                        ->end()
+                    ->end()
                 ->end()
             ->end();
 
