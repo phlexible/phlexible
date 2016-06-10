@@ -61,7 +61,7 @@ class DataSource
 
     /**
      * @var DataSourceValueBag[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="DataSourceValueBag", mappedBy="datasource", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="DataSourceValueBag", mappedBy="datasource", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $valueBags;
 

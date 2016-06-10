@@ -48,14 +48,14 @@ class DatasourceListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DataSourceEvents::GARBAGE_COLLECT => 'onGarbageCollect',
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT => 'onBeforeGarbageCollect',
         ];
     }
 
     /**
      * @param GarbageCollectEvent $event
      */
-    public function onGarbageCollect(GarbageCollectEvent $event)
+    public function onBeforeGarbageCollect(GarbageCollectEvent $event)
     {
         // get id of data source to process
         $values = $event->getDataSourceValueBag();
