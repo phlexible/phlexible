@@ -96,7 +96,8 @@ class GarbageCollector
         $activeValues = $event->getActiveValues();
         $inactiveValues = $event->getInactiveValues();
 
-        //ld('raw active', $activeValues);ld('raw inactive', $inactiveValues);
+        //dump('raw active', $activeValues);
+        //dump('raw inactive', $inactiveValues);
 
         $values = $valueBag->getValues();
         $removeValues = array_diff($values, $activeValues, $inactiveValues);

@@ -9,6 +9,9 @@
 namespace Phlexible\Bundle\ElementBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureIterator;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
@@ -25,10 +28,14 @@ class SuggestFieldUtil
     private $metaSetManager;
 
     /**
-    /**
-     * @var MetaDataManagerInterface
+     * @var ElementService
      */
-    private $metaDataManager;
+    private $elementService;
+
+    /**
+     * @var ElementSourceManagerInterface
+     */
+    private $elementSourceManager;
 
     /**
      * @var string
@@ -36,14 +43,16 @@ class SuggestFieldUtil
     private $separatorChar;
 
     /**
-     * @param MetaSetManagerInterface  $metaSetManager
-     * @param MetaDataManagerInterface $metaDataManager
-     * @param string                   $separatorChar
+     * @param MetaSetManagerInterface       $metaSetManager
+     * @param ElementService                $elementService
+     * @param ElementSourceManagerInterface $elementSourceManager
+     * @param string                        $separatorChar
      */
-    public function __construct(MetaSetManagerInterface $metaSetManager, MetaDataManagerInterface $metaDataManager, $separatorChar)
+    public function __construct(MetaSetManagerInterface $metaSetManager, ElementService $elementService, ElementSourceManagerInterface $elementSourceManager, $separatorChar)
     {
         $this->metaSetManager = $metaSetManager;
-        $this->metaDataManager = $metaDataManager;
+        $this->elementService = $elementService;
+        $this->elementSourceManager = $elementSourceManager;
         $this->separatorChar = $separatorChar;
     }
 
@@ -67,46 +76,62 @@ class SuggestFieldUtil
             }
         }
 
-        $values = array();
-        foreach ($fields as $field) {
-            foreach ($this->metaDataManager->findByMetaSet($field->getMetaSet()) as $metaData) {
-                $value = $metaData->get($field->getId(), $valueBag->getLanguage());
-
-                $values[] = $value;
+        $nodes = array();
+        foreach ($this->elementSourceManager->findAll() as $elementSource) {
+            if ($elementSource->getType() !== 'full' && $elementSource->getType() !== 'structure' && $elementSource->getType() !== 'part') {
+                continue;
             }
-        }
-        
-        // TODO: aus elementen
 
-        $values = $this->splitSuggestValues($values);
+            $elementtype = $this->elementSourceManager->findElementtype($elementSource->getElementtypeId());
 
-        return $values;
-    }
-
-    /**
-     * Split list of suggest values into pieces and remove duplicates.
-     *
-     * @param array $concatenated
-     *
-     * @return array
-     */
-    private function splitSuggestValues(array $concatenated)
-    {
-        $keys = [];
-        foreach ($concatenated as $value) {
-            $splitted = explode($this->separatorChar, $value);
-            foreach ($splitted as $key) {
-                $key = trim($key);
-
-                // skip empty values
-                if (strlen($key)) {
-                    $keys[] = $key;
+            $rii = new \RecursiveIteratorIterator($elementtype->getStructure()->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+            foreach ($rii as $node) {
+                if ($node->getType() === 'suggest') {
+                    if (!empty($node->getConfigurationValue('suggest_source'))) {
+                        $source = $node->getConfigurationValue('suggest_source');
+                        if ($source === $valueBag->getDatasource()->getId()) {
+                            $nodes[] = array($elementtype, $node);
+                        }
+                    }
                 }
             }
         }
 
-        $uniqueKeys = array_unique($keys);
+        $values = array();
 
-        return $uniqueKeys;
+        foreach ($nodes as $nodeRow) {
+            $elementtype = $nodeRow[0];
+            $suggestNode = $nodeRow[1];
+            foreach ($this->elementService->findElementsByElementtype($elementtype) as $element) {
+                foreach ($this->elementService->findElementVersions($element) as $elementVersion) {
+                    $elementStructure = $this->elementService->findElementStructure($elementVersion, $valueBag->getLanguage());
+
+                    foreach ($elementStructure->getValues() as $value) {
+                        if ($value->getDsId() === $suggestNode->getDsId()) {
+                            $values = array_merge($values, $value->getValue());
+                        }
+                    }
+
+                    $rii = new \RecursiveIteratorIterator($elementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+                    foreach ($rii as $structure) {
+                        foreach ($structure->getValues() as $value) {
+                            if ($value->getDsId() === $suggestNode->getDsId()) {
+                                $values = array_merge($values, $value->getValue());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $values = array_unique($values);
+
+        foreach ($values as $index => $value) {
+            if (!trim($value)) {
+                unset($values[$index]);
+            }
+        }
+
+        return $values;
     }
 }

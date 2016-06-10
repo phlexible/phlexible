@@ -19,6 +19,11 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 interface ElementSourceManagerInterface
 {
     /**
+     * @return ElementSource[]
+     */
+    public function findAll();
+
+    /**
      * @param string $elementtypeId
      *
      * @return ElementSource

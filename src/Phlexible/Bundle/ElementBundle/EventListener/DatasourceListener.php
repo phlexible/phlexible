@@ -59,9 +59,9 @@ class DatasourceListener implements EventSubscriberInterface
     {
         // get id of data source to process
         $values = $event->getDataSourceValueBag();
-        $datasource = $values->getDatasource();
-        $datasourceId = $datasource->getId();
-        $language = $values->getLanguage();
+        //$datasource = $values->getDatasource();
+        //$datasourceId = $datasource->getId();
+        //$language = $values->getLanguage();
 
         // fetch all data source values used in element online versions
         $onlineValues = $this->suggestFieldUtil->fetchUsedValues($values);
