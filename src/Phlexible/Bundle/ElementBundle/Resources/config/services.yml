@@ -63,7 +63,10 @@ services:
 
     phlexible_element.util.suggest_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
-        arguments: [%phlexible_elementtype.field.suggest_seperator%]
+        arguments:
+            - @phlexible_meta_set.meta_set_manager
+            - @phlexible_element.element_meta_data_manager
+            - %phlexible_elementtype.field.suggest_seperator%
 
     phlexible_element.util.suggest_meta_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil

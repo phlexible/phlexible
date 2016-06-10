@@ -64,13 +64,13 @@ class DatasourceListener implements EventSubscriberInterface
         $language = $values->getLanguage();
 
         // fetch all data source values used in element online versions
-        $onlineValues = $this->suggestFieldUtil->fetchUsedValues($datasource->getValueBags(), $language);
+        $onlineValues = $this->suggestFieldUtil->fetchUsedValues($values);
 
         // remove offline values from collection
         $event->markActive($onlineValues);
 
         // fetch all data source values used in element online versions
-        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchUsedValues($datasource->getValueBags(), $language);
+        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchUsedValues($values);
 
         // remove offline values from collection
         $event->markActive($onlineMetaValues);

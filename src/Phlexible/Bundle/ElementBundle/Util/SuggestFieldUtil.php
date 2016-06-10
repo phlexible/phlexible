@@ -9,6 +9,8 @@
 namespace Phlexible\Bundle\ElementBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
+use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
  * Utility class for suggest fields.
@@ -18,16 +20,31 @@ use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 class SuggestFieldUtil
 {
     /**
-     * @var string
+     * @var MetaSetManagerInterface
      */
-    private $seperatorChar;
+    private $metaSetManager;
 
     /**
-     * @param string $seperatorChar
+    /**
+     * @var MetaDataManagerInterface
      */
-    public function __construct($seperatorChar)
+    private $metaDataManager;
+
+    /**
+     * @var string
+     */
+    private $separatorChar;
+
+    /**
+     * @param MetaSetManagerInterface  $metaSetManager
+     * @param MetaDataManagerInterface $metaDataManager
+     * @param string                   $separatorChar
+     */
+    public function __construct(MetaSetManagerInterface $metaSetManager, MetaDataManagerInterface $metaDataManager, $separatorChar)
     {
-        $this->seperatorChar = $seperatorChar;
+        $this->metaSetManager = $metaSetManager;
+        $this->metaDataManager = $metaDataManager;
+        $this->separatorChar = $separatorChar;
     }
 
     /**
@@ -39,7 +56,6 @@ class SuggestFieldUtil
      */
     public function fetchUsedValues(DataSourceValueBag $valueBag)
     {
-        /*
         $metaSets = $this->metaSetManager->findAll();
 
         $fields = array();
@@ -59,10 +75,8 @@ class SuggestFieldUtil
                 $values[] = $value;
             }
         }
-        */
+        
         // TODO: aus elementen
-
-        $values = [];
 
         $values = $this->splitSuggestValues($values);
 
@@ -80,7 +94,7 @@ class SuggestFieldUtil
     {
         $keys = [];
         foreach ($concatenated as $value) {
-            $splitted = explode($this->seperatorChar, $value);
+            $splitted = explode($this->separatorChar, $value);
             foreach ($splitted as $key) {
                 $key = trim($key);
 
