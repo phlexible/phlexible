@@ -41,23 +41,26 @@ class GarbageCollectCommand extends ContainerAwareCommand
         $pretend = !$input->getOption('run');
         $stats = $gc->run($pretend);
 
-        $cntActivated   = !empty($stats['activated']) ? $stats['activated'] : 0;
-        $cntDeactivated = !empty($stats['deactivated']) ? $stats['deactivated'] : 0;
-        $cntRemoved     = !empty($stats['removed']) ? $stats['removed'] : 0;
+        foreach ($stats as $name => $langs) {
+            foreach ($langs as $lang => $parts) {
+                $cntActivated = !empty($parts['activate']) ? count($parts['activate']) : 0;
+                $cntDeactivated = !empty($parts['inactivate']) ? count($parts['inactivate']) : 0;
+                $cntRemoved = !empty($parts['remove']) ? count($parts['remove']) : 0;
 
-        if ($pretend) {
-            $output->writeln(
-                "Garbage collect run will activate $cntActivated, "
-                . "deactivate $cntDeactivated "
-                . "and remove $cntRemoved values."
-            );
-        } else {
-            $output->writeln(
-                "Garbage collect run has activated $cntActivated, "
-                . "deactivated $cntDeactivated "
-                . "and removed $cntRemoved values."
-            );
-
+                if ($pretend) {
+                    $output->writeln(
+                        "Garbage collect run will activate $cntActivated, "
+                        . "deactivate $cntDeactivated "
+                        . "and remove $cntRemoved values on data source $name."
+                    );
+                } else {
+                    $output->writeln(
+                        "Garbage collect run has activated $cntActivated, "
+                        . "deactivated $cntDeactivated "
+                        . "and removed $cntRemoved values on data source $name."
+                    );
+                }
+            }
         }
 
         return 0;

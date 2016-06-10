@@ -103,7 +103,7 @@ class GarbageCollector
         $removeValues = array_diff($values, $activeValues, $inactiveValues);
         $inactiveValues = array_diff($inactiveValues, $activeValues);
 
-        //ld('remove', $removeValues);ld('active', $activeValues);ld('inactive', $inactiveValues);exit;
+        //dump('remove', $removeValues);dump('active', $activeValues);dump('inactive', $inactiveValues);exit;
 
         // for MODE_REMOVE_UNUSED is no change necessary
         if ($mode === self::MODE_MARK_UNUSED_INACTIVE) {
