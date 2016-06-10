@@ -35,6 +35,11 @@ class OnlineController extends Controller
         }
         $data = $configuration->getVariables();
 
-        return $this->render($data['template'], (array) $data);
+        $template = $data['template'];
+        if ($request->attributes->has('template')) {
+            $template = $request->attributes->get('template');
+        }
+
+        return $this->render($template, (array) $data);
     }
 }
