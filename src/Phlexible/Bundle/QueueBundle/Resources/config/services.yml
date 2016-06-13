@@ -2,13 +2,15 @@ services:
     # event listeners
     phlexible_queue.listener.collect_problems:
         class: Phlexible\Bundle\QueueBundle\EventListener\CollectProblemsListener
-        arguments: [@properties]
+        arguments:
+            - "@properties"
         tags:
             - {name: kernel.event_listener, event: phlexible_problem.collect, method: onCollectProblems}
 
     phlexible_queue.listener.console:
         class: Phlexible\Bundle\QueueBundle\EventListener\ConsoleListener
-        arguments: [@phlexible_queue.job_manager]
+        arguments:
+            - "@phlexible_queue.job_manager"
         tags:
             - {name: kernel.event_subscriber}
 

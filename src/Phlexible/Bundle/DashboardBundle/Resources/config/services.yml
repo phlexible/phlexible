@@ -6,6 +6,7 @@ services:
     # event listeners
     phlexible_dashboard.listener.get_config:
         class: Phlexible\Bundle\DashboardBundle\EventListener\GetConfigListener
-        arguments: [@security.token_storage]
+        arguments:
+            - "@security.token_storage"
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}

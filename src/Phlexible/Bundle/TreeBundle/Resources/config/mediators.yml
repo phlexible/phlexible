@@ -2,12 +2,12 @@ services:
     phlexible_tree.mediator.element:
         class: Phlexible\Bundle\TreeBundle\Mediator\ElementMediator
         arguments:
-            - @phlexible_element.element_service
-            - @phlexible_tree.mediator.element.viewable_voter
+            - "@phlexible_element.element_service"
+            - "@phlexible_tree.mediator.element.viewable_voter"
 
     phlexible_tree.mediator:
         class: Phlexible\Bundle\TreeBundle\Mediator\Mediator
-        arguments: [[@phlexible_tree.mediator.element]]
+        arguments: [["@phlexible_tree.mediator.element"]]
 
     phlexible_tree.mediator.element.viewable_voter.default:
         class: Phlexible\Bundle\TreeBundle\Mediator\ViewableVoter

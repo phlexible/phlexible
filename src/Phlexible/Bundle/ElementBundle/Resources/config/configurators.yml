@@ -3,11 +3,11 @@ services:
         class: Phlexible\Bundle\ElementBundle\Configurator\ElementConfigurator
         public: false
         arguments:
-            - @event_dispatcher
-            - @logger
-            - @phlexible_element.element_service
-            - @phlexible_element.content_loader
-            - @security.authorization_checker
+            - "@event_dispatcher"
+            - "@logger"
+            - "@phlexible_element.element_service"
+            - "@phlexible_element.content_loader"
+            - "@security.authorization_checker"
         tags:
             - {name: phlexible_element_renderer.configurator, priority: 500}
             - {name: monolog.logger, channel: element_renderer}

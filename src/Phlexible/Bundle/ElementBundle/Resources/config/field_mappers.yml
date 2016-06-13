@@ -2,8 +2,8 @@ services:
     phlexible_element.field_mapper:
         class: Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper
         arguments:
-            - @phlexible_element.element_source_manager
-            - %phlexible_cms.languages.available%
+            - "@phlexible_element.element_source_manager"
+            - "%phlexible_cms.languages.available%"
             - []
 
     # field mappers

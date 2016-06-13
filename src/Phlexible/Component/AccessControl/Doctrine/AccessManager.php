@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManager;
 use Phlexible\Component\AccessControl\Domain\AccessControlList;
 use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -126,13 +127,23 @@ class AccessManager implements AccessManagerInterface
 
         $qb = $conn->createQueryBuilder();
         $qb
-            ->select(array('e.security_type', 'e.security_identifier', 'e.mask', 'e.stop_mask', 'e.no_inherit_mask'))
+            ->select(array('oi.type', 'oi.identifier', 'e.security_type', 'e.security_identifier', 'e.mask', 'e.stop_mask', 'e.no_inherit_mask'))
             ->from('acl_object_identity', 'oi')
             ->join('oi', 'acl_entry', 'e', $qb->expr()->eq('oi.id', 'e.object_identity_id'))
             ->where($qb->expr()->eq('oi.type', $qb->expr()->literal($objectIdentity->getType())))
-            ->andWhere($qb->expr()->eq('oi.identifier', $qb->expr()->literal($objectIdentity->getIdentifier())));
+        ;
+
+        if ($objectIdentity instanceof HierarchicalObjectIdentity) {
+            $qb->andWhere($qb->expr()->in('oi.identifier', $objectIdentity->getHierarchicalIdentifiers()));
+        } else {
+            $qb->andWhere($qb->expr()->eq('oi.identifier', $qb->expr()->literal($objectIdentity->getIdentifier())));
+        }
 
         $entries = $qb->execute()->fetchAll();
+
+        if ($objectIdentity instanceof HierarchicalObjectIdentity) {
+            //array_multisort($entries, $objectIdentity->getIdentifier());
+        }
 
         $acl = new AccessControlList($this->permissionRegistry->get($objectIdentity->getType()), $objectIdentity);
 
@@ -140,6 +151,8 @@ class AccessManager implements AccessManagerInterface
             $acl->addEntry(
                 new Entry(
                     $acl,
+                    $entry['type'],
+                    $entry['identifier'],
                     $entry['security_type'],
                     $entry['security_identifier'],
                     $entry['mask'],

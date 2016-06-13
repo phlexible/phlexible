@@ -9,36 +9,40 @@ parameters:
 services:
     phlexible_user.successor_service:
         class: Phlexible\Bundle\UserBundle\Successor\SuccessorService
-        arguments: [@event_dispatcher, @phlexible_message.message_poster]
+        arguments:
+            - "@event_dispatcher"
+            - "@phlexible_message.message_poster"
 
     phlexible_user.mailer:
         class: Phlexible\Bundle\UserBundle\Mailer\Mailer
         arguments:
-            - @twig
-            - @mailer
+            - "@twig"
+            - "@mailer"
             -
-                new_account: {template: %phlexible_user.mailer.new_account.template%, from: %phlexible_user.mailer.new_account.from%}
-                new_password: {template: %phlexible_user.mailer.new_password.template%, from: %phlexible_user.mailer.new_password.from%}
+                new_account: {template: "%phlexible_user.mailer.new_account.template%", from: "%phlexible_user.mailer.new_account.from%"}
+                new_password: {template: "%phlexible_user.mailer.new_password.template%", from: "%phlexible_user.mailer.new_password.from%"}
 
     # event listeners
     phlexible_user.listener.apply_successor:
         class: Phlexible\Bundle\UserBundle\EventListener\ApplySuccessorListener
-        arguments: [@phlexible_user.user_manager, @phlexible_user.group_manager]
+        arguments:
+            - "@phlexible_user.user_manager"
+            - "@phlexible_user.group_manager"
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
     phlexible_user.listener.get_config:
         class: Phlexible\Bundle\UserBundle\EventListener\GetConfigListener
         arguments:
-            - @security.token_storage
-            - @security.role_hierarchy
+            - "@security.token_storage"
+            - "@security.role_hierarchy"
             -
-                language: %phlexible_user.defaults.language%
-                theme: %phlexible_user.defaults.theme%
-                force_password_change: %phlexible_user.defaults.force_password_change%
-                cant_change_password: %phlexible_user.defaults.cant_change_password%
-                password_doesnt_expire: %phlexible_user.defaults.password_doesnt_expire%
-            - %phlexible_user.password.min_length%
+                language: "%phlexible_user.defaults.language%"
+                theme: "%phlexible_user.defaults.theme%"
+                force_password_change: "%phlexible_user.defaults.force_password_change%"
+                cant_change_password: "%phlexible_user.defaults.cant_change_password%"
+                password_doesnt_expire: "%phlexible_user.defaults.password_doesnt_expire%"
+            - "%phlexible_user.password.min_length%"
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
 
@@ -46,7 +50,9 @@ services:
     phlexible_user.portlet.online:
         class: Phlexible\Bundle\UserBundle\Portlet\OnlinePortlet
         public: false
-        arguments: [@translator, @phlexible_user.user_manager]
+        arguments:
+            - "@translator"
+            - "@phlexible_user.user_manager"
         tags:
             - {name: phlexible_dashboard.portlet}
 
@@ -61,6 +67,7 @@ services:
     phlexible_user.search.user:
         class: Phlexible\Bundle\UserBundle\Search\UserSearch
         public: false
-        arguments: [@phlexible_user.user_manager]
+        arguments:
+            - "@phlexible_user.user_manager"
         tags:
             - {name: phlexible_search.provider}

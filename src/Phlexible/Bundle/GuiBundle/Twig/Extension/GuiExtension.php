@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\GuiBundle\Twig\Extension;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class GuiExtension extends \Twig_Extension
+class GuiExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
     /**
      * @var string

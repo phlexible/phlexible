@@ -1,8 +1,9 @@
 services:
     phlexible_teaser.teaser_mediator.element:
         class: Phlexible\Bundle\TeaserBundle\Mediator\ElementMediator
-        arguments: [@phlexible_element.element_service]
+        arguments:
+            - "@phlexible_element.element_service"
 
     phlexible_teaser.teaser_mediator:
         class: Phlexible\Bundle\TeaserBundle\Mediator\Mediator
-        arguments: [[@phlexible_teaser.teaser_mediator.element]]
+        arguments: [["@phlexible_teaser.teaser_mediator.element"]]

@@ -9,8 +9,10 @@
 namespace Phlexible\Component\AccessControl\Domain;
 
 use FOS\UserBundle\Model\UserInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
+use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -75,6 +77,54 @@ class AccessControlList implements \Countable
     public function getEntries()
     {
         return $this->entries;
+    }
+
+    public function getEffectiveEntries()
+    {
+        if ($this->objectIdentity instanceof HierarchicalObjectIdentity) {
+            $map = array();
+            foreach ($this->objectIdentity->getHierarchicalIdentifiers() as $identifier) {
+                foreach ($this->entries as $entry) {
+                    if ($entry->getObjectIdentifier() == $identifier) {
+                        $map[$entry->getSecurityType()][$entry->getSecurityIdentifier()][$entry->getObjectIdentifier()] = $entry;
+                    }
+                }
+            }
+
+            $resolver = new HierarchyMaskResolver();
+
+            $effectiveEntries = array();
+            foreach ($map as $securityType => $securityIdentifiers) {
+                foreach ($securityIdentifiers as $securityIdentifier => $entries) {
+                    $mask = $resolver->resolve($entries, $this->objectIdentity->getIdentifier());
+                    if ($mask) {
+                        $effectiveEntries[] = new Entry(
+                            $this,
+                            $this->objectIdentity->getType(),
+                            $this->objectIdentity->getIdentifier(),
+                            $securityType,
+                            $securityIdentifier,
+                            $mask,
+                            0,
+                            0
+                        );
+                    }
+                }
+            }
+
+            return $effectiveEntries;
+        }
+
+        return $this->entries;
+    }
+
+    public function getInheritedEntries()
+    {
+        if ($this->objectIdentity instanceof HierarchicalObjectIdentity) {
+
+        }
+
+        return array();
     }
 
     /**

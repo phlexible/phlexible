@@ -11,28 +11,33 @@ services:
 
     phlexible_message.message_poster:
         class: Phlexible\Bundle\MessageBundle\Message\MessagePoster
-        arguments: [@event_dispatcher]
+        arguments:
+            - "@event_dispatcher"
 
     phlexible_message.digest:
         class: Phlexible\Bundle\MessageBundle\Digest\Digest
         arguments:
-            - @phlexible_message.subscription_manager
-            - @phlexible_message.filter_manager
-            - @phlexible_message.message_manager
-            - @phlexible_message.message_poster
-            - @phlexible_user.user_manager
-            - @phlexible_message.mailer
+            - "@phlexible_message.subscription_manager"
+            - "@phlexible_message.filter_manager"
+            - "@phlexible_message.message_manager"
+            - "@phlexible_message.message_poster"
+            - "@phlexible_user.user_manager"
+            - "@phlexible_message.mailer"
 
     phlexible_message.mailer:
         class: Phlexible\Bundle\MessageBundle\Mailer\Mailer
         arguments:
-            - @twig
-            - @mailer
-            - @logger
-            - %phlexible_gui.project.title%
+            - "@twig"
+            - "@mailer"
+            - "@logger"
+            - "%phlexible_gui.project.title%"
             -
-                digest: {from: %phlexible_message.mailer.digest.from%, template: %phlexible_message.mailer.digest.template%}
-                from: {from: %phlexible_message.mailer.message.from%, template: %phlexible_message.mailer.message.template%}
+                digest:
+                    from: "%phlexible_message.mailer.digest.from%"
+                    template: "%phlexible_message.mailer.digest.template%"
+                from:
+                    from: "%phlexible_message.mailer.message.from%"
+                    template: "%phlexible_message.mailer.message.template%"
         tags:
             - {name: monolog.logger, channel: mailer}
 
@@ -43,30 +48,35 @@ services:
     phlexible_message.handler.log:
         class: Phlexible\Bundle\MessageBundle\Handler\LogHandler
         public: false
-        arguments: [@logger]
+        arguments:
+            - "@logger"
 
     phlexible_message.handler.message_manager:
         class: Phlexible\Bundle\MessageBundle\Handler\BufferHandler
         public: false
-        arguments: [@phlexible_message.handler.message_manager.real]
+        arguments:
+            - "@phlexible_message.handler.message_manager.real"
 
     phlexible_message.handler.message_manager.real:
         class: Phlexible\Bundle\MessageBundle\Handler\MessageManagerHandler
         public: false
-        arguments: [@phlexible_message.message_manager]
+        arguments:
+            - "@phlexible_message.message_manager"
 
     # data collectors
     phlexible_message.data_collector.messages:
         class: Phlexible\Bundle\MessageBundle\DataCollector\MessagesDataCollector
         public: false
-        arguments: [@phlexible_message.handler.debug]
+        arguments:
+            - "@phlexible_message.handler.debug"
         tags:
-            - {name: data_collector, template: @PhlexibleMessage/Collector/messages.html.twig, id: messages, priority: 0}
+            - {name: data_collector, template: "@PhlexibleMessage/Collector/messages.html.twig", id: messages, priority: 0}
 
     # event listeners
     phlexible_message.listener.message:
         class: Phlexible\Bundle\MessageBundle\EventListener\MessageListener
-        arguments: [@phlexible_message.handlers]
+        arguments:
+            - "@phlexible_message.handlers"
         tags:
             - {name: kernel.event_subscriber}
 
@@ -75,10 +85,10 @@ services:
         class: Phlexible\Bundle\MessageBundle\Portlet\MessagesPortlet
         public: false
         arguments:
-            - @translator
-            - @phlexible_message.subscription_manager
-            - @phlexible_message.message_manager
-            - @security.token_storage
+            - "@translator"
+            - "@phlexible_message.subscription_manager"
+            - "@phlexible_message.message_manager"
+            - "@security.token_storage"
         tags:
             - {name: phlexible_dashboard.portlet}
 

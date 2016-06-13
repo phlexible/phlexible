@@ -2,7 +2,11 @@ services:
     phlexible_teaser.configurator.teaser:
         class: Phlexible\Bundle\TeaserBundle\Configurator\TeaserConfigurator
         public: false
-        arguments: [@event_dispatcher, @logger, @phlexible_teaser.teaser_manager, @phlexible_element.element_service]
+        arguments:
+            - "@event_dispatcher"
+            - "@logger"
+            - "@phlexible_teaser.teaser_manager"
+            - "@phlexible_element.element_service"
         tags:
             - {name: phlexible_element_renderer.configurator, priority: 600}
             - {name: monolog.logger, channel: element_renderer}
@@ -11,11 +15,11 @@ services:
         class: Phlexible\Bundle\TeaserBundle\Configurator\LayoutareaConfigurator
         public: false
         arguments:
-            - @phlexible_element.element_service
-            - @phlexible_element.element_source_manager
-            - @phlexible_teaser.content_teaser_manager.delegating
-            - @event_dispatcher
-            - @logger
+            - "@phlexible_element.element_service"
+            - "@phlexible_element.element_source_manager"
+            - "@phlexible_teaser.content_teaser_manager.delegating"
+            - "@event_dispatcher"
+            - "@logger"
         tags:
             - {name: phlexible_element_renderer.configurator, priority: -300}
             - {name: monolog.logger, channel: element_renderer}

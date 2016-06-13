@@ -11,6 +11,6 @@ services:
         class: Phlexible\Bundle\MediaTemplateBundle\Twig\Extension\MediaTemplateExtension
         public: false
         arguments:
-            - @phlexible_media_template.template_manager
+            - "@phlexible_media_template.template_manager"
         tags:
             - {name: twig.extension}

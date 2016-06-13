@@ -1,7 +1,8 @@
 services:
     phlexible_teaser.teaser_hasher:
         class: Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher
-        arguments: [@phlexible_element.element_hasher]
+        arguments:
+            - "@phlexible_element.element_hasher"
 
     phlexible_teaser.layoutarea.manager:
         class: Phlexible\Bundle\TeaserBundle\Layoutarea\LayoutareaManager
@@ -14,13 +15,15 @@ services:
     # event listeners
     phlexible_teaser.listener.apply_successor:
         class: Phlexible\Bundle\TeaserBundle\EventListener\ApplySuccessorListener
-        arguments: [@doctrine.dbal.default_connection]
+        arguments:
+            - "@doctrine.dbal.default_connection"
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
     phlexible_teaser.listener.tree:
         class: Phlexible\Bundle\TeaserBundle\EventListener\TreeListener
-        arguments: [@phlexible_teaser.teaser_manager]
+        arguments:
+            - "@phlexible_teaser.teaser_manager"
         tags:
             - {name: kernel.event_subscriber}
 
@@ -35,8 +38,8 @@ services:
     phlexible_teaser.twig.teaser_extension:
         class: Phlexible\Bundle\TeaserBundle\Twig\Extension\TeaserExtension
         arguments:
-            - @fragment.handler
-            - @router
-            - @request_stack
+            - "@fragment.handler"
+            - "@router"
+            - "@request_stack"
         tags:
             - {name: twig.extension}

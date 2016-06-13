@@ -11,9 +11,9 @@ services:
     phlexible_meta_set.listener.get_config:
         class: Phlexible\Bundle\MetaSetBundle\EventListener\GetConfigListener
         arguments:
-            - @security.token_storage
-            - %phlexible_meta_set.languages.default%
-            - %phlexible_meta_set.languages.available%
+            - "@security.token_storage"
+            - "%phlexible_meta_set.languages.default%"
+            - "%phlexible_meta_set.languages.available%"
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
 

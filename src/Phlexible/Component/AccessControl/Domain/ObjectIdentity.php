@@ -15,11 +15,6 @@ use Symfony\Component\Security\Core\Util\ClassUtils;
 class ObjectIdentity implements ObjectIdentityInterface
 {
     /**
-     * @var int
-     */
-    private $id;
-
-    /**
      * @var string
      */
     private $identifier;
@@ -76,14 +71,6 @@ class ObjectIdentity implements ObjectIdentityInterface
         }
 
         throw new InvalidDomainObjectException('$domainObject must either implement the DomainObjectInterface, or have a method named "getId".');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

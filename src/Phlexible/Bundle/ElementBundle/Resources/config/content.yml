@@ -1,27 +1,35 @@
 services:
     phlexible_element.content_dumper.xml:
         class: Phlexible\Bundle\ElementBundle\ContentElement\Dumper\XmlDumper
-        arguments: [%phlexible_element.content.cache_dir%]
+        arguments:
+            - "%phlexible_element.content.cache_dir%"
 
     phlexible_element.content_loader:
         class: Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader
         arguments:
-            - @event_dispatcher
-            - @logger
-            - @phlexible_element.content_loader.delegating
+            - "@event_dispatcher"
+            - "@logger"
+            - "@phlexible_element.content_loader.delegating"
 
     phlexible_element.content_loader.chain:
         class: Phlexible\Bundle\ElementBundle\ContentElement\Loader\ChainLoader
-        arguments: [[@phlexible_element.content_loader.xml, @phlexible_element.content_loader.dumping]]
+        arguments:
+            -
+                - "@phlexible_element.content_loader.xml"
+                - "@phlexible_element.content_loader.dumping"
 
     phlexible_element.content_loader.dumping:
         class: Phlexible\Bundle\ElementBundle\ContentElement\Loader\DumpingLoader
-        arguments: [@phlexible_element.content_loader.delegating, @phlexible_element.content_dumper.xml]
+        arguments:
+            - "@phlexible_element.content_loader.delegating"
+            - "@phlexible_element.content_dumper.xml"
 
     phlexible_element.content_loader.delegating:
         class: Phlexible\Bundle\ElementBundle\ContentElement\Loader\DelegatingLoader
-        arguments: [@phlexible_element.element_service]
+        arguments:
+            - "@phlexible_element.element_service"
 
     phlexible_element.content_loader.xml:
         class: Phlexible\Bundle\ElementBundle\ContentElement\Loader\XmlLoader
-        arguments: [%phlexible_element.content.cache_dir%]
+        arguments:
+            - "%phlexible_element.content.cache_dir%"

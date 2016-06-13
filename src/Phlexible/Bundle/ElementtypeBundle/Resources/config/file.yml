@@ -1,20 +1,23 @@
 services:
     phlexible_elementtype.file.elementtype_manager:
         class: Phlexible\Bundle\ElementtypeBundle\File\ElementtypeManager
-        arguments:
-            - @phlexible_elementtype.file.loader.xml
-            - @phlexible_elementtype.file.writer.xml
-            - @validator
-            - @event_dispatcher
         public: false
+        arguments:
+            - "@phlexible_elementtype.file.loader.xml"
+            - "@phlexible_elementtype.file.writer.xml"
+            - "@validator"
+            - "@event_dispatcher"
 
     phlexible_elementtype.file.loader.xml:
-      class: Phlexible\Bundle\ElementtypeBundle\File\Loader\XmlLoader
-      arguments: [@pattern_locator]
+        class: Phlexible\Bundle\ElementtypeBundle\File\Loader\XmlLoader
+        arguments:
+            - "@pattern_locator"
 
     phlexible_elementtype.file.writer.xml:
-      class: Phlexible\Bundle\ElementtypeBundle\File\Writer\XmlWriter
-      arguments: [@phlexible_elementtype.file.dumper.xml, "%kernel.root_dir%/Resources/elementtypes"]
+        class: Phlexible\Bundle\ElementtypeBundle\File\Writer\XmlWriter
+        arguments:
+            - "@phlexible_elementtype.file.dumper.xml"
+            - "%kernel.root_dir%/Resources/elementtypes"
 
     phlexible_elementtype.file.dumper.xml:
       class: Phlexible\Bundle\ElementtypeBundle\File\Dumper\XmlDumper

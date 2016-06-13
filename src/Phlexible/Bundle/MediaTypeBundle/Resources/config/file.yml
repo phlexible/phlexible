@@ -10,14 +10,16 @@ services:
         class: Phlexible\Component\MediaType\File\PuliLoader
         public: false
         arguments:
-            - @puli.discovery
-            - @phlexible_media_type.loader.delagating
-            - @phlexible_media_type.compiler.php
-            - %phlexible_media_type.file_dir%
-            - %phlexible_media_type.compiler.cache_dir%
-            - %kernel.debug%
+            - "@puli.discovery"
+            - "@phlexible_media_type.loader.delagating"
+            - "@phlexible_media_type.compiler.php"
+            - "%phlexible_media_type.file_dir%"
+            - "%phlexible_media_type.compiler.cache_dir%"
+            - "%kernel.debug%"
 
     phlexible_media_type.file.media_type_manager:
         class: Phlexible\Component\MediaType\File\MediaTypeManager
         public: false
-        arguments: [@phlexible_media_type.file.puli_loader, @phlexible_media_tool.mime.detector]
+        arguments:
+            - "@phlexible_media_type.file.puli_loader"
+            - "@phlexible_media_tool.mime.detector"

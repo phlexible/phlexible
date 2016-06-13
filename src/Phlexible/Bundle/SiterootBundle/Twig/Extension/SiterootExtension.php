@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class SiterootExtension extends \Twig_Extension
+class SiterootExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
     /**
      * @var SiterootManagerInterface

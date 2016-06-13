@@ -13,6 +13,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 
 /**
  * Tree node
@@ -22,7 +23,7 @@ use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
  * @ORM\Entity
  * @ORM\Table(name="tree")
  */
-class TreeNode implements TreeNodeInterface, DomainObjectInterface
+class TreeNode implements TreeNodeInterface, DomainObjectInterface, HierarchicalDomainObjectInterface
 {
     /**
      * @var TreeInterface
@@ -129,6 +130,14 @@ class TreeNode implements TreeNodeInterface, DomainObjectInterface
     public function getObjectType()
     {
         return get_class($this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHierarchicalObjectIdentifiers()
+    {
+        return $this->getTree()->getIdPath($this);
     }
 
     /**

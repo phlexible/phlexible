@@ -142,14 +142,14 @@ class RightsController extends Controller
         if ($acl) {
             $resolver = $this->get('phlexible_access_control.security_resolver');
 
-            foreach ($acl->getEntries() as $ace) {
+            foreach ($acl->getEffectiveEntries() as $ace) {
                 $identities[] = array(
                     'id'             => $ace->getId(),
                     'objectType'     => $acl->getObjectIdentity()->getType(),
                     'objectId'       => $acl->getObjectIdentity()->getIdentifier(),
-                    'mask'           => $ace->getMask(),
-                    'stopMask'       => $ace->getStopMask(),
-                    'noInheritMask'  => $ace->getNoInheritMask(),
+                    'mask'           => (int) $ace->getMask(),
+                    'stopMask'       => (int) $ace->getStopMask(),
+                    'noInheritMask'  => (int) $ace->getNoInheritMask(),
                     'objectLanguage' => null,
                     'securityType'   => $ace->getSecurityType(),
                     'securityId'     => $ace->getSecurityIdentifier(),

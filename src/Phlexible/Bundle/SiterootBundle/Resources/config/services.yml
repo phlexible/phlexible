@@ -1,24 +1,30 @@
 services:
     phlexible_siteroot.siteroot_saver:
         class: Phlexible\Bundle\SiterootBundle\Controller\Siteroot\SiterootSaver
-        arguments: [@phlexible_siteroot.siteroot_manager]
+        arguments:
+            - "@phlexible_siteroot.siteroot_manager"
 
     phlexible_siteroot.siteroot_request_matcher:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher
-        arguments: [@phlexible_siteroot.siteroot_manager, %phlexible_siteroot.mappings%]
+        arguments:
+            - "@phlexible_siteroot.siteroot_manager"
+            - "%phlexible_siteroot.mappings%"
 
     phlexible_siteroot.siteroot_hostname_generator:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator
-        arguments: [%phlexible_siteroot.mappings%]
+        arguments:
+            - "%phlexible_siteroot.mappings%"
 
     phlexible_siteroot.siteroots_accessor:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootsAccessor
-        arguments: [@phlexible_siteroot.siteroot_manager]
+        arguments:
+            - "@phlexible_siteroot.siteroot_manager"
 
     # event listeners
     phlexible_siteroot.listener.apply_successor:
         class: Phlexible\Bundle\SiterootBundle\EventListener\ApplySuccessorListener
-        arguments: [@phlexible_siteroot.siteroot_manager]
+        arguments:
+            - "@phlexible_siteroot.siteroot_manager"
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
@@ -26,7 +32,8 @@ services:
     phlexible_siteroot.problem.siterootcheck:
         class: Phlexible\Bundle\SiterootBundle\ProblemChecker\SiterootProblemChecker
         public: false
-        arguments: [@phlexible_siteroot.siteroot_manager]
+        arguments:
+            - "@phlexible_siteroot.siteroot_manager"
         tags:
             - {name: phlexible_problem.problem_checker}
 
@@ -42,9 +49,9 @@ services:
         class: Phlexible\Bundle\SiterootBundle\Twig\Extension\SiterootExtension
         public: false
         arguments:
-            - @phlexible_siteroot.siteroot_manager
-            - @phlexible_siteroot.siteroot_request_matcher
-            - @phlexible_siteroot.siteroots_accessor
-            - @request_stack
+            - "@phlexible_siteroot.siteroot_manager"
+            - "@phlexible_siteroot.siteroot_request_matcher"
+            - "@phlexible_siteroot.siteroots_accessor"
+            - "@request_stack"
         tags:
             - {name: twig.extension}

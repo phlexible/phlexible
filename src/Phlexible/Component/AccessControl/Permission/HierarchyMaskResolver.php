@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\AccessControl\Permission;
 
-use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
+use Phlexible\Component\AccessControl\Domain\Entry;
 
 /**
  * Class HierarchyMaskResolver
@@ -18,29 +18,37 @@ use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
 class HierarchyMaskResolver
 {
     /**
-     * @param AccessControlEntry[] $path
+     * @param Entry[] $path
+     * @param string  $currentIdentifier
      *
      * @return int
      */
-    public function resolve(array $path)
+    public function resolve(array $path, $currentIdentifier)
     {
-        $first = true;
-        $mask = 0;
+        if (!count($path)) {
+            return 0;
+        }
+
+        $mask = null;
 
         while (count($path)) {
             $ace = array_shift($path);
+            /* @var $ace Entry */
 
-            $currentMask = $ace->getMask();
-            if (!$first && $ace->getStopMask()) {
+            $currentMask = (int) $ace->getMask();
+            if ($ace->getObjectIdentifier() == $currentIdentifier && $ace->getStopMask()) {
                 // apply stop mask
-                $currentMask = $currentMask ^ $ace->getStopMask();
+                $currentMask = $currentMask ^ (int) $ace->getStopMask();
             }
-            if (count($path) && $ace->getNoInheritMask()) {
+            if ($ace->getObjectIdentifier() != $currentIdentifier && $ace->getNoInheritMask()) {
                 // apply no inherit mask
-                $currentMask = $currentMask ^ $ace->getNoInheritMask();
+                $currentMask = $currentMask ^ (int) $ace->getNoInheritMask();
             }
-            $mask = $currentMask ^ $mask;
-            $first = false;
+            if ($mask === null) {
+                $mask = $currentMask;
+            } else {
+                $mask = $currentMask & $mask;
+            }
         }
 
         return $mask;
