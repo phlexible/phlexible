@@ -8,7 +8,9 @@
 
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
+use Phlexible\Component\AccessControl\Domain\AccessControlList;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
+use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -137,28 +139,7 @@ class RightsController extends Controller
 
         $acl = $accessManager->findAcl($identity);
 
-        $identities = array();
-
-        if ($acl) {
-            $resolver = $this->get('phlexible_access_control.security_resolver');
-
-            foreach ($acl->getEffectiveEntries() as $ace) {
-                $identities[] = array(
-                    'id'             => $ace->getId(),
-                    'objectType'     => $acl->getObjectIdentity()->getType(),
-                    'objectId'       => $acl->getObjectIdentity()->getIdentifier(),
-                    'mask'           => (int) $ace->getMask(),
-                    'stopMask'       => (int) $ace->getStopMask(),
-                    'noInheritMask'  => (int) $ace->getNoInheritMask(),
-                    'objectLanguage' => null,
-                    'securityType'   => $ace->getSecurityType(),
-                    'securityId'     => $ace->getSecurityIdentifier(),
-                    'securityName'   => $resolver->resolveName($ace->getSecurityType(), $ace->getSecurityIdentifier()),
-                );
-            }
-        }
-
-        return new JsonResponse(array('identities' => $identities));
+        return new JsonResponse(array('identities' => $this->createIdentities($acl)));
 
         $rightsData = $contentRightsManager->getRightsData(array('uid', 'gid'), $rightType, $contentType, $path);
 
@@ -206,6 +187,56 @@ class RightsController extends Controller
         }
 
         return new JsonResponse(array('subjects' => $subjects));
+    }
+
+    /**
+     * @param AccessControlList $acl
+     *
+     * @return array
+     */
+    private function createIdentities(AccessControlList $acl)
+    {
+        $securityResolver = $this->get('phlexible_access_control.security_resolver');
+
+        $oi = $acl->getObjectIdentity();
+        if ($oi instanceof HierarchicalObjectIdentity) {
+            $map = array();
+            foreach ($oi->getHierarchicalIdentifiers() as $identifier) {
+                foreach ($acl->getEntries() as $entry) {
+                    if ($entry->getObjectIdentifier() == $identifier) {
+                        $map[$entry->getSecurityType()][$entry->getSecurityIdentifier()][$entry->getObjectIdentifier()] = $entry;
+                    }
+                }
+            }
+
+            $maskResolver = new HierarchyMaskResolver();
+
+            foreach ($map as $securityType => $securityIdentifiers) {
+                foreach ($securityIdentifiers as $securityIdentifier => $entries) {
+                    $resolvedMasks = $maskResolver->resolve($entries, $oi->getIdentifier());
+                    $identities[] = array(
+                        'id'                  => 0,//$ace->getId(),
+                        'objectType'          => $oi->getType(),
+                        'objectId'            => $oi->getIdentifier(),
+                        'effectiveMask'       => $resolvedMasks['effectiveMask'],
+                        'mask'                => $resolvedMasks['mask'],
+                        'stopMask'            => $resolvedMasks['stopMask'],
+                        'noInheritMask'       => $resolvedMasks['noInheritMask'],
+                        'parentMask'          => $resolvedMasks['parentMask'],
+                        'parentStopMask'      => $resolvedMasks['parentStopMask'],
+                        'parentNoInheritMask' => $resolvedMasks['parentNoInheritMask'],
+                        'objectLanguage'      => null,
+                        'securityType'        => $securityType,
+                        'securityId'          => $securityIdentifier,
+                        'securityName'        => $securityResolver->resolveName($securityType, $securityIdentifier),
+                    );
+                }
+            }
+
+            return $identities;
+        }
+
+        return $this->entries;
     }
 
     /**

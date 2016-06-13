@@ -172,11 +172,13 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
                     fields.push({
                         header: Phlexible.inlineIcon(iconCls, {qtip: name}),
-                        dataIndex: 'mask',
+                        dataIndex: 'effectiveMask',
                         permission: permission,
                         width: 40,
-                        renderer: function (v) {
-                            if (bit & v) {
+                        renderer: function (v, md, r) {
+                            if ((bit & r.data.mask) === 0 && bit & r.data.parentMask) {
+                                return Phlexible.inlineIcon('p-accesscontrol-checked_inherit-icon');
+                            } else if (bit & r.data.mask) {
                                 return Phlexible.inlineIcon('p-accesscontrol-checked-icon');
                             } else {
                                 return Phlexible.inlineIcon('p-accesscontrol-unchecked-icon');
@@ -242,22 +244,16 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             width: 70,
             actions: [
                 {
-                    //showIndex: 'setHere',
+                    hideIndex: "values.mask===null",
                     iconCls: 'p-accesscontrol-delete-icon',
                     tooltip: this.strings['delete'],
                     callback: this.deleteAction
                 },
                 {
-                    //showIndex: 'inherited',
+                    hideIndex: "values.mask!==null",
                     iconCls: 'p-accesscontrol-link-icon',
                     tooltip: this.strings.link,
                     callback: this.linkAction
-                },
-                {
-                    //showIndex: 'restore',
-                    iconCls: 'p-accesscontrol-restore-icon',
-                    tooltip: this.strings.restore,
-                    callback: this.restoreAction
                 }
             ]
         });
@@ -430,13 +426,15 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 }
             },
             cellclick: function (grid, rowIndex, colIndex) {
-                if (colIndex < (this.languageEnabled ? 3 : 2) || colIndex == grid.getColumnModel().getColumnCount() - 1) return;
+                if (colIndex < (this.languageEnabled ? 3 : 2) || colIndex == grid.getColumnModel().getColumnCount() - 1) {
+                    return;
+                }
 
                 var record = grid.getStore().getAt(rowIndex);
                 var cm = grid.getColumnModel();
                 var col = cm.getColumnById(cm.getColumnId(colIndex));
                 var permission = col.permission;
-                var mask = record.data.mask;
+                var mask = record.get('effectiveMask');
 
                 if (mask & permission.bit) {
                     mask = mask ^ permission.bit;
@@ -444,7 +442,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                     mask = mask | permission.bit;
                 }
 
-                record.set('mask', mask);
+                record.set('effectiveMask', mask);
                 return;
 
                 var original = record.data.original;
@@ -601,12 +599,17 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 id: null,
                 objectType: this.objectType,
                 objectId: this.objectId,
-                securityType: securityIdentity.get('securityType'),
-                securityId: securityIdentity.get('securityId'),
-                securityName: securityIdentity.get('securityName'),
+                effectiveMask: 0,
                 mask: 0,
                 stopMask: 0,
-                noInheritMask: 0
+                noInheritMask: 0,
+                parentMask: 0,
+                parentStopMask: 0,
+                parentNoInheritMask: 0,
+                objectLanguage: '',
+                securityType: securityIdentity.get('securityType'),
+                securityId: securityIdentity.get('securityId'),
+                securityName: securityIdentity.get('securityName')
             });
 
         this.store.insert(0, entry);

@@ -79,54 +79,6 @@ class AccessControlList implements \Countable
         return $this->entries;
     }
 
-    public function getEffectiveEntries()
-    {
-        if ($this->objectIdentity instanceof HierarchicalObjectIdentity) {
-            $map = array();
-            foreach ($this->objectIdentity->getHierarchicalIdentifiers() as $identifier) {
-                foreach ($this->entries as $entry) {
-                    if ($entry->getObjectIdentifier() == $identifier) {
-                        $map[$entry->getSecurityType()][$entry->getSecurityIdentifier()][$entry->getObjectIdentifier()] = $entry;
-                    }
-                }
-            }
-
-            $resolver = new HierarchyMaskResolver();
-
-            $effectiveEntries = array();
-            foreach ($map as $securityType => $securityIdentifiers) {
-                foreach ($securityIdentifiers as $securityIdentifier => $entries) {
-                    $mask = $resolver->resolve($entries, $this->objectIdentity->getIdentifier());
-                    if ($mask) {
-                        $effectiveEntries[] = new Entry(
-                            $this,
-                            $this->objectIdentity->getType(),
-                            $this->objectIdentity->getIdentifier(),
-                            $securityType,
-                            $securityIdentifier,
-                            $mask,
-                            0,
-                            0
-                        );
-                    }
-                }
-            }
-
-            return $effectiveEntries;
-        }
-
-        return $this->entries;
-    }
-
-    public function getInheritedEntries()
-    {
-        if ($this->objectIdentity instanceof HierarchicalObjectIdentity) {
-
-        }
-
-        return array();
-    }
-
     /**
      * @param Entry $ace
      *
