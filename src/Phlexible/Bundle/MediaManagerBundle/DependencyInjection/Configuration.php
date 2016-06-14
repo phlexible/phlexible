@@ -59,7 +59,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('view')->defaultValue('tile')->end()
-                        ->integerNode('num_files')->defaultValue(10)->end()
+                        ->integerNode('num_files')->defaultValue(50)->end()
                     ->end()
                 ->end()
                 ->arrayNode('upload')
