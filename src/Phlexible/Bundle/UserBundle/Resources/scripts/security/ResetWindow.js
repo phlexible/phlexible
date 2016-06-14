@@ -57,7 +57,7 @@ Phlexible.users.security.ResetWindow = Ext.extend(Ext.Window, {
                         fieldLabel: this.newPasswordText,
                         labelSeparator: '',
                         inputType: 'password',
-                        name: 'fos_user_resetting_form[new][first]',
+                        name: 'fos_user_resetting_form[plainPassword][first]',
                         msgTarget: 'under',
                         //minLength: this.minLength,
                         allowBlank: false
@@ -68,7 +68,7 @@ Phlexible.users.security.ResetWindow = Ext.extend(Ext.Window, {
                         fieldLabel: this.newPasswordConfirmationText,
                         labelSeparator: '',
                         inputType: 'password',
-                        name: 'fos_user_resetting_form[new][second]',
+                        name: 'fos_user_resetting_form[plainPassword][second]',
                         msgTarget: 'under',
                         //minLength: this.minLength,
                         allowBlank: false,
