@@ -22,6 +22,8 @@ class Entry implements EntryInterface
      */
     private $id;
 
+    private $objectIdentityId;
+
     /**
      * @var AccessControlList
      */

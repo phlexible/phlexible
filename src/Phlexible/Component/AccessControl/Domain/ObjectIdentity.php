@@ -15,6 +15,11 @@ use Symfony\Component\Security\Core\Util\ClassUtils;
 class ObjectIdentity implements ObjectIdentityInterface
 {
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var string
      */
     private $identifier;
