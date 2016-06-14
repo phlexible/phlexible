@@ -180,38 +180,15 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                                 return Phlexible.inlineIcon('p-accesscontrol-checked_inherit-icon');
                             } else if (bit & r.data.mask) {
                                 return Phlexible.inlineIcon('p-accesscontrol-checked-icon');
+                            } else if (0) {
+                                return Phlexible.inlineIcon('p-accesscontrol-stopped-icon');
+                            } else if (0) {
+                                return Phlexible.inlineIcon('p-accesscontrol-single_right-icon');
+                            } else if (0) {
+                                return Phlexible.inlineIcon('p-accesscontrol-unchecked_inherit-icon');
                             } else {
                                 return Phlexible.inlineIcon('p-accesscontrol-unchecked-icon');
                             }
-
-                            var s = '';
-                            v[key]['status'] = parseInt(v[key]['status'], 10);
-                            switch (v[key]['status']) {
-                                case 0:
-                                    s = Phlexible.inlineIcon('p-accesscontrol-stopped-icon');
-                                    break;
-
-                                case 1:
-                                    s = Phlexible.inlineIcon('p-accesscontrol-single_right-icon');
-                                    break;
-
-                                case 2:
-                                    s = Phlexible.inlineIcon('p-accesscontrol-checked-icon');
-                                    break;
-
-                                case 3:
-                                    s = Phlexible.inlineIcon('p-accesscontrol-checked_inherit-icon');
-                                    break;
-
-                                case 4:
-                                    s = Phlexible.inlineIcon('p-accesscontrol-unchecked_inherit-icon');
-                                    break;
-
-                                default:
-                                    s = Phlexible.inlineIcon('p-accesscontrol-unchecked-icon');
-                                    break;
-                            }
-                            return s;
                         }
                     });
                 }, this);
@@ -443,8 +420,8 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 }
 
                 record.set('effectiveMask', mask);
-                return;
 
+                /*
                 var original = record.data.original;
                 var above = record.data.above;
                 var status = parseInt(rights[right]['status'], 10);
@@ -500,6 +477,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 record.set('restore', 1);
                 record.set('inherited', !record.get('setHere'));
                 record.endEdit();
+                */
             },
             scope: this
         });
@@ -613,8 +591,8 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             });
 
         this.store.insert(0, entry);
-        return;
 
+        /*
         var key = combo.getValue();
         var r = combo.getStore().getById(key);
         combo.clearValue();
@@ -653,6 +631,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             },
             scope: this
         });
+        */
     },
 
     onSave: function () {
