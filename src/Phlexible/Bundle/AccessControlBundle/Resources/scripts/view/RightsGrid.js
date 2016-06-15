@@ -168,25 +168,37 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 Ext.each(data.permissions, function(permission) {
                     var bit = permission.bit,
                         name = permission.name,
-                        iconCls = this.createIconCls(permission);
+                        iconCls = this.createIconCls(permission),
+                        test = function(test) {
+                            return test !== null && (bit & test) === bit;
+                        };
 
                     fields.push({
                         header: Phlexible.inlineIcon(iconCls, {qtip: name}),
-                        dataIndex: 'effectiveMask',
+                        dataIndex: 'mask',
                         permission: permission,
                         width: 40,
                         renderer: function (v, md, r) {
-                            if ((bit & r.data.mask) === 0 && bit & r.data.parentMask) {
+                            if (test(r.data.mask) && test(r.data.noInheritMask)) {
+                                // set here, stopped below
+                                return Phlexible.inlineIcon('p-accesscontrol-single_right-icon');
+                            } else if (test(r.data.parentMask) && test(r.data.stopMask)) {
+                                // set above, stopped here
+                                return Phlexible.inlineIcon('p-accesscontrol-stopped-icon');
+                            } else if (test(r.data.parentMask) && test(r.data.noInheritMask)) {
+                                // set above, stopped below
+                                return Phlexible.inlineIcon('p-accesscontrol-checked_inherit_stopped-icon');
+                            } else if (!test(r.data.mask) && test(r.data.parentMask)) {
+                                // set above
                                 return Phlexible.inlineIcon('p-accesscontrol-checked_inherit-icon');
-                            } else if (bit & r.data.mask) {
+                            } else if (test(r.data.mask)) {
+                                // set here
                                 return Phlexible.inlineIcon('p-accesscontrol-checked-icon');
                             } else if (0) {
-                                return Phlexible.inlineIcon('p-accesscontrol-stopped-icon');
-                            } else if (0) {
-                                return Phlexible.inlineIcon('p-accesscontrol-single_right-icon');
-                            } else if (0) {
+                                // stopped above
                                 return Phlexible.inlineIcon('p-accesscontrol-unchecked_inherit-icon');
                             } else {
+                                // -
                                 return Phlexible.inlineIcon('p-accesscontrol-unchecked-icon');
                             }
                         }
@@ -202,32 +214,19 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             scope: this
         });
 
-        /*
-         this.expander = new Ext.grid.RowExpander({
-         dataIndex: 'rights',
-         tpl: new Ext.XTemplate(
-         '{[for(var xyz in rights) {}]}',
-         '<tpl for="rights">',
-         '<p>x {#} {.}</p>',
-         '{[Phlexible.console.log(values)]}',
-         '</tpl>'
-         )
-         });
-         */
-
         this.actions = new Ext.ux.grid.RowActions({
             header: this.strings.actions,
             autoWidth: false,
             width: 70,
             actions: [
                 {
-                    hideIndex: "values.mask===null",
+                    hideIndex: "values.parentMask!==null",
                     iconCls: 'p-accesscontrol-delete-icon',
                     tooltip: this.strings['delete'],
                     callback: this.deleteAction
                 },
                 {
-                    hideIndex: "values.mask!==null",
+                    hideIndex: "values.parentMask===null||(values.mask===null&&values.stopMask===null&&values.noInheritMask===null)",
                     iconCls: 'p-accesscontrol-link-icon',
                     tooltip: this.strings.link,
                     callback: this.linkAction
@@ -246,7 +245,6 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         });
 
         this.columns = [
-            //this.expander,
             {
                 header: this.strings.id,
                 dataIndex: 'objectId',
@@ -277,7 +275,6 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         });
 
         this.plugins = [
-            //this.expander,
             this.actions
         ];
 
@@ -372,18 +369,23 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             ' ',
             {
                 xtype: 'tbtext',
-                text: Phlexible.inlineIcon('p-accesscontrol-checked-icon') + ' ' + this.strings.set_here
-            },
-            ' ',
-            {
-                xtype: 'tbtext',
                 text: Phlexible.inlineIcon('p-accesscontrol-checked_inherit-icon') + ' ' + this.strings.set_above
             },
             ' ',
             {
                 xtype: 'tbtext',
-                text: Phlexible.inlineIcon('p-accesscontrol-unchecked_inherit-icon') + ' ' + this.strings.stopped_above
+                text: Phlexible.inlineIcon('p-accesscontrol-checked-icon') + ' ' + this.strings.set_here
             },
+            ' ',
+            {
+                xtype: 'tbtext',
+                text: Phlexible.inlineIcon('p-accesscontrol-checked_inherit_stopped-icon') + ' ' + this.strings.set_above_stopped_below
+            },
+            //' ',
+            //{
+            //    xtype: 'tbtext',
+            //    text: Phlexible.inlineIcon('p-accesscontrol-unchecked_inherit-icon') + ' ' + this.strings.stopped_above
+            //},
             ' ',
             {
                 xtype: 'tbtext',
@@ -392,7 +394,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             ' ',
             {
                 xtype: 'tbtext',
-                text: Phlexible.inlineIcon('p-accesscontrol-single_right-icon') + ' ' + this.strings.stopped_below
+                text: Phlexible.inlineIcon('p-accesscontrol-single_right-icon') + ' ' + this.strings.set_here_stopped_below
             }
         ];
 
@@ -407,77 +409,69 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                     return;
                 }
 
-                var record = grid.getStore().getAt(rowIndex);
-                var cm = grid.getColumnModel();
-                var col = cm.getColumnById(cm.getColumnId(colIndex));
-                var permission = col.permission;
-                var mask = record.get('effectiveMask');
+                var record = grid.getStore().getAt(rowIndex),
+                    cm = grid.getColumnModel(),
+                    col = cm.getColumnById(cm.getColumnId(colIndex)),
+                    permission = col.permission,
+                    bit = permission.bit,
+                    test = function(field) {
+                        var v = record.get(field); //record.isModified(field) ? record.modified[field] : record.get(field);
+                        return v !== null && (bit & v) === bit;
+                    },
+                    set = function(field) {
+                        record.set(field, record.get(field) | bit);
+                        console.info('set', field, record.get(field));
+                    },
+                    unset = function(field) {
+                        record.set(field, record.get(field) & ~bit);
+                        console.info('unset', field, record.get(field));
+                    };
 
-                if (mask & permission.bit) {
-                    mask = mask ^ permission.bit;
+                if (test("parentMask")) {
+                    if (!test("stopMask") && !test("noInheritMask")) {
+                        // set to stop here
+                        set("stopMask");
+                        unset("noInheritMask");
+                    } else  if (test("stopMask") && !test("noInheritMask")) {
+                        // set to no inherit
+                        unset("stopMask");
+                        set("noInheritMask");
+                    } else /*if (!test("mask"))*/ {
+                        // set to set here
+                        unset("stopMask");
+                        unset("noInheritMask");
+                    }
                 } else {
-                    mask = mask | permission.bit;
+                    if (test("mask") && !test("noInheritMask")) {
+                        // set to set here, stopped below
+                        set("mask");
+                        set("noInheritMask");
+                    } else  if (test("mask") && test("noInheritMask")) {
+                        // unset
+                        unset("mask");
+                        unset("noInheritMask");
+                    } else /*if (!test("mask"))*/ {
+                        // set to set here
+                        set("mask");
+                        unset("noInheritMask");
+                    }
                 }
 
-                record.set('effectiveMask', mask);
-
-                /*
-                var original = record.data.original;
-                var above = record.data.above;
-                var status = parseInt(rights[right]['status'], 10);
-                var originalStatus = parseInt(original[right]['status'], 10);
-                var aboveStatus = parseInt(above[right]['status'], 10);
-
-                //Phlexible.console.log('right: ' + right);
-                //Phlexible.console.log('status: ' + status);
-                //Phlexible.console.log('originalStatus: ' + originalStatus);
-                //Phlexible.console.log('aboveStatus: ' + aboveStatus);
-
-                switch (status) {
-                    case 2:
-                    case 3:
-                        status = 1;
-                        break;
-
-                    case 1:
-                        if (aboveStatus === 2 || aboveStatus === 3) {
-                            status = 0;
-                        }
-                        else if (aboveStatus === 4) {
-                            status = 4;
-                        }
-                        else if (originalStatus === 4) {
-                            status = 4;
-                        }
-                        else {
-                            status = -1;
-                        }
-                        break;
-
-                    default:
-                        if (aboveStatus === 2 || aboveStatus === 3) {
-                            status = aboveStatus;
-                        }
-                        else if (originalStatus === 2 || originalStatus === 3) {
-                            status = originalStatus;
-                        }
-                        else {
-                            status = 2;
-                        }
-                        break;
+                if (record.get('mask') === 0) {
+                    record.set('mask', null);
+                }
+                if (record.get('stopMask') === 0) {
+                    record.set('stopMask', null);
+                }
+                if (record.get('noInheritMask') === 0) {
+                    record.set('noInheritMask', null);
                 }
 
-                rights[right]['status'] = status;
-
-                record.beginEdit();
-                //r.set('rights', rights);
-                var dummy = record.data.label;
-                record.set('label', 'xxx');
-                record.set('label', dummy);
-                record.set('restore', 1);
-                record.set('inherited', !record.get('setHere'));
-                record.endEdit();
-                */
+                function dec2bin(dec) {
+                    if (!dec) dec = 0;
+                    return (dec >>> 0).toString(2);
+                }
+                Phlexible.console.info(dec2bin(record.get("mask")), dec2bin(record.get("stopMask")), dec2bin(record.get("noInheritMask")));
             },
             scope: this
         });
@@ -513,62 +507,12 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     },
 
     linkAction: function (grid, record, action, row, col) {
-        var empty = true;
-        for (var i in record.data.above) {
-            if (record.data.above[i].status != -1) {
-                empty = false;
-                break;
-            }
-        }
-
-        if (empty) {
-            grid.store.remove(record);
-        }
-        else {
-            var above = record.get('above');
-            var rights = record.get('rights');
-
-            rights = Phlexible.clone(above);
-
-            record.beginEdit();
-            record.set('rights', false);
-            record.set('rights', rights);
-            record.set('restore', 1);
-            record.set('inherited', 0);
-            var dummy = record.data.label;
-            record.set('label', 'xxx');
-            record.set('label', dummy);
-            record.endEdit();
-            //record.commit();
-        }
-
-        /*
-         grid.deletedSubjects.push({
-         content_type: grid.content_type,
-         content_id: grid.content_id,
-         object_type: record.data.object_type,
-         object_id: record.data.object_id,
-         language: record.data.language
-         });
-         */
-    },
-
-    restoreAction: function (grid, record, action, row, col) {
-        var original = record.get('original');
-        var rights = record.get('rights');
-
-        rights = Phlexible.clone(original);
-
         record.beginEdit();
-        record.set('rights', false);
-        record.set('rights', rights);
-        record.set('restore', 0);
-        record.set('inherited', !record.get('setHere'));
-        var dummy = record.data.label;
-        record.set('label', 'xxx');
-        record.set('label', dummy);
+        record.set('mask', null);
+        record.set('stopMask', null);
+        record.set('noInheritMask', null);
         record.endEdit();
-        record.commit();
+        //record.commit();
     },
 
     onAdd: function (combo) {
@@ -577,13 +521,12 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 id: null,
                 objectType: this.objectType,
                 objectId: this.objectId,
-                effectiveMask: 0,
-                mask: 0,
-                stopMask: 0,
-                noInheritMask: 0,
-                parentMask: 0,
-                parentStopMask: 0,
-                parentNoInheritMask: 0,
+                mask: null,
+                stopMask: null,
+                noInheritMask: null,
+                parentMask: null,
+                parentStopMask: null,
+                parentNoInheritMask: null,
                 objectLanguage: '',
                 securityType: securityIdentity.get('securityType'),
                 securityId: securityIdentity.get('securityId'),
@@ -591,47 +534,6 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             });
 
         this.store.insert(0, entry);
-
-        /*
-        var key = combo.getValue();
-        var r = combo.getStore().getById(key);
-        combo.clearValue();
-        if (!r) {
-            return;
-        }
-        var language = '_all_';
-
-        Ext.Ajax.request({
-            url: this.urls.add,
-            params: {
-                objectType: this.objectType,
-                objectId: this.objectId,
-                securityType: r.data.securityType,
-                securityId: r.data.securityId
-            },
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                var newRecord = new Ext.data.Record({
-                    type: data.type,
-                    objectType: data.objectType,
-                    objectId: data.objectId,
-                    label: data.label,
-                    rights: data.rights,
-                    original: data.original,
-                    above: data.above,
-                    language: language,
-                    inherited: 0,
-                    setHere: 1,
-                    restore: 0,
-                    'new': 1
-                });
-
-                this.store.insert(0, newRecord);
-            },
-            scope: this
-        });
-        */
     },
 
     onSave: function () {

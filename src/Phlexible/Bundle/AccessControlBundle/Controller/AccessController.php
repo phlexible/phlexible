@@ -118,7 +118,7 @@ class AccessController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @throws InvalidArgumentException
+     * @throws \Exception
      * @Route("/save", name="accesscontrol_save")
      */
     public function saveAction(Request $request)
@@ -158,8 +158,14 @@ class AccessController extends Controller
             $acl->removeEntry($ace);
         }
         foreach ($identities as $objectIdentity) {
+            if ($objectIdentity['mask'] === null && $objectIdentity['stopMask'] === null && $objectIdentity['noInheritMask'] === null) {
+                continue;
+            }
+
             $ace = new Entry(
                 $acl,
+                $objectIdentity['objectType'],
+                $objectIdentity['objectId'],
                 $objectIdentity['securityType'],
                 $objectIdentity['securityId'],
                 $objectIdentity['mask'],

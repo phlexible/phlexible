@@ -4,7 +4,6 @@ Phlexible.accesscontrol.model.AccessControlEntry = Ext.data.Record.create([
     {name: 'id'},
     {name: 'objectType'},
     {name: 'objectId'},
-    {name: 'effectiveMask'},
     {name: 'mask'},
     {name: 'stopMask'},
     {name: 'noInheritMask'},

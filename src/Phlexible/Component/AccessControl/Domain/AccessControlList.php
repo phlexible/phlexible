@@ -8,11 +8,8 @@
 
 namespace Phlexible\Component\AccessControl\Domain;
 
-use FOS\UserBundle\Model\UserInterface;
-use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
-use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

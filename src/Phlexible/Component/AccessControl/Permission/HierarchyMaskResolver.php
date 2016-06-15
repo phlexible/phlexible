@@ -41,43 +41,43 @@ class HierarchyMaskResolver
             $ace = array_shift($path);
             /* @var $ace Entry */
 
-            $currentMask = (int) $ace->getMask();
-
             if ($ace->getObjectIdentifier() == $currentIdentifier) {
-                $mask = (int) $ace->getMask();
-                $stopMask = (int) $ace->getStopMask();
-                $noInheritMask = (int) $ace->getNoInheritMask();
+                $mask = $ace->getMask();
+                $stopMask = $ace->getStopMask();
+                $noInheritMask = $ace->getNoInheritMask();
             } else {
-                $parentMask = (int) $ace->getMask();
-                $parentStopMask = (int) $ace->getStopMask();
-                $parentNoInheritMask = (int) $ace->getNoInheritMask();
+                $parentMask = $ace->getMask();
+                $parentStopMask = $ace->getStopMask();
+                $parentNoInheritMask = $ace->getNoInheritMask();
             }
 
-            if ($ace->getObjectIdentifier() == $currentIdentifier && $ace->getStopMask()) {
+            if ($ace->getMask() !== null) {
+                if ($effectiveMask !== null) {
+                    $effectiveMask = $effectiveMask ^ (int) $ace->getMask();
+                } else {
+                    $effectiveMask = (int) $ace->getMask();
+                }
+            }
+
+            if ($effectiveMask && $ace->getStopMask() !== null) {
                 // apply stop mask
-                $currentMask = $currentMask ^ (int) $ace->getStopMask();
+                $effectiveMask = $effectiveMask ^ (int) $ace->getStopMask();
             }
 
-            if ($ace->getObjectIdentifier() != $currentIdentifier && $ace->getNoInheritMask()) {
+            if ($effectiveMask && $ace->getObjectIdentifier() != $currentIdentifier && $ace->getNoInheritMask() !== null) {
                 // apply no inherit mask
-                $currentMask = $currentMask ^ (int) $ace->getNoInheritMask();
-            }
-
-            if ($effectiveMask === null) {
-                $effectiveMask = (int) $currentMask;
-            } else {
-                $effectiveMask = (int) ($currentMask & $effectiveMask);
+                $effectiveMask = $effectiveMask ^ (int) $ace->getNoInheritMask();
             }
         }
 
         return array(
             'effectiveMask' => $effectiveMask,
-            'mask' => $mask,
-            'stopMask' => $stopMask,
-            'noInheritMask' => $noInheritMask,
-            'parentMask' => $parentMask,
-            'parentStopMask' => $parentStopMask,
-            'parentNoInheritMask' => $parentNoInheritMask,
+            'mask' => $mask !== null ? (int) $mask : null,
+            'stopMask' => $stopMask !== null ? (int) $stopMask : null,
+            'noInheritMask' => $noInheritMask !== null ? (int) $noInheritMask : null,
+            'parentMask' => $parentMask !== null ? (int) $parentMask : null,
+            'parentStopMask' => $parentStopMask !== null ? (int) $parentStopMask : null,
+            'parentNoInheritMask' => $parentNoInheritMask !== null ? (int) $parentNoInheritMask : null,
         );
     }
 }
