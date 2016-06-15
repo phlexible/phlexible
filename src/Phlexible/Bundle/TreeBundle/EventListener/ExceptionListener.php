@@ -129,7 +129,12 @@ class ExceptionListener
 
         $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
         $tid = $siteroot->getSpecialTid($request->getLocale(), "error_$code");
-        if (!$tid) {
+
+        if (!$tid && !$template) {
+            if (!$template) {
+                return;
+            }
+
             $content = $this->twig->render($template);
             $response = new Response($content, $code);
 
