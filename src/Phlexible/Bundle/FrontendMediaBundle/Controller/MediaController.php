@@ -38,7 +38,12 @@ class MediaController extends Controller
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $templateManager = $this->get('phlexible_media_template.template_manager');
 
-        $volume = $volumeManager->getByFileId($fileId);
+        try {
+            $volume = $volumeManager->getByFileId($fileId);
+        } catch (\Exception $e) {
+            throw $this->createNotFoundException($e->getMessage(), $e);
+        }
+
         $file = $volume->findFile($fileId);
         $template = $templateManager->find($templateKey);
 
@@ -93,7 +98,12 @@ class MediaController extends Controller
     {
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        $volume = $volumeManager->getByFileId($fileId);
+        try {
+            $volume = $volumeManager->getByFileId($fileId);
+        } catch (\Exception $e) {
+            throw $this->createNotFoundException($e->getMessage(), $e);
+        }
+
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
@@ -127,7 +137,12 @@ class MediaController extends Controller
     {
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        $volume = $volumeManager->getByFileId($fileId);
+        try {
+            $volume = $volumeManager->getByFileId($fileId);
+        } catch (\Exception $e) {
+            throw $this->createNotFoundException($e->getMessage(), $e);
+        }
+
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
@@ -161,7 +176,12 @@ class MediaController extends Controller
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
 
-        $volume = $volumeManager->getByFileId($fileId);
+        try {
+            $volume = $volumeManager->getByFileId($fileId);
+        } catch (\Exception $e) {
+            throw $this->createNotFoundException($e->getMessage(), $e);
+        }
+
         $file = $volume->findFile($fileId);
         $mimeType = $file->getMimeType();
 
