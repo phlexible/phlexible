@@ -279,18 +279,6 @@ elements:
         cancel: Abbrechen
         set: Setzen
 
-    task:
-        publish_element: 'Element veröffentlichen'
-        publish_element_template: 'Element "{title}" mit der TID {tid} veröffentlichen.'
-        set_element_offline: 'Element offline setzen'
-        set_element_offline_template: 'Element "{title}" mit der TID {tid} offline setzen.'
-        delete_element: 'Element löschen'
-        delete_element_template: 'Element "{title}" mit der TID {tid} löschen.'
-        general: 'Allgemeine Aufgabe'
-        general_template: 'Allgemeine Aufgabe für das Element "{title}" mit der TID {tid}.'
-        done: 'Aufgabe wurde durch Aktion automatisch erledigt.'
-        delete: 'Aufgabe wurde durch Löschen des Ziels automatisch erledigt.'
-
     routing:
         routing: Routing
         route: Route

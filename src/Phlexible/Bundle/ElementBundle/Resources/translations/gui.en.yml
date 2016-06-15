@@ -278,18 +278,6 @@ elements:
         cancel: Cancel
         set: Set
 
-    task:
-        publish_element: 'Publish element'
-        publish_element_template: 'Publish element "{title}" with TID {tid}.'
-        set_element_offline: 'Set element offline'
-        set_element_offline_template: 'Set element "{title}" with TID {tid} offline.'
-        delete_element: 'Delete element'
-        delete_element_template: 'Delete element "{title}" with TID {tid}.'
-        general: 'General task'
-        general_template: 'General task for element "{title}" with TID {tid}.'
-        done: 'Automatically set task finished through action.'
-        delete: 'Automatically set task finished through deletion of target.'
-
     routing:
         routing: Routing
         route: Route

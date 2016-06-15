@@ -33,7 +33,6 @@ class ElementRoleProvider extends RoleProvider
             'ROLE_ELEMENT_LOCKS',
             'ROLE_ELEMENT_META',
             'ROLE_ELEMENT_PUBLISH',
-            'ROLE_ELEMENT_TASKS',
             'ROLE_ELEMENT_VERSIONS',
         ];
     }

@@ -696,30 +696,6 @@
     text-align: right;
 }
 
-.p-tasks-toolbar .x-btn .x-btn-left {
-    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 0 transparent !important;
-}
-
-.p-tasks-toolbar .x-btn .x-btn-center {
-    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") repeat-x scroll 0 -42px transparent !important;
-}
-
-.p-tasks-toolbar .x-btn .x-btn-right {
-    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -21px transparent !important;
-}
-
-.p-tasks-toolbar .x-btn-over .x-btn-left {
-    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -63px transparent !important;
-}
-
-.p-tasks-toolbar .x-btn-over .x-btn-center {
-    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") repeat-x scroll 0 -105px transparent !important;
-}
-
-.p-tasks-toolbar .x-btn-over .x-btn-right {
-    background: url("/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif") no-repeat scroll 0 -84px transparent !important;
-}
-
 .p-elements-accordion .x-accordion-hd .error {
     color: red;
 }

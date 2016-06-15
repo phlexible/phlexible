@@ -1,7 +1,6 @@
 Ext.provide('Phlexible.elements.ElementPanel');
 
 Ext.require('Phlexible.elements.ElementTabPanel');
-// xt.provide('Phlexible.elements.TaskBar');
 
 Phlexible.elements.ElementPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
@@ -15,24 +14,7 @@ Phlexible.elements.ElementPanel = Ext.extend(Ext.Panel, {
 
     initComponent: function () {
         this.items = [
-            /*{
-             xtype: 'elements-taskbar',
-             element: this.element,
-             region: 'north',
-             height: 26,
-             hidden: true,
-             listeners: {
-             newStatus: {
-             fn: function() {
-             this.element.reload({
-             lock: 0,
-             unlock: this.element.eid
-             });
-             },
-             scope: this
-             }
-             }
-             },*/{
+            {
                 xtype: 'elements-elementtabpanel',
                 element: this.element,
                 region: 'center',

@@ -104,14 +104,6 @@ services:
             - "@phlexible_element.element_service"
 
     # event listeners
-    phlexible_element.listener.task:
-        class: Phlexible\Bundle\ElementBundle\EventListener\TaskListener
-        arguments:
-            - "@security.token_storage"
-            - "@?phlexible_task.task_manager"
-        tags:
-            - {name: kernel.event_subscriber}
-
     phlexible_element.listener.siteroot:
         class: Phlexible\Bundle\ElementBundle\EventListener\SiterootListener
         arguments:
