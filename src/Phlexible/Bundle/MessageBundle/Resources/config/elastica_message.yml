@@ -3,4 +3,4 @@ services:
         class: Phlexible\Bundle\MessageBundle\Elastica\MessageManager
         public: false
         arguments:
-            - "@phlexible_elastica.default_client"
+            - "@phlexible_elastica.client"
