@@ -14,6 +14,7 @@ use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
+use Phlexible\Component\AccessControl\Permission\PermissionResolver;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -155,7 +156,9 @@ class AccessControlList implements \Countable
             }
         }
 
-        return $mask;
+        $resolver = new PermissionResolver();
+
+        return $resolver->resolve($this->permissions, $mask);
     }
 
     /**

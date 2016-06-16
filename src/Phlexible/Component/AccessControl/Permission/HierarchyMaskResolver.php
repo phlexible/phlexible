@@ -53,7 +53,7 @@ class HierarchyMaskResolver
 
             if ($ace->getMask() !== null) {
                 if ($effectiveMask !== null) {
-                    $effectiveMask = $effectiveMask ^ (int) $ace->getMask();
+                    $effectiveMask = $effectiveMask | (int) $ace->getMask();
                 } else {
                     $effectiveMask = (int) $ace->getMask();
                 }

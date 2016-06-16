@@ -155,9 +155,9 @@ class AccessManager implements AccessManagerInterface
                     $entry['identifier'],
                     $entry['security_type'],
                     $entry['security_identifier'],
-                    $entry['mask'],
-                    $entry['stop_mask'],
-                    $entry['no_inherit_mask']
+                    $entry['mask'] !== null ? (int) $entry['mask'] : null,
+                    $entry['stop_mask'] !== null ? (int) $entry['stop_mask'] : null,
+                    $entry['no_inherit_mask'] !== null ? (int) $entry['no_inherit_mask'] : null
                 )
             );
         }
