@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
-use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 
 /**
@@ -23,7 +22,7 @@ use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
  * @ORM\Entity
  * @ORM\Table(name="tree")
  */
-class TreeNode implements TreeNodeInterface, DomainObjectInterface, HierarchicalDomainObjectInterface
+class TreeNode implements TreeNodeInterface, HierarchicalDomainObjectInterface
 {
     /**
      * @var TreeInterface

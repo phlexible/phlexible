@@ -90,31 +90,6 @@ class AccessController extends Controller
     }
 
     /**
-     * List subjects
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/identities", name="accesscontrol_identities")
-     */
-    public function identitiesAction(Request $request)
-    {
-        $objectType = $request->get('objectType');
-        $objectId = $request->get('objectId');
-
-        $objectIdentity = new ObjectIdentity($objectId, $objectType);
-
-        $accessManager = $this->get('phlexible_access_control.access_manager');
-        $acl = $accessManager->findAcl($objectIdentity);
-        $permissionResolver = $this->get('phlexible_access_control.permission_resolver');
-        dump($acl);
-        dump($permissionResolver->resolve($acl));
-        die;
-
-        return new JsonResponse($acl->getPermissions());
-    }
-
-    /**
      * @param Request $request
      *
      * @return ResultResponse

@@ -87,8 +87,7 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
                 group: '_group'
             },
             urls: {
-                identities: Phlexible.Router.generate('mediamanager_rights_identities'),
-                add: Phlexible.Router.generate('mediamanager_rights_add')
+                identities: Phlexible.Router.generate('mediamanager_rights_identities')
             },
             listeners: {
                 render: function (c) {

@@ -134,7 +134,11 @@ class AccessManager implements AccessManagerInterface
         ;
 
         if ($objectIdentity instanceof HierarchicalObjectIdentity) {
-            $qb->andWhere($qb->expr()->in('oi.identifier', $objectIdentity->getHierarchicalIdentifiers()));
+            $identifiers = array();
+            foreach ($objectIdentity->getHierarchicalIdentifiers() as $identifier) {
+                $identifiers[] = $qb->expr()->literal($identifier);
+            }
+            $qb->andWhere($qb->expr()->in('oi.identifier', $identifiers));
         } else {
             $qb->andWhere($qb->expr()->eq('oi.identifier', $qb->expr()->literal($objectIdentity->getIdentifier())));
         }

@@ -20,6 +20,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -450,21 +451,24 @@ class DataController extends Controller
 
         // rights
 
-        $userRights = array();
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             if (!$this->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
                 return new JsonResponse(array('success' => false, 'message' => 'no permission'));
             }
 
-            // TODO: fix
-            foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                $userRights[] = $permission->getName();
-            }
+            $identity = HierarchicalObjectIdentity::fromDomainObject($node);
+            $acl = $this->get('phlexible_access_control.access_manager')->findAcl($identity);
+            $token = $this->get('security.token_storage')->getToken();
+
+            $permissions = $acl->getEffectivePermissions($token, $language);
         } else {
-            foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                $userRights[] = $permission->getName();
-            }
+            $permissions = $permissionRegistry->get(get_class($node))->all();
+        }
+
+        $userRights = array();
+        foreach ($permissions as $permission) {
+            $userRights[] = $permission->getName();
         }
 
         $status = '';

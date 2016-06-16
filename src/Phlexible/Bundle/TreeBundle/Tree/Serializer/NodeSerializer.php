@@ -122,11 +122,11 @@ class NodeSerializer
                 $identity = HierarchicalObjectIdentity::fromDomainObject($node);
                 $acl = $this->accessManager->findAcl($identity);
 
-                // TODO: fix
                 $permissions = $acl->getEffectivePermissions($token, $language);
             } else {
                 $permissions = $this->permissionRegistry->get(get_class($node))->all();
             }
+            
             foreach ($permissions as $permission) {
                 $userRights[] = $permission->getName();
             }
