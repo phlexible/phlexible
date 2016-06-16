@@ -8,8 +8,10 @@
 
 namespace Phlexible\Component\AccessControl\Domain;
 
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
+use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -115,23 +117,89 @@ class AccessControlList implements \Countable
     {
         $user = $token->getUser();
 
-        foreach ($this->entries as $entry) {
-            if (
-                $entry->getSecurityType() === 'Phlexible\Bundle\UserBundle\Entity\User' &&
-                $entry->getSecurityIdentifier() === $user->getId()
-            ) {
-                return $permission->test($entry->getMask());
+        $masks = $this->getEffectiveMasks();
+        if (isset($masks['Phlexible\Bundle\UserBundle\Entity\User'][$user->getId()])) {
+            if ($masks['Phlexible\Bundle\UserBundle\Entity\User'][$user->getId()] & $permission->getBit()) {
+                return true;
             }
-            if ($entry->getSecurityType() === 'Phlexible\Bundle\UserBundle\Entity\Group') {
-                foreach ($user->getGroups() as $group) {
-                    if ($entry->getSecurityIdentifier() === $group->getId()) {
-                        return $permission->test($entry->getMask());
-                    }
+        }
+        foreach ($user->getGroups() as $group) {
+            if (isset($masks['Phlexible\Bundle\UserBundle\Entity\Group'][$group->getId()])) {
+                if ($masks['Phlexible\Bundle\UserBundle\Entity\Group'][$group->getId()] & $permission->getBit()) {
+                    return true;
                 }
             }
         }
 
         return false;
+    }
+
+    /**
+     * @param TokenInterface $token
+     * @param string|null    $objectLanguage
+     *
+     * @return array
+     */
+    public function getEffectivePermissions(TokenInterface $token, $objectLanguage = null)
+    {
+        $user = $token->getUser();
+
+        $mask = 0;
+        $masks = $this->getEffectiveMasks();
+        if (isset($masks['Phlexible\Bundle\UserBundle\Entity\User'][$user->getId()])) {
+            $mask |= $masks['Phlexible\Bundle\UserBundle\Entity\User'][$user->getId()];
+        }
+        foreach ($user->getGroups() as $group) {
+            if (isset($masks['Phlexible\Bundle\UserBundle\Entity\Group'][$group->getId()])) {
+                $mask |= $masks['Phlexible\Bundle\UserBundle\Entity\Group'][$group->getId()];
+            }
+        }
+
+        return $mask;
+    }
+
+    /**
+     * @var array
+     */
+    private $effectiveMasks = null;
+
+    /**
+     * @return array
+     */
+    private function getEffectiveMasks()
+    {
+        if ($this->effectiveMasks === null) {
+            $masks = array();
+
+            $oi = $this->getObjectIdentity();
+            if ($oi instanceof HierarchicalObjectIdentity) {
+                $map = array();
+                foreach ($oi->getHierarchicalIdentifiers() as $identifier) {
+                    foreach ($this->getEntries() as $entry) {
+                        if ($entry->getObjectIdentifier() == $identifier) {
+                            $map[$entry->getSecurityType()][$entry->getSecurityIdentifier()][$entry->getObjectIdentifier()] = $entry;
+                        }
+                    }
+                }
+
+                $maskResolver = new HierarchyMaskResolver();
+
+                foreach ($map as $securityType => $securityIdentifiers) {
+                    foreach ($securityIdentifiers as $securityIdentifier => $entries) {
+                        $resolvedMasks = $maskResolver->resolve($entries, $oi->getIdentifier());
+                        $masks[$securityType][$securityIdentifier] = $resolvedMasks['effectiveMask'];
+                    }
+                }
+            } else {
+                foreach ($this->getEntries() as $entry) {
+                    $masks[$entry->getSecurityType()][$entry->getSecurityIdentifier()] = $entry->getMask();
+                }
+            }
+
+            $this->effectiveMasks = $masks;
+        }
+
+        return $this->effectiveMasks;
     }
 
     /**

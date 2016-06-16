@@ -59,7 +59,7 @@ class TreeController extends Controller
         $data = [];
         if ($rootNode) {
             if ($tid === null || $tid < 1) {
-                $data = [$nodeSerializer->serializeNode($rootNode, $language)];
+                $data = [$nodeSerializer->serializeNode($rootNode, $language, $this->container->get('security.token_storage')->getToken())];
             } else {
                 $node = $tree->get($tid);
 
@@ -69,7 +69,7 @@ class TreeController extends Controller
 
                 $nodes = $tree->getChildren($node);
                 if (!empty($nodes) && !$elementtype->getHideChildren()) {
-                    $data = $nodeSerializer->serializeNodes($nodes, $language);
+                    $data = $nodeSerializer->serializeNodes($nodes, $language, $this->container->get('security.token_storage')->getToken());
                 }
             }
         }
