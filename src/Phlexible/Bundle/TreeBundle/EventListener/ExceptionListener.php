@@ -130,7 +130,7 @@ class ExceptionListener
         $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
         $tid = $siteroot->getSpecialTid($request->getLocale(), "error_$code");
 
-        if (!$tid && !$template) {
+        if (!$tid) {
             if (!$template) {
                 return;
             }
