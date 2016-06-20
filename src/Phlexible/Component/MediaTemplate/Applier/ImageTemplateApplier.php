@@ -149,20 +149,20 @@ class ImageTemplateApplier
         $method = $template->getParameter('method');
 
         if ($method === 'width') {
-            $size = $image->getSize()->widen($template->getParameter('width'));
-            $image->resize($size);
+            $templateSize = $image->getSize()->widen($template->getParameter('width'));
+            $image->resize($templateSize);
         } elseif ($method === 'height') {
-            $size = $image->getSize()->heighten($template->getParameter('height'));
-            $image->resize($size);
+            $templateSize = $image->getSize()->heighten($template->getParameter('height'));
+            $image->resize($templateSize);
         } elseif ($method === 'exact') {
-            $size = new Box($template->getParameter('width'), $template->getParameter('height'));
-            $image->resize($size);
+            $templateSize = new Box($template->getParameter('width'), $template->getParameter('height'));
+            $image->resize($templateSize);
         } elseif ($method === 'fit') {
-            $size = new Box($template->getParameter('width'), $template->getParameter('height'));
-            $image = $image->thumbnail($size, ImageInterface::THUMBNAIL_INSET);
+            $templateSize = new Box($template->getParameter('width'), $template->getParameter('height'));
+            $image = $image->thumbnail($templateSize, ImageInterface::THUMBNAIL_INSET);
         } elseif ($method === 'exactFit') {
-            $size = new Box($template->getParameter('width'), $template->getParameter('height'));
-            $layer = $image->thumbnail($size, ImageInterface::THUMBNAIL_INSET);
+            $templateSize = new Box($template->getParameter('width'), $template->getParameter('height'));
+            $layer = $image->thumbnail($templateSize, ImageInterface::THUMBNAIL_INSET);
             $layerSize = $layer->getSize();
 
             $palette = new RGB();
@@ -171,53 +171,70 @@ class ImageTemplateApplier
             } else {
                 $color = $palette->color('#fff', 0);
             }
-            $image = $this->imagine->create($size, $color);
+            $image = $this->imagine->create($templateSize, $color);
             $image->paste($layer, new Point(
-                floor(($size->getWidth() - $layerSize->getWidth()) / 2),
-                floor(($size->getHeight() - $layerSize->getHeight()) / 2)
+                floor(($templateSize->getWidth() - $layerSize->getWidth()) / 2),
+                floor(($templateSize->getHeight() - $layerSize->getHeight()) / 2)
             ));
         } elseif ($method === 'crop') {
-            $size = new Box($template->getParameter('width'), $template->getParameter('height'));
+            $templateSize = new Box($template->getParameter('width'), $template->getParameter('height'));
             $imageSize = $image->getSize();
 
-            if (!$size->contains($imageSize)) {
+            #if ($imageSize->getWidth() > $size->getWidth() && $imageSize->getHeight() < $size->getHeight()) {
+            #    $imageSize = $imageSize->heighten($size->getHeight());
+            #    $image->resize($imageSize);
+            #} else if ($imageSize->getWidth() < $size->getWidth() && $imageSize->getHeight() > $size->getHeight()) {
+            #    $imageSize = $imageSize->widen($size->getWidth());
+            #    $image->resize($imageSize);
+            #}
+
+            if (!$templateSize->contains($imageSize)) {
                 $ratios = array(
-                    $size->getWidth() / $imageSize->getWidth(),
-                    $size->getHeight() / $imageSize->getHeight()
+                    $templateSize->getWidth() / $imageSize->getWidth(),
+                    $templateSize->getHeight() / $imageSize->getHeight()
                 );
                 $ratio = max($ratios);
-                if (!$imageSize->contains($size)) {
+                if (!$imageSize->contains($templateSize)) {
                     $imageSize = new Box(
-                        min($imageSize->getWidth(), $size->getWidth()),
-                        min($imageSize->getHeight(), $size->getHeight())
+                        min($imageSize->getWidth(), $templateSize->getWidth()),
+                        min($imageSize->getHeight(), $templateSize->getHeight())
                     );
                 } else {
                     $imageSize = $imageSize->scale($ratio);
                     $image->resize($imageSize);
                 }
 
-                if (($focalpoint = $file->getAttribute('focalpoint')) && !empty($focalpoint['active'])) {
-                    $focalX = floor($focalpoint['x'] * $ratio - $size->getWidth() / 2);
-                    $focalY = floor($focalpoint['y'] * $ratio - $size->getHeight() / 2);
+                if (($focalPoint = $file->getAttribute('focalpoint')) && !empty($focalPoint['active'])) {
+                    $focalPoint = new Point($focalPoint['x'], $focalPoint['y']);
 
-                    $focalX = max($focalX, 0);
-                    $focalY = max($focalY, 0);
+                    $cropX = floor($focalPoint->getX() * $ratio - $templateSize->getWidth() / 2);
+                    $cropY = floor($focalPoint->getY() * $ratio - $templateSize->getHeight() / 2);
 
-                    if ($size->getWidth() + $focalX > $image->getSize()->getWidth()) {
-                        $focalX = $image->getSize()->getWidth() - $size->getWidth();
+                    $cropX = max($cropX, 0);
+                    $cropY = max($cropY, 0);
+
+                    if ($templateSize->getWidth() + $cropX > $image->getSize()->getWidth()) {
+                        $cropX = $image->getSize()->getWidth() - $templateSize->getWidth();
                     }
-                    if ($size->getHeight() + $focalY > $image->getSize()->getHeight()) {
-                        $focalY = $image->getSize()->getHeight() - $size->getHeight();
+                    if ($templateSize->getHeight() + $cropY > $image->getSize()->getHeight()) {
+                        $cropY = $image->getSize()->getHeight() - $templateSize->getHeight();
                     }
-                    $point = new Point($focalX, $focalY);
+                    dump(
+                        'Template', $templateSize,
+                        'Image', $imageSize,
+                        'FocalPoint', $focalPoint,
+                        'Crop', $cropX." x ".$cropY
+                    );
+                    die;
+                    $cropPoint = new Point($cropX, $cropY);
                 } else {
-                    $point = new Point(
-                        max(0, round(($imageSize->getWidth() - $size->getWidth()) / 2)),
-                        max(0, round(($imageSize->getHeight() - $size->getHeight()) / 2))
+                    $cropPoint = new Point(
+                        max(0, round(($imageSize->getWidth() - $templateSize->getWidth()) / 2)),
+                        max(0, round(($imageSize->getHeight() - $templateSize->getHeight()) / 2))
                     );
                 }
 
-                $image->crop($point, $size);
+                $image->crop($cropPoint, $templateSize);
             }
         }
 
