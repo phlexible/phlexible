@@ -180,13 +180,13 @@ class ImageTemplateApplier
             $templateSize = new Box($template->getParameter('width'), $template->getParameter('height'));
             $imageSize = $image->getSize();
 
-            #if ($imageSize->getWidth() > $size->getWidth() && $imageSize->getHeight() < $size->getHeight()) {
-            #    $imageSize = $imageSize->heighten($size->getHeight());
-            #    $image->resize($imageSize);
-            #} else if ($imageSize->getWidth() < $size->getWidth() && $imageSize->getHeight() > $size->getHeight()) {
-            #    $imageSize = $imageSize->widen($size->getWidth());
-            #    $image->resize($imageSize);
-            #}
+            if ($imageSize->getWidth() > $templateSize->getWidth() && $imageSize->getHeight() < $templateSize->getHeight()) {
+                $imageSize = $imageSize->heighten($templateSize->getHeight());
+                $image->resize($imageSize);
+            } else if ($imageSize->getWidth() < $templateSize->getWidth() && $imageSize->getHeight() > $templateSize->getHeight()) {
+                $imageSize = $imageSize->widen($templateSize->getWidth());
+                $image->resize($imageSize);
+            }
 
             if (!$templateSize->contains($imageSize)) {
                 $ratios = array(
@@ -219,13 +219,7 @@ class ImageTemplateApplier
                     if ($templateSize->getHeight() + $cropY > $image->getSize()->getHeight()) {
                         $cropY = $image->getSize()->getHeight() - $templateSize->getHeight();
                     }
-                    dump(
-                        'Template', $templateSize,
-                        'Image', $imageSize,
-                        'FocalPoint', $focalPoint,
-                        'Crop', $cropX." x ".$cropY
-                    );
-                    die;
+                    
                     $cropPoint = new Point($cropX, $cropY);
                 } else {
                     $cropPoint = new Point(
