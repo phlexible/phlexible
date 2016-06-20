@@ -219,7 +219,7 @@ class ImageTemplateApplier
                     if ($templateSize->getHeight() + $cropY > $image->getSize()->getHeight()) {
                         $cropY = $image->getSize()->getHeight() - $templateSize->getHeight();
                     }
-                    
+
                     $cropPoint = new Point($cropX, $cropY);
                 } else {
                     $cropPoint = new Point(
