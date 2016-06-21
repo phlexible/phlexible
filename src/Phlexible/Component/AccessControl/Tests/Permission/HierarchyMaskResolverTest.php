@@ -44,6 +44,12 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $result = $this->resolver->resolve(array($ace), 1);
 
         $this->assertEquals(self::READ | self::WRITE, $result['effectiveMask']);
+        $this->assertEquals(self::READ | self::WRITE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertNull($result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testTwoLevels()
@@ -56,6 +62,12 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $result = $this->resolver->resolve(array($ace1, $ace2), 2);
 
         $this->assertEquals(self::READ | self::WRITE | self::DELETE, $result['effectiveMask']);
+        $this->assertEquals(self::DELETE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::READ | self::WRITE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testTwoLevelsWithStopMask()
@@ -68,6 +80,12 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $result = $this->resolver->resolve(array($ace1, $ace2), 2);
 
         $this->assertEquals(self::WRITE | self::DELETE, $result['effectiveMask']);
+        $this->assertEquals(self::DELETE, $result['mask']);
+        $this->assertEquals(self::READ, $result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::READ | self::WRITE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testTwoLevelsWithNoInheritMask()
@@ -80,6 +98,14 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $result = $this->resolver->resolve(array($ace1, $ace2), 2);
 
         $this->assertEquals(self::READ | self::DELETE, $result['effectiveMask']);
+
+        $this->assertEquals(self::DELETE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+
+        $this->assertEquals(self::READ | self::WRITE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertEquals(self::WRITE, $result['parentNoInheritMask']);
     }
 
     public function testTwoLevelsWithStopMaskAndNoInheritMask()
@@ -92,6 +118,12 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $result = $this->resolver->resolve(array($ace1, $ace2), 2);
 
         $this->assertEquals(self::DELETE, $result['effectiveMask']);
+        $this->assertEquals(self::DELETE, $result['mask']);
+        $this->assertEquals(self::READ, $result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::READ | self::WRITE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertEquals(self::WRITE, $result['parentNoInheritMask']);
     }
 
     public function testThreeLevels()
@@ -105,6 +137,12 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $result = $this->resolver->resolve(array($ace1, $ace2, $ace3), 3);
 
         $this->assertEquals(self::READ | self::WRITE | self::DELETE | self::NUKE, $result['effectiveMask']);
+        $this->assertEquals(self::NUKE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::READ | self::WRITE | self::DELETE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testThreeLevelsWithStopMask()
@@ -118,6 +156,14 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $result = $this->resolver->resolve(array($ace1, $ace2, $ace3), 3);
 
         $this->assertEquals(self::WRITE | self::NUKE, $result['effectiveMask']);
+
+        $this->assertEquals(self::WRITE | self::NUKE, $result['effectiveMask']);
+        $this->assertEquals(self::NUKE, $result['mask']);
+        $this->assertEquals(self::DELETE, $result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::WRITE | self::DELETE, $result['parentMask']);
+        $this->assertEquals(self::READ, $result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testThreeLevelsWithNoInheritMask()
@@ -131,6 +177,12 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $result = $this->resolver->resolve(array($ace1, $ace2, $ace3), 3);
 
         $this->assertEquals(self::DELETE | self::NUKE, $result['effectiveMask']);
+        $this->assertEquals(self::NUKE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::WRITE | self::DELETE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertEquals(self::WRITE, $result['parentNoInheritMask']);
     }
 
     public function testThreeLevelsWithStopMaskAndNoInheritMask()
@@ -144,5 +196,11 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $result = $this->resolver->resolve(array($ace1, $ace2, $ace3), 3);
 
         $this->assertEquals(self::DELETE | self::ADMIN, $result['effectiveMask']);
+        $this->assertEquals(self::ADMIN, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::DELETE | self::NUKE, $result['parentMask']);
+        $this->assertEquals(self::READ, $result['parentStopMask']);
+        $this->assertEquals(self::NUKE, $result['parentNoInheritMask']);
     }
 }
