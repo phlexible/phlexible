@@ -70,9 +70,9 @@ class Entry implements EntryInterface
      * @param string            $objectIdentifier
      * @param string            $securityType
      * @param string            $securityIdentifier
-     * @param bool              $mask
-     * @param bool              $stopMask
-     * @param bool              $noInheritMask
+     * @param int               $mask
+     * @param int               $stopMask
+     * @param int               $noInheritMask
      */
     public function __construct(AccessControlList $acl, $objectType, $objectIdentifier, $securityType, $securityIdentifier, $mask, $stopMask, $noInheritMask)
     {
