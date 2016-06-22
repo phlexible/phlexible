@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaManager\Volume;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Component\MediaManager\Entity\FolderUsage;
+use Phlexible\Bundle\MediaManagerBundle\Entity\FolderUsage;
 use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
