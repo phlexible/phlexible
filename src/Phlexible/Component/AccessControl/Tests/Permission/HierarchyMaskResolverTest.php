@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\AccessControl\Tests\Permission;
 
-use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
+use Phlexible\Component\AccessControl\Domain\AccessControlList;
 use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 
@@ -19,6 +19,12 @@ use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
  */
 class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
 {
+    const READ = 1;
+    const WRITE = 2;
+    const DELETE = 4;
+    const NUKE = 8;
+    const ADMIN = 16;
+
     /**
      * @var HierarchyMaskResolver
      */
@@ -31,204 +37,170 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testSingleMask()
     {
-        $ace = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace->getMask()->willReturn(1 | 2);
+        $acl = $this->prophesize(AccessControlList::class);
 
-        $mask = $this->resolver->resolve(array($ace->reveal()));
+        $ace = new Entry($acl->reveal(), 'object', 1, 'security', 2, self::READ | self::WRITE, null, null);
 
-        $this->assertEquals(1 | 2, $mask);
+        $result = $this->resolver->resolve(array($ace), 1);
+
+        $this->assertEquals(self::READ | self::WRITE, $result['effectiveMask']);
+        $this->assertEquals(self::READ | self::WRITE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertNull($result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testTwoLevels()
     {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2);
-        $ace1->getNoInheritMask()->willReturn(0);
-        $ace1->getStopMask()->willReturn(0);
+        $acl = $this->prophesize(AccessControlList::class);
 
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(4);
-        $ace2->getNoInheritMask()->willReturn(0);
-        $ace2->getStopMask()->willReturn(0);
+        $ace1 = new Entry($acl->reveal(), 'object', 1, 'security', 2, self::READ | self::WRITE, null, null);
+        $ace2 = new Entry($acl->reveal(), 'object', 2, 'security', 2, self::DELETE, null, null);
 
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal()));
+        $result = $this->resolver->resolve(array($ace1, $ace2), 2);
 
-        $this->assertEquals(1 | 2 | 4, $mask);
-    }
-
-    public function testTwoLevelsStopAll()
-    {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2);
-        $ace1->getNoInheritMask()->willReturn(0);
-        $ace1->getStopMask()->willReturn(0);
-
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(1 | 2);
-        $ace2->getNoInheritMask()->willReturn(0);
-        $ace2->getStopMask()->willReturn(0);
-
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal()));
-
-        $this->assertEquals(0, $mask);
+        $this->assertEquals(self::READ | self::WRITE | self::DELETE, $result['effectiveMask']);
+        $this->assertEquals(self::DELETE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::READ | self::WRITE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testTwoLevelsWithStopMask()
     {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2);
-        $ace1->getNoInheritMask()->willReturn(0);
-        $ace1->getStopMask()->willReturn(0);
+        $acl = $this->prophesize(AccessControlList::class);
 
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(4);
-        $ace2->getNoInheritMask()->willReturn(0);
-        $ace2->getStopMask()->willReturn(1);
+        $ace1 = new Entry($acl->reveal(), 'object', 1, 'security', 2, self::READ | self::WRITE, null, null);
+        $ace2 = new Entry($acl->reveal(), 'object', 2, 'security', 2, self::DELETE, self::READ, null);
 
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal()));
+        $result = $this->resolver->resolve(array($ace1, $ace2), 2);
 
-        $this->assertEquals(2 | 4, $mask);
+        $this->assertEquals(self::WRITE | self::DELETE, $result['effectiveMask']);
+        $this->assertEquals(self::DELETE, $result['mask']);
+        $this->assertEquals(self::READ, $result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::READ | self::WRITE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testTwoLevelsWithNoInheritMask()
     {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2);
-        $ace1->getStopMask()->willReturn(0);
-        $ace1->getNoInheritMask()->willReturn(2);
+        $acl = $this->prophesize(AccessControlList::class);
 
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(4);
-        $ace2->getStopMask()->willReturn(0);
-        $ace2->getNoInheritMask()->willReturn(0);
+        $ace1 = new Entry($acl->reveal(), 'object', 1, 'security', 2, self::READ | self::WRITE, null, self::WRITE);
+        $ace2 = new Entry($acl->reveal(), 'object', 2, 'security', 2, self::DELETE, null, null);
 
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal()));
+        $result = $this->resolver->resolve(array($ace1, $ace2), 2);
 
-        $this->assertEquals(1 | 4, $mask);
+        $this->assertEquals(self::READ | self::DELETE, $result['effectiveMask']);
+
+        $this->assertEquals(self::DELETE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+
+        $this->assertEquals(self::READ | self::WRITE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertEquals(self::WRITE, $result['parentNoInheritMask']);
     }
 
     public function testTwoLevelsWithStopMaskAndNoInheritMask()
     {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2 | 4);
-        $ace1->getNoInheritMask()->willReturn(2);
+        $acl = $this->prophesize(AccessControlList::class);
 
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(8);
-        $ace2->getStopMask()->willReturn(1);
+        $ace1 = new Entry($acl->reveal(), 'object', 1, 'security', 2, self::READ | self::WRITE, null, self::WRITE);
+        $ace2 = new Entry($acl->reveal(), 'object', 2, 'security', 2, self::DELETE, self::READ, null);
 
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal()));
+        $result = $this->resolver->resolve(array($ace1, $ace2), 2);
 
-        $this->assertEquals(4 | 8, $mask);
+        $this->assertEquals(self::DELETE, $result['effectiveMask']);
+        $this->assertEquals(self::DELETE, $result['mask']);
+        $this->assertEquals(self::READ, $result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::READ | self::WRITE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertEquals(self::WRITE, $result['parentNoInheritMask']);
     }
 
     public function testThreeLevels()
     {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2);
-        $ace1->getStopMask()->willReturn(0);
-        $ace1->getNoInheritMask()->willReturn(0);
+        $acl = $this->prophesize(AccessControlList::class);
 
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(4);
-        $ace2->getStopMask()->willReturn(0);
-        $ace2->getNoInheritMask()->willReturn(0);
+        $ace1 = new Entry($acl->reveal(), 'object', 1, 'security', 2, self::READ | self::WRITE, null, null);
+        $ace2 = new Entry($acl->reveal(), 'object', 2, 'security', 2, self::DELETE, null, null);
+        $ace3 = new Entry($acl->reveal(), 'object', 3, 'security', 2, self::NUKE, null, null);
 
-        $ace3 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace3->getMask()->willReturn(8);
-        $ace3->getStopMask()->willReturn(0);
-        $ace3->getNoInheritMask()->willReturn(0);
+        $result = $this->resolver->resolve(array($ace1, $ace2, $ace3), 3);
 
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal(), $ace3->reveal()));
-
-        $this->assertEquals(1 | 2 | 4 | 8, $mask);
-    }
-
-    public function testThreeLevelsStopAll()
-    {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2);
-        $ace1->getStopMask()->willReturn(0);
-        $ace1->getNoInheritMask()->willReturn(0);
-
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(4);
-        $ace2->getStopMask()->willReturn(0);
-        $ace2->getNoInheritMask()->willReturn(0);
-
-        $ace3 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace3->getMask()->willReturn(1 | 2 | 4);
-        $ace3->getStopMask()->willReturn(0);
-        $ace3->getNoInheritMask()->willReturn(0);
-
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal(), $ace3->reveal()));
-
-        $this->assertEquals(0, $mask);
+        $this->assertEquals(self::READ | self::WRITE | self::DELETE | self::NUKE, $result['effectiveMask']);
+        $this->assertEquals(self::NUKE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::READ | self::WRITE | self::DELETE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testThreeLevelsWithStopMask()
     {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2);
-        $ace1->getStopMask()->willReturn(0);
-        $ace1->getNoInheritMask()->willReturn(0);
+        $acl = $this->prophesize(AccessControlList::class);
 
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(4);
-        $ace2->getStopMask()->willReturn(1);
-        $ace2->getNoInheritMask()->willReturn(0);
+        $ace1 = new Entry($acl->reveal(), 'object', 1, 'security', 2, self::READ | self::WRITE, null, null);
+        $ace2 = new Entry($acl->reveal(), 'object', 2, 'security', 2, self::DELETE, self::READ, null);
+        $ace3 = new Entry($acl->reveal(), 'object', 3, 'security', 2, self::NUKE, self::DELETE, null);
 
-        $ace3 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace3->getMask()->willReturn(8);
-        $ace3->getStopMask()->willReturn(4);
-        $ace3->getNoInheritMask()->willReturn(0);
+        $result = $this->resolver->resolve(array($ace1, $ace2, $ace3), 3);
 
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal(), $ace3->reveal()));
+        $this->assertEquals(self::WRITE | self::NUKE, $result['effectiveMask']);
 
-        $this->assertEquals(2 | 8, $mask);
+        $this->assertEquals(self::WRITE | self::NUKE, $result['effectiveMask']);
+        $this->assertEquals(self::NUKE, $result['mask']);
+        $this->assertEquals(self::DELETE, $result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::WRITE | self::DELETE, $result['parentMask']);
+        $this->assertEquals(self::READ, $result['parentStopMask']);
+        $this->assertNull($result['parentNoInheritMask']);
     }
 
     public function testThreeLevelsWithNoInheritMask()
     {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2);
-        $ace1->getNoInheritMask()->willReturn(2);
-        $ace1->getStopMask()->willReturn(0);
+        $acl = $this->prophesize(AccessControlList::class);
 
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(4);
-        $ace2->getNoInheritMask()->willReturn(1);
-        $ace2->getStopMask()->willReturn(0);
+        $ace1 = new Entry($acl->reveal(), 'object', 1, 'security', 2, self::READ | self::WRITE, null, self::READ);
+        $ace2 = new Entry($acl->reveal(), 'object', 2, 'security', 2, self::DELETE, null, self::WRITE);
+        $ace3 = new Entry($acl->reveal(), 'object', 3, 'security', 2, self::NUKE, null, null);
 
-        $ace3 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace3->getMask()->willReturn(8);
-        $ace3->getStopMask()->willReturn(0);
-        $ace3->getNoInheritMask()->willReturn(0);
+        $result = $this->resolver->resolve(array($ace1, $ace2, $ace3), 3);
 
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal(), $ace3->reveal()));
-
-        $this->assertEquals(4 | 8, $mask);
+        $this->assertEquals(self::DELETE | self::NUKE, $result['effectiveMask']);
+        $this->assertEquals(self::NUKE, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::WRITE | self::DELETE, $result['parentMask']);
+        $this->assertNull($result['parentStopMask']);
+        $this->assertEquals(self::WRITE, $result['parentNoInheritMask']);
     }
 
     public function testThreeLevelsWithStopMaskAndNoInheritMask()
     {
-        $ace1 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace1->getMask()->willReturn(1 | 2 | 4);
-        $ace1->getNoInheritMask()->willReturn(2);
-        $ace1->getStopMask()->willReturn(0);
+        $acl = $this->prophesize(AccessControlList::class);
 
-        $ace2 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace2->getMask()->willReturn(8 | 16);
-        $ace2->getStopMask()->willReturn(1);
-        $ace2->getNoInheritMask()->willReturn(8);
+        $ace1 = new Entry($acl->reveal(), 'object', 1, 'security', 2, self::READ | self::WRITE | self::DELETE, null, self::WRITE);
+        $ace2 = new Entry($acl->reveal(), 'object', 2, 'security', 2, self::NUKE, self::READ, self::NUKE);
+        $ace3 = new Entry($acl->reveal(), 'object', 3, 'security', 2, self::ADMIN, null, null);
 
-        $ace3 = $this->prophesize('Phlexible\Component\AccessControl\Domain\Entry');
-        $ace3->getMask()->willReturn(32);
-        $ace3->getStopMask()->willReturn(0);
-        $ace3->getNoInheritMask()->willReturn(0);
+        $result = $this->resolver->resolve(array($ace1, $ace2, $ace3), 3);
 
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal(), $ace3->reveal()));
-
-        $this->assertEquals(4 | 16 | 32, $mask);
+        $this->assertEquals(self::DELETE | self::ADMIN, $result['effectiveMask']);
+        $this->assertEquals(self::ADMIN, $result['mask']);
+        $this->assertNull($result['stopMask']);
+        $this->assertNull($result['noInheritMask']);
+        $this->assertEquals(self::DELETE | self::NUKE, $result['parentMask']);
+        $this->assertEquals(self::READ, $result['parentStopMask']);
+        $this->assertEquals(self::NUKE, $result['parentNoInheritMask']);
     }
 }
