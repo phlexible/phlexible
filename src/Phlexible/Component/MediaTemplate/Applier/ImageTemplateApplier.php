@@ -96,6 +96,13 @@ class ImageTemplateApplier
     public function apply(ImageTemplate $template, ExtendedFileInterface $file, $filename, $outFilename)
     {
         $image = $this->imagine->open($filename);
+        if ($image->layers()->count() > 1) {
+            // workaround for multi-page pdfs
+            // might be removed when https://github.com/avalanche123/Imagine/pull/451 is merged
+            $tmpFilename = sys_get_temp_dir().'/'.basename($filename);
+            $image->layers()->get(0)->save($tmpFilename.".jpg");
+            $image = $this->imagine->open($tmpFilename.".jpg");
+        }
 
         $options = array();
 
@@ -183,7 +190,7 @@ class ImageTemplateApplier
             if ($imageSize->getWidth() > $templateSize->getWidth() && $imageSize->getHeight() < $templateSize->getHeight()) {
                 $imageSize = $imageSize->heighten($templateSize->getHeight());
                 $image->resize($imageSize);
-            } else if ($imageSize->getWidth() < $templateSize->getWidth() && $imageSize->getHeight() > $templateSize->getHeight()) {
+            } elseif ($imageSize->getWidth() < $templateSize->getWidth() && $imageSize->getHeight() > $templateSize->getHeight()) {
                 $imageSize = $imageSize->widen($templateSize->getWidth());
                 $image->resize($imageSize);
             }
