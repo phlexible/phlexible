@@ -507,17 +507,8 @@ class LayoutController extends Controller
         $teaserId = $request->get('teaser_id');
 
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
-        $elementService = $this->get('phlexible_element.element_service');
 
         $teaser = $teaserManager->find($teaserId);
-        if ($teaser->getType() === 'element') {
-            $element = $elementService->findElement($teaser->getTypeId());
-            $elementService->deleteElement($element);
-        }
-
-        foreach ($teaserManager->findBy(['type' => ['sort', 'stop', 'inherit'], 'typeId' => $teaser->getTypeId()]) as $subTeaser) {
-            $teaserManager->deleteTeaser($subTeaser, $this->getUser()->getId());
-        }
 
         $teaserManager->deleteTeaser($teaser, $this->getUser()->getId());
 
