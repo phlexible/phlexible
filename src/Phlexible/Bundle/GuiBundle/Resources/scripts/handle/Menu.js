@@ -39,6 +39,10 @@ Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handl
                 handleFactory = Phlexible.Handles.get(menuItem.handle);
                 handler = handleFactory();
 
+                if (!handler) {
+                    return;
+                }
+                
                 if (menuItem.parameters) {
                     handler.setParameters(menuItem.parameters);
                 }

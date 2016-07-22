@@ -55,7 +55,7 @@ Phlexible.users.UserGrid = Ext.extend(Ext.grid.GridPanel, {
             }
         ];
 
-        if (Phlexible.User.isGranted('ROLE_ALLOWED_TO_SWITCH')) {
+        if (Phlexible.User.isGranted('ROLE_ALLOWED_TO_SWITCH') && !Phlexible.User.isGranted("ROLE_PREVIOUS_ADMIN")) {
             this.tbar.push('-');
             this.tbar.push({
                 text: this.strings.impersonate,

@@ -10,3 +10,7 @@ options:
 logout:
     parent: account
     handle: logout
+
+exit:
+    parent: account
+    handle: exit
