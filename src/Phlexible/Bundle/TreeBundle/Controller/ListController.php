@@ -12,6 +12,7 @@ use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,7 +52,8 @@ class ListController extends Controller
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
-        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
+        $tokenStorage = $this->get('security.token_storage');
+        $nodePermissionResolver = $this->get('phlexible_tree.node_permission_resolver');
 
         $tree = $treeManager->getByNodeID($tid);
         $node = $tree->get($tid);
@@ -61,36 +63,16 @@ class ListController extends Controller
         $elementVersion = $elementService->findLatestElementVersion($element);
         $elementtype = $elementService->findElementtype($element);
         //$elementData = $element->getData(0, 'en');
+        $token = $tokenStorage->getToken();
 
         if (!$language) {
             $language = $elementMasterLanguage;
         }
 
-        $userRights = [];
-        $userAdminRights = null;
-        if ($node instanceof DomainObjectInterface) {
-            if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
-                //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
+        $userRights = $nodePermissionResolver->resolve($node, $language, $token);
 
-                if (!$this->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
-                    return new JsonResponse([
-                        'parent' => null,
-                        'list'   => array(),
-                        'total'  => 0
-                    ]);
-                }
-
-                // TODO: fix
-                $userRights = array();
-                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                    $userRights[] = $permission->getName();
-                }
-            } else {
-                $userRights = array();
-                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                    $userRights[] = $permission->getName();
-                }
-            }
+        if ($userRights === null) {
+            throw $this->createAccessDeniedException();
         }
 
         $parent = [
@@ -140,23 +122,9 @@ class ListController extends Controller
         foreach ($childIds as $childId => $latestVersion) {
             $childNode = $tree->get($childId);
 
-            if (!$userAdminRights) {
-                //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
-
-                if (!$this->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
-                    continue;
-                }
-
-                // TODO: fix
-                $userRights = array();
-                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                    $userRights[] = $permission->getName();
-                }
-            } else {
-                $userRights = array();
-                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                    $userRights[] = $permission->getName();
-                }
+            $userRights = $nodePermissionResolver->resolve($childNode, $language, $token);
+            if ($userRights === null) {
+                continue;
             }
 
             $childElement = $elementService->findElement($childNode->getTypeId());

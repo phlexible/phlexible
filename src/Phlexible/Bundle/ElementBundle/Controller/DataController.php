@@ -66,7 +66,7 @@ class DataController extends Controller
         $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
         $lockManager = $this->get('phlexible_element.element_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
-        $securityContext = $this->get('security.context');
+        $authorizationChecker = $this->get('security.authorization_checker');
 
         $teaser = null;
         if ($teaserId) {
@@ -251,8 +251,8 @@ class DataController extends Controller
         }
 
         if ($node instanceof DomainObjectInterface) {
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') &&
-                !$securityContext->isGranted(['permission' => 'EDIT', 'language' => $language], $node)
+            if (!$authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
+                !$authorizationChecker->isGranted(['permission' => 'EDIT', 'language' => $language], $node)
             ) {
                 $doLock = false;
             }
@@ -451,25 +451,15 @@ class DataController extends Controller
 
         // rights
 
-        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
-        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
-            if (!$this->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
-                return new JsonResponse(array('success' => false, 'message' => 'no permission'));
-            }
+        $permissionResolver = $this->get('phlexible_tree.node_permission_resolver');
+        $tokenStorage = $this->get('security.token_storage');
 
-            $identity = HierarchicalObjectIdentity::fromDomainObject($node);
-            $acl = $this->get('phlexible_access_control.access_manager')->findAcl($identity);
-            $token = $this->get('security.token_storage')->getToken();
-
-            $permissions = $acl->getEffectivePermissions($token, $language);
-        } else {
-            $permissions = $permissionRegistry->get(get_class($node))->all();
+        $userRights = $permissionResolver->resolve($node, $language, $tokenStorage->getToken());
+        if ($userRights === null) {
+            return new JsonResponse(array('success' => false, 'message' => 'no permission'));
         }
 
-        $userRights = array();
-        foreach ($permissions as $permission) {
-            $userRights[] = $permission->getName();
-        }
+        // state
 
         $status = '';
         if ($stateManager->isPublished($node, $language)) {

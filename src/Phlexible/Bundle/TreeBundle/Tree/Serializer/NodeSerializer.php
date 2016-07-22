@@ -12,11 +12,8 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
-use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
-use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
-use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Phlexible\Bundle\TreeBundle\Tree\NodePermissionResolver;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Tree interface
@@ -41,42 +38,26 @@ class NodeSerializer
     private $stateManager;
 
     /**
-     * @var PermissionRegistry
+     * @var NodePermissionResolver
      */
-    private $permissionRegistry;
+    private $nodePermissionResolver;
 
     /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
-
-    /**
-     * @var AccessManagerInterface
-     */
-    private $accessManager;
-
-    /**
-     * @param ElementService                $elementService
-     * @param IconResolver                  $iconResolver
-     * @param StateManagerInterface         $stateManager
-     * @param PermissionRegistry            $permissionRegistry
-     * @param AccessManagerInterface        $accessManager
-     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param ElementService         $elementService
+     * @param IconResolver           $iconResolver
+     * @param StateManagerInterface  $stateManager
+     * @param NodePermissionResolver $nodePermissionResolver
      */
     public function __construct(
         ElementService $elementService,
         IconResolver $iconResolver,
         StateManagerInterface $stateManager,
-        PermissionRegistry $permissionRegistry,
-        AccessManagerInterface $accessManager,
-        AuthorizationCheckerInterface $authorizationChecker)
-    {
+        NodePermissionResolver $nodePermissionResolver
+    ) {
         $this->elementService = $elementService;
         $this->iconResolver = $iconResolver;
         $this->stateManager = $stateManager;
-        $this->permissionRegistry = $permissionRegistry;
-        $this->accessManager = $accessManager;
-        $this->authorizationChecker = $authorizationChecker;
+        $this->nodePermissionResolver = $nodePermissionResolver;
     }
 
     /**
@@ -84,10 +65,11 @@ class NodeSerializer
      *
      * @param TreeNodeInterface[] $nodes
      * @param string              $language
+     * @param TokenInterface      $token
      *
      * @return array
      */
-    public function serializeNodes(array $nodes, $language, $token)
+    public function serializeNodes(array $nodes, $language, TokenInterface $token)
     {
         $return = [];
 
@@ -107,29 +89,15 @@ class NodeSerializer
      *
      * @param TreeNodeInterface $node
      * @param string            $language
+     * @param TokenInterface    $token
      *
      * @return array
      */
-    public function serializeNode(TreeNodeInterface $node, $language, $token)
+    public function serializeNode(TreeNodeInterface $node, $language, TokenInterface $token)
     {
-        $userRights = [];
-        if ($node instanceof DomainObjectInterface) {
-            if (1 || !$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-                if (0 && !$this->authorizationChecker->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
-                    return null;
-                }
-
-                $identity = HierarchicalObjectIdentity::fromDomainObject($node);
-                $acl = $this->accessManager->findAcl($identity);
-
-                $permissions = $acl->getEffectivePermissions($token, $language);
-            } else {
-                $permissions = $this->permissionRegistry->get(get_class($node))->all();
-            }
-            
-            foreach ($permissions as $permission) {
-                $userRights[] = $permission->getName();
-            }
+        $userRights = $this->nodePermissionResolver->resolve($node, $language, $token);
+        if ($userRights === null) {
+            return null;
         }
 
         $eid = $node->getTypeId();

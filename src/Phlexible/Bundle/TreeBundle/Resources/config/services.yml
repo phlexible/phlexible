@@ -1,4 +1,11 @@
 services:
+    phlexible_tree.node_permission_resolver:
+        class: Phlexible\Bundle\TreeBundle\Tree\NodePermissionResolver
+        arguments:
+            - "@security.authorization_checker"
+            - "@phlexible_access_control.access_manager"
+            - "@phlexible_access_control.permission_registry"
+
     phlexible_tree.node_url_generator.language:
         class: Phlexible\Bundle\TreeBundle\NodeUrlGenerator\LanguageNodeUrlGenerator
         arguments:
@@ -24,9 +31,7 @@ services:
             - "@phlexible_element.element_service"
             - "@phlexible_element.icon_resolver"
             - "@phlexible_tree.state_manager"
-            - "@phlexible_access_control.permission_registry"
-            - "@phlexible_access_control.access_manager"
-            - "@security.authorization_checker"
+            - "@phlexible_tree.node_permission_resolver"
 
     phlexible_tree.router.handler.default:
         class: Phlexible\Bundle\TreeBundle\Router\Handler\DefaultHandler
