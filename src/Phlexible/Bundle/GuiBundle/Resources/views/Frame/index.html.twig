@@ -74,7 +74,7 @@
     };
 
     var Phlexible = {
-        debug: {{ app.debug }},
+        debug: {{ app.debug ? "true" : "false" }},
         environment: "{{ app.environment }}",
         title: "{{ project.title }}",
         version: "{{ project.version }}",
