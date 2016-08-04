@@ -1,3 +1,4 @@
+/*global Ext, Phlexible*/
 Ext.provide('Phlexible.gui.util.Console');
 
 /*
@@ -49,7 +50,7 @@ Phlexible.gui.util.Console = function () {
         enabled = false;
     };
 
-    [
+    Ext.each([
         'clear',
         'log',
         'debug',
@@ -68,7 +69,7 @@ Phlexible.gui.util.Console = function () {
         'profile',
         'profileEnd',
         'count'
-    ].forEach(function(methodName) {
+    ], function(methodName) {
         if (enabled && typeof window.console === 'object' && typeof window.console[methodName] === 'function') {
             if (Function.prototype.bind) {
                 self[methodName] = Function.prototype.bind.call(window.console[methodName], window.console);
