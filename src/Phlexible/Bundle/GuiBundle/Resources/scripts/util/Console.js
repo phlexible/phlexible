@@ -40,7 +40,7 @@ Phlexible.gui.util.Console = function () {
     "use strict";
     // private
     var self = this;
-    var enabled = true;
+    var enabled = Phlexible.debug;
 
     // Enable / disable logging
     self.enable = function () {
@@ -71,13 +71,11 @@ Phlexible.gui.util.Console = function () {
         'count'
     ], function(methodName) {
         if (enabled && typeof window.console === 'object' && typeof window.console[methodName] === 'function') {
-            if (Function.prototype.bind) {
-                self[methodName] = Function.prototype.bind.call(window.console[methodName], window.console);
-            } else {
-                self[methodName] = function() {
+            self[methodName] = function() {
+                if (enabled) {
                     Function.prototype.apply.call(window.console[methodName], window.console, arguments);
-                };
-            }
+                }
+            };
         } else {
             self[methodName] = function() {};
         }
