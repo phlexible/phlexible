@@ -20,6 +20,7 @@ use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -65,7 +66,7 @@ class DataController extends Controller
         $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
         $lockManager = $this->get('phlexible_element.element_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
-        $securityContext = $this->get('security.context');
+        $authorizationChecker = $this->get('security.authorization_checker');
 
         $teaser = null;
         if ($teaserId) {
@@ -250,8 +251,8 @@ class DataController extends Controller
         }
 
         if ($node instanceof DomainObjectInterface) {
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') &&
-                !$securityContext->isGranted(['permission' => 'EDIT', 'language' => $language], $node)
+            if (!$authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
+                !$authorizationChecker->isGranted(['permission' => 'EDIT', 'language' => $language], $node)
             ) {
                 $doLock = false;
             }
@@ -450,22 +451,15 @@ class DataController extends Controller
 
         // rights
 
-        $userRights = array();
-        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
-        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
-            if (!$this->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
-                return new JsonResponse(array('success' => false, 'message' => 'no permission'));
-            }
+        $permissionResolver = $this->get('phlexible_tree.node_permission_resolver');
+        $tokenStorage = $this->get('security.token_storage');
 
-            // TODO: fix
-            foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                $userRights[] = $permission->getName();
-            }
-        } else {
-            foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                $userRights[] = $permission->getName();
-            }
+        $userRights = $permissionResolver->resolve($node, $language, $tokenStorage->getToken());
+        if ($userRights === null) {
+            return new JsonResponse(array('success' => false, 'message' => 'no permission'));
         }
+
+        // state
 
         $status = '';
         if ($stateManager->isPublished($node, $language)) {

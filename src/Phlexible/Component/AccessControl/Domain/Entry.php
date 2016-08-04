@@ -32,6 +32,16 @@ class Entry implements EntryInterface
     /**
      * @var string
      */
+    private $objectType;
+
+    /**
+     * @var string
+     */
+    private $objectIdentifier;
+
+    /**
+     * @var string
+     */
     private $securityType;
 
     /**
@@ -56,15 +66,19 @@ class Entry implements EntryInterface
 
     /**
      * @param AccessControlList $acl
+     * @param string            $objectType
+     * @param string            $objectIdentifier
      * @param string            $securityType
      * @param string            $securityIdentifier
-     * @param bool              $mask
-     * @param bool              $stopMask
-     * @param bool              $noInheritMask
+     * @param int               $mask
+     * @param int               $stopMask
+     * @param int               $noInheritMask
      */
-    public function __construct(AccessControlList $acl, $securityType, $securityIdentifier, $mask, $stopMask, $noInheritMask)
+    public function __construct(AccessControlList $acl, $objectType, $objectIdentifier, $securityType, $securityIdentifier, $mask, $stopMask, $noInheritMask)
     {
         $this->acl = $acl;
+        $this->objectType = $objectType;
+        $this->objectIdentifier = $objectIdentifier;
         $this->securityType = $securityType;
         $this->securityIdentifier = $securityIdentifier;
         $this->mask = $mask;
@@ -86,6 +100,22 @@ class Entry implements EntryInterface
     public function getAcl()
     {
         return $this->acl;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectType()
+    {
+        return $this->objectType;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectIdentifier()
+    {
+        return $this->objectIdentifier;
     }
 
     /**

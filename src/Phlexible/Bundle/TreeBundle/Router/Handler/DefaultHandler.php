@@ -162,7 +162,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         $parameters = $this->matchIdentifiers($request);
 
         if ($parameters === null) {
-            throw new ResourceNotFoundException("bla");
+            throw new ResourceNotFoundException();
         }
 
         /*

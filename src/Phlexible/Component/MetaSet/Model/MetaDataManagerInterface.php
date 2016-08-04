@@ -28,7 +28,7 @@ interface MetaDataManagerInterface
     /**
      * @param MetaSet $metaSet
      *
-     * @return MetaDataInterface
+     * @return MetaDataInterface[]
      */
     public function findByMetaSet(MetaSet $metaSet);
 

@@ -10,30 +10,34 @@ services:
         class: Phlexible\Component\AccessControl\SecurityProvider\DelegatingSecurityResolver
         arguments:
             -
-                - @phlexible_access_control.user_security_provider
-                - @phlexible_access_control.group_security_provider
-                - @phlexible_access_control.role_security_provider
+                - "@phlexible_access_control.user_security_provider"
+                - "@phlexible_access_control.group_security_provider"
+                - "@phlexible_access_control.role_security_provider"
 
     phlexible_access_control.user_security_provider:
         class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\UserSecurityProvider
-        arguments: [@phlexible_user.user_manager]
+        arguments:
+            - "@phlexible_user.user_manager"
 
     phlexible_access_control.group_security_provider:
         class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\GroupSecurityProvider
-        arguments: [@phlexible_user.group_manager]
+        arguments:
+            - "@phlexible_user.group_manager"
 
     phlexible_access_control.role_security_provider:
         class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\RoleSecurityProvider
-        arguments: [@security.role_hierarchy, %security.role_hierarchy.roles%]
+        arguments:
+            - "@security.role_hierarchy"
+            - "%security.role_hierarchy.roles%"
 
     # voters
     phlexible_access_control.voter.rights:
         class: Phlexible\Bundle\AccessControlBundle\Voter\AccessControlVoter
         public: false
         arguments:
-            - @phlexible_access_control.access_manager
-            - @phlexible_access_control.permission_registry
-            - %phlexible_access_control.permissive_on_empty_acl%
+            - "@phlexible_access_control.access_manager"
+            - "@phlexible_access_control.permission_registry"
+            - "%phlexible_access_control.permissive_on_empty_acl%"
         tags:
             - {name: security.voter}
 

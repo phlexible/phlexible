@@ -3,6 +3,7 @@ services:
     phlexible_frontend.problem.specialtidcheck:
         class: Phlexible\Bundle\FrontendBundle\ProblemChecker\SpecialTidChecker
         public: false
-        arguments: [@doctrine.orm.entity_manager]
+        arguments:
+            - "@doctrine.orm.entity_manager"
         tags:
             - {name: problem.checker}

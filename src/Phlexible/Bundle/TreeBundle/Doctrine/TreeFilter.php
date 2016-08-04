@@ -14,9 +14,7 @@ use Phlexible\Bundle\TreeBundle\Event\TreeFilterEvent;
 use Phlexible\Bundle\TreeBundle\Model\TreeFilterInterface;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 
 /**
  * Tree filter
@@ -61,9 +59,9 @@ class TreeFilter implements TreeFilterInterface
     private $language;
 
     /**
-     * @var SessionBagInterface
+     * @var TreeFilterStorage
      */
-    private $storage = null;
+    private $storage;
 
     /**
      * @param Connection               $connection
@@ -79,9 +77,13 @@ class TreeFilter implements TreeFilterInterface
         $this->tid = $tid;
         $this->language = $language;
 
-        $bag = new AttributeBag('elements_filter_' . $tid . '_' . $language);
-        $session->registerBag($bag);
-        $this->storage = $bag;
+        $key = 'elements_filter_' . $tid . '_' . $language;
+        if ($session->has($key)) {
+            $this->storage = $session->get($key);
+        } else {
+            $this->storage = new TreeFilterStorage();
+            $session->set($key, $this->storage);
+        }
 
         if ($this->storage->has('filterValues')) {
             $this->setFilterValues($this->storage->get('filterValues'));

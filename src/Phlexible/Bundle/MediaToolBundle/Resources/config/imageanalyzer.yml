@@ -1,7 +1,8 @@
 services:
     phlexible_media_tool.image_analyzer:
         class: Brainbits\ImageAnalyzer\ImageAnalyzer
-        arguments: [@phlexible_media_tool.image_analyzer.driver]
+        arguments:
+            - "@phlexible_media_tool.image_analyzer.driver"
 
     phlexible_media_tool.image_analyzer.driver.imagick:
         class: Brainbits\ImageAnalyzer\Driver\ImagickDriver

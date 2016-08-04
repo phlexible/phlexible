@@ -1,8 +1,17 @@
 services:
     phlexible_teaser.doctrine.teaser_manager:
         class: Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager
-        arguments: [@doctrine.orm.entity_manager, @phlexible_teaser.state_manager, @phlexible_element.element_history_manager, @event_dispatcher]
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@phlexible_teaser.state_manager"
+            - "@phlexible_element.element_history_manager"
+            - "@event_dispatcher"
 
     phlexible_teaser.doctrine.state_manager:
         class: Phlexible\Bundle\TeaserBundle\Doctrine\StateManager
-        arguments: [@doctrine.orm.entity_manager, @phlexible_element.element_history_manager, @phlexible_teaser.teaser_mediator, @phlexible_teaser.teaser_hasher, @event_dispatcher]
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@phlexible_element.element_history_manager"
+            - "@phlexible_teaser.teaser_mediator"
+            - "@phlexible_teaser.teaser_hasher"
+            - "@event_dispatcher"

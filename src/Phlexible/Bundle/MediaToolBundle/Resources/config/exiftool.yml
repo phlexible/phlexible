@@ -1,8 +1,8 @@
 services:
     phlexible_media_tool.exiftool:
         class: PHPExiftool\Reader
-        factory_class: PHPExiftool\Reader
-        factory_method: create
-        arguments: [@logger]
+        factory: [PHPExiftool\Reader, create]
+        arguments:
+            - "@logger"
         tags:
             - {name: monolog.logger, channel: media_tools}

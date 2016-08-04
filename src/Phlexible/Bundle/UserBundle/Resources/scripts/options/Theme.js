@@ -50,7 +50,7 @@ Phlexible.users.options.Theme = Ext.extend(Ext.form.FormPanel, {
                         var r = records[0];
                         if (Phlexible.Config.get('user.property.theme', 'default') != r.id) {
                             Ext.Ajax.request({
-                                url: Phlexible.Router.generate('users_options_savedetails', {theme: r.id}),
+                                url: Phlexible.Router.generate('users_options_savetheme', {theme: r.id}),
                                 success: function (response) {
                                     var data = Ext.decode(response.responseText);
                                     if (data.success) {

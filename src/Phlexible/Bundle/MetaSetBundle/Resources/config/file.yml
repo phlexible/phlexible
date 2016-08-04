@@ -13,15 +13,20 @@ services:
     phlexible_meta_set.file.loader:
         class: Phlexible\Component\MetaSet\File\MetaSetLoader
         public: false
-        arguments: [@pattern_locator]
+        arguments:
+            - "@pattern_locator"
         calls:
-            - [addLoader, [@phlexible_meta_set.file.loader.xml]]
+            - [addLoader, ["@phlexible_meta_set.file.loader.xml"]]
 
     phlexible_meta_set.file.dumper:
         class: Phlexible\Component\MetaSet\File\MetaSetDumper
         public: false
-        arguments: [@phlexible_meta_set.file.dumper.xml, %phlexible_meta_set.file_dir%]
+        arguments:
+            - "@phlexible_meta_set.file.dumper.xml"
+            - "%phlexible_meta_set.file_dir%"
 
     phlexible_meta_set.file.meta_set_manager:
         class: Phlexible\Component\MetaSet\File\MetaSetManager
-        arguments: [@phlexible_meta_set.file.loader, @phlexible_meta_set.file.dumper]
+        arguments:
+            - "@phlexible_meta_set.file.loader"
+            - "@phlexible_meta_set.file.dumper"

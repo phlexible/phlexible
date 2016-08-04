@@ -1,8 +1,10 @@
 services:
     phlexible_media_manager.doctrine.folder_usage_manager:
         class: Phlexible\Component\MediaManager\Usage\FolderUsageManager
-        arguments: [@doctrine.orm.entity_manager]
+        arguments:
+            - "@doctrine.orm.entity_manager"
 
     phlexible_media_manager.doctrine.file_usage_manager:
         class: Phlexible\Component\MediaManager\Usage\FileUsageManager
-        arguments: [@doctrine.orm.entity_manager]
+        arguments:
+            - "@doctrine.orm.entity_manager"

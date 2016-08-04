@@ -2,4 +2,5 @@ services:
     phlexible_data_source.doctrine.data_source_manager:
         class: Phlexible\Bundle\DataSourceBundle\Doctrine\DataSourceManager
         public: false
-        arguments: [@doctrine.orm.entity_manager]
+        arguments:
+            - "@doctrine.orm.entity_manager"

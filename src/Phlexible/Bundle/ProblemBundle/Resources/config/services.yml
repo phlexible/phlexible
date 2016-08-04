@@ -5,12 +5,15 @@ services:
 
     phlexible_problem.problem_fetcher:
         class: Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcher
-        arguments: [@doctrine.orm.entity_manager, @event_dispatcher]
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@event_dispatcher"
 
     # event listeners
     phlexible_problem.listener.collect_problems:
         class: Phlexible\Bundle\ProblemBundle\EventListener\CollectProblemsListener
-        arguments: [@properties]
+        arguments:
+            - "@properties"
         tags:
             - {name: kernel.event_listener, event: phlexible_problem.collect, method: onCollectProblems}
 
@@ -18,7 +21,9 @@ services:
     phlexible_problem.portlet.problems:
         class: Phlexible\Bundle\ProblemBundle\Portlet\ProblemsPortlet
         public: false
-        arguments: [@translator, @phlexible_problem.problem_fetcher]
+        arguments:
+            - "@translator"
+            - "@phlexible_problem.problem_fetcher"
         tags:
             - {name: phlexible_dashboard.portlet}
 

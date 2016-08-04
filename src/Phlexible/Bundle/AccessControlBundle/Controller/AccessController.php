@@ -90,35 +90,10 @@ class AccessController extends Controller
     }
 
     /**
-     * List subjects
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/identities", name="accesscontrol_identities")
-     */
-    public function identitiesAction(Request $request)
-    {
-        $objectType = $request->get('objectType');
-        $objectId = $request->get('objectId');
-
-        $objectIdentity = new ObjectIdentity($objectId, $objectType);
-
-        $accessManager = $this->get('phlexible_access_control.access_manager');
-        $acl = $accessManager->findAcl($objectIdentity);
-        $permissionResolver = $this->get('phlexible_access_control.permission_resolver');
-        dump($acl);
-        dump($permissionResolver->resolve($acl));
-        die;
-
-        return new JsonResponse($acl->getPermissions());
-    }
-
-    /**
      * @param Request $request
      *
      * @return ResultResponse
-     * @throws InvalidArgumentException
+     * @throws \Exception
      * @Route("/save", name="accesscontrol_save")
      */
     public function saveAction(Request $request)
@@ -158,8 +133,14 @@ class AccessController extends Controller
             $acl->removeEntry($ace);
         }
         foreach ($identities as $objectIdentity) {
+            if ($objectIdentity['mask'] === null && $objectIdentity['stopMask'] === null && $objectIdentity['noInheritMask'] === null) {
+                continue;
+            }
+
             $ace = new Entry(
                 $acl,
+                $objectIdentity['objectType'],
+                $objectIdentity['objectId'],
                 $objectIdentity['securityType'],
                 $objectIdentity['securityId'],
                 $objectIdentity['mask'],

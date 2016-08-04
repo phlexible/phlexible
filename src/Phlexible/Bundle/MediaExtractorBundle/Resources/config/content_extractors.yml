@@ -2,7 +2,8 @@ services:
     phlexible_media_extractor.extractor.content.pdftotext:
         class: Phlexible\Component\MediaExtractor\ContentExtractor\PdfToTextExtractor
         public: false
-        arguments: [@phlexible_media_tool.poppler.pdf_file]
+        arguments:
+            - "@phlexible_media_tool.poppler.pdf_file"
 
     phlexible_media_extractor.extractor.content.rawtext:
         class: Phlexible\Component\MediaExtractor\ContentExtractor\RawTextExtractor
@@ -25,14 +26,15 @@ services:
         public: false
         arguments:
             -
-                - @phlexible_media_extractor.extractor.content.pdftotext
-                - @phlexible_media_extractor.extractor.content.rawtext
-                - @phlexible_media_extractor.extractor.content.zendlucenedocx
-                - @phlexible_media_extractor.extractor.content.zendlucenepptx
-                - @phlexible_media_extractor.extractor.content.zendlucenexlsx
+                - "@phlexible_media_extractor.extractor.content.pdftotext"
+                - "@phlexible_media_extractor.extractor.content.rawtext"
+                - "@phlexible_media_extractor.extractor.content.zendlucenedocx"
+                - "@phlexible_media_extractor.extractor.content.zendlucenepptx"
+                - "@phlexible_media_extractor.extractor.content.zendlucenexlsx"
 
     phlexible_media_extractor.extractor.content:
         class: Phlexible\Component\MediaExtractor\Extractor\DelegatingExtractor
-        arguments: [@phlexible_media_extractor.extractor.content.resolver]
+        arguments:
+            - "@phlexible_media_extractor.extractor.content.resolver"
         tags:
             - {name: phlexible_media_extractor.extractor}

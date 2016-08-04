@@ -6,158 +6,174 @@ services:
     phlexible_element.element_service:
         class: Phlexible\Bundle\ElementBundle\ElementService
         arguments:
-            - @phlexible_element.element_manager
-            - @phlexible_element.element_version_manager
-            - @phlexible_element.element_structure_manager
-            - @phlexible_element.element_source_manager
-            - @phlexible_element.element_history_manager
-            - @phlexible_elementtype.viability_manager
-            - @phlexible_element.field_mapper
+            - "@phlexible_element.element_manager"
+            - "@phlexible_element.element_version_manager"
+            - "@phlexible_element.element_structure_manager"
+            - "@phlexible_element.element_source_manager"
+            - "@phlexible_element.element_history_manager"
+            - "@phlexible_elementtype.viability_manager"
+            - "@phlexible_element.field_mapper"
 
     phlexible_element.checker:
         class: Phlexible\Bundle\ElementBundle\Change\Checker
         arguments:
-            - @phlexible_elementtype.elementtype_service
-            - @phlexible_element.element_service
-            - @phlexible_element.element_source_manager
+            - "@phlexible_elementtype.elementtype_service"
+            - "@phlexible_element.element_service"
+            - "@phlexible_element.element_source_manager"
 
     phlexible_element.synchronizer:
         class: Phlexible\Bundle\ElementBundle\Change\Synchronizer
         arguments:
-            - @phlexible_element.element_version_manager
-            - @phlexible_element.element_source_manager
-            - @phlexible_elementtype.file.dumper.xml
+            - "@phlexible_element.element_version_manager"
+            - "@phlexible_element.element_source_manager"
+            - "@phlexible_elementtype.file.dumper.xml"
 
     phlexible_element.publish.publisher:
         class: Phlexible\Bundle\ElementBundle\Element\Publish\Publisher
         arguments:
-            - @phlexible_element.element_service
-            - @phlexible_tree.tree_manager
-            - @phlexible_teaser.teaser_manager
-            - @security.authorization_checker
+            - "@phlexible_element.element_service"
+            - "@phlexible_tree.tree_manager"
+            - "@phlexible_teaser.teaser_manager"
+            - "@security.authorization_checker"
 
     phlexible_element.publish.selector:
         class: Phlexible\Bundle\ElementBundle\Element\Publish\Selector
         arguments:
-            - @phlexible_element.element_service
-            - @phlexible_elementtype.elementtype_service
-            - @phlexible_tree.tree_manager
-            - @phlexible_teaser.teaser_manager
-            - @security.authorization_checker
+            - "@phlexible_element.element_service"
+            - "@phlexible_elementtype.elementtype_service"
+            - "@phlexible_tree.tree_manager"
+            - "@phlexible_teaser.teaser_manager"
+            - "@security.authorization_checker"
 
     phlexible_element.icon_builder:
         class: Phlexible\Bundle\ElementBundle\Icon\IconBuilder
-        arguments: [@file_locator, %phlexible_element.overlay.cache_dir%]
+        arguments:
+            - "@file_locator"
+            - "%phlexible_element.overlay.cache_dir%"
 
     phlexible_element.icon_resolver:
         class: Phlexible\Bundle\ElementBundle\Icon\IconResolver
-        arguments: [@router, @phlexible_element.element_service, @phlexible_teaser.teaser_manager]
+        arguments:
+            - "@router"
+            - "@phlexible_element.element_service"
+            - "@phlexible_teaser.teaser_manager"
 
     phlexible_element.element_meta_set_resolver:
         class: Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver
-        arguments: [@phlexible_meta_set.meta_set_manager, @phlexible_element.element_service]
+        arguments:
+            - "@phlexible_meta_set.meta_set_manager"
+            - "@phlexible_element.element_service"
 
     phlexible_element.element_meta_data_manager:
         class: Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager
-        arguments: [@doctrine.orm.entity_manager, @phlexible_data_source.data_source_manager, "element_meta"]
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@phlexible_data_source.data_source_manager"
+            - element_meta
 
     phlexible_element.util.suggest_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
-        arguments: [%phlexible_elementtype.field.suggest_seperator%]
+        arguments:
+            - "@phlexible_meta_set.meta_set_manager"
+            - "@phlexible_element.element_service"
+            - "@phlexible_element.element_source_manager"
+            - "%phlexible_elementtype.field.suggest_seperator%"
 
     phlexible_element.util.suggest_meta_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil
-        arguments: [@phlexible_meta_set.meta_set_manager, @phlexible_element.element_meta_data_manager, %phlexible_meta_set.suggest.seperator%]
+        arguments:
+            - "@phlexible_meta_set.meta_set_manager"
+            - "@phlexible_element.element_meta_data_manager"
+            - "%phlexible_meta_set.suggest.seperator%"
 
     phlexible_element.request.data_saver:
         class: Phlexible\Bundle\ElementBundle\Controller\Data\DataSaver
         arguments:
-            - @phlexible_element.element_service
-            - @phlexible_elementtype.field.registry
-            - @phlexible_tree.tree_manager
-            - @phlexible_teaser.teaser_manager
-            - @phlexible_element.element_meta_set_resolver
-            - @phlexible_element.element_meta_data_manager
-            - @event_dispatcher
-            - %phlexible_cms.languages.available%
+            - "@phlexible_element.element_service"
+            - "@phlexible_elementtype.field.registry"
+            - "@phlexible_tree.tree_manager"
+            - "@phlexible_teaser.teaser_manager"
+            - "@phlexible_element.element_meta_set_resolver"
+            - "@phlexible_element.element_meta_data_manager"
+            - "@event_dispatcher"
+            - "%phlexible_cms.languages.available%"
 
     phlexible_element.element_hasher:
         class: Phlexible\Bundle\ElementBundle\Element\ElementHasher
-        arguments: [@phlexible_element.element_service]
+        arguments:
+            - "@phlexible_element.element_service"
 
     # event listeners
-    phlexible_element.listener.task:
-        class: Phlexible\Bundle\ElementBundle\EventListener\TaskListener
-        arguments: [@security.token_storage, @?phlexible_task.task_manager]
-        tags:
-            - {name: kernel.event_subscriber}
-
     phlexible_element.listener.siteroot:
         class: Phlexible\Bundle\ElementBundle\EventListener\SiterootListener
         arguments:
-            - @phlexible_element.element_service
-            - @phlexible_elementtype.elementtype_service
-            - @phlexible_tree.tree_manager
-            - @phlexible_user.user_manager
-            - %phlexible_cms.languages.default%
+            - "@phlexible_element.element_service"
+            - "@phlexible_elementtype.elementtype_service"
+            - "@phlexible_tree.tree_manager"
+            - "@phlexible_user.user_manager"
+            - "%phlexible_cms.languages.default%"
         tags:
             - {name: kernel.event_listener, event: phlexible_siteroot.create_siteroot, method: onCreateSiteroot}
 
     phlexible_element.listener.datasource:
         class: Phlexible\Bundle\ElementBundle\EventListener\DatasourceListener
         arguments:
-            - @phlexible_element.util.suggest_field
-            - @phlexible_element.util.suggest_meta_field
+            - "@phlexible_element.util.suggest_field"
+            - "@phlexible_element.util.suggest_meta_field"
         tags:
             - {name: kernel.event_subscriber}
 
     phlexible_element.listener.element_structure:
         class: Phlexible\Bundle\ElementBundle\EventListener\ElementStructureListener
         arguments:
-            - @phlexible_data_source.data_source_manager
-            - @phlexible_element.element_service
+            - "@phlexible_data_source.data_source_manager"
+            - "@phlexible_element.element_service"
         tags:
             - {name: kernel.event_subscriber}
 
     phlexible_element.listener.get_config:
         class: Phlexible\Bundle\ElementBundle\EventListener\GetConfigListener
         arguments:
-            - @phlexible_siteroot.siteroot_manager
-            - @phlexible_tree.tree_manager
-            - @security.authorization_checker
-            - %phlexible_element.publish.comment_required%
-            - %phlexible_element.publish.confirm_required%
-            - %phlexible_element.create.use_multilanguage%
-            - %phlexible_element.create.restricted%
-            - %phlexible_cms.languages.available%
+            - "@phlexible_siteroot.siteroot_manager"
+            - "@phlexible_tree.tree_manager"
+            - "@security.authorization_checker"
+            - "%phlexible_element.publish.comment_required%"
+            - "%phlexible_element.publish.confirm_required%"
+            - "%phlexible_element.create.use_multilanguage%"
+            - "%phlexible_element.create.restricted%"
+            - "%phlexible_cms.languages.available%"
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
 
     phlexible_element.listener.get_menu:
         class: Phlexible\Bundle\ElementBundle\EventListener\GetMenuListener
         arguments:
-            - @phlexible_siteroot.siteroot_manager
-            - @phlexible_tree.tree_manager
-            - @security.authorization_checker
-            - %phlexible_cms.languages.available%
+            - "@phlexible_siteroot.siteroot_manager"
+            - "@phlexible_tree.tree_manager"
+            - "@security.authorization_checker"
+            - "%phlexible_cms.languages.available%"
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_menu, method: onGetMenu}
 
     phlexible_element.listener.apply_successor:
         class: Phlexible\Bundle\ElementBundle\EventListener\ApplySuccessorListener
-        arguments: [@doctrine.dbal.default_connection]
+        arguments:
+            - "@doctrine.dbal.default_connection"
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
     phlexible_element.listener.elementtype_usage:
         class: Phlexible\Bundle\ElementBundle\EventListener\ElementtypeUsageListener
-        arguments: [@doctrine.dbal.default_connection, @security.token_storage]
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@security.token_storage"
         tags:
             - {name: kernel.event_listener, event: phlexible_elementtype.usage, method: onElementtypeUsage}
 
     phlexible_element.listener.unlock:
         class: Phlexible\Bundle\ElementBundle\EventListener\UnlockListener
-        arguments: [@doctrine.orm.entity_manager]
+        arguments:
+            - "@doctrine.orm.entity_manager"
         tags:
             - {name: kernel.event_listener, event: phlexible_user.before_delete_user, method: onBeforeDeleteUser}
             - {name: kernel.event_listener, event: security.logout, method: onLogout}
@@ -165,14 +181,15 @@ services:
     phlexible_element.listener.teaser:
         class: Phlexible\Bundle\ElementBundle\EventListener\TeaserListener
         arguments:
-            - @phlexible_element.element_service
-            - @phlexible_teaser.teaser_manager
+            - "@phlexible_element.element_service"
+            - "@phlexible_teaser.teaser_manager"
         tags:
             - {name: kernel.event_subscriber}
 
     phlexible_element.listener.tree:
         class: Phlexible\Bundle\ElementBundle\EventListener\TreeListener
-        arguments: [@phlexible_element.element_service]
+        arguments:
+            - "@phlexible_element.element_service"
         tags:
             - {name: kernel.event_subscriber}
 
@@ -196,14 +213,14 @@ services:
         abstract: true
         public: false
         arguments:
-            - @doctrine.dbal.default_connection
-            - @phlexible_element.element_service
-            - @phlexible_tree.tree_manager
-            - @phlexible_siteroot.siteroot_manager
-            - @phlexible_element.icon_resolver
-            - @security.authorization_checker
-            - @phlexible_user.user_manager
-            - %phlexible_cms.languages.default%
+            - "@doctrine.dbal.default_connection"
+            - "@phlexible_element.element_service"
+            - "@phlexible_tree.tree_manager"
+            - "@phlexible_siteroot.siteroot_manager"
+            - "@phlexible_element.icon_resolver"
+            - "@security.authorization_checker"
+            - "@phlexible_user.user_manager"
+            - "%phlexible_cms.languages.default%"
 
     phlexible_element.search.eid:
         class: Phlexible\Bundle\ElementBundle\Search\EidSearch
@@ -231,8 +248,8 @@ services:
         class: Phlexible\Bundle\ElementBundle\Twig\Extension\ElementExtension
         public: false
         arguments:
-            - @phlexible_element.content_loader
-            - @phlexible_teaser.content_teaser_manager.delegating
-            - @request_stack
+            - "@phlexible_element.content_loader"
+            - "@phlexible_teaser.content_teaser_manager.delegating"
+            - "@request_stack"
         tags:
             - {name: twig.extension}

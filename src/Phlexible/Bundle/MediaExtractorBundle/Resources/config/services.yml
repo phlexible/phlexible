@@ -5,8 +5,8 @@ services:
     phlexible_media_extractor.transmutor:
         class: Phlexible\Component\MediaExtractor\Transmutor
         arguments:
-            - @phlexible_media_type.media_type_manager
-            - @phlexible_media_extractor.extractor
+            - "@phlexible_media_type.media_type_manager"
+            - "@phlexible_media_extractor.extractor"
 
     phlexible_media_extractor.extractor.resolver:
         class: Phlexible\Component\MediaExtractor\Extractor\ExtractorResolver
@@ -16,4 +16,4 @@ services:
     phlexible_media_extractor.extractor:
         class: Phlexible\Component\MediaExtractor\Extractor\DelegatingExtractor
         arguments:
-            - @phlexible_media_extractor.extractor.resolver
+            - "@phlexible_media_extractor.extractor.resolver"

@@ -3,6 +3,7 @@ users:
         enter_username_and_password: bla
         lost_password: blubb
     logout: Logout
+    exit: 'Exit impersonation'
     uid: 'User ID'
     gid: 'Group ID'
     user: User

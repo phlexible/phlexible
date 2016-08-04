@@ -4,7 +4,6 @@ Ext.require('Phlexible.teasers.PublishTeaserWindow');
 Ext.require('Phlexible.teasers.SetTeaserOfflineWindow');
 Ext.require('Phlexible.elements.HistoryWindow');
 Ext.require('Phlexible.elements.LocksWindow');
-Ext.require('Phlexible.elements.NewTaskWindow');
 Ext.require('Phlexible.elements.PublishTreeNodeWindow');
 Ext.require('Phlexible.elements.SetTreeNodeOfflineWindow');
 
@@ -391,41 +390,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this
         });
-
-        if (Phlexible.tasks !== undefined && Phlexible.User.isGranted('ROLE_ELEMENT_TASKS')) {
-            this.extendedMenuIndex.add('task_sep', '-');
-            this.extendedMenuIndex.add('task', {
-                text: Phlexible.tasks.Strings.new_task,
-                iconCls: 'p-task-component-icon',
-                disabled: true,
-                handler: function () {
-                    var payload = {
-                        tid: this.element.tid
-                        //language: this.element.language
-                    };
-
-                    if (this.element.teaser_id) {
-                        payload.teaser_id = this.element.teaser_id;
-                    }
-
-                    var w = new Phlexible.elements.NewTaskWindow({
-                        payload: payload,
-                        component_filter: 'elements',
-                        listeners: {
-                            create: function () {
-                                this.element.reload({
-                                    unlock: this.element.eid
-                                });
-                            },
-                            scope: this
-                        }
-                    });
-
-                    w.show();
-                },
-                scope: this
-            });
-        }
     },
 
     updateLockInfo: function () {
@@ -591,12 +555,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         } else {
             this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
         }
-
-        // task button
-        if (this.extendedMenuIndex.indexOfKey('task') !== -1) {
-            var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
-            extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].enable();
-        }
     },
 
     onIsLocked: function () {
@@ -610,11 +568,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.items.items[this.tbarIndex.indexOfKey('publish')].disable();
         this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
-        // task button
-        if (this.extendedMenuIndex.indexOfKey('task') !== -1) {
-            var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
-            extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
-        }
     },
 
     onRemoveLock: function () {
@@ -637,11 +590,6 @@ Phlexible.elements.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.items.items[this.tbarIndex.indexOfKey('publish')].disable();
         this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
-        // task button
-        if (this.extendedMenuIndex.indexOfKey('task') !== -1) {
-            var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
-            extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('task')].disable();
-        }
     },
 
     onQuickPublish: function () {

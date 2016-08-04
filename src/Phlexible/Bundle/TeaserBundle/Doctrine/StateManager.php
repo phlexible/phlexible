@@ -184,7 +184,7 @@ class StateManager implements StateManagerInterface
         $publishedHash = $teaserOnline->getHash();
         $currentHash = $this->teaserHasher->hashTeaser($teaser, $version, $language);
 
-        return $publishedHash === $currentHash;
+        return $publishedHash !== $currentHash;
     }
 
     /**

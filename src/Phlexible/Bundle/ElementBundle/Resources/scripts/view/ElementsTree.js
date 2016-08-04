@@ -28,6 +28,9 @@ Phlexible.elements.ElementsTree = Ext.extend(Ext.tree.TreePanel, {
 
         this.element.on({
             createElement: function (element, data, node) {
+                if (!node) {
+                    return;
+                }
                 if (element.language === data.master_language) {
                     node.attributes.children = false;
                     node.reload(function () {

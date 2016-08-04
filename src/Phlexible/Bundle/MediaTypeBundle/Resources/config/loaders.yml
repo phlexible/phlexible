@@ -8,10 +8,11 @@ services:
 
     phlexible_media_type.loader.resolver:
         class: Phlexible\Component\MediaType\Loader\LoaderResolver
-        arguments: [[@phlexible_media_type.loader.xml]]
+        arguments: [["@phlexible_media_type.loader.xml"]]
         public: false
 
     phlexible_media_type.loader.delagating:
         class: Phlexible\Component\MediaType\Loader\DelegatingLoader
-        arguments: [@phlexible_media_type.loader.resolver]
+        arguments:
+            - "@phlexible_media_type.loader.resolver"
         public: false

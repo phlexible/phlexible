@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Phlexible\Component\Volume\Model\Folder as BaseFolder;
 
@@ -21,7 +21,7 @@ use Phlexible\Component\Volume\Model\Folder as BaseFolder;
  * @ORM\Entity
  * @ORM\Table(name="media_folder")
  */
-class Folder extends BaseFolder implements ExtendedFolderInterface, DomainObjectInterface
+class Folder extends BaseFolder implements ExtendedFolderInterface, HierarchicalDomainObjectInterface
 {
     /**
      * @var array
@@ -95,5 +95,13 @@ class Folder extends BaseFolder implements ExtendedFolderInterface, DomainObject
     public function getObjectType()
     {
         return get_class($this);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHierarchicalObjectIdentifiers()
+    {
+        return $this->getIdPath();
     }
 }

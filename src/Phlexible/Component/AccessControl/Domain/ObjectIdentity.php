@@ -81,14 +81,6 @@ class ObjectIdentity implements ObjectIdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getIdentifier()
     {
         return $this->identifier;

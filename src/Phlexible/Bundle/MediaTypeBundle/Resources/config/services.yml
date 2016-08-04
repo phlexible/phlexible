@@ -4,7 +4,8 @@ parameters:
 services:
     phlexible_media_type.icon_resolver:
         class: Phlexible\Component\MediaType\Model\IconResolver
-        arguments: [@file_locator]
+        arguments:
+            - "@file_locator"
 
     phlexible_media_type.compiler.php:
         class: Phlexible\Component\MediaType\Compiler\PhpCompiler
@@ -21,7 +22,8 @@ services:
     # event listeners
     phlexible_media_type.listener.view_frame:
         class: Phlexible\Bundle\MediaTypeBundle\EventListener\ViewFrameListener
-        arguments: [@router]
+        arguments:
+            - "@router"
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.view_frame, method: onViewFrame}
 

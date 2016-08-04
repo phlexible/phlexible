@@ -1,12 +1,15 @@
 services:
     phlexible_media_template.applier.audio:
         class: Phlexible\Component\MediaTemplate\Applier\AudioTemplateApplier
-        arguments: [@phlexible_media_tool.ffmpeg]
+        arguments:
+            - "@phlexible_media_tool.ffmpeg"
 
     phlexible_media_template.applier.image:
         class: Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier
-        arguments: [@phlexible_media_tool.imagine]
+        arguments:
+            - "@phlexible_media_tool.imagine"
 
     phlexible_media_template.applier.video:
         class: Phlexible\Component\MediaTemplate\Applier\VideoTemplateApplier
-        arguments: [@phlexible_media_tool.ffmpeg]
+        arguments:
+            - "@phlexible_media_tool.ffmpeg"

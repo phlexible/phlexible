@@ -110,6 +110,14 @@ class ElementSourceManager implements ElementSourceManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findAll()
+    {
+        return $this->getAll()->toArray();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findElementSource($elementtypeId)
     {
         //return $this->getAll()->get($elementtypeId);

@@ -2,14 +2,18 @@ services:
     phlexible_media_extractor.extractor.image.video_converter:
         class: Phlexible\Component\MediaExtractor\ImageExtractor\VideoConverterImageExtractor
         public: false
-        arguments: [@phlexible_media_tool.ffmpeg, %phlexible_media_extractor.asset_temp_dir%]
+        arguments:
+            - "@phlexible_media_tool.ffmpeg"
+            - "%phlexible_media_extractor.asset_temp_dir%"
         tags:
             - {name: phlexible_media_extractor.extractor}
 
     phlexible_media_extractor.extractor.image.exitftool:
         class: Phlexible\Component\MediaExtractor\ImageExtractor\ExiftoolImageExtractor
         public: false
-        arguments: [@phlexible_media_tool.exiftool, %phlexible_media_extractor.asset_temp_dir%]
+        arguments:
+            - "@phlexible_media_tool.exiftool"
+            - "%phlexible_media_extractor.asset_temp_dir%"
         tags:
             - {name: phlexible_media_extractor.extractor}
 

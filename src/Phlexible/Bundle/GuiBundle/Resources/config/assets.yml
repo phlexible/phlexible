@@ -5,23 +5,30 @@ services:
     phlexible_gui.asset.builder.scripts:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\ScriptsBuilder
         arguments:
-            - @puli.discovery
-            - @phlexible_gui.compressor.javascript
-            - %asset.cache_dir%
-            - %kernel.debug%
+            - "@puli.discovery"
+            - "@phlexible_gui.compressor.javascript"
+            - "%asset.cache_dir%"
+            - "%kernel.debug%"
 
     phlexible_gui.asset.builder.css:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\CssBuilder
         arguments:
-            - @puli.discovery
-            - @phlexible_gui.compressor.css
-            - %asset.cache_dir%
-            - %kernel.debug%
+            - "@puli.discovery"
+            - "@phlexible_gui.compressor.css"
+            - "%asset.cache_dir%"
+            - "%kernel.debug%"
 
     phlexible_gui.asset.builder.icons:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\IconsBuilder
-        arguments: [@puli.discovery, @phlexible_gui.compressor.css, %asset.cache_dir%, %kernel.debug%]
+        arguments:
+            - "@puli.discovery"
+            - "@phlexible_gui.compressor.css"
+            - "%asset.cache_dir%"
+            - "%kernel.debug%"
 
     phlexible_gui.asset.builder.translations:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\TranslationsBuilder
-        arguments: [@translator, @phlexible_gui.compressor.javascript, %asset.cache_dir%]
+        arguments:
+            - "@translator"
+            - "@phlexible_gui.compressor.javascript"
+            - "%asset.cache_dir%"

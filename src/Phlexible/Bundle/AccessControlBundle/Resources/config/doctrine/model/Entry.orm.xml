@@ -13,9 +13,9 @@
         <field name="objectIdentityId" column="object_identity_id" type="integer" />
         <field name="securityType" column="security_type" type="string" />
         <field name="securityIdentifier" column="security_identifier" type="string" />
-        <field name="mask" type="integer" />
-        <field name="stopMask" column="stop_mask" type="integer" />
-        <field name="noInheritMask" column="no_inherit_mask" type="integer" />
+        <field name="mask" type="integer" nullable="true" />
+        <field name="stopMask" column="stop_mask" type="integer" nullable="true" />
+        <field name="noInheritMask" column="no_inherit_mask" type="integer" nullable="true" />
 
     </entity>
 

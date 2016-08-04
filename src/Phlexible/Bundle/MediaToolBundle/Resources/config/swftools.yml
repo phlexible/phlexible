@@ -2,39 +2,44 @@ services:
     phlexible_media_tool.swftools.driver_container:
         class: SwfTools\Binary\DriverContainer
         arguments:
-            - %phlexible_media_tool.swftools.configuration%
-            - @logger
+            - "%phlexible_media_tool.swftools.configuration%"
+            - "@logger"
         tags:
             - {name: monolog.logger, channel: media_tools}
 
     phlexible_media_tool.swftools.pdf2swf:
         class: SwfTools\Binary\Pdf2swf
-        factory_class: SwfTools\Binary\Pdf2swf
-        factory_method: create
-        arguments: [%phlexible_media_tool.swftools.configuration%, @logger]
+        factory: [SwfTools\Binary\Pdf2swf, create]
+        arguments:
+            - "%phlexible_media_tool.swftools.configuration%"
+            - "@logger"
         tags:
             - {name: monolog.logger, channel: media_tools}
 
     phlexible_media_tool.swftools.swfrender:
         class: SwfTools\Binary\Swfrender
-        factory_class: SwfTools\Binary\Swfrender
-        factory_method: create
-        arguments: [%phlexible_media_tool.swftools.configuration%, @logger]
+        factory: [SwfTools\Binary\Swfrender, create]
+        arguments:
+            - "%phlexible_media_tool.swftools.configuration%"
+            - "@logger"
         tags:
             - {name: monolog.logger, channel: media_tools}
 
     phlexible_media_tool.swftools.swfextract:
         class: SwfTools\Binary\Swfextract
-        factory_class: SwfTools\Binary\Swfextract
-        factory_method: create
-        arguments: [%phlexible_media_tool.swftools.configuration%, @logger]
+        factory: [SwfTools\Binary\Swfextract, create]
+        arguments:
+            - "%phlexible_media_tool.swftools.configuration%"
+            - "@logger"
         tags:
             - {name: monolog.logger, channel: media_tools}
 
     phlexible_media_tool.swftools.pdf_file:
         class: SwfTools\Processor\PDFFile
-        arguments: [@phlexible_media_tool.swftools.driver_container]
+        arguments:
+            - "@phlexible_media_tool.swftools.driver_container"
 
     phlexible_media_tool.swftools.flash_file:
         class: SwfTools\Processor\FlashFile
-        arguments: [@phlexible_media_tool.swftools.driver_container]
+        arguments:
+            - "@phlexible_media_tool.swftools.driver_container"

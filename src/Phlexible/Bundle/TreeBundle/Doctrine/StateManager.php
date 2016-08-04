@@ -197,7 +197,7 @@ class StateManager implements StateManagerInterface
         $publishedHash = $treeOnline->getHash();
         $currentHash = $this->nodeHasher->hashNode($treeNode, $version, $language);
 
-        return $publishedHash === $currentHash;
+        return $publishedHash !== $currentHash;
     }
 
     /**

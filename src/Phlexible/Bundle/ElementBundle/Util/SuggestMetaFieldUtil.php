@@ -59,7 +59,7 @@ class SuggestMetaFieldUtil
     {
         $metaSets = $this->metaSetManager->findAll();
 
-        $fields = [];
+        $fields = array();
         foreach ($metaSets as $metaSet) {
             foreach ($metaSet->getFields() as $field) {
                 if ($field->getOptions() === $valueBag->getDatasource()->getId()) {
@@ -68,11 +68,9 @@ class SuggestMetaFieldUtil
             }
         }
 
-        $values = [];
+        $values = array();
         foreach ($fields as $field) {
-            /* @var $field MetaSetField */
             foreach ($this->metaDataManager->findByMetaSet($field->getMetaSet()) as $metaData) {
-                /* @var $metaData MetaDataInterface */
                 $value = $metaData->get($field->getId(), $valueBag->getLanguage());
 
                 $values[] = $value;
