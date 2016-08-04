@@ -175,7 +175,7 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
         }
 
         var w = new Phlexible.elements.LinkWindow({
-            siteroot_id: this.siteroot_id,
+            siteroot_id: typeof this.siteroot_id == 'object' ? this.siteroot_id.join(',') : this.siteroot_id,
             value: this.hiddenValue,
             allowed: this.allowed,
             elementTypeIds: this.elementTypeIds || '',
