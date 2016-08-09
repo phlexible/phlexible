@@ -21,6 +21,7 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
  */
 class ElementMetaDataManager extends MetaDataManager
 {
+
     /**
      * @param MetaSet        $metaSet
      * @param ElementVersion $elementVersion
