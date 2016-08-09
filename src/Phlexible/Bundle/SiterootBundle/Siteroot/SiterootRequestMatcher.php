@@ -57,7 +57,9 @@ class SiterootRequestMatcher
                     return $siteroot;
                 }
                 if (isset($this->urlMappings[$siterootHostname])) {
-                    $siterootHostname = $this->urlMappings[$siterootHostname];
+                    if (in_array($hostname, $this->urlMappings[$siterootHostname])) {
+                        return $siteroot;
+                    }
                 }
                 if ($siterootHostname === $hostname) {
                     return $siteroot;

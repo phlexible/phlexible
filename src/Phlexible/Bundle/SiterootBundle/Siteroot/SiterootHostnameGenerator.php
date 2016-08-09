@@ -44,7 +44,7 @@ class SiterootHostnameGenerator
         $hostname = $siterootUrl->getHostname();
 
         if (isset($this->urlMappings[$hostname])) {
-            $hostname = $this->urlMappings[$hostname];
+            $hostname = current($this->urlMappings[$hostname]);
         }
 
         return $hostname;

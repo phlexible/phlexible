@@ -33,8 +33,8 @@ class PhlexibleSiterootExtension extends Extension
 
         $mappings = [];
         if (!empty($config['mappings'])) {
-            foreach ($config['mappings'] as $mappedUrl => $siterootUrl) {
-                $mappings[$mappedUrl] = $siterootUrl;
+            foreach ($config['mappings'] as $mapping) {
+                $mappings[$mapping['to']] = $mapping['from'];
             }
         }
 
