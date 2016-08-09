@@ -8,14 +8,11 @@
 
 namespace Phlexible\Bundle\ElementBundle\Meta;
 
-use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Component\MetaSet\Doctrine\MetaDataManager;
 use Phlexible\Component\MetaSet\Model\MetaData;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaSet;
-use Psr\Log\LoggerInterface;
 
 /**
  * Element meta data manager
@@ -24,18 +21,6 @@ use Psr\Log\LoggerInterface;
  */
 class ElementMetaDataManager extends MetaDataManager
 {
-//    /**
-//     * ElementMetaDataManager constructor.
-//     * @param EntityManager $entityManager
-//     * @param DataSourceManagerInterface $dataSourceManager
-//     * @param LoggerInterface $logger
-//     * @param string $tableName
-//     */
-//    public function __construct(EntityManager $entityManager, DataSourceManagerInterface $dataSourceManager, LoggerInterface $logger, $tableName)
-//    {
-//        parent::__construct($entityManager, $dataSourceManager, $logger, $tableName);
-//    }
-
 
     /**
      * @param MetaSet        $metaSet
