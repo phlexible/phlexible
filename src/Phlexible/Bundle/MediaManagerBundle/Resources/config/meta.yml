@@ -14,6 +14,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@phlexible_data_source.data_source_manager"
+            - "@logger"
             - media_file_meta
 
     phlexible_media_manager.doctrine.folder_meta_data_manager:
@@ -21,4 +22,5 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@phlexible_data_source.data_source_manager"
+            - "@logger"
             - media_folder_meta

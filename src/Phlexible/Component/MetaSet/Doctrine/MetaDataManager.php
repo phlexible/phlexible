@@ -16,6 +16,7 @@ use Phlexible\Component\MetaSet\Model\MetaData;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSet;
+use Psr\Log\LoggerInterface;
 
 /**
  * Meta data manager
@@ -35,6 +36,11 @@ class MetaDataManager implements MetaDataManagerInterface
     private $dataSourceManager;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var string
      */
     private $tableName;
@@ -42,12 +48,14 @@ class MetaDataManager implements MetaDataManagerInterface
     /**
      * @param EntityManager              $entityManager
      * @param DataSourceManagerInterface $dataSourceManager
+     * @param LoggerInterface            $logger
      * @param string                     $tableName
      */
-    public function __construct(EntityManager $entityManager, DataSourceManagerInterface $dataSourceManager, $tableName)
+    public function __construct(EntityManager $entityManager, DataSourceManagerInterface $dataSourceManager, LoggerInterface $logger, $tableName)
     {
         $this->entityManager = $entityManager;
         $this->dataSourceManager = $dataSourceManager;
+        $this->logger = $logger;
         $this->tableName = $tableName;
     }
 
@@ -201,6 +209,12 @@ class MetaDataManager implements MetaDataManagerInterface
             }
 
             $field = $metaSet->getFieldById($row['field_id']);
+
+            if (!$field) {
+                $this->logger->error(sprintf("MetaSet with id %s doesn't exists", $row['field_id']));
+                $this->logger->info("MetaSet Identifieres", $identifiers);
+                continue;
+            }
             $metaData->set($field->getName(), $row['value'], $row['language']);
         }
 

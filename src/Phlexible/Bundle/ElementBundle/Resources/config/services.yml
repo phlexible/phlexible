@@ -69,6 +69,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@phlexible_data_source.data_source_manager"
+            - "@logger"
             - element_meta
 
     phlexible_element.util.suggest_field:
