@@ -15,7 +15,7 @@ use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Garbage collector for datas ource values.
+ * Garbage collector for data source values.
  * - unused values can be removed
  *
  * @author Phillip Look <pl@brainbits.net>

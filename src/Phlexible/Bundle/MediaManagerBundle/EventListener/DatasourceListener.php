@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
 use Phlexible\Component\MediaManager\Util\SuggestFieldUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -51,22 +50,9 @@ class DatasourceListener implements EventSubscriberInterface
      */
     public function onGarbageCollect(GarbageCollectEvent $event)
     {
-        $values = $this->fetchValues($event->getDataSourceValueBag());
+        $values = $event->getDataSourceValueBag();
+        $collectedValues = $event->getCollectedValues();
 
-        $event->markActive($values);
-    }
-
-    /**
-     * Ensure used values are not deleted from data source.
-     *
-     * @param DataSourceValueBag $values
-     *
-     * @return array
-     */
-    private function fetchValues(DataSourceValueBag $values)
-    {
-        $language = $values->getLanguage();
-
-        return $this->suggestFieldUtil->fetchUsedValues($values, [$language]);
+        $collectedValues->merge($this->suggestFieldUtil->fetchUsedValues($values));
     }
 }

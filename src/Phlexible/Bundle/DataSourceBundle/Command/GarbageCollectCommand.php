@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\Command;
 
+use Phlexible\Bundle\DataSourceBundle\DataSourceMessage;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -37,30 +38,45 @@ class GarbageCollectCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $gc = $this->getContainer()->get('phlexible_data_source.garbage_collector');
+        $messagePoster = $this->getContainer()->get('phlexible_message.message_poster');
 
         $pretend = !$input->getOption('run');
         $stats = $gc->run($pretend);
 
+        $subjects = array();
+
         foreach ($stats as $name => $langs) {
             foreach ($langs as $lang => $parts) {
-                $cntActivated = !empty($parts['activate']) ? count($parts['activate']) : 0;
-                $cntDeactivated = !empty($parts['inactivate']) ? count($parts['inactivate']) : 0;
-                $cntRemoved = !empty($parts['remove']) ? count($parts['remove']) : 0;
+                $cntActivate = !empty($parts['active']) ? count($parts['active']) : 0;
+                $cntInactive = !empty($parts['inactive']) ? count($parts['inactive']) : 0;
+                $cntRemove = !empty($parts['remove']) ? count($parts['remove']) : 0;
 
                 if ($pretend) {
                     $output->writeln(
-                        "Garbage collect run will activate $cntActivated, "
-                        . "deactivate $cntDeactivated "
-                        . "and remove $cntRemoved values on data source $name."
+                        '['.$name."] Would store $cntActivate active, "
+                        ."store $cntInactive inactive "
+                        ."and remove $cntRemove values"
                     );
                 } else {
-                    $output->writeln(
-                        "Garbage collect run has activated $cntActivated, "
-                        . "deactivated $cntDeactivated "
-                        . "and removed $cntRemoved values on data source $name."
-                    );
+                    $subject = '['.$name."] Stored $cntActivate active, "
+                        ."stored $cntInactive inactive "
+                        ."and removed $cntRemove values";
+
+                    $output->writeln($subject);
+
+                    if ($cntActivate || $cntInactive || $cntRemove) {
+                        $subjects[] = $subject;
+                    }
                 }
             }
+        }
+
+        if (!$pretend && count($subjects)) {
+            $message = DataSourceMessage::create(
+                'Garbage collection run on '.count($stats).' data sources.',
+                implode(PHP_EOL, $subjects)
+            );
+            $messagePoster->post($message);
         }
 
         return 0;

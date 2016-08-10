@@ -57,22 +57,17 @@ class DatasourceListener implements EventSubscriberInterface
      */
     public function onBeforeGarbageCollect(GarbageCollectEvent $event)
     {
-        // get id of data source to process
         $values = $event->getDataSourceValueBag();
+        $collectedValues = $event->getCollectedValues();
+
         //$datasource = $values->getDatasource();
         //$datasourceId = $datasource->getId();
         //$language = $values->getLanguage();
 
         // fetch all data source values used in element online versions
-        $onlineValues = $this->suggestFieldUtil->fetchUsedValues($values);
+        $collectedValues->merge($this->suggestFieldUtil->fetchUsedValues($values));
 
-        // remove offline values from collection
-        $event->markActive($onlineValues);
-
-        // fetch all data source values used in element online versions
-        $onlineMetaValues = $this->suggestMetaFieldUtil->fetchUsedValues($values);
-
-        // remove offline values from collection
-        $event->markActive($onlineMetaValues);
+        // fetch all meta data source values used in element online versions
+        $collectedValues->merge($this->suggestMetaFieldUtil->fetchUsedValues($values));
     }
 }

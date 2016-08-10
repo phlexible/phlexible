@@ -9,10 +9,14 @@
 namespace Phlexible\Bundle\ElementBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Bundle\DataSourceBundle\GarbageCollector\ValuesCollection;
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureIterator;
-use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
+use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
+use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
+use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
@@ -38,6 +42,16 @@ class SuggestFieldUtil
     private $elementSourceManager;
 
     /**
+     * @var ContentTreeManagerInterface
+     */
+    private $treeManager;
+
+    /**
+     * @var TeaserManagerInterface
+     */
+    private $teaserManager;
+
+    /**
      * @var string
      */
     private $separatorChar;
@@ -46,13 +60,23 @@ class SuggestFieldUtil
      * @param MetaSetManagerInterface       $metaSetManager
      * @param ElementService                $elementService
      * @param ElementSourceManagerInterface $elementSourceManager
+     * @param ContentTreeManagerInterface   $treeManager
+     * @param TeaserManagerInterface        $teaserManager
      * @param string                        $separatorChar
      */
-    public function __construct(MetaSetManagerInterface $metaSetManager, ElementService $elementService, ElementSourceManagerInterface $elementSourceManager, $separatorChar)
-    {
+    public function __construct(
+        MetaSetManagerInterface $metaSetManager,
+        ElementService $elementService,
+        ElementSourceManagerInterface $elementSourceManager,
+        ContentTreeManagerInterface $treeManager,
+        TeaserManagerInterface $teaserManager,
+        $separatorChar
+    ) {
         $this->metaSetManager = $metaSetManager;
         $this->elementService = $elementService;
         $this->elementSourceManager = $elementSourceManager;
+        $this->treeManager = $treeManager;
+        $this->teaserManager = $teaserManager;
         $this->separatorChar = $separatorChar;
     }
 
@@ -61,7 +85,7 @@ class SuggestFieldUtil
      *
      * @param DataSourceValueBag $valueBag
      *
-     * @return array
+     * @return ValuesCollection
      */
     public function fetchUsedValues(DataSourceValueBag $valueBag)
     {
@@ -97,7 +121,7 @@ class SuggestFieldUtil
             }
         }
 
-        $values = array();
+        $values = new ValuesCollection();
 
         foreach ($nodes as $nodeRow) {
             $elementtype = $nodeRow[0];
@@ -108,7 +132,11 @@ class SuggestFieldUtil
 
                     foreach ($elementStructure->getValues() as $value) {
                         if ($value->getDsId() === $suggestNode->getDsId()) {
-                            $values = array_merge($values, $value->getValue());
+                            if ($this->isOnline($element, $elementVersion, $elementtype, $valueBag->getLanguage())) {
+                                $values->addActiveValues($value->getValue());
+                            } else {
+                                $values->addInactiveValues($value->getValue());
+                            }
                         }
                     }
 
@@ -116,7 +144,11 @@ class SuggestFieldUtil
                     foreach ($rii as $structure) {
                         foreach ($structure->getValues() as $value) {
                             if ($value->getDsId() === $suggestNode->getDsId()) {
-                                $values = array_merge($values, $value->getValue());
+                                if ($this->isOnline($element, $elementVersion, $elementtype, $valueBag->getLanguage())) {
+                                    $values->addActiveValues($value->getValue());
+                                } else {
+                                    $values->addInactiveValues($value->getValue());
+                                }
                             }
                         }
                     }
@@ -124,14 +156,35 @@ class SuggestFieldUtil
             }
         }
 
-        $values = array_unique($values);
+        return $values;
+    }
 
-        foreach ($values as $index => $value) {
-            if (!trim($value)) {
-                unset($values[$index]);
+    /**
+     * @param Element        $element
+     * @param ElementVersion $elementVersion
+     * @param Elementtype    $elementtype
+     *
+     * @return bool
+     */
+    private function isOnline(Element $element, ElementVersion $elementVersion, Elementtype $elementtype, $language)
+    {
+        if ($elementtype->getType() === Elementtype::TYPE_PART) {
+            foreach ($this->teaserManager->findBy(array('typeId' => $element->getEid())) as $teaser) {
+                if ($this->teaserManager->getPublishedVersion($teaser, $language) === $elementVersion->getVersion()) {
+                    return true;
+                }
+            }
+        } else {
+            foreach ($this->treeManager->findAll() as $tree) {
+                foreach ($tree->getByTypeId($element->getEid()) as $node) {
+                    //echo $node->getId()." ".$language." | ".$tree->getPublishedVersion($node, $language)." => ".$elementVersion->getVersion().PHP_EOL;
+                    if ($tree->getPublishedVersion($node, $language) === $elementVersion->getVersion()) {
+                        return true;
+                    }
+                }
             }
         }
 
-        return $values;
+        return false;
     }
 }

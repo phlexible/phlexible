@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\DataSourceBundle\Event;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Bundle\DataSourceBundle\GarbageCollector\ValuesCollection;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -24,14 +25,9 @@ class GarbageCollectEvent extends Event
     private $values;
 
     /**
-     * @var array
+     * @var ValuesCollection
      */
-    private $activeValues = [];
-
-    /**
-     * @var array
-     */
-    private $inactiveValues = [];
+    private $collectedValues;
 
     /**
      * @param DataSourceValueBag $values
@@ -39,6 +35,8 @@ class GarbageCollectEvent extends Event
     public function __construct(DataSourceValueBag $values)
     {
         $this->values = $values;
+
+        $this->collectedValues = new ValuesCollection();
     }
 
     /**
@@ -50,18 +48,24 @@ class GarbageCollectEvent extends Event
     }
 
     /**
+     * @return ValuesCollection
+     */
+    public function getCollectedValues()
+    {
+        return $this->collectedValues;
+    }
+
+    /**
      * @param string|array $values
      *
      * @return $this
      */
     public function markActive($values)
     {
-        if (!is_array($values)) {
-            $values = [$values];
-        }
-
-        foreach ($values as $value) {
-            $this->activeValues[] = $value;
+        if (is_array($values)) {
+            $this->collectedValues->addActiveValues($values);
+        } else {
+            $this->collectedValues->addActiveValue($values);
         }
 
         return $this;
@@ -72,7 +76,7 @@ class GarbageCollectEvent extends Event
      */
     public function getActiveValues()
     {
-        return $this->activeValues;
+        return $this->collectedValues->getActiveValues();
     }
 
     /**
@@ -82,12 +86,10 @@ class GarbageCollectEvent extends Event
      */
     public function markInactive($values)
     {
-        if (!is_array($values)) {
-            $values = [$values];
-        }
-
-        foreach ($values as $value) {
-            $this->inactiveValues[] = $value;
+        if (is_array($values)) {
+            $this->collectedValues->addInactiveValues($values);
+        } else {
+            $this->collectedValues->addInactiveValue($values);
         }
 
         return $this;
@@ -98,6 +100,6 @@ class GarbageCollectEvent extends Event
      */
     public function getInactiveValues()
     {
-        return $this->inactiveValues;
+        return $this->collectedValues->getInactiveValues();
     }
 }

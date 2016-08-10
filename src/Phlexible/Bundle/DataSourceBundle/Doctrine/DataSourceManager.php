@@ -66,11 +66,8 @@ class DataSourceManager implements DataSourceManagerInterface
             $this->entityManager->persist($value);
         }
         if ($flush) {
-            $this->entityManager->flush($dataSource);
+            $this->entityManager->flush();
         }
-        #foreach ($dataSource->getValueBags() as $value) {
-        #    $this->entityManager->flush($value);
-        #}
     }
 
     /**

@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Bundle\DataSourceBundle\GarbageCollector\ValuesCollection;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetField;
@@ -34,18 +35,18 @@ class SuggestMetaFieldUtil
     /**
      * @var string
      */
-    private $seperatorChar;
+    private $separatorChar;
 
     /**
      * @param MetaSetManagerInterface  $metaSetManager
      * @param MetaDataManagerInterface $metaDataManager
-     * @param string                   $seperatorChar
+     * @param string                   $separatorChar
      */
-    public function __construct(MetaSetManagerInterface $metaSetManager, MetaDataManagerInterface $metaDataManager, $seperatorChar)
+    public function __construct(MetaSetManagerInterface $metaSetManager, MetaDataManagerInterface $metaDataManager, $separatorChar)
     {
         $this->metaSetManager = $metaSetManager;
         $this->metaDataManager = $metaDataManager;
-        $this->seperatorChar = $seperatorChar;
+        $this->separatorChar = $separatorChar;
     }
 
     /**
@@ -53,7 +54,7 @@ class SuggestMetaFieldUtil
      *
      * @param DataSourceValueBag $valueBag
      *
-     * @return array
+     * @return ValuesCollection
      */
     public function fetchUsedValues(DataSourceValueBag $valueBag)
     {
@@ -68,39 +69,51 @@ class SuggestMetaFieldUtil
             }
         }
 
-        $values = array();
+        $values = new ValuesCollection();
         foreach ($fields as $field) {
             foreach ($this->metaDataManager->findByMetaSet($field->getMetaSet()) as $metaData) {
                 $value = $metaData->get($field->getId(), $valueBag->getLanguage());
 
-                $values[] = $value;
+                $value = $this->splitSuggestValue($value);
+                if ($this->isOnline($metaData)) {
+                    $values->addActiveValue($value);
+                } else {
+                    $values->addInactiveValue($value);
+                }
             }
         }
-
-        $values = $this->splitSuggestValues($values);
 
         return $values;
     }
 
     /**
-     * Split list of suggest values into pieces and remove duplicates.
+     * @param mixed $metaData
      *
-     * @param array $concatenated
+     * @return bool
+     */
+    private function isOnline($metaData)
+    {
+        return true;
+    }
+
+    /**
+     * Split value into parts and remove duplicates.
+     *
+     * @param string $concatenated
      *
      * @return array
      */
-    private function splitSuggestValues(array $concatenated)
+    private function splitSuggestValue($concatenated)
     {
         $keys = [];
-        foreach ($concatenated as $value) {
-            $splitted = explode($this->seperatorChar, $value);
-            foreach ($splitted as $key) {
-                $key = trim($key);
 
-                // skip empty values
-                if (strlen($key)) {
-                    $keys[] = $key;
-                }
+        $splitted = explode($this->separatorChar, $concatenated);
+        foreach ($splitted as $key) {
+            $key = trim($key);
+
+            // skip empty values
+            if (strlen($key)) {
+                $keys[] = $key;
             }
         }
 
