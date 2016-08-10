@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\DataSourceBundle\Tests;
+namespace Phlexible\Bundle\DataSourceBundle\Tests\GarbageCollector;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * DataSource Test
+ * Garbage collector test
  *
  * @author Phillip Look <pl@brainbits.net>
  */

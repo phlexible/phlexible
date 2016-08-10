@@ -6,12 +6,12 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\DataSourceBundle\Tests;
+namespace Phlexible\Bundle\DataSourceBundle\Tests\Entity;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 
 /**
- * DataSource Test
+ * Data source test
  *
  * @author Phillip Look <pl@brainbits.net>
  */
