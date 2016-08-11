@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\Util;
+namespace Phlexible\Bundle\DataSourceBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Phlexible\Bundle\DataSourceBundle\GarbageCollector\ValuesCollection;
@@ -24,7 +24,7 @@ use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class SuggestFieldUtil
+class ElementSuggestFieldUtil implements Util
 {
     /**
      * @var MetaSetManagerInterface
@@ -87,7 +87,7 @@ class SuggestFieldUtil
      *
      * @return ValuesCollection
      */
-    public function fetchUsedValues(DataSourceValueBag $valueBag)
+    public function fetchValues(DataSourceValueBag $valueBag)
     {
         $metaSets = $this->metaSetManager->findAll();
 

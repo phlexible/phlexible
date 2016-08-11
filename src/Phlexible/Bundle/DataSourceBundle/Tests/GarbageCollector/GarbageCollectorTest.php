@@ -48,9 +48,8 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->eventDispatcher = new EventDispatcher();
-        $this->manager = $this->prophesize('Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface');
+        $this->manager = $this->prophesize(DataSourceManagerInterface::class);
         $this->garbageCollector = new GarbageCollector($this->manager->reveal(), $this->eventDispatcher);
 
         $this->datasource = new DataSource();
@@ -91,9 +90,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->garbageCollector->run();
 
-        $this->assertCount(0, $result['testDatasource']['de']['remove']);
-        $this->assertCount(0, $result['testDatasource']['de']['active']);
-        $this->assertCount(0, $result['testDatasource']['de']['inactive']);
+        $this->assertCount(0, $result['testDatasource']['de']->getRemoveValues());
+        $this->assertCount(0, $result['testDatasource']['de']->getActiveValues());
+        $this->assertCount(0, $result['testDatasource']['de']->getInactiveValues());
     }
 
     public function testRunRemovesUnusedValuesInModeRemoveUnused()
@@ -108,14 +107,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => [],
-                'remove' => ['value1', 'value2'],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame([], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunRemovesUnusedValuesInModeUnusedAndInactive()
@@ -130,14 +124,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => [],
-                'remove' => ['value1', 'value2'],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame([], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunMarksUnusedValuesAsInactiveInModeUnusedAndInactive()
@@ -152,14 +141,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => ['value1', 'value2'],
-                'remove' => [],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame([], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunKeepsActiveValuesInModeRemoveUnused()
@@ -181,14 +165,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => [],
-                'remove' => [],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunKeepsActiveValuesInModeRemoveUnusedAndInactive()
@@ -210,14 +189,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => [],
-                'remove' => [],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunKeepsActiveValuesInModeMarkUnusedInactive()
@@ -239,14 +213,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => [],
-                'remove' => [],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunKeepsInactiveValuesInModeRemoveUnused()
@@ -268,14 +237,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => ['value1', 'value2'],
-                'remove' => [],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame([], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunRemovesInactiveValuesInModeRemoveUnused()
@@ -297,14 +261,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => [],
-                'remove' => ['value1', 'value2'],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame([], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunKeepsInactiveValuesInModeMarkUnusedInactive()
@@ -326,14 +285,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => ['value1', 'value2'],
-                'remove' => [],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame([], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunKeepsValuesAndRemovesUnusedInModeRemoveUnused()
@@ -360,14 +314,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => ['value3', 'value4'],
-                'remove' => ['value5', 'value6'],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame(['value3', 'value4'], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame(['value5', 'value6'], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunKeepsValuesAndRemovesUnusedInModeRemoveUnusedAndInactive()
@@ -394,14 +343,9 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => [],
-                'remove' => ['value3', 'value4', 'value5', 'value6'],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame(['value3', 'value4', 'value5', 'value6'], $result['testDatasource']['de']->getRemoveValues());
     }
 
     public function testRunKeepsValuesAndRemovesUnusedInModeMarkUnusedInactive()
@@ -428,13 +372,8 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
-        $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => ['value3', 'value4', 'value5', 'value6'],
-                'remove' => [],
-            ],
-            $result['testDatasource']['de']
-        );
+        $this->assertSame(['value1', 'value2'], $result['testDatasource']['de']->getActiveValues());
+        $this->assertSame(['value3', 'value4', 'value5', 'value6'], $result['testDatasource']['de']->getInactiveValues());
+        $this->assertSame([], $result['testDatasource']['de']->getRemoveValues());
     }
 }

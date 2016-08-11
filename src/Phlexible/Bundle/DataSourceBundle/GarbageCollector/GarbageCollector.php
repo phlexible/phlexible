@@ -64,9 +64,9 @@ class GarbageCollector
         $offset = 0;
         foreach ($this->dataSourceManager->findBy([], null, $limit, $offset) as $dataSource) {
             foreach ($dataSource->getValueBags() as $values) {
-                $num = $this->garbageCollect($values, $mode, $pretend);
+                $result = $this->garbageCollect($values, $mode, $pretend);
 
-                $nums[$dataSource->getTitle()][$values->getLanguage()] = $num;
+                $nums[$dataSource->getTitle()][$values->getLanguage()] = $result;
             }
 
             if (!$pretend) {
@@ -84,24 +84,26 @@ class GarbageCollector
      * @param string             $mode
      * @param bool               $pretend
      *
-     * @return array
+     * @return ValuesCollection
      */
     private function garbageCollect(DataSourceValueBag $valueBag, $mode, $pretend = false)
     {
         $event = new GarbageCollectEvent($valueBag);
         if ($this->dispatcher->dispatch(DataSourceEvents::BEFORE_GARBAGE_COLLECT, $event)->isPropagationStopped()) {
-            return [];
+            return new ValuesCollection();
         }
 
-        $activeValues = $event->getActiveValues();
-        $inactiveValues = $event->getInactiveValues();
+        $collectedValues = $event->getCollectedValues();
+        $activeValues = $collectedValues->getActiveValues();
+        $inactiveValues = $collectedValues->getInactiveValues();
 
-        //dump('raw active', $activeValues);
-        //dump('raw inactive', $inactiveValues);
+        //dump('raw active', $activeValues);dump('raw inactive', $inactiveValues);exit;
 
         $values = $valueBag->getValues();
-        $removeValues = array_diff($values, $activeValues, $inactiveValues);
-        $inactiveValues = array_diff($inactiveValues, $activeValues);
+
+        $activeValues = array_values(array_unique($activeValues));
+        $removeValues = array_values(array_unique(array_diff($values, $activeValues, $inactiveValues)));
+        $inactiveValues = array_values(array_unique(array_diff($inactiveValues, $activeValues)));
 
         //dump('remove', $removeValues);dump('active', $activeValues);dump('inactive', $inactiveValues);exit;
 
@@ -118,7 +120,6 @@ class GarbageCollector
 
         if (!$pretend) {
             if (count($removeValues)) {
-                $removeValues = array_values(array_unique($removeValues));
                 // apply changes if there is changeable data
                 foreach ($removeValues as $value) {
                     $valueBag->removeActiveValue($value);
@@ -127,7 +128,6 @@ class GarbageCollector
             }
 
             if (count($activeValues)) {
-                $activeValues = array_values(array_unique($activeValues));
                 // apply changes if there is changeable data
                 foreach ($activeValues as $value) {
                     $valueBag->addActiveValue($value);
@@ -137,7 +137,6 @@ class GarbageCollector
 
             if (count($inactiveValues)) {
                 // apply changes if there is changeable data
-                $inactiveValues = array_values(array_unique($inactiveValues));
                 foreach ($inactiveValues as $value) {
                     $valueBag->addInactiveValue($value);
                     $valueBag->removeActiveValue($value);
@@ -148,10 +147,6 @@ class GarbageCollector
         $event = new GarbageCollectEvent($valueBag);
         $this->dispatcher->dispatch(DataSourceEvents::GARBAGE_COLLECT, $event);
 
-        return [
-            'active'   => $activeValues,
-            'inactive' => $inactiveValues,
-            'remove'   => $removeValues,
-        ];
+        return new ValuesCollection($activeValues, $inactiveValues, $removeValues);
     }
 }

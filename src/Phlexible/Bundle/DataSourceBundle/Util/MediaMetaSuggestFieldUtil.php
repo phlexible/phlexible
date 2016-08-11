@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaManager\Util;
+namespace Phlexible\Bundle\DataSourceBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Phlexible\Bundle\DataSourceBundle\GarbageCollector\ValuesCollection;
@@ -20,7 +20,7 @@ use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
  *
  * @author Phillip Look <pl@brainbits.net>
  */
-class SuggestFieldUtil
+class MediaMetaSuggestFieldUtil implements Util
 {
     /**
      * @var MetaSetManagerInterface
@@ -56,7 +56,7 @@ class SuggestFieldUtil
      *
      * @return ValuesCollection
      */
-    public function fetchUsedValues(DataSourceValueBag $valueBag)
+    public function fetchValues(DataSourceValueBag $valueBag)
     {
         $metaSets = $this->metaSetManager->findAll();
 
@@ -75,12 +75,16 @@ class SuggestFieldUtil
             /* @var $field MetaSetField */
             foreach ($this->metaDataManager->findByMetaSet($field->getMetaSet()) as $metaData) {
                 /* @var $metaData MetaDataInterface */
-                $value = $metaData->get($field->getId(), $valueBag->getLanguage());
+                $suggestValues = $this->splitSuggestValue(trim($metaData->get($field->getName(), $valueBag->getLanguage())));
+
+                if (!count($suggestValues)) {
+                    continue;
+                }
 
                 if ($this->isOnline($metaData)) {
-                    $values->addActiveValue($this->splitSuggestValue($value));
+                    $values->addActiveValues($suggestValues);
                 } else {
-                    $values->addInactiveValue($this->splitSuggestValue($value));
+                    $values->addInactiveValues($suggestValues);
                 }
             }
         }
@@ -107,6 +111,10 @@ class SuggestFieldUtil
      */
     private function splitSuggestValue($concatenated)
     {
+        if (!trim($concatenated)) {
+            return array();
+        }
+
         $keys = [];
 
         $splitted = explode($this->separatorChar, $concatenated);

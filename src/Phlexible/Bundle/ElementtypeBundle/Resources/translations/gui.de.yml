@@ -129,7 +129,6 @@ elementtypes:
     values_key: Schlüssel
     values_german: Deutsch
     values_english: Englisch
-    suggest: Suggest
     link: Link
     allow: erlauben
     link_types: Linktypen

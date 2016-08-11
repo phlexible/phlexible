@@ -26,15 +26,22 @@ class ValuesCollection
     private $inactiveValues = [];
 
     /**
+     * @var array
+     */
+    private $removeValues = [];
+
+    /**
      * ValuesCollection constructor.
      *
      * @param array $activeValues
      * @param array $inactiveValues
+     * @param array $removeValues
      */
-    public function __construct($activeValues = [], $inactiveValues = [])
+    public function __construct($activeValues = [], $inactiveValues = [], $removeValues = [])
     {
         $this->addActiveValues($activeValues);
         $this->addInactiveValues($inactiveValues);
+        $this->addRemoveValues($removeValues);
     }
 
     /**
@@ -63,6 +70,20 @@ class ValuesCollection
         foreach ($values as $value) {
             $this->addActiveValue($value);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return $this
+     */
+    public function setActiveValues($values)
+    {
+        $this->activeValues = [];
+
+        $this->addActiveValues($values);
 
         return $this;
     }
@@ -104,6 +125,14 @@ class ValuesCollection
     }
 
     /**
+     * @return int
+     */
+    public function countActiveValues()
+    {
+        return count($this->activeValues);
+    }
+
+    /**
      * @param string $value
      *
      * @return $this
@@ -129,6 +158,20 @@ class ValuesCollection
         foreach ($values as $value) {
             $this->addInactiveValue($value);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return $this
+     */
+    public function setInactiveValues($values)
+    {
+        $this->inactiveValues = [];
+
+        $this->addInactiveValues($values);
 
         return $this;
     }
@@ -170,19 +213,111 @@ class ValuesCollection
     }
 
     /**
+     * @return int
+     */
+    public function countInactiveValues()
+    {
+        return count($this->inactiveValues);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function addRemoveValue($value)
+    {
+        $value = trim($value);
+
+        if ($value && !in_array($value, $this->removeValues)) {
+            $this->removeValues[] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return $this
+     */
+    public function addRemoveValues($values)
+    {
+        foreach ($values as $value) {
+            $this->addRemoveValue($value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return $this
+     */
+    public function setRemoveValues($values)
+    {
+        $this->removeValues = [];
+
+        $this->addRemoveValues($values);
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function removeRemoveValue($value)
+    {
+        if (in_array($value, $this->removeValues)) {
+            unset($this->removeValues[array_search($value, $this->removeValues)]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $values
+     *
+     * @return $this
+     */
+    public function removeRemoveValues($values)
+    {
+        foreach ($values as $value) {
+            $this->removeRemoveValue($value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRemoveValues()
+    {
+        return $this->removeValues;
+    }
+
+    /**
+     * @return int
+     */
+    public function countRemoveValues()
+    {
+        return count($this->removeValues);
+    }
+
+    /**
      * @param ValuesCollection $values
      *
      * @return $this
      */
     public function merge(ValuesCollection $values)
     {
-        foreach ($values->getActiveValues() as $value) {
-            $this->addActiveValue($value);
-        }
-
-        foreach ($values->getInactiveValues() as $value) {
-            $this->addInactiveValue($value);
-        }
+        $this->addActiveValues($values->getActiveValues());
+        $this->addInactiveValues($values->getInactiveValues());
+        $this->addRemoveValues($values->getRemoveValues());
 
         return $this;
     }

@@ -35,12 +35,6 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('available')->defaultValue('en,de')->end()
                     ->end()
                 ->end()
-                ->arrayNode('suggest')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('seperator')->defaultValue(',')->end()
-                    ->end()
-                ->end()
             ->end();
 
         return $treeBuilder;

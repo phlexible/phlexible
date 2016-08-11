@@ -1,6 +1,6 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elementtypes.field.SuggestField');
+Ext.require('Phlexible.datasources.field.SuggestField');
 Ext.require('Phlexible.fields.FieldHelper');
 
 Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
@@ -15,7 +15,7 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
          */
         storeMode = 'remote';
         store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('elementtypes_selectfield_suggest'),
+            url: Phlexible.Router.generate('datasources_field_suggest'),
             baseParams: {
                 id: item.configuration.suggest_source,
                 ds_id: item.dsId,
@@ -37,7 +37,7 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
-        xtype: 'elementtypes-field-suggest',
+        xtype: 'datasources-field-suggest',
         name: config.name + '[]',
         width: (parseInt(item.configuration.width, 10) || 200),
 
@@ -85,7 +85,7 @@ Phlexible.fields.FieldTypes.addField('suggest', {
         de: 'Suggest',
         en: 'Suggest'
     },
-    iconCls: 'p-elementtype-field_suggest-icon',
+    iconCls: 'p-datasource-field_suggest-icon',
     allowedIn: [
         'tab',
         'accordion',

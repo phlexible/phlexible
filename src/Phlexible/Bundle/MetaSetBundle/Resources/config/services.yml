@@ -1,7 +1,6 @@
 parameters:
     phlexible_meta_set.languages.default: en
     phlexible_meta_set.languages.available: en,de
-    phlexible_meta_set.suggest.seperator: ,
 
 services:
     phlexible_meta_set.option_resolver:

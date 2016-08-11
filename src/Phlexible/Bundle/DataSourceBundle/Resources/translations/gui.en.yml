@@ -1,0 +1,10 @@
+datasources:
+    suggest: Suggest
+    source: Source
+    datasource: DataSource
+    create_datasource: Create new datasource
+    create_datasource_text: Please enter the title for the new data source.
+    suggest_needs_options: Please configure the suggest field.
+    configure_suggest: Configure suggest field
+    select: Select
+    cancel: Cancel

@@ -6,13 +6,13 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementtypeBundle\DependencyInjection;
+namespace Phlexible\Bundle\DataSourceBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Elementtypes configuration
+ * Data source configuration
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -24,14 +24,14 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('phlexible_elementtype');
+        $rootNode = $treeBuilder->root('phlexible_meta_set');
 
         $rootNode
             ->children()
-                ->arrayNode('fields')
+                ->arrayNode('suggest')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('suggest_separator')->defaultValue(',')->end()
+                        ->scalarNode('separator')->defaultValue(',')->end()
                     ->end()
                 ->end()
             ->end();

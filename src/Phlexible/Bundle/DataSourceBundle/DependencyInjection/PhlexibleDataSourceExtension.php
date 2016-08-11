@@ -27,8 +27,13 @@ class PhlexibleDataSourceExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
-
         $loader->load('doctrine.yml');
+
+        $configuration = $this->getConfiguration($config, $container);
+        $config = $this->processConfiguration($configuration, $config);
+
+        $container->setParameter('phlexible_data_source.suggest_separator', $config['suggest']['separator']);
+
         $container->setAlias(
             'phlexible_data_source.data_source_manager',
             'phlexible_data_source.doctrine.data_source_manager'

@@ -1,8 +1,8 @@
-Ext.provide('Phlexible.metasets.SuggestConfigurationWindow');
+Ext.provide('Phlexible.datasources.SuggestConfigurationWindow');
 
-Phlexible.metasets.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.metasets.Strings.configure_suggest,
-    strings: Phlexible.metasets.Strings,
+Phlexible.datasources.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
+    title: Phlexible.datasources.Strings.configure_suggest,
+    strings: Phlexible.datasources.Strings,
     width: 300,
     height: 400,
     layout: 'fit',
@@ -91,6 +91,6 @@ Phlexible.metasets.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
             scope: this
         }];
 
-        Phlexible.metasets.SuggestConfigurationWindow.superclass.initComponent.call(this);
+        Phlexible.datasources.SuggestConfigurationWindow.superclass.initComponent.call(this);
     }
 });

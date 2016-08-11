@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\EventListener;
+namespace Phlexible\Bundle\DataSourceBundle\EventListener;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;

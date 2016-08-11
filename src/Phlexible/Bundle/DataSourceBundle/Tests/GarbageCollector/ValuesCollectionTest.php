@@ -75,16 +75,46 @@ class ValuesCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $values->getInactiveValues());
     }
 
+    public function testAddRemoveValue()
+    {
+        $values = new ValuesCollection();
+
+        $values->addRemoveValue('test1');
+        $values->addRemoveValue('test2');
+
+        $this->assertCount(2, $values->getRemoveValues());
+    }
+
+    public function testAddRemovesValue()
+    {
+        $values = new ValuesCollection();
+
+        $values->addRemoveValues(array('test1', 'test2'));
+
+        $this->assertCount(2, $values->getRemoveValues());
+    }
+
+    public function testAddRemoveValueDoesNotAddDuplicates()
+    {
+        $values = new ValuesCollection();
+
+        $values->addRemoveValue('test');
+        $values->addRemoveValue('test');
+
+        $this->assertCount(1, $values->getRemoveValues());
+    }
+
     public function tesMergeValues()
     {
-        $values1 = new ValuesCollection(array('test1', 'test2'), array('test3', 'test4'));
-        $values2 = new ValuesCollection(array('test1', 'test5'), array('test3', 'test6'));
+        $values1 = new ValuesCollection(array('active1', 'active2'), array('inactive1', 'inactive2'), array('remove1', 'remove2'));
+        $values2 = new ValuesCollection(array('active3', 'active1'), array('inactive3', 'inactive1'), array('remove3', 'remove1'));
 
         $values = new ValuesCollection();
         $values->merge($values1);
         $values->merge($values2);
 
-        $this->assertSame(array('test1', 'test2', 'test5'), $values->getActiveValues());
-        $this->assertSame(array('test3', 'test4', 'test6'), $values->getInactiveValues());
+        $this->assertSame(array('active1', 'active2', 'active3'), $values->getActiveValues());
+        $this->assertSame(array('inactive1', 'inactive2', 'inactive3'), $values->getInactiveValues());
+        $this->assertSame(array('remove1', 'remove2', 'remove3'), $values->getRemoveValues());
     }
 }

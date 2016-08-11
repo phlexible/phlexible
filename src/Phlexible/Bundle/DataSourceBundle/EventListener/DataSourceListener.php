@@ -6,11 +6,11 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
+namespace Phlexible\Bundle\DataSourceBundle\EventListener;
 
 use Phlexible\Bundle\DataSourceBundle\DataSourceEvents;
 use Phlexible\Bundle\DataSourceBundle\Event\GarbageCollectEvent;
-use Phlexible\Component\MediaManager\Util\SuggestFieldUtil;
+use Phlexible\Bundle\DataSourceBundle\Util\Util;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -18,19 +18,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class DatasourceListener implements EventSubscriberInterface
+class DataSourceListener implements EventSubscriberInterface
 {
     /**
-     * @var SuggestFieldUtil
+     * @var Util[]
      */
-    private $suggestFieldUtil;
+    private $utils;
 
     /**
-     * @param SuggestFieldUtil $suggestFieldUtil
+     * @param Util[] $utils
      */
-    public function __construct(SuggestFieldUtil $suggestFieldUtil)
+    public function __construct($utils)
     {
-        $this->suggestFieldUtil = $suggestFieldUtil;
+        $this->utils = $utils;
     }
 
     /**
@@ -39,7 +39,7 @@ class DatasourceListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DataSourceEvents::GARBAGE_COLLECT => 'onGarbageCollect',
+            DataSourceEvents::BEFORE_GARBAGE_COLLECT => 'onGarbageCollect',
         ];
     }
 
@@ -53,6 +53,8 @@ class DatasourceListener implements EventSubscriberInterface
         $values = $event->getDataSourceValueBag();
         $collectedValues = $event->getCollectedValues();
 
-        $collectedValues->merge($this->suggestFieldUtil->fetchUsedValues($values));
+        foreach ($this->utils as $util) {
+            $collectedValues->merge($util->fetchValues($values));
+        }
     }
 }

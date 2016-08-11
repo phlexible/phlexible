@@ -83,7 +83,7 @@ Phlexible.metasets.SelectConfigurationWindow = Ext.extend(Ext.Window, {
             scope: this
         }];
 
-        Phlexible.metasets.SuggestConfigurationWindow.superclass.initComponent.call(this);
+        Phlexible.metasets.SelectConfigurationWindow.superclass.initComponent.call(this);
     },
 
     addValue: function() {

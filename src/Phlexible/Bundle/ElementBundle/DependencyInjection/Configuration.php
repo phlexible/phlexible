@@ -55,14 +55,6 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('sync_page')->defaultValue(false)->end()
                     ->end()
                 ->end()
-                ->arrayNode('context')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('default_country')->defaultValue('de')->end()
-                        ->scalarNode('countries')->defaultValue('de')->end()
-                        ->booleanNode('enabled')->defaultValue(false)->end()
-                    ->end()
-                ->end()
             ->end();
 
         return $treeBuilder;

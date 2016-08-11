@@ -41,24 +41,30 @@ class GarbageCollectCommand extends ContainerAwareCommand
         $messagePoster = $this->getContainer()->get('phlexible_message.message_poster');
 
         $pretend = !$input->getOption('run');
-        $stats = $gc->run($pretend);
+        $stats = $gc->run(0, $pretend);
 
         $subjects = array();
 
         foreach ($stats as $name => $langs) {
-            foreach ($langs as $lang => $parts) {
-                $cntActivate = !empty($parts['active']) ? count($parts['active']) : 0;
-                $cntInactive = !empty($parts['inactive']) ? count($parts['inactive']) : 0;
-                $cntRemove = !empty($parts['remove']) ? count($parts['remove']) : 0;
+            foreach ($langs as $lang => $values) {
+                $cntActivate = $values->countActiveValues();
+                $cntInactive = $values->countInactiveValues();
+                $cntRemove = $values->countRemoveValues();
 
                 if ($pretend) {
                     $output->writeln(
-                        '['.$name."] Would store $cntActivate active, "
+                        "[$name, $lang] Would store $cntActivate active, "
                         ."store $cntInactive inactive "
                         ."and remove $cntRemove values"
                     );
+
+                    if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
+                        $output->writeln(' Active: '.json_encode($values->getActiveValues()));
+                        $output->writeln(' Inactive: '.json_encode($values->getInactiveValues()));
+                        $output->writeln(' Remove: '.json_encode($values->getRemoveValues()));
+                    }
                 } else {
-                    $subject = '['.$name."] Stored $cntActivate active, "
+                    $subject = "[$name, $lang] Stored $cntActivate active, "
                         ."stored $cntInactive inactive "
                         ."and removed $cntRemove values";
 
