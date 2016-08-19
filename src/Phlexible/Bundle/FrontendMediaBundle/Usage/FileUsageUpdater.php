@@ -111,7 +111,6 @@ class FileUsageUpdater
         $fileLinks = $qb->getQuery()->getResult();
         /* @var $fileLinks ElementLink[] */
 
-
         $teasers = $this->teaserManager->findBy(['typeId' => $eid]);
         $trees = $this->treeManager->getByTypeId($eid);
         $treeNodes = array();
@@ -194,7 +193,10 @@ class FileUsageUpdater
 
         foreach ($flags as $fileId => $fileVersions) {
             foreach ($fileVersions as $fileVersion => $flag) {
-                $volume = $this->volumeManager->getByFileId($fileId);
+                $volume = $this->volumeManager->findByFileId($fileId);
+                if (!$volume) {
+                    continue;
+                }
                 $file = $volume->findFile($fileId, $fileVersion);
 
                 $qb = $fileUsageRepository->createQueryBuilder('fu');

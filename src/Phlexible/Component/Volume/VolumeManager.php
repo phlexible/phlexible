@@ -69,6 +69,22 @@ class VolumeManager
      */
     public function getByFileId($fileId)
     {
+        if ($volume = $this->$this->findByFileId($fileId)) {
+            return $volume;
+        }
+
+        throw new NotFoundException("Volume for file $fileId not found.");
+    }
+
+    /**
+     * Return volume by file ID
+     *
+     * @param string $fileId
+     *
+     * @return Volume
+     */
+    public function findByFileId($fileId)
+    {
         foreach ($this->volumes as $volume) {
             try {
                 $file = $volume->findFile($fileId);
@@ -79,7 +95,7 @@ class VolumeManager
             }
         }
 
-        throw new NotFoundException("Volume for file $fileId not found.");
+        return null;
     }
 
     /**
@@ -92,13 +108,29 @@ class VolumeManager
      */
     public function getByFolderId($folderId)
     {
+        if ($volume = $this->findByFolderId($folderId)) {
+            return $volume;
+        }
+
+        throw new NotFoundException("Volume for folder $folderId not found.");
+    }
+
+    /**
+     * Return volume by folder ID
+     *
+     * @param string $folderId
+     *
+     * @return Volume
+     */
+    public function findByFolderId($folderId)
+    {
         foreach ($this->volumes as $volume) {
             if ($volume->findFolder($folderId)) {
                 return $volume;
             }
         }
 
-        throw new NotFoundException("Volume for folder $folderId not found.");
+        return null;
     }
 
     /**
