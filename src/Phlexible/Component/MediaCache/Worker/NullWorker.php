@@ -58,6 +58,14 @@ class NullWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         return true;
