@@ -69,7 +69,7 @@ class VolumeManager
      */
     public function getByFileId($fileId)
     {
-        if ($volume = $this->$this->findByFileId($fileId)) {
+        if ($volume = $this->findByFileId($fileId)) {
             return $volume;
         }
 
