@@ -11,7 +11,6 @@ namespace Phlexible\Component\MediaCache\Worker;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Abstract worker
@@ -43,6 +42,7 @@ abstract class AbstractWorker implements WorkerInterface
             ->setError($message);
 
         $this->getLogger()->error($message, array(
+            'worker' => get_class($this),
             'templateType' => $template->getType(),
             'templateKey' => $template->getKey(),
             'fileName' => $file->getName(),

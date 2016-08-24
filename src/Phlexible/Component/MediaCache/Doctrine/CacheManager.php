@@ -147,6 +147,10 @@ class CacheManager implements CacheManagerInterface
      */
     public function deleteCacheItem(CacheItem $cacheItem)
     {
+        if (!$this->entityManager->contains($cacheItem)) {
+            return;
+        }
+
         // TODO: remove files
         $this->entityManager->remove($cacheItem);
         $this->entityManager->flush($cacheItem);
