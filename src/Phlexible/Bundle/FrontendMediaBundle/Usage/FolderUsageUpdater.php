@@ -159,7 +159,10 @@ class FolderUsageUpdater
         }
 
         foreach ($flags as $folderId => $flag) {
-            $volume = $this->volumeManager->getByFolderId($folderId);
+            $volume = $this->volumeManager->findByFolderId($folderId);
+            if (!$volume) {
+                continue;
+            }
             $folder = $volume->findFolder($folderId);
 
             $folderUsage = $folderUsageRepository->findOneBy(['folder' => $folder, 'usageType' => 'element', 'usageId' => $eid]);
