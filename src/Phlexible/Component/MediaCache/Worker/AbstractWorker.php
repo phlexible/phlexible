@@ -11,6 +11,7 @@ namespace Phlexible\Component\MediaCache\Worker;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Abstract worker
@@ -37,18 +38,19 @@ abstract class AbstractWorker implements WorkerInterface
         TemplateInterface $template,
         ExtendedFileInterface $file)
     {
-        $error = $message . PHP_EOL
-            . PHP_EOL
-            . 'Template type: ' . $template->getType() . PHP_EOL
-            . 'Template key: ' . $template->getKey() . PHP_EOL
-            . 'File name: ' . $file->getName() . PHP_EOL
-            . 'File path: ' . $inputFilename . PHP_EOL
-            . 'File ID: ' . $file->getId() . ':' . $file->getVersion() . PHP_EOL
-            . 'File type: ' . $file->getMimeType() . PHP_EOL
-            . 'File media type: ' . strtolower($file->getMediaType());
-
         $cacheItem
             ->setCacheStatus($status)
-            ->setError($error);
+            ->setError($message);
+
+        $this->getLogger()->error($message, array(
+            'templateType' => $template->getType(),
+            'templateKey' => $template->getKey(),
+            'fileName' => $file->getName(),
+            'filePath' => $inputFilename,
+            'fileId' => $file->getId(),
+            'fileVersion' => $file->getVersion(),
+            'fileMimeType' => $file->getMimeType(),
+            'fileMediaType' => $file->getMediaType(),
+        ));
     }
 }
