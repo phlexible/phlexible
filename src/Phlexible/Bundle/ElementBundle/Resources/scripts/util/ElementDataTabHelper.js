@@ -153,7 +153,7 @@ Phlexible.elements.ElementDataTabHelper = {
                         }
                     });
                 });
-            } else {
+            } else if (element.master) {
                 Ext.each(repeatableDsIds, function(dsId) {
                     var pt = element.prototypes.getPrototype(dsId);
                     var defaultRepeat = parseInt(pt.configuration.repeat_default, 10) || 0;
