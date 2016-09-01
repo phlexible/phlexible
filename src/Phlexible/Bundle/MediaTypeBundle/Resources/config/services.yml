@@ -24,6 +24,7 @@ services:
         class: Phlexible\Bundle\MediaTypeBundle\EventListener\ViewFrameListener
         arguments:
             - "@router"
+            - "@templating.helper.assets"
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.view_frame, method: onViewFrame}
 
