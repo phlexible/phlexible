@@ -52,6 +52,8 @@ abstract class AbstractField extends Field
             $value = json_decode($value, true);
         } elseif ($type === 'array') {
             $value = (array) $value;
+        } elseif ($type === 'list') {
+            $value = explode(',', $value);
         } elseif ($type === 'boolean') {
             $value = (bool) $value;
         } elseif ($type === 'integer') {
@@ -74,6 +76,8 @@ abstract class AbstractField extends Field
             return json_encode($value);
         } elseif ($this->getDataType() === 'array') {
             return json_encode($value);
+        } elseif ($this->getDataType() === 'list') {
+            return implode(',', $value);
         }
 
         return trim($value);
@@ -92,6 +96,8 @@ abstract class AbstractField extends Field
             $value = json_decode($value, true);
         } elseif ($type === 'array') {
             $value = json_decode($value, true);
+        } elseif ($type === 'list') {
+            $value = explode(',', $value);
         } elseif ($type === 'boolean') {
             $value = (bool) $value;
         } elseif ($type === 'integer') {

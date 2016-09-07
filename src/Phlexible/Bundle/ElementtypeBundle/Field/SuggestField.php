@@ -28,6 +28,6 @@ class SuggestField extends AbstractField
      */
     public function getDataType()
     {
-        return 'array';
+        return 'list';
     }
 }
