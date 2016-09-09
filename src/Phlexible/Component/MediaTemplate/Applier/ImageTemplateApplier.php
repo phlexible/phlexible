@@ -128,7 +128,7 @@ class ImageTemplateApplier
 
             if ($template->hasParameter('colorspace')) {
                 $colorspace = $template->getParameter('colorspace');
-                if ($colorspace === 'grayscale') {
+                if ($colorspace === 'grayscale' || $colorspace === 'gray') {
                     $image->usePalette(new Grayscale());
                 } else {
                     $image->usePalette(new RGB());
@@ -136,7 +136,7 @@ class ImageTemplateApplier
             }
         } elseif ($template->hasParameter('colorspace', true)) {
             $colorspace = $template->getParameter('colorspace');
-            if ($colorspace === 'grayscale') {
+            if ($colorspace === 'grayscale' || $colorspace === 'gray') {
                 $image->usePalette(new Grayscale());
             } elseif ($colorspace === 'cmyk') {
                 $image->usePalette(new CMYK());
