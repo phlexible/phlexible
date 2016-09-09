@@ -159,7 +159,7 @@ class MediaController extends Controller
                 $mimeType, array(
                     'serve_filename' => $file->getName(),
                     'absolute_path' => true,
-                    'inline' => false,
+                    'inline' => true,
                 )
             );
     }
