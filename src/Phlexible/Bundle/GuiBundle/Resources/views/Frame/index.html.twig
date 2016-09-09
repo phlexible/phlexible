@@ -10,8 +10,8 @@
     {% if  theme != "default" %}
     <link id="theme" href="{{ asset("/resources/css/xtheme-" ~ theme ~ ".css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
     {% endif %}
-    <link href="{{ path("asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
-    <link href="{{ path("asset_icons") }}" media="screen" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset(path("asset_css")) }}" media="screen" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset(path("asset_icons")) }}" media="screen" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         #loading {
             position: absolute;
@@ -87,9 +87,9 @@
     //]]>
 </script>
 {{ scripts|raw }}
-<script type="text/javascript" src="{{ path("asset_translations", {language: language}) }}"></script>
-<script type="text/javascript" src="{{ path("asset_scripts") }}"></script>
-<script type="text/javascript" src="{{ path("gui_routes") }}"></script>
+<script type="text/javascript" src="{{ asset(path("asset_translations", {language: language})) }}"></script>
+<script type="text/javascript" src="{{ asset(path("asset_scripts")) }}"></script>
+<script type="text/javascript" src="{{ asset(path("gui_routes")) }}"></script>
 <script type="text/javascript">
     //<![CDATA[
     Ext.onReady(function () {

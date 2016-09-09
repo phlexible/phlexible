@@ -142,6 +142,9 @@ class DataController extends Controller
         }
 
         foreach ($publishedVersions as $publishedVersion) {
+            if (!isset($versions[$publishedVersion->getVersion()])) {
+                continue;
+            }
             $versions[$publishedVersion->getVersion()]['online'] = true;
             if ($publishedVersion->getVersion() === $onlineVersion) {
                 $versions[$publishedVersion->getVersion()]['is_published'] = true;

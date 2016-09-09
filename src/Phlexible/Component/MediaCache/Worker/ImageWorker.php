@@ -102,6 +102,14 @@ class ImageWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         return $template instanceof ImageTemplate;
@@ -232,10 +240,6 @@ class ImageWorker extends AbstractWorker
         }
 
         $this->cacheManager->updateCacheItem($cacheItem);
-
-        if ($cacheItem->getError()) {
-            $this->logger->error($cacheItem->getError());
-        }
 
         return $cacheItem;
     }

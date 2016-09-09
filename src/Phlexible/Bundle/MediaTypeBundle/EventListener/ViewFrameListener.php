@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\MediaTypeBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\ViewEvent;
+use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -24,11 +25,18 @@ class ViewFrameListener
     private $router;
 
     /**
-     * @param RouterInterface $router
+     * @var AssetsHelper
      */
-    public function __construct(RouterInterface $router)
+    private $assetsHelper;
+
+    /**
+     * @param RouterInterface $router
+     * @param AssetsHelper    $assetsHelper
+     */
+    public function __construct(RouterInterface $router, AssetsHelper $assetsHelper)
     {
         $this->router = $router;
+        $this->assetsHelper = $assetsHelper;
     }
 
     /**
@@ -39,7 +47,7 @@ class ViewFrameListener
         $view = $event->getView();
 
         $view
-            ->addScript($this->router->generate('mediatypes_asset_scripts'))
-            ->addLink($this->router->generate('mediatypes_asset_css'));
+            ->addScript($this->assetsHelper->getUrl($this->router->generate('mediatypes_asset_scripts')))
+            ->addLink($this->assetsHelper->getUrl($this->router->generate('mediatypes_asset_css')));
     }
 }

@@ -42,8 +42,8 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@phlexible_media_manager.hash_calculator"
-            - "Phlexible\Bundle\MediaManagerBundle\Entity\Folder"
-            - "Phlexible\Bundle\MediaManagerBundle\Entity\File"
+            - Phlexible\Bundle\MediaManagerBundle\Entity\Folder
+            - Phlexible\Bundle\MediaManagerBundle\Entity\File
 
     phlexible_media_manager.upload.temp_storage:
         class: Phlexible\Component\MediaManager\Upload\TempStorage

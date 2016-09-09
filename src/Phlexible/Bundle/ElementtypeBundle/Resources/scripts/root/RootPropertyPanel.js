@@ -163,6 +163,34 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
             }
         ];
 
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
+            this.items.push({
+                xtype: 'fieldset',
+                title: 'Debug',
+                autoHeight: true,
+                collapsible: true,
+                collapsed: true,
+                items: [
+                    {
+                        xtype: 'textfield',
+                        name: 'debug_ds_id',
+                        fieldLabel: 'ds_id',
+                        width: 230,
+                        readOnly: true
+                    },
+                    {
+                        xtype: 'textarea',
+                        name: 'debug_dump',
+                        fieldLabel: 'dump',
+                        width: 400,
+                        height: 300,
+                        readOnly: true,
+                        style: 'font-family: Courier, "Courier New", monospace'
+                    }
+                ]
+            });
+        }
+
         Phlexible.elementtypes.RootPropertyPanel.superclass.initComponent.call(this);
     },
 
@@ -174,7 +202,15 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
             properties.root.default_content_tab += '';
         }
 
-        this.getForm().setValues(properties.root);
+        var values = Phlexible.clone(properties.root);
+
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
+            values['debug_ds_id'] = node.attributes.ds_id;
+            values['debug_dump'] = Phlexible.dump(node.attributes.properties);
+        }
+
+        this.getForm().setValues(values);
+
     },
 
     loadRoot: function (properties, node) {

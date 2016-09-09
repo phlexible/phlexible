@@ -111,6 +111,14 @@ class VideoWorker extends AbstractWorker
     /**
      * {@inheritdoc}
      */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function accept(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
         return $template instanceof VideoTemplate && $mediaType->getCategory() === 'video';
@@ -212,10 +220,6 @@ class VideoWorker extends AbstractWorker
         }
 
         $this->cacheManager->updateCacheItem($cacheItem);
-
-        if ($cacheItem->getError()) {
-            $this->logger->error($cacheItem->getError());
-        }
 
         return $cacheItem;
     }

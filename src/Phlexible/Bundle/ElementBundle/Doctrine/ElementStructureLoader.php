@@ -211,7 +211,7 @@ class ElementStructureLoader
             $field->getDataType(),
             $dataRow['name'],
             $value,
-            $dataRow['options']
+            $dataRow['options'] ? json_decode($dataRow['options'], true) : null
         );
     }
 
