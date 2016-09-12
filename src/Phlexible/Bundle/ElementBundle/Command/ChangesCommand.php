@@ -113,33 +113,5 @@ class ChangesCommand extends ContainerAwareCommand
 
         // TODO: meta, titles
     }
-
-    /**
-     * @param ElementStructure $structure
-     *
-     * @return ElementStructure
-     */
-    private function iterateStructure(ElementStructure $structure)
-    {
-        $elementStructure = new ElementStructure();
-        $elementStructure
-            ->setId($structure->getId())
-            ->setDsId($structure->getDsId())
-            ->setName($structure->getName())
-            //->setParentId($structure->getParentId())
-            //->setParentDsId($structure->getParentDsId())
-            ->setParentName($structure->getParentName());
-        ;
-
-        foreach ($structure->getValues() as $value) {
-            $elementStructure->setValue($value);
-        }
-
-        foreach ($structure->getStructures() as $childStructure) {
-            $elementStructure->addStructure($this->iterateStructure($childStructure));
-        }
-
-        return $elementStructure;
-    }
 }
 
