@@ -53,7 +53,7 @@ Phlexible.elements.HistoryFilter = Ext.extend(Ext.form.FormPanel, {
                         xtype: 'numberfield',
                         fieldLabel: this.strings.tid,
                         anchor: '100%',
-                        name: 'filter_tid',
+                        name: 'filter_tree_id',
                         enableKeyEvents: true,
                         listeners: {
                             keyup: {
