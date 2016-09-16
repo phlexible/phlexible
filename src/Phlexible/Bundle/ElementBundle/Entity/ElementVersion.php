@@ -99,7 +99,7 @@ class ElementVersion
 
     /**
      * @var ArrayCollection|ElementVersionMappedField[]
-     * @ORM\OneToMany(targetEntity="ElementVersionMappedField", mappedBy="elementVersion", indexBy="language")
+     * @ORM\OneToMany(targetEntity="ElementVersionMappedField", mappedBy="elementVersion", indexBy="language", cascade={"persist","remove"}, orphanRemoval=true)
      */
     private $mappedFields;
 
