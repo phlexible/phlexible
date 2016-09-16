@@ -34,7 +34,7 @@ class HistoryController extends Controller
     public function indexAction(Request $request)
     {
         $eid      = $request->get('filter_eid', null);
-        $tid      = $request->get('filter_tid', null);
+        $treeId   = $request->get('filter_tree_id', null);
         $teaserId = $request->get('filter_teaser_id', null);
         $action   = $request->get('filter_action', null);
         $comment  = $request->get('filter_comment', null);
@@ -48,8 +48,8 @@ class HistoryController extends Controller
         if ($eid) {
             $criteria['eid'] = $eid;
         }
-        if ($tid) {
-            $criteria['tid'] = $tid;
+        if ($treeId) {
+            $criteria['treeId'] = $treeId;
         }
         if ($teaserId) {
             $criteria['teaserId'] = $teaserId;
