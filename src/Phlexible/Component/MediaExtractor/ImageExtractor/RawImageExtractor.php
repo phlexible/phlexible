@@ -24,7 +24,7 @@ class RawImageExtractor implements ExtractorInterface
      */
     public function supports(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
-        return $targetFormat === 'image' && ($mediaType->getCategory() === 'image' || $mediaType->getName() === 'pdf');
+        return $targetFormat === 'image' && ($mediaType->getCategory() === 'image' || $mediaType->getName() === 'pdf' || $mediaType->getName() === 'svg');
     }
 
     /**
