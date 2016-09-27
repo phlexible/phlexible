@@ -24,7 +24,7 @@ class ExtensionAdapterTest extends AbstractConcreteAdapterTest
 
     public function testCheckAvailability()
     {
-        if (!$this->createAdapter()->isAvailable('testFile')) {
+        if (!$this->createAdapter()->isAvailable($this->getFile('test.csv'))) {
             $this->markTestSkipped('Extension adapter not available on this system');
         }
     }
