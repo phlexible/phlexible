@@ -15,6 +15,7 @@ use Phlexible\Component\Mime\MimeDetector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -243,10 +244,9 @@ class UploadController extends Controller
         $outFilename = $this->container->getParameter('phlexible_media_manager.temp_dir') . 'preview.png';
         $imageApplier->apply($template, new File(), $tempFile->getPath(), $outFilename);
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create($outFilename, 'image/png', [
-                'absolute_path' => true,
-            ]);
+        $response = new BinaryFileResponse($outFilename, 200, array('Content-Type' => 'image/png'));
+
+        return $response;
     }
 
     /**

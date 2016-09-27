@@ -522,10 +522,6 @@
             "install-path": "vendor/friendsofsymfony/user-bundle",
             "installer": "composer"
         },
-        "igorw/file-serve-bundle": {
-            "install-path": "vendor/igorw/file-serve-bundle/Igorw/FileServeBundle",
-            "installer": "composer"
-        },
         "imagine/imagine": {
             "install-path": "vendor/imagine/imagine",
             "installer": "composer"

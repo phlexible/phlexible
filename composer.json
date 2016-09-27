@@ -36,7 +36,6 @@
         "ramsey/uuid": "~2.7",
         "php-ffmpeg/php-ffmpeg": "~0.5",
         "php-ffmpeg/extras": "~0.3",
-        "igorw/file-serve-bundle": "~1",
         "cocur/slugify": "~0.8",
         "alchemy/phpexiftool": "~0.5",
         "cogpowered/finediff": "~0.3",
