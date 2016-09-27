@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
-use Brainbits\Mime\MimeDetector;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
+use Phlexible\Component\Mime\MimeDetector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaManager\AttributeReader;
 
-use Brainbits\ImageAnalyzer\ImageAnalyzer;
+use Phlexible\Component\ImageAnalyzer\ImageAnalyzer;
 use Phlexible\Component\MediaType\Model\MediaType;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 
