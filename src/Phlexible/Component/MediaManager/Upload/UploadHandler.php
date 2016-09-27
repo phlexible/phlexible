@@ -8,8 +8,8 @@
 
 namespace Phlexible\Component\MediaManager\Upload;
 
-use Brainbits\Mime\MimeDetector;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\Mime\MimeDetector;
 use Phlexible\Component\Volume\FileSource\UploadedFileSource;
 use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
