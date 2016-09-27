@@ -56,12 +56,6 @@
     "suggest": {
         "puli/composer-plugin": "This package contains Puli resources. Require the plugin to use them."
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.brainbits.net/repo/private/"
-        }
-    ],
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
