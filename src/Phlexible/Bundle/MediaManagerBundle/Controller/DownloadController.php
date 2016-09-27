@@ -15,8 +15,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Download controller
@@ -50,12 +52,10 @@ class DownloadController extends Controller
         $filepath = $file->getPhysicalPath();
         $filename = $file->getName();
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create($filepath, $file->getMimeType(), [
-                'serve_filename' => $filename,
-                'absolute_path'  => true,
-                'inline'         => false,
-            ]);
+        $response = new BinaryFileResponse($filepath, 200, array('Content-Type' => $file->getMimeType()));
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
+
+        return $response;
     }
 
     /**
@@ -167,10 +167,9 @@ class DownloadController extends Controller
             return $this->createNotFoundException();
         }
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create($filepath, 'application/zip', [
-                'absolute_path' => true,
-                'inline'        => false,
-            ]);
+        $response = new BinaryFileResponse($filepath, 200, array('Content-Type' => 'application/zip'));
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+
+        return $response;
     }
 }
