@@ -11,7 +11,9 @@ namespace Phlexible\Bundle\FrontendMediaBundle\Controller;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -76,14 +78,10 @@ class MediaController extends Controller
 
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create(
-                $filePath,
-                $mimeType, array(
-                    'serve_filename' => $file->getName() . '.' . $extension,
-                    'absolute_path' => true,
-                )
-            );
+        $response = new BinaryFileResponse($filePath, 200, array('Content-Type' => $mimeType));
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $file->getName().'.'.$extension);
+
+        return $response;
     }
 
     /**
@@ -114,15 +112,10 @@ class MediaController extends Controller
 
         $mimeType = $file->getMimeType();
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create(
-                $filePath,
-                $mimeType, array(
-                    'serve_filename' => $file->getName(),
-                    'absolute_path' => true,
-                    'inline' => false,
-                )
-            );
+        $response = new BinaryFileResponse($filePath, 200, array('Content-Type' => $mimeType));
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $file->getName());
+
+        return $response;
     }
 
     /**
@@ -153,15 +146,10 @@ class MediaController extends Controller
 
         $mimeType = $file->getMimeType();
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create(
-                $filePath,
-                $mimeType, array(
-                    'serve_filename' => $file->getName(),
-                    'absolute_path' => true,
-                    'inline' => true,
-                )
-            );
+        $response = new BinaryFileResponse($filePath, 200, array('Content-Type' => $mimeType));
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $file->getName());
+
+        return $response;
     }
 
     /**
@@ -188,7 +176,6 @@ class MediaController extends Controller
         $mediaType = $mediaTypeManager->findByMimetype($mimeType);
         $icon = $mediaType->getIcon($size);
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create($icon, 'image/gif', ['absolute_path' => true]);
+        $response = new BinaryFileResponse($icon, 200, array('Content-Type' => 'image/gif'));
     }
 }

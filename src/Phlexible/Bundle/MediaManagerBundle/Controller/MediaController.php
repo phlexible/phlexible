@@ -13,8 +13,10 @@ use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Media controller
@@ -116,10 +118,7 @@ class MediaController extends Controller
             $mimeType = 'image/gif';
         }
 
-        $response = $this->get('igorw_file_serve.response_factory')
-            ->create($filePath, $mimeType, ['absolute_path' => true])
-        //    ->setEtag($etag)
-        ;
+        $response = new BinaryFileResponse($filePath, 200, array('Content-Type' => $mimeType));
 
         return $response;
     }
@@ -144,7 +143,8 @@ class MediaController extends Controller
         $fileSize = filesize($filePath);
         $mimeType = 'image/gif';
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create($filePath, $mimeType, ['absolute_path' => true]);
+        $response = new BinaryFileResponse($filePath, 200, array('Content-Type' => $mimeType));
+
+        return $response;
     }
 }
