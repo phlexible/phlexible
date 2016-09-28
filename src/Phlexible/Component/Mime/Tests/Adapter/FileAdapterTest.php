@@ -20,13 +20,13 @@ class FileAdapterTest extends AbstractConcreteAdapterTest
     public function testCheckAvailability()
     {
         $adapter = $this->createAdapter('file');
-        $this->assertTrue($adapter->isAvailable('testFile'));
+        $this->assertTrue($adapter->isAvailable($this->getFile('file.txt')));
     }
 
-    public function testIsAvailableWithInvalidExecutable()
+    public function testIsNotAvailableForInvalidExecutable()
     {
         $adapter = $this->createAdapter('invalid_file_command');
-        $this->assertFalse($adapter->isAvailable('testFile'));
+        $this->assertFalse($adapter->isAvailable($this->getFile('file.txt')));
     }
 
     /**
@@ -36,13 +36,11 @@ class FileAdapterTest extends AbstractConcreteAdapterTest
     {
         $adapter = $this->createAdapter('invalid_file_command');
 
-        $filename = $this->getFile('file.txt');
-
-        $adapter->getInternetMediaTypeStringFromFile($filename);
+        $adapter->getInternetMediaTypeStringFromFile($this->getFile('file.txt'));
     }
 
     /**
-     * {@inheritdoc}
+     * @return FileAdapter
      */
     protected function createAdapter($fileCommand = 'file')
     {
