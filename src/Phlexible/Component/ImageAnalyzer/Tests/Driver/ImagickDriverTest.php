@@ -29,7 +29,6 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
         return array(
             array(__DIR__ . '/../files/test.tif', array(
                 'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colors'      => '69955',
                 'colorspace'  => 'SRGB',
                 'compression' => 'None',
                 'depth'       => '8',
@@ -47,7 +46,6 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
             )),
             array(__DIR__ . '/../files/test.jpg', array(
                 'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colors'      => '69955',
                 'colorspace'  => 'SRGB',
                 'compression' => 'JPEG',
                 'depth'       => '8',
@@ -65,7 +63,6 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
             )),
             array(__DIR__ . '/../files/test_cmyk.jpg', array(
                 'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colors'      => '114790',
                 'colorspace'  => 'CMYK',
                 'compression' => 'JPEG',
                 'depth'       => '8',
@@ -83,7 +80,6 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
             )),
             array(__DIR__ . '/../files/test.gif', array(
                 'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colors'      => '255',
                 'colorspace'  => 'SRGB',
                 'compression' => 'LZW',
                 'depth'       => '8',
@@ -101,7 +97,6 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
             )),
             array(__DIR__ . '/../files/test.png', array(
                 'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\ImagickDriver',
-                'colors'      => '69955',
                 'colorspace'  => 'SRGB',
                 'compression' => 'Zip',
                 'depth'       => '8',
@@ -132,7 +127,6 @@ class ImagickDriverTest extends \PHPUnit_Framework_TestCase
         $imageInfo = $driver->analyze($file);
 
         $this->assertEquals($expected['analyzer'], $imageInfo->getAnalyzer());
-        $this->assertEquals($expected['colors'], $imageInfo->getColors());
         $this->assertEquals($expected['colorspace'], $imageInfo->getColorspace());
         $this->assertEquals($expected['compression'], $imageInfo->getCompression());
         $this->assertEquals($expected['depth'], $imageInfo->getDepth());

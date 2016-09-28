@@ -29,7 +29,6 @@ class GdDriverTest extends \PHPUnit_Framework_TestCase
         return array(
             array(__DIR__ . '/../files/test.jpg', array(
                 'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\GdDriver',
-                'colors'      => '0',
                 'colorspace'  => 'RGB',
                 'compression' => null,
                 'depth'       => '8',
@@ -47,7 +46,6 @@ class GdDriverTest extends \PHPUnit_Framework_TestCase
             )),
             array(__DIR__ . '/../files/test_cmyk.jpg', array(
                 'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\GdDriver',
-                'colors'      => '0',
                 'colorspace'  => 'CMYK',
                 'compression' => null,
                 'depth'       => '8',
@@ -65,7 +63,6 @@ class GdDriverTest extends \PHPUnit_Framework_TestCase
             )),
             array(__DIR__ . '/../files/test.gif', array(
                 'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\GdDriver',
-                'colors'      => '256',
                 'colorspace'  => 'RGB',
                 'compression' => null,
                 'depth'       => '8',
@@ -83,7 +80,6 @@ class GdDriverTest extends \PHPUnit_Framework_TestCase
             )),
             array(__DIR__ . '/../files/test.png', array(
                 'analyzer'    => 'Phlexible\Component\ImageAnalyzer\Driver\GdDriver',
-                'colors'      => '0',
                 'colorspace'  => 'RGB',
                 'compression' => null,
                 'depth'       => '8',
@@ -114,7 +110,6 @@ class GdDriverTest extends \PHPUnit_Framework_TestCase
         $imageInfo = $driver->analyze($file);
 
         $this->assertEquals($expected['analyzer'], $imageInfo->getAnalyzer());
-        $this->assertEquals($expected['colors'], $imageInfo->getColors());
         $this->assertEquals($expected['colorspace'], $imageInfo->getColorspace());
         $this->assertEquals($expected['compression'], $imageInfo->getCompression());
         $this->assertEquals($expected['depth'], $imageInfo->getDepth());
