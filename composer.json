@@ -37,7 +37,7 @@
         "php-ffmpeg/php-ffmpeg": "~0.5",
         "php-ffmpeg/extras": "~0.3",
         "cocur/slugify": "~0.8",
-        "alchemy/phpexiftool": "~0.5",
+        "alchemy/phpexiftool": "~0.6",
         "cogpowered/finediff": "~0.3",
         "nelmio/api-doc-bundle": "~2.5",
         "alchemy/zippy": "^0.3.1"
