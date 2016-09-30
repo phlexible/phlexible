@@ -95,10 +95,10 @@ Phlexible.frontendmedia.FieldHelper = {
                     }, 'after');
                     this.button_unlink = this.hidden_unlink.insertSibling({
                         tag: 'img',
-                        src: Phlexible.bundleAsset('/elementtypes/icons/' + (this.isUnlinked ? 'unlink' : 'link')) + '.png',
+                        cls: 'p-inline-icon p-fields-' + (this.isUnlinked ? 'unlink' : 'link'),
+                        src: Ext.BLANK_IMAGE_URL,
                         width: 16,
                         height: 16,
-                        style: 'cursor: pointer; padding-left: 3px; vertical-align: middle;',
                         qtip: this.isUnlinked ? 'Link' : 'Unlink'
                     }, 'after');
                     this.button_unlink.on('click', function () {
@@ -107,8 +107,9 @@ Phlexible.frontendmedia.FieldHelper = {
                             this.hidden_unlink.set({
                                 value: ''
                             });
+                            this.button_unlink.removeClass('p-fields-unlink');
+                            this.button_unlink.addClass('p-fields-link');
                             this.button_unlink.set({
-                                src: Phlexible.bundleAsset('/elementtypes/icons/link.png'),
                                 qtip: 'Unlink'
                             });
                             this.el.removeClass('p-fields-synchronized-unlinked');
@@ -126,8 +127,9 @@ Phlexible.frontendmedia.FieldHelper = {
                             this.hidden_unlink.set({
                                 value: '1'
                             });
+                            this.button_unlink.removeClass('p-fields-link');
+                            this.button_unlink.addClass('p-fields-unlink');
                             this.button_unlink.set({
-                                src: Phlexible.bundleAsset('/elementtypes/icons/unlink.png'),
                                 qtip: 'Link'
                             });
                             this.el.addClass('p-fields-synchronized-unlinked');

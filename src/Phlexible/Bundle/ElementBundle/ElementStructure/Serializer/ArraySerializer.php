@@ -20,34 +20,41 @@ class ArraySerializer implements SerializerInterface
     /**
      * {@inheritdoc}
      */
-    public function serialize(ElementStructure $elementStructure, $language)
+    public function serialize(ElementStructure $elementStructure, $language, $masterLanguage)
     {
-        return $this->walk($elementStructure, $language);
+        return $this->walk($elementStructure, $language, $masterLanguage);
     }
 
     /**
      * @param ElementStructure $elementStructure
      * @param string           $language
+     * @param string           $masterLanguage
      *
      * @return array
      */
-    private function walk(ElementStructure $elementStructure, $language)
+    private function walk(ElementStructure $elementStructure, $language, $masterLanguage)
     {
         $valueDatas = [];
         foreach ($elementStructure->getValues($language) as $value) {
-            $valueDatas[] = [
+            $valueData = [
                 'id'         => $value->getId(),
                 'dsId'       => $value->getDsId(),
                 'name'       => $value->getName(),
                 'type'       => $value->getType(),
                 'content'    => $value->getValue(),
                 'attributes' => $value->getAttributes(),
+                'options'    => $value->getOptions(),
             ];
+            $options = $value->getOptions();
+            if (!empty($options['unlinked'])) {
+                $valueData['masterContent'] = $elementStructure->getValue($value->getName(), $masterLanguage)->getValue();
+            }
+            $valueDatas[] = $valueData;
         }
 
         $structureDatas = [];
         foreach ($elementStructure->getStructures() as $subStructure) {
-            $structureDatas[] = $this->walk($subStructure, $language);
+            $structureDatas[] = $this->walk($subStructure, $language, $masterLanguage);
         }
 
         $structureData = [
