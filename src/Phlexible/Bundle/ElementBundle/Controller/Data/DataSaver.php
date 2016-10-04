@@ -19,8 +19,11 @@ use Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager;
 use Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
+use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
+use Phlexible\Bundle\ElementtypeBundle\Field\Field;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
+use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
@@ -173,10 +176,10 @@ class DataSaver
             }
             $map = $this->applyStructure($elementStructure, $elementtypeStructure, $values, $language, $oldElementStructure);
             $this->applyOldValues($elementStructure, $oldElementStructure, $language);
-            $this->applyValues($elementStructure, $elementtypeStructure, $values, $language, $map);
+            $this->applyValues($elementStructure, $elementtypeStructure, $values, $language, $map, null);
         } else {
             $elementStructure = clone $oldElementStructure;
-            $this->applyValues($elementStructure, $elementtypeStructure, $values, $language);
+            $this->applyValues($elementStructure, $elementtypeStructure, $values, $language, null, $element->getMasterLanguage());
         }
 
         $elementStructure->setId(null);
@@ -586,13 +589,16 @@ class DataSaver
      * @param array                $values
      * @param string               $language
      * @param array                $map
+     * @param bool                 $masterLanguage
      *
      * @throws InvalidArgumentException
      * @return ElementStructure
      */
-    private function applyValues(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values, $language, array $map = null)
+    private function applyValues(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values, $language, array $map = null, $masterLanguage = false)
     {
-        $rootElementStructure->removeLanguage($language);
+        //$rootElementStructure->removeLanguage($language);
+
+        $fields = array();
 
         foreach ($values as $key => $value) {
             $parts = explode('__', $key);
@@ -603,48 +609,119 @@ class DataSaver
             }
             $identifier = rtrim($identifier, '[]');
 
-            if (preg_match('/^field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match)) {
+            if (!$value && (preg_match('/^unlink_field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match) || preg_match('/^unlink_field-([-a-f0-9]{36})-new-([0-9]+)$/', $identifier, $match))) {
                 // existing value
                 $dsId = $match[1];
                 $node = $elementtypeStructure->getNode($dsId);
-                $options = null;
                 $field = $this->fieldRegistry->getField($node->getType());
-                $value = $field->fromRaw($value);
-                $elementStructureValue = new ElementStructureValue(null, $dsId, $language, $node->getType(), $field->getDataType(), $node->getName(), $value, $options);
-                if ($map) {
-                    $mapId = $map[$repeatableIdentifier];
-                } else {
-                    $mapId = $rootElementStructure->getDataId();
-                    if ($repeatableIdentifier) {
-                        $mapId = mb_substr($repeatableIdentifier, -36, null, 'UTF-8');
-                    }
-                }
-                $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
-                if (!$elementStructure) {
-                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
-                }
-                $elementStructure->setValue($elementStructureValue);
-            } elseif (preg_match('/^field-([-a-f0-9]{36})-new-.+$/', $identifier, $match)) {
+                $fields[] = array(
+                    'key' => $key,
+                    'identifier' => $identifier,
+                    'repeatableIdentifier' => $repeatableIdentifier,
+                    'dsId' => $dsId,
+                    'node' => $node,
+                    'field' => $field,
+                    'value' => $value,
+                    'type' => 'link',
+                );
+                unset($values[substr($key, 7)]);
+            }
+        }
+
+        foreach ($values as $key => $value) {
+            $parts = explode('__', $key);
+            $identifier = $parts[0];
+            $repeatableIdentifier = null;
+            if (isset($parts[1])) {
+                $repeatableIdentifier = $parts[1];
+            }
+            $identifier = rtrim($identifier, '[]');
+
+            if (preg_match('/^field-([-a-f0-9]{36})-id-([0-9]+)$/', $identifier, $match) || preg_match('/^field-([-a-f0-9]{36})-new-.+$/', $identifier, $match)) {
                 // new value
                 $dsId = $match[1];
                 $node = $elementtypeStructure->getNode($dsId);
                 $field = $this->fieldRegistry->getField($node->getType());
-                $value = $field->fromRaw($value);
-                $options = null;
+                $fields[] = array(
+                    'key' => $key,
+                    'identifier' => $identifier,
+                    'repeatableIdentifier' => $repeatableIdentifier,
+                    'dsId' => $dsId,
+                    'node' => $node,
+                    'field' => $field,
+                    'value' => $value,
+                    'type' => 'field',
+                );
+            }
+        }
+
+        foreach ($fields as $fieldData) {
+            $dsId = $fieldData['dsId'];
+            $node = $fieldData['node']; /* @var $node ElementtypeStructureNode */
+            $field = $fieldData['field']; /* @var $field AbstractField */
+            $value = $fieldData['value'];
+            $identifier = $fieldData['identifier'];
+            $repeatableIdentifier = $fieldData['repeatableIdentifier'];
+            $type = $fieldData['type'];
+
+            $options = null;
+            $value = $field->fromRaw($value);
+            $elementStructureValue = $rootElementStructure->getValue($node->getName(), $language);
+            if (!$elementStructureValue) {
                 $elementStructureValue = new ElementStructureValue(null, $dsId, $language, $node->getType(), $field->getDataType(), $node->getName(), $value, $options);
-                if ($map) {
-                    $mapId = $map[$repeatableIdentifier];
-                } else {
-                    $mapId = $rootElementStructure->getDataId();
-                    if ($repeatableIdentifier) {
-                        $mapId = mb_substr($repeatableIdentifier, -36, null, 'UTF-8');
+            } else {
+                $elementStructureValue->setOptions($options);
+                $elementStructureValue->setValue($value);
+            }
+            if ($masterLanguage && ($node->getConfigurationValue('synchronized') === 'synchronized' || $node->getConfigurationValue('synchronized') === 'synchronized_unlink')) {
+                if ($node->getConfigurationValue('synchronized') === 'synchronized') {
+                    continue;
+                }
+                if ($type === 'link') {
+                    $masterValue = $rootElementStructure->getValue($node->getName(), $masterLanguage);
+                    if ($masterValue) {
+                        $elementStructureValue->setValue($masterValue->getValue());
+                    } else {
+                        $elementStructureValue->setValue(null);
                     }
+
+                    $elementStructureValue->setOptions(null);
+                } else {
+                    $elementStructureValue->setOptions(array('unlinked' => true));
                 }
-                $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
-                if (!$elementStructure) {
-                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
+            }
+            if ($map) {
+                $mapId = $map[$repeatableIdentifier];
+            } else {
+                $mapId = $rootElementStructure->getDataId();
+                if ($repeatableIdentifier) {
+                    $mapId = mb_substr($repeatableIdentifier, -36, null, 'UTF-8');
                 }
-                $elementStructure->setValue($elementStructureValue);
+            }
+            $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
+            if (!$elementStructure) {
+                throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
+            }
+            $elementStructure->setValue($elementStructureValue);
+            if (!$masterLanguage && ($node->getConfigurationValue('synchronized') === 'synchronized' || $node->getConfigurationValue('synchronized') === 'synchronized_unlink')) {
+                foreach ($this->availableLanguages as $slaveLanguage) {
+                    if ($language === $slaveLanguage) {
+                        continue;
+                    }
+                    $slaveValue = $elementStructure->getValue($elementStructureValue->getName(), $slaveLanguage);
+                    if (!$slaveValue) {
+                        $slaveValue = clone $elementStructureValue;
+                        $slaveValue->setId(null);
+                        $slaveValue->setLanguage($slaveLanguage);
+                    } else {
+                        $options = $slaveValue->getOptions();
+                        if (!empty($options['unlinked'])) {
+                            continue;
+                        }
+                    }
+                    $slaveValue->setValue($value);
+                    $elementStructure->setValue($slaveValue);
+                }
             }
         }
 
