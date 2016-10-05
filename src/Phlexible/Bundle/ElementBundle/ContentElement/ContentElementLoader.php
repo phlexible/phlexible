@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\ContentElement;
 
-use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
 use Phlexible\Bundle\ElementBundle\ContentElement\Loader\LoaderInterface;
 use Phlexible\Bundle\ElementBundle\ContentElement\Loader\XmlLoader;
 use Psr\Log\LoggerInterface;
@@ -37,6 +36,11 @@ class ContentElementLoader
     private $loader;
 
     /**
+     * @var ContentElement[]
+     */
+    private $elements = [];
+
+    /**
      * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface          $logger
      * @param LoaderInterface          $loader
@@ -60,8 +64,20 @@ class ContentElementLoader
      */
     public function load($eid, $version, $language)
     {
-        $contentElement = $this->loader->load($eid, $version, $language);
+        $id = $eid.'_'.$language.'_'.$version;
 
-        return $contentElement;
+        if (!isset($this->elements[$id])) {
+            $this->elements[$id] = $this->loader->load($eid, $version, $language);
+        }
+
+        return $this->elements[$id];
+    }
+
+    /**
+     * @return ContentElement[]
+     */
+    public function getElements()
+    {
+        return $this->elements;
     }
 }

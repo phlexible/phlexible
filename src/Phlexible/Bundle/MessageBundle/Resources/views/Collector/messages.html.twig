@@ -1,15 +1,27 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% block menu %}
-    <span class="label">
-        <span class="icon"><img
-                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAgCAYAAAAMq2gFAAABjElEQVRIx2MIDw+vd3R0/GFvb/+fGtjFxeVJSUmJ1f///5nv37/PAMMMzs7OVLMEhoODgy/k5+cHJCYmagAtZAJbRG1L0DEwxCYALeOgiUXbt2+/X1NT8xTEdnd3/wi0SI4mFgHBDCBeCLXoF5BtwkCEpvNAvB8JnydCTwgQR0It+g1kWxNjUQEQOyDhAiL0gNUiWWRDjEUOyMkUZsCoRaMWjVpEvEVkFkGjFmEUqgc+fvx4hVYWIReqzi9evKileaoDslnu3LkTNLQtGk3edLPIycnpL9Bge5pb1NXVdQNosDmGRcAm7F+QgKur6783b95cBQoeRGv1kII3QPOdAoZF8+fPP4PUqnx55syZVKCEI1rLh1hsAbWEZ8aMGaUoFoFcMG3atKdIjfSPISEhawICAlaQgwMDA1f6+/sfB5rzE2Sej4/PD3C7DkjoAHHVoUOHLpSVlX3w8vL6Sa34Alr6Z8WKFaCoMARZxAHEoFZ/HBD3A/FyIF4BxMvIxCC964F4G6hZDMTxQCwJAGWE8pur5kFDAAAAAElFTkSuQmCC"
-                    alt="Messages"></span>
+    <span class="label{% if not collector.messages|length %} disabled{% endif %}">
+        <span class="icon">{{ include('@PhlexibleMessage/Icon/messages.svg') }}</span>
         <strong>Messages</strong>
+        {% if collector.messages|length %}
+        <span class="count">
+            <span>{{ collector.messages|length }}</span>
+        </span>
+        {% endif %}
     </span>
 {% endblock %}
 
 {% block panel %}
+
+    <h2>Messages</h2>
+
+    {% if not collector.messages|length %}
+    <div class="empty">
+        <p>No messages were posted during the request.</p>
+    </div>
+
+    {% else %}
 
     Priorities:<br/>{% for priority in collector.priorities %}- {{ priority.name }}: {{ priority.count }}
     <br/>{% endfor %}<br/>
@@ -30,5 +42,7 @@
             <br/>
         {% endif %}
     {% endfor %}
+
+    {% endif %}
 
 {% endblock %}
