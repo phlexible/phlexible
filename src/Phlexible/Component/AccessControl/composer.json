@@ -1,17 +1,16 @@
 {
-    "name": "phlexible/access-control-bundle",
+    "name": "phlexible/access-control",
     "description": "phlexible",
     "license": "proprietary",
-    "type": "symfony-bundle",
+    "type": "library",
     "keywords": ["phlexible"],
     "autoload": {
         "psr-4": {
-            "Phlexible\\Bundle\\AccessControlBundle\\": ""
+            "Phlexible\\Component\\AccessControl\\": ""
         }
     },
     "require": {
-        "php": ">=5.6.0",
-        "phlexible/access-control": "^1.0.0"
+        "php": ">=5.6.0"
     },
     "repositories": [
         {
