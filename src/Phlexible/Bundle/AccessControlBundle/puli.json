@@ -1,0 +1,26 @@
+{
+    "version": "1.0",
+    "name": "phlexible/access-control-bundle",
+    "path-mappings": {
+      "/phlexible/phlexibleaccesscontrol/icons": "src/Phlexible/Bundle/AccessControlBundle/Resources/public/icons",
+      "/phlexible/phlexibleaccesscontrol/scripts": "src/Phlexible/Bundle/AccessControlBundle/Resources/scripts",
+      "/phlexible/phlexibleaccesscontrol/styles": "src/Phlexible/Bundle/AccessControlBundle/Resources/styles"
+    },
+    "bindings": {
+        "7ca6b7f3-2afe-560b-8d50-593ed57592df": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleaccesscontrol/icons/*.png",
+            "type": "phlexible/icons"
+        },
+        "85d31772-1be8-52a9-9c78-c973e5e058e8": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleaccesscontrol/styles/**/*.css",
+            "type": "phlexible/styles"
+        },
+        "d8f515b6-d461-5835-852a-6b3e350e539c": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleaccesscontrol/scripts/**/*.js",
+            "type": "phlexible/scripts"
+        }
+    }
+}
