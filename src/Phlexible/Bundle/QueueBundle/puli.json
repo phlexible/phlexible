@@ -8,14 +8,17 @@
     },
     "bindings": {
         "53f8a617-37a1-5ea0-894c-cc5df42d7490": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexiblequeue/icons/*.png",
             "type": "phlexible/icons"
         },
         "12dca705-3701-5b44-8d03-81c7ebaf29b5": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexiblequeue/menu/*.yml",
             "type": "phlexible/menu"
         },
         "ca47c1f0-77b3-50b1-8f25-f76dd788e356": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexiblequeue/scripts/**/*.js",
             "type": "phlexible/scripts"
         }

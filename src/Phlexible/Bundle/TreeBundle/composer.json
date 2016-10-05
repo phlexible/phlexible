@@ -1,12 +1,12 @@
 {
-    "name": "phlexible/queue-bundle",
+    "name": "phlexible/tree-bundle",
     "description": "phlexible",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {
         "psr-4": {
-            "Phlexible\\Bundle\\QueueBundle\\": ""
+            "Phlexible\\Bundle\\TreeBundle\\": ""
         }
     },
     "require": {

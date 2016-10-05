@@ -1,0 +1,32 @@
+{
+    "version": "1.0",
+    "name": "phlexible/search-bundle",
+    "path-mappings": {
+        "/phlexible/phlexiblesearch/icons": "src/Phlexible/Bundle/SearchBundle/Resources/public/icons",
+        "/phlexible/phlexiblesearch/menu": "src/Phlexible/Bundle/SearchBundle/Resources/menu",
+        "/phlexible/phlexiblesearch/scripts": "src/Phlexible/Bundle/SearchBundle/Resources/scripts",
+        "/phlexible/phlexiblesearch/styles": "src/Phlexible/Bundle/SearchBundle/Resources/styles"
+    },
+    "bindings": {
+        "425f8f59-d98a-5917-9a98-84e8da326ad3": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexiblesearch/icons/*.png",
+            "type": "phlexible/icons"
+        },
+        "96a4756b-b806-5ad2-9425-5c81a81e4e28": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexiblesearch/scripts/**/*.js",
+            "type": "phlexible/scripts"
+        },
+        "a040e763-9ed1-582c-8185-d89ff8122ee2": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexiblesearch/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "d6b01ef5-48f8-5a70-85c3-e60ccd125420": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexiblesearch/styles/**/*.css",
+            "type": "phlexible/styles"
+        }
+    }
+}

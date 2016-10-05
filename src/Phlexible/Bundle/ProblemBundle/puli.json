@@ -1,0 +1,32 @@
+{
+    "version": "1.0",
+    "name": "phlexible/user-bundle",
+    "path-mappings": {
+        "/phlexible/phlexibleproblem/icons": "src/Phlexible/Bundle/ProblemBundle/Resources/public/icons",
+        "/phlexible/phlexibleproblem/menu": "src/Phlexible/Bundle/ProblemBundle/Resources/menu",
+        "/phlexible/phlexibleproblem/scripts": "src/Phlexible/Bundle/ProblemBundle/Resources/scripts",
+        "/phlexible/phlexibleproblem/styles": "src/Phlexible/Bundle/ProblemBundle/Resources/styles"
+    },
+    "bindings": {
+        "00dec2a9-c081-576c-8234-ac78afa6530c": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleproblem/scripts/**/*.js",
+            "type": "phlexible/scripts"
+        },
+        "55fdf06c-4a18-5764-952b-5386bca000f9": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleproblem/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "9554765c-b587-5408-b348-664a8b302336": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleproblem/styles/**/*.css",
+            "type": "phlexible/styles"
+        },
+        "f0d6111a-791e-506e-930d-12b875e9a3c3": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleproblem/icons/*.png",
+            "type": "phlexible/icons"
+        }
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "version": "1.0",
+    "name": "phlexible/message-bundle",
+    "path-mappings": {
+        "/phlexible/phlexiblemessage/icons": "src/Phlexible/Bundle/MessageBundle/Resources/public/icons",
+        "/phlexible/phlexiblemessage/menu": "src/Phlexible/Bundle/MessageBundle/Resources/menu",
+        "/phlexible/phlexiblemessage/scripts": "src/Phlexible/Bundle/MessageBundle/Resources/scripts",
+        "/phlexible/phlexiblemessage/styles": "src/Phlexible/Bundle/MessageBundle/Resources/styles"
+    },
+    "bindings": {
+        "42ad3a40-538a-5743-9373-99b7a16578a9": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexiblemessage/styles/**/*.css",
+            "type": "phlexible/styles"
+        },
+        "6142a6e6-222b-5258-8d57-17e14837696b": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexiblemessage/scripts/**/*.js",
+            "type": "phlexible/scripts"
+        },
+        "8f166b00-fb9d-5dd5-8fba-619658dbdca2": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexiblemessage/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "a0ec4b1d-a33a-5451-9692-f040cb083ef1": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexiblemessage/icons/*.png",
+            "type": "phlexible/icons"
+        }
+    }
+}

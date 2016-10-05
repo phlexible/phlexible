@@ -1,12 +1,12 @@
 {
-    "name": "phlexible/queue-bundle",
+    "name": "phlexible/search-bundle",
     "description": "phlexible",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {
         "psr-4": {
-            "Phlexible\\Bundle\\QueueBundle\\": ""
+            "Phlexible\\Bundle\\SearchBundle\\": ""
         }
     },
     "require": {
