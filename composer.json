@@ -47,6 +47,7 @@
         "phlexible/access-control-bundle": "self.version",
         "phlexible/dashboard-bundle": "self.version",
         "phlexible/element-bundle": "self.version",
+        "phlexible/elementtype-bundle": "self.version",
         "phlexible/gui-bundle": "self.version",
         "phlexible/message-bundle": "self.version",
         "phlexible/problem-bundle": "self.version",
