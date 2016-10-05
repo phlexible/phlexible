@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -17,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Elementtype implements IdentifiableInterface
+class Elementtype
 {
     const TYPE_FULL = 'full';
     const TYPE_STRUCTURE = 'structure';
@@ -404,14 +403,6 @@ class Elementtype implements IdentifiableInterface
         $this->modifyUser = $modifyUser;
 
         return $this;
-    }
-
-    /**
-     * @return ElementtypeIdentifier
-     */
-    public function getIdentifier()
-    {
-        return new ElementtypeIdentifier($this->getId());
     }
 
     /**
