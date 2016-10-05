@@ -1,18 +1,16 @@
 {
-    "name": "phlexible/tree-bundle",
+    "name": "phlexible/siteroot-bundle",
     "description": "phlexible",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {
         "psr-4": {
-            "Phlexible\\Bundle\\TreeBundle\\": ""
+            "Phlexible\\Bundle\\SiterootBundle\\": ""
         }
     },
     "require": {
-        "php": ">=5.6.0",
-        "phlexible/access-control-bundle": "^1.0",
-        "symfony-cmf/routing": "^1.4"
+        "php": ">=5.6.0"
     },
     "repositories": [
         {
