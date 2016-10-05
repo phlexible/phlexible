@@ -21,13 +21,11 @@ use Phlexible\Bundle\TreeBundle\Event\ReorderNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Model\WritableTreeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
-use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Webmozart\Assert\Assert;
 
@@ -36,7 +34,7 @@ use Webmozart\Assert\Assert;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterface
+class Tree implements TreeInterface, WritableTreeInterface
 {
     /**
      * @var string
@@ -95,16 +93,6 @@ class Tree implements TreeInterface, WritableTreeInterface, IdentifiableInterfac
     public function getIterator()
     {
         return new TreeIterator($this);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return TreeIdentifier
-     */
-    public function getIdentifier()
-    {
-        return new TreeIdentifier($this->siterootId);
     }
 
     /**

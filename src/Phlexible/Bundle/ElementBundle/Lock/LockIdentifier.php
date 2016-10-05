@@ -8,14 +8,50 @@
 
 namespace Phlexible\Bundle\ElementBundle\Lock;
 
-use Phlexible\Component\Identifier\Identifier;
+use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 
 /**
  * Lock identifier
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LockIdentifier extends Identifier implements LockIdentityInterface
+class LockIdentifier implements LockIdentityInterface
 {
+    /**
+     * @var array
+     */
+    private $delimiter = '__';
 
+    /**
+     * @var array
+     */
+    private $args = [];
+
+    /**
+     * Create a new identifier based on the given parameters
+     *
+     * @throws InvalidArgumentException
+     */
+    public function __construct()
+    {
+        $args = func_get_args();
+
+        if (!count($args) || !implode('', $args)) {
+            throw new InvalidArgumentException('No identifiers received');
+        }
+
+        array_unshift($args, str_replace('\\', '-', get_class($this)));
+
+        $this->args = $args;
+    }
+
+    /**
+     * Return dtring representation of this identifier
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return str_replace('-', '_', implode($this->delimiter, $this->args));
+    }
 }
