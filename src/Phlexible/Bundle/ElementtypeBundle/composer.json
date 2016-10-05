@@ -1,17 +1,16 @@
 {
-    "name": "phlexible/element-bundle",
+    "name": "phlexible/elementtype-bundle",
     "description": "phlexible",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {
         "psr-4": {
-            "Phlexible\\Bundle\\ElementBundle\\": ""
+            "Phlexible\\Bundle\\ElementtypeBundle\\": ""
         }
     },
     "require": {
-        "php": ">=5.6.0",
-        "phlexible/elementtype-bundle": "~1.0"
+        "php": ">=5.6.0"
     },
     "repositories": [
         {

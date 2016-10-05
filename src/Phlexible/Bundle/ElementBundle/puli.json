@@ -32,6 +32,6 @@
             "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexibleelement/menu/*.yml",
             "type": "phlexible/menu"
-        },
+        }
     }
 }
