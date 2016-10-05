@@ -43,9 +43,16 @@
         "alchemy/zippy": "^0.3.1"
     },
      "replace": {
+        "phlexible/access-control": "self.version",
+        "phlexible/access-control-bundle": "self.version",
         "phlexible/dashboard-bundle": "self.version",
         "phlexible/gui-bundle": "self.version",
+        "phlexible/message-bundle": "self.version",
+        "phlexible/problem-bundle": "self.version",
         "phlexible/queue-bundle": "self.version",
+        "phlexible/search-bundle": "self.version",
+        "phlexible/siteroot-bundle": "self.version",
+        "phlexible/tree-bundle": "self.version",
         "phlexible/user-bundle": "self.version"
     },
     "require-dev": {
