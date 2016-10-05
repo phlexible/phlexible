@@ -10,7 +10,7 @@
         }
     },
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.6.0",
         "ext-date": "*",
         "ext-hash": "*",
         "ext-iconv": "*",
@@ -28,7 +28,7 @@
         "doctrine/orm": "~2.4",
         "fluentdom/fluentdom": "~5.1",
         "friendsofsymfony/user-bundle": "~2.0",
-        "symfony/symfony": "~2.4",
+        "symfony/symfony": "~2.8",
         "symfony-cmf/routing-bundle": "~1.1",
         "twig/twig": "~1.15",
         "php-poppler/php-poppler": "~1.0",
@@ -46,6 +46,7 @@
         "phlexible/access-control": "self.version",
         "phlexible/access-control-bundle": "self.version",
         "phlexible/dashboard-bundle": "self.version",
+        "phlexible/element-bundle": "self.version",
         "phlexible/gui-bundle": "self.version",
         "phlexible/message-bundle": "self.version",
         "phlexible/problem-bundle": "self.version",
