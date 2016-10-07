@@ -74,7 +74,7 @@ class ContentDataCollector extends DataCollector implements LateDataCollectorInt
     /**
      * Gets the called events.
      *
-     * @return int
+     * @return array
      */
     public function getElements()
     {

@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('handler_service')->defaultValue('default handler')->end()
                 ->arrayNode('patterns')
                     ->canBeUnset()
                     ->prototype('scalar')
