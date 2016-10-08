@@ -268,6 +268,9 @@ Phlexible.fields.FieldHelper = {
                             else {
                                 this.setValue('');
                             }
+                            if (this.onRelink) {
+                                this.onRelink(this);
+                            }
                         }
                         else {
                             this.isUnlinked = true;
@@ -282,9 +285,15 @@ Phlexible.fields.FieldHelper = {
                             styleEl.addClass('p-fields-synchronized-unlinked');
                             styleEl.removeClass('p-fields-synchronized-synched');
                             this.enable();
+                            if (this.onUnlink) {
+                                this.onUnlink(this);
+                            }
                         }
                     }, this);
                 }
+            }
+            if (this.onApplyUnlink) {
+                this.onApplyUnlink(this);
             }
         }
     },

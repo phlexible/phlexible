@@ -28,7 +28,14 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('handler_service')->defaultValue('phlexible_tree.router.handler.default')->end()
+                ->arrayNode('router')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('handler_service')->defaultValue('phlexible_tree.router.default_handler')->end()
+                        ->scalarNode('url_generator_service')->defaultValue('phlexible_tree.router.default_url_generator')->end()
+                        ->scalarNode('request_matcher_service')->defaultValue('phlexible_tree.router.default_request_matcher')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('patterns')
                     ->canBeUnset()
                     ->prototype('scalar')
