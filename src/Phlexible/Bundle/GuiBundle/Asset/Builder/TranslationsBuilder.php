@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Phlexible\Bundle\GuiBundle\Translator\CatalogAccessor;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\TranslatorBagInterface;
 
@@ -82,13 +81,10 @@ class TranslationsBuilder
 
         $cacheFilename = $this->cacheDir . '/translations-' . $language . '.js';
 
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists(dirname($cacheFilename))) {
-            $filesystem->mkdir(dirname($cacheFilename));
-        }
-
         $content = $this->buildTranslations($translations);
-        file_put_contents($cacheFilename, $content);
+
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile($cacheFilename, $content);
 
         return $cacheFilename;
     }
