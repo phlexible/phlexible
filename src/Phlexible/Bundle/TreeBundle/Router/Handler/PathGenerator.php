@@ -8,10 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
-use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Symfony\Component\Routing\RequestContext;
 
 /**
  * Path generator
