@@ -10,9 +10,10 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
+use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinder;
+use Phlexible\Bundle\GuiBundle\Asset\MappedAsset;
+use Phlexible\Bundle\GuiBundle\Asset\MappedContent\MappedContentBuilder;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Puli\Discovery\Api\Binding\Binding;
-use Puli\Discovery\Api\EditableDiscovery;
 use Puli\Repository\Resource\FileResource;
 
 /**
@@ -23,9 +24,9 @@ use Puli\Repository\Resource\FileResource;
 class CssBuilder
 {
     /**
-     * @var EditableDiscovery
+     * @var ResourceFinder
      */
-    private $puliDiscovery;
+    private $resourceFinder;
 
     /**
      * @var CompressorInterface
@@ -43,18 +44,18 @@ class CssBuilder
     private $debug;
 
     /**
-     * @param EditableDiscovery   $puliDiscovery
+     * @param ResourceFinder      $resourceFinder
      * @param CompressorInterface $compressor
      * @param string              $cacheDir
      * @param bool                $debug
      */
     public function __construct(
-        EditableDiscovery $puliDiscovery,
+        ResourceFinder $resourceFinder,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
-        $this->puliDiscovery = $puliDiscovery;
+        $this->resourceFinder = $resourceFinder;
         $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -66,63 +67,43 @@ class CssBuilder
      * @param string $baseUrl
      * @param string $basePath
      *
-     * @return string
+     * @return MappedAsset
      */
     public function build($baseUrl, $basePath)
     {
-        $cache = new ResourceCollectionCache($this->cacheDir . '/gui.css', $this->debug);
+        $file = $this->cacheDir . '/gui.css';
+        $mapFile = $file . '.map';
 
-        $resources = $this->findBindings();
+        $cache = new ResourceCollectionCache($file, $this->debug);
+
+        $resources = $this->resourceFinder->findByType('phlexible/styles');
 
         if (!$cache->isFresh($resources)) {
-            $content = $this->buildCss($resources);
-
+            $builder = new MappedContentBuilder();
             $filter = new BaseUrlFilter($baseUrl, $basePath);
-            $content = $filter->filter($content);
+            $mappedContent = $builder->build(
+                'gui.css',
+                $resources,
+                function (FileResource $resource) {
+                    return preg_match('#^/phlexible/([a-z0-9\-_.]+)/styles/([/A-Za-z0-9\-_.]+\.css)$#', $resource->getPath(), $match)
+                        ? $match[1] . '/' . $match[2]
+                        : $resource->getPath();
+                },
+                null,
+                function ($content) use ($filter) {
+                    return $filter->filter($content);
+                }
+            );
 
-            $cache->write($content);
+            $cache->write($mappedContent->getContent());
+            file_put_contents($mapFile, $mappedContent->getMap());
 
             if (!$this->debug) {
-                $this->compressor->compressFile((string) $cache);
+                $this->compressor->compressFile($file);
             }
 
         }
 
-        return (string) $cache;
-    }
-
-    /**
-     * @return Binding[]
-     */
-    private function findBindings()
-    {
-        return $this->puliDiscovery->findBindings('phlexible/styles');
-    }
-
-    /**
-     * @param Binding[] $bindings
-     *
-     * @return string
-     */
-    private function buildCss(array $bindings)
-    {
-        $input = [];
-
-        foreach ($bindings as $binding) {
-            foreach ($binding->getResources() as $resource) {
-                /* @var $resource FileResource */
-                $input[] = $resource->getFilesystemPath();
-            }
-        }
-
-        $css = '/* Created: ' . date('Y-m-d H:i:s') . ' */';
-        foreach ($input as $file) {
-            if ($this->debug) {
-                $css .= PHP_EOL . "/* File: $file */" . PHP_EOL;
-            }
-            $css .= file_get_contents($file);
-        }
-
-        return $css;
+        return new MappedAsset($file, $mapFile);
     }
 }

@@ -29,7 +29,7 @@ class AssetController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/scripts", name="mediatypes_asset_scripts")
+     * @Route("/mediatypes.js", name="mediatypes_asset_scripts")
      */
     public function scriptsAction(Request $request)
     {
@@ -46,7 +46,7 @@ class AssetController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/css", name="mediatypes_asset_css")
+     * @Route("/mediatypes.css", name="mediatypes_asset_css")
      */
     public function cssAction(Request $request)
     {

@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Cache;
 
-use Puli\Discovery\Api\Binding\ResourceBinding;
+use Puli\Discovery\Api\Binding\Binding;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -49,11 +49,11 @@ class ResourceCollectionCache
     }
 
     /**
-     * @param ResourceBinding[] $bindings
+     * @param FileResource[] $resources
      *
      * @return bool
      */
-    public function isFresh(array $bindings)
+    public function isFresh(array $resources)
     {
         if (!file_exists($this->file)) {
             return false;
@@ -61,11 +61,9 @@ class ResourceCollectionCache
 
         $timestamp = filemtime($this->file);
 
-        foreach ($bindings as $binding) {
-            foreach ($binding->getResources() as $resource) {
-                if ($resource instanceof FileResource && $timestamp < $resource->getMetadata()->getModificationTime()) {
-                    return false;
-                }
+        foreach ($resources as $resource) {
+            if ($resource instanceof FileResource && $timestamp < $resource->getMetadata()->getModificationTime()) {
+                return false;
             }
         }
 

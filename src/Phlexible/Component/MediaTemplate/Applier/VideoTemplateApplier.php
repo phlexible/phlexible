@@ -9,7 +9,6 @@
 namespace Phlexible\Component\MediaTemplate\Applier;
 
 use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
 use FFMpeg\Media\Video;
 use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
 use Psr\Log\LoggerInterface;

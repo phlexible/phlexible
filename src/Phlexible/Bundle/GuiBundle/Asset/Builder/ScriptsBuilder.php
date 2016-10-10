@@ -8,11 +8,12 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
+use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinder;
+use Phlexible\Bundle\GuiBundle\Asset\MappedAsset;
+use Phlexible\Bundle\GuiBundle\Asset\MappedContent\MappedContentBuilder;
+use Phlexible\Bundle\GuiBundle\Asset\ResourceResolver\ScriptsResourceResolver;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Puli\Discovery\Api\Binding\Binding;
-use Puli\Discovery\Api\EditableDiscovery;
 use Puli\Repository\Resource\FileResource;
 
 /**
@@ -23,9 +24,9 @@ use Puli\Repository\Resource\FileResource;
 class ScriptsBuilder
 {
     /**
-     * @var EditableDiscovery
+     * @var ResourceFinder
      */
-    private $puliDiscovery;
+    private $resourceFinder;
 
     /**
      * @var CompressorInterface
@@ -43,18 +44,18 @@ class ScriptsBuilder
     private $debug;
 
     /**
-     * @param EditableDiscovery   $puliDiscovery
+     * @param ResourceFinder      $resourceFinder
      * @param CompressorInterface $compressor
      * @param string              $cacheDir
      * @param bool                $debug
      */
     public function __construct(
-        EditableDiscovery $puliDiscovery,
+        ResourceFinder $resourceFinder,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
-        $this->puliDiscovery = $puliDiscovery;
+        $this->resourceFinder = $resourceFinder;
         $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -63,148 +64,55 @@ class ScriptsBuilder
     /**
      * Get all javascripts for the given section
      *
-     * @return string
+     * @return MappedAsset
      */
     public function build()
     {
-        $cache = new ResourceCollectionCache($this->cacheDir . '/gui.js', $this->debug);
+        $file = $this->cacheDir . '/gui.js';
+        $mapFile = $file . '.map';
 
-        $bindings = $this->findBindings();
+        $cache = new ResourceCollectionCache($file, $this->debug);
 
-        if (!$cache->isFresh($bindings)) {
-            $content = $this->buildScripts($bindings);
+        $resources = $this->resourceFinder->findByType('phlexible/scripts');
 
-            $cache->write($content);
+        if (!$cache->isFresh($resources)) {
+            $resolver = new ScriptsResourceResolver();
+            $resolvedResources = $resolver->resolve($resources);
+            $debug = $this->debug;
+            $unusedResources = $resolvedResources->getUnusedResources();
+            $builder = new MappedContentBuilder();
+            $mappedContent = $builder->build(
+                'gui.js',
+                $resolvedResources->getResources(),
+                function (FileResource $resource) {
+                    return preg_match('#^/phlexible/([a-z0-9\-_.]+)/scripts/([/A-Za-z0-9\-_.]+\.js)$#', $resource->getPath(), $match)
+                        ? $match[1] . '/' . $match[2]
+                        : $resource->getPath();
+                },
+                function () use ($debug, $unusedResources) {
+                    if (!$debug) {
+                        return '';
+                    }
+                    $prefix = '/* ' . PHP_EOL;
+                    $prefix .= ' * Unused resources:' . PHP_EOL;
+                    foreach ($unusedResources as $unusedResource) {
+                        $prefix .= ' * ' . $unusedResource->getPath() . PHP_EOL;
+                    }
+
+                    $prefix .= ' */' . PHP_EOL;
+                    return $prefix;
+                }
+            );
+
+            $cache->write($mappedContent->getContent());
+            file_put_contents($mapFile, $mappedContent->getMap());
 
             if (!$this->debug) {
-                $this->compressor->compressFile((string) $cache);
+                $this->compressor->compressFile($file);
             }
 
         }
 
-        return (string) $cache;
-    }
-
-    /**
-     * @return Binding[]
-     */
-    private function findBindings()
-    {
-        return $this->puliDiscovery->findBindings('phlexible/scripts');
-    }
-
-    /**
-     * @param Binding[] $bindings
-     *
-     * @return string
-     */
-    private function buildScripts(array $bindings)
-    {
-        $entryPoints = array();
-
-        foreach ($bindings as $binding) {
-            foreach ($binding->getResources() as $resource) {
-                if (preg_match('#^/phlexible/[a-z0-9\-_.]+/scripts/[A-Za-z0-9\-_.]+\.js$#', $resource->getPath())) {
-                    $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();
-                }
-            }
-        }
-
-        $files = array();
-        foreach ($bindings as $binding) {
-            foreach ($binding->getResources() as $resource) {
-                /* @var $resource FileResource */
-
-                $body = $resource->getBody();
-
-                $file = new \stdClass();
-                $file->path = $resource->getPath();
-                $file->file = $resource->getFilesystemPath();
-                $file->requires = array();
-                $file->provides = array();
-
-                preg_match_all('/Ext\.provide\(["\'](.+)["\']\)/', $body, $matches);
-                foreach ($matches[1] as $provide) {
-                    $file->provides[] = $provide;
-                }
-
-                preg_match_all('/Ext\.require\(["\'](.+)["\']\)/', $body, $matches);
-                foreach ($matches[1] as $require) {
-                    $file->requires[] = $require;
-                }
-
-                $files[$resource->getPath()] = $file;
-            }
-        }
-
-        $prototypes = $files['/phlexible/phlexiblegui/scripts/prototypes.js'];
-        $functions = $files['/phlexible/phlexiblegui/scripts/functions.js'];
-        $global = $files['/phlexible/phlexiblegui/scripts/global.js'];
-        unset($files['/phlexible/phlexiblegui/scripts/prototypes.js']);
-        unset($files['/phlexible/phlexiblegui/scripts/functions.js']);
-        unset($files['/phlexible/phlexiblegui/scripts/global.js']);
-
-        $files = array_merge(array(
-            '/phlexible/phlexiblegui/scripts/prototypes.js' => $prototypes,
-            '/phlexible/phlexiblegui/scripts/functions.js' => $functions,
-            '/phlexible/phlexiblegui/scripts/global.js' => $global,
-        ), $files);
-
-        $entryPointFiles = array_intersect_key($files, $entryPoints);
-
-        $symbols = array();
-        foreach ($files as $file) {
-            foreach ($file->provides as $provide) {
-                $symbols[$provide] = $file;
-            }
-        }
-
-        $results = new ArrayCollection();
-
-        function addToResult($file, ArrayCollection $results, array $symbols)
-        {
-            if (!empty($file->added)) {
-                return;
-            }
-
-            $file->added = true;
-
-            if (!empty($file->requires)) {
-                foreach ($file->requires as $require) {
-                    if (!isset($symbols[$require])) {
-                        throw new \Exception("Symbol '$require' not found for file {$file->file}.");
-                    }
-                    addToResult($symbols[$require], $results, $symbols);
-                }
-            }
-
-            $results->set($file->path, $file->file);
-        };
-
-        foreach ($entryPointFiles as $file) {
-            addToResult($file, $results, $symbols);
-        }
-
-        $unusedPaths = array();
-        foreach ($files as $path => $file) {
-            if (empty($file->added)) {
-                $unusedPaths[] = $path;
-            }
-        }
-
-        $scripts = '/* Created: ' . date('Y-m-d H:i:s');
-        if ($this->debug) {
-            $scripts .= PHP_EOL . ' * ' . PHP_EOL . ' * Unused paths:' . PHP_EOL . ' * ' .
-                implode(PHP_EOL . ' * ', $unusedPaths) . PHP_EOL;
-        }
-        $scripts .= ' */';
-        foreach ($results as $path => $file) {
-            if ($this->debug) {
-                $scripts .= PHP_EOL . "/* Resource: $path */" . PHP_EOL;
-            }
-            $scripts .= file_get_contents($file);
-        }
-
-        return $scripts;
+        return new MappedAsset($file, $mapFile);
     }
 }
