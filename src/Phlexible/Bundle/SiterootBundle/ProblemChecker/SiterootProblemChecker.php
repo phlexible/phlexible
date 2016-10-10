@@ -54,6 +54,8 @@ class SiterootProblemChecker implements ProblemCheckerInterface
             return [$problem];
         }
 
+        $problems = array();
+
         foreach ($siteroots as $siteRoot) {
             if (!$siteRoot->getNavigations()) {
                 $problem = new Problem();
