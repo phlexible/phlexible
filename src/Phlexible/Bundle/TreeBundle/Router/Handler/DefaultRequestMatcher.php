@@ -262,7 +262,7 @@ class DefaultRequestMatcher implements RequestMatcherInterface
                 'language' => $siterootUrl->getLanguage(),
                 'tid' => $siterootUrl->getTarget()
             );
-        } elseif (!preg_match('#^/(\w\w)/(.+)\.(\d+)\.html#', $path, $match)) {
+        } elseif (preg_match('#^/(\w\w)/.+\.(\d+)\.html#', $path, $match)) {
             return array(
                 'language' => $match[1],
                 'tid' => $match[2]
