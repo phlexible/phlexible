@@ -45,9 +45,11 @@ class ArraySerializer implements SerializerInterface
                 'attributes' => $value->getAttributes(),
                 'options'    => $value->getOptions(),
             ];
-            $options = $value->getOptions();
-            if (!empty($options['unlinked'])) {
-                $valueData['masterContent'] = $elementStructure->getValue($value->getName(), $masterLanguage)->getValue();
+            if ($language !== $masterLanguage) {
+                $masterValue = $elementStructure->getValue($value->getName(), $masterLanguage);
+                if ($masterValue) {
+                    $valueData['masterContent'] = $masterValue->getValue();
+                }
             }
             $valueDatas[] = $valueData;
         }

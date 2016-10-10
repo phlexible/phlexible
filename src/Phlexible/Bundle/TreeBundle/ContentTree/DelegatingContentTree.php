@@ -142,6 +142,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate
         $contentNode
             ->setLanguage($this->language)
             ->setId($treeNode->getId())
+            ->setSiterootId($treeNode->getSiterootId())
             ->setTypeId($treeNode->getTypeId())
             ->setType($treeNode->getType())
             ->setTree($this)
