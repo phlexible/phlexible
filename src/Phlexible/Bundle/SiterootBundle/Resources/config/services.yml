@@ -35,7 +35,7 @@ services:
         arguments:
             - "@phlexible_siteroot.siteroot_manager"
         tags:
-            - {name: phlexible_problem.problem_checker}
+            - {name: phlexible_problem.checker}
 
     # role providers
     phlexible_siteroot.role_provider:

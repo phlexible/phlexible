@@ -12,6 +12,7 @@ use Phlexible\Bundle\ProblemBundle\ProblemsMessage;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Check command
@@ -35,6 +36,8 @@ class CheckCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $style = new SymfonyStyle($input, $output);
+
         $problemCheckers = $this->getContainer()->get('phlexible_problem.problem_checkers');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $problemsRepository = $em->getRepository('PhlexibleProblemBundle:Problem');
@@ -42,9 +45,11 @@ class CheckCommand extends ContainerAwareCommand
         $problemList = ['add' => [], 'remove' => []];
 
         foreach ($problemCheckers as $problemChecker) {
-            $problems = $problemChecker->check();
+            $style->section(get_class($problemChecker));
 
+            $problems = $problemChecker->check();
             $existingProblems = $problemsRepository->findByCheckClass(get_class($problemChecker));
+            $handled = false;
 
             $problemIds = [];
             foreach ($problems as $problemKey => $problem) {
@@ -55,7 +60,8 @@ class CheckCommand extends ContainerAwareCommand
                 $existingProblemId = $existingProblem->getId();
 
                 if (array_key_exists($existingProblemId, $problemIds)) {
-                    $output->writeln("= " . $existingProblemId);
+                    $handled = true;
+                    $style->text("= " . $existingProblemId);
                     $existingProblem->setLastCheckedAt(new \DateTime());
                     unset ($problems[$problemIds[$existingProblemId]]);
                     unset ($existingProblems[$existingProblemKey]);
@@ -65,7 +71,9 @@ class CheckCommand extends ContainerAwareCommand
             foreach ($problems as $problem) {
                 $problemList['add'][] = $problem->getId();
 
-                $output->writeln("<fg=red>+ {$problem->getId()} </fg=red>");
+                $handled = true;
+
+                $style->text("<fg=red>+ {$problem->getId()} </fg=red>");
                 $problem->setCreatedAt(new \DateTime());
                 $problem->setLastCheckedAt(new \DateTime());
                 $em->persist($problem);
@@ -74,8 +82,14 @@ class CheckCommand extends ContainerAwareCommand
             foreach ($existingProblems as $existingProblem) {
                 $problemList['remove'][] = $existingProblem->getId();
 
-                $output->writeln("<fg=green>- {$existingProblem->getId()}</fg=green>");
+                $handled = true;
+
+                $style->text("<fg=green>- {$existingProblem->getId()}</fg=green>");
                 $em->remove($existingProblem);
+            }
+
+            if (!$handled) {
+                $style->success('No problems or changes found.');
             }
         }
 
