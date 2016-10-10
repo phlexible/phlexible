@@ -125,37 +125,13 @@ class DefaultUrlGenerator implements UrlGeneratorInterface
             return $this->generatePreviewPath($node, $parameters);
         }
 
-        $tree = $node->getTree();
+        $pathGenerator = new PathGenerator();
+        $path = $pathGenerator->generatePath($node, $parameters);
 
-        // we reverse the order to determine if this leaf is no full element
-        // if the is the case we don't have to continue, only full elements
-        // have paths
-        $pathNodes = array_reverse($tree->getPath($node));
-
-        $parts = [];
-
-        foreach ($pathNodes as $pathNode) {
-            if ($tree->isViewable($pathNode)) {
-                $part = $pathNode->getSlug($parameters['_locale']);
-                if ($part) {
-                    $parts[] = $part;
-                }
-            }
+        if ($path === '') {
+            return $path;
         }
 
-        if (!count($parts)) {
-            if (!count($pathNodes)) {
-                return '';
-            }
-
-            $current = $pathNodes[0];
-            $part = $current->getSlug($parameters['_locale']);
-            if ($part) {
-                $parts[] = $part;
-            }
-        }
-
-        $path = '/' . implode('/', array_reverse($parts));
         $path = $this->generatePathPrefix($path, $node, $parameters);
         $path = $this->generatePathSuffix($path, $node, $parameters);
         $path = $this->generateQuery($path, $node, $parameters);
