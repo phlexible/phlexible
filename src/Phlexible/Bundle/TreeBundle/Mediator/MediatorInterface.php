@@ -47,4 +47,12 @@ interface MediatorInterface
      * @return bool
      */
     public function isViewable(TreeNodeInterface $node, $language);
+
+    /**
+     * @param TreeNodeInterface $node
+     * @param string            $language
+     *
+     * @return bool
+     */
+    public function isSluggable(TreeNodeInterface $node, $language);
 }

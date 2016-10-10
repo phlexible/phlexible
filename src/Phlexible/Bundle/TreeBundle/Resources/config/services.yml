@@ -113,7 +113,7 @@ services:
         class: Phlexible\Bundle\TreeBundle\EventListener\PreviewListener
         arguments:
             - "@router"
-            - "@phlexible_tree.mediator.element.viewable_voter"
+            - "@phlexible_tree.element_mediator.viewable_voter"
         tags:
             - {name: kernel.event_subscriber}
 

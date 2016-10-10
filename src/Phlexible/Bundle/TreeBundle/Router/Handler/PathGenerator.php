@@ -32,7 +32,7 @@ class PathGenerator implements PathGeneratorInterface
         $parts = [];
 
         foreach ($pathNodes as $pathNode) {
-            if ($tree->isViewable($pathNode)) {
+            if ($tree->isSluggable($pathNode)) {
                 $part = $pathNode->getSlug($parameters['_locale']);
                 if ($part) {
                     $parts[] = $part;
