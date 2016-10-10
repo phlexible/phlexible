@@ -40,6 +40,6 @@ class ViewableVoter implements ViewableVoterInterface
             $isPublished = $node->getTree()->isPublished($node, $language);
         }
 
-        return $isPublished && $node->getType() === 'element-full';
+        return $isPublished && $node->getInNavigation() && $node->getType() === 'element-full';
     }
 }

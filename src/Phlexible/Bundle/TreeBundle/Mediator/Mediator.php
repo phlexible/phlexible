@@ -88,6 +88,18 @@ class Mediator implements MediatorInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isSluggable(TreeNodeInterface $node, $language)
+    {
+        if ($mediator = $this->findMediator($node)) {
+            return $mediator->isSluggable($node, $language);
+        }
+
+        return false;
+    }
+
+    /**
      * @param TreeNodeInterface $node
      *
      * @return MediatorInterface|null

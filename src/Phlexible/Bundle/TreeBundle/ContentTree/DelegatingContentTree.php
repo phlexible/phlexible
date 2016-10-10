@@ -402,7 +402,15 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate
      */
     public function isViewable(TreeNodeInterface $node, $language = null)
     {
-        return $node->getInNavigation() && $this->mediator->isViewable($node, $language ?: $this->language);
+        return $this->mediator->isViewable($node, $language ?: $this->language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSluggable(TreeNodeInterface $node, $language = null)
+    {
+        return $this->mediator->isSluggable($node, $language ?: $this->language);
     }
 
     /**

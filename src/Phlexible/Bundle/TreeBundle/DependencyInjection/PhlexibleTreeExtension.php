@@ -43,7 +43,8 @@ class PhlexibleTreeExtension extends Extension
         $container->setAlias('phlexible_tree.content_tree_manager', 'phlexible_tree.content_tree_manager.delegating');
         $container->setAlias('phlexible_tree.router.url_generator', $config['router']['url_generator_service']);
         $container->setAlias('phlexible_tree.router.request_matcher', $config['router']['request_matcher_service']);
-        $container->setAlias('phlexible_tree.mediator.element.viewable_voter', 'phlexible_tree.mediator.element.viewable_voter.default');
+        $container->setAlias('phlexible_tree.element_mediator.viewable_voter', $config['mediator']['element_viewable_voter']);
+        $container->setAlias('phlexible_tree.element_mediator.sluggable_voter', $config['mediator']['element_sluggable_voter']);
         $container->setAlias('phlexible_tree.node_url_generator', 'phlexible_tree.node_url_generator.language');
     }
 }

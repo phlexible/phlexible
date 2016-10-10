@@ -28,6 +28,13 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('mediator')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('element_sluggable_voter')->defaultValue('phlexible_tree.element_mediator.viewable_voter.default')->end()
+                        ->scalarNode('element_viewable_voter')->defaultValue('phlexible_tree.element_mediator.sluggable_voter.default')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('router')
                     ->addDefaultsIfNotSet()
                     ->children()
