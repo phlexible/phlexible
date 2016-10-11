@@ -1,6 +1,6 @@
 {
     "name": "phlexible/search-bundle",
-    "description": "phlexible",
+    "description": "phlexible search bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],

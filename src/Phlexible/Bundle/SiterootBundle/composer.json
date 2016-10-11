@@ -1,6 +1,6 @@
 {
     "name": "phlexible/siteroot-bundle",
-    "description": "phlexible",
+    "description": "phlexible siteroot bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],

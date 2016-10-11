@@ -1,6 +1,6 @@
 {
     "name": "phlexible/access-control-bundle",
-    "description": "phlexible",
+    "description": "phlexible access control bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],

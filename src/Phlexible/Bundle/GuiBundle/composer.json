@@ -1,6 +1,6 @@
 {
     "name": "phlexible/gui-bundle",
-    "description": "phlexible",
+    "description": "phlexible gui bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],

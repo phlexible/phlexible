@@ -1,6 +1,6 @@
 {
     "name": "phlexible/access-control",
-    "description": "phlexible",
+    "description": "phlexible access control component",
     "license": "proprietary",
     "type": "library",
     "keywords": ["phlexible"],
