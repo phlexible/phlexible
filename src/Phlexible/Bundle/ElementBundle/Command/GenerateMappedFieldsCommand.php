@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Command;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -27,7 +28,8 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
     {
         $this
             ->setName('element:generate:mapped-fields')
-            ->setDescription('Generate mapped fields for elements.');
+            ->setDescription('Generate mapped fields for elements.')
+            ->addArgument('eid', InputArgument::OPTIONAL, 'EID');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -40,7 +42,12 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
         $fieldMapper = $this->getContainer()->get('phlexible_element.field_mapper');
 
-        $elements = $elementManager->findBy(array());
+        $criteria = array();
+        if ($eid = $input->getArgument('eid')) {
+            $criteria['eid'] = $eid;
+        }
+
+        $elements = $elementManager->findBy($criteria);
         $countElements = count($elements);
 
         $style->progressStart($countElements);
