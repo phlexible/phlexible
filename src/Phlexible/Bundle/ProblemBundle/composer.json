@@ -1,6 +1,6 @@
 {
     "name": "phlexible/problem-bundle",
-    "description": "phlexible",
+    "description": "phlexible problem bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],

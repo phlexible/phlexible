@@ -1,6 +1,6 @@
 {
     "name": "phlexible/message-bundle",
-    "description": "phlexible",
+    "description": "phlexible message bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],

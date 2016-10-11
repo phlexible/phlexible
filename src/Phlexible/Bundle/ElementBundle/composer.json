@@ -1,6 +1,6 @@
 {
     "name": "phlexible/element-bundle",
-    "description": "phlexible",
+    "description": "phlexible element bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],

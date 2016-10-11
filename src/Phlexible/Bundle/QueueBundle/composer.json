@@ -1,6 +1,6 @@
 {
     "name": "phlexible/queue-bundle",
-    "description": "phlexible",
+    "description": "phlexible queue bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],

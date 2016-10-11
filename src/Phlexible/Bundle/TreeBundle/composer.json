@@ -1,6 +1,6 @@
 {
     "name": "phlexible/tree-bundle",
-    "description": "phlexible",
+    "description": "phlexible tree bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],

@@ -1,6 +1,6 @@
 {
     "name": "phlexible/dashboard-bundle",
-    "description": "phlexible",
+    "description": "phlexible dashboard bundle",
     "license": "proprietary",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
