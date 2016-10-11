@@ -10,11 +10,10 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
-use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinder;
+use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinderInterface;
 use Phlexible\Bundle\GuiBundle\Asset\MappedAsset;
 use Phlexible\Bundle\GuiBundle\Asset\MappedContent\MappedContentBuilder;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Puli\Repository\Resource\FileResource;
 
 /**
  * CSS builder
@@ -24,7 +23,7 @@ use Puli\Repository\Resource\FileResource;
 class CssBuilder
 {
     /**
-     * @var ResourceFinder
+     * @var ResourceFinderInterface
      */
     private $resourceFinder;
 
@@ -44,17 +43,17 @@ class CssBuilder
     private $debug;
 
     /**
-     * @param ResourceFinder      $resourceFinder
-     * @param CompressorInterface $compressor
-     * @param string              $cacheDir
-     * @param bool                $debug
+     * @param ResourceFinderInterface $resourceFinder
+     * @param CompressorInterface     $compressor
+     * @param string                  $cacheDir
+     * @param bool                    $debug
      */
     public function __construct(
-        ResourceFinder $resourceFinder,
+        ResourceFinderInterface $resourceFinder,
         CompressorInterface $compressor,
         $cacheDir,
-        $debug)
-    {
+        $debug
+    ) {
         $this->resourceFinder = $resourceFinder;
         $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
@@ -62,7 +61,7 @@ class CssBuilder
     }
 
     /**
-     * Build stream
+     * Build css file
      *
      * @param string $baseUrl
      * @param string $basePath
@@ -84,12 +83,15 @@ class CssBuilder
             $mappedContent = $builder->build(
                 'gui.css',
                 $resources,
-                function (FileResource $resource) {
-                    return preg_match('#^/phlexible/([a-z0-9\-_.]+)/styles/([/A-Za-z0-9\-_.]+\.css)$#', $resource->getPath(), $match)
+                function ($path) {
+                    return preg_match('#^/phlexible/([a-z0-9\-_.]+)/styles/([/A-Za-z0-9\-_.]+\.css)$#', $path, $match)
                         ? $match[1] . '/' . $match[2]
-                        : $resource->getPath();
+                        : $path;
                 },
-                null,
+                function () {
+                    $prefix = '/* CSS created on: ' . date('Y-m-d H:i:s') . ' */' . PHP_EOL;
+                    return $prefix;
+                },
                 function ($content) use ($filter) {
                     return $filter->filter($content);
                 }
