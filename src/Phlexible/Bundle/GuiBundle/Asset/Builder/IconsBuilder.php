@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 use Phlexible\Bundle\GuiBundle\Asset\Asset;
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinder;
+use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinderInterface;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
 use Puli\Repository\Resource\FileResource;
 
@@ -22,7 +23,7 @@ use Puli\Repository\Resource\FileResource;
 class IconsBuilder
 {
     /**
-     * @var ResourceFinder
+     * @var ResourceFinderInterface
      */
     private $resourceFinder;
 
@@ -42,13 +43,13 @@ class IconsBuilder
     private $debug;
 
     /**
-     * @param ResourceFinder      $resourceFinder
-     * @param CompressorInterface $compressor
-     * @param string              $cacheDir
-     * @param bool                $debug
+     * @param ResourceFinderInterface $resourceFinder
+     * @param CompressorInterface     $compressor
+     * @param string                  $cacheDir
+     * @param bool                    $debug
      */
     public function __construct(
-        ResourceFinder $resourceFinder,
+        ResourceFinderInterface $resourceFinder,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
@@ -68,7 +69,7 @@ class IconsBuilder
      */
     public function build($basePath)
     {
-        $cache = new ResourceCollectionCache($this->cacheDir . '/icons.css', $this->debug);
+        $cache = new ResourceCollectionCache($this->cacheDir . 'icons.css', $this->debug);
 
         $resources = $this->resourceFinder->findByType('phlexible/icons');
 

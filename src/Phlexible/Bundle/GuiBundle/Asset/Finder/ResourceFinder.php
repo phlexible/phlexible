@@ -16,7 +16,7 @@ use Puli\Repository\Resource\FileResource;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ResourceFinder
+class ResourceFinder implements ResourceFinderInterface
 {
     /**
      * @var EditableDiscovery
@@ -32,9 +32,7 @@ class ResourceFinder
     }
 
     /**
-     * @param string $typeName
-     *
-     * @return FileResource[]
+     * {@inheritdoc}
      */
     public function findByType($typeName)
     {

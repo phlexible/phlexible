@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Cache;
 
-use Puli\Discovery\Api\Binding\Binding;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;

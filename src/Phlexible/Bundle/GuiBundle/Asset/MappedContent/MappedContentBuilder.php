@@ -21,32 +21,36 @@ class MappedContentBuilder
     /**
      * @param string         $name
      * @param FileResource[] $resources
-     * @param callable       $sanitize
-     * @param callable|null  $prefix
-     * @param callable|null  $filter
+     * @param callable       $sanitizePath
+     * @param callable|null  $prefixContent
+     * @param callable|null  $filterContent
      *
      * @return MappedContent
      */
-    public function build($name, array $resources, callable $sanitize, callable $prefix = null, callable $filter = null)
+    public function build($name, array $resources, callable $sanitizePath = null, callable $prefixContent = null, callable $filterContent = null)
     {
         $content = '';
-        $content .= '/* Created: ' . date('Y-m-d H:i:s') . ' */' . PHP_EOL;
-        if ($prefix) {
-            $content .= $prefix();
+        if ($prefixContent) {
+            $content .= $prefixContent();
         }
         $line = substr_count($content, PHP_EOL);
         $sourceMapBuilder = new SourceMapBuilder($name, $line);
-        foreach ($resources as $path => $resource) {
+        foreach ($resources as $resource) {
             $fileContent = $resource->getBody() . PHP_EOL;
             $content .= $fileContent;
 
-            $sourceMapBuilder->add($sanitize($resource), $fileContent);
+            $path = $resource->getPath();
+            if ($sanitizePath) {
+                $path = $sanitizePath($path);
+            }
+
+            $sourceMapBuilder->add($path, $fileContent);
         }
 
         $map = $sourceMapBuilder->getSourceMap();
 
-        if ($filter) {
-            $content = $filter($content);
+        if ($filterContent) {
+            $content = $filterContent($content);
         }
 
         return new MappedContent($content, $map->toJson());

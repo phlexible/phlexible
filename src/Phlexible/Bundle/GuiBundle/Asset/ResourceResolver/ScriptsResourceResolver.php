@@ -112,6 +112,6 @@ class ScriptsResourceResolver implements ResourceResolverInterface
         }
         ksort($unusedResources);
 
-        return new ResolvedResources($results->toArray(), $unusedResources);
+        return new ResolvedResources($results->getValues(), $unusedResources);
     }
 }

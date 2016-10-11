@@ -10,11 +10,11 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinder;
+use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinderInterface;
 use Phlexible\Bundle\GuiBundle\Asset\MappedAsset;
 use Phlexible\Bundle\GuiBundle\Asset\MappedContent\MappedContentBuilder;
 use Phlexible\Bundle\GuiBundle\Asset\ResourceResolver\ScriptsResourceResolver;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Puli\Repository\Resource\FileResource;
 
 /**
  * Scripts builder
@@ -24,7 +24,7 @@ use Puli\Repository\Resource\FileResource;
 class ScriptsBuilder
 {
     /**
-     * @var ResourceFinder
+     * @var ResourceFinderInterface
      */
     private $resourceFinder;
 
@@ -44,13 +44,13 @@ class ScriptsBuilder
     private $debug;
 
     /**
-     * @param ResourceFinder      $resourceFinder
-     * @param CompressorInterface $compressor
-     * @param string              $cacheDir
-     * @param bool                $debug
+     * @param ResourceFinderInterface $resourceFinder
+     * @param CompressorInterface     $compressor
+     * @param string                  $cacheDir
+     * @param bool                    $debug
      */
     public function __construct(
-        ResourceFinder $resourceFinder,
+        ResourceFinderInterface $resourceFinder,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
@@ -84,16 +84,18 @@ class ScriptsBuilder
             $mappedContent = $builder->build(
                 'gui.js',
                 $resolvedResources->getResources(),
-                function (FileResource $resource) {
-                    return preg_match('#^/phlexible/([a-z0-9\-_.]+)/scripts/([/A-Za-z0-9\-_.]+\.js)$#', $resource->getPath(), $match)
+                function ($path) {
+                    return preg_match('#^/phlexible/([a-z0-9\-_.]+)/scripts/([/A-Za-z0-9\-_.]+\.js)$#', $path, $match)
                         ? $match[1] . '/' . $match[2]
-                        : $resource->getPath();
+                        : $path;
                 },
                 function () use ($debug, $unusedResources) {
+                    $prefix = '';
+                    $prefix .= '/* JS created on: ' . date('Y-m-d H:i:s') . ' */' . PHP_EOL;
                     if (!$debug) {
-                        return '';
+                        return $prefix;
                     }
-                    $prefix = '/* ' . PHP_EOL;
+                    $prefix .= '/* ' . PHP_EOL;
                     $prefix .= ' * Unused resources:' . PHP_EOL;
                     foreach ($unusedResources as $unusedResource) {
                         $prefix .= ' * ' . $unusedResource->getPath() . PHP_EOL;
