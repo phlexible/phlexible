@@ -8,11 +8,14 @@
 
 namespace Phlexible\Bundle\ElementBundle\Meta;
 
+use Doctrine\ORM\QueryBuilder;
+use Phlexible\Bundle\ElementBundle\Entity\ElementMetaDataValue;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Component\MetaSet\Doctrine\MetaDataManager;
 use Phlexible\Component\MetaSet\Model\MetaData;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaSet;
+use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
  * Element meta data manager
@@ -21,90 +24,70 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
  */
 class ElementMetaDataManager extends MetaDataManager
 {
-
     /**
-     * @param MetaSet        $metaSet
-     * @param ElementVersion $elementVersion
-     *
-     * @return MetaData|MetaDataInterface
+     * {@inheritdoc}
      */
-    public function createElementMetaData(MetaSet $metaSet, ElementVersion $elementVersion)
+    public function createMetaData(MetaSet $metaSet)
     {
-        $metaData = $this->createMetaData($metaSet);
-        $metaData
-            ->setIdentifiers($this->getIdentifiersFromElementVersion($elementVersion));
-
-        return $metaData;
+        return new MetaData($metaSet);
     }
 
     /**
-     * @param MetaSet        $metaSet
-     * @param ElementVersion $elementVersion
+     * @param MetaSetInterface $metaSet
+     * @param ElementVersion   $elementVersion
      *
-     * @return null|MetaDataInterface
+     * @return MetaDataInterface|null
      */
-    public function findByMetaSetAndElementVersion(MetaSet $metaSet, ElementVersion $elementVersion)
+    public function findByMetaSetAndElementVersion(MetaSetInterface $metaSet, ElementVersion $elementVersion)
     {
-        return $this->findByMetaSetAndIdentifiers($metaSet, $this->getIdentifiersFromElementVersion($elementVersion));
+        return $this->findOneByMetaSetAndTarget($metaSet, $elementVersion);
     }
 
     /**
-     * @param string $value
-     *
-     * @return MetaDataInterface[]
+     * {@inheritdoc}
      */
-    public function findByValue($value)
+    protected function getDataClass()
     {
-        $connection = $this->getConnection();
+        return ElementMetaDataValue::class;
+    }
 
-        $qb = $connection->createQueryBuilder();
-        $qb
-            ->select('m.*')
-            ->from($this->getTableName(), 'm')
-            ->where($qb->expr()->like('m.value', $qb->expr()->literal("%$value%")));
+    /**
+     * {@inheritdoc}
+     */
+    protected function joinTarget(QueryBuilder $qb, $elementVersion)
+    {
+        /* @var $elementVersion ElementVersion */
+        $qb->join('d.elementVersion', 'e');
+        $qb->andWhere($qb->expr()->eq("e.id", ':elementVersionId'));
+        $qb->setParameter('elementVersionId', $elementVersion->getId());
+    }
 
-        $rows = $connection->fetchAll($qb->getSQL());
+    /**
+     * @param string         $setId
+     * @param string         $language
+     * @param string         $fieldId
+     * @param ElementVersion $target
+     *
+     * @return ElementMetaDataValue
+     */
+    protected function getOrCreateMetaDataValue($setId, $language, $fieldId, $target)
+    {
+        $metaDataValue = $this->getDataRepository()->findOneBy(array(
+            'setId' => $setId,
+            'language' => $language,
+            'fieldId' => $fieldId,
+            'elementVersion' => $target,
+        ));
 
-        $metaDatas = [];
-
-        foreach ($rows as $row) {
-            $identifiers = [
-                'eid'     => $row['eid'],
-                'version' => $row['version'],
-            ];
-
-            $id = '';
-            foreach ($identifiers as $value) {
-                $id .= $value . '_';
-            }
-            $id .= $row['set_id'];
-
-            if (!isset($metaDatas[$id])) {
-                $metaData = new MetaData();
-                $metaData
-                    ->setIdentifiers($identifiers)
-                    ->setMetaSet(null);
-                $metaDatas[$id] = $metaData;
-            } else {
-                $metaData = $metaDatas[$id];
-            }
-
-            $metaData->set($row['field_id'], $row['value'], $row['language']);
+        if (!$metaDataValue) {
+            $metaDataValue = new ElementMetaDataValue(
+                $setId,
+                $target,
+                $language,
+                $fieldId
+            );
         }
 
-        return $metaDatas;
-    }
-
-    /**
-     * @param ElementVersion $elementVersion
-     *
-     * @return array
-     */
-    private function getIdentifiersFromElementVersion(ElementVersion $elementVersion)
-    {
-        return [
-            'eid'     => $elementVersion->getElement()->getEid(),
-            'version' => $elementVersion->getVersion(),
-        ];
+        return $metaDataValue;
     }
 }

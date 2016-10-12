@@ -116,7 +116,7 @@ class FolderMetaController extends Controller
             $metaData = $folderMetaDataManager->findByMetaSetAndFolder($metaSet, $folder);
 
             if (!$metaData) {
-                $metaData = $folderMetaDataManager->createFolderMetaData($metaSet, $folder);
+                $metaData = $folderMetaDataManager->createMetaData($metaSet);
             }
 
             foreach ($fields as $fieldname => $row) {
@@ -140,7 +140,7 @@ class FolderMetaController extends Controller
                 }
             }
 
-            $folderMetaDataManager->updateMetaData($metaData);
+            $folderMetaDataManager->updateMetaData($folder, $metaData);
         }
 
         /*

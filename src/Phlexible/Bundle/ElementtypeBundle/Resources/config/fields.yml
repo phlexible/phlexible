@@ -84,12 +84,6 @@ services:
         tags:
             - {name: phlexible_elementtype.field, alias: select}
 
-    phlexible_elementtype.field.suggest:
-        class: Phlexible\Bundle\ElementtypeBundle\Field\SuggestField
-        public: false
-        tags:
-            - {name: phlexible_elementtype.field, alias: suggest}
-
     phlexible_elementtype.field.table:
         class: Phlexible\Bundle\ElementtypeBundle\Field\TableField
         public: false

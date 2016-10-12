@@ -12,15 +12,15 @@ services:
     phlexible_media_manager.doctrine.file_meta_data_manager:
         class: Phlexible\Component\MediaManager\Meta\FileMetaDataManager
         arguments:
+            - "@phlexible_meta_set.meta_set_manager"
             - "@doctrine.orm.entity_manager"
-            - "@phlexible_data_source.data_source_manager"
+            - "@event_dispatcher"
             - "@logger"
-            - media_file_meta
 
     phlexible_media_manager.doctrine.folder_meta_data_manager:
         class: Phlexible\Component\MediaManager\Meta\FolderMetaDataManager
         arguments:
+            - "@phlexible_meta_set.meta_set_manager"
             - "@doctrine.orm.entity_manager"
-            - "@phlexible_data_source.data_source_manager"
+            - "@event_dispatcher"
             - "@logger"
-            - media_folder_meta

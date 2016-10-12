@@ -1,5 +1,7 @@
 Ext.provide('Phlexible.elements.tab.Security');
 
+Ext.require('Ext.ux.form.SuperBoxSelect');
+
 Phlexible.elements.tab.Security = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.elements.Strings.security.security,
     iconCls: 'p-element-security-icon',
