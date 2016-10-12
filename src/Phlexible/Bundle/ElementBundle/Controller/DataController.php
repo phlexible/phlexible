@@ -526,7 +526,7 @@ class DataController extends Controller
         $serializedStructure = $elementtypeSerializer->serialize($elementtypeStructure);
 
         $elementSerializer = new ElementArraySerializer();
-        $serializedValues = $elementSerializer->serialize($elementStructure, $language);
+        $serializedValues = $elementSerializer->serialize($elementStructure, $language, $element->getMasterLanguage());
 
         $data = [
             'success'             => true,

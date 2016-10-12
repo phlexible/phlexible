@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Filter;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class BaseUrlFilter
+class BaseUrlFilter implements UrlFilterInterface
 {
     /**
      * @var string
@@ -31,8 +31,10 @@ class BaseUrlFilter
      */
     public function __construct($baseUrl, $basePath)
     {
-        $this->baseUrl = rtrim($baseUrl, '/') . '/';
-        $this->basePath = rtrim($basePath, '/') . '/';
+        $baseUrl = rtrim($baseUrl, '/') . '/';
+        $this->baseUrl = '/' . ltrim($baseUrl, '/');
+        $basePath = rtrim($basePath, '/') . '/';
+        $this->basePath = '/' . ltrim($basePath, '/');
     }
 
     /**

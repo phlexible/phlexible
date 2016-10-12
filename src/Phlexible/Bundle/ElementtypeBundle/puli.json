@@ -1,0 +1,37 @@
+{
+    "version": "1.0",
+    "name": "phlexible/elementtype-bundle",
+    "path-mappings": {
+        "/phlexible/phlexibleelementtype/icons": "src/Phlexible/Bundle/ElementtypeBundle/Resources/public/icons",
+        "/phlexible/phlexibleelementtype/menu": "src/Phlexible/Bundle/ElementtypeBundle/Resources/menu",
+        "/phlexible/phlexibleelementtype/scripts": "src/Phlexible/Bundle/ElementtypeBundle/Resources/scripts",
+        "/phlexible/phlexibleelementtype/styles": "src/Phlexible/Bundle/ElementtypeBundle/Resources/styles",
+    },
+    "bindings": {
+        "287e862e-6a6a-541f-aab4-bc4d5498b4c0": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleelementtype/icons/*.gif",
+            "type": "phlexible/icons"
+        },
+        "3e23bcd0-2bc4-5c24-942a-7d640be08c40": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleelementtype/icons/*.png",
+            "type": "phlexible/icons"
+        },
+        "43a612f4-1059-5375-bace-94816dc79db8": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleelementtype/styles/**/*.css",
+            "type": "phlexible/styles"
+        },
+        "997e7153-0a1c-5562-95d8-df0a37463e40": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleelementtype/scripts/**/*.js",
+            "type": "phlexible/scripts"
+        },
+        "f5544b71-d3fb-5c0e-b5c5-cd89c074a24c": {
+            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
+            "query": "/phlexible/phlexibleelementtype/menu/*.yml",
+            "type": "phlexible/menu"
+        }
+    }
+}

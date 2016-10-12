@@ -30,13 +30,23 @@ class ElementMediator implements MediatorInterface
     private $viewableVoter;
 
     /**
-     * @param ElementService         $elementService
-     * @param ViewableVoterInterface $viewableVoter
+     * @var SluggableVoterInterface
      */
-    public function __construct(ElementService $elementService, ViewableVoterInterface $viewableVoter)
-    {
+    private $sluggableVoter;
+
+    /**
+     * @param ElementService          $elementService
+     * @param ViewableVoterInterface  $viewableVoter
+     * @param SluggableVoterInterface $sluggableVoter
+     */
+    public function __construct(
+        ElementService $elementService,
+        ViewableVoterInterface $viewableVoter,
+        SluggableVoterInterface $sluggableVoter
+    ) {
         $this->elementService = $elementService;
         $this->viewableVoter = $viewableVoter;
+        $this->sluggableVoter = $sluggableVoter;
     }
 
     /**
@@ -73,5 +83,13 @@ class ElementMediator implements MediatorInterface
     public function isViewable(TreeNodeInterface $node, $language)
     {
         return $this->viewableVoter->isViewable($node, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSluggable(TreeNodeInterface $node, $language)
+    {
+        return $this->sluggableVoter->isSluggable($node, $language);
     }
 }

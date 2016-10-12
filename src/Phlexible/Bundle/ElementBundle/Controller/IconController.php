@@ -10,8 +10,10 @@ namespace Phlexible\Bundle\ElementBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Icon controller
@@ -37,15 +39,7 @@ class IconController extends Controller
         $iconBuilder = $this->get('phlexible_element.icon_builder');
         $cacheFilename = $iconBuilder->getAssetPath($icon, $params);
 
-        return $this->get('igorw_file_serve.response_factory')
-            ->create(
-                $cacheFilename,
-                'image/png',
-                [
-                    'absolute_path' => true,
-                    'inline' => true,
-                ]
-            );
+        return new BinaryFileResponse($cacheFilename, 200, array('Content-Type' => 'image/png'), true, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
 }

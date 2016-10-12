@@ -211,7 +211,7 @@ class MetaDataManager implements MetaDataManagerInterface
             $field = $metaSet->getFieldById($row['field_id']);
 
             if (!$field) {
-                $this->logger->error(sprintf("MetaSet with id %s doesn't exists", $row['field_id']));
+                $this->logger->error(sprintf("MetaSet with id %s doesn't exist", $row['field_id']));
                 $this->logger->info("MetaSet Identifieres", $identifiers);
                 continue;
             }

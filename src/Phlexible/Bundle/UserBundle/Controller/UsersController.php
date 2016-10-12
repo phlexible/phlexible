@@ -248,10 +248,11 @@ class UsersController extends Controller
 
         $optin = (bool) $request->request->get('optin', false);
         if ($optin) {
-            $user->setPasswordToken(Uuid::generate());
+            $user->setConfirmationToken(Uuid::generate());
 
             $mailer = $this->get('phlexible_user.mailer');
             $mailer->sendNewPasswordEmailMessage($user);
+            $user->setPasswordRequestedAt(new \DateTime());
         }
 
         $userManager->updateUser($user);

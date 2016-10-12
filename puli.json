@@ -472,14 +472,6 @@
             "install-path": "vendor/alchemy/zippy",
             "installer": "composer"
         },
-        "brainbits/image-analyzer": {
-            "install-path": "vendor/brainbits/image-analyzer",
-            "installer": "composer"
-        },
-        "brainbits/mime": {
-            "install-path": "vendor/brainbits/mime",
-            "installer": "composer"
-        },
         "cocur/slugify": {
             "install-path": "vendor/cocur/slugify",
             "installer": "composer"
@@ -534,10 +526,6 @@
         },
         "friendsofsymfony/user-bundle": {
             "install-path": "vendor/friendsofsymfony/user-bundle",
-            "installer": "composer"
-        },
-        "igorw/file-serve-bundle": {
-            "install-path": "vendor/igorw/file-serve-bundle/Igorw/FileServeBundle",
             "installer": "composer"
         },
         "imagine/imagine": {

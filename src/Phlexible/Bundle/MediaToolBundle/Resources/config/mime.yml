@@ -4,26 +4,26 @@ parameters:
 
 services:
     phlexible_media_tool.mime.detector:
-        class: Brainbits\Mime\MimeDetector
+        class: Phlexible\Component\Mime\MimeDetector
         arguments:
             - "@phlexible_media_tool.mime.adapter"
 
     phlexible_media_tool.mime.adapter.fallback:
-        class: Brainbits\Mime\Adapter\FallbackAdapter
+        class: Phlexible\Component\Mime\Adapter\FallbackAdapter
         arguments:
             - "@phlexible_media_tool.mime.adapter.file"
             - "@phlexible_media_tool.mime.adapter.extension"
 
     phlexible_media_tool.mime.adapter.extension:
-        class: Brainbits\Mime\Adapter\ExtensionAdapter
+        class: Phlexible\Component\Mime\Adapter\ExtensionAdapter
 
     phlexible_media_tool.mime.adapter.file:
-        class: Brainbits\Mime\Adapter\FileAdapter
+        class: Phlexible\Component\Mime\Adapter\FileAdapter
         arguments:
             - "%phlexible_media_tool.mime.file%"
 
     phlexible_media_tool.mime.adapter.fileinfo:
-        class: Brainbits\Mime\Adapter\FileinfoAdapter
+        class: Phlexible\Component\Mime\Adapter\FileinfoAdapter
         arguments:
             - "%phlexible_media_tool.mime.magicfile%"
 

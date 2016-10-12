@@ -61,12 +61,15 @@ class Synchronizer
     }
 
     /**
-     * @param Change $change
-     * @param bool   $force
+     * @param Change   $change
+     * @param bool     $force
+     * @param callable $callback
      */
-    public function synchronize(Change $change, $force = false)
+    public function synchronize(Change $change, $force = false, callable $callback = null)
     {
         $elementtype = $change->getElementtype();
+        $title = $elementtype->getTitle();
+        $revision = $elementtype->getRevision();
         if ($change->getNeedImport()) {
             $elementSource = new ElementSource();
             $this->applyElementtypeToElementSource($elementtype, $elementSource);
@@ -74,13 +77,31 @@ class Synchronizer
             $elementSource = $this->elementSourceManager->findOneByElementtypeAndRevision($elementtype);
         }
 
+        if (!count($change->getOutdatedElementSources())) {
+            $callback('noop', $title, $revision, 0, 0);
+
+            return;
+        }
+
         foreach ($change->getOutdatedElementSources() as $outdatedElementSource) {
             $elementVersions = $this->elementVersionManager->findByElementSource($outdatedElementSource);
+            $total = count($elementVersions);
+            $current = 0;
+            if ($callback) {
+                $callback('start', $title, $revision, $current, $total);
+            }
             foreach ($elementVersions as $elementVersion) {
+                $current++;
+                if ($callback) {
+                    $callback('progress', $title, $revision, $current, $total);
+                }
                 $elementVersion->setElementSource($elementSource);
                 $this->elementVersionManager->updateElementVersion($elementVersion, true);
             }
             $this->removeOutdatedElementSource($outdatedElementSource);
+            if ($callback) {
+                $callback('end', $title, $revision, $current, $total);
+            }
         }
     }
 

@@ -33,15 +33,22 @@ services:
             - "@phlexible_tree.state_manager"
             - "@phlexible_tree.node_permission_resolver"
 
-    phlexible_tree.router.handler.default:
-        class: Phlexible\Bundle\TreeBundle\Router\Handler\DefaultHandler
+    phlexible_tree.router.default_request_matcher:
+        class: Phlexible\Bundle\TreeBundle\Router\Handler\DefaultRequestMatcher
         arguments:
             - "@logger"
             - "@phlexible_tree.content_tree_manager"
             - "@phlexible_siteroot.siteroot_request_matcher"
-            - "@phlexible_siteroot.siteroot_hostname_generator"
             - "%phlexible_cms.languages.available%"
             - "%phlexible_cms.languages.default%"
+        tags:
+            - {name: monolog.logger, channel: router}
+
+    phlexible_tree.router.default_url_generator:
+        class: Phlexible\Bundle\TreeBundle\Router\Handler\DefaultUrlGenerator
+        arguments:
+            - "@phlexible_tree.content_tree_manager"
+            - "@phlexible_siteroot.siteroot_hostname_generator"
         tags:
             - {name: monolog.logger, channel: router}
 
@@ -49,8 +56,8 @@ services:
         class: Phlexible\Bundle\TreeBundle\Router\TreeRouter
         arguments:
             - "@router.request_context"
-            - "@phlexible_tree.router.handler"
-            - "@phlexible_tree.router.handler"
+            - "@phlexible_tree.router.request_matcher"
+            - "@phlexible_tree.router.url_generator"
             - ""
             - "@event_dispatcher"
         tags:
@@ -106,7 +113,7 @@ services:
         class: Phlexible\Bundle\TreeBundle\EventListener\PreviewListener
         arguments:
             - "@router"
-            - "@phlexible_tree.mediator.element.viewable_voter"
+            - "@phlexible_tree.element_mediator.viewable_voter"
         tags:
             - {name: kernel.event_subscriber}
 

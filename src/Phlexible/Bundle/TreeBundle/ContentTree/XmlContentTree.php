@@ -13,18 +13,15 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidArgumentException;
-use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
-use Phlexible\Component\Identifier\IdentifiableInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * XML content tree
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, IdentifiableInterface
+class XmlContentTree implements ContentTreeInterface, \IteratorAggregate
 {
     /**
      * @var int
@@ -72,16 +69,6 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     public function getIterator()
     {
         return new TreeIterator($this);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return TreeIdentifier
-     */
-    public function getIdentifier()
-    {
-        return new TreeIdentifier($this->getSiterootId());
     }
 
     /**

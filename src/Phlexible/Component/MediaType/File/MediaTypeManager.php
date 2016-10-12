@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaType\File;
 
-use Brainbits\Mime\MimeDetector;
+use Phlexible\Component\Mime\MimeDetector;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 

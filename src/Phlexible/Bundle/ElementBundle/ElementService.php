@@ -319,7 +319,7 @@ class ElementService
 
         $elementSource = $this->findElementSource($element->getElementtypeId());
 
-        $elementVersion = clone $oldElementVersion;
+        $elementVersion = new ElementVersion();
         $elementVersion
             ->setId(null)
             ->setElement($element)
@@ -329,9 +329,6 @@ class ElementService
             ->setCreatedAt(new \DateTime())
             ->setComment($comment)
             ->setTriggerLanguage($triggerLanguage);
-
-        $elementVersion
-            ->getMappedFields()->clear();
 
         $element->setLatestVersion($elementVersion->getVersion());
 

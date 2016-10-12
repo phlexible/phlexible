@@ -10,19 +10,16 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
-use Phlexible\Component\Identifier\IdentifiableInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Delegating content tree
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate, IdentifiableInterface
+class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate
 {
     /**
      * @var TreeInterface
@@ -78,16 +75,6 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     public function getIterator()
     {
         return new TreeIterator($this);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return TreeIdentifier
-     */
-    public function getIdentifier()
-    {
-        return new TreeIdentifier($this->getSiterootId());
     }
 
     /**
@@ -155,6 +142,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
         $contentNode
             ->setLanguage($this->language)
             ->setId($treeNode->getId())
+            ->setSiterootId($treeNode->getSiterootId())
             ->setTypeId($treeNode->getTypeId())
             ->setType($treeNode->getType())
             ->setTree($this)
@@ -414,7 +402,15 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function isViewable(TreeNodeInterface $node, $language = null)
     {
-        return $node->getInNavigation() && $this->mediator->isViewable($node, $language ?: $this->language);
+        return $this->mediator->isViewable($node, $language ?: $this->language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSluggable(TreeNodeInterface $node, $language = null)
+    {
+        return $this->mediator->isSluggable($node, $language ?: $this->language);
     }
 
     /**

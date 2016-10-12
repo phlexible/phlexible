@@ -12,8 +12,6 @@ use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
 use Phlexible\Bundle\TeaserBundle\ContentTeaser\ContentTeaser;
 use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
-use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;

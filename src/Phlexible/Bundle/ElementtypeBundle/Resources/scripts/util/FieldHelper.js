@@ -66,7 +66,7 @@ Phlexible.fields.FieldHelper = {
             hideLabel: hideLabel,
 
             value: itemValue ? itemValue.content : (item.configuration['default_value'] ? item.configuration['default_value'] : ''),
-            masterValue: '', // TODO
+            masterValue: itemValue ? itemValue.masterContent : null,
             attributes: itemValue ? itemValue.attributes : {},
 
             isMaster: element.master,
@@ -74,7 +74,7 @@ Phlexible.fields.FieldHelper = {
 
             isSynchronized: (item.configuration['synchronized'] === 'synchronized' || item.configuration['synchronized'] === 'synchronized_unlink'),
             hasUnlink: item.configuration['synchronized'] === 'synchronized_unlink',
-            isUnlinked: item.data_options && item.data_options.unlinked,
+            isUnlinked: itemValue && itemValue.options && itemValue.options.unlinked,
 
 //            isRepeatable: (item.configuration.repeat_max > 1 ? true : false),
             minRepeat: item.configuration.repeat_min ? parseInt(item.configuration.repeat_min, 10) : 0,
@@ -268,6 +268,9 @@ Phlexible.fields.FieldHelper = {
                             else {
                                 this.setValue('');
                             }
+                            if (this.onRelink) {
+                                this.onRelink(this);
+                            }
                         }
                         else {
                             this.isUnlinked = true;
@@ -282,9 +285,15 @@ Phlexible.fields.FieldHelper = {
                             styleEl.addClass('p-fields-synchronized-unlinked');
                             styleEl.removeClass('p-fields-synchronized-synched');
                             this.enable();
+                            if (this.onUnlink) {
+                                this.onUnlink(this);
+                            }
                         }
                     }, this);
                 }
+            }
+            if (this.onApplyUnlink) {
+                this.onApplyUnlink(this);
             }
         }
     },

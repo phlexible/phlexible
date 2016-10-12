@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
+use Phlexible\Bundle\ElementBundle\Change\Change;
 use Phlexible\Bundle\ElementBundle\Change\Checker;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
@@ -78,11 +79,30 @@ class ChangesCommand extends ContainerAwareCommand
                 $table->render();
             } else {
                 $this->getContainer()->get('event_dispatcher')->dispatch(ElementEvents::COMMIT_CHANGES);
-                
+
                 foreach ($changes as $change) {
-                    $output->write("{$change->getElementtype()->getTitle()}... ");
-                    $synchronizer->synchronize($change, $input->getOption('force'));
-                    $output->writeln("<info>ok</info>");
+                    $synchronizer->synchronize($change, $input->getOption('force'), function($e, $title, $revision, $current, $total) use ($output) {
+                        switch ($e) {
+                            case 'start':
+                                $output->write("$title (Revision $revision) ... ");
+                                break;
+                            case 'progress':
+                                $output->write("\r");
+                                $output->write("$title (Revision $revision) ... ");
+                                $output->write("$current / $total                ");
+                                break;
+                            case 'end':
+                                $output->write("\r");
+                                $output->write("$title (Revision $revision) ... ");
+                                $output->writeln("<info>$total changes</info>                          ");
+                                break;
+                            case 'noop':
+                                if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
+                                    $output->writeln("$title (Revision $revision) ... ");
+                                    $output->writeln("<fg=yellow>no changes</>                          ");
+                                }
+                        }
+                    });
                 }
             }
         } else {
@@ -92,34 +112,6 @@ class ChangesCommand extends ContainerAwareCommand
         return 0;
 
         // TODO: meta, titles
-    }
-
-    /**
-     * @param ElementStructure $structure
-     *
-     * @return ElementStructure
-     */
-    private function iterateStructure(ElementStructure $structure)
-    {
-        $elementStructure = new ElementStructure();
-        $elementStructure
-            ->setId($structure->getId())
-            ->setDsId($structure->getDsId())
-            ->setName($structure->getName())
-            //->setParentId($structure->getParentId())
-            //->setParentDsId($structure->getParentDsId())
-            ->setParentName($structure->getParentName());
-        ;
-
-        foreach ($structure->getValues() as $value) {
-            $elementStructure->setValue($value);
-        }
-
-        foreach ($structure->getStructures() as $childStructure) {
-            $elementStructure->addStructure($this->iterateStructure($childStructure));
-        }
-
-        return $elementStructure;
     }
 }
 

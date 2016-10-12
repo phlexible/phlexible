@@ -8,10 +8,12 @@
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
+use Phlexible\Bundle\GuiBundle\Asset\Asset;
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
+use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinder;
+use Phlexible\Bundle\GuiBundle\Asset\Finder\ResourceFinderInterface;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Puli\Discovery\Api\Binding\Binding;
-use Puli\Discovery\Api\EditableDiscovery;
+use Puli\Repository\Resource\FileResource;
 
 /**
  * Icons builder
@@ -21,9 +23,9 @@ use Puli\Discovery\Api\EditableDiscovery;
 class IconsBuilder
 {
     /**
-     * @var EditableDiscovery
+     * @var ResourceFinderInterface
      */
-    private $puliDiscovery;
+    private $resourceFinder;
 
     /**
      * @var CompressorInterface
@@ -41,18 +43,18 @@ class IconsBuilder
     private $debug;
 
     /**
-     * @param EditableDiscovery   $puliDiscovery
-     * @param CompressorInterface $compressor
-     * @param string              $cacheDir
-     * @param bool                $debug
+     * @param ResourceFinderInterface $resourceFinder
+     * @param CompressorInterface     $compressor
+     * @param string                  $cacheDir
+     * @param bool                    $debug
      */
     public function __construct(
-        EditableDiscovery $puliDiscovery,
+        ResourceFinderInterface $resourceFinder,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
-        $this->puliDiscovery = $puliDiscovery;
+        $this->resourceFinder = $resourceFinder;
         $this->compressor = $compressor;
         $this->cacheDir = rtrim($cacheDir, '/') . '/';
         $this->debug = $debug;
@@ -61,19 +63,18 @@ class IconsBuilder
     /**
      * Get all Stylesheets for the given section
      *
-     * @param string $baseUrl
      * @param string $basePath
      *
-     * @return string
+     * @return Asset
      */
-    public function build($baseUrl, $basePath)
+    public function build($basePath)
     {
-        $cache = new ResourceCollectionCache($this->cacheDir . '/icons.css', $this->debug);
+        $cache = new ResourceCollectionCache($this->cacheDir . 'icons.css', $this->debug);
 
-        $bindings = $this->findBindings();
+        $resources = $this->resourceFinder->findByType('phlexible/icons');
 
-        if (1 || !$cache->isFresh($bindings)) {
-            $content = $this->buildIcons($bindings, $baseUrl, $basePath);
+        if (!$cache->isFresh($resources)) {
+            $content = $this->buildIcons($resources, $basePath);
 
             $cache->write($content);
 
@@ -83,58 +84,47 @@ class IconsBuilder
 
         }
 
-        return (string) $cache;
+        return new Asset((string) $cache);
     }
 
     /**
-     * @return Binding[]
-     */
-    private function findBindings()
-    {
-        return $this->puliDiscovery->findBindings('phlexible/icons');
-    }
-
-    /**
-     * @param Binding[] $bindings
-     * @param string    $baseUrl
-     * @param string    $basePath
+     * @param FileResource[] $resources
+     * @param string         $basePath
      *
      * @return string
      */
-    private function buildIcons(array $bindings, $baseUrl, $basePath)
+    private function buildIcons(array $resources, $basePath)
     {
         $data = [];
 
-        foreach ($bindings as $binding) {
-            foreach ($binding->getResources() as $resource) {
-                if (!preg_match("#^/phlexible/(.+?)/icons/(.*\.(png|gif))$#", $resource->getPath(), $match)) {
-                    continue;
-                }
-
-                $bundle = $match[1];
-                $path = $match[2];
-                $extension = $match[3];
-
-                $filesystemPath = $resource->getFilesystemPath();
-                $file = basename($filesystemPath);
-                $name = basename($filesystemPath, ".$extension");
-
-                $size = getimagesize($filesystemPath);
-                if ($size[0] != 16 || $size[1] != 16) {
-                    continue;
-                }
-
-                $selector = sprintf('.p-%s-%s-icon', str_replace('phlexible', '', $bundle), $name);
-
-                $data[] = [
-                    'bundle'    => $bundle,
-                    'path'      => $path,
-                    'file'      => $file,
-                    'name'      => $name,
-                    'selector'  => $selector,
-                    'extension' => $extension,
-                ];
+        foreach ($resources as $resource) {
+            if (!preg_match("#^/phlexible/(.+?)/icons/(.*\.(png|gif))$#", $resource->getPath(), $match)) {
+                continue;
             }
+
+            $bundle = $match[1];
+            $path = $match[2];
+            $extension = $match[3];
+
+            $filesystemPath = $resource->getFilesystemPath();
+            $file = basename($filesystemPath);
+            $name = basename($filesystemPath, ".$extension");
+
+            $size = getimagesize($filesystemPath);
+            if ($size[0] != 16 || $size[1] != 16) {
+                continue;
+            }
+
+            $selector = sprintf('.p-%s-%s-icon', str_replace('phlexible', '', $bundle), $name);
+
+            $data[] = [
+                'bundle'    => $bundle,
+                'path'      => $path,
+                'file'      => $file,
+                'name'      => $name,
+                'selector'  => $selector,
+                'extension' => $extension,
+            ];
         }
 
         $urlTemplate = $basePath . '/bundles/%s/icons/%s';

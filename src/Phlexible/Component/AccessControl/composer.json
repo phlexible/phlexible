@@ -1,0 +1,28 @@
+{
+    "name": "phlexible/access-control",
+    "description": "phlexible access control component",
+    "license": "proprietary",
+    "type": "library",
+    "keywords": ["phlexible"],
+    "autoload": {
+        "psr-4": {
+            "Phlexible\\Component\\AccessControl\\": ""
+        }
+    },
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.brainbits.net/repo/private/"
+        }
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

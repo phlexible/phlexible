@@ -10,7 +10,7 @@
         }
     },
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.6.0",
         "ext-date": "*",
         "ext-hash": "*",
         "ext-iconv": "*",
@@ -28,27 +28,33 @@
         "doctrine/orm": "~2.4",
         "fluentdom/fluentdom": "~5.1",
         "friendsofsymfony/user-bundle": "~2.0",
-        "symfony/symfony": "~2.4",
+        "symfony/symfony": "~2.8",
         "symfony-cmf/routing-bundle": "~1.1",
         "twig/twig": "~1.15",
-        "brainbits/mime": "~1.0",
-        "brainbits/image-analyzer": "~1.0",
         "php-poppler/php-poppler": "~1.0",
         "imagine/imagine": "~0.6",
         "ramsey/uuid": "~2.7",
         "php-ffmpeg/php-ffmpeg": "~0.5",
         "php-ffmpeg/extras": "~0.3",
-        "igorw/file-serve-bundle": "~1",
         "cocur/slugify": "~0.8",
-        "alchemy/phpexiftool": "~0.5",
+        "alchemy/phpexiftool": "~0.6",
         "cogpowered/finediff": "~0.3",
         "nelmio/api-doc-bundle": "~2.5",
         "alchemy/zippy": "^0.3.1"
     },
      "replace": {
+        "phlexible/access-control": "self.version",
+        "phlexible/access-control-bundle": "self.version",
         "phlexible/dashboard-bundle": "self.version",
+        "phlexible/element-bundle": "self.version",
+        "phlexible/elementtype-bundle": "self.version",
         "phlexible/gui-bundle": "self.version",
+        "phlexible/message-bundle": "self.version",
+        "phlexible/problem-bundle": "self.version",
         "phlexible/queue-bundle": "self.version",
+        "phlexible/search-bundle": "self.version",
+        "phlexible/siteroot-bundle": "self.version",
+        "phlexible/tree-bundle": "self.version",
         "phlexible/user-bundle": "self.version"
     },
     "require-dev": {
@@ -56,15 +62,8 @@
         "mikey179/vfsStream": "~1.4"
     },
     "suggest": {
-        "puli/composer-plugin": "This package contains Puli resources. Require the plugin to use them.",
-        "phlexible/compressor-minify-bundle": "Compress javascript and css files."
+        "puli/composer-plugin": "This package contains Puli resources. Require the plugin to use them."
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.brainbits.net/repo/private/"
-        }
-    ],
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"

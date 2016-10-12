@@ -604,29 +604,23 @@ Phlexible.mediatemplates.image.FormPanel = Ext.extend(Ext.form.FormPanel, {
             return;
         }
 
-        Ext.MessageBox.confirm(this.strings.save, this.strings.save_hint, function (btn) {
-            if (btn !== 'yes') {
-                return;
-            }
-
-            this.getForm().submit({
-                url: Phlexible.Router.generate('mediatemplates_form_save'),
-                params: {
-                    template_key: this.template_key
-                },
-                success: function (form, action) {
-                    var data = Ext.decode(action.response.responseText);
-                    if (data.success) {
-                        Phlexible.success(data.msg);
-                        this.fireEvent('paramssave');
-                    }
-                    else {
-                        Ext.Msg.alert('Failure', data.msg);
-                    }
-                },
-                scope: this
-            });
-        }, this);
+        this.getForm().submit({
+            url: Phlexible.Router.generate('mediatemplates_form_save'),
+            params: {
+                template_key: this.template_key
+            },
+            success: function (form, action) {
+                var data = Ext.decode(action.response.responseText);
+                if (data.success) {
+                    Phlexible.success(data.msg);
+                    this.fireEvent('paramssave');
+                }
+                else {
+                    Ext.Msg.alert('Failure', data.msg);
+                }
+            },
+            scope: this
+        });
     }
 });
 

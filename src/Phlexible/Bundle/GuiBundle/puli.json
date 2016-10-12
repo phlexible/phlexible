@@ -9,22 +9,27 @@
     },
     "bindings": {
         "f4f815d8-eb5c-5b2a-90ef-ef53de03e382": {
+             "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexiblegui/icons/*.gif",
             "type": "phlexible/icons"
         },
         "70d2fbfa-b862-5481-8d7c-2e6c023e1299": {
+             "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexiblegui/icons/*.png",
             "type": "phlexible/icons"
         },
         "f8dedc99-e83b-5926-8eed-0aa7f0673429": {
+             "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexiblegui/menu/*.yml",
             "type": "phlexible/menu"
         },
         "f9f7ada2-dd12-571f-95c4-e5931a2e1f4a": {
+             "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexiblegui/scripts/**/*.js",
             "type": "phlexible/scripts"
         },
         "e48dfe29-6164-5df2-89ca-8b32ab717083": {
+             "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexiblegui/styles/**/*.css",
             "type": "phlexible/styles"
         }
