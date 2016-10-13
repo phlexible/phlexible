@@ -78,7 +78,7 @@ class MediaController extends Controller
         }
 
         if (!file_exists($filePath)) {
-            return $this->createNotFoundException("File not found.");
+            throw $this->createNotFoundException("File not found.");
         }
 
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -112,7 +112,7 @@ class MediaController extends Controller
         $filePath = $file->getPhysicalPath();
 
         if (!file_exists($filePath)) {
-            return $this->createNotFoundException("File not found.");
+            throw $this->createNotFoundException("File not found.");
         }
 
         $mimeType = $file->getMimeType();
@@ -146,7 +146,7 @@ class MediaController extends Controller
         $filePath = $file->getPhysicalPath();
 
         if (!file_exists($filePath)) {
-            return $this->createNotFoundException("File not found.");
+            throw $this->createNotFoundException("File not found.");
         }
 
         $mimeType = $file->getMimeType();
