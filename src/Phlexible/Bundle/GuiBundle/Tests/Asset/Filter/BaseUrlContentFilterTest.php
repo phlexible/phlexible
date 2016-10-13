@@ -17,33 +17,33 @@ class BaseUrlContentFilterTest extends \PHPUnit_Framework_TestCase
 {
     public function testFilterBasePath()
     {
-        $filter = new BaseUrlContentFilter('bbb', 'aaa');
+        $filter = new BaseUrlContentFilter('/app.php', '/');
 
-        $result = $filter->filter('/foo/BASE_PATH/bar');
+        $result = $filter->filter('/BASE_PATH/foo.txt');
 
-        $expected = '/foo/aaa/bar';
+        $expected = '/foo.txt';
 
         $this->assertSame($expected, $result);
     }
 
     public function testFilterBaseUrl()
     {
-        $filter = new BaseUrlContentFilter('bbb', 'aaa');
+        $filter = new BaseUrlContentFilter('/app.php', '/');
 
-        $result = $filter->filter('/bar/BASE_URL/baz');
+        $result = $filter->filter('/BASE_URL/bar.txt');
 
-        $expected = '/bar/bbb/baz';
+        $expected = '/app.php/bar.txt';
 
         $this->assertSame($expected, $result);
     }
 
     public function testFilterBundlesPath()
     {
-        $filter = new BaseUrlContentFilter('bbb', 'aaa');
+        $filter = new BaseUrlContentFilter('/app.php', '/');
 
-        $result = $filter->filter('/baz/BUNDLES_PATH/bar');
+        $result = $filter->filter('/BUNDLES_PATH/baz.txt');
 
-        $expected = '/baz/aaa/bundles/bar';
+        $expected = '/bundles/baz.txt';
 
         $this->assertSame($expected, $result);
     }
