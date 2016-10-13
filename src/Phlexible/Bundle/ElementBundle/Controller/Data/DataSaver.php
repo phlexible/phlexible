@@ -673,23 +673,6 @@ class DataSaver
                 $elementStructureValue->setOptions($options);
                 $elementStructureValue->setValue($value);
             }
-            if ($masterLanguage && ($node->getConfigurationValue('synchronized') === 'synchronized' || $node->getConfigurationValue('synchronized') === 'synchronized_unlink')) {
-                if ($node->getConfigurationValue('synchronized') === 'synchronized') {
-                    continue;
-                }
-                if ($type === 'link') {
-                    $masterValue = $rootElementStructure->getValue($node->getName(), $masterLanguage);
-                    if ($masterValue) {
-                        $elementStructureValue->setValue($masterValue->getValue());
-                    } else {
-                        $elementStructureValue->setValue(null);
-                    }
-
-                    $elementStructureValue->setOptions(null);
-                } else {
-                    $elementStructureValue->setOptions(array('unlinked' => true));
-                }
-            }
             if ($map) {
                 $mapId = $map[$repeatableIdentifier];
             } else {
@@ -701,6 +684,23 @@ class DataSaver
             $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
             if (!$elementStructure) {
                 throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
+            }
+            if ($masterLanguage && ($node->getConfigurationValue('synchronized') === 'synchronized' || $node->getConfigurationValue('synchronized') === 'synchronized_unlink')) {
+                if ($node->getConfigurationValue('synchronized') === 'synchronized') {
+                    continue;
+                }
+                if ($type === 'link') {
+                    $masterValue = $elementStructure->getValue($node->getName(), $masterLanguage);
+                    if ($masterValue) {
+                        $elementStructureValue->setValue($masterValue->getValue());
+                    } else {
+                        $elementStructureValue->setValue(null);
+                    }
+
+                    $elementStructureValue->setOptions(null);
+                } else {
+                    $elementStructureValue->setOptions(array('unlinked' => true));
+                }
             }
             $elementStructure->setValue($elementStructureValue);
             if (!$masterLanguage && ($node->getConfigurationValue('synchronized') === 'synchronized' || $node->getConfigurationValue('synchronized') === 'synchronized_unlink')) {
