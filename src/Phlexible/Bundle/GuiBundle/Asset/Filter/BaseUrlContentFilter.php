@@ -31,8 +31,16 @@ class BaseUrlContentFilter implements ContentFilterInterface
      */
     public function __construct($baseUrl, $basePath)
     {
-        $this->baseUrl = '/' . trim($baseUrl, '/') . '/';
-        $this->basePath = '/' . trim($basePath, '/') . '/';
+        $this->baseUrl = '/';
+        $this->basePath = '/';
+
+        if ($baseUrl && $baseUrl !== '/') {
+            $this->baseUrl = '/' . trim($baseUrl, '/') . '/';
+        }
+
+        if ($basePath && $basePath !== '/') {
+            $this->basePath = '/' . trim($basePath, '/') . '/';
+        }
     }
 
     /**
