@@ -217,8 +217,12 @@ Phlexible.fields.FieldHelper = {
 
     unlink: function (styleEl, unlinkEl) {
         if (this.isSynchronized) {
-            if (!styleEl) styleEl = this.el;
-            if (!unlinkEl) unlinkEl = this.el;
+            if (!styleEl) {
+                styleEl = this.el;
+            }
+            if (!unlinkEl) {
+                unlinkEl = this.el;
+            }
             if (this.isMaster) {
                 styleEl.addClass('p-fields-synchronized-master');
             }
