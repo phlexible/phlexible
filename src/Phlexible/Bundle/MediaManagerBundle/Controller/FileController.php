@@ -229,6 +229,7 @@ class FileController extends Controller
                 'document_type_key' => strtolower($file->getMediaType()),
                 'present'           => file_exists($file->getPhysicalPath()),
                 'size'              => $file->getSize(),
+                'hash'              => $file->getHash(),
                 'hidden'            => $file->isHidden() ? 1 : 0,
                 'version'           => $version,
                 'create_user'       => $createUserName,
@@ -370,6 +371,7 @@ class FileController extends Controller
         $properties['path'] = '/' . $folder->getPath();
         $properties['name'] = $file->getName();
         $properties['size'] = $file->getSize();
+        $properties['hash'] = $file->getHash();
         $properties['document_type_key'] = strtolower($file->getMediaType());
         $properties['asset_type'] = strtolower($file->getMediaCategory());
         $properties['create_user_id'] = $file->getCreateUserId();

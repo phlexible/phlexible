@@ -16,28 +16,16 @@ namespace Phlexible\Component\MetaSet\Model;
 interface MetaDataInterface
 {
     /**
-     * @return array
-     */
-    public function getIdentifiers();
-
-    /**
-     * @param array $identifiers
-     *
-     * @return $this
-     */
-    public function setIdentifiers(array $identifiers);
-
-    /**
-     * @return MetaSet
+     * @return MetaSetInterface
      */
     public function getMetaSet();
 
     /**
-     * @param MetaSet $metaSet
+     * @param MetaSetInterface $metaSet
      *
      * @return $this
      */
-    public function setMetaSet($metaSet);
+    public function setMetaSet(MetaSetInterface $metaSet);
 
     /**
      * @return array

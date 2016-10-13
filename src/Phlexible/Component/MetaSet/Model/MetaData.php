@@ -16,11 +16,6 @@ namespace Phlexible\Component\MetaSet\Model;
 class MetaData implements MetaDataInterface, \Countable
 {
     /**
-     * @var array
-     */
-    private $identifiers;
-
-    /**
      * @var MetaSet
      */
     private $metaSet;
@@ -31,21 +26,11 @@ class MetaData implements MetaDataInterface, \Countable
     private $values = [];
 
     /**
-     * {@inheritdoc}
+     * @param MetaSetInterface $metaSet
      */
-    public function getIdentifiers()
+    public function __construct(MetaSetInterface $metaSet)
     {
-        return $this->identifiers;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setIdentifiers(array $identifiers)
-    {
-        $this->identifiers = $identifiers;
-
-        return $this;
+        $this->metaSet = $metaSet;
     }
 
     /**
@@ -59,7 +44,7 @@ class MetaData implements MetaDataInterface, \Countable
     /**
      * {@inheritdoc}
      */
-    public function setMetaSet($metaSet)
+    public function setMetaSet(MetaSetInterface $metaSet)
     {
         $this->metaSet = $metaSet;
 

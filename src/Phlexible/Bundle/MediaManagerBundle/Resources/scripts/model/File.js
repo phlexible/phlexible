@@ -11,6 +11,7 @@ Phlexible.mediamanager.model.File = Ext.data.Record.create([
     {name: 'document_type', type: 'string'},
     {name: 'document_type_key', type: 'string'},
     {name: 'size', type: 'int'},
+    {name: 'hash', type: 'string'},
     {name: 'hidden', type: 'bool'},
     {name: 'present', type: 'bool'},
     {name: 'version', type: 'int'},

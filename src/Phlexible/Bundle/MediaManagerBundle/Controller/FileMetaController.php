@@ -118,7 +118,7 @@ class FileMetaController extends Controller
             $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
 
             if (!$metaData) {
-                $metaData = $fileMetaDataManager->createFileMetaData($metaSet, $file);
+                $metaData = $fileMetaDataManager->createMetaData($metaSet);
             }
 
             foreach ($fields as $fieldname => $row) {
@@ -142,7 +142,7 @@ class FileMetaController extends Controller
                 }
             }
 
-            $fileMetaDataManager->updateMetaData($metaData);
+            $fileMetaDataManager->updateMetaData($file, $metaData);
         }
 
         /*

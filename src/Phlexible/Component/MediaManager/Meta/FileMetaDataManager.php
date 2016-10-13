@@ -8,11 +8,14 @@
 
 namespace Phlexible\Component\MediaManager\Meta;
 
+use Doctrine\ORM\QueryBuilder;
+use Phlexible\Bundle\MediaManagerBundle\Entity\FileMetaDataValue;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MetaSet\Doctrine\MetaDataManager;
 use Phlexible\Component\MetaSet\Model\MetaData;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaSet;
+use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
  * File meta data manager
@@ -22,88 +25,71 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
 class FileMetaDataManager extends MetaDataManager
 {
     /**
-     * @param MetaSet               $metaSet
-     * @param ExtendedFileInterface $file
-     *
-     * @return MetaData|MetaDataInterface
+     * {@inheritdoc}
      */
-    public function createFileMetaData(MetaSet $metaSet, ExtendedFileInterface $file)
+    public function createMetaData(MetaSet $metaSet)
     {
-        $metaData = $this->createMetaData($metaSet);
-        $metaData
-            ->setIdentifiers($this->getIdentifiersFromFile($file));
-
-        return $metaData;
+        return new MetaData($metaSet);
     }
 
     /**
-     * @param MetaSet               $metaSet
+     * @param MetaSetInterface      $metaSet
      * @param ExtendedFileInterface $file
      *
-     * @return null|MetaDataInterface
+     * @return MetaDataInterface|null
      */
-    public function findByMetaSetAndFile(MetaSet $metaSet, ExtendedFileInterface $file)
+    public function findByMetaSetAndFile(MetaSetInterface $metaSet, ExtendedFileInterface $file)
     {
-        return $this->findByMetaSetAndIdentifiers($metaSet, $this->getIdentifiersFromFile($file));
+        return $this->findOneByMetaSetAndTarget($metaSet, $file);
     }
 
     /**
-     * @param string $value
-     *
-     * @return MetaDataInterface[]
+     * {@inheritdoc}
      */
-    public function findByValue($value)
+    protected function getDataClass()
     {
-        $connection = $this->getConnection();
+        return FileMetaDataValue::class;
+    }
 
-        $qb = $connection->createQueryBuilder();
-        $qb
-            ->select('m.*')
-            ->from($this->getTableName(), 'm')
-            ->where($qb->expr()->like('m.value', $qb->expr()->literal("%$value%")));
+    /**
+     * {@inheritdoc}
+     */
+    protected function joinTarget(QueryBuilder $qb, $file)
+    {
+        /* @var $file ExtendedFileInterface */
+        $qb->join('d.file', 'f');
+        $qb->andWhere($qb->expr()->eq("f.id", ':fileId'));
+        $qb->setParameter('fileId', $file->getId());
+        $qb->andWhere($qb->expr()->eq("f.version", ':fileVersion'));
+        $qb->setParameter('fileVersion', $file->getVersion());
+    }
 
-        $rows = $connection->fetchAll($qb->getSQL());
+    /**
+     * @param string                $setId
+     * @param string                $language
+     * @param string                $fieldId
+     * @param ExtendedFileInterface $target
+     *
+     * @return FileMetaDataValue
+     */
+    protected function getOrCreateMetaDataValue($setId, $language, $fieldId, $target)
+    {
+        $metaDataValue = $this->getDataRepository()->findOneBy(array(
+            'setId' => $setId,
+            'language' => $language,
+            'fieldId' => $fieldId,
+            'file' => $target,
+        ));
 
-        $metaDatas = [];
-
-        foreach ($rows as $row) {
-            $identifiers = [
-                'file_id' => $row['file_id'],
-                'file_version' => $row['file_version'],
-            ];
-
-            $id = '';
-            foreach ($identifiers as $value) {
-                $id .= $value . '_';
-            }
-            $id .= $row['set_id'];
-
-            if (!isset($metaDatas[$id])) {
-                $metaData = new MetaData();
-                $metaData
-                    ->setIdentifiers($identifiers)
-                    ->setMetaSet(null);
-                $metaDatas[$id] = $metaData;
-            } else {
-                $metaData = $metaDatas[$id];
-            }
-
-            $metaData->set($row['field_id'], $row['value'], $row['language']);
+        if (!$metaDataValue) {
+            $metaDataValue = new FileMetaDataValue(
+                $setId,
+                $target,
+                $language,
+                $fieldId
+            );
         }
 
-        return $metaDatas;
-    }
-
-    /**
-     * @param ExtendedFileInterface $file
-     *
-     * @return array
-     */
-    private function getIdentifiersFromFile(ExtendedFileInterface $file)
-    {
-        return [
-            'file_id'      => $file->getId(),
-            'file_version' => $file->getVersion(),
-        ];
+        return $metaDataValue;
     }
 }

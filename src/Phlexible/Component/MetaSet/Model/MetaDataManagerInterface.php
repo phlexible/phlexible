@@ -8,6 +8,8 @@
 
 namespace Phlexible\Component\MetaSet\Model;
 
+use Phlexible\Bundle\MetaSetBundle\Entity\MetaDataValue;
+
 /**
  * Meta data manager interface
  *
@@ -16,26 +18,25 @@ namespace Phlexible\Component\MetaSet\Model;
 interface MetaDataManagerInterface
 {
     /**
-     * Load meta data
-     *
-     * @param MetaSet $metaSet
-     * @param array   $identifiers
-     *
-     * @return MetaDataInterface
-     */
-    public function findByMetaSetAndIdentifiers(MetaSet $metaSet, array $identifiers);
-
-    /**
-     * @param MetaSet $metaSet
+     * @param MetaSetInterface $metaSet
      *
      * @return MetaDataInterface[]
      */
-    public function findByMetaSet(MetaSet $metaSet);
+    public function findByMetaSet(MetaSetInterface $metaSet);
 
     /**
+     * @param string $value
+     *
      * @return MetaDataInterface[]
      */
-    public function findAll();
+    public function findByValue($value);
+
+    /**
+     * @param MetaSetFieldInterface $field
+     *
+     * @return MetaDataValue[]
+     */
+    public function findByField(MetaSetFieldInterface $field);
 
     /**
      * @param MetaSet $metaSet
@@ -45,7 +46,8 @@ interface MetaDataManagerInterface
     public function createMetaData(MetaSet $metaSet);
 
     /**
+     * @param mixed             $target
      * @param MetaDataInterface $metaData
      */
-    public function updateMetaData(MetaDataInterface $metaData);
+    public function updateMetaData($target, MetaDataInterface $metaData);
 }

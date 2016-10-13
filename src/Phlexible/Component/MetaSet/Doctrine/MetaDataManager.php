@@ -8,32 +8,42 @@
 
 namespace Phlexible\Component\MetaSet\Doctrine;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\DataSourceBundle\Model\DataSourceManagerInterface;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Phlexible\Bundle\MetaSetBundle\Entity\MetaDataValue;
+use Phlexible\Component\MetaSet\Event\MetaDataValueEvent;
+use Phlexible\Component\MetaSet\MetaSetEvents;
 use Phlexible\Component\MetaSet\Model\MetaData;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
-use Phlexible\Component\MetaSet\Model\MetaSet;
+use Phlexible\Component\MetaSet\Model\MetaSetFieldInterface;
+use Phlexible\Component\MetaSet\Model\MetaSetInterface;
+use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Meta data manager
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MetaDataManager implements MetaDataManagerInterface
+abstract class MetaDataManager implements MetaDataManagerInterface
 {
+    /**
+     * @var MetaSetManagerInterface
+     */
+    private $metaSetManager;
+
     /**
      * @var EntityManager
      */
     private $entityManager;
 
     /**
-     * @var DataSourceManagerInterface
+     * @var EventDispatcherInterface
      */
-    private $dataSourceManager;
+    private $eventDispatcher;
 
     /**
      * @var LoggerInterface
@@ -41,95 +51,75 @@ class MetaDataManager implements MetaDataManagerInterface
     private $logger;
 
     /**
-     * @var string
+     * @param EntityManager            $entityManager
+     * @param MetaSetManagerInterface  $metaSetManager
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param LoggerInterface          $logger
      */
-    private $tableName;
-
-    /**
-     * @param EntityManager              $entityManager
-     * @param DataSourceManagerInterface $dataSourceManager
-     * @param LoggerInterface            $logger
-     * @param string                     $tableName
-     */
-    public function __construct(EntityManager $entityManager, DataSourceManagerInterface $dataSourceManager, LoggerInterface $logger, $tableName)
+    public function __construct(MetaSetManagerInterface $metaSetManager, EntityManager $entityManager, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
     {
+        $this->metaSetManager = $metaSetManager;
         $this->entityManager = $entityManager;
-        $this->dataSourceManager = $dataSourceManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
-        $this->tableName = $tableName;
     }
 
     /**
-     * @return Connection
+     * @return EntityRepository
      */
-    protected function getConnection()
+    protected function getDataRepository()
     {
-        return $this->entityManager->getConnection();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTableName()
-    {
-        return $this->tableName;
+        return $this->entityManager->getRepository($this->getDataClass());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findByMetaSetAndIdentifiers(MetaSet $metaSet, array $identifiers)
+    public function findByMetaSet(MetaSetInterface $metaSet)
     {
-        $metaDatas = $this->doFindByMetaSetAndIdentifiers($metaSet, $identifiers);
+        return $this->findByMetaSetAndTarget($metaSet, null);
+    }
 
-        if (!count($metaDatas)) {
-            return null;
+    /**
+     * {@inheritdoc}
+     */
+    public function findByValue($value)
+    {
+        $dataRepository = $this->getDataRepository();
+        $qb = $dataRepository->createQueryBuilder('d');
+        $qb
+            ->where($qb->expr()->like('d.value', $qb->expr()->literal("%$value%")));
+
+        $metaDatas = [];
+
+        foreach ($qb->getQuery()->getScalarResult() as $row) {
+            $identifier = $row['set_id'];
+
+            if (!isset($metaDatas[$identifier])) {
+                $metaSet = $this->metaSetManager->find($row['set_id']);
+
+                $metaData = new MetaData($metaSet);
+                $metaDatas[$identifier] = $metaData;
+            } else {
+                $metaData = $metaDatas[$identifier];
+            }
+
+            $metaData->set($row['field_id'], $row['value'], $row['language']);
         }
 
-        return current($metaDatas);
+        return $metaDatas;
+    }
+
+    public function findByField(MetaSetFieldInterface $field)
+    {
+        return $this->findMetaDataValues($field->getMetaSet(), null, $field->getId());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findByMetaSet(MetaSet $metaSet)
+    public function updateMetaData($target, MetaDataInterface $metaData)
     {
-        return $this->doFindByMetaSetAndIdentifiers($metaSet);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findAll()
-    {
-        return $this->doFindByMetaSetAndIdentifiers();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createMetaData(MetaSet $metaSet)
-    {
-        $metaData = new MetaData();
-        $metaData->setMetaSet($metaSet);
-
-        return $metaData;
-    }
-
-    /**
-     * @param MetaDataInterface $metaData
-     */
-    public function updateMetaData(MetaDataInterface $metaData)
-    {
-        $baseData = [
-            'set_id' => $metaData->getMetaSet()->getId(),
-        ];
-        foreach ($metaData->getIdentifiers() as $field => $value) {
-            $baseData[$field] = $value;
-        }
-
-        $connection = $this->getConnection();
-
         foreach ($metaData->getLanguages() as $language) {
             foreach ($metaData->getMetaSet()->getFields() as $field) {
 
@@ -140,23 +130,22 @@ class MetaDataManager implements MetaDataManagerInterface
 
                 $value = $metaData->get($field->getName(), $language);
 
-                if ('suggest' === $field->getType()) {
-                    $dataSourceId = $field->getOptions();
-                    $dataSource = $this->dataSourceManager->find($dataSourceId);
-                    foreach (explode(',', $value) as $singleValue) {
-                        $dataSource->addValueForLanguage($language, $singleValue, true);
-                    }
-                    $this->dataSourceManager->updateDataSource($dataSource);
-                }
+                $data = $this->getOrCreateMetaDataValue(
+                    $metaData->getMetaSet()->getId(),
+                    $language,
+                    $field->getId(),
+                    $target
+                );
+                $data->setValue($value);
 
-                $insertData = $baseData;
+                $event = new MetaDataValueEvent($data, $metaData->getMetaSet(), $field);
+                $this->eventDispatcher->dispatch(MetaSetEvents::BEFORE_UPDATE_META_DATA_VALUE, $event);
 
-                $insertData['id'] = Uuid::generate();
-                $insertData['field_id'] = $field->getId();
-                $insertData['value'] = $value;
-                $insertData['language'] = $language;
+                $this->entityManager->persist($data);
+                $this->entityManager->flush($data);
 
-                $connection->insert($this->getTableName(), $insertData);
+                $event = new MetaDataValueEvent($data, $metaData->getMetaSet(), $field);
+                $this->eventDispatcher->dispatch(MetaSetEvents::UPDATE_META_DATA_VALUE, $event);
             }
         }
 
@@ -165,60 +154,93 @@ class MetaDataManager implements MetaDataManagerInterface
     }
 
     /**
-     * @param MetaSet $metaSet
-     * @param array   $identifiers
-     *
-     * @return MetaData[]
+     * @return string
      */
-    private function doFindByMetaSetAndIdentifiers(MetaSet $metaSet = null, array $identifiers = [])
+    abstract protected function getDataClass();
+
+    /**
+     * @param QueryBuilder $qb
+     * @param mixed        $target
+     */
+    abstract protected function joinTarget(QueryBuilder $qb, $target);
+
+    /**
+     * @param string $setId
+     * @param string $language
+     * @param string $fieldId
+     * @param mixed  $target
+     *
+     * @return MetaDataValue
+     */
+    abstract protected function getOrCreateMetaDataValue($setId, $language, $fieldId, $target);
+
+    /**
+     * @param MetaSetInterface $metaSet
+     * @param mixed            $target
+     *
+     * @return MetaDataInterface|null
+     */
+    protected function findOneByMetaSetAndTarget(MetaSetInterface $metaSet, $target)
     {
-        $connection = $this->getConnection();
+        $metaDatas = $this->findByMetaSetAndTarget($metaSet, $target);
 
-        $qb = $connection->createQueryBuilder();
-        $qb
-            ->select('m.*')
-            ->from($this->getTableName(), 'm');
-
-        if ($metaSet) {
-            $qb->where($qb->expr()->eq('m.set_id', $qb->expr()->literal($metaSet->getId())));
+        if (!count($metaDatas)) {
+            return null;
         }
 
-        foreach ($identifiers as $field => $value) {
-            $qb->andWhere($qb->expr()->eq("m.$field", $qb->expr()->literal($value)));
-        }
+        return current($metaDatas);
+    }
 
-        $rows = $connection->fetchAll($qb->getSQL());
+    /**
+     * @param MetaSetInterface $metaSet
+     * @param mixed            $target
+     *
+     * @return MetaDataInterface[]
+     */
+    protected function findByMetaSetAndTarget(MetaSetInterface $metaSet, $target = null)
+    {
+        $metaDatas = array();
 
-        $metaDatas = [];
+        foreach ($this->findMetaDataValues($metaSet, $target) as $metaDataValue) {
+            $identifier = $metaDataValue->getSetId();
 
-        foreach ($rows as $row) {
-            $id = '';
-            foreach ($identifiers as $value) {
-                $id .= $value . '_';
-            }
-            $id .= $row['set_id'];
-
-            if (!isset($metaDatas[$id])) {
-                $metaData = new MetaData();
-                $metaData
-                    ->setIdentifiers($identifiers)
-                    ->setMetaSet($metaSet);
-                $metaDatas[$id] = $metaData;
+            if (!isset($metaDatas[$identifier])) {
+                $metaData = new MetaData($metaSet);
+                $metaDatas[$identifier] = $metaData;
             } else {
-                $metaData = $metaDatas[$id];
+                $metaData = $metaDatas[$identifier];
             }
 
-            $field = $metaSet->getFieldById($row['field_id']);
+            $field = $metaSet->getFieldById($metaDataValue->getFieldId());
 
             if (!$field) {
-                $this->logger->error(sprintf("MetaSet with id %s doesn't exist", $row['field_id']));
-                $this->logger->info("MetaSet Identifieres", $identifiers);
+                $this->logger->error(sprintf("MetaSet with id %s doesn't exist", $metaDataValue->getFieldId()));
                 continue;
             }
-            $metaData->set($field->getName(), $row['value'], $row['language']);
+
+            $metaData->set($field->getName(), $metaDataValue->getValue(), $metaDataValue->getLanguage());
         }
 
         return $metaDatas;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function findMetaDataValues(MetaSetInterface $metaSet, $target = null, $fieldId = null)
+    {
+        $dataRepository = $this->getDataRepository();
+        $qb = $dataRepository->createQueryBuilder('d');
+        $qb->where($qb->expr()->eq('d.setId', $qb->expr()->literal($metaSet->getId())));
+
+        if ($target) {
+            $this->joinTarget($qb, $target);
+        }
+
+        if ($fieldId) {
+            $qb->andWhere($qb->expr()->eq('d.fieldId', $qb->expr()->literal($fieldId)));
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

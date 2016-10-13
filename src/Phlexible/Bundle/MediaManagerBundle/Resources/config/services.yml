@@ -64,13 +64,6 @@ services:
             - "@phlexible_media_manager.upload.temp_storage"
             - "@phlexible_media_tool.mime.detector"
 
-    phlexible_media_manager.util.suggest_field:
-        class: Phlexible\Component\MediaManager\Util\SuggestFieldUtil
-        arguments:
-            - "@phlexible_meta_set.meta_set_manager"
-            - "@phlexible_media_manager.folder_meta_data_manager"
-            - "%phlexible_meta_set.suggest.seperator%"
-
     # access control permission providers
     phlexible_media_manager.permission_provider:
         class: Phlexible\Bundle\MediaManagerBundle\AccessControl\MediaManagerPermissionProvider
@@ -87,13 +80,6 @@ services:
             - "@phlexible_media_manager.delete_file_checker"
             - "@phlexible_media_manager.delete_folder_checker"
             - "@phlexible_media_manager.meta_set_mapper"
-        tags:
-            - {name: kernel.event_subscriber}
-
-    phlexible_media_manager.listener.datasource:
-        class: Phlexible\Bundle\MediaManagerBundle\EventListener\DatasourceListener
-        arguments:
-            - "@phlexible_media_manager.util.suggest_field"
         tags:
             - {name: kernel.event_subscriber}
 

@@ -30,10 +30,8 @@ metasets:
     configure: Konfigurieren
     failure: Fehler
     select_needs_options: Bitte konfigurieren Sie das Select-Feld.
-    suggest_needs_options: Bitte konfigurieren Sie das Suggest-Feld.
     select: Auswählen
     configure_select: Select-Feld konfigurieren
-    configure_suggest: Suggest-Feld konfigurieren
     remove_value: Wert entfernen
     use_add: Klicken Sie auf "Hinzufügen" um einen neuen Wert hinzuzufügen
     value: Wert
@@ -41,9 +39,6 @@ metasets:
     cancel: Abbrechen
     store: Übernehmen
     add_at_least_one_value: Bitte fügen Sie mindestens einen Wert hinzu.
-    datasource: DataSource
     select_metaset: Meta Set auswählen...
     remove_metaset: Meta Set entfernen
 
-    create_datasource: Neue Datenquelle anlegen
-    create_datasource_text: Bitte geben Sie den Titel der neuen Datenquelle ein.

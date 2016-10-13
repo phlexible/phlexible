@@ -31,11 +31,6 @@ class PhlexibleElementtypeExtension extends Extension
         $loader->load('file.yml');
         $loader->load('fields.yml');
 
-        $configuration = $this->getConfiguration($config, $container);
-        $config = $this->processConfiguration($configuration, $config);
-
-        $container->setParameter('phlexible_elementtype.field.suggest_seperator', $config['fields']['suggest_separator']);
-
         $container->setAlias('phlexible_elementtype.viability_manager', 'phlexible_elementtype.doctrine.viability_manager');
         $container->setAlias('phlexible_elementtype.elementtype_manager', 'phlexible_elementtype.file.elementtype_manager');
     }

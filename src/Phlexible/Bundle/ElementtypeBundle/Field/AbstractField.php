@@ -40,6 +40,8 @@ abstract class AbstractField extends Field
     }
 
     /**
+     * From submitted value to object
+     *
      * @param string $value
      *
      * @return mixed
@@ -66,6 +68,8 @@ abstract class AbstractField extends Field
     }
 
     /**
+     * From object to database
+     *
      * @param mixed $value
      *
      * @return string
@@ -84,6 +88,8 @@ abstract class AbstractField extends Field
     }
 
     /**
+     * From database to object
+     *
      * @param string $value
      *
      * @return mixed

@@ -369,7 +369,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate
      */
     public function getByTypeId($typeId, $type = null)
     {
-        // TODO: Implement getByTypeId() method.
+        return $this->tree->getByTypeId($typeId, $type);
     }
 
     /**
@@ -377,7 +377,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate
      */
     public function hasByTypeId($typeId, $type = null)
     {
-        // TODO: Implement hasByTypeId() method.
+        return $this->tree->hasByTypeId($typeId, $type);
     }
 
     /**

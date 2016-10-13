@@ -12,7 +12,6 @@
         "/phlexible/phlexibledashboard/icons": "src/Phlexible/Bundle/DashboardBundle/Resources/public/icons",
         "/phlexible/phlexibledashboard/scripts": "src/Phlexible/Bundle/DashboardBundle/Resources/scripts",
         "/phlexible/phlexibledashboard/styles": "src/Phlexible/Bundle/DashboardBundle/Resources/styles",
-        "/phlexible/phlexibledatasource/icons": "src/Phlexible/Bundle/DataSourceBundle/Resources/public/icons",
         "/phlexible/phlexibleelement/icons": "src/Phlexible/Bundle/ElementBundle/Resources/public/icons",
         "/phlexible/phlexibleelement/menu": "src/Phlexible/Bundle/ElementBundle/Resources/menu",
         "/phlexible/phlexibleelement/scripts": "src/Phlexible/Bundle/ElementBundle/Resources/scripts",
@@ -291,11 +290,6 @@
             "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
             "query": "/phlexible/phlexibleelementtype/scripts/**/*.js",
             "type": "phlexible/scripts"
-        },
-        "9f12b4e8-fe37-560b-b969-4fc54c0b41b7": {
-            "_class": "Puli\\Discovery\\Binding\\ResourceBinding",
-            "query": "/phlexible/phlexibledatasource/icons/*.png",
-            "type": "phlexible/icons"
         },
         "a040e763-9ed1-582c-8185-d89ff8122ee2": {
             "_class": "Puli\\Discovery\\Binding\\ResourceBinding",

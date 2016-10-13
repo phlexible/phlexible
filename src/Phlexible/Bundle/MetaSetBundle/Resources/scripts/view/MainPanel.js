@@ -2,9 +2,7 @@ Ext.provide('Phlexible.metasets.MainPanel');
 
 Ext.require('Phlexible.metasets.util.Fields');
 Ext.require('Phlexible.metasets.MetaSetsWindow');
-Ext.require('Phlexible.metasets.MetaSuggestWindow');
 Ext.require('Phlexible.metasets.SelectConfigurationWindow');
-Ext.require('Phlexible.metasets.SuggestConfigurationWindow');
 Ext.require('Ext.ux.dd.GridReorderDropTarget');
 
 Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
@@ -316,19 +314,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     configureField: function(grid, record) {
-        if (record.get('type') === 'suggest') {
-            var w = new Phlexible.metasets.SuggestConfigurationWindow({
-                options: record.get('options'),
-                listeners: {
-                    select: function(options) {
-                        record.set('options', options);
-                    },
-                    scope: this
-                }
-            });
-            w.show();
-        }
-        else if (record.get('type') === 'select') {
+        if (record.get('type') === 'select') {
             var w = new Phlexible.metasets.SelectConfigurationWindow({
                 options: record.get('options'),
                 listeners: {

@@ -20,7 +20,6 @@ use Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\ElementtypeBundle\Field\AbstractField;
-use Phlexible\Bundle\ElementtypeBundle\Field\Field;
 use Phlexible\Bundle\ElementtypeBundle\Field\FieldRegistry;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
 use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
@@ -439,7 +438,7 @@ class DataSaver
         $metaData = $this->elementMetaDataManager->findByMetaSetAndElementVersion($metaSet, $elementVersion);
 
         if (!$metaData) {
-            $metaData = $this->elementMetaDataManager->createElementMetaData($metaSet, $elementVersion);
+            $metaData = $this->elementMetaDataManager->createMetaData($metaSet);
         }
 
         /*
@@ -464,26 +463,6 @@ class DataSaver
                 continue;
             }
 
-            // TODO: repair suggest
-            /*
-            if ('suggest' === $metaSetItem->getType($key)) {
-                $dataSourceId = $metaSetItem->getOptions($key);
-                $dataSourcesRepository = $container->get('datasources.repository');
-                $dataSource = $dataSourcesRepository->getDataSourceById($dataSourceId, $language);
-                $dataSourceKeys = $dataSource->getKeys();
-                $dataSourceModified = false;
-                foreach (explode(',', $value) as $singleValue) {
-                    if (!in_array($singleValue, $dataSourceKeys)) {
-                        $dataSource->addKey($singleValue, true);
-                        $dataSourceModified = true;
-                    }
-                }
-                if ($dataSourceModified) {
-                    $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
-                }
-            }
-            */
-
             // TODO: master check?
             if ($metaSet->getField($field)->isSynchronized()) {
                 foreach ($availableLanguages as $currentLanguage) {
@@ -494,7 +473,7 @@ class DataSaver
             }
         }
 
-        $this->elementMetaDataManager->updateMetaData($metaData);
+        $this->elementMetaDataManager->updateMetaData($elementVersion, $metaData);
     }
 
     /**

@@ -67,25 +67,10 @@ services:
     phlexible_element.element_meta_data_manager:
         class: Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager
         arguments:
+            - "@phlexible_meta_set.meta_set_manager"
             - "@doctrine.orm.entity_manager"
-            - "@phlexible_data_source.data_source_manager"
+            - "@event_dispatcher"
             - "@logger"
-            - element_meta
-
-    phlexible_element.util.suggest_field:
-        class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil
-        arguments:
-            - "@phlexible_meta_set.meta_set_manager"
-            - "@phlexible_element.element_service"
-            - "@phlexible_element.element_source_manager"
-            - "%phlexible_elementtype.field.suggest_seperator%"
-
-    phlexible_element.util.suggest_meta_field:
-        class: Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil
-        arguments:
-            - "@phlexible_meta_set.meta_set_manager"
-            - "@phlexible_element.element_meta_data_manager"
-            - "%phlexible_meta_set.suggest.seperator%"
 
     phlexible_element.request.data_saver:
         class: Phlexible\Bundle\ElementBundle\Controller\Data\DataSaver
@@ -115,22 +100,6 @@ services:
             - "%phlexible_cms.languages.default%"
         tags:
             - {name: kernel.event_listener, event: phlexible_siteroot.create_siteroot, method: onCreateSiteroot}
-
-    phlexible_element.listener.datasource:
-        class: Phlexible\Bundle\ElementBundle\EventListener\DatasourceListener
-        arguments:
-            - "@phlexible_element.util.suggest_field"
-            - "@phlexible_element.util.suggest_meta_field"
-        tags:
-            - {name: kernel.event_subscriber}
-
-    phlexible_element.listener.element_structure:
-        class: Phlexible\Bundle\ElementBundle\EventListener\ElementStructureListener
-        arguments:
-            - "@phlexible_data_source.data_source_manager"
-            - "@phlexible_element.element_service"
-        tags:
-            - {name: kernel.event_subscriber}
 
     phlexible_element.listener.get_config:
         class: Phlexible\Bundle\ElementBundle\EventListener\GetConfigListener

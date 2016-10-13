@@ -36,8 +36,7 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
             ['textarea', 'Textarea'],
             ['date', 'Date'],
             ['boolean', 'Boolean'],
-            ['select', 'Select'],
-            ['suggest', 'Suggest']
+            ['select', 'Select']
         ];
     },
 
@@ -89,33 +88,7 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
     },
 
     initBeforeEditCallbacks: function () {
-        this.beforeEditCallbacks = {
-            suggest: function (grid, field, record) {
-                if (grid.master !== undefined) {
-                    var isSynchronized = (1 == record.get('synchronized'));
-
-                    // skip editing english values if language is synchronized
-                    if (!grid.master && isSynchronized) {
-                        return false;
-                    }
-                }
-
-                var w = new Phlexible.metasets.MetaSuggestWindow({
-                    record: record,
-                    valueField: field,
-                    metaLanguage: grid.language,
-                    listeners: {
-                        store: function () {
-                            grid.validateMeta();
-                        }
-                    }
-                });
-
-                w.show();
-
-                return false;
-            }
-        };
+        this.beforeEditCallbacks = {};
     },
 
     initAfterEditCallbacks: function () {
